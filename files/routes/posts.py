@@ -203,6 +203,7 @@ def post_id(pid, anything=None, v=None):
 		comments = first + second
 
 	offset = 0
+	ids = set()
 
 	if post.comment_count > 60 and not request.headers.get("Authorization") and not request.values.get("all"):
 		comments2 = []
@@ -210,17 +211,18 @@ def post_id(pid, anything=None, v=None):
 		if post.created_utc > 1638672040:
 			for comment in comments:
 				comments2.append(comment)
+				ids.add(comment.id)
 				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
-				offset += 1
 				if count > 50: break
 		else:
 			for comment in comments:
 				comments2.append(comment)
+				ids.add(comment.id)
 				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
-				offset += 1
 				if count > 10: break
 
-		if len(comments) == len(comments2): offset = None
+		if len(comments) == len(comments2): offset = 0
+		else: offset = 1
 		comments = comments2
 
 	for pin in pinned:
@@ -243,13 +245,14 @@ def post_id(pid, anything=None, v=None):
 	else:
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
-		return render_template(template, v=v, p=post, sort=sort, render_replies=True, offset=offset)
+		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset)
 
 @app.post("/viewmore/<pid>/<sort>/<offset>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def viewmore(v, pid, sort, offset):
 	offset = int(offset)
+	ids = set(int(x) for x in request.values.get("ids").split(','))
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
@@ -262,12 +265,12 @@ def viewmore(v, pid, sort, offset):
 			votes.c.vote_type,
 			blocking.c.id,
 			blocked.c.id,
-		)
+		).filter(Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID)), Comment.is_pinned == None, Comment.id.notin_(ids))
 		
 		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
  
-		comments=comments.filter(Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID)), Comment.is_pinned == None).join(
+		comments=comments.join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
@@ -288,7 +291,7 @@ def viewmore(v, pid, sort, offset):
 			comment.is_blocking = c[2] or 0
 			comment.is_blocked = c[3] or 0
 			output.append(comment)
-				
+		
 		comments = comments.filter(Comment.level == 1)
 
 		if sort == "new":
@@ -305,9 +308,8 @@ def viewmore(v, pid, sort, offset):
 		first = [c[0] for c in comments.filter(or_(and_(Comment.slots_result == None, Comment.blackjack_result == None), func.length(Comment.body) > 20)).all()]
 		second = [c[0] for c in comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None), func.length(Comment.body) <= 20).all()]
 		comments = first + second
-		comments = comments[offset:]
 	else:
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID)), Comment.level == 1, Comment.is_pinned == None)
+		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID)), Comment.level == 1, Comment.is_pinned == None, Comment.id.notin_(ids))
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -331,20 +333,21 @@ def viewmore(v, pid, sort, offset):
 	if post.created_utc > 1638672040:
 		for comment in comments:
 			comments2.append(comment)
+			ids.add(comment.id)
 			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
-			offset += 1
 			if count > 50: break
 	else:
 		for comment in comments:
 			comments2.append(comment)
+			ids.add(comment.id)
 			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
-			offset += 1
 			if count > 10: break
-
-	if len(comments) == len(comments2): offset = None
+	
+	if len(comments) == len(comments2): offset = 0
+	else: offset += 1
 	comments = comments2
 
-	return render_template("comments.html", v=v, comments=comments, render_replies=True, pid=pid, sort=sort, offset=offset, ajax=True)
+	return render_template("comments.html", v=v, comments=comments, ids=list(ids), render_replies=True, pid=pid, sort=sort, offset=offset, ajax=True)
 
 
 @app.post("/morecomments/<cid>")

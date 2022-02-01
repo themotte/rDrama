@@ -1,9 +1,10 @@
-function viewmore(pid,sort,offset) {
+function viewmore(pid,sort,offset,ids) {
     btn = document.getElementById("viewbtn");
     btn.disabled = true;
     btn.innerHTML = "Requesting...";
     var form = new FormData();
 	form.append("formkey", formkey());
+	form.append("ids", ids);
     const xhr = new XMLHttpRequest();
     xhr.open("post", `/viewmore/${pid}/${sort}/${offset}`);
     xhr.setRequestHeader('xhr', 'xhr');
