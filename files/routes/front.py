@@ -112,7 +112,7 @@ def notifications(v):
 			elif c.parent_submission:
 				replies = []
 				for x in c.replies:
-					if x.id not in all and x.author_id == v.id:
+					if x.author_id == v.id:
 						x.voted = 1
 						replies.append(x)
 						all.add(x.id)
@@ -126,7 +126,7 @@ def notifications(v):
 						all.add(c.id)
 						c = c.parent_comment
 
-				if c.id not in all and c not in listing:
+				if c not in listing:
 					all.add(c.id)
 					listing.append(c)
 
