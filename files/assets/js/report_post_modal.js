@@ -6,6 +6,9 @@ function report_postModal(id) {
 	submitbutton.disabled = false;
 	submitbutton.innerHTML='Report post';
 
+	reason = document.getElementById("reason")
+	reason.value = ""
+
 	submitbutton.onclick = function() {
 
 		this.innerHTML='Reporting post';
@@ -16,7 +19,7 @@ function report_postModal(id) {
 		xhr.setRequestHeader('xhr', 'xhr');
 		var form = new FormData()
 		form.append("formkey", formkey());
-		form.append("reason", document.getElementById("reason").value);
+		form.append("reason", reason.value);
 
 		xhr.onload=function() {
 			document.getElementById("reportPostFormBefore").classList.add('d-none');

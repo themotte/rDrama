@@ -55,6 +55,9 @@ function report_commentModal(id, author) {
 	btn.innerHTML='Report comment';
 	btn.disabled = false;
 
+	reason = document.getElementById("reason-comment")
+	reason.value = ""
+	
 	btn.onclick = function() {
 		this.innerHTML='Reporting comment';
 		this.disabled = true;
@@ -63,7 +66,7 @@ function report_commentModal(id, author) {
 		xhr.setRequestHeader('xhr', 'xhr');
 		var form = new FormData()
 		form.append("formkey", formkey());
-		form.append("reason", document.getElementById("reason-comment").value);
+		form.append("reason", reason.value);
 
 		xhr.onload=function() {
 			document.getElementById("reportCommentFormBefore").classList.add('d-none');
