@@ -100,6 +100,7 @@ def notifications(v):
 					parent = c.parent_comment
 					if c not in parent.replies2:
 						parent.replies2 = parent.replies2 + [c]
+						all.add(c.id)
 						parent.replies = parent.replies2
 					c = parent
 				if c.id not in all and c not in listing:
