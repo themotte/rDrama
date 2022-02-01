@@ -823,8 +823,9 @@ def submit_post(v):
 
 		domain_obj = get_domain(domain)
 		if domain_obj:
-			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":domain_obj.reason}, 400
-			return render_template("submit.html", v=v, error=domain_obj.reason, title=title, url=url, body=request.values.get("body", "")), 400
+			reason = f"Remove the {domain_obj.domain} link from your post and try again. {domain_obj.reason}"
+			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":reason}, 400
+			return render_template("submit.html", v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 400
 		elif "twitter.com" == domain:
 			try: embed = requests.get("https://publish.twitter.com/oembed", timeout=5, params={"url":url, "omit_script":"t"}).json()["html"]
 			except: embed = None

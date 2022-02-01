@@ -700,13 +700,7 @@ def edit_comment(cid, v):
 			
 			if ban.reason: reason += f" {ban.reason}"	
 		
-			if request.headers.get("Authorization"): return {'error': 'A blacklisted domain was used.'}, 400
-			return render_template("comment_failed.html",
-													action=f"/edit_comment/{c.id}",
-													badlinks=[x.domain for x in bans],
-													body=body,
-													v=v
-													)
+			return {'error': reason}, 400
 		if AGENDAPOSTER_PHRASE not in body.lower():
 			now = int(time.time())
 			cutoff = now - 60 * 60 * 24
