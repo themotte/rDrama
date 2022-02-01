@@ -765,7 +765,7 @@ def shadowban(user_id, v):
 
 	body_html = sanitize(body)
 
-	send_admin(NOTIFICATIONS_ID, body_html)
+	send_admin(NOTIFICATIONS_ID, body_html, v.id)
 
 	g.db.commit()
 	return {"message": "User shadowbanned!"}
@@ -930,7 +930,7 @@ def ban_user(user_id, v):
 
 	body_html = sanitize(body)
 
-	send_admin(NOTIFICATIONS_ID, body_html)
+	send_admin(NOTIFICATIONS_ID, body_html, v.id)
 
 	g.db.commit()
 

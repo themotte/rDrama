@@ -52,7 +52,7 @@ def request_api_keys(v):
 
 	text_html = sanitize(text, noimages=True)
 
-	send_admin(NOTIFICATIONS_ID, text_html)
+	send_admin(NOTIFICATIONS_ID, text_html, v.id)
 
 	g.db.commit()
 

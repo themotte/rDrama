@@ -88,7 +88,7 @@ def NOTIFY_USERS2(text, v):
 
 	return notify_users
 
-def send_admin(id, body_html):
+def send_admin(id, body_html, vid):
 
 	new_comment = Comment(author_id=id,
 						  parent_submission=None,
@@ -99,7 +99,7 @@ def send_admin(id, body_html):
 	g.db.add(new_comment)
 	g.db.flush()
 
-	admins = g.db.query(User).filter(User.admin_level > 2).all()
+	admins = g.db.query(User).filter(User.admin_level > 2, User.id != vid).all()
 	for admin in admins:
 		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
 		g.db.add(notif)
