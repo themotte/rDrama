@@ -522,6 +522,10 @@ def edit_post(pid, v):
 
 		elif 'nigg' in f'{p.body}{p.title}'.lower() and not v.nwordpass:
 
+			p.is_banned = True
+			p.ban_reason = "AutoJanny"
+			g.db.add(p)
+
 			c_jannied = Comment(author_id=NOTIFICATIONS_ID,
 				parent_submission=p.id,
 				level=1,
@@ -537,9 +541,9 @@ def edit_post(pid, v):
 			g.db.add(c_jannied)
 			g.db.flush()
 
-			v.ban(reason="White people nonsense.", days=0.00347223)
+			v.ban(reason="White people nonsense.", days=0.007)
 
-			text = "Your account has been suspended for 5 minutes for the following reason:\n\n> Unsanctioned NWord"
+			text = "Your account has been suspended for 10 minutes for the following reason:\n\n> Unsanctioned NWord"
 			send_repeatable_notification(v.id, text)		
 
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
@@ -1109,6 +1113,9 @@ def submit_post(v):
 
 	elif 'nigg' in f'{new_post.body}{new_post.title}'.lower() and not v.nwordpass:
 
+		new_post.is_banned = True
+		new_post.ban_reason = "AutoJanny"
+
 		c_jannied = Comment(author_id=NOTIFICATIONS_ID,
 			parent_submission=new_post.id,
 			level=1,
@@ -1123,9 +1130,9 @@ def submit_post(v):
 		g.db.add(c_jannied)
 		g.db.flush()
 
-		v.ban(reason="White people nonsense.", days=0.00347223)
+		v.ban(reason="White people nonsense.", days=0.007)
 
-		text = "Your account has been suspended for 5 minutes for the following reason:\n\n> Unsanctioned NWord"
+		text = "Your account has been suspended for 10 minutes for the following reason:\n\n> Unsanctioned NWord"
 		send_repeatable_notification(v.id, text)		
 
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)

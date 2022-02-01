@@ -559,5 +559,5 @@ REDDIT_NOTIFS = {
 }
 
 
-no_pass_phrase = """<p>Sorry whiteboy, we're gonna need to see some ID before you start throwin that word around like it's nothing.\n\nTake a 5 minute time-out and come back when you've learned your lesson and/or paid reparations (by purchasing a BIPOC Approved™ Rdrama NWord Pass© from the shop) \n\n<em>This is an automated message; if you need help,+
+no_pass_phrase = """<p>Sorry whiteboy, we're gonna need to see some ID before you start throwin that word around like it's nothing.\n\nTake a 10 minute time-out and come back when you've learned your lesson and/or paid reparations (by purchasing a BIPOC Approved™ Rdrama NWord Pass© from the <a href="/shop">shop</a>) \n\n<em>This is an automated message; if you need help,+
  you can message us <a href="/contact">here</a>.</em></p>"""
