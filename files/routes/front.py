@@ -95,12 +95,14 @@ def notifications(v):
 						all.add(x.id)
 						replies.append(x)
 				c.replies = replies
+				all.add(c.id)
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment in comments):
 					parent = c.parent_comment
 					if c not in parent.replies2:
 						parent.replies2 = parent.replies2 + [c]
 						parent.replies = parent.replies2
 					c = parent
+					all.add(c.id)
 				if c.id not in all and c not in listing:
 					all.add(c.id)
 					listing.append(c)
@@ -117,9 +119,10 @@ def notifications(v):
 					c.replies = replies
 			else:
 				if c.parent_comment:
+					all.add(c.id)
 					while c.level > 1:
-						all.add(c.id)
 						c = c.parent_comment
+						all.add(c.id)
 
 				if c.id not in all and c not in listing:
 					all.add(c.id)
