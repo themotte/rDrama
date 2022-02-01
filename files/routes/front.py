@@ -104,8 +104,8 @@ def notifications(v):
 						all.add(c.id)
 						parent.replies = parent.replies2
 					c = parent
-					
-				if c.id not in all and c not in listing:
+
+				if c not in listing:
 					all.add(c.id)
 					listing.append(c)
 					c.replies = c.replies2
