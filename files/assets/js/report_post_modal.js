@@ -1,6 +1,8 @@
 function report_postModal(id) {
 
 	submitbutton=document.getElementById("reportPostButton");
+	document.getElementById("reportPostFormBefore").classList.remove('d-none');
+	document.getElementById("reportPostFormAfter").classList.add('d-none');
 
 	submitbutton.onclick = function() {
 
@@ -18,6 +20,7 @@ function report_postModal(id) {
 			document.getElementById("reportPostFormBefore").classList.add('d-none');
 			document.getElementById("reportPostFormAfter").classList.remove('d-none');
 			this.disabled = false;
+			this.innerHTML='Report post';
 		};
 
 		xhr.onerror=function(){alert(errortext)};

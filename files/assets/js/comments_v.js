@@ -52,24 +52,25 @@ function report_commentModal(id, author) {
 	document.getElementById("reportCommentFormAfter").classList.add('d-none');
 
 	document.getElementById("reportCommentButton").onclick = function() {
+		this.innerHTML='Reporting comment';
+		this.disabled = true;
+		const xhr = new XMLHttpRequest();
+		xhr.open("POST", '/report/comment/'+id);
+		xhr.setRequestHeader('xhr', 'xhr');
+		var form = new FormData()
+		form.append("formkey", formkey());
+		form.append("reason", document.getElementById("reason-comment").value);
 
-	this.innerHTML='Reporting comment';
-	this.disabled = true;
-	const xhr = new XMLHttpRequest();
-	xhr.open("POST", '/report/comment/'+id);
-	xhr.setRequestHeader('xhr', 'xhr');
-	var form = new FormData()
-	form.append("formkey", formkey());
-	form.append("reason", document.getElementById("reason-comment").value);
+		xhr.onload=function() {
+			document.getElementById("reportCommentFormBefore").classList.add('d-none');
+			document.getElementById("reportCommentFormAfter").classList.remove('d-none');
+			this.innerHTML='Report comment';
+			this.disabled = false;	
+		};
 
-	xhr.onload=function() {
-		document.getElementById("reportCommentFormBefore").classList.add('d-none');
-		document.getElementById("reportCommentFormAfter").classList.remove('d-none');
-	};
-
-	xhr.onerror=function(){alert(errortext)};
-	xhr.send(form);
-}
+		xhr.onerror=function(){alert(errortext)};
+		xhr.send(form);
+	}
 
 };
 
