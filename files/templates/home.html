@@ -43,15 +43,11 @@
 				<div class="text-small font-weight-bold mr-2">‎</div>
 
 				{% if request.path == '/' and v.paid_dues %}
-				<div class="toggle-cc-mode">
-					<button class="btn btn-secondary ccMode-toggle" type="button" id="toggleCCMode">
-						{% if ccmode=="true"%}<a class="cc-activated" href="?sort={{sort}}&t={{t}}&ccmode=false"><i class="fas fa-angry mr-2"></i>COUNTRY CLUB MODE: ACTIVATED</a>{% endif %}
-						{% if ccmode=="false" or not ccmode %}<a class="cc-deactivated" href="?sort={{sort}}&t={{t}}&ccmode=true"><i class="fas fa-angry mr-2"></i>CC Mode</a>{% endif %}
-					</button>
-				</div>
-
+					{% if ccmode=="true"%}<a class="btn btn-secondary text-primary" href="?sort={{sort}}&t={{t}}&ccmode=false"><i class="fas fa-angry mr-2"></i>COUNTRY CLUB MODE: ACTIVATED</a>{% endif %}
+					{% if ccmode=="false" or not ccmode %}<a class="btn btn-secondary text-primary" href="?sort={{sort}}&t={{t}}&ccmode=true"><i class="fas fa-angry mr-2"></i>CC Mode</a>{% endif %}
 				<div class="text-small font-weight-bold ml-3 mr-2">‎</div>
 				{% endif %}
+
 				<div class="dropdown dropdown-actions">
 					<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						{% if t=="hour" %}<i class="fas fa-clock mr-1"></i>
