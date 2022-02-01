@@ -76,6 +76,7 @@ def shop(v):
 		if v.has_badge(badge): discount -= discounts[badge]
 
 	for val in AWARDS.values():
+		val["baseprice"] = int(val["price"])
 		val["price"] = int(val["price"]*discount)
 
 	sales = g.db.query(func.sum(User.coins_spent)).scalar()
