@@ -1,6 +1,6 @@
 function post_toast_callback(url, data, callback) {
 	const xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
+	xhr.open("POST", url);
 	xhr.setRequestHeader('xhr', 'xhr');
 	var form = new FormData()
 	form.append("formkey", formkey());
@@ -143,7 +143,7 @@ function submitFormAjax(e) {
 	}
 	actionPath = form.getAttribute("action");
 
-	xhr.open("POST", actionPath, true);
+	xhr.open("POST", actionPath);
 	xhr.setRequestHeader('xhr', 'xhr');
 
 	xhr.onload = function() {

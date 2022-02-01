@@ -1,7 +1,7 @@
 function delete_postModal(id) {
     document.getElementById("deletePostButton").onclick =  function() {
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", `/delete_post/${id}`, true);
+        xhr.open("POST", `/delete_post/${id}`);
         xhr.setRequestHeader('xhr', 'xhr');
         var form = new FormData()
         form.append("formkey", formkey());

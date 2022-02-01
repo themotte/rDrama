@@ -1,6 +1,6 @@
 function post(url) {
 	const xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
+	xhr.open("POST", url);
 	xhr.setRequestHeader('xhr', 'xhr');
 	var form = new FormData()
 	form.append("formkey", formkey());
@@ -9,7 +9,7 @@ function post(url) {
 
 function post_toast3(url, button1, button2) {
 	const xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
+	xhr.open("POST", url);
 	xhr.setRequestHeader('xhr', 'xhr');
 	var form = new FormData()
 	form.append("formkey", formkey());
@@ -53,7 +53,7 @@ function report_commentModal(id, author) {
 	this.innerHTML='Reporting comment';
 	this.disabled = true;
 	const xhr = new XMLHttpRequest();
-	xhr.open("POST", '/report/comment/'+id, true);
+	xhr.open("POST", '/report/comment/'+id);
 	xhr.setRequestHeader('xhr', 'xhr');
 	var form = new FormData()
 	form.append("formkey", formkey());
@@ -106,7 +106,7 @@ function delete_commentModal(id) {
 
 		var url = '/delete/comment/' + id
 		const xhr = new XMLHttpRequest();
-		xhr.open("POST", url, true);
+		xhr.open("POST", url);
 		xhr.setRequestHeader('xhr', 'xhr');
 		var form = new FormData()
 		form.append("formkey", formkey());

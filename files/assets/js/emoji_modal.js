@@ -8,7 +8,7 @@ function loadEmojis(form) {
 	if (emojis == 1)
 	{
 		const xhr = new XMLHttpRequest();
-		xhr.open("GET", '/marsey_list', true);
+		xhr.open("GET", '/marsey_list');
 		xhr.setRequestHeader('xhr', 'xhr');
 		var f = new FormData();
 		xhr.onload = function() {

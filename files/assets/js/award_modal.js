@@ -67,7 +67,7 @@ function vote(type, id, dir) {
 	}
 
 	const xhr = new XMLHttpRequest();
-	xhr.open("POST", "/vote/" + type.replace('-mobile','') + "/" + id + "/" + votedirection, true);
+	xhr.open("POST", "/vote/" + type.replace('-mobile','') + "/" + id + "/" + votedirection);
 	xhr.setRequestHeader('xhr', 'xhr');
 	var form = new FormData()
 	form.append("formkey", formkey());
@@ -106,7 +106,7 @@ function buy(mb) {
 	const xhr = new XMLHttpRequest();
 	url = `/buy/${kind}`
 	if (mb) url += "?mb=true"
-	xhr.open("POST", url, true);
+	xhr.open("POST", url);
 	xhr.setRequestHeader('xhr', 'xhr');
 	var form = new FormData()
 	form.append("formkey", formkey());

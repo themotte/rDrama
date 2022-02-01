@@ -8,7 +8,7 @@ function report_postModal(id) {
 		this.disabled = true;
 
 		const xhr = new XMLHttpRequest();
-		xhr.open("POST", '/report/post/'+id, true);
+		xhr.open("POST", '/report/post/'+id);
 		xhr.setRequestHeader('xhr', 'xhr');
 		var form = new FormData()
 		form.append("formkey", formkey());

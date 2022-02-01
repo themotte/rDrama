@@ -8,7 +8,7 @@ function banModal(link, id, name) {
         fd.append("formkey", formkey());
 
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", `/ban_user/${id}?form`, true);
+        xhr.open("POST", `/ban_user/${id}?form`);
         xhr.setRequestHeader('xhr', 'xhr');
 
         xhr.onload = function(){
