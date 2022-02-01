@@ -812,7 +812,8 @@ CREATE TABLE public.users (
     progressivestack integer,
     winnings integer,
     patron_utc integer,
-    rehab integer
+    rehab integer,
+    nwordpass boolean
 );
 
 
