@@ -127,6 +127,7 @@ def notifications(v):
 					all.add(c.id)
 					listing.append(c)
 
+		all = all | set([x.id for x in comments]) | set([x.id for x in listing])
 		comments = get_comments(all, v=v)
 
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
