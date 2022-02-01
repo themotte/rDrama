@@ -48,6 +48,9 @@ function report_commentModal(id, author) {
 
 	document.getElementById("comment-author").textContent = author;
 
+	document.getElementById("reportCommentFormBefore").classList.remove('d-none');
+	document.getElementById("reportCommentFormAfter").classList.add('d-none');
+
 	document.getElementById("reportCommentButton").onclick = function() {
 
 	this.innerHTML='Reporting comment';
