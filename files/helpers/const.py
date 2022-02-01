@@ -476,6 +476,14 @@ AWARDS = {
 		"color": "text-lightgreen",
 		"price": 10000
 	},
+	"nword": {
+		"kind": "nword",
+		"title": "Nword Pass",
+		"description": "Gives the recipient the ability to speak that which must not be spoken",
+		"icon": "fas fa-edit",
+		"color": "text-success",
+		"price": 10000
+	},
 	"fish": {
 		"kind": "fish",
 		"title": "Fish",
@@ -507,14 +515,6 @@ AWARDS = {
 		"icon": "fas fa-eye",
 		"color": "text-gold",
 		"price": 50000
-	},
-	"nword": {
-		"kind": "nword",
-		"title": "Nword Pass",
-		"description": "Gives the recipient the ability to speak that which must not be spoken",
-		"icon": "fas fa-edit",
-		"color": "text-success",
-		"price": 10000
 	},
 }
 

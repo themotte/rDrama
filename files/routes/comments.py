@@ -780,7 +780,7 @@ def edit_comment(cid, v):
 				is_bot=True,
 				body_html=body_jannied_html,
 				top_comment_id=c.top_comment_id,
-				ghost=c.post.ghost
+				ghost=c.ghost
 				)
 
 			g.db.add(c_jannied)
@@ -803,7 +803,7 @@ def edit_comment(cid, v):
 				is_bot=True,
 				body_html=no_pass_phrase,
 				top_comment_id=c.top_comment_id,
-				ghost=c.post.ghost
+				ghost=c.ghost
 				)
 
 			g.db.add(c_jannied)

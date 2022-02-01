@@ -43,8 +43,8 @@
 				<div class="text-small font-weight-bold mr-2">‎</div>
 
 				{% if request.path == '/' and v.paid_dues %}
-					{% if ccmode=="true"%}<a class="btn btn-secondary text-primary" href="?sort={{sort}}&t={{t}}&ccmode=false"><i class="fas fa-angry mr-2"></i>COUNTRY CLUB MODE: ACTIVATED</a>{% endif %}
-					{% if ccmode=="false" or not ccmode %}<a class="btn btn-secondary text-primary" href="?sort={{sort}}&t={{t}}&ccmode=true"><i class="fas fa-angry mr-2"></i>CC Mode</a>{% endif %}
+					{% if ccmode=="true"%}<a class="btn btn-secondary text-primary text-small-m" href="?sort={{sort}}&t={{t}}&ccmode=false"><i class="fas fa-angry mr-2"></i>CC Mode: Activated</a>{% endif %}
+					{% if ccmode=="false" or not ccmode %}<a class="btn btn-secondary text-primary text-small-m" href="?sort={{sort}}&t={{t}}&ccmode=true"><i class="fas fa-angry mr-2"></i>CC Mode</a>{% endif %}
 				<div class="text-small font-weight-bold ml-3 mr-2">‎</div>
 				{% endif %}
 
@@ -155,14 +155,14 @@
 	<ul class="pagination pagination-sm mb-0">
 		{% if page>1 %}
 		<li class="page-item">
-			<small><a class="page-link" href="?sort={{sort}}&page={{page-1}}&t={{t}}{% if only %}&only={{only}}{% endif %}" tabindex="-1">Prev</a></small>
+			<small><a class="page-link" href="?sort={{sort}}&page={{page-1}}&t={{t}}{% if ccmode %}&ccmode={{ccmode}}{% endif %}" tabindex="-1">Prev</a></small>
 		</li>
 		{% else %}
 		<li class="page-item disabled"><span class="page-link">Prev</span></li>
 		{% endif %}
 		{% if next_exists %}
 		<li class="page-item">
-			<small><a class="page-link" href="?sort={{sort}}&page={{page+1}}&t={{t}}{% if only %}&only={{only}}{% endif %}">Next</a></small>
+			<small><a class="page-link" href="?sort={{sort}}&page={{page+1}}&t={{t}}{% if ccmode %}&ccmode={{ccmode}}{% endif %}">Next</a></small>
 		</li>
 		{% else %}
 		<li class="page-item disabled"><span class="page-link">Next</span></li>
