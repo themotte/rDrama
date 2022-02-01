@@ -197,7 +197,7 @@ def api_comment(v):
 					copyfile(oldname, filename)
 					process_image(filename, 400)
 				elif parent_post.id == 37697:
-					filename = 'files/assets/images/Drama/banners/' + str(len(listdir('files/assets/images/Drama/banners'))+1) + '.webp'
+					filename = 'files/assets/images/Drama/banners_bhm/' + str(len(listdir('files/assets/images/Drama/banners_bhm'))+1) + '.webp'
 					copyfile(oldname, filename)
 					process_image(filename)
 				elif parent_post.id == 37833:
