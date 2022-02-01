@@ -51,7 +51,11 @@ function report_commentModal(id, author) {
 	document.getElementById("reportCommentFormBefore").classList.remove('d-none');
 	document.getElementById("reportCommentFormAfter").classList.add('d-none');
 
-	document.getElementById("reportCommentButton").onclick = function() {
+	btn = document.getElementById("reportCommentButton")
+	btn.innerHTML='Report comment';
+	btn.disabled = false;
+
+	btn.onclick = function() {
 		this.innerHTML='Reporting comment';
 		this.disabled = true;
 		const xhr = new XMLHttpRequest();
@@ -64,8 +68,6 @@ function report_commentModal(id, author) {
 		xhr.onload=function() {
 			document.getElementById("reportCommentFormBefore").classList.add('d-none');
 			document.getElementById("reportCommentFormAfter").classList.remove('d-none');
-			this.innerHTML='Report comment';
-			this.disabled = false;	
 		};
 
 		xhr.onerror=function(){alert(errortext)};
