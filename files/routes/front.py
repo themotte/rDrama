@@ -92,6 +92,7 @@ def notifications(v):
 				replies = []
 				for x in c.replies:
 					if x.id not in all and x.author_id == v.id:
+						x.voted = 1
 						replies.append(x)
 						all.add(x.id)
 				c.replies = replies
@@ -99,23 +100,23 @@ def notifications(v):
 					parent = c.parent_comment
 					if c not in parent.replies2:
 						parent.replies2 = parent.replies2 + [c]
-						all.add(c.id)
 						parent.replies = parent.replies2
 					c = parent
 				if c.id not in all and c not in listing:
-					listing.append(c)
 					all.add(c.id)
+					listing.append(c)
 					c.replies = c.replies2
 			elif c.parent_submission:
-				if c.id not in all and c not in listing:
-					listing.append(c)
+				replies = []
+				for x in c.replies:
+					if x.id not in all and x.author_id == v.id:
+						x.voted = 1
+						replies.append(x)
+						all.add(x.id)
+				c.replies = replies
+				if x.id not in all and c not in listing:
 					all.add(c.id)
-					replies = []
-					for x in c.replies:
-						if x.id not in all and x.author_id == v.id:
-							replies.append(x)
-							all.add(x.id)
-					c.replies = replies
+					listing.append(c)
 			else:
 				if c.parent_comment:
 					while c.level > 1:
@@ -123,10 +124,10 @@ def notifications(v):
 						c = c.parent_comment
 
 				if c.id not in all and c not in listing:
-					listing.append(c)
 					all.add(c.id)
+					listing.append(c)
 
-		comments = get_comments(list(all), v=v)
+		comments = get_comments(all, v=v)
 
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
