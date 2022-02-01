@@ -49,25 +49,22 @@ def notifications(v):
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif posts:
-		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ID).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(101).all()
-
-		listing = []
+		notifications = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(Notification.user_id == v.id, Comment.author_id == AUTOJANNY_ID).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(101).all()
 
 		for index, x in enumerate(notifications[:100]):
-			c = x.comment
-			if x.read and index > 24: break
-			elif not x.read:
-				x.read = True
-				c.unread = True
-				g.db.add(x)
-			listing.append(c)
+			if not x[0].read:
+				x[0].read = True
+				x[1].unread = True
+				g.db.add(x[0])
 
 		g.db.commit()
 
+		listing = [x[1] for x in notifications][:25]
 		next_exists = (len(notifications) > len(listing))
 
 	else:
-		notifications = v.notifications.join(Notification.comment).filter(
+		notifications = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(
+			Notification.user_id == v.id,
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
@@ -75,19 +72,16 @@ def notifications(v):
 
 		next_exists = (len(notifications) > 25)
 		notifications = notifications[:25]
-		cids = [x.comment_id for x in notifications]
-		comments = get_comments(cids, v=v, load_parent=True)
 
-		i = 0
 		for x in notifications:
-			try:
-				if not x.read: comments[i].unread = True
-			except: continue
-			x.read = True
-			g.db.add(x)
-			i += 1
+			if not x[0].read: x[1].unread = True
+			x[0].read = True
+			g.db.add(x[0])
+	
 		g.db.commit()
 		
+		comments = [x[1] for x in notifications]
+
 	if not posts:
 		listing = []
 		all = set()
@@ -98,9 +92,8 @@ def notifications(v):
 				replies = []
 				for x in c.replies:
 					if x.id not in all and x.author_id == v.id:
-						x.voted = 1
-						replies.append(x)
 						all.add(x.id)
+						replies.append(x)
 				c.replies = replies
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment in comments):
 					parent = c.parent_comment
@@ -113,16 +106,15 @@ def notifications(v):
 					listing.append(c)
 					c.replies = c.replies2
 			elif c.parent_submission:
-				replies = []
-				for x in c.replies:
-					if x.id not in all and x.author_id == v.id:
-						x.voted = 1
-						replies.append(x)
-						all.add(x.id)
-				c.replies = replies
-				if x.id not in all and c not in listing:
+				if c.id not in all and c not in listing:
 					all.add(c.id)
 					listing.append(c)
+					replies = []
+					for x in c.replies:
+						if x.id not in all and x.author_id == v.id:
+							all.add(x.id)
+							replies.append(x)
+					c.replies = replies
 			else:
 				if c.parent_comment:
 					while c.level > 1:
@@ -133,7 +125,8 @@ def notifications(v):
 					all.add(c.id)
 					listing.append(c)
 
-	listing = listing
+		comments = get_comments(list(all), v=v)
+
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
 	return render_template("notifications.html",
