@@ -88,7 +88,7 @@ def NOTIFY_USERS2(text, v):
 
 	return notify_users
 
-def send_admin(id, body_html, vid):
+def send_admin(id, body_html, vid=None):
 
 	new_comment = Comment(author_id=id,
 						  parent_submission=None,
