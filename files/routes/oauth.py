@@ -48,11 +48,11 @@ def request_api_keys(v):
 
 	g.db.add(new_app)
 
-	text = f"{v.username} has requested API keys for `{request.values.get('name')}`. You can approve or deny the request [here](/admin/apps)."
+	body = f"{v.username} has requested API keys for `{request.values.get('name')}`. You can approve or deny the request [here](/admin/apps)."
 
-	text_html = sanitize(text, noimages=True)
+	body_html = sanitize(body, noimages=True)
 
-	send_admin(NOTIFICATIONS_ID, text_html, v.id)
+	send_admin(NOTIFICATIONS_ID, body_html)
 
 	g.db.commit()
 

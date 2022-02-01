@@ -295,7 +295,7 @@ def submit_contact(v):
 			body_html += f"<p>{url}</p>"
 		else: return {"error": "Image/Video files only"}, 400
 
-	send_admin(v.id, body_html, v.id)
+	send_admin(v.id, body_html)
 
 	g.db.commit()
 	return render_template("contact.html", v=v, msg="Your message has been sent.")
