@@ -12,7 +12,7 @@ function banModal(link, id, name) {
         xhr.setRequestHeader('xhr', 'xhr');
 
         xhr.onload = function(){
-            var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+            var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success'));
             myToast.show();
             document.getElementById('toast-post-success-text').innerHTML = `@${name} banned`;
         }

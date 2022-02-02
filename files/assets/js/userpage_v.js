@@ -15,10 +15,10 @@ function post_toast_callback(url, data, callback) {
 	xhr.onload = function() {
 		let result = callback(xhr);
 		if (xhr.status >= 200 && xhr.status < 300) {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+			var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error'));
 			myToast.hide();
 
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+			var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success'));
 			myToast.show();
 
 			try {
@@ -32,10 +32,10 @@ function post_toast_callback(url, data, callback) {
 
 			return true;
 		} else {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+			var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success'));
 			myToast.hide();
 
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+			var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error'));
 			myToast.show();
 
 			try {
@@ -154,7 +154,7 @@ function submitFormAjax(e) {
 			} catch(e) {
 				document.getElementById('toast-post-success-text').innerText = "Action successful!";
 			}
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+			var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success'));
 			myToast.show();
 			return true
 		} else if (xhr.status >= 300 && xhr.status < 400) {
@@ -163,13 +163,13 @@ function submitFormAjax(e) {
 			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			try {
 				let data=JSON.parse(xhr.response);
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error'));
 				myToast.show();
 				document.getElementById('toast-post-error-text').innerText = data["error"];
 			} catch(e) {
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+				var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success'));
 				myToast.hide();
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error'));
 				myToast.show();
 			}
 		}

@@ -1,7 +1,10 @@
 function expandText(id) {
     document.getElementById('post-text-'+id).classList.toggle('d-none');
-    document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-expand-alt');
-    document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-compress-alt');
+    for (const e of document.getElementsByClassName('text-expand-icon-'+id))
+    {
+        e.classList.toggle('fa-expand-alt');
+        e.classList.toggle('fa-compress-alt');
+    }
 };
 
 function togglevideo(pid) {

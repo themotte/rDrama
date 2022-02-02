@@ -29,7 +29,7 @@ function post_toast3(url, button1, button2) {
 		catch(e) {console.log(e)}
 		if (xhr.status >= 200 && xhr.status < 300 && data && data["message"]) {
 			document.getElementById('toast-post-success-text').innerText = data["message"];
-			new bootstrap.Toast(document.getElementById('toast-post-success')).show();
+			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success')).show();
 
 			document.getElementById(button1).classList.toggle("d-md-inline-block");
 			document.getElementById(button2).classList.toggle("d-md-inline-block");
@@ -37,7 +37,7 @@ function post_toast3(url, button1, button2) {
 		} else {
 			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
-			new bootstrap.Toast(document.getElementById('toast-post-error')).show();
+			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
 	};
 
@@ -148,7 +148,7 @@ function post_reply(id){
 				document.getElementById('toast-post-error-text').innerText = data["error"];
 			}
 			catch(e) {console.log(e)}
-			new bootstrap.Toast(document.getElementById('toast-post-error')).show();
+			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
 		btn.classList.remove('disabled');
 	}
@@ -181,7 +181,7 @@ function comment_edit(id){
 				document.getElementById('toast-post-error-text').innerText = data["error"];
 			}
 			catch(e) {console.log(e)}
-			new bootstrap.Toast(document.getElementById('toast-post-error')).show();
+			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
 		btn.classList.remove('disabled');
 	}
@@ -215,7 +215,7 @@ function post_comment(fullname){
 				document.getElementById('toast-post-error-text').innerText = data["error"];
 			}
 			catch(e) {console.log(e)}
-			new bootstrap.Toast(document.getElementById('toast-post-error')).show();
+			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
 		btn.classList.remove('disabled');
 	}

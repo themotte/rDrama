@@ -13,7 +13,7 @@ function viewmore(pid,sort,offset,ids) {
             document.getElementById(`viewmore-${offset}`).innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             tooltipTriggerList.map(function(element){
-                return new bootstrap.Tooltip(element);
+                return bootstrap.Tooltip.getOrCreateInstance(element);
             });
             popovertrigger()
             btn.disabled = false;

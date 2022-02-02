@@ -229,12 +229,12 @@ def award_post(pid, v):
 
 	note = request.values.get("note", "").strip()
 
-	if v.id != post.author.id:
+	author = post.author
+
+	if v.id != author.id:
 		msg = f"@{v.username} has given your [post]({post.permalink}) the {AWARDS[kind]['title']} Award!"
 		if note: msg += f"\n\n> {note}"
-		send_repeatable_notification(post.author.id, msg)
-
-	author = post.author
+		send_repeatable_notification(author.id, msg)
 
 	if kind == "benefactor" and author.id == v.id:
 		return {"error": "You can't use this award on yourself."}, 400
@@ -420,9 +420,9 @@ def award_post(pid, v):
 			g.db.flush()
 			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 
-	if post.author.received_award_count: post.author.received_award_count += 1
-	else: post.author.received_award_count = 1
-	g.db.add(post.author)
+	if author.received_award_count: author.received_award_count += 1
+	else: author.received_award_count = 1
+	g.db.add(author)
 
 	g.db.commit()
 	if request.referrer and len(request.referrer) > 1:
@@ -469,12 +469,12 @@ def award_comment(cid, v):
 
 	note = request.values.get("note", "").strip()
 
-	if v.id != c.author.id:
+	author = c.author
+
+	if v.id != author.id:
 		msg = f"@{v.username} has given your [comment]({c.permalink}) the {AWARDS[kind]['title']} Award!"
 		if note: msg += f"\n\n> {note}"
-		send_repeatable_notification(c.author.id, msg)
-
-	author = c.author
+		send_repeatable_notification(author.id, msg)
 
 	if kind == "benefactor" and author.id == v.id:
 		return {"error": "You can't use this award on yourself."}, 400
@@ -654,9 +654,9 @@ def award_comment(cid, v):
 			g.db.flush()
 			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 
-	if c.author.received_award_count: c.author.received_award_count += 1
-	else: c.author.received_award_count = 1
-	g.db.add(c.author)
+	if author.received_award_count: author.received_award_count += 1
+	else: author.received_award_count = 1
+	g.db.add(author)
 
 	g.db.commit()
 	if request.referrer and len(request.referrer) > 1 and request.host in request.referrer:

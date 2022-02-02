@@ -22,7 +22,7 @@ function popovertrigger() {
         const popoverId = popoverTriggerEl.getAttribute('data-content-id');
         const contentEl = document.getElementById(popoverId);
         if (contentEl) {
-            return new bootstrap.Popover(popoverTriggerEl, {
+            return bootstrap.Popover.getOrCreateInstance(popoverTriggerEl, {
                 content: contentEl.innerHTML,
                 html: true,
             });

@@ -12,7 +12,7 @@ function collapse_comment(comment_id) {
 
 function poll_vote_no_v() {
     document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
-    new bootstrap.Toast(document.getElementById('toast-post-error')).show();
+    bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 }
 
 function morecomments(cid) {
@@ -29,7 +29,7 @@ function morecomments(cid) {
             document.getElementById(`morecomments-${cid}`).innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             tooltipTriggerList.map(function(element){
-                return new bootstrap.Tooltip(element);
+                return bootstrap.Tooltip.getOrCreateInstance(element);
             });
             popovertrigger()
         }

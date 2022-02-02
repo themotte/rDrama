@@ -125,7 +125,7 @@ function buy(mb) {
 		catch(e) {console.log(e)}
 		if (xhr.status >= 200 && xhr.status < 300 && data && data["message"]) {
 			document.getElementById('toast-post-success-text2').innerText = data["message"];
-			new bootstrap.Toast(document.getElementById('toast-post-success2')).show();
+			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success2')).show();
 			document.getElementById('giveaward').disabled=false;
 			let owned = document.getElementById(`${kind}-owned`)
 			let ownednum = Number(owned.textContent);
@@ -133,7 +133,7 @@ function buy(mb) {
 		} else {
 			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			if (data && data["error"]) document.getElementById('toast-post-error-text2').innerText = data["error"];
-			new bootstrap.Toast(document.getElementById('toast-post-error2')).show();
+			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error2')).show();
 		}
 	};
 

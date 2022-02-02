@@ -116,5 +116,5 @@ class Slots:
 	def build_text(self, wager_value, result, user, currency):
 		if result == 0: return f'Lost {wager_value} {currency}'
 		elif result == 1: return 'Broke Even'
-		elif result == 12: return f'Jackpot! Won {wager_value * result} {currency}'
-		else: return f'Won {wager_value * result} {currency}'
+		elif result == 12: return f'Jackpot! Won {wager_value * (result-1)} {currency}'
+		else: return f'Won {wager_value * (result-1)} {currency}'
