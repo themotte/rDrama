@@ -4598,7 +4598,7 @@ input[type=radio] ~ .custom-control-label::before {
 .emoji-modal {
     max-width: 90% !important 
 }
-.emj, .emoji {
+.emj, .emoji, a img {
     height: 30px !important;
     width: 30px !important;
 }
