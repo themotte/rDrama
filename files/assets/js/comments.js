@@ -4,6 +4,8 @@ function collapse_comment(comment_id) {
     const closed = element.classList.toggle("collapsed")
     const top = element.getBoundingClientRect().y
 
+    document.querySelectorAll(`#${comment} .collapsed`).forEach(n => n.classList.remove('collapsed'))
+
     if (closed && top < 0) {
         element.scrollIntoView()
         window.scrollBy(0, - 100)
