@@ -68,10 +68,10 @@ def notifications(v):
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
-		).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26).all()
+		).order_by(Notification.id.desc()).offset(100 * (page - 1)).limit(101).all()
 
-		next_exists = (len(notifications) > 25)
-		notifications = notifications[:25]
+		next_exists = (len(notifications) > 100)
+		notifications = notifications[:100]
 
 		for x in notifications:
 			if x[0].read: break
