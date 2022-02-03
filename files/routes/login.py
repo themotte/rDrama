@@ -85,11 +85,7 @@ def login_post():
 	username = request.values.get("username")
 
 	if not username: abort(400)
-	if "@" in username:
-		account = g.db.query(User).filter(
-			User.email.ilike(username)).one_or_none()
-	else:
-		account = get_user(username, graceful=True)
+	account = get_user(username, graceful=True)
 
 	if not account:
 		time.sleep(random.uniform(0, 2))

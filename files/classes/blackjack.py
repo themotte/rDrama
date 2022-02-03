@@ -62,6 +62,7 @@ class Blackjack:
 		self.db = g.db
 
 	def check_for_blackjack_command(self, in_text, from_user, from_comment):
+		in_text = in_text.lower()
 		if self.command_word in in_text:
 			for word in in_text.split():
 				if self.command_word in word:

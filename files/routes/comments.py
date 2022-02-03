@@ -214,7 +214,7 @@ def api_comment(v):
 						process_image(filename, 200)
 						requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/badges/{badge.id}.webp"]})
 					except Exception as e:
-						return {"error": e}, 400
+						return {"error": str(e)}, 400
 				elif v.admin_level > 2 and parent_post.id == 37838:
 					try:
 						marsey = loads(body.lower())
@@ -231,7 +231,7 @@ def api_comment(v):
 						requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/emojis/{name}.webp"]})
 						cache.delete_memoized(marsey_list)
 					except Exception as e:
-						return {"error": e}, 400
+						return {"error": str(e)}, 400
 			body += f"\n\n![]({image})"
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
@@ -282,7 +282,7 @@ def api_comment(v):
 
 	is_bot = bool(request.headers.get("Authorization"))
 
-	if not is_bot and not v.marseyawarded and AGENDAPOSTER_PHRASE not in body.lower() and len(body) > 10:
+	if parent_post.id not in (37696,37697,37749,37833,37838) and not is_bot and not v.marseyawarded and AGENDAPOSTER_PHRASE not in body.lower() and len(body) > 10:
 		now = int(time.time())
 		cutoff = now - 60 * 60 * 24
 
@@ -385,201 +385,200 @@ def api_comment(v):
 		n = Notification(comment_id=c_based.id, user_id=v.id)
 		g.db.add(n)
 
-	if v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in c.body.lower():
+	if parent_post.id not in (37696,37697,37749,37833,37838):
+		if v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in c.body.lower():
 
-		c.is_banned = True
-		c.ban_reason = "AutoJanny"
+			c.is_banned = True
+			c.ban_reason = "AutoJanny"
 
-		g.db.add(c)
-
-
-		body = AGENDAPOSTER_MSG.format(username=v.username, type='comment', AGENDAPOSTER_PHRASE=AGENDAPOSTER_PHRASE)
-
-		body_jannied_html = sanitize(body)
+			g.db.add(c)
 
 
+			body = AGENDAPOSTER_MSG.format(username=v.username, type='comment', AGENDAPOSTER_PHRASE=AGENDAPOSTER_PHRASE)
 
-		c_jannied = Comment(author_id=NOTIFICATIONS_ID,
-			parent_submission=parent_submission,
-			distinguish_level=6,
-			parent_comment_id=c.id,
-			level=level+1,
-			is_bot=True,
-			body_html=body_jannied_html,
-			top_comment_id=c.top_comment_id,
-			ghost=parent_post.ghost
-			)
+			body_jannied_html = sanitize(body)
 
-		g.db.add(c_jannied)
-		g.db.flush()
 
-		n = Notification(comment_id=c_jannied.id, user_id=v.id)
-		g.db.add(n)
-	
-	elif request.host == 'rdrama.net' and 'nigg' in c.body.lower() and not v.nwordpass:
 
-		c.is_banned = True
-		c.ban_reason = "AutoJanny"
-		g.db.add(c)
+			c_jannied = Comment(author_id=NOTIFICATIONS_ID,
+				parent_submission=parent_submission,
+				distinguish_level=6,
+				parent_comment_id=c.id,
+				level=level+1,
+				is_bot=True,
+				body_html=body_jannied_html,
+				top_comment_id=c.top_comment_id,
+				ghost=parent_post.ghost
+				)
 
-		c_jannied = Comment(author_id=NOTIFICATIONS_ID,
-			parent_submission=parent_submission,
-			distinguish_level=6,
-			parent_comment_id=c.id,
-			level=level+1,
-			is_bot=True,
-			body_html=no_pass_phrase,
-			top_comment_id=c.top_comment_id,
-			ghost=parent_post.ghost
-			)
+			g.db.add(c_jannied)
+			g.db.flush()
 
-		g.db.add(c_jannied)
-		g.db.flush()
-
-		v.ban(reason="White people nonsense.", days=0.007)
-
-		text = "Your account has been suspended for 10 minutes for the following reason:\n\n> Unsanctioned NWord"
-		send_repeatable_notification(v.id, text)		
-
-		n = Notification(comment_id=c_jannied.id, user_id=v.id)
-		g.db.add(n)	
+			n = Notification(comment_id=c_jannied.id, user_id=v.id)
+			g.db.add(n)
 		
-	if request.host == "rdrama.net" and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
-	
-		body = random.choice(LONGPOST_REPLIES)
+		elif request.host == 'rdrama.net' and 'nigg' in c.body.lower() and not v.nwordpass:
 
-		body_html2 = sanitize(body)
+			c.is_banned = True
+			c.ban_reason = "AutoJanny"
+			g.db.add(c)
 
-		c2 = Comment(author_id=LONGPOSTBOT_ID,
-			parent_submission=parent_submission,
-			parent_comment_id=c.id,
-			level=level+1,
-			is_bot=True,
-			body_html=body_html2,
-			top_comment_id=c.top_comment_id,
-			ghost=parent_post.ghost
-			)
+			c_jannied = Comment(author_id=NOTIFICATIONS_ID,
+				parent_submission=parent_submission,
+				distinguish_level=6,
+				parent_comment_id=c.id,
+				level=level+1,
+				is_bot=True,
+				body_html=no_pass_phrase,
+				top_comment_id=c.top_comment_id,
+				ghost=parent_post.ghost
+				)
 
-		g.db.add(c2)
+			g.db.add(c_jannied)
+			g.db.flush()
 
-		longpostbot = g.db.query(User).filter_by(id = LONGPOSTBOT_ID).one_or_none()
-		longpostbot.comment_count += 1
-		longpostbot.coins += 1
-		g.db.add(longpostbot)
+			v.ban(reason="White people nonsense.", days=0.007)
+
+			text = "Your account has been suspended for 10 minutes for the following reason:\n\n> Unsanctioned NWord"
+			send_repeatable_notification(v.id, text)		
+
+			n = Notification(comment_id=c_jannied.id, user_id=v.id)
+			g.db.add(n)	
+			
+		if request.host == "rdrama.net" and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
 		
-		g.db.flush()
+			body = random.choice(LONGPOST_REPLIES)
 
-		n = Notification(comment_id=c2.id, user_id=v.id)
-		g.db.add(n)
+			body_html2 = sanitize(body)
 
+			c2 = Comment(author_id=LONGPOSTBOT_ID,
+				parent_submission=parent_submission,
+				parent_comment_id=c.id,
+				level=level+1,
+				is_bot=True,
+				body_html=body_html2,
+				top_comment_id=c.top_comment_id,
+				ghost=parent_post.ghost
+				)
 
-	if request.host == "rdrama.net" and random.random() < 0.001:
-	
-		body = "zoz"
-		body_html2 = sanitize(body)
+			g.db.add(c2)
 
+			longpostbot = g.db.query(User).filter_by(id = LONGPOSTBOT_ID).one_or_none()
+			longpostbot.comment_count += 1
+			longpostbot.coins += 1
+			g.db.add(longpostbot)
+			
+			g.db.flush()
 
-
-
-		c2 = Comment(author_id=ZOZBOT_ID,
-			parent_submission=parent_submission,
-			parent_comment_id=c.id,
-			level=level+1,
-			is_bot=True,
-			body_html=body_html2,
-			top_comment_id=c.top_comment_id,
-			ghost=parent_post.ghost
-			)
-
-		g.db.add(c2)
-		g.db.flush()
-		n = Notification(comment_id=c2.id, user_id=v.id)
-		g.db.add(n)
-
-
-
-
-	
-		body = "zle"
-		body_html2 = sanitize(body)
-
-
-
-		c3 = Comment(author_id=ZOZBOT_ID,
-			parent_submission=parent_submission,
-			parent_comment_id=c2.id,
-			level=level+2,
-			is_bot=True,
-			body_html=body_html2,
-			top_comment_id=c.top_comment_id,
-			ghost=parent_post.ghost
-			)
-
-		g.db.add(c3)
-		g.db.flush()
-		
-		body = "zozzle"
-		body_html2 = sanitize(body)
-
-
-		c4 = Comment(author_id=ZOZBOT_ID,
-			parent_submission=parent_submission,
-			parent_comment_id=c3.id,
-			level=level+3,
-			is_bot=True,
-			body_html=body_html2,
-			top_comment_id=c.top_comment_id,
-			ghost=parent_post.ghost
-			)
-
-		g.db.add(c4)
-
-		zozbot = g.db.query(User).filter_by(id = ZOZBOT_ID).one_or_none()
-		zozbot.comment_count += 3
-		zozbot.coins += 3
-		g.db.add(zozbot)
-
-
-
-
-
-	if not v.shadowbanned and parent_post.id not in (37696,37697,37749,37833,37838):
-		notify_users = NOTIFY_USERS(body_html, v)
-		
-		for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
-		
-		if parent.author.id not in [v.id, BASEDBOT_ID, AUTOJANNY_ID, SNAPPY_ID, LONGPOSTBOT_ID, ZOZBOT_ID, AUTOPOLLER_ID]: notify_users.add(parent.author.id)
-
-		for x in notify_users:
-			n = Notification(comment_id=c.id, user_id=x)
+			n = Notification(comment_id=c2.id, user_id=v.id)
 			g.db.add(n)
 
-		if parent.author.id != v.id and PUSHER_ID:
-			if len(c.body) > 500: notifbody = c.body[:500] + '...'
-			else: notifbody = c.body or 'no body'
 
-			beams_client.publish_to_interests(
-				interests=[f'{request.host}{parent.author.id}'],
-				publish_body={
-					'web': {
-						'notification': {
-							'title': f'New reply by @{c.author_name}',
-							'body': notifbody,
-							'deep_link': f'{SITE_FULL}/comment/{c.id}?context=8&read=true#context',
-							'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp',
+		if request.host == "rdrama.net" and random.random() < 0.001:
+		
+			body = "zoz"
+			body_html2 = sanitize(body)
+
+
+
+
+			c2 = Comment(author_id=ZOZBOT_ID,
+				parent_submission=parent_submission,
+				parent_comment_id=c.id,
+				level=level+1,
+				is_bot=True,
+				body_html=body_html2,
+				top_comment_id=c.top_comment_id,
+				ghost=parent_post.ghost
+				)
+
+			g.db.add(c2)
+			g.db.flush()
+			n = Notification(comment_id=c2.id, user_id=v.id)
+			g.db.add(n)
+
+
+
+
+		
+			body = "zle"
+			body_html2 = sanitize(body)
+
+
+
+			c3 = Comment(author_id=ZOZBOT_ID,
+				parent_submission=parent_submission,
+				parent_comment_id=c2.id,
+				level=level+2,
+				is_bot=True,
+				body_html=body_html2,
+				top_comment_id=c.top_comment_id,
+				ghost=parent_post.ghost
+				)
+
+			g.db.add(c3)
+			g.db.flush()
+			
+			body = "zozzle"
+			body_html2 = sanitize(body)
+
+
+			c4 = Comment(author_id=ZOZBOT_ID,
+				parent_submission=parent_submission,
+				parent_comment_id=c3.id,
+				level=level+3,
+				is_bot=True,
+				body_html=body_html2,
+				top_comment_id=c.top_comment_id,
+				ghost=parent_post.ghost
+				)
+
+			g.db.add(c4)
+
+			zozbot = g.db.query(User).filter_by(id = ZOZBOT_ID).one_or_none()
+			zozbot.comment_count += 3
+			zozbot.coins += 3
+			g.db.add(zozbot)
+
+
+		if not v.shadowbanned:
+			notify_users = NOTIFY_USERS(body_html, v)
+			
+			for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
+			
+			if parent.author.id not in [v.id, BASEDBOT_ID, AUTOJANNY_ID, SNAPPY_ID, LONGPOSTBOT_ID, ZOZBOT_ID, AUTOPOLLER_ID]: notify_users.add(parent.author.id)
+
+			for x in notify_users:
+				n = Notification(comment_id=c.id, user_id=x)
+				g.db.add(n)
+
+			if parent.author.id != v.id and PUSHER_ID:
+				if len(c.body) > 500: notifbody = c.body[:500] + '...'
+				else: notifbody = c.body or 'no body'
+
+				beams_client.publish_to_interests(
+					interests=[f'{request.host}{parent.author.id}'],
+					publish_body={
+						'web': {
+							'notification': {
+								'title': f'New reply by @{c.author_name}',
+								'body': notifbody,
+								'deep_link': f'{SITE_FULL}/comment/{c.id}?context=8&read=true#context',
+								'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp',
+							}
+						},
+						'fcm': {
+							'notification': {
+								'title': f'New reply by @{c.author_name}',
+								'body': notifbody,
+							},
+							'data': {
+								'url': f'/comment/{c.id}?context=8&read=true#context',
+							}
 						}
 					},
-					'fcm': {
-						'notification': {
-							'title': f'New reply by @{c.author_name}',
-							'body': notifbody,
-						},
-						'data': {
-							'url': f'/comment/{c.id}?context=8&read=true#context',
-						}
-					}
-				},
-			)
+				)
+
 
 	vote = CommentVote(user_id=v.id,
 						 comment_id=c.id,

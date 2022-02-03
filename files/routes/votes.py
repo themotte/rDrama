@@ -24,6 +24,8 @@ def admin_vote_info_get(v):
 
 	if thing.ghost: abort(403)
 
+	if not thing.author:
+		print(thing.id, flush=True)
 	if isinstance(thing, Submission):
 		if thing.author.shadowbanned and not (v and v.admin_level):
 			thing_id = g.db.query(Submission.id).filter_by(upvotes=thing.upvotes, downvotes=thing.downvotes).order_by(Submission.id).first()[0]
@@ -60,7 +62,7 @@ def admin_vote_info_get(v):
 						   v=v,
 						   thing=thing,
 						   ups=ups,
-						   downs=downs,)
+						   downs=downs)
 
 
 

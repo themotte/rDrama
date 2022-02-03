@@ -98,7 +98,11 @@ def stats():
 def chart(v):
 	days = int(request.values.get("days", 0))
 	file = cached_chart(days)
-	return send_file(file)
+	try: f = send_file(file)
+	except:
+		print('/chart', flush=True)
+		abort(404)
+	return f
 
 
 @cache.memoize(timeout=86400)
@@ -254,7 +258,11 @@ def log_item(id, v):
 
 @app.get("/static/assets/favicon.ico")
 def favicon():
-	return send_file(f"./assets/images/{SITE_NAME}/icon.webp")
+	try: f = send_file(f"./assets/images/{SITE_NAME}/icon.webp")
+	except:
+		print('/static/assets/favicon.ico', flush=True)
+		abort(404)
+	return f
 
 @app.get("/api")
 @auth_required
@@ -340,8 +348,11 @@ def images(path):
 
 @app.get("/robots.txt")
 def robots_txt():
-	return send_file("assets/robots.txt")
-
+	try: f = send_file("assets/robots.txt")
+	except:
+		print('/robots.txt', flush=True)
+		abort(404)
+	return f
 
 @app.get("/badges")
 @auth_required

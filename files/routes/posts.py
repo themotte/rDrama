@@ -822,6 +822,7 @@ def submit_post(v):
 			if repost: return redirect(repost.permalink)
 
 		domain_obj = get_domain(domain)
+		if not domain_obj: domain_obj = get_domain(domain+parsed_url.path)
 		if domain_obj:
 			reason = f"Remove the {domain_obj.domain} link from your post and try again. {domain_obj.reason}"
 			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":reason}, 400
