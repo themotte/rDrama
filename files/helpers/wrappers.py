@@ -46,8 +46,6 @@ def get_logged_in_user():
 		g.db.add(v)
 		g.db.commit()
 
-	if v.hidevotedon: posts = [x for x in posts if not hasattr(x, 'voted') or not x.voted]
-
 	if v.agendaposter_expires_utc and v.agendaposter_expires_utc < time.time():
 		v.agendaposter_expires_utc = 0
 		v.agendaposter = None
