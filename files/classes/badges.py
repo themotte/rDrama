@@ -51,7 +51,7 @@ class Badge(Base):
 			text = self.badge.description + " until " + datetime.utcfromtimestamp(ti).strftime('%Y-%m-%d %H:%M:%S')
 		elif self.description: text = self.description
 		elif self.badge.description: text = self.badge.description
-		else: return ''
+		else: return self.name
 		return f'{self.name} - {text}'
 
 	@property
