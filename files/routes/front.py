@@ -186,7 +186,7 @@ def front_all(v):
 
 	posts = get_posts(ids, v=v)
 	
-	if v.hidevotedon: posts = [x for x in posts if not hasattr(x, 'voted') or not x.voted]
+	if v and v.hidevotedon: posts = [x for x in posts if not hasattr(x, 'voted') or not x.voted]
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
 	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode)
