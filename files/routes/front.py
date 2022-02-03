@@ -74,7 +74,8 @@ def notifications(v):
 		notifications = notifications[:25]
 
 		for x in notifications:
-			if not x[0].read: x[1].unread = True
+			if x[0].read: break
+			x[1].unread = True
 			x[0].read = True
 			g.db.add(x[0])
 	
