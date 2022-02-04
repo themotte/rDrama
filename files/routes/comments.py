@@ -165,7 +165,7 @@ def api_comment(v):
 			f.write('\n{[para]}\n' + body)
 
 	if v.marseyawarded and parent_post.id not in (37696,37697,37749,37833,37838):
-		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body, flags=re.A))
+		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body, re.A))
 		if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
 	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
@@ -174,11 +174,11 @@ def api_comment(v):
 
 	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
 	
-	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
+	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', body, re.M|re.A):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 
 	options = []
-	for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, flags=re.A):
+	for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, re.A):
 		options.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
@@ -249,7 +249,7 @@ def api_comment(v):
 
 	body_html = sanitize(body, comment=True)
 
-	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html, flags=re.A))): return {"error":"You can only type marseys!"}, 403
+	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html, re.A))): return {"error":"You can only type marseys!"}, 403
 
 	if parent_post.id not in (37696,37697,37749,37833,37838):
 		if v.longpost:
@@ -654,20 +654,20 @@ def edit_comment(cid, v):
 
 	if body != c.body or request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		if v.marseyawarded:
-			marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body, flags=re.A))
+			marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body, re.A))
 			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
 		if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
 		elif v.bird and len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
 
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', body, re.M|re.A):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 
 		if v.agendaposter and not v.marseyawarded:
 			body = torture_ap(body, v.username)
 
 		if not c.options:
-			for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, flags=re.A):
+			for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, re.A):
 				body = body.replace(i.group(0), "")
 				c_option = Comment(author_id=AUTOPOLLER_ID,
 					parent_submission=c.parent_submission,
@@ -681,7 +681,7 @@ def edit_comment(cid, v):
 
 		body_html = sanitize(body, edit=True)
 
-		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html, flags=re.A))): return {"error":"You can only type marseys!"}, 403
+		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html, re.A))): return {"error":"You can only type marseys!"}, 403
 
 		if v.longpost:
 			if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403

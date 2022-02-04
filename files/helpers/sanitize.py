@@ -105,14 +105,14 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	sanitized = sanitized.replace("\ufeff", "").replace("𒐪","").replace("<script","").replace('‎','')
 
 	if alert:
-		for i in re.finditer("<p>@((\w|-){1,25})", sanitized, flags=re.A):
+		for i in re.finditer("<p>@((\w|-){1,25})", sanitized, re.A):
 			u = get_user(i.group(1), graceful=True)
 			if u:
 				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img alt="@{u.username}'s profile picture" loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
 	else:
-		sanitized = re.sub('(^|\s|\n|<p>)\/?((r|u)\/(\w|-){3,25})', r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">\2</a>', sanitized, flags=re.A)
+		sanitized = re.sub('(^|\s|\n|<p>)\/?((r|u)\/(\w|-){3,25})', r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">\2</a>', sanitized, re.A)
 
-		for i in re.finditer('(^|\s|\n|<p>)@((\w|-){1,25})', sanitized, flags=re.A):
+		for i in re.finditer('(^|\s|\n|<p>)@((\w|-){1,25})', sanitized, re.A):
 			u = get_user(i.group(2), graceful=True)
 
 			if u and (not g.v.any_block_exists(u) or g.v.admin_level > 1):
@@ -167,7 +167,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 				tag["target"] = "_blank"
 				tag["rel"] = "nofollow noopener noreferrer"
 
-			if re.match("https?://\S+", str(tag.string), flags=re.A):
+			if re.match("https?://\S+", str(tag.string), re.A):
 				try: tag.string = tag["href"]
 				except: tag.string = ""
 
@@ -178,7 +178,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	
 	if comment: marseys_used = set()
 
-	emojis = list(re.finditer("[^a]>\s*(:[!#]{0,2}\w+:\s*)+<\/", sanitized, flags=re.A))
+	emojis = list(re.finditer("[^a]>\s*(:[!#]{0,2}\w+:\s*)+<\/", sanitized, re.A))
 	if len(emojis) > 20: edit = True
 	for i in emojis:
 		old = i.group(0)
@@ -202,7 +202,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			if not edit and random() < 0.005 and 'marsey' in emoji: classes += ' golden'
 
 			if path.isfile(f'files/assets/images/emojis/{remoji}.webp'):
-				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{remoji}.webp" >', new, flags=re.I)
+				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{remoji}.webp" >', new, re.I)
 				if comment: marseys_used.add(emoji)
 					
 		sanitized = sanitized.replace(old, new)
@@ -216,13 +216,13 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			classes = 'emoji mirrored'
 			if not edit and random() < 0.005 and 'marsey' in emoji: classes += ' golden'
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				sanitized = re.sub(f'(?<!"):!{i.group(1).lower()[1:]}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
+				sanitized = re.sub(f'(?<!"):!{i.group(1).lower()[1:]}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, re.I)
 				if comment: marseys_used.add(emoji)
 
 		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 			classes = 'emoji'
 			if not edit and random() < 0.005 and 'marsey' in emoji: classes += ' golden'
-			sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
+			sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, re.I)
 			if comment: marseys_used.add(emoji)
 
 	sanitized = sanitized.replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube")
@@ -282,12 +282,12 @@ def filter_emojis_only(title, edit=False):
 			classes = 'emoji mirrored'
 			if not edit and random() < 0.005 and 'marsey' in emoji: classes += ' golden'
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" src="/static/assets/images/emojis/{emoji}.webp" class="{classes}">', title, flags=re.I)
+				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" src="/static/assets/images/emojis/{emoji}.webp" class="{classes}">', title, re.I)
 
 		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 			classes = 'emoji'
 			if not edit and random() < 0.005 and 'marsey' in emoji: classes += ' golden'
-			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', title, flags=re.I)
+			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', title, re.I)
 
 	if len(title) > 1500: abort(400)
 	else: return title
