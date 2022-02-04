@@ -710,6 +710,7 @@ def thumbnail_thread(pid):
 
 				if existing_comment: break
 
+				print(body_html, flush=True)
 				new_comment = Comment(author_id=NOTIFICATIONS_ID,
 									parent_submission=None,
 									distinguish_level=6,
@@ -730,6 +731,8 @@ def thumbnail_thread(pid):
 				except: continue
 				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html).first()
 				if existing_comment: break
+
+				print(body_html, flush=True)
 				new_comment = Comment(author_id=NOTIFICATIONS_ID,
 									parent_submission=None,
 									distinguish_level=6,
