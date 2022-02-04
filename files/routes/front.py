@@ -92,46 +92,26 @@ def notifications(v):
 	if not posts:
 		listing = []
 		for c in comments:
-			c.is_blocked = False
-			c.is_blocking = False
-			if c.parent_submission and c.parent_comment and c.parent_comment.author_id == v.id:
+			if c.parent_submission:
 				
-				for x in c.replies:
+				if c.replies2 == None: c.replies2 = []
+				for x in c.child_comments:
 					if x.author_id == v.id:
 						x.voted = 1
 						c.replies2.append(x)
-
-				c.replies = []
 
 				while c.parent_comment and c.parent_comment.author_id == v.id:
 					parent = c.parent_comment
-					if c not in parent.replies2:
-						parent.replies2 = parent.replies2 + [c]
-						parent.replies = parent.replies2
+					if parent.replies2 == None: parent.replies2 = [c]
+					elif c not in parent.replies2: parent.replies2.append(c)
 					c = parent
 
-				if c not in listing:
-					listing.append(c)
-					c.replies = c.replies2
-
-			elif c.parent_submission:
-				for x in c.replies:
-					if x.author_id == v.id:
-						x.voted = 1
-						c.replies2.append(x)
-
-				c.replies = []
-
-				if c not in listing:
-					listing.append(c)
-					c.replies = c.replies2
 			else:
-				if c.parent_comment:
-					while c.level > 1:
-						c = c.parent_comment
+				while c.parent_comment:
+					c = c.parent_comment
 
-				if c not in listing:
-					listing.append(c)
+			if c not in listing: listing.append(c)
+
 
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
