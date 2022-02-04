@@ -521,6 +521,7 @@ AWARDS = {
 AWARDS2 = deepcopy(AWARDS)
 for k, val in AWARDS.items():
 	if val['description'] == '???': AWARDS2.pop(k)
+	if SITE == 'pcmemes.net' and k in ('ban','pizza','marsey','bird','grass'): AWARDS2.pop(k)
 
 TROLLTITLES = [
 	"how will @{username} ever recover?",
