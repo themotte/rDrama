@@ -192,7 +192,7 @@ class Submission(Base):
 	@property
 	@lazy
 	def shortlink(self):
-		if self.club: return f"{SITE_FULL}/post/{self.id}"
+		if self.club: return f"/post/{self.id}"
 
 		output = self.title.lower()
 
