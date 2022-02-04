@@ -201,17 +201,17 @@ class Comment(Base):
 		return sorted((x for x in self.child_comments if x.author and not x.author.shadowbanned and x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID)), key=lambda x: x.realupvotes, reverse=True)
 
 	@property
+	def replies3(self):
+		if self.replies2 != None: return self.replies2
+		return sorted((x for x in self.child_comments if x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID)), key=lambda x: x.realupvotes, reverse=True)
+
+	@property
 	def replies2(self):
 		return self.__dict__.get("replies2", None)
 
 	@replies2.setter
 	def replies2(self, value):
 		self.__dict__["replies2"] = value
-
-	@property
-	def replies3(self):
-		if self.replies2 != None: return self.replies2
-		return sorted((x for x in self.child_comments if x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID)), key=lambda x: x.realupvotes, reverse=True)
 
 	@property
 	@lazy
