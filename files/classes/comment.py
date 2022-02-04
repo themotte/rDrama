@@ -223,7 +223,7 @@ class Comment(Base):
 	@property
 	@lazy
 	def shortlink(self):
-		return f"/comment/{self.id}#context"
+		return f"{SITE_FULL}/comment/{self.id}#context"
 
 	@property
 	@lazy

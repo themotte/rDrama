@@ -192,11 +192,6 @@ class Submission(Base):
 	@property
 	@lazy
 	def shortlink(self):
-		return f"/post/{self.id}"
-
-	@property
-	@lazy
-	def permalink(self):
 		if self.club: return f"{SITE_FULL}/post/{self.id}"
 
 		output = self.title.lower()
@@ -210,7 +205,12 @@ class Submission(Base):
 
 		if not output: output = '-'
 
-		return f"{SITE_FULL}/post/{self.id}/{output}"
+		return f"/post/{self.id}/{output}"
+
+	@property
+	@lazy
+	def permalink(self):
+		return SITE_FULL + self.shortlink
 
 	@property
 	@lazy
