@@ -133,6 +133,7 @@ def notifications(v):
 @limiter.limit("3/second;30/minute;400/hour;2000/day")
 @auth_desired
 def front_all(v, hole=None):
+	if hole not in holes: hole = None
 	if g.webview and not session.get("session_id"):
 		session.permanent = True
 		session["session_id"] = secrets.token_hex(49)
