@@ -128,9 +128,11 @@ def notifications(v):
 
 @app.get("/")
 @app.get("/logged_out")
+@app.get("/<hole>")
+@app.get("/logged_out/<hole>")
 @limiter.limit("3/second;30/minute;400/hour;2000/day")
 @auth_desired
-def front_all(v):
+def front_all(v, hole=None):
 	if g.webview and not session.get("session_id"):
 		session.permanent = True
 		session["session_id"] = secrets.token_hex(49)
@@ -162,6 +164,7 @@ def front_all(v):
 					filter_words=v.filter_words if v else [],
 					gt=int(request.values.get("utc_greater_than", 0)),
 					lt=int(request.values.get("utc_less_than", 0)),
+					hole=hole
 					)
 
 	posts = get_posts(ids, v=v)
@@ -243,14 +246,17 @@ def front_all(v):
 			g.db.commit()
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
-	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode)
+	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode, hole=hole)
 
 
 
 @cache.memoize(timeout=86400)
-def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=None, lt=None):
+def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=None, lt=None, hole=None):
 
 	posts = g.db.query(Submission)
+
+	if hole: posts = posts.filter_by(hole=hole)
+	else: posts = posts.filter_by(hole=None)
 
 	if t == 'all': cutoff = 0
 	else:

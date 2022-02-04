@@ -114,7 +114,7 @@
 			</div>
 			<div class="card-body">
 				{% if v %}
-					<a href="/submit">
+					<a href="/submit{% if hole %}/{{hole}}{% endif %}">
 						<input autocomplete="off" type="text" class="form-control"
 						aria-label="Username"
 						aria-describedby="basic-addon1">

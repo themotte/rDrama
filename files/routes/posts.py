@@ -88,10 +88,10 @@ def publish(pid, v):
 	return {"message": "Post published!"}
 
 @app.get("/submit")
+@app.get("/submit/<hole>")
 @auth_required
-def submit_get(v):
-	return render_template("submit.html",
-						   v=v)
+def submit_get(v, hole=None):
+	return render_template("submit.html", v=v, hole=hole)
 
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
@@ -751,9 +751,10 @@ def thumbnail_thread(pid):
 
 
 @app.post("/submit")
+@app.post("/submit/<hole>")
 @limiter.limit("1/second;6/minute;200/hour;1000/day")
 @auth_required
-def submit_post(v):
+def submit_post(v, hole=None):
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
 	
 	if v and v.patron:
@@ -1006,7 +1007,8 @@ def submit_post(v):
 		embed_url=embed,
 		title=title[:500],
 		title_html=title_html,
-		created_utc=int(time.time())	
+		created_utc=int(time.time()),
+		hole=hole
 	)
 
 	g.db.add(new_post)
