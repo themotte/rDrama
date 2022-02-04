@@ -198,6 +198,7 @@ class Comment(Base):
 	@property
 	def replies(self):
 		if self.id == 1313520:
+			print('wtf')
 			print(self.replies2)
 			return []
 		if self.replies2 != None:  return [x for x in self.replies2 if not x.author.shadowbanned]
