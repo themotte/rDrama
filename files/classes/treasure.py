@@ -11,9 +11,7 @@ class Treasure:
 		self.db = g.db
 
 	def check_for_treasure(self, in_text, from_comment):
-		has_gamble_command = '!slots' in in_text or '!blackjack' in in_text
-
-		if not has_gamble_command:
+		if '!slots' not in in_text and '!blackjack' not in in_text:
 			seed = random.randint(1, 1000)
 			is_special = seed == 1000  # 0.1% chance
 			is_standard = seed >= 990  # 1.0% chance
