@@ -197,11 +197,6 @@ class Comment(Base):
 
 	@property
 	def replies(self):
-		print(self.id, flush=True)
-		if self.id == 1313520:
-			print('wtf')
-			print(self.replies2, flush=True)
-			return []
 		if self.replies2 != None:  return [x for x in self.replies2 if not x.author.shadowbanned]
 		return sorted((x for x in self.child_comments if x.author and not x.author.shadowbanned and x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID)), key=lambda x: x.realupvotes, reverse=True)
 
@@ -215,9 +210,8 @@ class Comment(Base):
 
 	@property
 	def replies3(self):
-		r = self.__dict__.get("replies", None)
-		if not r and r != []: r = sorted((x for x in self.child_comments if x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID)), key=lambda x: x.realupvotes, reverse=True)
-		return r
+		if self.replies2 != None: return self.replies2
+		return sorted((x for x in self.child_comments if x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID)), key=lambda x: x.realupvotes, reverse=True)
 
 	@property
 	@lazy
