@@ -244,7 +244,7 @@ def post_id(pid, anything=None, v=None):
 	else:
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
-		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset)
+		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset, hole=p.hole)
 
 @app.post("/viewmore/<pid>/<sort>/<offset>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -1239,7 +1239,7 @@ def submit_post(v, hole=None):
 		if 'megathread' in new_post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
 		if len(body_html) < 40000: new_post.replies = [c]
-		return render_template('submission.html', v=v, p=new_post, sort=sort, render_replies=True, offset=0, success=True)
+		return render_template('submission.html', v=v, p=new_post, sort=sort, render_replies=True, offset=0, success=True, hole=new_post.hole)
 
 
 @app.post("/delete_post/<pid>")

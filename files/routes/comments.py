@@ -127,7 +127,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	else: 
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
-		return render_template(template, v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True)
+		return render_template(template, v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True, hole=post.hole)
 
 @app.post("/comment")
 @limiter.limit("1/second;20/minute;200/hour;1000/day")
