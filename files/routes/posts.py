@@ -742,7 +742,7 @@ def thumbnail_thread(pid):
 				db.add(new_comment)
 				db.flush()
 
-				notif = Notification(comment_id=new_comment.id, user_id=v)
+				notif = Notification(comment_id=new_comment.id, user_id=1)
 				db.add(notif)
 
 
