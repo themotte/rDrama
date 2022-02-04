@@ -237,17 +237,11 @@ def log(v):
 def log_item(id, v):
 
 	try: id = int(id)
-	except:
-		try: id = int(id, 36)
-		except: abort(404)
+	except: abort(404)
 
 	action=g.db.query(ModAction).filter_by(id=id).one_or_none()
 
-	if not action:
-		abort(404)
-
-	if request.path != action.permalink:
-		return redirect(action.permalink)
+	if not action: abort(404)
 
 	admins = [x[0] for x in g.db.query(User.username).filter(User.admin_level > 1).all()]
 

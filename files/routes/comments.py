@@ -34,9 +34,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	if v and request.path.startswith('/logged_out'): v = None
 	
 	try: cid = int(cid)
-	except:
-		try: cid = int(cid, 36)
-		except: abort(404)
+	except: abort(404)
 
 	comment = get_comment(cid, v=v)
 	

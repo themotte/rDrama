@@ -967,9 +967,7 @@ def user_profile_uid(v, id):
 	if v and request.path.startswith('/logged_out'): v = None
 
 	try: id = int(id)
-	except:
-		try: id = int(id, 36)
-		except: abort(404)
+	except: abort(404)
 	x=get_account(id)
 	return redirect(x.profile_url)
 
