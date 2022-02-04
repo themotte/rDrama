@@ -197,6 +197,9 @@ class Comment(Base):
 
 	@property
 	def replies(self):
+		if self.id == 1313520:
+			print(self.replies2)
+			return []
 		if self.replies2 != None:  return [x for x in self.replies2 if not x.author.shadowbanned]
 		return sorted((x for x in self.child_comments if x.author and not x.author.shadowbanned and x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID)), key=lambda x: x.realupvotes, reverse=True)
 
