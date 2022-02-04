@@ -4,7 +4,7 @@ import random
 class Treasure:
 	special_min = 100
 	special_max = 1000
-	standard_min = 10
+	standard_min = 50
 	standard_max = 100
 
 	def __init__(self, g):
