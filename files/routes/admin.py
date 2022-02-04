@@ -35,6 +35,14 @@ def make_admin(v, username):
 	if not user: abort(404)
 	user.admin_level = 2
 	g.db.add(user)
+
+	ma = ModAction(
+		kind="make_admin",
+		user_id=v.id,
+		target_user_id=user.id
+	)
+	g.db.add(ma)
+
 	g.db.commit()
 	return {"message": "User has been made admin!"}
 
@@ -47,6 +55,14 @@ def remove_admin(v, username):
 	if not user: abort(404)
 	user.admin_level = 0
 	g.db.add(user)
+
+	ma = ModAction(
+		kind="remove_admin",
+		user_id=v.id,
+		target_user_id=user.id
+	)
+	g.db.add(ma)
+
 	g.db.commit()
 	return {"message": "Admin removed!"}
 
@@ -88,6 +104,13 @@ def distribute(v, comment):
 	post.body += '\n\nclosed'
 	g.db.add(post)
 	
+	ma = ModAction(
+		kind="distribute",
+		user_id=v.id,
+		target_comment_id=cid
+	)
+	g.db.add(ma)
+
 	g.db.commit()
 	return {"message": f"Each winner has received {coinsperperson} coins!"}
 
@@ -98,6 +121,13 @@ def revert_actions(v, username):
 	user = get_user(username)
 	if not user: abort(404)
 	
+	ma = ModAction(
+		kind="revert",
+		user_id=v.id,
+		target_user_id=user.id
+	)
+	g.db.add(ma)
+
 	cutoff = int(time.time()) - 86400
 
 	posts = [x[0] for x in g.db.query(ModAction.target_submission_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind == 'ban_post').all()]
@@ -149,6 +179,13 @@ def club_allow(v, username):
 		x.club_allowed = True
 		g.db.add(x)
 
+	ma = ModAction(
+		kind="club_allow",
+		user_id=v.id,
+		target_user_id=u.id
+	)
+	g.db.add(ma)
+
 	g.db.commit()
 	return {"message": f"@{username} has been allowed into the {CC_TITLE}!"}
 
@@ -169,6 +206,13 @@ def club_ban(v, username):
 		u.club_allowed = False
 		g.db.add(x)
 
+	ma = ModAction(
+		kind="club_ban",
+		user_id=v.id,
+		target_user_id=u.id
+	)
+	g.db.add(ma)
+
 	g.db.commit()
 	return {"message": f"@{username} has been kicked from the {CC_TITLE}. Deserved."}
 
@@ -182,6 +226,14 @@ def make_meme_admin(v, username):
 		if not user: abort(404)
 		user.admin_level = 1
 		g.db.add(user)
+
+		ma = ModAction(
+			kind="make_meme_admin",
+			user_id=v.id,
+			target_user_id=user.id
+		)
+		g.db.add(ma)
+
 		g.db.commit()
 	return {"message": "User has been made meme admin!"}
 
@@ -195,6 +247,14 @@ def remove_meme_admin(v, username):
 		if not user: abort(404)
 		user.admin_level = 0
 		g.db.add(user)
+
+		ma = ModAction(
+			kind="remove_meme_admin",
+			user_id=v.id,
+			target_user_id=user.id
+		)
+		g.db.add(ma)
+
 		g.db.commit()
 	return {"message": "Meme admin removed!"}
 
@@ -237,6 +297,12 @@ def monthly(v):
 		u = g.db.query(User).filter_by(id=KIPPY_ID).one()
 		u.procoins += 50000
 		g.db.add(u)
+
+	ma = ModAction(
+		kind="monthly",
+		user_id=v.id
+	)
+	g.db.add(ma)
 
 	g.db.commit()
 	
@@ -382,6 +448,13 @@ def disable_signups(v):
 def purge_cache(v):
 	cache.clear()
 	response = str(requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data='{"purge_everything":true}'))
+
+	ma = ModAction(
+		kind="purge_cache",
+		user_id=v.id
+	)
+	g.db.add(ma)
+
 	if response == "<Response [200]>": return {"message": "Cache purged!"}
 	return {"error": "Failed to purge cache."}
 
@@ -454,6 +527,14 @@ def badge_grant_post(v):
 		text = f"@{v.username} has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}"
 		send_notification(user.id, text)
 	
+	ma = ModAction(
+		kind="badge_grant",
+		user_id=v.id,
+		target_user_id=user.id,
+		_note=new_badge.name
+	)
+	g.db.add(ma)
+
 	g.db.commit()
 	return render_template("admin/badge_grant.html", v=v, badge_types=badges, msg="Badge granted!")
 
@@ -483,6 +564,15 @@ def badge_remove_post(v):
 	badge = user.has_badge(badge_id)
 	if badge:
 		g.db.delete(badge)
+
+		ma = ModAction(
+			kind="badge_remove",
+			user_id=v.id,
+			target_user_id=user.id,
+			_note=badge.name
+		)
+		g.db.add(ma)
+
 		g.db.commit()
 	
 	return render_template("admin/badge_remove.html", v=v, badge_types=badges, msg="Badge removed!")
@@ -631,6 +721,14 @@ def admin_link_accounts(v):
 		)
 
 	g.db.add(new_alt)
+
+	ma = ModAction(
+		kind="link_accounts",
+		user_id=v.id,
+		target_user_id=u1,
+		_note=f'with {u2}'
+	)
+	g.db.add(ma)
 
 	g.db.commit()
 	return redirect(f"{SITE_FULL}/admin/alt_votes?u1={g.db.query(User).get(u1).username}&u2={g.db.query(User).get(u2).username}")
@@ -1056,10 +1154,21 @@ def api_distinguish_post(post_id, v):
 
 	if post.author_id != v.id and v.admin_level < 2 : abort(403)
 
-	if post.distinguish_level: post.distinguish_level = 0
-	else: post.distinguish_level = v.admin_level
+	if post.distinguish_level:
+		post.distinguish_level = 0
+		kind = 'undistinguish_post'
+	else:
+		post.distinguish_level = v.admin_level
+		kind = 'distinguish_post'
 
 	g.db.add(post)
+
+	ma = ModAction(
+		kind=kind,
+		user_id=v.id,
+		target_submission_id=post.id
+	)
+	g.db.add(ma)
 
 	g.db.commit()
 
@@ -1081,6 +1190,13 @@ def sticky_post(post_id, v):
 			else: return {"error": "Can't exceed 3 pinned posts limit!"}, 403
 		else: post.stickied = v.username
 		g.db.add(post)
+
+		ma=ModAction(
+			kind="pin_post",
+			user_id=v.id,
+			target_submission_id=post.id
+		)
+		g.db.add(ma)
 
 		if v.id != post.author_id:
 			send_repeatable_notification(post.author_id, f"@{v.username} has pinned your [post](/post/{post_id})!")
@@ -1122,6 +1238,13 @@ def sticky_comment(cid, v):
 	comment = get_comment(cid, v=v)
 	comment.is_pinned = v.username
 	g.db.add(comment)
+
+	ma=ModAction(
+		kind="pin_comment",
+		user_id=v.id,
+		target_comment_id=comment.id
+	)
+	g.db.add(ma)
 
 	if v.id != comment.author_id:
 		message = f"@{v.username} has pinned your [comment]({comment.permalink})!"
@@ -1218,9 +1341,22 @@ def admin_distinguish_comment(c_id, v):
 
 	if comment.author_id != v.id: abort(403)
 
-	comment.distinguish_level = 0 if comment.distinguish_level else v.admin_level
+	if comment.distinguish_level:
+		comment.distinguish_level = 0
+		kind = 'distinguish_comment'
+	else:
+		comment.distinguish_level = v.admin_level
+		kind = 'undistinguish_comment'
 
 	g.db.add(comment)
+
+	ma = ModAction(
+		kind=kind,
+		user_id=v.id,
+		target_comment_id=comment.id
+	)
+	g.db.add(ma)
+
 	g.db.commit()
 
 	if comment.distinguish_level: return {"message": "Comment distinguished!"}
@@ -1230,6 +1366,13 @@ def admin_distinguish_comment(c_id, v):
 @admin_level_required(2)
 def admin_dump_cache(v):
 	cache.clear()
+
+	ma = ModAction(
+		kind="dump_cache",
+		user_id=v.id
+	)
+	g.db.add(ma)
+
 	return {"message": "Internal cache cleared."}
 
 

@@ -502,9 +502,9 @@
 							{% if p.domain == "twitter.com" %}
 								{{p.embed_url | safe}}
 								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
-									<script src="/static/assets/js/twitterlight.js?a=241"></script>
+									<script src="/static/assets/js/twitterlight.js?a=242"></script>
 								{% else %}
-									<script src="/static/assets/js/twitter.js?a=241"></script>
+									<script src="/static/assets/js/twitter.js?a=242"></script>
 								{% endif %}
 							{% elif p.domain in ['youtu.be','youtube.com'] and p.embed_url and p.embed_url.startswith('<lite-youtube') %}
 								{{p.embed_url | safe}}
