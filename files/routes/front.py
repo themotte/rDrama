@@ -95,12 +95,10 @@ def notifications(v):
 			c.is_blocked = False
 			c.is_blocking = False
 			if c.parent_submission and c.parent_comment and c.parent_comment.author_id == v.id:
-
 				for x in c.replies:
 					if x.author_id == v.id:
 						x.voted = 1
-						replies.append(x)
-				c.replies2 = replies
+						c.replies2.append(x)
 
 				c.replies = []
 
@@ -117,11 +115,10 @@ def notifications(v):
 				for x in c.replies:
 					if x.author_id == v.id:
 						x.voted = 1
-						replies.append(x)
-				c.replies2 = replies
+						c.replies2.append(x)
 
 				c.replies = []
-				
+
 				if c not in listing:
 					listing.append(c)
 			else:
