@@ -69,7 +69,7 @@ limiter = Limiter(
 	app,
 	key_func=get_CF,
 	default_limits=["3/second;30/minute;200/hour;1000/day"],
-	application_limits=["10/second;200/minute;5000/hour;12000/day"],
+	application_limits=["10/second;200/minute;5000/hour;10000/day"],
 	storage_uri=environ.get("REDIS_URL", "redis://localhost")
 )
 
