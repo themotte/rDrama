@@ -151,7 +151,6 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	soup = BeautifulSoup(sanitized, features="html.parser")
 
 	for tag in soup.find_all("img"):
-
 		if tag.get("src") and tag.get("class") != ['pp20']:
 			tag["class"] = "in-comment-image"
 			tag["loading"] = "lazy"
