@@ -963,10 +963,13 @@ def handle_blackjack_action(cid, v):
 	action = request.values.get("action", "")
 	blackjack = Blackjack(g)
 
-	if action == 'hit':
-		blackjack.player_hit(comment)
-	elif action == 'stay':
-		blackjack.player_stayed(comment)
+	blackjack_status = comment.blackjack_result.split('_')[3]
+	if blackjack_status == 'activemb': currency = 2
+	else: currency = 1
+
+	if action == 'hit': blackjack.player_hit(comment, currency)
+	elif action == 'stay': blackjack.player_stayed(comment, currency)
+	else: abort(400)
 	
 	g.db.add(comment)
 	g.db.add(v)

@@ -8,7 +8,7 @@ def shuffle(stuff):
 
 class Slots:
 	command_word = "!slots"
-	casino_word = "!casino"
+	casino_word = "!slotsmb"
 	if SITE == 'rdrama.net': minimum_bet = 100
 	else: minimum_bet = 10
 	maximum_bet = INFINITY
