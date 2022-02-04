@@ -1,6 +1,6 @@
 from functools import reduce
 from json.encoder import INFINITY
-from random import shuffle
+import random
 from math import floor
 
 deck_count = 4
@@ -8,6 +8,9 @@ ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K", "A"]
 suits = ["♠️", "♥️", "♣️", "♦️"]
 
 
+def shuffle(x):
+	random.shuffle(x)
+	return x
 
 def deal_initial_cards():
 	deck = shuffle([rank + suit for rank in ranks for suit in suits for _ in range(deck_count)])
@@ -86,7 +89,7 @@ class Blackjack:
 						self.apply_game_result(from_comment, wager, status, 1)
 
 					from_comment.blackjack_result = format_all(player_hand, dealer_hand, rest_of_deck, status, wager)
-		
+
 		if self.casino_word in in_text:
 			for word in in_text.split():
 				if self.casino_word in word:
@@ -103,7 +106,7 @@ class Blackjack:
 					from_user.winnings -= wager_value
 
 					player_hand, dealer_hand, rest_of_deck = deal_initial_cards()
-					status = 'activemb'
+					status = 'mbactive'
 					player_value = get_hand_value(player_hand)
 					dealer_value = get_hand_value(dealer_hand)
 
@@ -111,14 +114,13 @@ class Blackjack:
 						status = 'push'
 						self.apply_game_result(from_comment, wager, status, 2)
 					elif player_value == 21:
-						status = 'blackjack'
+						status = 'mbblackjack'
 						self.apply_game_result(from_comment, wager, status, 2)
 					elif dealer_value == 21:
-						status = 'lost'
+						status = 'mblost'
 						self.apply_game_result(from_comment, wager, status, 2)
 
 					from_comment.blackjack_result = format_all(player_hand, dealer_hand, rest_of_deck, status, wager)
-
 
 	def player_hit(self, from_comment, currency):
 		player_hand, dealer_hand, deck, status, wager = from_comment.blackjack_result.split("_")
@@ -129,13 +131,13 @@ class Blackjack:
 		player_value = get_hand_value(player_hand)
 
 		if player_value == -1:
-			status = 'bust'
+			if currency == 1: status = 'bust'
+			else: status = 'mbbust'
 			self.apply_game_result(from_comment, wager, status, currency)
 
 		from_comment.blackjack_result = format_all(player_hand, dealer_hand, deck, status, wager)
 
-		if (player_value == 21): self.player_stayed(from_comment)
-
+		if (player_value == 21): self.player_stayed(from_comment, currency)
 
 	def player_stayed(self, from_comment, currency):
 		player_hand, dealer_hand, deck, status, wager = from_comment.blackjack_result.split("_")
@@ -150,21 +152,25 @@ class Blackjack:
 			dealer_hand.append(next)
 			dealer_value = get_hand_value(dealer_hand)
 
-		if player_value > dealer_value or dealer_value == -1: status = 'won'
-		elif dealer_value > player_value: status = 'lost'
-		else: status = 'push'
+
+		if player_value > dealer_value or dealer_value == -1:
+			if currency == 1: status = 'won'
+			else: status = 'mbwon'
+		elif dealer_value > player_value:
+			if currency == 1: status = 'lost'
+			else: status = 'mblost'
+		else: status += 'push'
 
 		from_comment.blackjack_result = format_all(player_hand, dealer_hand, deck, status, wager)
 
 		self.apply_game_result(from_comment, wager, status, currency)
 
-
 	def apply_game_result(self, from_comment, wager, result, currency):
 		reward = 0
 
-		if result == 'push': reward = int(wager)
-		elif result == 'won': reward = int(wager) * 2
-		elif result == 'blackjack': reward = floor(int(wager) * (5/2))
+		if result.endswith('push'): reward = int(wager)
+		elif result.endswith('won'): reward = int(wager) * 2
+		elif result.endswith('blackjack'): reward = floor(int(wager) * (5/2))
 
 		if (reward > 0):
 			user = from_comment.author

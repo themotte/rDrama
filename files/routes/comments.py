@@ -282,7 +282,7 @@ def api_comment(v):
 
 	is_bot = bool(request.headers.get("Authorization"))
 
-	if parent_post.id not in (37696,37697,37749,37833,37838) and not is_bot and not v.marseyawarded and AGENDAPOSTER_PHRASE not in body.lower() and len(body) > 10:
+	if '!slots' not in body.lower() and '!blackjack' not in body.lower() and parent_post.id not in (37696,37697,37749,37833,37838) and not is_bot and not v.marseyawarded and AGENDAPOSTER_PHRASE not in body.lower() and len(body) > 10:
 		now = int(time.time())
 		cutoff = now - 60 * 60 * 24
 
@@ -700,7 +700,7 @@ def edit_comment(cid, v):
 			if ban.reason: reason += f" {ban.reason}"	
 		
 			return {'error': reason}, 400
-		if AGENDAPOSTER_PHRASE not in body.lower():
+		if '!slots' not in body.lower() and '!blackjack' not in body.lower() and AGENDAPOSTER_PHRASE not in body.lower():
 			now = int(time.time())
 			cutoff = now - 60 * 60 * 24
 
@@ -964,8 +964,9 @@ def handle_blackjack_action(cid, v):
 	blackjack = Blackjack(g)
 
 	blackjack_status = comment.blackjack_result.split('_')[3]
-	if blackjack_status == 'activemb': currency = 2
-	else: currency = 1
+	if blackjack_status == 'mbactive': currency = 2
+	elif blackjack_status == 'active': currency = 1
+	else: abort(400)
 
 	if action == 'hit': blackjack.player_hit(comment, currency)
 	elif action == 'stay': blackjack.player_stayed(comment, currency)
