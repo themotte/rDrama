@@ -106,6 +106,7 @@ def notifications(v):
 					elif c not in parent.replies2: parent.replies2.append(c)
 					c = parent
 
+				if c.replies2 == None: c.replies2 = []
 			else:
 				while c.parent_comment:
 					c = c.parent_comment
