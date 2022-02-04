@@ -91,7 +91,7 @@ def publish(pid, v):
 @app.get("/submit/<hole>")
 @auth_required
 def submit_get(v, hole=None):
-	if hole not in holes: hole = None
+	if hole and hole not in holes: hole = None
 	return render_template("submit.html", v=v, hole=hole)
 
 @app.get("/post/<pid>")
@@ -756,7 +756,7 @@ def thumbnail_thread(pid):
 @limiter.limit("1/second;6/minute;200/hour;1000/day")
 @auth_required
 def submit_post(v, hole=None):
-	if hole not in holes: hole = None
+	if hole and hole not in holes: hole = None
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
 	
 	if v and v.patron:
