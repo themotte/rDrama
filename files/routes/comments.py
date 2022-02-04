@@ -552,30 +552,32 @@ def api_comment(v):
 
 			if parent.author.id != v.id and PUSHER_ID:
 				if len(c.body) > 500: notifbody = c.body[:500] + '...'
-				else: notifbody = c.body or 'no body'
+				else: notifbody = c.body
 
-				beams_client.publish_to_interests(
-					interests=[f'{request.host}{parent.author.id}'],
-					publish_body={
-						'web': {
-							'notification': {
-								'title': f'New reply by @{c.author_name}',
-								'body': notifbody,
-								'deep_link': f'{SITE_FULL}/comment/{c.id}?context=8&read=true#context',
-								'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1009',
+				try:
+					beams_client.publish_to_interests(
+						interests=[f'{request.host}{parent.author.id}'],
+						publish_body={
+							'web': {
+								'notification': {
+									'title': f'New reply by @{c.author_name}',
+									'body': notifbody,
+									'deep_link': f'{SITE_FULL}/comment/{c.id}?context=8&read=true#context',
+									'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1009',
+								}
+							},
+							'fcm': {
+								'notification': {
+									'title': f'New reply by @{c.author_name}',
+									'body': notifbody,
+								},
+								'data': {
+									'url': f'/comment/{c.id}?context=8&read=true#context',
+								}
 							}
 						},
-						'fcm': {
-							'notification': {
-								'title': f'New reply by @{c.author_name}',
-								'body': notifbody,
-							},
-							'data': {
-								'url': f'/comment/{c.id}?context=8&read=true#context',
-							}
-						}
-					},
-				)
+					)
+				except: pass
 
 
 	vote = CommentVote(user_id=v.id,

@@ -494,28 +494,30 @@ def message2(v, username):
 		if len(message) > 500: notifbody = message[:500] + '...'
 		else: notifbody = message
 
-		beams_client.publish_to_interests(
-			interests=[f'{request.host}{user.id}'],
-			publish_body={
-				'web': {
-					'notification': {
-						'title': f'New message from @{v.username}',
-						'body': notifbody,
-						'deep_link': f'{SITE_FULL}/notifications?messages=true',
-						'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1009',
+		try:
+			beams_client.publish_to_interests(
+				interests=[f'{request.host}{user.id}'],
+				publish_body={
+					'web': {
+						'notification': {
+							'title': f'New message from @{v.username}',
+							'body': notifbody,
+							'deep_link': f'{SITE_FULL}/notifications?messages=true',
+							'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1009',
+						}
+					},
+					'fcm': {
+						'notification': {
+							'title': f'New message from @{v.username}',
+							'body': notifbody,
+						},
+						'data': {
+							'url': '/notifications?messages=true',
+						}
 					}
 				},
-				'fcm': {
-					'notification': {
-						'title': f'New message from @{v.username}',
-						'body': notifbody,
-					},
-					'data': {
-						'url': '/notifications?messages=true',
-					}
-				}
-			},
-		)
+			)
+		except: pass
 
 	g.db.commit()
 
@@ -562,28 +564,30 @@ def messagereply(v):
 			if len(message) > 500: notifbody = message[:500] + '...'
 			else: notifbody = message
 			
-			beams_client.publish_to_interests(
-				interests=[f'{request.host}{user_id}'],
-				publish_body={
-					'web': {
-						'notification': {
-							'title': f'New message from @{v.username}',
-							'body': notifbody,
-							'deep_link': f'{SITE_FULL}/notifications?messages=true',
-							'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp"a=1008',
+			try:
+				beams_client.publish_to_interests(
+					interests=[f'{request.host}{user_id}'],
+					publish_body={
+						'web': {
+							'notification': {
+								'title': f'New message from @{v.username}',
+								'body': notifbody,
+								'deep_link': f'{SITE_FULL}/notifications?messages=true',
+								'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp"a=1008',
+							}
+						},
+						'fcm': {
+							'notification': {
+								'title': f'New message from @{v.username}',
+								'body': notifbody,
+							},
+							'data': {
+								'url': '/notifications?messages=true',
+							}
 						}
 					},
-					'fcm': {
-						'notification': {
-							'title': f'New message from @{v.username}',
-							'body': notifbody,
-						},
-						'data': {
-							'url': '/notifications?messages=true',
-						}
-					}
-				},
-			)
+				)
+			except: pass
 
 
 	if new_comment.top_comment.sentto == 0:
