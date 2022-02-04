@@ -627,7 +627,8 @@ CREATE TABLE public.submissions (
     realupvotes integer,
     flair character varying(350),
     stickied_utc integer,
-    ghost boolean
+    ghost boolean,
+    hole character varying(20)
 );
 
 
