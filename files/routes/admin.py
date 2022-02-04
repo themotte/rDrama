@@ -795,7 +795,7 @@ def agendaposter(user_id, v):
 	if expiry:
 		expiry = float(expiry)
 		expiry = g.timestamp + expiry*60*60*24
-	else: expiry = 0
+	else: expiry = g.timestamp + 2629746
 
 	user.agendaposter = not user.agendaposter
 	user.agendaposter_expires_utc = expiry
