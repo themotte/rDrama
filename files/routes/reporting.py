@@ -67,14 +67,14 @@ def remove_report(report_fn, v):
 	if report_fn.startswith('c'):
 		report = g.db.query(CommentFlag).filter_by(id=int(report_fn.lstrip('c'))).one_or_none()
 		ma=ModAction(
-			kind="delete_report_comment",
+			kind="delete_report",
 			user_id=v.id,
 			target_comment_id=report.comment_id
 		)
 	elif report_fn.startswith('p'):
 		report = g.db.query(Flag).filter_by(id=int(report_fn.lstrip('p'))).one_or_none()
 		ma=ModAction(
-			kind="delete_report_post",
+			kind="delete_report",
 			user_id=v.id,
 			target_submission_id=report.post_id
 		)
