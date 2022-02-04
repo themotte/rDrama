@@ -386,7 +386,7 @@ def changeloglist(v=None, sort="new", page=1 ,t="all"):
 			Submission.author_id.notin_(blocked)
 		)
 
-	admins = [x[0] for x in g.db.query(User.id).filter(User.admin_level > 1).all()]
+	admins = [x[0] for x in g.db.query(User.id).filter(User.admin_level > 0).all()]
 	posts = posts.filter(Submission.title.ilike('_changelog%'), Submission.author_id.in_(admins))
 
 	if t != 'all':
