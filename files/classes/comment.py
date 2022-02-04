@@ -197,6 +197,7 @@ class Comment(Base):
 
 	@property
 	def replies(self):
+		print(self.id)
 		if self.id == 1313520:
 			print('wtf')
 			print(self.replies2)
