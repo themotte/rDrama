@@ -100,7 +100,7 @@ def notifications(v):
 						x.voted = 1
 						c.replies2.append(x)
 
-				while c.parent_comment and c.parent_comment.author_id == v.id:
+				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment in comments):
 					parent = c.parent_comment
 					if parent.replies2 == None: parent.replies2 = [c]
 					elif c not in parent.replies2: parent.replies2.append(c)
