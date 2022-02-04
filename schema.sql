@@ -813,7 +813,8 @@ CREATE TABLE public.users (
     winnings integer,
     patron_utc integer,
     rehab integer,
-    nwordpass boolean
+    nwordpass boolean,
+    house character varying(8)
 );
 
 
