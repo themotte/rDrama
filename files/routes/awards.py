@@ -56,8 +56,6 @@ AWARDS3 = {
 @app.get("/settings/shop")
 @auth_required
 def shop(v):
-	if request.host == 'pcmemes.net': abort(403)
-
 	AWARDS = deepcopy(AWARDS2)
 
 	for val in AWARDS.values(): val["owned"] = 0
@@ -87,8 +85,6 @@ def shop(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def buy(v, award):
-	if request.host == 'pcmemes.net': abort(403)
-
 	if award == 'benefactor' and not request.values.get("mb"):
 		return {"error": "You can only buy the Benefactor award with marseybux."}, 403
 
@@ -196,8 +192,6 @@ def buy(v, award):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def award_post(pid, v):
-	if request.host == 'pcmemes.net': abort(403)
-
 	if v.shadowbanned: return render_template('errors/500.html', err=True, v=v), 500
 	
 	kind = request.values.get("kind", "").strip()
@@ -436,8 +430,6 @@ def award_post(pid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def award_comment(cid, v):
-	if request.host == 'pcmemes.net': abort(403)
-
 	if v.shadowbanned: return render_template('errors/500.html', err=True, v=v), 500
 
 	kind = request.values.get("kind", "").strip()
