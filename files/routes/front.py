@@ -98,7 +98,7 @@ def notifications(v):
 				for x in c.child_comments:
 					if x.author_id == v.id:
 						x.voted = 1
-						c.replies2.append(x)
+						if x not in c.replies2: c.replies2.append(x)
 
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment in comments):
 					parent = c.parent_comment
