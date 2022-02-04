@@ -1,6 +1,5 @@
 import random
 
-
 class Treasure:
 	special_min = 100
 	special_max = 1000
@@ -21,17 +20,13 @@ class Treasure:
 				amount = random.randint(self.special_min, self.special_max)
 			elif is_standard:
 				amount = random.randint(self.standard_min, self.standard_max)
-
-				# Mimic: 25% chance
-				if random.randint(1, 100) > 75:
-					amount = -amount
+				if random.randint(1, 100) > 75: amount = -amount
 
 			if amount != 0:
 				user = from_comment.author
 				user.coins += amount
 
-				if user.coins < 0:
-					user.coins = 0
+				if user.coins < 0: user.coins = 0
 
 				from_comment.treasure_amount = str(amount)
 
