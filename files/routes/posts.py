@@ -88,18 +88,22 @@ def publish(pid, v):
 	return {"message": "Post published!"}
 
 @app.get("/submit")
-@app.get("/submit/<hole>")
+@app.get("/s/<sub>/submit")
 @auth_required
-def submit_get(v, hole=None):
-	if hole and hole not in holes: hole = None
-	return render_template("submit.html", v=v, hole=hole)
+def submit_get(v, sub=None):
+	if sub and sub not in subs: sub = None
+	return render_template("submit.html", v=v, sub=sub)
 
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
 @app.get("/logged_out/post/<pid>")
 @app.get("/logged_out/post/<pid>/<anything>")
+@app.get("/s/<sub>/post/<pid>")
+@app.get("/s/<sub>/post/<pid>/<anything>")
+@app.get("/logged_out/s/<sub>/post/<pid>")
+@app.get("/logged_out/s/<sub>/post/<pid>/<anything>")
 @auth_desired
-def post_id(pid, anything=None, v=None):
+def post_id(pid, anything=None, v=None, sub=None):
 	if not v and not request.path.startswith('/logged_out') and not request.headers.get("Authorization"):
 		return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
 
@@ -244,7 +248,7 @@ def post_id(pid, anything=None, v=None):
 	else:
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
-		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset, hole=post.hole)
+		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset, sub=post.sub)
 
 @app.post("/viewmore/<pid>/<sort>/<offset>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -752,11 +756,11 @@ def thumbnail_thread(pid):
 
 
 @app.post("/submit")
-@app.post("/submit/<hole>")
+@app.post("/s/<sub>/submit")
 @limiter.limit("1/second;6/minute;200/hour;1000/day")
 @auth_required
-def submit_post(v, hole=None):
-	if hole and hole not in holes: hole = None
+def submit_post(v, sub=None):
+	if sub and sub not in subs: sub = None
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
 	
 	if v and v.patron:
@@ -1010,7 +1014,7 @@ def submit_post(v, hole=None):
 		title=title[:500],
 		title_html=title_html,
 		created_utc=int(time.time()),
-		hole=hole
+		sub=sub
 	)
 
 	g.db.add(new_post)
@@ -1239,7 +1243,7 @@ def submit_post(v, hole=None):
 		if 'megathread' in new_post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
 		if len(body_html) < 40000: new_post.replies = [c]
-		return render_template('submission.html', v=v, p=new_post, sort=sort, render_replies=True, offset=0, success=True, hole=new_post.hole)
+		return render_template('submission.html', v=v, p=new_post, sort=sort, render_replies=True, offset=0, success=True, sub=new_post.sub)
 
 
 @app.post("/delete_post/<pid>")

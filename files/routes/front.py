@@ -128,12 +128,12 @@ def notifications(v):
 
 @app.get("/")
 @app.get("/logged_out")
-@app.get("/<hole>")
-@app.get("/logged_out/<hole>")
+@app.get("/s/<sub>")
+@app.get("/logged_out/s/<sub>")
 @limiter.limit("3/second;30/minute;400/hour;2000/day")
 @auth_desired
-def front_all(v, hole=None):
-	if hole and hole not in holes: hole = None
+def front_all(v, sub=None):
+	if sub and sub not in subs: sub = None
 	if g.webview and not session.get("session_id"):
 		session.permanent = True
 		session["session_id"] = secrets.token_hex(49)
@@ -165,7 +165,7 @@ def front_all(v, hole=None):
 					filter_words=v.filter_words if v else [],
 					gt=int(request.values.get("utc_greater_than", 0)),
 					lt=int(request.values.get("utc_less_than", 0)),
-					hole=hole
+					sub=sub
 					)
 
 	posts = get_posts(ids, v=v)
@@ -247,17 +247,17 @@ def front_all(v, hole=None):
 			g.db.commit()
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
-	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode, hole=hole)
+	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode, sub=sub)
 
 
 
 @cache.memoize(timeout=86400)
-def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=None, lt=None, hole=None):
+def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=None, lt=None, sub=None):
 
 	posts = g.db.query(Submission)
 
-	if hole: posts = posts.filter_by(hole=hole)
-	else: posts = posts.filter_by(hole=None)
+	if sub: posts = posts.filter_by(sub=sub)
+	else: posts = posts.filter_by(sub=None)
 
 	if t == 'all': cutoff = 0
 	else:
@@ -327,8 +327,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 
 	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false":
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
-		if hole: pins = pins.filter_by(hole=hole)
-		else: pins = pins.filter_by(hole=None)
+		if sub: pins = pins.filter_by(sub=sub)
+		else: pins = pins.filter_by(sub=None)
 		if v and v.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
 			blocked = [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]

@@ -80,7 +80,7 @@ class ModAction(Base):
 	@lazy
 	def string(self):
 
-		output =  ACTIONTYPES[self.kind]["str"].format(self=self)
+		output =  ACTIONTYPES[self.kind]["str"].format(self=self, cc=cc)
 
 		if self.note: output += f" <i>({self.note})</i>"
 

@@ -29,7 +29,7 @@ class Submission(Base):
 	distinguish_level = Column(Integer, default=0)
 	stickied = Column(String)
 	stickied_utc = Column(Integer)
-	hole = Column(String)
+	sub = Column(String)
 	is_pinned = Column(Boolean, default=False)
 	private = Column(Boolean, default=False)
 	club = Column(Boolean, default=False)
@@ -193,20 +193,19 @@ class Submission(Base):
 	@property
 	@lazy
 	def shortlink(self):
-		if self.club: return f"/post/{self.id}"
+		link = f"/post/{self.id}"
+		if self.sub: link = f"/s/{self.sub}{link}"
+
+		if self.club: return link
 
 		output = self.title.lower()
-
 		output = re.sub('&\w{2,3};', '', output, re.A)
-
 		output = [re.sub('\W', '', word, re.A) for word in output.split()]
 		output = [x for x in output if x][:6]
-
 		output = '-'.join(output)
-
 		if not output: output = '-'
 
-		return f"/post/{self.id}/{output}"
+		return f"{link}/{output}"
 
 	@property
 	@lazy
