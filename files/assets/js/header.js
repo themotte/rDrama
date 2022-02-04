@@ -40,3 +40,7 @@ function post_toast(url, reload, data) {
 	xhr.send(form);
 
 }
+
+function changename(s1,s2) {
+	document.getElementById(s1).innerHTML = document.getElementById(s2).files[0].name.substr(0, 20);
+}

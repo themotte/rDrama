@@ -29,8 +29,8 @@ document.onpaste = function(event) {
 document.getElementById('file-upload').addEventListener('change', function(){
 	f=document.getElementById('file-upload');
 	document.getElementById('urlblock').classList.add('d-none');
-	document.getElementById('filename-show').textContent = document.getElementById('file-upload').files[0].name;
-	filename = f.files[0].name.toLowerCase()
+	document.getElementById('filename-show').textContent = document.getElementById('file-upload').files[0].name.substr(0, 20);
+	filename = f.files[0].name.toLowerCase().substr(0, 20)
 	if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".webp"))
 	{
 		var fileReader = new FileReader();

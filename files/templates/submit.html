@@ -141,7 +141,7 @@
 																
 												<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-submit">
 													<div id="filename-show-submit"><i class="far fa-image"></i></div>
-													<input autocomplete="off" id="file-upload-submit" type="file" name="file2" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-submit').innerHTML='image/video';" hidden>
+													<input autocomplete="off" id="file-upload-submit" type="file" name="file2" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-submit','file-upload-submit')" hidden>
 												</label>		
 
 												<pre></pre>
@@ -241,7 +241,7 @@
 
 		<script src="/static/assets/js/marked.js?a=240"></script>
 		<script src="/static/assets/js/formatting.js?a=240"></script>
-		<script src="/static/assets/js/submit.js?a=240"></script>
+		<script src="/static/assets/js/submit.js?a=242"></script>
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
 
