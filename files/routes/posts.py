@@ -702,7 +702,7 @@ def thumbnail_thread(pid):
 
 	if SITE == 'rdrama.net':
 		for t in ("submission","comment"):
-			for term in ('rdrama','freeghettohoes.biz','marsey'):
+			for term in ('rdrama'):
 				for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={term}&size=10').json()["data"]:
 
 					body_html = sanitize(f'New rdrama mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
