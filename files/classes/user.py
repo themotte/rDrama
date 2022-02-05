@@ -152,7 +152,7 @@ class User(Base):
 
 	@lazy
 	def mods(self, sub):
-		return g.db.query(Mod.user_id).filter_by(user_id=self.id, sub=sub).one_or_none()
+		return self.admin_level > 1 or g.db.query(Mod.user_id).filter_by(user_id=self.id, sub=sub).one_or_none()
 
 	@property
 	@lazy
