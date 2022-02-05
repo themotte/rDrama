@@ -19,7 +19,6 @@ import random
 from os import environ, remove, path
 
 defaulttheme = environ.get("DEFAULT_THEME", "midnight").strip()
-defaultcolor = environ.get("DEFAULT_COLOR", "fff").strip()
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 cardview = bool(int(environ.get("CARD_VIEW", 1)))
 
@@ -33,13 +32,13 @@ class User(Base):
 
 	id = Column(Integer, primary_key=True)
 	username = Column(String)
-	namecolor = Column(String, default=defaultcolor)
+	namecolor = Column(String, default=DEFAULT_COLOR)
 	background = Column(String)
 	customtitle = Column(String)
 	customtitleplain = deferred(Column(String))
-	titlecolor = Column(String, default=defaultcolor)
+	titlecolor = Column(String, default=DEFAULT_COLOR)
 	theme = Column(String, default=defaulttheme)
-	themecolor = Column(String, default=defaultcolor)
+	themecolor = Column(String, default=DEFAULT_COLOR)
 	cardview = Column(Boolean, default=cardview)
 	song = Column(String)
 	highres = Column(String)

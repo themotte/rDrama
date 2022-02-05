@@ -7,8 +7,6 @@ from files.__main__ import app, limiter, cache
 from sqlalchemy.orm import joinedload
 from os import environ
 
-defaultcolor = environ.get("DEFAULT_COLOR").strip()
-
 @app.get("/votes")
 @limiter.limit("5/second;60/minute;200/hour;1000/day")
 @auth_required
@@ -104,7 +102,7 @@ def api_vote_post(post_id, new, v):
 		post.author.coins += 1
 		post.author.truecoins += 1
 		g.db.add(post.author)
-		real = new == -1 or (not v.agendaposter and not v.shadowbanned and (bool(v.profileurl) or bool(v.customtitle) or v.namecolor != defaultcolor))
+		real = new == -1 or (not v.agendaposter and not v.shadowbanned and (bool(v.profileurl) or bool(v.customtitle) or v.namecolor != DEFAULT_COLOR))
 		vote = Vote(user_id=v.id,
 					vote_type=new,
 					submission_id=post_id,
@@ -167,7 +165,7 @@ def api_vote_comment(comment_id, new, v):
 		comment.author.coins += 1
 		comment.author.truecoins += 1
 		g.db.add(comment.author)
-		real = new == -1 or (not v.agendaposter and not v.shadowbanned and (bool(v.profileurl) or bool(v.customtitle) or v.namecolor != defaultcolor))
+		real = new == -1 or (not v.agendaposter and not v.shadowbanned and (bool(v.profileurl) or bool(v.customtitle) or v.namecolor != DEFAULT_COLOR))
 		vote = CommentVote(user_id=v.id,
 						vote_type=new,
 						comment_id=comment_id,
