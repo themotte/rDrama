@@ -1,8 +1,16 @@
+
 <nav class="shadow shadow-md fixed-top">
 	{% if SITE_NAME == 'Drama' %}
+		<style>
+			body {padding-top: 90px !important}
+		</style>
 		<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: center; font-weight: bold;white-space:nowrap">
 			<a style="color: white" class="text-small-mobile" href="https://reddit.com/r/SubredditDrama">💖🌈 welcome to rdrama.net: the official site for r/subredditdrama</a>
 		</div>
+	{% else %}
+		<style>
+			body {padding-top: 65px !important}
+		</style>
 	{% endif %}
 	<div class="navbar navbar-expand-md navbar-light" id="navbar">
 		<div class="container-fluid" style="padding:0;">
