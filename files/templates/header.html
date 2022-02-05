@@ -8,7 +8,7 @@
 		<div class="container-fluid" style="padding:0;">
 			<div class="flex-grow-1">
 				<a href="/" class="navbar-brand mr-auto">
-					{% if True %}
+					{% if request.host == 'rdrama.net' %}
 						{% set icon = ('marseyblm','marseykween','marseydynamite','marseyblack','marseymyeisha','marseyetika','marseyobama','marseyblackcop','marseysosa','marseyblackface')|random() %}
 						<img alt="header icon" height=35 src="/static/assets/images/emojis/{{icon}}.webp?a=1008">
 					{% else %}
