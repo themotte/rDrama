@@ -169,10 +169,16 @@ class Comment(Base):
 			years = int(months / 12)
 			return f"{years}yr ago"
 
-	@property
-	@lazy
-	def score(self):
-		return self.upvotes - self.downvotes
+	if SITE_NAME == 'Too4You':
+		@property
+		@lazy
+		def score(self):
+			return self.upvotes
+	else:
+		@property
+		@lazy
+		def score(self):
+			return self.upvotes - self.downvotes
 
 	@property
 	@lazy

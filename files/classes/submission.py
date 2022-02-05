@@ -180,10 +180,16 @@ class Submission(Base):
 		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.edited_utc)))
 
 
-	@property
-	@lazy
-	def score(self):
-		return self.upvotes - self.downvotes
+	if SITE_NAME == 'Too4You':
+		@property
+		@lazy
+		def score(self):
+			return self.upvotes
+	else:
+		@property
+		@lazy
+		def score(self):
+			return self.upvotes - self.downvotes
 
 	@property
 	@lazy
