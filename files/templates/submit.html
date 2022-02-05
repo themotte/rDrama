@@ -63,7 +63,7 @@
 
 		
 		<div class="submit-grid-view">
-			<form id="submitform" action="{% if sub %}/s/{{sub}}{% endif %}/submit" method="post" enctype="multipart/form-data" style="grid-column: 2">
+			<form id="submitform" action="{% if sub %}/s/{{sub.name}}{% endif %}/submit" method="post" enctype="multipart/form-data" style="grid-column: 2">
 
 				<div class="container">
 
@@ -88,7 +88,7 @@
 																general
 															</option>
 															{% for s in SUBS %}
-																<option value="{{s}}" {% if sub == s %}selected{% endif %}>
+																<option value="{{s}}" {% if sub.name == s %}selected{% endif %}>
 																	/s/{{s}}
 																</option>
 															{% endfor %}

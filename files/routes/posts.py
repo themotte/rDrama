@@ -93,8 +93,7 @@ def publish(pid, v):
 def submit_get(v, sub=None):
 	if sub: sub = g.db.query(Sub.name).filter_by(name=sub).one_or_none()
 	
-	if sub: sub = sub[0]
-	elif request.path.startswith('/s/'): abort(404)
+	if request.path.startswith('/s/') and not sub: abort(404)
 
 	return render_template("submit.html", v=v, sub=sub)
 
