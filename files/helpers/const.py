@@ -229,6 +229,8 @@ else:
 
 PUSHER_ID = environ.get("PUSHER_ID", "").strip()
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
+DEFAULT_COLOR = environ.get("DEFAULT_COLOR", "fff").strip()
+COLORS = {'ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58', DEFAULT_COLOR}
 
 AWARDS = {
 	"snow": {
@@ -564,5 +566,5 @@ FORTUNE_REPLIES = ('<b style="color:#6023f8">Your fortune: Allah Wills It</b>','
 
 no_pass_phrase = """<p>Sorry whiteboy, we're gonna need to see some ID before you start throwin that word around like it's nothing.\n\nTake a 10 minute time-out and come back when you've learned your lesson and/or paid reparations (by purchasing a BIPOC Approved™ Rdrama NWord Pass© from the <a href="/shop">shop</a>) \n\n<em>This is an automated message; if you need help, you can message us <a href="/contact">here</a>.</em></p>"""
 
-if SITE == 'rdrama.net': subs = ('2balkan4u','2middleeast4u')
+if SITE == 'rdrama.net': subs = ('2balkan4you','2middleeast4you')
 else: subs = ()

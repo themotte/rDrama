@@ -12,15 +12,15 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 	<meta name="author" content="">
-	<meta name="thumbnail" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1008">
+	<meta name="thumbnail" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1009">
 	<link rel="icon" type="image/png" href="/static/assets/images/{{SITE_NAME}}/icon.webp?a=1009">
 
 	<meta property="og:type" content="article" >
 	<meta property="og:title" content="{{SITE_NAME}}" >
 	<meta property="og:site_name" content="{{request.host}}" >
-	<meta property="og:image" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1008" >
+	<meta property="og:image" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1009" >
 	<meta property="og:url" content="{{SITE_FULL}}{{request.full_path}}">
-	<meta property="og:description" name="description" content="{{SITE_NAME}} - {{config('SLOGAN')}}">
+	<meta property="og:description" name="description" content="{{SITE_NAME}} - {{config('DESCRIPTION')}}">
 	<meta property="og:author" name="author" content="{{SITE_FULL}}/" >
 	<meta property="og:site_name" content="{{request.host}}" >
 
@@ -28,8 +28,8 @@
 	<meta name="twitter:site" content="{{SITE_FULL}}/">
 	<meta name="twitter:title" content="{{SITE_NAME}}" >
 	<meta name="twitter:creator" content="{{SITE_FULL}}/">
-	<meta name="twitter:description" content="{{SITE_NAME}} - {{config('SLOGAN')}}" >
-	<meta name="twitter:image" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1008" >
+	<meta name="twitter:description" content="{{SITE_NAME}} - {{config('DESCRIPTION')}}" >
+	<meta name="twitter:image" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1009" >
 	<meta name="twitter:url" content="{{SITE_FULL}}{{request.full_path}}" >
 
 
@@ -39,10 +39,10 @@
 	
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=107"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=15">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=108"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=15">
 	{% else %}
 		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=107"><link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?a=15">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=108"><link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?a=15">
 	{% endif %}
 </head>
 
