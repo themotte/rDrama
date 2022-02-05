@@ -91,9 +91,10 @@ def publish(pid, v):
 @app.get("/s/<sub>/submit")
 @auth_required
 def submit_get(v, sub=None):
-	sub = g.db.query(Sub.name).filter_by(name=sub).one_or_none()
+	if sub: sub = g.db.query(Sub.name).filter_by(name=sub).one_or_none()
+	
 	if sub: sub = sub[0]
-	else: sub = None
+	elif request.path.startswith('/s/'): abort(404)
 
 	return render_template("submit.html", v=v, sub=sub)
 
