@@ -146,10 +146,8 @@ a {
 	color: var(--black2) !important;
 }
 
-.post-body * {
-    margin-left:10px;
-    margin-top:10px;
-    margin-right:10px;
+.post-text {
+	margin: 15px;
 }
 
 .anchor.comment {
@@ -496,4 +494,10 @@ a.nav-link:hover {
 
 .tooltip {
     color:black !important;
+}
+
+#frontpage .btn.btn-secondary.text-small-m {
+	color: #ff0 !important;
+	text-shadow: -1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000 !important;
+	background: transparent !important;
 }
