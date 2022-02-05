@@ -503,7 +503,7 @@ def message2(v, username):
 							'title': f'New message from @{v.username}',
 							'body': notifbody,
 							'deep_link': f'{SITE_FULL}/notifications?messages=true',
-							'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1009',
+							'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1010',
 						}
 					},
 					'fcm': {
