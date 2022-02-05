@@ -79,21 +79,22 @@
 
 												<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 
+												{% if SUBS %}
+													<label class='mt-4' for="title">Sub</label>
 
-												<label class='mt-4' for="title">Sub</label>
-
-												<div class="input-group mb2">
-													<select autocomplete="off" id='sub' class="form-control" form="submitform" name="sub">
-														<option {% if not sub %}selected{% endif %}>
-															general
-														</option>
-														{% for s in SUBS %}
-															<option value="{{s}}" {% if sub == s %}selected{% endif %}>
-																/s/{{s}}
+													<div class="input-group mb2">
+														<select autocomplete="off" id='sub' class="form-control" form="submitform" name="sub">
+															<option {% if not sub %}selected{% endif %}>
+																general
 															</option>
-														{% endfor %}
-													</select>
-												</div>
+															{% for s in SUBS %}
+																<option value="{{s}}" {% if sub == s %}selected{% endif %}>
+																	/s/{{s}}
+																</option>
+															{% endfor %}
+														</select>
+													</div>
+												{% endif %}
 						
 												<label class='mt-4' for="title">Post Title</label>
 
