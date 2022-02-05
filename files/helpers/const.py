@@ -571,3 +571,15 @@ no_pass_phrase = """<p>Sorry whiteboy, we're gonna need to see some ID before yo
 db = db_session()
 SUBS = [x[0] for x in db.query(Sub.name).all()]
 db.close()
+
+ROLES={
+	"owner": "864612849199480914",
+	"admin": "879459632656048180" if environ.get("DOMAIN") == "pcmemes.net" else "846509661288267776",
+	"linked": "890342909390520382",
+	"1": "868129042346414132",
+	"2": "875569477671067688",
+	"3": "869434199575236649",
+	"4": "868140288013664296",
+	"5": "880445545771044884",
+	"8": "886781932430565418",
+	}
