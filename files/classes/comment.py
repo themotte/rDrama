@@ -342,7 +342,7 @@ class Comment(Base):
 			if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
 			elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
-			if v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+			if v.nitter and not '/i/spaces/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
 		if v and v.controversial:
 			for i in re.finditer('(/comments/.*?)"', body):
@@ -393,7 +393,7 @@ class Comment(Base):
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
-		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+		if v and v.nitter and not '/i/spaces/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
 		if v and v.controversial:
 			for i in re.finditer('(/comments/.*?)"', body):

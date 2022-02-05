@@ -29,7 +29,7 @@ function loadEmojis(form) {
 					
 				'wolf': ['wolfcumjar','wolflgbt','wolfmarseyhead','wolfnoir','wolfsherifssmoking','wolftrans','wolfvaporwave','wolfangry','wolfbrains','wolfcry','wolfdead','wolfdevilish','wolffacepalm','wolfhappy','wolfidea','wolfkoala','wolflaugh','wolflove','wolfmeditate','wolfphone','wolfrainbow','wolfroses','wolfsad','wolfsfear','wolfsleep','wolftear','wolfthink','wolfthumbsup','wolfupsidedown','wolfvictory','wolfwave','wolfwink'],
 		
-				'misc': ['sigmatalking','zoroarkconfused','zoroarkhappy','zoroarkpout','zoroarksleepy','casanovanova','deuxwaifu','flairlessmong','hardislife','redditgigachad','rfybear','etika','sneed','retardedchildren','bruh','autism','doot','kylieface','queenyes','wholesomeseal','chadyescapy','gigachadglow','gigachadorthodox','gigachad','gigachad2','gigachad3']
+				'misc': ['yotsubafish','yotsubalol','sigmatalking','zoroarkconfused','zoroarkhappy','zoroarkpout','zoroarksleepy','casanovanova','deuxwaifu','flairlessmong','hardislife','redditgigachad','rfybear','etika','sneed','retardedchildren','bruh','autism','doot','kylieface','queenyes','wholesomeseal','chadyescapy','gigachadglow','gigachadorthodox','gigachad','gigachad2','gigachad3']
 			}
 			loadEmojis(form);
 		}
