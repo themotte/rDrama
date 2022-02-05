@@ -72,10 +72,10 @@ def notifications(v):
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
-		).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26).all()
+		).order_by(Notification.id.desc()).offset(50 * (page - 1)).limit(51).all()
 
-		next_exists = (len(notifications) > 25)
-		notifications = notifications[:25]
+		next_exists = (len(notifications) > 50)
+		notifications = notifications[:50]
 		cids = [x.comment_id for x in notifications]
 		comments = get_comments(cids, v=v, load_parent=True)
 
