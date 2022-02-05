@@ -493,6 +493,16 @@ ALTER SEQUENCE public.modactions_id_seq OWNED BY public.modactions.id;
 
 
 --
+-- Name: mods; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mods (
+    user_id integer NOT NULL,
+    sub character varying(20) NOT NULL
+);
+
+
+--
 -- Name: notifications; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -650,6 +660,17 @@ CREATE SEQUENCE public.submissions_id_seq
 --
 
 ALTER SEQUENCE public.submissions_id_seq OWNED BY public.submissions.id;
+
+
+--
+-- Name: subs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.subs (
+    name character varying(20) NOT NULL,
+    sidebar character varying(500),
+    sidebar_html character varying(1000)
+);
 
 
 --
@@ -1182,6 +1203,14 @@ ALTER TABLE ONLY public.modactions
 
 
 --
+-- Name: mods mods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mods
+    ADD CONSTRAINT mods_pkey PRIMARY KEY (user_id, sub);
+
+
+--
 -- Name: notifications notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1251,6 +1280,14 @@ ALTER TABLE ONLY public.save_relationship
 
 ALTER TABLE ONLY public.submissions
     ADD CONSTRAINT submissions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: subs subs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subs
+    ADD CONSTRAINT subs_pkey PRIMARY KEY (name);
 
 
 --
@@ -1581,6 +1618,13 @@ CREATE INDEX modaction_pid_idx ON public.modactions USING btree (target_submissi
 
 
 --
+-- Name: mods_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX mods_idx ON public.mods USING btree (user_id);
+
+
+--
 -- Name: notification_read_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1697,6 +1741,13 @@ CREATE INDEX submissions_created_utc_desc_idx ON public.submissions USING btree 
 --
 
 CREATE INDEX submissions_over18_index ON public.submissions USING btree (over_18);
+
+
+--
+-- Name: subs_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX subs_idx ON public.subs USING btree (name);
 
 
 --
