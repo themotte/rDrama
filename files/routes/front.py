@@ -257,7 +257,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	posts = g.db.query(Submission)
 
 	if sub: posts = posts.filter_by(sub=sub)
-	else: posts = posts.filter_by(sub=None)
 
 	if t == 'all': cutoff = 0
 	else:
@@ -328,7 +327,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false":
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub)
-		else: pins = pins.filter_by(sub=None)
 		if v and v.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
 			blocked = [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]

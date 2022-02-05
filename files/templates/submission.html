@@ -459,6 +459,9 @@
 							&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('edited_timestamp','{{p.edited_utc}}')" id="edited_timestamp">{{p.edited_string}}</span>
 						{% endif %}
 						&nbsp;&nbsp;{{p.views}} views
+						{% if p.sub %}
+							&nbsp;&nbsp;<a href='/s/{{p.sub}}'>/s/{{p.sub}}</a>
+						{% endif %}
 					</div>
 					{% if p.active_flags %}
 					<div id="flaggers" class="flaggers d-none">

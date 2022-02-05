@@ -760,7 +760,9 @@ def thumbnail_thread(pid):
 @limiter.limit("1/second;6/minute;200/hour;1000/day")
 @auth_required
 def submit_post(v, sub=None):
+	if not sub: sub = request.values.get("sub")
 	if sub and sub not in subs: sub = None
+
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
 	
 	if v and v.patron:

@@ -566,5 +566,5 @@ FORTUNE_REPLIES = ('<b style="color:#6023f8">Your fortune: Allah Wills It</b>','
 
 no_pass_phrase = """<p>Sorry whiteboy, we're gonna need to see some ID before you start throwin that word around like it's nothing.\n\nTake a 10 minute time-out and come back when you've learned your lesson and/or paid reparations (by purchasing a BIPOC Approved™ Rdrama NWord Pass© from the <a href="/shop">shop</a>) \n\n<em>This is an automated message; if you need help, you can message us <a href="/contact">here</a>.</em></p>"""
 
-if SITE == '2much4u.net': subs = ('2balkan4you','2middleeast4you')
+if True: subs = ('2balkan4you','2middleeast4you','2asia4you','2visegrad4you')
 else: subs = ()

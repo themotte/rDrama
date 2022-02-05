@@ -112,6 +112,8 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	else:
 		sanitized = re.sub('(^|\s|\n|<p>)\/?((r|u)\/(\w|-){3,25})', r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">\2</a>', sanitized, re.A)
 
+		sanitized = re.sub('(^|\s|\n|<p>)\/?(s\/(\w|-){3,25})', r'\1<a href="/\2" rel="nofollow noopener noreferrer">\2</a>', sanitized, re.A)
+
 		for i in re.finditer('(^|\s|\n|<p>)@((\w|-){1,25})', sanitized, re.A):
 			u = get_user(i.group(2), graceful=True)
 

@@ -195,6 +195,9 @@
 					&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp-{{p.id}}" onmouseover="timestamp('edited_timestamp-{{p.id}}','{{p.edited_utc}}')">{{p.edited_string}}</span>
 				{% endif %}
 				&nbsp;&nbsp;{{p.views}} views
+				{% if p.sub %}
+					&nbsp;&nbsp;<a href='/s/{{p.sub}}'>/s/{{p.sub}}</a>
+				{% endif %}
 			</div>
 
 			<h5 class="card-title post-title text-left w-lg-95 mb-0 pb-0 pb-md-1"><a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}" class="stretched-link {% if p.author.agendaposter %}agendaposter{% endif %}">

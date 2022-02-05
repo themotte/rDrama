@@ -7,6 +7,15 @@
 		<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: center; font-weight: bold;white-space:nowrap">
 			<a style="color: white" class="text-small-mobile" href="https://reddit.com/r/SubredditDrama">💖🌈 welcome to rdrama.net: the official site for r/subredditdrama</a>
 		</div>
+	{% elif SITE_NAME == '2Much4You' %}
+		<style>
+			body {padding-top: 90px !important}
+		</style>
+		<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: left; font-weight: bold;white-space:nowrap">
+			{% for s in subs %}
+				<a style="color: white" class="text-small-mobile ml-2" href="/s/{{s}}">/s/{{s}}</a>
+			{% endfor %}
+		</div>
 	{% else %}
 		<style>
 			body {padding-top: 65px !important}
@@ -22,10 +31,12 @@
 					{% else %}
 						<img alt="header icon" class="mt-1" height=35 src="/static/assets/images/{{SITE_NAME}}/headericon.webp?a=1009">
 					{% endif %}
-					{% if False %}
+					{% if SITE_NAME == 'Drama' %}
 						<img alt="logo" src="/static/assets/images/{{SITE_NAME}}/logo.webp?a=1010" height=20 width=77>
+					{% elif sub %}
+						<a href="/s/{{sub}}" class="font-weight-bold ml-4 mt-2" style="font-size:25px;position:absolute">{{sub}}</a>
 					{% else %}
-						<a href="/" class="font-weight-bold ml-2 mt-1" style="font-size:25px;position:absolute">{{SITE_NAME}}</a>
+						<a href="/" class="font-weight-bold ml-4 mt-2" style="font-size:25px;position:absolute">{{SITE_NAME}}</a>
 					{% endif %}
 				</a>
 			</div>
