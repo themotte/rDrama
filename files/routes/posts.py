@@ -764,7 +764,9 @@ def thumbnail_thread(pid):
 @auth_required
 def submit_post(v, sub=None):
 	if not sub: sub = request.values.get("sub")
-	sub = g.db.query(Sub).filter_by(name=sub).one_or_none()
+	sub = g.db.query(Sub.name).filter_by(name=sub).one_or_none()
+	if sub: sub = sub[0]
+	else: sub = None
 
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
 	
@@ -1019,7 +1021,7 @@ def submit_post(v, sub=None):
 		title=title[:500],
 		title_html=title_html,
 		created_utc=int(time.time()),
-		sub=sub.name
+		sub=sub
 	)
 
 	g.db.add(new_post)
