@@ -9,6 +9,10 @@
 
 
 {% if sub %}
+    <pre>
+
+    
+    </pre>
     {{sub.sidebar_html|safe}}
     <a class="btn btn-primary btn-block mt-4" href="/s/{{sub.name}}/mods">MODS</a>
     {% if v and v.mods(sub.name) %}
