@@ -1,6 +1,6 @@
 import gevent.monkey
 gevent.monkey.patch_all()
-from os import environ
+from os import environ, path
 import secrets
 from flask import *
 from flask_caching import Cache
@@ -16,6 +16,10 @@ import time
 from sys import stdout
 import faulthandler
 from json import loads
+
+f = 'files/templates/sidebar_' + environ.get("SITE_NAME").strip().lower() + '.html'
+if not path.exists(f):
+    with open(f, 'w'): pass
 
 app = Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
