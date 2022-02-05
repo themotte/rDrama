@@ -17,7 +17,7 @@ from sys import stdout
 import faulthandler
 from json import loads
 
-f = 'files/templates/sidebar_' + environ.get("SITE_NAME").strip().lower() + '.html'
+f = 'files/templates/sidebar_' + environ.get("SITE_NAME").strip() + '.html'
 if not path.exists(f):
     with open(f, 'w'): pass
 
