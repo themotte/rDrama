@@ -133,7 +133,8 @@ def notifications(v):
 @limiter.limit("3/second;30/minute;400/hour;2000/day")
 @auth_desired
 def front_all(v, sub=None):
-	if sub and sub not in subs: sub = None
+	sub = g.db.query(Sub).filter_by(name=sub).one_or_none()
+
 	if g.webview and not session.get("session_id"):
 		session.permanent = True
 		session["session_id"] = secrets.token_hex(49)
@@ -256,7 +257,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 
 	posts = g.db.query(Submission)
 
-	if sub: posts = posts.filter_by(sub=sub)
+	if sub: posts = posts.filter_by(sub=sub.name)
 
 	if t == 'all': cutoff = 0
 	else:
@@ -326,7 +327,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 
 	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false":
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
-		if sub: pins = pins.filter_by(sub=sub)
+		if sub: pins = pins.filter_by(sub=sub.name)
 		if v and v.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
 			blocked = [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]

@@ -13,6 +13,7 @@ from .userblock import *
 from .badges import *
 from .clients import *
 from .mod_logs import *
+from .mod import *
 from files.__main__ import Base, cache
 from files.helpers.security import *
 import random
@@ -148,6 +149,10 @@ class User(Base):
 
 		super().__init__(**kwargs)
 
+
+	@lazy
+	def mods(self, sub):
+		return g.db.query(Mod.user_id).filter_by(user_id=self.id, sub=sub).one_or_none()
 
 	@property
 	@lazy

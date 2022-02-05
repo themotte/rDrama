@@ -272,7 +272,7 @@
 			{% endblock %}
 
 		</div>
-		{% if request.path in ('/', '/logged_out', '/logged_out/') %}
+		{% if request.path in ('/', '/logged_out', '/logged_out/') or SITE_NAME == '2Much4You' %}
 			{% block sidebar %}
 				{% include "sidebar_" + SITE_NAME + ".html" %}
 			{% endblock %}

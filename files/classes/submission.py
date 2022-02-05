@@ -12,6 +12,7 @@ from files.helpers.lazy import lazy
 from .flags import Flag
 from .comment import Comment
 from flask import g
+from .sub import *
 
 class Submission(Base):
 	__tablename__ = "submissions"
@@ -56,6 +57,7 @@ class Submission(Base):
 	awards = relationship("AwardRelationship", viewonly=True)
 	reports = relationship("Flag", viewonly=True)
 	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
+	subr = relationship("Sub", primaryjoin="foreign(Submission.sub)==remote(Sub.name)", viewonly=True)
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)

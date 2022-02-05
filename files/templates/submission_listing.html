@@ -553,7 +553,7 @@
 			</span>
 			<h2 class="h5">You haven't {% if "saved" in request.full_path %}saved{% else %}made{% endif %} a post yet</h2>
 			<p class="text-muted mb-md-5">Your {% if "saved" in request.full_path %}saved posts{% else %}posting history{% endif %} will show here.</p>
-			{% if "saved" not in request.full_path %}<a href="{% if sub %}/s/{{sub}}{% endif %}/submit" class="btn btn-primary">Create a post</a>{% endif %}
+			{% if "saved" not in request.full_path %}<a href="{% if sub %}/s/{{sub.name}}{% endif %}/submit" class="btn btn-primary">Create a post</a>{% endif %}
 		</div>			
 	</div>	
 </div>

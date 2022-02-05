@@ -2,6 +2,8 @@ from os import environ, listdir
 import re
 from copy import deepcopy
 from json import loads
+from files.__main__ import db_session
+from files.classes.sub import Sub
 
 SITE = environ.get("DOMAIN", '').strip()
 SITE_NAME = environ.get("SITE_NAME", '').strip()
@@ -566,5 +568,6 @@ FORTUNE_REPLIES = ('<b style="color:#6023f8">Your fortune: Allah Wills It</b>','
 
 no_pass_phrase = """<p>Sorry whiteboy, we're gonna need to see some ID before you start throwin that word around like it's nothing.\n\nTake a 10 minute time-out and come back when you've learned your lesson and/or paid reparations (by purchasing a BIPOC Approved™ Rdrama NWord Pass© from the <a href="/shop">shop</a>) \n\n<em>This is an automated message; if you need help, you can message us <a href="/contact">here</a>.</em></p>"""
 
-if True: subs = ('2balkan4you','2middleeast4you','2asia4you','2visegrad4you')
-else: subs = ()
+db = db_session()
+SUBS = [x[0] for x in db.query(Sub.name).all()]
+db.close()
