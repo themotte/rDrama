@@ -349,8 +349,7 @@ def get_sub_sidebar(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub).one_or_none()
 	if not sub: abort(404)
 
-	mod = g.db.query(Mod).filter_by(user_id=v.id, sub=sub.name).one_or_none()
-	if not mod: abort(403)
+	if not v.mods(sub.name): abort(403)
 
 	return render_template('admin/sidebar.html', v=v, sidebar=sub.sidebar, sub=sub)
 
@@ -362,8 +361,7 @@ def post_sub_sidebar(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub).one_or_none()
 	if not sub: abort(404)
 	
-	mod = g.db.query(Mod).filter_by(user_id=v.id, sub=sub.name).one_or_none()
-	if not mod: abort(403)
+	if not v.mods(sub.name): abort(403)
 
 	sub.sidebar = request.values.get('sidebar', '').strip()
 	sub.sidebar_html = sanitize(sub.sidebar)
