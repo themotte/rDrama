@@ -12,6 +12,7 @@ from files.helpers.lazy import lazy
 from .flags import Flag
 from .comment import Comment
 from flask import g
+from .sub import *
 
 class Submission(Base):
 	__tablename__ = "submissions"
@@ -56,6 +57,7 @@ class Submission(Base):
 	awards = relationship("AwardRelationship", viewonly=True)
 	reports = relationship("Flag", viewonly=True)
 	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
+	subr = relationship("Sub", primaryjoin="foreign(Submission.sub)==remote(Sub.name)", viewonly=True)
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
@@ -180,16 +182,10 @@ class Submission(Base):
 		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.edited_utc)))
 
 
-	if SITE_NAME == 'Too4You':
-		@property
-		@lazy
-		def score(self):
-			return self.upvotes
-	else:
-		@property
-		@lazy
-		def score(self):
-			return self.upvotes - self.downvotes
+	@property
+	@lazy
+	def score(self):
+		return self.upvotes - self.downvotes
 
 	@property
 	@lazy
@@ -346,7 +342,7 @@ class Submission(Base):
 				if v.controversial: url += "&sort=controversial"
 			return url
 		elif self.url:
-			if v and v.nitter: return self.url.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+			if v and v.nitter and not '/i/spaces/' in self.url: return self.url.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 			if self.url.startswith('/'): return SITE_FULL + self.url
 			return self.url
 		else: return ""
@@ -362,7 +358,7 @@ class Submission(Base):
 			if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
 			elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
-			if v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+			if v.nitter and not '/i/spaces/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
 		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 20:
 			ti = max(int((time.time() - self.created_utc)/60), 1)
@@ -418,7 +414,7 @@ class Submission(Base):
 			if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
 			elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
-			if v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+			if v.nitter and not '/i/spaces/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
 		return body
 

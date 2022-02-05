@@ -91,7 +91,10 @@ def publish(pid, v):
 @app.get("/s/<sub>/submit")
 @auth_required
 def submit_get(v, sub=None):
-	if sub and sub not in subs: sub = None
+	if sub: sub = g.db.query(Sub.name).filter_by(name=sub).one_or_none()
+	
+	if request.path.startswith('/s/') and not sub: abort(404)
+
 	return render_template("submit.html", v=v, sub=sub)
 
 @app.get("/post/<pid>")
@@ -248,7 +251,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 	else:
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
-		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset, sub=post.sub)
+		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset, sub=post.subr)
 
 @app.post("/viewmore/<pid>/<sort>/<offset>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -760,7 +763,11 @@ def thumbnail_thread(pid):
 @limiter.limit("1/second;6/minute;200/hour;1000/day")
 @auth_required
 def submit_post(v, sub=None):
-	if sub and sub not in subs: sub = None
+	if not sub: sub = request.values.get("sub")
+	sub = g.db.query(Sub.name).filter_by(name=sub).one_or_none()
+	if sub: sub = sub[0]
+	else: sub = None
+
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
 	
 	if v and v.patron:
@@ -1243,7 +1250,7 @@ def submit_post(v, sub=None):
 		if 'megathread' in new_post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
 		if len(body_html) < 40000: new_post.replies = [c]
-		return render_template('submission.html', v=v, p=new_post, sort=sort, render_replies=True, offset=0, success=True, sub=new_post.sub)
+		return render_template('submission.html', v=v, p=new_post, sort=sort, render_replies=True, offset=0, success=True, sub=new_post.subr)
 
 
 @app.post("/delete_post/<pid>")

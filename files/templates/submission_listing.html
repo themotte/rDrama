@@ -181,7 +181,7 @@
 					👻
 				{% else %}
 					{% if p.author.house %}
-						<img src="/assets/images/{{SITE_NAME}}/houses/{{p.author.house}}.webp?a=1" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{p.author.house}}">
+						<img src="/assets/images/{{SITE_NAME}}/houses/{{p.author.house}}.webp?a=2" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{p.author.house}}">
 					{% endif %}
 
 					{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{p.author.verified}}"></i>
@@ -195,6 +195,9 @@
 					&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp-{{p.id}}" onmouseover="timestamp('edited_timestamp-{{p.id}}','{{p.edited_utc}}')">{{p.edited_string}}</span>
 				{% endif %}
 				&nbsp;&nbsp;{{p.views}} views
+				{% if p.sub %}
+					&nbsp;&nbsp;<a href='/s/{{p.sub}}'>/s/{{p.sub}}</a>
+				{% endif %}
 			</div>
 
 			<h5 class="card-title post-title text-left w-lg-95 mb-0 pb-0 pb-md-1"><a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}" class="stretched-link {% if p.author.agendaposter %}agendaposter{% endif %}">
@@ -550,7 +553,7 @@
 			</span>
 			<h2 class="h5">You haven't {% if "saved" in request.full_path %}saved{% else %}made{% endif %} a post yet</h2>
 			<p class="text-muted mb-md-5">Your {% if "saved" in request.full_path %}saved posts{% else %}posting history{% endif %} will show here.</p>
-			{% if "saved" not in request.full_path %}<a href="{% if sub %}/s/{{sub}}{% endif %}/submit" class="btn btn-primary">Create a post</a>{% endif %}
+			{% if "saved" not in request.full_path %}<a href="{% if sub %}/s/{{sub.name}}{% endif %}/submit" class="btn btn-primary">Create a post</a>{% endif %}
 		</div>			
 	</div>	
 </div>

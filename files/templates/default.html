@@ -7,8 +7,8 @@
 	<script src="/static/assets/js/bootstrap.js?a=240"></script>
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=108">
-		<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=15">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=109">
+		<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=17">
 		{% if v.agendaposter %}
 			<style>
 				html {
@@ -32,7 +32,7 @@
 		{% endif %}
 	{% else %}
 		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=108"><link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?a=15">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=109"><link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?a=17">
 	{% endif %}
 
 	<meta charset="utf-8">
@@ -272,7 +272,7 @@
 			{% endblock %}
 
 		</div>
-		{% if request.path in ('/', '/logged_out', '/logged_out/') %}
+		{% if request.path in ('/', '/logged_out', '/logged_out/') or SITE_NAME == '2Much4You' %}
 			{% block sidebar %}
 				{% include "sidebar_" + SITE_NAME + ".html" %}
 			{% endblock %}
