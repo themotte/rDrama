@@ -37,10 +37,11 @@
 				<a href="/" class="navbar-brand mr-auto">
 					{% if request.host == 'rdrama.net' %}
 						{% set icon = ('marseyblm','marseykween','marseydynamite','marseyblack','marseymyeisha','marseyetika','marseyobama','marseyblackcop','marseysosa','marseyblackface')|random() %}
-						<img alt="header icon" height=30 src="/static/assets/images/emojis/{{icon}}.webp?a=1008">
+						<img alt="header icon" height=33 src="/static/assets/images/emojis/{{icon}}.webp?a=1008">
 					{% else %}
-						<img alt="header icon" height=40 src="/static/assets/images/{{SITE_NAME}}/headericon.webp?a=1010">
+						<img alt="header icon" height=33 src="/static/assets/images/{{SITE_NAME}}/headericon.webp?a=1010">
 					{% endif %}
+
 					{% if SITE_NAME == 'Drama' %}
 						<img alt="logo" src="/static/assets/images/{{SITE_NAME}}/logo.webp?a=1010" height=20 width=77>
 					{% elif sub %}
