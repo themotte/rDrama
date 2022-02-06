@@ -4449,11 +4449,11 @@ textarea {
     padding-bottom: 50px;
 }
 .navbar {
-    padding: 0 0.5rem;
+    padding: 0.5rem 0.5rem 0.3rem 0.5rem;
 }
 @media (min-width: 767.98px) {
     .navbar {
-        padding: 0 3rem 0 0.5rem;
+        padding: 0.5rem 3rem 0.4rem 0.5rem;
 }
 }
 blockquote {
