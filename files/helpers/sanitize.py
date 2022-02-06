@@ -100,6 +100,8 @@ allowed_styles = ['color', 'background-color', 'font-weight', 'transform', '-web
 
 def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
+	if sanitized.count(':') > 100: abort(418)
+
 	sanitized = markdown(sanitized)
 
 	sanitized = sanitized.replace("\ufeff", "").replace("𒐪","").replace("<script","").replace('‎','')
