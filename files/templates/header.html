@@ -10,6 +10,11 @@
 	{% elif SITE_NAME == '2Much4You' %}
 		<style>
 			body {padding-top: 90px !important}
+			@media (max-width: 767.98px) {
+				body {
+					padding-top: 72px !important
+				}
+			}
 		</style>
 		<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: left; font-weight: bold;white-space:nowrap">
 			{% for s in SUBS %}
@@ -19,6 +24,11 @@
 	{% else %}
 		<style>
 			body {padding-top: 65px !important}
+			@media (max-width: 767.98px) {
+				body {
+					padding-top: 47px !important
+				}
+			}
 		</style>
 	{% endif %}
 	<div class="navbar navbar-expand-md navbar-light" id="navbar">
@@ -48,6 +58,15 @@
 					</span>
 				</form>
 			</div>
+
+			{% if v %}
+				{% if v.notifications_count %}
+					<a class="mobile-nav-icon d-md-none" href="/notifications{% if not v.not_post_notifications_count %}?posts=true{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Notifications"><i class="fas fa-bell align-middle text-danger" {% if not v.not_post_notifications_count %}style="color:blue!important"{% endif %}></i><span class="notif-count ml-1" style="padding-left: 4.5px;{% if not v.not_post_notifications_count %}background:blue{% endif %}">{{v.notifications_count}}</span></a>
+				{% else %}
+					<a class="mobile-nav-icon d-md-none" href="/notifications" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Notifications"><i class="fas fa-bell  align-middle text-gray-500 black"></i></a>
+				{% endif %}
+			{% endif %}
+			
 			{% if not err %}
 			<a class="mobile-nav-icon d-md-none" href="/random"><i class="fas fa-random align-middle text-gray-500 black"></i></a>
 			{% if v and v.admin_level > 1 %}
@@ -61,9 +80,6 @@
 			<button class="navbar-toggler" role="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
 			aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon {% if v and v.notifications_count %}position-relative{% endif %}"><i class="fal fa-bars text-gray-500 black"></i>
-				{% if v and v.notifications_count %}
-					<span class="notif-count" {% if not v.not_post_notifications_count %}style="background:blue"{% endif %}>{{v.notifications_count}}</span>
-				{% endif %}
 			</span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarResponsive">
@@ -131,7 +147,7 @@
 								<a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-fw text-left mr-3"></i>Settings</a>
 							</div>
 							<div class="px-2">
-								<button class="dropdown-item copy-link" data-clipboard-text="/signup?ref={{v.username}}"><i class="fad fa-user-friends fa-fw text-left mr-3"></i>Invite friends</button>
+								<button class="dropdown-item copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fad fa-user-friends fa-fw text-left mr-3"></i>Invite friends</button>
 							</div>
 							<div class="px-2">
 								<a class="dropdown-item" href="/assets/{{config('SITE_NAME')}}_v1.6.apk"><i class="fab fa-android fa-fw text-left mr-3"></i>Android app</a>
@@ -188,15 +204,10 @@
 					<a class="nav-link" href="{{v.url}}"><i class="fas fa-user-circle fa-fw mr-3"></i>@{{v.username}}</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link position-relative" href="/notifications{% if v.notifications_count and not v.not_post_notifications_count %}?posts=true{% endif %}">
-						<i class="fas fa-envelope fa-fw mr-3"></i>Inbox
-						{% if v.notifications_count %}
-						<i class="fas fa-circle text-danger position-absolute" style="left: 19px; top: 5px; font-size: 10px;{% if not v.not_post_notifications_count %}color:blue!important{% endif %}"></i>
-						{% endif %}
-					</a>
+					<a class="nav-link" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>Settings</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>Settings</a>
+					<a class="nav-link copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fas fa-user-friends fa-fw text-left mr-3"></i>Invite friends</a>
 				</li>
 				<a class="nav-item nav-link" href="/assets/{{config('SITE_NAME')}}_v1.6.apk"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
 

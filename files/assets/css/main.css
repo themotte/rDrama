@@ -3752,7 +3752,6 @@ ul.comment-section {
     color: var(--muted);
     font-size: 12px;
     text-transform: uppercase;
-    background-color: var(--light);
     border: none;
 }
 .settings .settings-section {

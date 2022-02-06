@@ -2,7 +2,7 @@
 
 {% block desktopBanner %}
 
-{% if v %}
+{% if v and environ.get("FP") %}
 	{% if not v.fp %}
 		<script>
 			function fp(fp) {
