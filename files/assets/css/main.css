@@ -4449,7 +4449,7 @@ textarea {
     padding-bottom: 50px;
 }
 .navbar {
-    padding: 0.2rem 0.5rem 0.3rem 0.5rem;
+    padding: 0.2rem 0.5rem 0 0.3rem;
 }
 @media (min-width: 767.98px) {
     .navbar {
