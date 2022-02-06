@@ -977,7 +977,7 @@ def submit_post(v, sub=None):
 			body += f"\n\n{url}"
 		else:
 			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "Image/Video files only"}, 400
-			return render_template("submit.html", v=v, error=f"Image/Video files only."), 400
+			return render_template("submit.html", v=v, error="Image/Video files only."), 400
 
 	if '#fortune' in body:
 		body = body.replace('#fortune', '')

@@ -583,3 +583,6 @@ ROLES={
 	"5": "880445545771044884",
 	"8": "886781932430565418",
 	}
+
+if SITE_NAME == 'Drama': patron = 'Paypig'
+else: patron = 'Patron'
