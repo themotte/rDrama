@@ -41,7 +41,7 @@ def get_hand_value(hand):
 
 
 def format_cards(hand):
-	return map(lambda x: "".join(x), hand)
+	return map("".join(x), hand)
 
 
 def format_all(player_hand, dealer_hand, deck, status, wager):

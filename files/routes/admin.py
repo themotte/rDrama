@@ -314,7 +314,7 @@ def monthly(v):
 def get_sidebar(v):
 
 	try:
-		with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r') as f: sidebar = f.read()
+		with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r', encoding="utf-8") as f: sidebar = f.read()
 	except:
 		sidebar = None
 
@@ -328,9 +328,9 @@ def post_sidebar(v):
 
 	text = request.values.get('sidebar', '').strip()
 
-	with open(f'files/templates/sidebar_{SITE_NAME}.html', 'w+') as f: f.write(text)
+	with open(f'files/templates/sidebar_{SITE_NAME}.html', 'w+', encoding="utf-8") as f: f.write(text)
 
-	with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r') as f: sidebar = f.read()
+	with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r', encoding="utf-8") as f: sidebar = f.read()
 
 	ma = ModAction(
 		kind="change_sidebar",

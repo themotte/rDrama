@@ -24,7 +24,7 @@ marseys = tuple(f':#{x[0]}:' for x in db.query(Marsey.name).all())
 db.close()
 
 if path.exists(f'snappy_{SITE_NAME}.txt'):
-	with open(f'snappy_{SITE_NAME}.txt', "r") as f:
+	with open(f'snappy_{SITE_NAME}.txt', "r", encoding="utf-8") as f:
 		if SITE == 'pcmemes.net': snappyquotes = tuple(f.read().split("{[para]}"))
 		else: snappyquotes = tuple(f.read().split("{[para]}")) + marseys
 else: snappyquotes = marseys

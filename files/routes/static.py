@@ -384,7 +384,7 @@ def formatting(v):
 
 @app.get("/service-worker.js")
 def serviceworker():
-	with open("files/assets/js/service-worker.js", "r") as f: return Response(f.read(), mimetype='application/javascript')
+	with open("files/assets/js/service-worker.js", "r", encoding="utf-8") as f: return Response(f.read(), mimetype='application/javascript')
 
 @app.get("/settings/security")
 @auth_required

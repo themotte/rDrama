@@ -165,7 +165,7 @@ def api_comment(v):
 	body = request.values.get("body", "").strip()[:10000]
 
 	if v.admin_level == 3 and parent_post.id == 37749:
-		with open(f"snappy_{SITE_NAME}.txt", "a") as f:
+		with open(f"snappy_{SITE_NAME}.txt", "a", encoding="utf-8") as f:
 			f.write('\n{[para]}\n' + body)
 
 	if v.marseyawarded and parent_post.id not in (37696,37697,37749,37833,37838):
