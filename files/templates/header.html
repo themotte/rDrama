@@ -163,7 +163,7 @@
 								{% if request.host != 'pcmemes.net' %}
 									<a class="dropdown-item" href="/discord"><i class="fab fa-discord fa-fw text-left mr-3"></i>Discord</a>
 								{% endif %}
-								{% if not (g.webview and v.truecoins < 1) %}
+								{% if not (g.webview and v.truecoins < 1) and request.host != '2Much4You' %}
 									<a class="dropdown-item" rel="nofollow noopener noreferrer" href="{{config('GUMROAD_LINK')}}"><i class="fas fa-dollar-sign fa-fw text-left mr-3"></i>Donate</a>
 								{% endif %}
 								{% if request.host == 'rdrama.net' %}<a class="dropdown-item" href="/archives"><i class="fas fa-book fa-fw text-left mr-3"></i>Archives</a>{% endif %}
@@ -206,9 +206,11 @@
 				<li class="nav-item">
 					<a class="nav-link" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>Settings</a>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fas fa-user-friends fa-fw text-left mr-3"></i>Invite friends</a>
-				</li>
+				{% if not g.webview %}
+					<li class="nav-item">
+						<a class="nav-link copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fas fa-user-friends fa-fw text-left mr-3"></i>Invite friends</a>
+					</li>
+				{% endif %}
 				<a class="nav-item nav-link" href="/assets/{{config('SITE_NAME')}}_v1.6.apk"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
 
 				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/Drama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>

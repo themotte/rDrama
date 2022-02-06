@@ -420,6 +420,10 @@
 				<div id="post-content" class="{% if p.deleted_utc %}deleted {% endif %}card-block w-100 my-md-auto">
 
 					<div class="post-meta text-left mb-2">
+						{% if p.sub %}
+							<a href='/s/{{p.sub}}'>/s/{{p.sub}}</a>&nbsp;&nbsp;
+						{% endif %}
+
 						{% if p.bannedfor %}
 							<a role="button"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User was banned for this post{% if p.author.banned_by %} by @{{p.author.banned_by.username}}{% endif %}"></i></a>
 						{% endif %}	
@@ -459,9 +463,6 @@
 							&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('edited_timestamp','{{p.edited_utc}}')" id="edited_timestamp">{{p.edited_string}}</span>
 						{% endif %}
 						&nbsp;&nbsp;{{p.views}} views
-						{% if p.sub %}
-							&nbsp;&nbsp;<a href='/s/{{p.sub}}'>/s/{{p.sub}}</a>
-						{% endif %}
 					</div>
 					{% if p.active_flags %}
 					<div id="flaggers" class="flaggers d-none">
