@@ -253,7 +253,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 		else: template = "submission.html"
 		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset, sub=post.subr)
 
-@app.post("/viewmore/<pid>/<sort>/<offset>")
+@app.get("/viewmore/<pid>/<sort>/<offset>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def viewmore(v, pid, sort, offset):
@@ -356,7 +356,7 @@ def viewmore(v, pid, sort, offset):
 	return render_template("comments.html", v=v, comments=comments, ids=list(ids), render_replies=True, pid=pid, sort=sort, offset=offset, ajax=True)
 
 
-@app.post("/morecomments/<cid>")
+@app.get("/morecomments/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def morecomments(v, cid):

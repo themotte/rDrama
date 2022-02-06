@@ -6,7 +6,7 @@ function viewmore(pid,sort,offset,ids) {
 	form.append("formkey", formkey());
 	form.append("ids", ids);
     const xhr = new XMLHttpRequest();
-    xhr.open("post", `/viewmore/${pid}/${sort}/${offset}`);
+    xhr.open("get", `/viewmore/${pid}/${sort}/${offset}`);
     xhr.setRequestHeader('xhr', 'xhr');
     xhr.onload=function(){
         if (xhr.status==200) {
