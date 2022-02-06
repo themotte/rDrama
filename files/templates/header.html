@@ -1,11 +1,11 @@
 
 <nav class="shadow shadow-md fixed-top">
-	{% if SITE_NAME in ('Drama','2Much4You') %}
+	{% if SITE_NAME == 'Drama' or subs %}
 		<style>
 			body {padding-top: 85.88px !important}
 			@media (max-width: 767.98px) {
 				body {
-					padding-top: 77.94px !important
+					padding-top: 69.55px !important
 				}
 			}
 		</style>
@@ -14,7 +14,7 @@
 			body {padding-top: 60.89px !important}
 			@media (max-width: 767.98px) {
 				body {
-					padding-top: 52.94px !important
+					padding-top: 44.55px !important
 				}
 			}
 		</style>
@@ -24,7 +24,7 @@
 		<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: center; font-weight: bold;white-space:nowrap">
 			<a style="color: white" class="text-small-mobile" href="https://reddit.com/r/SubredditDrama">💖🌈 welcome to rdrama.net: the official site for r/subredditdrama</a>
 		</div>
-	{% elif SITE_NAME == '2Much4You' %}
+	{% elif subs %}
 		<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: left; font-weight: bold;white-space:nowrap">
 			{% for s in SUBS %}
 				<a {% if sub and s == sub.name %} style="color: var(--secondary)" {% else %} style="color: white"{% endif %} class="text-small-mobile ml-2" href="/s/{{s}}">/s/{{s}}</a>
