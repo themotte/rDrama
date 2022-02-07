@@ -1,6 +1,5 @@
 from functools import reduce
 from json.encoder import INFINITY
-from locale import currency
 import random
 from math import floor
 
@@ -171,8 +170,7 @@ class Blackjack:
 
             setattr(user, kind, currency_value + wager_value + reward)
 
-            if kind == 'coins':
-                user.winnings += reward
+            user.winnings += reward
 
             self.db.add(user)
             self.db.commit()
