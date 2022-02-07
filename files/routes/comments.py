@@ -625,7 +625,7 @@ def api_comment(v):
 		slots.check_for_slots_command(body, v, c)
 
 		blackjack = Blackjack(g)
-		blackjack.check_for_blackjack_command(body, v, c)
+		blackjack.check_for_blackjack_commands(body, v, c)
 
 	treasure = Treasure(g)
 	treasure.check_for_treasure(body, c)
