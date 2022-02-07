@@ -381,8 +381,9 @@ class Comment(Base):
 			body += f'"> - <a href="/votes?link=t3_{c.id}"><span id="poll-{c.id}">{c.upvotes}</span> votes</a></span></label></div>'
 
 		curr = self.total_choice_voted(v)
-		if curr:
-			body += f'<input class="d-none" id="current-{self.id}" value={curr[0].comment_id}>'
+		if curr: curr = " value=" + str(curr[0].comment_id)
+		else: curr = ''
+		body += f'<input class="d-none" id="current-{self.id}"{curr}>'
 
 		for c in self.choices:
 			body += f'''<div class="custom-control"><input name="choice" autocomplete="off" class="custom-control-input" type="radio" id="{c.id}" onchange="choice_vote('{c.id}','{self.id}')"'''

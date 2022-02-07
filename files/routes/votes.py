@@ -259,6 +259,8 @@ def api_vote_choice(comment_id, v):
 	else: parent = comment.post
 
 	for vote in parent.total_choice_voted(v):
+		vote.comment.upvotes = g.db.query(CommentVote.id).filter_by(comment_id=vote.comment.id, vote_type=1).count() - 1
+		g.db.add(vote.comment)
 		g.db.delete(vote)
 
 	try:

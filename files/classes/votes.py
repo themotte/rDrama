@@ -15,8 +15,8 @@ class Vote(Base):
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	real = Column(Boolean, default=True)
 
-	user = relationship("User", lazy="subquery", viewonly=True)
-	post = relationship("Submission", lazy="subquery", viewonly=True)
+	user = relationship("User", viewonly=True)
+	post = relationship("Submission", viewonly=True)
 
 	def __init__(self, *args, **kwargs):
 
@@ -56,8 +56,8 @@ class CommentVote(Base):
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	real = Column(Boolean, default=True)
 
-	user = relationship("User", lazy="subquery")
-	comment = relationship("Comment", lazy="subquery", viewonly=True)
+	user = relationship("User")
+	comment = relationship("Comment")
 
 	def __init__(self, *args, **kwargs):
 
