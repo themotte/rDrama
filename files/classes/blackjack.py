@@ -120,7 +120,7 @@ class Blackjack:
 
         if player_value == -1:
             status = 'bust'
-            self.apply_game_result(from_comment, wager, status)
+            self.apply_game_result(from_comment, wager, status, kind)
 
         from_comment.blackjack_result = format_all(
             player_hand, dealer_hand, deck, status, wager, kind)
