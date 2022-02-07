@@ -110,7 +110,7 @@ class Blackjack:
                                 player_hand, dealer_hand, rest_of_deck, status, wager, currency_prop)
 
     def player_hit(self, from_comment):
-        player_hand, dealer_hand, deck, status, wager = from_comment.blackjack_result.split(
+        player_hand, dealer_hand, deck, status, wager, kind = from_comment.blackjack_result.split(
             "_")
         player_hand = player_hand.split("/")
         dealer_hand = dealer_hand.split("/")
