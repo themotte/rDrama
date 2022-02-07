@@ -258,7 +258,9 @@ def post_id(pid, anything=None, v=None, sub=None):
 @auth_desired
 def viewmore(v, pid, sort, offset):
 	offset = int(offset)
-	ids = set(int(x) for x in request.values.get("ids").split(','))
+	try: ids = set(int(x) for x in request.values.get("ids").split(','))
+	except: abort(400)
+	
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
@@ -746,7 +748,7 @@ def thumbnail_thread(pid):
 					notif = Notification(comment_id=new_comment.id, user_id=admin.id)
 					db.add(notif)
 
-			k,val = random.choice(REDDIT_NOTIFS.items())
+			k,val = random.choice(tuple(REDDIT_NOTIFS.items()))
 			for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={k}&size=1').json()["data"]:
 				try: body_html = sanitize(f'New mention of you: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 				except: continue
