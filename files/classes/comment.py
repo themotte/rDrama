@@ -338,38 +338,37 @@ class Comment(Base):
 
 		body = self.body_html
 
-		if not body: return ""
+		if body:
+			body = censor_slurs(body, v)
 
-		body = censor_slurs(body, v)
+			if v:
+				if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
+				elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
-		if v:
-			if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
-			elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
+				if v.nitter and not '/i/spaces/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
-			if v.nitter and not '/i/spaces/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+			if v and v.controversial:
+				for i in re.finditer('(/comments/.*?)"', body):
+					url = i.group(1)
+					p = urlparse(url).query
+					p = parse_qs(p)
 
-		if v and v.controversial:
-			for i in re.finditer('(/comments/.*?)"', body):
-				url = i.group(1)
-				p = urlparse(url).query
-				p = parse_qs(p)
+					if 'sort' not in p: p['sort'] = ['controversial']
 
-				if 'sort' not in p: p['sort'] = ['controversial']
+					url_noquery = url.split('?')[0]
+					body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
 
-				url_noquery = url.split('?')[0]
-				body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
-
-		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 60:
-			ti = max(int((time.time() - self.created_utc)/60), 1)
-			maxupvotes = min(ti, 31)
-			rand = randint(0, maxupvotes)
-			if self.upvotes < rand:
-				amount = randint(0, 3)
-				self.upvotes += amount
-				g.db.add(self)
-				self.author.coins += amount
-				g.db.add(self.author)
-				g.db.commit()
+			if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 60:
+				ti = max(int((time.time() - self.created_utc)/60), 1)
+				maxupvotes = min(ti, 31)
+				rand = randint(0, maxupvotes)
+				if self.upvotes < rand:
+					amount = randint(0, 3)
+					self.upvotes += amount
+					g.db.add(self)
+					self.author.coins += amount
+					g.db.add(self.author)
+					g.db.commit()
 
 		for c in self.options:
 			body += f'<div class="custom-control"><input type="checkbox" class="custom-control-input" id="{c.id}" name="option"'
