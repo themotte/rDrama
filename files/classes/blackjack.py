@@ -123,7 +123,7 @@ class Blackjack:
             self.apply_game_result(from_comment, wager, status)
 
         from_comment.blackjack_result = format_all(
-            player_hand, dealer_hand, deck, status, wager)
+            player_hand, dealer_hand, deck, status, wager, kind)
 
         if (player_value == 21):
             self.player_stayed(from_comment)
