@@ -87,12 +87,12 @@ class Comment(Base):
 	@property
 	@lazy
 	def options(self):
-		return [x for x in self.child_comments if x.author_id == AUTOPOLLER_ID]
+		return (x for x in self.child_comments if x.author_id == AUTOPOLLER_ID)
 
 	@property
 	@lazy
 	def choices(self):
-		return [x for x in self.child_comments if x.author_id == AUTOCHOICE_ID]
+		return (x for x in self.child_comments if x.author_id == AUTOCHOICE_ID)
 
 	def total_poll_voted(self, v):
 		if v:

@@ -242,7 +242,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 
 	post.views += 1
 	g.db.add(post)
-	if request.host != 'old.rdrama.net' and post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
+	if post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"Must be 18+ to view"}, 451
 		return render_template("errors/nsfw.html", v=v)
 
@@ -540,7 +540,7 @@ def edit_post(pid, v):
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
 
-		elif request.host == 'rdrama.net' and 'nigg' in f'{p.body}{p.title}'.lower() and not v.nwordpass:
+		elif SITE_NAME == 'Drama' and 'nigg' in f'{p.body}{p.title}'.lower() and not v.nwordpass:
 
 			p.is_banned = True
 			p.ban_reason = "AutoJanny"
@@ -720,7 +720,7 @@ def thumbnail_thread(pid):
 	db.add(post)
 	db.commit()
 
-	if SITE == 'rdrama.net':
+	if SITE_NAME == 'Drama':
 		for t in ("submission","comment"):
 			word = random.choice(('rdrama','marsey'))
 
@@ -1138,7 +1138,7 @@ def submit_post(v, sub=None):
 
 		
 	if not new_post.thumburl and new_post.url:
-		if request.host in new_post.url or new_post.url.startswith('/') or request.host == 'rdrama.net' and 'rdrama' in new_post.domain:
+		if request.host in new_post.url or new_post.url.startswith('/') or new_post.domain == SITE:
 			new_post.thumburl = f'/static/assets/images/{SITE_NAME}/site_preview.webp'
 		elif request.headers.get('cf-ipcountry')!="T1":
 			gevent.spawn( thumbnail_thread, new_post.id)
@@ -1184,7 +1184,7 @@ def submit_post(v, sub=None):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	elif request.host == 'rdrama.net' and 'nigg' in f'{new_post.body}{new_post.title}'.lower() and not v.nwordpass:
+	elif SITE_NAME == 'Drama' and 'nigg' in f'{new_post.body}{new_post.title}'.lower() and not v.nwordpass:
 
 		new_post.is_banned = True
 		new_post.ban_reason = "AutoJanny"

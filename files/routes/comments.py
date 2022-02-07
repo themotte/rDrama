@@ -57,7 +57,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 	
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
-		elif request.host == "rdrama.net": pid = 6489
+		elif SITE_NAME == 'Drama': pid = 6489
 		elif request.host == 'pcmemes.net': pid = 2487
 		else: pid = 1
 	
@@ -435,7 +435,7 @@ def api_comment(v):
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
 		
-		elif request.host == 'rdrama.net' and 'nigg' in c.body.lower() and not v.nwordpass:
+		elif SITE_NAME == 'Drama' and 'nigg' in c.body.lower() and not v.nwordpass:
 
 			c.is_banned = True
 			c.ban_reason = "AutoJanny"
@@ -463,7 +463,7 @@ def api_comment(v):
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)	
 			
-		if request.host == "rdrama.net" and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
+		if SITE_NAME == 'Drama' and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
 		
 			body = random.choice(LONGPOST_REPLIES)
 
@@ -492,7 +492,7 @@ def api_comment(v):
 			g.db.add(n)
 
 
-		if request.host == "rdrama.net" and random.random() < 0.001:
+		if SITE_NAME == 'Drama' and random.random() < 0.001:
 		
 			body = "zoz"
 			body_html2 = sanitize(body)
@@ -822,7 +822,7 @@ def edit_comment(cid, v):
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
 
-		elif request.host == 'rdrama.net' and 'nigg' in c.body.lower() and not v.nwordpass:
+		elif SITE_NAME == 'Drama' and 'nigg' in c.body.lower() and not v.nwordpass:
 
 			c.is_banned = True
 			c.ban_reason = "AutoJanny"
