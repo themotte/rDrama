@@ -148,7 +148,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
  
-		comments=comments.filter(Comment.parent_submission == post.id, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID))).join(
+		comments=comments.filter(Comment.parent_submission == post.id, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID))).join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
@@ -191,7 +191,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 	else:
 		pinned = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.is_pinned != None).all()
 
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID)), Comment.level == 1, Comment.is_pinned == None)
+		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)), Comment.level == 1, Comment.is_pinned == None)
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -271,7 +271,7 @@ def viewmore(v, pid, sort, offset):
 			votes.c.vote_type,
 			blocking.c.id,
 			blocked.c.id,
-		).filter(Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID)), Comment.is_pinned == None, Comment.id.notin_(ids))
+		).filter(Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)), Comment.is_pinned == None, Comment.id.notin_(ids))
 		
 		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
@@ -315,7 +315,7 @@ def viewmore(v, pid, sort, offset):
 		second = [c[0] for c in comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None), func.length(Comment.body) <= 50).all()]
 		comments = first + second
 	else:
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID)), Comment.level == 1, Comment.is_pinned == None, Comment.id.notin_(ids))
+		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)), Comment.level == 1, Comment.is_pinned == None, Comment.id.notin_(ids))
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -466,6 +466,18 @@ def edit_post(pid, v):
 			for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, re.A):
 				body = body.replace(i.group(0), "")
 				c = Comment(author_id=AUTOPOLLER_ID,
+					parent_submission=p.id,
+					level=1,
+					body_html=filter_emojis_only(i.group(1)),
+					upvotes=0,
+					is_bot=True
+					)
+				g.db.add(c)
+
+		if not p.choices.count():
+			for i in re.finditer('\s*##([^\$\n]+)##\s*', body, re.A):
+				body = body.replace(i.group(0), "")
+				c = Comment(author_id=AUTOCHOICE_ID,
 					parent_submission=p.id,
 					level=1,
 					body_html=filter_emojis_only(i.group(1)),
@@ -960,6 +972,11 @@ def submit_post(v, sub=None):
 		options.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
+	choices = []
+	for i in re.finditer('\s*##([^\$\n]+)##\s*', body, re.A):
+		choices.append(i.group(1))
+		body = body.replace(i.group(0), "")
+
 	if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
 	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
@@ -1047,7 +1064,16 @@ def submit_post(v, sub=None):
 			upvotes=0,
 			is_bot=True
 			)
+		g.db.add(c)
 
+	for choice in choices:
+		c = Comment(author_id=AUTOCHOICE_ID,
+			parent_submission=new_post.id,
+			level=1,
+			body_html=filter_emojis_only(choice),
+			upvotes=0,
+			is_bot=True
+			)
 		g.db.add(c)
 
 	vote = Vote(user_id=v.id,

@@ -266,15 +266,32 @@ function poll_vote(cid, parentid) {
 	for(let el of document.getElementsByClassName('presult-'+parentid)) {
 		el.classList.remove('d-none');
 	}
-	for(let el of document.getElementsByClassName('presult')) {
-		el.classList.remove('d-none');
-	}
 	var type = document.getElementById(cid).checked;
 	var scoretext = document.getElementById('poll-' + cid);
 	var score = Number(scoretext.textContent);
 	if (type == true) scoretext.textContent = score + 1;
 	else scoretext.textContent = score - 1;
 	post('/vote/poll/' + cid + '?vote=' + type);
+}
+
+function choice_vote(cid, parentid) {
+	for(let el of document.getElementsByClassName('presult-'+parentid)) {
+		el.classList.remove('d-none');
+	}
+	
+	let curr = document.getElementById(`current-${parentid}`)
+	if (curr.value)
+	{
+		var scoretext = document.getElementById('choice-' + curr.value);
+		var score = Number(scoretext.textContent);
+		scoretext.textContent = score - 1;
+	}
+
+	var scoretext = document.getElementById('choice-' + cid);
+	var score = Number(scoretext.textContent);
+	scoretext.textContent = score + 1;
+	post('/vote/choice/' + cid);
+	curr.value = cid
 }
 
 function handle_blackjack_action(cid, action) {
@@ -288,12 +305,6 @@ function handle_blackjack_action(cid, action) {
 	xhr.setRequestHeader('xhr', 'xhr');
 
 	xhr.onload = function() {
-		if (xhr.status == 200) {
-			window.location.reload();
-		} else {
-			// Handle error.
-		}
-	}
-
+		if (xhr.status == 200) location.reload();
 	xhr.send(form);
 }

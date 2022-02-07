@@ -102,7 +102,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 		 
 		comments=comments.filter(
 			Comment.parent_submission == post.id,
-			Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID))
+			Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID))
 		).join(
 			votes,
 			votes.c.comment_id == Comment.id,
@@ -184,6 +184,11 @@ def api_comment(v):
 	options = []
 	for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, re.A):
 		options.append(i.group(1))
+		body = body.replace(i.group(0), "")
+
+	choices = []
+	for i in re.finditer('\s*##([^\$\n]+)##\s*', body, re.A):
+		choices.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
@@ -353,6 +358,17 @@ def api_comment(v):
 
 		g.db.add(c_option)
 
+	for choice in choices:
+		c_choice = Comment(author_id=AUTOCHOICE_ID,
+			parent_submission=parent_submission,
+			parent_comment_id=c.id,
+			level=level+1,
+			body_html=filter_emojis_only(choice),
+			upvotes=0,
+			is_bot=True
+			)
+
+		g.db.add(c_choice)
 
 	if request.host == 'pcmemes.net' and c.body.lower().startswith("based"):
 		pill = re.match("based and (.{1,20}?)(-| )pilled", body, re.IGNORECASE)
@@ -548,7 +564,8 @@ def api_comment(v):
 			
 			for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
 			
-			if parent.author.id not in [v.id, BASEDBOT_ID, AUTOJANNY_ID, SNAPPY_ID, LONGPOSTBOT_ID, ZOZBOT_ID, AUTOPOLLER_ID]: notify_users.add(parent.author.id)
+			if parent.author.id not in (v.id, BASEDBOT_ID, AUTOJANNY_ID, SNAPPY_ID, LONGPOSTBOT_ID, ZOZBOT_ID, AUTOPOLLER_ID, AUTOCHOICE_ID):
+				notify_users.add(parent.author.id)
 
 			for x in notify_users:
 				n = Notification(comment_id=c.id, user_id=x)
@@ -684,6 +701,19 @@ def edit_comment(cid, v):
 					is_bot=True
 					)
 				g.db.add(c_option)
+
+		if not c.choices:
+			for i in re.finditer('\s*##([^\$\n]+)##\s*', body, re.A):
+				body = body.replace(i.group(0), "")
+				c_choice = Comment(author_id=AUTOCHOICE_ID,
+					parent_submission=c.parent_submission,
+					parent_comment_id=c.id,
+					level=c.level+1,
+					body_html=filter_emojis_only(i.group(1)),
+					upvotes=0,
+					is_bot=True
+					)
+				g.db.add(c_choice)
 
 		body_html = sanitize(body, edit=True)
 

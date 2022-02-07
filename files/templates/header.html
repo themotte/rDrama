@@ -1,6 +1,6 @@
 
 <nav class="shadow shadow-md fixed-top">
-	{% if SITE_NAME == 'Drama' or subs %}
+	{% if SITE_NAME == 'Drama' or SUBS %}
 		<style>
 			body {padding-top: 85.88px !important}
 			@media (max-width: 767.98px) {
@@ -24,7 +24,7 @@
 		<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: center; font-weight: bold;white-space:nowrap">
 			<a style="color: white" class="text-small-mobile" href="https://reddit.com/r/SubredditDrama">💖🌈 welcome to rdrama.net: the official site for r/subredditdrama</a>
 		</div>
-	{% elif subs %}
+	{% elif SUBS %}
 		<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: left; font-weight: bold;white-space:nowrap">
 			{% for s in SUBS %}
 				<a {% if sub and s == sub.name %} style="color: var(--secondary)" {% else %} style="color: white"{% endif %} class="text-small-mobile ml-2" href="/s/{{s}}">/s/{{s}}</a>

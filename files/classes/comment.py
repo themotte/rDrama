@@ -11,6 +11,7 @@ from files.helpers.const import *
 from files.helpers.lazy import lazy
 from .flags import CommentFlag
 from random import randint
+from .votes import CommentVote
 
 class Comment(Base):
 
@@ -79,20 +80,29 @@ class Comment(Base):
 	@lazy
 	def poll_voted(self, v):
 		if v:
-			vote = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=self.id).one_or_none()
-			if vote: return vote.vote_type
-			else: return None
-		else: return None
+			vote = g.db.query(CommentVote.vote_type).filter_by(user_id=v.id, comment_id=self.id).one_or_none()
+			if vote: return vote[0]
+		return None
 
 	@property
 	@lazy
 	def options(self):
 		return [x for x in self.child_comments if x.author_id == AUTOPOLLER_ID]
 
+	@property
+	@lazy
+	def choices(self):
+		return [x for x in self.child_comments if x.author_id == AUTOCHOICE_ID]
+
 	def total_poll_voted(self, v):
 		if v:
 			for option in self.options:
 				if option.poll_voted(v): return True
+		return False
+
+	def total_choice_voted(self, v):
+		if v:
+			return g.db.query(CommentVote).filter(CommentVote.user_id == v.id, CommentVote.comment_id.in_(tuple(x.id for x in self.choices))).all()
 		return False
 
 	@property
@@ -198,12 +208,12 @@ class Comment(Base):
 	@property
 	def replies(self):
 		if self.replies2 != None:  return [x for x in self.replies2 if not x.author.shadowbanned]
-		return sorted((x for x in self.child_comments if x.author and not x.author.shadowbanned and x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID)), key=lambda x: x.realupvotes, reverse=True)
+		return sorted((x for x in self.child_comments if x.author and not x.author.shadowbanned and x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)), key=lambda x: x.realupvotes, reverse=True)
 
 	@property
 	def replies3(self):
 		if self.replies2 != None: return self.replies2
-		return sorted((x for x in self.child_comments if x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID)), key=lambda x: x.realupvotes, reverse=True)
+		return sorted((x for x in self.child_comments if x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)), key=lambda x: x.realupvotes, reverse=True)
 
 	@property
 	def replies2(self):
@@ -361,15 +371,25 @@ class Comment(Base):
 				g.db.add(self.author)
 				g.db.commit()
 
-		for o in self.options:
-			body += f'<div class="custom-control"><input type="checkbox" class="custom-control-input" id="{o.id}" name="option"'
-			if o.poll_voted(v): body += " checked"
-			if v: body += f''' onchange="poll_vote('{o.id}', '{self.id}')"'''
-			else: body += f''' onchange="poll_vote_no_v('{o.id}', '{self.id}')"'''
-			body += f'''><label class="custom-control-label" for="{o.id}">{o.body_html}<span class="presult-{self.id}'''
+		for c in self.options:
+			body += f'<div class="custom-control"><input type="checkbox" class="custom-control-input" id="{c.id}" name="option"'
+			if c.poll_voted(v): body += " checked"
+			if v: body += f''' onchange="poll_vote('{c.id}', '{self.id}')"'''
+			else: body += f''' onchange="poll_vote_no_v('{c.id}', '{self.id}')"'''
+			body += f'''><label class="custom-control-label" for="{c.id}">{c.body_html}<span class="presult-{self.id}'''
 			if not self.total_poll_voted(v): body += ' d-none'	
-			body += f'"> - <a href="/votes?link=t3_{o.id}"><span id="poll-{o.id}">{o.upvotes}</span> votes</a></span></label></div>'
+			body += f'"> - <a href="/votes?link=t3_{c.id}"><span id="poll-{c.id}">{c.upvotes}</span> votes</a></span></label></div>'
 
+		curr = self.total_choice_voted(v)
+		if curr:
+			body += f'<input class="d-none" id="current-{self.id}" value={curr[0].comment_id}>'
+
+		for c in self.choices:
+			body += f'''<div class="custom-control mt-3"><input name="choice" autocomplete="off" class="custom-control-input" type="radio" id="{c.id}" onchange="choice_vote('{c.id}','{self.id}')"'''
+			if c.poll_voted(v): body += " checked "
+			body += f'''><label class="custom-control-label" for="{c.id}">{c.body_html}<span class="presult-{self.id}'''
+			if not self.total_choice_voted(v): body += ' d-none'	
+			body += f'"> - <a href="/votes?link=t3_{c.id}"><span id="choice-{c.id}">{c.upvotes}</span> votes</a></span></label></div>'
 
 		if self.author.sig_html and not self.ghost and (self.author_id == MOOSE_ID or not (v and v.sigs_disabled)):
 			body += f"<hr>{self.author.sig_html}"
