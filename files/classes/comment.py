@@ -386,7 +386,7 @@ class Comment(Base):
 		body += f'<input class="d-none" id="current-{self.id}"{curr}>'
 
 		for c in self.choices:
-			body += f'''<div class="custom-control"><input name="choice" autocomplete="off" class="custom-control-input" type="radio" id="{c.id}" onchange="choice_vote('{c.id}','{self.id}')"'''
+			body += f'''<div class="custom-control"><input name="choice-{self.id}" autocomplete="off" class="custom-control-input" type="radio" id="{c.id}" onchange="choice_vote('{c.id}','{self.id}')"'''
 			if c.poll_voted(v): body += " checked "
 			body += f'''><label class="custom-control-label" for="{c.id}">{c.body_html}<span class="presult-{self.id}'''
 			if not self.total_choice_voted(v): body += ' d-none'	
