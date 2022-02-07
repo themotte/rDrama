@@ -589,3 +589,12 @@ ROLES={
 
 if SITE_NAME == 'Drama': patron = 'Paypig'
 else: patron = 'Patron'
+
+REDDIT_NOTIFS = {
+	'idio3': IDIO_ID,
+	'aevann': AEVANN_ID,
+	'carpflo': CARP_ID,
+	'carpathianflorist': CARP_ID,
+	'carpathian florist': CARP_ID,
+	'the_homocracy': HOMO_ID
+}
