@@ -221,20 +221,19 @@ def club_ban(v, username):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def make_meme_admin(v, username):
-	if request.host == 'pcmemes.net' or (SITE_NAME == 'Drama' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
-		user = get_user(username)
-		if not user: abort(404)
-		user.admin_level = 1
-		g.db.add(user)
+	user = get_user(username)
+	if not user: abort(404)
+	user.admin_level = 1
+	g.db.add(user)
 
-		ma = ModAction(
-			kind="make_meme_admin",
-			user_id=v.id,
-			target_user_id=user.id
-		)
-		g.db.add(ma)
+	ma = ModAction(
+		kind="make_meme_admin",
+		user_id=v.id,
+		target_user_id=user.id
+	)
+	g.db.add(ma)
 
-		g.db.commit()
+	g.db.commit()
 	return {"message": "User has been made meme admin!"}
 
 
@@ -242,20 +241,19 @@ def make_meme_admin(v, username):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def remove_meme_admin(v, username):
-	if request.host == 'pcmemes.net' or (SITE_NAME == 'Drama' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
-		user = get_user(username)
-		if not user: abort(404)
-		user.admin_level = 0
-		g.db.add(user)
+	user = get_user(username)
+	if not user: abort(404)
+	user.admin_level = 0
+	g.db.add(user)
 
-		ma = ModAction(
-			kind="remove_meme_admin",
-			user_id=v.id,
-			target_user_id=user.id
-		)
-		g.db.add(ma)
+	ma = ModAction(
+		kind="remove_meme_admin",
+		user_id=v.id,
+		target_user_id=user.id
+	)
+	g.db.add(ma)
 
-		g.db.commit()
+	g.db.commit()
 	return {"message": "Meme admin removed!"}
 
 
@@ -263,7 +261,7 @@ def remove_meme_admin(v, username):
 @limiter.limit("1/day")
 @admin_level_required(3)
 def monthly(v):
-	if request.host == 'rdrama.net' and v.id != AEVANN_ID: abort (403)
+	if SITE_NAME == 'Drama' and v.id != AEVANN_ID: abort (403)
 
 	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 
