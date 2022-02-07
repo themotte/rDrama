@@ -306,5 +306,6 @@ function handle_blackjack_action(cid, action) {
 
 	xhr.onload = function() {
 		if (xhr.status == 200) location.reload();
+	}
 	xhr.send(form);
 }
