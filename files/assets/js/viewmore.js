@@ -3,7 +3,6 @@ function viewmore(pid,sort,offset,ids) {
     btn.disabled = true;
     btn.innerHTML = "Requesting...";
     var form = new FormData();
-	form.append("formkey", formkey());
     const xhr = new XMLHttpRequest();
     xhr.open("get", `/viewmore/${pid}/${sort}/${offset}?ids=${ids}`);
     xhr.setRequestHeader('xhr', 'xhr');
