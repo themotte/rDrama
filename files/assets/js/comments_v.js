@@ -280,7 +280,7 @@ function choice_vote(cid, parentid) {
 	}
 	
 	let curr = document.getElementById(`current-${parentid}`)
-	if (curr.value)
+	if (curr && curr.value)
 	{
 		var scoretext = document.getElementById('choice-' + curr.value);
 		var score = Number(scoretext.textContent);
