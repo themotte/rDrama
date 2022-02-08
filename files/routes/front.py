@@ -286,7 +286,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 
 	posts = posts.filter_by(is_banned=False, private=False, deleted_utc = 0)
 
-	if sort == "hot" or (v and v.id == Q_ID) and ccmode == "false" and not gt and not lt:
+	if (sort == "hot" or (v and v.id == Q_ID)) and ccmode == "false" and not gt and not lt:
 		posts = posts.filter_by(stickied=None)
 
 	if v and v.admin_level == 0:
