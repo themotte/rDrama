@@ -151,10 +151,12 @@ def front_all(v, sub=None):
 
 	if v:
 		defaultsorting = v.defaultsorting
-		defaulttime = v.defaulttime
+		if sub or SITE_NAME == '2Much4You': defaulttime = 'all'
+		else: defaulttime = v.defaulttime
 	else:
 		defaultsorting = "hot"
-		defaulttime = defaulttimefilter
+		if sub or SITE_NAME == '2Much4You': defaulttime = 'all'
+		else: defaulttime = v.defaulttime
 
 	sort=request.values.get("sort", defaultsorting)
 	t=request.values.get('t', defaulttime)
@@ -341,6 +343,9 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false" and not gt and not lt:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
+		elif SITE_NAME == '2Much4You': pins = pins.filter(Submission.sub != None)
+		else: pins = pins.filter_by(sub=None)
+
 		if v and v.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
 			blocked = [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]
