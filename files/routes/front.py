@@ -160,15 +160,21 @@ def front_all(v, sub=None):
 	t=request.values.get('t', defaulttime)
 	ccmode=request.values.get('ccmode', "false")
 
+	try: gt=int(request.values.get("utc_greater_than", 0))
+	except: gt=0
+
+	try: lt=int(request.values.get("utc_less_than", 0))
+	except: lt=0
+
 	ids, next_exists = frontlist(sort=sort,
 					page=page,
 					t=t,
 					v=v,
 					ccmode=ccmode,
 					filter_words=v.filter_words if v else [],
-					gt=int(request.values.get("utc_greater_than", 0)),
-					lt=int(request.values.get("utc_less_than", 0)),
-					sub=sub
+					gt=gt,
+					lt=lt,
+					sub=sub,
 					)
 
 	posts = get_posts(ids, v=v)
@@ -255,21 +261,25 @@ def front_all(v, sub=None):
 
 
 @cache.memoize(timeout=86400)
-def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=None, lt=None, sub=None):
+def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=0, lt=0, sub=None):
 
 	posts = g.db.query(Submission)
-
+	
 	if sub: posts = posts.filter_by(sub=sub.name)
 
-	if t == 'all': cutoff = 0
-	else:
-		now = int(time.time())
-		if t == 'hour': cutoff = now - 3600
-		elif t == 'week': cutoff = now - 604800
-		elif t == 'month': cutoff = now - 2592000
-		elif t == 'year': cutoff = now - 31536000
-		else: cutoff = now - 86400
-		posts = posts.filter(Submission.created_utc >= cutoff)
+	if gt: posts = posts.filter(Submission.created_utc > gt)
+	if lt: posts = posts.filter(Submission.created_utc < lt)
+
+	if not gt and not lt:
+		if t == 'all': cutoff = 0
+		else:
+			now = int(time.time())
+			if t == 'hour': cutoff = now - 3600
+			elif t == 'week': cutoff = now - 604800
+			elif t == 'month': cutoff = now - 2592000
+			elif t == 'year': cutoff = now - 31536000
+			else: cutoff = now - 86400
+			posts = posts.filter(Submission.created_utc >= cutoff)
 
 	if (ccmode == "true"):
 		posts = posts.filter(Submission.club == True)
@@ -295,9 +305,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	if v and filter_words:
 		for word in filter_words:
 			posts=posts.filter(not_(Submission.title.ilike(f'%{word}%')))
-
-	if gt: posts = posts.filter(Submission.created_utc > gt)
-	if lt: posts = posts.filter(Submission.created_utc < lt)
 
 	if not (v and v.shadowbanned):
 		posts = posts.join(User, User.id == Submission.author_id).filter(User.shadowbanned == None)
