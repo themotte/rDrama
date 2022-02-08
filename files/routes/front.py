@@ -284,8 +284,10 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	if (ccmode == "true"):
 		posts = posts.filter(Submission.club == True)
 
-	if sort == "hot" or (v and v.id == Q_ID): posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
-	else: posts = posts.filter_by(is_banned=False, private=False, deleted_utc = 0)
+	posts = posts.filter_by(is_banned=False, private=False, deleted_utc = 0)
+
+	if sort == "hot" or (v and v.id == Q_ID) and ccmode == "false" and not gt and not lt:
+		posts = posts.filter_by(stickied=None)
 
 	if v and v.admin_level == 0:
 		blocking = [x[0] for x in g.db.query(
@@ -334,7 +336,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 
 	posts = posts[:size]
 
-	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false":
+	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false" and not gt and not lt:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
 		if v and v.admin_level == 0:
