@@ -151,11 +151,11 @@ def front_all(v, sub=None):
 
 	if v:
 		defaultsorting = v.defaultsorting
-		if SITE_NAME == '2Much4You': defaulttime = 'all'
+		if sub or SITE_NAME == '2Much4You': defaulttime = 'all'
 		else: defaulttime = v.defaulttime
 	else:
 		defaultsorting = "hot"
-		if SITE_NAME == '2Much4You': defaulttime = 'all'
+		if sub or SITE_NAME == '2Much4You': defaulttime = 'all'
 		else: defaulttime = v.defaulttime
 
 	sort=request.values.get("sort", defaultsorting)
