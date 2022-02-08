@@ -349,7 +349,7 @@
 			</div>
 			<div class="mt-n3 py-3">
 				{% if u.is_suspended %}
-					<h5 class="text-primary">>BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
+					<h5 class="text-primary">BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
 					{% if u.unban_utc %}<h5 class="text-primary">>{{u.unban_string}}</h5>{% endif %}
 				{% endif %}
 				{% if u.house %}
