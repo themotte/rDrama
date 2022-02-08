@@ -57,7 +57,7 @@
 									<i class="fad fa-user-tag text-info align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Original Username: @{{u.original_username}}"></i>
 								</span>
 								{% endif %}
-								{% if u.house %}
+								{% if SITE_NAME=='Drama' and u.house %}
 									<img src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?a=5" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{u.house}}">
 								{% endif %}
 
@@ -352,7 +352,7 @@
 					<h5 class="text-primary">BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
 					{% if u.unban_utc %}<h5 class="text-primary">>{{u.unban_string}}</h5>{% endif %}
 				{% endif %}
-				{% if u.house %}
+				{% if SITE_NAME=='Drama' and u.house %}
 					<img src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?a=5" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{u.house}}">
 				{% endif %}
 
