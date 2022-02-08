@@ -164,7 +164,7 @@ def api_comment(v):
 
 	body = request.values.get("body", "").strip()[:10000]
 
-	if v.admin_level == 3 and parent_post.id == 37749:
+	if v.admin_level > 1 and parent_post.id == 37749:
 		with open(f"snappy_{SITE_NAME}.txt", "a", encoding="utf-8") as f:
 			f.write('\n{[para]}\n' + body)
 
@@ -198,7 +198,7 @@ def api_comment(v):
 			file.save(oldname)
 			image = process_image(oldname)
 			if image == "": return {"error":"Image upload failed"}
-			if v.admin_level == 3:
+			if v.admin_level > 2:
 				if parent_post.id == 37696:
 					filename = 'files/assets/images/Drama/sidebar/' + str(len(listdir('files/assets/images/Drama/sidebar'))+1) + '.webp'
 					copyfile(oldname, filename)
