@@ -38,7 +38,9 @@
 	{% if SUBS %}
 		<div class="srd">
 			{% for s in SUBS %}
-				<a {% if sub and s == sub.name %} style="color: var(--secondary)" {% else %} style="color: white"{% endif %} class="text-small-mobile ml-2" href="/s/{{s}}">/s/{{s}}</a>
+				{% if s != 'general' %}
+					<a {% if sub and s == sub.name %} style="color: var(--secondary)" {% else %} style="color: white"{% endif %} class="text-small-mobile ml-2" href="/s/{{s}}">/s/{{s}}</a>
+				{% endif %}
 			{% endfor %}
 		</div>
 	{% endif %}
