@@ -125,11 +125,11 @@ blockquote a {
     color: var(--gray-400);
 }
 
-#srd {
+.srd {
     background-color: var(--gray-700) !important;
 }
 
-#srd a {
+.srd a {
     color: maroon !important;
 }
 

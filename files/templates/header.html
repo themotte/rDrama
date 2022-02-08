@@ -2,6 +2,15 @@
 <nav class="shadow shadow-md fixed-top">
 	{% if SITE_NAME == 'Drama' or SUBS %}
 		<style>
+			body {padding-top: 110.88px !important}
+			@media (max-width: 767.98px) {
+				body {
+					padding-top: 94.55px !important
+				}
+			}
+		</style>
+	{% elif SUBS %}
+		<style>
 			body {padding-top: 85.88px !important}
 			@media (max-width: 767.98px) {
 				body {
@@ -21,11 +30,13 @@
 	{% endif %}
 
 	{% if SITE_NAME == 'Drama' %}
-		<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: center; font-weight: bold;white-space:nowrap">
+		<div class="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: center; font-weight: bold;white-space:nowrap">
 			<a style="color: white" class="text-small-mobile" href="https://reddit.com/r/SubredditDrama">💖🌈 welcome to {{SITE}}: the official site for r/subredditdrama</a>
 		</div>
-	{% elif SUBS %}
-		<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: left; font-weight: bold;white-space:nowrap">
+	{% endif %}
+
+	{% if SUBS %}
+		<div class="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: left; font-weight: bold;white-space:nowrap">
 			{% for s in SUBS %}
 				<a {% if sub and s == sub.name %} style="color: var(--secondary)" {% else %} style="color: white"{% endif %} class="text-small-mobile ml-2" href="/s/{{s}}">/s/{{s}}</a>
 			{% endfor %}
