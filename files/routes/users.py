@@ -295,11 +295,11 @@ def transfer_bux(v, username):
 		if amount < 100: return {"error": "You have to gift at least 100 marseybux."}, 400
 
 		log_message = f"@{v.username} has transferred {amount} Marseybux to @{receiver.username}"
-		send_repeatable_notification(CARP_ID, log_message)
+		send_repeatable_notification(TAX_NOTIF_ID, log_message)
 
 		receiver.procoins += amount
 		v.procoins -= amount
-		send_repeatable_notification(TAX_NOTIF_ID, f":marseycapitalistmanlet: @{v.username} has gifted you {amount} marseybux!")
+		send_repeatable_notification(receiver.id, f":marseycapitalistmanlet: @{v.username} has gifted you {amount} marseybux!")
 		g.db.add(receiver)
 		g.db.add(v)
 
