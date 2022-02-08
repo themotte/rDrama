@@ -174,7 +174,7 @@ def front_all(v, sub=None):
 					filter_words=v.filter_words if v else [],
 					gt=gt,
 					lt=lt,
-					sub=sub,
+					sub=sub
 					)
 
 	posts = get_posts(ids, v=v)
@@ -266,6 +266,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	posts = g.db.query(Submission)
 	
 	if sub: posts = posts.filter_by(sub=sub.name)
+	elif SITE_NAME == '2Much4You': posts = posts.filter(Submission.sub != None)
+	else: posts = posts.filter_by(sub=None)
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
 	if lt: posts = posts.filter(Submission.created_utc < lt)
