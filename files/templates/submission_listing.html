@@ -184,7 +184,7 @@
 				{% if p.ghost %}
 					👻
 				{% else %}
-					{% if p.author.house %}
+					{% if SITE_NAME=='Drama' and p.author.house %}
 						<img src="/assets/images/{{SITE_NAME}}/houses/{{p.author.house}}.webp?a=5" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{p.author.house}}">
 					{% endif %}
 
