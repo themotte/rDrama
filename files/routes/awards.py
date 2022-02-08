@@ -190,7 +190,7 @@ def buy(v, award):
 @app.get("/post/<pid>/awards")
 @app.post("/post/<pid>/awards")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
+@is_not_permabanned
 def award_post(pid, v):
 	if v.shadowbanned: return render_template('errors/500.html', err=True, v=v), 500
 	
@@ -428,7 +428,7 @@ def award_post(pid, v):
 @app.get("/comment/<cid>/awards")
 @app.post("/comment/<cid>/awards")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
+@is_not_permabanned
 def award_comment(cid, v):
 	if v.shadowbanned: return render_template('errors/500.html', err=True, v=v), 500
 
