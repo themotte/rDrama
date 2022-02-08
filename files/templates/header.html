@@ -2,15 +2,6 @@
 <nav class="shadow shadow-md fixed-top">
 	{% if SITE_NAME == 'Drama' or SUBS %}
 		<style>
-			body {padding-top: 110.88px !important}
-			@media (max-width: 767.98px) {
-				body {
-					padding-top: 94.55px !important
-				}
-			}
-		</style>
-	{% elif SUBS %}
-		<style>
 			body {padding-top: 85.88px !important}
 			@media (max-width: 767.98px) {
 				body {
@@ -33,17 +24,14 @@
 		<div class="srd">
 			<a style="color: white" class="text-small-mobile" href="https://reddit.com/r/SubredditDrama">💖🌈 welcome to {{SITE}}: the official site for r/subredditdrama</a>
 		</div>
-	{% endif %}
-
-	{% if SUBS %}
+	{% elif SUBS %}
 		<div class="srd">
 			{% for s in SUBS %}
-				{% if s != 'general' %}
-					<a {% if sub and s == sub.name %} style="color: var(--secondary)" {% else %} style="color: white"{% endif %} class="text-small-mobile ml-2" href="/s/{{s}}">/s/{{s}}</a>
-				{% endif %}
+				<a {% if sub and s == sub.name %} style="color: var(--secondary)" {% else %} style="color: white"{% endif %} class="text-small-mobile ml-2" href="/s/{{s}}">/s/{{s}}</a>
 			{% endfor %}
 		</div>
 	{% endif %}
+
 
 	<div class="navbar navbar-expand-md navbar-light" id="navbar">
 		<div class="container-fluid" style="padding:0;">
