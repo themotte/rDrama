@@ -156,7 +156,7 @@ def front_all(v, sub=None):
 	else:
 		defaultsorting = "hot"
 		if sub or SITE_NAME == '2Much4You': defaulttime = 'all'
-		else: defaulttime = v.defaulttime
+		else: defaulttime = defaulttimefilter
 
 	sort=request.values.get("sort", defaultsorting)
 	t=request.values.get('t', defaulttime)
