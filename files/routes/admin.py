@@ -452,7 +452,8 @@ def reported_comments(v):
 @admin_level_required(2)
 def admin_home(v):
 	with open('disable_signups', 'r') as f: x = f.read()
-
+	
+	print(requests.get(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS).json())
 	response = requests.get(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS).json()['result']['value']
 	x2 = response == 'under_attack'
 
