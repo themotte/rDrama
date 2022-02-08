@@ -100,6 +100,8 @@ allowed_styles = ['color', 'background-color', 'font-weight', 'transform', '-web
 
 def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
+	if sanitized.count(':') > 100: abort(418)
+
 	sanitized = markdown(sanitized)
 
 	sanitized = sanitized.replace("\ufeff", "").replace("𒐪","").replace("<script","").replace('‎','')
@@ -111,6 +113,8 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img alt="@{u.username}'s profile picture" loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
 	else:
 		sanitized = re.sub('(^|\s|\n|<p>)\/?((r|u)\/(\w|-){3,25})', r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">\2</a>', sanitized, re.A)
+
+		sanitized = re.sub('(^|\s|\n|<p>)\/?(s\/(\w|-){3,25})', r'\1<a href="/\2" rel="nofollow noopener noreferrer">\2</a>', sanitized, re.A)
 
 		for i in re.finditer('(^|\s|\n|<p>)@((\w|-){1,25})', sanitized, re.A):
 			u = get_user(i.group(2), graceful=True)
@@ -157,7 +161,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			tag["data-src"] = tag["src"]
 			tag["src"] = "/static/assets/images/loading.webp"
 			tag['alt'] = f'![]({tag["data-src"]})'
-			tag["onclick"] = f"expandDesktopImage(this.src);"
+			tag["onclick"] = "expandDesktopImage(this.src);"
 			tag["data-bs-toggle"] = "modal"
 			tag["data-bs-target"] = "#expandImageModal"
 

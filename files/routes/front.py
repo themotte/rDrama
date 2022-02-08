@@ -133,7 +133,10 @@ def notifications(v):
 @limiter.limit("3/second;30/minute;400/hour;2000/day")
 @auth_desired
 def front_all(v, sub=None):
-	if sub and sub not in subs: sub = None
+	if sub: sub = g.db.query(Sub).filter_by(name=sub).one_or_none()
+	
+	if request.path.startswith('/s/') and not sub: abort(404)
+
 	if g.webview and not session.get("session_id"):
 		session.permanent = True
 		session["session_id"] = secrets.token_hex(49)
@@ -256,8 +259,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 
 	posts = g.db.query(Submission)
 
-	if sub: posts = posts.filter_by(sub=sub)
-	else: posts = posts.filter_by(sub=None)
+	if sub: posts = posts.filter_by(sub=sub.name)
 
 	if t == 'all': cutoff = 0
 	else:
@@ -302,7 +304,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 
 	if sort == "hot":
 		ti = int(time.time()) + 3600
-		posts = posts.order_by(-1000000*(Submission.realupvotes + 1 + Submission.comment_count/5 + (func.length(Submission.body_html)-func.length(func.replace(Submission.body_html,'</a>','')))/4)/(func.power(((ti - Submission.created_utc)/1000), 1.23)))
+		posts = posts.order_by(-1000000*(Submission.realupvotes + 1 + Submission.comment_count/5 + (func.length(Submission.body_html)-func.length(func.replace(Submission.body_html,'</a>',''))))/(func.power(((ti - Submission.created_utc)/1000), 1.23)))
 	elif sort == "new":
 		posts = posts.order_by(Submission.created_utc.desc())
 	elif sort == "old":
@@ -327,8 +329,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 
 	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false":
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
-		if sub: pins = pins.filter_by(sub=sub)
-		else: pins = pins.filter_by(sub=None)
+		if sub: pins = pins.filter_by(sub=sub.name)
 		if v and v.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
 			blocked = [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]
@@ -447,7 +448,7 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 
 	cc_idlist = [x[0] for x in g.db.query(Submission.id).filter(Submission.club == True).all()]
 
-	comments = g.db.query(Comment.id).filter(Comment.parent_submission.notin_(cc_idlist))
+	comments = g.db.query(Comment.id).filter(Comment.parent_submission != None, Comment.parent_submission.notin_(cc_idlist))
 
 	if v and v.admin_level <= 3:
 		blocking = [x[0] for x in g.db.query(

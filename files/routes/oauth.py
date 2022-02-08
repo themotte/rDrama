@@ -5,7 +5,6 @@ from files.helpers.const import *
 from files.classes import *
 from flask import *
 from files.__main__ import app, limiter
-from sqlalchemy.orm import joinedload
 
 @app.get("/authorize")
 @auth_required
@@ -190,13 +189,9 @@ def admin_app_id(v, aid):
 
 	aid=aid
 
-	oauth = g.db.query(OauthApp).options(
-		joinedload(
-			OauthApp.author)).filter_by(
-		id=aid).one_or_none()
+	oauth = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
-	pids=oauth.idlist(page=int(request.values.get("page",1)),
-		)
+	pids=oauth.idlist(page=int(request.values.get("page",1)))
 
 	next_exists=len(pids)==101
 	pids=pids[:100]
@@ -216,10 +211,7 @@ def admin_app_id_comments(v, aid):
 
 	aid=aid
 
-	oauth = g.db.query(OauthApp).options(
-		joinedload(
-			OauthApp.author)).filter_by(
-		id=aid).one_or_none()
+	oauth = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
 	cids=oauth.comments_idlist(page=int(request.values.get("page",1)),
 		)

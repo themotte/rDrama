@@ -221,7 +221,7 @@
 <meta property="og:description" name="description" content="{{comment_info.plainbody(v)}}" >
 <meta property="og:author" name="author" content="{{'@'+comment_info.author_name}}" >
 <meta property="og:title" content="{{'@'+comment_info.author_name}} comments on {{p.plaintitle(v)}} - {{SITE_NAME}}" >
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1009{% endif %}" >
+<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1011{% endif %}" >
 {% if p.is_video %}
 	<meta property="og:video" content="{{p.realurl(v)}}" >
 {% endif %}
@@ -233,7 +233,7 @@
 <meta name="twitter:title" content="{{'@'+comment_info.author_name}} comments on {{p.plaintitle(v)}} - {{SITE_NAME}}" >
 <meta name="twitter:creator" content="{{'@'+comment_info.author_name}}">
 <meta name="twitter:description" content="{{comment_info.plainbody(v)}}" >
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1009{% endif %}" >
+<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1011{% endif %}" >
 <meta name="twitter:url" content="{{p.permalink}}" >
 
 {% else %}
@@ -246,7 +246,7 @@
 <meta property="og:description" name="description" content="{{p.plainbody(v)}}" >
 {% if p.author %}<meta property="og:author" name="author" content="{{'@'+p.author_name}}" >{% endif %}
 <meta property="og:title" content="{{p.plaintitle(v)}} - {{SITE_NAME}}" >
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1009{% endif %}" >
+<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1011{% endif %}" >
 {% if p.url and p.is_video %}
 <meta property="og:video" content="{{p.realurl(v)}}" >
 {% endif %}
@@ -258,7 +258,7 @@
 <meta name="twitter:title" content="{{p.plaintitle(v)}} - {{SITE_NAME}}" >
 {% if p.author %}<meta name="twitter:creator" content="{{'@'+p.author_name}}">{% endif %}
 <meta name="twitter:description" content="{{p.plainbody(v)}}" >
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1009{% endif %}" >
+<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1011{% endif %}" >
 <meta name="twitter:url" content="{{p.permalink}}" >
 
 {% endif %}
@@ -420,6 +420,10 @@
 				<div id="post-content" class="{% if p.deleted_utc %}deleted {% endif %}card-block w-100 my-md-auto">
 
 					<div class="post-meta text-left mb-2">
+						{% if p.sub %}
+							<a href='/s/{{p.sub}}'>/s/{{p.sub}}</a>&nbsp;&nbsp;
+						{% endif %}
+
 						{% if p.bannedfor %}
 							<a role="button"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User was banned for this post{% if p.author.banned_by %} by @{{p.author.banned_by.username}}{% endif %}"></i></a>
 						{% endif %}	
@@ -445,12 +449,12 @@
 							👻
 						{% else %}
 							{% if p.author.house %}
-								<img src="/assets/images/{{SITE_NAME}}/houses/{{p.author.house}}.webp?a=1" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{p.author.house}}">
+								<img src="/assets/images/{{SITE_NAME}}/houses/{{p.author.house}}.webp?a=5" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{p.author.house}}">
 							{% endif %}
 
 							{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{p.author.verified}}"></i>
 							{% endif %}
-							<a class="user-name text-decoration-none" onclick='popclick({{p.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name"><img alt="@{{p.author_name}}'s profile picture" loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and request.host == 'rdrama.net' %}class="mod"{% endif %}>{{p.author_name}}</span></a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{% if p.author.quadrant %}<img alt="{{p.author.quadrant}} quadrant" loading="lazy" height="20" src="/static/assets/images/quadrants/{{p.author.quadrant}}.webp?a=1008">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
+							<a class="user-name text-decoration-none" onclick='popclick({{p.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name"><img alt="@{{p.author_name}}'s profile picture" loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and SITE_NAME == 'Drama' %}class="mod"{% endif %}>{{p.author_name}}</span></a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{% if p.author.quadrant %}<img alt="{{p.author.quadrant}} quadrant" loading="lazy" height="20" src="/static/assets/images/quadrants/{{p.author.quadrant}}.webp?a=1008">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
 						{% endif %}
 						<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp" onmouseover="timestamp('timestamp','{{p.created_utc}}')">&nbsp;{{p.age_string}}</span>
 						({% if p.is_image %}image post{% elif p.is_video %}video post{% elif p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
@@ -617,7 +621,7 @@
 							<a class="list-inline-item text-muted d-none d-md-inline-block" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw"></i>Give Award</a>
 						{% endif %}
 
-						<a class="list-inline-item copy-link" role="button" role="button" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
+						<a class="list-inline-item copy-link" role="button" role="button" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
 
 						{% if v %}
 							<a id="subscribe-{{p.id}}" class="{% if p.id in v.subscribed_idlist() %}d-none{% endif %} list-inline-item" role="button" onclick="post_toast2('/subscribe/{{p.id}}','subscribe-{{p.id}}','unsubscribe-{{p.id}}')"><i class="fas fa-eye"></i>Subscribe</a>
@@ -752,7 +756,7 @@
 					{% endif %}
 				</li>
 
-				<a class="list-inline-item copy-link" role="button" role="button" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="fas fa-link"></i>Copy link</a>
+				<a class="list-inline-item copy-link" role="button" role="button" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="fas fa-link"></i>Copy link</a>
 				{% if v %}
 				<li class="list-inline-item">
 					<a role="button" data-bs-toggle="modal" data-bs-target="#actionsModal">
@@ -879,7 +883,7 @@
  </div>
  
 {% if offset %}
-	<script src="/static/assets/js/viewmore.js?a=240"></script>
+	<script src="/static/assets/js/viewmore.js?a=245"></script>
 {% endif %}
 
 {% elif not p.replies and p.deleted_utc == 0 %}

@@ -35,6 +35,15 @@ function markdown(first, second) {
 				input += '<div class="custom-control"><input type="checkbox" class="custom-control-input" id="' + option2 + '"><label class="custom-control-label" for="' + option2 + '">' + option2 + ' - <a>0 votes</a></label></div>';
 			}
 		}
+		var options = Array.from(input.matchAll(/\s*##([^\$\n]+)##\s*/gi))
+		if(options != null){
+			for(i = 0; i < options.length; i++){
+				var option = options[i][0];
+				var option2 = option.replace(/##/g, '').replace(/\n/g, '')
+				input = input.replace(option, '');
+				input += '<div class="custom-control"><input type="radio" name="choice" class="custom-control-input" id="' + option2 + '"><label class="custom-control-label" for="' + option2 + '">' + option2 + ' - <a>0 votes</a></label></div>';
+			}
+		}
 	}
 	
 	document.getElementById(second).innerHTML = marked(input)

@@ -24,7 +24,7 @@ marseys = tuple(f':#{x[0]}:' for x in db.query(Marsey.name).all())
 db.close()
 
 if path.exists(f'snappy_{SITE_NAME}.txt'):
-	with open(f'snappy_{SITE_NAME}.txt', "r") as f:
+	with open(f'snappy_{SITE_NAME}.txt', "r", encoding="utf-8") as f:
 		if SITE == 'pcmemes.net': snappyquotes = tuple(f.read().split("{[para]}"))
 		else: snappyquotes = tuple(f.read().split("{[para]}")) + marseys
 else: snappyquotes = marseys
@@ -91,7 +91,10 @@ def publish(pid, v):
 @app.get("/s/<sub>/submit")
 @auth_required
 def submit_get(v, sub=None):
-	if sub and sub not in subs: sub = None
+	if sub: sub = g.db.query(Sub.name).filter_by(name=sub).one_or_none()
+	
+	if request.path.startswith('/s/') and not sub: abort(404)
+
 	return render_template("submit.html", v=v, sub=sub)
 
 @app.get("/post/<pid>")
@@ -145,7 +148,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
  
-		comments=comments.filter(Comment.parent_submission == post.id, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID))).join(
+		comments=comments.filter(Comment.parent_submission == post.id, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID))).join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
@@ -188,7 +191,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 	else:
 		pinned = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.is_pinned != None).all()
 
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID)), Comment.level == 1, Comment.is_pinned == None)
+		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)), Comment.level == 1, Comment.is_pinned == None)
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -239,7 +242,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 
 	post.views += 1
 	g.db.add(post)
-	if request.host != 'old.rdrama.net' and post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
+	if post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"Must be 18+ to view"}, 451
 		return render_template("errors/nsfw.html", v=v)
 
@@ -248,14 +251,16 @@ def post_id(pid, anything=None, v=None, sub=None):
 	else:
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
-		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset, sub=post.sub)
+		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset, sub=post.subr)
 
-@app.post("/viewmore/<pid>/<sort>/<offset>")
+@app.get("/viewmore/<pid>/<sort>/<offset>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def viewmore(v, pid, sort, offset):
 	offset = int(offset)
-	ids = set(int(x) for x in request.values.get("ids").split(','))
+	try: ids = set(int(x) for x in request.values.get("ids").split(','))
+	except: abort(400)
+	
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
@@ -268,7 +273,7 @@ def viewmore(v, pid, sort, offset):
 			votes.c.vote_type,
 			blocking.c.id,
 			blocked.c.id,
-		).filter(Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID)), Comment.is_pinned == None, Comment.id.notin_(ids))
+		).filter(Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)), Comment.is_pinned == None, Comment.id.notin_(ids))
 		
 		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
@@ -312,7 +317,7 @@ def viewmore(v, pid, sort, offset):
 		second = [c[0] for c in comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None), func.length(Comment.body) <= 50).all()]
 		comments = first + second
 	else:
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID)), Comment.level == 1, Comment.is_pinned == None, Comment.id.notin_(ids))
+		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)), Comment.level == 1, Comment.is_pinned == None, Comment.id.notin_(ids))
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -353,7 +358,7 @@ def viewmore(v, pid, sort, offset):
 	return render_template("comments.html", v=v, comments=comments, ids=list(ids), render_replies=True, pid=pid, sort=sort, offset=offset, ajax=True)
 
 
-@app.post("/morecomments/<cid>")
+@app.get("/morecomments/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def morecomments(v, cid):
@@ -471,6 +476,18 @@ def edit_post(pid, v):
 					)
 				g.db.add(c)
 
+		if not p.choices.count():
+			for i in re.finditer('\s*##([^\$\n]+)##\s*', body, re.A):
+				body = body.replace(i.group(0), "")
+				c = Comment(author_id=AUTOCHOICE_ID,
+					parent_submission=p.id,
+					level=1,
+					body_html=filter_emojis_only(i.group(1)),
+					upvotes=0,
+					is_bot=True
+					)
+				g.db.add(c)
+
 		body_html = sanitize(body, edit=True)
 
 		bans = filter_comment_html(body_html)
@@ -523,7 +540,7 @@ def edit_post(pid, v):
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
 
-		elif request.host == 'rdrama.net' and 'nigg' in f'{p.body}{p.title}'.lower() and not v.nwordpass:
+		elif SITE_NAME == 'Drama' and 'nigg' in f'{p.body}{p.title}'.lower() and not v.nwordpass:
 
 			p.is_banned = True
 			p.ban_reason = "AutoJanny"
@@ -703,17 +720,18 @@ def thumbnail_thread(pid):
 	db.add(post)
 	db.commit()
 
-	if SITE == 'rdrama.net':
+	if SITE_NAME == 'Drama':
 		for t in ("submission","comment"):
-			for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q=rdrama&size=1').json()["data"]:
+			word = random.choice(('rdrama','marsey'))
 
-				body_html = sanitize(f'New rdrama mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
+			for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={word}&size=1').json()["data"]:
+
+				body_html = sanitize(f'New {word} mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 
 				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1, sentto=0).first()
 
 				if existing_comment: break
 
-				print(body_html, flush=True)
 				new_comment = Comment(author_id=NOTIFICATIONS_ID,
 									parent_submission=None,
 									distinguish_level=6,
@@ -729,13 +747,13 @@ def thumbnail_thread(pid):
 					notif = Notification(comment_id=new_comment.id, user_id=admin.id)
 					db.add(notif)
 
-			for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q=aevann&size=1').json()["data"]:
+			k,val = random.choice(tuple(REDDIT_NOTIFS.items()))
+			for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={k}&size=1').json()["data"]:
 				try: body_html = sanitize(f'New mention of you: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 				except: continue
 				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html).first()
 				if existing_comment: break
 
-				print(body_html, flush=True)
 				new_comment = Comment(author_id=NOTIFICATIONS_ID,
 									parent_submission=None,
 									distinguish_level=6,
@@ -745,9 +763,34 @@ def thumbnail_thread(pid):
 				db.add(new_comment)
 				db.flush()
 
-				notif = Notification(comment_id=new_comment.id, user_id=AEVANN_ID)
+				notif = Notification(comment_id=new_comment.id, user_id=val)
 				db.add(notif)
 
+
+	if SITE == 'pcmemes.net':
+		for t in ("submission","comment"):
+			for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q=pcmemes.net&size=1').json()["data"]:
+
+				body_html = sanitize(f'New pcmemes mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
+
+				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1, sentto=0).first()
+
+				if existing_comment: break
+
+				new_comment = Comment(author_id=NOTIFICATIONS_ID,
+									parent_submission=None,
+									distinguish_level=6,
+									body_html=body_html,
+									level=1,
+									sentto=0,
+									)
+				db.add(new_comment)
+				db.flush()
+
+				admins = db.query(User).filter(User.admin_level > 2).all()
+				for admin in admins:
+					notif = Notification(comment_id=new_comment.id, user_id=admin.id)
+					db.add(notif)
 
 	db.commit()
 	db.close()
@@ -760,7 +803,11 @@ def thumbnail_thread(pid):
 @limiter.limit("1/second;6/minute;200/hour;1000/day")
 @auth_required
 def submit_post(v, sub=None):
-	if sub and sub not in subs: sub = None
+	if not sub: sub = request.values.get("sub")
+	sub = g.db.query(Sub.name).filter_by(name=sub).one_or_none()
+	if sub: sub = sub[0]
+	else: sub = None
+
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
 	
 	if v and v.patron:
@@ -953,6 +1000,11 @@ def submit_post(v, sub=None):
 		options.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
+	choices = []
+	for i in re.finditer('\s*##([^\$\n]+)##\s*', body, re.A):
+		choices.append(i.group(1))
+		body = body.replace(i.group(0), "")
+
 	if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
 	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
@@ -970,7 +1022,7 @@ def submit_post(v, sub=None):
 			body += f"\n\n{url}"
 		else:
 			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "Image/Video files only"}, 400
-			return render_template("submit.html", v=v, error=f"Image/Video files only."), 400
+			return render_template("submit.html", v=v, error="Image/Video files only."), 400
 
 	if '#fortune' in body:
 		body = body.replace('#fortune', '')
@@ -1040,7 +1092,16 @@ def submit_post(v, sub=None):
 			upvotes=0,
 			is_bot=True
 			)
+		g.db.add(c)
 
+	for choice in choices:
+		c = Comment(author_id=AUTOCHOICE_ID,
+			parent_submission=new_post.id,
+			level=1,
+			body_html=filter_emojis_only(choice),
+			upvotes=0,
+			is_bot=True
+			)
 		g.db.add(c)
 
 	vote = Vote(user_id=v.id,
@@ -1074,7 +1135,7 @@ def submit_post(v, sub=None):
 
 		
 	if not new_post.thumburl and new_post.url:
-		if request.host in new_post.url or new_post.url.startswith('/') or request.host == 'rdrama.net' and 'rdrama' in new_post.domain:
+		if request.host in new_post.url or new_post.url.startswith('/') or new_post.domain == SITE:
 			new_post.thumburl = f'/static/assets/images/{SITE_NAME}/site_preview.webp'
 		elif request.headers.get('cf-ipcountry')!="T1":
 			gevent.spawn( thumbnail_thread, new_post.id)
@@ -1120,7 +1181,7 @@ def submit_post(v, sub=None):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	elif request.host == 'rdrama.net' and 'nigg' in f'{new_post.body}{new_post.title}'.lower() and not v.nwordpass:
+	elif SITE_NAME == 'Drama' and 'nigg' in f'{new_post.body}{new_post.title}'.lower() and not v.nwordpass:
 
 		new_post.is_banned = True
 		new_post.ban_reason = "AutoJanny"
@@ -1167,7 +1228,7 @@ def submit_post(v, sub=None):
 		gevent.spawn(archiveorg, newposturl)
 
 	url_regex = '<a href=\"(https?:\/\/[a-z]{1,20}\.[^\"]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">(.*?)<\/a>'
-	for url_match in re.finditer(url_regex, new_post.body_html):
+	for url_match in list(re.finditer(url_regex, new_post.body_html))[:20]:
 		href = url_match.group(1)
 		if not href: continue
 
@@ -1243,7 +1304,7 @@ def submit_post(v, sub=None):
 		if 'megathread' in new_post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
 		if len(body_html) < 40000: new_post.replies = [c]
-		return render_template('submission.html', v=v, p=new_post, sort=sort, render_replies=True, offset=0, success=True, sub=new_post.sub)
+		return render_template('submission.html', v=v, p=new_post, sort=sort, render_replies=True, offset=0, success=True, sub=new_post.subr)
 
 
 @app.post("/delete_post/<pid>")

@@ -256,9 +256,9 @@ def transfer_coins(v, username):
 		amount = request.values.get("amount", "").strip()
 		amount = int(amount) if amount.isdigit() else None
 
-		if amount is None or amount <= 0: return {"error": f"Invalid amount of coins."}, 400
-		if v.coins < amount: return {"error": f"You don't have enough coins."}, 400
-		if amount < 100: return {"error": f"You have to gift at least 100 coins."}, 400
+		if amount is None or amount <= 0: return {"error": "Invalid amount of coins."}, 400
+		if v.coins < amount: return {"error": "You don't have enough coins."}, 400
+		if amount < 100: return {"error": "You have to gift at least 100 coins."}, 400
 
 		if not v.patron and not receiver.patron and not v.alts_patron and not receiver.alts_patron: tax = math.ceil(amount*0.03)
 		else: tax = 0
@@ -275,7 +275,7 @@ def transfer_coins(v, username):
 		g.db.commit()
 		return {"message": f"{amount-tax} coins transferred!"}, 200
 
-	return {"message": f"You can't transfer coins to yourself!"}, 400
+	return {"message": "You can't transfer coins to yourself!"}, 400
 
 
 @app.post("/@<username>/transfer_bux")
@@ -503,7 +503,7 @@ def message2(v, username):
 							'title': f'New message from @{v.username}',
 							'body': notifbody,
 							'deep_link': f'{SITE_FULL}/notifications?messages=true',
-							'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1009',
+							'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1010',
 						}
 					},
 					'fcm': {
@@ -674,7 +674,7 @@ def following(username, v):
 @app.get("/views")
 @auth_required
 def visitors(v):
-	if request.host == 'rdrama.net' and v.admin_level < 1 and not v.patron: return render_template("errors/patron.html", v=v)
+	if SITE_NAME == 'Drama' and v.admin_level < 1 and not v.patron: return render_template("errors/patron.html", v=v)
 	viewers=sorted(v.viewers, key = lambda x: x.last_view_utc, reverse=True)
 	return render_template("viewers.html", v=v, viewers=viewers)
 

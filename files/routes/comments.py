@@ -57,7 +57,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 	
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
-		elif request.host == "rdrama.net": pid = 6489
+		elif SITE_NAME == 'Drama': pid = 6489
 		elif request.host == 'pcmemes.net': pid = 2487
 		else: pid = 1
 	
@@ -102,7 +102,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 		 
 		comments=comments.filter(
 			Comment.parent_submission == post.id,
-			Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID))
+			Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID))
 		).join(
 			votes,
 			votes.c.comment_id == Comment.id,
@@ -131,7 +131,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 	else: 
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
-		return render_template(template, v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True, sub=post.sub)
+		return render_template(template, v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True, sub=post.subr)
 
 @app.post("/comment")
 @limiter.limit("1/second;20/minute;200/hour;1000/day")
@@ -165,7 +165,7 @@ def api_comment(v):
 	body = request.values.get("body", "").strip()[:10000]
 
 	if v.admin_level == 3 and parent_post.id == 37749:
-		with open(f"snappy_{SITE_NAME}.txt", "a") as f:
+		with open(f"snappy_{SITE_NAME}.txt", "a", encoding="utf-8") as f:
 			f.write('\n{[para]}\n' + body)
 
 	if v.marseyawarded and parent_post.id not in (37696,37697,37749,37833,37838):
@@ -184,6 +184,11 @@ def api_comment(v):
 	options = []
 	for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, re.A):
 		options.append(i.group(1))
+		body = body.replace(i.group(0), "")
+
+	choices = []
+	for i in re.finditer('\s*##([^\$\n]+)##\s*', body, re.A):
+		choices.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
@@ -353,6 +358,17 @@ def api_comment(v):
 
 		g.db.add(c_option)
 
+	for choice in choices:
+		c_choice = Comment(author_id=AUTOCHOICE_ID,
+			parent_submission=parent_submission,
+			parent_comment_id=c.id,
+			level=level+1,
+			body_html=filter_emojis_only(choice),
+			upvotes=0,
+			is_bot=True
+			)
+
+		g.db.add(c_choice)
 
 	if request.host == 'pcmemes.net' and c.body.lower().startswith("based"):
 		pill = re.match("based and (.{1,20}?)(-| )pilled", body, re.IGNORECASE)
@@ -419,7 +435,7 @@ def api_comment(v):
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
 		
-		elif request.host == 'rdrama.net' and 'nigg' in c.body.lower() and not v.nwordpass:
+		elif SITE_NAME == 'Drama' and 'nigg' in c.body.lower() and not v.nwordpass:
 
 			c.is_banned = True
 			c.ban_reason = "AutoJanny"
@@ -447,7 +463,7 @@ def api_comment(v):
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)	
 			
-		if request.host == "rdrama.net" and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
+		if SITE_NAME == 'Drama' and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
 		
 			body = random.choice(LONGPOST_REPLIES)
 
@@ -476,7 +492,7 @@ def api_comment(v):
 			g.db.add(n)
 
 
-		if request.host == "rdrama.net" and random.random() < 0.001:
+		if SITE_NAME == 'Drama' and random.random() < 0.001:
 		
 			body = "zoz"
 			body_html2 = sanitize(body)
@@ -548,7 +564,8 @@ def api_comment(v):
 			
 			for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
 			
-			if parent.author.id not in [v.id, BASEDBOT_ID, AUTOJANNY_ID, SNAPPY_ID, LONGPOSTBOT_ID, ZOZBOT_ID, AUTOPOLLER_ID]: notify_users.add(parent.author.id)
+			if parent.author.id not in (v.id, BASEDBOT_ID, AUTOJANNY_ID, SNAPPY_ID, LONGPOSTBOT_ID, ZOZBOT_ID, AUTOPOLLER_ID, AUTOCHOICE_ID):
+				notify_users.add(parent.author.id)
 
 			for x in notify_users:
 				n = Notification(comment_id=c.id, user_id=x)
@@ -567,7 +584,7 @@ def api_comment(v):
 									'title': f'New reply by @{c.author_name}',
 									'body': notifbody,
 									'deep_link': f'{SITE_FULL}/comment/{c.id}?context=8&read=true#context',
-									'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1009',
+									'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1010',
 								}
 							},
 							'fcm': {
@@ -625,7 +642,7 @@ def api_comment(v):
 		slots.check_for_slots_command(body, v, c)
 
 		blackjack = Blackjack(g)
-		blackjack.check_for_blackjack_command(body, v, c)
+		blackjack.check_for_blackjack_commands(body, v, c)
 
 	treasure = Treasure(g)
 	treasure.check_for_treasure(body, c)
@@ -684,6 +701,19 @@ def edit_comment(cid, v):
 					is_bot=True
 					)
 				g.db.add(c_option)
+
+		if not c.choices:
+			for i in re.finditer('\s*##([^\$\n]+)##\s*', body, re.A):
+				body = body.replace(i.group(0), "")
+				c_choice = Comment(author_id=AUTOCHOICE_ID,
+					parent_submission=c.parent_submission,
+					parent_comment_id=c.id,
+					level=c.level+1,
+					body_html=filter_emojis_only(i.group(1)),
+					upvotes=0,
+					is_bot=True
+					)
+				g.db.add(c_choice)
 
 		body_html = sanitize(body, edit=True)
 
@@ -792,7 +822,7 @@ def edit_comment(cid, v):
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
 
-		elif request.host == 'rdrama.net' and 'nigg' in c.body.lower() and not v.nwordpass:
+		elif SITE_NAME == 'Drama' and 'nigg' in c.body.lower() and not v.nwordpass:
 
 			c.is_banned = True
 			c.ban_reason = "AutoJanny"

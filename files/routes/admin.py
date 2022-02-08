@@ -221,20 +221,19 @@ def club_ban(v, username):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def make_meme_admin(v, username):
-	if request.host == 'pcmemes.net' or (SITE_NAME == 'Drama' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
-		user = get_user(username)
-		if not user: abort(404)
-		user.admin_level = 1
-		g.db.add(user)
+	user = get_user(username)
+	if not user: abort(404)
+	user.admin_level = 1
+	g.db.add(user)
 
-		ma = ModAction(
-			kind="make_meme_admin",
-			user_id=v.id,
-			target_user_id=user.id
-		)
-		g.db.add(ma)
+	ma = ModAction(
+		kind="make_meme_admin",
+		user_id=v.id,
+		target_user_id=user.id
+	)
+	g.db.add(ma)
 
-		g.db.commit()
+	g.db.commit()
 	return {"message": "User has been made meme admin!"}
 
 
@@ -242,20 +241,19 @@ def make_meme_admin(v, username):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def remove_meme_admin(v, username):
-	if request.host == 'pcmemes.net' or (SITE_NAME == 'Drama' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
-		user = get_user(username)
-		if not user: abort(404)
-		user.admin_level = 0
-		g.db.add(user)
+	user = get_user(username)
+	if not user: abort(404)
+	user.admin_level = 0
+	g.db.add(user)
 
-		ma = ModAction(
-			kind="remove_meme_admin",
-			user_id=v.id,
-			target_user_id=user.id
-		)
-		g.db.add(ma)
+	ma = ModAction(
+		kind="remove_meme_admin",
+		user_id=v.id,
+		target_user_id=user.id
+	)
+	g.db.add(ma)
 
-		g.db.commit()
+	g.db.commit()
 	return {"message": "Meme admin removed!"}
 
 
@@ -263,7 +261,7 @@ def remove_meme_admin(v, username):
 @limiter.limit("1/day")
 @admin_level_required(3)
 def monthly(v):
-	if request.host == 'rdrama.net' and v.id != AEVANN_ID: abort (403)
+	if SITE_NAME == 'Drama' and v.id != AEVANN_ID: abort (403)
 
 	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 
@@ -314,7 +312,7 @@ def monthly(v):
 def get_sidebar(v):
 
 	try:
-		with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r') as f: sidebar = f.read()
+		with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r', encoding="utf-8") as f: sidebar = f.read()
 	except:
 		sidebar = None
 
@@ -328,9 +326,9 @@ def post_sidebar(v):
 
 	text = request.values.get('sidebar', '').strip()
 
-	with open(f'files/templates/sidebar_{SITE_NAME}.html', 'w+') as f: f.write(text)
+	with open(f'files/templates/sidebar_{SITE_NAME}.html', 'w+', encoding="utf-8") as f: f.write(text)
 
-	with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r') as f: sidebar = f.read()
+	with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r', encoding="utf-8") as f: sidebar = f.read()
 
 	ma = ModAction(
 		kind="change_sidebar",
@@ -341,6 +339,41 @@ def post_sidebar(v):
 	g.db.commit()
 
 	return render_template('admin/sidebar.html', v=v, sidebar=sidebar, msg='Sidebar edited successfully!')
+
+
+@app.get('/s/<sub>/sidebar')
+@auth_required
+def get_sub_sidebar(v, sub):
+	sub = g.db.query(Sub).filter_by(name=sub).one_or_none()
+	if not sub: abort(404)
+
+	if not v.mods(sub.name): abort(403)
+
+	return render_template('admin/sidebar.html', v=v, sidebar=sub.sidebar, sub=sub)
+
+
+@app.post('/s/<sub>/sidebar')
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@auth_required
+def post_sub_sidebar(v, sub):
+	sub = g.db.query(Sub).filter_by(name=sub).one_or_none()
+	if not sub: abort(404)
+	
+	if not v.mods(sub.name): abort(403)
+
+	sub.sidebar = request.values.get('sidebar', '').strip()
+	sub.sidebar_html = sanitize(sub.sidebar)
+	g.db.add(sub)
+
+	ma = ModAction(
+		kind="change_sidebar",
+		user_id=v.id
+	)
+	g.db.add(ma)
+
+	g.db.commit()
+
+	return render_template('admin/sidebar.html', v=v, sidebar=sub.sidebar, msg='Sidebar edited successfully!', sub=sub)
 
 
 @app.get("/admin/shadowbanned")

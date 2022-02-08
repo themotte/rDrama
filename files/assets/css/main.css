@@ -3752,7 +3752,6 @@ ul.comment-section {
     color: var(--muted);
     font-size: 12px;
     text-transform: uppercase;
-    background-color: var(--light);
     border: none;
 }
 .settings .settings-section {
@@ -4079,7 +4078,7 @@ pre .com, code .com {
         box-shadow: none;
 }
     .mobile-nav-icon {
-        padding: 0.25rem 0.75rem;
+        padding: 0.25rem 0.6rem;
 }
     #thread, #submit {
         background-color: var(--light);
@@ -4450,7 +4449,7 @@ textarea {
     padding-bottom: 50px;
 }
 .navbar {
-    padding: 0.5rem 0.5rem 0.3rem 0.5rem;
+    padding: 0.2rem 0 0 0.2rem;
 }
 @media (min-width: 767.98px) {
     .navbar {

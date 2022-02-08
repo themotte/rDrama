@@ -152,6 +152,10 @@
 		<div class="card-block text-left x-scroll-parent my-md-auto w-100">
 
 			<div class="post-meta text-left x-scroll mb-md-2">
+				{% if p.sub %}
+					<a href='/s/{{p.sub}}'>/s/{{p.sub}}</a>&nbsp;&nbsp;
+				{% endif %}
+
 				{% if p.bannedfor %}
 					<a role="button"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User was banned for this post{% if p.author.banned_by %} by @{{p.author.banned_by.username}}{% endif %}"></i></a>
 				{% endif %}
@@ -181,12 +185,12 @@
 					👻
 				{% else %}
 					{% if p.author.house %}
-						<img src="/assets/images/{{SITE_NAME}}/houses/{{p.author.house}}.webp?a=1" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{p.author.house}}">
+						<img src="/assets/images/{{SITE_NAME}}/houses/{{p.author.house}}.webp?a=5" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{p.author.house}}">
 					{% endif %}
 
 					{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{p.author.verified}}"></i>
 					{% endif %}
-					<a class="user-name text-decoration-none" onclick='popclick({{p.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color: #{{p.author.namecolor}};  font-weight: bold;"><img alt="@{{p.author_name}}'s profile picture" loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and request.host == 'rdrama.net' %}class="mod"{% endif %}>{{p.author_name}}</span></a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{% if p.author.quadrant %}<img alt="{{p.author.quadrant}} quadrant" loading="lazy" height="20" src="/static/assets/images/quadrants/{{p.author.quadrant}}.webp?a=1008">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
+					<a class="user-name text-decoration-none" onclick='popclick({{p.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color: #{{p.author.namecolor}};  font-weight: bold;"><img alt="@{{p.author_name}}'s profile picture" loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and SITE_NAME == 'Drama' %}class="mod"{% endif %}>{{p.author_name}}</span></a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{% if p.author.quadrant %}<img alt="{{p.author.quadrant}} quadrant" loading="lazy" height="20" src="/static/assets/images/quadrants/{{p.author.quadrant}}.webp?a=1008">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
 				{% endif %}
 				<span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('timestamp-{{p.id}}','{{p.created_utc}}')" id="timestamp-{{p.id}}">&nbsp;{{p.age_string}}</span>
 				&nbsp;
@@ -220,7 +224,7 @@
 							<a class="list-inline-item text-muted d-none d-md-inline-block" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw"></i>Give Award</a>
 						{% endif %}
 
-						<a class="list-inline-item copy-link" role="button" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
+						<a class="list-inline-item copy-link" role="button" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
 
 						{% if v %}
 							<a id="subscribe-{{p.id}}" class="{% if p.id in v.subscribed_idlist() %}d-none{% endif %} list-inline-item" role="button" onclick="post_toast2('/subscribe/{{p.id}}','subscribe-{{p.id}}','unsubscribe-{{p.id}}')"><i class="fas fa-eye"></i>Subscribe</a>
@@ -318,7 +322,7 @@
 
 			</li>
 			
-			<a class="copy-link" role="button" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}" style="margin-right: 15px;margin-top:5px;"><i class="fas fa-link"></i></a>
+			<a class="copy-link" role="button" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}" style="margin-right: 15px;margin-top:5px;"><i class="fas fa-link"></i></a>
 
 			{% if p.realbody(v) and request.path != "/changelog"%}
 				<a class="list-inline-item" role="button" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
@@ -550,7 +554,7 @@
 			</span>
 			<h2 class="h5">You haven't {% if "saved" in request.full_path %}saved{% else %}made{% endif %} a post yet</h2>
 			<p class="text-muted mb-md-5">Your {% if "saved" in request.full_path %}saved posts{% else %}posting history{% endif %} will show here.</p>
-			{% if "saved" not in request.full_path %}<a href="{% if sub %}/s/{{sub}}{% endif %}/submit" class="btn btn-primary">Create a post</a>{% endif %}
+			{% if "saved" not in request.full_path %}<a href="{% if sub %}/s/{{sub.name}}{% endif %}/submit" class="btn btn-primary">Create a post</a>{% endif %}
 		</div>			
 	</div>	
 </div>

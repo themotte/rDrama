@@ -185,6 +185,7 @@
 	{% set dealer_hand = split_result[1].split('/')[0] if blackjack_status == 'active' else split_result[1] %}
 	{% set dealer_hand = dealer_hand.replace('X', '10') %}
 	{% set wager = split_result[4] %}
+	{% set kind = split_result[5] %}
 {% endif %}
 
 <div id="comment-{{c.id}}" class="anchor {% if c.unread %}unread{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %} {% if c.collapse_for_user(v,request.path) %}collapsed{% endif %}" style="{% if isreply %}padding-left:0!important;{% elif not c.unread %}border-left: 2px solid {% if c.ghost %}var(--primary){% else %}#{{c.author.namecolor}};{% endif %}{% endif %} {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
@@ -225,13 +226,13 @@
 					👻
 				{% else %}
 					{% if c.author.house %}
-						<img src="/assets/images/{{SITE_NAME}}/houses/{{c.author.house}}.webp?a=1" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{c.author.house}}">
+						<img src="/assets/images/{{SITE_NAME}}/houses/{{c.author.house}}.webp?a=5" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{c.author.house}}">
 					{% endif %}
 
 					{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{c.author.verified}}"></i>
 					{% endif %}
 
-					<a class="user-name text-decoration-none" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color:#{{c.author.namecolor}}; font-size:12px; font-weight:bold;"><img alt="@{{c.author_name}}'s profile picture" loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level and request.host == 'rdrama.net' %}class="mod"{% endif %}>{{c.author_name}}</span></a>
+					<a class="user-name text-decoration-none" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color:#{{c.author.namecolor}}; font-size:12px; font-weight:bold;"><img alt="@{{c.author_name}}'s profile picture" loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level and SITE_NAME == 'Drama' %}class="mod"{% endif %}>{{c.author_name}}</span></a>
 					{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{% if c.author.quadrant %}<img alt="{{c.author.quadrant}} quadrant" loading="lazy" height="20" src="/static/assets/images/quadrants/{{c.author.quadrant}}.webp?a=1008">{% endif %}{{c.author.customtitle | safe}}</bdi>{% endif %}
 				{% endif %}
 
@@ -259,20 +260,21 @@
 				{% endif %}
 
 				{% if c.blackjack_result %}
+				{% set currency_kind = "Coins" if kind == "coins" else "Marseybucks" %}
 				<em>{{player_hand}} vs. {{dealer_hand}}</em>
 					{% if blackjack_status == 'active' and v.id == c.author_id %}
 					<button class="btn btn-success small" style="text-transform: uppercase; padding: 2px;" onclick="handle_blackjack_action('{{c.id}}', 'hit')">Hit</button>
 					<button class="btn btn-danger small" style="text-transform: uppercase; padding: 2px;" onclick="handle_blackjack_action('{{c.id}}', 'stay')">Stay</button>
 					{% elif blackjack_status == 'push' %}
-					<strong>Pushed.</strong>
+					<strong>Pushed. Refunded {{wager}} {{currency_kind}}.</strong>
 					{% elif blackjack_status == 'bust' %}
-					<strong>Bust. Lost {{wager}} Coins.</strong>
+					<strong>Bust. Lost {{wager}} {{currency_kind}}.</strong>
 					{% elif blackjack_status == 'lost' %}
-					<strong>Lost {{wager}} Coins.</strong>
+					<strong>Lost {{wager}} {{currency_kind}}.</strong>
 					{% elif blackjack_status == 'won' %}
 					<strong>Won {{wager}} Coins.</strong>
 					{% elif blackjack_status == 'blackjack' %}
-					<strong>Blackjack! Won <span id="blackjack-result-{{c.id}}">{{(wager|int * 3/2)|round(0, 'floor')|int}}</span> Coins.</strong>
+					<strong>Blackjack! Won {{(wager|int * 3/2)|round(0, 'floor')|int}} {{currency_kind}}.</strong>
 					{% endif %}
 				{% endif %}
 			</div>
@@ -450,7 +452,7 @@
 						
 						<a class="btn caction nobackground px-1 text-muted" href="{{c.permalink}}"><i class="fas fa-book-open"></i>Context</a>
 
-						<button class="btn caction py-0 nobackground px-1 text-muted copy-link" role="button" role="button" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://rdrama.com{{c.shortlink_context}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</button>
+						<button class="btn caction py-0 nobackground px-1 text-muted copy-link" role="button" role="button" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{c.shortlink_context}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</button>
 
 						{% if v %}
 							<button class="btn caction py-0 nobackground px-1 text-muted" data-bs-toggle="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author_name}}',)"><i class="fas fa-flag fa-fw"></i>Report</button>
@@ -620,7 +622,7 @@
 
 					{% if not c.ghost %}<a href="/votes?link={{c.fullname}}"><li class="list-group-item"><i class="fas fa-arrows-v"></i>Votes</li></a>{% endif %}
 
-					<a role="button" role="button" class="list-group-item copy-link" data-bs-dismiss="modal" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://rdrama.com{{c.shortlink_context}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
+					<a role="button" role="button" class="list-group-item copy-link" data-bs-dismiss="modal" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{c.shortlink_context}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
 
 					<a class="list-group-item" href="{{c.permalink}}"><i class="fas fa-dna"></i>Context</a>
 
@@ -907,8 +909,8 @@
 	</style>
 
 	{% if v %}
-		<script src="/static/assets/js/marked.js?a=240"></script>
-		<script src="/static/assets/js/comments_v.js?a=240"></script>
+		<script src="/static/assets/js/marked.js?a=241"></script>
+		<script src="/static/assets/js/comments_v.js?a=243"></script>
 	{% endif %}
 
 	<script src="/static/assets/js/clipboard.js?a=240"></script>
@@ -920,7 +922,7 @@
 	{% include "expanded_image_modal.html" %}
 
 	<script src="/static/assets/js/comments+submission_listing.js?a=240"></script>
-	<script src="/static/assets/js/comments.js?a=241"></script>
+	<script src="/static/assets/js/comments.js?a=242"></script>
 
 	<script>
 		{% if p and (not v or v.highlightcomments) %}

@@ -11,6 +11,7 @@ from files.helpers.const import *
 from files.helpers.lazy import lazy
 from .flags import CommentFlag
 from random import randint
+from .votes import CommentVote
 
 class Comment(Base):
 
@@ -79,20 +80,29 @@ class Comment(Base):
 	@lazy
 	def poll_voted(self, v):
 		if v:
-			vote = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=self.id).one_or_none()
-			if vote: return vote.vote_type
-			else: return None
-		else: return None
+			vote = g.db.query(CommentVote.vote_type).filter_by(user_id=v.id, comment_id=self.id).one_or_none()
+			if vote: return vote[0]
+		return None
 
 	@property
 	@lazy
 	def options(self):
-		return [x for x in self.child_comments if x.author_id == AUTOPOLLER_ID]
+		return tuple(x for x in self.child_comments if x.author_id == AUTOPOLLER_ID)
+
+	@property
+	@lazy
+	def choices(self):
+		return tuple(x for x in self.child_comments if x.author_id == AUTOCHOICE_ID)
 
 	def total_poll_voted(self, v):
 		if v:
 			for option in self.options:
 				if option.poll_voted(v): return True
+		return False
+
+	def total_choice_voted(self, v):
+		if v:
+			return g.db.query(CommentVote).filter(CommentVote.user_id == v.id, CommentVote.comment_id.in_(tuple(x.id for x in self.choices))).all()
 		return False
 
 	@property
@@ -169,16 +179,10 @@ class Comment(Base):
 			years = int(months / 12)
 			return f"{years}yr ago"
 
-	if SITE_NAME == 'Too4You':
-		@property
-		@lazy
-		def score(self):
-			return self.upvotes
-	else:
-		@property
-		@lazy
-		def score(self):
-			return self.upvotes - self.downvotes
+	@property
+	@lazy
+	def score(self):
+		return self.upvotes - self.downvotes
 
 	@property
 	@lazy
@@ -204,12 +208,12 @@ class Comment(Base):
 	@property
 	def replies(self):
 		if self.replies2 != None:  return [x for x in self.replies2 if not x.author.shadowbanned]
-		return sorted((x for x in self.child_comments if x.author and not x.author.shadowbanned and x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID)), key=lambda x: x.realupvotes, reverse=True)
+		return sorted((x for x in self.child_comments if x.author and not x.author.shadowbanned and x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)), key=lambda x: x.realupvotes, reverse=True)
 
 	@property
 	def replies3(self):
 		if self.replies2 != None: return self.replies2
-		return sorted((x for x in self.child_comments if x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID)), key=lambda x: x.realupvotes, reverse=True)
+		return sorted((x for x in self.child_comments if x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)), key=lambda x: x.realupvotes, reverse=True)
 
 	@property
 	def replies2(self):
@@ -334,48 +338,58 @@ class Comment(Base):
 
 		body = self.body_html
 
-		if not body: return ""
+		if body:
+			body = censor_slurs(body, v)
 
-		body = censor_slurs(body, v)
+			if v:
+				if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
+				elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
-		if v:
-			if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
-			elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
+				if v.nitter and not '/i/spaces/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
-			if v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+			if v and v.controversial:
+				for i in re.finditer('(/comments/.*?)"', body):
+					url = i.group(1)
+					p = urlparse(url).query
+					p = parse_qs(p)
 
-		if v and v.controversial:
-			for i in re.finditer('(/comments/.*?)"', body):
-				url = i.group(1)
-				p = urlparse(url).query
-				p = parse_qs(p)
+					if 'sort' not in p: p['sort'] = ['controversial']
 
-				if 'sort' not in p: p['sort'] = ['controversial']
+					url_noquery = url.split('?')[0]
+					body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
 
-				url_noquery = url.split('?')[0]
-				body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
+			if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 60:
+				ti = max(int((time.time() - self.created_utc)/60), 1)
+				maxupvotes = min(ti, 31)
+				rand = randint(0, maxupvotes)
+				if self.upvotes < rand:
+					amount = randint(0, 3)
+					self.upvotes += amount
+					g.db.add(self)
+					self.author.coins += amount
+					g.db.add(self.author)
+					g.db.commit()
 
-		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 60:
-			ti = max(int((time.time() - self.created_utc)/60), 1)
-			maxupvotes = min(ti, 31)
-			rand = randint(0, maxupvotes)
-			if self.upvotes < rand:
-				amount = randint(0, 3)
-				self.upvotes += amount
-				g.db.add(self)
-				self.author.coins += amount
-				g.db.add(self.author)
-				g.db.commit()
-
-		for o in self.options:
-			body += f'<div class="custom-control"><input type="checkbox" class="custom-control-input" id="{o.id}" name="option"'
-			if o.poll_voted(v): body += " checked"
-			if v: body += f''' onchange="poll_vote('{o.id}', '{self.id}')"'''
-			else: body += f''' onchange="poll_vote_no_v('{o.id}', '{self.id}')"'''
-			body += f'''><label class="custom-control-label" for="{o.id}">{o.body_html}<span class="presult-{self.id}'''
+		for c in self.options:
+			body += f'<div class="custom-control"><input type="checkbox" class="custom-control-input" id="{c.id}" name="option"'
+			if c.poll_voted(v): body += " checked"
+			if v: body += f''' onchange="poll_vote('{c.id}', '{self.id}')"'''
+			else: body += f''' onchange="poll_vote_no_v('{c.id}', '{self.id}')"'''
+			body += f'''><label class="custom-control-label" for="{c.id}">{c.body_html}<span class="presult-{self.id}'''
 			if not self.total_poll_voted(v): body += ' d-none'	
-			body += f'"> - <a href="/votes?link=t3_{o.id}"><span id="poll-{o.id}">{o.upvotes}</span> votes</a></span></label></div>'
+			body += f'"> - <a href="/votes?link=t3_{c.id}"><span id="poll-{c.id}">{c.upvotes}</span> votes</a></span></label></div>'
 
+		curr = self.total_choice_voted(v)
+		if curr: curr = " value=" + str(curr[0].comment_id)
+		else: curr = ''
+		body += f'<input class="d-none" id="current-{self.id}"{curr}>'
+
+		for c in self.choices:
+			body += f'''<div class="custom-control"><input name="choice-{self.id}" autocomplete="off" class="custom-control-input" type="radio" id="{c.id}" onchange="choice_vote('{c.id}','{self.id}')"'''
+			if c.poll_voted(v): body += " checked "
+			body += f'''><label class="custom-control-label" for="{c.id}">{c.body_html}<span class="presult-{self.id}'''
+			if not self.total_choice_voted(v): body += ' d-none'	
+			body += f'"> - <a href="/votes?link=t3_{c.id}"><span id="choice-{c.id}">{c.upvotes}</span> votes</a></span></label></div>'
 
 		if self.author.sig_html and not self.ghost and (self.author_id == MOOSE_ID or not (v and v.sigs_disabled)):
 			body += f"<hr>{self.author.sig_html}"
@@ -393,7 +407,7 @@ class Comment(Base):
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
-		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+		if v and v.nitter and not '/i/spaces/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
 		if v and v.controversial:
 			for i in re.finditer('(/comments/.*?)"', body):

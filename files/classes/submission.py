@@ -12,6 +12,8 @@ from files.helpers.lazy import lazy
 from .flags import Flag
 from .comment import Comment
 from flask import g
+from .sub import *
+from .votes import CommentVote
 
 class Submission(Base):
 	__tablename__ = "submissions"
@@ -56,6 +58,7 @@ class Submission(Base):
 	awards = relationship("AwardRelationship", viewonly=True)
 	reports = relationship("Flag", viewonly=True)
 	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
+	subr = relationship("Sub", primaryjoin="foreign(Submission.sub)==remote(Sub.name)", viewonly=True)
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
@@ -66,7 +69,7 @@ class Submission(Base):
 	@property
 	@lazy
 	def comments2(self):
-		return g.db.query(Comment.author_id, Comment.created_utc, Comment.id).filter(Comment.parent_submission == self.id, Comment.author_id.notin_((AUTOPOLLER_ID,AUTOBETTER_ID))).all()
+		return g.db.query(Comment.author_id, Comment.created_utc, Comment.id).filter(Comment.parent_submission == self.id, Comment.author_id.notin_((AUTOPOLLER_ID,AUTOBETTER_ID, AUTOCHOICE_ID))).all()
 
 	@property
 	@lazy
@@ -86,6 +89,11 @@ class Submission(Base):
 
 	@property
 	@lazy
+	def choices(self):
+		return g.db.query(Comment).filter_by(parent_submission = self.id, author_id = AUTOCHOICE_ID, level=1)
+
+	@property
+	@lazy
 	def bet_options(self):
 		return g.db.query(Comment).filter_by(parent_submission = self.id, author_id = AUTOBETTER_ID, level=1)
 
@@ -93,6 +101,11 @@ class Submission(Base):
 		if v:
 			for option in self.options:
 				if option.poll_voted(v): return True
+		return False
+
+	def total_choice_voted(self, v):
+		if v and self.choices:
+			return g.db.query(CommentVote).filter(CommentVote.user_id == v.id, CommentVote.comment_id.in_(tuple(x.id for x in self.choices))).all()
 		return False
 
 	def total_bet_voted(self, v):
@@ -180,16 +193,10 @@ class Submission(Base):
 		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.edited_utc)))
 
 
-	if SITE_NAME == 'Too4You':
-		@property
-		@lazy
-		def score(self):
-			return self.upvotes
-	else:
-		@property
-		@lazy
-		def score(self):
-			return self.upvotes - self.downvotes
+	@property
+	@lazy
+	def score(self):
+		return self.upvotes - self.downvotes
 
 	@property
 	@lazy
@@ -346,7 +353,7 @@ class Submission(Base):
 				if v.controversial: url += "&sort=controversial"
 			return url
 		elif self.url:
-			if v and v.nitter: return self.url.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+			if v and v.nitter and not '/i/spaces/' in self.url: return self.url.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 			if self.url.startswith('/'): return SITE_FULL + self.url
 			return self.url
 		else: return ""
@@ -362,7 +369,7 @@ class Submission(Base):
 			if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
 			elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
-			if v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+			if v.nitter and not '/i/spaces/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
 		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 20:
 			ti = max(int((time.time() - self.created_utc)/60), 1)
@@ -377,15 +384,26 @@ class Submission(Base):
 				g.db.add(self.author)
 				g.db.commit()
 
-		for o in self.options:
-			body += f'<div class="custom-control"><input type="checkbox" class="custom-control-input" id="{o.id}" name="option"'
-			if o.poll_voted(v): body += " checked"
-			if v: body += f''' onchange="poll_vote('{o.id}', '{self.id}')"'''
-			else: body += f''' onchange="poll_vote_no_v('{o.id}', '{self.id}')"'''
-			body += f'''><label class="custom-control-label" for="{o.id}">{o.body_html}<span class="presult-{self.id}'''
+		for c in self.options:
+			body += f'<div class="custom-control"><input type="checkbox" class="custom-control-input" id="{c.id}" name="option"'
+			if c.poll_voted(v): body += " checked"
+			if v: body += f''' onchange="poll_vote('{c.id}', '{self.id}')"'''
+			else: body += f''' onchange="poll_vote_no_v('{c.id}', '{self.id}')"'''
+			body += f'''><label class="custom-control-label" for="{c.id}">{c.body_html}<span class="presult-{self.id}'''
 			if not self.total_poll_voted(v): body += ' d-none'	
-			body += f'"> - <a href="/votes?link=t3_{o.id}"><span id="poll-{o.id}">{o.upvotes}</span> votes</a></span></label></div>'
+			body += f'"> - <a href="/votes?link=t3_{c.id}"><span id="poll-{c.id}">{c.upvotes}</span> votes</a></span></label></div>'
 
+		curr = self.total_choice_voted(v)
+		if curr: curr = " value=" + str(curr[0].comment_id)
+		else: curr = ''
+		body += f'<input class="d-none" id="current-{self.id}"{curr}>'
+
+		for c in self.choices:
+			body += f'''<div class="custom-control"><input name="choice-{self.id}" autocomplete="off" class="custom-control-input" type="radio" id="{c.id}" onchange="choice_vote('{c.id}','{self.id}')"'''
+			if c.poll_voted(v): body += " checked "
+			body += f'''><label class="custom-control-label" for="{c.id}">{c.body_html}<span class="presult-{self.id}'''
+			if not self.total_choice_voted(v): body += ' d-none'	
+			body += f'"> - <a href="/votes?link=t3_{c.id}"><span id="choice-{c.id}">{c.upvotes}</span> votes</a></span></label></div>'
 
 		for c in self.bet_options:
 			body += f'''<div class="custom-control mt-3"><input autocomplete="off" class="custom-control-input bet" type="radio" id="{c.id}" onchange="bet_vote('{c.id}')"'''
@@ -418,7 +436,7 @@ class Submission(Base):
 			if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
 			elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
-			if v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+			if v.nitter and not '/i/spaces/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
 		return body
 
