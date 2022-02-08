@@ -96,7 +96,7 @@ allowed_attributes = {
 
 allowed_protocols = ['http', 'https']
 
-allowed_styles = ['color', 'background-color', 'font-weight', 'transform', '-webkit-transform']
+allowed_styles = ['color', 'background-color', 'font-weight', 'text-align']
 
 def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
