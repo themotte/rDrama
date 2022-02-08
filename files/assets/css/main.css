@@ -4757,3 +4757,11 @@ img.golden {
 .bg-muted {
     background-color: #6c757d !important;
 }
+.srd {
+    width: 100%;
+    background-color: var(--primary);
+    padding: 2px;
+    text-align: center;
+    font-weight: bold;
+    white-space: nowrap;
+}

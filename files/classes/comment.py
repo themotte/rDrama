@@ -336,7 +336,7 @@ class Comment(Base):
 	def realbody(self, v):
 		if self.post and self.post.club and not (v and (v.paid_dues or v.id in [self.author_id, self.post.author_id])): return f"<p>{CC} ONLY</p>"
 
-		body = self.body_html
+		body = self.body_html or ""
 
 		if body:
 			body = censor_slurs(body, v)
