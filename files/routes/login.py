@@ -174,8 +174,9 @@ def logout(v):
 @app.get("/signup")
 @auth_desired
 def sign_up_get(v):
-	if environ.get('disable_signups'):
-		return {"error": "New account registration is currently closed. Please come back later."}, 403
+	with open('disable_signups', 'r') as f:
+		if f.read() == "yes":
+			return {"error": "New account registration is currently closed. Please come back later."}, 403
 
 	if v: return redirect(f"{SITE_FULL}/")
 
@@ -218,8 +219,9 @@ def sign_up_get(v):
 @limiter.limit("1/minute;5/day")
 @auth_desired
 def sign_up_post(v):
-	if environ.get('disable_signups'):
-		return {"error": "New account registration is currently closed. Please come back later."}, 403
+	with open('disable_signups', 'r') as f:
+		if f.read() == "yes":
+			return {"error": "New account registration is currently closed. Please come back later."}, 403
 
 	if v: abort(403)
 

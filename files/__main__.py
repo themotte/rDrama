@@ -17,9 +17,9 @@ from sys import stdout
 import faulthandler
 from json import loads
 
-f = 'files/templates/sidebar_' + environ.get("SITE_NAME").strip() + '.html'
-if not path.exists(f):
-    with open(f, 'w', encoding="utf-8"): pass
+for f in (f'files/templates/sidebar_{environ.get("SITE_NAME").strip()}.html', 'disable_signups'):
+	if not path.exists(f):
+		with open(f, 'w', encoding="utf-8"): pass
 
 app = Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False

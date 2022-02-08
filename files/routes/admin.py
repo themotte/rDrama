@@ -451,29 +451,37 @@ def reported_comments(v):
 @app.get("/admin")
 @admin_level_required(2)
 def admin_home(v):
-	return render_template("admin/admin_home.html", v=v)
+	with open('disable_signups', 'r') as f: x = f.read()
+
+	response = requests.get(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS).json()['result']['value']
+	x2 = response == 'under_attack'
+
+	return render_template("admin/admin_home.html", v=v, x=x, x2=x2)
 
 @app.post("/admin/disable_signups")
 @admin_level_required(3)
 def disable_signups(v):
-	if environ.get('disable_signups'):
-		environ["disable_signups"] = ""
-		ma = ModAction(
-			kind="enable_signups",
-			user_id=v.id,
-		)
-		g.db.add(ma)
-		g.db.commit()
-		return {"message": "Signups enabled!"}
-	else:
-		environ["disable_signups"] = "1"
-		ma = ModAction(
-			kind="disable_signups",
-			user_id=v.id,
-		)
-		g.db.add(ma)
-		g.db.commit()
-		return {"message": "Signups disabled!"}
+	with open('disable_signups', 'r') as f: content = f.read()
+
+	with open('disable_signups', 'w') as f:
+		if content == "yes":
+			f.write("no")
+			ma = ModAction(
+				kind="enable_signups",
+				user_id=v.id,
+			)
+			g.db.add(ma)
+			g.db.commit()
+			return {"message": "Signups enabled!"}
+		else:
+			f.write("yes")
+			ma = ModAction(
+				kind="disable_signups",
+				user_id=v.id,
+			)
+			g.db.add(ma)
+			g.db.commit()
+			return {"message": "Signups disabled!"}
 
 
 @app.post("/admin/purge_cache")
@@ -495,8 +503,9 @@ def purge_cache(v):
 @app.post("/admin/under_attack")
 @admin_level_required(3)
 def under_attack(v):
-	if environ.get('under_attack'):
-		environ["under_attack"] = ""
+	response = requests.get(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS).json()['result']['value']
+
+	if response == 'under_attack':
 		ma = ModAction(
 			kind="disable_under_attack",
 			user_id=v.id,
@@ -508,7 +517,6 @@ def under_attack(v):
 		if response == "<Response [200]>": return {"message": "Under attack mode disabled!"}
 		return {"error": "Failed to disable under attack mode."}
 	else:
-		environ["under_attack"] = "1"
 		ma = ModAction(
 			kind="enable_under_attack",
 			user_id=v.id,
