@@ -138,7 +138,7 @@ AGENDAPOSTER_MSG = """Hi @{username},\n\nYour {type} has been automatically remo
 		included. \n\n*This is an automated message; if you need help,
 		you can message us [here](/contact).*"""
 
-if SITE_NAME == 'Drama':
+if SITE_NAME in ('Drama','2Much4You'):
 	PW_ID = 3750
 	BASEDBOT_ID = 0
 	KIPPY_ID = 7150
