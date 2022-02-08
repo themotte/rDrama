@@ -55,7 +55,6 @@ app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", "0")))
 app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
 app.config["CACHE_TYPE"] = "RedisCache"
 app.config["CACHE_REDIS_URL"] = environ.get("REDIS_URL", "redis://localhost")
-app.config["CACHE_KEY_PREFIX"] = app.config["SITE_NAME"]
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
