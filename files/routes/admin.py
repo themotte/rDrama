@@ -940,7 +940,7 @@ def unshadowban(user_id, v):
 
 @app.post("/admin/verify/<user_id>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
-@admin_level_required(2)
+@admin_level_required(3)
 def verify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 	user.verified = "Verified"
@@ -958,7 +958,7 @@ def verify(user_id, v):
 
 @app.post("/admin/unverify/<user_id>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
-@admin_level_required(2)
+@admin_level_required(3)
 def unverify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 	user.verified = None
