@@ -179,7 +179,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 		elif sort == "old":
 			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
+			comments = comments.order_by(Comment.upvotes/Comment.downvotes + Comment.downvotes/Comment.upvotes)
 		elif sort == "top":
 			comments = comments.order_by(Comment.realupvotes.desc())
 		elif sort == "bottom":
@@ -198,7 +198,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 		elif sort == "old":
 			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
+			comments = comments.order_by(Comment.upvotes/Comment.downvotes + Comment.downvotes/Comment.upvotes)
 		elif sort == "top":
 			comments = comments.order_by(Comment.realupvotes.desc())
 		elif sort == "bottom":
@@ -307,7 +307,7 @@ def viewmore(v, pid, sort, offset):
 		elif sort == "old":
 			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
+			comments = comments.order_by(Comment.upvotes/Comment.downvotes + Comment.downvotes/Comment.upvotes)
 		elif sort == "top":
 			comments = comments.order_by(Comment.realupvotes.desc())
 		elif sort == "bottom":
@@ -324,7 +324,7 @@ def viewmore(v, pid, sort, offset):
 		elif sort == "old":
 			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
+			comments = comments.order_by(Comment.upvotes/Comment.downvotes + Comment.downvotes/Comment.upvotes)
 		elif sort == "top":
 			comments = comments.order_by(Comment.realupvotes.desc())
 		elif sort == "bottom":
