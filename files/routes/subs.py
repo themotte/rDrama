@@ -193,9 +193,6 @@ def sub_sidebar(v, sub):
 	return redirect(f'/s/{sub.name}/settings')
 
 
-#create general
-#subs urls
-#-----
 #mods id seq
 #css
 #exile
