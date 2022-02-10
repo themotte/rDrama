@@ -353,7 +353,7 @@ class Submission(Base):
 				if v.controversial: url += "&sort=controversial"
 			return url
 		elif self.url:
-			if v and v.nitter and not '/i/spaces/' in self.url: return self.url.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+			if v and v.nitter and not '/i/' in self.url: return self.url.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 			if self.url.startswith('/'): return SITE_FULL + self.url
 			return self.url
 		else: return ""
@@ -369,7 +369,7 @@ class Submission(Base):
 			if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
 			elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
-			if v.nitter and not '/i/spaces/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+			if v.nitter and not '/i/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
 		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 20:
 			ti = max(int((time.time() - self.created_utc)/60), 1)
@@ -436,7 +436,7 @@ class Submission(Base):
 			if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
 			elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
-			if v.nitter and not '/i/spaces/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+			if v.nitter and not '/i/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
 		return body
 
