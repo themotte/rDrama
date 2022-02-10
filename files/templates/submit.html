@@ -84,6 +84,10 @@
 
 													<div class="input-group mb2">
 														<select autocomplete="off" id='sub' class="form-control" form="submitform" name="sub">
+															{% if SITE_NAME == '2Much4You' %}
+																{% set SUBS == ('2much4you','2balkan4you','2middleeast4you','2asia4you','2caucasian4you','2european4you','2american4you') %}
+															{% endif %}
+
 															{% for s in SUBS %}
 																<option value="{{s}}" {% if sub.name == s %}selected{% endif %}>
 																	/s/{{s}}
