@@ -836,7 +836,8 @@ CREATE TABLE public.users (
     patron_utc integer,
     rehab integer,
     nwordpass boolean,
-    house character varying(8)
+    house character varying(8),
+    subs_created integer DEFAULT 0
 );
 
 
