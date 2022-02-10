@@ -271,9 +271,11 @@
 
 
 						<pre></pre>
-
-						<a id="verify" class="{% if u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2('/admin/verify/{{u.id}}','verify','unverify')">Verify</a>
-						<a id="unverify" class="{% if not u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2('/admin/unverify/{{u.id}}','verify','unverify')">Unverify</a>
+						
+						{% if v.admin_level > 2 %}
+							<a id="verify" class="{% if u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2('/admin/verify/{{u.id}}','verify','unverify')">Verify</a>
+							<a id="unverify" class="{% if not u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2('/admin/unverify/{{u.id}}','verify','unverify')">Unverify</a>
+						{% endif %}
 
 						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">
@@ -561,9 +563,11 @@
 
 						<pre></pre>
 
-						<a id="verify2" class="{% if u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2('/admin/verify/{{u.id}}','verify2','unverify2')">Verify</a>
-						<a id="unverify2" class="{% if not u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2('/admin/unverify/{{u.id}}','verify2','unverify2')">Unverify</a>
-
+						{% if v.admin_level > 2 %}
+							<a id="verify2" class="{% if u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2('/admin/verify/{{u.id}}','verify2','unverify2')">Verify</a>
+							<a id="unverify2" class="{% if not u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2('/admin/unverify/{{u.id}}','verify2','unverify2')">Unverify</a>
+						{% endif %}
+						
 						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">
 							<input autocomplete="off" type="hidden" name="formkey", value="{{v.formkey}}">
