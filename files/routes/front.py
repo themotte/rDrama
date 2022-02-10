@@ -133,7 +133,7 @@ def notifications(v):
 @limiter.limit("3/second;30/minute;400/hour;2000/day")
 @auth_desired
 def front_all(v, sub=None):
-	if sub: sub = g.db.query(Sub).filter_by(name=sub..strip().lower()).one_or_none()
+	if sub: sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	
 	if request.path.startswith('/s/') and not sub: abort(404)
 
