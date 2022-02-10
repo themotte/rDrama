@@ -31,6 +31,11 @@ function loadEmojis(form) {
 		
 				'misc': ['yotsubafish','yotsubalol','sigmatalking','zoroarkconfused','zoroarkhappy','zoroarkpout','zoroarksleepy','casanovanova','deuxwaifu','flairlessmong','hardislife','redditgigachad','rfybear','etika','sneed','retardedchildren','bruh','autism','doot','kylieface','queenyes','wholesomeseal','chadyescapy','gigachadglow','gigachadorthodox','gigachad','gigachad2','gigachad3']
 			}
+
+			ruqq = document.getElementById('EMOJIS_ruqqie')
+			if (ruqq)
+				emojis['ruqqie'] = ['ruqqiecowboy','ruqqielove','ruqqiepensive','ruqqiesip','ruqqiesmile','ruqqieupvote','ruqqiewizard']
+			
 			loadEmojis(form);
 		}
 		xhr.send(f);

@@ -133,7 +133,7 @@ def notifications(v):
 @limiter.limit("3/second;30/minute;400/hour;2000/day")
 @auth_desired
 def front_all(v, sub=None):
-	if sub: sub = g.db.query(Sub).filter_by(name=sub).one_or_none()
+	if sub: sub = g.db.query(Sub).filter_by(name=sub..strip().lower()).one_or_none()
 	
 	if request.path.startswith('/s/') and not sub: abort(404)
 
@@ -151,11 +151,11 @@ def front_all(v, sub=None):
 
 	if v:
 		defaultsorting = v.defaultsorting
-		if sub or SITE_NAME == '2Much4You': defaulttime = 'all'
+		if sub or SITE_NAME != 'Drama': defaulttime = 'all'
 		else: defaulttime = v.defaulttime
 	else:
 		defaultsorting = "hot"
-		if sub or SITE_NAME == '2Much4You': defaulttime = 'all'
+		if sub or SITE_NAME != 'Drama': defaulttime = 'all'
 		else: defaulttime = defaulttimefilter
 
 	sort=request.values.get("sort", defaultsorting)
@@ -268,7 +268,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	posts = g.db.query(Submission)
 	
 	if sub: posts = posts.filter_by(sub=sub.name)
-	elif SITE_NAME == '2Much4You': posts = posts.filter(Submission.sub != None)
+	elif SITE_NAME == '2Much4You': posts = posts.filter(Submission.sub.in_(toomuch_subs))
+	elif SITE_NAME == 'ruqqus': posts = posts.filter(Submission.sub != None)
 	else: posts = posts.filter_by(sub=None)
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
@@ -343,7 +344,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false" and not gt and not lt:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
-		elif SITE_NAME == '2Much4You': pins = pins.filter(Submission.sub != None)
+		elif SITE_NAME == '2Much4You': pins = pins.filter(Submission.sub.in_(toomuch_subs))
+		elif SITE_NAME == 'ruqqus': pins = pins.filter(Submission.sub != None)
 		else: pins = pins.filter_by(sub=None)
 
 		if v and v.admin_level == 0:

@@ -32,9 +32,7 @@ def get_user(username, v=None, graceful=False):
 		if not graceful: abort(404)
 		else: return None
 
-	username = username.replace('\\', '')
-	username = username.replace('_', '\_')
-	username = username.replace('%', '')
+	username = username.replace('\\', '').replace('_', '\_').replace('%', '').strip()
 
 	user = g.db.query(
 		User

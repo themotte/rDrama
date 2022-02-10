@@ -223,6 +223,10 @@
 				<a href="https://naacp.org/donate">
 					<img alt="site banner" src="{{image}}" width="100%">
 				</a>
+			{% elif sub %}
+				<a href="/">
+					<img alt="sub banner" src="{{sub.banner_url}}" height=100 width=100% style="object-fit:cover">
+				</a>	
 			{% else %}
 				<a href="/">
 					<img alt="site banner" src="/static/assets/images/{{SITE_NAME}}/banner.webp?a=1012" width="100%">

@@ -335,6 +335,10 @@
 								<button id="block2-{{p.id}}" class="blockuser nobackground btn btn-link btn-block btn-lg text-danger text-left{% if p.is_blocking %} d-none{% endif %}" onclick="document.getElementById('block2-{{p.id}}').classList.toggle('d-none');document.getElementById('prompt2-{{p.id}}').classList.toggle('d-none');"><i class="fas fa-eye-slash mr-3 text-danger"></i>Block user</button>
 							{% endif %}
 						{% endif %}
+
+						{% if p.sub and v.mods(p.sub) %}
+							<button class="nobackground btn btn-link btn-block btn-lg text-left text-danger" onclick="post_toast('/kick/{{p.id}}')"><i class="fas fa-sign-out text-danger text-center mr-3"></i>Kick</button>
+						{% endif %}
 					</ul>
 				</div>
 			</div>
@@ -445,6 +449,11 @@
 						{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
 						{% if p.active_flags %}<a class="btn btn-primary" role="button" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
+						
+						{% if not p.author %}
+							{{p.print()}}
+						{% endif %}
+
 						{% if p.ghost %}
 							👻
 						{% else %}
@@ -616,7 +625,7 @@
 						{% endif %}
 
 						{% if not p.ghost %}<a class="list-inline-item" href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a>{% endif %}
-						
+
 						{% if v %}
 							<a class="list-inline-item text-muted d-none d-md-inline-block" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw"></i>Give Award</a>
 						{% endif %}
@@ -685,6 +694,10 @@
 								<a id="prompt-{{p.id}}" class="text-danger blockuser list-inline-item d-none" role="button" onclick="post_toast2('/settings/block?username={{p.author_name}}','prompt-{{p.id}}','unblock-{{p.id}}')"><i class="fas fa-eye-slash text-danger"></i>Are you sure?</a>
 
 								<a id="block-{{p.id}}" class="text-danger blockuser list-inline-item {% if p.is_blocking %} d-none{% endif %}" role="button" onclick="document.getElementById('block-{{p.id}}').classList.toggle('d-none');document.getElementById('prompt-{{p.id}}').classList.toggle('d-none');"><i class="fas fa-eye-slash text-danger"></i>Block user</a>
+							{% endif %}
+
+							{% if p.sub and v.mods(p.sub) %}
+								<a class="list-inline-item text-danger" role="button" onclick="post_toast('/kick/{{p.id}}')"><i class="fas fa-sign-out text-danger"></i>Kick</a>
 							{% endif %}
 
 							{% if v.admin_level > 1 and v.id!=p.author_id %}

@@ -340,42 +340,6 @@ def post_sidebar(v):
 
 	return render_template('admin/sidebar.html', v=v, sidebar=sidebar, msg='Sidebar edited successfully!')
 
-
-@app.get('/s/<sub>/sidebar')
-@auth_required
-def get_sub_sidebar(v, sub):
-	sub = g.db.query(Sub).filter_by(name=sub).one_or_none()
-	if not sub: abort(404)
-
-	if not v.mods(sub.name): abort(403)
-
-	return render_template('admin/sidebar.html', v=v, sidebar=sub.sidebar, sub=sub)
-
-
-@app.post('/s/<sub>/sidebar')
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
-def post_sub_sidebar(v, sub):
-	sub = g.db.query(Sub).filter_by(name=sub).one_or_none()
-	if not sub: abort(404)
-	
-	if not v.mods(sub.name): abort(403)
-
-	sub.sidebar = request.values.get('sidebar', '').strip()
-	sub.sidebar_html = sanitize(sub.sidebar)
-	g.db.add(sub)
-
-	ma = ModAction(
-		kind="change_sidebar",
-		user_id=v.id
-	)
-	g.db.add(ma)
-
-	g.db.commit()
-
-	return render_template('admin/sidebar.html', v=v, sidebar=sub.sidebar, msg='Sidebar edited successfully!', sub=sub)
-
-
 @app.get("/admin/shadowbanned")
 @auth_required
 def shadowbanned(v):

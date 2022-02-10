@@ -181,6 +181,11 @@
 				{% if p.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="This user is blocking you."></i>{% endif %}
 				{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
 				{% if p.active_flags %}<a class="btn btn-primary" role="button" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
+				
+				{% if not p.author %}
+					{{p.print()}}
+				{% endif %}
+
 				{% if p.ghost %}
 					👻
 				{% else %}
@@ -288,6 +293,12 @@
 
 									<a id="block-{{p.id}}" class="dropdown-item list-inline-item text-danger {% if p.is_blocking %}d-none{% endif %}" role="button" onclick="post_toast2('/settings/block?username={{p.author_name}}','block-{{p.id}}','unblock-{{p.id}}')"><i class="fas fa-eye-slash text-danger"></i>Block user</a>
 								{% endif %}
+
+
+								{% if p.sub and v.mods(p.sub) %}
+									<a class="list-inline-item text-danger" role="button" onclick="post_toast('/kick/{{p.id}}')"><i class="fas fa-sign-out text-danger"></i>Kick</a>
+								{% endif %}
+
 
 								{% if v.id==p.author_id or v.admin_level > 1 %}
 									<a id="mark-{{p.id}}" class="dropdown-item {% if p.over_18 %}d-none{% endif %} list-inline-item text-danger" role="button" onclick="post_toast2('/toggle_post_nsfw/{{p.id}}','mark-{{p.id}}','unmark-{{p.id}}')"><i class="fas fa-eye-evil"></i>Mark +18</a>
@@ -441,6 +452,10 @@
 							<button id="unblock2-{{p.id}}" class="nobackground btn btn-link btn-block btn-lg text-success text-left{% if not p.is_blocking %} d-none{% endif %}" data-bs-dismiss="modal" onclick="post_toast2('/settings/unblock?username={{p.author_name}}','block2-{{p.id}}','unblock2-{{p.id}}')"><i class="fas fa-eye mr-3"></i>Unblock user</button>
 							<button id="prompt2-{{p.id}}" class="blockuser nobackground btn btn-link btn-block btn-lg text-danger text-left d-none" data-bs-dismiss="modal" onclick="post_toast2('/settings/block?username={{p.author_name}}','prompt2-{{p.id}}','unblock2-{{p.id}}')"><i class="fas fa-eye-slash mr-3"></i>Are you sure?</button>
 							<button id="block2-{{p.id}}" class="blockuser nobackground btn btn-link btn-block btn-lg text-danger text-left{% if p.is_blocking %} d-none{% endif %}" onclick="document.getElementById('block2-{{p.id}}').classList.toggle('d-none');document.getElementById('prompt2-{{p.id}}').classList.toggle('d-none');"><i class="fas fa-eye-slash mr-3"></i>Block user</button>
+						{% endif %}
+
+						{% if p.sub and v.mods(p.sub) %}
+							<button class="nobackground btn btn-link btn-block btn-lg text-left text-danger" onclick="post_toast('/kick/{{p.id}}')"><i class="fas fa-sign-out text-danger text-center mr-3"></i>Kick</button>
 						{% endif %}
 					</ul>
 				</div>

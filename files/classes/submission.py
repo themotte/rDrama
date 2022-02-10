@@ -440,6 +440,10 @@ class Submission(Base):
 
 		return body
 
+	def print(self):
+		print(f'post: {self.id}, author: {self.author_id}', flush=True)
+		return ''
+
 	@lazy
 	def realtitle(self, v):
 		if self.club and not (v and (v.paid_dues or v.id == self.author_id)):

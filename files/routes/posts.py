@@ -91,11 +91,11 @@ def publish(pid, v):
 @app.get("/s/<sub>/submit")
 @auth_required
 def submit_get(v, sub=None):
-	if sub: sub = g.db.query(Sub.name).filter_by(name=sub).one_or_none()
+	if sub: sub = g.db.query(Sub.name).filter_by(name=sub.strip().lower()).one_or_none()
 	
 	if request.path.startswith('/s/') and not sub: abort(404)
 
-	return render_template("submit.html", v=v, sub=sub)
+	return render_template("submit.html", SUBS=tuple(x[0] for x in g.db.query(Sub.name).all()) if SITE_NAME == 'Drama' else None, v=v, sub=sub)
 
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
@@ -804,7 +804,7 @@ def thumbnail_thread(pid):
 @auth_required
 def submit_post(v, sub=None):
 	if not sub: sub = request.values.get("sub")
-	sub = g.db.query(Sub.name).filter_by(name=sub).one_or_none()
+	sub = g.db.query(Sub.name).filter_by(name=sub.strip().lower()).one_or_none()
 	if sub: sub = sub[0]
 	else: sub = None
 
@@ -879,7 +879,7 @@ def submit_post(v, sub=None):
 		if domain_obj:
 			reason = f"Remove the {domain_obj.domain} link from your post and try again. {domain_obj.reason}"
 			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":reason}, 400
-			return render_template("submit.html", v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 400
+			return render_template("submit.html", SUBS=tuple(x[0] for x in g.db.query(Sub.name).all()) if SITE_NAME == 'Drama' else None, v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 400
 		elif "twitter.com" == domain:
 			try: embed = requests.get("https://publish.twitter.com/oembed", timeout=5, params={"url":url, "omit_script":"t"}).json()["html"]
 			except: embed = None
@@ -901,16 +901,16 @@ def submit_post(v, sub=None):
 
 	if not url and not request.values.get("body") and not request.files.get("file", None):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "`url` or `body` parameter required."}, 400
-		return render_template("submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.values.get("body", "")), 400
+		return render_template("submit.html", SUBS=tuple(x[0] for x in g.db.query(Sub.name).all()) if SITE_NAME == 'Drama' else None, v=v, error="Please enter a url or some text.", title=title, url=url, body=request.values.get("body", "")), 400
 
 	if not title:
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "Please enter a better title"}, 400
-		return render_template("submit.html", v=v, error="Please enter a better title.", title=title, url=url, body=request.values.get("body", "")), 400
+		return render_template("submit.html", SUBS=tuple(x[0] for x in g.db.query(Sub.name).all()) if SITE_NAME == 'Drama' else None, v=v, error="Please enter a better title.", title=title, url=url, body=request.values.get("body", "")), 400
 
 
 	elif len(title) > 500:
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "500 character limit for titles"}, 400
-		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.values.get("body", "")), 400
+		else: render_template("submit.html", SUBS=tuple(x[0] for x in g.db.query(Sub.name).all()) if SITE_NAME == 'Drama' else None, v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.values.get("body", "")), 400
 
 	if v.marseyawarded:
 		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", title, re.A))
@@ -979,12 +979,12 @@ def submit_post(v, sub=None):
 	if len(str(body)) > 20000:
 
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"There's a 20000 character limit for text body."}, 400
-		return render_template("submit.html", v=v, error="There's a 20000 character limit for text body.", title=title, url=url, body=request.values.get("body", "")), 400
+		return render_template("submit.html", SUBS=tuple(x[0] for x in g.db.query(Sub.name).all()) if SITE_NAME == 'Drama' else None, v=v, error="There's a 20000 character limit for text body.", title=title, url=url, body=request.values.get("body", "")), 400
 
 	if len(url) > 2048:
 
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"2048 character limit for URLs."}, 400
-		return render_template("submit.html", v=v, error="2048 character limit for URLs.", title=title, url=url,body=request.values.get("body", "")), 400
+		return render_template("submit.html", SUBS=tuple(x[0] for x in g.db.query(Sub.name).all()) if SITE_NAME == 'Drama' else None, v=v, error="2048 character limit for URLs.", title=title, url=url,body=request.values.get("body", "")), 400
 
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', body, re.M|re.A):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
@@ -1022,7 +1022,7 @@ def submit_post(v, sub=None):
 			body += f"\n\n{url}"
 		else:
 			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "Image/Video files only"}, 400
-			return render_template("submit.html", v=v, error="Image/Video files only."), 400
+			return render_template("submit.html", SUBS=tuple(x[0] for x in g.db.query(Sub.name).all()) if SITE_NAME == 'Drama' else None, v=v, error="Image/Video files only."), 400
 
 	if '#fortune' in body:
 		body = body.replace('#fortune', '')
@@ -1045,7 +1045,7 @@ def submit_post(v, sub=None):
 		reason = f"Remove the {ban.domain} link from your post and try again."
 		if ban.reason: reason += f" {ban.reason}"
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": reason}, 403
-		return render_template("submit.html", v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 403
+		return render_template("submit.html", SUBS=tuple(x[0] for x in g.db.query(Sub.name).all()) if SITE_NAME == 'Drama' else None, v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 403
 
 	if v.club_allowed == False: club = False
 	else: club = bool(request.values.get("club",""))
@@ -1131,7 +1131,7 @@ def submit_post(v, sub=None):
 			new_post.url = url
 		else:
 			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "File type not allowed"}, 400
-			return render_template("submit.html", v=v, error="File type not allowed.", title=title, body=request.values.get("body", "")), 400
+			return render_template("submit.html", SUBS=tuple(x[0] for x in g.db.query(Sub.name).all()) if SITE_NAME == 'Drama' else None, v=v, error="File type not allowed.", title=title, body=request.values.get("body", "")), 400
 
 		
 	if not new_post.thumburl and new_post.url:

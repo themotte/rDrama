@@ -1,6 +1,6 @@
 
 <nav class="shadow shadow-md fixed-top">
-	{% if SITE_NAME == 'Drama' or SUBS %}
+	{% if SITE_NAME == 'Drama' %}
 		<style>
 			body {padding-top: 85.88px !important}
 			@media (max-width: 767.98px) {
@@ -23,14 +23,6 @@
 	{% if SITE_NAME == 'Drama' %}
 		<div class="srd">
 			<a style="color: white" class="text-small-mobile" href="https://reddit.com/r/SubredditDrama">💖🌈 welcome to {{SITE}}: the official site for r/subredditdrama</a>
-		</div>
-	{% elif SUBS %}
-		<div class="srd">
-			{% for s in SUBS %}
-				{% if s != 'general' %}
-					<a {% if sub and s == sub.name %} style="color: var(--secondary)" {% else %} style="color: white"{% endif %} class="text-small-mobile ml-2" href="/s/{{s}}">/s/{{s}}</a>
-				{% endif %}
-			{% endfor %}
 		</div>
 	{% endif %}
 
@@ -168,7 +160,7 @@
 								{% if request.host != 'pcmemes.net' %}
 									<a class="dropdown-item" href="/discord"><i class="fab fa-discord fa-fw text-left mr-3"></i>Discord</a>
 								{% endif %}
-								{% if not (g.webview and v.truecoins < 1) and request.host != '2Much4You' %}
+								{% if not (g.webview and v.truecoins < 1) and SITE_NAME not in ('2Much4You','ruqqus') %}
 									<a class="dropdown-item" rel="nofollow noopener noreferrer" href="{{config('GUMROAD_LINK')}}"><i class="fas fa-dollar-sign fa-fw text-left mr-3"></i>Donate</a>
 								{% endif %}
 								{% if SITE_NAME == 'Drama' %}<a class="dropdown-item" href="/archives"><i class="fas fa-book fa-fw text-left mr-3"></i>Archives</a>{% endif %}
@@ -223,7 +215,7 @@
 				{% if request.host != 'pcmemes.net' %}
 					<a class="nav-item nav-link" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a>
 				{% endif %}
-				{% if not (g.webview and v.truecoins < 1) %}
+				{% if not (g.webview and v.truecoins < 1) and SITE_NAME not in ('2Much4You','ruqqus') %}
 					<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="{{config('GUMROAD_LINK')}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a>
 				{% endif %}
 				{% if SITE_NAME == 'Drama' %}<a class="nav-item nav-link" href="/archives"><i class="fas fa-book fa-fw mr-3"></i>Archives</a>{% endif %}

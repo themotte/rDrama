@@ -127,7 +127,8 @@ class User(Base):
 	original_username = deferred(Column(String))
 	referred_by = Column(Integer, ForeignKey("users.id"))
 	nwordpass = Column(Boolean)
-	
+	subs_created = Column(Integer, default=0)
+
 	badges = relationship("Badge", viewonly=True)
 	subscriptions = relationship("Subscription", viewonly=True)
 	following = relationship("Follow", primaryjoin="Follow.user_id==User.id", viewonly=True)

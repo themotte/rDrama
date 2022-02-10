@@ -142,7 +142,7 @@ AGENDAPOSTER_MSG = """Hi @{username},\n\nYour {type} has been automatically remo
 		included. \n\n*This is an automated message; if you need help,
 		you can message us [here](/contact).*"""
 
-if SITE_NAME in ('Drama','2Much4You'):
+if SITE in ('rdrama.net','devrama.xyz','2much4you.net','ruqqus.ga'):
 	PW_ID = 3750
 	BASEDBOT_ID = 0
 	KIPPY_ID = 7150
@@ -575,10 +575,6 @@ FORTUNE_REPLIES = ('<b style="color:#6023f8">Your fortune: Allah Wills It</b>','
 
 no_pass_phrase = """<p>Sorry whiteboy, we're gonna need to see some ID before you start throwin that word around like it's nothing.\n\nTake a 10 minute time-out and come back when you've learned your lesson and/or paid reparations (by purchasing a BIPOC Approved™ rDrama NWord Pass© from the <a href="/shop">shop</a>) \n\n<em>This is an automated message; if you need help, you can message us <a href="/contact">here</a>.</em></p>"""
 
-db = db_session()
-SUBS = [x[0] for x in db.query(Sub.name).all()]
-db.close()
-
 ROLES={
 	"owner": "864612849199480914",
 	"admin": "879459632656048180" if environ.get("DOMAIN") == "pcmemes.net" else "846509661288267776",
@@ -601,3 +597,5 @@ REDDIT_NOTIFS = {
 	'carpathian florist': CARP_ID,
 	'the_homocracy': HOMO_ID
 }
+
+toomuch_subs = ('2much4you','2balkan4you','2middleeast4you','2asia4you','2caucasian4you','2european4you','2american4you')
