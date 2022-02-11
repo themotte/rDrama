@@ -724,7 +724,10 @@ def thumbnail_thread(pid):
 		for t in ("submission","comment"):
 			word = random.choice(('rdrama','marsey'))
 
-			for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={word}&size=1').json()["data"]:
+			try: data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={word}&size=1').json()["data"]
+			except: break
+
+			for i in data:
 
 				body_html = sanitize(f'New {word} mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 
@@ -769,8 +772,11 @@ def thumbnail_thread(pid):
 
 	if SITE == 'pcmemes.net':
 		for t in ("submission","comment"):
-			for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q=pcmemes.net&size=1').json()["data"]:
 
+			try: data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q=pcmemes.net&size=1').json()["data"]
+			except: break
+
+			for i in data:
 				body_html = sanitize(f'New pcmemes mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 
 				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1, sentto=0).first()
