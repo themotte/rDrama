@@ -8,7 +8,7 @@
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
 		<link rel="stylesheet" href="/static/assets/css/main.css?a=117">
-		<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=20">
+		<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=21">
 		{% if v.agendaposter %}
 			<style>
 				html {
@@ -32,7 +32,7 @@
 		{% endif %}
 	{% else %}
 		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=117"><link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?a=20">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=117"><link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?a=21">
 	{% endif %}
 
 	<meta charset="utf-8">
@@ -225,7 +225,7 @@
 				</a>
 			{% elif sub %}
 				<a href="/">
-					<img alt="sub banner" src="{{sub.banner_url}}" height=100 width=100% style="object-fit:cover">
+					<img alt="/s/{[sub.name]} banner" src="{{sub.banner_url}}" max-height=190px width=100% style="object-fit:cover">
 				</a>	
 			{% else %}
 				<a href="/">
@@ -276,7 +276,7 @@
 			{% endblock %}
 
 		</div>
-		{% if home %}
+		{% if home  or sub and (request.path.startswith('/post') or request.path.startswith('/comment')) %}
 			{% block sidebar %}
 				{% include "sidebar_" + SITE_NAME + ".html" %}
 			{% endblock %}
