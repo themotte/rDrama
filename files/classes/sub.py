@@ -1,5 +1,3 @@
-SITE_FULL = ""
-
 from sqlalchemy import *
 from files.__main__ import Base
 from files.helpers.lazy import lazy
