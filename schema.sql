@@ -498,7 +498,8 @@ ALTER SEQUENCE public.modactions_id_seq OWNED BY public.modactions.id;
 
 CREATE TABLE public.mods (
     user_id integer NOT NULL,
-    sub character varying(20) NOT NULL
+    sub character varying(20) NOT NULL,
+    created_utc integer
 );
 
 
@@ -671,7 +672,8 @@ CREATE TABLE public.subs (
     sidebar character varying(500),
     sidebar_html character varying(1000),
     sidebarurl character varying(60),
-    bannerurl character varying(60)
+    bannerurl character varying(60),
+    css character varying(4000)
 );
 
 
