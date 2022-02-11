@@ -276,7 +276,7 @@
 			{% endblock %}
 
 		</div>
-		{% if home  or sub and (request.path.startswith('/post') or request.path.startswith('/comment')) %}
+		{% if home or sub and p %}
 			{% block sidebar %}
 				{% include "sidebar_" + SITE_NAME + ".html" %}
 			{% endblock %}
