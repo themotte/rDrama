@@ -25,7 +25,7 @@
 			</div>
 			<div class="body d-lg-flex">
 				<div class="w-lg-100">
-					<form id="profile-settings" action="{% if sub %}/s/{{sub.name}}{% else %}/admin{% endif %}/sidebar" method="post">
+					<form id="profile-settings" action="/admin/sidebar" method="post">
 						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 						<textarea autocomplete="off" maxlength="10000" class="form-control rounded" id="bio-text" aria-label="With textarea" placeholder="Enter sidebar here..." rows="50" name="sidebar" form="profile-settings">{% if sidebar %}{{sidebar}}{% endif %}</textarea>
 

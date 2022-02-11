@@ -7,7 +7,11 @@ from os import path, environ
 import re
 from mistletoe import markdown
 from json import loads, dump
-from random import random
+from random import random, choice
+
+db = db_session()
+marseys = tuple(x[0] for x in db.query(Marsey.name).all())
+db.close()
 
 allowed_tags = tags = ['b',
 						'blockquote',
@@ -203,7 +207,9 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 				classes = 'emoji-md'
 				remoji = emoji
 
-			if not edit and random() < 0.005 and 'marsey' in emoji: classes += ' golden'
+			if not edit and random() < 0.005 and ('marsey' in emoji or emoji in marseys): classes += ' golden'
+
+			if remoji == 'marseyrandom': remoji = choice(marseys)
 
 			if path.isfile(f'files/assets/images/emojis/{remoji}.webp'):
 				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{remoji}.webp" >', new, re.I)
@@ -218,14 +224,20 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			classes = 'emoji mirrored'
-			if not edit and random() < 0.005 and 'marsey' in emoji: classes += ' golden'
+			if not edit and random() < 0.005 and ('marsey' in emoji or emoji in marseys): classes += ' golden'
+
+			if emoji == 'marseyrandom': emoji = random.choice(marseys)
+
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 				sanitized = re.sub(f'(?<!"):!{i.group(1).lower()[1:]}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, re.I)
 				if comment: marseys_used.add(emoji)
 
 		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 			classes = 'emoji'
-			if not edit and random() < 0.005 and 'marsey' in emoji: classes += ' golden'
+			if not edit and random() < 0.005 and ('marsey' in emoji or emoji in marseys): classes += ' golden'
+
+			if emoji == 'marseyrandom': emoji = random.choice(marseys)
+
 			sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, re.I)
 			if comment: marseys_used.add(emoji)
 
@@ -284,13 +296,19 @@ def filter_emojis_only(title, edit=False):
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			classes = 'emoji mirrored'
-			if not edit and random() < 0.005 and 'marsey' in emoji: classes += ' golden'
+			if not edit and random() < 0.005 and ('marsey' in emoji or emoji in marseys): classes += ' golden'
+
+			if emoji == 'marseyrandom': emoji = random.choice(marseys)
+
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" src="/static/assets/images/emojis/{emoji}.webp" class="{classes}">', title, re.I)
 
 		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 			classes = 'emoji'
-			if not edit and random() < 0.005 and 'marsey' in emoji: classes += ' golden'
+			if not edit and random() < 0.005 and ('marsey' in emoji or emoji in marseys): classes += ' golden'
+
+			if emoji == 'marseyrandom': emoji = random.choice(marseys)
+
 			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', title, re.I)
 
 	if len(title) > 1500: abort(400)

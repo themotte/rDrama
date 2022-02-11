@@ -2,9 +2,11 @@ from sqlalchemy import *
 from files.__main__ import Base
 from files.helpers.lazy import lazy
 from os import environ
-from files.helpers.const import *
 
 SITE_NAME = environ.get("SITE_NAME", '').strip()
+SITE = environ.get("DOMAIN", '').strip()
+if SITE == "localhost": SITE_FULL = 'http://' + SITE
+else: SITE_FULL = 'https://' + SITE
 
 class Sub(Base):
 
@@ -14,6 +16,7 @@ class Sub(Base):
 	sidebar_html = Column(String)
 	sidebarurl = Column(String)
 	bannerurl = Column(String)
+	css = Column(String)
 
 	def __repr__(self):
 		return f"<Sub(name={self.name})>"

@@ -81,8 +81,11 @@ function updateBux(mobile=false) {
 }
 
 function transferCoins(mobile=false) {
-	let t = event.target;
-	t.disabled = true;
+	for(let el of document.getElementsByClassName('profile-toggleable')) {
+		el.classList.add('d-none');
+	}
+
+	this.disabled = true;
 
 	let amount = parseInt(document.getElementById("coin-transfer-amount").value);
 	let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
@@ -99,12 +102,15 @@ function transferCoins(mobile=false) {
 		}
 	);
 
-	setTimeout(_ => t.disabled = false, 2000);
+	setTimeout(_ => this.disabled = false, 2000);
 }
 
 function transferBux(mobile=false) {
-	let t = event.target;
-	t.disabled = true;
+	for(let el of document.getElementsByClassName('profile-toggleable')) {
+		el.classList.add('d-none');
+	}
+
+	this.disabled = true;
 
 	let amount = parseInt(document.getElementById("bux-transfer-amount").value);
 	let username = document.getElementById('username').innerHTML
@@ -120,7 +126,7 @@ function transferBux(mobile=false) {
 		}
 	);
 
-	setTimeout(_ => t.disabled = false, 2000);
+	setTimeout(_ => this.disabled = false, 2000);
 }
 
 function submitFormAjax(e) {
