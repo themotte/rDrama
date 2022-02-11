@@ -7,7 +7,7 @@ from .front import frontlist
 valid_sub_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
 
 @app.get("/s/<sub>/mods")
-@auth_required
+@is_not_permabanned
 def mods(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.lower()).one_or_none()
 	if not sub: abort(404)
@@ -18,7 +18,7 @@ def mods(v, sub):
 
 
 @app.post("/s/<sub>/add_mod")
-@auth_required
+@is_not_permabanned
 def add_mod(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.lower()).one_or_none()
 	if not sub: abort(404)
@@ -43,13 +43,13 @@ def add_mod(v, sub):
 
 
 @app.get("/create_sub")
-@auth_required
+@is_not_permabanned
 def create_sub(v):
 	return render_template("sub/create_sub.html", v=v)
 
 
 @app.post("/create_sub")
-@auth_required
+@is_not_permabanned
 def create_sub2(v):
 	name = request.values.get('name')
 	if not name: abort(400)
@@ -77,7 +77,7 @@ def create_sub2(v):
 	return redirect(f'/s/{sub.name}')
 
 @app.post("/kick/<pid>")
-@auth_required
+@is_not_permabanned
 def kick(v, pid):
 	try: pid = int(pid)
 	except: abort(400)
@@ -97,7 +97,7 @@ def kick(v, pid):
 
 
 @app.get('/s/<sub>/settings')
-@auth_required
+@is_not_permabanned
 def sub_settings(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	if not sub: abort(404)
@@ -109,7 +109,7 @@ def sub_settings(v, sub):
 
 @app.post('/s/<sub>/sidebar')
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
+@is_not_permabanned
 def post_sub_sidebar(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.lower()).one_or_none()
 	if not sub: abort(404)
@@ -133,7 +133,7 @@ def post_sub_sidebar(v, sub):
 
 @app.post("/s/<sub>/banner")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
+@is_not_permabanned
 def sub_banner(v, sub):
 	if v and v.patron:
 		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}, 413
@@ -164,7 +164,7 @@ def sub_banner(v, sub):
 
 @app.post("/s/<sub>/sidebar_image")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
+@is_not_permabanned
 def sub_sidebar(v, sub):
 	if v and v.patron:
 		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}, 413
@@ -191,11 +191,3 @@ def sub_sidebar(v, sub):
 		g.db.commit()
 
 	return redirect(f'/s/{sub.name}/settings')
-
-
-#mods id seq
-#css
-#exile
-#guild mod log
-#remove mod
-#search sub
