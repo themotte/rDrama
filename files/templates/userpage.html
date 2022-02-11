@@ -151,7 +151,7 @@
 
 				{% if u.moderated_subs %}
 					<div class="text-white rounded p-2 mb-3" style="background-color: rgba(50, 50, 50, 0.6); width: 30%;">
-						<p class="text-uppercase my-0" style="font-weight: bold; font-size: 12px;">Moderator of</p>
+						<p class="text-uppercase my-0 pb-1" style="font-weight: bold; font-size: 12px;">Moderator of</p>
 						{% for a in u.moderated_subs %}
 							<span class="d-inline-block mx-1">
 								<a href="{{SITE_FULL}}/s/{{a['sub']}}">/s/{{a['sub']}}</a>
@@ -436,6 +436,17 @@
 					</span>
 					{% endfor %}
 				</div>
+				{% endif %}
+
+				{% if u.moderated_subs %}
+					<div class="text-white rounded p-2 mb-3" style="background-color: rgba(50, 50, 50, 0.6); width: 30%;">
+						<p class="text-uppercase my-0 pb-1" style="font-weight: bold; font-size: 12px;">Moderator of</p>
+						{% for a in u.moderated_subs %}
+							<span class="d-inline-block mx-1">
+								<a href="{{SITE_FULL}}/s/{{a['sub']}}">/s/{{a['sub']}}</a>
+							</span>
+						{% endfor %}
+					</div>
 				{% endif %}
 
 				<div class="mb-3">
