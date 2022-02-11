@@ -153,22 +153,12 @@
 	{% endif %}
 {% endif %}
 
-{% if p.award_count("train") %}
+{% if p.award_count("train") or p.award_count("scooter") %}
 	<style>
 		.train {
 			position:fixed;
 			z-index:9999;
 			pointer-events: none;
-		}
-		.trainimg {
-			width: 100px;
-			height: 51px;
-		}
-		@media (max-width: 992px) {
-			.trainimg {
-				width: 40px;
-				height: 20px;
-			}
 		}
 		.train1 {
 			top: 10%
@@ -181,6 +171,21 @@
 		}
 		.train4 {
 			top: 85%
+		}
+	</style>
+{% endif %}
+
+{% if p.award_count("train") %}
+	<style>
+		.trainimg {
+			width: 100px;
+			height: 51px;
+		}
+		@media (max-width: 992px) {
+			.trainimg {
+				width: 40px;
+				height: 20px;
+			}
 		}
 	</style>
 
@@ -205,6 +210,54 @@
 	<marquee class="train train4" direction="right" scrollamount=10 width="100%">
 		<img alt=":#marseytrain:" class="trainimg" src="/static/assets/images/emojis/marseytrain.webp?a=1008">
 	</marquee>
+{% endif %}
+
+
+
+{% if p.award_count("scooter") %}
+	<style>
+		.scooterimg {
+			width: 100px;
+			height: 135px;
+		}
+		@media (max-width: 992px) {
+			.scooterimg {
+				width: 40px;
+				height: 54px;
+			}
+		}
+	</style>
+	<marquee class="train train1" direction="left" scrollamount=10 width="100%">
+		<img alt=":#marseyscooter:" class="scooterimg mirrored" src="/static/assets/images/emojis/marseyscooter.webp?a=1008">
+	</marquee>
+{% endif %}
+
+{% if p.award_count("scooter") > 1 %}
+	<marquee class="train train2" direction="right" scrollamount=10 width="100%">
+		<img alt=":#marseyscooter:" class="scooterimg" src="/static/assets/images/emojis/marseyscooter.webp?a=1008">
+	</marquee>
+{% endif %}
+
+{% if p.award_count("scooter") > 2 %}
+	<marquee class="train train3" direction="left" scrollamount=10 width="100%">
+		<img alt=":#marseyscooter:" class="scooterimg mirrored" src="/static/assets/images/emojis/marseyscooter.webp?a=1008">
+	</marquee>
+{% endif %}
+
+{% if p.award_count("scooter") > 3 %}
+	<marquee class="train train4" direction="right" scrollamount=10 width="100%">
+		<img alt=":#marseyscooter:" class="scooterimg" src="/static/assets/images/emojis/marseyscooter.webp?a=1008">
+	</marquee>
+{% endif %}
+
+
+
+{% if p.award_count("tilt") %}
+	<style>
+		body {
+			transform: rotate({{(p.award_count("tilt"),4)|min}}deg);
+		}
+	</style>
 {% endif %}
 
 

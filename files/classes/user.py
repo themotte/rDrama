@@ -153,7 +153,14 @@ class User(Base):
 
 	@lazy
 	def mods(self, sub):
-		return self.admin_level > 1 or g.db.query(Mod.user_id).filter_by(user_id=self.id, sub=sub).one_or_none()
+		return self.id == AEVANN_ID or g.db.query(Mod.user_id).filter_by(user_id=self.id, sub=sub).one_or_none()
+
+	@lazy
+	def mod_date(self, sub):
+		if self.id == AEVANN_ID: return 1
+		mod = g.db.query(Mod).filter_by(user_id=self.id, sub=sub).one_or_none()
+		if not mod: return None
+		return mod.created_utc
 
 	@property
 	@lazy
@@ -427,6 +434,12 @@ class User(Base):
 			output.append(user)
 
 		return output
+
+	@property
+	@lazy
+	def moderated_subs(self):
+		modded_subs = g.db.query(Mod.sub).filter_by(user_id=self.id).all()
+		return modded_subs
 
 	def has_follower(self, user):
 

@@ -392,9 +392,7 @@ def leaderboard(v):
 @app.get("/@<username>/css")
 def get_css(username):
 	user = get_user(username)
-	if user.css: css = user.css
-	else: css = ""
-	resp=make_response(css)
+	resp=make_response(user.css or "")
 	resp.headers.add("Content-Type", "text/css")
 	return resp
 

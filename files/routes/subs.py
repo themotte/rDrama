@@ -9,18 +9,18 @@ valid_sub_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
 @app.get("/s/<sub>/mods")
 @is_not_permabanned
 def mods(v, sub):
-	sub = g.db.query(Sub).filter_by(name=sub.lower()).one_or_none()
+	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	if not sub: abort(404)
 
-	mods = [x[0] for x in g.db.query(Mod.user_id).filter_by(sub=sub.name).all()]
-	users = g.db.query(User).filter(User.id.in_(mods)).all()
+	users = g.db.query(User, Mod).join(Mod, Mod.user_id==User.id).filter_by(sub=sub.name).order_by(Mod.created_utc).all()
+
 	return render_template("sub/mods.html", v=v, sub=sub, users=users)
 
 
 @app.post("/s/<sub>/add_mod")
 @is_not_permabanned
 def add_mod(v, sub):
-	sub = g.db.query(Sub).filter_by(name=sub.lower()).one_or_none()
+	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	if not sub: abort(404)
 	sub = sub.name
 
@@ -32,10 +32,41 @@ def add_mod(v, sub):
 
 	user = get_user(user)
 
-	mod = Mod(user_id=user.id, sub=sub)
-	g.db.add(mod)
+	existing = g.db.query(Mod).filter_by(user_id=user.id, sub=sub).one_or_none()
 
-	send_repeatable_notification(user.id, f"You have been added as a mod to /s/{sub}")
+	if not existing:
+		mod = Mod(user_id=user.id, sub=sub, created_utc=int(time.time()))
+		g.db.add(mod)
+
+		send_repeatable_notification(user.id, f"You have been added as a mod to /s/{sub}")
+
+		g.db.commit()
+	
+	return redirect(f'/s/{sub}/mods')
+
+
+@app.post("/s/<sub>/remove_mod")
+@is_not_permabanned
+def remove_mod(v, sub):
+	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
+	if not sub: abort(404)
+	sub = sub.name
+
+	if not v.mods(sub): abort(403)
+
+	uid = request.values.get('uid')
+
+	if not uid: abort(400)
+
+	try: uid = int(uid)
+	except: abort(400)
+
+	mod = g.db.query(Mod).filter_by(user_id=uid, sub=sub).one_or_none()
+	if not mod: abort(400)
+
+	g.db.delete(mod)
+
+	send_repeatable_notification(uid, f"You have been removed as a mod from /s/{sub}")
 
 	g.db.commit()
 	
@@ -70,7 +101,7 @@ def create_sub2(v):
 
 		sub = Sub(name=name)
 		g.db.add(sub)
-		mod = Mod(user_id=v.id, sub=sub.name)
+		mod = Mod(user_id=v.id, sub=sub.name, created_utc=int(time.time()))
 		g.db.add(mod)
 		g.db.commit()
 
@@ -111,25 +142,46 @@ def sub_settings(v, sub):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def post_sub_sidebar(v, sub):
-	sub = g.db.query(Sub).filter_by(name=sub.lower()).one_or_none()
+	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	if not sub: abort(404)
 	
 	if not v.mods(sub.name): abort(403)
 
-	sub.sidebar = request.values.get('sidebar', '').strip()
+	sub.sidebar = request.values.get('sidebar', '').strip()[:500]
 	sub.sidebar_html = sanitize(sub.sidebar)
-	g.db.add(sub)
+	if len(sub.sidebar_html) > 1000: return "Sidebar is too big!"
 
-	ma = ModAction(
-		kind="change_sidebar",
-		user_id=v.id
-	)
-	g.db.add(ma)
+	g.db.add(sub)
 
 	g.db.commit()
 
 	return redirect(f'/s/{sub.name}/settings')
 
+
+@app.post('/s/<sub>/css')
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@is_not_permabanned
+def post_sub_css(v, sub):
+	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
+	if not sub: abort(404)
+	
+	if not v.mods(sub.name): abort(403)
+
+	sub.css = request.values.get('css', '').strip()
+	g.db.add(sub)
+
+	g.db.commit()
+
+	return redirect(f'/s/{sub.name}/settings')
+
+
+@app.get("/s/<sub>/css")
+def get_sub_css(sub):
+	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
+	if not sub: abort(404)
+	resp=make_response(sub.css or "")
+	resp.headers.add("Content-Type", "text/css")
+	return resp
 
 @app.post("/s/<sub>/banner")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")

@@ -362,12 +362,28 @@ AWARDS = {
 		"color": "text-pink",
 		"price": 300
 	},
+	"scooter": {
+		"kind": "scooter",
+		"title": "Scooter",
+		"description": "Summons a scooter on the post.",
+		"icon": "fas fa-flag-usa",
+		"color": "text-muted",
+		"price": 300
+	},
 	"wholesome": {
         "kind": "wholesome",
         "title": "Wholesome",
         "description": "Summons a wholesome marsey on the post.",
         "icon": "fas fa-smile-beam",
         "color": "text-yellow",
+        "price": 300
+    },
+	"tilt": {
+        "kind": "tilt",
+        "title": "Tilt",
+        "description": "Tilts the post by 1 degree (up to 4)",
+        "icon": "fas fa-car-tilt",
+        "color": "text-blue",
         "price": 300
     },
 	"ghosts": {

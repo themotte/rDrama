@@ -149,6 +149,17 @@
 				</div>
 				{% endif %}
 
+				{% if u.moderated_subs %}
+				<div class="text-white rounded p-2 mb-3" style="background-color: rgba(50, 50, 50, 0.6); width: 30%;">
+					<p class="text-uppercase my-0" style="font-weight: bold; font-size: 12px;">Moderator of</p>
+					{% for a in u.moderated_subs %}
+					<span class="d-inline-block mx-1">
+						<a href="{{site_full}}/s/{{a['sub']}}">/s/x{{a['sub']}}</a>
+					</span>
+					{% endfor %}
+				</div>
+				{% endif %}
+
 				<div class="d-flex justify-content-between align-items-center">
 					<div>
 					{% if v and v.id != u.id %}
@@ -704,7 +715,7 @@
 
 {% if v %}
 <div id='tax' class="d-none">{% if v.patron or u.patron or v.alts_patron or u.alts_patron %}0{% else %}0.03{% endif %}</div>
-<script src="/static/assets/js/userpage_v.js?a=240"></script>
+<script src="/static/assets/js/userpage_v.js?a=241"></script>
 <div id="username" class="d-none">{{u.username}}</div>
 {% endif %}
 
@@ -734,7 +745,7 @@
 </nav>
 {% endif %}
 
-<script src="/static/assets/js/marked.js?a=241"></script>
+<script src="/static/assets/js/marked.js?a=242"></script>
 
 <style>
 	.userbanner {
