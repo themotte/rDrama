@@ -435,6 +435,12 @@ class User(Base):
 
 		return output
 
+	@property
+	@lazy
+	def moderated_subs(self):
+		modded_subs = g.db.query(Mod.sub).filter_by(user_id=self.id).all()
+		return modded_subs
+
 	def has_follower(self, user):
 
 		return g.db.query(Follow).filter_by(target_id=self.id, user_id=user.id).one_or_none()
