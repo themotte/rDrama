@@ -43,7 +43,7 @@ def error_413(e):
 
 @app.errorhandler(418)
 def error_418(e):
-	return {"error": "Too many emojis!"}, 418
+	return {"error": "Too many emojis or pings!"}, 418
 
 @app.errorhandler(429)
 def error_429(e):

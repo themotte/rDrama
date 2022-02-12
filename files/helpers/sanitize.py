@@ -105,6 +105,7 @@ allowed_styles = ['color', 'background-color', 'font-weight', 'text-align']
 def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 	if sanitized.count(':') > 100: abort(418)
+	if sanitized.count('@') > 50: abort(418)
 
 	sanitized = markdown(sanitized)
 

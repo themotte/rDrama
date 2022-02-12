@@ -9,7 +9,7 @@ from files.helpers.const import *
 
 class ModAction(Base):
 	__tablename__ = "modactions"
-	id = Column(BigInteger, primary_key=True)
+	id = Column(Integer, primary_key=True)
 
 	user_id = Column(Integer, ForeignKey("users.id"))
 	kind = Column(String)

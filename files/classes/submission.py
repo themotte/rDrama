@@ -18,10 +18,10 @@ from .votes import CommentVote
 class Submission(Base):
 	__tablename__ = "submissions"
 
-	id = Column(BigInteger, primary_key=True)
-	author_id = Column(BigInteger, ForeignKey("users.id"))
-	edited_utc = Column(BigInteger, default=0)
-	created_utc = Column(BigInteger, default=0)
+	id = Column(Integer, primary_key=True)
+	author_id = Column(Integer, ForeignKey("users.id"))
+	edited_utc = Column(Integer, default=0)
+	created_utc = Column(Integer, default=0)
 	thumburl = Column(String)
 	is_banned = Column(Boolean, default=False)
 	bannedfor = Column(Boolean)
