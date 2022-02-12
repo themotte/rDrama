@@ -272,7 +272,7 @@
 							<input autocomplete="off" type="number" step="any" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" >
 							<input autocomplete="off" type="submit" class="btn btn-danger" value="Lock Chud Theme" >
 						</form>
-						<a id="unagendaposter" class="{% if not u.agendaposter %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2('/agendaposter/{{u.id}}','agendaposter1','unagendaposter')">Disable Chud Theme</a>
+						<a id="unagendaposter" class="{% if not u.agendaposter %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2('/unagendaposter/{{u.id}}','agendaposter1','unagendaposter')">Disable Chud Theme</a>
 
 						<pre></pre>
 
@@ -574,7 +574,7 @@
 							<input autocomplete="off" type="number" step="any" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" >
 							<input autocomplete="off" type="submit" class="btn btn-danger" value="Lock Chud Theme" >
 						</form>
-						<a id="unagendaposter2" class="{% if not u.agendaposter %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2('/agendaposter/{{u.id}}','agendaposter2','unagendaposter2')">Disable Chud Theme</a>
+						<a id="unagendaposter2" class="{% if not u.agendaposter %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2('/unagendaposter/{{u.id}}','agendaposter2','unagendaposter2')">Disable Chud Theme</a>
 
 						<pre></pre>
 

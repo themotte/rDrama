@@ -52,7 +52,7 @@ def grassed(v):
 @app.get("/agendaposters")
 @auth_required
 def agendaposters(v):
-	users = [x for x in g.db.query(User).filter_by(agendaposter = True).order_by(User.username).all()]
+	users = [x for x in g.db.query(User).filter(User.agendaposter > 0).order_by(User.username).all()]
 	return render_template("agendaposters.html", v=v, users=users)
 
 

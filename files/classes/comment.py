@@ -35,9 +35,8 @@ class Comment(Base):
 	is_bot = Column(Boolean, default=False)
 	is_pinned = Column(String)
 	is_pinned_utc = Column(Integer)
-	sentto=Column(Integer, ForeignKey("users.id"))
+	sentto = Column(Integer, ForeignKey("users.id"))
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
-	oauth_app = relationship("OauthApp", viewonly=True)
 	upvotes = Column(Integer, default=1)
 	downvotes = Column(Integer, default=0)
 	realupvotes = Column(Integer, default=1)
@@ -48,6 +47,7 @@ class Comment(Base):
 	blackjack_result = Column(String)
 	treasure_amount = Column(String)
 
+	oauth_app = relationship("OauthApp", viewonly=True)
 	post = relationship("Submission", viewonly=True)
 	author = relationship("User", primaryjoin="User.id==Comment.author_id")
 	senttouser = relationship("User", primaryjoin="User.id==Comment.sentto", viewonly=True)
@@ -451,6 +451,7 @@ class Notification(Base):
 	user_id = Column(Integer, ForeignKey("users.id"))
 	comment_id = Column(Integer, ForeignKey("comments.id"))
 	read = Column(Boolean, default=False)
+
 	comment = relationship("Comment", viewonly=True)
 	user = relationship("User", viewonly=True)
 

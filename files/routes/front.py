@@ -201,9 +201,8 @@ def front_all(v, sub=None):
 			g.db.add(v)
 			g.db.commit()
 
-		if v.agendaposter_expires_utc and v.agendaposter_expires_utc < time.time():
-			v.agendaposter_expires_utc = 0
-			v.agendaposter = None
+		if v.agendaposter and v.agendaposter < time.time():
+			v.agendaposter = 0
 			send_repeatable_notification(v.id, "Your chud theme has expired!")
 			g.db.add(v)
 			badge = v.has_badge(26)

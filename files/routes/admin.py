@@ -794,54 +794,71 @@ def admin_removed_comments(v):
 def agendaposter(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
-	if user.username == '911roofer': abort(403)
-
 	expiry = request.values.get("days", 0)
 	if expiry:
 		expiry = float(expiry)
 		expiry = g.timestamp + expiry*60*60*24
 	else: expiry = g.timestamp + 2629746
 
-	user.agendaposter = not user.agendaposter
-	user.agendaposter_expires_utc = expiry
+	user.agendaposter = expiry
 	g.db.add(user)
+
 	for alt in user.alts:
-		if alt.admin_level: break
-		alt.agendaposter = user.agendaposter
-		alt.agendaposter_expires_utc = expiry
+		if alt.admin_level: return {"error": "User is an admin!"}
+		alt.agendaposter = expiry
 		g.db.add(alt)
 
-	note = None
-
-	if not user.agendaposter: kind = "unagendaposter"
-	else:
-		kind = "agendaposter"
-		note = f"for {request.values.get('days')} days" if expiry else "never expires"
+	note = f"for {request.values.get('days')} days" if expiry else "never expires"
 
 	ma = ModAction(
-		kind=kind,
+		kind="agendaposter",
 		user_id=v.id,
 		target_user_id=user.id,
 		note = note
 	)
 	g.db.add(ma)
 
-	if user.agendaposter:
-		if not user.has_badge(26):
-			badge = Badge(user_id=user.id, badge_id=26)
-			g.db.add(badge)
-			g.db.flush()
-			send_notification(user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
+	if not user.has_badge(26):
+		badge = Badge(user_id=user.id, badge_id=26)
+		g.db.add(badge)
+		g.db.flush()
+		send_notification(user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 
-	else:
-		badge = user.has_badge(26)
-		if badge: g.db.delete(badge)
 
-	if user.agendaposter: send_repeatable_notification(user.id, f"You have been marked by an admin as an agendaposter ({note}).")
-	else: send_repeatable_notification(user.id, "You have been unmarked by an admin as an agendaposter.")
+	send_repeatable_notification(user.id, f"You have been marked by an admin as an agendaposter ({note}).")
 
 	g.db.commit()
-	if user.agendaposter: return redirect(user.url)
+	
+	return redirect(user.url)
+
+
+
+@app.post("/unagendaposter/<user_id>")
+@admin_level_required(2)
+def unagendaposter(user_id, v):
+	user = g.db.query(User).filter_by(id=user_id).one_or_none()
+
+	user.agendaposter = 0
+	g.db.add(user)
+
+	for alt in user.alts:
+		alt.agendaposter = 0
+		g.db.add(alt)
+
+	ma = ModAction(
+		kind="unagendaposter",
+		user_id=v.id,
+		target_user_id=user.id
+	)
+
+	g.db.add(ma)
+
+	badge = user.has_badge(26)
+	if badge: g.db.delete(badge)
+
+	send_repeatable_notification(user.id, "You have been unmarked by an admin as an agendaposter.")
+
+	g.db.commit()
 	return {"message": "Chud theme disabled!"}
 
 

@@ -10,7 +10,6 @@ from files.helpers.const import *
 class ModAction(Base):
 	__tablename__ = "modactions"
 	id = Column(Integer, primary_key=True)
-
 	user_id = Column(Integer, ForeignKey("users.id"))
 	kind = Column(String)
 	target_user_id = Column(Integer, ForeignKey("users.id"), default=0)
