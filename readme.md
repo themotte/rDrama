@@ -1,12 +1,6 @@
-[![Website](https://img.shields.io/website/https/rdrama.net?down_color=red&down_message=down&up_message=up)](https://www.rdrama.net) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Aevann1/Drama) ![Lines of code](https://img.shields.io/tokei/lines/github/Aevann1/Drama)
+This code runs https://rdrama.net, https://pcmemes.net, https://ruqqus.us, and https://2much4you.net
 
-# Installation
-
-Installing Drama locally is the fastest way to get the software up and running and start tinkering under the hood.
-
----
-
-# Windows/Linux/MacOS
+# Installation (Windows/Linux/MacOS)
 
 1- Install Docker on your machine.
 
