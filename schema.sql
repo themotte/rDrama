@@ -281,8 +281,6 @@ CREATE TABLE public.comments (
     edited_utc integer DEFAULT 0 NOT NULL,
     deleted_utc integer DEFAULT 0 NOT NULL,
     is_approved integer DEFAULT 0 NOT NULL,
-    author_name character varying(64),
-    approved_utc integer,
     level integer DEFAULT 0 NOT NULL,
     parent_comment_id integer,
     over_18 boolean DEFAULT false NOT NULL,
@@ -335,9 +333,8 @@ CREATE TABLE public.commentvotes (
     comment_id integer,
     vote_type integer,
     user_id integer,
-    creation_ip character(64),
     app_id integer,
-    "real" boolean
+    "real" boolean DEFAULT true NOT NULL
 );
 
 
@@ -613,7 +610,6 @@ CREATE TABLE public.submissions (
     over_18 boolean DEFAULT false NOT NULL,
     distinguish_level integer DEFAULT 0 NOT NULL,
     deleted_utc integer DEFAULT 0 NOT NULL,
-    domain_ref integer,
     is_approved integer DEFAULT 0 NOT NULL,
     edited_utc integer DEFAULT 0 NOT NULL,
     is_pinned boolean DEFAULT false NOT NULL,
@@ -684,8 +680,7 @@ CREATE TABLE public.subs (
 CREATE TABLE public.subscriptions (
     id integer NOT NULL,
     user_id integer,
-    board_id integer,
-    submission_id integer
+    submission_id integer DEFAULT 0 NOT NULL
 );
 
 
@@ -749,8 +744,8 @@ CREATE TABLE public.users (
     username character varying(255) NOT NULL,
     email character varying(255),
     passhash character varying(255) NOT NULL,
-    created_utc integer NOT NULL,
-    admin_level integer,
+    created_utc integer DEFAULT 0 NOT NULL,
+    admin_level integer DEFAULT 0 NOT NULL,
     over_18 boolean,
     is_activated boolean,
     bio character varying(1500),
@@ -794,26 +789,26 @@ CREATE TABLE public.users (
     coins integer,
     agendaposter boolean,
     agendaposter_expires_utc integer DEFAULT 0,
-    suicide_utc integer,
-    post_count integer,
-    comment_count integer,
+    suicide_utc integer DEFAULT 0 NOT NULL,
+    post_count integer DEFAULT 0 NOT NULL,
+    comment_count integer DEFAULT 0 NOT NULL,
     highres character varying(60),
-    rent_utc integer,
-    patron integer,
+    rent_utc integer DEFAULT 0 NOT NULL,
+    patron integer DEFAULT 0 NOT NULL,
     controversial boolean,
     background character varying(20),
     verified character varying(20),
-    fail_utc integer,
-    steal_utc integer,
-    fail2_utc integer,
+    fail_utc integer DEFAULT 0 NOT NULL,
+    steal_utc integer DEFAULT 0 NOT NULL,
+    fail2_utc integer DEFAULT 0 NOT NULL,
     cardview boolean,
-    received_award_count integer,
+    received_award_count integer DEFAULT 0 NOT NULL,
     highlightcomments boolean,
     nitter boolean,
     truecoins integer,
     club_allowed boolean DEFAULT false,
     frontsize integer,
-    coins_spent integer,
+    coins_spent integer DEFAULT 0 NOT NULL,
     procoins integer,
     mute boolean,
     unmutable boolean,
@@ -834,10 +829,10 @@ CREATE TABLE public.users (
     teddit boolean,
     bird integer,
     fish boolean,
-    lootboxes_bought integer,
+    lootboxes_bought integer DEFAULT 0 NOT NULL,
     progressivestack integer,
-    winnings integer,
-    patron_utc integer,
+    winnings integer DEFAULT 0 NOT NULL,
+    patron_utc integer DEFAULT 0 NOT NULL,
     rehab integer,
     nwordpass boolean,
     house character varying(8),
@@ -906,9 +901,8 @@ CREATE TABLE public.votes (
     user_id integer NOT NULL,
     submission_id integer,
     vote_type integer,
-    creation_ip character(64),
     app_id integer,
-    "real" boolean
+    "real" boolean DEFAULT true NOT NULL
 );
 
 
@@ -1540,13 +1534,6 @@ CREATE INDEX discord_id_idx ON public.users USING btree (discord_id);
 
 
 --
--- Name: domain_ref_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX domain_ref_idx ON public.submissions USING btree (domain_ref);
-
-
---
 -- Name: domains_domain_trgm_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1708,13 +1695,6 @@ CREATE INDEX subimssion_binary_group_idx ON public.submissions USING btree (is_b
 
 
 --
--- Name: submission_domainref_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX submission_domainref_index ON public.submissions USING btree (domain_ref);
-
-
---
 -- Name: submission_isbanned_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1768,13 +1748,6 @@ CREATE INDEX submissions_over18_index ON public.submissions USING btree (over_18
 --
 
 CREATE INDEX subs_idx ON public.subs USING btree (name);
-
-
---
--- Name: subscription_board_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX subscription_board_index ON public.subscriptions USING btree (board_id);
 
 
 --
