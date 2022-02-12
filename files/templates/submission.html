@@ -254,8 +254,10 @@
 
 {% if p.award_count("tilt") %}
 	<style>
-		body {
-			transform: rotate({{(p.award_count("tilt")/4,1)|min}}deg);
+		@media (min-width: 767.98px) {
+			body {
+				transform: rotate({{(p.award_count("tilt")/4,1)|min}}deg);
+			}
 		}
 	</style>
 {% endif %}
