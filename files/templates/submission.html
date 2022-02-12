@@ -255,7 +255,7 @@
 {% if p.award_count("tilt") %}
 	<style>
 		body {
-			transform: rotate({{(p.award_count("tilt"),4)|min}}deg);
+			transform: rotate({{(p.award_count("tilt")/4,1)|min}}deg);
 		}
 	</style>
 {% endif %}

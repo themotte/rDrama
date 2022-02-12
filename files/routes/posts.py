@@ -724,7 +724,10 @@ def thumbnail_thread(pid):
 		for t in ("submission","comment"):
 			word = random.choice(('rdrama','marsey'))
 
-			try: data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={word}&size=1').json()["data"]
+			try:
+				data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={word}&size=1')
+				if str(data) == "<Response [200]>": data = data.json()["data"]
+				else: break
 			except: break
 
 			for i in data:
@@ -773,7 +776,10 @@ def thumbnail_thread(pid):
 	if SITE == 'pcmemes.net':
 		for t in ("submission","comment"):
 
-			try: data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q=pcmemes.net&size=1').json()["data"]
+			try:
+				data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q=pcmemes.net&size=1').json()["data"]
+				if str(data) == "<Response [200]>": data = data.json()["data"]
+				else: break
 			except: break
 
 			for i in data:
