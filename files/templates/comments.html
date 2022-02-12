@@ -160,7 +160,7 @@
 			<span class="font-weight-bold"><a href="{{c.post.permalink}}">{{c.post.realtitle(v) | safe}}</a></span>
 		{% endif %}
 	{% elif c.author_id==NOTIFICATIONS_ID or c.author_id==AUTOJANNY_ID %}
-	<span class="font-weight-bold">{{SITE_NAME}} Notification</span>
+	<span class="font-weight-bold">Notification</span>
 	{% else %}
 		{% if c.sentto == 0 %}
 			<span class="font-weight-bold">Sent to admins</span>
