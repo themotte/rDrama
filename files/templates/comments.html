@@ -295,8 +295,24 @@
 			{% if c.is_banned and c.ban_reason %}
 				<div id="comment-banned-warning" class="comment-text text-removed mb-0">removed by @{{c.ban_reason}}</div>
 			{% endif %}
+			
+			{% if c.award_count("tilt") %}
+				<style>
+					@keyframes c{{c.id}}-tilt {
+						from {transform: rotate(1deg);}
+						to {transform: rotate({{c.award_count("tilt")+1}}deg);}
+					}
+					#comment-{{c.id}}-only {
+						animation-name: c{{c.id}}-tilt !important;
+						animation-duration: {{c.award_count("tilt")*30}}s !important;
+						animation-iteration-count: infinite !important;
+						animation-direction: alternate !important;
+						animation-timing-function: linear !important;
+					}
+				</style>
+			{% endif %}
 
-			<div id="comment-text-{{c.id}}" class="comment-text mb-0 {% if c.author.agendaposter %}agendaposter{% endif %}" >
+			<div id="comment-text-{{c.id}}" class="comment-text mb-0 {% if c.author.agendaposter %}agendaposter{% endif %}">
 				{{c.realbody(v) | safe}}
 			</div>
 			{% if c.parent_submission %}

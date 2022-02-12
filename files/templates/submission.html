@@ -254,10 +254,16 @@
 
 {% if p.award_count("tilt") %}
 	<style>
-		@media (min-width: 767.98px) {
-			body {
-				transform: rotate({{(p.award_count("tilt")/4,1)|min}}deg);
-			}
+		@keyframes post-tilt {
+			from {transform: rotate(1deg);}
+			to {transform: rotate({{p.award_count("tilt")+1}}deg);}
+		}
+		#post-root {
+			animation-name: post-tilt !important;
+			animation-duration: {{p.award_count("tilt")*30}}s !important;
+			animation-iteration-count: infinite !important;
+			animation-direction: alternate !important;
+			animation-timing-function: linear !important;
 		}
 	</style>
 {% endif %}
