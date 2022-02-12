@@ -18,6 +18,7 @@ def mods(v, sub):
 
 
 @app.post("/s/<sub>/add_mod")
+@limiter.limit("1/second;5/day")
 @is_not_permabanned
 def add_mod(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
