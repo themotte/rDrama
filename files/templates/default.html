@@ -221,7 +221,7 @@
 		{% if v %}
 			
 			{% if sub %}
-				<img alt="/s/{{sub.name}} banner" role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" onclick="expandDesktopImage('{{sub.banner_url}}')" loading="lazy" src="{{sub.banner_url}}" width=100% style="object-fit:contain;max-height:30vh">
+				<img alt="/s/{{sub.name}} banner" role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" onclick="expandDesktopImage('{{sub.banner_url}}')" loading="lazy" src="{{sub.banner_url}}" width=100% style="object-fit:cover;max-height:35vh">
 			{% elif SITE_NAME == 'Drama' %}
 				{% set path = "assets/images/" + SITE_NAME + "/banners_bhm" %}
 				{% set image = "/static/" + path + "/" + listdir('files/' + path)|random() + '?a=21' %}
