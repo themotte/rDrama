@@ -185,7 +185,7 @@ def get_sub_css(sub):
 	return resp
 
 @app.post("/s/<sub>/banner")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;10/day")
 @is_not_permabanned
 def sub_banner(v, sub):
 	if v and v.patron:
@@ -216,7 +216,7 @@ def sub_banner(v, sub):
 	return redirect(f'/s/{sub.name}/settings')
 
 @app.post("/s/<sub>/sidebar_image")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;10/day")
 @is_not_permabanned
 def sub_sidebar(v, sub):
 	if v and v.patron:
