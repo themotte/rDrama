@@ -361,8 +361,6 @@ class Comment(Base):
 					amount = randint(0, 3)
 					self.upvotes += amount
 					g.db.add(self)
-					self.author.coins += amount
-					g.db.add(self.author)
 					g.db.commit()
 
 		for c in self.options:
