@@ -204,6 +204,8 @@ def sign_up_get(v):
 					   digestmod='md5'
 					   ).hexdigest()
 
+	error = request.values.get("error", None)
+
 	redir = request.values.get("redirect", "/").replace("/logged_out", "").strip()
 
 	return render_template("sign_up.html",
@@ -211,7 +213,8 @@ def sign_up_get(v):
 						   now=now,
 						   redirect=redir,
 						   ref_user=ref_user,
-						   hcaptcha=app.config["HCAPTCHA_SITEKEY"]
+						   hcaptcha=app.config["HCAPTCHA_SITEKEY"],
+						   error=error
 						   )
 
 
