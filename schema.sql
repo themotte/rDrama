@@ -70,7 +70,7 @@ CREATE TABLE public.alts (
     id integer NOT NULL,
     user1 integer NOT NULL,
     user2 integer NOT NULL,
-    is_manual boolean DEFAULT false,
+    is_manual boolean DEFAULT false NOT NULL,
     CONSTRAINT alts_cant_be_equal CHECK ((user1 <> user2))
 );
 
@@ -274,21 +274,21 @@ ALTER SEQUENCE public.commentflags_id_seq OWNED BY public.commentflags.id;
 CREATE TABLE public.comments (
     id integer NOT NULL,
     author_id integer,
-    created_utc integer NOT NULL,
+    created_utc integer DEFAULT 0 NOT NULL,
     parent_submission integer,
-    is_banned boolean,
-    distinguish_level integer,
-    edited_utc integer,
-    deleted_utc integer NOT NULL,
-    is_approved integer NOT NULL,
+    is_banned boolean DEFAULT false NOT NULL,
+    distinguish_level integer DEFAULT 0 NOT NULL,
+    edited_utc integer DEFAULT 0 NOT NULL,
+    deleted_utc integer DEFAULT 0 NOT NULL,
+    is_approved integer DEFAULT 0 NOT NULL,
     author_name character varying(64),
     approved_utc integer,
-    level integer,
+    level integer DEFAULT 0 NOT NULL,
     parent_comment_id integer,
-    over_18 boolean,
-    upvotes integer,
-    downvotes integer,
-    is_bot boolean DEFAULT false,
+    over_18 boolean DEFAULT false NOT NULL,
+    upvotes integer DEFAULT 1 NOT NULL,
+    downvotes integer DEFAULT 0 NOT NULL,
+    is_bot boolean DEFAULT false NOT NULL,
     app_id integer,
     sentto integer,
     bannedfor boolean,
@@ -296,7 +296,7 @@ CREATE TABLE public.comments (
     body character varying(10000),
     body_html character varying(40000),
     ban_reason character varying(25),
-    realupvotes integer,
+    realupvotes integer DEFAULT 1 NOT NULL,
     top_comment_id integer,
     is_pinned_utc integer,
     ghost boolean,
@@ -463,10 +463,10 @@ CREATE TABLE public.marseys (
 CREATE TABLE public.modactions (
     id integer NOT NULL,
     user_id integer,
-    target_user_id integer,
-    target_submission_id integer,
-    target_comment_id integer,
-    created_utc integer DEFAULT 0,
+    target_user_id integer DEFAULT 0 NOT NULL,
+    target_submission_id integer DEFAULT 0 NOT NULL,
+    target_comment_id integer DEFAULT 0 NOT NULL,
+    created_utc integer DEFAULT 0 NOT NULL,
     kind character varying(32) DEFAULT NULL::character varying,
     _note character varying(256) DEFAULT NULL::character varying
 );
@@ -608,14 +608,14 @@ ALTER SEQUENCE public.save_relationship_id_seq OWNED BY public.save_relationship
 CREATE TABLE public.submissions (
     id integer NOT NULL,
     author_id integer,
-    created_utc integer NOT NULL,
+    created_utc integer DEFAULT 0 NOT NULL,
     is_banned boolean,
     over_18 boolean,
     distinguish_level integer,
     deleted_utc integer NOT NULL,
     domain_ref integer,
     is_approved integer NOT NULL,
-    edited_utc integer,
+    edited_utc integer DEFAULT 0 NOT NULL,
     is_pinned boolean,
     upvotes integer,
     downvotes integer,
@@ -1554,6 +1554,13 @@ CREATE INDEX domains_domain_trgm_idx ON public.banneddomains USING gin (domain p
 
 
 --
+-- Name: fki_comments_author_id_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_comments_author_id_fkey ON public.comments USING btree (author_id);
+
+
+--
 -- Name: flag_user_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1939,6 +1946,14 @@ ALTER TABLE ONLY public.client_auths
 
 ALTER TABLE ONLY public.commentflags
     ADD CONSTRAINT commentflags_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id);
+
+
+--
+-- Name: comments comments_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comments_author_id_fkey FOREIGN KEY (author_id) REFERENCES public.users(id);
 
 
 --
