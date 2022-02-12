@@ -147,7 +147,11 @@
 								<button class="dropdown-item copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fad fa-user-friends fa-fw text-left mr-3"></i>Invite friends</button>
 							</div>
 							<div class="px-2">
-								<a class="dropdown-item" href="/assets/{{config('SITE_NAME')}}_v1.7.apk?a=2"><i class="fab fa-android fa-fw text-left mr-3"></i>Android app</a>
+								{% if SITE_NAME == 'Drama' %}
+									<a class="dropdown-item" href="https://play.google.com/store/apps/details?id=com.rdrama"><i class="fab fa-android fa-fw text-left mr-3"></i>Android app</a>
+								{% else %}
+									<a class="dropdown-item" href="/assets/{{config('SITE_NAME')}}_v1.7.apk?a=2"><i class="fab fa-android fa-fw text-left mr-3"></i>Android app</a>
+								{% endif %}
 
 								<a class="dropdown-item" href="/changelog"><i class="fas fa-clipboard fa-fw text-left mr-3"></i>Changelog</a>
 
@@ -208,7 +212,12 @@
 						<a class="nav-link copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fas fa-user-friends fa-fw text-left mr-3"></i>Invite friends</a>
 					</li>
 				{% endif %}
-				<a class="nav-item nav-link" href="/assets/{{config('SITE_NAME')}}_v1.7.apk?a=2"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
+				
+				{% if SITE_NAME == 'Drama' %}
+					<a class="nav-item nav-link" href="https://play.google.com/store/apps/details?id=com.rdrama"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
+				{% else %}
+					<a class="nav-item nav-link" href="/assets/{{config('SITE_NAME')}}_v1.7.apk?a=2"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
+				{% endif %}
 
 				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/Drama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
 

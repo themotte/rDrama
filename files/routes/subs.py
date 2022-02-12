@@ -62,12 +62,18 @@ def remove_mod(v, sub):
 	try: uid = int(uid)
 	except: abort(400)
 
-	mod = g.db.query(Mod).filter_by(user_id=uid, sub=sub).one_or_none()
+	user = g.db.query(User).filter_by(id=uid).one_or_none()
+
+	if not user: abort(404)
+
+	mod = g.db.query(Mod).filter_by(user_id=user.id, sub=sub).one_or_none()
 	if not mod: abort(400)
+
+	if not (v.id == user.id or v.mod_date(sub.name) and v.mod_date(sub.name) < mod.created_utc): abort(403)
 
 	g.db.delete(mod)
 
-	send_repeatable_notification(uid, f"You have been removed as a mod from /s/{sub}")
+	send_repeatable_notification(user.id, f"You have been removed as a mod from /s/{sub}")
 
 	g.db.commit()
 	
