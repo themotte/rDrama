@@ -226,20 +226,24 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			classes = 'emoji mirrored'
 			if not edit and random() < 0.005 and ('marsey' in emoji or emoji in marseys): classes += ' golden'
 
-			if emoji == 'marseyrandom': emoji = random.choice(marseys)
+			old = emoji
+			if emoji == 'marseyrandom': emoji = choice(marseys)
+			else: emoji = old
 
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				sanitized = re.sub(f'(?<!"):!{i.group(1).lower()[1:]}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, re.I)
+				sanitized = re.sub(f'(?<!"):!{i.group(1).lower()[1:]}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, re.I)
 				if comment: marseys_used.add(emoji)
-
-		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
+		else:
 			classes = 'emoji'
 			if not edit and random() < 0.005 and ('marsey' in emoji or emoji in marseys): classes += ' golden'
+			
+			old = emoji
+			if emoji == 'marseyrandom': emoji = choice(marseys)
+			else: emoji = old
 
-			if emoji == 'marseyrandom': emoji = random.choice(marseys)
-
-			sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, re.I)
-			if comment: marseys_used.add(emoji)
+			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
+				sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, re.I)
+				if comment: marseys_used.add(emoji)
 
 	sanitized = sanitized.replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube")
 
@@ -298,18 +302,23 @@ def filter_emojis_only(title, edit=False):
 			classes = 'emoji mirrored'
 			if not edit and random() < 0.005 and ('marsey' in emoji or emoji in marseys): classes += ' golden'
 
-			if emoji == 'marseyrandom': emoji = random.choice(marseys)
+			old = emoji
+			if emoji == 'marseyrandom': emoji = choice(marseys)
+			else: emoji = old
 
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" src="/static/assets/images/emojis/{emoji}.webp" class="{classes}">', title, re.I)
+				title = re.sub(f'(?<!"):!{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" delay="0" src="/static/assets/images/emojis/{emoji}.webp" class="{classes}">', title, re.I)
 
-		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
+		else:
 			classes = 'emoji'
 			if not edit and random() < 0.005 and ('marsey' in emoji or emoji in marseys): classes += ' golden'
 
-			if emoji == 'marseyrandom': emoji = random.choice(marseys)
+			old = emoji
+			if emoji == 'marseyrandom': emoji = choice(marseys)
+			else: emoji = old
 
-			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', title, re.I)
+			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
+				title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', title, re.I)
 
 	if len(title) > 1500: abort(400)
 	else: return title
