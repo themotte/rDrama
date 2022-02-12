@@ -381,7 +381,7 @@ AWARDS = {
 	"tilt": {
         "kind": "tilt",
         "title": "Tilt",
-        "description": "Tilts the post by 1 degree (up to 4)",
+        "description": "Tilts the post or comment",
         "icon": "fas fa-car-tilt",
         "color": "text-blue",
         "price": 300
