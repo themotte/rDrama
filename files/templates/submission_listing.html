@@ -214,8 +214,8 @@
 
 			<div class="post-actions mt-2 d-none d-md-block">
 				<ul class="list-inline text-right d-flex">
-						{% if p.realbody(v) %}
-						<a class="list-inline-item" role="button" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
+						{% if p.body %}
+							<a class="list-inline-item" role="button" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
 						{% endif %}
 						<li class="list-inline-item">
 							<a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}">
@@ -335,7 +335,7 @@
 			
 			<a class="copy-link" role="button" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}" style="margin-right: 15px;margin-top:5px;"><i class="fas fa-link"></i></a>
 
-			{% if p.realbody(v) and request.path != "/changelog"%}
+			{% if p.body and request.path != "/changelog"%}
 				<a class="list-inline-item" role="button" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
 			{% endif %}
 
