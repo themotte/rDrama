@@ -99,7 +99,7 @@
 				<div class="w-lg-100">
 					<form id="sidebar" action="/s/{{sub.name}}/sidebar" method="post">
 						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
-						<textarea autocomplete="off" maxlength="500" class="form-control rounded" id="bio-text" aria-label="With textarea" placeholder="Enter sidebar here..." rows="50" name="sidebar" form="sidebar">{% if sub.sidebar %}{{sub.sidebar}}{% endif %}</textarea>
+						<textarea autocomplete="off" maxlength="500" class="form-control rounded" id="bio-text" aria-label="With textarea" placeholder="Enter sidebar here..." rows="10" name="sidebar" form="sidebar">{% if sub.sidebar %}{{sub.sidebar}}{% endif %}</textarea>
 
 						<div class="d-flex mt-2">
 							<input autocomplete="off" class="btn btn-primary ml-auto" type="submit" value="Save">
@@ -124,7 +124,7 @@
 				<div class="w-lg-100">
 					<form id="css" action="/s/{{sub.name}}/css" method="post">
 						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
-						<textarea autocomplete="off" maxlength="4000" class="form-control rounded" id="bio-text" aria-label="With textarea" placeholder="Enter css here..." rows="50" name="css" form="css">{% if sub.css %}{{sub.css}}{% endif %}</textarea>
+						<textarea autocomplete="off" maxlength="4000" class="form-control rounded" id="bio-text" aria-label="With textarea" placeholder="Enter css here..." rows="10" name="css" form="css">{% if sub.css %}{{sub.css}}{% endif %}</textarea>
 
 						<div class="d-flex mt-2">
 							<input autocomplete="off" class="btn btn-primary ml-auto" type="submit" value="Save">
