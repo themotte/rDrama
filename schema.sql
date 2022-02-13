@@ -331,8 +331,8 @@ ALTER SEQUENCE public.comments_id_seq OWNED BY public.comments.id;
 CREATE TABLE public.commentvotes (
     id integer NOT NULL,
     comment_id integer NOT NULL,
-    vote_type integer,
-    user_id integer,
+    vote_type integer NOT NULL,
+    user_id integer NOT NULL,
     app_id integer,
     "real" boolean DEFAULT true NOT NULL
 );
@@ -506,8 +506,8 @@ CREATE TABLE public.mods (
 
 CREATE TABLE public.notifications (
     id integer NOT NULL,
-    user_id integer,
-    comment_id integer,
+    user_id integer NOT NULL,
+    comment_id integer NOT NULL,
     read boolean NOT NULL
 );
 
@@ -538,11 +538,11 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 CREATE TABLE public.oauth_apps (
     id integer NOT NULL,
-    client_id character(64),
-    app_name character varying(50),
-    redirect_uri character varying(4096),
-    author_id integer,
-    description character varying(256)
+    client_id character(64) NOT NULL,
+    app_name character varying(50) NOT NULL,
+    redirect_uri character varying(4096) NOT NULL,
+    author_id integer NOT NULL,
+    description character varying(256) NOT NULL
 );
 
 
@@ -573,7 +573,7 @@ ALTER SEQUENCE public.oauth_apps_id_seq OWNED BY public.oauth_apps.id;
 CREATE TABLE public.save_relationship (
     id integer NOT NULL,
     submission_id integer,
-    user_id integer,
+    user_id integer NOT NULL,
     comment_id integer
 );
 
@@ -604,7 +604,7 @@ ALTER SEQUENCE public.save_relationship_id_seq OWNED BY public.save_relationship
 
 CREATE TABLE public.submissions (
     id integer NOT NULL,
-    author_id integer,
+    author_id integer NOT NULL,
     created_utc integer NOT NULL,
     is_banned boolean DEFAULT false NOT NULL,
     over_18 boolean DEFAULT false NOT NULL,
@@ -624,13 +624,13 @@ CREATE TABLE public.submissions (
     comment_count integer DEFAULT 0 NOT NULL,
     club boolean DEFAULT false NOT NULL,
     stickied character varying(40),
-    title character varying(500),
+    title character varying(500) NOT NULL,
     url character varying(2083),
     body character varying(20000),
     body_html character varying(40000),
     embed_url character varying(1500),
     ban_reason character varying(25),
-    title_html character varying(1500),
+    title_html character varying(1500) NOT NULL,
     realupvotes integer,
     flair character varying(350),
     stickied_utc integer,
@@ -751,42 +751,42 @@ CREATE TABLE public.users (
     bio character varying(1500),
     bio_html character varying(10000),
     referred_by integer,
-    is_banned integer,
+    is_banned integer DEFAULT 0 NOT NULL,
     ban_reason character varying(256),
-    login_nonce integer,
+    login_nonce integer DEFAULT 0 NOT NULL,
     reserved character varying(256),
     mfa_secret character varying(32),
-    is_private boolean,
-    unban_utc integer,
-    is_nofollow boolean DEFAULT false,
+    is_private boolean DEFAULT false NOT NULL,
+    unban_utc integer DEFAULT 0 NOT NULL,
+    is_nofollow boolean DEFAULT false NOT NULL,
     custom_filter_list character varying(1000) DEFAULT ''::character varying,
     discord_id character varying(64),
-    stored_subscriber_count integer DEFAULT 0,
-    ban_evade integer DEFAULT 0,
+    stored_subscriber_count integer DEFAULT 0 NOT NULL,
+    ban_evade integer DEFAULT 0 NOT NULL,
     original_username character varying(255),
     customtitle character varying(1000),
-    defaultsorting character varying(15),
-    defaulttime character varying(5),
-    namecolor character varying(6),
-    titlecolor character varying(6),
+    defaultsorting character varying(15) DEFAULT 'hot'::character varying NOT NULL,
+    defaulttime character varying(5) NOT NULL,
+    namecolor character varying(6) NOT NULL,
+    titlecolor character varying(6) NOT NULL,
     profileurl character varying(65),
     bannerurl character varying(65),
     hidevotedon boolean DEFAULT false NOT NULL,
-    newtab boolean,
+    newtab boolean DEFAULT false NOT NULL,
     flairchanged integer,
-    defaultsortingcomments character varying(15),
-    theme character varying(15),
+    defaultsortingcomments character varying(15) DEFAULT 'top'::character varying NOT NULL,
+    theme character varying(15) NOT NULL,
     song character varying(50),
-    slurreplacer boolean,
+    slurreplacer boolean DEFAULT true NOT NULL,
     shadowbanned character varying(25),
-    newtabexternal boolean,
+    newtabexternal boolean DEFAULT true NOT NULL,
     customtitleplain character varying(100),
-    themecolor character varying(6),
+    themecolor character varying(6) NOT NULL,
     changelogsub boolean DEFAULT false NOT NULL,
-    oldreddit boolean,
+    oldreddit boolean DEFAULT true NOT NULL,
     css character varying(4000),
     profilecss character varying(4000),
-    coins integer,
+    coins integer DEFAULT 0 NOT NULL,
     agendaposter integer DEFAULT 0 NOT NULL,
     suicide_utc integer DEFAULT 0 NOT NULL,
     post_count integer DEFAULT 0 NOT NULL,
@@ -794,21 +794,21 @@ CREATE TABLE public.users (
     highres character varying(60),
     rent_utc integer DEFAULT 0 NOT NULL,
     patron integer DEFAULT 0 NOT NULL,
-    controversial boolean,
+    controversial boolean DEFAULT false NOT NULL,
     background character varying(20),
     verified character varying(20),
     fail_utc integer DEFAULT 0 NOT NULL,
     steal_utc integer DEFAULT 0 NOT NULL,
     fail2_utc integer DEFAULT 0 NOT NULL,
-    cardview boolean,
+    cardview boolean NOT NULL,
     received_award_count integer DEFAULT 0 NOT NULL,
     highlightcomments boolean DEFAULT true NOT NULL,
     nitter boolean,
-    truecoins integer,
-    club_allowed boolean DEFAULT false,
-    frontsize integer,
+    truecoins integer DEFAULT 0 NOT NULL,
+    club_allowed boolean,
+    frontsize integer DEFAULT 25 NOT NULL,
     coins_spent integer DEFAULT 0 NOT NULL,
-    procoins integer,
+    procoins integer DEFAULT 0 NOT NULL,
     mute boolean,
     unmutable boolean,
     verifiedcolor character varying(6),
@@ -835,7 +835,7 @@ CREATE TABLE public.users (
     rehab integer,
     nwordpass boolean,
     house character varying(8),
-    subs_created integer DEFAULT 0
+    subs_created integer DEFAULT 0 NOT NULL
 );
 
 
@@ -898,8 +898,8 @@ ALTER SEQUENCE public.viewers_id_seq OWNED BY public.viewers.id;
 CREATE TABLE public.votes (
     id integer NOT NULL,
     user_id integer NOT NULL,
-    submission_id integer,
-    vote_type integer,
+    submission_id integer NOT NULL,
+    vote_type integer NOT NULL,
     app_id integer,
     "real" boolean DEFAULT true NOT NULL
 );
@@ -1241,11 +1241,35 @@ ALTER TABLE ONLY public.client_auths
 
 
 --
+-- Name: users one_banner; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT one_banner UNIQUE (bannerurl);
+
+
+--
+-- Name: userblocks one_block; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.userblocks
+    ADD CONSTRAINT one_block UNIQUE (user_id, target_id);
+
+
+--
 -- Name: commentflags one_comment_flag; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.commentflags
     ADD CONSTRAINT one_comment_flag UNIQUE (user_id, comment_id);
+
+
+--
+-- Name: save_relationship one_comment_save; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.save_relationship
+    ADD CONSTRAINT one_comment_save UNIQUE (comment_id, user_id);
 
 
 --
@@ -1281,6 +1305,30 @@ ALTER TABLE ONLY public.notifications
 
 
 --
+-- Name: users one_profile_url; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT one_profile_url UNIQUE (profileurl);
+
+
+--
+-- Name: save_relationship one_save; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.save_relationship
+    ADD CONSTRAINT one_save UNIQUE (submission_id, user_id);
+
+
+--
+-- Name: subscriptions one_subscription; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subscriptions
+    ADD CONSTRAINT one_subscription UNIQUE (user_id, submission_id);
+
+
+--
 -- Name: viewers one_view; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1302,14 +1350,6 @@ ALTER TABLE ONLY public.commentvotes
 
 ALTER TABLE ONLY public.votes
     ADD CONSTRAINT onevote UNIQUE (user_id, submission_id);
-
-
---
--- Name: save_relationship save_constraint; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.save_relationship
-    ADD CONSTRAINT save_constraint UNIQUE (submission_id, user_id);
 
 
 --
