@@ -584,7 +584,7 @@ def api_comment(v):
 									'title': f'New reply by @{c.author_name}',
 									'body': notifbody,
 									'deep_link': f'{SITE_FULL}/comment/{c.id}?context=8&read=true#context',
-									'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1010',
+									'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1011',
 								}
 							},
 							'fcm': {
