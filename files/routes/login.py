@@ -25,6 +25,7 @@ def login_get(v):
 
 
 def check_for_alts(current_id):
+	if SITE == 'localhost': return
 	past_accs = set(session.get("history", []))
 	past_accs.add(current_id)
 	session["history"] = list(past_accs)
