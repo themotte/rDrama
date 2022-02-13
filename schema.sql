@@ -280,7 +280,7 @@ CREATE TABLE public.comments (
     distinguish_level integer DEFAULT 0 NOT NULL,
     edited_utc integer DEFAULT 0 NOT NULL,
     deleted_utc integer DEFAULT 0 NOT NULL,
-    is_approved integer DEFAULT 0 NOT NULL,
+    is_approved integer,
     level integer DEFAULT 0 NOT NULL,
     parent_comment_id integer,
     over_18 boolean DEFAULT false NOT NULL,
@@ -1641,6 +1641,13 @@ CREATE INDEX fki_c ON public.notifications USING btree (user_id);
 
 
 --
+-- Name: fki_comment_approver_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_comment_approver_fkey ON public.comments USING btree (is_approved);
+
+
+--
 -- Name: fki_comment_parent_comment_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1673,6 +1680,13 @@ CREATE INDEX fki_commentflags_user_id_fkey ON public.commentflags USING btree (u
 --
 
 CREATE INDEX fki_comments_author_id_fkey ON public.comments USING btree (author_id);
+
+
+--
+-- Name: fki_commentvote_comment_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_commentvote_comment_fkey ON public.commentvotes USING btree (comment_id);
 
 
 --
@@ -2184,6 +2198,14 @@ ALTER TABLE ONLY public.client_auths
 
 
 --
+-- Name: comments comment_approver_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comment_approver_fkey FOREIGN KEY (is_approved) REFERENCES public.users(id);
+
+
+--
 -- Name: comments comment_parent_comment_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2221,6 +2243,14 @@ ALTER TABLE ONLY public.commentflags
 
 ALTER TABLE ONLY public.comments
     ADD CONSTRAINT comments_author_id_fkey FOREIGN KEY (author_id) REFERENCES public.users(id);
+
+
+--
+-- Name: commentvotes commentvote_comment_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.commentvotes
+    ADD CONSTRAINT commentvote_comment_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id) NOT VALID;
 
 
 --
