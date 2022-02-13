@@ -1627,13 +1627,6 @@ CREATE INDEX fki_block_user_fkey ON public.userblocks USING btree (user_id);
 
 
 --
--- Name: fki_c; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_c ON public.notifications USING btree (user_id);
-
-
---
 -- Name: fki_comment_approver_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1648,45 +1641,10 @@ CREATE INDEX fki_comment_sentto_fkey ON public.comments USING btree (sentto);
 
 
 --
--- Name: fki_flags_user_id_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_flags_user_id_fkey ON public.flags USING btree (user_id);
-
-
---
--- Name: fki_follow_target_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_follow_target_fkey ON public.follows USING btree (target_id);
-
-
---
--- Name: fki_marsey_author_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_marsey_author_fkey ON public.marseys USING btree (author_id);
-
-
---
 -- Name: fki_mod_sub_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX fki_mod_sub_fkey ON public.mods USING btree (sub);
-
-
---
--- Name: fki_modactions_comment_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_modactions_comment_fkey ON public.modactions USING btree (target_comment_id);
-
-
---
--- Name: fki_modactions_submission_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_modactions_submission_fkey ON public.modactions USING btree (target_submission_id);
 
 
 --
@@ -1722,13 +1680,6 @@ CREATE INDEX fki_subscription_submission_fkey ON public.subscriptions USING btre
 --
 
 CREATE INDEX fki_subscription_user_fkey ON public.subscriptions USING btree (user_id);
-
-
---
--- Name: fki_u; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_u ON public.follows USING btree (user_id);
 
 
 --
