@@ -538,7 +538,7 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 CREATE TABLE public.oauth_apps (
     id integer NOT NULL,
-    client_id character(64) NOT NULL,
+    client_id character(64),
     app_name character varying(50) NOT NULL,
     redirect_uri character varying(4096) NOT NULL,
     author_id integer NOT NULL,
@@ -1628,6 +1628,27 @@ CREATE INDEX domains_domain_trgm_idx ON public.banneddomains USING gin (domain p
 
 
 --
+-- Name: fki_comment_parent_comment_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_comment_parent_comment_fkey ON public.comments USING btree (parent_comment_id);
+
+
+--
+-- Name: fki_comment_parent_submission_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_comment_parent_submission_fkey ON public.comments USING btree (parent_submission);
+
+
+--
+-- Name: fki_comment_sentto_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_comment_sentto_fkey ON public.comments USING btree (sentto);
+
+
+--
 -- Name: fki_comments_author_id_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1998,6 +2019,30 @@ ALTER TABLE ONLY public.badges
 
 ALTER TABLE ONLY public.client_auths
     ADD CONSTRAINT client_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: comments comment_parent_comment_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comment_parent_comment_fkey FOREIGN KEY (parent_comment_id) REFERENCES public.comments(id);
+
+
+--
+-- Name: comments comment_parent_submission_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comment_parent_submission_fkey FOREIGN KEY (parent_submission) REFERENCES public.submissions(id);
+
+
+--
+-- Name: comments comment_sentto_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comment_sentto_fkey FOREIGN KEY (sentto) REFERENCES public.users(id);
 
 
 --
