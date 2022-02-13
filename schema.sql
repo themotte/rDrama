@@ -1613,20 +1613,6 @@ CREATE INDEX domains_domain_trgm_idx ON public.banneddomains USING gin (domain p
 
 
 --
--- Name: fki_block_target_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_block_target_fkey ON public.userblocks USING btree (target_id);
-
-
---
--- Name: fki_block_user_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_block_user_fkey ON public.userblocks USING btree (user_id);
-
-
---
 -- Name: fki_comment_approver_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1662,24 +1648,10 @@ CREATE INDEX fki_submissions_approver_fkey ON public.submissions USING btree (is
 
 
 --
--- Name: fki_submissions_author_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_submissions_author_fkey ON public.submissions USING btree (author_id);
-
-
---
 -- Name: fki_subscription_submission_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX fki_subscription_submission_fkey ON public.subscriptions USING btree (submission_id);
-
-
---
--- Name: fki_subscription_user_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_subscription_user_fkey ON public.subscriptions USING btree (user_id);
 
 
 --
@@ -1816,31 +1788,10 @@ CREATE INDEX notifs_user_read_idx ON public.notifications USING btree (user_id, 
 
 
 --
--- Name: post_18_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX post_18_index ON public.submissions USING btree (over_18);
-
-
---
 -- Name: post_app_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX post_app_id_idx ON public.submissions USING btree (app_id);
-
-
---
--- Name: post_author_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX post_author_index ON public.submissions USING btree (author_id);
-
-
---
--- Name: sub_user_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX sub_user_index ON public.subscriptions USING btree (user_id);
 
 
 --
@@ -1886,6 +1837,13 @@ CREATE INDEX submissions_author_index ON public.submissions USING btree (author_
 
 
 --
+-- Name: submissions_created_utc_asc_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submissions_created_utc_asc_idx ON public.submissions USING btree (created_utc NULLS FIRST);
+
+
+--
 -- Name: submissions_created_utc_desc_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1918,13 +1876,6 @@ CREATE INDEX subscription_user_index ON public.subscriptions USING btree (user_i
 --
 
 CREATE INDEX user_banned_idx ON public.users USING btree (is_banned);
-
-
---
--- Name: user_privacy_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX user_privacy_idx ON public.users USING btree (is_private);
 
 
 --
