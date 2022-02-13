@@ -24,7 +24,7 @@
 						<div class="body w-lg-100">
 							<p>Choose your quadrant.</p>
 							<div class="input-group mb2">
-								<select autocomplete="off" id='quadrant' class="form-control" form="profile-settings" name="quadrant" onchange="post_toast('/settings/profile?quadrant='+document.getElementById('quadrant').value, '1')">
+								<select autocomplete="off" id='quadrant' class="form-control" form="profile-settings" name="quadrant" onchange="post_toast(this,'/settings/profile?quadrant='+document.getElementById('quadrant').value, '1')">
 								{% for entry in ["Centrist", "LibLeft", "LibRight", "AuthLeft", "AuthRight", "LibCenter", "AuthCenter", "Left", "Right"] %}
 									<option value="{{entry}}" {% if v.quadrant==entry %} selected {% endif %}>
 										{{entry}}
@@ -52,7 +52,7 @@
 						<div class="body w-lg-100">
 
 							<div class="custom-control custom-switch">
-								<input autocomplete="off" type="checkbox" class="custom-control-input" id="cardview" name="cardview"{% if v.cardview %} checked{% endif %} onchange="post_toast('/settings/profile?cardview='+document.getElementById('cardview').checked);">
+								<input autocomplete="off" type="checkbox" class="custom-control-input" id="cardview" name="cardview"{% if v.cardview %} checked{% endif %} onchange="post_toast(this,'/settings/profile?cardview='+document.getElementById('cardview').checked);">
 								<label class="custom-control-label" for="cardview"></label>
 							</div>
 
@@ -72,7 +72,7 @@
 						<div class="body w-lg-100">
 
 							<div class="custom-control custom-switch">
-								<input autocomplete="off" type="checkbox" class="custom-control-input" id="highlightcomments" name="highlightcomments"{% if v.highlightcomments %} checked{% endif %} onchange="post_toast('/settings/profile?highlightcomments='+document.getElementById('highlightcomments').checked);">
+								<input autocomplete="off" type="checkbox" class="custom-control-input" id="highlightcomments" name="highlightcomments"{% if v.highlightcomments %} checked{% endif %} onchange="post_toast(this,'/settings/profile?highlightcomments='+document.getElementById('highlightcomments').checked);">
 								<label class="custom-control-label" for="highlightcomments"></label>
 							</div>
 
@@ -91,7 +91,7 @@
 						<div class="body w-lg-100">
 							<p>Change the theme for the website.</p>
 							<div class="input-group mb2">
-								<select autocomplete="off" id='theme' class="form-control" form="profile-settings" name="theme" onchange="post_toast('/settings/profile?theme='+document.getElementById('theme').value, '1')">
+								<select autocomplete="off" id='theme' class="form-control" form="profile-settings" name="theme" onchange="post_toast(this,'/settings/profile?theme='+document.getElementById('theme').value, '1')">
 								{% for entry in  ["dramblr","classic","classic_dark","transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"] %}
 									<option value="{{entry}}" {% if v.theme==entry %} selected {% endif %}>
 										{{entry}}
@@ -157,7 +157,7 @@
 					</div>
 					{% if v.background %}
 						<div class="d-flex mt-2">
-							<a class="btn btn-primary ml-auto" role="button" onclick="post_toast('/settings/removebackground','1')">Remove Background</a>
+							<a class="btn btn-primary ml-auto" role="button" onclick="post_toast(this,'/settings/removebackground','1')">Remove Background</a>
 							<pre></pre>
 						</div>
 					{% endif %}
@@ -644,7 +644,7 @@
 							<div class="body w-lg-100">
 
 								<div class="custom-control custom-switch">
-									<input autocomplete="off" type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="post_toast('/settings/profile?private='+document.getElementById('privateswitch').checked)">
+									<input autocomplete="off" type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="post_toast(this,'/settings/profile?private='+document.getElementById('privateswitch').checked)">
 									<label class="custom-control-label" for="privateswitch"></label>
 								</div>
 
@@ -662,7 +662,7 @@
 							<div class="body w-lg-100">
 
 								<div class="custom-control custom-switch">
-									<input autocomplete="off" type="checkbox" class="custom-control-input" id="nofollowswitch" name="nofollow"{% if v.is_nofollow%} checked{% endif %} onchange="post_toast('/settings/profile?nofollow='+document.getElementById('nofollowswitch').checked)">
+									<input autocomplete="off" type="checkbox" class="custom-control-input" id="nofollowswitch" name="nofollow"{% if v.is_nofollow%} checked{% endif %} onchange="post_toast(this,'/settings/profile?nofollow='+document.getElementById('nofollowswitch').checked)">
 									<label class="custom-control-label" for="nofollowswitch"></label>
 								</div>
 
@@ -685,7 +685,7 @@
 </div>
 
 
-<script src="/static/assets/js/settings_profile.js?a=240"></script>
+<script src="/static/assets/js/settings_profile.js?a=241"></script>
 
 {% include "emoji_modal.html" %}
 {% include "gif_modal.html" %}

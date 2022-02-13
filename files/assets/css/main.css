@@ -707,10 +707,6 @@ a.btn.disabled, fieldset:disabled a.btn {
     text-decoration: underline;
     box-shadow: none;
 }
-.btn-link:disabled, .btn-link.disabled {
-    color: #6c757d;
-    pointer-events: none;
-}
 .btn-lg {
     padding: 0.5rem 1rem;
     font-size: 1.25rem;
@@ -1055,7 +1051,7 @@ input[type=submit].btn-block, input[type=reset].btn-block, input[type=button].bt
 .nav-link:hover, .nav-link:focus {
     text-decoration: none;
 }
-.nav-link.disabled {
+.disabled {
     color: #6c757d;
     pointer-events: none;
     cursor: default;
@@ -1215,9 +1211,6 @@ input[type=submit].btn-block, input[type=reset].btn-block, input[type=button].bt
 .navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:focus {
     color: rgba(0, 0, 0, 0.7);
 }
-.navbar-light .navbar-nav .nav-link.disabled {
-    color: rgba(0, 0, 0, 0.3);
-}
 .navbar-light .navbar-toggler {
     color: rgba(0, 0, 0, 0.5);
     border-color: rgba(0, 0, 0, 0.1);
@@ -1236,9 +1229,6 @@ input[type=submit].btn-block, input[type=reset].btn-block, input[type=button].bt
 }
 .navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
     color: rgba(255, 255, 255, 0.75);
-}
-.navbar-dark .navbar-nav .nav-link.disabled {
-    color: rgba(255, 255, 255, 0.25);
 }
 .navbar-dark .navbar-nav .show > .nav-link, .navbar-dark .navbar-nav .active > .nav-link, .navbar-dark .navbar-nav .nav-link.show, .navbar-dark .navbar-nav .nav-link.active {
     color: #fff;
@@ -1576,9 +1566,6 @@ button.close {
     background-color: transparent;
     border: 0;
     appearance: none;
-}
-a.close.disabled {
-    pointer-events: none;
 }
 .toast {
     max-width: 350px;

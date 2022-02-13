@@ -9,7 +9,9 @@ tooltipTriggerList.map(function(element){
 	return bootstrap.Tooltip.getOrCreateInstance(element);
 });
 
-function post_toast(url, reload, data) {
+function post_toast(t, url, reload, data) {
+	t.disabled = true;
+	t.classList.add("disabled");
 	const xhr = new XMLHttpRequest();
 	xhr.open("POST", url);
 	xhr.setRequestHeader('xhr', 'xhr');
@@ -35,6 +37,10 @@ function post_toast(url, reload, data) {
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
+		setTimeout(() => {
+			t.disabled = false;
+			t.classList.remove("disabled");
+		}, 500);
 	};
 
 	xhr.send(form);

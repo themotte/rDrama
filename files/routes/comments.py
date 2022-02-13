@@ -873,19 +873,19 @@ def edit_comment(cid, v):
 @auth_required
 def delete_comment(cid, v):
 
-	c = g.db.query(Comment).filter_by(id=cid).one_or_none()
+	comment = get_comment(cid, v=v)
 
-	if not c: abort(404)
+	if not comment.deleted_utc:
 
-	if c.author_id != v.id: abort(403)
+		if c.author_id != v.id: abort(403)
 
-	c.deleted_utc = int(time.time())
+		c.deleted_utc = int(time.time())
 
-	g.db.add(c)
-	
-	cache.delete_memoized(comment_idlist)
+		g.db.add(c)
+		
+		cache.delete_memoized(comment_idlist)
 
-	g.db.commit()
+		g.db.commit()
 
 	return {"message": "Comment deleted!"}
 
@@ -894,20 +894,18 @@ def delete_comment(cid, v):
 @auth_required
 def undelete_comment(cid, v):
 
-	c = g.db.query(Comment).filter_by(id=cid).one_or_none()
+	comment = get_comment(cid, v=v)
 
-	if not c: abort(404)
+	if comment.deleted_utc:
+		if c.author_id != v.id: abort(403)
 
-	if c.author_id != v.id:
-		abort(403)
+		c.deleted_utc = 0
 
-	c.deleted_utc = 0
+		g.db.add(c)
 
-	g.db.add(c)
+		cache.delete_memoized(comment_idlist)
 
-	cache.delete_memoized(comment_idlist)
-
-	g.db.commit()
+		g.db.commit()
 
 	return {"message": "Comment undeleted!"}
 
@@ -918,19 +916,18 @@ def pin_comment(cid, v):
 	
 	comment = get_comment(cid, v=v)
 	
-	if not comment: abort(404)
+	if not comment.is_pinned:
+		if v.id != comment.post.author_id: abort(403)
+		
+		comment.is_pinned = v.username + " (OP)"
 
-	if v.id != comment.post.author_id: abort(403)
-	
-	comment.is_pinned = v.username + " (OP)"
+		g.db.add(comment)
 
-	g.db.add(comment)
+		if v.id != comment.author_id:
+			message = f"@{v.username} (OP) has pinned your [comment]({comment.permalink})!"
+			send_repeatable_notification(comment.author_id, message)
 
-	if v.id != comment.author_id:
-		message = f"@{v.username} (OP) has pinned your [comment]({comment.permalink})!"
-		send_repeatable_notification(comment.author_id, message)
-
-	g.db.commit()
+		g.db.commit()
 	return {"message": "Comment pinned!"}
 	
 
@@ -940,20 +937,19 @@ def unpin_comment(cid, v):
 	
 	comment = get_comment(cid, v=v)
 	
-	if not comment: abort(404)
+	if comment.is_pinned:
+		if v.id != comment.post.author_id: abort(403)
 
-	if v.id != comment.post.author_id: abort(403)
+		if not comment.is_pinned.endswith(" (OP)"): 
+			return {"error": "You can only unpin comments you have pinned!"}
 
-	if not comment.is_pinned.endswith(" (OP)"): 
-		return {"error": "You can only unpin comments you have pinned!"}
+		comment.is_pinned = None
+		g.db.add(comment)
 
-	comment.is_pinned = None
-	g.db.add(comment)
-
-	if v.id != comment.author_id:
-		message = f"@{v.username} (OP) has unpinned your [comment]({comment.permalink})!"
-		send_repeatable_notification(comment.author_id, message)
-	g.db.commit()
+		if v.id != comment.author_id:
+			message = f"@{v.username} (OP) has unpinned your [comment]({comment.permalink})!"
+			send_repeatable_notification(comment.author_id, message)
+		g.db.commit()
 	return {"message": "Comment unpinned!"}
 
 
@@ -963,39 +959,37 @@ def mod_pin(cid, v):
 	
 	comment = get_comment(cid, v=v)
 	
-	if not comment: abort(404)
+	if not comment.is_pinned:
+		if not (comment.post.sub and v.mods(comment.post.sub)): abort(403)
+		
+		comment.is_pinned = v.username + " (Mod)"
 
-	if not (comment.post.sub and v.mods(comment.post.sub)): abort(403)
-	
-	comment.is_pinned = v.username + " (Mod)"
+		g.db.add(comment)
 
-	g.db.add(comment)
+		if v.id != comment.author_id:
+			message = f"@{v.username} (Mod) has pinned your [comment]({comment.permalink})!"
+			send_repeatable_notification(comment.author_id, message)
 
-	if v.id != comment.author_id:
-		message = f"@{v.username} (Mod) has pinned your [comment]({comment.permalink})!"
-		send_repeatable_notification(comment.author_id, message)
-
-	g.db.commit()
+		g.db.commit()
 	return {"message": "Comment pinned!"}
 	
 
-@app.post("/mod_unpin/<cid>")
+@app.post("/unmod_pin/<cid>")
 @auth_required
 def mod_unpin(cid, v):
 	
 	comment = get_comment(cid, v=v)
 	
-	if not comment: abort(404)
+	if comment.is_pinned:
+		if not (comment.post.sub and v.mods(comment.post.sub)): abort(403)
 
-	if not (comment.post.sub and v.mods(comment.post.sub)): abort(403)
+		comment.is_pinned = None
+		g.db.add(comment)
 
-	comment.is_pinned = None
-	g.db.add(comment)
-
-	if v.id != comment.author_id:
-		message = f"@{v.username} (Mod) has unpinned your [comment]({comment.permalink})!"
-		send_repeatable_notification(comment.author_id, message)
-	g.db.commit()
+		if v.id != comment.author_id:
+			message = f"@{v.username} (Mod) has unpinned your [comment]({comment.permalink})!"
+			send_repeatable_notification(comment.author_id, message)
+		g.db.commit()
 	return {"message": "Comment unpinned!"}
 
 
@@ -1040,10 +1034,8 @@ def handle_blackjack_action(cid, v):
 	action = request.values.get("action", "")
 	blackjack = Blackjack(g)
 
-	if action == 'hit':
-		blackjack.player_hit(comment)
-	elif action == 'stay':
-		blackjack.player_stayed(comment)
+	if action == 'hit': blackjack.player_hit(comment)
+	elif action == 'stay': blackjack.player_stayed(comment)
 	
 	g.db.add(comment)
 	g.db.add(v)

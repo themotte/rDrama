@@ -1,4 +1,6 @@
-function post_toast2(url, button1, button2) {
+function post_toast2(t, url, button1, button2) {
+	t.disabled=true;
+	t.classList.add("disabled");
 	const xhr = new XMLHttpRequest();
 	xhr.open("POST", url);
 	xhr.setRequestHeader('xhr', 'xhr');
@@ -30,6 +32,10 @@ function post_toast2(url, button1, button2) {
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
+		setTimeout(() => {
+			t.disabled = false;
+			t.classList.remove("disabled");
+		}, 500);
 	};
 
 	xhr.send(form);

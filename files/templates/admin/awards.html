@@ -64,6 +64,6 @@
 
 	<pre></pre>
 	{% if SITE_NAME != 'Drama' or v.id == AEVANN_ID %}
-		<div><a class="btn btn-danger" role="button" onclick="post_toast('/admin/monthly')">Grant Monthly Marseybux</a></div>
+		<div><a class="btn btn-danger" role="button" onclick="post_toast(this,'/admin/monthly')">Grant Monthly Marseybux</a></div>
 	{% endif %}
 {% endblock %}

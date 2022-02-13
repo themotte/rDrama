@@ -1262,21 +1262,23 @@ def unsticky_post(post_id, v):
 def sticky_comment(cid, v):
 	
 	comment = get_comment(cid, v=v)
-	comment.is_pinned = v.username
-	g.db.add(comment)
 
-	ma=ModAction(
-		kind="pin_comment",
-		user_id=v.id,
-		target_comment_id=comment.id
-	)
-	g.db.add(ma)
+	if not comment.is_pinned:
+		comment.is_pinned = v.username
+		g.db.add(comment)
 
-	if v.id != comment.author_id:
-		message = f"@{v.username} has pinned your [comment]({comment.permalink})!"
-		send_repeatable_notification(comment.author_id, message)
+		ma=ModAction(
+			kind="pin_comment",
+			user_id=v.id,
+			target_comment_id=comment.id
+		)
+		g.db.add(ma)
 
-	g.db.commit()
+		if v.id != comment.author_id:
+			message = f"@{v.username} has pinned your [comment]({comment.permalink})!"
+			send_repeatable_notification(comment.author_id, message)
+
+		g.db.commit()
 	return {"message": "Comment pinned!"}
 	
 
@@ -1286,23 +1288,24 @@ def unsticky_comment(cid, v):
 	
 	comment = get_comment(cid, v=v)
 	
-	if comment.is_pinned.endswith("(pin award)"): return {"error": "Can't unpin award pins!"}, 403
+	if comment.is_pinned:
+		if comment.is_pinned.endswith("(pin award)"): return {"error": "Can't unpin award pins!"}, 403
 
-	comment.is_pinned = None
-	g.db.add(comment)
+		comment.is_pinned = None
+		g.db.add(comment)
 
-	ma=ModAction(
-		kind="unpin_comment",
-		user_id=v.id,
-		target_comment_id=comment.id
-	)
-	g.db.add(ma)
+		ma=ModAction(
+			kind="unpin_comment",
+			user_id=v.id,
+			target_comment_id=comment.id
+		)
+		g.db.add(ma)
 
-	if v.id != comment.author_id:
-		message = f"@{v.username} has unpinned your [comment]({comment.permalink})!"
-		send_repeatable_notification(comment.author_id, message)
+		if v.id != comment.author_id:
+			message = f"@{v.username} has unpinned your [comment]({comment.permalink})!"
+			send_repeatable_notification(comment.author_id, message)
 
-	g.db.commit()
+		g.db.commit()
 	return {"message": "Comment unpinned!"}
 
 

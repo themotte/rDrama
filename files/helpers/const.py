@@ -79,7 +79,6 @@ SLURS = {
 	"mohammad": "Prophet Mohammad (PBUH)",
 	"muhammad": "Prophet Mohammad (PBUH)",
 	"i hate marsey": "i love marsey",
-	"billie eilish": "Billie Eilish (fat cow)",
 	"dancing israelis": "i love Israel",
 	"sodomite": "total dreamboat",
 	"pajeet": "sexy Indian dude",

@@ -69,8 +69,8 @@
 				<td style="font-weight: bold">{{a['owned']}}</td>
 				{% set kind = a['kind'] %}
 				<td style="font-weight: bold">
-					{% if a['kind'] != "benefactor" %}<a class="d-flex btn btn-success {% if v.coins < a['price'] %}disabled{% endif %}" role="button" onclick="post_toast('/buy/{{kind}}')"><span class="m-auto">Buy with coins</span></a>{% endif %}
-					{% if a['kind'] != "grass" %}<a class="d-flex marseybux btn btn-success {% if v.procoins < a['price'] %}disabled{% endif %}" role="button" onclick="post_toast('/buy/{{kind}}?mb=true')"><span class="m-auto">Buy with marseybux</span></a>{% endif %}
+					{% if a['kind'] != "benefactor" %}<a class="d-flex btn btn-success {% if v.coins < a['price'] %}disabled{% endif %}" role="button" onclick="post_toast(this,'/buy/{{kind}}')"><span class="m-auto">Buy with coins</span></a>{% endif %}
+					{% if a['kind'] != "grass" %}<a class="d-flex marseybux btn btn-success {% if v.procoins < a['price'] %}disabled{% endif %}" role="button" onclick="post_toast(this,'/buy/{{kind}}?mb=true')"><span class="m-auto">Buy with marseybux</span></a>{% endif %}
 				</td>
 			</tr>
 		{% endfor %}

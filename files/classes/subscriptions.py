@@ -7,7 +7,7 @@ class Subscription(Base):
 	__tablename__ = "subscriptions"
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"))
-	submission_id = Column(Integer, default=0)
+	submission_id = Column(Integer, ForeignKey("submissions.id"))
 	
 	user = relationship("User", uselist=False, viewonly=True)
 

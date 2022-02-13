@@ -7,7 +7,9 @@ function post(url) {
 	xhr.send(form);
 };
 
-function post_toast3(url, button1, button2) {
+function post_toast3(t, url, button1, button2) {
+	t.disabled=true;
+	t.classList.add("disabled");
 	const xhr = new XMLHttpRequest();
 	xhr.open("POST", url);
 	xhr.setRequestHeader('xhr', 'xhr');
@@ -39,6 +41,10 @@ function post_toast3(url, button1, button2) {
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
+		setTimeout(() => {
+			t.disabled = false;
+			t.classList.remove("disabled");
+		}, 500);
 	};
 
 	xhr.send(form);
@@ -127,6 +133,7 @@ function delete_commentModal(id) {
 
 function post_reply(id){
 	const btn = document.getElementById(`save-reply-to-${id}`)
+	btn.disabled = true;
 	btn.classList.add('disabled');
 
 	var form = new FormData();
@@ -150,13 +157,17 @@ function post_reply(id){
 			catch(e) {console.log(e)}
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
-		btn.classList.remove('disabled');
+		setTimeout(() => {
+			btn.disabled = false;
+			btn.classList.remove('disabled');
+		}, 500);
 	}
 	xhr.send(form)
 }
 
 function comment_edit(id){
 	const btn = document.getElementById(`edit-btn-${id}`)
+	btn.disabled = true
 	btn.classList.add('disabled');
 
 	var form = new FormData();
@@ -183,13 +194,17 @@ function comment_edit(id){
 			catch(e) {console.log(e)}
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
-		btn.classList.remove('disabled');
+		setTimeout(() => {
+			btn.disabled = false;
+			btn.classList.remove('disabled');
+		}, 500);
 	}
 	xhr.send(form)
 }
 
 function post_comment(fullname){
 	const btn = document.getElementById('save-reply-to-'+fullname)
+	btn.disabled = true
 	btn.classList.add('disabled');
 
 	var form = new FormData();
@@ -217,7 +232,10 @@ function post_comment(fullname){
 			catch(e) {console.log(e)}
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
-		btn.classList.remove('disabled');
+		setTimeout(() => {
+			btn.disabled = false;
+			btn.classList.remove('disabled');
+		}, 500);
 	}
 	xhr.send(form)
 }

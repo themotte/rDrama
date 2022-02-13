@@ -21,7 +21,7 @@ class Submission(Base):
 	id = Column(Integer, primary_key=True)
 	author_id = Column(Integer, ForeignKey("users.id"))
 	edited_utc = Column(Integer, default=0)
-	created_utc = Column(Integer, default=0)
+	created_utc = Column(Integer)
 	thumburl = Column(String)
 	is_banned = Column(Boolean, default=False)
 	bannedfor = Column(Boolean)
@@ -412,7 +412,7 @@ class Submission(Base):
 				body += '''<span class="cost"> (cost of entry: 200 coins)</span>'''
 			body += "</label>"
 			if v and v.admin_level > 2:
-				body += f'''<button class="btn btn-primary px-2 mx-2" style="font-size:10px;padding:2px;margin-top:-5px" onclick="post_toast('/distribute/{c.id}')">Declare winner</button>'''
+				body += f'''<button class="btn btn-primary px-2 mx-2" style="font-size:10px;padding:2px;margin-top:-5px" onclick="post_toast(this,'/distribute/{c.id}')">Declare winner</button>'''
 			body += "</div>"
 
 
