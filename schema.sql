@@ -1571,13 +1571,6 @@ CREATE INDEX commentflag_comment_index ON public.commentflags USING btree (comme
 
 
 --
--- Name: comments_parent_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX comments_parent_id_idx ON public.comments USING btree (parent_comment_id);
-
-
---
 -- Name: comments_user_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1648,59 +1641,10 @@ CREATE INDEX fki_comment_approver_fkey ON public.comments USING btree (is_approv
 
 
 --
--- Name: fki_comment_parent_comment_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_comment_parent_comment_fkey ON public.comments USING btree (parent_comment_id);
-
-
---
--- Name: fki_comment_parent_submission_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_comment_parent_submission_fkey ON public.comments USING btree (parent_submission);
-
-
---
 -- Name: fki_comment_sentto_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX fki_comment_sentto_fkey ON public.comments USING btree (sentto);
-
-
---
--- Name: fki_commentflags_user_id_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_commentflags_user_id_fkey ON public.commentflags USING btree (user_id);
-
-
---
--- Name: fki_comments_author_id_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_comments_author_id_fkey ON public.comments USING btree (author_id);
-
-
---
--- Name: fki_commentvote_comment_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_commentvote_comment_fkey ON public.commentvotes USING btree (comment_id);
-
-
---
--- Name: fki_commentvote_user_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_commentvote_user_fkey ON public.commentvotes USING btree (user_id);
-
-
---
--- Name: fki_f; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_f ON public.votes USING btree (user_id);
 
 
 --
@@ -1806,13 +1750,6 @@ CREATE INDEX fki_view_user_fkey ON public.viewers USING btree (user_id);
 --
 
 CREATE INDEX fki_view_viewer_fkey ON public.viewers USING btree (viewer_id);
-
-
---
--- Name: fki_vote_submission_key; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_vote_submission_key ON public.votes USING btree (submission_id);
 
 
 --
@@ -2250,7 +2187,7 @@ ALTER TABLE ONLY public.comments
 --
 
 ALTER TABLE ONLY public.commentvotes
-    ADD CONSTRAINT commentvote_comment_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id) NOT VALID;
+    ADD CONSTRAINT commentvote_comment_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id) MATCH FULL NOT VALID;
 
 
 --
