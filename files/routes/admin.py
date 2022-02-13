@@ -373,7 +373,7 @@ def reported_posts(v):
 	page = max(1, int(request.values.get("page", 1)))
 
 	listing = g.db.query(Submission).filter_by(
-		is_approved=0,
+		is_approved=None,
 		is_banned=False
 	).join(Submission.reports).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26)
 
@@ -395,7 +395,7 @@ def reported_comments(v):
 
 	listing = g.db.query(Comment
 					   ).filter_by(
-		is_approved=0,
+		is_approved=None,
 		is_banned=False
 	).join(Comment.reports).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
@@ -526,9 +526,9 @@ def badge_grant_post(v):
 	if url: new_badge.url = url
 
 	g.db.add(new_badge)
-	
+	g.db.flush()
+
 	if v.id != user.id:
-		g.db.flush()
 		text = f"@{v.username} has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}"
 		send_notification(user.id, text)
 	
@@ -568,8 +568,6 @@ def badge_remove_post(v):
 
 	badge = user.has_badge(badge_id)
 	if badge:
-		g.db.delete(badge)
-
 		ma = ModAction(
 			kind="badge_remove",
 			user_id=v.id,
@@ -577,6 +575,8 @@ def badge_remove_post(v):
 			_note=badge.name
 		)
 		g.db.add(ma)
+
+		g.db.delete(badge)
 
 		g.db.commit()
 	
@@ -1112,7 +1112,7 @@ def ban_post(post_id, v):
 		abort(400)
 
 	post.is_banned = True
-	post.is_approved = 0
+	post.is_approved = None
 	post.stickied = None
 	post.is_pinned = False
 	post.ban_reason = v.username
@@ -1319,7 +1319,7 @@ def api_ban_comment(c_id, v):
 		abort(404)
 
 	comment.is_banned = True
-	comment.is_approved = 0
+	comment.is_approved = None
 	comment.ban_reason = v.username
 	g.db.add(comment)
 	ma=ModAction(

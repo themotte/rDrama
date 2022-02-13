@@ -108,6 +108,7 @@ def create_sub2(v):
 
 		sub = Sub(name=name)
 		g.db.add(sub)
+		g.db.flush()
 		mod = Mod(user_id=v.id, sub=sub.name, created_utc=int(time.time()))
 		g.db.add(mod)
 		g.db.commit()

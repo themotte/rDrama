@@ -27,7 +27,7 @@ class Comment(Base):
 	bannedfor = Column(Boolean)
 	distinguish_level = Column(Integer, default=0)
 	deleted_utc = Column(Integer, default=0)
-	is_approved = Column(Integer, default=0)
+	is_approved = Column(Integer, ForeignKey("users.id"))
 	level = Column(Integer, default=0)
 	parent_comment_id = Column(Integer, ForeignKey("comments.id"))
 	top_comment_id = Column(Integer)
