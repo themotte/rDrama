@@ -101,10 +101,10 @@ ALTER SEQUENCE public.alts_id_seq OWNED BY public.alts.id;
 
 CREATE TABLE public.award_relationships (
     id integer NOT NULL,
-    user_id integer,
+    user_id integer NOT NULL,
     submission_id integer,
     comment_id integer,
-    kind character varying(20)
+    kind character varying(20) NOT NULL
 );
 
 
@@ -165,8 +165,8 @@ ALTER SEQUENCE public.badge_defs_id_seq OWNED BY public.badge_defs.id;
 
 CREATE TABLE public.badges (
     id integer NOT NULL,
-    badge_id integer,
-    user_id integer,
+    badge_id integer NOT NULL,
+    user_id integer NOT NULL,
     description character varying(256),
     url character varying(256)
 );
@@ -198,8 +198,8 @@ ALTER SEQUENCE public.badges_id_seq OWNED BY public.badges.id;
 
 CREATE TABLE public.banneddomains (
     id integer NOT NULL,
-    domain character varying(100),
-    reason character varying(100)
+    domain character varying(100) NOT NULL,
+    reason character varying(100) NOT NULL
 );
 
 
@@ -209,9 +209,9 @@ CREATE TABLE public.banneddomains (
 
 CREATE TABLE public.client_auths (
     id integer NOT NULL,
-    user_id integer,
-    oauth_client integer,
-    access_token character(128)
+    user_id integer NOT NULL,
+    oauth_client integer NOT NULL,
+    access_token character(128) NOT NULL
 );
 
 
@@ -241,8 +241,8 @@ ALTER SEQUENCE public.client_auths_id_seq OWNED BY public.client_auths.id;
 
 CREATE TABLE public.commentflags (
     id integer NOT NULL,
-    user_id integer,
-    comment_id integer,
+    user_id integer NOT NULL,
+    comment_id integer NOT NULL,
     reason character varying(350)
 );
 
@@ -273,8 +273,8 @@ ALTER SEQUENCE public.commentflags_id_seq OWNED BY public.commentflags.id;
 
 CREATE TABLE public.comments (
     id integer NOT NULL,
-    author_id integer,
-    created_utc integer DEFAULT 0 NOT NULL,
+    author_id integer NOT NULL,
+    created_utc integer NOT NULL,
     parent_submission integer,
     is_banned boolean DEFAULT false NOT NULL,
     distinguish_level integer DEFAULT 0 NOT NULL,
@@ -330,7 +330,7 @@ ALTER SEQUENCE public.comments_id_seq OWNED BY public.comments.id;
 
 CREATE TABLE public.commentvotes (
     id integer NOT NULL,
-    comment_id integer,
+    comment_id integer NOT NULL,
     vote_type integer,
     user_id integer,
     app_id integer,
@@ -384,8 +384,8 @@ ALTER SEQUENCE public.domains_id_seq OWNED BY public.banneddomains.id;
 
 CREATE TABLE public.flags (
     id integer NOT NULL,
-    user_id integer,
-    post_id integer,
+    user_id integer NOT NULL,
+    post_id integer NOT NULL,
     reason character varying(350)
 );
 
@@ -416,8 +416,8 @@ ALTER SEQUENCE public.flags_id_seq OWNED BY public.flags.id;
 
 CREATE TABLE public.follows (
     id integer NOT NULL,
-    user_id integer,
-    target_id integer
+    user_id integer NOT NULL,
+    target_id integer NOT NULL
 );
 
 
@@ -460,10 +460,10 @@ CREATE TABLE public.marseys (
 CREATE TABLE public.modactions (
     id integer NOT NULL,
     user_id integer,
-    target_user_id integer DEFAULT 0 NOT NULL,
-    target_submission_id integer DEFAULT 0 NOT NULL,
-    target_comment_id integer DEFAULT 0 NOT NULL,
-    created_utc integer DEFAULT 0 NOT NULL,
+    target_user_id integer,
+    target_submission_id integer,
+    target_comment_id integer,
+    created_utc integer NOT NULL,
     kind character varying(32) DEFAULT NULL::character varying,
     _note character varying(256) DEFAULT NULL::character varying
 );
@@ -605,7 +605,7 @@ ALTER SEQUENCE public.save_relationship_id_seq OWNED BY public.save_relationship
 CREATE TABLE public.submissions (
     id integer NOT NULL,
     author_id integer,
-    created_utc integer DEFAULT 0 NOT NULL,
+    created_utc integer NOT NULL,
     is_banned boolean DEFAULT false NOT NULL,
     over_18 boolean DEFAULT false NOT NULL,
     distinguish_level integer DEFAULT 0 NOT NULL,
@@ -679,8 +679,8 @@ CREATE TABLE public.subs (
 
 CREATE TABLE public.subscriptions (
     id integer NOT NULL,
-    user_id integer,
-    submission_id integer DEFAULT 0 NOT NULL
+    user_id integer NOT NULL,
+    submission_id integer NOT NULL
 );
 
 
@@ -710,8 +710,8 @@ ALTER SEQUENCE public.subscriptions_id_seq OWNED BY public.subscriptions.id;
 
 CREATE TABLE public.userblocks (
     id integer NOT NULL,
-    user_id integer,
-    target_id integer
+    user_id integer NOT NULL,
+    target_id integer NOT NULL
 );
 
 
@@ -744,10 +744,10 @@ CREATE TABLE public.users (
     username character varying(255) NOT NULL,
     email character varying(255),
     passhash character varying(255) NOT NULL,
-    created_utc integer DEFAULT 0 NOT NULL,
+    created_utc integer NOT NULL,
     admin_level integer DEFAULT 0 NOT NULL,
-    over_18 boolean,
-    is_activated boolean,
+    over_18 boolean DEFAULT false NOT NULL,
+    is_activated boolean DEFAULT false NOT NULL,
     bio character varying(1500),
     bio_html character varying(10000),
     referred_by integer,
@@ -771,7 +771,7 @@ CREATE TABLE public.users (
     titlecolor character varying(6),
     profileurl character varying(65),
     bannerurl character varying(65),
-    hidevotedon boolean,
+    hidevotedon boolean DEFAULT false NOT NULL,
     newtab boolean,
     flairchanged integer,
     defaultsortingcomments character varying(15),
@@ -782,13 +782,12 @@ CREATE TABLE public.users (
     newtabexternal boolean,
     customtitleplain character varying(100),
     themecolor character varying(6),
-    changelogsub boolean,
+    changelogsub boolean DEFAULT false NOT NULL,
     oldreddit boolean,
     css character varying(4000),
     profilecss character varying(4000),
     coins integer,
-    agendaposter boolean,
-    agendaposter_expires_utc integer DEFAULT 0,
+    agendaposter integer DEFAULT 0 NOT NULL,
     suicide_utc integer DEFAULT 0 NOT NULL,
     post_count integer DEFAULT 0 NOT NULL,
     comment_count integer DEFAULT 0 NOT NULL,
@@ -803,7 +802,7 @@ CREATE TABLE public.users (
     fail2_utc integer DEFAULT 0 NOT NULL,
     cardview boolean,
     received_award_count integer DEFAULT 0 NOT NULL,
-    highlightcomments boolean,
+    highlightcomments boolean DEFAULT true NOT NULL,
     nitter boolean,
     truecoins integer,
     club_allowed boolean DEFAULT false,
@@ -866,9 +865,9 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 CREATE TABLE public.viewers (
     id integer NOT NULL,
-    user_id integer,
-    viewer_id integer,
-    last_view_utc integer
+    user_id integer NOT NULL,
+    viewer_id integer NOT NULL,
+    last_view_utc integer NOT NULL
 );
 
 
@@ -1098,6 +1097,14 @@ ALTER TABLE ONLY public.award_relationships
 
 
 --
+-- Name: badge_defs badge_def_name_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.badge_defs
+    ADD CONSTRAINT badge_def_name_unique UNIQUE (name);
+
+
+--
 -- Name: badge_defs badge_defs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1226,6 +1233,22 @@ ALTER TABLE ONLY public.oauth_apps
 
 
 --
+-- Name: client_auths one_auth; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.client_auths
+    ADD CONSTRAINT one_auth UNIQUE (user_id, oauth_client);
+
+
+--
+-- Name: commentflags one_comment_flag; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.commentflags
+    ADD CONSTRAINT one_comment_flag UNIQUE (user_id, comment_id);
+
+
+--
 -- Name: users one_discord_account; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1234,11 +1257,35 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: flags one_flag; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flags
+    ADD CONSTRAINT one_flag UNIQUE (user_id, post_id);
+
+
+--
+-- Name: follows one_follow; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.follows
+    ADD CONSTRAINT one_follow UNIQUE (user_id, target_id);
+
+
+--
 -- Name: notifications one_notif; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT one_notif UNIQUE (user_id, comment_id);
+
+
+--
+-- Name: viewers one_view; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.viewers
+    ADD CONSTRAINT one_view UNIQUE (user_id, viewer_id);
 
 
 --
