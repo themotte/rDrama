@@ -25,7 +25,6 @@ def login_get(v):
 
 
 def check_for_alts(current_id):
-	if SITE == 'localhost': return
 	past_accs = set(session.get("history", []))
 	past_accs.add(current_id)
 	session["history"] = list(past_accs)
@@ -323,7 +322,9 @@ def sign_up_post(v):
 
 	id_1 = g.db.query(User.id).filter_by(id=9).count()
 	users_count = g.db.query(User.id).count()
-	if id_1 == 0 and users_count == 8: admin_level=3
+	if id_1 == 0 and users_count == 8:
+		admin_level=3
+		session["history"] = []
 	else: admin_level=0
 
 	new_user = User(

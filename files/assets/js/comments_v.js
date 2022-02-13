@@ -44,7 +44,7 @@ function post_toast3(t, url, button1, button2) {
 		setTimeout(() => {
 			t.disabled = false;
 			t.classList.remove("disabled");
-		}, 500);
+		}, 2000);
 	};
 
 	xhr.send(form);
@@ -160,7 +160,7 @@ function post_reply(id){
 		setTimeout(() => {
 			btn.disabled = false;
 			btn.classList.remove('disabled');
-		}, 500);
+		}, 2000);
 	}
 	xhr.send(form)
 }
@@ -197,7 +197,7 @@ function comment_edit(id){
 		setTimeout(() => {
 			btn.disabled = false;
 			btn.classList.remove('disabled');
-		}, 500);
+		}, 2000);
 	}
 	xhr.send(form)
 }
@@ -235,7 +235,7 @@ function post_comment(fullname){
 		setTimeout(() => {
 			btn.disabled = false;
 			btn.classList.remove('disabled');
-		}, 500);
+		}, 2000);
 	}
 	xhr.send(form)
 }
