@@ -4429,7 +4429,7 @@ textarea {
 }
 @media (min-width: 992px) {
     .card-columns {
-        column-count: 6 !important;
+        column-count: 7 !important;
 }
 }
 .container, .container-fluid {

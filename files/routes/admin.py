@@ -263,8 +263,6 @@ def remove_meme_admin(v, username):
 def monthly(v):
 	if SITE_NAME == 'Drama' and v.id != AEVANN_ID: abort (403)
 
-	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
-
 	data = {'access_token': GUMROAD_TOKEN}
 
 	emails = [x['email'] for x in requests.get(f'https://api.gumroad.com/v2/products/{GUMROAD_ID}/subscribers', data=data, timeout=5).json()["subscribers"]]

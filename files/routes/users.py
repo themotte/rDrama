@@ -470,7 +470,7 @@ def message2(v, username):
 	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
 															Comment.sentto == user.id,
 															Comment.body_html == text_html,
-															).first()
+															).one_or_none()
 
 	if existing: return {"error": "Message already exists."}, 403
 
@@ -699,19 +699,11 @@ def u_username(username, v=None):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"That username is reserved for: {u.reserved}"}
 		return render_template("userpage_reserved.html", u=u, v=v)
 
-	if v and u.id != v.id:
-		view = g.db.query(ViewerRelationship).filter(
-			and_(
-				ViewerRelationship.viewer_id == v.id,
-				ViewerRelationship.user_id == u.id
-			)
-		).first()
+	if v and u.id != v.id and u.patron:
+		view = g.db.query(ViewerRelationship).filter_by(viewer_id=v.id, user_id=u.id).one_or_none()
 
-		if view:
-			view.last_view_utc = g.timestamp
-		else:
-			view = ViewerRelationship(user_id = u.id,
-									  viewer_id = v.id)
+		if view: view.last_view_utc = g.timestamp
+		else: view = ViewerRelationship(viewer_id=v.id, user_id=u.id)
 
 		g.db.add(view)
 		g.db.commit()
@@ -1054,7 +1046,7 @@ def fp(v, fp):
 			users += alts
 	for u in users:
 		li = [v.id, u.id]
-		existing = g.db.query(Alt).filter(Alt.user1.in_(li), Alt.user2.in_(li)).first()
+		existing = g.db.query(Alt).filter(Alt.user1.in_(li), Alt.user2.in_(li)).one_or_none()
 		if existing: continue
 		new_alt = Alt(user1=v.id, user2=u.id)
 		g.db.add(new_alt)

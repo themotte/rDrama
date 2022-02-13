@@ -87,7 +87,9 @@ def login_post():
 	if not username: abort(400)
 	if username.startswith('@'): username = username[1:]
 
-	if "@" in username: account = g.db.query(User).filter(User.email.ilike(username)).one_or_none()
+	if "@" in username:
+		try: account = g.db.query(User).filter(User.email.ilike(username)).one_or_none()
+		except: return "Multiple users use this email!"
 	else: account = get_user(username, graceful=True)
 
 	if not account:
@@ -117,9 +119,7 @@ def login_post():
 			return redirect(f'{SITE_FULL}/login')
 
 		formhash = request.values.get("hash")
-		if not validate_hash(f"{account.id}+{request.values.get('time')}+2fachallenge",
-							 formhash
-							 ):
+		if not validate_hash(f"{account.id}+{request.values.get('time')}+2fachallenge", formhash):
 			return redirect(f"{SITE_FULL}/login")
 
 		if not account.validate_2fa(request.values.get("2fa_token", "").strip()):
