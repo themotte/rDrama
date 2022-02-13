@@ -610,7 +610,7 @@ CREATE TABLE public.submissions (
     over_18 boolean DEFAULT false NOT NULL,
     distinguish_level integer DEFAULT 0 NOT NULL,
     deleted_utc integer DEFAULT 0 NOT NULL,
-    is_approved integer DEFAULT 0 NOT NULL,
+    is_approved integer,
     edited_utc integer DEFAULT 0 NOT NULL,
     is_pinned boolean DEFAULT false NOT NULL,
     upvotes integer DEFAULT 1 NOT NULL,
@@ -1177,14 +1177,6 @@ ALTER TABLE ONLY public.flags
 
 
 --
--- Name: follows follow_membership_unique; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.follows
-    ADD CONSTRAINT follow_membership_unique UNIQUE (user_id, target_id);
-
-
---
 -- Name: follows follows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1297,6 +1289,14 @@ ALTER TABLE ONLY public.follows
 
 
 --
+-- Name: mods one_mod; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mods
+    ADD CONSTRAINT one_mod UNIQUE (user_id, sub);
+
+
+--
 -- Name: notifications one_notif; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1398,14 +1398,6 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.client_auths
     ADD CONSTRAINT unique_access UNIQUE (access_token);
-
-
---
--- Name: badge_defs unique_badge_name; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.badge_defs
-    ADD CONSTRAINT unique_badge_name UNIQUE (name);
 
 
 --
@@ -1628,6 +1620,27 @@ CREATE INDEX domains_domain_trgm_idx ON public.banneddomains USING gin (domain p
 
 
 --
+-- Name: fki_block_target_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_block_target_fkey ON public.userblocks USING btree (target_id);
+
+
+--
+-- Name: fki_block_user_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_block_user_fkey ON public.userblocks USING btree (user_id);
+
+
+--
+-- Name: fki_c; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_c ON public.notifications USING btree (user_id);
+
+
+--
 -- Name: fki_comment_parent_comment_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1649,10 +1662,143 @@ CREATE INDEX fki_comment_sentto_fkey ON public.comments USING btree (sentto);
 
 
 --
+-- Name: fki_commentflags_user_id_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_commentflags_user_id_fkey ON public.commentflags USING btree (user_id);
+
+
+--
 -- Name: fki_comments_author_id_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX fki_comments_author_id_fkey ON public.comments USING btree (author_id);
+
+
+--
+-- Name: fki_commentvote_user_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_commentvote_user_fkey ON public.commentvotes USING btree (user_id);
+
+
+--
+-- Name: fki_f; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_f ON public.votes USING btree (user_id);
+
+
+--
+-- Name: fki_flags_user_id_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_flags_user_id_fkey ON public.flags USING btree (user_id);
+
+
+--
+-- Name: fki_follow_target_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_follow_target_fkey ON public.follows USING btree (target_id);
+
+
+--
+-- Name: fki_marsey_author_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_marsey_author_fkey ON public.marseys USING btree (author_id);
+
+
+--
+-- Name: fki_mod_sub_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_mod_sub_fkey ON public.mods USING btree (sub);
+
+
+--
+-- Name: fki_modactions_comment_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_modactions_comment_fkey ON public.modactions USING btree (target_comment_id);
+
+
+--
+-- Name: fki_modactions_submission_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_modactions_submission_fkey ON public.modactions USING btree (target_submission_id);
+
+
+--
+-- Name: fki_modactions_user_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_modactions_user_fkey ON public.modactions USING btree (target_user_id);
+
+
+--
+-- Name: fki_submissions_approver_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_submissions_approver_fkey ON public.submissions USING btree (is_approved);
+
+
+--
+-- Name: fki_submissions_author_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_submissions_author_fkey ON public.submissions USING btree (author_id);
+
+
+--
+-- Name: fki_subscription_submission_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_subscription_submission_fkey ON public.subscriptions USING btree (submission_id);
+
+
+--
+-- Name: fki_subscription_user_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_subscription_user_fkey ON public.subscriptions USING btree (user_id);
+
+
+--
+-- Name: fki_u; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_u ON public.follows USING btree (user_id);
+
+
+--
+-- Name: fki_user_referrer_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_user_referrer_fkey ON public.users USING btree (referred_by);
+
+
+--
+-- Name: fki_view_user_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_view_user_fkey ON public.viewers USING btree (user_id);
+
+
+--
+-- Name: fki_view_viewer_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_view_viewer_fkey ON public.viewers USING btree (viewer_id);
+
+
+--
+-- Name: fki_vote_submission_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_vote_submission_key ON public.votes USING btree (submission_id);
 
 
 --
@@ -2014,6 +2160,22 @@ ALTER TABLE ONLY public.badges
 
 
 --
+-- Name: userblocks block_target_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.userblocks
+    ADD CONSTRAINT block_target_fkey FOREIGN KEY (target_id) REFERENCES public.users(id);
+
+
+--
+-- Name: userblocks block_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.userblocks
+    ADD CONSTRAINT block_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: client_auths client_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2038,19 +2200,19 @@ ALTER TABLE ONLY public.comments
 
 
 --
--- Name: comments comment_sentto_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.comments
-    ADD CONSTRAINT comment_sentto_fkey FOREIGN KEY (sentto) REFERENCES public.users(id);
-
-
---
 -- Name: commentflags commentflags_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.commentflags
     ADD CONSTRAINT commentflags_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id);
+
+
+--
+-- Name: commentflags commentflags_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.commentflags
+    ADD CONSTRAINT commentflags_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -2062,6 +2224,14 @@ ALTER TABLE ONLY public.comments
 
 
 --
+-- Name: commentvotes commentvote_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.commentvotes
+    ADD CONSTRAINT commentvote_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: flags flags_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2070,11 +2240,83 @@ ALTER TABLE ONLY public.flags
 
 
 --
+-- Name: flags flags_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flags
+    ADD CONSTRAINT flags_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: follows follow_target_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.follows
+    ADD CONSTRAINT follow_target_fkey FOREIGN KEY (target_id) REFERENCES public.users(id);
+
+
+--
+-- Name: follows follow_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.follows
+    ADD CONSTRAINT follow_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: marseys marsey_author_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.marseys
+    ADD CONSTRAINT marsey_author_fkey FOREIGN KEY (author_id) REFERENCES public.users(id);
+
+
+--
+-- Name: mods mod_sub_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mods
+    ADD CONSTRAINT mod_sub_fkey FOREIGN KEY (sub) REFERENCES public.subs(name);
+
+
+--
+-- Name: modactions modactions_comment_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.modactions
+    ADD CONSTRAINT modactions_comment_fkey FOREIGN KEY (target_comment_id) REFERENCES public.comments(id);
+
+
+--
+-- Name: modactions modactions_submission_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.modactions
+    ADD CONSTRAINT modactions_submission_fkey FOREIGN KEY (target_submission_id) REFERENCES public.submissions(id);
+
+
+--
+-- Name: modactions modactions_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.modactions
+    ADD CONSTRAINT modactions_user_fkey FOREIGN KEY (target_user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: notifications notifications_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id);
+
+
+--
+-- Name: notifications notifications_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notifications
+    ADD CONSTRAINT notifications_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -2094,9 +2336,81 @@ ALTER TABLE ONLY public.submissions
 
 
 --
+-- Name: submissions submissions_approver_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.submissions
+    ADD CONSTRAINT submissions_approver_fkey FOREIGN KEY (is_approved) REFERENCES public.users(id);
+
+
+--
+-- Name: submissions submissions_author_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.submissions
+    ADD CONSTRAINT submissions_author_fkey FOREIGN KEY (author_id) REFERENCES public.users(id);
+
+
+--
+-- Name: subscriptions subscription_submission_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subscriptions
+    ADD CONSTRAINT subscription_submission_fkey FOREIGN KEY (submission_id) REFERENCES public.submissions(id);
+
+
+--
+-- Name: subscriptions subscription_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subscriptions
+    ADD CONSTRAINT subscription_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: mods user_mod_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.mods
     ADD CONSTRAINT user_mod_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: users user_referrer_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT user_referrer_fkey FOREIGN KEY (referred_by) REFERENCES public.users(id);
+
+
+--
+-- Name: viewers view_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.viewers
+    ADD CONSTRAINT view_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: viewers view_viewer_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.viewers
+    ADD CONSTRAINT view_viewer_fkey FOREIGN KEY (viewer_id) REFERENCES public.users(id);
+
+
+--
+-- Name: votes vote_submission_key; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.votes
+    ADD CONSTRAINT vote_submission_key FOREIGN KEY (submission_id) REFERENCES public.submissions(id) NOT VALID;
+
+
+--
+-- Name: votes vote_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.votes
+    ADD CONSTRAINT vote_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
