@@ -211,7 +211,7 @@ def api_comment(v):
 					try:
 						badge_def = loads(body)
 						name = badge_def["name"]
-						badge = g.db.query(BadgeDef).filter_by(name=name).first()
+						badge = g.db.query(BadgeDef).filter_by(name=name).one_or_none()
 						if not badge:
 							badge = BadgeDef(name=name, description=badge_def["description"])
 							g.db.add(badge)
@@ -229,7 +229,7 @@ def api_comment(v):
 						if "author" in marsey: author_id = get_user(marsey["author"]).id
 						elif "author_id" in marsey: author_id = marsey["author_id"]
 						else: abort(400)
-						if not g.db.query(Marsey.name).filter_by(name=name).first():
+						if not g.db.query(Marsey.name).filter_by(name=name).one_or_none():
 							marsey = Marsey(name=marsey["name"], author_id=author_id, tags=marsey["tags"], count=0)
 							g.db.add(marsey)
 						filename = f'files/assets/images/emojis/{name}.webp'

@@ -9,8 +9,6 @@ INSERT INTO public.users (username, original_username) VALUES
 		('AutoBetter','AutoBetter'),
 		('AutoChoice','AutoChoice');
 
-insert into public.award_relationships(id,user_id,kind) values(1,1,'shit');
-
 INSERT INTO public.badge_defs VALUES
 (1,'Alpha User','Joined during open alpha'),
 (2,'Verified Email','Verified Email'),
