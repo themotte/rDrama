@@ -873,9 +873,9 @@ def edit_comment(cid, v):
 @auth_required
 def delete_comment(cid, v):
 
-	comment = get_comment(cid, v=v)
+	c = get_comment(cid, v=v)
 
-	if not comment.deleted_utc:
+	if not c.deleted_utc:
 
 		if c.author_id != v.id: abort(403)
 
@@ -894,9 +894,9 @@ def delete_comment(cid, v):
 @auth_required
 def undelete_comment(cid, v):
 
-	comment = get_comment(cid, v=v)
+	c = get_comment(cid, v=v)
 
-	if comment.deleted_utc:
+	if c.deleted_utc:
 		if c.author_id != v.id: abort(403)
 
 		c.deleted_utc = 0
