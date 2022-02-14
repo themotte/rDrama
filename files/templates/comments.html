@@ -490,62 +490,66 @@
 							{% endif %}
 						{% endif %}
 
-						{% if v and v.admin_level and v.id==c.author_id %}
-							<button id="undistinguish-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if c.distinguish_level %}d-md-inline-block{% endif %} text-info"  onclick="post_toast3(this,'/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','no')"><i class="fas fa-id-badge text-info fa-fw"></i>Undistinguish</button>
-							<button id="distinguish-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if not c.distinguish_level %}d-md-inline-block{% endif %} text-info" onclick="post_toast3(this,'/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','yes')"><i class="fas fa-id-badge text-info fa-fw"></i>Distinguish</button>
-						{% endif %}
-						
-						{% if v and v.id != c.author_id and not c.ghost %}
-							<button id="unblock-{{c.id}}" class="nobackground text-success {% if c.is_blocking %}d-md-inline-block{% endif %} d-none" onclick="post_toast3(this,'/settings/unblock?username={{c.author_name}}','block-{{c.id}}','unblock-{{c.id}}')"><i class="fas fa-eye-slash fa-fw text-success"></i>Unblock user</button>
-							
-							<button id="prompt-{{c.id}}" class="blockuser d-none text-danger nobackground" onclick="post_toast3(this,'/settings/block?username={{c.author_name}}','prompt-{{c.id}}','unblock-{{c.id}}')"><i class="fas fa-eye-slash fa-fw text-danger"></i>Are you sure?</button>
-							
-							<button id="block-{{c.id}}" class="btn caction py-0 nobackground px-1 {% if not c.is_blocking %}d-md-inline-block{% endif %} d-none text-danger" onclick="document.getElementById('block-{{c.id}}').classList.toggle('d-md-inline-block');document.getElementById('prompt-{{c.id}}').classList.toggle('d-md-inline-block');"><i class="fas fa-eye-slash fa-fw text-danger"></i>Block user</button>
-						{% endif %}
-						
-						{% if v and c.post %}
-							{% set url = "" %}
+						{% if v %}
+							<button class="btn caction py-0 nobackground px-1 text-muted" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-h fa-fw"></i></button>
+							<ul class="dropdown-menu">
+{% if v.admin_level and v.id==c.author_id %}
+<button id="undistinguish-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.distinguish_level %}d-md-inline-block{% endif %} text-info"  onclick="post_toast3(this,'/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','no')"><i class="fas fa-id-badge text-info fa-fw"></i>Undistinguish</button>
+<button id="distinguish-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.distinguish_level %}d-md-inline-block{% endif %} text-info" onclick="post_toast3(this,'/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','yes')"><i class="fas fa-id-badge text-info fa-fw"></i>Distinguish</button>
+{% endif %}
 
-							{% if v.admin_level > 1%}
-								{% set url = "sticky_comment" %}
-							{% elif v.id == c.post.author_id %}
-								{% set url = "pin_comment" %}
-							{% elif c.post.sub and v.mods(c.post.sub) %}
-								{% set url = "mod_pin" %}
-							{% endif %}
+{% if v.id != c.author_id and not c.ghost %}
+    <a id="unblock-{{c.id}}" class="dropdown-item text-success list-inline-item {% if not p.is_blocking %}d-none{% endif %}" role="button" onclick="post_toast2(this,'/settings/unblock?username={{p.author_name}}','block-{{c.id}}','unblock-{{c.id}}')"><i class="fas fa-eye text-success"></i>Unblock user</a>
 
-							{% if url != "" %}
-								<button id="unpin-{{c.id}}" class="btn caction py-0 nobackground {% if c.is_pinned %}d-md-inline-block{% endif %} text-muted d-none text-info"  data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3(this,'/un{{url}}/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Unpin</button>
-									
-								<button id="pin-{{c.id}}" class="btn caction py-0 nobackground px-1 {% if not c.is_pinned %}d-md-inline-block{% endif %} text-muted d-none text-info" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3(this,'/{{url}}/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Pin</button>
-							{% endif %}
+    <a id="block-{{c.id}}" class="dropdown-item list-inline-item text-danger {% if p.is_blocking %}d-none{% endif %}" role="button" onclick="post_toast2(this,'/settings/block?username={{p.author_name}}','block-{{c.id}}','unblock-{{c.id}}')"><i class="fas fa-eye-slash text-danger"></i>Block user</a>
+{% endif %}
+
+{% if c.post %}
+{% set url = "" %}
+
+{% if v.admin_level > 1%}
+    {% set url = "sticky_comment" %}
+{% elif v.id == c.post.author_id %}
+    {% set url = "pin_comment" %}
+{% elif c.post.sub and v.mods(c.post.sub) %}
+    {% set url = "mod_pin" %}
+{% endif %}
+
+{% if url != "" %}
+    <button id="unpin-{{c.id}}" class="dropdown-item list-inline-item {% if c.is_pinned %}d-md-inline-block{% endif %} text-muted d-none text-info"  data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3(this,'/un{{url}}/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Unpin</button>
+        
+    <button id="pin-{{c.id}}" class="dropdown-item list-inline-item {% if not c.is_pinned %}d-md-inline-block{% endif %} text-muted d-none text-info" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3(this,'/{{url}}/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Pin</button>
+{% endif %}
+{% endif %}
+
+
+{% if v.admin_level > 1 %}
+{% if "/reported/" in request.path %}
+    <button class="dropdown-item list-inline-item text-muted text-success" onclick="approveComment('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
+    <button class="dropdown-item list-inline-item text-muted text-danger" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
+{% else %}
+    <button id="approve-{{c.id}}" class="dropdown-item list-inline-item text-success d-none {% if c.is_banned %}d-md-inline-block{% endif %} text-success" onclick="approveComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
+    <button id="remove-{{c.id}}" class="dropdown-item list-inline-item text-danger d-none {% if not c.is_banned %}d-md-inline-block{% endif %} text-danger" onclick="removeComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
+{% endif %}
+{% endif %}
+
+{% if c.parent_submission and (c.author_id==v.id or v.admin_level > 1) %}
+<button id="unmark-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.over_18 %}d-md-inline-block{% endif %} text-danger" onclick="post_toast3(this,'/toggle_comment_nsfw/{{c.id}}','mark-{{c.id}}','unmark-{{c.id}}')"><i class="fas fa-eye-evil text-danger fa-fw"></i>Unmark +18</button>
+<button id="mark-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.over_18 %}d-md-inline-block{% endif %} text-danger" onclick="post_toast3(this,'/toggle_comment_nsfw/{{c.id}}','mark-{{c.id}}','unmark-{{c.id}}')"><i class="fas fa-eye-evil text-danger fa-fw"></i>Mark +18</button>
+{% endif %}
+
+{% if v.admin_level > 1 and v.id != c.author_id %}
+<button id="unban-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.author.is_suspended %}d-md-inline-block{% endif %} text-success" id="unexile-comment-{{c.id}}" onclick="post_toast3(this,'/unban_user/{{c.author_id}}','ban-{{c.id}}','unban-{{c.id}}')"><i class="fas fa-user-slash text-success fa-fw"></i>Unban user</button>
+<button id="ban-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.author.is_suspended %}d-md-inline-block{% endif %} text-danger" id="exile-comment-{{c.id}}" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/comment/{{c.id}}', '{{c.author.id}}', '{{c.author_name}}')"><i class="fas fa-user-slash text-danger fa-fw"></i>Ban user</button>
+{% endif %}
+
+{% if v.admin_level > 1 and c.oauth_app %}
+<a class=" text-muted" href="{{c.oauth_app.permalink}}/comments"><i class="fas fa-code fa-fw"></i>API App</a>
+{% endif %}
+							</ul>
 						{% endif %}
-						
-						
-						{% if v and v.admin_level > 1 %}
-							{% if "/reported/" in request.path %}
-								<button class="btn caction py-0 nobackground px-1 text-muted text-success" onclick="approveComment('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
-								<button class="btn caction py-0 nobackground px-1 text-muted text-danger" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
-							{% else %}
-								<button id="approve-{{c.id}}" class="btn caction py-0 nobackground px-1 text-success d-none {% if c.is_banned %}d-md-inline-block{% endif %} text-success" onclick="approveComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
-								<button id="remove-{{c.id}}" class="btn caction py-0 nobackground px-1 text-danger d-none {% if not c.is_banned %}d-md-inline-block{% endif %} text-danger" onclick="removeComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
-							{% endif %}
-						{% endif %}
-						
-						{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 1) %}
-							<button id="unmark-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if c.over_18 %}d-md-inline-block{% endif %} text-danger" onclick="post_toast3(this,'/toggle_comment_nsfw/{{c.id}}','mark-{{c.id}}','unmark-{{c.id}}')"><i class="fas fa-eye-evil text-danger fa-fw"></i>Unmark +18</button>
-							<button id="mark-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if not c.over_18 %}d-md-inline-block{% endif %} text-danger" onclick="post_toast3(this,'/toggle_comment_nsfw/{{c.id}}','mark-{{c.id}}','unmark-{{c.id}}')"><i class="fas fa-eye-evil text-danger fa-fw"></i>Mark +18</button>
-						{% endif %}
-						
-						{% if v and v.admin_level > 1 and v.id != c.author_id %}
-							<button id="unban-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if c.author.is_suspended %}d-md-inline-block{% endif %} text-success" id="unexile-comment-{{c.id}}" onclick="post_toast3(this,'/unban_user/{{c.author_id}}','ban-{{c.id}}','unban-{{c.id}}')"><i class="fas fa-user-slash text-success fa-fw"></i>Unban user</button>
-							<button id="ban-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if not c.author.is_suspended %}d-md-inline-block{% endif %} text-danger" id="exile-comment-{{c.id}}" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/comment/{{c.id}}', '{{c.author.id}}', '{{c.author_name}}')"><i class="fas fa-user-slash text-danger fa-fw"></i>Ban user</button>
-						{% endif %}
-						
-						{% if v and v.admin_level > 1 and c.oauth_app %}
-							<a class=" text-muted" href="{{c.oauth_app.permalink}}/comments"><i class="fas fa-code fa-fw"></i>API App</a>
-						{% endif %}
-					</li></ul>
+						</li>
+					</ul>
 				</div>
 				{% endif %}
 			</div>

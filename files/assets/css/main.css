@@ -2028,6 +2028,9 @@ a.bg-light:hover, a.bg-light:focus, button.bg-light:hover, button.bg-light:focus
     .d-md-flex {
         display: flex !important;
     }
+    .d-md-inline {
+        display: inline !important;
+    }
 }
 @media (min-width: 992px) {
     .d-lg-none {
