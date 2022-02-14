@@ -60,6 +60,7 @@ function report_commentModal(id, author) {
 	btn = document.getElementById("reportCommentButton")
 	btn.innerHTML='Report comment';
 	btn.disabled = false;
+	btn.classList.remove('disabled');
 
 	reason = document.getElementById("reason-comment")
 	reason.value = ""
@@ -67,6 +68,7 @@ function report_commentModal(id, author) {
 	btn.onclick = function() {
 		this.innerHTML='Reporting comment';
 		this.disabled = true;
+		this.classList.add('disabled');
 		const xhr = new XMLHttpRequest();
 		xhr.open("POST", '/report/comment/'+id);
 		xhr.setRequestHeader('xhr', 'xhr');
