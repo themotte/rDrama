@@ -172,7 +172,7 @@
 </div>
 {% endif %}
 
-{% if c.sentto and c.level > 2 and c.created_utc > 1641340623 %}
+{% if c.sentto and c.level > 1 and c.created_utc > 1641340623 %}
 	{% set isreply = True %}
 {% else %}
 	{% set isreply = False %}
@@ -620,7 +620,20 @@
 
 
 	{% if render_replies %} 
-		{% if request.path == '/notifications' and not replies and c.sentto != None and not c.parent_submission and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
+		{% if level<9 or request.path == '/notifications' %}
+			<div id="replies-of-{{c.id}}">
+				{% for reply in replies %}
+					{{single_comment(reply, level=level+1)}}
+				{% endfor %}
+			</div>
+		{% elif replies %}
+			<div id="morecomments-{{c.id}}" class="mt-2 more-comments">
+				<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments</button>
+				<a class="d-md-none" href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+			</div>
+		{% endif %}
+
+		{% if request.path == '/notifications' and c.level == 1 and c.sentto != None and not c.parent_submission and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
 			<a class="btn btn-primary" role="button" onclick="openReplyBox('reply-message-{{c.id}}')">Reply</a>
 			<pre></pre>
 			<div id="reply-message-{{c.id}}" class="d-none">
@@ -639,17 +652,6 @@
 					</form>
 					<div id="message-reply-{{c.id}}" class="preview mt-2"></div>
 				</div>
-			</div>
-		{% elif level<9 or request.path == '/notifications' %}
-			<div id="replies-of-{{c.id}}">
-				{% for reply in replies %}
-					{{single_comment(reply, level=level+1)}}
-				{% endfor %}
-			</div>
-		{% elif replies %}
-			<div id="morecomments-{{c.id}}" class="mt-2 more-comments">
-				<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments</button>
-				<a class="d-md-none" href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
 	{% endif %}
