@@ -305,38 +305,38 @@ def monthly(v):
 	return {"message": "Monthly coins granted"}
 
 
-@app.get('/admin/sidebar')
-@admin_level_required(3)
-def get_sidebar(v):
+# @app.get('/admin/sidebar')
+# @admin_level_required(3)
+# def get_sidebar(v):
 
-	try:
-		with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r', encoding="utf-8") as f: sidebar = f.read()
-	except:
-		sidebar = None
+# 	try:
+# 		with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r', encoding="utf-8") as f: sidebar = f.read()
+# 	except:
+# 		sidebar = None
 
-	return render_template('admin/sidebar.html', v=v, sidebar=sidebar)
+# 	return render_template('admin/sidebar.html', v=v, sidebar=sidebar)
 
 
-@app.post('/admin/sidebar')
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
-@admin_level_required(3)
-def post_sidebar(v):
+# @app.post('/admin/sidebar')
+# @limiter.limit("1/second;30/minute;200/hour;1000/day")
+# @admin_level_required(3)
+# def post_sidebar(v):
 
-	text = request.values.get('sidebar', '').strip()
+# 	text = request.values.get('sidebar', '').strip()
 
-	with open(f'files/templates/sidebar_{SITE_NAME}.html', 'w+', encoding="utf-8") as f: f.write(text)
+# 	with open(f'files/templates/sidebar_{SITE_NAME}.html', 'w+', encoding="utf-8") as f: f.write(text)
 
-	with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r', encoding="utf-8") as f: sidebar = f.read()
+# 	with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r', encoding="utf-8") as f: sidebar = f.read()
 
-	ma = ModAction(
-		kind="change_sidebar",
-		user_id=v.id,
-	)
-	g.db.add(ma)
+# 	ma = ModAction(
+# 		kind="change_sidebar",
+# 		user_id=v.id,
+# 	)
+# 	g.db.add(ma)
 
-	g.db.commit()
+# 	g.db.commit()
 
-	return render_template('admin/sidebar.html', v=v, sidebar=sidebar, msg='Sidebar edited successfully!')
+# 	return render_template('admin/sidebar.html', v=v, sidebar=sidebar, msg='Sidebar edited successfully!')
 
 @app.get("/admin/shadowbanned")
 @auth_required

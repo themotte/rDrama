@@ -14,6 +14,7 @@ from .badges import *
 from .clients import *
 from .mod_logs import *
 from .mod import *
+from .sub_block import *
 from files.__main__ import Base, cache
 from files.helpers.security import *
 import random
@@ -153,6 +154,15 @@ class User(Base):
 	@lazy
 	def mods(self, sub):
 		return self.id == AEVANN_ID or g.db.query(Mod.user_id).filter_by(user_id=self.id, sub=sub).one_or_none()
+
+	@property
+	@lazy
+	def all_blocks(self):
+		return tuple(x[0] for x in g.db.query(SubBlock.sub).filter_by(user_id=self.id).all())
+
+	@lazy
+	def blocks(self, sub):
+		return g.db.query(SubBlock).filter_by(user_id=self.id, sub=sub).one_or_none()
 
 	@lazy
 	def mod_date(self, sub):

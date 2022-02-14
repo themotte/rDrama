@@ -6,6 +6,43 @@ from .front import frontlist
 
 valid_sub_regex = re.compile("^[a-zA-Z0-9_\-]{3,20}$")
 
+
+@app.post("/s/<sub>/block")
+@auth_required
+def block_sub(v, sub):
+	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
+	if not sub: abort(404)
+	sub = sub.name
+
+	# if v.mods(sub): return {"error": "You can't block subs you mod!"}
+
+	existing = g.db.query(SubBlock).filter_by(user_id=v.id, sub=sub).one_or_none()
+
+	if not existing:
+		block = SubBlock(user_id=v.id, sub=sub)
+		g.db.add(block)
+		g.db.commit()
+		cache.delete_memoized(frontlist)
+
+	return {"message": "Sub blocked successfully!"}
+
+
+@app.post("/s/<sub>/unblock")
+@auth_required
+def unblock_sub(v, sub):
+	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
+	if not sub: abort(404)
+	sub = sub.name
+
+	block = g.db.query(SubBlock).filter_by(user_id=v.id, sub=sub).one_or_none()
+
+	if block:
+		g.db.delete(block)
+		g.db.commit()
+		cache.delete_memoized(frontlist)
+
+	return {"message": "Sub unblocked successfully!"}
+
 @app.get("/s/<sub>/mods")
 @is_not_permabanned
 def mods(v, sub):
