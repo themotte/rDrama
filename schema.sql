@@ -298,10 +298,10 @@ CREATE TABLE public.comments (
     top_comment_id integer,
     is_pinned_utc integer,
     ghost boolean,
-    slots_result character varying(50),
+    slots_result character varying(32),
     blackjack_result character varying(855),
-    wordle_result character varying(97),
-    treasure_amount character varying(10)
+    treasure_amount character varying(10),
+    wordle_result character varying(97)
 );
 
 
