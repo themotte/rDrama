@@ -67,32 +67,11 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.alts (
-    id integer NOT NULL,
     user1 integer NOT NULL,
     user2 integer NOT NULL,
     is_manual boolean DEFAULT false NOT NULL,
     CONSTRAINT alts_cant_be_equal CHECK ((user1 <> user2))
 );
-
-
---
--- Name: alts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.alts_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: alts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.alts_id_seq OWNED BY public.alts.id;
 
 
 --
@@ -164,7 +143,6 @@ ALTER SEQUENCE public.badge_defs_id_seq OWNED BY public.badge_defs.id;
 --
 
 CREATE TABLE public.badges (
-    id integer NOT NULL,
     badge_id integer NOT NULL,
     user_id integer NOT NULL,
     description character varying(256),
@@ -173,31 +151,10 @@ CREATE TABLE public.badges (
 
 
 --
--- Name: badges_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.badges_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: badges_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.badges_id_seq OWNED BY public.badges.id;
-
-
---
 -- Name: banneddomains; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.banneddomains (
-    id integer NOT NULL,
     domain character varying(100) NOT NULL,
     reason character varying(100) NOT NULL
 );
@@ -368,26 +325,6 @@ CREATE SEQUENCE public.commentvotes_id_seq
 --
 
 ALTER SEQUENCE public.commentvotes_id_seq OWNED BY public.commentvotes.id;
-
-
---
--- Name: domains_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.domains_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: domains_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.domains_id_seq OWNED BY public.banneddomains.id;
 
 
 --
@@ -678,30 +615,9 @@ CREATE TABLE public.subs (
 --
 
 CREATE TABLE public.subscriptions (
-    id integer NOT NULL,
     user_id integer NOT NULL,
     submission_id integer NOT NULL
 );
-
-
---
--- Name: subscriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.subscriptions_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: subscriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.subscriptions_id_seq OWNED BY public.subscriptions.id;
 
 
 --
@@ -709,30 +625,9 @@ ALTER SEQUENCE public.subscriptions_id_seq OWNED BY public.subscriptions.id;
 --
 
 CREATE TABLE public.userblocks (
-    id integer NOT NULL,
     user_id integer NOT NULL,
     target_id integer NOT NULL
 );
-
-
---
--- Name: userblocks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.userblocks_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: userblocks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.userblocks_id_seq OWNED BY public.userblocks.id;
 
 
 --
@@ -864,31 +759,10 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 --
 
 CREATE TABLE public.viewers (
-    id integer NOT NULL,
     user_id integer NOT NULL,
     viewer_id integer NOT NULL,
     last_view_utc integer NOT NULL
 );
-
-
---
--- Name: viewers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.viewers_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: viewers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.viewers_id_seq OWNED BY public.viewers.id;
 
 
 --
@@ -927,13 +801,6 @@ ALTER SEQUENCE public.votes_id_seq OWNED BY public.votes.id;
 
 
 --
--- Name: alts id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.alts ALTER COLUMN id SET DEFAULT nextval('public.alts_id_seq'::regclass);
-
-
---
 -- Name: award_relationships id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -945,20 +812,6 @@ ALTER TABLE ONLY public.award_relationships ALTER COLUMN id SET DEFAULT nextval(
 --
 
 ALTER TABLE ONLY public.badge_defs ALTER COLUMN id SET DEFAULT nextval('public.badge_defs_id_seq'::regclass);
-
-
---
--- Name: badges id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.badges ALTER COLUMN id SET DEFAULT nextval('public.badges_id_seq'::regclass);
-
-
---
--- Name: banneddomains id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.banneddomains ALTER COLUMN id SET DEFAULT nextval('public.domains_id_seq'::regclass);
 
 
 --
@@ -1032,31 +885,10 @@ ALTER TABLE ONLY public.submissions ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
--- Name: subscriptions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.subscriptions ALTER COLUMN id SET DEFAULT nextval('public.subscriptions_id_seq'::regclass);
-
-
---
--- Name: userblocks id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.userblocks ALTER COLUMN id SET DEFAULT nextval('public.userblocks_id_seq'::regclass);
-
-
---
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
-
-
---
--- Name: viewers id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.viewers ALTER COLUMN id SET DEFAULT nextval('public.viewers_id_seq'::regclass);
 
 
 --
@@ -1111,7 +943,7 @@ ALTER TABLE ONLY public.badge_defs
 --
 
 ALTER TABLE ONLY public.badges
-    ADD CONSTRAINT badges_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT badges_pkey PRIMARY KEY (user_id, badge_id);
 
 
 --
@@ -1155,19 +987,11 @@ ALTER TABLE ONLY public.commentvotes
 
 
 --
--- Name: banneddomains domains_domain_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: banneddomains domain_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.banneddomains
-    ADD CONSTRAINT domains_domain_key UNIQUE (domain);
-
-
---
--- Name: banneddomains domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.banneddomains
-    ADD CONSTRAINT domains_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT domain_pkey PRIMARY KEY (domain);
 
 
 --
@@ -1243,14 +1067,6 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: userblocks one_block; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.userblocks
-    ADD CONSTRAINT one_block UNIQUE (user_id, target_id);
-
-
---
 -- Name: commentflags one_comment_flag; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1307,22 +1123,6 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: subscriptions one_subscription; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.subscriptions
-    ADD CONSTRAINT one_subscription UNIQUE (user_id, submission_id);
-
-
---
--- Name: viewers one_view; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.viewers
-    ADD CONSTRAINT one_view UNIQUE (user_id, viewer_id);
-
-
---
 -- Name: commentvotes onecvote; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1375,7 +1175,7 @@ ALTER TABLE ONLY public.subs
 --
 
 ALTER TABLE ONLY public.subscriptions
-    ADD CONSTRAINT subscriptions_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT subscriptions_pkey PRIMARY KEY (submission_id, user_id);
 
 
 --
@@ -1403,27 +1203,11 @@ ALTER TABLE ONLY public.oauth_apps
 
 
 --
--- Name: badges user_badge_constraint; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.badges
-    ADD CONSTRAINT user_badge_constraint UNIQUE (user_id, badge_id);
-
-
---
 -- Name: userblocks userblocks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.userblocks
-    ADD CONSTRAINT userblocks_pkey PRIMARY KEY (id);
-
-
---
--- Name: alts userpair; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.alts
-    ADD CONSTRAINT userpair UNIQUE (user1, user2);
+    ADD CONSTRAINT userblocks_pkey PRIMARY KEY (user_id, target_id);
 
 
 --
@@ -1455,7 +1239,7 @@ ALTER TABLE ONLY public.users
 --
 
 ALTER TABLE ONLY public.viewers
-    ADD CONSTRAINT viewers_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT viewers_pkey PRIMARY KEY (user_id, viewer_id);
 
 
 --
@@ -2141,7 +1925,7 @@ ALTER TABLE ONLY public.comments
 --
 
 ALTER TABLE ONLY public.commentvotes
-    ADD CONSTRAINT commentvote_comment_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id) MATCH FULL;
+    ADD CONSTRAINT commentvote_comment_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id) MATCH FULL NOT VALID;
 
 
 --
