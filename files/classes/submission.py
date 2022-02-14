@@ -373,14 +373,15 @@ class Submission(Base):
 
 		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 20:
 			ti = max(int((time.time() - self.created_utc)/60), 1)
-			maxupvotes = min(ti, 27)
+			maxupvotes = min(ti, 7)
 			rand = random.randint(0, maxupvotes)
 			if self.upvotes < rand:
-				amount = random.randint(0, 3)
-				self.views += amount*random.randint(3, 5)
-				self.upvotes += amount
-				g.db.add(self)
-				g.db.commit()
+				amount = random.randint(0, 1)
+				if amount == 1:
+					self.views += amount*random.randint(3, 5)
+					self.upvotes += amount
+					g.db.add(self)
+					g.db.commit()
 
 		for c in self.options:
 			body += f'<div class="custom-control"><input type="checkbox" class="custom-control-input" id="{c.id}" name="option"'

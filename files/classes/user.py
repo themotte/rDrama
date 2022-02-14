@@ -215,7 +215,7 @@ class User(Base):
 
 		return g.db.query(UserBlock).filter(
 			or_(and_(UserBlock.user_id == self.id, UserBlock.target_id == other.id), and_(
-				UserBlock.user_id == other.id, UserBlock.target_id == self.id))).one_or_none()
+				UserBlock.user_id == other.id, UserBlock.target_id == self.id))).first()
 
 	def validate_2fa(self, token):
 
