@@ -236,6 +236,16 @@ ALTER SEQUENCE public.client_auths_id_seq OWNED BY public.client_auths.id;
 
 
 --
+-- Name: comment_save_relationship; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.comment_save_relationship (
+    user_id integer NOT NULL,
+    comment_id integer NOT NULL
+);
+
+
+--
 -- Name: commentflags; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -572,31 +582,9 @@ ALTER SEQUENCE public.oauth_apps_id_seq OWNED BY public.oauth_apps.id;
 --
 
 CREATE TABLE public.save_relationship (
-    id integer NOT NULL,
-    submission_id integer,
-    user_id integer NOT NULL,
-    comment_id integer
+    submission_id integer NOT NULL,
+    user_id integer NOT NULL
 );
-
-
---
--- Name: save_relationship_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.save_relationship_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: save_relationship_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.save_relationship_id_seq OWNED BY public.save_relationship.id;
 
 
 --
@@ -1035,13 +1023,6 @@ ALTER TABLE ONLY public.oauth_apps ALTER COLUMN id SET DEFAULT nextval('public.o
 
 
 --
--- Name: save_relationship id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.save_relationship ALTER COLUMN id SET DEFAULT nextval('public.save_relationship_id_seq'::regclass);
-
-
---
 -- Name: submissions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1137,6 +1118,14 @@ ALTER TABLE ONLY public.badges
 
 ALTER TABLE ONLY public.client_auths
     ADD CONSTRAINT client_auths_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comment_save_relationship comment_save_relationship_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comment_save_relationship
+    ADD CONSTRAINT comment_save_relationship_pkey PRIMARY KEY (user_id, comment_id);
 
 
 --
@@ -1268,14 +1257,6 @@ ALTER TABLE ONLY public.commentflags
 
 
 --
--- Name: save_relationship one_comment_save; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.save_relationship
-    ADD CONSTRAINT one_comment_save UNIQUE (comment_id, user_id);
-
-
---
 -- Name: users one_discord_account; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1324,14 +1305,6 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: save_relationship one_save; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.save_relationship
-    ADD CONSTRAINT one_save UNIQUE (submission_id, user_id);
-
-
---
 -- Name: subscriptions one_subscription; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1368,7 +1341,7 @@ ALTER TABLE ONLY public.votes
 --
 
 ALTER TABLE ONLY public.save_relationship
-    ADD CONSTRAINT save_relationship_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT save_relationship_pkey PRIMARY KEY (user_id, submission_id);
 
 
 --
@@ -1639,6 +1612,20 @@ CREATE INDEX fki_comment_approver_fkey ON public.comments USING btree (is_approv
 
 
 --
+-- Name: fki_comment_save_relationship_comment_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_comment_save_relationship_comment_fkey ON public.comment_save_relationship USING btree (comment_id);
+
+
+--
+-- Name: fki_comment_save_relationship_user_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_comment_save_relationship_user_fkey ON public.comment_save_relationship USING btree (user_id);
+
+
+--
 -- Name: fki_comment_sentto_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1657,6 +1644,20 @@ CREATE INDEX fki_mod_sub_fkey ON public.mods USING btree (sub);
 --
 
 CREATE INDEX fki_modactions_user_fkey ON public.modactions USING btree (target_user_id);
+
+
+--
+-- Name: fki_save_relationship_submission_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_save_relationship_submission_fkey ON public.save_relationship USING btree (submission_id);
+
+
+--
+-- Name: fki_save_relationship_user_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_save_relationship_user_fkey ON public.save_relationship USING btree (user_id);
 
 
 --
@@ -2094,6 +2095,22 @@ ALTER TABLE ONLY public.comments
 
 
 --
+-- Name: comment_save_relationship comment_save_relationship_comment_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comment_save_relationship
+    ADD CONSTRAINT comment_save_relationship_comment_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id) MATCH FULL;
+
+
+--
+-- Name: comment_save_relationship comment_save_relationship_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comment_save_relationship
+    ADD CONSTRAINT comment_save_relationship_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) MATCH FULL;
+
+
+--
 -- Name: commentflags commentflags_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2227,6 +2244,22 @@ ALTER TABLE ONLY public.notifications
 
 ALTER TABLE ONLY public.client_auths
     ADD CONSTRAINT oauth_client_fkey FOREIGN KEY (oauth_client) REFERENCES public.oauth_apps(id);
+
+
+--
+-- Name: save_relationship save_relationship_submission_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.save_relationship
+    ADD CONSTRAINT save_relationship_submission_fkey FOREIGN KEY (submission_id) REFERENCES public.submissions(id) MATCH FULL;
+
+
+--
+-- Name: save_relationship save_relationship_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.save_relationship
+    ADD CONSTRAINT save_relationship_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) MATCH FULL;
 
 
 --
