@@ -3,6 +3,9 @@ from files.helpers.filters import *
 from files.helpers.alerts import *
 from files.helpers.images import *
 from files.helpers.const import *
+from files.helpers.slots import *
+from files.helpers.blackjack import *
+from files.helpers.treasure import *
 from files.classes import *
 from files.routes.front import comment_idlist
 from files.routes.static import marsey_list
@@ -21,6 +24,7 @@ if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key
 CF_KEY = environ.get("CF_KEY", "").strip()
 CF_ZONE = environ.get("CF_ZONE", "").strip()
 CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
+WORD_LIST = tuple(set(environ.get("WORDLE").split(" ")))
 
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
@@ -638,21 +642,19 @@ def api_comment(v):
 		g.db.add(c)
 
 	if not v.rehab:
-		slots = Slots(g)
-		slots.check_for_slots_command(body, v, c)
+		check_for_slots_command(body, v, c)
 
-		blackjack = Blackjack(g)
-		blackjack.check_for_blackjack_commands(body, v, c)
-	
-	wordle = Wordle(g)
-	wordle.check_for_wordle_commands(body, v, c)
+		check_for_blackjack_commands(body, v, c)
 
-	treasure = Treasure(g)
-	treasure.check_for_treasure(body, c)
+	check_for_treasure(body, c)
 
 	if not c.slots_result and not c.blackjack_result and not c.wordle_result:
 		parent_post.comment_count += 1
 		g.db.add(parent_post)
+
+	if "!wordle" in body:
+		answer = random.choice(WORD_LIST)
+		c.wordle_result = f'_active_{answer}'
 
 	g.db.commit()
 
@@ -1035,10 +1037,9 @@ def unsave_comment(cid, v):
 def handle_blackjack_action(cid, v):
 	comment = get_comment(cid)
 	action = request.values.get("action", "")
-	blackjack = Blackjack(g)
 
-	if action == 'hit': blackjack.player_hit(comment)
-	elif action == 'stay': blackjack.player_stayed(comment)
+	if action == 'hit': player_hit(comment)
+	elif action == 'stay': player_stayed(comment)
 	
 	g.db.add(comment)
 	g.db.add(v)
@@ -1050,12 +1051,36 @@ def handle_blackjack_action(cid, v):
 @auth_required
 def handle_wordle_action(cid, v):
 	comment = get_comment(cid)
-	guess = request.values.get("guess", "")
-	wordle = Wordle(g)
 
-	wordle.check_guess(comment,guess)
+	guesses, status, answer = comment.wordle_result.split("_")
+	count = len(guesses.split(" -> "))
+
+	try: guess = request.values.get("guess").strip().lower()
+	except: abort(400)
+
+	if (len(guess) == 5 and status == "active"):
+		result = ""
+		not_finished = [x for x in answer]
+		pos = 0
+		for i in guess:
+			result += i.upper()
+			if i == answer[pos]:
+				result += "🟩/"
+				not_finished[pos] = " "
+			elif i in not_finished: result += "🟨/"
+			else: result += "🟥/"
+			pos += 1
+
+		guesses += result[:-1]
+
+		if (guess == answer): status = "won"
+		elif (count == 6): status = "lost"
+		else: guesses += ' -> '
+
+		comment.wordle_result = f'{guesses}_{status}_{answer}'
+		
+
+		g.db.add(comment)
+		g.db.commit()
 	
-	g.db.add(comment)
-	g.db.add(v)
-	g.db.commit()
 	return { "message" : "..." }

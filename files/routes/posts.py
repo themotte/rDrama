@@ -7,6 +7,7 @@ from files.helpers.filters import *
 from files.helpers.alerts import *
 from files.helpers.discord import send_discord_message
 from files.helpers.const import *
+from files.helpers.slots import *
 from files.classes import *
 from flask import *
 from io import BytesIO
@@ -1279,8 +1280,7 @@ def submit_post(v, sub=None):
 			g.db.add(n)
 		
 		if body.startswith('!slots1000'):
-			slots = Slots(g)
-			slots.check_for_slots_command(body, snappy, c)
+			check_for_slots_command(body, snappy, c)
 
 		new_post.comment_count += 1
 
