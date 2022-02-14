@@ -174,10 +174,6 @@
 														<input autocomplete="off" type="checkbox" class="custom-control-input" id="privateCheck" name="private">
 														<label class="custom-control-label" for="privateCheck">Draft</label>
 												</div>
-												<div class="custom-control custom-checkbox">
-														<input autocomplete="off" type="checkbox" class="custom-control-input" id="ghostCheck" name="ghost">
-														<label class="custom-control-label" for="ghostCheck">Ghost Thread (cost: 500 coins or marseybux)</label>
-												</div>
 
 												{% if v.club_allowed != False %}
 													<div class="custom-control custom-checkbox">
@@ -185,6 +181,12 @@
 														<label class="custom-control-label" for="clubCheck">{{CC_TITLE}} thread</label>
 													</div>
 												{% endif %}
+
+												<div class="custom-control custom-checkbox">
+														<input {% if v.coins < 500 and v.procoins < 500 %}disabled{% endif %} autocomplete="off" type="checkbox" class="custom-control-input" id="ghostCheck" name="ghost">
+														<label class="custom-control-label" for="ghostCheck">Ghost Thread (cost: 500 coins or marseybux)</label>
+												</div>
+
 												<pre>
 
 

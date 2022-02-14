@@ -337,6 +337,16 @@ def settings_profile_post(v):
 			updated = True
 		else: abort(400)
 
+	house = request.values.get("house")
+	if house and house in ("None","Furry","Femboy","Vampire","Racist"):
+		if v.coins > 500: v.coins -= 500
+		elif v.procoins > 500: v.procoins -= 500
+		else: abort(403)
+
+		if house == "None": house = None 
+		v.house = house
+		updated = True
+
 	quadrant = request.values.get("quadrant")
 	if quadrant and request.host == 'pcmemes.net'.lower():
 		v.quadrant = quadrant
