@@ -19,6 +19,10 @@
         {% if v and v.mods(sub.name) %}
           <a class="btn btn-primary btn-block" href="/s/{{sub.name}}/settings">SUB SETTINGS</a>
         {% endif %}
+        {% if v %}
+            <a class="btn btn-primary btn-block {% if v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/s/{{sub.name}}/block','block-sub','unblock-sub');this.classList.toggle('d-none');nextElementSibling.classList.toggle('d-none')">BLOCK SUB</a>
+            <a class="btn btn-primary btn-block {% if not v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/s/{{sub.name}}/unblock','block-sub','unblock-sub');this.classList.toggle('d-none');previousElementSibling.classList.toggle('d-none')">UNBLOCK SUB</a>
+        {% endif %}
     {% else %}
         <a class="btn btn-primary btn-block mt-4" href="/post/16583">EMOJI MEGATHREAD</a>
         <a class="btn btn-primary btn-block" href="/post/18459">BUGS/SUGGESTIONS MEGATHREAD</a>
