@@ -61,6 +61,7 @@ class Submission(Base):
 	subr = relationship("Sub", primaryjoin="foreign(Submission.sub)==remote(Sub.name)", viewonly=True)
 
 	def __init__(self, *args, **kwargs):
+		if "created_utc" not in kwargs: kwargs["created_utc"] = int(time.time())
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):

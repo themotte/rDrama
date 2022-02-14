@@ -1078,7 +1078,6 @@ def submit_post(v, sub=None):
 		embed_url=embed,
 		title=title[:500],
 		title_html=title_html,
-		created_utc=int(time.time()),
 		sub=sub
 	)
 

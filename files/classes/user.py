@@ -146,7 +146,7 @@ class User(Base):
 			kwargs["passhash"] = self.hash_password(kwargs["password"])
 			kwargs.pop("password")
 
-		kwargs["created_utc"] = int(time.time())
+		if "created_utc" not in kwargs: kwargs["created_utc"] = int(time.time())
 
 		super().__init__(**kwargs)
 

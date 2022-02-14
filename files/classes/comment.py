@@ -58,10 +58,7 @@ class Comment(Base):
 	reports = relationship("CommentFlag", viewonly=True)
 	
 	def __init__(self, *args, **kwargs):
-
-		if "created_utc" not in kwargs:
-			kwargs["created_utc"] = int(time.time())
-
+		if "created_utc" not in kwargs: kwargs["created_utc"] = int(time.time())
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):

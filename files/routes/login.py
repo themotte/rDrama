@@ -331,7 +331,6 @@ def sign_up_post(v):
 		admin_level = admin_level,
 		password=request.values.get("password"),
 		email=email,
-		created_utc=int(time.time()),
 		referred_by=ref_id or None,
 		ban_evade =  int(any((x.is_banned or x.shadowbanned) and not x.unban_utc for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x))
 		)

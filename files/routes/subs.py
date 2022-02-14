@@ -73,7 +73,7 @@ def add_mod(v, sub):
 	existing = g.db.query(Mod).filter_by(user_id=user.id, sub=sub).one_or_none()
 
 	if not existing:
-		mod = Mod(user_id=user.id, sub=sub, created_utc=int(time.time()))
+		mod = Mod(user_id=user.id, sub=sub)
 		g.db.add(mod)
 
 		send_repeatable_notification(user.id, f"You have been added as a mod to /s/{sub}")
@@ -146,7 +146,7 @@ def create_sub2(v):
 		sub = Sub(name=name)
 		g.db.add(sub)
 		g.db.flush()
-		mod = Mod(user_id=v.id, sub=sub.name, created_utc=int(time.time()))
+		mod = Mod(user_id=v.id, sub=sub.name)
 		g.db.add(mod)
 		g.db.commit()
 
