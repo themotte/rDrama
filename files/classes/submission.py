@@ -480,13 +480,3 @@ class Submission(Base):
 	@property
 	@lazy
 	def active_flags(self): return self.flags.count()
-
-
-class SaveRelationship(Base):
-
-	__tablename__="save_relationship"
-
-	id=Column(Integer, primary_key=True)
-	user_id=Column(Integer)
-	submission_id=Column(Integer)
-	comment_id=Column(Integer)

@@ -5,7 +5,7 @@ from files.helpers.discord import remove_user
 from files.helpers.images import *
 from files.helpers.const import *
 from .alts import Alt
-from .submission import SaveRelationship
+from .saves import *
 from .comment import Notification
 from .award import AwardRelationship
 from .subscriptions import *
@@ -581,7 +581,7 @@ class User(Base):
 	@lazy
 	def saved_idlist(self, page=1):
 
-		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).filter(SaveRelationship.user_id == self.id).all()]
+		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).filter_by(user_id=self.id).all()]
 		posts = g.db.query(Submission.id).filter(Submission.id.in_(saved), Submission.is_banned == False, Submission.deleted_utc == 0)
 
 		if self.admin_level == 0:
@@ -602,8 +602,7 @@ class User(Base):
 	@lazy
 	def saved_comment_idlist(self, page=1):
 
-		try: saved = [x[0] for x in g.db.query(SaveRelationship.comment_id).filter(SaveRelationship.user_id == self.id).all()]
-		except: return []
+		saved = [x[0] for x in g.db.query(CommentSaveRelationship.comment_id).filter_by(user_id=self.id).all()]
 		comments = g.db.query(Comment.id).filter(Comment.id.in_(saved), Comment.is_banned == False, Comment.deleted_utc == 0)
 
 		if self.admin_level == 0:
