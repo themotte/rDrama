@@ -823,17 +823,9 @@ def submit_post(v, sub=None):
 		sub = sub[0]
 	else: sub = None
 
-	if v.is_suspended: error( "You can't perform this action while banned.")
-	
-	if v and v.patron:
-		if request.content_length > 8 * 1024 * 1024: error( "Max file size is 8 MB.")
-	elif request.content_length > 4 * 1024 * 1024: error( "Max file size is 4 MB.")
-
 	title = request.values.get("title", "").strip()[:500].replace('‎','')
 
 	url = request.values.get("url", "").strip()
-
-	if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 		
 	body = request.values.get("body", "").strip().replace('‎','')
 
@@ -841,6 +833,14 @@ def submit_post(v, sub=None):
 		print(sub, flush=True)
 		if request.headers.get("Authorization") or request.headers.get("xhr"): error(error)
 		return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error=error, title=title, url=url, body=body), 400
+
+	if v.is_suspended: error( "You can't perform this action while banned.")
+	
+	if v and v.patron:
+		if request.content_length > 8 * 1024 * 1024: error( "Max file size is 8 MB.")
+	elif request.content_length > 4 * 1024 * 1024: error( "Max file size is 4 MB.")
+
+	if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 
 	title_html = filter_emojis_only(title, graceful=True)
 	if len(title_html) > 1500: return error("Rendered title is too big!")
