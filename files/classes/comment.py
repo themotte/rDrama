@@ -446,8 +446,9 @@ class Notification(Base):
 
 	__tablename__ = "notifications"
 
-	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-	comment_id = Column(Integer, ForeignKey("comments.id"), primary_key=True)
+	id = Column(Integer, primary_key=True)
+	user_id = Column(Integer, ForeignKey("users.id"))
+	comment_id = Column(Integer, ForeignKey("comments.id"))
 	read = Column(Boolean, default=False)
 
 	comment = relationship("Comment", viewonly=True)

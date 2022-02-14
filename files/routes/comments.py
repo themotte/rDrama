@@ -97,8 +97,8 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 		comments = g.db.query(
 			Comment,
 			votes.c.vote_type,
-			blocking.c.id,
-			blocked.c.id,
+			blocking.c.target_id,
+			blocked.c.target_id,
 		)
 
 		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
