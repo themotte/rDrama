@@ -63,18 +63,18 @@ def publish(pid, v):
 	post.created_utc = int(time.time())
 	g.db.add(post)
 	
-	notify_users = NOTIFY_USERS(post.body_html, v) | NOTIFY_USERS2(post.title, v)
+	if not post.ghost:
+		notify_users = NOTIFY_USERS(post.body_html, v) | NOTIFY_USERS2(post.title, v)
 
-	cid = notif_comment(f"@{v.username} has mentioned you: [{post.title}]({post.permalink})")
-	for x in notify_users:
-		add_notif(cid, x)
+		cid = notif_comment(f"@{v.username} has mentioned you: [{post.title}]({post.permalink})")
+		for x in notify_users:
+			add_notif(cid, x)
 
-	
-	cid = notif_comment(f"@{v.username} has made a new post: [{post.title}]({post.permalink})", autojanny=True)
-	for follow in v.followers:
-		user = get_account(follow.user_id)
-		if post.club and not user.paid_dues: continue
-		add_notif(cid, user.id)
+		cid = notif_comment(f"@{v.username} has made a new post: [{post.title}]({post.permalink})", autojanny=True)
+		for follow in v.followers:
+			user = get_account(follow.user_id)
+			if post.club and not user.paid_dues: continue
+			add_notif(cid, user.id)
 
 
 	cache.delete_memoized(frontlist)
@@ -571,13 +571,11 @@ def edit_post(pid, v):
 			g.db.add(n)
 
 
-		notify_users = NOTIFY_USERS(body_html, v) | NOTIFY_USERS2(title, v)
-		
-		soup = BeautifulSoup(body_html, features="html.parser")
-			
-		cid = notif_comment(f"@{v.username} has mentioned you: [{p.title}]({p.permalink})")
-		for x in notify_users:
-			add_notif(cid, x)
+		if not p.private and not p.ghost:
+			notify_users = NOTIFY_USERS(body_html, v) | NOTIFY_USERS2(title, v)
+			cid = notif_comment(f"@{v.username} has mentioned you: [{p.title}]({p.permalink})")
+			for x in notify_users:
+				add_notif(cid, x)
 
 
 
@@ -1065,6 +1063,16 @@ def submit_post(v, sub=None):
 	
 	if embed and len(embed) > 1500: embed = None
 
+	ghost = False
+	if request.values.get('ghost'):
+		if v.coins > 500:
+			v.coins -= 500
+			ghost = True
+		elif v.procoins > 500:
+			v.procoins -= 500
+			ghost = True
+
+
 	new_post = Submission(
 		private=bool(request.values.get("private","")),
 		club=club,
@@ -1078,7 +1086,8 @@ def submit_post(v, sub=None):
 		embed_url=embed,
 		title=title[:500],
 		title_html=title_html,
-		sub=sub
+		sub=sub,
+		ghost=ghost
 	)
 
 	g.db.add(new_post)
@@ -1150,7 +1159,10 @@ def submit_post(v, sub=None):
 		elif request.headers.get('cf-ipcountry')!="T1":
 			gevent.spawn( thumbnail_thread, new_post.id)
 
-	if not new_post.private:
+
+
+
+	if not new_post.private and not new_post.ghost:
 
 		notify_users = NOTIFY_USERS(body_html, v) | NOTIFY_USERS2(title, v)
 
@@ -1163,6 +1175,10 @@ def submit_post(v, sub=None):
 			user = get_account(follow.user_id)
 			if new_post.club and not user.paid_dues: continue
 			add_notif(cid, user.id)
+
+
+
+
 
 	if v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in f'{new_post.body}{new_post.title}'.lower():
 		new_post.is_banned = True
