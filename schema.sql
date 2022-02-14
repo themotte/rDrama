@@ -346,7 +346,7 @@ CREATE TABLE public.commentvotes (
     user_id integer NOT NULL,
     app_id integer,
     "real" boolean DEFAULT true NOT NULL,
-    created_utc integer DEFAULT 0 NOT NULL
+    created_utc integer NOT NULL
 );
 
 
@@ -902,7 +902,7 @@ CREATE TABLE public.votes (
     vote_type integer NOT NULL,
     app_id integer,
     "real" boolean DEFAULT true NOT NULL,
-    created_utc integer DEFAULT 0 NOT NULL
+    created_utc integer NOT NULL
 );
 
 
