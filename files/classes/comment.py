@@ -356,13 +356,14 @@ class Comment(Base):
 
 			if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 60:
 				ti = max(int((time.time() - self.created_utc)/60), 1)
-				maxupvotes = min(ti, 31)
+				maxupvotes = min(ti, 6)
 				rand = randint(0, maxupvotes)
 				if self.upvotes < rand:
-					amount = randint(0, 3)
-					self.upvotes += amount
-					g.db.add(self)
-					g.db.commit()
+					amount = randint(0, 1)
+					if amount == 1:
+						self.upvotes += amount
+						g.db.add(self)
+						g.db.commit()
 
 		for c in self.options:
 			body += f'<div class="custom-control"><input type="checkbox" class="custom-control-input" id="{c.id}" name="option"'
