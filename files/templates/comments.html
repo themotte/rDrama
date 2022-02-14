@@ -188,6 +188,13 @@
 	{% set kind = split_result[5] %}
 {% endif %}
 
+{% if c.wordle_result %}
+	{% set split_wordle_result = c.wordle_result.split('_') %}
+	{% set wordle_guesses = split_wordle_result[0] %}
+	{% set wordle_status = split_wordle_result[1] %}
+	{% set wordle_answer = split_wordle_result[2] %}
+{% endif %}
+
 <div id="comment-{{c.id}}" class="anchor {% if c.unread %}unread{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %} {% if c.collapse_for_user(v,request.path) %}collapsed{% endif %}" style="{% if isreply %}padding-left:0!important;{% elif not c.unread %}border-left: 2px solid {% if c.ghost %}var(--primary){% else %}#{{c.author.namecolor}};{% endif %}{% endif %} {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
 	{% if not isreply %}
 		<span class="comment-collapse-desktop d-none d-md-block" {% if not c.unread %}style="border-left: 2px solid {% if c.ghost %}var(--primary){% else %}#{{c.author.namecolor}}{% endif %}"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
@@ -277,6 +284,19 @@
 					<strong>Won {{wager}} Coins.</strong>
 					{% elif blackjack_status == 'blackjack' %}
 					<strong>Blackjack! Won {{(wager|int * 3/2)|round(0, 'floor')|int}} {{currency_kind}}.</strong>
+					{% endif %}
+				{% endif %}
+
+				{% if c.wordle_result %}
+				<em>{{wordle_guesses}}</em>
+					{% if wordle_status == 'active' and v.id == c.author_id %}
+					<input autocomplete="off" id="guess_box" type="text" name="guess" class="form-control" maxsize="4" style="width: 200px;
+					display: initial;" placeholder="5-letter guess"></input>
+					<button class="btn btn-success small" style="text-transform: uppercase; padding: 2px;" onclick="handle_wordle_action('{{c.id}}', document.getElementById('guess_box').value)">Guess</button>
+					{% elif wordle_status == 'won' %}
+					<strong>Correct!</strong>
+					{% elif wordle_status == 'lost' %}
+					<strong>Lost. The answer was: {{wordle_answer}}</strong>
 					{% endif %}
 				{% endif %}
 			</div>
@@ -945,16 +965,16 @@
 		<script src="/static/assets/js/comments_v.js?a=246"></script>
 	{% endif %}
 
-	<script src="/static/assets/js/clipboard.js?a=240"></script>
+	<script src="/static/assets/js/clipboard.js"></script>
 
 	{% if v and v.admin_level > 1 %}
-		<script src="/static/assets/js/comments_admin.js?a=240"></script>
+		<script src="/static/assets/js/comments_admin.js"></script>
 	{% endif %}
 
 	{% include "expanded_image_modal.html" %}
 
-	<script src="/static/assets/js/comments+submission_listing.js?a=240"></script>
-	<script src="/static/assets/js/comments.js?a=242"></script>
+	<script src="/static/assets/js/comments+submission_listing.js"></script>
+	<script src="/static/assets/js/comments.js"></script>
 
 	<script>
 		{% if p and (not v or v.highlightcomments) %}

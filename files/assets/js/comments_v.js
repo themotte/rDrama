@@ -327,3 +327,19 @@ function handle_blackjack_action(cid, action) {
 	}
 	xhr.send(form);
 }
+
+function handle_wordle_action(cid, guess) {
+	const form = new FormData();
+	form.append('formkey', formkey());
+	form.append('comment_id', cid);
+	form.append('guess', guess);
+	
+	const xhr = new XMLHttpRequest();
+	xhr.open("post", `/wordle/${cid}`);
+	xhr.setRequestHeader('xhr', 'xhr');
+
+	xhr.onload = function() {
+		if (xhr.status == 200) location.reload();
+	}
+	xhr.send(form);
+}

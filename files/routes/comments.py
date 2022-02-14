@@ -643,11 +643,14 @@ def api_comment(v):
 
 		blackjack = Blackjack(g)
 		blackjack.check_for_blackjack_commands(body, v, c)
+	
+	wordle = Wordle(g)
+	wordle.check_for_wordle_commands(body, v, c)
 
 	treasure = Treasure(g)
 	treasure.check_for_treasure(body, c)
 
-	if not c.slots_result and not c.blackjack_result:
+	if not c.slots_result and not c.blackjack_result and not c.wordle_result:
 		parent_post.comment_count += 1
 		g.db.add(parent_post)
 
@@ -734,7 +737,7 @@ def edit_comment(cid, v):
 			if ban.reason: reason += f" {ban.reason}"	
 		
 			return {'error': reason}, 400
-		if '!slots' not in body.lower() and '!blackjack' not in body.lower() and AGENDAPOSTER_PHRASE not in body.lower():
+		if '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower() and AGENDAPOSTER_PHRASE not in body.lower():
 			now = int(time.time())
 			cutoff = now - 60 * 60 * 24
 
@@ -1036,6 +1039,21 @@ def handle_blackjack_action(cid, v):
 
 	if action == 'hit': blackjack.player_hit(comment)
 	elif action == 'stay': blackjack.player_stayed(comment)
+	
+	g.db.add(comment)
+	g.db.add(v)
+	g.db.commit()
+	return { "message" : "..." }
+
+@app.post("/wordle/<cid>")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@auth_required
+def handle_wordle_action(cid, v):
+	comment = get_comment(cid)
+	guess = request.values.get("guess", "")
+	wordle = Wordle(g)
+
+	wordle.check_guess(comment,guess)
 	
 	g.db.add(comment)
 	g.db.add(v)

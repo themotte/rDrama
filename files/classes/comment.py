@@ -45,6 +45,7 @@ class Comment(Base):
 	ban_reason = Column(String)
 	slots_result = Column(String)
 	blackjack_result = Column(String)
+	wordle_result = Column(String)
 	treasure_amount = Column(String)
 
 	oauth_app = relationship("OauthApp", viewonly=True)
