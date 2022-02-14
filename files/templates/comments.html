@@ -461,9 +461,9 @@
 						{% if v %}
 							<button class="btn caction py-0 nobackground px-1 text-muted" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/comment/{{c.id}}/awards')"><i class="fas fa-gift" aria-hidden="true"></i>Give Award</button>
 							
-							<button id="unsave-{{c.id}}" class="btn {% if c.id in v.saved_comment_idlist() %}d-md-block{% endif %} text-muted d-none" role="button" onclick="post_toast3(this,'/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Unsave</button>
+							<button id="unsave-{{c.id}}" class="btn {% if c.id in v.saved_comment_idlist() %}d-md-inline-block{% endif %} text-muted d-none" role="button" onclick="post_toast3(this,'/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Unsave</button>
 							
-							<button id="save-{{c.id}}" class="btn caction py-0 nobackground px-1 {% if c.id not in v.saved_comment_idlist() %}d-md-block{% endif %} text-muted d-none" role="button" onclick="post_toast3(this,'/save_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Save</button>
+							<button id="save-{{c.id}}" class="btn caction py-0 nobackground px-1 {% if c.id not in v.saved_comment_idlist() %}d-md-inline-block{% endif %} text-muted d-none" role="button" onclick="post_toast3(this,'/save_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Save</button>
 							
 							<button class="btn caction py-0 nobackground px-1 text-muted" role="button" onclick="openReplyBox('reply-to-{{c.id}}')"><i class="fas fa-reply" aria-hidden="true"></i>Reply</button>
 						{% endif %}
