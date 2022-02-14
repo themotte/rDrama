@@ -1,4 +1,5 @@
 import random
+from os import environ
 
 def format_guesses(guesses):
     return " -> ".join(guesses)
@@ -9,7 +10,7 @@ def format_all(guesses, status, answer):
 
 class Wordle:
     def __init__(self, g):
-        self.word_list = ['tariq', 'sneed', 'drama', 'chuck', 'bussy', 'which', 'their', 'would', 'there', 'could', 'other', 'about', 'great', 'these', 'after', 'first', 'never', 'where', 'those', 'shall', 'being', 'might', 'every', 'think', 'under', 'found', 'still', 'while', 'again', 'place', 'young', 'years', 'three', 'right', 'house', 'whole', 'world', 'thing', 'night', 'going', 'heard', 'heart', 'among', 'asked', 'small', 'woman', 'whose', 'quite', 'words', 'given', 'taken', 'hands', 'until', 'since', 'light']
+        self.word_list = environ.get('WORDLE').split(' ')
         self.command_word = "!wordle"
         self.db = g.db
 
@@ -29,11 +30,6 @@ class Wordle:
             guesses = []
         count = len(guesses)
 
-        if (guess.lower() == answer):
-            status = "won"
-        elif (count == 5):
-            status = "lost"
-
         if (guess != None and len(guess) == 5 and status == "active"):
             result = ["🟥"]*5
             pos = 0 # letter position
@@ -49,4 +45,8 @@ class Wordle:
                 pos += 1 # add 1 to the letter position
             guesses.append("/".join(result))
             
+
+        if (guess.lower() == answer): status = "won"
+        elif (count == 5): status = "lost"
+
         from_comment.wordle_result = format_all(guesses, status, answer)
