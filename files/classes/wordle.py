@@ -29,6 +29,11 @@ class Wordle:
             guesses = []
         count = len(guesses)
 
+        if (guess.lower() == answer):
+            status = "won"
+        elif (count == 5):
+            status = "lost"
+
         if (guess != None and len(guess) == 5 and status == "active"):
             result = ["🟥"]*5
             pos = 0 # letter position
@@ -43,13 +48,5 @@ class Wordle:
                     result[pos] = result[pos] + "🟥" # red
                 pos += 1 # add 1 to the letter position
             guesses.append("/".join(result))
-        else:
-            return
-
-        if (guess.lower() in answer):
-            status = "won"
-        elif (count == 6):
-            status = "lost"
             
         from_comment.wordle_result = format_all(guesses, status, answer)
-    

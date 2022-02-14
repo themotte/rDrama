@@ -10,7 +10,7 @@ class Treasure:
 		self.db = g.db
 
 	def check_for_treasure(self, in_text, from_comment):
-		if '!slots' not in in_text and '!blackjack' not in in_text:
+		if '!slots' not in in_text and '!blackjack' not in in_text and '!wordle' not in in_text:
 			seed = random.randint(1, 1000)
 			is_special = seed == 1000
 			is_standard = seed >= 990

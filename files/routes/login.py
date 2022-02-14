@@ -252,10 +252,8 @@ def sign_up_post(v):
 
 		args = {"error": error}
 		if request.values.get("referred_by"):
-			user = g.db.query(User).filter_by(
-				id=request.values.get("referred_by")).one_or_none()
-			if user:
-				args["ref"] = user.username
+			user = g.db.query(User).filter_by(id=request.values.get("referred_by")).one_or_none()
+			if user: args["ref"] = user.username
 
 		return redirect(f"{SITE_FULL}/signup?{urlencode(args)}")
 

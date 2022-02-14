@@ -89,7 +89,7 @@
 															{% endif %}
 															
 															{% for s in SUBS %}
-																<option value="{{s}}" {% if sub.name == s %}selected{% endif %}>
+																<option value="{{s}}" {% if sub and sub.name == s %}selected{% endif %}>
 																	/s/{{s}}
 																</option>
 															{% endfor %}

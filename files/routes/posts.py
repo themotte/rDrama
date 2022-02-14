@@ -823,27 +823,34 @@ def submit_post(v, sub=None):
 		sub = sub[0]
 	else: sub = None
 
-	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
+	if v.is_suspended: error( "You can't perform this action while banned.")
 	
 	if v and v.patron:
-		if request.content_length > 8 * 1024 * 1024: return {"error": "Max file size is 8 MB."}, 413
-	elif request.content_length > 4 * 1024 * 1024: return {"error": "Max file size is 4 MB."}, 413
+		if request.content_length > 8 * 1024 * 1024: error( "Max file size is 8 MB.")
+	elif request.content_length > 4 * 1024 * 1024: error( "Max file size is 4 MB.")
 
 	title = request.values.get("title", "").strip()[:500].replace('‎','')
 
 	url = request.values.get("url", "").strip()
 
 	if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
-
-	title_html = filter_emojis_only(title)
+		
 	body = request.values.get("body", "").strip().replace('‎','')
 
-	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html, re.A))): return {"error":"You can only type marseys!"}, 40
+	def error(error):
+		print(sub, flush=True)
+		if request.headers.get("Authorization") or request.headers.get("xhr"): error(error)
+		return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error=error, title=title, url=url, body=body), 400
+
+	title_html = filter_emojis_only(title, graceful=True)
+	if len(title_html) > 1500: return error("Rendered title is too big!")
+
+	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html, re.A))): return error("You can only type marseys!")
 
 	if v.longpost:
-		if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
+		if len(body) < 280 or ' [](' in body or body.startswith('[]('): return error("You have to type more than 280 characters!")
 	elif v.bird:
-		if len(body) > 140 : return {"error":"You have to type less than 140 characters!"}, 403
+		if len(body) > 140 : return error("You have to type less than 140 characters!")
 
 	if url:
 		if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
@@ -893,8 +900,7 @@ def submit_post(v, sub=None):
 		if not domain_obj: domain_obj = get_domain(domain+parsed_url.path)
 		if domain_obj:
 			reason = f"Remove the {domain_obj.domain} link from your post and try again. {domain_obj.reason}"
-			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":reason}, 400
-			return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 400
+			return error(reason)
 		elif "twitter.com" == domain:
 			try: embed = requests.get("https://publish.twitter.com/oembed", timeout=5, params={"url":url, "omit_script":"t"}).json()["html"]
 			except: embed = None
@@ -915,27 +921,24 @@ def submit_post(v, sub=None):
 	else: embed = None
 
 	if not url and not request.values.get("body") and not request.files.get("file", None):
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "`url` or `body` parameter required."}, 400
-		return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error="Please enter a url or some text.", title=title, url=url, body=request.values.get("body", "")), 400
+		return error("Please enter a url or some text.")
 
 	if not title:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "Please enter a better title"}, 400
-		return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error="Please enter a better title.", title=title, url=url, body=request.values.get("body", "")), 400
+		return error("Please enter a better title.")
 
 
 	elif len(title) > 500:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "500 character limit for titles"}, 400
-		else: render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.values.get("body", "")), 400
+		return error("There's a 500 character limit for titles.")
 
 	if v.marseyawarded:
 		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", title, re.A))
-		if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
+		if len(marregex) == 0: return error("You can only type marseys!")
 		if body:
 			marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body, re.A))
-			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
+			if len(marregex) == 0: return error("You can only type marseys!")
 
-	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
-	elif v.bird and len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
+	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return error("You have to type more than 280 characters!")
+	elif v.bird and len(body) > 140: return error("You have to type less than 140 characters!")
 
 	dup = g.db.query(Submission).filter(
 		Submission.author_id == v.id,
@@ -992,14 +995,10 @@ def submit_post(v, sub=None):
 		return redirect(f"{SITE_FULL}/notifications")
 
 	if len(str(body)) > 20000:
-
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"There's a 20000 character limit for text body."}, 400
-		return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error="There's a 20000 character limit for text body.", title=title, url=url, body=request.values.get("body", "")), 400
+		return error("There's a 20000 character limit for text body.")
 
 	if len(url) > 2048:
-
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"2048 character limit for URLs."}, 400
-		return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error="2048 character limit for URLs.", title=title, url=url,body=request.values.get("body", "")), 400
+		return error("There's a 2048 character limit for URLs.")
 
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', body, re.M|re.A):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
@@ -1032,12 +1031,11 @@ def submit_post(v, sub=None):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
 				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
-				except: return {"error": "Imgur error"}, 400
+				except: error( "Imgur error")
 			if url.endswith('.'): url += 'mp4'
 			body += f"\n\n{url}"
 		else:
-			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "Image/Video files only"}, 400
-			return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error="Image/Video files only."), 400
+			return error("Image/Video files only.")
 
 	if '#fortune' in body:
 		body = body.replace('#fortune', '')
@@ -1045,22 +1043,21 @@ def submit_post(v, sub=None):
 
 	body_html = sanitize(body)
 
-	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html, re.A))): return {"error":"You can only type marseys!"}, 400
+	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html, re.A))): return error("You can only type marseys!")
 
 	if v.longpost:
-		if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
+		if len(body) < 280 or ' [](' in body or body.startswith('[]('): return error("You have to type more than 280 characters!")
 	elif v.bird:
-		if len(body) > 140 : return {"error":"You have to type less than 140 characters!"}, 403
+		if len(body) > 140 : return error("You have to type less than 140 characters!")
 
-	if len(body_html) > 40000: return {"error":"Submission body too long!"}, 400
+	if len(body_html) > 40000: return error("Submission body too long!")
 
 	bans = filter_comment_html(body_html)
 	if bans:
 		ban = bans[0]
 		reason = f"Remove the {ban.domain} link from your post and try again."
 		if ban.reason: reason += f" {ban.reason}"
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": reason}, 403
-		return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 403
+		return error(reason)
 
 	if v.club_allowed == False: club = False
 	else: club = bool(request.values.get("club",""))
@@ -1141,13 +1138,11 @@ def submit_post(v, sub=None):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
 				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
-				except: return {"error": "Imgur error"}, 400
+				except: error( "Imgur error")
 			if url.endswith('.'): url += 'mp4'
 			new_post.url = url
 		else:
-			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "File type not allowed"}, 400
-			return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error="File type not allowed.", title=title, body=request.values.get("body", "")), 400
-
+			return error("Image/Video files only.")
 		
 	if not new_post.thumburl and new_post.url:
 		if request.host in new_post.url or new_post.url.startswith('/') or new_post.domain == SITE:
