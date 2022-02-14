@@ -1065,10 +1065,10 @@ def handle_wordle_action(cid, v):
 		for i in guess:
 			result += i.upper()
 			if i == answer[pos]:
-				result += "🟩/"
+				result += "🟩 "
 				not_finished[pos] = " "
-			elif i in not_finished: result += "🟨/"
-			else: result += "🟥/"
+			elif i in not_finished: result += "🟨 "
+			else: result += "🟥 "
 			pos += 1
 
 		guesses += result[:-1]
