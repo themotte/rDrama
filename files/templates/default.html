@@ -281,13 +281,6 @@
 		{% if home or sub and p %}
 			{% block sidebar %}
 				{% include "sidebar_" + SITE_NAME + ".html" %}
-				{% if sub and p %}
-					<style>
-						.container {
-							max-width: 1800px;
-						}
-					</style>
-				{% endif %}
 			{% endblock %}
 		{% endif %}
 	</div>
