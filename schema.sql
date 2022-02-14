@@ -599,6 +599,16 @@ ALTER SEQUENCE public.save_relationship_id_seq OWNED BY public.save_relationship
 
 
 --
+-- Name: sub_blocks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sub_blocks (
+    user_id integer NOT NULL,
+    sub character varying(20) NOT NULL
+);
+
+
+--
 -- Name: submissions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1361,6 +1371,14 @@ ALTER TABLE ONLY public.save_relationship
 
 
 --
+-- Name: sub_blocks sub_blocks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sub_blocks
+    ADD CONSTRAINT sub_blocks_pkey PRIMARY KEY (user_id, sub);
+
+
+--
 -- Name: submissions submissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1638,6 +1656,20 @@ CREATE INDEX fki_mod_sub_fkey ON public.mods USING btree (sub);
 --
 
 CREATE INDEX fki_modactions_user_fkey ON public.modactions USING btree (target_user_id);
+
+
+--
+-- Name: fki_sub_blocks_sub_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_sub_blocks_sub_fkey ON public.sub_blocks USING btree (sub);
+
+
+--
+-- Name: fki_sub_blocks_user_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_sub_blocks_user_fkey ON public.sub_blocks USING btree (user_id);
 
 
 --
@@ -2194,6 +2226,22 @@ ALTER TABLE ONLY public.notifications
 
 ALTER TABLE ONLY public.client_auths
     ADD CONSTRAINT oauth_client_fkey FOREIGN KEY (oauth_client) REFERENCES public.oauth_apps(id);
+
+
+--
+-- Name: sub_blocks sub_blocks_sub_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sub_blocks
+    ADD CONSTRAINT sub_blocks_sub_fkey FOREIGN KEY (sub) REFERENCES public.subs(name) MATCH FULL;
+
+
+--
+-- Name: sub_blocks sub_blocks_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sub_blocks
+    ADD CONSTRAINT sub_blocks_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) MATCH FULL;
 
 
 --
