@@ -300,7 +300,7 @@ CREATE TABLE public.comments (
     ghost boolean,
     slots_result character varying(50),
     blackjack_result character varying(855),
-    wordle_result character varying(97),
+    wordle_result character varying(3000),
     treasure_amount character varying(10)
 );
 
