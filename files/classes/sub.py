@@ -25,7 +25,7 @@ class Sub(Base):
 	@lazy
 	def sidebar_url(self):
 		if self.sidebarurl: return SITE_FULL + self.sidebarurl
-		return f'{SITE_FULL}/static/assets/images/{SITE_NAME}/sidebar.webp?a=1040'
+		return f'{SITE_FULL}/static/assets/images/{SITE_NAME}/sidebar.webp?a=1041'
 
 	@property
 	@lazy
