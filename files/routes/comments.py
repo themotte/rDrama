@@ -1036,14 +1036,15 @@ def unsave_comment(cid, v):
 @auth_required
 def handle_blackjack_action(cid, v):
 	comment = get_comment(cid)
-	action = request.values.get("action", "")
+	if 'active' in comment.blackjack_result:
+		action = request.values.get("action", "")
 
-	if action == 'hit': player_hit(comment)
-	elif action == 'stay': player_stayed(comment)
-	
-	g.db.add(comment)
-	g.db.add(v)
-	g.db.commit()
+		if action == 'hit': player_hit(comment)
+		elif action == 'stay': player_stayed(comment)
+		
+		g.db.add(comment)
+		g.db.add(v)
+		g.db.commit()
 	return { "message" : "..." }
 
 @app.post("/wordle/<cid>")
