@@ -9,14 +9,6 @@ from flask import g, request
 from files.helpers.sanitize import filter_emojis_only
 from copy import deepcopy
 
-discounts = {
-	69: 0.02,
-	70: 0.04,
-	71: 0.06,
-	72: 0.08,
-	73: 0.10,
-}
-
 AWARDS3 = {
 	"fireflies": {
 		"kind": "fireflies",

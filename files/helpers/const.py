@@ -614,3 +614,11 @@ REDDIT_NOTIFS = {
 }
 
 toomuch_subs = ('2much4you','2balkan4you','2middleeast4you','2asia4you','2caucasian4you','2european4you','2american4you')
+
+discounts = {
+	69: 0.02,
+	70: 0.04,
+	71: 0.06,
+	72: 0.08,
+	73: 0.10,
+}
