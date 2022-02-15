@@ -36,6 +36,18 @@ CF_KEY = environ.get("CF_KEY", "").strip()
 CF_ZONE = environ.get("CF_ZONE", "").strip()
 CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
 
+def ghost_price(v):
+	if v.patron == 1: discount = 0.90
+	elif v.patron == 2: discount = 0.85
+	elif v.patron == 3: discount = 0.80
+	elif v.patron == 4: discount = 0.75
+	elif v.patron == 5: discount = 0.70
+	else: discount = 1
+	for badge in [69,70,71,72,73]:
+		if v.has_badge(badge): discount -= discounts[badge]
+
+	return int(500*discount)
+
 @app.post("/toggle_club/<pid>")
 @auth_required
 def toggle_club(pid, v):
@@ -96,7 +108,7 @@ def submit_get(v, sub=None):
 	
 	if request.path.startswith('/s/') and not sub: abort(404)
 
-	return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, sub=sub)
+	return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, sub=sub, price=ghost_price(v))
 
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
@@ -831,7 +843,7 @@ def submit_post(v, sub=None):
 	def error(error):
 		print(sub, flush=True)
 		if request.headers.get("Authorization") or request.headers.get("xhr"): error(error)
-		return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error=error, title=title, url=url, body=body), 400
+		return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error=error, title=title, url=url, body=body, price=ghost_price(v)), 400
 
 	if v.is_suspended: error( "You can't perform this action while banned.")
 	
@@ -1065,11 +1077,14 @@ def submit_post(v, sub=None):
 
 	ghost = False
 	if request.values.get('ghost'):
-		if v.coins > 500:
-			v.coins -= 500
+
+		price = ghost_price(v)
+
+		if v.coins >= price:
+			v.coins -= price
 			ghost = True
-		elif v.procoins > 500:
-			v.procoins -= 500
+		elif v.procoins >= price:
+			v.procoins -= price
 			ghost = True
 
 
