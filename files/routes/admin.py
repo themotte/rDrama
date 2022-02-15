@@ -20,10 +20,6 @@ import requests
 GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
 GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 
-CF_KEY = environ.get("CF_KEY", "").strip()
-CF_ZONE = environ.get("CF_ZONE", "").strip()
-CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
-
 month = datetime.now().strftime('%B')
 
 
@@ -1098,6 +1094,8 @@ def ban_post(post_id, v):
 
 	v.coins += 1
 	g.db.add(v)
+
+	requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, json={'files': [f"{SITE_FULL}/logged_out/"]})
 
 	g.db.commit()
 

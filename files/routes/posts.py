@@ -32,10 +32,6 @@ else: snappyquotes = marseys
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
-CF_KEY = environ.get("CF_KEY", "").strip()
-CF_ZONE = environ.get("CF_ZONE", "").strip()
-CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
-
 discounts = {
 	69: 0.02,
 	70: 0.04,

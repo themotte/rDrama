@@ -622,3 +622,7 @@ discounts = {
 	72: 0.08,
 	73: 0.10,
 }
+
+CF_KEY = environ.get("CF_KEY", "").strip()
+CF_ZONE = environ.get("CF_ZONE", "").strip()
+CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}

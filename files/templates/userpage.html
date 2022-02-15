@@ -58,7 +58,7 @@
 								</span>
 								{% endif %}
 								{% if SITE_NAME=='Drama' and u.house %}
-									<img class="ml-3" src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?a=7" height="40" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{u.house}}" alt="House {{u.house}}">
+									<img class="ml-3" src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?a=7" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{u.house}}" alt="House {{u.house}}">
 								{% endif %}
 
 								{% if u.verified %}<span><i class="fas fa-badge-check align-middle ml-1" style="color:{% if u.verifiedcolor %}#{{u.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.verified}}"></i></span>{% endif %}
@@ -374,7 +374,7 @@
 					</span>
 				{% endif %}
 				{% if SITE_NAME=='Drama' and u.house %}
-					<img class="ml-3" src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?a=7" height="40" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{u.house}}" alt="House {{u.house}}">
+					<img class="ml-3" src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?a=7" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{u.house}}" alt="House {{u.house}}">
 				{% endif %}
 				{% if u.admin_level > 1 or (u.admin_level == 1 and not(v and v.admin_level > 1)) %}
 				<span>

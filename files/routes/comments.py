@@ -21,9 +21,6 @@ IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
 if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
-CF_KEY = environ.get("CF_KEY", "").strip()
-CF_ZONE = environ.get("CF_ZONE", "").strip()
-CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
 WORD_LIST = tuple(set(environ.get("WORDLE").split(" ")))
 
 @app.get("/comment/<cid>")
