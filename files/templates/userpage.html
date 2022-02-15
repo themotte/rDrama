@@ -58,7 +58,7 @@
 								</span>
 								{% endif %}
 								{% if SITE_NAME=='Drama' and u.house %}
-									<img src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?a=7" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{u.house}}" alt="House {{u.house}}">
+									<img class="ml-3" src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?a=7" height="40" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{u.house}}" alt="House {{u.house}}">
 								{% endif %}
 
 								{% if u.verified %}<span><i class="fas fa-badge-check align-middle ml-1" style="color:{% if u.verifiedcolor %}#{{u.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.verified}}"></i></span>{% endif %}
@@ -365,9 +365,6 @@
 					<h5 class="text-primary">BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
 					{% if u.unban_utc %}<h5 class="text-primary">>{{u.unban_string}}</h5>{% endif %}
 				{% endif %}
-				{% if SITE_NAME=='Drama' and u.house %}
-					<img src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?a=7" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{u.house}}" alt="House {{u.house}}">
-				{% endif %}
 
 				{% if u.verified %}<span><i class="fas fa-badge-check align-middle ml-1" style="color:{% if u.verifiedcolor %}#{{u.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.verified}}"></i></span>&nbsp;{% endif %}
 				<h1 class="h5 d-inline-block" style="color: #{{u.namecolor}}"><span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}}"{% endif %}>{{u.username}}</span></h1>
@@ -375,6 +372,9 @@
 					<span>
 						<i class="fad fa-user-tag text-info align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Original Username: @{{u.original_username}}"></i>
 					</span>
+				{% endif %}
+				{% if SITE_NAME=='Drama' and u.house %}
+					<img class="ml-3" src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?a=7" height="40" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{u.house}}" alt="House {{u.house}}">
 				{% endif %}
 				{% if u.admin_level > 1 or (u.admin_level == 1 and not(v and v.admin_level > 1)) %}
 				<span>
