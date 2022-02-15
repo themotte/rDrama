@@ -283,7 +283,6 @@ def award_post(pid, v):
 		if author.marseyawarded:
 			return {"error": "This user is the under the effect of a conflicting award: Marsey award."}, 404
 
-		if author.username == "911roofer": abort(403)
 		if author.agendaposter and time.time() < author.agendaposter: author.agendaposter += 86400
 		else: author.agendaposter = int(time.time()) + 86400
 		
@@ -517,7 +516,6 @@ def award_comment(cid, v):
 		if author.marseyawarded:
 			return {"error": "This user is the under the effect of a conflicting award: Marsey award."}, 404
 
-		if author.username == "911roofer": abort(403)
 		if author.agendaposter and time.time() < author.agendaposter: author.agendaposter += 86400
 		else: author.agendaposter = int(time.time()) + 86400
 		
