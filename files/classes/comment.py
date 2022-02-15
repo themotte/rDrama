@@ -23,7 +23,7 @@ class Comment(Base):
 	created_utc = Column(Integer)
 	edited_utc = Column(Integer, default=0)
 	is_banned = Column(Boolean, default=False)
-	ghost = Column(Boolean)
+	ghost = Column(Boolean, default=False)
 	bannedfor = Column(Boolean)
 	distinguish_level = Column(Integer, default=0)
 	deleted_utc = Column(Integer, default=0)
