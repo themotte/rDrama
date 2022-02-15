@@ -264,7 +264,7 @@ CREATE TABLE public.comments (
     realupvotes integer DEFAULT 1 NOT NULL,
     top_comment_id integer,
     is_pinned_utc integer,
-    ghost boolean,
+    ghost boolean DEFAULT false NOT NULL,
     slots_result character varying(32),
     blackjack_result character varying(855),
     treasure_amount character varying(10),
@@ -571,7 +571,7 @@ CREATE TABLE public.submissions (
     realupvotes integer,
     flair character varying(350),
     stickied_utc integer,
-    ghost boolean,
+    ghost boolean DEFAULT false NOT NULL,
     sub character varying(20)
 );
 
