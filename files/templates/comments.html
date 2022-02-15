@@ -92,7 +92,7 @@
 
 		<div class="comment-body">
 
-				<div id="comment-{{c.id}}-only">
+				<div id="comment-{{c.id}}-only" class="comment-{{c.id}}-only">
 
 						<div class="user-info">
 							<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
@@ -201,7 +201,7 @@
 	{% endif %}
 	<div class="comment-body">
 
-		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
+		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
 
 			<div class="user-info">
 				<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
@@ -322,7 +322,7 @@
 						from {transform: rotate(0.5deg);}
 						to {transform: rotate({{c.award_count("tilt")}}deg);}
 					}
-					#comment-{{c.id}}-only {
+					.comment-{{c.id}}-only {
 						animation-name: c{{c.id}}-tilt !important;
 						animation-duration: 30s !important;
 						animation-iteration-count: infinite !important;
