@@ -54,9 +54,9 @@
 					</div>
 
 					<div class="body w-lg-100">
-						<p>Change your house (cost: 500 coins or marseybux).</p>
+						<p>Change your house (cost: 2000 coins or marseybux).</p>
 						<div class="input-group mb2">
-							<select {% if v.coins < 500 and v.procoins < 500 %}disabled{% endif %} autocomplete="off" id='house' class="form-control" form="profile-settings" name="house" onchange="post_toast(this,'/settings/profile?house='+document.getElementById('house').value, '1')">
+							<select {% if v.coins < 2000 and v.procoins < 2000 %}disabled{% endif %} autocomplete="off" id='house' class="form-control" form="profile-settings" name="house" onchange="post_toast(this,'/settings/profile?house='+document.getElementById('house').value, '1')">
 							{% for entry in  ("None","Furry","Femboy","Vampire","Racist") %}
 								<option value="{{entry}}" {% if v.house==entry %} selected {% endif %}>
 									{{entry}}
