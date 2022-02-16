@@ -1020,13 +1020,6 @@ CREATE UNIQUE INDEX alts_unique_combination ON public.alts USING btree (GREATEST
 
 
 --
--- Name: alts_user1_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX alts_user1_idx ON public.alts USING btree (user1);
-
-
---
 -- Name: alts_user2_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1059,13 +1052,6 @@ CREATE INDEX award_user_idx ON public.award_relationships USING btree (user_id);
 --
 
 CREATE INDEX badges_badge_id_idx ON public.badges USING btree (badge_id);
-
-
---
--- Name: badges_user_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX badges_user_index ON public.badges USING btree (user_id);
 
 
 --
@@ -1104,24 +1090,10 @@ CREATE INDEX comment_post_id_index ON public.comments USING btree (parent_submis
 
 
 --
--- Name: commentflag_comment_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX commentflag_comment_index ON public.commentflags USING btree (comment_id);
-
-
---
 -- Name: comments_user_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX comments_user_index ON public.comments USING btree (author_id);
-
-
---
--- Name: commentvotes_comments_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX commentvotes_comments_id_index ON public.commentvotes USING btree (comment_id);
 
 
 --
@@ -1167,13 +1139,6 @@ CREATE INDEX fki_comment_save_relationship_comment_fkey ON public.comment_save_r
 
 
 --
--- Name: fki_comment_save_relationship_user_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_comment_save_relationship_user_fkey ON public.comment_save_relationship USING btree (user_id);
-
-
---
 -- Name: fki_comment_sentto_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1185,13 +1150,6 @@ CREATE INDEX fki_comment_sentto_fkey ON public.comments USING btree (sentto);
 --
 
 CREATE INDEX fki_exile_sub_fkey ON public.exiles USING btree (sub);
-
-
---
--- Name: fki_exile_user_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_exile_user_fkey ON public.exiles USING btree (user_id);
 
 
 --
@@ -1279,20 +1237,6 @@ CREATE INDEX flag_user_idx ON public.flags USING btree (user_id);
 
 
 --
--- Name: flags_post_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX flags_post_index ON public.flags USING btree (post_id);
-
-
---
--- Name: follow_target_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX follow_target_id_index ON public.follows USING btree (target_id);
-
-
---
 -- Name: follow_user_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1349,13 +1293,6 @@ CREATE INDEX modaction_pid_idx ON public.modactions USING btree (target_submissi
 
 
 --
--- Name: mods_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX mods_idx ON public.mods USING btree (user_id);
-
-
---
 -- Name: notification_read_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1367,13 +1304,6 @@ CREATE INDEX notification_read_idx ON public.notifications USING btree (read);
 --
 
 CREATE INDEX notifications_comment_idx ON public.notifications USING btree (comment_id);
-
-
---
--- Name: notifications_user_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX notifications_user_index ON public.notifications USING btree (user_id);
 
 
 --
