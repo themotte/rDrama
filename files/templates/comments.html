@@ -214,6 +214,13 @@
 					{% endfor %}
 				{% endif %}
 
+				{% if c.post %}
+					{% set sub = c.post.sub %}
+					{% if sub and c.author.exiled_from(sub) %}
+						<a role="button"><i class="fad fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User has been exiled from /s/{{sub}}"></i></a>
+					{% endif %}
+				{% endif %}
+
 				{% if c.bannedfor %}
 					<a role="button"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}"></i></a>
 				{% endif %}
@@ -490,7 +497,7 @@
 						
 						<a class="btn caction nobackground px-1 text-muted" href="{{c.permalink}}"><i class="fas fa-book-open"></i>Context</a>
 
-						<button class="btn caction py-0 nobackground px-1 text-muted copy-link" role="button" role="button" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{c.shortlink_context}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</button>
+						<button class="btn caction py-0 nobackground px-1 text-muted copy-link" role="button" role="button" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{c.sl}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</button>
 
 						{% if v %}
 							<button class="btn caction py-0 nobackground px-1 text-muted" data-bs-toggle="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author_name}}',)"><i class="fas fa-flag fa-fw"></i>Report</button>
@@ -571,12 +578,20 @@
 
 {% if v.admin_level > 1 %}
 {% if "/reported/" in request.path %}
-	<button class="dropdown-item list-inline-item text-muted text-success" onclick="approveComment('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
-	<button class="dropdown-item list-inline-item text-muted text-danger" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
+	<button class="dropdown-item list-inline-item text-success" onclick="approveComment('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
+	<button class="dropdown-item list-inline-item text-danger" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
 {% else %}
-	<button id="approve-{{c.id}}" class="dropdown-item list-inline-item text-success d-none {% if c.is_banned %}d-md-block{% endif %} text-success" onclick="approveComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
-	<button id="remove-{{c.id}}" class="dropdown-item list-inline-item text-danger d-none {% if not c.is_banned %}d-md-block{% endif %} text-danger" onclick="removeComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
+	<button id="approve-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.is_banned %}d-md-block{% endif %} text-success" onclick="approveComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
+	<button id="remove-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.is_banned %}d-md-block{% endif %} text-danger" onclick="removeComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
 {% endif %}
+{% endif %}
+
+{% if c.post %}
+	{% set sub = c.post.sub %}
+	{% if sub and v.mods(sub) %}
+		<button id="exile-{{c.id}}" class="d-none {% if not c.author.exiled_from(sub) %}d-md-block{% endif %} dropdown-item list-inline-item text-danger" onclick="post_toast2(this,'/exile/comment/{{c.id}}','exile-{{c.id}}','unexile-{{c.id}}')"><i class="fas fa-campfire text-danger"></i>Exile user</button>
+		<button id="unexile-{{c.id}}" class="d-none {% if c.author.exiled_from(sub) %}d-md-block{% endif %} dropdown-item list-inline-item text-success" onclick="post_toast2(this,'/unexile/comment/{{c.id}}','exile-{{c.id}}','unexile-{{c.id}}')"><i class="fas fa-campfire text-success"></i>Unexile user</button>
+	{% endif %}
 {% endif %}
 
 {% if c.parent_submission and (c.author_id==v.id or v.admin_level > 1) %}
@@ -698,7 +713,7 @@
 
 					{% if not c.ghost %}<a href="/votes?link={{c.fullname}}"><li class="list-group-item"><i class="fas fa-arrows-v"></i>Votes</li></a>{% endif %}
 
-					<a role="button" role="button" class="list-group-item copy-link" data-bs-dismiss="modal" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{c.shortlink_context}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
+					<a role="button" role="button" class="list-group-item copy-link" data-bs-dismiss="modal" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{c.sl}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
 
 					<a class="list-group-item" href="{{c.permalink}}"><i class="fas fa-book-open"></i>Context</a>
 
@@ -745,6 +760,14 @@
 							{% elif c.post.sub and v.mods(c.post.sub) %}
 								<a id="pin2-{{c.id}}" class="list-group-item {% if c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2(this,'/mod_pin/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Pin</a>
 								<a id="unpin2-{{c.id}}" class="list-group-item {% if not c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2(this,'/mod_unpin/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Unpin</a>
+							{% endif %}
+						{% endif %}
+
+						{% if c.post %}
+							{% set sub = c.post.sub %}
+							{% if sub and v.mods(sub) %}
+								<a data-bs-dismiss="modal" id="exile2-{{c.id}}" class="{% if c.author.exiled_from(sub) %}d-none{% endif %} list-group-item text-danger" onclick="post_toast2(this,'/exile/comment/{{c.id}}','exile2-{{c.id}}','unexile2-{{c.id}}')"><i class="fas fa-campfire text-danger"></i>Exile user</a>
+								<a data-bs-dismiss="modal" id="unexile2-{{c.id}}" class="{% if not c.author.exiled_from(sub) %}d-none{% endif %} list-group-item text-success" onclick="post_toast2(this,'/unexile/comment/{{c.id}}','exile2-{{c.id}}','unexile2-{{c.id}}')"><i class="fas fa-campfire text-success"></i>Unexile user</a>
 							{% endif %}
 						{% endif %}
 					{% endif %}

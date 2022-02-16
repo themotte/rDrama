@@ -96,11 +96,11 @@ def publish(pid, v):
 	if not post.ghost:
 		notify_users = NOTIFY_USERS(post.body_html, v) | NOTIFY_USERS2(post.title, v)
 
-		cid = notif_comment(f"@{v.username} has mentioned you: [{post.title}]({post.permalink})")
+		cid = notif_comment(f"@{v.username} has mentioned you: [{post.title}]({post.sl})")
 		for x in notify_users:
 			add_notif(cid, x)
 
-		cid = notif_comment(f"@{v.username} has made a new post: [{post.title}]({post.permalink})", autojanny=True)
+		cid = notif_comment(f"@{v.username} has made a new post: [{post.title}]({post.sl})", autojanny=True)
 		for follow in v.followers:
 			user = get_account(follow.user_id)
 			if post.club and not user.paid_dues: continue
@@ -126,7 +126,7 @@ def submit_get(v, sub=None):
 	
 	if request.path.startswith('/s/') and not sub: abort(404)
 
-	return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, sub=sub, ghost=submit_ghost(v,g.db))
+	return render_template("submit.html", SUBS=tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, sub=sub, ghost=submit_ghost(v,g.db))
 
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
@@ -603,7 +603,7 @@ def edit_post(pid, v):
 
 		if not p.private and not p.ghost:
 			notify_users = NOTIFY_USERS(body_html, v) | NOTIFY_USERS2(title, v)
-			cid = notif_comment(f"@{v.username} has mentioned you: [{p.title}]({p.permalink})")
+			cid = notif_comment(f"@{v.username} has mentioned you: [{p.title}]({p.sl})")
 			for x in notify_users:
 				add_notif(cid, x)
 
@@ -844,13 +844,6 @@ def thumbnail_thread(pid):
 @limiter.limit("1/second;6/minute;200/hour;1000/day")
 @auth_required
 def submit_post(v, sub=None):
-	if not sub: sub = request.values.get("sub")
-
-	if sub:
-		sub = g.db.query(Sub.name).filter_by(name=sub.strip().lower()).one_or_none()
-		if not sub: abort(404)
-		sub = sub[0]
-	else: sub = None
 
 	title = request.values.get("title", "").strip()[:500].replace('‎','')
 
@@ -859,15 +852,24 @@ def submit_post(v, sub=None):
 	body = request.values.get("body", "").strip().replace('‎','')
 
 	def error(error):
-		print(sub, flush=True)
-		if request.headers.get("Authorization") or request.headers.get("xhr"): error(error)
-		return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error=error, title=title, url=url, body=body, price=submit_ghost(v,g.db)), 400
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": error}, 403
+		return render_template("submit.html", SUBS=tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error=error, title=title, url=url, body=body, ghost=submit_ghost(v,g.db)), 400
 
-	if v.is_suspended: error( "You can't perform this action while banned.")
+
+	if not sub: sub = request.values.get("sub")
+
+	if sub:
+		sub = g.db.query(Sub.name).filter_by(name=sub.strip().lower()).one_or_none()
+		if not sub: abort(404)
+		sub = sub[0]
+		if v.exiled_from(sub): return error(f"You're exiled from /s/{sub}")
+	else: sub = None
+
+	if v.is_suspended: return error("You can't perform this action while banned.")
 	
 	if v and v.patron:
-		if request.content_length > 8 * 1024 * 1024: error( "Max file size is 8 MB.")
-	elif request.content_length > 4 * 1024 * 1024: error( "Max file size is 4 MB.")
+		if request.content_length > 8 * 1024 * 1024: return error( "Max file size is 8 MB.")
+	elif request.content_length > 4 * 1024 * 1024: return error( "Max file size is 4 MB.")
 
 	if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 
@@ -1060,7 +1062,7 @@ def submit_post(v, sub=None):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
 				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
-				except: error( "Imgur error")
+				except: return error( "Imgur error")
 			if url.endswith('.'): url += 'mp4'
 			body += f"\n\n{url}"
 		else:
@@ -1188,7 +1190,7 @@ def submit_post(v, sub=None):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
 				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
-				except: error( "Imgur error")
+				except: return error( "Imgur error")
 			if url.endswith('.'): url += 'mp4'
 			new_post.url = url
 		else:
@@ -1207,11 +1209,11 @@ def submit_post(v, sub=None):
 
 		notify_users = NOTIFY_USERS(body_html, v) | NOTIFY_USERS2(title, v)
 
-		cid = notif_comment(f"@{v.username} has mentioned you: [{title}]({new_post.permalink})")
+		cid = notif_comment(f"@{v.username} has mentioned you: [{title}]({new_post.sl})")
 		for x in notify_users:
 			add_notif(cid, x)
 
-		cid = notif_comment(f"@{v.username} has made a new post: [{title}]({new_post.permalink})", autojanny=True)
+		cid = notif_comment(f"@{v.username} has made a new post: [{title}]({new_post.sl})", autojanny=True)
 		for follow in v.followers:
 			user = get_account(follow.user_id)
 			if new_post.club and not user.paid_dues: continue

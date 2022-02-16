@@ -14,6 +14,7 @@ from .badges import *
 from .clients import *
 from .mod_logs import *
 from .mod import *
+from .exiles import *
 from .sub_block import *
 from files.__main__ import Base, cache
 from files.helpers.security import *
@@ -153,7 +154,11 @@ class User(Base):
 
 	@lazy
 	def mods(self, sub):
-		return self.id == AEVANN_ID or g.db.query(Mod.user_id).filter_by(user_id=self.id, sub=sub).one_or_none()
+		return self.id == AEVANN_ID or bool(g.db.query(Mod.user_id).filter_by(user_id=self.id, sub=sub).one_or_none())
+
+	@lazy
+	def exiled_from(self, sub):
+		return self.admin_level < 2 and bool(g.db.query(Exile.user_id).filter_by(user_id=self.id, sub=sub).one_or_none())
 
 	@property
 	@lazy

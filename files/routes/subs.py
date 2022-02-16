@@ -7,6 +7,119 @@ from .front import frontlist
 valid_sub_regex = re.compile("^[a-zA-Z0-9_\-]{3,20}$")
 
 
+
+
+
+
+@app.post("/exile/post/<pid>")
+@is_not_permabanned
+def exile_post(v, pid):
+	try: pid = int(pid)
+	except: abort(400)
+
+	p = get_post(pid)
+	sub = p.sub
+	if not sub: abort(400)
+
+	if not v.mods(sub): abort(403)
+
+	u = p.author
+
+	if u.admin_level < 2 and not u.exiled_from(sub):
+		exile = Exile(user_id=u.id, sub=sub)
+		g.db.add(exile)
+
+		send_notification(u.id, f"You have been exiled from /s/{sub} for [{p.title}]({p.sl})")
+
+		g.db.commit()
+	
+	return {"message": "User exiled successfully!"}
+
+
+
+@app.post("/unexile/post/<pid>")
+@is_not_permabanned
+def unexile_post(v, pid):
+	try: pid = int(pid)
+	except: abort(400)
+
+	p = get_post(pid)
+	sub = p.sub
+	if not sub: abort(400)
+
+	if not v.mods(sub): abort(403)
+
+	u = p.author
+
+	if u.exiled_from(sub):
+		exile = g.db.query(Exile).filter_by(user_id=u.id, sub=sub).one_or_none()
+		g.db.delete(exile)
+
+		send_notification(u.id, f"Your exile from /s/{sub} has been revoked!")
+
+		g.db.commit()
+	
+	return {"message": "User unexiled successfully!"}
+
+
+
+
+@app.post("/exile/comment/<cid>")
+@is_not_permabanned
+def exile_comment(v, cid):
+	try: cid = int(cid)
+	except: abort(400)
+
+	c = get_comment(cid)
+	sub = c.post.sub
+	if not sub: abort(400)
+
+	if not v.mods(sub): abort(403)
+
+	u = c.author
+
+	if u.admin_level < 2 and not u.exiled_from(sub):
+		exile = Exile(user_id=u.id, sub=sub)
+		g.db.add(exile)
+
+		send_notification(u.id, f"You have been exiled from /s/{sub} for [{c.permalink}]({c.sl})")
+
+		g.db.commit()
+	
+	return {"message": "User exiled successfully!"}
+
+
+
+
+@app.post("/unexile/comment/<cid>")
+@is_not_permabanned
+def unexile_comment(v, cid):
+	try: cid = int(cid)
+	except: abort(400)
+
+	c = get_comment(cid)
+	sub = c.post.sub
+	if not sub: abort(400)
+
+	if not v.mods(sub): abort(403)
+
+	u = c.author
+
+	if u.exiled_from(sub):
+		exile = g.db.query(Exile).filter_by(user_id=u.id, sub=sub).one_or_none()
+		g.db.delete(exile)
+
+		send_notification(u.id, f"Your exile from /s/{sub} has been revoked!")
+
+		g.db.commit()
+	
+	return {"message": "User unexiled successfully!"}
+
+
+
+
+
+
 @app.post("/s/<sub>/block")
 @auth_required
 def block_sub(v, sub):

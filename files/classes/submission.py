@@ -204,6 +204,13 @@ class Submission(Base):
 	def fullname(self):
 		return f"t2_{self.id}"	
 
+
+	@property
+	@lazy
+	def sl(self):
+		return f'/post/{self.id}'
+
+
 	@property
 	@lazy
 	def shortlink(self):

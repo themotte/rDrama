@@ -148,6 +148,9 @@ def api_comment(v):
 	parent_fullname = request.values.get("parent_fullname").strip()
 
 	parent_post = get_post(parent_submission, v=v)
+	sub = parent_post.sub
+	if sub and v.exiled_from(sub): return {"error": f"You're exiled from /s/{sub}"}, 403
+
 	if parent_post.club and not (v and (v.paid_dues or v.id == parent_post.author_id)): abort(403)
 
 	if parent_fullname.startswith("t2_"):
@@ -926,7 +929,7 @@ def pin_comment(cid, v):
 		g.db.add(comment)
 
 		if v.id != comment.author_id:
-			message = f"@{v.username} (OP) has pinned your [comment]({comment.permalink})!"
+			message = f"@{v.username} (OP) has pinned your [comment]({comment.sl})!"
 			send_repeatable_notification(comment.author_id, message)
 
 		g.db.commit()
@@ -949,7 +952,7 @@ def unpin_comment(cid, v):
 		g.db.add(comment)
 
 		if v.id != comment.author_id:
-			message = f"@{v.username} (OP) has unpinned your [comment]({comment.permalink})!"
+			message = f"@{v.username} (OP) has unpinned your [comment]({comment.sl})!"
 			send_repeatable_notification(comment.author_id, message)
 		g.db.commit()
 	return {"message": "Comment unpinned!"}
@@ -969,7 +972,7 @@ def mod_pin(cid, v):
 		g.db.add(comment)
 
 		if v.id != comment.author_id:
-			message = f"@{v.username} (Mod) has pinned your [comment]({comment.permalink})!"
+			message = f"@{v.username} (Mod) has pinned your [comment]({comment.sl})!"
 			send_repeatable_notification(comment.author_id, message)
 
 		g.db.commit()
@@ -989,7 +992,7 @@ def mod_unpin(cid, v):
 		g.db.add(comment)
 
 		if v.id != comment.author_id:
-			message = f"@{v.username} (Mod) has unpinned your [comment]({comment.permalink})!"
+			message = f"@{v.username} (Mod) has unpinned your [comment]({comment.sl})!"
 			send_repeatable_notification(comment.author_id, message)
 		g.db.commit()
 	return {"message": "Comment unpinned!"}

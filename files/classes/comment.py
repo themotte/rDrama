@@ -228,7 +228,7 @@ class Comment(Base):
 
 	@property
 	@lazy
-	def shortlink_context(self):
+	def sl(self):
 		return f"/comment/{self.id}?context=8#context"
 
 	@property

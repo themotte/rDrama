@@ -117,9 +117,9 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			if u:
 				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img alt="@{u.username}'s profile picture" loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
 	else:
-		sanitized = re.sub('(^|\s|\n|<p>)\/?((r|u)\/(\w|-){3,25})', r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">\2</a>', sanitized, re.A)
+		sanitized = re.sub('(^|\s|\n|<p>)\/?((r|u)\/(\w|-){3,25})', r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized, re.A)
 
-		sanitized = re.sub('(^|\s|\n|<p>)\/?(s\/(\w|-){3,25})', r'\1<a href="/\2" rel="nofollow noopener noreferrer">\2</a>', sanitized, re.A)
+		sanitized = re.sub('(^|\s|\n|<p>)\/?(s\/(\w|-){3,25})', r'\1<a href="/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized, re.A)
 
 		for i in re.finditer('(^|\s|\n|<p>)@((\w|-){1,25})', sanitized, re.A):
 			u = get_user(i.group(2), graceful=True)

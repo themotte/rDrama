@@ -227,7 +227,7 @@ def award_post(pid, v):
 	author = post.author
 
 	if v.id != author.id:
-		msg = f"@{v.username} has given your [post]({post.permalink}) the {AWARDS[kind]['title']} Award!"
+		msg = f"@{v.username} has given your [post]({post.sl}) the {AWARDS[kind]['title']} Award!"
 		if note: msg += f"\n\n> {note}"
 		send_repeatable_notification(author.id, msg)
 
@@ -235,7 +235,7 @@ def award_post(pid, v):
 		return {"error": "You can't use this award on yourself."}, 400
 
 	if kind == "ban":
-		link = f"[this post]({post.permalink})"
+		link = f"[this post]({post.sl})"
 
 		if not author.is_suspended:
 			author.ban(reason=f"1-Day ban award used by @{v.username} on /post/{post.id}", days=1)
@@ -258,7 +258,7 @@ def award_post(pid, v):
 		author.is_banned = AUTOJANNY_ID
 		author.ban_reason = f"grass award used by @{v.username} on /post/{post.id}"
 		author.unban_utc = int(time.time()) + 30 * 86400
-		link = f"[this post]({post.permalink})"
+		link = f"[this post]({post.sl})"
 		send_repeatable_notification(author.id, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 	elif kind == "pin":
 		if post.stickied and post.stickied_utc:
@@ -461,7 +461,7 @@ def award_comment(cid, v):
 	author = c.author
 
 	if v.id != author.id:
-		msg = f"@{v.username} has given your [comment]({c.permalink}) the {AWARDS[kind]['title']} Award!"
+		msg = f"@{v.username} has given your [comment]({c.sl}) the {AWARDS[kind]['title']} Award!"
 		if note: msg += f"\n\n> {note}"
 		send_repeatable_notification(author.id, msg)
 
@@ -469,7 +469,7 @@ def award_comment(cid, v):
 		return {"error": "You can't use this award on yourself."}, 400
 
 	if kind == "ban":
-		link = f"[this comment]({c.permalink})"
+		link = f"[this comment]({c.sl})"
 
 		if not author.is_suspended:
 			author.ban(reason=f"1-Day ban award used by @{v.username} on /comment/{c.id}", days=1)
@@ -492,7 +492,7 @@ def award_comment(cid, v):
 		author.is_banned = AUTOJANNY_ID
 		author.ban_reason = f"grass award used by @{v.username} on /comment/{c.id}"
 		author.unban_utc = int(time.time()) + 30 * 86400
-		link = f"[this comment]({c.permalink})"
+		link = f"[this comment]({c.sl})"
 		send_repeatable_notification(author.id, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 	elif kind == "pin":
 		if c.is_pinned and c.is_pinned_utc: c.is_pinned_utc += 3600
