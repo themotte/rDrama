@@ -266,6 +266,16 @@ CREATE TABLE public.commentvotes (
 
 
 --
+-- Name: exiles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.exiles (
+    user_id integer NOT NULL,
+    sub character varying(20) NOT NULL
+);
+
+
+--
 -- Name: flags; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -803,6 +813,14 @@ ALTER TABLE ONLY public.banneddomains
 
 
 --
+-- Name: exiles exiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exiles
+    ADD CONSTRAINT exiles_pkey PRIMARY KEY (user_id, sub);
+
+
+--
 -- Name: flags flags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -872,14 +890,6 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT one_discord_account UNIQUE (discord_id);
-
-
---
--- Name: mods one_mod; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mods
-    ADD CONSTRAINT one_mod UNIQUE (user_id, sub);
 
 
 --
@@ -1168,6 +1178,20 @@ CREATE INDEX fki_comment_save_relationship_user_fkey ON public.comment_save_rela
 --
 
 CREATE INDEX fki_comment_sentto_fkey ON public.comments USING btree (sentto);
+
+
+--
+-- Name: fki_exile_sub_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_exile_sub_fkey ON public.exiles USING btree (sub);
+
+
+--
+-- Name: fki_exile_user_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_exile_user_fkey ON public.exiles USING btree (user_id);
 
 
 --
@@ -1686,6 +1710,22 @@ ALTER TABLE ONLY public.commentvotes
 
 ALTER TABLE ONLY public.commentvotes
     ADD CONSTRAINT commentvote_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: exiles exile_sub_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exiles
+    ADD CONSTRAINT exile_sub_fkey FOREIGN KEY (sub) REFERENCES public.subs(name);
+
+
+--
+-- Name: exiles exile_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exiles
+    ADD CONSTRAINT exile_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
