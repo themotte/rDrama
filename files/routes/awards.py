@@ -43,21 +43,21 @@ AWARDS3 = {
 		"price": 300
 	},
 	"wholesome": {
-        "kind": "wholesome",
-        "title": "Wholesome",
-        "description": "Summons a wholesome marsey on the post.",
-        "icon": "fas fa-smile-beam",
-        "color": "text-yellow",
-        "price": 300
-    },
+		"kind": "wholesome",
+		"title": "Wholesome",
+		"description": "Summons a wholesome marsey on the post.",
+		"icon": "fas fa-smile-beam",
+		"color": "text-yellow",
+		"price": 300
+	},
 	"tilt": {
-        "kind": "tilt",
-        "title": "Tilt",
-        "description": "Tilts the post by 1 degree (up to 4)",
-        "icon": "fas fa-car-tilt",
-        "color": "text-blue",
-        "price": 300
-    },
+		"kind": "tilt",
+		"title": "Tilt",
+		"description": "Tilts the post by 1 degree (up to 4)",
+		"icon": "fas fa-car-tilt",
+		"color": "text-blue",
+		"price": 300
+	},
 }
 
 @app.get("/shop")
@@ -203,12 +203,10 @@ def award_post(pid, v):
 		return {"error": "That award doesn't exist."}, 404
 
 	post_award = g.db.query(AwardRelationship).filter(
-		and_(
-			AwardRelationship.kind == kind,
-			AwardRelationship.user_id == v.id,
-			AwardRelationship.submission_id == None,
-			AwardRelationship.comment_id == None
-		)
+		AwardRelationship.kind == kind,
+		AwardRelationship.user_id == v.id,
+		AwardRelationship.submission_id == None,
+		AwardRelationship.comment_id == None
 	).first()
 
 	if not post_award:
@@ -439,12 +437,10 @@ def award_comment(cid, v):
 		return {"error": "That award doesn't exist."}, 404
 
 	comment_award = g.db.query(AwardRelationship).filter(
-		and_(
-			AwardRelationship.kind == kind,
-			AwardRelationship.user_id == v.id,
-			AwardRelationship.submission_id == None,
-			AwardRelationship.comment_id == None
-		)
+		AwardRelationship.kind == kind,
+		AwardRelationship.user_id == v.id,
+		AwardRelationship.submission_id == None,
+		AwardRelationship.comment_id == None
 	).first()
 
 	if not comment_award:

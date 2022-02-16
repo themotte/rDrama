@@ -183,8 +183,12 @@
 												{% endif %}
 
 												<div class="custom-control custom-checkbox">
-														<input {% if v.coins < price and v.procoins < price %}disabled{% endif %} autocomplete="off" type="checkbox" class="custom-control-input" id="ghostCheck" name="ghost">
-														<label class="custom-control-label" for="ghostCheck">Ghost Thread (cost: {{price}} coins or marseybux)</label>
+														<input {% if ghost != 42069 and v.coins < ghost and v.procoins < ghost %}disabled{% endif %} autocomplete="off" type="checkbox" class="custom-control-input" id="ghostCheck" name="ghost">
+														{% if ghost == 42069 %}
+															<label class="custom-control-label" for="ghostCheck">Ghost Thread (will use a ghost award you own)</label>
+														{% else %}
+															<label class="custom-control-label" for="ghostCheck">Ghost Thread (cost: {{ghost}} coins or marseybux)</label>
+														{% endif %}
 												</div>
 
 												<pre>

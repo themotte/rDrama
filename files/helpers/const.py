@@ -370,21 +370,21 @@ AWARDS = {
 		"price": 300
 	},
 	"wholesome": {
-        "kind": "wholesome",
-        "title": "Wholesome",
-        "description": "Summons a wholesome marsey on the post.",
-        "icon": "fas fa-smile-beam",
-        "color": "text-yellow",
-        "price": 300
-    },
+		"kind": "wholesome",
+		"title": "Wholesome",
+		"description": "Summons a wholesome marsey on the post.",
+		"icon": "fas fa-smile-beam",
+		"color": "text-yellow",
+		"price": 300
+	},
 	"tilt": {
-        "kind": "tilt",
-        "title": "Tilt",
-        "description": "Tilts the post or comment",
-        "icon": "fas fa-car-tilt",
-        "color": "text-blue",
-        "price": 300
-    },
+		"kind": "tilt",
+		"title": "Tilt",
+		"description": "Tilts the post or comment",
+		"icon": "fas fa-car-tilt",
+		"color": "text-blue",
+		"price": 300
+	},
 	"ghosts": {
 		"kind": "ghosts",
 		"title": "Ghosts",
@@ -394,21 +394,21 @@ AWARDS = {
 		"price": 500
 	},
 	"rehab": {
-        "kind": "rehab",
-        "title": "Rehab",
-        "description": "Prevents the user from gambling for 24 hours in a last ditch effort to save them from themself.",
-        "icon": "fas fa-dice-six",
-        "color": "text-black",
-        "price": 777
-    }, 
+		"kind": "rehab",
+		"title": "Rehab",
+		"description": "Prevents the user from gambling for 24 hours in a last ditch effort to save them from themself.",
+		"icon": "fas fa-dice-six",
+		"color": "text-black",
+		"price": 777
+	}, 
 	"progressivestack": {
-        "kind": "progressivestack",
-        "title": "Progressive Stack",
-        "description": "Makes votes on the recipient's posts and comments weigh double in the ranking algorithm for 6 hours.",
-        "icon": "fas fa-bullhorn",
-        "color": "text-red",
-        "price": 1000
-    },
+		"kind": "progressivestack",
+		"title": "Progressive Stack",
+		"description": "Makes votes on the recipient's posts and comments weigh double in the ranking algorithm for 6 hours.",
+		"icon": "fas fa-bullhorn",
+		"color": "text-red",
+		"price": 1000
+	},
 	"pin": {
 		"kind": "pin",
 		"title": "1-Hour Pin",
@@ -482,13 +482,13 @@ AWARDS = {
 		"price": 3500
 	},
 	"benefactor": {
-        "kind": "benefactor",
-        "title": "Benefactor",
-        "description": "Grants one month of paypig status and 2500 marseybux to the recipient. Cannot be used on yourself.",
-        "icon": "fas fa-gift",
-        "color": "text-blue",
-        "price": 4000
-    },
+		"kind": "benefactor",
+		"title": "Benefactor",
+		"description": "Grants one month of paypig status and 2500 marseybux to the recipient. Cannot be used on yourself.",
+		"icon": "fas fa-gift",
+		"color": "text-blue",
+		"price": 4000
+	},
 	"grass": {
 		"kind": "grass",
 		"title": "Grass",

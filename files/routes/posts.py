@@ -52,6 +52,20 @@ def ghost_price(v):
 
 	return int(500*discount)
 
+
+def submit_ghost(v,db):
+	ghost = db.query(AwardRelationship.id).filter(
+		AwardRelationship.kind == 'ghosts',
+		AwardRelationship.user_id == v.id,
+		AwardRelationship.submission_id == None,
+		AwardRelationship.comment_id == None
+	).first()
+
+	if ghost: ghost = 42069
+	else: ghost = ghost_price(v)
+	return ghost
+
+
 @app.post("/toggle_club/<pid>")
 @auth_required
 def toggle_club(pid, v):
@@ -112,7 +126,7 @@ def submit_get(v, sub=None):
 	
 	if request.path.startswith('/s/') and not sub: abort(404)
 
-	return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, sub=sub, price=ghost_price(v))
+	return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, sub=sub, ghost=submit_ghost(v,g.db))
 
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
@@ -847,7 +861,7 @@ def submit_post(v, sub=None):
 	def error(error):
 		print(sub, flush=True)
 		if request.headers.get("Authorization") or request.headers.get("xhr"): error(error)
-		return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error=error, title=title, url=url, body=body, price=ghost_price(v)), 400
+		return render_template("submit.html", SUBS=() if SITE_NAME == 'Drama' else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error=error, title=title, url=url, body=body, price=submit_ghost(v,g.db)), 400
 
 	if v.is_suspended: error( "You can't perform this action while banned.")
 	
@@ -1079,19 +1093,6 @@ def submit_post(v, sub=None):
 	
 	if embed and len(embed) > 1500: embed = None
 
-	ghost = False
-	if request.values.get('ghost'):
-
-		price = ghost_price(v)
-
-		if v.coins >= price:
-			v.coins -= price
-			ghost = True
-		elif v.procoins >= price:
-			v.procoins -= price
-			ghost = True
-
-
 	new_post = Submission(
 		private=bool(request.values.get("private","")),
 		club=club,
@@ -1106,11 +1107,32 @@ def submit_post(v, sub=None):
 		title=title[:500],
 		title_html=title_html,
 		sub=sub,
-		ghost=ghost
+		ghost=False
 	)
 
 	g.db.add(new_post)
 	g.db.flush()
+
+	if request.values.get('ghost'):
+
+		ghost_award = g.db.query(AwardRelationship).filter(
+			AwardRelationship.kind == 'ghosts',
+			AwardRelationship.user_id == v.id,
+			AwardRelationship.submission_id == None,
+			AwardRelationship.comment_id == None
+		).first()
+		
+		if ghost_award:
+			ghost_award.submission_id = new_post.id
+			new_post.ghost = True
+		else:
+			price = ghost_price(v)
+			if v.coins >= price:
+				v.coins -= price
+				new_post.ghost = True
+			elif v.procoins >= price:
+				v.procoins -= price
+				new_post.ghost = True
 
 	if v and v.admin_level > 2:
 		for option in bet_options:
