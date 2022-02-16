@@ -928,7 +928,7 @@ def pin_comment(cid, v):
 
 		g.db.add(comment)
 
-		if v.id != comment.author_id:
+		if v.id != comment.author_id and not comment.post.ghost:
 			message = f"@{v.username} (OP) has pinned your [comment]({comment.sl})!"
 			send_repeatable_notification(comment.author_id, message)
 
