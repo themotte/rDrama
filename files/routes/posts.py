@@ -126,7 +126,9 @@ def submit_get(v, sub=None):
 	
 	if request.path.startswith('/s/') and not sub: abort(404)
 
-	return render_template("submit.html", SUBS=tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, sub=sub, ghost=submit_ghost(v,g.db))
+	SUBS = () if SITE_NAME == 'Drama' and not sub else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all())
+
+	return render_template("submit.html", SUBS=SUBS, v=v, sub=sub, ghost=submit_ghost(v,g.db))
 
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
@@ -853,10 +855,12 @@ def submit_post(v, sub=None):
 
 	def error(error):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": error}, 403
-		return render_template("submit.html", SUBS=tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()), v=v, error=error, title=title, url=url, body=body, ghost=submit_ghost(v,g.db)), 400
+	
+		SUBS = () if SITE_NAME == 'Drama' and not sub else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all())
+		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body, ghost=submit_ghost(v,g.db)), 400
 
 
-	if not sub: sub = request.values.get("sub")
+	sub = request.values.get("sub")
 
 	if sub:
 		sub = g.db.query(Sub.name).filter_by(name=sub.strip().lower()).one_or_none()
