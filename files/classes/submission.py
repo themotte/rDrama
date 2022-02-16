@@ -81,7 +81,7 @@ class Submission(Base):
 	@property
 	@lazy
 	def flags(self):
-		return g.db.query(Flag).filter_by(post_id=self.id).order_by(Flag.id)
+		return g.db.query(Flag).filter_by(post_id=self.id).order_by(Flag.created_utc)
 
 	@property
 	@lazy

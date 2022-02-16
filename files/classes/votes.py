@@ -51,10 +51,9 @@ class CommentVote(Base):
 
 	__tablename__ = "commentvotes"
 
-	id = Column(Integer, primary_key=True)
-	user_id = Column(Integer, ForeignKey("users.id"))
+	comment_id = Column(Integer, ForeignKey("comments.id"), primary_key=True)
+	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	vote_type = Column(Integer)
-	comment_id = Column(Integer, ForeignKey("comments.id"))
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	real = Column(Boolean, default=True)
 	created_utc = Column(Integer)

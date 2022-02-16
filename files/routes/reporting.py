@@ -16,7 +16,7 @@ def api_flag_post(pid, v):
 		reason = request.values.get("reason", "").strip()[:100]
 
 		if not reason.startswith('!'):
-			existing = g.db.query(Flag.id).filter_by(user_id=v.id, post_id=post.id).one_or_none()
+			existing = g.db.query(Flag.post_id).filter_by(user_id=v.id, post_id=post.id).one_or_none()
 			if existing: return "", 409
 
 		reason = filter_emojis_only(reason)
@@ -43,7 +43,7 @@ def api_flag_comment(cid, v):
 	comment = get_comment(cid)
 	
 	if not v.shadowbanned:
-		existing = g.db.query(CommentFlag.id).filter_by( user_id=v.id, comment_id=comment.id).one_or_none()
+		existing = g.db.query(CommentFlag.comment_id).filter_by( user_id=v.id, comment_id=comment.id).one_or_none()
 		if existing: return "", 409
 
 		reason = request.values.get("reason", "").strip()[:100]

@@ -658,14 +658,14 @@ def redditor_moment_redirect(username, v):
 @auth_required
 def followers(username, v):
 	u = get_user(username, v=v)
-	users = g.db.query(User).join(Follow, Follow.target_id == u.id).filter(Follow.user_id == User.id).order_by(Follow.id).all()
+	users = g.db.query(User).join(Follow, Follow.target_id == u.id).filter(Follow.user_id == User.id).order_by(Follow.created_utc).all()
 	return render_template("followers.html", v=v, u=u, users=users)
 
 @app.get("/@<username>/following")
 @auth_required
 def following(username, v):
 	u = get_user(username, v=v)
-	users = g.db.query(User).join(Follow, Follow.user_id == u.id).filter(Follow.target_id == User.id).order_by(Follow.id).all()
+	users = g.db.query(User).join(Follow, Follow.user_id == u.id).filter(Follow.target_id == User.id).order_by(Follow.created_utc).all()
 	return render_template("following.html", v=v, u=u, users=users)
 
 @app.get("/views")
@@ -907,7 +907,7 @@ def follow_user(username, v):
 	g.db.add(new_follow)
 
 	g.db.flush()
-	target.stored_subscriber_count = g.db.query(Follow.id).filter_by(target_id=target.id).count()
+	target.stored_subscriber_count = g.db.query(Follow.target_id).filter_by(target_id=target.id).count()
 	g.db.add(target)
 
 	send_notification(target.id, f"@{v.username} has followed you!")
@@ -931,7 +931,7 @@ def unfollow_user(username, v):
 		g.db.delete(follow)
 		
 		g.db.flush()
-		target.stored_subscriber_count = g.db.query(Follow.id).filter_by(target_id=target.id).count()
+		target.stored_subscriber_count = g.db.query(Follow.target_id).filter_by(target_id=target.id).count()
 		g.db.add(target)
 
 		send_notification(target.id, f"@{v.username} has unfollowed you!")
@@ -953,7 +953,7 @@ def remove_follow(username, v):
 	g.db.delete(follow)
 	
 	g.db.flush()
-	v.stored_subscriber_count = g.db.query(Follow.id).filter_by(target_id=v.id).count()
+	v.stored_subscriber_count = g.db.query(Follow.target_id).filter_by(target_id=v.id).count()
 	g.db.add(v)
 
 	send_repeatable_notification(target.id, f"@{v.username} has removed your follow!")

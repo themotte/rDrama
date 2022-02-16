@@ -73,7 +73,7 @@ class Comment(Base):
 	@property
 	@lazy
 	def flags(self):
-		return g.db.query(CommentFlag).filter_by(comment_id=self.id).order_by(CommentFlag.id)
+		return g.db.query(CommentFlag).filter_by(comment_id=self.id).order_by(CommentFlag.created_utc)
 
 	@lazy
 	def poll_voted(self, v):
@@ -446,9 +446,8 @@ class Notification(Base):
 
 	__tablename__ = "notifications"
 
-	id = Column(Integer, primary_key=True)
-	user_id = Column(Integer, ForeignKey("users.id"))
-	comment_id = Column(Integer, ForeignKey("comments.id"))
+	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+	comment_id = Column(Integer, ForeignKey("comments.id"), primary_key=True)
 	read = Column(Boolean, default=False)
 	created_utc = Column(Integer)
 

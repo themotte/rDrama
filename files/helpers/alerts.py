@@ -27,7 +27,7 @@ def send_repeatable_notification(uid, text, autojanny=False):
 
 	if existing_comment:
 		cid = existing_comment[0]
-		existing_notif = g.db.query(Notification.id).filter_by(user_id=uid, comment_id=cid).one_or_none()
+		existing_notif = g.db.query(Notification.user_id).filter_by(user_id=uid, comment_id=cid).one_or_none()
 		if existing_notif: cid = create_comment(text_html, autojanny)
 	else: cid = create_comment(text_html, autojanny)
 
@@ -55,7 +55,7 @@ def notif_comment(text, autojanny=False):
 
 
 def add_notif(cid, uid):
-	existing = g.db.query(Notification.id).filter_by(comment_id=cid, user_id=uid).one_or_none()
+	existing = g.db.query(Notification.user_id).filter_by(comment_id=cid, user_id=uid).one_or_none()
 	if not existing:
 		notif = Notification(comment_id=cid, user_id=uid)
 		g.db.add(notif)

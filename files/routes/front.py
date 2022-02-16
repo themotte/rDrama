@@ -23,7 +23,7 @@ def unread(v):
 		Comment.is_banned == False,
 		Comment.deleted_utc == 0,
 		Comment.author_id != AUTOJANNY_ID,
-	).order_by(Notification.id.desc()).all()
+	).order_by(Notification.created_utc.desc()).all()
 
 	for n in v.notifications.filter_by(read=False).all():
 		n.read = True
@@ -50,7 +50,7 @@ def notifications(v):
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif posts:
-		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ID).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(101).all()
+		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ID).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
 
 		listing = []
 
@@ -72,7 +72,7 @@ def notifications(v):
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
-		).order_by(Notification.id.desc()).offset(50 * (page - 1)).limit(51).all()
+		).order_by(Notification.created_utc.desc()).offset(50 * (page - 1)).limit(51).all()
 
 		next_exists = (len(notifications) > 50)
 		notifications = notifications[:50]

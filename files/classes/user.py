@@ -294,7 +294,7 @@ class User(Base):
 	@property
 	@lazy
 	def follow_count(self):
-		return g.db.query(Follow.id).filter_by(user_id=self.id).count()
+		return g.db.query(Follow.target_id).filter_by(user_id=self.id).count()
 
 	@property
 	@lazy
@@ -399,12 +399,12 @@ class User(Base):
 	@property
 	@lazy
 	def notifications_count(self):
-		return g.db.query(Notification.id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.is_banned == False, Comment.deleted_utc == 0).count()
+		return g.db.query(Notification.user_id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.is_banned == False, Comment.deleted_utc == 0).count()
 
 	@property
 	@lazy
 	def post_notifications_count(self):
-		return g.db.query(Notification.id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.author_id == AUTOJANNY_ID).count()
+		return g.db.query(Notification.user_id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.author_id == AUTOJANNY_ID).count()
 
 	@property
 	@lazy
