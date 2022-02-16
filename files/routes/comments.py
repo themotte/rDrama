@@ -1008,8 +1008,7 @@ def save_comment(cid, v):
 		new_save=CommentSaveRelationship(user_id=v.id, comment_id=comment.id)
 		g.db.add(new_save)
 
-		try: g.db.commit()
-		except: g.db.rollback()
+		g.db.commit()
 
 	return {"message": "Comment saved!"}
 
