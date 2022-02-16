@@ -165,31 +165,10 @@ CREATE TABLE public.banneddomains (
 --
 
 CREATE TABLE public.client_auths (
-    id integer NOT NULL,
     user_id integer NOT NULL,
     oauth_client integer NOT NULL,
     access_token character(128) NOT NULL
 );
-
-
---
--- Name: client_auths_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.client_auths_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: client_auths_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.client_auths_id_seq OWNED BY public.client_auths.id;
 
 
 --
@@ -207,32 +186,11 @@ CREATE TABLE public.comment_save_relationship (
 --
 
 CREATE TABLE public.commentflags (
-    id integer NOT NULL,
     user_id integer NOT NULL,
     comment_id integer NOT NULL,
     reason character varying(350),
     created_utc integer NOT NULL
 );
-
-
---
--- Name: commentflags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.commentflags_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: commentflags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.commentflags_id_seq OWNED BY public.commentflags.id;
 
 
 --
@@ -298,7 +256,6 @@ ALTER SEQUENCE public.comments_id_seq OWNED BY public.comments.id;
 --
 
 CREATE TABLE public.commentvotes (
-    id integer NOT NULL,
     comment_id integer NOT NULL,
     vote_type integer NOT NULL,
     user_id integer NOT NULL,
@@ -309,31 +266,10 @@ CREATE TABLE public.commentvotes (
 
 
 --
--- Name: commentvotes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.commentvotes_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: commentvotes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.commentvotes_id_seq OWNED BY public.commentvotes.id;
-
-
---
 -- Name: flags; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.flags (
-    id integer NOT NULL,
     user_id integer NOT NULL,
     post_id integer NOT NULL,
     reason character varying(350),
@@ -342,55 +278,14 @@ CREATE TABLE public.flags (
 
 
 --
--- Name: flags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.flags_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: flags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.flags_id_seq OWNED BY public.flags.id;
-
-
---
 -- Name: follows; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.follows (
-    id integer NOT NULL,
     user_id integer NOT NULL,
     target_id integer NOT NULL,
     created_utc integer NOT NULL
 );
-
-
---
--- Name: follows_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.follows_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: follows_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.follows_id_seq OWNED BY public.follows.id;
 
 
 --
@@ -448,7 +343,7 @@ ALTER SEQUENCE public.modactions_id_seq OWNED BY public.modactions.id;
 CREATE TABLE public.mods (
     user_id integer NOT NULL,
     sub character varying(20) NOT NULL,
-    created_utc integer
+    created_utc integer NOT NULL
 );
 
 
@@ -457,32 +352,11 @@ CREATE TABLE public.mods (
 --
 
 CREATE TABLE public.notifications (
-    id integer NOT NULL,
     user_id integer NOT NULL,
     comment_id integer NOT NULL,
     read boolean NOT NULL,
     created_utc integer NOT NULL
 );
-
-
---
--- Name: notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.notifications_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 
 --
@@ -774,7 +648,6 @@ CREATE TABLE public.viewers (
 --
 
 CREATE TABLE public.votes (
-    id integer NOT NULL,
     user_id integer NOT NULL,
     submission_id integer NOT NULL,
     vote_type integer NOT NULL,
@@ -782,26 +655,6 @@ CREATE TABLE public.votes (
     "real" boolean DEFAULT true NOT NULL,
     created_utc integer NOT NULL
 );
-
-
---
--- Name: votes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.votes_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: votes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.votes_id_seq OWNED BY public.votes.id;
 
 
 --
@@ -819,20 +672,6 @@ ALTER TABLE ONLY public.badge_defs ALTER COLUMN id SET DEFAULT nextval('public.b
 
 
 --
--- Name: client_auths id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.client_auths ALTER COLUMN id SET DEFAULT nextval('public.client_auths_id_seq'::regclass);
-
-
---
--- Name: commentflags id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.commentflags ALTER COLUMN id SET DEFAULT nextval('public.commentflags_id_seq'::regclass);
-
-
---
 -- Name: comments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -840,38 +679,10 @@ ALTER TABLE ONLY public.comments ALTER COLUMN id SET DEFAULT nextval('public.com
 
 
 --
--- Name: commentvotes id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.commentvotes ALTER COLUMN id SET DEFAULT nextval('public.commentvotes_id_seq'::regclass);
-
-
---
--- Name: flags id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.flags ALTER COLUMN id SET DEFAULT nextval('public.flags_id_seq'::regclass);
-
-
---
--- Name: follows id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.follows ALTER COLUMN id SET DEFAULT nextval('public.follows_id_seq'::regclass);
-
-
---
 -- Name: modactions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.modactions ALTER COLUMN id SET DEFAULT nextval('public.modactions_id_seq'::regclass);
-
-
---
--- Name: notifications id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('public.notifications_id_seq'::regclass);
 
 
 --
@@ -893,13 +704,6 @@ ALTER TABLE ONLY public.submissions ALTER COLUMN id SET DEFAULT nextval('public.
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
-
-
---
--- Name: votes id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.votes ALTER COLUMN id SET DEFAULT nextval('public.votes_id_seq'::regclass);
 
 
 --
@@ -955,7 +759,7 @@ ALTER TABLE ONLY public.badges
 --
 
 ALTER TABLE ONLY public.client_auths
-    ADD CONSTRAINT client_auths_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT client_auths_pkey PRIMARY KEY (user_id, oauth_client);
 
 
 --
@@ -971,7 +775,7 @@ ALTER TABLE ONLY public.comment_save_relationship
 --
 
 ALTER TABLE ONLY public.commentflags
-    ADD CONSTRAINT commentflags_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT commentflags_pkey PRIMARY KEY (comment_id, user_id);
 
 
 --
@@ -987,7 +791,7 @@ ALTER TABLE ONLY public.comments
 --
 
 ALTER TABLE ONLY public.commentvotes
-    ADD CONSTRAINT commentvotes_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT commentvotes_pkey PRIMARY KEY (comment_id, user_id);
 
 
 --
@@ -1003,7 +807,7 @@ ALTER TABLE ONLY public.banneddomains
 --
 
 ALTER TABLE ONLY public.flags
-    ADD CONSTRAINT flags_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT flags_pkey PRIMARY KEY (post_id, user_id);
 
 
 --
@@ -1011,7 +815,7 @@ ALTER TABLE ONLY public.flags
 --
 
 ALTER TABLE ONLY public.follows
-    ADD CONSTRAINT follows_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT follows_pkey PRIMARY KEY (target_id, user_id);
 
 
 --
@@ -1043,7 +847,7 @@ ALTER TABLE ONLY public.mods
 --
 
 ALTER TABLE ONLY public.notifications
-    ADD CONSTRAINT notifications_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT notifications_pkey PRIMARY KEY (user_id, comment_id);
 
 
 --
@@ -1055,27 +859,11 @@ ALTER TABLE ONLY public.oauth_apps
 
 
 --
--- Name: client_auths one_auth; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.client_auths
-    ADD CONSTRAINT one_auth UNIQUE (user_id, oauth_client);
-
-
---
 -- Name: users one_banner; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT one_banner UNIQUE (bannerurl);
-
-
---
--- Name: commentflags one_comment_flag; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.commentflags
-    ADD CONSTRAINT one_comment_flag UNIQUE (user_id, comment_id);
 
 
 --
@@ -1087,22 +875,6 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: flags one_flag; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.flags
-    ADD CONSTRAINT one_flag UNIQUE (user_id, post_id);
-
-
---
--- Name: follows one_follow; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.follows
-    ADD CONSTRAINT one_follow UNIQUE (user_id, target_id);
-
-
---
 -- Name: mods one_mod; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1111,35 +883,11 @@ ALTER TABLE ONLY public.mods
 
 
 --
--- Name: notifications one_notif; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.notifications
-    ADD CONSTRAINT one_notif UNIQUE (user_id, comment_id);
-
-
---
 -- Name: users one_profile_url; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT one_profile_url UNIQUE (profileurl);
-
-
---
--- Name: commentvotes onecvote; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.commentvotes
-    ADD CONSTRAINT onecvote UNIQUE (user_id, comment_id);
-
-
---
--- Name: votes onevote; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.votes
-    ADD CONSTRAINT onevote UNIQUE (user_id, submission_id);
 
 
 --
@@ -1251,7 +999,7 @@ ALTER TABLE ONLY public.viewers
 --
 
 ALTER TABLE ONLY public.votes
-    ADD CONSTRAINT votes_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT votes_pkey PRIMARY KEY (submission_id, user_id);
 
 
 --
@@ -2145,7 +1893,7 @@ ALTER TABLE ONLY public.viewers
 --
 
 ALTER TABLE ONLY public.votes
-    ADD CONSTRAINT vote_submission_key FOREIGN KEY (submission_id) REFERENCES public.submissions(id) NOT VALID;
+    ADD CONSTRAINT vote_submission_key FOREIGN KEY (submission_id) REFERENCES public.submissions(id);
 
 
 --
