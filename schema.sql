@@ -210,7 +210,8 @@ CREATE TABLE public.commentflags (
     id integer NOT NULL,
     user_id integer NOT NULL,
     comment_id integer NOT NULL,
-    reason character varying(350)
+    reason character varying(350),
+    created_utc integer NOT NULL
 );
 
 
@@ -335,7 +336,8 @@ CREATE TABLE public.flags (
     id integer NOT NULL,
     user_id integer NOT NULL,
     post_id integer NOT NULL,
-    reason character varying(350)
+    reason character varying(350),
+    created_utc integer NOT NULL
 );
 
 
@@ -366,7 +368,8 @@ ALTER SEQUENCE public.flags_id_seq OWNED BY public.flags.id;
 CREATE TABLE public.follows (
     id integer NOT NULL,
     user_id integer NOT NULL,
-    target_id integer NOT NULL
+    target_id integer NOT NULL,
+    created_utc integer NOT NULL
 );
 
 
@@ -457,7 +460,8 @@ CREATE TABLE public.notifications (
     id integer NOT NULL,
     user_id integer NOT NULL,
     comment_id integer NOT NULL,
-    read boolean NOT NULL
+    read boolean NOT NULL,
+    created_utc integer NOT NULL
 );
 
 
