@@ -1062,13 +1062,6 @@ CREATE INDEX block_target_idx ON public.userblocks USING btree (target_id);
 
 
 --
--- Name: block_user_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX block_user_idx ON public.userblocks USING btree (user_id);
-
-
---
 -- Name: cflag_user_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1174,24 +1167,10 @@ CREATE INDEX fki_save_relationship_submission_fkey ON public.save_relationship U
 
 
 --
--- Name: fki_save_relationship_user_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_save_relationship_user_fkey ON public.save_relationship USING btree (user_id);
-
-
---
 -- Name: fki_sub_blocks_sub_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX fki_sub_blocks_sub_fkey ON public.sub_blocks USING btree (sub);
-
-
---
--- Name: fki_sub_blocks_user_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_sub_blocks_user_fkey ON public.sub_blocks USING btree (user_id);
 
 
 --
@@ -1202,24 +1181,10 @@ CREATE INDEX fki_submissions_approver_fkey ON public.submissions USING btree (is
 
 
 --
--- Name: fki_subscription_submission_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_subscription_submission_fkey ON public.subscriptions USING btree (submission_id);
-
-
---
 -- Name: fki_user_referrer_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX fki_user_referrer_fkey ON public.users USING btree (referred_by);
-
-
---
--- Name: fki_view_user_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_view_user_fkey ON public.viewers USING btree (user_id);
 
 
 --
@@ -1412,13 +1377,6 @@ CREATE INDEX user_private_idx ON public.users USING btree (is_private);
 
 
 --
--- Name: userblocks_both_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX userblocks_both_idx ON public.userblocks USING btree (user_id, target_id);
-
-
---
 -- Name: users_created_utc_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1458,13 +1416,6 @@ CREATE INDEX users_username_trgm_idx ON public.users USING gin (username public.
 --
 
 CREATE INDEX vote_user_index ON public.votes USING btree (user_id);
-
-
---
--- Name: votes_submission_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX votes_submission_id_index ON public.votes USING btree (submission_id);
 
 
 --
