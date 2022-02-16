@@ -345,6 +345,10 @@ def settings_profile_post(v):
 
 		if house == "None": house = None 
 		v.house = house
+
+		if v.house == "Vampire":
+			send_repeatable_notification(DAD_ID, f"@{v.username} has joined House Vampire!")
+
 		updated = True
 
 	quadrant = request.values.get("quadrant")

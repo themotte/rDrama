@@ -65,14 +65,15 @@
 			{% endif %}
 			
 			{% if not err %}
-			<a class="mobile-nav-icon d-md-none" href="/random"><i class="fas fa-random align-middle text-gray-500 black"></i></a>
+				<a class="mobile-nav-icon d-md-none" href="/random"><i class="fas fa-random align-middle text-gray-500 black"></i></a>
 			{% if v and v.admin_level > 1 %}
-			<a class="mobile-nav-icon d-md-none" href="/admin"><i class="fas fa-crown align-middle text-gray-500 black"></i></a>
+				<a class="mobile-nav-icon d-md-none" href="/admin"><i class="fas fa-crown align-middle text-gray-500 black"></i></a>
 			{% endif %}
+
 			{% if v %}
-			<a class="mobile-nav-icon d-md-none" href="{% if sub %}/s/{{sub.name}}{% endif %}/submit"><i class="fas fa-feather-alt align-middle text-gray-500 black"></i></a>
+				<a class="mobile-nav-icon d-md-none" href="{% if sub %}/s/{{sub.name}}{% endif %}/submit"><i class="fas fa-feather-alt align-middle text-gray-500 black"></i></a>
 			{% else %}
-			<a class="mobile-nav-icon d-md-none" href="/login"><i class="fas fa-feather-alt align-middle text-gray-500 black"></i></a>
+				<a class="mobile-nav-icon d-md-none" href="/login"><i class="fas fa-feather-alt align-middle text-gray-500 black"></i></a>
 			{% endif %}
 			<button class="navbar-toggler" role="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
 			aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
