@@ -397,8 +397,7 @@ def get_css(username):
 	return resp
 
 @app.get("/@<username>/profilecss")
-@auth_required
-def get_profilecss(v, username):
+def get_profilecss(username):
 	user = get_user(username)
 	if user.profilecss: profilecss = user.profilecss
 	else: profilecss = ""
