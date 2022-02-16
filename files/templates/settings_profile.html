@@ -476,7 +476,7 @@
 
 									<form id="profile-settings" action="/settings/title_change" method="post">
 										<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
-										<input {% if v.flairchanged %}disabled{% endif %} autocomplete="off" id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if v.flairchanged %}Your flair has been locked until {{ti}}{% elif v.customtitleplain %}{{v.customtitleplain}}{% endif %}">
+										<input maxlength=100 {% if v.flairchanged %}disabled{% endif %} autocomplete="off" id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if v.flairchanged %}Your flair has been locked until {{ti}}{% elif v.customtitleplain %}{{v.customtitleplain}}{% endif %}">
 										<div class="d-flex mt-2">
 											<a class="format" role="button"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i></a>
 											&nbsp;&nbsp;&nbsp;
