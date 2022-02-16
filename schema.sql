@@ -266,6 +266,16 @@ CREATE TABLE public.commentvotes (
 
 
 --
+-- Name: exiles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.exiles (
+    user_id integer NOT NULL,
+    sub character varying(20) NOT NULL
+);
+
+
+--
 -- Name: flags; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -803,6 +813,14 @@ ALTER TABLE ONLY public.banneddomains
 
 
 --
+-- Name: exiles exiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exiles
+    ADD CONSTRAINT exiles_pkey PRIMARY KEY (user_id, sub);
+
+
+--
 -- Name: flags flags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -872,14 +890,6 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT one_discord_account UNIQUE (discord_id);
-
-
---
--- Name: mods one_mod; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mods
-    ADD CONSTRAINT one_mod UNIQUE (user_id, sub);
 
 
 --
@@ -1010,13 +1020,6 @@ CREATE UNIQUE INDEX alts_unique_combination ON public.alts USING btree (GREATEST
 
 
 --
--- Name: alts_user1_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX alts_user1_idx ON public.alts USING btree (user1);
-
-
---
 -- Name: alts_user2_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1052,24 +1055,10 @@ CREATE INDEX badges_badge_id_idx ON public.badges USING btree (badge_id);
 
 
 --
--- Name: badges_user_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX badges_user_index ON public.badges USING btree (user_id);
-
-
---
 -- Name: block_target_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX block_target_idx ON public.userblocks USING btree (target_id);
-
-
---
--- Name: block_user_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX block_user_idx ON public.userblocks USING btree (user_id);
 
 
 --
@@ -1094,24 +1083,10 @@ CREATE INDEX comment_post_id_index ON public.comments USING btree (parent_submis
 
 
 --
--- Name: commentflag_comment_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX commentflag_comment_index ON public.commentflags USING btree (comment_id);
-
-
---
 -- Name: comments_user_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX comments_user_index ON public.comments USING btree (author_id);
-
-
---
--- Name: commentvotes_comments_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX commentvotes_comments_id_index ON public.commentvotes USING btree (comment_id);
 
 
 --
@@ -1157,17 +1132,17 @@ CREATE INDEX fki_comment_save_relationship_comment_fkey ON public.comment_save_r
 
 
 --
--- Name: fki_comment_save_relationship_user_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_comment_save_relationship_user_fkey ON public.comment_save_relationship USING btree (user_id);
-
-
---
 -- Name: fki_comment_sentto_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX fki_comment_sentto_fkey ON public.comments USING btree (sentto);
+
+
+--
+-- Name: fki_exile_sub_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_exile_sub_fkey ON public.exiles USING btree (sub);
 
 
 --
@@ -1192,24 +1167,10 @@ CREATE INDEX fki_save_relationship_submission_fkey ON public.save_relationship U
 
 
 --
--- Name: fki_save_relationship_user_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_save_relationship_user_fkey ON public.save_relationship USING btree (user_id);
-
-
---
 -- Name: fki_sub_blocks_sub_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX fki_sub_blocks_sub_fkey ON public.sub_blocks USING btree (sub);
-
-
---
--- Name: fki_sub_blocks_user_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_sub_blocks_user_fkey ON public.sub_blocks USING btree (user_id);
 
 
 --
@@ -1220,24 +1181,10 @@ CREATE INDEX fki_submissions_approver_fkey ON public.submissions USING btree (is
 
 
 --
--- Name: fki_subscription_submission_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_subscription_submission_fkey ON public.subscriptions USING btree (submission_id);
-
-
---
 -- Name: fki_user_referrer_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX fki_user_referrer_fkey ON public.users USING btree (referred_by);
-
-
---
--- Name: fki_view_user_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX fki_view_user_fkey ON public.viewers USING btree (user_id);
 
 
 --
@@ -1252,20 +1199,6 @@ CREATE INDEX fki_view_viewer_fkey ON public.viewers USING btree (viewer_id);
 --
 
 CREATE INDEX flag_user_idx ON public.flags USING btree (user_id);
-
-
---
--- Name: flags_post_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX flags_post_index ON public.flags USING btree (post_id);
-
-
---
--- Name: follow_target_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX follow_target_id_index ON public.follows USING btree (target_id);
 
 
 --
@@ -1325,13 +1258,6 @@ CREATE INDEX modaction_pid_idx ON public.modactions USING btree (target_submissi
 
 
 --
--- Name: mods_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX mods_idx ON public.mods USING btree (user_id);
-
-
---
 -- Name: notification_read_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1343,13 +1269,6 @@ CREATE INDEX notification_read_idx ON public.notifications USING btree (read);
 --
 
 CREATE INDEX notifications_comment_idx ON public.notifications USING btree (comment_id);
-
-
---
--- Name: notifications_user_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX notifications_user_index ON public.notifications USING btree (user_id);
 
 
 --
@@ -1458,13 +1377,6 @@ CREATE INDEX user_private_idx ON public.users USING btree (is_private);
 
 
 --
--- Name: userblocks_both_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX userblocks_both_idx ON public.userblocks USING btree (user_id, target_id);
-
-
---
 -- Name: users_created_utc_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1504,13 +1416,6 @@ CREATE INDEX users_username_trgm_idx ON public.users USING gin (username public.
 --
 
 CREATE INDEX vote_user_index ON public.votes USING btree (user_id);
-
-
---
--- Name: votes_submission_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX votes_submission_id_index ON public.votes USING btree (submission_id);
 
 
 --
@@ -1686,6 +1591,22 @@ ALTER TABLE ONLY public.commentvotes
 
 ALTER TABLE ONLY public.commentvotes
     ADD CONSTRAINT commentvote_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: exiles exile_sub_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exiles
+    ADD CONSTRAINT exile_sub_fkey FOREIGN KEY (sub) REFERENCES public.subs(name);
+
+
+--
+-- Name: exiles exile_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exiles
+    ADD CONSTRAINT exile_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
