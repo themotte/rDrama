@@ -563,7 +563,7 @@ if SITE_NAME == 'PCM':
 			"description": "Summons Croag on the post.",
 			"icon": "fas fa-head-side",
 			"color": "text-gold",
-			"price": 300
+			"price": 500
 		},
 		"toe": {
 			"kind": "toe",
@@ -571,7 +571,7 @@ if SITE_NAME == 'PCM':
 			"description": "Summons Blade's toe on the post.",
 			"icon": "fas fa-socks",
 			"color": "text-gold",
-			"price": 300
+			"price": 500
 		},
 		"crab": {
 			"kind": "crab",
@@ -579,7 +579,7 @@ if SITE_NAME == 'PCM':
 			"description": "Rave time!",
 			"icon": "fas fa-glass-cheers",
 			"color": "text-gold",
-			"price": 300
+			"price": 4000
 		}
 	}
 	AWARDS = {**PCM_AWARDS, **AWARDS}
