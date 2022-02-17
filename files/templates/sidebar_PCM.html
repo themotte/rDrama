@@ -5,7 +5,7 @@
 		{% set image='/static/assets/images/' + SITE_NAME + '/sidebar.webp?a=1041' %}
 	{% endif %}
 
-	<img alt="sidebar image" role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" onclick="expandDesktopImage('{{image}}')" loading="lazy" src="{{image}}" width=100%>
+	<img class="mb-4" alt="sidebar image" role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" onclick="expandDesktopImage('{{image}}')" loading="lazy" src="{{image}}" width=100%>
 
 {% if sub %}
 	{% if sub.sidebar_html %}
