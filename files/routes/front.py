@@ -110,6 +110,7 @@ def notifications(v):
 			else:
 				while c.parent_comment:
 					c = c.parent_comment
+				c.replies = g.db.query(Comment).filter_by(parent_comment_id=c.id).all()
 
 			if c not in listing: listing.append(c)
 
@@ -272,6 +273,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	elif SITE_NAME == 'Ruqqus':
 		posts = posts.filter(Submission.sub != None)
 		if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
+	elif SITE_NAME == 'PCM':
+		if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
 	else: posts = posts.filter_by(sub=None)
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
@@ -347,7 +350,11 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
 		elif SITE_NAME == '2Much4You': pins = pins.filter(Submission.sub.in_(toomuch_subs))
-		elif SITE_NAME == 'Ruqqus': pins = pins.filter(Submission.sub != None)
+		elif SITE_NAME == 'Ruqqus':
+			pins = pins.filter(Submission.sub != None)
+			if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
+		elif SITE_NAME == 'PCM':
+			if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
 		else: pins = pins.filter_by(sub=None)
 
 		if v and v.admin_level == 0:
