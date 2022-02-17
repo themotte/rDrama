@@ -220,10 +220,10 @@ def api_comment(v):
 							badge = BadgeDef(name=name, description=badge_def["description"])
 							g.db.add(badge)
 							g.db.flush()
-						filename = f'files/assets/images/badges/{badge.id}.webp'
-						copyfile(oldname, filename)
-						process_image(filename, 200)
-						requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/badges/{badge.id}.webp"]})
+							filename = f'files/assets/images/badges/{badge.id}.webp'
+							copyfile(oldname, filename)
+							process_image(filename, 200)
+							requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/badges/{badge.id}.webp"]})
 					except Exception as e:
 						return {"error": str(e)}, 400
 				elif v.admin_level > 2 and parent_post.id == 37838:
@@ -236,11 +236,11 @@ def api_comment(v):
 						if not g.db.query(Marsey.name).filter_by(name=name).one_or_none():
 							marsey = Marsey(name=marsey["name"], author_id=author_id, tags=marsey["tags"], count=0)
 							g.db.add(marsey)
-						filename = f'files/assets/images/emojis/{name}.webp'
-						copyfile(oldname, filename)
-						process_image(filename, 200)
-						requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/emojis/{name}.webp"]})
-						cache.delete_memoized(marsey_list)
+							filename = f'files/assets/images/emojis/{name}.webp'
+							copyfile(oldname, filename)
+							process_image(filename, 200)
+							requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/emojis/{name}.webp"]})
+							cache.delete_memoized(marsey_list)
 					except Exception as e:
 						return {"error": str(e)}, 400
 			body += f"\n\n![]({image})"
