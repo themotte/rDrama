@@ -22,8 +22,11 @@
 {% endif %}
 
 
+{% if p.award_count("crab") %}
+	<iframe width="0" height="0" src="https://youtube-nocookie.com/embed/LDU_Txk06tM?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1&start=44" frameborder="0" allow="autoplay"></iframe>
+{% endif %}
 
-{% if g.seal %}
+{% if g.inferior_browser %}
 	{% if p.award_count("wholesome") %}
 		<style>
 			.sealimg {
@@ -98,6 +101,81 @@
 			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=1008">
 		</div>
 	{% endif %}
+
+	{% if p.award_count("toe") %}
+	<style>
+		.toeimg {
+			width: 100px;
+			height: auto;
+		}
+		@media (max-width: 992px) {
+			.toeimg {
+				width: 30px;
+				height: auto;
+			}
+		}
+		
+		.toe {
+			position:fixed;
+			z-index:9999;
+			pointer-events: none;
+			width: 100% !important;
+			height: 100% !important;
+		}
+		
+		@keyframes moveX {
+			from { left: 0; } to { left: 98%; }
+		}
+	
+		@keyframes moveY {
+			from { top: 0; } to { top: 98%; }	
+		}
+	
+		.toe1 {
+			animation: moveX 4s linear 0s infinite alternate, moveY 6.8s linear 0s infinite alternate !important;
+			animation-delay:0s;
+		}
+	</style>
+	<div class="toe toe1" height="100%" width="100%">
+		<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+	</div>
+	{% endif %}
+	
+	{% if p.award_count("toe") > 1 %}
+	<style>
+		.toe2 {
+			animation: moveX 5s linear 0s infinite alternate, moveY 8s linear 0s infinite alternate !important;
+			animation-delay:1s;
+		}
+	</style>
+	<div class="toe toe2" height="100%" width="100%">
+		<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+	</div>
+	{% endif %}
+	
+	{% if p.award_count("toe") > 2 %}
+	<style>
+		.toe3 {
+			animation: moveX 4s linear 0s infinite alternate, moveY 5s linear 0s infinite alternate !important;
+			animation-delay:2s;
+		}
+	</style>
+	<div class="toe toe3" height="100%" width="100%">
+		<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+	</div>
+	{% endif %}
+	
+	{% if p.award_count("toe") > 3 %}
+	<style>
+		.toe4 {
+			animation: moveX 5s linear 0s infinite alternate, moveY 6.8s linear 0s infinite alternate !important;
+			animation-delay:3s;
+		}
+	</style>
+	<div class="toe toe4" height="100%" width="100%">
+		<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+	</div>
+	{% endif %}	
 {% else %}
 	{% if p.award_count("wholesome") %}
 		<style>
@@ -151,7 +229,65 @@
 			</marquee>
 		</marquee>
 	{% endif %}
+
+
+	{% if p.award_count("toe") %}
+		<style>
+			.toe {
+				position:fixed;
+				z-index:9999;
+				pointer-events: none;
+				width: 100% !important;
+				height: 100% !important;
+			}
+			.toeimg {
+				width: 100px;
+				height: auto;
+			}
+			@media (max-width: 992px) {
+				.toeimg {
+					width: 30px;
+					height: auto;
+				}
+			}
+		</style>
+		<div class="toe" height="100%" width="100%">
+			<marquee class="toe" scrollamount=10 behavior="alternate" direction="up" height="100%" width="100%">
+				<marquee direction="right" scrollamount=10 behavior="alternate" height="100%" width="100%">
+					<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+				</marquee>
+			</marquee>
+		</div>
+	{% endif %}
+
+	{% if p.award_count("toe") > 1 %}
+		<marquee class="toe" scrollamount=10 behavior="alternate" direction="down" height="100%">
+			<marquee direction="right" scrollamount=10 behavior="alternate" width="100%">
+				<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+			</marquee>
+		</marquee>
+	{% endif %}
+
+	{% if p.award_count("toe") > 2 %}
+		<marquee class="toe" scrollamount=10 behavior="alternate" direction="up" height="100%">
+			<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
+				<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+			</marquee>
+		</marquee>
+	{% endif %}
+
+	{% if p.award_count("toe") > 3 %}
+		<marquee class="toe" scrollamount=10 behavior="alternate" direction="down" height="100%">
+			<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
+				<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+			</marquee>
+		</marquee>
+	{% endif %}
 {% endif %}
+
+
+
+
 
 {% if p.award_count("train") or p.award_count("scooter") %}
 	<style>
@@ -209,6 +345,62 @@
 {% if p.award_count("train") > 3 %}
 	<marquee class="train train4" direction="right" scrollamount=10 width="100%">
 		<img alt=":#marseytrain:" class="trainimg" src="/static/assets/images/emojis/marseytrain.webp?a=1008">
+	</marquee>
+{% endif %}
+
+
+
+{% if p.award_count("croag") %}
+	<style>
+		.croag {
+			position:fixed;
+			z-index:9999;
+			pointer-events: none;
+		}
+		.croag1 {
+			top: 15%
+		}
+		.croag2 {
+			top: 40%
+		}
+		.croag3 {
+			top: 65%
+		}
+		.croag4 {
+			top: 90%
+		}
+		.croagimg {
+			width: 169px;
+			height: 68px;
+		}
+		@media (max-width: 992px) {
+			.croagimg {
+				width: 100px;
+				height: 40px;
+			}
+		}
+	</style>
+
+	<marquee class="croag croag1" direction="left" scrollamount=10 width="100%">
+		<img alt="croag" class="croagimg mirrored" src="/static/assets/images/PCM/croag.webp?a=1">
+	</marquee>
+{% endif %}
+
+{% if p.award_count("croag") > 1 %}
+	<marquee class="croag croag2" direction="right" scrollamount=10 width="100%">
+		<img alt="croag" class="croagimg" src="/static/assets/images/PCM/croag.webp?a=1">
+	</marquee>
+{% endif %}
+
+{% if p.award_count("croag") > 2 %}
+	<marquee class="croag croag3" direction="left" scrollamount=10 width="100%">
+		<img alt="croag" class="croagimg mirrored" src="/static/assets/images/PCM/croag.webp?a=1">
+	</marquee>
+{% endif %}
+
+{% if p.award_count("croag") > 3 %}
+	<marquee class="croag croag4" direction="right" scrollamount=10 width="100%">
+		<img alt="croag" class="croagimg" src="/static/assets/images/PCM/croag.webp?a=1">
 	</marquee>
 {% endif %}
 

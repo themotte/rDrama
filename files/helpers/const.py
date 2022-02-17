@@ -555,6 +555,35 @@ AWARDS = {
 	},
 }
 
+if SITE == 'PCM':
+	PCM_AWARDS = {
+		"croag": {
+			"kind": "croag",
+			"title": "Croag",
+			"description": "Summons Croag on the post.",
+			"icon": "fas fa-head-side",
+			"color": "text-gold",
+			"price": 300
+		},
+		"toe": {
+			"kind": "toe",
+			"title": "Toe Hype",
+			"description": "Summons Blade's toe on the post.",
+			"icon": "fas fa-socks",
+			"color": "text-gold",
+			"price": 300
+		},
+		"crab": {
+			"kind": "crab",
+			"title": "crab",
+			"description": "Rave time!",
+			"icon": "fas fa-glass-cheers",
+			"color": "text-gold",
+			"price": 300
+		}
+	}
+	AWARDS = {**PCM_AWARDS, **AWARDS}
+
 AWARDS2 = deepcopy(AWARDS)
 for k, val in AWARDS.items():
 	if val['description'] == '???': AWARDS2.pop(k)
