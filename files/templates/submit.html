@@ -88,6 +88,12 @@
 																{% set SUBS = toomuch_subs %}
 															{% endif %}
 															
+															{% if SITE_NAME == 'PCM' %}
+																<option value="none" selected>
+																	None
+																</option>
+															{% endif %}
+
 															{% for s in SUBS %}
 																<option value="{{s}}" {% if sub and sub.name == s %}selected{% endif %}>
 																	/s/{{s}}

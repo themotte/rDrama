@@ -862,7 +862,7 @@ def submit_post(v, sub=None):
 
 	sub = request.values.get("sub")
 
-	if sub:
+	if sub and sub != 'none':
 		sub = g.db.query(Sub.name).filter_by(name=sub.strip().lower()).one_or_none()
 		if not sub: abort(404)
 		sub = sub[0]
