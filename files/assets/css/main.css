@@ -4432,7 +4432,7 @@ textarea {
 }
 @media (min-width: 992px) {
     .card-columns {
-        column-count: 8 !important;
+        column-count: 7 !important;
 }
 }
 .container, .container-fluid {
