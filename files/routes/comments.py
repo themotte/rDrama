@@ -511,7 +511,8 @@ def api_comment(v):
 				is_bot=True,
 				body_html=body_html2,
 				top_comment_id=c.top_comment_id,
-				ghost=parent_post.ghost
+				ghost=parent_post.ghost,
+				distinguish_level=6
 				)
 
 			g.db.add(c2)
@@ -535,7 +536,8 @@ def api_comment(v):
 				is_bot=True,
 				body_html=body_html2,
 				top_comment_id=c.top_comment_id,
-				ghost=parent_post.ghost
+				ghost=parent_post.ghost,
+				distinguish_level=6
 				)
 
 			g.db.add(c3)
@@ -552,7 +554,8 @@ def api_comment(v):
 				is_bot=True,
 				body_html=body_html2,
 				top_comment_id=c.top_comment_id,
-				ghost=parent_post.ghost
+				ghost=parent_post.ghost,
+				distinguish_level=6
 				)
 
 			g.db.add(c4)
