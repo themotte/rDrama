@@ -110,7 +110,7 @@ def notifications(v):
 			else:
 				while c.parent_comment:
 					c = c.parent_comment
-				c.replies = g.db.query(Comment).filter_by(parent_comment_id=c.id).all()
+				c.replies = g.db.query(Comment).filter_by(parent_comment_id=c.id).order_by(Comment.id).all()
 
 			if c not in listing: listing.append(c)
 
