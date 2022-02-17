@@ -233,14 +233,14 @@ class Comment(Base):
 
 	@property
 	@lazy
-	def author_name(self):
-		if self.ghost: return '👻'
-		else: return self.author.username
+	def permalink(self):
+		return f"{SITE_FULL}{self.sl}"
 
 	@property
 	@lazy
-	def permalink(self):
-		return f"{SITE_FULL}/comment/{self.id}?context=8#context"
+	def author_name(self):
+		if self.ghost: return '👻'
+		else: return self.author.username
 
 	@property
 	@lazy

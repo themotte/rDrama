@@ -208,15 +208,15 @@ class Submission(Base):
 	@property
 	@lazy
 	def sl(self):
-		return f'/post/{self.id}'
+		link = f"/post/{self.id}"
+		if self.sub: link = f"/s/{self.sub}{link}"
+		return link
 
 
 	@property
 	@lazy
 	def shortlink(self):
-		link = f"/post/{self.id}"
-		if self.sub: link = f"/s/{self.sub}{link}"
-
+		link = self.sl
 		if self.club: return link
 
 		output = self.title.lower()
