@@ -8,6 +8,8 @@ import re
 from mistletoe import markdown
 from json import loads, dump
 from random import random, choice
+import signal
+import time
 
 db = db_session()
 marseys = tuple(x[0] for x in db.query(Marsey.name).all())
@@ -102,8 +104,17 @@ allowed_protocols = ['http', 'https']
 
 allowed_styles = ['color', 'background-color', 'font-weight', 'text-align']
 
+
+def handler(signum, frame):
+	print("Forever is over!")
+	raise Exception("end of time")
+
+
 def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
+	signal.signal(signal.SIGALRM, handler)
+	signal.alarm(1)
+	
 	if sanitized.count(':') > 100: abort(418)
 	if sanitized.count('@') > 50: abort(418)
 
@@ -282,6 +293,8 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 		for marsey in g.db.query(Marsey).filter(Marsey.name.in_(marseys_used)).all():
 			marsey.count += 1
 			g.db.add(marsey)
+
+	signal.alarm(0)
 
 	return sanitized
 
