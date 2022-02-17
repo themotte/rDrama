@@ -23,7 +23,20 @@
 
 
 {% if p.award_count("crab") %}
-	<iframe width="0" height="0" src="https://youtube.com/embed/LDU_Txk06tM?rel=0&controls=0&showinfo=0&autoplay=1&start=44" frameborder="0" allow="autoplay"></iframe>
+	<script>
+		let audio = new Audio('/assets/crab.mp3');
+		audio.loop=true;
+
+		function toggle() {
+			if (audio.paused) audio.play()
+			else audio.pause()
+		}
+
+		audio.play();
+		window.addEventListener('click', () => {
+			if (audio.paused) audio.play(); 
+		}, {once : true});
+	</script>
 {% endif %}
 
 {% if g.inferior_browser %}
