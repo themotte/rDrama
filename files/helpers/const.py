@@ -555,7 +555,7 @@ AWARDS = {
 	},
 }
 
-if SITE == 'PCM':
+if SITE_NAME == 'PCM':
 	PCM_AWARDS = {
 		"croag": {
 			"kind": "croag",
