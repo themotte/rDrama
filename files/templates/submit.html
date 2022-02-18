@@ -79,23 +79,25 @@
 
 												<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 
-												<label class='mt-4' for="title">Sub</label>
+												{% if SITE_NAME != 'Drama' or sub %}
+													<label class='mt-4' for="title">Sub</label>
 
-												<div class="input-group mb2">
-													<select autocomplete="off" id='sub' class="form-control" form="submitform" name="sub">
-														{% if SITE_NAME != 'Ruqqus' %}
-															<option value="none" selected>
-																None
-															</option>
-														{% endif %}
+													<div class="input-group mb2">
+														<select autocomplete="off" id='sub' class="form-control" form="submitform" name="sub">
+															{% if SITE_NAME != 'Ruqqus' %}
+																<option value="none" selected>
+																	None
+																</option>
+															{% endif %}
 
-														{% for s in SUBS %}
-															<option value="{{s}}" {% if sub and sub.name == s %}selected{% endif %}>
-																/s/{{s}}
-															</option>
-														{% endfor %}
-													</select>
-												</div>
+															{% for s in SUBS %}
+																<option value="{{s}}" {% if sub and sub.name == s %}selected{% endif %}>
+																	/s/{{s}}
+																</option>
+															{% endfor %}
+														</select>
+													</div>
+												{% endif %}
 						
 												<label class='mt-4' for="title">Post Title</label>
 

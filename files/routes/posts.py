@@ -126,7 +126,7 @@ def submit_get(v, sub=None):
 	
 	if request.path.startswith('/s/') and not sub: abort(404)
 
-	SUBS = tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all())
+	SUBS = () if SITE_NAME == 'Drama' and not sub else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all())
 
 	return render_template("submit.html", SUBS=SUBS, v=v, sub=sub, ghost=submit_ghost(v,g.db))
 
@@ -854,7 +854,7 @@ def submit_post(v, sub=None):
 	def error(error):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": error}, 403
 	
-		SUBS = tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all())
+		SUBS = () if SITE_NAME == 'Drama' and not sub else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all())
 		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body, ghost=submit_ghost(v,g.db)), 400
 
 

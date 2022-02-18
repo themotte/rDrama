@@ -269,6 +269,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	posts = g.db.query(Submission)
 	
 	if sub: posts = posts.filter_by(sub=sub.name)
+	elif SITE_NAME == 'Drama': posts = posts.filter(Submission.sub == None)
 	else:
 		if SITE_NAME == 'Ruqqus':
 			posts = posts.filter(Submission.sub != None)
@@ -347,6 +348,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false" and not gt and not lt:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
+		elif SITE_NAME == 'Drama': pins = pins.filter(Submission.sub == None)
 		else:
 			if SITE_NAME == 'Ruqqus':
 				pins = pins.filter(Submission.sub != None)
