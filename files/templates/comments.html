@@ -313,7 +313,7 @@
 				<pre></pre>
 				<ul style="padding-left:20px; margin-bottom: 0;">
 					{% for f in c.flags %}
-						<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %} {% if v and v.admin_level > 1 %}<a role="button" onclick="post_toast(this,'/del_report/c{{f.id}}')">[remove]</a>{% endif %}</li>
+						<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %} {% if v and v.admin_level > 1 %}<a role="button" onclick="post_toast(this,'/del_report/comment/{{f.comment_id}}/{{f.user_id}}')">[remove]</a>{% endif %}</li>
 					{% endfor %}
 				</ul>
 			</div>
@@ -1015,7 +1015,7 @@
 
 	{% if v %}
 		<script src="/static/assets/js/marked.js?a=242"></script>
-		<script src="/static/assets/js/comments_v.js?a=252"></script>
+		<script src="/static/assets/js/comments_v.js?a=253"></script>
 	{% endif %}
 
 	<script src="/static/assets/js/clipboard.js?a=250"></script>

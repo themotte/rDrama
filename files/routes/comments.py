@@ -16,12 +16,14 @@ from files.helpers.sanitize import filter_emojis_only
 import requests
 from shutil import copyfile
 from json import loads
+from collections import Counter
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
 if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
 WORD_LIST = tuple(set(environ.get("WORDLE").split(" ")))
+WORDLE_COLOR_MAPPINGS = {-1: "🟥", 0: "🟨", 1: "🟩"}
 
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
@@ -1050,10 +1052,31 @@ def handle_blackjack_action(cid, v):
 		g.db.commit()
 	return { "message" : "..." }
 
+
+def diff_words(answer, guess):
+	"""
+	Return a list of numbers corresponding to the char's relevance.
+	-1 means char is not in solution or the character appears too many times in the guess
+	0 means char is in solution but in the wrong spot
+	1 means char is in the correct spot
+	"""
+	diffs = [
+			1 if cs == cg else -1 for cs, cg in zip(answer, guess)
+		]
+	char_freq = Counter(
+		c_guess for c_guess, diff, in zip(answer, diffs) if diff == -1
+	)
+	for i, cg in enumerate(guess):
+		if diffs[i] == -1 and cg in char_freq and char_freq[cg] > 0:
+			char_freq[cg] -= 1
+			diffs[i] = 0
+	return diffs
+
 @app.post("/wordle/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def handle_wordle_action(cid, v):
+
 	comment = get_comment(cid)
 
 	guesses, status, answer = comment.wordle_result.split("_")
@@ -1063,26 +1086,13 @@ def handle_wordle_action(cid, v):
 	except: abort(400)
 
 	if (len(guess) == 5 and status == "active"):
-		result = ""
-		not_finished = [x for x in answer]
-		pos = 0
-		for i in guess:
-			result += i.upper()
-			if i == answer[pos]:
-				result += "🟩 "
-				not_finished[pos] = " "
-			elif i in not_finished: result += "🟨 "
-			else: result += "🟥 "
-			pos += 1
-
-		guesses += result[:-1]
+		guesses += "".join(cg + WORDLE_COLOR_MAPPINGS[diff] for cg, diff in zip(guess, diff_words(answer, guess)))
 
 		if (guess == answer): status = "won"
 		elif (count == 6): status = "lost"
 		else: guesses += ' -> '
 
 		comment.wordle_result = f'{guesses}_{status}_{answer}'
-		
 
 		g.db.add(comment)
 		g.db.commit()

@@ -59,31 +59,51 @@ def api_flag_comment(cid, v):
 	return {"message": "Comment reported!"}
 
 
-@app.post('/del_report/<report_fn>')
+@app.post('/del_report/post/<pid>/<uid>')
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
-def remove_report(report_fn, v):
-
-	if report_fn.startswith('c'):
-		report = g.db.query(CommentFlag).filter_by(id=int(report_fn.lstrip('c'))).one_or_none()
-		ma=ModAction(
-			kind="delete_report",
-			user_id=v.id,
-			target_comment_id=report.comment_id
-		)
-	elif report_fn.startswith('p'):
-		report = g.db.query(Flag).filter_by(id=int(report_fn.lstrip('p'))).one_or_none()
-		ma=ModAction(
-			kind="delete_report",
-			user_id=v.id,
-			target_submission_id=report.post_id
-		)
-	else: return {"error": "Invalid report ID"}, 400
-
+def remove_report_post(v, pid, uid):
+	
+	pid = int(pid)
+	uid = int(uid)
+	
+	report = g.db.query(Flag).filter_by(post_id=pid, user_id=uid).one()
+	
 	g.db.delete(report)
+
+	ma=ModAction(
+		kind="delete_report",
+		user_id=v.id,
+		target_submission_id=pid
+	)
 
 	g.db.add(ma)
 
 	g.db.commit()
 
-	return {"message": "Removed report"}
+	return {"message": "Removed report!"}
+
+
+@app.post('/del_report/comment/<cid>/<uid>')
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@admin_level_required(2)
+def remove_report_comment(v, cid, uid):
+	
+	cid = int(cid)
+	uid = int(uid)
+	
+	report = g.db.query(CommentFlag).filter_by(comment_id=cid, user_id=uid).one()
+	
+	g.db.delete(report)
+
+	ma=ModAction(
+		kind="delete_report",
+		user_id=v.id,
+		target_comment_id=cid
+	)
+
+	g.db.add(ma)
+
+	g.db.commit()
+
+	return {"message": "Removed report!"}
