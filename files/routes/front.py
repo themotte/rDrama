@@ -178,7 +178,7 @@ def front_all(v, sub=None):
 					gt=gt,
 					lt=lt,
 					sub=sub,
-					site=SITE_NAME
+					site=SITE
 					)
 
 	posts = get_posts(ids, v=v)
