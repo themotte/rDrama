@@ -550,7 +550,7 @@
 
 						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportPostModal" onclick="report_postModal('{{p.id}}')"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
 
-						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift text-center text-muted mr-3"></i>Give Award</button>
+						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#awardModal" onclick="awardModal('/award_post/{{p.id}}')"><i class="fas fa-gift text-center text-muted mr-3"></i>Give Award</button>
 
 						<button id="subscribe2-{{p.id}}" class="{% if p.id in v.subscribed_idlist() %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-muted" role="button" onclick="post_toast2(this,'/subscribe/{{p.id}}','subscribe2-{{p.id}}','unsubscribe2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-eye text-center text-muted mr-3"></i>Subscribe</button>
 						<button id="unsubscribe2-{{p.id}}" class="{% if not p.id in v.subscribed_idlist() %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-muted" role="button" onclick="post_toast2(this,'/unsubscribe/{{p.id}}','subscribe2-{{p.id}}','unsubscribe2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-eye-slash text-center text-muted mr-3"></i>Unsubscribe</button>
@@ -900,7 +900,7 @@
 						{% if not p.ghost %}<a class="list-inline-item" href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a>{% endif %}
 
 						{% if v %}
-							<a class="list-inline-item text-muted d-none d-md-inline-block" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw"></i>Give Award</a>
+							<a class="list-inline-item text-muted d-none d-md-inline-block" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/award_post/{{p.id}}')"><i class="fas fa-gift fa-fw"></i>Give Award</a>
 						{% endif %}
 
 						<a class="list-inline-item copy-link" role="button" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>

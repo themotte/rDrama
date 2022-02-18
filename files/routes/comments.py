@@ -1087,4 +1087,4 @@ def handle_wordle_action(cid, v):
 		g.db.add(comment)
 		g.db.commit()
 	
-	return { "message" : "..." }
+	return '', 204

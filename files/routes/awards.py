@@ -190,8 +190,7 @@ def buy(v, award):
 
 	return {"message": "Award bought!"}
 
-@app.get("/post/<pid>/awards")
-@app.post("/post/<pid>/awards")
+@app.post("/award_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def award_post(pid, v):
@@ -424,8 +423,7 @@ def award_post(pid, v):
 	return redirect(f"{SITE_FULL}/")
 
 
-@app.get("/comment/<cid>/awards")
-@app.post("/comment/<cid>/awards")
+@app.get("/award_comment/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def award_comment(cid, v):
