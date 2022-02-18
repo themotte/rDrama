@@ -289,14 +289,21 @@
 		</tr>
 	</thead>
 	<tbody id="followers-table">
+	{% set self=False %}
 	{% for user in users11 %}
-		<tr {% if v.id == user[0].id %}class="self"{% endif %}>
+		<tr {% if v.id == user[0].id %}class="self"{% set self=True %}{% endif %}>
 			<td style="font-weight: bold">{{loop.index}}</td>
 			<td><a style="color:#{{user[0].namecolor}};font-weight:bold" href="/@{{user[0].username}}"><img alt="@{{user[0].username}}'s profile picture" loading="lazy" src="{{user[0].profile_url}}" class="pp20"><span {% if user[0].patron %}class="patron" style="background-color:#{{user[0].namecolor}}"{% endif %}>{{user[0].username}}</span></a></td>
 			<td style="font-weight: bold">{{user[1]}}</td>
 		</tr>
 	{% endfor %}
-	{% if pos11 and (pos11[0] > 25 or not pos11[1]) %}
+	{% if not self and pos11[0] < 25 %}
+		<tr style="border-top:2px solid var(--primary)">
+			<td style="font-weight:bold">26</td>
+			<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img alt="@{{v.username}}'s profile picture" loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
+			<td style="font-weight:bold">{{pos11[1]}}</td>
+		</tr>
+	{% elif pos11 and (pos11[0] > 25 or not pos11[1]) %}
 		<tr style="border-top:2px solid var(--primary)">
 			<td style="font-weight:bold">{{pos11[0]}}</td>
 			<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img alt="@{{v.username}}'s profile picture" loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
