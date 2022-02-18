@@ -270,7 +270,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	
 	if sub: posts = posts.filter_by(sub=sub.name)
 	elif SITE != 'devrama.xyz':
-		elif SITE_NAME == '2Much4You': posts = posts.filter(Submission.sub.in_(toomuch_subs))
+		if SITE_NAME == '2Much4You': posts = posts.filter(Submission.sub.in_(toomuch_subs))
 		elif SITE_NAME == 'Ruqqus':
 			posts = posts.filter(Submission.sub != None)
 			if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
@@ -350,13 +350,14 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false" and not gt and not lt:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
-		elif SITE_NAME == '2Much4You': pins = pins.filter(Submission.sub.in_(toomuch_subs))
-		elif SITE_NAME == 'Ruqqus':
-			pins = pins.filter(Submission.sub != None)
-			if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
-		elif SITE_NAME == 'PCM':
-			if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
-		else: pins = pins.filter_by(sub=None)
+		elif SITE != 'devrama.xyz':
+			if SITE_NAME == '2Much4You': pins = pins.filter(Submission.sub.in_(toomuch_subs))
+			elif SITE_NAME == 'Ruqqus':
+				pins = pins.filter(Submission.sub != None)
+				if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
+			elif SITE_NAME == 'PCM':
+				if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
+			else: pins = pins.filter_by(sub=None)
 
 		if v and v.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
@@ -474,9 +475,9 @@ def random_post(v):
 @cache.memoize(timeout=86400)
 def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 
-	cc_idlist = [x[0] for x in g.db.query(Submission.id).filter(Submission.club == True).all()]
+	cc_or_private = [x[0] for x in g.db.query(Submission.id).filter(or_(Submission.club == True, Submission.private == True)).all()]
 
-	comments = g.db.query(Comment.id).filter(Comment.parent_submission != None, Comment.parent_submission.notin_(cc_idlist))
+	comments = g.db.query(Comment.id).filter(Comment.parent_submission != None, Comment.parent_submission.notin_(cc_or_private))
 
 	if v and v.admin_level <= 3:
 		blocking = [x[0] for x in g.db.query(

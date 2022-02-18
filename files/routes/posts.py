@@ -216,8 +216,8 @@ def post_id(pid, anything=None, v=None, sub=None):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		first = [c[0] for c in comments.filter(or_(and_(Comment.slots_result == None, Comment.blackjack_result == None), func.length(Comment.body) > 50)).all()]
-		second = [c[0] for c in comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None), func.length(Comment.body) <= 50).all()]
+		first = [c[0] for c in comments.filter(or_(and_(Comment.slots_result == None, Comment.blackjack_result == None, Comment.wordle_result == None), func.length(Comment.body) > 50)).all()]
+		second = [c[0] for c in comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None, Comment.wordle_result != None), func.length(Comment.body) <= 50).all()]
 		comments = first + second
 	else:
 		pinned = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.is_pinned != None).all()
@@ -235,8 +235,8 @@ def post_id(pid, anything=None, v=None, sub=None):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		first = comments.filter(or_(and_(Comment.slots_result == None, Comment.blackjack_result == None), func.length(Comment.body) > 50)).all()
-		second = comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None), func.length(Comment.body) <= 50).all()
+		first = comments.filter(or_(and_(Comment.slots_result == None, Comment.blackjack_result == None, Comment.wordle_result == None), func.length(Comment.body) > 50)).all()
+		second = comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None, Comment.wordle_result != None), func.length(Comment.body) <= 50).all()
 		comments = first + second
 
 	offset = 0
@@ -344,8 +344,8 @@ def viewmore(v, pid, sort, offset):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		first = [c[0] for c in comments.filter(or_(and_(Comment.slots_result == None, Comment.blackjack_result == None), func.length(Comment.body) > 50)).all()]
-		second = [c[0] for c in comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None), func.length(Comment.body) <= 50).all()]
+		first = [c[0] for c in comments.filter(or_(and_(Comment.slots_result == None, Comment.blackjack_result == None, Comment.wordle_result == None), func.length(Comment.body) > 50)).all()]
+		second = [c[0] for c in comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None, Comment.wordle_result != None), func.length(Comment.body) <= 50).all()]
 		comments = first + second
 	else:
 		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)), Comment.level == 1, Comment.is_pinned == None, Comment.id.notin_(ids))
@@ -361,8 +361,8 @@ def viewmore(v, pid, sort, offset):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 		
-		first = comments.filter(or_(and_(Comment.slots_result == None, Comment.blackjack_result == None), func.length(Comment.body) > 50)).all()
-		second = comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None), func.length(Comment.body) <= 50).all()
+		first = comments.filter(or_(and_(Comment.slots_result == None, Comment.blackjack_result == None, Comment.wordle_result == None), func.length(Comment.body) > 50)).all()
+		second = comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None, Comment.wordle_result != None), func.length(Comment.body) <= 50).all()
 		comments = first + second
 		comments = comments[offset:]
 
