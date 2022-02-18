@@ -269,14 +269,9 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	posts = g.db.query(Submission)
 	
 	if sub: posts = posts.filter_by(sub=sub.name)
-	elif SITE != 'devrama.xyz':
-		if SITE_NAME == '2Much4You': posts = posts.filter(Submission.sub.in_(toomuch_subs))
-		elif SITE_NAME == 'Ruqqus':
-			posts = posts.filter(Submission.sub != None)
-			if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
-		elif SITE_NAME == 'PCM':
-			if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
-		else: posts = posts.filter_by(sub=None)
+	if SITE_NAME == '2Much4You': posts = posts.filter(Submission.sub.in_(toomuch_subs))
+	elif SITE_NAME == 'Ruqqus': posts = posts.filter(Submission.sub != None)
+	if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
 	if lt: posts = posts.filter(Submission.created_utc < lt)
@@ -350,14 +345,9 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false" and not gt and not lt:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
-		elif SITE != 'devrama.xyz':
-			if SITE_NAME == '2Much4You': pins = pins.filter(Submission.sub.in_(toomuch_subs))
-			elif SITE_NAME == 'Ruqqus':
-				pins = pins.filter(Submission.sub != None)
-				if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
-			elif SITE_NAME == 'PCM':
-				if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
-			else: pins = pins.filter_by(sub=None)
+		if SITE_NAME == '2Much4You': pins = pins.filter(Submission.sub.in_(toomuch_subs))
+		elif SITE_NAME == 'Ruqqus': pins = pins.filter(Submission.sub != None)
+		if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
 
 		if v and v.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
