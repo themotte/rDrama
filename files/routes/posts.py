@@ -1333,11 +1333,6 @@ def submit_post(v, sub=None):
 		snappy.comment_count += 1
 		snappy.coins += 1
 		g.db.add(snappy)
-
-		if not v.is_blocking(snappy):
-			g.db.flush()
-			n = Notification(comment_id=c.id, user_id=v.id)
-			g.db.add(n)
 		
 		if body.startswith('!slots1000'):
 			check_for_slots_command(body, snappy, c)
