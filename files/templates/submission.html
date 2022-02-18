@@ -548,6 +548,8 @@
 					<ul class="list-group post-actions">
 						{% if not p.ghost %}<a class="btn-block" href="/votes?link={{p.fullname}}"><button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</button></a>{% endif %}
 
+						<button class="copy-link nobackground btn btn-link btn-block btn-lg text-left text-muted" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="far fa-link text-center text-muted mr-3"></i>Copy link</button>
+
 						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportPostModal" onclick="report_postModal('{{p.id}}')"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
 
 						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#awardModal" onclick="awardModal('/award_post/{{p.id}}')"><i class="fas fa-gift text-center text-muted mr-3"></i>Give Award</button>
@@ -1052,7 +1054,6 @@
 					{% endif %}
 				</li>
 
-				<a class="list-inline-item copy-link" role="button" role="button" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="fas fa-link"></i>Copy link</a>
 				{% if v %}
 				<li class="list-inline-item">
 					<a role="button" data-bs-toggle="modal" data-bs-target="#actionsModal">
