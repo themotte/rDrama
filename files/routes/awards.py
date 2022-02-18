@@ -423,7 +423,7 @@ def award_post(pid, v):
 	return redirect(f"{SITE_FULL}/")
 
 
-@app.get("/award_comment/<cid>")
+@app.post("/award_comment/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def award_comment(cid, v):
