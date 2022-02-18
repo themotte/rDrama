@@ -81,7 +81,7 @@ def remove_report_post(v, pid, uid):
 
 	g.db.commit()
 
-	return {"message": "Removed report!"}
+	return {"message": "Report removed successfully!"}
 
 
 @app.post('/del_report/comment/<cid>/<uid>')
@@ -106,4 +106,4 @@ def remove_report_comment(v, cid, uid):
 
 	g.db.commit()
 
-	return {"message": "Removed report!"}
+	return {"message": "Report removed successfully!"}
