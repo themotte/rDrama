@@ -2646,7 +2646,7 @@ pre {
 .sticky {
     position: -webkit-sticky;
     position: sticky;
-    top: 45px;
+    top: 43px;
     height: auto;
     overflow-y: auto;
     z-index: 4;
