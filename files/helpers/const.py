@@ -141,7 +141,7 @@ AGENDAPOSTER_MSG = """Hi @{username},\n\nYour {type} has been automatically remo
 		included. \n\n*This is an automated message; if you need help,
 		you can message us [here](/contact).*"""
 
-if SITE in ('rdrama.net','devrama.xyz','2much4you.net','ruqqus.us'):
+if SITE in ('rdrama.net','devrama.xyz','ruqqus.us'):
 	PW_ID = 3750
 	BASEDBOT_ID = 0
 	KIPPY_ID = 7150
@@ -641,8 +641,6 @@ REDDIT_NOTIFS = {
 	'carpathian florist': CARP_ID,
 	'the_homocracy': HOMO_ID
 }
-
-toomuch_subs = ('2much4you','2balkan4you','2middleeast4you','2asia4you','2caucasian4you','2european4you','2american4you')
 
 discounts = {
 	69: 0.02,

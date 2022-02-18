@@ -270,8 +270,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	
 	if sub: posts = posts.filter_by(sub=sub.name)
 	elif SITE != 'devrama.xyz':
-		if SITE_NAME == '2Much4You': posts = posts.filter(Submission.sub.in_(toomuch_subs))
-		elif SITE_NAME == 'Ruqqus':
+		if SITE_NAME == 'Ruqqus':
 			posts = posts.filter(Submission.sub != None)
 			if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
 		elif SITE_NAME == 'PCM':
@@ -351,8 +350,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
 		elif SITE != 'devrama.xyz':
-			if SITE_NAME == '2Much4You': pins = pins.filter(Submission.sub.in_(toomuch_subs))
-			elif SITE_NAME == 'Ruqqus':
+			if SITE_NAME == 'Ruqqus':
 				pins = pins.filter(Submission.sub != None)
 				if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
 			elif SITE_NAME == 'PCM':
