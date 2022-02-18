@@ -270,8 +270,10 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	
 	if sub: posts = posts.filter_by(sub=sub.name)
 	else:
-		if SITE_NAME == 'Ruqqus': posts = posts.filter(Submission.sub != None)
-		if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
+		if SITE_NAME == 'Ruqqus':
+			posts = posts.filter(Submission.sub != None)
+			if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
+		elif v and v.all_blocks: posts = posts.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
 	if lt: posts = posts.filter(Submission.created_utc < lt)
@@ -346,8 +348,10 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
 		else:
-			if SITE_NAME == 'Ruqqus': pins = pins.filter(Submission.sub != None)
-			if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
+			if SITE_NAME == 'Ruqqus':
+				pins = pins.filter(Submission.sub != None)
+				if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
+			elif v and v.all_blocks: pins = pins.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
 
 		if v and v.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
