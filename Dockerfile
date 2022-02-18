@@ -6,13 +6,9 @@ RUN apt update && apt install -y python3.8 python3-pip supervisor curl
 
 COPY imei.sh /etc/imei.sh
 
-RUN /etc/imei.sh
+COPY requirements.txt /etc/requirements.txt
 
-RUN mkdir -p ./service
-
-COPY requirements.txt ./service/requirements.txt
-
-RUN pip3 install -r requirements.txt
+RUN /etc/imei.sh && pip3 install -r /etc/requirements.txt
 
 RUN mkdir /images && mkdir /songs
 
