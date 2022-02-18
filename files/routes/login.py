@@ -28,7 +28,7 @@ def check_for_alts(current_id):
 	ids = tuple(x[0] for x in g.db.query(User.id).all())
 	past_accs = set(session.get("history", []))
 
-	for past_id in past_accs:
+	for past_id in list(past_accs):
 		
 		if past_id not in ids:
 			past_accs.remove(past_id)
