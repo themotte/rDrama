@@ -40,6 +40,8 @@ discounts = {
 	73: 0.10,
 }
 
+titleheaders = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
+
 def ghost_price(v):
 	if v.patron == 1: discount = 0.90
 	elif v.patron == 2: discount = 0.85
@@ -1494,3 +1496,22 @@ def api_pin_post(post_id, v):
 		g.db.commit()
 		if post.is_pinned: return {"message": "Post pinned!"}
 		else: return {"message": "Post unpinned!"}
+
+
+@app.get("/submit/title")
+@limiter.limit("6/minute")
+@auth_required
+def get_post_title(v):
+
+	url = request.values.get("url", None)
+	if not url: abort(400)
+
+	try: x = requests.get(url, headers=titleheaders, timeout=5)
+	except: abort(400)
+
+	soup = BeautifulSoup(x.content, 'html.parser')
+
+	title = soup.find('title')
+	if not title: abort(400)
+
+	return {"url": url, "title": title.string}

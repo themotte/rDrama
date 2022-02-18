@@ -8,7 +8,8 @@ def process_image(filename=None, resize=0):
 	i = Image.open(filename)
 
 	if resize and i.width > resize:
-		subprocess.call(["convert", filename, "-coalesce", "-resize", f"{resize}>", filename])
+		try: subprocess.call(["convert", filename, "-coalesce", "-resize", f"{resize}>", filename])
+		except: pass
 	elif i.format.lower() != "webp":
 
 		exif = i.getexif()
