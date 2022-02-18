@@ -19,6 +19,7 @@ requests
 SQLAlchemy
 psycopg2-binary
 pusher_push_notifications
+pyenchant
 youtube-dl
 yattag
 webptools

@@ -17,12 +17,14 @@ import requests
 from shutil import copyfile
 from json import loads
 from collections import Counter
+from enchant import Dict
+
+d = Dict("en_US")
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
 if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
-WORD_LIST = tuple(set(environ.get("WORDLE").split(" ")))
 WORDLE_COLOR_MAPPINGS = {-1: "🟥", 0: "🟨", 1: "🟩"}
 
 @app.get("/comment/<cid>")
@@ -658,7 +660,7 @@ def api_comment(v):
 		g.db.add(parent_post)
 
 	if "!wordle" in body:
-		answer = random.choice(WORD_LIST)
+		answer = random.choice(WORDLE_LIST)
 		c.wordle_result = f'_active_{answer}'
 
 	g.db.commit()
@@ -1085,7 +1087,10 @@ def handle_wordle_action(cid, v):
 	try: guess = request.values.get("guess").strip().lower()
 	except: abort(400)
 
-	if (len(guess) == 5 and status == "active"):
+	if len(guess) != 5 or not d.check(guess) and guess not in WORDLE_LIST:
+		return {"error": "Not a valid guess!"}, 400
+
+	if status == "active":
 		guesses += "".join(cg + WORDLE_COLOR_MAPPINGS[diff] for cg, diff in zip(guess, diff_words(answer, guess)))
 
 		if (guess == answer): status = "won"
@@ -1097,4 +1102,4 @@ def handle_wordle_action(cid, v):
 		g.db.add(comment)
 		g.db.commit()
 	
-	return { "message" : "." }
+	return {"message" : "."}

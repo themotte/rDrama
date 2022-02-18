@@ -360,6 +360,16 @@ function handle_wordle_action(cid, guess) {
 			location.hash = `comment-${cid}`;
 			location.reload();
 		}
+		else {
+			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
+			try
+			{
+				data = JSON.parse(xhr.response)
+			 	document.getElementById('toast-post-error-text').innerText = data["error"];
+				bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
+			}
+			catch {}
+		}
 	}
 	xhr.send(form);
 }
