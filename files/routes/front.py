@@ -269,13 +269,14 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	posts = g.db.query(Submission)
 	
 	if sub: posts = posts.filter_by(sub=sub.name)
-	elif SITE_NAME == '2Much4You': posts = posts.filter(Submission.sub.in_(toomuch_subs))
-	elif SITE_NAME == 'Ruqqus':
-		posts = posts.filter(Submission.sub != None)
-		if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
-	elif SITE_NAME == 'PCM':
-		if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
-	else: posts = posts.filter_by(sub=None)
+	elif SITE != 'devrama.xyz':
+		elif SITE_NAME == '2Much4You': posts = posts.filter(Submission.sub.in_(toomuch_subs))
+		elif SITE_NAME == 'Ruqqus':
+			posts = posts.filter(Submission.sub != None)
+			if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
+		elif SITE_NAME == 'PCM':
+			if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
+		else: posts = posts.filter_by(sub=None)
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
 	if lt: posts = posts.filter(Submission.created_utc < lt)
