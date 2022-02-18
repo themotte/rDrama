@@ -495,7 +495,7 @@
 							<button class="btn caction py-0 nobackground px-1 text-muted" role="button" onclick="openReplyBox('reply-to-{{c.id}}')"><i class="fas fa-reply" aria-hidden="true"></i>Reply</button>
 						{% endif %}
 						
-						<button class="btn caction py-0 nobackground px-1 text-muted copy-link" role="button" role="button" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{c.sl}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</button>
+						<button class="btn caction py-0 nobackground px-1 text-muted copy-link" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{c.sl}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</button>
 
 						<a class="btn caction nobackground px-1 text-muted" href="{{c.permalink}}"><i class="fas fa-book-open"></i>Context</a>
 
@@ -713,7 +713,7 @@
 
 					{% if not c.ghost %}<a href="/votes?link={{c.fullname}}"><li class="list-group-item"><i class="fas fa-arrows-v"></i>Votes</li></a>{% endif %}
 
-					<a role="button" role="button" class="list-group-item copy-link" data-bs-dismiss="modal" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{c.sl}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
+					<a role="button" class="list-group-item copy-link" data-bs-dismiss="modal" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{c.sl}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
 
 					<a class="list-group-item" href="{{c.permalink}}"><i class="fas fa-book-open"></i>Context</a>
 

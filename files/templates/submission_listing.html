@@ -415,7 +415,7 @@
 
 						<a class="copy-link" role="button" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}" style="margin-right: 15px;margin-top:5px;"><i class="fas fa-link"></i></a>
 
-						<button class="copy-link nobackground btn btn-link btn-block btn-lg text-left text-muted" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="far fa-link text-center text-muted mr-3"></i>Copy link</button>
+						<button data-bs-dismiss="modal" class="copy-link nobackground btn btn-link btn-block btn-lg text-left text-muted" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="far fa-link text-center text-muted mr-3"></i>Copy link</button>
 
 						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportPostModal" onclick="report_postModal('{{p.id}}')"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
 
