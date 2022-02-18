@@ -48,6 +48,7 @@ def ghost_price(v):
 	elif v.patron == 3: discount = 0.80
 	elif v.patron == 4: discount = 0.75
 	elif v.patron == 5: discount = 0.70
+	elif v.patron == 6: discount = 0.65
 	else: discount = 1
 	for badge in [69,70,71,72,73]:
 		if v.has_badge(badge): discount -= discounts[badge]

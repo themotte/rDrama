@@ -478,6 +478,7 @@ def gumroad(v):
 	elif v.patron == 3: procoins = 10000
 	elif v.patron == 4: procoins = 25000
 	elif v.patron == 5: procoins = 50000
+	elif u.patron == 6: procoins = 125000
 
 	v.procoins += procoins
 	send_repeatable_notification(v.id, f"You have received {procoins} Marseybux! You can use them to buy awards in the [shop](/shop).")
