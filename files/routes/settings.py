@@ -27,7 +27,8 @@ tiers={
 	"(Renthog)": 2,
 	"(Landchad)": 3,
 	"(Terminally online turboautist)": 4,
-	"(Rich Bich)": 5,
+	"(Footpig)": 5,
+	"(Rich Bich)": 6,
 	"(LlamaBean)": 1,
 	}
 
