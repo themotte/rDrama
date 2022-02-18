@@ -217,12 +217,12 @@
 				{% if c.post %}
 					{% set sub = c.post.sub %}
 					{% if sub and c.author.exiled_from(sub) %}
-						<a role="button"><i class="fad fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User has been exiled from /s/{{sub}}"></i></a>
+						<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User has been exiled from /s/{{sub}}"></i></a>
 					{% endif %}
 				{% endif %}
 
 				{% if c.bannedfor %}
-					<a role="button"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}"></i></a>
+					<a role="button"><i class="fas fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}"></i></a>
 				{% endif %}
 				{% if c.active_flags %}<a class="btn btn-primary" style="padding:1px 5px; font-size:10px;" role="button" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('d-none')">{{c.active_flags}} Reports</a>{% endif %}
 				{% if c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
@@ -232,7 +232,7 @@
 				{% endif %}
 				{% if c.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{SITE_NAME}} Admin, speaking officially"></i>{% endif %}
 				{% if c.is_op and not c.ghost %}<i class="fas fa-microphone-stand text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="OP"></i>{% endif %}
-				{% if c.is_bot %}<i class="fad fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bot"></i>{% endif %}
+				{% if c.is_bot %}<i class="fas fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bot"></i>{% endif %}
 				{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="You're blocking this user, but you can see this comment because you're an admin"></i>{% endif %}
 				{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="This user is blocking you."></i>{% endif %}
 
@@ -871,7 +871,7 @@
 			<div class="modal-body text-center">
 
 				<div class="py-4">
-					<i class="fad fa-trash-alt text-muted d-none d-md-block" style="font-size: 3.5rem;"></i>
+					<i class="fas fa-trash-alt text-muted d-none d-md-block" style="font-size: 3.5rem;"></i>
 				</div>
 
 				<div class="h4 d-md-none">Delete comment?</div>

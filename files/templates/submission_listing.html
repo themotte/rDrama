@@ -157,11 +157,11 @@
 				{% endif %}
 
 				{% if p.sub and p.author.exiled_from(p.sub) %}
-					<a role="button"><i class="fad fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User has been exiled from /s/{{p.sub}}"></i></a>
+					<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User has been exiled from /s/{{p.sub}}"></i></a>
 				{% endif %}
 				
 				{% if p.bannedfor %}
-					<a role="button"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User was banned for this post{% if p.author.banned_by %} by @{{p.author.banned_by.username}}{% endif %}"></i></a>
+					<a role="button"><i class="fas fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User was banned for this post{% if p.author.banned_by %} by @{{p.author.banned_by.username}}{% endif %}"></i></a>
 				{% endif %}
 
 				{% if p.awards %}
@@ -181,7 +181,7 @@
 				{% if p.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{SITE_NAME}} Admin, speaking officially"></i>{% endif %}
 				{% if p.is_pinned and request.path.startswith('/@') %}<i class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned to profile"></i>{% endif %}
 				{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
-				{% if p.is_bot %} <i class="fad fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom"	data-bs-original-title="Bot"></i>{% endif %}
+				{% if p.is_bot %} <i class="fas fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom"	data-bs-original-title="Bot"></i>{% endif %}
 				{% if p.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="You're blocking this user, but you can see this post because you're an admin."></i>{% endif %}
 				{% if p.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="This user is blocking you."></i>{% endif %}
 				{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
