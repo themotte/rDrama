@@ -298,11 +298,13 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 	return sanitized
 
-
+def handler2(signum, frame):
+	print("Forever is over!")
+	raise Exception("end of time")
 
 def filter_emojis_only(title, edit=False, graceful=False):
 
-	signal.signal(signal.SIGALRM, handler)
+	signal.signal(signal.SIGALRM, handler2)
 	signal.alarm(1)
 	
 	if title.count(':') > 100: abort(418)
