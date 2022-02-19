@@ -285,8 +285,8 @@ def award_post(pid, v):
 		if author.agendaposter and time.time() < author.agendaposter: author.agendaposter += 86400
 		else: author.agendaposter = int(time.time()) + 86400
 		
-		if not author.has_badge(26):
-			badge = Badge(user_id=author.id, badge_id=26)
+		if not author.has_badge(28):
+			badge = Badge(user_id=author.id, badge_id=28)
 			g.db.add(badge)
 			g.db.flush()
 			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
@@ -515,8 +515,8 @@ def award_comment(cid, v):
 		if author.agendaposter and time.time() < author.agendaposter: author.agendaposter += 86400
 		else: author.agendaposter = int(time.time()) + 86400
 		
-		if not author.has_badge(26):
-			badge = Badge(user_id=author.id, badge_id=26)
+		if not author.has_badge(28):
+			badge = Badge(user_id=author.id, badge_id=28)
 			g.db.add(badge)
 			g.db.flush()
 			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")

@@ -95,8 +95,6 @@ def before_request():
 
 	g.db = db_session()
 
-	g.timestamp = int(time.time())
-
 	ua = request.headers.get("User-Agent","").lower()
 
 	if '; wv) ' in ua: g.webview = True

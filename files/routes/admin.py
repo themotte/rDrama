@@ -792,11 +792,9 @@ def admin_removed_comments(v):
 def agendaposter(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
-	expiry = request.values.get("days", 0)
-	if expiry:
-		expiry = float(expiry)
-		expiry = g.timestamp + expiry*60*60*24
-	else: expiry = g.timestamp + 2629746
+	days = request.values.get("days", 30)
+	expiry = float(days)
+	expiry = int(time.time() + expiry*60*60*24)
 
 	user.agendaposter = expiry
 	g.db.add(user)
@@ -806,7 +804,7 @@ def agendaposter(user_id, v):
 		alt.agendaposter = expiry
 		g.db.add(alt)
 
-	note = f"for {request.values.get('days')} days" if expiry else "never expires"
+	note = f"for {days} days"
 
 	ma = ModAction(
 		kind="agendaposter",
@@ -816,8 +814,8 @@ def agendaposter(user_id, v):
 	)
 	g.db.add(ma)
 
-	if not user.has_badge(26):
-		badge = Badge(user_id=user.id, badge_id=26)
+	if not user.has_badge(28):
+		badge = Badge(user_id=user.id, badge_id=28)
 		g.db.add(badge)
 		g.db.flush()
 		send_notification(user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
@@ -851,7 +849,7 @@ def unagendaposter(user_id, v):
 
 	g.db.add(ma)
 
-	badge = user.has_badge(26)
+	badge = user.has_badge(28)
 	if badge: g.db.delete(badge)
 
 	send_repeatable_notification(user.id, "You have been unmarked by an admin as an agendaposter.")

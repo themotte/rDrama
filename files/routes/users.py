@@ -701,7 +701,7 @@ def u_username(username, v=None):
 	if v and u.id != v.id and u.patron:
 		view = g.db.query(ViewerRelationship).filter_by(viewer_id=v.id, user_id=u.id).one_or_none()
 
-		if view: view.last_view_utc = g.timestamp
+		if view: view.last_view_utc = int(time.time())
 		else: view = ViewerRelationship(viewer_id=v.id, user_id=u.id)
 
 		g.db.add(view)
