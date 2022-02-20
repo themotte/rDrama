@@ -364,7 +364,7 @@ def leaderboard(v):
 	users11 = users11.limit(25).all()
 
 	if pos11[1] < 25 and v not in (x[0] for x in users11):
-		pos11 = (26, pos11[2])
+		pos11 = (26, pos11[1])
 
 	if SITE_NAME == 'Drama':
 		sq = g.db.query(Marsey.author_id, func.count(Marsey.author_id).label("count"), func.rank().over(order_by=func.count(Marsey.author_id).desc()).label("rank")).group_by(Marsey.author_id).subquery()
