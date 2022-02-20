@@ -131,7 +131,7 @@ def notifications(v):
 @app.get("/logged_out")
 @app.get("/s/<sub>")
 @app.get("/logged_out/s/<sub>")
-@limiter.limit("3/second;30/minute;400/hour;2000/day")
+@limiter.limit("3/second;30/minute;1000/hour;5000/day")
 @auth_desired
 def front_all(v, sub=None):
 	if sub: sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
