@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-RUN apt update && apt install -y python3.8 python3-pip supervisor libenchant1c2a
+RUN apt update && apt install -y python3.8 python3-pip supervisor python3-enchant
 
 COPY supervisord.conf /etc/supervisord.conf
 

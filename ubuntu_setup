@@ -1,7 +1,7 @@
 cd /Drama
 sudo apt update
 sudo apt -y upgrade
-sudo apt -y install postgresql postgresql-contrib redis-server libenchant1c2a python3-pip gunicorn ffmpeg
+sudo apt -y install postgresql postgresql-contrib redis-server python3-enchant python3-pip gunicorn ffmpeg
 cp pg_hba.conf /etc/postgresql/12/main/pg_hba.conf
 sudo service postgresql restart
 sudo psql -U postgres -f schema.sql postgres
