@@ -1510,7 +1510,7 @@ def get_post_title(v):
 	try: x = requests.get(url, headers=titleheaders, timeout=5)
 	except: abort(400)
 
-	soup = BeautifulSoup(x.content, 'html.parser')
+	soup = BeautifulSoup(x.content, 'xml')
 
 	title = soup.find('title')
 	if not title: abort(400)

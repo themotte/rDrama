@@ -8,6 +8,7 @@ Flask-Mail
 gevent
 greenlet
 gunicorn
+lxml
 mistletoe
 matplotlib
 Pillow
