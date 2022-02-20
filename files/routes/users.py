@@ -360,7 +360,7 @@ def leaderboard(v):
 	users11 = g.db.query(User, sq.c.count).join(sq, User.id==sq.c.user_id).order_by(sq.c.count.desc(), User.id)
 	pos11 = g.db.query(sq.c.rank, sq.c.count, User.id).join(sq, User.id==sq.c.user_id).order_by(sq.c.count.desc(), User.id).filter(User.id == v.id).one_or_none()
 	print(pos11)
-	if pos11: pos11 = (pos11[9],pos11[1])
+	if pos11: pos11 = (pos11[0],pos11[1])
 	else: pos11 = (users11.count()+1, 0)
 	users11 = users11.limit(25).all()
 
