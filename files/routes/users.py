@@ -356,13 +356,15 @@ def leaderboard(v):
 	sq = g.db.query(User.id, func.rank().over(order_by=User.truecoins.desc()).label("rank")).subquery()
 	pos10 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
-	sq = g.db.query(Badge.user_id, func.count(Badge.user_id).label("count"), func.rank().over(order_by=func.count(Badge.user_id).desc()).label("rank")).group_by(Badge.user_id).order_by(func.count(Badge.user_id).desc(), Badge.user_id).subquery()
-	users11 = g.db.query(User, sq.c.count).join(sq, User.id==sq.c.user_id).order_by(sq.c.count.desc(), User.id)
-	pos11 = g.db.query(sq.c.rank, sq.c.count, User.id).join(sq, User.id==sq.c.user_id).order_by(sq.c.count.desc(), User.id).filter(User.id == v.id).one_or_none()
-	print(pos11)
-	if pos11: pos11 = (pos11[0],pos11[1])
+	sq = g.db.query(Badge.user_id, func.count(Badge.user_id).label("count"), func.rank().over(order_by=func.count(Badge.user_id).desc()).label("rank")).group_by(Badge.user_id).subquery()
+	users11 = g.db.query(User, sq.c.count).join(sq, User.id==sq.c.user_id).order_by(sq.c.count.desc())
+	pos11 = g.db.query(User.id, sq.c.rank, sq.c.count).join(sq, User.id==sq.c.user_id).filter(User.id == v.id).one_or_none()
+	if pos11: pos11 = (pos11[1],pos11[2])
 	else: pos11 = (users11.count()+1, 0)
 	users11 = users11.limit(25).all()
+
+	if pos11[1] < 25 and v not in (x[0] for x in users11):
+		pos11[1] = (26, pos11[2])
 
 	if SITE_NAME == 'Drama':
 		sq = g.db.query(Marsey.author_id, func.count(Marsey.author_id).label("count"), func.rank().over(order_by=func.count(Marsey.author_id).desc()).label("rank")).group_by(Marsey.author_id).subquery()
