@@ -1554,6 +1554,14 @@ ALTER TABLE ONLY public.comment_save_relationship
 
 
 --
+-- Name: comments comment_sentto_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comment_sentto_fkey FOREIGN KEY (sentto) REFERENCES public.users(id);
+
+
+--
 -- Name: commentflags commentflags_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
