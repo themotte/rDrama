@@ -766,7 +766,10 @@ def thumbnail_thread(pid):
 
 				body_html = sanitize(f'New {word} mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 
-				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1).one_or_none()
+				try: existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1).one_or_none()
+				except:
+					print(body_html)
+					break
 
 				if existing_comment: break
 
