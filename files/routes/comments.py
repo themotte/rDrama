@@ -158,6 +158,7 @@ def api_comment(v):
 
 	if parent_post.club and not (v and (v.paid_dues or v.id == parent_post.author_id)): abort(403)
 
+	rts = False
 	if parent_fullname.startswith("t2_"):
 		parent = parent_post
 		parent_comment_id = None
@@ -169,6 +170,7 @@ def api_comment(v):
 		level = parent.level + 1
 		if level == 2: top_comment_id = parent.id
 		else: top_comment_id = parent.top_comment_id
+		if parent.author_id == v.id: rts = True
 	else: abort(400)
 
 	body = request.values.get("body", "").strip()[:10000]
@@ -667,7 +669,7 @@ def api_comment(v):
 
 	check_for_treasure(body, c)
 
-	if not c.slots_result and not c.blackjack_result and not c.wordle_result:
+	if not c.slots_result and not c.blackjack_result and not c.wordle_result and not rts:
 		parent_post.comment_count += 1
 		g.db.add(parent_post)
 
