@@ -51,7 +51,19 @@ def request_api_keys(v):
 
 	body_html = sanitize(body, noimages=True)
 
-	send_admin(NOTIFICATIONS_ID, body_html)
+
+	new_comment = Comment(author_id=NOTIFICATIONS_ID,
+						  parent_submission=None,
+						  level=1,
+						  body_html=body_html,
+						  sentto=2
+						  )
+	g.db.add(new_comment)
+	g.db.flush()
+	for admin in g.db.query(User).filter(User.admin_level > 2).all():
+		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
+		g.db.add(notif)
+
 
 	g.db.commit()
 

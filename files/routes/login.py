@@ -225,7 +225,7 @@ def sign_up_get(v):
 
 
 @app.post("/signup")
-@limiter.limit("5/day")
+@limiter.limit("10/day")
 @auth_desired
 def sign_up_post(v):
 	with open('disable_signups', 'r') as f:

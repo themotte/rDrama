@@ -304,7 +304,21 @@ def submit_contact(v):
 			body_html += f"<p>{url}</p>"
 		else: return {"error": "Image/Video files only"}, 400
 
-	send_admin(v.id, body_html)
+
+
+	new_comment = Comment(author_id=v.id,
+						  parent_submission=None,
+						  level=1,
+						  body_html=body_html,
+						  sentto=2
+						  )
+	g.db.add(new_comment)
+	g.db.flush()
+	for admin in g.db.query(User).filter(User.admin_level > 1).all():
+		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
+		g.db.add(notif)
+
+
 
 	g.db.commit()
 	return render_template("contact.html", v=v, msg="Your message has been sent.")

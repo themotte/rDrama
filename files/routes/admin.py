@@ -883,7 +883,19 @@ def shadowban(user_id, v):
 
 	body_html = sanitize(body)
 
-	send_admin(NOTIFICATIONS_ID, body_html, v.id)
+
+	new_comment = Comment(author_id=NOTIFICATIONS_ID,
+						  parent_submission=None,
+						  level=1,
+						  body_html=body_html,
+						  )
+	g.db.add(new_comment)
+	g.db.flush()
+	for admin in g.db.query(User).filter(User.admin_level > 2, User.id != v.id).all():
+		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
+		g.db.add(notif)
+
+
 
 	g.db.commit()
 	return {"message": "User shadowbanned!"}
@@ -1052,7 +1064,18 @@ def ban_user(user_id, v):
 
 	body_html = sanitize(body)
 
-	send_admin(NOTIFICATIONS_ID, body_html, v.id)
+
+	new_comment = Comment(author_id=NOTIFICATIONS_ID,
+						  parent_submission=None,
+						  level=1,
+						  body_html=body_html,
+						  )
+	g.db.add(new_comment)
+	g.db.flush()
+	for admin in g.db.query(User).filter(User.admin_level > 2, User.id != v.id).all():
+		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
+		g.db.add(notif)
+
 
 	g.db.commit()
 
