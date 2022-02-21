@@ -16,7 +16,12 @@ function expandDesktopImage(image) {
 	document.getElementById("desktop-expanded-image-wrap-link").href=image;
 };
 
-function popovertrigger() {
+function bs_trigger() {
+	let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+	tooltipTriggerList.map(function(element){
+		return bootstrap.Tooltip.getOrCreateInstance(element);
+	});
+
 	const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
 	const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
 		const popoverId = popoverTriggerEl.getAttribute('data-content-id');
@@ -30,7 +35,7 @@ function popovertrigger() {
 	})
 }
 
-popovertrigger()
+bs_trigger()
 
 function popclick(author) {
 	setTimeout(() => {

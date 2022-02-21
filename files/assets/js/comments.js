@@ -29,11 +29,7 @@ function morecomments(cid) {
 	xhr.onload=function(){
 		if (xhr.status==200) {
 			document.getElementById(`morecomments-${cid}`).innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
-			var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-			tooltipTriggerList.map(function(element){
-				return bootstrap.Tooltip.getOrCreateInstance(element);
-			});
-			popovertrigger()
+			bs_trigger()
 		}
 		btn.disabled = false;
 	}

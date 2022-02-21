@@ -165,6 +165,7 @@ function post_reply(id){
 			try{
 				let data = JSON.parse(xhr.response)
 				document.getElementById('toast-post-error-text').innerText = data["error"];
+				bs_trigger()
 			}
 			catch(e) {console.log(e)}
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
@@ -240,6 +241,7 @@ function post_comment(fullname){
 			try{
 				let data = JSON.parse(xhr.response)
 				document.getElementById('toast-post-error-text').innerText = data["error"];
+				bs_trigger()
 			}
 			catch(e) {console.log(e)}
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
