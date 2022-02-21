@@ -562,30 +562,28 @@ def messagereply(v):
 			if len(message) > 500: notifbody = message[:500] + '...'
 			else: notifbody = message
 			
-			try:
-				beams_client.publish_to_interests(
-					interests=[f'{request.host}{user_id}'],
-					publish_body={
-						'web': {
-							'notification': {
-								'title': f'New message from @{v.username}',
-								'body': notifbody,
-								'deep_link': f'{SITE_FULL}/notifications?messages=true',
-								'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp"a=1010',
-							}
-						},
-						'fcm': {
-							'notification': {
-								'title': f'New message from @{v.username}',
-								'body': notifbody,
-							},
-							'data': {
-								'url': '/notifications?messages=true',
-							}
+			beams_client.publish_to_interests(
+				interests=[f'{request.host}{user_id}'],
+				publish_body={
+					'web': {
+						'notification': {
+							'title': f'New message from @{v.username}',
+							'body': notifbody,
+							'deep_link': f'{SITE_FULL}/notifications?messages=true',
+							'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp"a=1010',
 						}
 					},
-				)
-			except: pass
+					'fcm': {
+						'notification': {
+							'title': f'New message from @{v.username}',
+							'body': notifbody,
+						},
+						'data': {
+							'url': '/notifications?messages=true',
+						}
+					}
+				},
+			)
 
 
 	if new_comment.top_comment.sentto == 2:
