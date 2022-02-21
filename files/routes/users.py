@@ -539,7 +539,8 @@ def messagereply(v):
 	parent = get_comment(id, v=v)
 	user_id = parent.author.id
 
-	if v.id == user_id: user_id = parent.sentto
+	if parent.sentto == 2: user_id = None
+	elif v.id == user_id: user_id = parent.sentto
 
 	text_html = sanitize(message, noimages=True)
 
@@ -554,7 +555,7 @@ def messagereply(v):
 	g.db.add(new_comment)
 	g.db.flush()
 
-	if user_id != v.id and user_id != 0:
+	if user_id and user_id != v.id and user_id != 2:
 		notif = Notification(comment_id=new_comment.id, user_id=user_id)
 		g.db.add(notif)
 
@@ -587,7 +588,7 @@ def messagereply(v):
 
 
 	if new_comment.top_comment.sentto == 2:
-		admins = g.db.query(User).filter(User.admin_level > 2, User.id != v.id, User.id != user_id).all()
+		admins = g.db.query(User).filter(User.admin_level > 2, User.id != v.id).all()
 		for admin in admins:
 			notif = Notification(comment_id=new_comment.id, user_id=admin.id)
 			g.db.add(notif)
