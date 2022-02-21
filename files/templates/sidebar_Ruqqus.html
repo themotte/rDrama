@@ -9,7 +9,7 @@
 
 {% if sub %}
 	{% if sub.sidebar_html %}
-		<div class="my-4">{{sub.sidebar_html|safe}}</div>
+		<div class="mb-4">{{sub.sidebar_html|safe}}</div>
 	{% endif %}
 	{% if v and v.mods(sub.name) %}
 		<a class="btn btn-primary btn-block" href="/s/{{sub.name}}/settings">SUB SETTINGS</a>
