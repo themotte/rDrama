@@ -158,14 +158,14 @@ function post_reply(id){
 	xhr.onload=function(){
 		if (xhr.status==200) {
 			commentForm=document.getElementById('comment-form-space-'+id);
-			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '').replace('comment-collapse-desktop d-none d-md-block','d-none').replace('border-left: 2px solid','padding-left:0;border-left: 0px solid')
+			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '').replace('comment-collapse-desktop d-none d-md-block','d-none').replace('border-left: 2px solid','padding-left:0;border-left: 0px solid');
+			bs_trigger();
 		}
 		else {
 			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			try{
 				let data = JSON.parse(xhr.response)
 				document.getElementById('toast-post-error-text').innerText = data["error"];
-				bs_trigger()
 			}
 			catch(e) {console.log(e)}
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
@@ -234,14 +234,14 @@ function post_comment(fullname){
 	xhr.onload=function(){
 		if (xhr.status==200) {
 			commentForm=document.getElementById('comment-form-space-'+fullname);
-			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '')
+			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
+			bs_trigger();
 		}
 		else {
 			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			try{
 				let data = JSON.parse(xhr.response)
 				document.getElementById('toast-post-error-text').innerText = data["error"];
-				bs_trigger()
 			}
 			catch(e) {console.log(e)}
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
