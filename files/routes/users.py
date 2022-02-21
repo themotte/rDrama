@@ -556,7 +556,7 @@ def messagereply(v):
 	g.db.add(new_comment)
 	g.db.flush()
 
-	if user_id != v.id and user_id != 9:
+	if user_id != v.id and user_id != 0:
 		notif = Notification(comment_id=new_comment.id, user_id=user_id)
 		g.db.add(notif)
 
