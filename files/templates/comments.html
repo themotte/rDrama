@@ -157,7 +157,7 @@
 	{% elif c.author_id==NOTIFICATIONS_ID or c.author_id==AUTOJANNY_ID %}
 	<span class="font-weight-bold">Notification</span>
 	{% else %}
-		{% if c.sentto == 0 %}
+		{% if c.sentto == 2 %}
 			<span class="font-weight-bold">Sent to admins</span>
 		{% else %}
 			<span class="font-weight-bold">Sent to @{{c.senttouser.username}}</span>
@@ -167,7 +167,7 @@
 </div>
 {% endif %}
 
-{% if c.sentto and c.level > 1 and c.created_utc > 1641340623 %}
+{% if c.sentto and c.level > 1 %}
 	{% set isreply = True %}
 {% else %}
 	{% set isreply = False %}
@@ -639,7 +639,7 @@
 			</div>
 		{% endif %}
 
-		{% if request.path == '/notifications' and c.level == 1 and c.sentto != None and not c.parent_submission and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
+		{% if request.path == '/notifications' and c.level == 1 and c.sentto and not c.parent_submission and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
 			<a class="btn btn-primary" role="button" onclick="openReplyBox('reply-message-{{c.id}}')">Reply</a>
 			<pre></pre>
 			<div id="reply-message-{{c.id}}" class="d-none">

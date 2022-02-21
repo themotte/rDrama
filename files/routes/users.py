@@ -590,7 +590,7 @@ def messagereply(v):
 			except: pass
 
 
-	if new_comment.top_comment.sentto == 0:
+	if new_comment.top_comment.sentto == 2:
 		admins = g.db.query(User).filter(User.admin_level > 2, User.id != v.id, User.id != user_id).all()
 		for admin in admins:
 			notif = Notification(comment_id=new_comment.id, user_id=admin.id)

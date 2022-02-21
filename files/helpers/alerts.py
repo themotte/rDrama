@@ -93,7 +93,7 @@ def send_admin(id, body_html, vid=None):
 	new_comment = Comment(author_id=id,
 						  parent_submission=None,
 						  level=1,
-						  sentto=0,
+						  sentto=2,
 						  body_html=body_html,
 						  )
 	g.db.add(new_comment)

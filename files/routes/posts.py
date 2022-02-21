@@ -766,7 +766,7 @@ def thumbnail_thread(pid):
 
 				body_html = sanitize(f'New {word} mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 
-				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1, sentto=0).one_or_none()
+				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1, sentto=2).one_or_none()
 
 				if existing_comment: break
 
@@ -817,7 +817,7 @@ def thumbnail_thread(pid):
 			for i in data:
 				body_html = sanitize(f'New pcmemes mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 
-				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1, sentto=0).one_or_none()
+				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1, sentto=2).one_or_none()
 
 				if existing_comment: break
 
@@ -826,7 +826,7 @@ def thumbnail_thread(pid):
 									distinguish_level=6,
 									body_html=body_html,
 									level=1,
-									sentto=0,
+									sentto=2,
 									)
 				db.add(new_comment)
 				db.flush()

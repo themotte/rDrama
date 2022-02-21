@@ -358,7 +358,7 @@ def robots_txt():
 @app.get("/badges")
 @auth_required
 def badges(v):
-	badges = g.db.query(BadgeDef).all()
+	badges = g.db.query(BadgeDef).order_by(BadgeDef.id).all()
 
 	return render_template("badges.html", v=v, badges=badges)
 
