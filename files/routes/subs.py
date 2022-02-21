@@ -248,9 +248,8 @@ def create_sub2(v):
 
 	sub = g.db.query(Sub).filter_by(name=name).one_or_none()
 	if not sub:
-		if SITE_NAME == 'PCM': cost = v.subs_created * 150
-		else: cost = v.subs_created * 50
-		
+		cost = v.subs_created * 150
+
 		if v.coins < cost:
 			return render_template("sub/create_sub.html", v=v, error="You don't have enough coins!"), 403
 
