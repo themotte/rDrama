@@ -476,6 +476,19 @@ def api_comment(v):
 		
 			body = random.choice(LONGPOST_REPLIES)
 
+
+			if body.startswith('▼'):
+				body = body[1:]
+				vote = CommentVote(user_id=LONGPOSTBOT_ID,
+							vote_type=-1,
+							comment_id=c.id,
+							real = True
+							)
+				g.db.add(vote)
+				c.downvotes = 1
+
+
+
 			body_html2 = sanitize(body)
 
 			c2 = Comment(author_id=LONGPOSTBOT_ID,

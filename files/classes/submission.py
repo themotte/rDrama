@@ -5,7 +5,7 @@ import time
 from urllib.parse import urlparse
 from flask import render_template
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, deferred
 from files.__main__ import Base
 from files.helpers.const import *
 from files.helpers.lazy import lazy
@@ -59,6 +59,8 @@ class Submission(Base):
 	reports = relationship("Flag", viewonly=True)
 	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
 	subr = relationship("Sub", primaryjoin="foreign(Submission.sub)==remote(Sub.name)", viewonly=True)
+
+	comment_count_distinct = deferred(Column(Float, server_default=FetchedValue()))
 
 	def __init__(self, *args, **kwargs):
 		if "created_utc" not in kwargs: kwargs["created_utc"] = int(time.time())

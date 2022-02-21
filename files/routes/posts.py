@@ -27,7 +27,7 @@ db.close()
 if path.exists(f'snappy_{SITE_NAME}.txt'):
 	with open(f'snappy_{SITE_NAME}.txt', "r", encoding="utf-8") as f:
 		if SITE == 'pcmemes.net': snappyquotes = tuple(f.read().split("{[para]}"))
-		else: snappyquotes = tuple(f.read().split("{[para]}")) + marseys
+		else: snappyquotes = tuple(f.read().split("\n{[para]}\n")) + marseys
 else: snappyquotes = marseys
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
@@ -1289,7 +1289,22 @@ def submit_post(v, sub=None):
 	elif v.id == LAWLZ_ID:
 		if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
 		else: body = "wow, a good lawlzpost for once!"
-	else: body = random.choice(snappyquotes)
+	else:
+		body = random.choice(snappyquotes)
+		if body.startswith('▼'):
+			body = body[1:]
+			vote = Vote(user_id=SNAPPY_ID,
+						vote_type=-1,
+						submission_id=new_post.id,
+						real = True
+						)
+			g.db.add(vote)
+			new_post.downvotes = 1
+			if body.startswith('OP is a Trump supporter'):
+				flag = Flag(post_id=new_post.id, user_id=SNAPPY_ID, reason='Trump supporter')
+				g.db.add(flag)
+
+
 	body += "\n\n"
 
 	if new_post.url:
