@@ -157,7 +157,7 @@ def unblock_sub(v, sub):
 	return {"message": "Sub unblocked successfully!"}
 
 @app.get("/s/<sub>/mods")
-@is_not_permabanned
+@auth_required
 def mods(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	if not sub: abort(404)
@@ -165,6 +165,29 @@ def mods(v, sub):
 	users = g.db.query(User, Mod).join(Mod, Mod.user_id==User.id).filter_by(sub=sub.name).order_by(Mod.created_utc).all()
 
 	return render_template("sub/mods.html", v=v, sub=sub, users=users)
+
+
+@app.get("/s/<sub>/exilees")
+@auth_required
+def exilees(v, sub):
+	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
+	if not sub: abort(404)
+
+	users = g.db.query(User).join(Exile, Exile.user_id==User.id).filter_by(sub=sub.name).all()
+
+	return render_template("sub/exilees.html", v=v, sub=sub, users=users)
+
+
+@app.get("/s/<sub>/blockers")
+@auth_required
+def blockers(v, sub):
+	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
+	if not sub: abort(404)
+
+	users = g.db.query(User).join(SubBlock, SubBlock.user_id==User.id).filter_by(sub=sub.name).all()
+
+	return render_template("sub/blockers.html", v=v, sub=sub, users=users)
+
 
 
 @app.post("/s/<sub>/add_mod")
@@ -341,6 +364,7 @@ def get_sub_css(sub):
 	resp=make_response(sub.css or "")
 	resp.headers.add("Content-Type", "text/css")
 	return resp
+
 
 @app.post("/s/<sub>/banner")
 @limiter.limit("1/second;10/day")
