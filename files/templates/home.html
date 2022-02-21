@@ -48,7 +48,7 @@
 				<div class="text-small font-weight-bold ml-3 mr-2">‎</div>
 				{% endif %}
 
-				{% if request.path == '/' and v and v.admin_level > 1 %}
+				{% if request.path == '/' and v and v.admin_level > 1 and SITE_NAME == 'Drama' %}
 					{% if subs=="true"%}<a class="btn btn-secondary text-primary text-small-m" href="?sort={{sort}}&t={{t}}&subs=false"><i class="fas fa-angry mr-2"></i>Subs</a>{% endif %}
 					{% if subs=="false" %}<a class="btn btn-secondary text-small-m" href="?sort={{sort}}&t={{t}}&subs=true"><i class="fas fa-angry mr-2"></i>Subs</a>{% endif %}
 				<div class="text-small font-weight-bold ml-3 mr-2">‎</div>
