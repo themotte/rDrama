@@ -13,7 +13,8 @@ from pusher_push_notifications import PushNotifications
 from collections import Counter
 import gevent
 
-if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
+if PUSHER_ID != '3435tdfsdudebussylmaoxxt43':
+	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
 def leaderboard_thread():
 	global users9, users9_25, users13, users13_25
@@ -490,7 +491,7 @@ def message2(v, username):
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
 
-	if PUSHER_ID:
+	if PUSHER_ID != '3435tdfsdudebussylmaoxxt43':
 		if len(message) > 500: notifbody = message[:500] + '...'
 		else: notifbody = message
 
@@ -559,7 +560,7 @@ def messagereply(v):
 		notif = Notification(comment_id=new_comment.id, user_id=user_id)
 		g.db.add(notif)
 
-		if PUSHER_ID:
+		if PUSHER_ID != '3435tdfsdudebussylmaoxxt43':
 			if len(message) > 500: notifbody = message[:500] + '...'
 			else: notifbody = message
 			

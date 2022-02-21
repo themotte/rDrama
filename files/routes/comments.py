@@ -23,7 +23,8 @@ d = Dict("en_US")
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
-if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
+if PUSHER_ID != '3435tdfsdudebussylmaoxxt43':
+	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
 WORDLE_COLOR_MAPPINGS = {-1: "🟥", 0: "🟨", 1: "🟩"}
 
@@ -582,7 +583,7 @@ def api_comment(v):
 				n = Notification(comment_id=c.id, user_id=x)
 				g.db.add(n)
 
-			if parent.author.id != v.id and PUSHER_ID:
+			if parent.author.id != v.id and PUSHER_ID != '3435tdfsdudebussylmaoxxt43':
 				if len(c.body) > 500: notifbody = c.body[:500] + '...'
 				else: notifbody = c.body
 
