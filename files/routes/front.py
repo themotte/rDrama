@@ -354,7 +354,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
 		elif subs == "true":
-			if v and v.all_blocks: posts = posts.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
+			if v and v.all_blocks: pins = pins.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
 		else:
 			if SITE_NAME == 'Drama': pins = pins.filter(Submission.sub == None)
 			else:
