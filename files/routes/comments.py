@@ -17,9 +17,14 @@ import requests
 from shutil import copyfile
 from json import loads
 from collections import Counter
-from enchant import Dict
 
-d = Dict("en_US")
+import nltk
+nltk.download('words')
+
+from nltk.corpus import words
+
+words = set(WORDLE_LIST) | set(words.words())
+words = set([x for x in words if len(x) == 5])
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
@@ -1101,7 +1106,7 @@ def handle_wordle_action(cid, v):
 	try: guess = request.values.get("guess").strip().lower()
 	except: abort(400)
 
-	if len(guess) != 5 or not d.check(guess) and guess not in WORDLE_LIST:
+	if len(guess) != 5 or guess not in words:
 		return {"error": "Not a valid guess!"}, 400
 
 	if status == "active":

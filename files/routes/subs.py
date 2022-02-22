@@ -26,7 +26,7 @@ def exile_post(v, pid):
 	u = p.author
 
 	if u.admin_level < 2 and not u.exiled_from(sub):
-		exile = Exile(user_id=u.id, sub=sub)
+		exile = Exile(user_id=u.id, sub=sub, exiler_id=v.id)
 		g.db.add(exile)
 
 		send_notification(u.id, f"@{v.username} has exiled you from /s/{sub} for [{p.title}]({p.sl})")
@@ -79,7 +79,7 @@ def exile_comment(v, cid):
 	u = c.author
 
 	if u.admin_level < 2 and not u.exiled_from(sub):
-		exile = Exile(user_id=u.id, sub=sub)
+		exile = Exile(user_id=u.id, sub=sub, exiler_id=v.id)
 		g.db.add(exile)
 
 		send_notification(u.id, f"@{v.username} has exiled you from /s/{sub} for [{c.permalink}]({c.sl})")

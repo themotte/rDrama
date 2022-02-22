@@ -11,6 +11,7 @@ gunicorn
 lxml
 mistletoe
 matplotlib
+nltk
 Pillow
 psutil
 pyotp
@@ -20,7 +21,6 @@ requests
 SQLAlchemy
 psycopg2-binary
 pusher_push_notifications
-pyenchant
 youtube-dl
 yattag
 webptools

@@ -113,7 +113,7 @@ def handler(signum, frame):
 def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 	signal.signal(signal.SIGALRM, handler)
-	signal.alarm(1)
+	signal.alarm(2)
 	
 	if sanitized.count(':') > 100: abort(418)
 	if sanitized.count('@') > 50: abort(418)
@@ -305,7 +305,7 @@ def handler2(signum, frame):
 def filter_emojis_only(title, edit=False, graceful=False):
 
 	signal.signal(signal.SIGALRM, handler2)
-	signal.alarm(1)
+	signal.alarm(2)
 	
 	if title.count(':') > 100: abort(418)
 	if title.count('@') > 50: abort(418)
@@ -341,6 +341,8 @@ def filter_emojis_only(title, edit=False, graceful=False):
 
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 				title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', title, re.I)
+
+	title = re.sub('~~(.*?)~~', r'<del>\1</del>', title)
 
 	signal.alarm(0)
 
