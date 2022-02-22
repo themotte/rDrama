@@ -226,8 +226,11 @@
 			document.getElementById('post-title').value = localStorage.getItem("post_title")
 			document.getElementById('post-text').value = localStorage.getItem("post_text")
 			document.getElementById('post-url').value = localStorage.getItem("post_url")
-			let sub = document.getElementById('sub')
-			if (sub) sub.value = localStorage.getItem("sub")
+
+			{% if request.path == '/submit' %}
+				let sub = document.getElementById('sub')
+				if (sub) sub.value = localStorage.getItem("sub")
+			{% endif %}
 
 			function checkForRequired() {
 

@@ -29,7 +29,7 @@ def exile_post(v, pid):
 		exile = Exile(user_id=u.id, sub=sub)
 		g.db.add(exile)
 
-		send_notification(u.id, f"You have been exiled from /s/{sub} for [{p.title}]({p.sl})")
+		send_notification(u.id, f"@{v.username} has exiled you from /s/{sub} for [{p.title}]({p.sl})")
 
 		g.db.commit()
 	
@@ -55,7 +55,7 @@ def unexile_post(v, pid):
 		exile = g.db.query(Exile).filter_by(user_id=u.id, sub=sub).one_or_none()
 		g.db.delete(exile)
 
-		send_notification(u.id, f"Your exile from /s/{sub} has been revoked!")
+		send_notification(u.id, f"@{v.username} has revoked your exile from /s/{sub}")
 
 		g.db.commit()
 	
@@ -82,7 +82,7 @@ def exile_comment(v, cid):
 		exile = Exile(user_id=u.id, sub=sub)
 		g.db.add(exile)
 
-		send_notification(u.id, f"You have been exiled from /s/{sub} for [{c.permalink}]({c.sl})")
+		send_notification(u.id, f"@{v.username} has exiled you from /s/{sub} for [{c.permalink}]({c.sl})")
 
 		g.db.commit()
 	
@@ -109,7 +109,7 @@ def unexile_comment(v, cid):
 		exile = g.db.query(Exile).filter_by(user_id=u.id, sub=sub).one_or_none()
 		g.db.delete(exile)
 
-		send_notification(u.id, f"Your exile from /s/{sub} has been revoked!")
+		send_notification(u.id, f"@{v.username} has revoked your exile from /s/{sub}")
 
 		g.db.commit()
 	
@@ -212,7 +212,7 @@ def add_mod(v, sub):
 		mod = Mod(user_id=user.id, sub=sub)
 		g.db.add(mod)
 
-		send_repeatable_notification(user.id, f"You have been added as a mod to /s/{sub}")
+		send_repeatable_notification(user.id, f"@{v.username} has added you as a mod to /s/{sub}")
 
 		g.db.commit()
 	
@@ -246,7 +246,7 @@ def remove_mod(v, sub):
 
 	g.db.delete(mod)
 
-	send_repeatable_notification(user.id, f"You have been removed as a mod from /s/{sub}")
+	send_repeatable_notification(user.id, f"@{v.username} has removed you as a mod from /s/{sub}")
 
 	g.db.commit()
 	

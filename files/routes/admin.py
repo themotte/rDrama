@@ -178,14 +178,14 @@ def revert_actions(v, username):
 		user.is_banned = 0
 		user.unban_utc = 0
 		user.ban_evade = 0
-		send_repeatable_notification(user.id, "Your account has been unbanned!")
+		send_repeatable_notification(user.id, f"@{v.username} has unbanned you!")
 		g.db.add(user)
 		for u in user.alts:
 			u.shadowbanned = None
 			u.is_banned = 0
 			u.unban_utc = 0
 			u.ban_evade = 0
-			send_repeatable_notification(u.id, "Your account has been unbanned!")
+			send_repeatable_notification(u.id, f"@{v.username} has unbanned you!")
 			g.db.add(u)
 
 	g.db.commit()
@@ -307,17 +307,17 @@ def monthly(v):
 			elif u.patron == 6: procoins = 125000
 			u.procoins += procoins
 			g.db.add(u)
-			send_repeatable_notification(u.id, f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
+			send_repeatable_notification(u.id, f"@{v.username} has given you {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
 		elif u.patron == 5:
 			procoins = 50000
 			u.procoins += procoins
 			g.db.add(u)
-			send_repeatable_notification(u.id, f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
+			send_repeatable_notification(u.id, f"@{v.username} has given you {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
 		elif u.patron == 1 and u.admin_level > 0:
 			procoins = 2500
 			u.procoins += procoins
 			g.db.add(u)
-			send_repeatable_notification(u.id, f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
+			send_repeatable_notification(u.id, f"@{v.username} has given you {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
 		else: print(u.username)
 
 	if request.host == 'pcmemes.net':
@@ -821,7 +821,7 @@ def agendaposter(user_id, v):
 		send_notification(user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 
 
-	send_repeatable_notification(user.id, f"You have been marked by an admin as an agendaposter ({note}).")
+	send_repeatable_notification(user.id, f"@{v.username} has marked you as an agendaposter ({note}).")
 
 	g.db.commit()
 	
@@ -852,7 +852,7 @@ def unagendaposter(user_id, v):
 	badge = user.has_badge(28)
 	if badge: g.db.delete(badge)
 
-	send_repeatable_notification(user.id, "You have been unmarked by an admin as an agendaposter.")
+	send_repeatable_notification(user.id, f"@{v.username} has unmarked you as an agendaposter.")
 
 	g.db.commit()
 	return {"message": "Chud theme disabled!"}
@@ -1096,7 +1096,7 @@ def unban_user(user_id, v):
 	user.unban_utc = 0
 	user.ban_evade = 0
 	user.ban_reason = None
-	send_repeatable_notification(user.id, "Your account has been unbanned!")
+	send_repeatable_notification(user.id, f"@{v.username} has unbanned you!")
 	g.db.add(user)
 
 	for x in user.alts:
@@ -1104,7 +1104,7 @@ def unban_user(user_id, v):
 		x.unban_utc = 0
 		x.ban_evade = 0
 		x.ban_reason = None
-		send_repeatable_notification(x.id, "Your account has been unbanned!")
+		send_repeatable_notification(x.id, f"@{v.username} has unbanned you!")
 		g.db.add(x)
 
 	ma=ModAction(

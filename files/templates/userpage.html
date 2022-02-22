@@ -170,11 +170,11 @@
 					{% if v and v.id != u.id %}
 						{% if not u.fish %}<a id="button-unsub" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" role="button" onclick="post_toast2(this,'/unfollow/{{u.username}}','button-unsub','button-sub')">Unfollow</a>{% endif %}
 						<a id="button-sub" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" role="button" onclick="post_toast2(this,'/follow/{{u.username}}','button-unsub','button-sub')">Follow</a>						
-						<a class="btn btn-primary" role="button" onclick="toggleElement('profile-toggleable', 'message', 'input-message')">Message</a>
+						<a class="btn btn-primary" role="button" onclick="toggleElement('message', 'input-message')">Message</a>
 
 						<a class="btn btn-primary" role="button" onclick="post_toast(this,'/@{{u.username}}/suicide')">Get them help</a>
-						<a class="btn btn-primary" role="button" onclick="toggleElement('profile-toggleable', 'coin-transfer', 'coin-transfer-amount')">Gift coins</a>
-						<a class="btn btn-primary" role="button" onclick="toggleElement('profile-toggleable', 'bux-transfer', 'bux-transfer-amount')">Gift Marseybux</a>
+						<a class="btn btn-primary" role="button" onclick="toggleElement('coin-transfer', 'coin-transfer-amount')">Gift coins</a>
+						<a class="btn btn-primary" role="button" onclick="toggleElement('bux-transfer', 'bux-transfer-amount')">Gift Marseybux</a>
 
 						{% if v.admin_level > 2 %}
 							<a id="admin" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2(this,'/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
@@ -189,7 +189,7 @@
 							{% endif %}
 						{% endif %}
 
-						<form class="d-none profile-toggleable" id="message" action="/@{{u.username}}/message" onsubmit="submitFormAjax(event)">
+						<form class="d-none toggleable" id="message" action="/@{{u.username}}/message" onsubmit="submitFormAjax(event)">
 							<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
 							<pre></pre>
 							<textarea autocomplete="off" id="input-message" form="message" name="message" rows="3" minlength="1" maxlength="10000" class="form-control b2" oninput="markdown('input-message', 'message-preview')" required></textarea>
@@ -207,13 +207,13 @@
 
 						<div id="message-preview" class="preview mt-2"></div>
 
-						<div class="d-none mt-3 profile-toggleable" id="coin-transfer">
+						<div class="d-none mt-3 toggleable" id="coin-transfer">
 							<input autocomplete="off" id="coin-transfer-amount" class="form-control" name="amount" type="number" oninput="updateTax()">
 							<div>{{u.username}} will receive <span id="coins-transfer-taxed">0</span> coins</div>
 							<button class="btn btn-primary mt-3" onclick="transferCoins()">Gift</button>
 						</div>
 
-						<div class="d-none mt-3 profile-toggleable" id="bux-transfer">
+						<div class="d-none mt-3 toggleable" id="bux-transfer">
 							<input autocomplete="off" id="bux-transfer-amount" class="form-control" name="amount" type="number" oninput="updateBux()">
 							<div>{{u.username}} will receive <span id="bux-transfer-taxed">0</span> marseybux</div>
 							<button class="btn btn-primary mt-3" onclick="transferBux()">Gift</button>
@@ -481,10 +481,10 @@
 				{% if v and v.id != u.id %}
 					{% if not u.fish %}<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" role="button" onclick="post_toast2(this,'/unfollow/{{u.username}}','button-unsub2','button-sub2')">Unfollow</a>{% endif %}
 					<a id="button-sub2" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" role="button" onclick="post_toast2(this,'/follow/{{u.username}}','button-unsub2','button-sub2')">Follow</a>						
-					<a class="btn btn-primary" role="button" onclick="toggleElement('profile-toggleable-mobile', 'message-mobile', 'input-message-mobile')">Message</a>
+					<a class="btn btn-primary" role="button" onclick="toggleElement('message-mobile', 'input-message-mobile')">Message</a>
 					<a class="btn btn-primary" role="button" onclick="post_toast(this,'/@{{u.username}}/suicide')">Get them help</a>
-					<a class="btn btn-primary" role="button" onclick="toggleElement('profile-toggleable-mobile', 'coin-transfer-mobile', 'coin-transfer-amount-mobile')">Gift coins</a>
-					<a class="btn btn-primary" role="button" onclick="toggleElement('profile-toggleable', 'bux-transfer-mobile', 'bux-transfer-amount-mobile')">Gift Marseybux</a>
+					<a class="btn btn-primary" role="button" onclick="toggleElement('coin-transfer-mobile', 'coin-transfer-amount-mobile')">Gift coins</a>
+					<a class="btn btn-primary" role="button" onclick="toggleElement('bux-transfer-mobile', 'bux-transfer-amount-mobile')">Gift Marseybux</a>
 
 					{% if v.admin_level > 2 %} 
 						<a id="admin2" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2(this,'/@{{u.username}}/make_admin','admin2','unadmin2')">Make admin</a>
@@ -499,7 +499,7 @@
 						{% endif %}
 					{% endif %}
 
-					<form class="d-none profile-toggleable-mobile" id='message-mobile' action="/@{{u.username}}/message" onsubmit="submitFormAjax(event)">
+					<form class="d-none toggleable" id='message-mobile' action="/@{{u.username}}/message" onsubmit="submitFormAjax(event)">
 						<pre></pre>
 						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
 						<textarea autocomplete="off" id="input-message-mobile" form="message-mobile" name="message" rows="3" minlength="1" maxlength="10000" class="form-control" oninput="markdown('input-message-mobile', 'message-preview-mobile')" required></textarea>
@@ -517,13 +517,13 @@
 
 					<div id="message-preview-mobile" class="preview my-3"></div>
 
-					<div class="d-none mt-3 profile-toggleable-mobile" id="coin-transfer-mobile">
+					<div class="d-none mt-3 toggleable" id="coin-transfer-mobile">
 						<input autocomplete="off" id="coin-transfer-amount-mobile" class="form-control" name="amount" type="number" oninput="updateTax(true)">
 						<div>{{u.username}} will receive <span id="coins-transfer-taxed-mobile">0</span> coins</div>
 						<button class="btn btn-primary mt-2 mb-3" onclick="transferCoins(true)">Gift</button>
 					</div>
 
-					<div class="d-none mt-3 profile-toggleable-mobile" id="bux-transfer-mobile">
+					<div class="d-none mt-3 toggleable" id="bux-transfer-mobile">
 						<input autocomplete="off" id="bux-transfer-amount-mobile" class="form-control" name="amount" type="number" oninput="updateBux(true)">
 						<div>{{u.username}} will receive <span id="bux-transfer-taxed-mobile">0</span> marseybux</div>
 						<button class="btn btn-primary mt-2 mb-3" onclick="transferBux(true)">Gift</button>
@@ -737,7 +737,7 @@
 
 {% if v %}
 <div id='tax' class="d-none">{% if v.patron or u.patron or v.alts_patron or u.alts_patron %}0{% else %}0.03{% endif %}</div>
-<script src="/static/assets/js/userpage_v.js?a=242"></script>
+<script src="/static/assets/js/userpage_v.js?a=243"></script>
 <div id="username" class="d-none">{{u.username}}</div>
 {% endif %}
 

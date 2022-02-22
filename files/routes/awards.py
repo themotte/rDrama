@@ -691,7 +691,7 @@ def admin_userawards_post(v):
 				g.db.add(award)
 
 	if v.id != u.id:
-		text = "You were given the following awards:\n\n"
+		text = f"@{v.username} has given the following awards:\n\n"
 		for key, value in notify_awards.items():
 			text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
 		send_repeatable_notification(u.id, text)
