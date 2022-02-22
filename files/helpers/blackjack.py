@@ -134,6 +134,6 @@ def apply_game_result(from_comment, wager, result, kind):
 
 	user.winnings += reward
 
-	if (reward > 0):
+	if (reward > -1):
 		currency_value = int(getattr(user, kind, 0))
 		setattr(user, kind, currency_value + wager_value + reward)
