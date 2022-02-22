@@ -55,25 +55,25 @@
 
 								{% if u.username != u.original_username %}
 								<span>
-									<i class="fas fa-user-tag text-info align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Original Username: @{{u.original_username}}"></i>
+									<i class="fas fa-user-tag text-info align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Original Username: @{{u.original_username}}" data-bs-original-title="Original Username: @{{u.original_username}}"></i>
 								</span>
 								{% endif %}
 
 								{% if SITE_NAME=='Drama' and u.house %}
-									<img class="ml-3" src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?a=7" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{u.house}}" alt="House {{u.house}}">
+									<img class="ml-3" src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?a=7" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="House {{u.house}}" data-bs-original-title="House {{u.house}}" alt="House {{u.house}}">
 								{% endif %}
 
 								{% if u.verified %}
-									<span><i class="fas fa-badge-check align-middle ml-2" style="color:{% if u.verifiedcolor %}#{{u.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.verified}}"></i></span>
+									<span><i class="fas fa-badge-check align-middle ml-2" style="color:{% if u.verifiedcolor %}#{{u.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{u.verified}}" data-bs-original-title="{{u.verified}}"></i></span>
 								{% endif %}
 
 								{% if u.admin_level > 1 or (u.admin_level == 1 and not(v and v.admin_level > 1)) %}
 								<span>
-									<i class="fas fa-broom text-admin align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Admin"></i>
+									<i class="fas fa-broom text-admin align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Admin" data-bs-original-title="Admin"></i>
 								</span>
 								{% elif u.admin_level == 1 and v and v.admin_level > 1 %}
 								<span>
-									<i class="fas fa-broom align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Meme Admin"></i>
+									<i class="fas fa-broom align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Meme Admin" data-bs-original-title="Meme Admin"></i>
 								</span>
 								{% endif %}
 								{% if v and v.has_follower(u) %}
@@ -112,16 +112,16 @@
 
 				<div class="font-weight-bolder">
 					<span id="profile-coins-amount">{{u.coins}}</span>
-					<img alt="coins" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="coins" height="20" width="24.4" src="/static/assets/images/marseycoin.webp?a=1008">&nbsp;&nbsp;
+					<img alt="coins" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="coins" data-bs-original-title="coins" height="20" width="24.4" src="/static/assets/images/marseycoin.webp?a=1008">&nbsp;&nbsp;
 
 					<span id="profile-bux-amount">{{u.procoins}}</span>
-					<img alt="marseybux" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Marseybux" height="20" width="46" src="/static/assets/images/marseybux.webp?a=1008">&nbsp;&nbsp;
+					<img alt="marseybux" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Marseybux" data-bs-original-title="Marseybux" height="20" width="46" src="/static/assets/images/marseybux.webp?a=1008">&nbsp;&nbsp;
 
 					<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp;
 
 					<a href="/@{{u.username}}/following">follows {{u.follow_count}} user{{'s' if u.follow_count != 1 else ''}}</a>&nbsp;&nbsp;
 
-					joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
+					joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{u.created_datetime}}" data-bs-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
 				</div>
 				{% if u.basedcount %}<p class="text-muted">Based Count: {{u.basedcount}}</p>{% endif %}
 
@@ -147,7 +147,7 @@
 					<p class="text-uppercase my-0" style="font-weight: bold; font-size: 12px;">Awards received</p>
 					{% for a in u.received_awards %}
 					<span class="d-inline-block mx-1">
-						<i class="{{a['icon']}} {{a['color']}} fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a['title']}} Awards received"></i>
+						<i class="{{a['icon']}} {{a['color']}} fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a['title']}} Awards received" data-bs-original-title="{{a['title']}} Awards received"></i>
 						x{{a['count']}}
 					</span>
 					{% endfor %}
@@ -194,13 +194,13 @@
 							<pre></pre>
 							<textarea autocomplete="off" id="input-message" form="message" name="message" rows="3" minlength="1" maxlength="10000" class="form-control b2" oninput="markdown('input-message', 'message-preview')" required></textarea>
 							<pre></pre>
-							<pre class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('input-message')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bold"></pre>
+							<pre class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('input-message')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Bold" data-bs-original-title="Bold"></pre>
 							&nbsp;
-							<pre class="btn btn-secondary format d-inline-block m-0 fas fa-italic" aria-hidden="true" onclick="makeItalics('input-message')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Italicize"></pre>
+							<pre class="btn btn-secondary format d-inline-block m-0 fas fa-italic" aria-hidden="true" onclick="makeItalics('input-message')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Italicize" data-bs-original-title="Italicize"></pre>
 							&nbsp;
-							<pre class="btn btn-secondary format d-inline-block m-0 fas fa-quote-right" aria-hidden="true" onclick="makeQuote('input-message')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Quote"></pre>
+							<pre class="btn btn-secondary format d-inline-block m-0 fas fa-quote-right" aria-hidden="true" onclick="makeQuote('input-message')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote" data-bs-original-title="Quote"></pre>
 							&nbsp;
-							<pre class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('input-message')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Emoji"></pre>
+							<pre class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('input-message')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji" data-bs-original-title="Add Emoji"></pre>
 							&nbsp;
 							<input autocomplete="off" type="submit" value="Submit" class="btn btn-primary">
 						</form>
@@ -237,7 +237,7 @@
 									<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 									<input maxlength=100 autocomplete="off" id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitleplain %}{{u.customtitleplain}}{% endif %}">
 									<div class="d-flex mt-2">
-										<a class="format" role="button"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i></a>
+										<a class="format" role="button"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Add Emoji" data-bs-original-title="Add Emoji"></i></a>
 										&nbsp;&nbsp;&nbsp;
 										<div class="custom-control custom-checkbox">
 											<input autocomplete="off" type="checkbox" class="custom-control-input" id="locked" name="locked" {% if u.flairchanged %}checked{% endif %}>
@@ -375,25 +375,25 @@
 
 				{% if u.username != u.original_username %}
 					<span>
-						<i class="fas fa-user-tag text-info align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Original Username: @{{u.original_username}}"></i>
+						<i class="fas fa-user-tag text-info align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Original Username: @{{u.original_username}}" data-bs-original-title="Original Username: @{{u.original_username}}"></i>
 					</span>
 				{% endif %}
 
 				{% if SITE_NAME=='Drama' and u.house %}
-					<img class="ml-2" src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?a=7" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{u.house}}" alt="House {{u.house}}">
+					<img class="ml-2" src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?a=7" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="House {{u.house}}" data-bs-original-title="House {{u.house}}" alt="House {{u.house}}">
 				{% endif %}
 
 				{% if u.verified %}
-					<span><i class="fas fa-badge-check align-middle ml-2" style="color:{% if u.verifiedcolor %}#{{u.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.verified}}"></i></span>&nbsp;
+					<span><i class="fas fa-badge-check align-middle ml-2" style="color:{% if u.verifiedcolor %}#{{u.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{u.verified}}" data-bs-original-title="{{u.verified}}"></i></span>&nbsp;
 				{% endif %}
 
 				{% if u.admin_level > 1 or (u.admin_level == 1 and not(v and v.admin_level > 1)) %}
 				<span>
-					<i class="fas fa-broom text-admin align-middle ml-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Admin"></i>
+					<i class="fas fa-broom text-admin align-middle ml-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Admin" data-bs-original-title="Admin"></i>
 				</span>
 				{% elif u.admin_level == 1 and v and v.admin_level > 1 %}
 				<span>
-					<i class="fas fa-broom align-middle ml-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Meme Admin"></i>
+					<i class="fas fa-broom align-middle ml-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Meme Admin" data-bs-original-title="Meme Admin"></i>
 				</span>
 				{% endif %}
 				{% if v and v.has_follower(u) and not v.is_nofollow %}
@@ -408,10 +408,10 @@
 				
 				<div class="font-weight-normal">
 					<span id="profile-coins-amount-mobile" class="font-weight-bold">{{u.coins}}</span>
-					<img alt="coins" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="coins" height="15" width="18.3" src="/static/assets/images/marseycoin.webp?a=1008">&nbsp;&nbsp;
+					<img alt="coins" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="coins" data-bs-original-title="coins" height="15" width="18.3" src="/static/assets/images/marseycoin.webp?a=1008">&nbsp;&nbsp;
 
 					<span id="profile-bux-amount-mobile" class="font-weight-bold">{{u.procoins}}</span>
-					<img alt="marseybux" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Marseybux" height="15" width="35" src="/static/assets/images/marseybux.webp?a=1008">&nbsp;&nbsp;
+					<img alt="marseybux" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Marseybux" data-bs-original-title="Marseybux" height="15" width="35" src="/static/assets/images/marseybux.webp?a=1008">&nbsp;&nbsp;
 
 					<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp;
 
@@ -421,7 +421,7 @@
 						<br>Based count: {{u.basedcount}}
 					{% endif %}
 
-					<br>joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
+					<br>joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{u.created_datetime}}" data-bs-original-title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
 				</div>
 				{% if u.bio_html %}
 					<p class="text-muted text-break">{{u.bio_html | safe}}</p>
@@ -442,7 +442,7 @@
 					<p class="text-uppercase my-0" style="font-weight: bold; font-size: 12px;">Awards received</p>
 					{% for a in u.received_awards %}
 					<span class="d-inline-block mx-1">
-						<i class="{{a['icon']}} {{a['color']}} fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a['title']}} Awards received"></i>
+						<i class="{{a['icon']}} {{a['color']}} fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a['title']}} Awards received" data-bs-original-title="{{a['title']}} Awards received"></i>
 						x{{a['count']}}
 					</span>
 					{% endfor %}
@@ -504,13 +504,13 @@
 						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
 						<textarea autocomplete="off" id="input-message-mobile" form="message-mobile" name="message" rows="3" minlength="1" maxlength="10000" class="form-control" oninput="markdown('input-message-mobile', 'message-preview-mobile')" required></textarea>
 						<pre></pre>
-						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('input-message-mobile')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bold"></pre>
+						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('input-message-mobile')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Bold" data-bs-original-title="Bold"></pre>
 						&nbsp;
-						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-italic" aria-hidden="true" onclick="makeItalics('input-message-mobile')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Italicize"></pre>
+						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-italic" aria-hidden="true" onclick="makeItalics('input-message-mobile')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Italicize" data-bs-original-title="Italicize"></pre>
 						&nbsp;
-						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-quote-right" aria-hidden="true" onclick="makeQuote('input-message-mobile')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Quote"></pre>
+						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-quote-right" aria-hidden="true" onclick="makeQuote('input-message-mobile')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote" data-bs-original-title="Quote"></pre>
 						&nbsp;
-						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('input-message-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Emoji"></pre>
+						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('input-message-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji" data-bs-original-title="Add Emoji"></pre>
 						&nbsp;
 						<input autocomplete="off" type="submit" value="Submit" class="btn btn-primary">
 					</form>
@@ -543,7 +543,7 @@
 									<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 									<input maxlength=100 autocomplete="off" id="customtitlebody-mobile" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitleplain %}{{u.customtitleplain}}{% endif %}">
 									<div class="d-flex mt-2">
-										<a class="format" role="button"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i></a>
+										<a class="format" role="button"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Add Emoji" data-bs-original-title="Add Emoji"></i></a>
 										&nbsp;&nbsp;&nbsp;
 										<div class="custom-control custom-checkbox">
 											<input autocomplete="off" type="checkbox" class="custom-control-input" id="locked-mobile" name="locked" {% if u.flairchanged %}checked{% endif %}>

@@ -205,40 +205,40 @@
 
 				{% if c.awards %}
 					{% for a in c.awards %}
-						<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a.title}} Award{% if a.kind != 'ghosts' %} given by @{{a.user.username}}{% endif %}"></i>
+						<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award{% if a.kind != 'ghosts' %} given by @{{a.user.username}}{% endif %}" data-bs-original-title="{{a.title}} Award{% if a.kind != 'ghosts' %} given by @{{a.user.username}}{% endif %}"></i>
 					{% endfor %}
 				{% endif %}
 
 				{% if c.post %}
 					{% set sub = c.post.sub %}
 					{% if sub and c.author.exiled_from(sub) %}
-						<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User has been exiled from /s/{{sub}}"></i></a>
+						<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User has been exiled from /s/{{sub}}" data-bs-original-title="User has been exiled from /s/{{sub}}"></i></a>
 					{% endif %}
 				{% endif %}
 
 				{% if c.bannedfor %}
-					<a role="button"><i class="fas fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}"></i></a>
+					<a role="button"><i class="fas fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}" data-bs-original-title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}"></i></a>
 				{% endif %}
 				{% if c.active_flags %}<a class="btn btn-primary" style="padding:1px 5px; font-size:10px;" role="button" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('d-none')">{{c.active_flags}} Reports</a>{% endif %}
 				{% if c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
-				{% if v and v.admin_level > 1 and c.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Shadowbanned by @{{c.author.shadowbanned}}"></i>{% endif %}
+				{% if v and v.admin_level > 1 and c.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{c.author.shadowbanned}}" data-bs-original-title="Shadowbanned by @{{c.author.shadowbanned}}"></i>{% endif %}
 				{% if c.is_pinned %}
-					<i id='pinned-{{c.id}}'class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned by @{{c.is_pinned}}" {% if c.is_pinned_utc %}onmouseover="pinned_timestamp('pinned-{{c.id}}')" data-timestamp={{c.is_pinned_utc}} {% endif %}></i>
+					<i id='pinned-{{c.id}}'class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned by @{{c.is_pinned}}" data-bs-original-title="Pinned by @{{c.is_pinned}}" {% if c.is_pinned_utc %}onmouseover="pinned_timestamp('pinned-{{c.id}}')" data-timestamp={{c.is_pinned_utc}} {% endif %}></i>
 				{% endif %}
-				{% if c.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{SITE_NAME}} Admin, speaking officially"></i>{% endif %}
-				{% if c.is_op and not c.ghost %}<i class="fas fa-microphone-stand text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="OP"></i>{% endif %}
-				{% if c.is_bot %}<i class="fas fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bot"></i>{% endif %}
-				{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="You're blocking this user, but you can see this comment because you're an admin"></i>{% endif %}
-				{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="This user is blocking you."></i>{% endif %}
+				{% if c.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{SITE_NAME}} Admin, speaking officially" data-bs-original-title="{{SITE_NAME}} Admin, speaking officially"></i>{% endif %}
+				{% if c.is_op and not c.ghost %}<i class="fas fa-microphone-stand text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="OP" data-bs-original-title="OP"></i>{% endif %}
+				{% if c.is_bot %}<i class="fas fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Bot" data-bs-original-title="Bot"></i>{% endif %}
+				{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You're blocking this user, but you can see this comment because you're an admin" data-bs-original-title="You're blocking this user, but you can see this comment because you're an admin"></i>{% endif %}
+				{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="This user is blocking you." data-bs-original-title="This user is blocking you."></i>{% endif %}
 
 				{% if c.ghost %}
 					👻
 				{% else %}
 					{% if SITE_NAME=='Drama' and c.author.house %}
-						<img src="/assets/images/{{SITE_NAME}}/houses/{{c.author.house}}.webp?a=7" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="House {{c.author.house}}" alt="House {{c.author.house}}">
+						<img src="/assets/images/{{SITE_NAME}}/houses/{{c.author.house}}.webp?a=7" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="House {{c.author.house}}" data-bs-original-title="House {{c.author.house}}" alt="House {{c.author.house}}">
 					{% endif %}
 
-					{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{c.author.verified}}"></i>
+					{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{c.author.verified}}" data-bs-original-title="{{c.author.verified}}"></i>
 					{% endif %}
 					{% if not c.author %}
 						{{c.print()}}
@@ -348,16 +348,16 @@
 						<div class="text-small font-weight-bold mt-1" id="charcount-edit-{{c.id}}" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
 						<div class="comment-format"> 
-							<a class="btn btn-secondary format m-0" role="button" onclick="makeBold('comment-edit-body-{{c.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bold"><i class="fas fa-bold"></i></a>
+							<a class="btn btn-secondary format m-0" role="button" onclick="makeBold('comment-edit-body-{{c.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Bold" data-bs-original-title="Bold"><i class="fas fa-bold"></i></a>
 							&nbsp;
-							<a class="btn btn-secondary format m-0" role="button" onclick="makeItalics('comment-edit-body-{{c.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Italicize"><i class="fas fa-italic"></i></a>
+							<a class="btn btn-secondary format m-0" role="button" onclick="makeItalics('comment-edit-body-{{c.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Italicize" data-bs-original-title="Italicize"><i class="fas fa-italic"></i></a>
 							&nbsp;
-							<a class="btn btn-secondary format m-0" role="button" onclick="makeQuote('comment-edit-body-{{c.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Quote"><i class="fas fa-quote-right"></i></a>
+							<a class="btn btn-secondary format m-0" role="button" onclick="makeQuote('comment-edit-body-{{c.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote" data-bs-original-title="Quote"><i class="fas fa-quote-right"></i></a>
 							&nbsp;
 
-							<small class="btn btn-secondary format m-0" aria-hidden="true" onclick="commentForm('comment-edit-body-{{c.id}}');getGif()" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add GIF"><span class="font-weight-bolder text-uppercase">GIF</span></small>
+							<small class="btn btn-secondary format m-0" aria-hidden="true" onclick="commentForm('comment-edit-body-{{c.id}}');getGif()" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add GIF" data-bs-original-title="Add GIF"><span class="font-weight-bolder text-uppercase">GIF</span></small>
 							&nbsp;
-							<small class="btn btn-secondary format m-0" aria-hidden="true" onclick="loadEmojis('comment-edit-body-{{c.id}}')" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Emoji"><i class="fas fa-smile-beam"></i></small>
+							<small class="btn btn-secondary format m-0" aria-hidden="true" onclick="loadEmojis('comment-edit-body-{{c.id}}')" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji" data-bs-original-title="Add Emoji"><i class="fas fa-smile-beam"></i></small>
 							&nbsp;
 							
 							<label class="btn btn-secondary format m-0" for="file-edit-reply-{{c.id}}">
@@ -403,7 +403,7 @@
 											<span class="mr-2 arrow-up comment-{{c.id}}-up active"></span>
 										{% endif %}
 								
-										<span id="comment-mobile-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+										<span id="comment-mobile-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 								
 										{% if voted==-1 %}
 											<span class="ml-2 my-0 arrow-down comment-{{c.id}}-down active"></span>
@@ -415,7 +415,7 @@
 										<span id="comment-mobile-{{c.id}}-up" tabindex="0" role="button" onclick="vote('comment-mobile', '{{c.id}}', '1')" class="mx-0 pr-1 arrow-up upvote-button comment-{{c.id}}-up {% if voted==1 %}active{% endif %}">
 										</span>
 								
-										<span id="comment-mobile-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+										<span id="comment-mobile-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 								
 										<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-mobile-{{c.id}}-down" tabindex="0" role="button" onclick="vote('comment-mobile', '{{c.id}}', '-1')" class="mx-0 pl-1 my-0 arrow-down downvote-button comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}">
 										</span>
@@ -427,7 +427,7 @@
 											<i class="fas fa-arrow-alt-up mx-0" aria-hidden="true"></i>
 										</span>
 								
-										<span id="comment-mobile-score-{{c.id}}" class="score{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+										<span id="comment-mobile-score-{{c.id}}" class="score{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 								
 										<span id="arrow-{{c.id}}-mobile-down" tabindex="0" class="arrow-mobile-down mx-0 pl-1 my-0" onclick="location.href='/login';">
 											<i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
@@ -462,7 +462,7 @@
 						{% endif %}
 						
 						<button class="btn caction nobackground p-0 m-0">
-							<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}" id="comment-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}">{{score}}</span>
+							<span data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}" data-bs-original-title="+{{ups}} | -{{downs}}" id="comment-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}">{{score}}</span>
 						</button>
 						
 						{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
@@ -596,18 +596,18 @@
 					<div class="text-small font-weight-bold mt-1" id="charcount-{{c.id}}" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
 					<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
-						<a class="btn btn-secondary format m-0" role="button" onclick="makeBold('reply-form-body-{{c.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bold"><i class="fas fa-bold"></i></a>
+						<a class="btn btn-secondary format m-0" role="button" onclick="makeBold('reply-form-body-{{c.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Bold" data-bs-original-title="Bold"><i class="fas fa-bold"></i></a>
 						&nbsp;
-						<a class="btn btn-secondary format m-0" role="button" onclick="makeItalics('reply-form-body-{{c.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Italicize"><i class="fas fa-italic"></i></a>
+						<a class="btn btn-secondary format m-0" role="button" onclick="makeItalics('reply-form-body-{{c.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Italicize" data-bs-original-title="Italicize"><i class="fas fa-italic"></i></a>
 						&nbsp;
-						<a class="btn btn-secondary format m-0" role="button" onclick="makeQuote('reply-form-body-{{c.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Quote"><i class="fas fa-quote-right"></i></a>
+						<a class="btn btn-secondary format m-0" role="button" onclick="makeQuote('reply-form-body-{{c.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote" data-bs-original-title="Quote"><i class="fas fa-quote-right"></i></a>
 						&nbsp;
 
-						<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.fullname}}" onclick="commentForm('reply-form-body-{{c.fullname}}');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add GIF">
+						<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.fullname}}" onclick="commentForm('reply-form-body-{{c.fullname}}');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add GIF" data-bs-original-title="Add GIF">
 							<span id="gif-reply-btn-{{c.fullname}}" class="font-weight-bolder text-uppercase">GIF</span>
 						</label> 
 						&nbsp;
-						<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.fullname}}" onclick="loadEmojis('reply-form-body-{{c.fullname}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Emoji">
+						<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.fullname}}" onclick="loadEmojis('reply-form-body-{{c.fullname}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji" data-bs-original-title="Add Emoji">
 							<i id="emoji-reply-btn-{{c.fullname}}" class="fas fa-smile-beam"></i>
 						</label>
 						&nbsp;
@@ -648,7 +648,7 @@
 						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
 						<textarea autocomplete="off" minlength="1" maxlength="10000" name="body" form="reply-to-t3_{{c.id}}" data-id="{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3" oninput="markdown('reply-form-body-{{c.id}}', 'message-reply-{{c.id}}')"></textarea> 
 						<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
-							<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.id}}" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Emoji">
+							<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.id}}" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji" data-bs-original-title="Add Emoji">
 								<i id="emoji-reply-btn-{{c.id}}" class="fas fa-smile-beam"></i>
 							</label>
 						</div>
@@ -998,7 +998,7 @@
 		{% if p and (not v or v.highlightcomments) %}
 			comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 			lastCount = comments['{{p.id}}']
-			redhtml = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Unread"></i>'
+			redhtml = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unread" data-bs-original-title="Unread"></i>'
 			if (lastCount)
 			{
 				{% for c in p.comments2 %}
