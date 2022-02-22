@@ -5010,3 +5010,14 @@ li > .sidebar > .rules {
 .sidebar {
     display:block!important;
 }
+
+.userbanner {
+    object-fit: cover !important;
+}
+
+@media (max-width: 400px) { 
+    .count {
+        display:block;
+        text-align: center;
+    }
+}

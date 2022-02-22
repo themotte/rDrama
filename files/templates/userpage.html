@@ -769,18 +769,6 @@
 
 <script src="/static/assets/js/marked.js?a=242"></script>
 
-<style>
-	.userbanner {
-		object-fit: cover !important;
-	}
-	@media (max-width: 400px) { 
-		.count {
-			display:block;
-			text-align: center;
-		}
-	}
-</style>
-
 
 {% if v and v.id != u.id and '/comments' not in request.path %}
 	{% include "emoji_modal.html" %}
