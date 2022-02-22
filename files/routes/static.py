@@ -71,7 +71,7 @@ def stats():
 	voters = g.db.query(Vote.user_id).distinct(Vote.user_id).filter(Vote.created_utc > week).all()
 	commentvoters = g.db.query(CommentVote.user_id).distinct(CommentVote.user_id).filter(CommentVote.created_utc > week).all()
 
-	active_users = set(posters) | set(commenters) | set(voteres) | set(commentvoters)
+	active_users = set(posters) | set(commenters) | set(voters) | set(commentvoters)
 
 	return {"marseys": g.db.query(Marsey.name).count(),
 			"users": g.db.query(User.id).count(),
