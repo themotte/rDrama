@@ -34,11 +34,9 @@
 
 <div class="row" style="overflow: visible;padding-top:5px;">
 	<div class="col">
-		<div class="d-flex justify-content-between align-items-center">
+		<div class="d-flex justify-content-between align-items-center py-3" style="float:right">
 
 			{% block navbar %}
-			<div class="font-weight-bold py-3">‎</div>
-
 			<div class="d-flex align-items-center sortingbarmargin">
 				{% if request.path == '/' and v.paid_dues %}
 					{% if ccmode=="true"%}<a class="btn btn-secondary text-primary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=false">CC</a>{% endif %}
