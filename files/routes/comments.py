@@ -17,6 +17,10 @@ import requests
 from shutil import copyfile
 from json import loads
 from collections import Counter
+
+import nltk
+nltk.download('words')
+
 from nltk.corpus import words
 
 words = set(WORDLE_LIST) | set(words.words())
