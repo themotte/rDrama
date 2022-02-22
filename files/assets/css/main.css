@@ -5002,10 +5002,6 @@ li > .sidebar > .rules {
     }
 }
 
-.sidebar {
-    display:block!important;
-}
-
 .userbanner {
     object-fit: cover !important;
 }
