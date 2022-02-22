@@ -9,5 +9,7 @@ class Exile(Base):
 	sub = Column(String, ForeignKey("subs.name"), primary_key=True)
 	exiler_id = Column(Integer, ForeignKey("users.id"))
 
+	exiler = relationship("User", primaryjoin="User.id==Exile.exiler_id", viewonly=True)
+
 	def __repr__(self):
 		return f"<Exile(user_id={self.user_id}, sub={self.sub})>"

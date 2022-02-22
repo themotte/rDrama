@@ -173,7 +173,7 @@ def exilees(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	if not sub: abort(404)
 
-	users = g.db.query(User).join(Exile, Exile.user_id==User.id).filter_by(sub=sub.name).all()
+	users = g.db.query(User, Exile).join(Exile, Exile.user_id==User.id).filter_by(sub=sub.name).all()
 
 	return render_template("sub/exilees.html", v=v, sub=sub, users=users)
 
