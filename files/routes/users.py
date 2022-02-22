@@ -196,8 +196,8 @@ def steal(v):
 			v.ban(days=1, reason="Jailed thief")
 			v.fail_utc = int(time.time())
 		else:
-			send_repeatable_notification(u.id, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you showed mercy in exchange for a 500 dramacoin tip. This time.")
-			send_repeatable_notification(v.id, "The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. You were able to convince him to spare your life with a 500 dramacoin tip. This time.")
+			send_repeatable_notification(u.id, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you showed mercy in exchange for a 500 coin tip. This time.")
+			send_repeatable_notification(v.id, "The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. You were able to convince him to spare your life with a 500 coin tip. This time.")
 			v.fail2_utc = int(time.time())
 		v.coins -= 500
 		g.db.add(v)
