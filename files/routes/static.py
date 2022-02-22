@@ -68,8 +68,8 @@ def stats():
 	active_users = set()
 	posters = g.db.query(Submission.author_id).distinct(Submission.author_id).filter(Submission.created_utc > week).all()
 	commenters = g.db.query(Comment.author_id).distinct(Comment.author_id).filter(Comment.created_utc > week).all()
-	voters = g.db.query(Vote.author_id).distinct(Vote.author_id).filter(Vote.created_utc > week).all()
-	commentvoters = g.db.query(CommentVote.author_id).distinct(CommentVote.author_id).filter(CommentVote.created_utc > week).all()
+	voters = g.db.query(Vote.user_id).distinct(Vote.user_id).filter(Vote.created_utc > week).all()
+	commentvoters = g.db.query(CommentVote.user_id).distinct(CommentVote.user_id).filter(CommentVote.created_utc > week).all()
 
 	active_users = set(posters) | set(commenters) | set(voteres) | set(commentvoters)
 
