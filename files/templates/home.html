@@ -34,23 +34,23 @@
 
 <div class="row" style="overflow: visible;padding-top:5px;">
 	<div class="col">
-		<div class="d-flex justify-content-between align-items-center mr-2">
+		<div class="d-flex justify-content-between align-items-center">
 
 			{% block navbar %}
+			<div class="font-weight-bold py-3">‎</div>
 
 			<div class="d-flex align-items-center sortingbarmargin">
-
-				{% if v and v.paid_dues %}
-					{% if ccmode=="true"%}<a class="btn btn-secondary text-primary text-small-m" href="?sort={{sort}}&t={{t}}&ccmode=false">CC</a>{% endif %}
-					{% if ccmode=="false" %}<a class="btn btn-secondary text-small-m" href="?sort={{sort}}&t={{t}}&ccmode=true">CC</a>{% endif %}
+				{% if request.path == '/' and v.paid_dues %}
+					{% if ccmode=="true"%}<a class="btn btn-secondary text-primary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=false">CC</a>{% endif %}
+					{% if ccmode=="false" %}<a class="btn btn-secondary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=true"></i>CC</a>{% endif %}
 				{% endif %}
 
-				{% if SITE_NAME == 'Drama' %}
-					{% if subs=="true"%}<a class="btn btn-secondary text-primary text-small-m" href="?sort={{sort}}&t={{t}}&subs=false">Subs</a>{% endif %}
-					{% if subs=="false" %}<a class="btn btn-secondary text-small-m" href="?sort={{sort}}&t={{t}}&subs=true">Subs</a>{% endif %}
+				{% if request.path == '/' and v and v.admin_level > 1 and SITE_NAME == 'Drama' %}
+					{% if subs=="true"%}<a class="btn btn-secondary text-primary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&subs=false">Subs</a>{% endif %}
+					{% if subs=="false" %}<a class="btn btn-secondary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&subs=true">Subs</a>{% endif %}
 				{% endif %}
 
-				<div class="dropdown dropdown-actions">
+				<div class="dropdown dropdown-actions mx-2">
 					<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						{% if t=="hour" %}<i class="fas fa-clock mr-1"></i>
 						{% elif t=="day" %}<i class="fas fa-calendar-day mr-1"></i>
@@ -71,7 +71,7 @@
 					</div>
 				</div>
 
-				<div class="dropdown dropdown-actions">
+				<div class="dropdown dropdown-actions ml-2">
 					<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						{% if sort=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
 						{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
