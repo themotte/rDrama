@@ -1299,10 +1299,19 @@ def submit_post(v, sub=None):
 						real = True
 						)
 			g.db.add(vote)
-			new_post.downvotes = 1
+			new_post.downvotes += 1
 			if body.startswith('OP is a Trump supporter'):
 				flag = Flag(post_id=new_post.id, user_id=SNAPPY_ID, reason='Trump supporter')
 				g.db.add(flag)
+		elif body.startswith('▲'):
+			body = body[1:]
+			vote = Vote(user_id=SNAPPY_ID,
+						vote_type=1,
+						submission_id=new_post.id,
+						real = True
+						)
+			g.db.add(vote)
+			new_post.upvotes += 1
 
 
 	body += "\n\n"
