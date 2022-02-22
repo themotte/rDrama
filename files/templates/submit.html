@@ -87,11 +87,11 @@
 														<input list="subs" autocomplete="off" id='sub' class="form-control" form="submitform" name="sub" oninput="savetext()">
 														<datalist id="subs">
 															{% if SITE_NAME != 'Ruqqus' %}
-																<option value="/s/none" selected></option>
+																<option value="none" selected></option>
 															{% endif %}
 
 															{% for s in SUBS %}
-																<option value="/s/{{s}}" {% if sub and sub.name == s %}selected{% endif %}></option>
+																<option value="{{s}}" {% if sub and sub.name == s %}selected{% endif %}></option>
 															{% endfor %}
 														</datalist>
 													</div>
