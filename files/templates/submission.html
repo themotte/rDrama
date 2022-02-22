@@ -77,118 +77,118 @@
 		<div class="seal seal1" height="100%" width="100%">
 			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=1008">
 		</div>
+
+		{% if p.award_count("wholesome") > 1 %}
+			<style>
+				.seal2 {
+					animation: moveX 5s linear 0s infinite alternate, moveY 8s linear 0s infinite alternate !important;
+					animation-delay:1s;
+				}
+			</style>
+			<div class="seal seal2" height="100%" width="100%">
+				<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=1008">
+			</div>
+		{% endif %}
+
+		{% if p.award_count("wholesome") > 2 %}
+			<style>
+				.seal3 {
+					animation: moveX 4s linear 0s infinite alternate, moveY 5s linear 0s infinite alternate !important;
+					animation-delay:2s;
+				}
+			</style>
+			<div class="seal seal3" height="100%" width="100%">
+				<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=1008">
+			</div>
+		{% endif %}
+
+		{% if p.award_count("wholesome") > 3 %}
+			<style>
+				.seal4 {
+					animation: moveX 5s linear 0s infinite alternate, moveY 6.8s linear 0s infinite alternate !important;
+					animation-delay:3s;
+				}
+			</style>
+			<div class="seal seal4" height="100%" width="100%">
+				<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=1008">
+			</div>
+		{% endif %}
 	{% endif %}
 
-	{% if p.award_count("wholesome") > 1 %}
+	{% if SITE_NAME == 'PCM' and p.award_count("toe") %}
 		<style>
-			.seal2 {
-				animation: moveX 5s linear 0s infinite alternate, moveY 8s linear 0s infinite alternate !important;
-				animation-delay:1s;
-			}
-		</style>
-		<div class="seal seal2" height="100%" width="100%">
-			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=1008">
-		</div>
-	{% endif %}
-
-	{% if p.award_count("wholesome") > 2 %}
-		<style>
-			.seal3 {
-				animation: moveX 4s linear 0s infinite alternate, moveY 5s linear 0s infinite alternate !important;
-				animation-delay:2s;
-			}
-		</style>
-		<div class="seal seal3" height="100%" width="100%">
-			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=1008">
-		</div>
-	{% endif %}
-
-	{% if p.award_count("wholesome") > 3 %}
-		<style>
-			.seal4 {
-				animation: moveX 5s linear 0s infinite alternate, moveY 6.8s linear 0s infinite alternate !important;
-				animation-delay:3s;
-			}
-		</style>
-		<div class="seal seal4" height="100%" width="100%">
-			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=1008">
-		</div>
-	{% endif %}
-
-	{% if p.award_count("toe") %}
-	<style>
-		.toeimg {
-			width: 100px;
-			height: auto;
-		}
-		@media (max-width: 992px) {
 			.toeimg {
-				width: 30px;
+				width: 100px;
 				height: auto;
 			}
-		}
+			@media (max-width: 992px) {
+				.toeimg {
+					width: 30px;
+					height: auto;
+				}
+			}
+			
+			.toe {
+				position:fixed;
+				z-index:9999;
+				pointer-events: none;
+				width: 100% !important;
+				height: 100% !important;
+			}
+			
+			@keyframes moveX {
+				from { left: 0; } to { left: 98%; }
+			}
 		
-		.toe {
-			position:fixed;
-			z-index:9999;
-			pointer-events: none;
-			width: 100% !important;
-			height: 100% !important;
-		}
+			@keyframes moveY {
+				from { top: 0; } to { top: 98%; }	
+			}
 		
-		@keyframes moveX {
-			from { left: 0; } to { left: 98%; }
-		}
-	
-		@keyframes moveY {
-			from { top: 0; } to { top: 98%; }	
-		}
-	
-		.toe1 {
-			animation: moveX 4s linear 0s infinite alternate, moveY 6.8s linear 0s infinite alternate !important;
-			animation-delay:0s;
-		}
-	</style>
-	<div class="toe toe1" height="100%" width="100%">
-		<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
-	</div>
+			.toe1 {
+				animation: moveX 4s linear 0s infinite alternate, moveY 6.8s linear 0s infinite alternate !important;
+				animation-delay:0s;
+			}
+		</style>
+		<div class="toe toe1" height="100%" width="100%">
+			<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+		</div>
+		
+		{% if p.award_count("toe") > 1 %}
+			<style>
+				.toe2 {
+					animation: moveX 5s linear 0s infinite alternate, moveY 8s linear 0s infinite alternate !important;
+					animation-delay:1s;
+				}
+			</style>
+			<div class="toe toe2" height="100%" width="100%">
+				<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+			</div>
+		{% endif %}
+		
+		{% if p.award_count("toe") > 2 %}
+			<style>
+				.toe3 {
+					animation: moveX 4s linear 0s infinite alternate, moveY 5s linear 0s infinite alternate !important;
+					animation-delay:2s;
+				}
+			</style>
+			<div class="toe toe3" height="100%" width="100%">
+				<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+			</div>
+		{% endif %}
+		
+		{% if p.award_count("toe") > 3 %}
+			<style>
+				.toe4 {
+					animation: moveX 5s linear 0s infinite alternate, moveY 6.8s linear 0s infinite alternate !important;
+					animation-delay:3s;
+				}
+			</style>
+			<div class="toe toe4" height="100%" width="100%">
+				<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+			</div>
+		{% endif %}
 	{% endif %}
-	
-	{% if p.award_count("toe") > 1 %}
-	<style>
-		.toe2 {
-			animation: moveX 5s linear 0s infinite alternate, moveY 8s linear 0s infinite alternate !important;
-			animation-delay:1s;
-		}
-	</style>
-	<div class="toe toe2" height="100%" width="100%">
-		<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
-	</div>
-	{% endif %}
-	
-	{% if p.award_count("toe") > 2 %}
-	<style>
-		.toe3 {
-			animation: moveX 4s linear 0s infinite alternate, moveY 5s linear 0s infinite alternate !important;
-			animation-delay:2s;
-		}
-	</style>
-	<div class="toe toe3" height="100%" width="100%">
-		<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
-	</div>
-	{% endif %}
-	
-	{% if p.award_count("toe") > 3 %}
-	<style>
-		.toe4 {
-			animation: moveX 5s linear 0s infinite alternate, moveY 6.8s linear 0s infinite alternate !important;
-			animation-delay:3s;
-		}
-	</style>
-	<div class="toe toe4" height="100%" width="100%">
-		<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
-	</div>
-	{% endif %}	
 {% else %}
 	{% if p.award_count("wholesome") %}
 		<style>
@@ -217,34 +217,33 @@
 				</marquee>
 			</marquee>
 		</div>
-	{% endif %}
 
-	{% if p.award_count("wholesome") > 1 %}
-		<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
-			<marquee direction="right" scrollamount=10 behavior="alternate" width="100%">
-				<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=1008">
+		{% if p.award_count("wholesome") > 1 %}
+			<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
+				<marquee direction="right" scrollamount=10 behavior="alternate" width="100%">
+					<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=1008">
+				</marquee>
 			</marquee>
-		</marquee>
-	{% endif %}
+		{% endif %}
 
-	{% if p.award_count("wholesome") > 2 %}
-		<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%">
-			<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
-				<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=1008">
+		{% if p.award_count("wholesome") > 2 %}
+			<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%">
+				<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
+					<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=1008">
+				</marquee>
 			</marquee>
-		</marquee>
-	{% endif %}
+		{% endif %}
 
-	{% if p.award_count("wholesome") > 3 %}
-		<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
-			<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
-				<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=1008">
+		{% if p.award_count("wholesome") > 3 %}
+			<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
+				<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
+					<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=1008">
+				</marquee>
 			</marquee>
-		</marquee>
+		{% endif %}
 	{% endif %}
 
-
-	{% if p.award_count("toe") %}
+	{% if SITE_NAME == 'PCM' and p.award_count("toe") %}
 		<style>
 			.toe {
 				position:fixed;
@@ -271,30 +270,30 @@
 				</marquee>
 			</marquee>
 		</div>
-	{% endif %}
 
-	{% if p.award_count("toe") > 1 %}
-		<marquee class="toe" scrollamount=10 behavior="alternate" direction="down" height="100%">
-			<marquee direction="right" scrollamount=10 behavior="alternate" width="100%">
-				<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+		{% if p.award_count("toe") > 1 %}
+			<marquee class="toe" scrollamount=10 behavior="alternate" direction="down" height="100%">
+				<marquee direction="right" scrollamount=10 behavior="alternate" width="100%">
+					<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+				</marquee>
 			</marquee>
-		</marquee>
-	{% endif %}
+		{% endif %}
 
-	{% if p.award_count("toe") > 2 %}
-		<marquee class="toe" scrollamount=10 behavior="alternate" direction="up" height="100%">
-			<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
-				<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+		{% if p.award_count("toe") > 2 %}
+			<marquee class="toe" scrollamount=10 behavior="alternate" direction="up" height="100%">
+				<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
+					<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+				</marquee>
 			</marquee>
-		</marquee>
-	{% endif %}
+		{% endif %}
 
-	{% if p.award_count("toe") > 3 %}
-		<marquee class="toe" scrollamount=10 behavior="alternate" direction="down" height="100%">
-			<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
-				<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+		{% if p.award_count("toe") > 3 %}
+			<marquee class="toe" scrollamount=10 behavior="alternate" direction="down" height="100%">
+				<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
+					<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?a=1">
+				</marquee>
 			</marquee>
-		</marquee>
+		{% endif %}
 	{% endif %}
 {% endif %}
 
@@ -341,29 +340,28 @@
 	<marquee class="train train1" direction="left" scrollamount=10 width="100%">
 		<img alt=":#marseytrain:" class="trainimg mirrored" src="/static/assets/images/emojis/marseytrain.webp?a=1008">
 	</marquee>
+
+	{% if p.award_count("train") > 1 %}
+		<marquee class="train train2" direction="right" scrollamount=10 width="100%">
+			<img alt=":#marseytrain:" class="trainimg" src="/static/assets/images/emojis/marseytrain.webp?a=1008">
+		</marquee>
+	{% endif %}
+
+	{% if p.award_count("train") > 2 %}
+		<marquee class="train train3" direction="left" scrollamount=10 width="100%">
+			<img alt=":#marseytrain:" class="trainimg mirrored" src="/static/assets/images/emojis/marseytrain.webp?a=1008">
+		</marquee>
+	{% endif %}
+
+	{% if p.award_count("train") > 3 %}
+		<marquee class="train train4" direction="right" scrollamount=10 width="100%">
+			<img alt=":#marseytrain:" class="trainimg" src="/static/assets/images/emojis/marseytrain.webp?a=1008">
+		</marquee>
+	{% endif %}
 {% endif %}
 
-{% if p.award_count("train") > 1 %}
-	<marquee class="train train2" direction="right" scrollamount=10 width="100%">
-		<img alt=":#marseytrain:" class="trainimg" src="/static/assets/images/emojis/marseytrain.webp?a=1008">
-	</marquee>
-{% endif %}
 
-{% if p.award_count("train") > 2 %}
-	<marquee class="train train3" direction="left" scrollamount=10 width="100%">
-		<img alt=":#marseytrain:" class="trainimg mirrored" src="/static/assets/images/emojis/marseytrain.webp?a=1008">
-	</marquee>
-{% endif %}
-
-{% if p.award_count("train") > 3 %}
-	<marquee class="train train4" direction="right" scrollamount=10 width="100%">
-		<img alt=":#marseytrain:" class="trainimg" src="/static/assets/images/emojis/marseytrain.webp?a=1008">
-	</marquee>
-{% endif %}
-
-
-
-{% if p.award_count("croag") %}
+{% if SITE_NAME == 'PCM' and p.award_count("croag") %}
 	<style>
 		.croag {
 			position:fixed;
@@ -397,26 +395,25 @@
 	<marquee class="croag croag1" direction="left" scrollamount=10 width="100%">
 		<img alt="croag" class="croagimg mirrored" src="/static/assets/images/PCM/croag.webp?a=1">
 	</marquee>
-{% endif %}
 
-{% if p.award_count("croag") > 1 %}
-	<marquee class="croag croag2" direction="right" scrollamount=10 width="100%">
-		<img alt="croag" class="croagimg" src="/static/assets/images/PCM/croag.webp?a=1">
-	</marquee>
-{% endif %}
+	{% if p.award_count("croag") > 1 %}
+		<marquee class="croag croag2" direction="right" scrollamount=10 width="100%">
+			<img alt="croag" class="croagimg" src="/static/assets/images/PCM/croag.webp?a=1">
+		</marquee>
+	{% endif %}
 
-{% if p.award_count("croag") > 2 %}
-	<marquee class="croag croag3" direction="left" scrollamount=10 width="100%">
-		<img alt="croag" class="croagimg mirrored" src="/static/assets/images/PCM/croag.webp?a=1">
-	</marquee>
-{% endif %}
+	{% if p.award_count("croag") > 2 %}
+		<marquee class="croag croag3" direction="left" scrollamount=10 width="100%">
+			<img alt="croag" class="croagimg mirrored" src="/static/assets/images/PCM/croag.webp?a=1">
+		</marquee>
+	{% endif %}
 
-{% if p.award_count("croag") > 3 %}
-	<marquee class="croag croag4" direction="right" scrollamount=10 width="100%">
-		<img alt="croag" class="croagimg" src="/static/assets/images/PCM/croag.webp?a=1">
-	</marquee>
+	{% if p.award_count("croag") > 3 %}
+		<marquee class="croag croag4" direction="right" scrollamount=10 width="100%">
+			<img alt="croag" class="croagimg" src="/static/assets/images/PCM/croag.webp?a=1">
+		</marquee>
+	{% endif %}
 {% endif %}
-
 
 
 {% if p.award_count("scooter") %}
@@ -435,24 +432,24 @@
 	<marquee class="train train3" direction="right" scrollamount=10 width="100%">
 		<img alt=":#marseyscooter:" class="scooterimg" src="/static/assets/images/emojis/marseyscooter.webp?a=1008">
 	</marquee>
-{% endif %}
 
-{% if p.award_count("scooter") > 1 %}
-	<marquee class="train train4" direction="left" scrollamount=10 width="100%">
-		<img alt=":#marseyscooter:" class="scooterimg mirrored" src="/static/assets/images/emojis/marseyscooter.webp?a=1008">
-	</marquee>
-{% endif %}
+	{% if p.award_count("scooter") > 1 %}
+		<marquee class="train train4" direction="left" scrollamount=10 width="100%">
+			<img alt=":#marseyscooter:" class="scooterimg mirrored" src="/static/assets/images/emojis/marseyscooter.webp?a=1008">
+		</marquee>
+	{% endif %}
 
-{% if p.award_count("scooter") > 2 %}
-	<marquee class="train train1" direction="right" scrollamount=10 width="100%">
-		<img alt=":#marseyscooter:" class="scooterimg" src="/static/assets/images/emojis/marseyscooter.webp?a=1008">
-	</marquee>
-{% endif %}
+	{% if p.award_count("scooter") > 2 %}
+		<marquee class="train train1" direction="right" scrollamount=10 width="100%">
+			<img alt=":#marseyscooter:" class="scooterimg" src="/static/assets/images/emojis/marseyscooter.webp?a=1008">
+		</marquee>
+	{% endif %}
 
-{% if p.award_count("scooter") > 3 %}
-	<marquee class="train train2" direction="left" scrollamount=10 width="100%">
-		<img alt=":#marseyscooter:" class="scooterimg mirrored" src="/static/assets/images/emojis/marseyscooter.webp?a=1008">
-	</marquee>
+	{% if p.award_count("scooter") > 3 %}
+		<marquee class="train train2" direction="left" scrollamount=10 width="100%">
+			<img alt=":#marseyscooter:" class="scooterimg mirrored" src="/static/assets/images/emojis/marseyscooter.webp?a=1008">
+		</marquee>
+	{% endif %}
 {% endif %}
 
 

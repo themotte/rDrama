@@ -9,26 +9,6 @@
 		{% include "award_modal.html" %}
 	{% endif %}
 
-	<style>
-		html {
-			scroll-padding-top: 100px;
-		}
-		.comment .comment-body {
-			padding: 3px 0 0 0;
-		}
-		.comment-anchor {
-			padding: 1px;
-		}
-		.comment-anchor::before {
-			content: '';
-			display: block;
-		}
-		.comment-anchor:target {
-			background: rgba(255,255,255,0.2);
-			padding: 12px;
-		}
-	</style>
-
 	<div style="display:none" id="popover">
 		<div class="popover-user-profile" role="tooltip">
 			<img loading="lazy" class="pop-banner w-100 h-64 object-cover">
@@ -888,95 +868,6 @@
 			</div>
 		</div>
 	{% endif %}
-
-	<style>
-		.mod:before {
-			content: '(((';
-		}
-
-		.mod:after {
-			content: ')))';
-		}
-
-		.mod {
-			padding: 2px 5px 3px 5px;
-			border-radius: 5px;
-			color:white!important;
-			background: -moz-linear-gradient(180deg, red, orange, yellow, green, blue, indigo, violet);
-			background: -webkit-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet );
-			text-shadow:-1px -1px 0 black,1px -1px 0 black,-1px 1px 0 black,1px 1px 0 black;
-		}
-
-		.popover {
-			max-width: 50%;
-			box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
-			border-color: #dadada;
-		}
-
-		@media (max-width: 991.98px) {
-			.popover {
-				max-width: 90% !important;
-			}
-		}
-
-		.popover-arrow {
-			display: none !important;
-		}
-
-		.popover-user-profile {
-			display: flex;
-			flex-direction: column;
-			padding: 0;
-			background: var(--gray-600);
-		}
-
-		.popover-body {
-			padding: 0;
-			border-radius: .25rem;
-			overflow: hidden;
-		}
-
-		.mt-n6 {
-			margin-top: -1.75rem !important;
-		}
-
-		.avatar-72 {
-			width: 72px;
-			height: 72px;
-			object-fit: cover;
-		}
-
-		.h-64 {
-			height: 64px;
-		}
-
-		.object-cover {
-			object-fit: cover;
-		}
-
-		.smolbtn {
-			font-weight: 600;
-			font-size: .9rem;
-			border-radius: 0.2rem;
-			padding: 0.1rem 0.50rem 0rem 0.30rem;
-			background-color: var(--black) !important;
-		}
-
-		.smol {
-			font-size: 11.5px;
-		}
-
-		@media (max-width: 768px) {
-			.commentmob {
-				margin-top: 0.5rem !important;
-			}
-		}
-		.treasure {
-			margin-left: 10px;
-			margin-right: 3px;
-			margin-top: -2px;
-		}
-	</style>
 
 	{% if v %}
 		<script src="/static/assets/js/marked.js?a=242"></script>
