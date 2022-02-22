@@ -511,7 +511,7 @@ def edit_post(pid, v):
 				g.db.add(c)
 
 		if not p.choices.count():
-			for i in re.finditer('\s*##([^\$\n]+)##\s*', body, re.A):
+			for i in re.finditer('\s*&&([^\$\n]+)&&\s*', body, re.A):
 				body = body.replace(i.group(0), "")
 				c = Comment(author_id=AUTOCHOICE_ID,
 					parent_submission=p.id,
@@ -1054,7 +1054,7 @@ def submit_post(v, sub=None):
 		body = body.replace(i.group(0), "")
 
 	choices = []
-	for i in re.finditer('\s*##([^\$\n]+)##\s*', body, re.A):
+	for i in re.finditer('\s*&&([^\$\n]+)&&\s*', body, re.A):
 		choices.append(i.group(1))
 		body = body.replace(i.group(0), "")
 

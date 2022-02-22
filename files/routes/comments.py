@@ -198,7 +198,7 @@ def api_comment(v):
 		body = body.replace(i.group(0), "")
 
 	choices = []
-	for i in re.finditer('\s*##([^\$\n]+)##\s*', body, re.A):
+	for i in re.finditer('\s*&&([^\$\n]+)&&\s*', body, re.A):
 		choices.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
@@ -729,7 +729,7 @@ def edit_comment(cid, v):
 				g.db.add(c_option)
 
 		if not c.choices:
-			for i in re.finditer('\s*##([^\$\n]+)##\s*', body, re.A):
+			for i in re.finditer('\s*&&([^\$\n]+)&&\s*', body, re.A):
 				body = body.replace(i.group(0), "")
 				c_choice = Comment(author_id=AUTOCHOICE_ID,
 					parent_submission=c.parent_submission,
