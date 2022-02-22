@@ -866,8 +866,9 @@ def submit_post(v, sub=None):
 	if sub: sub = sub.replace('/s/','').replace('s/','')
 
 	if sub and sub != 'none':
-		sub = g.db.query(Sub.name).filter_by(name=sub.strip().lower()).one_or_none()
-		if not sub: abort(404)
+		sname = sub.strip().lower()
+		sub = g.db.query(Sub.name).filter_by(name=sname).one_or_none()
+		if not sub: return error(f"/s/{sname} not found!")
 		sub = sub[0]
 		if v.exiled_from(sub): return error(f"You're exiled from /s/{sub}")
 	else: sub = None
