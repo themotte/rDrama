@@ -126,7 +126,7 @@ function delete_commentModal(id) {
 			try {data = JSON.parse(xhr.response)}
 			catch(e) {console.log(e)}
 			if (xhr.status >= 200 && xhr.status < 300 && data && data['message']) {
-				document.getElementById(`comment-${id}`).classList.add('deleted');
+				document.getElementsByClassName(`comment-${id}-only`)[0].classList.add('deleted');
 				document.getElementById(`delete-${id}`).classList.add('d-none');
 				document.getElementById(`undelete-${id}`).classList.remove('d-none');
 				document.getElementById(`delete2-${id}`).classList.add('d-none');
