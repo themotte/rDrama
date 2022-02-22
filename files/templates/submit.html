@@ -84,14 +84,10 @@
 													<label class='mt-4' for="title">Sub</label>
 
 													<div class="input-group mb2">
-														<input list="subs" autocomplete="off" id='sub' class="form-control" form="submitform" name="sub" oninput="savetext()">
+														<input list="subs" autocomplete="off" id='sub' class="form-control" form="submitform" name="sub" oninput="savetext()" {% if sub %}value="{{sub.name}}"{% endif %}>
 														<datalist id="subs">
-															{% if SITE_NAME != 'Ruqqus' %}
-																<option value="none" selected></option>
-															{% endif %}
-
 															{% for s in SUBS %}
-																<option value="{{s}}" {% if sub and sub.name == s %}selected{% endif %}></option>
+																<option value="{{s}}"></option>
 															{% endfor %}
 														</datalist>
 													</div>
