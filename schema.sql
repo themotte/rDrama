@@ -271,7 +271,8 @@ CREATE TABLE public.commentvotes (
 
 CREATE TABLE public.exiles (
     user_id integer NOT NULL,
-    sub character varying(20) NOT NULL
+    sub character varying(20) NOT NULL,
+    exiler_id integer NOT NULL
 );
 
 
@@ -1139,6 +1140,13 @@ CREATE INDEX fki_comment_sentto_fkey ON public.comments USING btree (sentto);
 
 
 --
+-- Name: fki_exile_exiler_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_exile_exiler_fkey ON public.exiles USING btree (exiler_id);
+
+
+--
 -- Name: fki_exile_sub_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1599,6 +1607,14 @@ ALTER TABLE ONLY public.commentvotes
 
 ALTER TABLE ONLY public.commentvotes
     ADD CONSTRAINT commentvote_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: exiles exile_exiler_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exiles
+    ADD CONSTRAINT exile_exiler_fkey FOREIGN KEY (exiler_id) REFERENCES public.users(id);
 
 
 --
