@@ -80,22 +80,20 @@
 												<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 
 												{% if SITE_NAME != 'Drama' or sub %}
+
 													<label class='mt-4' for="title">Sub</label>
 
 													<div class="input-group mb2">
-														<select autocomplete="off" id='sub' class="form-control" form="submitform" name="sub">
+														<input list="subs" autocomplete="off" id='sub' class="form-control" form="submitform" name="sub" oninput="savetext()">
+														<datalist id="subs">
 															{% if SITE_NAME != 'Ruqqus' %}
-																<option value="none" selected>
-																	None
-																</option>
+																<option value="/s/none" selected></option>
 															{% endif %}
 
 															{% for s in SUBS %}
-																<option value="{{s}}" {% if sub and sub.name == s %}selected{% endif %}>
-																	/s/{{s}}
-																</option>
+																<option value="/s/{{s}}" {% if sub and sub.name == s %}selected{% endif %}></option>
 															{% endfor %}
-														</select>
+														</datalist>
 													</div>
 												{% endif %}
 						
@@ -110,7 +108,7 @@
 
 												<div id="urlblock">
 														<label for="URL" class="mt-3">URL</label>
-														<input autocomplete="off" class="form-control" id="post-URL" aria-describedby="URLHelp" name="url" placeholder="Optional if you have text." value="{{request.values.get('url','')}}" required oninput="checkForRequired();hide_image();autoSuggestTitle()">
+														<input autocomplete="off" class="form-control" id="post-url" aria-describedby="URLHelp" name="url" placeholder="Optional if you have text." value="{{request.values.get('url','')}}" required oninput="checkForRequired();hide_image();autoSuggestTitle();savetext()">
 														<small class="form-text text-muted">To post an image, use a direct image link such as i.imgur.com</small>
 												</div>
 												<div id="image-upload-block">
@@ -225,16 +223,16 @@
 		{% endblock %}
 
 		<script>
-			let fetched_title = localStorage.getItem("post_title")
-			document.getElementById('post-title').value = fetched_title
-			let fetched_text = localStorage.getItem("post_text")
-			document.getElementById('post-text').value = fetched_text
+			document.getElementById('post-title').value = localStorage.getItem("post_title")
+			document.getElementById('post-text').value = localStorage.getItem("post_text")
+			document.getElementById('post-url').value = localStorage.getItem("post_url")
+			document.getElementById('sub').value = localStorage.getItem("sub")
 
 			function checkForRequired() {
 
 				var title = document.getElementById("post-title");
 
-				var url = document.getElementById("post-URL");
+				var url = document.getElementById("post-url");
 
 				var text = document.getElementById("post-text");
 
@@ -271,7 +269,7 @@
 
 		<script src="/static/assets/js/marked.js?a=242"></script>
 		<script src="/static/assets/js/formatting.js?a=240"></script>
-		<script src="/static/assets/js/submit.js?a=244"></script>
+		<script src="/static/assets/js/submit.js?a=246"></script>
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
 

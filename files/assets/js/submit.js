@@ -1,6 +1,6 @@
 function hide_image() {
 	x=document.getElementById('image-upload-block');
-	url=document.getElementById('post-URL').value;
+	url=document.getElementById('post-url').value;
 	if (url.length>=1){
 		x.classList.add('d-none');
 	}
@@ -48,16 +48,16 @@ document.getElementById('file-upload').addEventListener('change', function(){
 })
 
 function savetext() {
-	let post_title = document.getElementById('post-title').value
-	let post_text = document.getElementById('post-text').value
-	localStorage.setItem("post_title", post_title)
-	localStorage.setItem("post_text", post_text)
+	localStorage.setItem("post_title", document.getElementById('post-title').value)
+	localStorage.setItem("post_text", document.getElementById('post-text').value)
+	localStorage.setItem("post_url", document.getElementById('post-url').value)
+	localStorage.setItem("sub", document.getElementById('sub').value)
 }
 
 
 function autoSuggestTitle()	{
 
-    var urlField = document.getElementById("post-URL");
+    var urlField = document.getElementById("post-url");
 
     var titleField = document.getElementById("post-title");
 
