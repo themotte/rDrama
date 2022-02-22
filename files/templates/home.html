@@ -31,13 +31,20 @@
 	{% endif %}
 {% endif %}
   
+<style>
+	@media (max-width: 768px) {
+		.sorting {
+			padding-bottom: 1rem !important;
+		}
+	}
+</style>
 
 <div class="row" style="overflow: visible;padding-top:5px;">
 	<div class="col">
-		<div class="d-flex justify-content-between align-items-center pt-3 pb-2" style="float:right">
+		<div class="d-flex justify-content-between align-items-center pt-3 pb-2 sorting" style="float:right">
 
 			{% block navbar %}
-			<div class="d-flex align-items-center sortingbarmargin">
+			<div class="d-flex align-items-center">
 				{% if request.path == '/' and v.paid_dues %}
 					{% if ccmode=="true"%}<a class="btn btn-secondary text-primary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=false">CC</a>{% endif %}
 					{% if ccmode=="false" %}<a class="btn btn-secondary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=true"></i>CC</a>{% endif %}
