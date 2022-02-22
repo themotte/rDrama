@@ -862,7 +862,8 @@ def submit_post(v, sub=None):
 		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body, ghost=submit_ghost(v,g.db)), 400
 
 
-	sub = request.values.get("sub").replace('/s/','').replace('s/','')
+	sub = request.values.get("sub")
+	if sub: sub = sub.replace('/s/','').replace('s/','')
 
 	if sub and sub != 'none':
 		sub = g.db.query(Sub.name).filter_by(name=sub.strip().lower()).one_or_none()
