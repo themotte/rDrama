@@ -420,7 +420,7 @@ def usersong(username):
 def song(song):
 	resp = make_response(send_from_directory('/songs', song))
 	resp.headers.remove("Cache-Control")
-	resp.headers.add("Cache-Control", "public, max-age=2628000")
+	resp.headers.add("Cache-Control", "public, max-age=3153600")
 	return resp
 
 @app.post("/subscribe/<post_id>")

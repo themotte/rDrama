@@ -343,7 +343,7 @@ def static_service(path):
 	resp = make_response(send_from_directory('assets', path))
 	if request.path.endswith('.webp') or request.path.endswith('.gif') or request.path.endswith('.ttf') or request.path.endswith('.woff') or request.path.endswith('.woff2'):
 		resp.headers.remove("Cache-Control")
-		resp.headers.add("Cache-Control", "public, max-age=2628000")
+		resp.headers.add("Cache-Control", "public, max-age=3153600")
 
 	if request.path.endswith('.webp'):
 		resp.headers.remove("Content-Type")
@@ -358,7 +358,7 @@ def static_service(path):
 def images(path):
 	resp = make_response(send_from_directory('/images', path.replace('.WEBP','.webp')))
 	resp.headers.remove("Cache-Control")
-	resp.headers.add("Cache-Control", "public, max-age=2628000")
+	resp.headers.add("Cache-Control", "public, max-age=3153600")
 	if request.path.endswith('.webp'):
 		resp.headers.remove("Content-Type")
 		resp.headers.add("Content-Type", "image/webp")
