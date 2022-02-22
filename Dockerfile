@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-RUN apt update && apt -y upgrade && apt install -y python3.8 python3-pip supervisor libenchant1c2a
+RUN apt update && apt -y upgrade && apt install -y supervisor python3-pip ffmpeg
 
 COPY supervisord.conf /etc/supervisord.conf
 
