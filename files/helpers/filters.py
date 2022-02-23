@@ -5,7 +5,7 @@ from files.classes import BannedDomain
 
 def filter_comment_html(html_text):
 
-	soup = BeautifulSoup(html_text, 'xml')
+	soup = BeautifulSoup(html_text, 'html.parser')
 
 	links = soup.find_all("a")
 
@@ -28,7 +28,7 @@ def filter_comment_html(html_text):
 				new_domain += "." + parts[j]
 				domain_list.add(new_domain)
 
-	bans = [x for x in g.db.query(BannedDomain).filter(BannedDomain.domain.in_(list(domain_list))).all()]
+	bans = tuple(x for x in g.db.query(BannedDomain).filter(BannedDomain.domain.in_(list(domain_list))).all())
 
 	if bans: return bans
 	else: return []
