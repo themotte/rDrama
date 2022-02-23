@@ -97,7 +97,7 @@ def sanitize_marquee(tag, name, value):
 	return False
 
 allowed_attributes = {
-		'*': ['href', 'style', 'src', 'class', 'title', 'alt', 'loading'],
+		'*': ['href', 'style', 'src', 'class', 'title', 'loading'],
 		'marquee': sanitize_marquee}
 
 allowed_protocols = ['http', 'https']
@@ -113,11 +113,8 @@ def handler(signum, frame):
 def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 	signal.signal(signal.SIGALRM, handler)
-	signal.alarm(2)
+	signal.alarm(1)
 	
-	if sanitized.count(':') > 100: abort(418)
-	if sanitized.count('@') > 50: abort(418)
-
 	sanitized = markdown(sanitized)
 
 	sanitized = sanitized.replace("\ufeff", "").replace("𒐪","").replace("<script","").replace('‎','')
@@ -126,7 +123,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 		for i in re.finditer("<p>@((\w|-){1,25})", sanitized, re.A):
 			u = get_user(i.group(1), graceful=True)
 			if u:
-				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img alt="" loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
+				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
 	else:
 		sanitized = re.sub('(^|\s|\n|<p>)\/?((r|u)\/(\w|-){3,25})', r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized, re.A)
 
@@ -139,7 +136,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 				if noimages:
 					sanitized = sanitized.replace(i.group(0), f'{i.group(1)}<a href="/id/{u.id}">@{u.username}</a>', 1)
 				else:
-					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img alt="" loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
+					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
 
 
 	for i in re.finditer('https://i\.imgur\.com/(([^_]*?)\.(jpg|png|jpeg))(?!</code>)', sanitized):
@@ -305,11 +302,8 @@ def handler2(signum, frame):
 def filter_emojis_only(title, edit=False, graceful=False):
 
 	signal.signal(signal.SIGALRM, handler2)
-	signal.alarm(2)
+	signal.alarm(1)
 	
-	if title.count(':') > 100: abort(418)
-	if title.count('@') > 50: abort(418)
-
 	title = title.replace('<','&lt;').replace('>','&gt;').replace("\n", "").replace("\r", "").replace("\t", "").strip()
 
 	title = bleach.clean(title, tags=[])

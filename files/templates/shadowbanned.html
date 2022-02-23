@@ -14,7 +14,7 @@
 {% for user in users %}
 	<tr>
 		<td style="font-weight:bold;">{{loop.index}}</td>
-		<td><a style="color:#{{user.namecolor}}; font-weight:bold;" href="/@{{user.username}}"><img alt="" loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
+		<td><a style="color:#{{user.namecolor}}; font-weight:bold;" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
 		<td style="font-weight:bold;">{{user.shadowbanned}}</td>
 	</tr>
 {% endfor %}

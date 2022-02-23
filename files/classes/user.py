@@ -216,6 +216,7 @@ class User(Base):
 	def paid_dues(self):
 		return self.admin_level > 1 or self.patron > 1 or self.club_allowed in {True,None} or self.truecoins > int(environ.get("DUES").strip())
 
+	@lazy
 	def any_block_exists(self, other):
 
 		return g.db.query(UserBlock).filter(

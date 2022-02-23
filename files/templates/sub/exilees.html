@@ -18,8 +18,8 @@
 	<tr>
 		{% set exiler=exile.exiler %}
 		<td style="font-weight: bold">{{loop.index}}</td>
-		<td><a style="color:#{{user.namecolor}};  font-weight:bold;" href="/@{{user.username}}"><img alt="" loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
-		<td><a style="color:#{{exiler.namecolor}};  font-weight:bold;" href="/@{{exiler.username}}"><img alt="" loading="lazy" src="{{exiler.profile_url}}" class="pp20"><span {% if exiler.patron %}class="patron" style="background-color:#{{exiler.namecolor}}"{% endif %}>{{exiler.username}}</span></a></td>
+		<td><a style="color:#{{user.namecolor}};  font-weight:bold;" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
+		<td><a style="color:#{{exiler.namecolor}};  font-weight:bold;" href="/@{{exiler.username}}"><img loading="lazy" src="{{exiler.profile_url}}" class="pp20"><span {% if exiler.patron %}class="patron" style="background-color:#{{exiler.namecolor}}"{% endif %}>{{exiler.username}}</span></a></td>
 	</tr>
 {% endfor %}
 </table>

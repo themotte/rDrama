@@ -41,10 +41,6 @@ def error_405(e):
 def error_413(e):
 	return {"error": "Max file size is 4 MB (8 MB for paypigs)"}, 413
 
-@app.errorhandler(418)
-def error_418(e):
-	return {"error": "Too many emojis or pings!"}, 418
-
 @app.errorhandler(429)
 def error_429(e):
 	if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "429 Too Many Requests"}, 429
