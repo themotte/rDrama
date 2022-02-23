@@ -218,7 +218,7 @@ def award_post(pid, v):
 	if not post:
 		return {"error": "That post doesn't exist."}, 404
 
-	if kind == "ghosts" and post.distinguish_level: return {"error": "You can't use the ghosts award on distinguished posts."}, 403
+	if kind == "ghost" and post.distinguish_level: return {"error": "You can't use the ghost award on distinguished posts."}, 403
 
 	post_award.submission_id = post.id
 	g.db.add(post_award)
@@ -392,7 +392,7 @@ def award_post(pid, v):
 			g.db.add(badge)
 			g.db.flush()
 			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "ghosts":
+	elif kind == "ghost":
 		post.ghost = True
 		g.db.add(post)
 		for c in post.comments:
@@ -451,7 +451,7 @@ def award_comment(cid, v):
 	if not c:
 		return {"error": "That comment doesn't exist."}, 404
 
-	if kind == "ghosts" and c.distinguish_level: return {"error": "You can't use the ghosts award on distinguished comments."}, 403
+	if kind == "ghost" and c.distinguish_level: return {"error": "You can't use the ghost award on distinguished comments."}, 403
 
 	comment_award.comment_id = c.id
 	g.db.add(comment_award)
@@ -622,7 +622,7 @@ def award_comment(cid, v):
 			g.db.add(badge)
 			g.db.flush()
 			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "ghosts":
+	elif kind == "ghost":
 		c.ghost = True
 		g.db.add(c)
 	elif kind == "nword":

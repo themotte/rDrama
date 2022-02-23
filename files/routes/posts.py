@@ -58,7 +58,7 @@ def ghost_price(v):
 
 def submit_ghost(v,db):
 	ghost = db.query(AwardRelationship.id).filter(
-		AwardRelationship.kind == 'ghosts',
+		AwardRelationship.kind == 'ghost',
 		AwardRelationship.user_id == v.id,
 		AwardRelationship.submission_id == None,
 		AwardRelationship.comment_id == None
@@ -1126,7 +1126,7 @@ def submit_post(v, sub=None):
 	if request.values.get('ghost'):
 
 		ghost_award = g.db.query(AwardRelationship).filter(
-			AwardRelationship.kind == 'ghosts',
+			AwardRelationship.kind == 'ghost',
 			AwardRelationship.user_id == v.id,
 			AwardRelationship.submission_id == None,
 			AwardRelationship.comment_id == None

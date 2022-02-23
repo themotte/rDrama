@@ -166,7 +166,7 @@
 
 				{% if p.awards %}
 					{% for a in p.awards %}
-						<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award{% if a.kind != 'ghosts' %} given by @{{a.user.username}}{% endif %}" data-bs-original-title="{{a.title}} Award{% if a.kind != 'ghosts' %} given by @{{a.user.username}}{% endif %}"></i>
+						<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award{% if a.kind != 'ghost' %} given by @{{a.user.username}}{% endif %}" data-bs-original-title="{{a.title}} Award{% if a.kind != 'ghost' %} given by @{{a.user.username}}{% endif %}"></i>
 					{% endfor %}
 				{% endif %}
 

@@ -706,7 +706,7 @@
 
 						{% if p.awards %}
 							{% for a in p.awards %}
-								<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award{% if a.kind != 'ghosts' %} given by @{{a.user.username}}{% endif %}" data-bs-original-title="{{a.title}} Award{% if a.kind != 'ghosts' %} given by @{{a.user.username}}{% endif %}"></i>
+								<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award{% if a.kind != 'ghost' %} given by @{{a.user.username}}{% endif %}" data-bs-original-title="{{a.title}} Award{% if a.kind != 'ghost' %} given by @{{a.user.username}}{% endif %}"></i>
 							{% endfor %}
 						{% endif %}
 						{% if v and v.admin_level > 1 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{p.author.shadowbanned}}" data-bs-original-title="Shadowbanned by @{{p.author.shadowbanned}}"></i>{% endif %}
