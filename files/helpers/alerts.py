@@ -67,7 +67,7 @@ def NOTIFY_USERS(text, v):
 		if id == 0: continue
 		if word in text.lower() and id not in notify_users and v.id != id: notify_users.add(id)
 
-	soup = BeautifulSoup(text, 'xml')
+	soup = BeautifulSoup(text, 'html.parser')
 	for mention in soup.find_all("a", href=re.compile("^\/id\/([0-9]+)")):
 		id = int(mention["href"].split("/id/")[1])
 		if id != v.id:
