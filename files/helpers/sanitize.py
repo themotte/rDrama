@@ -165,7 +165,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 									]
 							).clean(sanitized)
 
-	soup = BeautifulSoup(sanitized, 'xml')
+	soup = BeautifulSoup(sanitized, 'html.parser')
 
 	for tag in soup.find_all("img"):
 		if tag.get("src") and tag.get("class") != ['pp20']:
