@@ -126,7 +126,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 		for i in re.finditer("<p>@((\w|-){1,25})", sanitized, re.A):
 			u = get_user(i.group(1), graceful=True)
 			if u:
-				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img alt="@{u.username}'s profile picture" loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
+				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img alt="" loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
 	else:
 		sanitized = re.sub('(^|\s|\n|<p>)\/?((r|u)\/(\w|-){3,25})', r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized, re.A)
 
@@ -139,7 +139,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 				if noimages:
 					sanitized = sanitized.replace(i.group(0), f'{i.group(1)}<a href="/id/{u.id}">@{u.username}</a>', 1)
 				else:
-					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img alt="@{u.username}'s profile picture" loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
+					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img alt="" loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
 
 
 	for i in re.finditer('https://i\.imgur\.com/(([^_]*?)\.(jpg|png|jpeg))(?!</code>)', sanitized):
@@ -168,7 +168,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 									]
 							).clean(sanitized)
 
-	soup = BeautifulSoup(sanitized, features="html.parser")
+	soup = BeautifulSoup(sanitized, 'xml')
 
 	for tag in soup.find_all("img"):
 		if tag.get("src") and tag.get("class") != ['pp20']:

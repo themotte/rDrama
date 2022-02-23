@@ -670,7 +670,7 @@ def thumbnail_thread(pid):
 
 
 	if x.headers.get("Content-Type","").startswith("text/html"):
-		soup=BeautifulSoup(x.content, 'html.parser')
+		soup=BeautifulSoup(x.content, 'xml')
 
 		thumb_candidate_urls=[]
 

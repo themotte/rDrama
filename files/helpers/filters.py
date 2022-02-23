@@ -5,7 +5,7 @@ from files.classes import BannedDomain
 
 def filter_comment_html(html_text):
 
-	soup = BeautifulSoup(html_text, features="html.parser")
+	soup = BeautifulSoup(html_text, 'xml')
 
 	links = soup.find_all("a")
 
