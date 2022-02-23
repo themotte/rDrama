@@ -40,7 +40,7 @@ class Badge(Base):
 			ti = self.user.agendaposter
 			if ti: text = self.badge.description + " until " + datetime.utcfromtimestamp(ti).strftime('%Y-%m-%d %H:%M:%S')
 			else: text = self.badge.description + " permanently"
-		elif self.badge_id in (94,95,96,97,98,109):
+		elif self.badge_id in {94,95,96,97,98,109}:
 			if self.badge_id == 94: ti = self.user.progressivestack
 			elif self.badge_id == 95: ti = self.user.bird
 			elif self.badge_id == 96: ti = self.user.flairchanged

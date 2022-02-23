@@ -108,7 +108,7 @@ def discord_redirect(v):
 
 	x=requests.put(url, headers=headers, json=data, timeout=5)
 
-	if x.status_code in [201, 204]:
+	if x.status_code in {201, 204}:
 
 		if v.admin_level > 2:
 			add_role(v, "owner")

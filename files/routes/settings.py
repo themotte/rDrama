@@ -301,7 +301,7 @@ def settings_profile_post(v):
 
 	frontsize = request.values.get("frontsize")
 	if frontsize:
-		if frontsize in ["25", "50", "100"]:
+		if frontsize in {"25", "50", "100"}:
 			v.frontsize = int(frontsize)
 			updated = True
 			cache.delete_memoized(frontlist)
@@ -309,28 +309,28 @@ def settings_profile_post(v):
 
 	defaultsortingcomments = request.values.get("defaultsortingcomments")
 	if defaultsortingcomments:
-		if defaultsortingcomments in ["new", "old", "controversial", "top", "bottom"]:
+		if defaultsortingcomments in {"new", "old", "controversial", "top", "bottom"}:
 			v.defaultsortingcomments = defaultsortingcomments
 			updated = True
 		else: abort(400)
 
 	defaultsorting = request.values.get("defaultsorting")
 	if defaultsorting:
-		if defaultsorting in ["hot", "new", "old", "comments", "controversial", "top", "bottom"]:
+		if defaultsorting in {"hot", "new", "old", "comments", "controversial", "top", "bottom"}:
 			v.defaultsorting = defaultsorting
 			updated = True
 		else: abort(400)
 
 	defaulttime = request.values.get("defaulttime")
 	if defaulttime:
-		if defaulttime in ["hour", "day", "week", "month", "year", "all"]:
+		if defaulttime in {"hour", "day", "week", "month", "year", "all"}:
 			v.defaulttime = defaulttime
 			updated = True
 		else: abort(400)
 
 	theme = request.values.get("theme")
 	if theme:
-		if theme in ["dramblr","classic","classic_dark","transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"]:
+		if theme in {"dramblr","classic","classic_dark","transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"}:
 			if theme == "transparent" and not v.background: 
 				return {"error": "You need to set a background to use the transparent theme!"}
 			v.theme = theme

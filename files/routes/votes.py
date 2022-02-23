@@ -125,7 +125,7 @@ def api_vote_comment(comment_id, new, v):
 
 	comment = get_comment(comment_id)
 
-	if comment.author_id in (AUTOPOLLER_ID,AUTOBETTER_ID,AUTOCHOICE_ID): return {"error": "forbidden."}, 403
+	if comment.author_id in {AUTOPOLLER_ID,AUTOBETTER_ID,AUTOCHOICE_ID}: return {"error": "forbidden."}, 403
 	
 	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
 

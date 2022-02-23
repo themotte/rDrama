@@ -1378,7 +1378,7 @@ def submit_post(v, sub=None):
 		send_discord_message(new_post.permalink)
 		cache.delete_memoized(changeloglist)
 
-	if v.id in (PIZZASHILL_ID, HIL_ID):
+	if v.id in {PIZZASHILL_ID, HIL_ID}:
 		autovote = Vote(user_id=CARP_ID, submission_id=new_post.id, vote_type=1)
 		g.db.add(autovote)
 		autovote = Vote(user_id=AEVANN_ID, submission_id=new_post.id, vote_type=1)

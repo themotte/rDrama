@@ -141,7 +141,7 @@ AGENDAPOSTER_MSG = """Hi @{username},\n\nYour {type} has been automatically remo
 		included. \n\n*This is an automated message; if you need help,
 		you can message us [here](/contact).*"""
 
-if SITE in ('rdrama.net','devrama.xyz','ruqqus.us'):
+if SITE in {'rdrama.net','devrama.xyz','ruqqus.us'}:
 	NOTIFICATIONS_ID = 1046
 	AUTOJANNY_ID = 2360
 	SNAPPY_ID = 261
