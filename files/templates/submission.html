@@ -545,7 +545,7 @@
 					<ul class="list-group post-actions">
 						{% if not p.ghost %}<a class="btn-block" href="/votes?link={{p.fullname}}"><button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</button></a>{% endif %}
 
-						<button data-bs-dismiss="modal" class="copy-link nobackground btn btn-link btn-block btn-lg text-left text-muted" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="far fa-copy text-center text-muted mr-3"></i>Copy link</button>
+						<button data-bs-dismiss="modal" class="copy-link nobackground btn btn-link btn-block btn-lg text-left text-muted" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.gay{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="far fa-copy text-center text-muted mr-3"></i>Copy link</button>
 
 						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportPostModal" onclick="report_postModal('{{p.id}}')"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
 
@@ -902,7 +902,7 @@
 							<a class="list-inline-item text-muted d-none d-md-inline-block" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/award_post/{{p.id}}')"><i class="fas fa-gift fa-fw"></i>Give Award</a>
 						{% endif %}
 
-						<a class="list-inline-item copy-link" role="button" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.com{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
+						<a class="list-inline-item copy-link" role="button" data-clipboard-text="{% if SITE_NAME == 'Drama' %}https://rdrama.gay{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
 
 						{% if v %}
 							<a id="subscribe-{{p.id}}" class="{% if p.id in v.subscribed_idlist() %}d-none{% endif %} list-inline-item" role="button" onclick="post_toast2(this,'/subscribe/{{p.id}}','subscribe-{{p.id}}','unsubscribe-{{p.id}}')"><i class="fas fa-eye"></i>Subscribe</a>
