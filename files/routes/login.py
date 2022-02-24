@@ -25,7 +25,7 @@ def login_get(v):
 
 
 def check_for_alts(current_id):
-	ids = tuple(x[0] for x in g.db.query(User.id).all())
+	ids = [x[0] for x in g.db.query(User.id).all()]
 	past_accs = set(session.get("history", []))
 
 	for past_id in list(past_accs):
@@ -338,7 +338,7 @@ def sign_up_post(v):
 		password=request.values.get("password"),
 		email=email,
 		referred_by=ref_id or None,
-		ban_evade =  int(any((x.is_banned or x.shadowbanned) and not x.unban_utc for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x))
+		ban_evade =  int(any((x.is_banned or x.shadowbanned) and not x.unban_utc for x in g.db.query(User).filter(User.id.in_(session.get("history", []))).all() if x))
 		)
 
 	g.db.add(new_user)

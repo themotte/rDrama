@@ -140,8 +140,6 @@ def get_posts(pids, v=None):
 	if not pids:
 		return []
 
-	pids=tuple(pids)
-
 	if v:
 		vt = g.db.query(Vote).filter(
 			Vote.submission_id.in_(pids), 
@@ -218,8 +216,6 @@ def get_comments(cids, v=None, load_parent=False):
 
 	if not cids: return []
 
-	cids=tuple(cids)
-
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
@@ -281,8 +277,6 @@ def get_domain(s):
 			new_domain += "." + parts[j]
 
 		domain_list.add(new_domain)
-
-	domain_list = tuple(list(domain_list))
 
 	doms = [x for x in g.db.query(BannedDomain).filter(BannedDomain.domain.in_(domain_list)).all()]
 

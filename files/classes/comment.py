@@ -85,12 +85,12 @@ class Comment(Base):
 	@property
 	@lazy
 	def options(self):
-		return tuple(x for x in self.child_comments if x.author_id == AUTOPOLLER_ID)
+		return [x for x in self.child_comments if x.author_id == AUTOPOLLER_ID]
 
 	@property
 	@lazy
 	def choices(self):
-		return tuple(x for x in self.child_comments if x.author_id == AUTOCHOICE_ID)
+		return [x for x in self.child_comments if x.author_id == AUTOCHOICE_ID]
 
 	def total_poll_voted(self, v):
 		if v:
@@ -100,7 +100,7 @@ class Comment(Base):
 
 	def total_choice_voted(self, v):
 		if v:
-			return g.db.query(CommentVote).filter(CommentVote.user_id == v.id, CommentVote.comment_id.in_(tuple(x.id for x in self.choices))).all()
+			return g.db.query(CommentVote).filter(CommentVote.user_id == v.id, CommentVote.comment_id.in_([x.id for x in self.choices])).all()
 		return False
 
 	@property

@@ -15,7 +15,7 @@ function loadEmojis(form) {
 			emojis = {
 				'marsey': JSON.parse(xhr.response),
 
-				'marseyalphabet': ['marseya','marseyb','marseyc','marseyd','marseye','marseyf','marseyg','marseyh','marseyi','marseyj','marseyk','marseyl','marseym','marseyn','marseyo','marseyp','marseyq','marseyr','marseys','marseyt','marseyu','marseyv','marseyw','marseyx','marseyy','marseyz','marsey0','marsey1','marsey2','marsey3','marsey4','marsey5','marsey6','marsey7','marsey8','marsey9','marseyexclamationpoint','marseyperiod','marseyquestionmark'],
+				'marseyalphabet': ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','exclamationpoint','period','questionmark'],
 		
 				'platy': ['platytrans','platyfuckyou','plarsy','platyabused','platyblizzard','platyboxer','platydevil','platyfear','platygirlmagic','platygolong','platyhaes','platyking','platylove','platyneet','platyold','platypatience','platypopcorn','platyrich','platysarcasm','platysilly','platysleeping','platythink','platytired','platytuxedomask','platyblush','platybruh','platycaveman','platycheer','platydown','platyeyes','platyheart','platylol','platymicdrop','platynooo','platysalute','platyseethe','platythumbsup','platywave'],
 		

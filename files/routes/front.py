@@ -145,8 +145,6 @@ def front_all(v, sub=None):
 	if not v and request.path == "/" and not request.headers.get("Authorization"):
 		return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
 
-	if v and request.path.startswith('/logged_out'): return redirect(SITE_FULL + request.full_path.replace('/logged_out',''))
-
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: abort(400)
 

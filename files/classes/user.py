@@ -163,7 +163,7 @@ class User(Base):
 	@property
 	@lazy
 	def all_blocks(self):
-		return tuple(x[0] for x in g.db.query(SubBlock.sub).filter_by(user_id=self.id).all())
+		return [x[0] for x in g.db.query(SubBlock.sub).filter_by(user_id=self.id).all()]
 
 	@lazy
 	def blocks(self, sub):
@@ -214,7 +214,7 @@ class User(Base):
 	@property
 	@lazy
 	def paid_dues(self):
-		return self.admin_level or self.club_allowed or self.patron > 1 or (self.patron == 1 and self.truecoins > dues/10) or (self.club_allowed != False and self.truecoins > dues)
+		return self.admin_level or self.club_allowed or self.patron > 1 or (self.patron == 1 and self.truecoins > dues/5) or (self.club_allowed != False and self.truecoins > dues)
 
 	@lazy
 	def any_block_exists(self, other):

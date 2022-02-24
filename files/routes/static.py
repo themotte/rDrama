@@ -39,7 +39,6 @@ def marsey_list():
 @auth_desired
 def terms(v):
 	if not v and not request.path.startswith('/logged_out'): return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
-	if v and request.path.startswith('/logged_out'): return redirect(SITE_FULL + request.full_path.replace('/logged_out',''))
 
 	return render_template("terms.html", v=v)
 
@@ -48,7 +47,6 @@ def terms(v):
 @auth_desired
 def sidebar(v):
 	if not v and not request.path.startswith('/logged_out'): return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
-	if v and request.path.startswith('/logged_out'): return redirect(SITE_FULL + request.full_path.replace('/logged_out',''))
 
 	return render_template('sidebar.html', v=v)
 
@@ -65,7 +63,6 @@ def stats():
 	day = int(time.time()) - 86400
 
 	week = int(time.time()) - 604800
-	active_users = set()
 	posters = g.db.query(Submission.author_id).distinct(Submission.author_id).filter(Submission.created_utc > week).all()
 	commenters = g.db.query(Comment.author_id).distinct(Comment.author_id).filter(Comment.created_utc > week).all()
 	voters = g.db.query(Vote.user_id).distinct(Vote.user_id).filter(Vote.created_utc > week).all()

@@ -46,8 +46,8 @@ def removebackground(v):
 @auth_required
 def settings_profile_post(v):
 	if v and v.patron:
-		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}, 413
-	elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB."}, 413
+		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 4 MB (8 MB for paypigs)."}, 413
+	elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB (8 MB for paypigs)."}, 413
 
 
 	updated = False
@@ -143,7 +143,7 @@ def settings_profile_post(v):
 	elif (v.patron or v.id == MOOSE_ID) and request.values.get("sig"):
 		sig = request.values.get("sig")[:200]
 
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', sig, re.M|re.A):
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', sig, flags=re.M|re.A):
 			if "wikipedia" not in i.group(1): sig = sig.replace(i.group(1), f'![]({i.group(1)})')
 
 		sig_html = sanitize(sig)
@@ -177,7 +177,7 @@ def settings_profile_post(v):
 	elif request.values.get("friends"):
 		friends = request.values.get("friends")[:500]
 
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', friends, re.M|re.A):
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', friends, flags=re.M|re.A):
 			if "wikipedia" not in i.group(1): friends = friends.replace(i.group(1), f'![]({i.group(1)})')
 
 		friends_html = sanitize(friends)
@@ -214,7 +214,7 @@ def settings_profile_post(v):
 	elif request.values.get("enemies"):
 		enemies = request.values.get("enemies")[:500]
 
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', enemies, re.M|re.A):
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', enemies, flags=re.M|re.A):
 			if "wikipedia" not in i.group(1): enemies = enemies.replace(i.group(1), f'![]({i.group(1)})')
 
 		enemies_html = sanitize(enemies)
@@ -251,7 +251,7 @@ def settings_profile_post(v):
 	elif request.values.get("bio") or request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
 		bio = request.values.get("bio")[:1500]
 
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', bio, re.M|re.A):
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', bio, flags=re.M|re.A):
 			if "wikipedia" not in i.group(1): bio = bio.replace(i.group(1), f'![]({i.group(1)})')
 
 		if request.files.get('file'):
@@ -631,8 +631,8 @@ def settings_log_out_others(v):
 @auth_required
 def settings_images_profile(v):
 	if v and v.patron:
-		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}, 413
-	elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB."}, 413
+		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 4 MB (8 MB for paypigs)."}, 413
+	elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB (8 MB for paypigs)."}, 413
 
 	if request.headers.get("cf-ipcountry") == "T1": return {"error":"Image uploads are not allowed through TOR."}, 403
 
@@ -670,8 +670,8 @@ def settings_images_profile(v):
 @auth_required
 def settings_images_banner(v):
 	if v and v.patron:
-		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}, 413
-	elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB."}, 413
+		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 4 MB (8 MB for paypigs)."}, 413
+	elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB (8 MB for paypigs)."}, 413
 
 	if request.headers.get("cf-ipcountry") == "T1": return {"error":"Image uploads are not allowed through TOR."}, 403
 

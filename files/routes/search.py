@@ -5,7 +5,7 @@ from flask import *
 from files.__main__ import app
 
 
-query_regex=re.compile("(\w+):(\S+)", re.A)
+query_regex=re.compile("(\w+):(\S+)", flags=re.A)
 valid_params=[
 	'author',
 	'domain',
@@ -88,7 +88,6 @@ def searchposts(v):
 	if 'q' in criteria:
 		words=criteria['q'].split()
 		words=[Submission.title.ilike('%'+x+'%') for x in words]
-		words=tuple(words)
 		posts=posts.filter(*words)
 		
 	if 'over18' in criteria: posts = posts.filter(Submission.over_18==True)
@@ -225,7 +224,6 @@ def searchcomments(v):
 	if 'q' in criteria:
 		words = criteria['q'].split()
 		words = [Comment.body.ilike('%'+x+'%') for x in words]
-		words = tuple(words)
 		comments = comments.filter(*words)
 
 	if 'over18' in criteria: comments = comments.filter(Comment.over_18 == True)

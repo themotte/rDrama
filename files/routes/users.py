@@ -685,8 +685,6 @@ def u_username(username, v=None):
 
 	if not v and not request.path.startswith('/logged_out'): return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
 
-	if v and request.path.startswith('/logged_out'): return redirect(SITE_FULL + request.full_path.replace('/logged_out',''))
-
 
 
 	u = get_user(username, v=v)
@@ -783,8 +781,6 @@ def u_username_comments(username, v=None):
 
 
 	if not v and not request.path.startswith('/logged_out'): return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
-
-	if v and request.path.startswith('/logged_out'): return redirect(SITE_FULL + request.full_path.replace('/logged_out',''))
 
 	user = get_user(username, v=v)
 
@@ -970,7 +966,6 @@ def remove_follow(username, v):
 @auth_desired
 def user_profile_uid(v, id):
 	if not v and not request.path.startswith('/logged_out'): return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
-	if v and request.path.startswith('/logged_out'): return redirect(SITE_FULL + request.full_path.replace('/logged_out',''))
 
 	try: id = int(id)
 	except: abort(404)

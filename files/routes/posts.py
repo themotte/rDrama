@@ -21,13 +21,13 @@ from shutil import copyfile
 from sys import stdout
 
 db = db_session()
-marseys = tuple(f':#{x[0]}:' for x in db.query(Marsey.name).all())
+marseys = [f':#{x[0]}:' for x in db.query(Marsey.name).all()]
 db.close()
 
 if path.exists(f'snappy_{SITE_NAME}.txt'):
 	with open(f'snappy_{SITE_NAME}.txt', "r", encoding="utf-8") as f:
-		if SITE == 'pcmemes.net': snappyquotes = tuple(f.read().split("{[para]}"))
-		else: snappyquotes = tuple(f.read().split("\n{[para]}\n")) + marseys
+		if SITE == 'pcmemes.net': snappyquotes = f.read().split("{[para]}")
+		else: snappyquotes = [f.read().split("\n{[para]}\n")] + marseys
 else: snappyquotes = marseys
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
@@ -129,7 +129,7 @@ def submit_get(v, sub=None):
 	
 	if request.path.startswith('/s/') and not sub: abort(404)
 
-	SUBS = () if SITE_NAME == 'Drama' and not sub else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all())
+	SUBS = () if SITE_NAME == 'Drama' and not sub else [[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
 
 	return render_template("submit.html", SUBS=SUBS, v=v, sub=sub, ghost=submit_ghost(v,g.db))
 
@@ -145,9 +145,6 @@ def submit_get(v, sub=None):
 def post_id(pid, anything=None, v=None, sub=None):
 	if not v and not request.path.startswith('/logged_out') and not request.headers.get("Authorization"):
 		return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
-
-	if v and request.path.startswith('/logged_out'): return redirect(SITE_FULL + request.full_path.replace('/logged_out',''))
-
 
 	try: pid = int(pid)
 	except Exception as e: pass
@@ -444,7 +441,7 @@ def morecomments(v, cid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def edit_post(pid, v):
-	if v.admin_level < 2:
+	if v.admin_level < 3:
 		if v and v.patron:
 			if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 4 MB (8 MB for paypigs)."}, 413
 		elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB (8 MB for paypigs)."}, 413
@@ -460,10 +457,10 @@ def edit_post(pid, v):
 	if len(body) > 20000: return {"error":"Character limit is 20000!"}, 403
 
 	if v.marseyawarded:
-		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", title, re.A))
+		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", title, flags=re.A))
 		if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 		if body:
-			marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body, re.A))
+			marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body, flags=re.A))
 			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
 	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
@@ -473,7 +470,7 @@ def edit_post(pid, v):
 		if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 
 		title_html = filter_emojis_only(title, edit=True)
-		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html, re.A))): return {"error":"You can only type marseys!"}, 403
+		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html, flags=re.A))): return {"error":"You can only type marseys!"}, 403
 		p.title = title[:500]
 		p.title_html = title_html
 
@@ -494,13 +491,13 @@ def edit_post(pid, v):
 		else: return {"error": "Image/Video files only"}, 400
 
 	if body != p.body:
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', body, re.M|re.A):
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', body, flags=re.M|re.A):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 
 		if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
 		if not p.options.count():
-			for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, re.A):
+			for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, flags=re.A):
 				body = body.replace(i.group(0), "")
 				c = Comment(author_id=AUTOPOLLER_ID,
 					parent_submission=p.id,
@@ -512,7 +509,7 @@ def edit_post(pid, v):
 				g.db.add(c)
 
 		if not p.choices.count():
-			for i in re.finditer('\s*&&([^\$\n]+)&&\s*', body, re.A):
+			for i in re.finditer('\s*&&([^\$\n]+)&&\s*', body, flags=re.A):
 				body = body.replace(i.group(0), "")
 				c = Comment(author_id=AUTOCHOICE_ID,
 					parent_submission=p.id,
@@ -535,7 +532,7 @@ def edit_post(pid, v):
 			return {"error": reason}, 403
 
 		p.body = body
-		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html, re.A))): return {"error":"You can only type marseys!"}, 40
+		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html, flags=re.A))): return {"error":"You can only type marseys!"}, 40
 
 		if v.longpost:
 			if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
@@ -671,7 +668,7 @@ def thumbnail_thread(pid):
 
 
 	if x.headers.get("Content-Type","").startswith("text/html"):
-		soup=BeautifulSoup(x.content, 'html.parser')
+		soup=BeautifulSoup(x.content, 'lxml')
 
 		thumb_candidate_urls=[]
 
@@ -788,7 +785,7 @@ def thumbnail_thread(pid):
 					notif = Notification(comment_id=new_comment.id, user_id=admin.id)
 					db.add(notif)
 
-			k,val = random.choice(tuple(REDDIT_NOTIFS.items()))
+			k,val = random.choice(REDDIT_NOTIFS.items())
 			for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={k}&size=1').json()["data"]:
 				try: body_html = sanitize(f'New mention of you: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 				except: continue
@@ -859,7 +856,7 @@ def submit_post(v, sub=None):
 	def error(error):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": error}, 403
 	
-		SUBS = () if SITE_NAME == 'Drama' and not sub else tuple(x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all())
+		SUBS = () if SITE_NAME == 'Drama' and not sub else [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
 		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body, ghost=submit_ghost(v,g.db)), 400
 
 
@@ -876,7 +873,7 @@ def submit_post(v, sub=None):
 
 	if v.is_suspended: return error("You can't perform this action while banned.")
 	
-	if v.admin_level < 2:
+	if v.admin_level < 3:
 		if v and v.patron:
 			if request.content_length > 8 * 1024 * 1024: return error( "Max file size is 4 MB (8 MB for paypigs).")
 		elif request.content_length > 4 * 1024 * 1024: return error( "Max file size is 4 MB (8 MB for paypigs).")
@@ -886,7 +883,7 @@ def submit_post(v, sub=None):
 	title_html = filter_emojis_only(title, graceful=True)
 	if len(title_html) > 1500: return error("Rendered title is too big!")
 
-	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html, re.A))): return error("You can only type marseys!")
+	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html, flags=re.A))): return error("You can only type marseys!")
 
 	if v.longpost:
 		if len(body) < 280 or ' [](' in body or body.startswith('[]('): return error("You have to type more than 280 characters!")
@@ -898,10 +895,10 @@ def submit_post(v, sub=None):
 		elif "/media.giphy.com/" in url or "/c.tenor.com/" in url: url = url.replace(".gif", ".webp")
 		elif "/i.ibb.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp").replace(".gif", ".webp")
 
-		for rd in ["://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it"]:
+		for rd in ("://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it", "://teddit.net"):
 			url = url.replace(rd, "://old.reddit.com")
 
-		url = url.replace("old.reddit.com/gallery", "new.reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube")
+		url = url.replace("nitter.net", "twitter.com").replace("old.reddit.com/gallery", "new.reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube")
 
 		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 
@@ -972,10 +969,10 @@ def submit_post(v, sub=None):
 		return error("There's a 500 character limit for titles.")
 
 	if v.marseyawarded:
-		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", title, re.A))
+		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", title, flags=re.A))
 		if len(marregex) == 0: return error("You can only type marseys!")
 		if body:
-			marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body, re.A))
+			marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body, flags=re.A))
 			if len(marregex) == 0: return error("You can only type marseys!")
 
 	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return error("You have to type more than 280 characters!")
@@ -1041,22 +1038,22 @@ def submit_post(v, sub=None):
 	if len(url) > 2048:
 		return error("There's a 2048 character limit for URLs.")
 
-	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', body, re.M|re.A):
+	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', body, flags=re.M|re.A):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 
 	if v and v.admin_level > 2:
 		bet_options = []
-		for i in re.finditer('\s*\$\$\$([^\$\n]+)\$\$\$\s*', body, re.A):
+		for i in re.finditer('\s*\$\$\$([^\$\n]+)\$\$\$\s*', body, flags=re.A):
 			bet_options.append(i.group(1))
 			body = body.replace(i.group(0), "")
 
 	options = []
-	for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, re.A):
+	for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, flags=re.A):
 		options.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
 	choices = []
-	for i in re.finditer('\s*&&([^\$\n]+)&&\s*', body, re.A):
+	for i in re.finditer('\s*&&([^\$\n]+)&&\s*', body, flags=re.A):
 		choices.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
@@ -1084,7 +1081,7 @@ def submit_post(v, sub=None):
 
 	body_html = sanitize(body)
 
-	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html, re.A))): return error("You can only type marseys!")
+	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html, flags=re.A))): return error("You can only type marseys!")
 
 	if v.longpost:
 		if len(body) < 280 or ' [](' in body or body.startswith('[]('): return error("You have to type more than 280 characters!")

@@ -107,7 +107,7 @@ class Submission(Base):
 
 	def total_choice_voted(self, v):
 		if v and self.choices:
-			return g.db.query(CommentVote).filter(CommentVote.user_id == v.id, CommentVote.comment_id.in_(tuple(x.id for x in self.choices))).all()
+			return g.db.query(CommentVote).filter(CommentVote.user_id == v.id, CommentVote.comment_id.in_([x.id for x in self.choices])).all()
 		return False
 
 	def total_bet_voted(self, v):
@@ -221,8 +221,8 @@ class Submission(Base):
 		if self.club: return link
 
 		output = self.title.lower()
-		output = re.sub('&\w{2,3};', '', output, re.A)
-		output = [re.sub('\W', '', word, re.A) for word in output.split()]
+		output = re.sub('&\w{2,3};', '', output, flags=re.A)
+		output = [re.sub('\W', '', word, flags=re.A) for word in output.split()]
 		output = [x for x in output if x][:6]
 		output = '-'.join(output)
 		if not output: output = '-'
