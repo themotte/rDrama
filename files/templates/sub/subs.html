@@ -17,7 +17,7 @@
 {% for sub, count in subs %}
 	<tr>
 		<td>{{loop.index}}</td>
-		<td><a href="/s/{{sub.name}}" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>{{sub}}</a></td>
+		<td><a href="/s/{{sub}}" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>{{sub}}</a></td>
 		<td>{{count}}</a>
 	</tr>
 {% endfor %}
