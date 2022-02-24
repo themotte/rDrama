@@ -232,67 +232,68 @@ def api_comment(v):
 		body = body.replace(i.group(0), "")
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
-		file=request.files["file"]
-		if file.content_type.startswith('image/'):
-			oldname = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
-			file.save(oldname)
-			image = process_image(oldname)
-			if image == "": return {"error":"Image upload failed"}
-			if v.admin_level > 2 and level == 1:
-				if parent_post.id == 37696:
-					filename = 'files/assets/images/Drama/sidebar/' + str(len(listdir('files/assets/images/Drama/sidebar'))+1) + '.webp'
-					copyfile(oldname, filename)
-					process_image(filename, 400)
-				elif parent_post.id == 37697:
-					filename = 'files/assets/images/Drama/banners_bhm/' + str(len(listdir('files/assets/images/Drama/banners_bhm'))+1) + '.webp'
-					copyfile(oldname, filename)
-					process_image(filename)
-				elif parent_post.id == 37833:
-					try:
-						badge_def = loads(body)
-						name = badge_def["name"]
-
-						existing = g.db.query(BadgeDef).filter_by(name=name).one_or_none()
-						if existing: return {"error": "A badge with this name already exists!"}, 403
-
-						badge = BadgeDef(name=name, description=badge_def["description"])
-						g.db.add(badge)
-						g.db.flush()
-						filename = f'files/assets/images/badges/{badge.id}.webp'
+		files = request.files.getlist('file')[:4]
+		for file in files:
+			if file.content_type.startswith('image/'):
+				oldname = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+				file.save(oldname)
+				image = process_image(oldname)
+				if image == "": return {"error":"Image upload failed"}
+				if v.admin_level > 2 and level == 1:
+					if parent_post.id == 37696:
+						filename = 'files/assets/images/Drama/sidebar/' + str(len(listdir('files/assets/images/Drama/sidebar'))+1) + '.webp'
 						copyfile(oldname, filename)
-						process_image(filename, 200)
-						requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/badges/{badge.id}.webp"]}, timeout=5)
-					except Exception as e:
-						return {"error": str(e)}, 400
-				elif v.admin_level > 2 and parent_post.id == 37838:
-					try:
-						marsey = loads(body.lower())
-						name = marsey["name"]
-						if "author" in marsey: author_id = get_user(marsey["author"]).id
-						elif "author_id" in marsey: author_id = marsey["author_id"]
-						else: abort(400)
-
-						existing = g.db.query(Marsey.name).filter_by(name=name).one_or_none()
-						if existing: return {"error": "A marsey with this name already exists!"}, 403
-
-						marsey = Marsey(name=marsey["name"], author_id=author_id, tags=marsey["tags"], count=0)
-						g.db.add(marsey)
-						filename = f'files/assets/images/emojis/{name}.webp'
+						process_image(filename, 400)
+					elif parent_post.id == 37697:
+						filename = 'files/assets/images/Drama/banners_bhm/' + str(len(listdir('files/assets/images/Drama/banners_bhm'))+1) + '.webp'
 						copyfile(oldname, filename)
-						process_image(filename, 200)
-						requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{name}"]}, timeout=5)
-						cache.delete_memoized(marsey_list)
-					except Exception as e:
-						return {"error": str(e)}, 400
-			body += f"\n\n![]({image})"
-		elif file.content_type.startswith('video/'):
-			file.save("video.mp4")
-			with open("video.mp4", 'rb') as f:
-				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']['link']
-				except: return {"error": "Imgur error"}, 400
-			if url.endswith('.'): url += 'mp4'
-			body += f"\n\n{url}"
-		else: return {"error": "Image/Video files only"}, 400
+						process_image(filename)
+					elif parent_post.id == 37833:
+						try:
+							badge_def = loads(body)
+							name = badge_def["name"]
+
+							existing = g.db.query(BadgeDef).filter_by(name=name).one_or_none()
+							if existing: return {"error": "A badge with this name already exists!"}, 403
+
+							badge = BadgeDef(name=name, description=badge_def["description"])
+							g.db.add(badge)
+							g.db.flush()
+							filename = f'files/assets/images/badges/{badge.id}.webp'
+							copyfile(oldname, filename)
+							process_image(filename, 200)
+							requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/badges/{badge.id}.webp"]}, timeout=5)
+						except Exception as e:
+							return {"error": str(e)}, 400
+					elif v.admin_level > 2 and parent_post.id == 37838:
+						try:
+							marsey = loads(body.lower())
+							name = marsey["name"]
+							if "author" in marsey: author_id = get_user(marsey["author"]).id
+							elif "author_id" in marsey: author_id = marsey["author_id"]
+							else: abort(400)
+
+							existing = g.db.query(Marsey.name).filter_by(name=name).one_or_none()
+							if existing: return {"error": "A marsey with this name already exists!"}, 403
+
+							marsey = Marsey(name=marsey["name"], author_id=author_id, tags=marsey["tags"], count=0)
+							g.db.add(marsey)
+							filename = f'files/assets/images/emojis/{name}.webp'
+							copyfile(oldname, filename)
+							process_image(filename, 200)
+							requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{name}"]}, timeout=5)
+							cache.delete_memoized(marsey_list)
+						except Exception as e:
+							return {"error": str(e)}, 400
+				body += f"\n\n![]({image})"
+			elif file.content_type.startswith('video/'):
+				file.save("video.mp4")
+				with open("video.mp4", 'rb') as f:
+					try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']['link']
+					except: return {"error": "Imgur error"}, 400
+				if url.endswith('.'): url += 'mp4'
+				body += f"\n\n{url}"
+			else: return {"error": "Image/Video files only"}, 400
 
 	if v.agendaposter and not v.marseyawarded and parent_post.id not in (37696,37697,37749,37833,37838):
 		body = torture_ap(body, v.username)
@@ -808,20 +809,21 @@ def edit_comment(cid, v):
 				return {"error": "Too much spam!"}, 403
 
 		if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
-			file=request.files["file"]
-			if file.content_type.startswith('image/'):
-				name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
-				file.save(name)
-				url = process_image(name)
-				body += f"\n\n![]({url})"
-			elif file.content_type.startswith('video/'):
-				file.save("video.mp4")
-				with open("video.mp4", 'rb') as f:
-					try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']['link']
-					except: return {"error": "Imgur error"}, 400
-				if url.endswith('.'): url += 'mp4'
-				body += f"\n\n{url}"
-			else: return {"error": "Image/Video files only"}, 400
+			files = request.files.getlist('file')[:4]
+			for file in files:
+				if file.content_type.startswith('image/'):
+					name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+					file.save(name)
+					url = process_image(name)
+					body += f"\n\n![]({url})"
+				elif file.content_type.startswith('video/'):
+					file.save("video.mp4")
+					with open("video.mp4", 'rb') as f:
+						try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']['link']
+						except: return {"error": "Imgur error"}, 400
+					if url.endswith('.'): url += 'mp4'
+					body += f"\n\n{url}"
+				else: return {"error": "Image/Video files only"}, 400
 
 			body_html = sanitize(body, edit=True)
 

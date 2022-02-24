@@ -481,20 +481,21 @@ def edit_post(pid, v):
 		p.title_html = title_html
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
-		file=request.files["file"]
-		if file.content_type.startswith('image/'):
-			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
-			file.save(name)
-			url = process_image(name)
-			body += f"\n\n![]({url})"
-		elif file.content_type.startswith('video/'):
-			file.save("video.mp4")
-			with open("video.mp4", 'rb') as f:
-				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']['link']
-				except: return {"error": "Imgur error"}, 400
-			if url.endswith('.'): url += 'mp4'
-			body += f"\n\n{url}"
-		else: return {"error": "Image/Video files only"}, 400
+		files = request.files.getlist('file')[:4]
+		for file in files:
+			if file.content_type.startswith('image/'):
+				name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+				file.save(name)
+				url = process_image(name)
+				body += f"\n\n![]({url})"
+			elif file.content_type.startswith('video/'):
+				file.save("video.mp4")
+				with open("video.mp4", 'rb') as f:
+					try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']['link']
+					except: return {"error": "Imgur error"}, 400
+				if url.endswith('.'): url += 'mp4'
+				body += f"\n\n{url}"
+			else: return {"error": "Image/Video files only"}, 400
 
 	if body != p.body:
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', body, flags=re.M|re.A):
@@ -1062,20 +1063,21 @@ def submit_post(v, sub=None):
 	if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
 	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
-		file=request.files["file2"]
-		if file.content_type.startswith('image/'):
-			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
-			file.save(name)
-			body += f"\n\n![]({process_image(name)})"
-		elif file.content_type.startswith('video/'):
-			file.save("video.mp4")
-			with open("video.mp4", 'rb') as f:
-				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']['link']
-				except: return error( "Imgur error")
-			if url.endswith('.'): url += 'mp4'
-			body += f"\n\n{url}"
-		else:
-			return error("Image/Video files only.")
+		files = request.files.getlist('file2')[:4]
+		for file in files:
+			if file.content_type.startswith('image/'):
+				name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+				file.save(name)
+				body += f"\n\n![]({process_image(name)})"
+			elif file.content_type.startswith('video/'):
+				file.save("video.mp4")
+				with open("video.mp4", 'rb') as f:
+					try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']['link']
+					except: return error( "Imgur error")
+				if url.endswith('.'): url += 'mp4'
+				body += f"\n\n{url}"
+			else:
+				return error("Image/Video files only.")
 
 	if '#fortune' in body:
 		body = body.replace('#fortune', '')
