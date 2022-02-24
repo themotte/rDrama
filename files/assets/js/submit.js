@@ -30,6 +30,8 @@ document.onpaste = function(event) {
 			document.getElementById('file-upload').setAttribute('required', 'false');	
 		}
 		checkForRequired();
+		document.getElementById('post-url').value = null;
+		localStorage.setItem("post_url", "")
 	}
 }
 

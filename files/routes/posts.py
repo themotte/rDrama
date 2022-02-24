@@ -928,14 +928,13 @@ def submit_post(v, sub=None):
 		
 		url = urlunparse(new_url)
 
-		if SITE != 'localhost':
-			repost = g.db.query(Submission).filter(
-				Submission.url.ilike(url),
-				Submission.deleted_utc == 0,
-				Submission.is_banned == False
-			).one_or_none()
+		repost = g.db.query(Submission).filter(
+			Submission.url.ilike(url),
+			Submission.deleted_utc == 0,
+			Submission.is_banned == False
+		).one_or_none()
 
-			if repost: return redirect(repost.permalink)
+		if repost: return redirect(repost.permalink)
 
 		domain_obj = get_domain(domain)
 		if not domain_obj: domain_obj = get_domain(domain+parsed_url.path)
