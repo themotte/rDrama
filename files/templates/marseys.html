@@ -20,7 +20,7 @@
 		<tr>
 			<td>{{loop.index}}</td>
 			<td>{{marsey.name}}</td>
-			<td><img class="marsey" loading="lazy" data-bs-toggle="tooltip" alt=":{{marsey.name}}:" title=":{{marsey.name}}:" data-bs-original-title=":{{marsey.name}}:" delay="0" src="/static/assets/images/emojis/{{marsey.name}}.webp?a=1010" ></td>
+			<td><img class="marsey" loading="lazy" data-bs-toggle="tooltip" alt=":{{marsey.name}}:" title=":{{marsey.name}}:" data-bs-original-title=":{{marsey.name}}:" src="/static/assets/images/emojis/{{marsey.name}}.webp?a=1010" ></td>
 			<td>{{marsey.count}}</td>
 			<td><a style="color:#{{author.namecolor}};font-weight:bold" href="/@{{author.username}}"><img loading="lazy" src="{{author.profile_url}}" class="pp20"><span {% if author.patron %}class="patron" style="background-color:#{{author.namecolor}}"{% endif %}>{{author.username}}</span></a></td>
 		</tr>
@@ -30,7 +30,7 @@
 	<tr>
 		<td>{{loop.index}}</td>
 		<td>{{marsey.name}}</td>
-		<td><img class="marsey" loading="lazy" data-bs-toggle="tooltip" alt=":{{marsey.name}}:" title=":{{marsey.name}}:" data-bs-original-title=":{{marsey.name}}:" delay="0" src="/static/assets/images/emojis/{{marsey.name}}.webp?a=1010" ></td>
+		<td><img class="marsey" loading="lazy" data-bs-toggle="tooltip" alt=":{{marsey.name}}:" title=":{{marsey.name}}:" data-bs-original-title=":{{marsey.name}}:" src="/static/assets/images/emojis/{{marsey.name}}.webp?a=1010" ></td>
 		<td>{{marsey.count}}</td>
 	</tr>
 	{% endfor %}
