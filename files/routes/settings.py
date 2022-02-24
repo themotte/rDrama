@@ -340,8 +340,11 @@ def settings_profile_post(v):
 
 	house = request.values.get("house")
 	if house and house in ("None","Furry","Femboy","Vampire","Racist"):
-		if v.coins >= 2000: v.coins -= 2000
-		elif v.procoins >= 2000: v.procoins -= 2000
+		if v.house: cost = 2000
+		else: cost = 500
+
+		if v.coins >= cost: v.coins -= cost
+		elif v.procoins >= cost: v.procoins -= cost
 		else: abort(403)
 
 		if house == "None": house = None 

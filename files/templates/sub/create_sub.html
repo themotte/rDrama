@@ -44,11 +44,11 @@
 						</p>
 						{% endif %}
 						
-						<button class="btn btn-primary ml-auto" id="create_button" {% if v.subs_created * 150 > v.coins %}disabled{% endif %}>Create Sub</button>
+						<button class="btn btn-primary ml-auto" id="create_button" {% if (v.subs_created+1) * 100 > v.coins %}disabled{% endif %}>Create Sub</button>
 
 					</div>
 
-					<p class="mt-2 mr-1" style="float: right"><b>Cost</b>: {{v.subs_created * 150}} coins</p>
+					<p class="mt-2 mr-1" style="float: right"><b>Cost</b>: {{(v.subs_created+1) * 100}} coins</p>
 
 				</div>
 

@@ -54,7 +54,7 @@ INSERT INTO public.badge_defs VALUES
 (23,'Landchad','Contributed at least $20'),
 (24,'Terminally online turboautist','Contributed at least $50'),
 (25,'Footpig','Contributed at least $100'),
-(26,'Rich Bich','Contributed at least $250'),
+(26,'Rich Bich','Contributed at least $500'),
 (27,'Lolcow','Beautiful and valid milk provider'),
 (28,'Chud','Forced to use the chud theme'),
 (60,'Unironically Retarded','Demonstrated a wholesale inability to read the room'),

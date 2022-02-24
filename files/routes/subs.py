@@ -271,7 +271,7 @@ def create_sub2(v):
 
 	sub = g.db.query(Sub).filter_by(name=name).one_or_none()
 	if not sub:
-		cost = v.subs_created * 150
+		cost = (v.subs_created+1) * 100
 
 		if v.coins < cost:
 			return render_template("sub/create_sub.html", v=v, error="You don't have enough coins!"), 403

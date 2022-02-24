@@ -5012,3 +5012,7 @@ li > .sidebar > .rules {
 th, td {
     font-weight: 700;
 }
+
+.fas {
+    text-align: center;
+}

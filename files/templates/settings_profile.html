@@ -54,9 +54,15 @@
 						</div>
 
 						<div class="body w-lg-100">
-							<p>Change your house (cost: 2000 coins or marseybux).</p>
+							{% if v.house %}
+								{% set cost=2000 %}
+								<p>Change your house (cost: {{cost}} coins or marseybux).</p>
+							{% else %}
+								{% set cost=500 %}
+								<p>Join a house (cost: {{cost}} coins or marseybux).</p>
+							{% endif %}
 							<div class="input-group mb2">
-								<select {% if v.coins < 2000 and v.procoins < 2000 %}disabled{% endif %} autocomplete="off" id='house' class="form-control" form="profile-settings" name="house" onchange="post_toast(this,'/settings/profile?house='+document.getElementById('house').value, '1')">
+								<select {% if v.coins < cost and v.procoins < cost %}disabled{% endif %} autocomplete="off" id='house' class="form-control" form="profile-settings" name="house" onchange="post_toast(this,'/settings/profile?house='+document.getElementById('house').value, '1')">
 								{% for entry in  ("None","Furry","Femboy","Vampire","Racist") %}
 									<option value="{{entry}}" {% if v.house==entry %} selected {% endif %}>
 										{{entry}}
