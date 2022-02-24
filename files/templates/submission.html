@@ -1086,7 +1086,7 @@
 
 </div>
 
-{% if p.body and not (v and v.id == p.author_id) %}
+{% if v and v.id != p.author_id and p.body %}
 	<textarea autocomplete="off" class="d-none card border my-2 p-3 comment-box form-control rounded" id="markdown-{{p.id}}" readonly>{{p.body.strip()}}</textarea> 
 {% endif %}
 

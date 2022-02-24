@@ -564,7 +564,7 @@
 				{% endif %}
 			</div>
 
-		{% if c.body and not (v and v.id == c.author_id) %}
+		{% if v and v.id != c.author_id and c.body %}
 			<div class="d-none card rounded border my-2 p-3" style="white-space:pre-wrap" id="markdown-{{c.id}}">{{c.body.strip()}}</div>
 		{% endif %}
 
