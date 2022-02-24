@@ -259,7 +259,7 @@ def api_comment(v):
 						filename = f'files/assets/images/badges/{badge.id}.webp'
 						copyfile(oldname, filename)
 						process_image(filename, 200)
-						requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/badges/{badge.id}.webp"]})
+						requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/badges/{badge.id}.webp"]}, timeout=5)
 					except Exception as e:
 						return {"error": str(e)}, 400
 				elif v.admin_level > 2 and parent_post.id == 37838:
@@ -278,7 +278,7 @@ def api_comment(v):
 						filename = f'files/assets/images/emojis/{name}.webp'
 						copyfile(oldname, filename)
 						process_image(filename, 200)
-						requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/emojis/{name}.webp"]})
+						requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/emojis/{name}.webp"]}, timeout=5)
 						cache.delete_memoized(marsey_list)
 					except Exception as e:
 						return {"error": str(e)}, 400
@@ -286,7 +286,7 @@ def api_comment(v):
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
-				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
+				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']['link']
 				except: return {"error": "Imgur error"}, 400
 			if url.endswith('.'): url += 'mp4'
 			body += f"\n\n{url}"
@@ -815,7 +815,7 @@ def edit_comment(cid, v):
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
-					try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
+					try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']['link']
 					except: return {"error": "Imgur error"}, 400
 				if url.endswith('.'): url += 'mp4'
 				body += f"\n\n{url}"

@@ -592,8 +592,7 @@
 							<button id="unmark3-{{p.id}}" class="{% if not p.over_18 %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-success" onclick="post_toast2(this,'/toggle_post_nsfw/{{p.id}}','mark3-{{p.id}}','unmark3-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-eye-evil text-center mr-3"></i>Unmark +18</button>
 						{% else %}
 							{% if p.body %}
-								<button id="view-{{p.id}}" class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-dismiss="modal" onclick="expandMarkdown('{{p.id}}')"><i class="fas text-expand-icon-{{p.id}} fa-expand-alt text-center mr-3"></i>View source</button>
-								<button id="hide-{{p.id}}" class="nobackground btn btn-link btn-block btn-lg text-left text-muted d-none" data-bs-dismiss="modal" onclick="expandMarkdown('{{p.id}}')"><i class="fas text-expand-icon-{{p.id}} fa-compress-alt text-center mr-3"></i>Hide source</button>
+								<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-dismiss="modal" onclick="expandMarkdown(this,'{{p.id}}')"><i class="fas text-expand-icon-{{p.id}} fa-expand-alt text-center mr-3"></i><span>View source</span></button>
 							{% endif %}
 
 							{% if not p.ghost %}
@@ -888,8 +887,8 @@
 							<a class="list-inline-item" role="button" onclick="togglePostEdit('{{p.id}}')"><i class="fas fa-edit"></i>Edit</a>
 						{% endif %}
 
-						{% if not (v and v.id == p.author_id) and p.body %}
-							<a class="list-inline-item" role="button" onclick="expandMarkdown('{{p.id}}')"><i class="fas text-expand-icon-{{p.id}} fa-expand-alt"></i>View source</a>
+						{% if v and v.id != p.author_id and p.body %}
+							<a class="list-inline-item" role="button" onclick="expandMarkdown(this,'{{p.id}}')"><i class="fas text-expand-icon-{{p.id}} fa-expand-alt"></i><span>View source</span></a>
 						{% endif %}
 
 						{% if v and v.id==p.author_id %}
@@ -1088,7 +1087,7 @@
 </div>
 
 {% if p.body and not (v and v.id == p.author_id) %}
-	<div class="d-none card rounded border my-2 p-3" style="white-space:pre-wrap" id="markdown-{{p.id}}">{{p.body.strip()}}</div>
+	<textarea autocomplete="off" class="d-none card border my-2 p-3 comment-box form-control rounded" id="markdown-{{p.id}}" readonly>{{p.body.strip()}}</textarea> 
 {% endif %}
 
 <div class="row border-md-0 comment-section pb-3">

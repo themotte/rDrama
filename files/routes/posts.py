@@ -490,7 +490,7 @@ def edit_post(pid, v):
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
-				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
+				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']['link']
 				except: return {"error": "Imgur error"}, 400
 			if url.endswith('.'): url += 'mp4'
 			body += f"\n\n{url}"
@@ -761,7 +761,7 @@ def thumbnail_thread(pid):
 			word = random.choice(('rdrama','marsey'))
 
 			try:
-				data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={word}&size=1')
+				data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={word}&size=1', timeout=5)
 				if str(data) == "<Response [200]>": data = data.json()["data"]
 				else: break
 			except: break
@@ -789,7 +789,7 @@ def thumbnail_thread(pid):
 
 			k,val = random.choice(tuple(REDDIT_NOTIFS.items()))
 			
-			for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={k}&size=1').json()["data"]:
+			for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={k}&size=1', timeout=5).json()["data"]:
 				body_html = sanitize(f'New mention of you: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 
 				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html).one_or_none()
@@ -812,7 +812,7 @@ def thumbnail_thread(pid):
 		for t in ("submission","comment"):
 
 			try:
-				data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q=pcmemes.net&size=1').json()["data"]
+				data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q=pcmemes.net&size=1', timeout=5).json()["data"]
 				if str(data) == "<Response [200]>": data = data.json()["data"]
 				else: break
 			except: break
@@ -943,7 +943,7 @@ def submit_post(v, sub=None):
 			reason = f"Remove the {domain_obj.domain} link from your post and try again. {domain_obj.reason}"
 			return error(reason)
 		elif "twitter.com" == domain:
-			try: embed = requests.get("https://publish.twitter.com/oembed", timeout=5, params={"url":url, "omit_script":"t"}).json()["html"]
+			try: embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}, timeout=5).json()["html"]
 			except: embed = None
 		elif url.startswith('https://youtube.com/watch?v='):
 			url = unquote(url).replace('?t', '&t')
@@ -1071,7 +1071,7 @@ def submit_post(v, sub=None):
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
-				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
+				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']['link']
 				except: return error( "Imgur error")
 			if url.endswith('.'): url += 'mp4'
 			body += f"\n\n{url}"
@@ -1199,7 +1199,7 @@ def submit_post(v, sub=None):
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
-				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
+				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']['link']
 				except: return error( "Imgur error")
 			if url.endswith('.'): url += 'mp4'
 			post.url = url

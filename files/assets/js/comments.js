@@ -36,10 +36,14 @@ function morecomments(cid) {
 	xhr.send(form)
 }
 
-function expandMarkdown(id) {
-	document.getElementById('markdown-'+id).classList.toggle('d-none');
+function expandMarkdown(t,id) {
+	let ta = document.getElementById('markdown-'+id);
+	ta.classList.toggle('d-none');
+	autoExpand(ta);
 	document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-expand-alt');
 	document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-compress-alt');
-	document.getElementById('view-'+id).classList.toggle('d-none');
-	document.getElementById('hide-'+id).classList.toggle('d-none');
+
+	let val = t.getElementsByTagName('span')[0]
+	if (val.innerHTML == 'View source') val.innerHTML = 'Hide source'
+	else val.innerHTML = 'View source'
 };

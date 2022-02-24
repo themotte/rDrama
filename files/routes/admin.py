@@ -414,7 +414,7 @@ def admin_home(v):
 	with open('disable_signups', 'r') as f: x = f.read()
 
 	if CF_ZONE == '3435tdfsdudebussylmaoxxt43': response = 'high'
-	else: response = requests.get(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS).json()['result']['value']
+	else: response = requests.get(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, timeout=5).json()['result']['value']
 	
 	x2 = response == 'under_attack'
 
@@ -450,7 +450,7 @@ def disable_signups(v):
 @admin_level_required(3)
 def purge_cache(v):
 	cache.clear()
-	response = str(requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data='{"purge_everything":true}'))
+	response = str(requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data='{"purge_everything":true}', timeout=5))
 
 	ma = ModAction(
 		kind="purge_cache",
@@ -465,7 +465,7 @@ def purge_cache(v):
 @app.post("/admin/under_attack")
 @admin_level_required(3)
 def under_attack(v):
-	response = requests.get(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS).json()['result']['value']
+	response = requests.get(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, timeout=5).json()['result']['value']
 
 	if response == 'under_attack':
 		ma = ModAction(
@@ -475,7 +475,7 @@ def under_attack(v):
 		g.db.add(ma)
 		g.db.commit()
 
-		response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data='{"value":"medium"}'))
+		response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data='{"value":"medium"}', timeout=5))
 		if response == "<Response [200]>": return {"message": "Under attack mode disabled!"}
 		return {"error": "Failed to disable under attack mode."}
 	else:
@@ -486,7 +486,7 @@ def under_attack(v):
 		g.db.add(ma)
 		g.db.commit()
 
-		response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data='{"value":"under_attack"}'))
+		response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data='{"value":"under_attack"}', timeout=5))
 		if response == "<Response [200]>": return {"message": "Under attack mode enabled!"}
 		return {"error": "Failed to enable under attack mode."}
 
@@ -1151,7 +1151,7 @@ def ban_post(post_id, v):
 	v.coins += 1
 	g.db.add(v)
 
-	requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, json={'files': [f"{SITE_FULL}/logged_out/"]})
+	requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, json={'files': [f"{SITE_FULL}/logged_out/"]}, timeout=5)
 
 	g.db.commit()
 
