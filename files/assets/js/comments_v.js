@@ -186,7 +186,8 @@ function comment_edit(id){
 
 	form.append('formkey', formkey());
 	form.append('body', document.getElementById('comment-edit-body-'+id).value);
-	form.append('file', document.getElementById('file-edit-reply-'+id).files[0]);
+	for (const e of document.getElementById('file-edit-reply-'+id).files)
+		form.append('file', e);
 
 	const xhr = new XMLHttpRequest();
 	xhr.open("post", "/edit_comment/"+id);
@@ -224,7 +225,9 @@ function post_comment(fullname){
 	form.append('parent_fullname', fullname);
 	form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
 	form.append('body', document.getElementById('reply-form-body-'+fullname).value);
-	form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
+
+	for (const e of document.getElementById('file-upload-reply-'+fullname).files)
+		form.append('file', e);
 
 	const xhr = new XMLHttpRequest();
 	xhr.open("post", "/comment");
