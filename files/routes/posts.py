@@ -764,11 +764,7 @@ def thumbnail_thread(pid):
 
 				body_html = sanitize(f'New {word} mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 
-				try: existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1).one_or_none()
-				except:
-					print(body_html)
-					break
-
+				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1).one_or_none()
 				if existing_comment: break
 
 				new_comment = Comment(author_id=NOTIFICATIONS_ID,
@@ -786,9 +782,10 @@ def thumbnail_thread(pid):
 					db.add(notif)
 
 			k,val = random.choice(tuple(REDDIT_NOTIFS.items()))
+			
 			for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={k}&size=1').json()["data"]:
-				try: body_html = sanitize(f'New mention of you: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
-				except: continue
+				body_html = sanitize(f'New mention of you: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
+
 				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html).one_or_none()
 				if existing_comment: break
 
