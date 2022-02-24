@@ -214,7 +214,7 @@ class User(Base):
 	@property
 	@lazy
 	def paid_dues(self):
-		return self.admin_level > 1 or self.club_allowed or self.truecoins > int(environ.get("DUES").strip()) and self.club_allowed != False
+		return self.admin_level or self.club_allowed or self.patron > 1 or (self.patron == 1 and self.truecoins > dues/10) or (self.club_allowed != False and self.truecoins > dues)
 
 	@lazy
 	def any_block_exists(self, other):
