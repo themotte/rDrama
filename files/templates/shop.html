@@ -59,7 +59,7 @@
 			</thead>
 			<tbody>
 		{% for a in awards %}
-			<tr data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a['description']}}" data-bs-original-title="{{a['description']}}">
+			<tr data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a['description']}}">
 				<td><i class="{{a['icon']}} {{a['color']}}" style="font-size: 30px"></i></td>
 				<td>{{a['title']}}</td>
 				{% if a['baseprice'] != a['price'] %}
