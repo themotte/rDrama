@@ -177,6 +177,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			tag["onclick"] = "expandDesktopImage(this.src);"
 			tag["data-bs-toggle"] = "modal"
 			tag["data-bs-target"] = "#expandImageModal"
+			tag['referrerpolicy'] = "no-referrer"
 
 	for tag in soup.find_all("a"):
 		if tag.get("href"):

@@ -223,7 +223,7 @@ def api_comment(v):
 						name = badge_def["name"]
 
 						existing = g.db.query(BadgeDef).filter_by(name=name).one_or_none()
-						if existing: return {"error": "A badge with this name already exists!"}
+						if existing: return {"error": "A badge with this name already exists!"}, 403
 
 						badge = BadgeDef(name=name, description=badge_def["description"])
 						g.db.add(badge)
@@ -243,7 +243,7 @@ def api_comment(v):
 						else: abort(400)
 
 						existing = g.db.query(Marsey.name).filter_by(name=name).one_or_none()
-						if existing: return {"error": "A marsey with this name already exists!"}
+						if existing: return {"error": "A marsey with this name already exists!"}, 403
 
 						marsey = Marsey(name=marsey["name"], author_id=author_id, tags=marsey["tags"], count=0)
 						g.db.add(marsey)
@@ -684,7 +684,7 @@ def api_comment(v):
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
-	return render_template("comments.html", v=v, comments=[c], ajax=True)
+	return {"comment": c.body_html}
 
 
 
@@ -897,7 +897,7 @@ def edit_comment(cid, v):
 
 		g.db.commit()
 
-	return c.realbody(v)
+	return {"comment": c.realbody(v)}
 
 
 @app.post("/delete/comment/<cid>")

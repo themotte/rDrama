@@ -147,7 +147,7 @@
 </div>
 {% endif %}
 
-{% if c.sentto and c.level > 1 %}
+{% if c.parent_comment and c.parent_comment.sentto %}
 	{% set isreply = True %}
 {% else %}
 	{% set isreply = False %}
@@ -871,7 +871,7 @@
 
 	{% if v %}
 		<script src="/static/assets/js/marked.js?a=242"></script>
-		<script src="/static/assets/js/comments_v.js?a=257"></script>
+		<script src="/static/assets/js/comments_v.js?a=259"></script>
 	{% endif %}
 
 	<script src="/static/assets/js/clipboard.js?a=250"></script>

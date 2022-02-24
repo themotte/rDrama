@@ -156,18 +156,17 @@ function post_reply(id){
 	xhr.open("post", "/reply");
 	xhr.setRequestHeader('xhr', 'xhr');
 	xhr.onload=function(){
-		if (xhr.status==200) {
+		let data
+		try {data = JSON.parse(xhr.response)}
+		catch(e) {console.log(e)}
+		if (data && data["comment"]) {
 			commentForm=document.getElementById('comment-form-space-'+id);
-			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '').replace('comment-collapse-desktop d-none d-md-block','d-none').replace('border-left: 2px solid','padding-left:0;border-left: 0px solid');
+			commentForm.innerHTML = data["comment"].replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '').replace('comment-collapse-desktop d-none d-md-block','d-none').replace('border-left: 2px solid','padding-left:0;border-left: 0px solid');
 			bs_trigger();
 		}
 		else {
-			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
-			try{
-				let data = JSON.parse(xhr.response)
-				document.getElementById('toast-post-error-text').innerText = data["error"];
-			}
-			catch(e) {console.log(e)}
+			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			else document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
 		setTimeout(() => {
@@ -193,18 +192,17 @@ function comment_edit(id){
 	xhr.open("post", "/edit_comment/"+id);
 	xhr.setRequestHeader('xhr', 'xhr');
 	xhr.onload=function(){
-		if (xhr.status==200) {
+		let data
+		try {data = JSON.parse(xhr.response)}
+		catch(e) {console.log(e)}
+		if (data && data["comment"]) {
 			commentForm=document.getElementById('comment-text-'+id);
-			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '')
+			commentForm.innerHTML = data["comment"].replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '')
 			document.getElementById('cancel-edit-'+id).click()
 		}
 		else {
-			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
-			try{
-				let data = JSON.parse(xhr.response)
-				document.getElementById('toast-post-error-text').innerText = data["error"];
-			}
-			catch(e) {console.log(e)}
+			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			else document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
 		setTimeout(() => {
@@ -232,18 +230,17 @@ function post_comment(fullname){
 	xhr.open("post", "/comment");
 	xhr.setRequestHeader('xhr', 'xhr');
 	xhr.onload=function(){
-		if (xhr.status==200) {
+		let data
+		try {data = JSON.parse(xhr.response)}
+		catch(e) {console.log(e)}
+		if (data && data["comment"]) {
 			commentForm=document.getElementById('comment-form-space-'+fullname);
-			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
+			commentForm.innerHTML = data["comment"].replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
 			bs_trigger();
 		}
 		else {
-			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
-			try{
-				let data = JSON.parse(xhr.response)
-				document.getElementById('toast-post-error-text').innerText = data["error"];
-			}
-			catch(e) {console.log(e)}
+			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			else document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
 		setTimeout(() => {
