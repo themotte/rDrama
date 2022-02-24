@@ -39,10 +39,10 @@
 	
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=147"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=25">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=148"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=25">
 	{% else %}
 		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=147"><link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?a=25">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=148"><link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?a=25">
 	{% endif %}
 </head>
 
@@ -93,22 +93,22 @@
 				<div class="d-flex flex-row-reverse justify-content-center">
 					<ul class="nav settings-nav">
 						<li class="nav-item">
-							<a style="padding: 0.75rem 1rem;" class="nav-link{% if request.path.endswith('/leaderboard') %} active{% endif %}" href="/leaderboard"><i class="fas fa-trophy text-lg mr-0"></i></a>
+							<a style="padding: 0.75rem 1rem"class="nav-link{% if request.path.endswith('/leaderboard') %} active{% endif %}" href="/leaderboard"><i class="fas fa-trophy text-lg mr-0"></i></a>
 						</li>
 						<li class="nav-item">
-							<a style="padding: 0.75rem 1rem;" class="nav-link{% if request.path.endswith('/admins') %} active{% endif %}" href="/admins"><i class="fas fa-crown text-lg mr-0"></i></a>
+							<a style="padding: 0.75rem 1rem"class="nav-link{% if request.path.endswith('/admins') %} active{% endif %}" href="/admins"><i class="fas fa-crown text-lg mr-0"></i></a>
 						</li>
 						<li class="nav-item">
-							<a style="padding: 0.75rem 1rem;" class="nav-link{% if request.path.endswith('/log') %} active{% endif %}" href="/log"><i class="fas fa-scroll-old text-lg mr-0"></i></a>
+							<a style="padding: 0.75rem 1rem"class="nav-link{% if request.path.endswith('/log') %} active{% endif %}" href="/log"><i class="fas fa-scroll-old text-lg mr-0"></i></a>
 						</li>
 						<li class="nav-item">
-							<a style="padding: 0.75rem 1rem;" class="nav-link{% if request.path.endswith('/banned') %} active{% endif %}" href="/banned"><i class="fas fa-user-slash text-lg mr-0"></i></a>
+							<a style="padding: 0.75rem 1rem"class="nav-link{% if request.path.endswith('/banned') %} active{% endif %}" href="/banned"><i class="fas fa-user-slash text-lg mr-0"></i></a>
 						</li>
 						<li class="nav-item">
-							<a style="padding: 0.75rem 1rem;" class="nav-link{% if request.path.endswith('/blocks') %} active{% endif %}" href="/blocks"><i class="fas fa-eye-slash text-lg mr-0"></i></a>
+							<a style="padding: 0.75rem 1rem"class="nav-link{% if request.path.endswith('/blocks') %} active{% endif %}" href="/blocks"><i class="fas fa-eye-slash text-lg mr-0"></i></a>
 						</li>
 						<li class="nav-item">
-							<a style="padding: 0.75rem 1rem;" class="nav-link{% if request.path.endswith('/changelog') %} active{% endif %}" href="/changelog"><i class="fas fa-clipboard text-lg mr-0"></i></a>
+							<a style="padding: 0.75rem 1rem"class="nav-link{% if request.path.endswith('/changelog') %} active{% endif %}" href="/changelog"><i class="fas fa-clipboard text-lg mr-0"></i></a>
 						</li>
 					</ul>
 				</div>

@@ -16,7 +16,7 @@ function block_user() {
 		f.append("formkey", formkey());
 		xhr.onload=function(){
 			if (xhr.status<300) {
-				location.reload(true);
+				location.reload();
 			}
 			else {
 				var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success'));

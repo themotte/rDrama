@@ -1,0 +1,26 @@
+{% extends "default.html" %}
+{% block content %}
+<pre>
+
+	
+</pre>
+<h5>List of subs with at least 1 post</h5>
+<pre></pre>
+<div class="overflow-x-auto"><table class="table table-striped mb-5">
+<thead class="bg-primary text-white">
+	<tr>
+		<th>#</th>
+		<th>Name</th>
+		<th>Posts</th>
+	</tr>
+</thead>
+{% for sub, count in subs %}
+	<tr>
+		<td>{{loop.index}}</td>
+		<td><a href="/s/{{sub.name}}">{{sub}}</a></td>
+		<td>{{count}}</a>
+	</tr>
+{% endfor %}
+</table>
+
+{% endblock %}

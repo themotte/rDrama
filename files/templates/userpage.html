@@ -261,8 +261,8 @@
 							<form action="/ban_user/{{u.id}}" method="post" action="">
 								<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 								<input autocomplete="off" type="hidden" name="redir" value="true">
-								<input autocomplete="off" style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" oninput="document.getElementById('user-ban-submit').disabled=false">
-								<input autocomplete="off" style="font-size:11px;" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
+								<input autocomplete="off" style="font-size:11px" type="text" class="form-control" name="reason" placeholder="Ban Reason" oninput="document.getElementById('user-ban-submit').disabled=false">
+								<input autocomplete="off" style="font-size:11px" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
 								<div class="custom-control custom-checkbox">
 									<input autocomplete="off" type="checkbox" id="alts-2-desktop" class="custom-control-input" name="alts" value="1">
 									<label class="custom-control-label" for="alts-2-desktop">Include alts</label>
@@ -567,8 +567,8 @@
 							<form action="/ban_user/{{u.id}}/" method="post">
 								<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 								<input autocomplete="off" type="hidden" name="redir" value="true">
-								<input autocomplete="off" style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" oninput="document.getElementById('user-ban-submit2').disabled=false">
-								<input autocomplete="off" style="font-size:11px;" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
+								<input autocomplete="off" style="font-size:11px" type="text" class="form-control" name="reason" placeholder="Ban Reason" oninput="document.getElementById('user-ban-submit2').disabled=false">
+								<input autocomplete="off" style="font-size:11px" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
 								<br >
 								<div class="custom-control custom-checkbox">
 									<input autocomplete="off" type="checkbox" id="alts-2-mobile" class="custom-control-input" name="alts" value="1">
@@ -647,17 +647,17 @@
 		<div class="flex-row box-shadow-bottom d-flex justify-content-center justify-content-md-between align-items-center">
 			<ul class="nav settings-nav">
 				<li class="nav-item">
-					<a class="nav-link {% if not 'saved' in request.path %}active{% endif %}" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}">Posts <span class="count">({{u.post_count}})</span></a>
+					<a class="nav-link {% if not 'saved' in request.path %}active{% endif %}" style="font-size: .9rem !important; padding: .75rem .4rem !important" href="/@{{u.username}}">Posts <span class="count">({{u.post_count}})</span></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}/comments">Comments <span class="count">({{u.comment_count}})</span></a>
+					<a class="nav-link" style="font-size: .9rem !important; padding: .75rem .4rem !important" href="/@{{u.username}}/comments">Comments <span class="count">({{u.comment_count}})</span></a>
 				</li>
 				{% if u.id == v.id %}
 				<li class="nav-item">
-					<a class="nav-link {% if 'saved' in request.path %}active{% endif %}" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}/saved/posts">Saved Posts <span class="count">({{u.saved_count}})</span></a>
+					<a class="nav-link {% if 'saved' in request.path %}active{% endif %}" style="font-size: .9rem !important; padding: .75rem .4rem !important" href="/@{{u.username}}/saved/posts">Saved Posts <span class="count">({{u.saved_count}})</span></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}/saved/comments">Saved Comments <span class="count">({{u.saved_comment_count}})</span></a>
+					<a class="nav-link" style="font-size: .9rem !important; padding: .75rem .4rem !important" href="/@{{u.username}}/saved/comments">Saved Comments <span class="count">({{u.saved_comment_count}})</span></a>
 				</li>
 				{% endif %}
 			</ul>

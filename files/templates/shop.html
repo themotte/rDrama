@@ -61,16 +61,16 @@
 		{% for a in awards %}
 			<tr data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a['description']}}" data-bs-original-title="{{a['description']}}">
 				<td><i class="{{a['icon']}} {{a['color']}}" style="font-size: 30px"></i></td>
-				<td style="font-weight: bold">{{a['title']}}</td>
+				<td>{{a['title']}}</td>
 				{% if a['baseprice'] != a['price'] %}
-				<td style="font-weight: bold"><strike>{{a['baseprice']}}</strike> <em class="text-success">{{a['price']}}</em></td>
+				<td><strike>{{a['baseprice']}}</strike> <em class="text-success">{{a['price']}}</em></td>
 				{% endif %}
 				{% if a['baseprice'] == a['price'] %}
-				<td style="font-weight: bold">{{a['price']}}</td>
+				<td>{{a['price']}}</td>
 				{% endif %}
-				<td style="font-weight: bold">{{a['owned']}}</td>
+				<td>{{a['owned']}}</td>
 				{% set kind = a['kind'] %}
-				<td style="font-weight: bold">
+				<td>
 					{% if a['kind'] != "benefactor" %}<a class="d-flex btn btn-success {% if v.coins < a['price'] %}disabled{% endif %}" role="button" onclick="post_toast(this,'/buy/{{kind}}')"><span class="m-auto">Buy with coins</span></a>{% endif %}
 					{% if a['kind'] != "grass" %}<a class="d-flex marseybux btn btn-success {% if v.procoins < a['price'] %}disabled{% endif %}" role="button" onclick="post_toast(this,'/buy/{{kind}}?mb=true')"><span class="m-auto">Buy with marseybux</span></a>{% endif %}
 				</td>

@@ -196,7 +196,7 @@
 				<form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search/posts/" method="get">
 					<input autocomplete="off" class="form-control form-control-sm w-100" type="search" placeholder="Search" aria-label="Search" name="q">
 					<span class="input-group-append">
-						<span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;" onclick="document.getElementById('searchform').submit()">
+						<span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem"onclick="document.getElementById('searchform').submit()">
 							<i class="fa fa-search" aria-hidden="true"></i>
 						</span>
 					</span>
@@ -256,7 +256,7 @@
 	</div>
 </nav>
 
-<script src="/static/assets/js/header.js?a=246"></script>
+<script src="/static/assets/js/header.js?a=247"></script>
 
 {% if v and not err %}
 	<div id="formkey" class="d-none">{{v.formkey}}</div>

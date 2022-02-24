@@ -9,23 +9,23 @@
 <div class="overflow-x-auto"><table class="table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>
-		<th style="font-weight:bold">#</th>
-		<th style="font-weight:bold">Name</th>
-		<th style="font-weight:bold">Coins</th>
+		<th>#</th>
+		<th>Name</th>
+		<th>Coins</th>
 	</tr>
 </thead>
 {% for user in users1 %}
 	<tr {% if v.id == user.id %}class="self"{% endif %}>
-		<td style="font-weight:bold">{{loop.index}}</td>
+		<td>{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
-		<td style="font-weight:bold">{{user.coins}}</td>
+		<td>{{user.coins}}</td>
 	</tr>
 {% endfor %}
 {% if pos1 > 25 %}
 	<tr style="border-top:2px solid var(--primary)">
-		<td style="font-weight:bold">{{pos1}}</td>
+		<td>{{pos1}}</td>
 		<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-		<td style="font-weight:bold">{{v.coins}}</td>
+		<td>{{v.coins}}</td>
 	</tr>
 {% endif %}
 </table>
@@ -43,24 +43,24 @@
 <div class="overflow-x-auto"><table class="table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>
-		<th style="font-weight:bold">#</th>
-		<th style="font-weight:bold">Name</th>
-		<th style="font-weight:bold">Coins</th>
+		<th>#</th>
+		<th>Name</th>
+		<th>Coins</th>
 	</tr>
 </thead>
 
 {% for user in users7 %}
 	<tr {% if v.id == user.id %}class="self"{% endif %}>
-		<td style="font-weight:bold">{{loop.index}}</td>
+		<td>{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
-		<td style="font-weight:bold">{{user.coins_spent}}</td>
+		<td>{{user.coins_spent}}</td>
 	</tr>
 {% endfor %}
 {% if pos7 > 25 %}
 	<tr style="border-top:2px solid var(--primary)">
-		<td style="font-weight:bold">{{pos7}}</td>
+		<td>{{pos7}}</td>
 		<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-		<td style="font-weight:bold">{{v.coins_spent}}</td>
+		<td>{{v.coins_spent}}</td>
 	</tr>
 {% endif %}
 </table>
@@ -78,24 +78,24 @@
 <div class="overflow-x-auto"><table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
 		<tr>
-			<th style="font-weight: bold">#</th>
-			<th style="font-weight: bold">Name</th>
-			<th style="font-weight: bold">Truescore</th>
+			<th>#</th>
+			<th>Name</th>
+			<th>Truescore</th>
 		</tr>
 	</thead>
 	<tbody id="followers-table">
 	{% for user in users10 %}
 		<tr {% if v.id == user.id %}class="self"{% endif %}>
-			<td style="font-weight:bold">{{loop.index}}</td>
+			<td>{{loop.index}}</td>
 			<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
-			<td style="font-weight:bold">{{user.truecoins}}</td>
+			<td>{{user.truecoins}}</td>
 		</tr>
 	{% endfor %}
 	{% if pos10 > 25 %}
 		<tr style="border-top:2px solid var(--primary)">
-			<td style="font-weight:bold">{{pos10}}</td>
+			<td>{{pos10}}</td>
 			<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-			<td style="font-weight:bold">{{v.truecoins}}</td>
+			<td>{{v.truecoins}}</td>
 		</tr>
 	{% endif %}
 	</tbody>
@@ -113,23 +113,23 @@
 <div class="overflow-x-auto"><table class="table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>
-		<th style="font-weight:bold">#</th>
-		<th style="font-weight:bold">Name</th>
-		<th style="font-weight:bold">Followers</th>
+		<th>#</th>
+		<th>Name</th>
+		<th>Followers</th>
 	</tr>
 </thead>
 {% for user in users2 %}
 	<tr {% if v.id == user.id %}class="self"{% endif %}>
-		<td style="font-weight:bold">{{loop.index}}</td>
+		<td>{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
-		<td style="font-weight:bold">{{user.stored_subscriber_count}}</td>
+		<td>{{user.stored_subscriber_count}}</td>
 	</tr>
 {% endfor %}
 {% if pos2 > 25 %}
 	<tr style="border-top:2px solid var(--primary)">
-		<td style="font-weight:bold">{{pos2}}</td>
+		<td>{{pos2}}</td>
 		<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-		<td style="font-weight:bold">{{v.stored_subscriber_count}}</td>
+		<td>{{v.stored_subscriber_count}}</td>
 	</tr>
 {% endif %}
 </table>
@@ -145,23 +145,23 @@
 <div class="overflow-x-auto"><table class="table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>
-		<th style="font-weight:bold">#</th>
-		<th style="font-weight:bold">Name</th>
-		<th style="font-weight:bold">Posts</th>
+		<th>#</th>
+		<th>Name</th>
+		<th>Posts</th>
 	</tr>
 </thead>
 {% for user in users3 %}
 	<tr {% if v.id == user.id %}class="self"{% endif %}>
-		<td style="font-weight:bold">{{loop.index}}</td>
+		<td>{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
-		<td style="font-weight:bold">{{user.post_count}}</td>
+		<td>{{user.post_count}}</td>
 	</tr>
 {% endfor %}
 {% if pos3 > 25 %}
 	<tr style="border-top:2px solid var(--primary)">
-		<td style="font-weight:bold">{{pos3}}</td>
+		<td>{{pos3}}</td>
 		<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-		<td style="font-weight:bold">{{v.post_count}}</td>
+		<td>{{v.post_count}}</td>
 	</tr>
 {% endif %}
 </table>
@@ -177,23 +177,23 @@
 <div class="overflow-x-auto"><table class="table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>
-		<th style="font-weight:bold">#</th>
-		<th style="font-weight:bold">Name</th>
-		<th style="font-weight:bold">Comments</th>
+		<th>#</th>
+		<th>Name</th>
+		<th>Comments</th>
 	</tr>
 </thead>
 {% for user in users4 %}
 	<tr {% if v.id == user.id %}class="self"{% endif %}>
-		<td style="font-weight:bold">{{loop.index}}</td>
+		<td>{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
-		<td style="font-weight:bold">{{user.comment_count}}</td>
+		<td>{{user.comment_count}}</td>
 	</tr>
 {% endfor %}
 {% if pos4 > 25 %}
 	<tr style="border-top:2px solid var(--primary)">
-		<td style="font-weight:bold">{{pos4}}</td>
+		<td>{{pos4}}</td>
 		<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-		<td style="font-weight:bold">{{v.comment_count}}</td>
+		<td>{{v.comment_count}}</td>
 	</tr>
 {% endif %}
 </table>
@@ -211,23 +211,23 @@
 <div class="overflow-x-auto"><table class="table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>
-		<th style="font-weight:bold">#</th>
-		<th style="font-weight:bold">Name</th>
-		<th style="font-weight:bold">Awards</th>
+		<th>#</th>
+		<th>Name</th>
+		<th>Awards</th>
 	</tr>
 </thead>
 {% for user in users5 %}
 	<tr {% if v.id == user.id %}class="self"{% endif %}>
-		<td style="font-weight:bold">{{loop.index}}</td>
+		<td>{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
-		<td style="font-weight:bold">{{user.received_award_count}}</td>
+		<td>{{user.received_award_count}}</td>
 	</tr>
 {% endfor %}
 {% if pos5 > 25 %}
 	<tr style="border-top:2px solid var(--primary)">
-		<td style="font-weight:bold">{{pos5}}</td>
+		<td>{{pos5}}</td>
 		<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-		<td style="font-weight:bold">{{v.received_award_count}}</td>
+		<td>{{v.received_award_count}}</td>
 	</tr>
 {% endif %}
 </table>
@@ -246,24 +246,24 @@
 <div class="overflow-x-auto"><table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
 		<tr>
-			<th style="font-weight: bold">#</th>
-			<th style="font-weight: bold">Name</th>
-			<th style="font-weight: bold">Downvotes</th>
+			<th>#</th>
+			<th>Name</th>
+			<th>Downvotes</th>
 		</tr>
 	</thead>
 	<tbody id="followers-table">
 	{% for user in users9 %}
 		<tr {% if v.id == user[0].id %}class="self"{% endif %}>
-			<td style="font-weight: bold">{{loop.index}}</td>
+			<td>{{loop.index}}</td>
 			<td><a style="color:#{{user[0].namecolor}};font-weight:bold" href="/@{{user[0].username}}"><img loading="lazy" src="{{user[0].profile_url}}" class="pp20"><span {% if user[0].patron %}class="patron" style="background-color:#{{user[0].namecolor}}"{% endif %}>{{user[0].username}}</span></a></td>
-			<td style="font-weight: bold">{{user[1]}}</td>
+			<td>{{user[1]}}</td>
 		</tr>
 	{% endfor %}
 	{% if pos9 and (pos9[0] > 25 or not pos9[1]) %}
 		<tr style="border-top:2px solid var(--primary)">
-			<td style="font-weight:bold">{{pos9[0]}}</td>
+			<td>{{pos9[0]}}</td>
 			<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-			<td style="font-weight:bold">{{pos9[1]}}</td>
+			<td>{{pos9[1]}}</td>
 		</tr>
 	{% endif %}
 	</tbody>
@@ -283,24 +283,24 @@
 <div class="overflow-x-auto"><table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
 		<tr>
-			<th style="font-weight: bold">#</th>
-			<th style="font-weight: bold">Name</th>
-			<th style="font-weight: bold">Badges</th>
+			<th>#</th>
+			<th>Name</th>
+			<th>Badges</th>
 		</tr>
 	</thead>
 	<tbody id="followers-table">
 	{% for user in users11 %}
 		<tr {% if v.id == user[0].id %}class="self"{% endif %}>
-			<td style="font-weight: bold">{{loop.index}}</td>
+			<td>{{loop.index}}</td>
 			<td><a style="color:#{{user[0].namecolor}};font-weight:bold" href="/@{{user[0].username}}"><img loading="lazy" src="{{user[0].profile_url}}" class="pp20"><span {% if user[0].patron %}class="patron" style="background-color:#{{user[0].namecolor}}"{% endif %}>{{user[0].username}}</span></a></td>
-			<td style="font-weight: bold">{{user[1]}}</td>
+			<td>{{user[1]}}</td>
 		</tr>
 	{% endfor %}
 	{% if pos11 and (pos11[0] > 25 or not pos11[1]) %}
 		<tr style="border-top:2px solid var(--primary)">
-			<td style="font-weight:bold">{{pos11[0]}}</td>
+			<td>{{pos11[0]}}</td>
 			<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-			<td style="font-weight:bold">{{pos11[1]}}</td>
+			<td>{{pos11[1]}}</td>
 		</tr>
 	{% endif %}
 	</tbody>
@@ -321,23 +321,23 @@
 	<div class="overflow-x-auto"><table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
 		<tr>
-			<th style="font-weight:bold">#</th>
-			<th style="font-weight:bold">Name</th>
-			<th style="font-weight:bold">Based count</th>
+			<th>#</th>
+			<th>Name</th>
+			<th>Based count</th>
 		</tr>
 	</thead>
 	{% for user in users6 %}
 		<tr {% if v.id == user.id %}class="self"{% endif %}>
-			<td style="font-weight:bold">{{loop.index}}</td>
+			<td>{{loop.index}}</td>
 			<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
-			<td style="font-weight:bold">{{user.basedcount}}</td>
+			<td>{{user.basedcount}}</td>
 		</tr>
 	{% endfor %}
 	{% if pos6 > 25 %}
 		<tr style="border-top:2px solid var(--primary)">
-			<td style="font-weight:bold">{{pos6}}</td>
+			<td>{{pos6}}</td>
 			<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-			<td style="font-weight:bold">{{v.basedcount}}</td>
+			<td>{{v.basedcount}}</td>
 		</tr>
 	{% endif %}
 	</table>
@@ -357,24 +357,24 @@
 	<div class="overflow-x-auto"><table class="table table-striped mb-5">
 		<thead class="bg-primary text-white">
 			<tr>
-				<th style="font-weight: bold">#</th>
-				<th style="font-weight: bold">Name</th>
-				<th style="font-weight: bold">Marseys</th>
+				<th>#</th>
+				<th>Name</th>
+				<th>Marseys</th>
 			</tr>
 		</thead>
 		<tbody id="followers-table">
 		{% for user in users12 %}
 			<tr {% if v.id == user[0].id %}class="self"{% endif %}>
-				<td style="font-weight: bold">{{loop.index}}</td>
+				<td>{{loop.index}}</td>
 				<td><a style="color:#{{user[0].namecolor}};font-weight:bold" href="/@{{user[0].username}}"><img loading="lazy" src="{{user[0].profile_url}}" class="pp20"><span {% if user[0].patron %}class="patron" style="background-color:#{{user[0].namecolor}}"{% endif %}>{{user[0].username}}</span></a></td>
-				<td style="font-weight: bold">{{user[1]}}</td>
+				<td>{{user[1]}}</td>
 			</tr>
 		{% endfor %}
 		{% if pos12 and (pos12[0] > 25 or not pos12[1]) %}
 			<tr style="border-top:2px solid var(--primary)">
-				<td style="font-weight:bold">{{pos12[0]}}</td>
+				<td>{{pos12[0]}}</td>
 				<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-				<td style="font-weight:bold">{{pos12[1]}}</td>
+				<td>{{pos12[1]}}</td>
 			</tr>
 		{% endif %}
 		</tbody>
@@ -395,24 +395,24 @@
 	<div class="overflow-x-auto"><table class="table table-striped mb-5">
 		<thead class="bg-primary text-white">
 			<tr>
-				<th style="font-weight: bold">#</th>
-				<th style="font-weight: bold">Name</th>
-				<th style="font-weight: bold">Upvotes</th>
+				<th>#</th>
+				<th>Name</th>
+				<th>Upvotes</th>
 			</tr>
 		</thead>
 		<tbody id="followers-table">
 		{% for user in users13 %}
 			<tr {% if v.id == user[0].id %}class="self"{% endif %}>
-				<td style="font-weight: bold">{{loop.index}}</td>
+				<td>{{loop.index}}</td>
 				<td><a style="color:#{{user[0].namecolor}};font-weight:bold" href="/@{{user[0].username}}"><img loading="lazy" src="{{user[0].profile_url}}" class="pp20"><span {% if user[0].patron %}class="patron" style="background-color:#{{user[0].namecolor}}"{% endif %}>{{user[0].username}}</span></a></td>
-				<td style="font-weight: bold">{{user[1]}}</td>
+				<td>{{user[1]}}</td>
 			</tr>
 		{% endfor %}
 		{% if pos13 and (pos13[0] > 25 or not pos13[1]) %}
 			<tr style="border-top:2px solid var(--primary)">
-				<td style="font-weight:bold">{{pos13[0]}}</td>
+				<td>{{pos13[0]}}</td>
 				<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-				<td style="font-weight:bold">{{pos13[1]}}</td>
+				<td>{{pos13[1]}}</td>
 			</tr>
 		{% endif %}
 		</tbody>
@@ -424,23 +424,23 @@
 <div class="overflow-x-auto"><table class="table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>
-		<th style="font-weight:bold">#</th>
-		<th style="font-weight:bold">Name</th>
-		<th style="font-weight:bold">Winnings</th>
+		<th>#</th>
+		<th>Name</th>
+		<th>Winnings</th>
 	</tr>
 </thead>
 {% for user in users14 %}
 	<tr {% if v.id == user.id %}class="self"{% endif %}>
-		<td style="font-weight:bold">{{loop.index}}</td>
+		<td>{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
-		<td style="font-weight:bold">{{user.winnings}}</td>
+		<td>{{user.winnings}}</td>
 	</tr>
 {% endfor %}
 {% if pos14 > 25 %}
 	<tr style="border-top:2px solid var(--primary)">
-		<td style="font-weight:bold">{{pos14}}</td>
+		<td>{{pos14}}</td>
 		<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-		<td style="font-weight:bold">{{v.winnings}}</td>
+		<td>{{v.winnings}}</td>
 	</tr>
 {% endif %}
 </table>
@@ -455,23 +455,23 @@
 <div class="overflow-x-auto"><table class="table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>
-		<th style="font-weight:bold">#</th>
-		<th style="font-weight:bold">Name</th>
-		<th style="font-weight:bold">Winnings</th>
+		<th>#</th>
+		<th>Name</th>
+		<th>Winnings</th>
 	</tr>
 </thead>
 {% for user in users15 %}
 	<tr {% if v.id == user.id %}class="self"{% endif %}>
-		<td style="font-weight:bold">{{loop.index}}</td>
+		<td>{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
-		<td style="font-weight:bold">{{user.winnings}}</td>
+		<td>{{user.winnings}}</td>
 	</tr>
 {% endfor %}
 {% if pos15 > 25 %}
 	<tr style="border-top:2px solid var(--primary)">
-		<td style="font-weight:bold">{{pos15}}</td>
+		<td>{{pos15}}</td>
 		<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-		<td style="font-weight:bold">{{v.winnings}}</td>
+		<td>{{v.winnings}}</td>
 	</tr>
 {% endif %}
 </table>

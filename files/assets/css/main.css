@@ -3040,9 +3040,6 @@ label.terms {
 small, .small {
     font-size: 12px;
 }
-th {
-    font-weight: 600;
-}
 .fa-rotate--45 {
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
@@ -5011,4 +5008,7 @@ li > .sidebar > .rules {
         display:block;
         text-align: center;
     }
+}
+th, td {
+    font-weight: 700;
 }

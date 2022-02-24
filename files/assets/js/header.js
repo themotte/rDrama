@@ -33,7 +33,7 @@ function post_toast(t, url, reload, data) {
 		if (xhr.status >= 200 && xhr.status < 300 && data && data['message']) {
 			document.getElementById('toast-post-success-text').innerText = data["message"];
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success')).show();
-			if (reload == 1) {location.reload(true)}
+			if (reload == 1) {location.reload()}
 		} else {
 			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];

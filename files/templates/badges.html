@@ -21,7 +21,7 @@
 </thead>
 {% for badge in badges %}
 	<tr>
-		<td style="font-weight:bold">{{loop.index}}</td>
+		<td>{{loop.index}}</td>
 		<td>{{badge.name}}</td>
 		<td><img alt="{{badge.name}}" loading="lazy" src="/static/assets/images/badges/{{badge.id}}.webp?a=1012" width=45.83 height=50>
 		<td>{{badge.description}}</td>

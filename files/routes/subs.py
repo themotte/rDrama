@@ -426,3 +426,16 @@ def sub_sidebar(v, sub):
 		g.db.commit()
 
 	return redirect(f'/s/{sub.name}/settings')
+
+
+@app.post("/sub_toggle")
+def sub_toggle():
+	session["subs"] = not session.get("subs")
+	return '', 204
+
+
+@app.get("/subs")
+@auth_desired
+def subs(v):
+	subs = g.db.query(Submission.sub, func.count(Submission.sub)).group_by(Submission.sub).order_by(func.count(Submission.sub).desc()).all()[:-1]
+	return render_template('sub/subs.html', v=v, subs=subs)

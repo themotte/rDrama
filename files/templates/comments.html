@@ -63,7 +63,7 @@
 {% if (c.is_banned or c.deleted_utc or c.is_blocking) and not (v and v.admin_level > 1) and not (v and v.id==c.author_id) %}
 
 <div id="comment-{{c.id}}" class="comment">
-		<span class="comment-collapse-desktop d-none d-md-block" style="border-left: 2px solid #{{c.author.namecolor}};" onclick="collapse_comment('{{c.id}}')"></span>
+		<span class="comment-collapse-desktop d-none d-md-block" style="border-left: 2px solid #{{c.author.namecolor}}"onclick="collapse_comment('{{c.id}}')"></span>
 
 		<div class="comment-body">
 
@@ -199,7 +199,7 @@
 				{% if c.bannedfor %}
 					<a role="button"><i class="fas fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}" data-bs-original-title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}"></i></a>
 				{% endif %}
-				{% if c.active_flags %}<a class="btn btn-primary" style="padding:1px 5px; font-size:10px;" role="button" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('d-none')">{{c.active_flags}} Reports</a>{% endif %}
+				{% if c.active_flags %}<a class="btn btn-primary" style="padding:1px 5px; font-size:10px"role="button" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('d-none')">{{c.active_flags}} Reports</a>{% endif %}
 				{% if c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 				{% if v and v.admin_level > 1 and c.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{c.author.shadowbanned}}" data-bs-original-title="Shadowbanned by @{{c.author.shadowbanned}}"></i>{% endif %}
 				{% if c.is_pinned %}
@@ -254,8 +254,8 @@
 				{% set currency_kind = "Coins" if kind == "coins" else "Marseybucks" %}
 				<em>{{player_hand}} vs. {{dealer_hand}}</em>
 					{% if blackjack_status == 'active' and v.id == c.author_id %}
-					<button class="btn btn-success small" style="text-transform: uppercase; padding: 2px;" onclick="handle_blackjack_action('{{c.id}}', 'hit')">Hit</button>
-					<button class="btn btn-danger small" style="text-transform: uppercase; padding: 2px;" onclick="handle_blackjack_action('{{c.id}}', 'stay')">Stay</button>
+					<button class="btn btn-success small" style="text-transform: uppercase; padding: 2px"onclick="handle_blackjack_action('{{c.id}}', 'hit')">Hit</button>
+					<button class="btn btn-danger small" style="text-transform: uppercase; padding: 2px"onclick="handle_blackjack_action('{{c.id}}', 'stay')">Stay</button>
 					{% elif blackjack_status == 'push' %}
 					<strong>Pushed. Refunded {{wager}} {{currency_kind}}.</strong>
 					{% elif blackjack_status == 'bust' %}
@@ -273,8 +273,8 @@
 					<small>{{wordle_guesses}}</small>
 					{% if wordle_status == 'active' and v.id == c.author_id %}
 					<input autocomplete="off" id="guess_box" type="text" name="guess" class="form-control" maxsize="4" style="width: 200px;
-					display: initial;" placeholder="5-letter guess"></input>
-					<button class="btn btn-success small" style="text-transform: uppercase; padding: 2px;" onclick="handle_wordle_action('{{c.id}}', document.getElementById('guess_box').value)">Guess</button>
+					display: initial"placeholder="5-letter guess"></input>
+					<button class="btn btn-success small" style="text-transform: uppercase; padding: 2px"onclick="handle_wordle_action('{{c.id}}', document.getElementById('guess_box').value)">Guess</button>
 					{% elif wordle_status == 'won' %}
 					<strong>Correct!</strong>
 					{% elif wordle_status == 'lost' %}
@@ -596,7 +596,7 @@
 							<input autocomplete="off" id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-reply-{{c.fullname}}','file-upload-reply-{{c.fullname}}')" hidden>
 						</label>
 					</div>
-					<a id="save-reply-to-{{c.fullname}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" role="button">Comment</a>
+					<a id="save-reply-to-{{c.fullname}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}')"role="button">Comment</a>
 					<a role="button" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form fl-r commentmob">Cancel</a> 
 				</form>
 				<div id="reply-edit-{{c.id}}" class="preview mb-3 mt-5"></div>
@@ -634,7 +634,7 @@
 						</div>
 
 						<a role="button" onclick="document.getElementById('reply-message-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-						<a id="save-reply-to-{{c.id}}" class="btn btn-primary ml-2" onclick="post_reply('{{c.id}}');" role="button">Reply</a> 
+						<a id="save-reply-to-{{c.id}}" class="btn btn-primary ml-2" onclick="post_reply('{{c.id}}') "role="button">Reply</a> 
 					</form>
 					<div id="message-reply-{{c.id}}" class="preview mt-2"></div>
 				</div>
@@ -871,7 +871,7 @@
 
 	{% if v %}
 		<script src="/static/assets/js/marked.js?a=242"></script>
-		<script src="/static/assets/js/comments_v.js?a=259"></script>
+		<script src="/static/assets/js/comments_v.js?a=260"></script>
 	{% endif %}
 
 	<script src="/static/assets/js/clipboard.js?a=250"></script>

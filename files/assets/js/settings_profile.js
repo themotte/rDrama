@@ -4,7 +4,7 @@ function post(url) {
 	xhr.setRequestHeader('xhr', 'xhr');
 	var form = new FormData()
 	form.append("formkey", formkey());
-	xhr.onload = function() {location.reload(true);};
+	xhr.onload = function() {location.reload();};
 	xhr.send(form);
 };
 
