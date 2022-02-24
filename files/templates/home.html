@@ -38,8 +38,8 @@
 			{% block navbar %}
 			<div class="d-flex align-items-center">
 				{% if request.path == '/' and v.paid_dues %}
-					{% if ccmode=="true"%}<a data-bs-toggle="tooltip" title="Only show country club posts" data-bs-original-title="Only show country club posts" class="btn btn-primary text-primary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=false">CC</a>{% endif %}
-					{% if ccmode=="false" %}<a data-bs-toggle="tooltip" title="Only show country club posts" data-bs-original-title="Only show country club posts" class="btn btn-secondary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=true"></i>CC</a>{% endif %}
+					{% if ccmode=="true"%}<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" data-bs-original-title="Only show country club posts" class="btn btn-primary text-primary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=false">CC</a>{% endif %}
+					{% if ccmode=="false" %}<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" data-bs-original-title="Only show country club posts" class="btn btn-secondary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=true"></i>CC</a>{% endif %}
 				{% endif %}
 
 				{% if request.path in ('/','/logged_out') and SITE_NAME == 'Drama' %}
@@ -48,7 +48,7 @@
 					{% else %}
 						{% set classes='btn-secondary' %}
 					{% endif %}
-					<button data-bs-toggle="tooltip" title="Include posts from subs" data-bs-original-title="Include posts from subs" class="{{classes}} btn text-small-m mx-2" onclick="post('/sub_toggle')">Subs</button>
+					<button data-bs-toggle="tooltip" data-bs-placement="bottom" title="Include posts from subs" data-bs-original-title="Include posts from subs" class="{{classes}} btn text-small-m mx-2" onclick="post('/sub_toggle')">Subs</button>
 				{% endif %}
 
 				<div class="dropdown dropdown-actions mx-2">
