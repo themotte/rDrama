@@ -28,6 +28,34 @@ if PUSHER_ID != '3435tdfsdudebussylmaoxxt43':
 
 WORDLE_COLOR_MAPPINGS = {-1: "🟥", 0: "🟨", 1: "🟩"}
 
+def pusher_thread(interests, c):
+	if len(c.body) > 500: notifbody = c.body[:500] + '...'
+	else: notifbody = c.body
+
+	beams_client.publish_to_interests(
+		interests=[interests],
+		publish_body={
+			'web': {
+				'notification': {
+					'title': f'New reply by @{c.author_name}',
+					'body': notifbody,
+					'deep_link': f'{SITE_FULL}/comment/{c.id}?context=8&read=true#context',
+					'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1011',
+				}
+			},
+			'fcm': {
+				'notification': {
+					'title': f'New reply by @{c.author_name}',
+					'body': notifbody,
+				},
+				'data': {
+					'url': f'/comment/{c.id}?context=8&read=true#context',
+				}
+			}
+		},
+	)
+	stdout.flush()
+
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
 @app.get("/logged_out/comment/<cid>")
@@ -602,33 +630,10 @@ def api_comment(v):
 				n = Notification(comment_id=c.id, user_id=x)
 				g.db.add(n)
 
-			if parent.author.id != v.id and PUSHER_ID != '3435tdfsdudebussylmaoxxt43':
-				if len(c.body) > 500: notifbody = c.body[:500] + '...'
-				else: notifbody = c.body
+			if parent.author.id != v.id and PUSHER_ID != '3435tdfsdudebussylmaoxxt43':				
+				gevent.spawn(pusher_thread, f'{request.host}{parent.author.id}', c)
 
-				beams_client.publish_to_interests(
-					interests=[f'{request.host}{parent.author.id}'],
-					publish_body={
-						'web': {
-							'notification': {
-								'title': f'New reply by @{c.author_name}',
-								'body': notifbody,
-								'deep_link': f'{SITE_FULL}/comment/{c.id}?context=8&read=true#context',
-								'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1011',
-							}
-						},
-						'fcm': {
-							'notification': {
-								'title': f'New reply by @{c.author_name}',
-								'body': notifbody,
-							},
-							'data': {
-								'url': f'/comment/{c.id}?context=8&read=true#context',
-							}
-						}
-					},
-				)
-
+				
 
 	vote = CommentVote(user_id=v.id,
 						 comment_id=c.id,

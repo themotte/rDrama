@@ -12,9 +12,35 @@ from files.__main__ import app, limiter, db_session
 from pusher_push_notifications import PushNotifications
 from collections import Counter
 import gevent
+from sys import stdout
 
 if PUSHER_ID != '3435tdfsdudebussylmaoxxt43':
 	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
+
+def pusher_thread2(interests, notifbody, username):
+	beams_client.publish_to_interests(
+		interests=[interests],
+		publish_body={
+			'web': {
+				'notification': {
+					'title': f'New message from @{username}',
+					'body': notifbody,
+					'deep_link': f'{SITE_FULL}/notifications?messages=true',
+					'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1011',
+				}
+			},
+			'fcm': {
+				'notification': {
+					'title': f'New message from @{username}',
+					'body': notifbody,
+				},
+				'data': {
+					'url': '/notifications?messages=true',
+				}
+			}
+		},
+	)
+	stdout.flush()
 
 def leaderboard_thread():
 	global users9, users9_25, users13, users13_25
@@ -41,6 +67,7 @@ def leaderboard_thread():
 	users13_25 = users13[:25]
 
 	db.close()
+	stdout.flush()
 
 gevent.spawn(leaderboard_thread())
 @app.get("/grassed")
@@ -477,46 +504,25 @@ def message2(v, username):
 
 	if existing: return {"error": "Message already exists."}, 403
 
-	new_comment = Comment(author_id=v.id,
+	c = Comment(author_id=v.id,
 						  parent_submission=None,
 						  level=1,
 						  sentto=user.id,
 						  body_html=text_html,
 						  )
-	g.db.add(new_comment)
+	g.db.add(c)
 
 	g.db.flush()
 
 
-	notif = Notification(comment_id=new_comment.id, user_id=user.id)
+	notif = Notification(comment_id=c.id, user_id=user.id)
 	g.db.add(notif)
 
 	if PUSHER_ID != '3435tdfsdudebussylmaoxxt43':
 		if len(message) > 500: notifbody = message[:500] + '...'
 		else: notifbody = message
 
-		beams_client.publish_to_interests(
-			interests=[f'{request.host}{user.id}'],
-			publish_body={
-				'web': {
-					'notification': {
-						'title': f'New message from @{v.username}',
-						'body': notifbody,
-						'deep_link': f'{SITE_FULL}/notifications?messages=true',
-						'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?a=1011',
-					}
-				},
-				'fcm': {
-					'notification': {
-						'title': f'New message from @{v.username}',
-						'body': notifbody,
-					},
-					'data': {
-						'url': '/notifications?messages=true',
-					}
-				}
-			},
-		)
+		gevent.spawn(pusher_thread2, f'{request.host}{user.id}', notifbody, v.username)
 
 	g.db.commit()
 
