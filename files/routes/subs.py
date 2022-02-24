@@ -29,7 +29,7 @@ def exile_post(v, pid):
 		exile = Exile(user_id=u.id, sub=sub, exiler_id=v.id)
 		g.db.add(exile)
 
-		send_notification(u.id, f"@{v.username} has exiled you from /s/{sub} for [{p.title}]({p.sl})")
+		send_notification(u.id, f"@{v.username} has exiled you from /s/{sub} for [{p.title}]({p.shortlink})")
 
 		g.db.commit()
 	
@@ -82,7 +82,7 @@ def exile_comment(v, cid):
 		exile = Exile(user_id=u.id, sub=sub, exiler_id=v.id)
 		g.db.add(exile)
 
-		send_notification(u.id, f"@{v.username} has exiled you from /s/{sub} for [{c.permalink}]({c.sl})")
+		send_notification(u.id, f"@{v.username} has exiled you from /s/{sub} for [{c.permalink}]({c.shortlink})")
 
 		g.db.commit()
 	

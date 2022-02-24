@@ -99,14 +99,14 @@ def publish(pid, v):
 	if not post.ghost:
 		notify_users = NOTIFY_USERS(post.body_html, v) | NOTIFY_USERS2(post.title, v)
 
-		text = f"@{v.username} has mentioned you: [{post.title}]({post.sl})"
+		text = f"@{v.username} has mentioned you: [{post.title}]({post.shortlink})"
 		if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
 
 		cid = notif_comment(text)
 		for x in notify_users:
 			add_notif(cid, x)
 
-		text = f"@{v.username} has made a new post: [{post.title}]({post.sl})"
+		text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
 		if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
 
 		cid = notif_comment(text, autojanny=True)
@@ -610,7 +610,7 @@ def edit_post(pid, v):
 
 		if not p.private and not p.ghost:
 			notify_users = NOTIFY_USERS(body_html, v) | NOTIFY_USERS2(title, v)
-			cid = notif_comment(f"@{v.username} has mentioned you: [{p.title}]({p.sl})")
+			cid = notif_comment(f"@{v.username} has mentioned you: [{p.title}]({p.shortlink})")
 			for x in notify_users:
 				add_notif(cid, x)
 
@@ -1219,14 +1219,14 @@ def submit_post(v, sub=None):
 
 		notify_users = NOTIFY_USERS(body_html, v) | NOTIFY_USERS2(title, v)
 
-		text = f"@{v.username} has mentioned you: [{post.title}]({post.sl})"
+		text = f"@{v.username} has mentioned you: [{post.title}]({post.shortlink})"
 		if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
 
 		cid = notif_comment(text)
 		for x in notify_users:
 			add_notif(cid, x)
 
-		text = f"@{v.username} has made a new post: [{post.title}]({post.sl})"
+		text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
 		if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
 
 		cid = notif_comment(text, autojanny=True)

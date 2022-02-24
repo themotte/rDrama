@@ -224,17 +224,17 @@ class Comment(Base):
 	@property
 	@lazy
 	def shortlink(self):
-		return f"{self.post.permalink}/{self.id}#context"
-
-	@property
-	@lazy
-	def sl(self):
 		return f"{self.post.shortlink}/{self.id}?context=8#context"
 
 	@property
 	@lazy
 	def permalink(self):
-		return f"{SITE_FULL}{self.sl}"
+		return f"{SITE_FULL}{self.shortlink}"
+
+	@property
+	@lazy
+	def morecomments(self):
+		return f"{self.post.permalink}/{self.id}#context"
 
 	@property
 	@lazy

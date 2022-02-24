@@ -93,12 +93,12 @@
 				{% endfor %}
 			</div>
 			<div id="morecomment-{{c.id}}" class="d-md-none mt-2 more-comments">
-				<a href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+				<a href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% elif replies %}
 			<div id="morecomment-{{c.id}}" class="mt-2 more-comments">
 				<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments</button>
-				<a class="d-md-none" href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+				<a class="d-md-none" href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
 	{% endif %}
@@ -466,7 +466,7 @@
 						
 						<a class="btn caction nobackground px-1 text-muted" href="{{c.permalink}}"><i class="fas fa-book-open"></i>Context</a>
 
-						<button class="btn caction py-0 nobackground px-1 text-muted copy-link" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://rdrama.gay{{c.sl}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</button>
+						<button class="btn caction py-0 nobackground px-1 text-muted copy-link" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://rdrama.gay{{c.shortlink}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</button>
 
 						{% if v %}
 							<button class="btn caction py-0 nobackground px-1 text-muted" role="button" onclick="openReplyBox('reply-to-{{c.id}}')"><i class="fas fa-reply" aria-hidden="true"></i>Reply</button>
@@ -619,7 +619,7 @@
 		{% elif replies %}
 			<div id="morecomments-{{c.id}}" class="mt-2 more-comments">
 				<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments</button>
-				<a class="d-md-none" href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+				<a class="d-md-none" href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
 
@@ -664,7 +664,7 @@
 
 					<a class="list-group-item" href="{{c.permalink}}"><i class="fas fa-book-open"></i>Context</a>
 
-					<a role="button" class="list-group-item copy-link" data-bs-dismiss="modal" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://rdrama.gay{{c.sl}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
+					<a role="button" class="list-group-item copy-link" data-bs-dismiss="modal" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://rdrama.gay{{c.shortlink}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
 
 					{% if v %}
 						<a role="button" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author_name}}')" class="list-group-item"><i class="fas fa-flag"></i>Report</a>

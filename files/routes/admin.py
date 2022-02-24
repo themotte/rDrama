@@ -119,13 +119,13 @@ def distribute(v, comment):
 	votes = g.db.query(CommentVote).filter_by(comment_id=comment)
 	coinsperperson = int(pool / votes.count())
 
-	cid = notif_comment(f"You won {coinsperperson} coins betting on [{post.title}]({post.sl}) :marseyparty:")
+	cid = notif_comment(f"You won {coinsperperson} coins betting on [{post.title}]({post.shortlink}) :marseyparty:")
 	for vote in votes:
 		u = vote.user
 		u.coins += coinsperperson
 		add_notif(cid, u.id)
 
-	cid = notif_comment(f"You lost the 200 coins you bet on [{post.title}]({post.sl}) :marseylaugh:")
+	cid = notif_comment(f"You lost the 200 coins you bet on [{post.title}]({post.shortlink}) :marseylaugh:")
 	cids = [x.id for x in post.bet_options]
 	cids.remove(comment)
 	votes = g.db.query(CommentVote).filter(CommentVote.comment_id.in_(cids)).all()
@@ -1296,7 +1296,7 @@ def sticky_comment(cid, v):
 		g.db.add(ma)
 
 		if v.id != comment.author_id:
-			message = f"@{v.username} has pinned your [comment]({comment.sl})!"
+			message = f"@{v.username} has pinned your [comment]({comment.shortlink})!"
 			send_repeatable_notification(comment.author_id, message)
 
 		g.db.commit()
@@ -1323,7 +1323,7 @@ def unsticky_comment(cid, v):
 		g.db.add(ma)
 
 		if v.id != comment.author_id:
-			message = f"@{v.username} has unpinned your [comment]({comment.sl})!"
+			message = f"@{v.username} has unpinned your [comment]({comment.shortlink})!"
 			send_repeatable_notification(comment.author_id, message)
 
 		g.db.commit()

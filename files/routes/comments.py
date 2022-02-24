@@ -956,8 +956,8 @@ def pin_comment(cid, v):
 		g.db.add(comment)
 
 		if v.id != comment.author_id:
-			if comment.post.ghost: message = f"OP has pinned your [comment]({comment.sl})!"
-			else: message = f"@{v.username} (OP) has pinned your [comment]({comment.sl})!"
+			if comment.post.ghost: message = f"OP has pinned your [comment]({comment.shortlink})!"
+			else: message = f"@{v.username} (OP) has pinned your [comment]({comment.shortlink})!"
 			send_repeatable_notification(comment.author_id, message)
 
 		g.db.commit()
@@ -980,7 +980,7 @@ def unpin_comment(cid, v):
 		g.db.add(comment)
 
 		if v.id != comment.author_id:
-			message = f"@{v.username} (OP) has unpinned your [comment]({comment.sl})!"
+			message = f"@{v.username} (OP) has unpinned your [comment]({comment.shortlink})!"
 			send_repeatable_notification(comment.author_id, message)
 		g.db.commit()
 	return {"message": "Comment unpinned!"}
@@ -1000,7 +1000,7 @@ def mod_pin(cid, v):
 		g.db.add(comment)
 
 		if v.id != comment.author_id:
-			message = f"@{v.username} (Mod) has pinned your [comment]({comment.sl})!"
+			message = f"@{v.username} (Mod) has pinned your [comment]({comment.shortlink})!"
 			send_repeatable_notification(comment.author_id, message)
 
 		g.db.commit()
@@ -1020,7 +1020,7 @@ def mod_unpin(cid, v):
 		g.db.add(comment)
 
 		if v.id != comment.author_id:
-			message = f"@{v.username} (Mod) has unpinned your [comment]({comment.sl})!"
+			message = f"@{v.username} (Mod) has unpinned your [comment]({comment.shortlink})!"
 			send_repeatable_notification(comment.author_id, message)
 		g.db.commit()
 	return {"message": "Comment unpinned!"}
