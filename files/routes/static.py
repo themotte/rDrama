@@ -314,7 +314,7 @@ def submit_contact(v):
 						  )
 	g.db.add(new_comment)
 	g.db.flush()
-	for admin in g.db.query(User).filter(User.admin_level > 1).all():
+	for admin in g.db.query(User).filter(User.admin_level > 2).all():
 		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
 		g.db.add(notif)
 
@@ -331,6 +331,16 @@ def archivesindex():
 def archives(path):
 	resp = make_response(send_from_directory('/archives', path))
 	if request.path.endswith('.css'): resp.headers.add("Content-Type", "text/css")
+	return resp
+
+@app.get('/e/<emoji>')
+@limiter.exempt
+def emoji(emoji):
+	resp = make_response(send_from_directory('assets/images/emojis', f'{emoji}.webp'))
+	resp.headers.remove("Cache-Control")
+	resp.headers.add("Cache-Control", "public, max-age=3153600")
+	resp.headers.remove("Content-Type")
+	resp.headers.add("Content-Type", "image/webp")
 	return resp
 
 @app.get('/assets/<path:path>')

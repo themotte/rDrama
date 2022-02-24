@@ -761,9 +761,7 @@ def thumbnail_thread(pid):
 			word = random.choice(('rdrama','marsey'))
 
 			try:
-				data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={word}&size=1', timeout=5)
-				if str(data) == "<Response [200]>": data = data.json()["data"]
-				else: break
+				data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={word}&size=1', timeout=5).json()["data"]
 			except: break
 
 			for i in data:
@@ -789,7 +787,11 @@ def thumbnail_thread(pid):
 
 			k,val = random.choice(tuple(REDDIT_NOTIFS.items()))
 			
-			for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={k}&size=1', timeout=5).json()["data"]:
+			try:
+				data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={k}&size=1', timeout=5).json()["data"]
+			except: break
+
+			for i in data:
 				body_html = sanitize(f'New mention of you: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 
 				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html).one_or_none()
@@ -813,8 +815,6 @@ def thumbnail_thread(pid):
 
 			try:
 				data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q=pcmemes.net&size=1', timeout=5).json()["data"]
-				if str(data) == "<Response [200]>": data = data.json()["data"]
-				else: break
 			except: break
 
 			for i in data:
