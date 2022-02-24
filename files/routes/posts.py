@@ -99,11 +99,17 @@ def publish(pid, v):
 	if not post.ghost:
 		notify_users = NOTIFY_USERS(post.body_html, v) | NOTIFY_USERS2(post.title, v)
 
-		cid = notif_comment(f"@{v.username} has mentioned you: [{post.title}]({post.sl})")
+		text = f"@{v.username} has mentioned you: [{post.title}]({post.sl})"
+		if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
+
+		cid = notif_comment(text)
 		for x in notify_users:
 			add_notif(cid, x)
 
-		cid = notif_comment(f"@{v.username} has made a new post: [{post.title}]({post.sl})", autojanny=True)
+		text = f"@{v.username} has made a new post: [{post.title}]({post.sl})"
+		if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
+
+		cid = notif_comment(text, autojanny=True)
 		for follow in v.followers:
 			user = get_account(follow.user_id)
 			if post.club and not user.paid_dues: continue
@@ -129,7 +135,7 @@ def submit_get(v, sub=None):
 	
 	if request.path.startswith('/s/') and not sub: abort(404)
 
-	SUBS = () if SITE_NAME == 'Drama' and not sub else [[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
+	SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
 
 	return render_template("submit.html", SUBS=SUBS, v=v, sub=sub, ghost=submit_ghost(v,g.db))
 
@@ -853,7 +859,7 @@ def submit_post(v, sub=None):
 	def error(error):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": error}, 403
 	
-		SUBS = () if SITE_NAME == 'Drama' and not sub else [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
+		SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
 		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body, ghost=submit_ghost(v,g.db)), 400
 
 
@@ -1099,7 +1105,7 @@ def submit_post(v, sub=None):
 	
 	if embed and len(embed) > 1500: embed = None
 
-	new_post = Submission(
+	post = Submission(
 		private=bool(request.values.get("private","")),
 		club=club,
 		author_id=v.id,
@@ -1116,7 +1122,7 @@ def submit_post(v, sub=None):
 		ghost=False
 	)
 
-	g.db.add(new_post)
+	g.db.add(post)
 	g.db.flush()
 
 	if request.values.get('ghost'):
@@ -1129,21 +1135,21 @@ def submit_post(v, sub=None):
 		).first()
 		
 		if ghost_award:
-			ghost_award.submission_id = new_post.id
-			new_post.ghost = True
+			ghost_award.submission_id = post.id
+			post.ghost = True
 		else:
 			price = ghost_price(v)
 			if v.coins >= price:
 				v.coins -= price
-				new_post.ghost = True
+				post.ghost = True
 			elif v.procoins >= price:
 				v.procoins -= price
-				new_post.ghost = True
+				post.ghost = True
 
 	if v and v.admin_level > 2:
 		for option in bet_options:
 			bet_option = Comment(author_id=AUTOBETTER_ID,
-				parent_submission=new_post.id,
+				parent_submission=post.id,
 				level=1,
 				body_html=filter_emojis_only(option),
 				upvotes=0,
@@ -1154,7 +1160,7 @@ def submit_post(v, sub=None):
 
 	for option in options:
 		c = Comment(author_id=AUTOPOLLER_ID,
-			parent_submission=new_post.id,
+			parent_submission=post.id,
 			level=1,
 			body_html=filter_emojis_only(option),
 			upvotes=0,
@@ -1164,7 +1170,7 @@ def submit_post(v, sub=None):
 
 	for choice in choices:
 		c = Comment(author_id=AUTOCHOICE_ID,
-			parent_submission=new_post.id,
+			parent_submission=post.id,
 			level=1,
 			body_html=filter_emojis_only(choice),
 			upvotes=0,
@@ -1174,7 +1180,7 @@ def submit_post(v, sub=None):
 
 	vote = Vote(user_id=v.id,
 				vote_type=1,
-				submission_id=new_post.id
+				submission_id=post.id
 				)
 	g.db.add(vote)
 	
@@ -1185,51 +1191,57 @@ def submit_post(v, sub=None):
 		if file.content_type.startswith('image/'):
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
-			new_post.url = process_image(name)
+			post.url = process_image(name)
 
 			name2 = name.replace('.webp', 'r.webp')
 			copyfile(name, name2)
-			new_post.thumburl = process_image(name2, resize=100)	
+			post.thumburl = process_image(name2, resize=100)	
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
 				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
 				except: return error( "Imgur error")
 			if url.endswith('.'): url += 'mp4'
-			new_post.url = url
+			post.url = url
 		else:
 			return error("Image/Video files only.")
 		
-	if not new_post.thumburl and new_post.url:
-		if request.host in new_post.url or new_post.url.startswith('/') or new_post.domain == SITE:
-			new_post.thumburl = f'/static/assets/images/{SITE_NAME}/site_preview.webp'
+	if not post.thumburl and post.url:
+		if request.host in post.url or post.url.startswith('/') or post.domain == SITE:
+			post.thumburl = f'/static/assets/images/{SITE_NAME}/site_preview.webp'
 		elif request.headers.get('cf-ipcountry')!="T1":
-			gevent.spawn( thumbnail_thread, new_post.id)
+			gevent.spawn( thumbnail_thread, post.id)
 
 
 
 
-	if not new_post.private and not new_post.ghost:
+	if not post.private and not post.ghost:
 
 		notify_users = NOTIFY_USERS(body_html, v) | NOTIFY_USERS2(title, v)
 
-		cid = notif_comment(f"@{v.username} has mentioned you: [{title}]({new_post.sl})")
+		text = f"@{v.username} has mentioned you: [{post.title}]({post.sl})"
+		if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
+
+		cid = notif_comment(text)
 		for x in notify_users:
 			add_notif(cid, x)
 
-		cid = notif_comment(f"@{v.username} has made a new post: [{title}]({new_post.sl})", autojanny=True)
+		text = f"@{v.username} has made a new post: [{post.title}]({post.sl})"
+		if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
+
+		cid = notif_comment(text, autojanny=True)
 		for follow in v.followers:
 			user = get_account(follow.user_id)
-			if new_post.club and not user.paid_dues: continue
+			if post.club and not user.paid_dues: continue
 			add_notif(cid, user.id)
 
 
 
 
 
-	if v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in f'{new_post.body}{new_post.title}'.lower():
-		new_post.is_banned = True
-		new_post.ban_reason = "AutoJanny"
+	if v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in f'{post.body}{post.title}'.lower():
+		post.is_banned = True
+		post.ban_reason = "AutoJanny"
 
 		body = AGENDAPOSTER_MSG.format(username=v.username, type='post', AGENDAPOSTER_PHRASE=AGENDAPOSTER_PHRASE)
 
@@ -1238,7 +1250,7 @@ def submit_post(v, sub=None):
 
 
 		c_jannied = Comment(author_id=NOTIFICATIONS_ID,
-			parent_submission=new_post.id,
+			parent_submission=post.id,
 			level=1,
 			over_18=False,
 			is_bot=True,
@@ -1254,13 +1266,13 @@ def submit_post(v, sub=None):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	elif SITE_NAME == 'Drama' and 'nigg' in f'{new_post.body}{new_post.title}'.lower() and not v.nwordpass:
+	elif SITE_NAME == 'Drama' and 'nigg' in f'{post.body}{post.title}'.lower() and not v.nwordpass:
 
-		new_post.is_banned = True
-		new_post.ban_reason = "AutoJanny"
+		post.is_banned = True
+		post.ban_reason = "AutoJanny"
 
 		c_jannied = Comment(author_id=NOTIFICATIONS_ID,
-			parent_submission=new_post.id,
+			parent_submission=post.id,
 			level=1,
 			over_18=False,
 			is_bot=True,
@@ -1293,39 +1305,39 @@ def submit_post(v, sub=None):
 			body = body[1:]
 			vote = Vote(user_id=SNAPPY_ID,
 						vote_type=-1,
-						submission_id=new_post.id,
+						submission_id=post.id,
 						real = True
 						)
 			g.db.add(vote)
-			new_post.downvotes += 1
+			post.downvotes += 1
 			if body.startswith('OP is a Trump supporter'):
-				flag = Flag(post_id=new_post.id, user_id=SNAPPY_ID, reason='Trump supporter')
+				flag = Flag(post_id=post.id, user_id=SNAPPY_ID, reason='Trump supporter')
 				g.db.add(flag)
 		elif body.startswith('▲'):
 			body = body[1:]
 			vote = Vote(user_id=SNAPPY_ID,
 						vote_type=1,
-						submission_id=new_post.id,
+						submission_id=post.id,
 						real = True
 						)
 			g.db.add(vote)
-			new_post.upvotes += 1
+			post.upvotes += 1
 
 
 	body += "\n\n"
 
-	if new_post.url:
-		if new_post.url.startswith('https://old.reddit.com/r/'):
-			rev = new_post.url.replace('https://old.reddit.com/', '')
+	if post.url:
+		if post.url.startswith('https://old.reddit.com/r/'):
+			rev = post.url.replace('https://old.reddit.com/', '')
 			rev = f"* [unddit.com](https://unddit.com/{rev})\n"
 		else: rev = ''
-		newposturl = new_post.url
+		newposturl = post.url
 		if newposturl.startswith('/'): newposturl = f"{SITE_FULL}{newposturl}"
 		body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{newposturl})\n* [archive.ph](https://archive.ph/?url={quote(newposturl)}&run=1) (click to archive)\n\n"			
 		gevent.spawn(archiveorg, newposturl)
 
 	url_regex = '<a href=\"(https?:\/\/[a-z]{1,20}\.[^\"]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">(.*?)<\/a>'
-	for url_match in list(re.finditer(url_regex, new_post.body_html))[:20]:
+	for url_match in list(re.finditer(url_regex, post.body_html))[:20]:
 		href = url_match.group(1)
 		if not href: continue
 
@@ -1345,7 +1357,7 @@ def submit_post(v, sub=None):
 	if len(body_html) < 40000:
 		c = Comment(author_id=SNAPPY_ID,
 			distinguish_level=6,
-			parent_submission=new_post.id,
+			parent_submission=post.id,
 			level=1,
 			over_18=False,
 			is_bot=True,
@@ -1363,39 +1375,39 @@ def submit_post(v, sub=None):
 		if body.startswith('!slots1000'):
 			check_for_slots_command(body, snappy, c)
 
-		new_post.comment_count += 1
+		post.comment_count += 1
 
 	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
-	if v.admin_level > 0 and ("[changelog]" in new_post.title.lower() or "(changelog)" in new_post.title.lower()) and not new_post.private:
-		send_discord_message(new_post.permalink)
+	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()) and not post.private:
+		send_discord_message(post.permalink)
 		cache.delete_memoized(changeloglist)
 
 	if v.id in {PIZZASHILL_ID, HIL_ID}:
-		autovote = Vote(user_id=CARP_ID, submission_id=new_post.id, vote_type=1)
+		autovote = Vote(user_id=CARP_ID, submission_id=post.id, vote_type=1)
 		g.db.add(autovote)
-		autovote = Vote(user_id=AEVANN_ID, submission_id=new_post.id, vote_type=1)
+		autovote = Vote(user_id=AEVANN_ID, submission_id=post.id, vote_type=1)
 		g.db.add(autovote)
-		autovote = Vote(user_id=CRAT_ID, submission_id=new_post.id, vote_type=1)
+		autovote = Vote(user_id=CRAT_ID, submission_id=post.id, vote_type=1)
 		g.db.add(autovote)
 		v.coins += 3
 		v.truecoins += 3
 		g.db.add(v)
-		new_post.upvotes += 3
-		g.db.add(new_post)
+		post.upvotes += 3
+		g.db.add(post)
 
 	g.db.commit()
 
-	if request.headers.get("Authorization"): return new_post.json
+	if request.headers.get("Authorization"): return post.json
 	else:
-		new_post.voted = 1
-		if 'megathread' in new_post.title.lower(): sort = 'new'
+		post.voted = 1
+		if 'megathread' in post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
-		if len(body_html) < 40000: new_post.replies = [c]
-		return render_template('submission.html', v=v, p=new_post, sort=sort, render_replies=True, offset=0, success=True, sub=new_post.subr)
+		if len(body_html) < 40000: post.replies = [c]
+		return render_template('submission.html', v=v, p=post, sort=sort, render_replies=True, offset=0, success=True, sub=post.subr)
 
 
 @app.post("/delete_post/<pid>")

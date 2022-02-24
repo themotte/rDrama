@@ -134,6 +134,10 @@
 		{% else %}
 			<span class="font-weight-bold"><a href="{{c.post.permalink}}">{{c.post.realtitle(v) | safe}}</a></span>
 		{% endif %}
+
+		{% if c.post.sub %}
+			<span class="ml-1"> in <a href="/s/{{c.post.sub}}" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>/s/{{c.post.sub}}</a></span>
+		{% endif %}
 	{% elif c.author_id==NOTIFICATIONS_ID or c.author_id==AUTOJANNY_ID %}
 	<span class="font-weight-bold">Notification</span>
 	{% else %}

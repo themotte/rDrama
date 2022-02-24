@@ -79,19 +79,16 @@
 
 												<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 
-												{% if SITE_NAME != 'Drama' or sub %}
+												<label class='mt-4' for="title">Sub</label>
 
-													<label class='mt-4' for="title">Sub</label>
-
-													<div class="input-group mb2">
-														<input list="subs" autocomplete="off" id='sub' class="form-control" form="submitform" name="sub" oninput="savetext()" {% if sub %}value="{{sub.name}}"{% endif %} {% if SITE_NAME == 'Ruqqus' %}required{% endif %}>
-														<datalist id="subs">
-															{% for s in SUBS %}
-																<option value="{{s}}"></option>
-															{% endfor %}
-														</datalist>
-													</div>
-												{% endif %}
+												<div class="input-group mb2">
+													<input list="subs" autocomplete="off" id='sub' class="form-control" form="submitform" name="sub" oninput="savetext()" {% if sub %}value="{{sub.name}}"{% endif %} {% if SITE_NAME == 'Ruqqus' %}required{% else %}placeholder="Optional"{% endif %}>
+													<datalist id="subs">
+														{% for s in SUBS %}
+															<option value="{{s}}"></option>
+														{% endfor %}
+													</datalist>
+												</div>
 						
 												<label class='mt-4' for="title">Post Title</label>
 

@@ -42,7 +42,7 @@
 					{% if ccmode=="false" %}<a title="Only show country club posts" data-bs-original-title="Only show country club posts" class="btn btn-secondary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=true"></i>CC</a>{% endif %}
 				{% endif %}
 
-				{% if request.path == '/' and v and v.admin_level > 1 and SITE_NAME == 'Drama' %}
+				{% if request.path in ('/','/logged_out') and SITE_NAME == 'Drama' %}
 					{% if subs %}
 						{% set classes='btn-primary text-primary' %}
 					{% else %}
