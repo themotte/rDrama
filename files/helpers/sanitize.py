@@ -227,7 +227,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			if remoji == 'marseyrandom': remoji = choice(marseys)
 
 			if path.isfile(f'files/assets/images/emojis/{remoji}.webp'):
-				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" class="{classes}" src="/e/{remoji}" >', new, flags=re.I)
+				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" class="{classes}" src="/e/{remoji}.webp" >', new, flags=re.I)
 				if comment: marseys_used.add(emoji)
 					
 		sanitized = sanitized.replace(old, new)
@@ -251,7 +251,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			else: emoji = old
 
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" class="{classes}" src="/e/{emoji}">', sanitized, flags=re.I)
+				sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" class="{classes}" src="/e/{emoji}.webp">', sanitized, flags=re.I)
 				if comment: marseys_used.add(emoji)
 		else:
 			classes = 'emoji'
@@ -262,7 +262,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			else: emoji = old
 
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}">', sanitized, flags=re.I)
+				sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', sanitized, flags=re.I)
 				if comment: marseys_used.add(emoji)
 
 	sanitized = sanitized.replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube")
@@ -339,7 +339,7 @@ def filter_emojis_only(title, edit=False, graceful=False):
 			else: emoji = old
 
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				title = re.sub(f'(?<!"):!{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" src="/e/{emoji}" class="{classes}">', title, flags=re.I)
+				title = re.sub(f'(?<!"):!{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" src="/e/{emoji}.webp" class="{classes}">', title, flags=re.I)
 
 		else:
 			classes = 'emoji'
@@ -350,7 +350,7 @@ def filter_emojis_only(title, edit=False, graceful=False):
 			else: emoji = old
 
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}">', title, flags=re.I)
+				title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', title, flags=re.I)
 
 	title = re.sub('~~(.*?)~~', r'<del>\1</del>', title)
 

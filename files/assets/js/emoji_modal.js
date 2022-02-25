@@ -59,7 +59,7 @@ function loadEmojis(form) {
 				);
 						
 				for (const emoji of Object.keys(sortable).slice(0, 25))
-					str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${emoji}')" data-bs-toggle="tooltip" title=":${emoji}:" delay:="0"><img loading="lazy" width=50 src="/e/${emoji}" alt="${emoji}-emoji"></button>`
+					str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${emoji}')" data-bs-toggle="tooltip" title=":${emoji}:" delay:="0"><img loading="lazy" width=50 src="/e/${emoji}.webp" alt="${emoji}-emoji"></button>`
 			
 				fav.innerHTML = str
 			}
@@ -76,12 +76,12 @@ function loadEmojis(form) {
 						{
 							for (const e of v) {
 								let k = e.toLowerCase().split(" : ")[0];
-								str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${k}')" style="background: None!important; width:60px; overflow: hidden; border: none" data-bs-toggle="tooltip" title=":${k}:" delay:="0"><img loading="lazy" width=50 src="/e/${k}" alt="${k}-emoji"></button>`;
+								str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${k}')" style="background: None!important; width:60px; overflow: hidden; border: none" data-bs-toggle="tooltip" title=":${k}:" delay:="0"><img loading="lazy" width=50 src="/e/${k}.webp" alt="${k}-emoji"></button>`;
 							}
 						}
 					else {
 						for (const e of v) {
-							str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${e}')" style="background: None!important; width:60px; overflow: hidden; border: none" data-bs-toggle="tooltip" title=":${e}:" delay:="0"><img loading="lazy" width=50 src="/e/${e}" alt="${e}-emoji"></button>`;
+							str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${e}')" style="background: None!important; width:60px; overflow: hidden; border: none" data-bs-toggle="tooltip" title=":${e}:" delay:="0"><img loading="lazy" width=50 src="/e/${e}.webp" alt="${e}-emoji"></button>`;
 						}
 					}
 	
@@ -100,7 +100,7 @@ function loadEmojis(form) {
 						let v = arr[1];
 						if (str.includes(`'${k}'`)) continue;
 						if (k.match(search_bar.value.toLowerCase()) || search_bar.value.toLowerCase().match(k) || v.match(search_bar.value.toLowerCase())) {
-							str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${k}')" data-bs-toggle="tooltip" title=":${k}:" delay:="0"><img loading="lazy" width=50 src="/e/${k}" alt="${k}-emoji"></button>`;
+							str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${k}')" data-bs-toggle="tooltip" title=":${k}:" delay:="0"><img loading="lazy" width=50 src="/e/${k}.webp" alt="${k}-emoji"></button>`;
 						}
 					}
 				}
@@ -108,7 +108,7 @@ function loadEmojis(form) {
 				{
 					for (const e of value) {
 						if (e.match(search_bar.value.toLowerCase()) || search_bar.value.toLowerCase().match(e)) {
-							str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${e}')" style="background: None!important; width:60px; overflow: hidden; border: none" data-bs-toggle="tooltip" title=":${e}:" delay:="0"><img loading="lazy" width=50 src="/e/${e}" alt="${e}-emoji"></button>`;
+							str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${e}')" style="background: None!important; width:60px; overflow: hidden; border: none" data-bs-toggle="tooltip" title=":${e}:" delay:="0"><img loading="lazy" width=50 src="/e/${e}.webp" alt="${e}-emoji"></button>`;
 						}
 					}
 				}

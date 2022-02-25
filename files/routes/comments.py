@@ -281,7 +281,7 @@ def api_comment(v):
 							filename = f'files/assets/images/emojis/{name}.webp'
 							copyfile(oldname, filename)
 							process_image(filename, 200)
-							requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{name}"]}, timeout=5)
+							requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{name}.webp"]}, timeout=5)
 							cache.delete_memoized(marsey_list)
 						except Exception as e:
 							return {"error": str(e)}, 400
