@@ -161,7 +161,7 @@ def front_all(v, sub=None):
 	t=request.values.get('t', defaulttime)
 	ccmode=request.values.get('ccmode', "false")
 	subs=session.get('subs', False)
-	subsonly=request.values.get('subsonly', 'false').lower() == 'true'
+	subsonly=request.values.get('subsonly', "false")
 
 	try: gt=int(request.values.get("utc_greater_than", 0))
 	except: gt=0
@@ -266,12 +266,12 @@ def front_all(v, sub=None):
 
 
 @cache.memoize(timeout=86400)
-def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", subs=False, filter_words='', gt=0, lt=0, sub=None, site=None, subsonly=False):
+def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", subs=False, filter_words='', gt=0, lt=0, sub=None, site=None, subsonly="false"):
 
 	posts = g.db.query(Submission)
 	
 	if sub: posts = posts.filter_by(sub=sub.name)
-	elif subsonly:
+	elif subsonly == "true":
 		posts = posts.filter(Submission.sub != None)
 		if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
 	elif subs:
@@ -351,7 +351,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false" and not gt and not lt:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
-		elif subsonly:
+		elif subsonly == "true":
 			pins = pins.filter(Submission.sub != None)
 			if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
 		elif subs:
