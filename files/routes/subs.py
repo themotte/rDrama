@@ -256,7 +256,11 @@ def remove_mod(v, sub):
 @app.get("/create_sub")
 @is_not_permabanned
 def create_sub(v):
-	return render_template("sub/create_sub.html", v=v)
+	num = v.subs_created + 1
+	for a in v.alts:
+		num += a.subs_created
+	cost = num * 100
+	return render_template("sub/create_sub.html", v=v, cost=cost)
 
 
 @app.post("/create_sub")
@@ -271,7 +275,10 @@ def create_sub2(v):
 
 	sub = g.db.query(Sub).filter_by(name=name).one_or_none()
 	if not sub:
-		cost = (v.subs_created+1) * 100
+		num = v.subs_created + 1
+		for a in v.alts:
+			num += a.subs_created
+		cost = num * 100
 
 		if v.coins < cost:
 			return render_template("sub/create_sub.html", v=v, error="You don't have enough coins!"), 403
