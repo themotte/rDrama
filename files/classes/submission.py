@@ -233,7 +233,6 @@ class Submission(Base):
 	def domain(self):
 		if not self.url: return None
 		if self.url.startswith('/'): return SITE
-		if g.v.id == 1: print(self.url)
 		domain = urlparse(self.url).netloc
 		if domain.startswith("www."): domain = domain.split("www.")[1]
 		return domain.replace("old.reddit.com", "reddit.com")
