@@ -161,7 +161,7 @@ def front_all(v, sub=None):
 	t=request.values.get('t', defaulttime)
 	ccmode=request.values.get('ccmode', "false")
 	subs=session.get('subs', False)
-	subsonly=request.values.get('subsonly', False)
+	subsonly=bool(request.values.get('subsonly', False))
 
 	try: gt=int(request.values.get("utc_greater_than", 0))
 	except: gt=0
