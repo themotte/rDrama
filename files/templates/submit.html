@@ -128,7 +128,6 @@
 
 													<div class="text-small font-weight-bold mt-1" id="character-count-submit-text-form" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
-													<div id="preview" class="preview my-3"></div>
 												</div>
 
 												<p></p>
@@ -154,6 +153,8 @@
 													<div id="filename-show-submit"><i class="far fa-image"></i></div>
 													<input autocomplete="off" id="file-upload-submit" multiple="multiple" type="file" name="file2" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-submit','file-upload-submit')" hidden>
 												</label>		
+
+												<div id="preview" class="preview my-3"></div>
 
 												<pre></pre>
 												<div class="form-text text-small"><a href="/formatting" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>Formatting help</a></div>

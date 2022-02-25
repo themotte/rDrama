@@ -75,5 +75,10 @@ function post_toast(t, url, reload, data) {
 }
 
 function changename(s1,s2) {
-	document.getElementById(s1).innerHTML = document.getElementById(s2).files[0].name.substr(0, 20);
+	let files = document.getElementById(s2).files;
+	let filename = '';
+	for (const e of files) {
+		filename += e.name.substr(0, 20) + ', ';
+	}
+	document.getElementById(s1).innerHTML = filename.slice(0, -2);
 }
