@@ -159,9 +159,9 @@ def front_all(v, sub=None):
 
 	sort=request.values.get("sort", defaultsorting)
 	t=request.values.get('t', defaulttime)
-	ccmode=request.values.get('ccmode', "false")
+	ccmode=request.values.get('ccmode', "false").lower()
 	subs=session.get('subs', False)
-	subsonly=request.values.get('subsonly', "false")
+	subsonly=request.values.get('subsonly', "false").lower()
 
 	try: gt=int(request.values.get("utc_greater_than", 0))
 	except: gt=0
