@@ -235,11 +235,11 @@ class Submission(Base):
 		if not self.url: return None
 		print('2')
 		if self.url.startswith('/'): return SITE
-		print('3')
+		print(f'url: {self.url}')
 		domain = urlparse(self.url).netloc
-		print(domain)
+		print(f'domain1: {domain}')
 		if domain.startswith("www."): domain = domain.split("www.")[1]
-		print(domain)
+		print(f'domain2: {domain}')
 		return domain.replace("old.reddit.com", "reddit.com")
 
 	@property
