@@ -236,7 +236,7 @@ class Submission(Base):
 		print('2')
 		if self.url.startswith('/'): return SITE
 		print(f'url: {self.url}')
-		domain = urlparse(self.url).netloc
+		domain = urlparse(self.url).hostname
 		print(f'domain1: {domain}')
 		if domain.startswith("www."): domain = domain.split("www.")[1]
 		print(f'domain2: {domain}')
