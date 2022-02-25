@@ -38,8 +38,8 @@
 			{% block navbar %}
 			<div class="d-flex align-items-center">
 				{% if request.path == '/' and v.paid_dues %}
-					{% if ccmode=="true"%}<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-primary text-primary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=false&subsonly={{subsonly}">CC</a>{% endif %}
-					{% if ccmode=="false" %}<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-secondary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=true&subsonly={{subsonly}"></i>CC</a>{% endif %}
+					{% if ccmode=="true"%}<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-primary text-primary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=false&subsonly={{subsonly}}">CC</a>{% endif %}
+					{% if ccmode=="false" %}<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-secondary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=true&subsonly={{subsonly}}"></i>CC</a>{% endif %}
 				{% endif %}
 
 				{% if request.path in ('/','/logged_out') and SITE_NAME == 'Drama' %}
