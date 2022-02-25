@@ -164,11 +164,11 @@ def cached_chart(days):
 	posts_chart.plot(
 		daily_times,
 		post_stats,
-		color='green')
+		color='blue')
 	comments_chart.plot(
 		daily_times,
 		comment_stats,
-		color='gold')
+		color='purple')
 
 	signup_chart.set_ylim(ymin=0)
 	posts_chart.set_ylim(ymin=0)
