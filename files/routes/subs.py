@@ -242,7 +242,7 @@ def remove_mod(v, sub):
 	mod = g.db.query(Mod).filter_by(user_id=user.id, sub=sub).one_or_none()
 	if not mod: abort(400)
 
-	if not (v.id == user.id or v.mod_date(sub.name) and v.mod_date(sub.name) < mod.created_utc): abort(403)
+	if not (v.id == user.id or v.mod_date(sub) and v.mod_date(sub) < mod.created_utc): abort(403)
 
 	g.db.delete(mod)
 
