@@ -231,15 +231,11 @@ class Submission(Base):
 	@property
 	@lazy
 	def domain(self):
-		print('1')
 		if not self.url: return None
-		print('2')
 		if self.url.startswith('/'): return SITE
-		print(f'url: {self.url}')
-		domain = urlparse(self.url).hostname
-		print(f'domain1: {domain}')
+		if g.v.id == 1: print(self.url)
+		domain = urlparse(self.url).netloc
 		if domain.startswith("www."): domain = domain.split("www.")[1]
-		print(f'domain2: {domain}')
 		return domain.replace("old.reddit.com", "reddit.com")
 
 	@property
