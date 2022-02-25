@@ -161,6 +161,7 @@ def front_all(v, sub=None):
 	t=request.values.get('t', defaulttime)
 	ccmode=request.values.get('ccmode', "false")
 	subs=session.get('subs', False)
+	subsonly=request.values.get('subsonly', False)
 
 	try: gt=int(request.values.get("utc_greater_than", 0))
 	except: gt=0
@@ -178,7 +179,8 @@ def front_all(v, sub=None):
 					gt=gt,
 					lt=lt,
 					sub=sub,
-					site=SITE
+					site=SITE,
+					subsonly=subsonly
 					)
 
 	posts = get_posts(ids, v=v)
@@ -264,7 +266,7 @@ def front_all(v, sub=None):
 
 
 @cache.memoize(timeout=86400)
-def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", subs=False, filter_words='', gt=0, lt=0, sub=None, site=None):
+def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", subs=False, filter_words='', gt=0, lt=0, sub=None, site=None, subsonly=False):
 
 	posts = g.db.query(Submission)
 	
@@ -274,7 +276,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	else:
 		if SITE_NAME == 'Drama': posts = posts.filter(Submission.sub == None)
 		else:
-			if SITE_NAME == 'Ruqqus':
+			if subsonly:
 				posts = posts.filter(Submission.sub != None)
 				if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
 			elif v and v.all_blocks: posts = posts.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
@@ -356,7 +358,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 		else:
 			if SITE_NAME == 'Drama': pins = pins.filter(Submission.sub == None)
 			else:
-				if SITE_NAME == 'Ruqqus':
+				if subsonly:
 					pins = pins.filter(Submission.sub != None)
 					if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
 				elif v and v.all_blocks: pins = pins.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
