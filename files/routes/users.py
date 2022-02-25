@@ -886,6 +886,9 @@ def u_username_info(username, v=None):
 @auth_required
 def u_user_id_info(id, v=None):
 
+	try: id = int(id)
+	except: abort(404)
+
 	user=get_account(id, v=v)
 
 	if hasattr(user, 'is_blocking') and user.is_blocking:
