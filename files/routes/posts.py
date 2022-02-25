@@ -602,8 +602,8 @@ def edit_post(pid, v):
 
 			v.ban(reason="White people nonsense.", days=0.007)
 
-			text = "Your account has been suspended for 10 minutes for the following reason:\n\n> Unsanctioned NWord"
-			send_repeatable_notification(v.id, text)		
+			text = "Your account has been banned for **10 minutes** for the following reason:\n\n> Unsanctioned NWord"
+			send_repeatable_notification(v.id, text)
 
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
@@ -1015,7 +1015,7 @@ def submit_post(v, sub=None):
 
 	if max(len(similar_urls), len(similar_posts)) >= threshold:
 
-		text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+		text = "Your account has been banned for **1 day** for the following reason:\n\n> Too much spam!"
 		send_repeatable_notification(v.id, text)
 
 		v.ban(reason="Spamming.",
@@ -1288,7 +1288,7 @@ def submit_post(v, sub=None):
 
 		v.ban(reason="White people nonsense.", days=0.007)
 
-		text = "Your account has been suspended for 10 minutes for the following reason:\n\n> Unsanctioned NWord"
+		text = "Your account has been banned for **10 minutes** for the following reason:\n\n> Unsanctioned NWord"
 		send_repeatable_notification(v.id, text)		
 
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)

@@ -353,7 +353,7 @@ def api_comment(v):
 			threshold *= 2
 
 		if len(similar_comments) > threshold:
-			text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+			text = "Your account has been banned for **1 day** for the following reason:\n\n> Too much spam!"
 			send_repeatable_notification(v.id, text)
 
 			v.ban(reason="Spamming.",
@@ -503,7 +503,7 @@ def api_comment(v):
 
 			v.ban(reason="White people nonsense.", days=0.007)
 
-			text = "Your account has been suspended for 10 minutes for the following reason:\n\n> Unsanctioned NWord"
+			text = "Your account has been banned for **10 minutes** for the following reason:\n\n> Unsanctioned NWord"
 			send_repeatable_notification(v.id, text)		
 
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
@@ -795,7 +795,7 @@ def edit_comment(cid, v):
 				threshold *= 2
 
 			if len(similar_comments) > threshold:
-				text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+				text = "Your account has been banned for **1 day** for the following reason:\n\n> Too much spam!"
 				send_repeatable_notification(v.id, text)
 
 				v.ban(reason="Spamming.",
@@ -885,7 +885,7 @@ def edit_comment(cid, v):
 
 			v.ban(reason="White people nonsense.", days=0.007)
 
-			text = "Your account has been suspended for 10 minutes for the following reason:\n\n> Unsanctioned NWord"
+			text = "Your account has been banned for **10 minutes** for the following reason:\n\n> Unsanctioned NWord"
 			send_repeatable_notification(v.id, text)		
 
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
