@@ -1292,7 +1292,9 @@ def submit_post(v, sub=None):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	if v.id == CARP_ID:
+	if post.sub == 'dankchristianmemes':
+		body = random.choice(christian_emojis)
+	elif v.id == CARP_ID:
 		if random.random() < 0.02: body = "i love you carp"
 		else: body = ":#marseyfuckoffcarp:"
 	elif v.id == LAWLZ_ID:
