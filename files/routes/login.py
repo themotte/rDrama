@@ -145,8 +145,6 @@ def login_post():
 	session["lo_user"] = account.id
 	session["login_nonce"] = account.login_nonce
 
-	if account.id != PW_ID: check_for_alts(account.id)
-
 	g.db.commit()
 
 	redir = request.values.get("redirect")
