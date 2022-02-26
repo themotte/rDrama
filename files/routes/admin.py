@@ -16,6 +16,7 @@ from .front import frontlist
 from files.helpers.discord import add_role
 from datetime import datetime
 import requests
+from urllib.parse import quote, urlencode
 
 GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
 GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
@@ -30,12 +31,15 @@ def merge(v, id1, id2):
 	with open('verified', 'r') as f:
 		verified = int(f.read())
 
-	if time.time() - verified > 20:
+	if time.time() - verified > 5:
 		session.pop("session_id", None)
 		session.pop("lo_user", None)
 		with open('verified', 'w') as f:
 			f.write(str(int(time.time())))
-		return redirect('/login')
+		path = request.path
+		qs = urlencode(dict(request.values))
+		argval = quote(f"{path}?{qs}", safe='')
+		return redirect(f"{SITE_FULL}/login?redirect={argval}")
 
 	user1 = get_account(id1)
 	user2 = get_account(id2)
@@ -89,12 +93,15 @@ def merge_all(v, id):
 	with open('verified', 'r') as f:
 		verified = int(f.read())
 
-	if time.time() - verified > 20:
+	if time.time() - verified > 5:
 		session.pop("session_id", None)
 		session.pop("lo_user", None)
 		with open('verified', 'w') as f:
 			f.write(str(int(time.time())))
-		return redirect('/login')
+		path = request.path
+		qs = urlencode(dict(request.values))
+		argval = quote(f"{path}?{qs}", safe='')
+		return redirect(f"{SITE_FULL}/login?redirect={argval}")
 
 	user = get_account(id)
 
