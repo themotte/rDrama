@@ -181,7 +181,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 				tag["target"] = "_blank"
 				tag["rel"] = "nofollow noopener noreferrer"
 
-			if re.match("https?://\S+", str(tag.string), flags=re.A):
+			if re.fullmatch("https?://\S+", str(tag.string), flags=re.A):
 				try: tag.string = tag["href"]
 				except: tag.string = ""
 
