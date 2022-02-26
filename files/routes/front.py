@@ -60,8 +60,8 @@ def notifications(v):
 			elif not x.read:
 				x.read = True
 				c.unread = True
-				if not c.created_utc: c.created_utc = x.created_utc
 				g.db.add(x)
+			if not c.created_utc: c.created_utc = x.created_utc
 			listing.append(c)
 
 		g.db.commit()
