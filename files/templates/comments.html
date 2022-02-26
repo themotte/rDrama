@@ -565,7 +565,7 @@
 			</div>
 
 		{% if v and v.id != c.author_id and c.body %}
-			<div class="d-none card rounded border my-2 p-3" style="white-space:pre-wrap" id="markdown-{{c.id}}">{{c.body.strip()}}</div>
+			<textarea autocomplete="off" class="d-none card border my-2 p-3 comment-box form-control rounded" id="markdown-{{c.id}}" readonly>{{c.body.strip()}}</textarea> 
 		{% endif %}
 
 
