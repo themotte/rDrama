@@ -26,8 +26,9 @@ tiers={
 	"(Renthog)": 2,
 	"(Landchad)": 3,
 	"(Terminally online turboautist)": 4,
-	"(Footpig)": 5,
-	"(Rich Bich)": 6,
+	"(Marsey's Sugar Daddy)": 5,
+	"(JIDF Bankroller)": 6,
+	"(Rich Bich)": 7,
 	"(LlamaBean)": 1,
 	}
 
@@ -481,6 +482,7 @@ def gumroad(v):
 	elif v.patron == 4: procoins = 25000
 	elif v.patron == 5: procoins = 50000
 	elif u.patron == 6: procoins = 125000
+	elif u.patron == 7: procoins = 250000
 
 	v.procoins += procoins
 	send_repeatable_notification(v.id, f"You have received {procoins} Marseybux! You can use them to buy awards in the [shop](/shop).")
