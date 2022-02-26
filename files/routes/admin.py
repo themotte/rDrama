@@ -21,10 +21,17 @@ GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
 GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 
 month = datetime.now().strftime('%B')
+verified = int(time.time())
 
 @app.get('/admin/merge/<id1>/<id2>')
 @admin_level_required(3)
 def merge(v, id1, id2):
+	if int(time.time()) - verified > 10:
+		verified = int(time.time())
+		session.pop("session_id", None)
+		session.pop("lo_user", None)
+		return redirect('/login')
+
 	if v.id != AEVANN_ID: abort(403)
 	user1 = get_account(id1)
 	user2 = get_account(id2)
