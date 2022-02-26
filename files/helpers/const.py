@@ -670,3 +670,5 @@ db.close()
 
 if SITE == 'PCM': valid_username_regex = re.compile("^[a-zA-Z0-9_\-А-я]{3,25}$")
 else: valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
+
+valid_password_regex = re.compile("^.{8,100}$", flags=re.A)

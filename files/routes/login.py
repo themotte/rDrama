@@ -4,8 +4,6 @@ from files.__main__ import app, limiter
 from files.helpers.const import *
 import requests
 
-valid_password_regex = re.compile("^.{8,100}$", flags=re.A)
-
 @app.get("/login")
 @auth_desired
 def login_get(v):
@@ -270,10 +268,10 @@ def sign_up_post(v):
 			"password") == request.values.get("password_confirm"):
 		return new_signup("Passwords did not match. Please try again.")
 
-	if not re.fullmatch(valid_username_regex, username, flags=re.A):
+	if not valid_username_regex.fullmatch(username, flags=re.A):
 		return new_signup("Invalid username")
 
-	if not re.fullmatch(valid_password_regex, request.values.get("password"), flags=re.A):
+	if not valid_password_regex.fullmatch(request.values.get("password"), flags=re.A):
 		return new_signup("Password must be between 8 and 100 characters.")
 
 	email = request.values.get("email").strip().lower()

@@ -11,6 +11,9 @@ from random import random, choice
 import signal
 import time
 
+if SITE == 'PCM': mention_regex = re.compile('(^|\s|\n|<p>)@(([a-zA-Z0-9_\-А-я]){3,25})', flags=re.A)
+else: mention_regex = re.compile('(^|\s|\n|<p>)@(([a-zA-Z0-9_\-]){1,25})', flags=re.A)
+
 allowed_tags = tags = ['b',
 						'blockquote',
 						'br',
@@ -125,7 +128,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 		sanitized = re.sub('(^|\s|\n|<p>)\/?(s\/(\w|-){3,25})', r'\1<a href="/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized, flags=re.A)
 
-		for i in re.finditer(valid_username_regex, sanitized):
+		for i in mention_regex.finditer(sanitized):
 			u = get_user(i.group(2), graceful=True)
 
 			if u and (not g.v.any_block_exists(u) or g.v.admin_level > 1):
