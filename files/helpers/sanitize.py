@@ -125,7 +125,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 		sanitized = re.sub('(^|\s|\n|<p>)\/?(s\/(\w|-){3,25})', r'\1<a href="/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized, flags=re.A)
 
-		for i in re.finditer('(^|\s|\n|<p>)@((\w|-){1,25})', sanitized, flags=re.A):
+		for i in re.finditer(valid_username_regex, sanitized, flags=re.A):
 			u = get_user(i.group(2), graceful=True)
 
 			if u and (not g.v.any_block_exists(u) or g.v.admin_level > 1):
@@ -135,7 +135,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
 
 
-	for i in re.finditer('https://i\.imgur\.com/(([^_]*?)\.(jpg|png|jpeg))(?!</code>)', sanitized):
+	for i in re.finditer('https://i\.imgur\.com/(([^_]*?)\.(jpg|png|jpeg))(?!</code>)', sanitized, flags=re.A):
 		sanitized = sanitized.replace(i.group(1), i.group(2) + "_d.webp?maxwidth=9999&fidelity=high")
 
 	if noimages:
@@ -203,7 +203,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 		old = i.group(0)
 		if 'marseylong1' in old or 'marseylong2' in old or 'marseyllama1' in old or 'marseyllama2' in old: new = old.lower().replace(">", " class='mb-0'>")
 		else: new = old.lower()
-		for i in re.finditer('(?<!"):([!#A-Za-z0-9]{1,30}?):', new):
+		for i in re.finditer('(?<!"):([!#A-Za-z0-9]{1,30}?):', new, flags=re.A):
 			emoji = i.group(1).lower()
 			if emoji.startswith("#!") or emoji.startswith("!#"):
 				classes = 'emoji-lg mirrored'
@@ -223,12 +223,12 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			if remoji == 'marseyrandom': remoji = choice(marseys_const)
 
 			if path.isfile(f'files/assets/images/emojis/{remoji}.webp'):
-				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" class="{classes}" src="/e/{remoji}.webp" >', new, flags=re.I)
+				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" class="{classes}" src="/e/{remoji}.webp" >', new, flags=re.I|re.A)
 				if comment: marseys_used.add(emoji)
 					
 		sanitized = sanitized.replace(old, new)
 
-	emojis = list(re.finditer('(?<!#"):([!#A-Za-z0-9]{1,30}?):', sanitized))
+	emojis = list(re.finditer('(?<!#"):([!#A-Za-z0-9]{1,30}?):', sanitized, flags=re.A))
 	if len(emojis) > 20: edit = True
 
 	captured = []
@@ -247,7 +247,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			else: emoji = old
 
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" class="{classes}" src="/e/{emoji}.webp">', sanitized, flags=re.I)
+				sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" class="{classes}" src="/e/{emoji}.webp">', sanitized, flags=re.I|re.A)
 				if comment: marseys_used.add(emoji)
 		else:
 			classes = 'emoji'
@@ -258,14 +258,14 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			else: emoji = old
 
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', sanitized, flags=re.I)
+				sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', sanitized, flags=re.I|re.A)
 				if comment: marseys_used.add(emoji)
 
 	sanitized = sanitized.replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube")
 
 	if "https://youtube.com/watch?v=" in sanitized: sanitized = sanitized.replace("?t=", "&t=")
 
-	for i in re.finditer('" target="_blank">(https://youtube\.com/watch\?v\=(.*?))</a>(?!</code>)', sanitized):
+	for i in re.finditer('" target="_blank">(https://youtube\.com/watch\?v\=(.*?))</a>(?!</code>)', sanitized, flags=re.A):
 		url = i.group(1)
 		yt_id = i.group(2).split('&')[0].split('%')[0]
 		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{url}</a>'
@@ -281,17 +281,17 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 		sanitized = sanitized.replace(replacing, htmlsource)
 
 	if not noimages:
-		for i in re.finditer('>(https://.*?\.(mp4|webm|mov|MP4|WEBM|MOV))</a></p>', sanitized):
+		for i in re.finditer('>(https://.*?\.(mp4|webm|mov|MP4|WEBM|MOV))</a></p>', sanitized, flags=re.A):
 			sanitized = sanitized.replace(f'<p><a href="{i.group(1)}" rel="nofollow noopener noreferrer" target="_blank">{i.group(1)}</a></p>', f'<p><video controls preload="none" class="embedvid"><source src="{i.group(1)}" type="video/mp4"></video>')
-		for i in re.finditer('<p>(https:.*?\.(mp4|webm|mov|MP4|WEBM|MOV))</p>', sanitized):
+		for i in re.finditer('<p>(https:.*?\.(mp4|webm|mov|MP4|WEBM|MOV))</p>', sanitized, flags=re.A):
 			sanitized = sanitized.replace(i.group(0), f'<p><video controls preload="none" class="embedvid"><source src="{i.group(1)}" type="video/mp4"></video>')
 
 	for rd in ["://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it"]:
 		sanitized = sanitized.replace(rd, "://old.reddit.com")
 
 	sanitized = sanitized.replace("old.reddit.com/gallery", "new.reddit.com/gallery")
-	sanitized = re.sub(' (https:\/\/[^ <>]*)', r' <a target="_blank" rel="nofollow noopener noreferrer" href="\1">\1</a>', sanitized)
-	sanitized = re.sub('<p>(https:\/\/[^ <>]*)', r'<p><a target="_blank" rel="nofollow noopener noreferrer" href="\1">\1</a></p>', sanitized)
+	sanitized = re.sub(' (https:\/\/[^ <>]*)', r' <a target="_blank" rel="nofollow noopener noreferrer" href="\1">\1</a>', sanitized, flags=re.A)
+	sanitized = re.sub('<p>(https:\/\/[^ <>]*)', r'<p><a target="_blank" rel="nofollow noopener noreferrer" href="\1">\1</a></p>', sanitized, flags=re.A)
 
 	if comment:
 		for marsey in g.db.query(Marsey).filter(Marsey.name.in_(marseys_used)).all():
@@ -315,7 +315,7 @@ def filter_emojis_only(title, edit=False, graceful=False):
 
 	title = bleach.clean(title, tags=[])
 
-	emojis = list(re.finditer('(?<!"):([!A-Za-z0-9]{1,30}?):', title))
+	emojis = list(re.finditer('(?<!"):([!A-Za-z0-9]{1,30}?):', title, flags=re.A))
 	if len(emojis) > 20: edit = True
 
 	captured = []
@@ -335,7 +335,7 @@ def filter_emojis_only(title, edit=False, graceful=False):
 			else: emoji = old
 
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				title = re.sub(f'(?<!"):!{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" src="/e/{emoji}.webp" class="{classes}">', title, flags=re.I)
+				title = re.sub(f'(?<!"):!{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" src="/e/{emoji}.webp" class="{classes}">', title, flags=re.I|re.A)
 
 		else:
 			classes = 'emoji'
@@ -346,9 +346,9 @@ def filter_emojis_only(title, edit=False, graceful=False):
 			else: emoji = old
 
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', title, flags=re.I)
+				title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', title, flags=re.I|re.A)
 
-	title = re.sub('~~(.*?)~~', r'<del>\1</del>', title)
+	title = re.sub('~~(.*?)~~', r'<del>\1</del>', title, flags=re.A)
 
 	signal.alarm(0)
 

@@ -14,7 +14,7 @@ from files.helpers.discord import add_role
 from shutil import copyfile
 import requests
 
-valid_password_regex = re.compile("^.{8,100}$")
+valid_password_regex = re.compile("^.{8,100}$", flags=re.A)
 
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
@@ -532,7 +532,7 @@ def settings_security_post(v):
 		if request.values.get("new_password") != request.values.get("cnf_password"):
 			return render_template("settings_security.html", v=v, error="Passwords do not match.")
 
-		if not re.fullmatch(valid_password_regex, request.values.get("new_password")):
+		if not re.fullmatch(valid_password_regex, request.values.get("new_password"), flags=re.A):
 			return render_template("settings_security.html", v=v, error="Password must be between 8 and 100 characters.")
 
 		if not v.verifyPass(request.values.get("old_password")):
@@ -859,7 +859,7 @@ def settings_name_change(v):
 						   v=v,
 						   error="You didn't change anything")
 
-	if not re.fullmatch(valid_username_regex, new_name):
+	if not re.fullmatch(valid_username_regex, new_name, flags=re.A):
 		return render_template("settings_profile.html",
 						   v=v,
 						   error="This isn't a valid username.")

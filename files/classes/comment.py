@@ -341,7 +341,7 @@ class Comment(Base):
 				if v.nitter and not '/i/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
 			if v and v.controversial:
-				for i in re.finditer('(/comments/.*?)"', body):
+				for i in re.finditer('(/comments/.*?)"', body, flags=re.A):
 					url = i.group(1)
 					p = urlparse(url).query
 					p = parse_qs(p)
@@ -402,7 +402,7 @@ class Comment(Base):
 		if v and v.nitter and not '/i/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
 		if v and v.controversial:
-			for i in re.finditer('(/comments/.*?)"', body):
+			for i in re.finditer('(/comments/.*?)"', body, flags=re.A):
 				url = i.group(1)
 				p = urlparse(url).query
 				p = parse_qs(p)

@@ -1339,7 +1339,7 @@ def submit_post(v, sub=None):
 			gevent.spawn(archiveorg, newposturl)
 
 		url_regex = '<a href=\"(https?:\/\/[a-z]{1,20}\.[^\"]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">(.*?)<\/a>'
-		for url_match in list(re.finditer(url_regex, post.body_html))[:20]:
+		for url_match in list(re.finditer(url_regex, post.body_html, flags=re.A))[:20]:
 			href = url_match.group(1)
 			if not href: continue
 

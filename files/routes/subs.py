@@ -4,7 +4,7 @@ from files.helpers.wrappers import *
 from files.classes import *
 from .front import frontlist
 
-valid_sub_regex = re.compile("^[a-zA-Z0-9_\-]{3,20}$")
+valid_sub_regex = re.compile("^[a-zA-Z0-9_\-]{3,20}$", flags=re.A)
 
 
 
@@ -273,7 +273,7 @@ def create_sub2(v):
 	if not name: abort(400)
 	name = name.strip().lower()
 
-	if not re.fullmatch(valid_sub_regex, name):
+	if not re.fullmatch(valid_sub_regex, name, flags=re.A):
 		return render_template("sub/create_sub.html", v=v, error="Sub name not allowed."), 400
 
 	sub = g.db.query(Sub).filter_by(name=name).one_or_none()

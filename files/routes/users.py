@@ -493,7 +493,7 @@ def message2(v, username):
 
 	if 'linkedin.com' in message: return {"error": "This domain 'linkedin.com' is banned."}, 403
 
-	message = re.sub('!\[\]\((.*?)\)', r'\1', message)
+	message = re.sub('!\[\]\((.*?)\)', r'\1', message, flags=re.A)
 
 	text_html = sanitize(message, noimages=True)
 
@@ -540,7 +540,7 @@ def messagereply(v):
 
 	if 'linkedin.com' in message: return {"error": "this domain 'linkedin.com' is banned"}
 
-	message = re.sub('!\[\]\((.*?)\)', r'\1', message)
+	message = re.sub('!\[\]\((.*?)\)', r'\1', message, flags=re.A)
 
 	id = int(request.values.get("parent_id"))
 	parent = get_comment(id, v=v)

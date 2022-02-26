@@ -417,7 +417,7 @@ def api_comment(v):
 		g.db.add(c_choice)
 
 	if request.host == 'pcmemes.net' and c.body.lower().startswith("based"):
-		pill = re.match("based and (.{1,20}?)(-| )pilled", body, flags=re.IGNORECASE)
+		pill = re.match("based and (.{1,20}?)(-| )pilled", body, flags=re.I|re.A)
 
 		if level == 1: basedguy = get_account(parent_post.author_id)
 		else: basedguy = get_account(c.parent_comment.author_id)
