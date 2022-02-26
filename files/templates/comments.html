@@ -387,7 +387,7 @@
 											<span class="mr-2 arrow-up comment-{{c.id}}-up active"></span>
 										{% endif %}
 								
-										<span id="comment-mobile-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+										<span  class="comment-mobile-score-{{c.id}} score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 								
 										{% if voted==-1 %}
 											<span class="ml-2 my-0 arrow-down comment-{{c.id}}-down active"></span>
@@ -396,24 +396,24 @@
 								{% elif v %}
 									<li id="voting-{{c.id}}-mobile" class="voting list-inline-item d-md-none">
 								
-										<span id="comment-mobile-{{c.id}}-up" tabindex="0" role="button" onclick="vote('comment-mobile', '{{c.id}}', '1')" class="mx-0 pr-1 arrow-up upvote-button comment-{{c.id}}-up {% if voted==1 %}active{% endif %}">
+										<span  tabindex="0" role="button" onclick="vote('comment-mobile', '{{c.id}}', '1')" class="comment-mobile-{{c.id}}-up mx-0 pr-1 arrow-up upvote-button comment-{{c.id}}-up {% if voted==1 %}active{% endif %}">
 										</span>
 								
-										<span id="comment-mobile-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+										<span  class="comment-mobile-score-{{c.id}} score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 								
-										<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-mobile-{{c.id}}-down" tabindex="0" role="button" onclick="vote('comment-mobile', '{{c.id}}', '-1')" class="mx-0 pl-1 my-0 arrow-down downvote-button comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}">
+										<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('comment-mobile', '{{c.id}}', '-1')" class="comment-mobile-{{c.id}}-down mx-0 pl-1 my-0 arrow-down downvote-button comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}">
 										</span>
 								
 									</li>
 								{% else %}
 									<li id="voting-{{c.id}}-mobile" class="voting list-inline-item d-md-none">
-										<span id="arrow-{{c.id}}-mobile-up" tabindex="0" class="mx-0 pr-1 arrow-mobile-up" onclick="location.href='/login';">
+										<span  tabindex="0" class="arrow-{{c.id}}-mobile-up mx-0 pr-1 arrow-mobile-up" onclick="location.href='/login';">
 											<i class="fas fa-arrow-alt-up mx-0" aria-hidden="true"></i>
 										</span>
 								
-										<span id="comment-mobile-score-{{c.id}}" class="score{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+										<span  class="comment-mobile-score-{{c.id}} score{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 								
-										<span id="arrow-{{c.id}}-mobile-down" tabindex="0" class="arrow-mobile-down mx-0 pl-1 my-0" onclick="location.href='/login';">
+										<span  tabindex="0" class="arrow-{{c.id}}-mobile-down arrow-mobile-down mx-0 pl-1 my-0" onclick="location.href='/login';">
 											<i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
 										</span>
 									</li>
@@ -438,15 +438,15 @@
 							{% endif %}
 						{% elif v %}
 						
-							<button id="comment-{{c.id}}-up" tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '1')" class="btn caction py-0 m-0 px-3 nobackground arrow-up upvote-button mx-0 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
+							<button  tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '1')" class="comment-{{c.id}}-up btn caction py-0 m-0 px-3 nobackground arrow-up upvote-button mx-0 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
 						
 						{% else %}
-							<button id="comment-{{c.id}}-up" tabindex="0" class="btn caction nobackground py-0 m-0 px-3 arrow-up" onclick="location.href='/login';"></button>
+							<button  tabindex="0" class="comment-{{c.id}}-up btn caction nobackground py-0 m-0 px-3 arrow-up" onclick="location.href='/login';"></button>
 						
 						{% endif %}
 						
 						<button class="btn caction nobackground p-0 m-0">
-							<span data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}" id="comment-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}">{{score}}</span>
+							<span data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"  class="comment-score-{{c.id}} score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}">{{score}}</span>
 						</button>
 						
 						{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
@@ -454,11 +454,11 @@
 								<li class=" arrow-down py-0 m-0 px-3 comment-{{c.id}}-down active"></li>
 							{% endif %}
 						{% elif v %}
-							<button {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-{{c.id}}-down" tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '-1')" class="btn caction py-0 m-0 px-3 nobackground arrow-down downvote-button comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}"></button>
+							<button {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '-1')" class="comment-{{c.id}}-down btn caction py-0 m-0 px-3 nobackground arrow-down downvote-button comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}"></button>
 						
 						{% else %}
 						
-							<button {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-{{c.id}}-down" tabindex="0" role="button" class="btn caction py-0 m-0 px-3 nobackground arrow-down" onclick="location.href='/login';"></button>
+							<button {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" class="comment-{{c.id}}-down btn caction py-0 m-0 px-3 nobackground arrow-down" onclick="location.href='/login';"></button>
 						
 						{% endif %}
 						

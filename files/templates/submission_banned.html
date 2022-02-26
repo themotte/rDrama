@@ -33,12 +33,12 @@
 
 														
 														<div id="voting" class="d-md-block my-auto mr-3 text-center">
-																<div id="post-{{p.id}}-up" class="arrow-up mx-auto">
+																<div  class="post-{{p.id}}-up arrow-up mx-auto">
 																</div>
-																<span id="post-{{p.id}}-score-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">✖</span>
-					<span id="post-{{p.id}}-score-none" class="score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">✖</span>
-					<span id="post-{{p.id}}-score-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">✖</span>
-																<div id="post-{{p.id}}-down" class="arrow-down mx-auto">
+																<span  class="post-{{p.id}}-score-up score-up text-muted{% if voted!=1 %} d-none{% endif %}">✖</span>
+					<span  class="post-{{p.id}}-score-none score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">✖</span>
+					<span  class="post-{{p.id}}-score-down score-down text-muted{% if voted!=-1 %} d-none{% endif %}">✖</span>
+																<div  class="post-{{p.id}}-down arrow-down mx-auto">
 																</div>
 														</div>
 
@@ -86,17 +86,17 @@
 								<div class="post-actions mx-auto">
 										<ul class="list-inline">
 												<li id="voting-mobile" class="voting list-inline-item{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-														<span id="arrow-mobile-up" class="mr-2 arrow-mobile-up">
+														<span  class="arrow-mobile-up mr-2 arrow-mobile-up">
 																<i class="fas fa-arrow-alt-up mx-0"></i>
 														</span>
 
 
-				<span id="post-{{p.id}}-score-mobile-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">✖</span>
-					<span id="post-{{p.id}}-score-mobile-none" class="score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">✖</span>
-					<span id="post-{{p.id}}-score-mobile-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">✖</span>
+				<span  class="post-{{p.id}}-score-mobile-up score-up text-muted{% if voted!=1 %} d-none{% endif %}">✖</span>
+					<span  class="post-{{p.id}}-score-mobile-none score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">✖</span>
+					<span  class="post-{{p.id}}-score-mobile-down score-down text-muted{% if voted!=-1 %} d-none{% endif %}">✖</span>
 
 
-														<span id="arrow-mobile-down" class="arrow-mobile-down ml-2 my-0">
+														<span  class="arrow-mobile-down arrow-mobile-down ml-2 my-0">
 																<i class="fas fa-arrow-alt-down mx-0"></i>
 														</span>
 												</li>
