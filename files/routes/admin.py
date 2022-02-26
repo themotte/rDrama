@@ -28,14 +28,9 @@ month = datetime.now().strftime('%B')
 def merge(v, id1, id2):
 	if v.id != AEVANN_ID: abort(403)
 
-	with open('verified', 'r') as f:
-		verified = int(f.read())
-
-	if time.time() - verified > 5:
+	if time.time() - session.get('verified', 0) > 5:
 		session.pop("session_id", None)
 		session.pop("lo_user", None)
-		with open('verified', 'w') as f:
-			f.write(str(int(time.time())))
 		path = request.path
 		qs = urlencode(dict(request.values))
 		argval = quote(f"{path}?{qs}", safe='')
@@ -93,14 +88,9 @@ def merge(v, id1, id2):
 def merge_all(v, id):
 	if v.id != AEVANN_ID: abort(403)
 
-	with open('verified', 'r') as f:
-		verified = int(f.read())
-
-	if time.time() - verified > 5:
+	if time.time() - session.get('verified', 0) > 5:
 		session.pop("session_id", None)
 		session.pop("lo_user", None)
-		with open('verified', 'w') as f:
-			f.write(str(int(time.time())))
 		path = request.path
 		qs = urlencode(dict(request.values))
 		argval = quote(f"{path}?{qs}", safe='')

@@ -11,4 +11,3 @@ venv/
 flask_session/
 .DS_Store
 disable_signups
-verified
