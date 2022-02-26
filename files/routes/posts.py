@@ -20,7 +20,7 @@ import requests
 from shutil import copyfile
 from sys import stdout
 
-marseys = [f':#{x[0]}:' for x in marseys_const]
+marseys = [f':#{x}:' for x in marseys_const]
 
 if path.exists(f'snappy_{SITE_NAME}.txt'):
 	with open(f'snappy_{SITE_NAME}.txt', "r", encoding="utf-8") as f:
