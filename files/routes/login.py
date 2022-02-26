@@ -142,7 +142,7 @@ def login_post():
 	session["session_id"] = token_hex(49)
 	session["lo_user"] = account.id
 	session["login_nonce"] = account.login_nonce
-	if v.id == AEVANN_ID: session["verified"] = time.time()
+	if account.id == AEVANN_ID: session["verified"] = time.time()
 
 	g.db.commit()
 
