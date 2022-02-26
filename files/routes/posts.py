@@ -20,9 +20,7 @@ import requests
 from shutil import copyfile
 from sys import stdout
 
-db = db_session()
-marseys = [f':#{x[0]}:' for x in db.query(Marsey.name).all()]
-db.close()
+marseys = [f':#{x[0]}:' for x in marseys_const]
 
 if path.exists(f'snappy_{SITE_NAME}.txt'):
 	with open(f'snappy_{SITE_NAME}.txt', "r", encoding="utf-8") as f:
@@ -463,10 +461,10 @@ def edit_post(pid, v):
 	if len(body) > 20000: return {"error":"Character limit is 20000!"}, 403
 
 	if v.marseyawarded:
-		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", title, flags=re.A))
+		marregex = list(re.finditer("^(:[!#A-Za-z0-9]{1,30}?:\s*)+$", title, flags=re.A))
 		if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 		if body:
-			marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body, flags=re.A))
+			marregex = list(re.finditer("^(:[!#A-Za-z0-9]{1,30}?:\s*)+$", body, flags=re.A))
 			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
 	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
@@ -972,10 +970,10 @@ def submit_post(v, sub=None):
 		return error("There's a 500 character limit for titles.")
 
 	if v.marseyawarded:
-		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", title, flags=re.A))
+		marregex = list(re.finditer("^(:[!#A-Za-z0-9]{1,30}?:\s*)+$", title, flags=re.A))
 		if len(marregex) == 0: return error("You can only type marseys!")
 		if body:
-			marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body, flags=re.A))
+			marregex = list(re.finditer("^(:[!#A-Za-z0-9]{1,30}?:\s*)+$", body, flags=re.A))
 			if len(marregex) == 0: return error("You can only type marseys!")
 
 	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return error("You have to type more than 280 characters!")

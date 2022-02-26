@@ -209,7 +209,7 @@ def api_comment(v):
 			f.write('\n{[para]}\n' + body)
 
 	if v.marseyawarded and parent_post.id not in (37696,37697,37749,37833,37838):
-		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body, flags=re.A))
+		marregex = list(re.finditer("^(:[!#A-Za-z0-9]{1,30}?:\s*)+$", body, flags=re.A))
 		if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
 	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
@@ -717,7 +717,7 @@ def edit_comment(cid, v):
 
 	if body != c.body or request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		if v.marseyawarded:
-			marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body, flags=re.A))
+			marregex = list(re.finditer("^(:[!#A-Za-z0-9]{1,30}?:\s*)+$", body, flags=re.A))
 			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
 		if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
