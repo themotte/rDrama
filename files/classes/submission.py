@@ -212,7 +212,7 @@ class Submission(Base):
 		link = f"/post/{self.id}"
 		if self.sub: link = f"/s/{self.sub}{link}"
 
-		if self.club: return link
+		if self.club: return link + '/-'
 
 		output = self.title.lower()
 		output = re.sub('&\w{2,3};', '', output, flags=re.A)
