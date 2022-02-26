@@ -34,6 +34,7 @@ def merge(v, id1, id2):
 	submissions = g.db.query(Submission).filter_by(author_id=user2.id)
 	badges = g.db.query(Badge).filter_by(user_id=user2.id)
 	mods = g.db.query(Mod).filter_by(user_id=user2.id)
+	exiles = g.db.query(Exile).filter_by(user_id=user2.id)
 
 	for award in awards:
 		award.user_id = user1.id
@@ -52,6 +53,10 @@ def merge(v, id1, id2):
 		if not user1.mods(mod.sub):
 			mod.user_id = user1.id
 			g.db.add(mod)
+	for exile in exiles:
+		if not user1.exiled_from(exile.sub):
+			exile.user_id = user1.id
+			g.db.add(exile)
 
 	for kind in ('comment_count', 'post_count', 'winnings', 'received_award_count', 'coins_spent', 'lootboxes_bought', 'coins', 'truecoins', 'procoins', 'subs_created'):
 		amount = getattr(user1, kind) + getattr(user2, kind)
@@ -73,7 +78,7 @@ def merge_all(v, id):
 
 	alt_ids = [x.id for x in user.alts_unique]
 
-	things = g.db.query(AwardRelationship).filter(AwardRelationship.user_id.in_(alt_ids)).all() + g.db.query(Badge).filter(Badge.user_id.in_(alt_ids)).all() + g.db.query(Mod).filter(Mod.user_id.in_(alt_ids)).all()
+	things = g.db.query(AwardRelationship).filter(AwardRelationship.user_id.in_(alt_ids)).all() + g.db.query(Badge).filter(Badge.user_id.in_(alt_ids)).all() + g.db.query(Mod).filter(Mod.user_id.in_(alt_ids)).all() + g.db.query(Exile).filter(Exile.user_id.in_(alt_ids)).all()
 
 	for thing in things:
 		thing.user_id = user.id
