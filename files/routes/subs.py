@@ -273,7 +273,7 @@ def create_sub2(v):
 	if not name: abort(400)
 	name = name.strip().lower()
 
-	if not valid_sub_regex.fullmatch(name, flags=re.A):
+	if not valid_sub_regex.fullmatch(name):
 		return render_template("sub/create_sub.html", v=v, error="Sub name not allowed."), 400
 
 	sub = g.db.query(Sub).filter_by(name=name).one_or_none()

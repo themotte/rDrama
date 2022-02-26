@@ -532,7 +532,7 @@ def settings_security_post(v):
 		if request.values.get("new_password") != request.values.get("cnf_password"):
 			return render_template("settings_security.html", v=v, error="Passwords do not match.")
 
-		if not valid_password_regex.fullmatch(request.values.get("new_password"), flags=re.A):
+		if not valid_password_regex.fullmatch(request.values.get("new_password")):
 			return render_template("settings_security.html", v=v, error="Password must be between 8 and 100 characters.")
 
 		if not v.verifyPass(request.values.get("old_password")):
@@ -859,7 +859,7 @@ def settings_name_change(v):
 						   v=v,
 						   error="You didn't change anything")
 
-	if not valid_username_regex.fullmatch(new_name, flags=re.A):
+	if not valid_username_regex.fullmatch(new_name):
 		return render_template("settings_profile.html",
 						   v=v,
 						   error="This isn't a valid username.")

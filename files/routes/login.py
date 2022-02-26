@@ -268,10 +268,10 @@ def sign_up_post(v):
 			"password") == request.values.get("password_confirm"):
 		return new_signup("Passwords did not match. Please try again.")
 
-	if not valid_username_regex.fullmatch(username, flags=re.A):
+	if not valid_username_regex.fullmatch(username):
 		return new_signup("Invalid username")
 
-	if not valid_password_regex.fullmatch(request.values.get("password"), flags=re.A):
+	if not valid_password_regex.fullmatch(request.values.get("password")):
 		return new_signup("Password must be between 8 and 100 characters.")
 
 	email = request.values.get("email").strip().lower()
