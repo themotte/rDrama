@@ -30,7 +30,7 @@ def merge(v, id1, id2):
 	with open('verified', 'r') as f:
 		verified = int(f.read())
 
-	if time.time() - verified > 10:
+	if time.time() - verified > 20:
 		session.pop("session_id", None)
 		session.pop("lo_user", None)
 		with open('verified', 'w') as f:
@@ -89,7 +89,7 @@ def merge_all(v, id):
 	with open('verified', 'r') as f:
 		verified = int(f.read())
 
-	if time.time() - verified > 10:
+	if time.time() - verified > 20:
 		session.pop("session_id", None)
 		session.pop("lo_user", None)
 		with open('verified', 'w') as f:
