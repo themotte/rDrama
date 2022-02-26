@@ -85,7 +85,7 @@ def merge(v, id1, id2):
 	g.db.add(user2)
 	g.db.commit()
 	cache.clear()
-	return f"Success! moved @{user2.username} to @{user1.username}"
+	return redirect(user1.url)
 
 
 @app.get('/admin/merge_all/<id>')
@@ -138,7 +138,7 @@ def merge_all(v, id):
 	g.db.add(user)
 	g.db.commit()
 	cache.clear()
-	return f"Success! moved all alts to @{user.username}"
+	return redirect(user.url)
 
 
 
@@ -1143,7 +1143,7 @@ def ban_user(user_id, v):
 	if request.values.get("alts"):
 		for x in user.alts:
 			if x.admin_level: break
-			user.ban(admin=v, reason=passed_reason, days=days)
+			x.ban(admin=v, reason=passed_reason, days=days)
 
 	if days:
 		if reason: text = f"Your account has been banned for **{days}** days for the following reason:\n\n> {reason}"
