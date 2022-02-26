@@ -376,10 +376,10 @@ class Submission(Base):
 
 		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 20:
 			ti = max(int((time.time() - self.created_utc)/60), 1)
-			maxupvotes = min(ti, 7)
+			maxupvotes = min(ti, 11)
 			rand = random.randint(0, maxupvotes)
 			if self.upvotes < rand:
-				amount = random.randint(0, 1)
+				amount = random.randint(0, 3)
 				if amount == 1:
 					self.views += amount*random.randint(3, 5)
 					self.upvotes += amount
