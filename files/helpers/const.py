@@ -4,6 +4,7 @@ from copy import deepcopy
 from json import loads
 from files.__main__ import db_session
 from files.classes.sub import Sub
+from files.classes.marsey import Marsey
 
 SITE = environ.get("DOMAIN", '').strip()
 SITE_NAME = environ.get("SITE_NAME", '').strip()
