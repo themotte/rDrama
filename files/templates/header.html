@@ -141,39 +141,39 @@
 					</a>
 					<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left border-0 shadow fade px-0 mt-2">
 					<div class="px-2">
-						<a class="dropdown-item" href="{{v.url}}"><i class="fas fa-user-circle fa-fw text-left mr-3"></i>My
+						<a class="dropdown-item" href="{{v.url}}"><i class="fas fa-user-circle fa-fw mr-3"></i>My
 							profile</a>
-								<a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-fw text-left mr-3"></i>Settings</a>
+								<a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>Settings</a>
 							</div>
 							<div class="px-2">
-								<button class="dropdown-item copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fas fa-user-friends fa-fw text-left mr-3"></i>Invite friends</button>
+								<button class="dropdown-item copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fas fa-user-friends fa-fw mr-3"></i>Invite friends</button>
 							</div>
 							<div class="px-2">
 								{% if SITE_NAME == 'Drama' %}
-									<a class="dropdown-item" href="https://play.google.com/store/apps/details?id=com.rdrama"><i class="fab fa-android fa-fw text-left mr-3"></i>Android app</a>
+									<a class="dropdown-item" href="https://play.google.com/store/apps/details?id=com.rdrama"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
 								{% else %}
-									<a class="dropdown-item" href="/assets/{{config('SITE_NAME')}}_v1.9.apk?a=3"><i class="fab fa-android fa-fw text-left mr-3"></i>Android app</a>
+									<a class="dropdown-item" href="/assets/{{config('SITE_NAME')}}_v1.9.apk?a=3"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
 								{% endif %}
 
-								<a class="dropdown-item" href="/changelog"><i class="fas fa-clipboard fa-fw text-left mr-3"></i>Changelog</a>
+								<a class="dropdown-item" href="/changelog"><i class="fas fa-clipboard fa-fw mr-3"></i>Changelog</a>
 
-								<a class="dropdown-item" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/Drama"><i class="fab fa-github fa-fw text-left mr-3"></i>Source code</a>
+								<a class="dropdown-item" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/Drama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
 
 								{% if SITE_NAME in ['Drama', 'PCM'] %}
-									<a class="dropdown-item" rel="nofollow noopener noreferrer" href="/report_bugs"><i class="fas fa-bug fa-fw text-left mr-3"></i>Bugs/Suggestions</a>
+									<a class="dropdown-item" rel="nofollow noopener noreferrer" href="/report_bugs"><i class="fas fa-bug fa-fw mr-3"></i>Bugs/Suggestions</a>
 								{% endif %}
 
 								{% if request.host != 'pcmemes.net' %}
-									<a class="dropdown-item" href="/discord"><i class="fab fa-discord fa-fw text-left mr-3"></i>Discord</a>
+									<a class="dropdown-item" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a>
 								{% endif %}
 								{% if not (g.webview and v.truecoins < 1) %}
-									<a class="dropdown-item" rel="nofollow noopener noreferrer" href="{{config('GUMROAD_LINK')}}"><i class="fas fa-dollar-sign fa-fw text-left mr-3"></i>Donate</a>
+									<a class="dropdown-item" rel="nofollow noopener noreferrer" href="{{config('GUMROAD_LINK')}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a>
 								{% endif %}
-								{% if SITE_NAME == 'Drama' %}<a class="dropdown-item" href="/archives"><i class="fas fa-book fa-fw text-left mr-3"></i>Archives</a>{% endif %}
-								<a class="dropdown-item" href="/contact"><i class="fas fa-file-signature fa-fw text-left mr-3"></i>Contact us</a>
+								{% if SITE_NAME == 'Drama' %}<a class="dropdown-item" href="/archives"><i class="fas fa-book fa-fw mr-3"></i>Archives</a>{% endif %}
+								<a class="dropdown-item" href="/contact"><i class="fas fa-file-signature fa-fw mr-3"></i>Contact us</a>
 							</div>
 							<div class="px-2">
-								<a class="dropdown-item" role="button", onclick="post_toast(this,'/logout', '1')"><i class="fas fa-sign-out fa-fw text-left mr-3"></i>Log out</a>
+								<a class="dropdown-item" role="button", onclick="post_toast(this,'/logout', '1')"><i class="fas fa-sign-out fa-fw mr-3"></i>Log out</a>
 							</div>
 						</div>
 					</div>
@@ -211,7 +211,7 @@
 				</li>
 				{% if not g.webview %}
 					<li class="nav-item">
-						<a class="nav-link copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fas fa-user-friends fa-fw text-left mr-3"></i>Invite friends</a>
+						<a class="nav-link copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fas fa-user-friends fa-fw mr-3"></i>Invite friends</a>
 					</li>
 				{% endif %}
 				
