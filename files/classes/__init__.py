@@ -16,3 +16,6 @@ from .award import *
 from .marsey import *
 from .sub_block import *
 from .saves import *
+from .views import *
+from .notifications import *
+from .follows import *

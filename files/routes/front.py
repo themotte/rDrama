@@ -60,6 +60,7 @@ def notifications(v):
 			elif not x.read:
 				x.read = True
 				c.unread = True
+				if not c.created_utc: c.created_utc = x.created_utc
 				g.db.add(x)
 			listing.append(c)
 
@@ -81,9 +82,10 @@ def notifications(v):
 
 		i = 0
 		for x in notifications:
-			try:
-				if not x.read: comments[i].unread = True
+			try: c = comments[i]
 			except: continue
+			if not x.read: c.unread = True
+			if not c.created_utc: c.created_utc = x.created_utc
 			x.read = True
 			g.db.add(x)
 			i += 1

@@ -2,7 +2,7 @@ import qrcode
 import io
 import time
 import math
-from files.classes.user import ViewerRelationship
+from files.classes.views import ViewerRelationship
 from files.helpers.alerts import *
 from files.helpers.sanitize import *
 from files.helpers.const import *
