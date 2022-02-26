@@ -85,7 +85,7 @@ def get_account(id, v=None):
 					 UserBlock.target_id == v.id
 					 )
 			)
-		).one_or_none()
+		).first()
 
 		user.is_blocking = block and block.user_id == v.id
 		user.is_blocked = block and block.target_id == v.id
@@ -200,7 +200,7 @@ def get_comment(i, v=None, graceful=False):
 					UserBlock.target_id == v.id
 				)
 			)
-		).one_or_none()
+		).first()
 
 		vts = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id)
 		vt = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()

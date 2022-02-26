@@ -125,7 +125,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 		sanitized = re.sub('(^|\s|\n|<p>)\/?(s\/(\w|-){3,25})', r'\1<a href="/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized, flags=re.A)
 
-		for i in re.finditer(valid_username_regex, sanitized, flags=re.A):
+		for i in re.finditer(valid_username_regex, sanitized):
 			u = get_user(i.group(2), graceful=True)
 
 			if u and (not g.v.any_block_exists(u) or g.v.admin_level > 1):
