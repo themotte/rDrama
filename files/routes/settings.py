@@ -892,7 +892,7 @@ def settings_name_change(v):
 	return redirect(f"{SITE_FULL}/settings/profile")
 
 @app.post("/settings/song_change")
-@limiter.limit("1/second;5/day")
+@limiter.limit("2/second;10/day")
 @auth_required
 def settings_song_change(v):
 	song=request.values.get("song").strip()
