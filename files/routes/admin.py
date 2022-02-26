@@ -22,6 +22,42 @@ GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 
 month = datetime.now().strftime('%B')
 
+@app.get('/admin/merge/<id1>/<id2>')
+@admin_level_required(3)
+def merge(v, id1, id2):
+	if v.id != 1: abort(403)
+	user1 = get_user(id1)
+	user2 = get_user(id2)
+
+	for award in user2.awards:
+		award.user_id = user1.id
+		g.db.add(award)
+	for badge in user2.badges:
+		if not user1.has_badge(badge.badge_id):
+			badge.user_id = user1.id
+			g.db.add(badge)
+	for mod in user2.mods:
+		mod.user_id = user1.id
+		g.db.add(mod)
+	for comment in user2.comments:
+		comment.author_id = user1.id
+		g.db.add(comment)
+	for submission in user2.submissions:
+		submission.author_id = user1.id
+		g.db.add(submission)
+
+	for kind in ('comment_count', 'post_count', 'winnings', 'received_award_count', 'coins_spent', 'lootboxes_bought', 'coins', 'truecoins', 'procoins', 'subs_created'):
+		setattr(user1, kind, getattr(user2, kind))
+		setattr(user2, kind, 0)
+
+	g.db.add(user1)
+	g.db.add(user2)
+	g.db.commit()
+	return f"Success! moved @{user2.username} to @{user1.username}"
+
+
+
+
 if SITE_NAME == 'PCM':
 	@app.get('/admin/sidebar')
 	@admin_level_required(3)

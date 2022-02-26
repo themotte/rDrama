@@ -1369,6 +1369,7 @@ def submit_post(v, sub=None):
 
 			g.db.add(c)
 
+			snappy = g.db.query(User).filter_by(id = SNAPPY_ID).one_or_none()
 			snappy.comment_count += 1
 			snappy.coins += 1
 			g.db.add(snappy)

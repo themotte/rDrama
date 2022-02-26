@@ -651,8 +651,6 @@ def api_is_available(name, v):
 @app.get("/id/<id>")
 @auth_required
 def user_id(id, v):
-	try: id = int(id)
-	except: abort(404)
 	user = get_account(id)
 	return redirect(user.url)
 		
@@ -886,9 +884,6 @@ def u_username_info(username, v=None):
 @auth_required
 def u_user_id_info(id, v=None):
 
-	try: id = int(id)
-	except: abort(404)
-
 	user=get_account(id, v=v)
 
 	if hasattr(user, 'is_blocking') and user.is_blocking:
@@ -976,8 +971,6 @@ def remove_follow(username, v):
 def user_profile_uid(v, id):
 	if not v and not request.path.startswith('/logged_out'): return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
 
-	try: id = int(id)
-	except: abort(404)
 	x=get_account(id)
 	return redirect(x.profile_url)
 

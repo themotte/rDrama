@@ -67,6 +67,9 @@ def get_user(username, v=None, graceful=False):
 
 def get_account(id, v=None):
 
+	try: id = int(id)
+	except: abort(404)
+
 	user = g.db.query(User).filter_by(id = id).one_or_none()
 				
 	if not user: abort(404)

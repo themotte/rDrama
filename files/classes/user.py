@@ -131,7 +131,12 @@ class User(Base):
 	nwordpass = Column(Boolean)
 	subs_created = Column(Integer, default=0)
 
-	badges = relationship("Badge", viewonly=True)
+	badges = relationship("Badge")
+	awards = relationship("AwardRelationship")
+	mods = relationship("Mod")
+	comments = relationship("Comment", primaryjoin="User.id==Comment.author_id")
+	submissions = relationship("Submission", primaryjoin="User.id==Submission.author_id")
+
 	subscriptions = relationship("Subscription", viewonly=True)
 	following = relationship("Follow", primaryjoin="Follow.user_id==User.id", viewonly=True)
 	followers = relationship("Follow", primaryjoin="Follow.target_id==User.id", viewonly=True)
@@ -139,7 +144,6 @@ class User(Base):
 	blocking = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id", viewonly=True)
 	blocked = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id", viewonly=True)
 	authorizations = relationship("ClientAuth", viewonly=True)
-	awards = relationship("AwardRelationship", primaryjoin="User.id==AwardRelationship.user_id", viewonly=True)
 	referrals = relationship("User", viewonly=True)
 
 	def __init__(self, **kwargs):
