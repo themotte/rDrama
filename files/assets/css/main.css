@@ -5016,3 +5016,8 @@ th, td {
 .fas {
     text-align: center;
 }
+
+.amogus {
+    color: var(--secondary);
+    opacity: 0.1;
+}
