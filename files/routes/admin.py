@@ -25,36 +25,44 @@ month = datetime.now().strftime('%B')
 @app.get('/admin/merge/<id1>/<id2>')
 @admin_level_required(3)
 def merge(v, id1, id2):
-	if v.id != 1: abort(403)
-	user1 = get_user(id1)
-	user2 = get_user(id2)
+	if v.id != AEVANN_ID: abort(403)
+	user1 = get_account(id1)
+	user2 = get_account(id2)
 
-	for award in user2.awards:
+	awards = g.db.query(AwardRelationship).filter_by(user_id=user2.id)
+	comments = g.db.query(Comment).filter_by(author_id=user2.id)
+	submissions = g.db.query(Submission).filter_by(author_id=user2.id)
+	badges = g.db.query(Badge).filter_by(user_id=user2.id)
+	mods = g.db.query(Mod).filter_by(user_id=user2.id)
+
+	for award in awards:
 		award.user_id = user1.id
 		g.db.add(award)
-	for badge in user2.badges:
+	for comment in comments:
+		comment.author_id = user1.id
+		g.db.add(comment)
+	for submission in submissions:
+		submission.author_id = user1.id
+		g.db.add(submission)
+	for badge in badges:
 		if not user1.has_badge(badge.badge_id):
 			badge.user_id = user1.id
 			g.db.add(badge)
-	for mod in user2.mods:
-		mod.user_id = user1.id
-		g.db.add(mod)
-	for comment in user2.comments:
-		comment.author_id = user1.id
-		g.db.add(comment)
-	for submission in user2.submissions:
-		submission.author_id = user1.id
-		g.db.add(submission)
+	for mod in mods:
+		if not user1.mods(mod.sub):
+			mod.user_id = user1.id
+			g.db.add(mod)
 
 	for kind in ('comment_count', 'post_count', 'winnings', 'received_award_count', 'coins_spent', 'lootboxes_bought', 'coins', 'truecoins', 'procoins', 'subs_created'):
-		setattr(user1, kind, getattr(user2, kind))
+		amount = getattr(user1, kind) + getattr(user2, kind)
+		setattr(user1, kind, amount)
 		setattr(user2, kind, 0)
 
 	g.db.add(user1)
 	g.db.add(user2)
 	g.db.commit()
+	cache.clear()
 	return f"Success! moved @{user2.username} to @{user1.username}"
-
 
 
 

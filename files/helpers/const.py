@@ -227,7 +227,7 @@ else:
 	CARP_ID = 0
 	JOAN_ID = 0
 	MOOSE_ID = 0
-	AEVANN_ID = 10
+	AEVANN_ID = 9
 	HOMO_ID = 0
 	Q_ID = 0
 	LAWLZ_ID = 0
