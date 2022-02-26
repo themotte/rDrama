@@ -7,9 +7,9 @@ function markdown(first, second) {
 	var emojis = Array.from(input.matchAll(/:([#!A-Za-z0-9]{1,30}?):/gi))
 	if(emojis != null){
 		for(i = 0; i < emojis.length; i++){
-			var emoji = emojis[i][0].toLowerCase();
+			var emoji = emojis[i][0];
 			if (emoji.includes('marseyrandom')) continue
-			var remoji = emoji.replace(/:/g,'');
+			var remoji = emoji.replace(/:/g,'').toLowerCase();
 			if (remoji.startsWith("!#") || remoji.startsWith("#!"))
 			{
 				input = input.replace(emoji, "<img class='emoji-lg mirrored' src='/e/" + remoji.substring(2) + ".webp'>")
