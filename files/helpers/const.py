@@ -670,7 +670,7 @@ db = db_session()
 marseys_const = [x[0] for x in db.query(Marsey.name).all()] + ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','exclamationpoint','period','questionmark']
 db.close()
 
-if SITE == 'PCM': valid_username_regex = re.compile("^[a-zA-Z0-9_\-А-я]{3,25}$")
+if SITE_NAME == 'PCM': valid_username_regex = re.compile("^[a-zA-Z0-9_\-А-я]{3,25}$")
 else: valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
 
 valid_password_regex = re.compile("^.{8,100}$", flags=re.A)
