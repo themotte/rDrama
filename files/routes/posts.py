@@ -1291,92 +1291,93 @@ def submit_post(v, sub=None):
 
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
+	
+	if not (post.sub and g.db.query(Exile.user_id).filter_by(user_id=SNAPPY_ID, sub=post.sub)):
+		if post.sub == 'dankchristianmemes':
+			body = random.choice(christian_emojis)
+		elif v.id == CARP_ID:
+			if random.random() < 0.02: body = "i love you carp"
+			else: body = ":#marseyfuckoffcarp:"
+		elif v.id == LAWLZ_ID:
+			if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
+			else: body = "wow, a good lawlzpost for once!"
+		else:
+			body = random.choice(snappyquotes)
+			if body.startswith('▼'):
+				body = body[1:]
+				vote = Vote(user_id=SNAPPY_ID,
+							vote_type=-1,
+							submission_id=post.id,
+							real = True
+							)
+				g.db.add(vote)
+				post.downvotes += 1
+				if body.startswith('OP is a Trump supporter'):
+					flag = Flag(post_id=post.id, user_id=SNAPPY_ID, reason='Trump supporter')
+					g.db.add(flag)
+			elif body.startswith('▲'):
+				body = body[1:]
+				vote = Vote(user_id=SNAPPY_ID,
+							vote_type=1,
+							submission_id=post.id,
+							real = True
+							)
+				g.db.add(vote)
+				post.upvotes += 1
 
-	if post.sub == 'dankchristianmemes':
-		body = random.choice(christian_emojis)
-	elif v.id == CARP_ID:
-		if random.random() < 0.02: body = "i love you carp"
-		else: body = ":#marseyfuckoffcarp:"
-	elif v.id == LAWLZ_ID:
-		if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
-		else: body = "wow, a good lawlzpost for once!"
-	else:
-		body = random.choice(snappyquotes)
-		if body.startswith('▼'):
-			body = body[1:]
-			vote = Vote(user_id=SNAPPY_ID,
-						vote_type=-1,
-						submission_id=post.id,
-						real = True
-						)
-			g.db.add(vote)
-			post.downvotes += 1
-			if body.startswith('OP is a Trump supporter'):
-				flag = Flag(post_id=post.id, user_id=SNAPPY_ID, reason='Trump supporter')
-				g.db.add(flag)
-		elif body.startswith('▲'):
-			body = body[1:]
-			vote = Vote(user_id=SNAPPY_ID,
-						vote_type=1,
-						submission_id=post.id,
-						real = True
-						)
-			g.db.add(vote)
-			post.upvotes += 1
 
+		body += "\n\n"
 
-	body += "\n\n"
+		if post.url:
+			if post.url.startswith('https://old.reddit.com/r/'):
+				rev = post.url.replace('https://old.reddit.com/', '')
+				rev = f"* [unddit.com](https://unddit.com/{rev})\n"
+			else: rev = ''
+			newposturl = post.url
+			if newposturl.startswith('/'): newposturl = f"{SITE_FULL}{newposturl}"
+			body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{newposturl})\n* [archive.ph](https://archive.ph/?url={quote(newposturl)}&run=1) (click to archive)\n\n"			
+			gevent.spawn(archiveorg, newposturl)
 
-	if post.url:
-		if post.url.startswith('https://old.reddit.com/r/'):
-			rev = post.url.replace('https://old.reddit.com/', '')
-			rev = f"* [unddit.com](https://unddit.com/{rev})\n"
-		else: rev = ''
-		newposturl = post.url
-		if newposturl.startswith('/'): newposturl = f"{SITE_FULL}{newposturl}"
-		body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{newposturl})\n* [archive.ph](https://archive.ph/?url={quote(newposturl)}&run=1) (click to archive)\n\n"			
-		gevent.spawn(archiveorg, newposturl)
+		url_regex = '<a href=\"(https?:\/\/[a-z]{1,20}\.[^\"]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">(.*?)<\/a>'
+		for url_match in list(re.finditer(url_regex, post.body_html))[:20]:
+			href = url_match.group(1)
+			if not href: continue
 
-	url_regex = '<a href=\"(https?:\/\/[a-z]{1,20}\.[^\"]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">(.*?)<\/a>'
-	for url_match in list(re.finditer(url_regex, post.body_html))[:20]:
-		href = url_match.group(1)
-		if not href: continue
+			title = url_match.group(2)
+			if "Snapshots:\n\n" not in body: body += "Snapshots:\n\n"			
 
-		title = url_match.group(2)
-		if "Snapshots:\n\n" not in body: body += "Snapshots:\n\n"			
+			if f'**[{title}]({href})**:\n\n' not in body:
+				body += f'**[{title}]({href})**:\n\n'
+				if href.startswith('https://old.reddit.com/'):
+					body += f'* [unddit.com](https://unddit.com/{href.replace("https://old.reddit.com/", "")})\n'
+				body += f'* [archive.org](https://web.archive.org/{href})\n'
+				body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'
+				gevent.spawn(archiveorg, href)
 
-		if f'**[{title}]({href})**:\n\n' not in body:
-			body += f'**[{title}]({href})**:\n\n'
-			if href.startswith('https://old.reddit.com/'):
-				body += f'* [unddit.com](https://unddit.com/{href.replace("https://old.reddit.com/", "")})\n'
-			body += f'* [archive.org](https://web.archive.org/{href})\n'
-			body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'
-			gevent.spawn(archiveorg, href)
+		body_html = sanitize(body)
 
-	body_html = sanitize(body)
+		if len(body_html) < 40000:
+			c = Comment(author_id=SNAPPY_ID,
+				distinguish_level=6,
+				parent_submission=post.id,
+				level=1,
+				over_18=False,
+				is_bot=True,
+				app_id=None,
+				body_html=body_html
+				)
 
-	if len(body_html) < 40000:
-		c = Comment(author_id=SNAPPY_ID,
-			distinguish_level=6,
-			parent_submission=post.id,
-			level=1,
-			over_18=False,
-			is_bot=True,
-			app_id=None,
-			body_html=body_html
-			)
+			g.db.add(c)
 
-		g.db.add(c)
+			snappy.comment_count += 1
+			snappy.coins += 1
+			g.db.add(snappy)
+			
+			if body.startswith('!slots1000'):
+				check_for_slots_command(body, snappy, c)
 
-		snappy = g.db.query(User).filter_by(id = SNAPPY_ID).one_or_none()
-		snappy.comment_count += 1
-		snappy.coins += 1
-		g.db.add(snappy)
-		
-		if body.startswith('!slots1000'):
-			check_for_slots_command(body, snappy, c)
-
-		post.comment_count += 1
+			post.comment_count += 1
+			if len(body_html) < 40000: post.replies = [c]
 
 	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
@@ -1407,7 +1408,6 @@ def submit_post(v, sub=None):
 		post.voted = 1
 		if 'megathread' in post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
-		if len(body_html) < 40000: post.replies = [c]
 		return render_template('submission.html', v=v, p=post, sort=sort, render_replies=True, offset=0, success=True, sub=post.subr)
 
 
