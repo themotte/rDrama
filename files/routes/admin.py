@@ -65,6 +65,39 @@ def merge(v, id1, id2):
 	return f"Success! moved @{user2.username} to @{user1.username}"
 
 
+@app.get('/admin/merge_all/<id>')
+@admin_level_required(3)
+def merge_all(v, id):
+	if v.id != AEVANN_ID: abort(403)
+	user = get_account(id)
+
+	alt_ids = [x.id for x in user.alts_unique]
+
+	things = g.db.query(AwardRelationship).filter(AwardRelationship.user_id.in_(alt_ids)).all() + g.db.query(Badge).filter(Badge.user_id.in_(alt_ids)).all() + g.db.query(Mod).filter(Mod.user_id.in_(alt_ids)).all()
+
+	for thing in things:
+		thing.user_id = user.id
+		g.db.add(thing)
+
+	things = g.db.query(Submission).filter(Submission.author_id.in_(alt_ids)).all() + g.db.query(Comment).filter(Comment.author_id.in_(alt_ids)).all()
+
+	for thing in things:
+		thing.author_id = user.id
+		g.db.add(thing)
+
+	for alt in user.alts_unique:
+		for kind in ('comment_count', 'post_count', 'winnings', 'received_award_count', 'coins_spent', 'lootboxes_bought', 'coins', 'truecoins', 'procoins', 'subs_created'):
+			amount = getattr(user, kind) + getattr(alt, kind)
+			setattr(user, kind, amount)
+			setattr(alt, kind, 0)
+		g.db.add(alt)
+
+	g.db.add(user)
+	g.db.commit()
+	cache.clear()
+	return f"Success! moved all alts to @{user.username}"
+
+
 
 if SITE_NAME == 'PCM':
 	@app.get('/admin/sidebar')
