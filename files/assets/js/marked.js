@@ -7,7 +7,7 @@ function markdown(first, second) {
 	var emojis = Array.from(input.matchAll(/:([#!A-Za-z0-9]{1,30}?):/gi))
 	if(emojis != null){
 		for(i = 0; i < emojis.length; i++){
-			var emoji = emojis[i][0]
+			var emoji = emojis[i][0].toLowerCase();
 			if (emoji.includes('marseyrandom')) continue
 			var remoji = emoji.replace(/:/g,'');
 			if (remoji.startsWith("!#") || remoji.startsWith("#!"))
