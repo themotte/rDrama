@@ -2146,6 +2146,11 @@ a.bg-light:hover, a.bg-light:focus, button.bg-light:hover, button.bg-light:focus
         z-index: 1020;
 }
 }
+.amogus {
+    color: var(--secondary);
+    opacity: 0.1;
+    pointer-events: none;
+}
 .shadow-sm {
     box-shadow: 0 0.1px 3px 0 rgba(0, 0, 0, 0.05), 0 0.1px 2px 0 rgba(0, 0, 0, 0.03) !important;
 }
@@ -5015,10 +5020,4 @@ th, td {
 
 .fas {
     text-align: center;
-}
-
-.amogus {
-    color: var(--secondary);
-    opacity: 0.1;
-    pointer-events: none;
 }
