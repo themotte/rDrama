@@ -432,7 +432,7 @@ AWARDS = {
 	"flairlock": {
 		"kind": "flairlock",
 		"title": "1-Day Flairlock",
-		"description": "Sets a flair for the recipient and locks it or 24 hours.",
+		"description": "Sets a flair for the recipient and locks it for 24 hours.",
 		"icon": "fas fa-lock",
 		"color": "text-black",
 		"price": 1250
