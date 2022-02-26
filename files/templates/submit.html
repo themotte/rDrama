@@ -151,7 +151,7 @@
 																
 												<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-submit">
 													<div id="filename-show-submit"><i class="far fa-image"></i></div>
-													<input autocomplete="off" id="file-upload-submit" multiple="multiple" type="file" name="file2" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-submit','file-upload-submit')" hidden>
+													<input autocomplete="off" id="file-upload-submit" multiple="multiple" type="file" name="file2" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-submit','file-upload-submit');checkForRequired()" hidden>
 												</label>		
 
 												<div id="preview" class="preview my-3"></div>
@@ -229,19 +229,16 @@
 			function checkForRequired() {
 
 				var title = document.getElementById("post-title");
-
 				var url = document.getElementById("post-url");
-
 				var text = document.getElementById("post-text");
-
 				var button = document.getElementById("create_button");
-
 				var image = document.getElementById("file-upload");
+				var image2 = document.getElementById("file-upload-submit");
 
-				if (url.value.length > 0 || image.value.length > 0) {
+				if (url.value.length > 0 || image.value.length > 0 || image2.value.length > 0) {
 					text.required = false;
 					url.required=false;
-				} else if (text.value.length > 0 || image.value.length > 0) {
+				} else if (text.value.length > 0 || image.value.length > 0 || image2.value.length > 0) {
 					url.required = false;
 				} else {
 					text.required = true;
@@ -249,12 +246,10 @@
 				}
 
 				var isValidTitle = title.checkValidity();
-
 				var isValidURL = url.checkValidity();
-
 				var isValidText = text.checkValidity();
 
-				if (isValidTitle && (isValidURL || image.value.length>0)) {
+				if (isValidTitle && (isValidURL || image.value.length > 0 || image2.value.length > 0)) {
 					button.disabled = false;
 				} else if (isValidTitle && isValidText) {
 					button.disabled = false;
