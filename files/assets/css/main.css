@@ -2148,7 +2148,7 @@ a.bg-light:hover, a.bg-light:focus, button.bg-light:hover, button.bg-light:focus
 }
 .amogus {
     color: var(--secondary);
-    opacity: 0.1;
+    opacity: 0.2;
     pointer-events: none;
 }
 .shadow-sm {
