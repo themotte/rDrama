@@ -162,8 +162,11 @@ def front_all(v, sub=None):
 	sort=request.values.get("sort", defaultsorting)
 	t=request.values.get('t', defaulttime)
 	ccmode=request.values.get('ccmode', "false").lower()
-	subs=session.get('subs', False)
-	subsonly=request.values.get('subsonly', "false").lower()
+
+	if SITE_NAME == 'Drama': defaultsubs = 'Exclude subs'
+	else: defaultsubs = 'Include subs'
+
+	subs=session.get('subs', defaultsubs)
 
 	try: gt=int(request.values.get("utc_greater_than", 0))
 	except: gt=0
@@ -182,7 +185,6 @@ def front_all(v, sub=None):
 					lt=lt,
 					sub=sub,
 					site=SITE,
-					subsonly=subsonly
 					)
 
 	posts = get_posts(ids, v=v)
@@ -263,23 +265,22 @@ def front_all(v, sub=None):
 			g.db.commit()
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
-	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode, sub=sub, subs=subs, subsonly=subsonly, home=True)
+	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode, sub=sub, subs=subs, home=True)
 
 
 
 @cache.memoize(timeout=86400)
-def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", subs=False, filter_words='', gt=0, lt=0, sub=None, site=None, subsonly="false"):
+def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", subs='Exclude subs', filter_words='', gt=0, lt=0, sub=None, site=None):
 
 	posts = g.db.query(Submission)
 	
 	if sub: posts = posts.filter_by(sub=sub.name)
-	elif subsonly == "true":
+	elif subs == "View subs only":
 		posts = posts.filter(Submission.sub != None)
 		if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
-	elif subs:
+	elif subs == "Include subs":
 		if v and v.all_blocks: posts = posts.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
-	elif SITE_NAME == 'Drama': posts = posts.filter(Submission.sub == None)
-	elif v and v.all_blocks: posts = posts.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
+	elif subs == 'Exclude subs': posts = posts.filter(Submission.sub == None)
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
 	if lt: posts = posts.filter(Submission.created_utc < lt)
@@ -353,13 +354,12 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false" and not gt and not lt:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
-		elif subsonly == "true":
+		elif subs == "View subs only":
 			pins = pins.filter(Submission.sub != None)
 			if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
-		elif subs:
+		elif subs == "Include subs":
 			if v and v.all_blocks: pins = pins.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
-		elif SITE_NAME == 'Drama': pins = pins.filter(Submission.sub == None)
-		elif v and v.all_blocks: pins = pins.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
+		elif subs == 'Exclude subs': pins = pins.filter(Submission.sub == None)
 
 		if v and v.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
