@@ -925,7 +925,7 @@
 		
 		var style = document.createElement('style');
 		style.innerHTML = `#post-text,.comment-text{background-image:url("data:image/svg+xml;base64,${base64Mark}")}`;
-		document.createNode(style);
+		document.getElementsByTagName('head')[0].appendChild(style);
 	</script>
 {% endif %}
 
