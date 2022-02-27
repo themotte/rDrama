@@ -341,7 +341,7 @@ class Comment(Base):
 				if v.nitter and not '/i/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
 			if v and v.controversial:
-				for i in re.finditer('(/comments/.*?)"', body, flags=re.A):
+				for i in controversial_regex.finditer(body):
 					url = i.group(1)
 					p = urlparse(url).query
 					p = parse_qs(p)
@@ -395,24 +395,7 @@ class Comment(Base):
 
 		if not body: return ""
 
-		body = censor_slurs(body, v)
-
-		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
-
-		if v and v.nitter and not '/i/' in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
-
-		if v and v.controversial:
-			for i in re.finditer('(/comments/.*?)"', body, flags=re.A):
-				url = i.group(1)
-				p = urlparse(url).query
-				p = parse_qs(p)
-
-				if 'sort' not in p: p['sort'] = ['controversial']
-
-				url_noquery = url.split('?')[0]
-				body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
-
-		return body
+		return censor_slurs(body, v)
 
 	def print(self):
 		print(f'post: {self.id}, comment: {self.author_id}', flush=True)

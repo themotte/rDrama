@@ -1030,7 +1030,7 @@ def submit_post(v, sub=None):
 
 	if v and v.admin_level > 2:
 		bet_options = []
-		for i in re.finditer('\s*\$\$\$([^\$\n]+)\$\$\$\s*', body, flags=re.A):
+		for i in bet_regex.finditer(body):
 			bet_options.append(i.group(1))
 			body = body.replace(i.group(0), "")
 
