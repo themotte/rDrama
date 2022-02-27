@@ -919,13 +919,13 @@
 	<script>
 		const color = getComputedStyle(document.body).getPropertyValue('background-color');  
 		const markTemplate = (name) => {
-			return `<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='50px' width='100px'><text transform='translate(20, 40) rotate(-45)' fill='${color}' fill-opacity="1" font-size='20'>${name}</text></svg>`;
+			return `<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='50px' width='100px'><text transform='translate(20, 40) rotate(-45)' fill='${color}' fill-opacity="0.1" font-size='20'>${name}</text></svg>`;
 		};
 		const base64Mark = btoa(markTemplate("{{v.id}}"));
 		
 		var style = document.createElement('style');
 		style.innerHTML = `#post-text,.comment-text{background-image:url("data:image/svg+xml;base64,${base64Mark}")}`;
-		document.getElementsByTagName('head')[0].appendChild(style);
+		document.createNode(style);
 	</script>
 {% endif %}
 
