@@ -1531,6 +1531,7 @@ def api_pin_post(post_id, v):
 		g.db.commit()
 		if post.is_pinned: return {"message": "Post pinned!"}
 		else: return {"message": "Post unpinned!"}
+	return {"error": "Post not found!"}
 
 
 @app.get("/submit/title")
