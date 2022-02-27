@@ -207,12 +207,9 @@ def sign_up_get(v):
 
 	error = request.values.get("error", None)
 
-	redir = request.values.get("redirect", "/").replace("/logged_out", "").strip()
-
 	return render_template("sign_up.html",
 						   formkey=formkey,
 						   now=now,
-						   redirect=redir,
 						   ref_user=ref_user,
 						   hcaptcha=app.config["HCAPTCHA_SITEKEY"],
 						   error=error
@@ -249,7 +246,7 @@ def sign_up_post(v):
 
 	username = request.values.get("username").strip()
 
-	def new_signup(error):
+	def signup_error(error):
 
 		args = {"error": error}
 		if request.values.get("referred_by"):
@@ -259,20 +256,20 @@ def sign_up_post(v):
 		return redirect(f"{SITE_FULL}/signup?{urlencode(args)}")
 
 	if now - int(form_timestamp) < 5:
-		return new_signup("There was a problem. Please try again.")
+		return signup_error("There was a problem. Please try again.")
 
 	if not hmac.compare_digest(correct_formkey, form_formkey):
-		return new_signup("There was a problem. Please try again.")
+		return signup_error("There was a problem. Please try again.")
 
 	if not request.values.get(
 			"password") == request.values.get("password_confirm"):
-		return new_signup("Passwords did not match. Please try again.")
+		return signup_error("Passwords did not match. Please try again.")
 
 	if not valid_username_regex.fullmatch(username):
-		return new_signup("Invalid username")
+		return signup_error("Invalid username")
 
 	if not valid_password_regex.fullmatch(request.values.get("password")):
-		return new_signup("Password must be between 8 and 100 characters.")
+		return signup_error("Password must be between 8 and 100 characters.")
 
 	email = request.values.get("email").strip().lower()
 
@@ -282,12 +279,13 @@ def sign_up_post(v):
 	if existing_account and existing_account.reserved:
 		return redirect(existing_account.url)
 
-	if existing_account: return new_signup("An account with that username already exists.")
+	if existing_account:
+		return signup_error("An account with that username already exists.")
 
 	if app.config.get("HCAPTCHA_SITEKEY"):
 		token = request.values.get("h-captcha-response")
 		if not token:
-			return new_signup("Unable to verify captcha [1].")
+			return signup_error("Unable to verify captcha [1].")
 
 		data = {"secret": app.config["HCAPTCHA_SECRET"],
 				"response": token,
@@ -297,7 +295,7 @@ def sign_up_post(v):
 		x = requests.post(url, data=data, timeout=5)
 
 		if not x.json()["success"]:
-			return new_signup("Unable to verify captcha [2].")
+			return signup_error("Unable to verify captcha [2].")
 
 	session.pop("signup_token")
 

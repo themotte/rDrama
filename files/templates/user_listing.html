@@ -18,7 +18,7 @@
 						{% if not u.fish %}<div id="button-unsub-{{u.id}}" style="z-index: 2" class="{% if not u.has_follower(v) %} d-none{% endif %}"><a class="btn btn-secondary " role="button" onclick="post_toast2(this,'/unfollow/{{u.username}}','button-sub-{{u.id}}','button-unsub-{{u.id}}')">Unfollow</a></div>{% endif %}
 						{% endif %}
 					{% else %}
-					<div id="button-sub-{{u.id}}" style="z-index: 2" "><a class="btn btn-primary " href="/signup?redirect={{request.path}}">Follow</a></div>
+					<div id="button-sub-{{u.id}}" style="z-index: 2"><a class="btn btn-primary " href="/signup">Follow</a></div>
 					{% endif %}
 				</div>
 

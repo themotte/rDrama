@@ -186,7 +186,7 @@
 				<a class="btn btn-primary" href="/login?redirect={{request.path | urlencode}}">Sign in</a>
 			</li>
 			<li class="nav-item d-flex align-items-center justify-content-center mx-1">
-				<a class="btn btn-primary" href="/signup?redirect={{request.path | urlencode}}">Sign up</a>
+				<a class="btn btn-primary" href="/signup">Sign up</a>
 			</li>
 			{% endif %}
 		</ul>
@@ -243,7 +243,7 @@
 					<a class="btn btn-primary btn-block" href="/login?redirect={{request.path | urlencode}}">Sign in</a>
 				</li>
 				<li class="nav-item d-flex align-items-center justify-content-center">
-					<a class="btn btn-primary btn-block" href="/signup?redirect={{request.path | urlencode}}">Sign up</a>
+					<a class="btn btn-primary btn-block" href="/signup">Sign up</a>
 				</li>
 			{% endif %}
 			<li class="mt-3">
@@ -256,7 +256,7 @@
 	</div>
 </nav>
 
-<script src="/static/assets/js/header.js?a=250"></script>
+<script src="/static/assets/js/header.js?a=251"></script>
 
 {% if v and not err %}
 	<div id="formkey" class="d-none">{{v.formkey}}</div>
