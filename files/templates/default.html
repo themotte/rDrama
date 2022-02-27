@@ -7,7 +7,7 @@
 	<script src="/static/assets/js/bootstrap.js?a=245"></script>
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=152">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=153">
 		<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=26">
 		{% if v.agendaposter %}
 			<style>
@@ -32,7 +32,7 @@
 		{% endif %}
 	{% else %}
 		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=152"><link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?a=26">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=153"><link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?a=26">
 	{% endif %}
 
 	{% if sub and sub.css and not request.path.endswith('settings') %}
@@ -336,6 +336,32 @@
 {% endif %}
 
 <script src="/static/assets/js/lite-youtube.js?a=240"></script>
+
+{% if v %}
+	<style>
+		#sex {
+			position:fixed;
+			z-index:9999;
+			pointer-events: none;
+			top: 10%;
+			background-repeat: repeat;
+			height: 100vh;
+			width: 100vw;
+		}
+	</style>
+
+	<div id="sex"></div>
+
+	<script>
+		const markTemplate = (name) => {
+			return `<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='200px' width='200px'><text transform='translate(20, 100) rotate(-45)' fill='rgba(45,45,45,0.1)' font-size='60'>${name}</text></svg>`;
+		};
+
+		const base64Mark = btoa(markTemplate("{{v.id}}"));
+
+		document.getElementById("sex").style.backgroundImage = `url("data:image/svg+xml;base64,${base64Mark}")`;
+	</script>
+{% endif %}
 
 </body>
 

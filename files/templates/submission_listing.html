@@ -261,7 +261,6 @@
 
 							{% if v %}
 								<a class="list-inline-item" role="button" data-bs-toggle="dropdown" aria-expanded="false" ><i class="fas fa-ellipsis-h fa-fw"></i></a>
-								<span class="amogus">{{v.id}}</span>
 								<ul class="dropdown-menu">
 									{% if v.admin_level %}
 										<a id="distinguish-{{p.id}}" class="dropdown-item {% if p.distinguish_level %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2(this,'/distinguish/{{p.id}}','distinguish-{{p.id}}','undistinguish-{{p.id}}')"><i class="fas fa-crown"></i>Distinguish</a>
