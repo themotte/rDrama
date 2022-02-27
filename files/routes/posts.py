@@ -1206,14 +1206,15 @@ def submit_post(v, sub=None):
 		for x in notify_users:
 			add_notif(cid, x)
 
-		text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
-		if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
+		if request.values.get('followers'):
+			text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
+			if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
 
-		cid = notif_comment(text, autojanny=True)
-		for follow in v.followers:
-			user = get_account(follow.user_id)
-			if post.club and not user.paid_dues: continue
-			add_notif(cid, user.id)
+			cid = notif_comment(text, autojanny=True)
+			for follow in v.followers:
+				user = get_account(follow.user_id)
+				if post.club and not user.paid_dues: continue
+				add_notif(cid, user.id)
 
 
 
