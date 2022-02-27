@@ -214,11 +214,10 @@ class Submission(Base):
 
 		if self.club: return link + '/-'
 
-		output = self.title.lower()
-		output = re.sub('&\w{2,3};', '', output, flags=re.A)
-		output = [re.sub('\W', '', word, flags=re.A) for word in output.split()]
-		output = [x for x in output if x][:6]
+		output = title_regex.sub('', self.title.lower())
+		output = output.split()[:6]
 		output = '-'.join(output)
+
 		if not output: output = '-'
 
 		return f"{link}/{output}"

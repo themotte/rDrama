@@ -141,8 +141,7 @@ def settings_profile_post(v):
 	elif (v.patron or v.id == MOOSE_ID) and request.values.get("sig"):
 		sig = request.values.get("sig")[:200]
 
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', sig, flags=re.M|re.A):
-			if "wikipedia" not in i.group(1): sig = sig.replace(i.group(1), f'![]({i.group(1)})')
+		sig = image_regex.sub(r'![](\1)', sig)
 
 		sig_html = sanitize(sig)
 		bans = filter_comment_html(sig_html)
@@ -175,8 +174,7 @@ def settings_profile_post(v):
 	elif request.values.get("friends"):
 		friends = request.values.get("friends")[:500]
 
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', friends, flags=re.M|re.A):
-			if "wikipedia" not in i.group(1): friends = friends.replace(i.group(1), f'![]({i.group(1)})')
+		friends = image_regex.sub(r'![](\1)', friends)
 
 		friends_html = sanitize(friends)
 		bans = filter_comment_html(friends_html)
@@ -193,7 +191,7 @@ def settings_profile_post(v):
 								   error="Your friends list is too long")
 
 
-		notify_users = NOTIFY_USERS(friends_html, v)
+		notify_users = NOTIFY_USERS(friends, v)
 
 		cid = notif_comment(f"@{v.username} has added you to their friends list!")
 
@@ -212,8 +210,7 @@ def settings_profile_post(v):
 	elif request.values.get("enemies"):
 		enemies = request.values.get("enemies")[:500]
 
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', enemies, flags=re.M|re.A):
-			if "wikipedia" not in i.group(1): enemies = enemies.replace(i.group(1), f'![]({i.group(1)})')
+		enemies = image_regex.sub(r'![](\1)', enemies)
 
 		enemies_html = sanitize(enemies)
 		bans = filter_comment_html(enemies_html)
@@ -230,7 +227,7 @@ def settings_profile_post(v):
 								   error="Your enemies list is too long")
 
 
-		notify_users = NOTIFY_USERS(enemies_html, v)
+		notify_users = NOTIFY_USERS(enemies, v)
 
 		cid = notif_comment(f"@{v.username} has added you to their enemies list!")
 
@@ -249,8 +246,7 @@ def settings_profile_post(v):
 	elif request.values.get("bio") or request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
 		bio = request.values.get("bio")[:1500]
 
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', bio, flags=re.M|re.A):
-			if "wikipedia" not in i.group(1): bio = bio.replace(i.group(1), f'![]({i.group(1)})')
+		bio = image_regex.sub(r'![](\1)', bio)
 
 		if request.files.get('file'):
 			file = request.files['file']

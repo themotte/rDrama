@@ -95,7 +95,7 @@ def publish(pid, v):
 	g.db.add(post)
 	
 	if not post.ghost:
-		notify_users = NOTIFY_USERS(post.body_html, v) | NOTIFY_USERS2(post.title, v)
+		notify_users = NOTIFY_USERS(f'{post.title} {post.body}', v)
 
 		text = f"@{v.username} has mentioned you: [{post.title}]({post.shortlink})"
 		if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
@@ -460,12 +460,8 @@ def edit_post(pid, v):
 
 	if len(body) > 20000: return {"error":"Character limit is 20000!"}, 403
 
-	if v.marseyawarded:
-		marregex = list(re.finditer("^(:[!#A-Za-z0-9]{1,30}?:\s*)+$", title, flags=re.A))
-		if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
-		if body:
-			marregex = list(re.finditer("^(:[!#A-Za-z0-9]{1,30}?:\s*)+$", body, flags=re.A))
-			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
+	if v.marseyawarded and (not marsey_regex.fullmatch(title) or body and not marsey_regex.fullmatch(body)):
+		return {"error":"You can only type marseys!"}, 403
 
 	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
 	elif v.bird and len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
@@ -474,7 +470,6 @@ def edit_post(pid, v):
 		if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 
 		title_html = filter_emojis_only(title, edit=True)
-		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html, flags=re.A))): return {"error":"You can only type marseys!"}, 403
 		p.title = title[:500]
 		p.title_html = title_html
 
@@ -496,13 +491,12 @@ def edit_post(pid, v):
 			else: return {"error": "Image/Video files only"}, 400
 
 	if body != p.body:
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', body, flags=re.M|re.A):
-			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
+		body = image_regex.sub(r'![](\1)', body)
 
 		if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
 		if not p.options.count():
-			for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, flags=re.A):
+			for i in poll_regex.finditer(body):
 				body = body.replace(i.group(0), "")
 				c = Comment(author_id=AUTOPOLLER_ID,
 					parent_submission=p.id,
@@ -514,7 +508,7 @@ def edit_post(pid, v):
 				g.db.add(c)
 
 		if not p.choices.count():
-			for i in re.finditer('\s*&&([^\$\n]+)&&\s*', body, flags=re.A):
+			for i in choice_regex.finditer(body):
 				body = body.replace(i.group(0), "")
 				c = Comment(author_id=AUTOCHOICE_ID,
 					parent_submission=p.id,
@@ -537,7 +531,6 @@ def edit_post(pid, v):
 			return {"error": reason}, 403
 
 		p.body = body
-		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html, flags=re.A))): return {"error":"You can only type marseys!"}, 40
 
 		if v.longpost:
 			if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
@@ -608,7 +601,7 @@ def edit_post(pid, v):
 
 
 		if not p.private and not p.ghost:
-			notify_users = NOTIFY_USERS(body_html, v) | NOTIFY_USERS2(title, v)
+			notify_users = NOTIFY_USERS(f'{title} {body}', v)
 			cid = notif_comment(f"@{v.username} has mentioned you: [{p.title}]({p.shortlink})")
 			for x in notify_users:
 				add_notif(cid, x)
@@ -885,8 +878,6 @@ def submit_post(v, sub=None):
 	title_html = filter_emojis_only(title, graceful=True)
 	if len(title_html) > 1500: return error("Rendered title is too big!")
 
-	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html, flags=re.A))): return error("You can only type marseys!")
-
 	if v.longpost:
 		if len(body) < 280 or ' [](' in body or body.startswith('[]('): return error("You have to type more than 280 characters!")
 	elif v.bird:
@@ -969,12 +960,8 @@ def submit_post(v, sub=None):
 	elif len(title) > 500:
 		return error("There's a 500 character limit for titles.")
 
-	if v.marseyawarded:
-		marregex = list(re.finditer("^(:[!#A-Za-z0-9]{1,30}?:\s*)+$", title, flags=re.A))
-		if len(marregex) == 0: return error("You can only type marseys!")
-		if body:
-			marregex = list(re.finditer("^(:[!#A-Za-z0-9]{1,30}?:\s*)+$", body, flags=re.A))
-			if len(marregex) == 0: return error("You can only type marseys!")
+	if v.marseyawarded and (not marsey_regex.fullmatch(title) or body and not marsey_regex.fullmatch(body)):
+			return error("You can only type marseys!")
 
 	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return error("You have to type more than 280 characters!")
 	elif v.bird and len(body) > 140: return error("You have to type less than 140 characters!")
@@ -1039,8 +1026,7 @@ def submit_post(v, sub=None):
 	if len(url) > 2048:
 		return error("There's a 2048 character limit for URLs.")
 
-	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', body, flags=re.M|re.A):
-		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
+	body = image_regex.sub(r'![](\1)', body)
 
 	if v and v.admin_level > 2:
 		bet_options = []
@@ -1049,12 +1035,12 @@ def submit_post(v, sub=None):
 			body = body.replace(i.group(0), "")
 
 	options = []
-	for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, flags=re.A):
+	for i in poll_regex.finditer(body):
 		options.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
 	choices = []
-	for i in re.finditer('\s*&&([^\$\n]+)&&\s*', body, flags=re.A):
+	for i in choice_regex.finditer(body):
 		choices.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
@@ -1082,8 +1068,6 @@ def submit_post(v, sub=None):
 		body += '\n\n<p>' + random.choice(FORTUNE_REPLIES) + '</p>'
 
 	body_html = sanitize(body)
-
-	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html, flags=re.A))): return error("You can only type marseys!")
 
 	if v.longpost:
 		if len(body) < 280 or ' [](' in body or body.startswith('[]('): return error("You have to type more than 280 characters!")
@@ -1213,7 +1197,7 @@ def submit_post(v, sub=None):
 
 	if not post.private and not post.ghost:
 
-		notify_users = NOTIFY_USERS(body_html, v) | NOTIFY_USERS2(title, v)
+		notify_users = NOTIFY_USERS(f'{title} {body}', v)
 
 		text = f"@{v.username} has mentioned you: [{post.title}]({post.shortlink})"
 		if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"

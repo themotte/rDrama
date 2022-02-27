@@ -11,9 +11,6 @@ from random import random, choice
 import signal
 import time
 
-if SITE == 'PCM': mention_regex = re.compile('(^|\s|\n|<p>)@(([a-zA-Z0-9_\-А-я]){3,25})', flags=re.A)
-else: mention_regex = re.compile('(^|\s|\n|<p>)@(([a-zA-Z0-9_\-]){1,25})', flags=re.A)
-
 allowed_tags = tags = ['b',
 						'blockquote',
 						'br',

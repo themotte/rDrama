@@ -209,8 +209,7 @@ def api_comment(v):
 			f.write('\n{[para]}\n' + body)
 
 	if v.marseyawarded and parent_post.id not in (37696,37697,37749,37833,37838):
-		marregex = list(re.finditer("^(:[!#A-Za-z0-9]{1,30}?:\s*)+$", body, flags=re.A))
-		if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
+		if not marsey_regex.fullmatch(body): return {"error":"You can only type marseys!"}, 403
 
 	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
 	elif v.bird and len(body) > 140 and parent_post.id not in (37696,37697,37749,37833,37838):
@@ -218,16 +217,15 @@ def api_comment(v):
 
 	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
 	
-	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', body, flags=re.M|re.A):
-		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
+	body = image_regex.sub(r'![](\1)', body)
 
 	options = []
-	for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, flags=re.A):
+	for i in poll_regex.finditer(body):
 		options.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
 	choices = []
-	for i in re.finditer('\s*&&([^\$\n]+)&&\s*', body, flags=re.A):
+	for i in choice_regex.finditer(body):
 		choices.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
@@ -303,8 +301,6 @@ def api_comment(v):
 		body += '\n\n<p>' + random.choice(FORTUNE_REPLIES) + '</p>'
 
 	body_html = sanitize(body, comment=True)
-
-	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html, flags=re.A))): return {"error":"You can only type marseys!"}, 403
 
 	if parent_post.id not in (37696,37697,37749,37833,37838):
 		if v.longpost:
@@ -622,7 +618,7 @@ def api_comment(v):
 
 
 		if not v.shadowbanned:
-			notify_users = NOTIFY_USERS(body_html, v)
+			notify_users = NOTIFY_USERS(body, v)
 			
 			for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
 			
@@ -716,21 +712,19 @@ def edit_comment(cid, v):
 		return {"error":"You have to actually type something!"}, 400
 
 	if body != c.body or request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
-		if v.marseyawarded:
-			marregex = list(re.finditer("^(:[!#A-Za-z0-9]{1,30}?:\s*)+$", body, flags=re.A))
-			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
+		if v.marseyawarded and not marsey_regex.fullmatch(body):
+			return {"error":"You can only type marseys!"}, 403
 
 		if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
 		elif v.bird and len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
 
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))', body, flags=re.M|re.A):
-			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
+		body = image_regex.sub(r'![](\1)', body)
 
 		if v.agendaposter and not v.marseyawarded:
 			body = torture_ap(body, v.username)
 
 		if not c.options:
-			for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, flags=re.A):
+			for i in poll_regex.finditer(body):
 				body = body.replace(i.group(0), "")
 				c_option = Comment(author_id=AUTOPOLLER_ID,
 					parent_submission=c.parent_submission,
@@ -743,7 +737,7 @@ def edit_comment(cid, v):
 				g.db.add(c_option)
 
 		if not c.choices:
-			for i in re.finditer('\s*&&([^\$\n]+)&&\s*', body, flags=re.A):
+			for i in choice_regex.finditer(body):
 				body = body.replace(i.group(0), "")
 				c_choice = Comment(author_id=AUTOCHOICE_ID,
 					parent_submission=c.parent_submission,
@@ -756,8 +750,6 @@ def edit_comment(cid, v):
 				g.db.add(c_choice)
 
 		body_html = sanitize(body, edit=True)
-
-		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html, flags=re.A))): return {"error":"You can only type marseys!"}, 403
 
 		if v.longpost:
 			if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
@@ -896,7 +888,7 @@ def edit_comment(cid, v):
 
 		g.db.add(c)
 		
-		notify_users = NOTIFY_USERS(body_html, v)
+		notify_users = NOTIFY_USERS(body, v)
 		
 		for x in notify_users:
 			notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=x).one_or_none()

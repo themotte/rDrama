@@ -67,22 +67,7 @@ def NOTIFY_USERS(text, v):
 		if id == 0: continue
 		if word in text.lower() and id not in notify_users and v.id != id: notify_users.add(id)
 
-	soup = BeautifulSoup(text, 'lxml')
-	for mention in soup.find_all("a", href=re.compile("^\/id\/([0-9]+)", flags=re.A)):
-		id = int(mention["href"].split("/id/")[1])
-		if id != v.id:
-			user = g.db.query(User).filter_by(id=id).one_or_none()
-			if user and not v.any_block_exists(user): notify_users.add(user.id)
-
-	return notify_users
-
-def NOTIFY_USERS2(text, v):
-	notify_users = set()
-	for word, id in NOTIFIED_USERS.items():
-		if id == 0: continue
-		if word in text.lower() and id not in notify_users and v.id != id: notify_users.add(id)
-
-	for i in re.finditer("(^|\s|\n)@((\w|-){1,25})", text, flags=re.A):
+	for i in mention_regex.finditer(text):
 		user = get_user(i.group(2), graceful=True)
 		if user and not v.any_block_exists(user): notify_users.add(user.id)
 

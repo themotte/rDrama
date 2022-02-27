@@ -4,7 +4,6 @@ from files.helpers.wrappers import *
 from files.classes import *
 from .front import frontlist
 
-valid_sub_regex = re.compile("^[a-zA-Z0-9_\-]{3,20}$", flags=re.A)
 
 
 
