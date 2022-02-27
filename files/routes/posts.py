@@ -1206,10 +1206,7 @@ def submit_post(v, sub=None):
 			return error("Image/Video files only.")
 		
 	if not post.thumburl and post.url:
-		if request.host in post.url or post.url.startswith('/') or post.domain == SITE:
-			post.thumburl = f'/static/assets/images/{SITE_NAME}/site_preview.webp'
-		elif request.headers.get('cf-ipcountry')!="T1":
-			gevent.spawn( thumbnail_thread, post.id)
+		gevent.spawn(thumbnail_thread, post.id)
 
 
 
