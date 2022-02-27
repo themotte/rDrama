@@ -917,24 +917,15 @@
 
 {% if not ajax and v and v.theme != 'transparent' %}
 	<script>
-		const e = document.getElementsByClassName('container')[0]
-		const color = getComputedStyle(e).getPropertyValue('background-color');  
-
+		const color = getComputedStyle(document.body).getPropertyValue('background-color');  
 		const markTemplate = (name) => {
-			return `<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='50px' width='100px'><text transform='translate(20, 40) rotate(-45)' fill='${color}' fill-opacity="0.1" font-size='20'>${name}</text></svg>`;
+			return `<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='50px' width='100px'><text transform='translate(20, 40) rotate(-45)' fill='${color}' fill-opacity="1" font-size='20'>${name}</text></svg>`;
 		};
-
 		const base64Mark = btoa(markTemplate("{{v.id}}"));
 		
-		const postt = document.getElementById("post-text")
-		if (postt)
-			postt.style.backgroundImage = `url("data:image/svg+xml;base64,${base64Mark}")`;
-
-
-		const x = document.getElementsByClassName("comment-text");
-		for (let i = 0; i < x.length; i++) {
-		x[i].style.backgroundImage = `url("data:image/svg+xml;base64,${base64Mark}")`;
-		}
+		var style = document.createElement('style');
+		style.innerHTML = `#post-text,.comment-text{background-image:url("data:image/svg+xml;base64,${base64Mark}")}`;
+		document.getElementsByTagName('head')[0].appendChild(style);
 	</script>
 {% endif %}
 
