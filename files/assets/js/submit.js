@@ -85,3 +85,13 @@ function autoSuggestTitle()	{
     };
 
 };
+
+function draft(t) {
+	const followers = document.getElementById("followers")
+	if (t.checked == true) {
+        followers.checked = false;
+        followers.disabled = true;
+    } else {
+        followers.disabled = false;
+   }
+}

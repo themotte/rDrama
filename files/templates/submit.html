@@ -175,7 +175,7 @@
 														<label class="custom-control-label" for="nsfw">+18</label>
 												</div>
 												<div class="custom-control custom-checkbox">
-														<input autocomplete="off" type="checkbox" class="custom-control-input" id="private" name="private">
+														<input onchange='draft(this);' autocomplete="off" type="checkbox" class="custom-control-input" id="private" name="private">
 														<label class="custom-control-label" for="private">Draft</label>
 												</div>
 
@@ -272,7 +272,7 @@
 
 		<script src="/static/assets/js/marked.js?a=248"></script>
 		<script src="/static/assets/js/formatting.js?a=240"></script>
-		<script src="/static/assets/js/submit.js?a=248"></script>
+		<script src="/static/assets/js/submit.js?a=250"></script>
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
 
