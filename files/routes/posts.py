@@ -159,7 +159,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 
 	post = get_post(pid, v=v)
 
-	if 'megathread' in post.title.lower(): defaultsortingcomments = 'new'
+	if post.new: defaultsortingcomments = 'new'
 	elif v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
 	sort = request.values.get("sort", defaultsortingcomments)
@@ -1093,6 +1093,7 @@ def submit_post(v, sub=None):
 		club=club,
 		author_id=v.id,
 		over_18=bool(request.values.get("over_18","")),
+		new=bool(request.values.get("new","")),
 		app_id=v.client.application.id if v.client else None,
 		is_bot = request.headers.get("Authorization"),
 		url=url,
@@ -1206,14 +1207,15 @@ def submit_post(v, sub=None):
 		for x in notify_users:
 			add_notif(cid, x)
 
-		text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
-		if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
+		if request.values.get('followers'):
+			text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
+			if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
 
-		cid = notif_comment(text, autojanny=True)
-		for follow in v.followers:
-			user = get_account(follow.user_id)
-			if post.club and not user.paid_dues: continue
-			add_notif(cid, user.id)
+			cid = notif_comment(text, autojanny=True)
+			for follow in v.followers:
+				user = get_account(follow.user_id)
+				if post.club and not user.paid_dues: continue
+				add_notif(cid, user.id)
 
 
 
@@ -1388,7 +1390,7 @@ def submit_post(v, sub=None):
 	if request.headers.get("Authorization"): return post.json
 	else:
 		post.voted = 1
-		if 'megathread' in post.title.lower(): sort = 'new'
+		if post.new: sort = 'new'
 		else: sort = v.defaultsortingcomments
 		return render_template('submission.html', v=v, p=post, sort=sort, render_replies=True, offset=0, success=True, sub=post.subr)
 

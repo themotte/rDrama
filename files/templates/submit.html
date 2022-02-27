@@ -26,7 +26,7 @@
 		{% block stylesheets %}
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/static/assets/css/main.css?a=153"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=26">
+			<link rel="stylesheet" href="/static/assets/css/main.css?a=155"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=26">
 			{% if v.agendaposter %}
 				<style>
 					html {
@@ -50,7 +50,7 @@
 			{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-			<link rel="stylesheet" href="/static/assets/css/main.css?a=153">
+			<link rel="stylesheet" href="/static/assets/css/main.css?a=155">
 			<link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?a=26">
 		{% endif %}
 		{% endblock %}
@@ -161,27 +161,37 @@
 												<pre></pre>
 
 												<div class="custom-control custom-checkbox">
-														<input autocomplete="off" type="checkbox" class="custom-control-input" id="nsfwCheck" name="over_18">
-														<label class="custom-control-label" for="nsfwCheck">+18</label>
+														<input checked autocomplete="off" type="checkbox" class="custom-control-input" id="followers" name="followers">
+														<label class="custom-control-label" for="followers">Alert Followers</label>
+												</div>
+
+												<div class="custom-control custom-checkbox">
+													<input autocomplete="off" type="checkbox" class="custom-control-input" id="new" name="new">
+													<label class="custom-control-label" for="new">Make the default comment sorting "new"</label>
+												</div>
+
+												<div class="custom-control custom-checkbox">
+														<input autocomplete="off" type="checkbox" class="custom-control-input" id="nsfw" name="over_18">
+														<label class="custom-control-label" for="nsfw">+18</label>
 												</div>
 												<div class="custom-control custom-checkbox">
-														<input autocomplete="off" type="checkbox" class="custom-control-input" id="privateCheck" name="private">
-														<label class="custom-control-label" for="privateCheck">Draft</label>
+														<input autocomplete="off" type="checkbox" class="custom-control-input" id="private" name="private">
+														<label class="custom-control-label" for="private">Draft</label>
 												</div>
 
 												{% if v.club_allowed != False %}
 													<div class="custom-control custom-checkbox">
-														<input autocomplete="off" type="checkbox" class="custom-control-input" id="clubCheck" name="club">
-														<label class="custom-control-label" for="clubCheck">{{CC_TITLE}} thread</label>
+														<input autocomplete="off" type="checkbox" class="custom-control-input" id="club" name="club">
+														<label class="custom-control-label" for="club">{{CC_TITLE}} thread</label>
 													</div>
 												{% endif %}
 
 												<div class="custom-control custom-checkbox">
-														<input {% if ghost != 42069 and v.coins < ghost and v.procoins < ghost %}disabled{% endif %} autocomplete="off" type="checkbox" class="custom-control-input" id="ghostCheck" name="ghost">
+														<input {% if ghost != 42069 and v.coins < ghost and v.procoins < ghost %}disabled{% endif %} autocomplete="off" type="checkbox" class="custom-control-input" id="ghost" name="ghost">
 														{% if ghost == 42069 %}
-															<label class="custom-control-label" for="ghostCheck">Ghost Thread (will use a ghost award you own)</label>
+															<label class="custom-control-label" for="ghost">Ghost Thread (will use a ghost award you own)</label>
 														{% else %}
-															<label class="custom-control-label" for="ghostCheck">Ghost Thread (cost: {{ghost}} coins or marseybux)</label>
+															<label class="custom-control-label" for="ghost">Ghost Thread (cost: {{ghost}} coins or marseybux)</label>
 														{% endif %}
 												</div>
 
