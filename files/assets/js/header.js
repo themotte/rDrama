@@ -82,3 +82,13 @@ function changename(s1,s2) {
 	}
 	document.getElementById(s1).innerHTML = filename.slice(0, -2);
 }
+
+function escapeHtml(unsafe)
+{
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+ }
