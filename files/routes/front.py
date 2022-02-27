@@ -167,6 +167,9 @@ def front_all(v, sub=None):
 	else: defaultsubs = 'Include subs'
 
 	subs=session.get('subs', defaultsubs)
+	if subs == True:
+		session['subs'] = 'Include subs'
+		subs = session['subs']
 
 	try: gt=int(request.values.get("utc_greater_than", 0))
 	except: gt=0
@@ -280,7 +283,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 		if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
 	elif subs == "Include subs":
 		if v and v.all_blocks: posts = posts.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
-	elif subs == 'Exclude subs': posts = posts.filter(Submission.sub == None)
+	else: posts = posts.filter(Submission.sub == None)
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
 	if lt: posts = posts.filter(Submission.created_utc < lt)
@@ -359,7 +362,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 			if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
 		elif subs == "Include subs":
 			if v and v.all_blocks: pins = pins.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
-		elif subs == 'Exclude subs': pins = pins.filter(Submission.sub == None)
+		else: pins = pins.filter(Submission.sub == None)
 
 		if v and v.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
