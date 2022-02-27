@@ -337,34 +337,6 @@
 
 <script src="/static/assets/js/lite-youtube.js?a=240"></script>
 
-{% if v and v.theme != 'transparent' %}
-	<style>
-		#sex {
-			position:fixed;
-			z-index:9999;
-			pointer-events: none;
-			top: 10%;
-			background-repeat: repeat;
-			height: 100vh;
-			width: 100vw;
-		}
-	</style>
-
-	<div id="sex"></div>
-
-	<script>
-		const color = window.getComputedStyle(document.body).getPropertyValue('background-color');  
-
-		const markTemplate = (name) => {
-			return `<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='200px' width='200px'><text transform='translate(20, 100) rotate(-45)' fill='${color}' fill-opacity="0.05" font-size='60'>${name}</text></svg>`;
-		};
-
-		const base64Mark = btoa(markTemplate("{{v.id}}"));
-
-		document.getElementById("sex").style.backgroundImage = `url("data:image/svg+xml;base64,${base64Mark}")`;
-	</script>
-{% endif %}
-
 </body>
 
 </html>

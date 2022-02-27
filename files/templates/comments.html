@@ -915,4 +915,26 @@
 	<div id="viewmore-{{offset}}"><button id="viewbtn" class="btn btn-primary" onclick="viewmore({{pid}},'{{sort}}',{{offset}},{{ids}})">VIEW MORE COMMENTS</a></div>
 {% endif %}
 
+{% if not ajax and v and v.theme != 'transparent' %}
+	<script>
+		const color = window.getComputedStyle(document.body).getPropertyValue('background-color');  
+
+		const markTemplate = (name) => {
+			return `<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='50px' width='100px'><text transform='translate(20, 40) rotate(-45)' fill='${color}' fill-opacity="0.1" font-size='20'>${name}</text></svg>`;
+		};
+
+		const base64Mark = btoa(markTemplate("{{v.id}}"));
+		
+		const postt = document.getElementById("post-text")
+		if (postt)
+			postt.style.backgroundImage = `url("data:image/svg+xml;base64,${base64Mark}")`;
+
+
+		const x = document.getElementsByClassName("comment-text");
+		for (let i = 0; i < x.length; i++) {
+		x[i].style.backgroundImage = `url("data:image/svg+xml;base64,${base64Mark}")`;
+		}
+	</script>
+{% endif %}
+
 </body>
