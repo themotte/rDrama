@@ -163,8 +163,6 @@ function submitFormAjax(e) {
 			var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success'));
 			myToast.show();
 			return true
-		} else if (xhr.status >= 300 && xhr.status < 400) {
-			location.href = JSON.parse(xhr.response)["redirect"]
 		} else {
 			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			try {

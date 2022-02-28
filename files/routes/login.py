@@ -179,7 +179,7 @@ def sign_up_get(v):
 		if f.read() == "yes":
 			return {"error": "New account registration is currently closed. Please come back later."}, 403
 
-	if v: return redirect(f"{SITE_FULL}/")
+	if v: return redirect(SITE_FULL)
 
 	agent = request.headers.get("User-Agent", None)
 	if not agent: abort(403)
@@ -350,7 +350,7 @@ def sign_up_post(v):
 
 	g.db.commit()
 
-	return redirect(f"{SITE_FULL}/")
+	return redirect(SITE_FULL)
 
 
 @app.get("/forgot")
