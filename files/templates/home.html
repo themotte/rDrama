@@ -48,9 +48,9 @@
 						{{subs | capitalize}}
 					</button>
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-						{% if subs != "Exclude subs" %}<button data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exclude posts from subs" class="dropdown-item" onclick="post('/sub_toggle/Exclude%20subs')">						<i class="fas fa-user-group mr-2"></i>Exclude subs</button>{% endif %}
-						{% if subs != "Include subs" %}<button data-bs-toggle="tooltip" data-bs-placement="bottom" title="Include posts from subs" class="dropdown-item" onclick="post('/sub_toggle/Include%20subs')">						<i class="fas fa-user-group mr-2"></i>Include subs</button>{% endif %}
-						{% if subs != "View subs only" %}<button data-bs-toggle="tooltip" data-bs-placement="bottom" title="Include posts from subs" class="dropdown-item" onclick="post('/sub_toggle/View%20subs%20only')">						<i class="fas fa-user-group mr-2"></i>View subs only</button>{% endif %}
+						{% if subs != "Exclude subs" %}<button class="dropdown-item" onclick="post('/sub_toggle/Exclude%20subs')">						<i class="fas fa-user-group mr-2"></i>Exclude subs</button>{% endif %}
+						{% if subs != "Include subs" %}<button class="dropdown-item" onclick="post('/sub_toggle/Include%20subs')">						<i class="fas fa-user-group mr-2"></i>Include subs</button>{% endif %}
+						{% if subs != "View subs only" %}<button class="dropdown-item" onclick="post('/sub_toggle/View%20subs%20only')"><i class="fas fa-user-group mr-2"></i>View subs only</button>{% endif %}
 					</div>
 				</div>
 
