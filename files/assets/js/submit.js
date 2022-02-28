@@ -11,27 +11,32 @@ function hide_image() {
 
 document.onpaste = function(event) {
 	files = event.clipboardData.files
-	filename = files[0].name.toLowerCase()
 
-	if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
+	filename = files[0]
+
+	if (filename)
 	{
-		if (document.activeElement.id == 'post-text') {
-			document.getElementById('file-upload-submit').files = files;
-			document.getElementById('filename-show-submit').textContent = filename;
+		filename = filename.name.toLowerCase()
+		if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
+		{
+			if (document.activeElement.id == 'post-text') {
+				document.getElementById('file-upload-submit').files = files;
+				document.getElementById('filename-show-submit').textContent = filename;
+			}
+			else {
+				f=document.getElementById('file-upload');
+				f.files = files;
+				document.getElementById('filename-show').textContent = filename;
+				document.getElementById('urlblock').classList.add('d-none');
+				var fileReader = new FileReader();
+				fileReader.readAsDataURL(f.files[0]);
+				fileReader.addEventListener("load", function () {document.getElementById('image-preview').setAttribute('src', this.result);});  
+				document.getElementById('file-upload').setAttribute('required', 'false');	
+			}
+			checkForRequired();
+			document.getElementById('post-url').value = null;
+			localStorage.setItem("post_url", "")
 		}
-		else {
-			f=document.getElementById('file-upload');
-			f.files = files;
-			document.getElementById('filename-show').textContent = filename;
-			document.getElementById('urlblock').classList.add('d-none');
-			var fileReader = new FileReader();
-			fileReader.readAsDataURL(f.files[0]);
-			fileReader.addEventListener("load", function () {document.getElementById('image-preview').setAttribute('src', this.result);});  
-			document.getElementById('file-upload').setAttribute('required', 'false');	
-		}
-		checkForRequired();
-		document.getElementById('post-url').value = null;
-		localStorage.setItem("post_url", "")
 	}
 }
 
@@ -71,11 +76,10 @@ function autoSuggestTitle()	{
         var x = new XMLHttpRequest();
         x.withCredentials=true;
         x.onreadystatechange = function() {
-            if (x.readyState == 4 && x.status == 200) {
+            if (x.readyState == 4 && x.status == 200 && !titleField.value) {
 
                 title=JSON.parse(x.responseText)["title"];
                 titleField.value=title;
-
                 checkForRequired()
             }
         }
