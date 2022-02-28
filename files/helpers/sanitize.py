@@ -113,7 +113,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	
 	sanitized = markdown(sanitized)
 
-	sanitized = sanitized.replace("\ufeff", "").replace("𒐪","").replace("<script","").replace('‎','')
+	sanitized = sanitized.replace("\ufeff", "").replace("𒐪","").replace("<script","").replace("script>","").replace('‎','')
 
 	if alert:
 		for i in re.finditer("<p>@((\w|-){1,25})", sanitized, flags=re.A):
@@ -311,7 +311,7 @@ def filter_emojis_only(title, edit=False, graceful=False):
 	signal.signal(signal.SIGALRM, handler2)
 	signal.alarm(1)
 	
-	title = title.replace('<','&lt;').replace('>','&gt;').replace("\n", "").replace("\r", "").replace("\t", "").strip()
+	title = title.replace("<script","").replace("script>","").replace('<','&lt;').replace('>','&gt;').replace("&", "&amp;").replace('"', '&quot;').replace("'", "&#039;").replace("\ufeff", "").replace("𒐪","").replace('‎','').replace("\n", "").replace("\r", "").replace("\t", "").strip()
 
 	title = bleach.clean(title, tags=[])
 
