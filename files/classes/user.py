@@ -465,17 +465,17 @@ class User(Base):
 	@lazy
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
-		else: return f"{SITE_FULL}/static/assets/images/{SITE_NAME}/site_preview.webp?a=1013"
+		else: return f"{SITE_FULL}/static/assets/images/{SITE_NAME}/site_preview.webp?v=1013"
 
 	@property
 	@lazy
 	def profile_url(self):
-		if self.agendaposter: return f"{SITE_FULL}/static/assets/images/defaultpictures/agendaposter/{random.randint(1, 51)}.webp?a=1008"
+		if self.agendaposter: return f"{SITE_FULL}/static/assets/images/defaultpictures/agendaposter/{random.randint(1, 51)}.webp?v=1008"
 		if self.profileurl: 
 			if self.profileurl.startswith('/'): return SITE_FULL + self.profileurl
 			return self.profileurl
-		if SITE_NAME == 'Drama': return f"{SITE_FULL}/static/assets/images/defaultpictures/bhm/{random.randint(1, 25)}.webp?a=1008"
-		return f"{SITE_FULL}/static/assets/images/default-profile-pic.webp?a=1008"
+		if SITE_NAME == 'Drama': return f"{SITE_FULL}/static/assets/images/defaultpictures/bhm/{random.randint(1, 25)}.webp?v=1008"
+		return f"{SITE_FULL}/static/assets/images/default-profile-pic.webp?v=1008"
 
 	@lazy
 	def json_popover(self, v):

@@ -4665,7 +4665,7 @@ lite-youtube > .lty-playbtn {
     left: 50%;
     z-index: 1;
     background-color: transparent;
-    background-image: url('/static/assets/images/youtube.webp?a=1008');
+    background-image: url('/static/assets/images/youtube.webp?v=1008');
     transition: filter .1s cubic-bezier(0, 0, 0.2, 1);
     border: none;
 }
@@ -5017,11 +5017,11 @@ th, td {
 @media (max-width: 400px) {
     .text-small-m {
         font-size: min(3.3vw,12px) !important;
-        margin-right: 2vw !important;
-        padding: 1vw !important;
+        margin-right: min(2vw,0.5rem) !important;
+        padding: min(1vw,0.75rem) !important;
     }
     .ddd {
         margin-right: 0 !important;
-        margin-left: 1.1vw !important;
+        margin-left: min(1.1vw,0.5rem) !important;
     }
 }

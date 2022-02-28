@@ -44,7 +44,7 @@ function popclick(author) {
 
 		let badges = ''
 		for (const x of author["badges"]) {
-			badges += `<img alt="badge" width="32" loading="lazy" src="${x}?a=1014">`
+			badges += `<img alt="badge" width="32" loading="lazy" src="${x}?v=1014">`
 		}
 		popover.getElementsByClassName('pop-banner')[0].src = author["bannerurl"]
 		popover.getElementsByClassName('pop-picture')[0].src = author["profile_url"]
