@@ -4,13 +4,13 @@
 	<meta name="description" content="{{config('DESCRIPTION')}}">
 		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
 
-		<script src="/static/assets/js/bootstrap.js?a=245"></script>
+		<script src="/static/assets/js/bootstrap.js?v=245"></script>
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 		<meta name="author" content="">
-		<link rel="icon" type="image/png" href="/static/assets/images/{{SITE_NAME}}/icon.webp?a=1011">
+		<link rel="icon" type="image/png" href="/static/assets/images/{{SITE_NAME}}/icon.webp?v=1011">
 
 		{% if request.host == 'pcmemes.net' %}
 			{% set cc='Splash Mountain' %}
@@ -26,7 +26,7 @@
 		{% block stylesheets %}
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/static/assets/css/main.css?a=159"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=26">
+			<link rel="stylesheet" href="/static/assets/css/main.css?v=160"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?v=26">
 			{% if v.agendaposter %}
 				<style>
 					html {
@@ -50,8 +50,8 @@
 			{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-			<link rel="stylesheet" href="/static/assets/css/main.css?a=159">
-			<link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?a=26">
+			<link rel="stylesheet" href="/static/assets/css/main.css?v=160">
+			<link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?v=26">
 		{% endif %}
 		{% endblock %}
 
@@ -270,9 +270,9 @@
 			checkForRequired()
 		</script>
 
-		<script src="/static/assets/js/marked.js?a=248"></script>
-		<script src="/static/assets/js/formatting.js?a=240"></script>
-		<script src="/static/assets/js/submit.js?a=250"></script>
+		<script src="/static/assets/js/marked.js?v=248"></script>
+		<script src="/static/assets/js/formatting.js?v=240"></script>
+		<script src="/static/assets/js/submit.js?v=250"></script>
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
 

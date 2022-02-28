@@ -4,7 +4,7 @@
 		{% set image=sub.sidebar_url %}
 	{% else %}
 		{% set path = "assets/images/" + SITE_NAME + "/sidebar" %}
-		{% set image = "/static/" + path + "/" + listdir('files/' + path)|random() + '?a=34' %}
+		{% set image = "/static/" + path + "/" + listdir('files/' + path)|random() + '?v=34' %}
 	{% endif %}
 
 	<img class="mb-4" alt="sidebar image" role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" onclick="expandDesktopImage('{{image}}')" loading="lazy" src="{{image}}" width=100%>
