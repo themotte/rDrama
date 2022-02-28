@@ -220,6 +220,14 @@ DEFAULT_COLOR = environ.get("DEFAULT_COLOR", "fff").strip()
 COLORS = {'ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58','8cdbe6', DEFAULT_COLOR}
 
 AWARDS = {
+	"nword": {
+		"kind": "nword",
+		"title": "Nword Pass",
+		"description": "???",
+		"icon": "fas fa-edit",
+		"color": "text-success",
+		"price": 10000
+	},
 	"snow": {
 		"kind": "snow",
 		"title": "Snow",
