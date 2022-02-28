@@ -5008,15 +5008,3 @@ th, td {
 .text-small-mobile {
     font-size: min(2.7vw,14px) !important;
 }
-
-@media (max-width: 500px) {
-    .text-small-m {
-        font-size: min(3.3vw,12px) !important;
-        margin-right: min(1.5vw,0.5rem) !important;
-        padding: min(1vw,0.75rem) !important;
-    }
-    .ddd {
-        margin-right: 0 !important;
-        margin-left: min(1.1vw,0.5rem) !important;
-    }
-}

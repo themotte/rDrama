@@ -37,15 +37,29 @@
 
 			{% block navbar %}
 			<div class="d-flex align-items-center">
-				{% if v and v.paid_dues %}
-					{% if ccmode=="true"%}
-						<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-primary text-primary text-small-m mx-2 ddd" href="?sort={{sort}}&t={{t}}&ccmode=false"><i class="fas fa-golf-club mr-2 text-small-m"></i>CC</a>
-					{% else %}
-						<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-secondary text-small-m mx-2 ddd" href="?sort={{sort}}&t={{t}}&ccmode=true"><i class="fas fa-golf-club mr-2 text-small-m"></i>CC</a>
-					{% endif %}
-				{% endif %}
-				
 				{% if v %}
+					<style>
+						@media (max-width: 500px) {
+							.text-small-m {
+								font-size: min(3.3vw,12px) !important;
+								margin-right: min(1.5vw,0.5rem) !important;
+								padding: min(1vw,0.75rem) !important;
+							}
+							.ddd {
+								margin-right: 0 !important;
+								margin-left: min(1.1vw,0.5rem) !important;
+							}
+						}
+					</style>
+				
+					{% if v.paid_dues %}
+						{% if ccmode=="true"%}
+							<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-primary text-primary text-small-m mx-2 ddd" href="?sort={{sort}}&t={{t}}&ccmode=false"><i class="fas fa-golf-club mr-2 text-small-m"></i>CC</a>
+						{% else %}
+							<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-secondary text-small-m mx-2 ddd" href="?sort={{sort}}&t={{t}}&ccmode=true"><i class="fas fa-golf-club mr-2 text-small-m"></i>CC</a>
+						{% endif %}
+					{% endif %}
+
 					<div class="dropdown dropdown-actions mx-2 ddd">
 						<button class="btn btn-secondary dropdown-toggle text-small-m ddd" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							<i class="fas fa-user-group mr-2 text-small-m"></i>

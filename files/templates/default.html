@@ -7,7 +7,7 @@
 	<script src="/static/assets/js/bootstrap.js?v=245"></script>
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?v=165">
+		<link rel="stylesheet" href="/static/assets/css/main.css?v=166">
 		<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?v=26">
 		{% if v.agendaposter %}
 			<style>
@@ -32,7 +32,7 @@
 		{% endif %}
 	{% else %}
 		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?v=165"><link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?v=26">
+		<link rel="stylesheet" href="/static/assets/css/main.css?v=166"><link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?v=26">
 	{% endif %}
 
 	{% if sub and sub.css and not request.path.endswith('settings') %}
@@ -231,7 +231,7 @@
 			{% if sub %}
 				<img alt="/s/{{sub.name}} banner" role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" onclick="expandDesktopImage('{{sub.banner_url}}')" loading="lazy" src="{{sub.banner_url}}" width=100% style="object-fit:cover;max-height:25vw">
 			{% elif SITE_NAME == 'Drama' %}
-				{% set path = "assets/images/" + SITE_NAME + "/banners_bhm" %}
+				{% set path = "assets/images/" + SITE_NAME + "/banners" %}
 				{% set image = "/static/" + path + "/" + listdir('files/' + path)|random() + '?v=21' %}
 
 				<a href="https://naacp.org/donate">
