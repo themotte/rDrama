@@ -5008,10 +5008,8 @@ th, td {
     text-align: center;
 }
 
-@media (max-width: 768px) {
-    .text-small-mobile {
-        font-size: min(3vw,14px) !important;
-    }
+.text-small-mobile {
+    font-size: min(3vw,14px) !important;
 }
 
 @media (max-width: 400px) {
