@@ -116,14 +116,14 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	sanitized = sanitized.replace("\ufeff", "").replace("𒐪","").replace("<script","").replace("script>","").replace('‎','')
 
 	if alert:
-		for i in re.finditer("<p>@((\w|-){1,25})", sanitized, flags=re.A):
+		for i in mention_regex2.finditer(sanitized):
 			u = get_user(i.group(1), graceful=True)
 			if u:
 				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
 	else:
-		sanitized = re.sub('(^|\s|\n|<p>)\/?((r|u)\/(\w|-){3,25})', r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized, flags=re.A)
+		sanitized = reddit_regex.sub(r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized)
 
-		sanitized = re.sub('(^|\s|\n|<p>)\/?(s\/(\w|-){3,25})', r'\1<a href="/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized, flags=re.A)
+		sanitized = sub_regex.sub(r'\1<a href="/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized)
 
 		for i in mention_regex.finditer(sanitized):
 			u = get_user(i.group(2), graceful=True)
@@ -135,8 +135,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
 
 
-	for i in re.finditer('https://i\.imgur\.com/(([^_]*?)\.(jpg|png|jpeg))(?!</code>)', sanitized, flags=re.A):
-		sanitized = sanitized.replace(i.group(1), i.group(2) + "_d.webp?maxwidth=9999&fidelity=high")
+	sanitized = imgur_regex.sub(r'\1_d.webp?maxwidth=9999&fidelity=high', sanitized)
 
 	if noimages:
 		sanitized = bleach.Cleaner(tags=no_images,
@@ -181,14 +180,9 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 				tag["target"] = "_blank"
 				tag["rel"] = "nofollow noopener noreferrer"
 
-			if re.fullmatch("https?://\S+", str(tag.string), flags=re.A):
-				try: tag.string = tag["href"]
-				except: tag.string = ""
-
-
 	sanitized = str(soup)
 	
-	sanitized = re.sub('\|\|(.*?)\|\|', r'<span class="spoiler">\1</span>', sanitized)
+	sanitized = spoiler_regex.sub(r'<span class="spoiler">\1</span>', sanitized)
 	
 	if comment: marseys_used = set()
 
@@ -265,7 +259,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 	if "https://youtube.com/watch?v=" in sanitized: sanitized = sanitized.replace("?t=", "&t=")
 
-	for i in re.finditer('" target="_blank">(https://youtube\.com/watch\?v\=(.*?))</a>(?!</code>)', sanitized, flags=re.A):
+	for i in youtube_regex.finditer(sanitized):
 		url = i.group(1)
 		yt_id = i.group(2).split('&')[0].split('%')[0]
 		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{url}</a>'
@@ -280,18 +274,16 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 		sanitized = sanitized.replace(replacing, htmlsource)
 
-	if not noimages:
-		for i in re.finditer('>(https://.*?\.(mp4|webm|mov|MP4|WEBM|MOV))</a></p>', sanitized, flags=re.A):
-			sanitized = sanitized.replace(f'<p><a href="{i.group(1)}" rel="nofollow noopener noreferrer" target="_blank">{i.group(1)}</a></p>', f'<p><video controls preload="none" class="embedvid"><source src="{i.group(1)}" type="video/mp4"></video>')
-		for i in re.finditer('<p>(https:.*?\.(mp4|webm|mov|MP4|WEBM|MOV))</p>', sanitized, flags=re.A):
-			sanitized = sanitized.replace(i.group(0), f'<p><video controls preload="none" class="embedvid"><source src="{i.group(1)}" type="video/mp4"></video>')
-
 	for rd in ["://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it"]:
 		sanitized = sanitized.replace(rd, "://old.reddit.com")
 
 	sanitized = sanitized.replace("old.reddit.com/gallery", "reddit.com/gallery")
-	sanitized = re.sub(' (https:\/\/[^ <>]*)', r' <a target="_blank" rel="nofollow noopener noreferrer" href="\1">\1</a>', sanitized, flags=re.A)
-	sanitized = re.sub('<p>(https:\/\/[^ <>]*)', r'<p><a target="_blank" rel="nofollow noopener noreferrer" href="\1">\1</a></p>', sanitized, flags=re.A)
+
+
+	sanitized = unlinked_regex.sub(r'\1<a href="\2" rel="nofollow noopener noreferrer" target="_blank">\2</a>', sanitized)
+
+	if not noimages:
+		sanitized = video_regex.sub(r'<p><video controls preload="none" class="embedvid"><source src="\1" type="video/mp4"></video>', sanitized)
 
 	if comment:
 		for marsey in g.db.query(Marsey).filter(Marsey.name.in_(marseys_used)).all():
@@ -348,7 +340,7 @@ def filter_emojis_only(title, edit=False, graceful=False):
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 				title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', title, flags=re.I|re.A)
 
-	title = re.sub('~~(.*?)~~', r'<del>\1</del>', title, flags=re.A)
+	title = strikethrough_regex.sub(r'<del>\1</del>', title)
 
 	signal.alarm(0)
 

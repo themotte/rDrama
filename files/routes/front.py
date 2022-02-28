@@ -164,7 +164,6 @@ def front_all(v, sub=None):
 	ccmode=request.values.get('ccmode', "false").lower()
 
 	defaultsubs = 'Include subs'
-
 	if v: subs=session.get('sub_toggle', defaultsubs)
 	else: subs=defaultsubs
 
@@ -270,7 +269,7 @@ def front_all(v, sub=None):
 
 
 @cache.memoize(timeout=86400)
-def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", subs='Exclude subs', filter_words='', gt=0, lt=0, sub=None, site=None):
+def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", subs='Include subs', filter_words='', gt=0, lt=0, sub=None, site=None):
 
 	posts = g.db.query(Submission)
 	

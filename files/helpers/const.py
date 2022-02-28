@@ -130,6 +130,7 @@ if SITE in {'rdrama.net','devrama.xyz'}:
 	AUTOCHOICE_ID = 9167
 	BASEDBOT_ID = 0
 
+	A_ID = 1230
 	MENTION_ID = 9376
 	KIPPY_ID = 7150
 	TAX_NOTIF_ID = 995
@@ -162,6 +163,7 @@ elif SITE == "pcmemes.net":
 	AUTOCHOICE_ID = 2072
 	BASEDBOT_ID = 800
 
+	A_ID = 0
 	MENTION_ID = 0
 	KIPPY_ID = 1592
 	PIZZASHILL_ID = 0
@@ -194,6 +196,7 @@ else:
 	AUTOCHOICE_ID = 8
 	BASEDBOT_ID = 0
 
+	A_ID = 0
 	MENTION_ID = 0
 	KIPPY_ID = 0
 	TAX_NOTIF_ID = 9
@@ -649,16 +652,18 @@ db.close()
 
 if SITE_NAME == 'PCM':
 	valid_username_regex = re.compile("^[a-zA-Z0-9_\-А-я]{3,25}$", flags=re.A)
-	mention_regex = re.compile('(^|\s|\n|<p>)@(([a-zA-Z0-9_\-А-я]){3,25})', flags=re.A)
+	mention_regex = re.compile('(^|\s|<p>)@(([a-zA-Z0-9_\-А-я]){3,25})', flags=re.A)
+	mention_regex2 = re.compile('<p>@(([a-zA-Z0-9_\-А-я]){3,25})', flags=re.A)
 else:
 	valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$", flags=re.A)
-	mention_regex = re.compile('(^|\s|\n|<p>)@(([a-zA-Z0-9_\-]){1,25})', flags=re.A)
+	mention_regex = re.compile('(^|\s|<p>)@(([a-zA-Z0-9_\-]){1,25})', flags=re.A)
+	mention_regex2 = re.compile('<p>@(([a-zA-Z0-9_\-]){1,25})', flags=re.A)
 
 valid_password_regex = re.compile("^.{8,100}$", flags=re.A)
 
 marsey_regex = re.compile("^(:[!#A-Za-z0-9]{1,30}?:\s*)+$", flags=re.A)
 
-image_regex = re.compile("(^https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999)($|\s|\n))", flags=re.M|re.A)
+image_regex = re.compile("(^https:\/\/.*\.(png|jpg|jpeg|gif|webp|maxwidth=9999|fidelity=high)($|\s))", flags=re.I|re.M|re.A)
 
 valid_sub_regex = re.compile("^[a-zA-Z0-9_\-]{3,20}$", flags=re.A)
 
@@ -676,10 +681,19 @@ based_regex = re.compile("based and (.{1,20}?)(-| )pilled", flags=re.I|re.A)
 
 controversial_regex = re.compile('(/comments/.*?)"', flags=re.A)
 
+spoiler_regex = re.compile('\|\|(.*?)\|\|', flags=re.A)
+video_regex = re.compile('<p><a href="(https:\/\/.*?\.(mp4|webm|mov))" rel="nofollow noopener noreferrer" target="_blank">(https:\/\/.*?\.(mp4|webm|mov))<\/a><\/p>', flags=re.I|re.A)
+unlinked_regex = re.compile('(^|\s|<p>)(https:\/\/[^ <>]*)', flags=re.A)
+imgur_regex = re.compile('(https://i\.imgur\.com/([^_]*?))\.(jpg|png|jpeg|webp)(?!</code>)', flags=re.A)
+reddit_regex = re.compile('(^|\s|<p>)\/?((r|u)\/(\w|-){3,25})', flags=re.A)
+sub_regex = re.compile('(^|\s|<p>)\/?(s\/(\w|-){3,25})', flags=re.A)
+youtube_regex = re.compile('" target="_blank">(https://youtube\.com/watch\?v\=(.*?))</a>(?!</code>)', flags=re.A)
+strikethrough_regex = re.compile('~~(.*?)~~', flags=re.A)
+
 slur_regex = re.compile(rf"((?<=\s|>)|^)({single_words})((?=[\s<,.$]|s[\s<,.$]))", flags=re.I|re.A)
 slur_regex_upper = re.compile(rf"((?<=\s|>)|^)({single_words.upper()})((?=[\s<,.$]|S[\s<,.$]))", flags=re.A)
-torture_regex = re.compile('(^|\s|\n)(i|me) ', flags=re.I|re.A)
-torture_regex2 = re.compile("(^|\s|\n)i'm ", flags=re.I|re.A)
+torture_regex = re.compile('(^|\s)(i|me) ', flags=re.I|re.A)
+torture_regex2 = re.compile("(^|\s)i'm ", flags=re.I|re.A)
 
 def sub_matcher(match):
 	return SLURS[match.group(0).lower()]
