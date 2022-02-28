@@ -163,16 +163,10 @@ def front_all(v, sub=None):
 	t=request.values.get('t', defaulttime)
 	ccmode=request.values.get('ccmode', "false").lower()
 
-	if SITE_NAME == 'Drama': defaultsubs = 'Exclude subs'
-	else: defaultsubs = 'Include subs'
+	defaultsubs = 'Include subs'
 
-	if v:
-		subs=session.get('subs', defaultsubs)
-		if subs == True:
-			session['subs'] = 'Include subs'
-			subs = session['subs']
-	else:
-		subs=defaultsubs
+	if v: subs=session.get('sub_toggle', defaultsubs)
+	else: subs=defaultsubs
 
 	try: gt=int(request.values.get("utc_greater_than", 0))
 	except: gt=0
