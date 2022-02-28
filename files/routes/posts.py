@@ -159,7 +159,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 
 	post = get_post(pid, v=v)
 
-	if post.new: defaultsortingcomments = 'new'
+	if post.new or 'megathread' in post.title.lower(): defaultsortingcomments = 'new'
 	elif v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
 	sort = request.values.get("sort", defaultsortingcomments)
@@ -1390,7 +1390,7 @@ def submit_post(v, sub=None):
 	if request.headers.get("Authorization"): return post.json
 	else:
 		post.voted = 1
-		if post.new: sort = 'new'
+		if post.new or 'megathread' in post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
 		return render_template('submission.html', v=v, p=post, sort=sort, render_replies=True, offset=0, success=True, sub=post.subr)
 
@@ -1531,7 +1531,7 @@ def get_post_title(v):
 	try: x = requests.get(url, headers=titleheaders, timeout=5)
 	except: abort(400)
 
-	soup = BeautifulSoup(x.content, 'xml')
+	soup = BeautifulSoup(x.content, 'lxml')
 
 	title = soup.find('title')
 	if not title: abort(400)
