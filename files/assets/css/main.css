@@ -5010,13 +5010,13 @@ th, td {
 
 @media (max-width: 768px) {
     .text-small-mobile {
-        font-size: 70% !important;
+        font-size: min(3vw,14px) !important;
     }
 }
 
 @media (max-width: 400px) {
     .text-small-m {
-        font-size: 3.3vw !important;
+        font-size: min(3.3vw,12px) !important;
         margin-right: 2vw !important;
         padding: 1vw !important;
     }
