@@ -5008,6 +5008,12 @@ th, td {
     text-align: center;
 }
 
+@media (max-width: 768px) {
+    .text-small-mobile {
+        font-size: 70% !important;
+    }
+}
+
 @media (max-width: 400px) {
     .text-small-m {
         font-size: 3.3vw !important;
@@ -5017,8 +5023,5 @@ th, td {
     .ddd {
         margin-right: 0 !important;
         margin-left: 1.3vw !important;
-    }
-    .text-small-mobile {
-        font-size: 70% !important;
     }
 }
