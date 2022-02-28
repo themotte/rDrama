@@ -5015,7 +5015,7 @@ th, td {
 @media (max-width: 500px) {
     .text-small-m {
         font-size: min(3.3vw,12px) !important;
-        margin-right: min(2vw,0.5rem) !important;
+        margin-right: min(1.7vw,0.5rem) !important;
         padding: min(1vw,0.75rem) !important;
     }
     .ddd {
