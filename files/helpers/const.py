@@ -559,7 +559,7 @@ if SITE_NAME == 'PCM':
 			"title": "crab",
 			"description": "Rave time!",
 			"icon": "fas fa-crab",
-			"color": "text-red",
+			"color": "text-danger",
 			"price": 4000
 		}
 	}
