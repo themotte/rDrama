@@ -166,10 +166,13 @@ def front_all(v, sub=None):
 	if SITE_NAME == 'Drama': defaultsubs = 'Exclude subs'
 	else: defaultsubs = 'Include subs'
 
-	subs=session.get('subs', defaultsubs)
-	if subs == True:
-		session['subs'] = 'Include subs'
-		subs = session['subs']
+	if v:
+		subs=session.get('subs', defaultsubs)
+		if subs == True:
+			session['subs'] = 'Include subs'
+			subs = session['subs']
+	else:
+		subs=defaultsubs
 
 	try: gt=int(request.values.get("utc_greater_than", 0))
 	except: gt=0
