@@ -551,7 +551,7 @@ if SITE_NAME == 'PCM':
 			"title": "Toe Hype",
 			"description": "Summons Blade's toe on the post.",
 			"icon": "fas fa-socks",
-			"color": "text-gold",
+			"color": "text-blue",
 			"price": 500
 		},
 		"crab": {
@@ -559,7 +559,7 @@ if SITE_NAME == 'PCM':
 			"title": "crab",
 			"description": "Rave time!",
 			"icon": "fas fa-crab",
-			"color": "text-gold",
+			"color": "text-red",
 			"price": 4000
 		}
 	}
