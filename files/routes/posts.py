@@ -570,34 +570,6 @@ def edit_post(pid, v):
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
 
-		elif SITE_NAME == 'Drama' and 'nigg' in f'{p.body}{p.title}'.lower() and not v.nwordpass:
-
-			p.is_banned = True
-			p.ban_reason = "AutoJanny"
-			g.db.add(p)
-
-			c_jannied = Comment(author_id=NOTIFICATIONS_ID,
-				parent_submission=p.id,
-				level=1,
-				over_18=False,
-				is_bot=True,
-				app_id=None,
-				is_pinned='AutoJanny',
-				distinguish_level=6,
-				body_html=no_pass_phrase,
-				ghost=p.ghost
-				)
-
-			g.db.add(c_jannied)
-			g.db.flush()
-
-			v.ban(reason="White people nonsense.", days=0.007)
-
-			text = "Your account has been banned for **10 minutes** for the following reason:\n\n> Unsanctioned NWord"
-			send_repeatable_notification(v.id, text)
-
-			n = Notification(comment_id=c_jannied.id, user_id=v.id)
-			g.db.add(n)
 
 
 		if not p.private and not p.ghost:
@@ -1248,32 +1220,7 @@ def submit_post(v, sub=None):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	elif SITE_NAME == 'Drama' and 'nigg' in f'{post.body}{post.title}'.lower() and not v.nwordpass:
 
-		post.is_banned = True
-		post.ban_reason = "AutoJanny"
-
-		c_jannied = Comment(author_id=NOTIFICATIONS_ID,
-			parent_submission=post.id,
-			level=1,
-			over_18=False,
-			is_bot=True,
-			app_id=None,
-			is_pinned='AutoJanny',
-			distinguish_level=6,
-			body_html=no_pass_phrase,
-			)
-
-		g.db.add(c_jannied)
-		g.db.flush()
-
-		v.ban(reason="White people nonsense.", days=0.007)
-
-		text = "Your account has been banned for **10 minutes** for the following reason:\n\n> Unsanctioned NWord"
-		send_repeatable_notification(v.id, text)		
-
-		n = Notification(comment_id=c_jannied.id, user_id=v.id)
-		g.db.add(n)
 	
 	if not (post.sub and g.db.query(Exile.user_id).filter_by(user_id=SNAPPY_ID, sub=post.sub).one_or_none()):
 		if post.sub == 'dankchristianmemes':
@@ -1321,12 +1268,15 @@ def submit_post(v, sub=None):
 			body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{newposturl})\n* [archive.ph](https://archive.ph/?url={quote(newposturl)}&run=1) (click to archive)\n\n"			
 			gevent.spawn(archiveorg, newposturl)
 
-		url_regex = '<a href=\"(https?:\/\/[a-z]{1,20}\.[^\"]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">(.*?)<\/a>'
-		for url_match in list(re.finditer(url_regex, post.body_html, flags=re.A))[:20]:
-			href = url_match.group(1)
+		captured = []
+		for i in list(snappy_url_regex.finditer(post.body_html))[:20]:
+			if i.group(0) in captured: continue
+			captured.append(i.group(0))
+
+			href = i.group(1)
 			if not href: continue
 
-			title = url_match.group(2)
+			title = i.group(2)
 			if "Snapshots:\n\n" not in body: body += "Snapshots:\n\n"			
 
 			if f'**[{title}]({href})**:\n\n' not in body:

@@ -618,7 +618,6 @@ CREATE TABLE public.users (
     winnings integer DEFAULT 0 NOT NULL,
     patron_utc integer DEFAULT 0 NOT NULL,
     rehab integer,
-    nwordpass boolean,
     house character varying(16),
     subs_created integer DEFAULT 0 NOT NULL
 );

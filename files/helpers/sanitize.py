@@ -116,7 +116,11 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	sanitized = sanitized.replace("\ufeff", "").replace("𒐪","").replace("<script","").replace("script>","").replace('‎','')
 
 	if alert:
+		captured = []
 		for i in mention_regex2.finditer(sanitized):
+			if i.group(0) in captured: continue
+			captured.append(i.group(0))
+
 			u = get_user(i.group(1), graceful=True)
 			if u:
 				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
@@ -125,7 +129,11 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 		sanitized = sub_regex.sub(r'\1<a href="/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized)
 
+		captured = []
 		for i in mention_regex.finditer(sanitized):
+			if i.group(0) in captured: continue
+			captured.append(i.group(0))
+
 			u = get_user(i.group(2), graceful=True)
 
 			if u and (not g.v.any_block_exists(u) or g.v.admin_level > 1):
@@ -186,7 +194,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	
 	if comment: marseys_used = set()
 
-	emojis = list(re.finditer("[^a]>\s*(:[!#]{0,2}\w+:\s*)+<\/", sanitized, flags=re.A))
+	emojis = list(emoji_regex.finditer(sanitized))
 	if len(emojis) > 20: edit = True
 
 	captured = []
@@ -197,7 +205,12 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 		old = i.group(0)
 		if 'marseylong1' in old or 'marseylong2' in old or 'marseyllama1' in old or 'marseyllama2' in old: new = old.lower().replace(">", " class='mb-0'>")
 		else: new = old.lower()
-		for i in re.finditer('(?<!"):([!#A-Za-z0-9]{1,30}?):', new, flags=re.A):
+		
+		captured2 = []
+		for i in emoji_regex2.finditer(new):
+			if i.group(0) in captured2: continue
+			captured2.append(i.group(0))
+
 			emoji = i.group(1).lower()
 			if emoji.startswith("#!") or emoji.startswith("!#"):
 				classes = 'emoji-lg mirrored'
@@ -222,7 +235,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 					
 		sanitized = sanitized.replace(old, new)
 
-	emojis = list(re.finditer('(?<!#"):([!#A-Za-z0-9]{1,30}?):', sanitized, flags=re.A))
+	emojis = list(emoji_regex3.finditer(sanitized))
 	if len(emojis) > 20: edit = True
 
 	captured = []
@@ -259,7 +272,11 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 	if "https://youtube.com/watch?v=" in sanitized: sanitized = sanitized.replace("?t=", "&t=")
 
+	captured = []
 	for i in youtube_regex.finditer(sanitized):
+		if i.group(0) in captured: continue
+		captured.append(i.group(0))
+
 		url = i.group(1)
 		yt_id = i.group(2).split('&')[0].split('%')[0]
 		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{url}</a>'
@@ -307,7 +324,7 @@ def filter_emojis_only(title, edit=False, graceful=False):
 
 	title = bleach.clean(title, tags=[])
 
-	emojis = list(re.finditer('(?<!"):([!A-Za-z0-9]{1,30}?):', title, flags=re.A))
+	emojis = list(emoji_regex4.finditer(title))
 	if len(emojis) > 20: edit = True
 
 	captured = []

@@ -110,14 +110,9 @@ single_words = "|".join([slur.lower() for slur in SLURS.keys()])
 
 LONGPOST_REPLIES = ('Wow, you must be a JP fan.', 'This is one of the worst posts I have EVER seen. Delete it.', "No, don't reply like this, please do another wall of unhinged rant please.", '# 😴😴😴', "Ma'am we've been over this before. You need to stop.", "I've known more coherent downies.", "Your pulitzer's in the mail", "That's great and all, but I asked for my burger without cheese.", 'That degree finally paying off', "That's nice sweaty. Why don't you have a seat in the time out corner with Pizzashill until you calm down, then you can have your Capri Sun.", "All them words won't bring your pa back.", "You had a chance to not be completely worthless, but it looks like you threw it away. At least you're consistent.", 'Some people are able to display their intelligence by going on at length on a subject and never actually saying anything. This ability is most common in trades such as politics, public relations, and law. You have impressed me by being able to best them all, while still coming off as an absolute idiot.', "You can type 10,000 characters and you decided that these were the one's that you wanted.", 'Have you owned the libs yet?', "I don't know what you said, because I've seen another human naked.", 'Impressive. Normally people with such severe developmental disabilities struggle to write much more than a sentence or two. He really has exceded our expectations for the writing portion. Sadly the coherency of his writing, along with his abilities in the social skills and reading portions, are far behind his peers with similar disabilities.', "This is a really long way of saying you don't fuck.", "Sorry ma'am, looks like his delusions have gotten worse. We'll have to admit him.", ':#marseywoah:', 'If only you could put that energy into your relationships', 'Posts like this is why I do Heroine.', 'still unemployed then?', 'K', 'look im gunna have 2 ask u 2 keep ur giant dumps in the toilet not in my replys 😷😷😷', "Mommy is soooo proud of you, sweaty. Let's put this sperg out up on the fridge with all your other failures.", "Good job bobby, here's a star", "That was a mistake. You're about to find out the hard way why.", f'You sat down and wrote all this shit. You could have done so many other things with your life. What happened to your life that made you decide writing novels of bullshit on {SITE} was the best option?', "I don't have enough spoons to read this shit", "All those words won't bring daddy back.", 'OUT!', "Damn, you're really mad over this, but thanks for the effort you put into typing that all out! Sadly I won't read it all.", "Jesse what the fuck are you talking about??", "▼you're fucking bananas if you think I'm reading all that, take my downvote and shut up idiot")
 
-AGENDAPOSTER_PHRASE = 'black lives matter'
+AGENDAPOSTER_PHRASE = 'trans lives matter'
 
-AGENDAPOSTER_MSG = """Hi @{username},\n\nYour {type} has been automatically removed because you forgot
-		to include `{AGENDAPOSTER_PHRASE}`.\n\nDon't worry, we're here to help! We 
-		won't let you post or comment anything that doesn't express your love and acceptance towards 
-		the black community. Feel free to resubmit your {type} with `{AGENDAPOSTER_PHRASE}` 
-		included. \n\n*This is an automated message; if you need help,
-		you can message us [here](/contact).*"""
+AGENDAPOSTER_MSG = """Hi @{username},\n\nYour {type} has been automatically removed because you forgot to include `{AGENDAPOSTER_PHRASE}`.\n\nDon't worry, we're here to help! We won't let you post or comment anything that doesn't express your love and acceptance towards the trans community. Feel free to resubmit your {type} with `{AGENDAPOSTER_PHRASE}` included. \n\n*This is an automated message; if you need help, you can message us [here](/contact).*"""
 
 if SITE in {'rdrama.net','devrama.xyz'}:
 	NOTIFICATIONS_ID = 1046
@@ -497,14 +492,6 @@ AWARDS = {
 		"color": "text-lightgreen",
 		"price": 10000
 	},
-	"nword": {
-		"kind": "nword",
-		"title": "Nword Pass",
-		"description": "Gives the recipient the ability to speak that which must not be spoken",
-		"icon": "fas fa-edit",
-		"color": "text-success",
-		"price": 10000
-	},
 	"fish": {
 		"kind": "fish",
 		"title": "Fish",
@@ -601,8 +588,6 @@ NOTIFIED_USERS = {
 
 FORTUNE_REPLIES = ('<b style="color:#6023f8">Your fortune: Allah Wills It</b>','<b style="color:#d302a7">Your fortune: Inshallah, Only Good Things Shall Come To Pass</b>','<b style="color:#e7890c">Your fortune: Allah Smiles At You This Day</b>','<b style="color:#7fec11">Your fortune: Your Bussy Is In For A Blasting</b>','<b style="color:#43fd3b">Your fortune: You Will Be Propositioned By A High-Tier Twink</b>','<b style="color:#9d05da">Your fortune: Repent, You Have Displeased Allah And His Vengeance Is Nigh</b>','<b style="color:#f51c6a">Your fortune: Reply Hazy, Try Again</b>','<b style="color:#00cbb0">Your fortune: lmao you just lost 100 coins</b>','<b style="color:#2a56fb">Your fortune: Yikes 😬</b>','<b style="color:#0893e1">Your fortune: You Will Be Blessed With Many Black Bulls</b>','<b style="color:#16f174">Your fortune: NEETmax, The Day Is Lost If You Venture Outside</b>','<b style="color:#fd4d32">Your fortune: A Taste Of Jannah Awaits You Today</b>','<b style="color:#bac200">Your fortune: Watch Your Back</b>','<b style="color:#6023f8">Your fortune: Outlook good</b>','<b style="color:#d302a7">Your fortune: Godly Luck</b>','<b style="color:#e7890c">Your fortune: Good Luck</b>','<b style="color:#7fec11">Your fortune: Bad Luck</b>','<b style="color:#43fd3b">Your fortune: Good news will come to you by mail</b>','<b style="color:#9d05da">Your fortune: Very Bad Luck</b>','<b style="color:#00cbb0">Your fortune: ｷﾀ━━━━━━(ﾟ∀ﾟ)━━━━━━ !!!!</b>','<b style="color:#2a56fb">Your fortune: Better not tell you now</b>','<b style="color:#0893e1">Your fortune: You will meet a dark handsome stranger</b>','<b style="color:#16f174">Your fortune: （　´_ゝ`）ﾌｰﾝ</b>','<b style="color:#fd4d32">Your fortune: Excellent Luck</b>','<b style="color:#bac200">Your fortune: Average Luck</b>')
 
-no_pass_phrase = """<p>Sorry whiteboy, we're gonna need to see some ID before you start throwin that word around like it's nothing.\n\nTake a 10 minute time-out and come back when you've learned your lesson and/or paid reparations (by purchasing a BIPOC Approved™ rDrama NWord Pass© from the <a href="/shop">shop</a>) \n\n<em>This is an automated message; if you need help, you can message us <a href="/contact">here</a>.</em></p>"""
-
 ROLES={
 	"owner": "864612849199480914",
 	"admin": "879459632656048180" if environ.get("DOMAIN") == "pcmemes.net" else "846509661288267776",
@@ -689,6 +674,13 @@ reddit_regex = re.compile('(^|\s|<p>)\/?((r|u)\/(\w|-){3,25})', flags=re.A)
 sub_regex = re.compile('(^|\s|<p>)\/?(s\/(\w|-){3,25})', flags=re.A)
 youtube_regex = re.compile('" target="_blank">(https://youtube\.com/watch\?v\=(.*?))</a>(?!</code>)', flags=re.A)
 strikethrough_regex = re.compile('~~(.*?)~~', flags=re.A)
+
+emoji_regex = re.compile("[^a]>\s*(:[!#]{0,2}\w+:\s*)+<\/", flags=re.A)
+emoji_regex2 = re.compile('(?<!"):([!#A-Za-z0-9]{1,30}?):', flags=re.A)
+emoji_regex3 = re.compile('(?<!#"):([!#A-Za-z0-9]{1,30}?):', flags=re.A)
+emoji_regex4 = re.compile('(?<!"):([!A-Za-z0-9]{1,30}?):', flags=re.A)
+
+snappy_url_regex = re.compile('<a href=\"(https?:\/\/[a-z]{1,20}\.[^\"]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">(.*?)<\/a>', flags=re.A)
 
 slur_regex = re.compile(rf"((?<=\s|>)|^)({single_words})((?=[\s<,.$]|s[\s<,.$]))", flags=re.I|re.A)
 slur_regex_upper = re.compile(rf"((?<=\s|>)|^)({single_words.upper()})((?=[\s<,.$]|S[\s<,.$]))", flags=re.A)
