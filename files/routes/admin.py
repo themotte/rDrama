@@ -676,19 +676,21 @@ def badge_remove_post(v):
 	except: abort(400)
 
 	badge = user.has_badge(badge_id)
-	if badge:
-		ma = ModAction(
-			kind="badge_remove",
-			user_id=v.id,
-			target_user_id=user.id,
-			_note=badge.name
-		)
-		g.db.add(ma)
+	if not badge:
+		return render_template("admin/badge_remove.html", v=v, badge_types=badges, error="User doesn't have that badge.")
 
-		g.db.delete(badge)
+	ma = ModAction(
+		kind="badge_remove",
+		user_id=v.id,
+		target_user_id=user.id,
+		_note=badge.name
+	)
+	g.db.add(ma)
 
-		g.db.commit()
-	
+	g.db.delete(badge)
+
+	g.db.commit()
+
 	return render_template("admin/badge_remove.html", v=v, badge_types=badges, msg="Badge removed!")
 
 
