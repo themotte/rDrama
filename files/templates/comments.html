@@ -267,7 +267,7 @@
 					{% elif blackjack_status == 'lost' %}
 					<strong>Lost {{wager}} {{currency_kind}}.</strong>
 					{% elif blackjack_status == 'won' %}
-					<strong>Won {{wager}} Coins.</strong>
+					<strong>Won {{wager}} {{currency_kind}}.</strong>
 					{% elif blackjack_status == 'blackjack' %}
 					<strong>Blackjack! Won {{(wager|int * 3/2)|round(0, 'floor')|int}} {{currency_kind}}.</strong>
 					{% endif %}
