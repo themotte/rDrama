@@ -556,7 +556,7 @@ if SITE_NAME == 'PCM':
 		},
 		"crab": {
 			"kind": "crab",
-			"title": "crab",
+			"title": "Crab",
 			"description": "Rave time!",
 			"icon": "fas fa-crab",
 			"color": "text-danger",
