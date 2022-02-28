@@ -558,7 +558,7 @@ if SITE_NAME == 'PCM':
 			"kind": "crab",
 			"title": "crab",
 			"description": "Rave time!",
-			"icon": "fas fa-glass-cheers",
+			"icon": "fas fa-crab",
 			"color": "text-gold",
 			"price": 4000
 		}
