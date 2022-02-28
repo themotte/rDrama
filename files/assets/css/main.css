@@ -2660,9 +2660,11 @@ pre {
 .text-small {
     font-size: 12px !important;
 }
-@media (max-width: 768px) {
+@media (max-width: 400px) {
     .text-small-m {
-        font-size: 12px !important;
+        font-size: 3vw !important;
+        margin-right: 1vw !important;
+        padding: 1vw !important;
     }    
     .text-small-mobile {
         font-size: 70% !important;
