@@ -291,7 +291,7 @@ AWARDS = {
 		"title": "Stab",
 		"description": "???",
 		"icon": "fas fa-knife-kitchen",
-		"color": "text-red",
+		"color": "text-danger",
 		"price": 300
 	},
 	"spiders": {
@@ -315,7 +315,7 @@ AWARDS = {
 		"title": "Lootstocking",
 		"description": "???",
 		"icon": "fas fa-stocking",
-		"color": "text-red",
+		"color": "text-danger",
 		"price": 1000
 	},
 	"shit": {
@@ -387,7 +387,7 @@ AWARDS = {
 		"title": "Progressive Stack",
 		"description": "Makes votes on the recipient's posts and comments weigh double in the ranking algorithm for 6 hours.",
 		"icon": "fas fa-bullhorn",
-		"color": "text-red",
+		"color": "text-danger",
 		"price": 1000
 	},
 	"pin": {
