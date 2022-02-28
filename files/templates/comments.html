@@ -915,7 +915,7 @@
 	<div id="viewmore-{{offset}}"><button id="viewbtn" class="btn btn-primary" onclick="viewmore({{pid}},'{{sort}}',{{offset}},{{ids}})">VIEW MORE COMMENTS</a></div>
 {% endif %}
 
-{% if not ajax and v and v.theme != 'transparent' %}
+/* {% if not ajax and v and v.theme != 'transparent' %}
 	<script>
 		const color = getComputedStyle(document.body).getPropertyValue('background-color');  
 		const markTemplate = (name) => {
@@ -927,6 +927,6 @@
 		style.innerHTML = `#post-text,.comment-text{background-image:url("data:image/svg+xml;base64,${base64Mark}")}`;
 		document.getElementsByTagName('head')[0].appendChild(style);
 	</script>
-{% endif %}
+{% endif %} */
 
 </body>
