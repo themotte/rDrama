@@ -421,7 +421,7 @@ def award_post(pid, v):
 	g.db.commit()
 	if request.referrer and len(request.referrer) > 1:
 		if request.referrer == f'{SITE_FULL}/submit': return redirect(post.permalink)
-		elif request.referrer.startswith(request.host): return redirect(request.referrer)
+		elif request.referrer.startswith(SITE_FULL): return redirect(request.referrer)
 	return redirect(SITE_FULL)
 
 
@@ -646,7 +646,7 @@ def award_comment(cid, v):
 	g.db.add(author)
 
 	g.db.commit()
-	if request.referrer and len(request.referrer) > 1 and request.referrer.startswith(request.host):
+	if request.referrer and len(request.referrer) > 1 and request.referrer.startswith(SITE_FULL):
 		return redirect(request.referrer)
 	return redirect(SITE_FULL)
 
