@@ -37,25 +37,30 @@
 
 			{% block navbar %}
 			<div class="d-flex align-items-center">
-				{% if request.path == '/' and v.paid_dues %}
-					{% if ccmode=="true"%}<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-primary text-primary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=false"><i class="fas fa-golf-club mr-2 text-small-m"></i>CC</a>{% endif %}
-					{% if ccmode=="false" %}<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-secondary text-small-m mx-2" href="?sort={{sort}}&t={{t}}&ccmode=true"><i class="fas fa-golf-club mr-2 text-small-m"></i>CC</a>{% endif %}
+				{% if v and v.paid_dues %}
+					{% if ccmode=="true"%}
+						<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-primary text-primary text-small-m mx-2 ddd" href="?sort={{sort}}&t={{t}}&ccmode=false"><i class="fas fa-golf-club mr-2 text-small-m"></i>CC</a>
+					{% else %}
+						<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-secondary text-small-m mx-2 ddd" href="?sort={{sort}}&t={{t}}&ccmode=true"><i class="fas fa-golf-club mr-2 text-small-m"></i>CC</a>
+					{% endif %}
+				{% endif %}
+				
+				{% if v %}
+					<div class="dropdown dropdown-actions mx-2 ddd">
+						<button class="btn btn-secondary dropdown-toggle text-small-m ddd" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="fas fa-user-group mr-2 text-small-m"></i>
+							{{subs | capitalize}}
+						</button>
+						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+							{% if subs != "Exclude subs" %}<a class="dropdown-item text-small-m" href="/sub_toggle/Exclude%20subs"><i class="fas fa-user-group mr-2 text-small-m"></i>Exclude subs</a>{% endif %}
+							{% if subs != "Include subs" %}<a class="dropdown-item text-small-m" href="/sub_toggle/Include%20subs"><i class="fas fa-user-group mr-2 text-small-m"></i>Include subs</a>{% endif %}
+							{% if subs != "View subs only" %}<a class="dropdown-item text-small-m" href="/sub_toggle/View%20subs%20only"><i class="fas fa-user-group mr-2 text-small-m"></i>View subs only</a>{% endif %}
+						</div>
+					</div>
 				{% endif %}
 
-				<div class="dropdown dropdown-actions mx-2">
-					<button class="btn btn-secondary dropdown-toggle text-small-m" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<i class="fas fa-user-group mr-2 text-small-m"></i>
-						{{subs | capitalize}}
-					</button>
-					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-						{% if subs != "Exclude subs" %}<a class="dropdown-item text-small-m" href="/sub_toggle/Exclude%20subs"><i class="fas fa-user-group mr-2 text-small-m"></i>Exclude subs</a>{% endif %}
-						{% if subs != "Include subs" %}<a class="dropdown-item text-small-m" href="/sub_toggle/Include%20subs"><i class="fas fa-user-group mr-2 text-small-m"></i>Include subs</a>{% endif %}
-						{% if subs != "View subs only" %}<a class="dropdown-item text-small-m" href="/sub_toggle/View%20subs%20only"><i class="fas fa-user-group mr-2 text-small-m"></i>View subs only</a>{% endif %}
-					</div>
-				</div>
-
-				<div class="dropdown dropdown-actions mx-2">
-					<button class="btn btn-secondary dropdown-toggle text-small-m" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<div class="dropdown dropdown-actions mx-2 ddd">
+					<button class="btn btn-secondary dropdown-toggle text-small-m ddd" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						{% if t=="hour" %}<i class="fas fa-clock mr-2 text-small-m"></i>
 						{% elif t=="day" %}<i class="fas fa-calendar-day mr-2 text-small-m"></i>
 						{% elif t=="week" %}<i class="fas fa-calendar-week mr-2 text-small-m"></i>
@@ -75,8 +80,8 @@
 					</div>
 				</div>
 
-				<div class="dropdown dropdown-actions ml-2">
-					<button class="btn btn-secondary dropdown-toggle text-small-m" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<div class="dropdown dropdown-actions ml-2 ddd">
+					<button class="btn btn-secondary dropdown-toggle text-small-m ddd" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						{% if sort=="hot" %}<i class="fas fa-fire mr-2 text-small-m"></i>{% endif %}
 						{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-2 text-small-m"></i>{% endif %}
 						{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-2 text-small-m"></i>{% endif %}

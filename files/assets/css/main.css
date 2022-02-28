@@ -2660,17 +2660,6 @@ pre {
 .text-small {
     font-size: 12px !important;
 }
-@media (max-width: 400px) {
-    .text-small-m {
-        font-size: 3vw !important;
-        margin-right: 1vw !important;
-        padding: 1vw !important;
-    }    
-    .text-small-mobile {
-        font-size: 70% !important;
-    }
-}
-
 .text-small-extra {
     font-size: 10.1px !important;
 }
@@ -5017,4 +5006,19 @@ th, td {
 
 .fas {
     text-align: center;
+}
+
+@media (max-width: 400px) {
+    .text-small-m {
+        font-size: 3.3vw !important;
+        margin-right: 2vw !important;
+        padding: 1vw !important;
+    }
+    .ddd {
+        margin-right: 0 !important;
+        margin-left: 1.3vw !important;
+    }
+    .text-small-mobile {
+        font-size: 70% !important;
+    }
 }
