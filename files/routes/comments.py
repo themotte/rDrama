@@ -268,7 +268,7 @@ def api_comment(v):
 							marsey = loads(body.lower())
 							name = marsey["name"]
 
-							if not marsey_regex.fullmatch(name):
+							if not marsey_regex2.fullmatch(name):
 								return {"error": "Invalid name!"}, 403
 
 							if "author" in marsey: author_id = get_user(marsey["author"]).id

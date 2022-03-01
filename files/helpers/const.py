@@ -656,6 +656,8 @@ valid_password_regex = re.compile("^.{8,100}$", flags=re.A)
 
 marsey_regex = re.compile("^(:[!#A-Za-z0-9]{1,30}?:\s*)+$", flags=re.A)
 
+marsey_regex2 = re.compile("[a-z0-9]{1,30}", flags=re.A)
+
 image_regex = re.compile("(^https:\/\/.*\.(png|jpg|jpeg|gif|webp|maxwidth=9999|fidelity=high)($|\s))", flags=re.I|re.M|re.A)
 
 valid_sub_regex = re.compile("^[a-zA-Z0-9_\-]{3,20}$", flags=re.A)
