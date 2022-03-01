@@ -261,7 +261,7 @@ class Comment(Base):
 			'is_banned': bool(self.is_banned),
 			'deleted_utc': self.deleted_utc,
 			'is_nsfw': self.over_18,
-			'permalink': self.permalink,
+			'permalink': f'/comment/{self.id}',
 			'is_pinned': self.is_pinned,
 			'distinguish_level': self.distinguish_level,
 			'post_id': self.post.id if self.post else 0,
