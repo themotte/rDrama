@@ -98,7 +98,7 @@ def publish(pid, v):
 		notify_users = NOTIFY_USERS(f'{post.title} {post.body}', v)
 
 		if notify_users:
-			text = f"@{v.username} has mentioned you: [{post.title}]({post.shortlink})"
+			text = f"@{v.username} has mentioned you: [{post.permalink}]({post.shortlink})"
 			if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
 
 			cid = notif_comment(text)
@@ -577,7 +577,7 @@ def edit_post(pid, v):
 		if not p.private and not p.ghost:
 			notify_users = NOTIFY_USERS(f'{title} {body}', v)
 			if notify_users:
-				cid = notif_comment(f"@{v.username} has mentioned you: [{p.title}]({p.shortlink})")
+				cid = notif_comment(f"@{v.username} has mentioned you: [{p.permalink}]({p.shortlink})")
 				for x in notify_users:
 					add_notif(cid, x)
 
@@ -1171,7 +1171,7 @@ def submit_post(v, sub=None):
 		notify_users = NOTIFY_USERS(f'{title} {body}', v)
 
 		if notify_users:
-			text = f"@{v.username} has mentioned you: [{post.title}]({post.shortlink})"
+			text = f"@{v.username} has mentioned you: [{post.permalink}]({post.shortlink})"
 			if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
 
 			cid = notif_comment(text)
