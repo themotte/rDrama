@@ -97,21 +97,23 @@ def publish(pid, v):
 	if not post.ghost:
 		notify_users = NOTIFY_USERS(f'{post.title} {post.body}', v)
 
-		text = f"@{v.username} has mentioned you: [{post.title}]({post.shortlink})"
-		if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
+		if notify_users:
+			text = f"@{v.username} has mentioned you: [{post.title}]({post.shortlink})"
+			if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
 
-		cid = notif_comment(text)
-		for x in notify_users:
-			add_notif(cid, x)
+			cid = notif_comment(text)
+			for x in notify_users:
+				add_notif(cid, x)
 
-		text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
-		if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
+		if v.followers:
+			text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
+			if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
 
-		cid = notif_comment(text, autojanny=True)
-		for follow in v.followers:
-			user = get_account(follow.user_id)
-			if post.club and not user.paid_dues: continue
-			add_notif(cid, user.id)
+			cid = notif_comment(text, autojanny=True)
+			for follow in v.followers:
+				user = get_account(follow.user_id)
+				if post.club and not user.paid_dues: continue
+				add_notif(cid, user.id)
 
 
 	cache.delete_memoized(frontlist)
@@ -574,9 +576,10 @@ def edit_post(pid, v):
 
 		if not p.private and not p.ghost:
 			notify_users = NOTIFY_USERS(f'{title} {body}', v)
-			cid = notif_comment(f"@{v.username} has mentioned you: [{p.title}]({p.shortlink})")
-			for x in notify_users:
-				add_notif(cid, x)
+			if notify_users:
+				cid = notif_comment(f"@{v.username} has mentioned you: [{p.title}]({p.shortlink})")
+				for x in notify_users:
+					add_notif(cid, x)
 
 
 
@@ -1172,14 +1175,15 @@ def submit_post(v, sub=None):
 
 		notify_users = NOTIFY_USERS(f'{title} {body}', v)
 
-		text = f"@{v.username} has mentioned you: [{post.title}]({post.shortlink})"
-		if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
+		if notify_users:
+			text = f"@{v.username} has mentioned you: [{post.title}]({post.shortlink})"
+			if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
 
-		cid = notif_comment(text)
-		for x in notify_users:
-			add_notif(cid, x)
+			cid = notif_comment(text)
+			for x in notify_users:
+				add_notif(cid, x)
 
-		if request.values.get('followers'):
+		if request.values.get('followers') and v.followers:
 			text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
 			if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
 

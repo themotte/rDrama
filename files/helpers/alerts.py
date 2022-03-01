@@ -48,7 +48,7 @@ def notif_comment(text, autojanny=False):
 
 	text_html = sanitize(text, alert=True)
 
-	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body_html=text_html, created_utc=0).first()
+	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body_html=text_html, created_utc=0).one_or_none()
 	
 	if existing: return existing[0]
 	else: return create_comment(text_html, autojanny)
