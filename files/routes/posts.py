@@ -735,14 +735,12 @@ def thumbnail_thread(pid):
 
 				body_html = sanitize(f'New {word} mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 
-				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1).one_or_none()
+				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, body_html=body_html).one_or_none()
 				if existing_comment: break
 
 				new_comment = Comment(author_id=NOTIFICATIONS_ID,
 									parent_submission=None,
-									distinguish_level=6,
 									body_html=body_html,
-									level=1,
 									)
 				db.add(new_comment)
 				db.flush()
@@ -761,12 +759,11 @@ def thumbnail_thread(pid):
 			for i in data:
 				body_html = sanitize(f'New mention of you: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 
-				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html).one_or_none()
+				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None,body_html=body_html).one_or_none()
 				if existing_comment: break
 
 				new_comment = Comment(author_id=NOTIFICATIONS_ID,
 									parent_submission=None,
-									distinguish_level=6,
 									body_html=body_html
 									)
 
@@ -787,15 +784,13 @@ def thumbnail_thread(pid):
 			for i in data:
 				body_html = sanitize(f'New pcmemes mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 
-				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1).one_or_none()
+				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, body_html=body_html).one_or_none()
 
 				if existing_comment: break
 
 				new_comment = Comment(author_id=NOTIFICATIONS_ID,
 									parent_submission=None,
-									distinguish_level=6,
 									body_html=body_html,
-									level=1
 									)
 				db.add(new_comment)
 				db.flush()

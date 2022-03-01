@@ -247,7 +247,7 @@ def distribute(v, comment):
 	ma = ModAction(
 		kind="distribute",
 		user_id=v.id,
-		target_comment_id=cid
+		target_comment_id=comment
 	)
 	g.db.add(ma)
 
