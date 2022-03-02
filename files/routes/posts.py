@@ -577,7 +577,7 @@ def edit_post(pid, v):
 		if not p.private and not p.ghost:
 			notify_users = NOTIFY_USERS(f'{title} {body}', v)
 			if notify_users:
-				cid = notif_comment(f"@{v.username} has mentioned you: [{SITE_FULL}/post/{post.id}](/post/{post.id})")
+				cid = notif_comment(f"@{v.username} has mentioned you: [{SITE_FULL}/post/{p.id}](/post/{p.id})")
 				for x in notify_users:
 					add_notif(cid, x)
 
