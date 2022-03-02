@@ -118,9 +118,11 @@ class Comment(Base):
 	@property
 	@lazy
 	def age_string(self):
-		if not self.created_utc: return None
+		if self.created_utc: timestamp = self.created_utc
+		elif self.notif_utc: timestamp = self.notif_utc
+		else: return None
 		
-		age = int(time.time()) - self.created_utc
+		age = int(time.time()) - timestamp
 
 		if age < 60:
 			return "just now"
@@ -135,7 +137,7 @@ class Comment(Base):
 			return f"{days}d ago"
 
 		now = time.gmtime()
-		ctd = time.gmtime(self.created_utc)
+		ctd = time.gmtime(timestamp)
 
 		months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
 		if now.tm_mday < ctd.tm_mday:

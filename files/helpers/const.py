@@ -676,6 +676,8 @@ based_regex = re.compile("based and (.{1,20}?)(-| )pilled", flags=re.I|re.A)
 
 controversial_regex = re.compile('(/comments/.*?)"', flags=re.A)
 
+fishylinks_regex = re.compile("https?://\S+", flags=re.A)
+
 spoiler_regex = re.compile('\|\|(.*?)\|\|', flags=re.A)
 video_regex = re.compile('<p><a href="(https:\/\/.*?\.(mp4|webm|mov))" rel="nofollow noopener noreferrer" target="_blank">(https:\/\/.*?\.(mp4|webm|mov))<\/a><\/p>', flags=re.I|re.A)
 unlinked_regex = re.compile('(^|\s|<p>)(https:\/\/[^ <>]*)', flags=re.A)
@@ -716,3 +718,5 @@ def torture_ap(body, username):
 	body = torture_regex.sub(rf'\1@{username} ', body)
 	body = torture_regex2.sub(rf'\1@{username} is ', body)
 	return body
+
+YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()

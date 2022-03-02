@@ -98,7 +98,7 @@ def publish(pid, v):
 		notify_users = NOTIFY_USERS(f'{post.title} {post.body}', v)
 
 		if notify_users:
-			text = f"@{v.username} has mentioned you: [{post.permalink}]({post.shortlink})"
+			text = f"@{v.username} has mentioned you: [{SITE_FULL}/post/{post.id}](/post/{post.id})"
 			if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
 
 			cid = notif_comment(text)
@@ -577,7 +577,7 @@ def edit_post(pid, v):
 		if not p.private and not p.ghost:
 			notify_users = NOTIFY_USERS(f'{title} {body}', v)
 			if notify_users:
-				cid = notif_comment(f"@{v.username} has mentioned you: [{p.permalink}]({p.shortlink})")
+				cid = notif_comment(f"@{v.username} has mentioned you: [{SITE_FULL}/post/{post.id}](/post/{post.id})")
 				for x in notify_users:
 					add_notif(cid, x)
 
@@ -732,6 +732,8 @@ def thumbnail_thread(pid):
 			except: break
 
 			for i in data:
+
+				if i["author"] == 'GoMarsey': continue
 
 				body_html = sanitize(f'New {word} mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 
@@ -896,29 +898,37 @@ def submit_post(v, sub=None):
 
 		if repost: return redirect(repost.permalink)
 
+
 		domain_obj = get_domain(domain)
 		if not domain_obj: domain_obj = get_domain(domain+parsed_url.path)
+
+		embed = None
+
 		if domain_obj:
 			reason = f"Remove the {domain_obj.domain} link from your post and try again. {domain_obj.reason}"
 			return error(reason)
 		elif "twitter.com" == domain:
-			try: embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}, timeout=5).json()["html"]
-			except: embed = None
+			embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}, timeout=5).json()["html"]
 		elif url.startswith('https://youtube.com/watch?v='):
 			url = unquote(url).replace('?t', '&t')
 			yt_id = url.split('https://youtube.com/watch?v=')[1].split('&')[0].split('%')[0]
-			params = parse_qs(urlparse(url).query)
-			t = params.get('t', params.get('start', [0]))[0]
-			if isinstance(t, str): t = t.replace('s','')
-			embed = f'<lite-youtube videoid="{yt_id}" params="autoplay=1&modestbranding=1'
-			if t: embed += f'&start={t}'
-			embed += '"></lite-youtube>'
+
+			req = requests.get(f"https://www.googleapis.com/youtube/v3/videos?id={yt_id}&key={YOUTUBE_KEY}&part=contentDetails", timeout=5).json()
+
+			if req.get('items'):
+				params = parse_qs(urlparse(url).query)
+				t = params.get('t', params.get('start', [0]))[0]
+				if isinstance(t, str): t = t.replace('s','')
+
+				embed = f'<lite-youtube videoid="{yt_id}" params="autoplay=1&modestbranding=1'
+				if t: embed += f'&start={int(t)}'
+				embed += '"></lite-youtube>'
+			
 		elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
 			id = url.split("/post/")[1]
 			if "/" in id: id = id.split("/")[0]
-			embed = id
-		else: embed = None
-	else: embed = None
+			embed = int(id)
+
 
 	if not url and not request.values.get("body") and not request.files.get("file") and not request.files.get("file2"):
 		return error("Please enter a url or some text.")
@@ -1171,7 +1181,7 @@ def submit_post(v, sub=None):
 		notify_users = NOTIFY_USERS(f'{title} {body}', v)
 
 		if notify_users:
-			text = f"@{v.username} has mentioned you: [{post.permalink}]({post.shortlink})"
+			text = f"@{v.username} has mentioned you: [{SITE_FULL}/post/{post.id}](/post/{post.id})"
 			if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
 
 			cid = notif_comment(text)

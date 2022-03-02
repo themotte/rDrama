@@ -14,7 +14,6 @@ from files.helpers.discord import add_role
 from shutil import copyfile
 import requests
 
-YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()

@@ -251,54 +251,54 @@ def remove_mod(v, sub):
 	
 	return redirect(f'/s/{sub}/mods')
 
+if SITE_NAME == 'PCM':
+	@app.get("/create_sub")
+	@is_not_permabanned
+	def create_sub(v):
+		if v.id == MENTION_ID: cost = 0
+		else:
+			num = v.subs_created + 1
+			for a in v.alts:
+				num += a.subs_created
+			cost = num * 100
+		
+		return render_template("sub/create_sub.html", v=v, cost=cost)
 
-# @app.get("/create_sub")
-# @is_not_permabanned
-# def create_sub(v):
-# 	if v.id == MENTION_ID: cost = 0
-# 	else:
-# 		num = v.subs_created + 1
-# 		for a in v.alts:
-# 			num += a.subs_created
-# 		cost = num * 100
-	
-# 	return render_template("sub/create_sub.html", v=v, cost=cost)
 
+	@app.post("/create_sub")
+	@is_not_permabanned
+	def create_sub2(v):
+		name = request.values.get('name')
+		if not name: abort(400)
+		name = name.strip().lower()
 
-# @app.post("/create_sub")
-# @is_not_permabanned
-# def create_sub2(v):
-# 	name = request.values.get('name')
-# 	if not name: abort(400)
-# 	name = name.strip().lower()
+		if not valid_sub_regex.fullmatch(name):
+			return render_template("sub/create_sub.html", v=v, error="Sub name not allowed."), 400
 
-# 	if not valid_sub_regex.fullmatch(name):
-# 		return render_template("sub/create_sub.html", v=v, error="Sub name not allowed."), 400
+		sub = g.db.query(Sub).filter_by(name=name).one_or_none()
+		if not sub:
+			if v.id != MENTION_ID:
+				num = v.subs_created + 1
+				for a in v.alts:
+					num += a.subs_created
+				cost = num * 100
 
-# 	sub = g.db.query(Sub).filter_by(name=name).one_or_none()
-# 	if not sub:
-# 		if v.id != MENTION_ID:
-# 			num = v.subs_created + 1
-# 			for a in v.alts:
-# 				num += a.subs_created
-# 			cost = num * 100
+				if v.coins < cost:
+					return render_template("sub/create_sub.html", v=v, error="You don't have enough coins!"), 403
 
-# 			if v.coins < cost:
-# 				return render_template("sub/create_sub.html", v=v, error="You don't have enough coins!"), 403
+				v.coins -= cost
 
-# 			v.coins -= cost
+			v.subs_created += 1
+			g.db.add(v)
 
-# 		v.subs_created += 1
-# 		g.db.add(v)
+			sub = Sub(name=name)
+			g.db.add(sub)
+			g.db.flush()
+			mod = Mod(user_id=v.id, sub=sub.name)
+			g.db.add(mod)
+			g.db.commit()
 
-# 		sub = Sub(name=name)
-# 		g.db.add(sub)
-# 		g.db.flush()
-# 		mod = Mod(user_id=v.id, sub=sub.name)
-# 		g.db.add(mod)
-# 		g.db.commit()
-
-# 	return redirect(f'/s/{sub.name}')
+		return redirect(f'/s/{sub.name}')
 
 @app.post("/kick/<pid>")
 @is_not_permabanned
@@ -442,6 +442,10 @@ def sub_sidebar(v, sub):
 @app.get("/sub_toggle/<mode>")
 def sub_toggle(mode):
 	if mode in ('Exclude subs', 'Include subs', 'View subs only'): session["sub_toggle"] = mode
+
+	if request.referrer and len(request.referrer) > 1 and request.referrer.startswith(SITE_FULL):
+		return redirect(request.referrer)
+
 	return redirect('/')
 
 
