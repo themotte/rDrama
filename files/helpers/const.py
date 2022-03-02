@@ -694,6 +694,8 @@ emoji_regex4 = re.compile('(?<!"):([!A-Za-z0-9]{1,30}?):', flags=re.A)
 
 snappy_url_regex = re.compile('<a href=\"(https?:\/\/[a-z]{1,20}\.[^\"]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">(.*?)<\/a>', flags=re.A)
 
+email_regex = re.compile('([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+', flags=re.A)
+
 slur_regex = re.compile(rf"((?<=\s|>)|^)({single_words})((?=[\s<,.$]|s[\s<,.$]))", flags=re.I|re.A)
 slur_regex_upper = re.compile(rf"((?<=\s|>)|^)({single_words.upper()})((?=[\s<,.$]|S[\s<,.$]))", flags=re.A)
 torture_regex = re.compile('(^|\s)(i|me) ', flags=re.I|re.A)

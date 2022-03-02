@@ -273,7 +273,10 @@ def sign_up_post(v):
 
 	email = request.values.get("email").strip().lower()
 
-	if not email: email = None
+	if email:
+		if not email_regex.fullmatch(email):
+			return signup_error("Invalid email.")
+	else: email = None
 
 	existing_account = get_user(username, graceful=True)
 	if existing_account and existing_account.reserved:
@@ -363,7 +366,13 @@ def get_forgot():
 def post_forgot():
 
 	username = request.values.get("username").lstrip('@')
-	email = request.values.get("email",'').strip().lower().replace("_","\_")
+	email = request.values.get("email",'').strip().lower()
+
+	if not email_regex.fullmatch(email):
+		return render_template("forgot_password.html", error="Invalid email.")
+
+
+	email = email.replace("_","\_")
 
 	user = g.db.query(User).filter(
 		User.username.ilike(username),
@@ -485,6 +494,9 @@ def request_2fa_disable():
 
 
 	email=request.values.get("email").strip().lower()
+
+	if not email_regex.fullmatch(email):
+		return render_template("message.html", title="Invalid email.", error="Invalid email.")
 
 	password =request.values.get("password")
 	if not user.verifyPass(password):

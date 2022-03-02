@@ -71,6 +71,8 @@
 
 											<form action="/signup" method="post" class="mt-md-3" id="signup">
 
+												<input autocomplete="false" name="hidden" type="text" style="display:none;">
+
 														{% if error %}<span class="text-danger">{{error}}</span><br>{% endif %}
 
 														<input autocomplete="off" type="hidden" name="formkey" value="{{formkey}}">
@@ -91,7 +93,7 @@
 														<small class="d-inline-block text-muted ml-1">(optional)</small>
 
 														<input autocomplete="off" class="form-control" id="email-register"
-														aria-describedby="emailHelpRegister" type="text" name="email">
+														aria-describedby="emailHelpRegister" type="email" pattern='([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+' name="email">
 
 														<label for="password-register" class="mt-3">Password</label>
 
