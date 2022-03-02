@@ -211,7 +211,8 @@ def add_mod(v, sub):
 		mod = Mod(user_id=user.id, sub=sub)
 		g.db.add(mod)
 
-		send_repeatable_notification(user.id, f"@{v.username} has added you as a mod to /s/{sub}")
+		if v.id != user.id:
+			send_repeatable_notification(user.id, f"@{v.username} has added you as a mod to /s/{sub}")
 
 		g.db.commit()
 	
@@ -245,7 +246,8 @@ def remove_mod(v, sub):
 
 	g.db.delete(mod)
 
-	send_repeatable_notification(user.id, f"@{v.username} has removed you as a mod from /s/{sub}")
+	if v.id != user.id:
+		send_repeatable_notification(user.id, f"@{v.username} has removed you as a mod from /s/{sub}")
 
 	g.db.commit()
 	
@@ -255,7 +257,7 @@ def remove_mod(v, sub):
 @is_not_permabanned
 def create_sub(v):
 	if SITE_NAME == 'Drama' and v.id not in (AEVANN_ID, CARP_ID): abort(403)
-	
+
 	if v.id == MENTION_ID: cost = 0
 	else:
 		num = v.subs_created + 1
