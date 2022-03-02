@@ -32,8 +32,9 @@
 			<div class="flex-grow-1">
 				<a href="/" class="navbar-brand mr-auto">
 					{% if SITE_NAME == 'Drama' %}
-						{% set icon = ('marseyblm','marseykween','marseydynamite','marseyblack','marseymyeisha','marseyetika','marseyobama','marseyblackcop','marseysosa','marseyblackface')|random() %}
-						<img alt="header icon" height=33 src="/e/{{icon}}.webp?v=1008">
+						<img alt="header icon" height=33 width=43 src="/static/assets/images/{{SITE_NAME}}/headericon.webp?v=1015">
+					{% elif SITE_NAME == 'Drama' %}
+						<img alt="header icon" height=33 width=34 src="/static/assets/images/{{SITE_NAME}}/headericon.webp?v=1015">
 					{% else %}
 						<img alt="header icon" height=33 src="/static/assets/images/{{SITE_NAME}}/headericon.webp?v=1015">
 					{% endif %}

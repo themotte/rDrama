@@ -442,6 +442,10 @@ def sub_sidebar(v, sub):
 @app.get("/sub_toggle/<mode>")
 def sub_toggle(mode):
 	if mode in ('Exclude subs', 'Include subs', 'View subs only'): session["sub_toggle"] = mode
+
+	if request.referrer and len(request.referrer) > 1 and request.referrer.startswith(SITE_FULL):
+		return redirect(request.referrer)
+
 	return redirect('/')
 
 

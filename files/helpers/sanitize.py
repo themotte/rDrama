@@ -188,6 +188,12 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 				tag["target"] = "_blank"
 				tag["rel"] = "nofollow noopener noreferrer"
 
+			if fishylinks_regex.fullmatch(str(tag.string)):
+				try: tag.string = tag["href"]
+				except: tag.string = ""
+
+
+
 	sanitized = str(soup)
 	
 	sanitized = spoiler_regex.sub(r'<span class="spoiler">\1</span>', sanitized)
