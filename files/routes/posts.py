@@ -855,6 +855,9 @@ def submit_post(v, sub=None):
 	elif v.bird:
 		if len(body) > 140 : return error("You have to type less than 140 characters!")
 
+
+	embed = None
+
 	if url:
 		if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
 		elif "/media.giphy.com/" in url or "/c.tenor.com/" in url: url = url.replace(".gif", ".webp")
@@ -901,8 +904,6 @@ def submit_post(v, sub=None):
 
 		domain_obj = get_domain(domain)
 		if not domain_obj: domain_obj = get_domain(domain+parsed_url.path)
-
-		embed = None
 
 		if domain_obj:
 			reason = f"Remove the {domain_obj.domain} link from your post and try again. {domain_obj.reason}"
