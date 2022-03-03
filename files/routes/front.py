@@ -162,8 +162,10 @@ def front_all(v, sub=None):
 	sort=request.values.get("sort", defaultsorting)
 	t=request.values.get('t', defaulttime)
 	ccmode=request.values.get('ccmode', "false").lower()
+	
+	if request.host == 'rdrama.net': defaultsubs = 'Exclude subs'
+	else: defaultsubs = 'Include subs'
 
-	defaultsubs = 'Exclude subs'
 	if v: subs=session.get('subs', defaultsubs)
 	else: subs=defaultsubs
 
