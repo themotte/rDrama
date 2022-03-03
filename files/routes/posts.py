@@ -909,7 +909,8 @@ def submit_post(v, sub=None):
 			reason = f"Remove the {domain_obj.domain} link from your post and try again. {domain_obj.reason}"
 			return error(reason)
 		elif "twitter.com" == domain:
-			embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}, timeout=5).json()["html"]
+			try: embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}, timeout=5).json()["html"]
+			except: pass
 		elif url.startswith('https://youtube.com/watch?v='):
 			url = unquote(url).replace('?t', '&t')
 			yt_id = url.split('https://youtube.com/watch?v=')[1].split('&')[0].split('%')[0]
