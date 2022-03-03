@@ -887,7 +887,17 @@
 
 	<script src="/static/assets/js/comments+submission_listing.js?v=253"></script>
 	<script src="/static/assets/js/comments.js?v=252"></script>
+{% endif %}
 
+{% if offset %}
+	{% if p %}
+		{% set pid = p.id %}
+	{% endif %}
+	<br>
+	<div id="viewmore-{{offset}}"><button id="viewbtn" class="btn btn-primary" onclick="viewmore({{pid}},'{{sort}}',{{offset}},{{ids}})">VIEW MORE COMMENTS</a></div>
+{% endif %}
+
+{% if p %}
 	<script>
 		{% if p and (not v or v.highlightcomments) %}
 			comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
@@ -904,14 +914,6 @@
 			}
 		{% endif %}
 	</script>
-{% endif %}
-
-{% if offset %}
-	{% if p %}
-		{% set pid = p.id %}
-	{% endif %}
-	<br>
-	<div id="viewmore-{{offset}}"><button id="viewbtn" class="btn btn-primary" onclick="viewmore({{pid}},'{{sort}}',{{offset}},{{ids}})">VIEW MORE COMMENTS</a></div>
 {% endif %}
 
 </body>
