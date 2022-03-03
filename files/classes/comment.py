@@ -101,7 +101,11 @@ class Comment(Base):
 
 	def total_choice_voted(self, v):
 		if v:
-			return g.db.query(CommentVote).filter(CommentVote.user_id == v.id, CommentVote.comment_id.in_([x.id for x in self.choices])).all()
+			try:
+				return g.db.query(CommentVote).filter(CommentVote.user_id == v.id, CommentVote.comment_id.in_([x.id for x in self.choices])).all()
+			except: 
+				print(self.id, flush=True)
+				return False
 		return False
 
 	@property
