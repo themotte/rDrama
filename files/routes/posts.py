@@ -392,14 +392,16 @@ def viewmore(v, pid, sort, offset):
 	else: offset += 1
 	comments = comments2
 
-	return render_template("comments.html", v=v, comments=comments, ids=list(ids), render_replies=True, pid=pid, sort=sort, offset=offset, ajax=True)
+	return render_template("comments.html", v=v, comments=comments, ids=list(ids), render_replies=True, p=post, pid=pid, sort=sort, offset=offset, ajax=True)
 
 
 @app.get("/morecomments/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def morecomments(v, cid):
-	tcid = g.db.query(Comment.top_comment_id).filter_by(id=cid).one_or_none()[0]
+	top_comment = g.db.query(Comment).filter_by(id=cid).one_or_none()
+	p = top_comment.post
+	tcid = top_comment.id
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -441,7 +443,7 @@ def morecomments(v, cid):
 		c = g.db.query(Comment).filter_by(id=cid).one_or_none()
 		comments = c.replies
 
-	return render_template("comments.html", v=v, comments=comments, render_replies=True, ajax=True)
+	return render_template("comments.html", v=v, comments=comments, p=p, render_replies=True, ajax=True)
 
 @app.post("/edit_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
