@@ -929,7 +929,7 @@ def submit_post(v, sub=None):
 		elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
 			id = url.split("/post/")[1]
 			if "/" in id: id = id.split("/")[0]
-			embed = int(id)
+			embed = str(int(id))
 
 
 	if not url and not request.values.get("body") and not request.files.get("file") and not request.files.get("file2"):
