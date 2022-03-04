@@ -274,7 +274,7 @@ def api_comment(v):
 								return {"error": "Invalid name!"}, 403
 
 							if "author" in marsey: author_id = get_user(marsey["author"]).id
-							elif "author_id" in marsey: author_id = marsey["author_id"]
+							elif "author_id" in marsey: author_id = int(marsey["author_id"])
 							else: abort(400)
 
 							existing = g.db.query(Marsey.name).filter_by(name=name).one_or_none()

@@ -26,7 +26,7 @@
 		{% block stylesheets %}
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/static/assets/css/main.css?v=167"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?v=27">
+			<link rel="stylesheet" href="/static/assets/css/main.css?v=168"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?v=27">
 			{% if v.agendaposter %}
 				<style>
 					html {
@@ -50,7 +50,7 @@
 			{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-			<link rel="stylesheet" href="/static/assets/css/main.css?v=167">
+			<link rel="stylesheet" href="/static/assets/css/main.css?v=168">
 			<link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?v=27">
 		{% endif %}
 		{% endblock %}
@@ -88,8 +88,10 @@
 															<option value="{{s}}"></option>
 														{% endfor %}
 													</datalist>
+													
 												</div>
-						
+												<div class="mt-1" style="font-size: min(3.5vw,14px)"><span style="color:#ffcccb ">WARNING</span>: selecting a sub considerably limits the number of people who will see your post. Don't select a sub unless that's what you want.</div>
+
 												<label class='mt-4' for="title">Post Title</label>
 
 
