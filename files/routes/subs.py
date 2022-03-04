@@ -277,21 +277,22 @@ def create_sub2(v):
 	if not name: abort(400)
 	name = name.strip().lower()
 
+	if v.id == MENTION_ID: cost = 0
+	else:
+		num = v.subs_created + 1
+		for a in v.alts:
+			num += a.subs_created
+		cost = num * 100
+
 	if not valid_sub_regex.fullmatch(name):
-		return render_template("sub/create_sub.html", v=v, error="Sub name not allowed."), 400
+		return render_template("sub/create_sub.html", v=v, cost=cost, error="Sub name not allowed."), 400
 
 	sub = g.db.query(Sub).filter_by(name=name).one_or_none()
 	if not sub:
-		if v.id != MENTION_ID:
-			num = v.subs_created + 1
-			for a in v.alts:
-				num += a.subs_created
-			cost = num * 100
+		if v.coins < cost:
+			return render_template("sub/create_sub.html", v=v, cost=cost, error="You don't have enough coins!"), 403
 
-			if v.coins < cost:
-				return render_template("sub/create_sub.html", v=v, error="You don't have enough coins!"), 403
-
-			v.coins -= cost
+		v.coins -= cost
 
 		v.subs_created += 1
 		g.db.add(v)
