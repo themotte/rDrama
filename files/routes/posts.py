@@ -573,21 +573,18 @@ def edit_post(pid, v):
 			g.db.add(n)
 
 
+	if v.id == p.author_id:
+		if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
+		g.db.add(p)
 
-	if title != p.title or body != p.body:
+	if not p.private and not p.ghost:
+		notify_users = NOTIFY_USERS(f'{p.title} {p.body}', v)
+		if notify_users:
+			cid = notif_comment2(p)
+			for x in notify_users:
+				add_notif(cid, x)
 
-		if v.id == p.author_id:
-			if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
-			g.db.add(p)
-
-		if not p.private and not p.ghost:
-			notify_users = NOTIFY_USERS(f'{title} {body}', v)
-			if notify_users:
-				cid = notif_comment2(p)
-				for x in notify_users:
-					add_notif(cid, x)
-
-		g.db.commit()
+	g.db.commit()
 
 	return redirect(p.permalink)
 
