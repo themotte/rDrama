@@ -118,7 +118,9 @@ class Comment(Base):
 	@property
 	@lazy
 	def age_string(self):
-		if self.notif_utc: timestamp = self.notif_utc
+		notif_utc = self.__dict__.get("notif_utc", None)
+
+		if notif_utc: timestamp = notif_utc
 		elif self.created_utc: timestamp = self.created_utc
 		else: return None
 		
