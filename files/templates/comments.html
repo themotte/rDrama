@@ -231,10 +231,10 @@
 
 				{% if c.parent_comment_id and not standalone and level != 1 %}<a href="#comment-{{c.parent_comment_id}}-only" class="text-muted ml-2"><i class="fas fa-reply fa-sm fa-fw fa-flip-horizontal mr-1"></i>{{c.parent_comment.author_name}}</a>{% endif %}
 
-				{% if c.created_utc %}
-					<span id="timestamp-{{c.id}}" onmouseover="timestamp('timestamp-{{c.id}}','{{c.created_utc}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" class="time-stamp">&nbsp;{{c.age_string}}</span>
-				{% elif c.notif_utc %}
+				{% if c.notif_utc %}
 					<span id="timestamp-{{c.id}}" onmouseover="timestamp('timestamp-{{c.id}}','{{c.notif_utc}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" class="time-stamp">&nbsp;{{c.age_string}}</span>
+				{% elif c.created_utc %}
+					<span id="timestamp-{{c.id}}" onmouseover="timestamp('timestamp-{{c.id}}','{{c.created_utc}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" class="time-stamp">&nbsp;{{c.age_string}}</span>
 				{% endif %}
 				
 				{% if c.edited_utc %}
@@ -537,7 +537,7 @@
 
 {% if c.post %}
 	{% set sub = c.post.sub %}
-	{% if sub and v.mods(sub) %}
+	{% if sub and v.mods(sub) and not c.author.mods(sub) %}
 		<button id="exile-{{c.id}}" class="d-none {% if not c.author.exiled_from(sub) %}d-md-block{% endif %} dropdown-item list-inline-item text-danger" onclick="post_toast2(this,'/exile/comment/{{c.id}}','exile-{{c.id}}','unexile-{{c.id}}')"><i class="fas fa-campfire text-danger fa-fw"></i>Exile user</button>
 		<button id="unexile-{{c.id}}" class="d-none {% if c.author.exiled_from(sub) %}d-md-block{% endif %} dropdown-item list-inline-item text-success" onclick="post_toast2(this,'/unexile/comment/{{c.id}}','exile-{{c.id}}','unexile-{{c.id}}')"><i class="fas fa-campfire text-success fa-fw"></i>Unexile user</button>
 	{% endif %}
@@ -713,7 +713,7 @@
 
 						{% if c.post %}
 							{% set sub = c.post.sub %}
-							{% if sub and v.mods(sub) %}
+							{% if sub and v.mods(sub) and not c.author.mods(sub) %}
 								<a data-bs-dismiss="modal" id="exile2-{{c.id}}" class="{% if c.author.exiled_from(sub) %}d-none{% endif %} list-group-item text-danger" onclick="post_toast2(this,'/exile/comment/{{c.id}}','exile2-{{c.id}}','unexile2-{{c.id}}')"><i class="fas fa-campfire text-danger mr-2"></i>Exile user</a>
 								<a data-bs-dismiss="modal" id="unexile2-{{c.id}}" class="{% if not c.author.exiled_from(sub) %}d-none{% endif %} list-group-item text-success" onclick="post_toast2(this,'/unexile/comment/{{c.id}}','exile2-{{c.id}}','unexile2-{{c.id}}')"><i class="fas fa-campfire text-success mr-2"></i>Unexile user</a>
 							{% endif %}
@@ -887,10 +887,25 @@
 
 	<script src="/static/assets/js/comments+submission_listing.js?v=253"></script>
 	<script src="/static/assets/js/comments.js?v=252"></script>
+{% endif %}
 
+{% if offset %}
+	{% if p %}
+		{% set pid = p.id %}
+	{% endif %}
+	<br>
+	<div id="viewmore-{{offset}}"><button id="viewbtn" class="btn btn-primary" onclick="viewmore({{pid}},'{{sort}}',{{offset}},{{ids}})">VIEW MORE COMMENTS</a></div>
+{% endif %}
+
+{% if p %}
 	<script>
 		{% if p and (not v or v.highlightcomments) %}
-			comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
+			{% if ajax %}
+				comments = JSON.parse(localStorage.getItem("old-comment-counts")) || {}
+			{% else %}
+				comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
+			{% endif %}
+
 			lastCount = comments['{{p.id}}']
 			if (lastCount)
 			{
@@ -904,14 +919,6 @@
 			}
 		{% endif %}
 	</script>
-{% endif %}
-
-{% if offset %}
-	{% if p %}
-		{% set pid = p.id %}
-	{% endif %}
-	<br>
-	<div id="viewmore-{{offset}}"><button id="viewbtn" class="btn btn-primary" onclick="viewmore({{pid}},'{{sort}}',{{offset}},{{ids}})">VIEW MORE COMMENTS</a></div>
 {% endif %}
 
 </body>

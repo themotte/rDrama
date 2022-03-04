@@ -118,8 +118,8 @@ class Comment(Base):
 	@property
 	@lazy
 	def age_string(self):
-		if self.created_utc: timestamp = self.created_utc
-		elif self.notif_utc: timestamp = self.notif_utc
+		if self.notif_utc: timestamp = self.notif_utc
+		elif self.created_utc: timestamp = self.created_utc
 		else: return None
 		
 		age = int(time.time()) - timestamp

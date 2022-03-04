@@ -394,7 +394,7 @@ def viewmore(v, pid, sort, offset):
 	else: offset += 1
 	comments = comments2
 
-	return render_template("comments.html", v=v, comments=comments, ids=list(ids), render_replies=True, pid=pid, sort=sort, offset=offset, ajax=True)
+	return render_template("comments.html", v=v, comments=comments, p=post, ids=list(ids), render_replies=True, pid=pid, sort=sort, offset=offset, ajax=True)
 
 
 @app.get("/morecomments/<cid>")
@@ -443,7 +443,8 @@ def morecomments(v, cid):
 		c = g.db.query(Comment).filter_by(id=cid).one_or_none()
 		comments = c.replies
 
-	return render_template("comments.html", v=v, comments=comments, render_replies=True, ajax=True)
+	p = comments[0].post
+	return render_template("comments.html", v=v, comments=comments, p=p, render_replies=True, ajax=True)
 
 @app.post("/edit_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")

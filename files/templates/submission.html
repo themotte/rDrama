@@ -1045,6 +1045,8 @@
 		{% endif %}
 
 		{% if "?context" not in request.full_path %}
+			localStorage.setItem("old-comment-counts", localStorage.getItem("comment-counts"))
+
 			const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 			const newTotal = {{p.comment_count}} || ((comments['{{p.id}}'] || {c: 0}).c + 1)
 			comments['{{p.id}}'] = {c: newTotal, t: Date.now()}
