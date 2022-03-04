@@ -61,7 +61,7 @@ def notifications(v):
 				x.read = True
 				c.unread = True
 				g.db.add(x)
-			if not c.created_utc: c.notif_utc = x.created_utc
+			c.notif_utc = x.created_utc
 			listing.append(c)
 
 		g.db.commit()
@@ -85,7 +85,7 @@ def notifications(v):
 			try: c = comments[i]
 			except: continue
 			if not x.read: c.unread = True
-			if not c.created_utc: c.notif_utc = x.created_utc
+			c.notif_utc = x.created_utc
 			x.read = True
 			g.db.add(x)
 			i += 1
@@ -556,7 +556,7 @@ def all_comments(v):
 @auth_required
 def transfers(v):
 
-	comments = g.db.query(Comment).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.parent_submission == None, Comment.distinguish_level == 6, Comment.body_html.like("%</a> has transferred %"), Comment.created_utc == 0).order_by(Comment.id.desc())
+	comments = g.db.query(Comment).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.parent_submission == None, Comment.body_html.like("%</a> has transferred %")).order_by(Comment.id.desc())
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in comments.all()]}
 
