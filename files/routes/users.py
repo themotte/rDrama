@@ -634,7 +634,7 @@ def api_is_available(name, v):
 	if len(name)<3 or len(name)>25:
 		return {name:False}
 		
-	name2 = name.replace('_','\_')
+	name2 = name.replace('\\', '').replace('_','\_').replace('%','')
 
 	x= g.db.query(User).filter(
 		or_(

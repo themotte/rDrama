@@ -52,6 +52,20 @@ def notif_comment(text, autojanny=False):
 	else: return create_comment(text_html, autojanny)
 
 
+def notif_comment2(p):
+
+	search_html = f'%</a> has mentioned you: <a href="/post/{p.id}" rel="nofollow">%'
+
+	existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.parent_submission == None, Comment.body_html.like(search_html)).first()
+	
+	if existing: return existing[0]
+	else:
+		text = f"@{p.author.username} has mentioned you: [{p.title}](/post/{p.id})"
+		if p.sub: text += f" in <a href='/s/{p.sub}'>/s/{p.sub}"
+		text_html = sanitize(text, alert=True)
+		return create_comment(text_html)
+
+
 def add_notif(cid, uid):
 	existing = g.db.query(Notification.user_id).filter_by(comment_id=cid, user_id=uid).one_or_none()
 	if not existing:

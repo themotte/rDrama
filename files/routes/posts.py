@@ -98,10 +98,7 @@ def publish(pid, v):
 		notify_users = NOTIFY_USERS(f'{post.title} {post.body}', v)
 
 		if notify_users:
-			text = f"@{v.username} has mentioned you: [{SITE_FULL}/post/{post.id}](/post/{post.id})"
-			if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
-
-			cid = notif_comment(text)
+			cid = notif_comment2(post)
 			for x in notify_users:
 				add_notif(cid, x)
 
@@ -577,18 +574,16 @@ def edit_post(pid, v):
 
 
 
-		if not p.private and not p.ghost:
-			notify_users = NOTIFY_USERS(f'{title} {body}', v)
-			if notify_users:
-				cid = notif_comment(f"@{v.username} has mentioned you: [{SITE_FULL}/post/{p.id}](/post/{p.id})")
-				for x in notify_users:
-					add_notif(cid, x)
-
-
-
 	if (title != p.title or body != p.body) and v.id == p.author_id:
 		if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
 		g.db.add(p)
+
+	if not p.private and not p.ghost:
+		notify_users = NOTIFY_USERS(f'{title} {body}', v)
+		if notify_users:
+			cid = notif_comment2(p)
+			for x in notify_users:
+				add_notif(cid, x)
 
 	g.db.commit()
 
@@ -896,6 +891,8 @@ def submit_post(v, sub=None):
 		
 		url = urlunparse(new_url)
 
+		url  = url.replace('\\', '').replace('_', '\_').replace('%', '').strip()
+
 		repost = g.db.query(Submission).filter(
 			Submission.url.ilike(url),
 			Submission.deleted_utc == 0,
@@ -1186,10 +1183,7 @@ def submit_post(v, sub=None):
 		notify_users = NOTIFY_USERS(f'{title} {body}', v)
 
 		if notify_users:
-			text = f"@{v.username} has mentioned you: [{SITE_FULL}/post/{post.id}](/post/{post.id})"
-			if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
-
-			cid = notif_comment(text)
+			cid = notif_comment2(post)
 			for x in notify_users:
 				add_notif(cid, x)
 

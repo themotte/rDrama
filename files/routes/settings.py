@@ -859,7 +859,7 @@ def settings_name_change(v):
 						   v=v,
 						   error="This isn't a valid username.")
 
-	name=new_name.replace('_','\_')
+	name = new_name.replace('\\', '').replace('_','\_').replace('%','')
 
 	x= g.db.query(User).filter(
 		or_(

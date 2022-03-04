@@ -85,6 +85,7 @@ def login_post():
 	template = ''
 
 	username = request.values.get("username")
+	username  = username.replace('\\', '').replace('_', '\_').replace('%', '').strip()
 
 	if not username: abort(400)
 	if username.startswith('@'): username = username[1:]
@@ -185,6 +186,9 @@ def sign_up_get(v):
 	if not agent: abort(403)
 
 	ref = request.values.get("ref", None)
+
+	ref  = ref.replace('\\', '').replace('_', '\_').replace('%', '').strip()
+
 	if ref:
 		ref_user = g.db.query(User).filter(User.username.ilike(ref)).one_or_none()
 
@@ -372,7 +376,8 @@ def post_forgot():
 		return render_template("forgot_password.html", error="Invalid email.")
 
 
-	email = email.replace("_","\_")
+	username  = username.replace('\\', '').replace('_', '\_').replace('%', '').strip()
+	email  = email.replace('\\', '').replace('_', '\_').replace('%', '').strip()
 
 	user = g.db.query(User).filter(
 		User.username.ilike(username),
