@@ -187,9 +187,8 @@ def sign_up_get(v):
 
 	ref = request.values.get("ref", None)
 
-	ref  = ref.replace('\\', '').replace('_', '\_').replace('%', '').strip()
-
 	if ref:
+		ref  = ref.replace('\\', '').replace('_', '\_').replace('%', '').strip()
 		ref_user = g.db.query(User).filter(User.username.ilike(ref)).one_or_none()
 
 	else:
