@@ -86,12 +86,16 @@ class Comment(Base):
 	@property
 	@lazy
 	def options(self):
-		return [x for x in self.child_comments if x.author_id == AUTOPOLLER_ID]
+		li = [x for x in self.child_comments if x.author_id == AUTOPOLLER_ID]
+		return sorted(li, key=lambda x: x.id)
+
 
 	@property
 	@lazy
 	def choices(self):
-		return [x for x in self.child_comments if x.author_id == AUTOCHOICE_ID]
+		li = [x for x in self.child_comments if x.author_id == AUTOCHOICE_ID]
+		return sorted(li, key=lambda x: x.id)
+
 
 	def total_poll_voted(self, v):
 		if v:
