@@ -1482,7 +1482,7 @@ def api_pin_post(post_id, v):
 @auth_required
 def get_post_title(v):
 
-	url = request.values.get("url", None)
+	url = request.values.get("url")
 	if not url: abort(400)
 
 	try: x = requests.get(url, headers=titleheaders, timeout=5)

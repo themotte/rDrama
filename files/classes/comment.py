@@ -122,7 +122,7 @@ class Comment(Base):
 	@property
 	@lazy
 	def age_string(self):
-		notif_utc = self.__dict__.get("notif_utc", None)
+		notif_utc = self.__dict__.get("notif_utc")
 
 		if notif_utc: timestamp = notif_utc
 		elif self.created_utc: timestamp = self.created_utc
@@ -224,7 +224,7 @@ class Comment(Base):
 
 	@property
 	def replies2(self):
-		return self.__dict__.get("replies2", None)
+		return self.__dict__.get("replies2")
 
 	@replies2.setter
 	def replies2(self, value):

@@ -182,10 +182,10 @@ def sign_up_get(v):
 
 	if v: return redirect(SITE_FULL)
 
-	agent = request.headers.get("User-Agent", None)
+	agent = request.headers.get("User-Agent")
 	if not agent: abort(403)
 
-	ref = request.values.get("ref", None)
+	ref = request.values.get("ref")
 
 	if ref:
 		ref  = ref.replace('\\', '').replace('_', '\_').replace('%', '').strip()
@@ -208,7 +208,7 @@ def sign_up_get(v):
 					   digestmod='md5'
 					   ).hexdigest()
 
-	error = request.values.get("error", None)
+	error = request.values.get("error")
 
 	return render_template("sign_up.html",
 						   formkey=formkey,
@@ -229,7 +229,7 @@ def sign_up_post(v):
 
 	if v: abort(403)
 
-	agent = request.headers.get("User-Agent", None)
+	agent = request.headers.get("User-Agent")
 	if not agent: abort(403)
 
 	form_timestamp = request.values.get("now", '0')
