@@ -104,7 +104,7 @@ function loadEmojis(form) {
 						}
 					}
 				}
-				else
+				else if (key != "marseyalphabet")
 				{
 					for (const e of value) {
 						if (e.match(search_bar.value.toLowerCase()) || search_bar.value.toLowerCase().match(e)) {
