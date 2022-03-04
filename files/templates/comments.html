@@ -895,7 +895,7 @@
 			if (lastCount)
 			{
 				{% for c in p.comments2 %}
-					{% if not (v and v.id==c[0]) %}
+					{% if not (v and v.id==c[0]) and not c.voted %}
 						if ({{c[1]*1000}} > lastCount.t) 
 						try {document.getElementById("comment-{{c.id}}-only").classList.add('unread2')}
 						catch(e) {}
@@ -925,7 +925,7 @@
 						if (lastCount)
 						{
 							{% for c in p.comments2 %}
-								{% if not (v and v.id==c[0]) %}
+								{% if not (v and v.id==c[0]) and not c.voted %}
 									if ({{c[1]*1000}} > lastCount.t) 
 									try {document.getElementById("comment-{{c.id}}-only").classList.add('unread2')}
 									catch(e) {}
