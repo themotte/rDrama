@@ -897,8 +897,14 @@
 	<div id="viewmore-{{offset}}"><button id="viewbtn" class="btn btn-primary" onclick="viewmore({{pid}},'{{sort}}',{{offset}},{{ids}})">VIEW MORE COMMENTS</a></div>
 {% endif %}
 
+<script>
+	console.log('ajax test')
+</script>
+
 {% if p %}
 	<script>
+		console.log('ajax test 2')
+		document.getElementById("user-coins-amount").classList.add('unread2')
 		{% if p and (not v or v.highlightcomments) %}
 			{% if ajax %}
 				comments = JSON.parse(localStorage.getItem("old-comment-counts")) || {}
@@ -912,8 +918,7 @@
 				{% for c in p.comments2 %}
 					{% if not (v and v.id==c[0]) %}
 						if ({{c[1]*1000}} > lastCount.t) 
-						try {document.getElementById("comment-{{c.id}}-only").classList.add('unread2')}
-						catch(e) {}
+							document.getElementById("comment-{{c.id}}-only").classList.add('unread2')
 					{% endif %}
 				{% endfor %}
 			}
