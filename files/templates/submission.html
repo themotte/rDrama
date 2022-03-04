@@ -459,8 +459,8 @@
 {% if p.award_count("tilt") %}
 	<style>
 		@keyframes post-tilt {
-			from {transform: rotate(0.5deg);}
-			to {transform: rotate({{p.award_count("tilt")}}deg);}
+			from {transform: rotate(1deg);}
+			to {transform: rotate({{p.award_count("tilt")*4}}deg);}
 		}
 		#post-root {
 			animation-name: post-tilt !important;

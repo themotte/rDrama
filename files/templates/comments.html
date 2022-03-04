@@ -305,8 +305,8 @@
 			{% if c.award_count("tilt") %}
 				<style>
 					@keyframes c{{c.id}}-tilt {
-						from {transform: rotate(0.5deg);}
-						to {transform: rotate({{c.award_count("tilt")}}deg);}
+						from {transform: rotate(1deg);}
+						to {transform: rotate({{c.award_count("tilt")*4}}deg);}
 					}
 					.comment-{{c.id}}-only {
 						animation-name: c{{c.id}}-tilt !important;
