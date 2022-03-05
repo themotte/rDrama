@@ -24,6 +24,8 @@ def exile_post(v, pid):
 
 	u = p.author
 
+	if u.mods(sub): abort(403)
+
 	if u.admin_level < 2 and not u.exiled_from(sub):
 		exile = Exile(user_id=u.id, sub=sub, exiler_id=v.id)
 		g.db.add(exile)
@@ -76,6 +78,8 @@ def exile_comment(v, cid):
 	if not v.mods(sub): abort(403)
 
 	u = c.author
+
+	if u.mods(sub): abort(403)
 
 	if u.admin_level < 2 and not u.exiled_from(sub):
 		exile = Exile(user_id=u.id, sub=sub, exiler_id=v.id)
