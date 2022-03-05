@@ -583,6 +583,7 @@ class User(Base):
 		posts = g.db.query(Subscription.submission_id).filter_by(user_id=self.id).all()
 		return [x[0] for x in posts]
 
+	@property
 	@lazy
 	def userblocks(self):
 		return [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()] + [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]
