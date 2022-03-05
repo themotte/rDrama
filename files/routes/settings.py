@@ -709,20 +709,16 @@ def settings_css(v):
 @app.get("/settings/profilecss")
 @auth_required
 def settings_profilecss_get(v):
-
-	if not v.patron : return f"You must be a {patron} to set profile css."
 	return render_template("settings_profilecss.html", v=v)
 
 @app.post("/settings/profilecss")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_profilecss(v):
-	if not v.patron: return f"You must be a {patron} to set profile css."
 	profilecss = request.values.get("profilecss").strip().replace('\\', '').strip()[:4000]
 	v.profilecss = profilecss
 	g.db.add(v)
 	g.db.commit()
-
 	return render_template("settings_profilecss.html", v=v)
 
 @app.post("/settings/block")
