@@ -586,7 +586,7 @@ class User(Base):
 	@property
 	@lazy
 	def userblocks(self):
-		return [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()] + [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]
+		return [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=self.id).all()] + [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=self.id).all()]
 
 	@lazy
 	def saved_idlist(self, page=1):
@@ -595,7 +595,7 @@ class User(Base):
 		posts = g.db.query(Submission.id).filter(Submission.id.in_(saved), Submission.is_banned == False, Submission.deleted_utc == 0)
 
 		if self.admin_level < 2:
-			posts = posts.filter(Submission.author_id.notin_(self.blocks))
+			posts = posts.filter(Submission.author_id.notin_(self.userblocks))
 
 		return [x[0] for x in posts.order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).all()]
 
@@ -606,7 +606,7 @@ class User(Base):
 		comments = g.db.query(Comment.id).filter(Comment.id.in_(saved), Comment.is_banned == False, Comment.deleted_utc == 0)
 
 		if self.admin_level < 2:
-			comments = comments.filter(Comment.author_id.notin_(self.blocks))
+			comments = comments.filter(Comment.author_id.notin_(self.userblocks))
 
 		return [x[0] for x in comments.order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).all()]
 
