@@ -63,6 +63,63 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: submissions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.submissions (
+    id integer NOT NULL,
+    author_id integer NOT NULL,
+    created_utc integer NOT NULL,
+    is_banned boolean DEFAULT false NOT NULL,
+    over_18 boolean DEFAULT false NOT NULL,
+    distinguish_level integer DEFAULT 0 NOT NULL,
+    deleted_utc integer DEFAULT 0 NOT NULL,
+    is_approved integer,
+    edited_utc integer DEFAULT 0 NOT NULL,
+    is_pinned boolean DEFAULT false NOT NULL,
+    upvotes integer DEFAULT 1 NOT NULL,
+    downvotes integer DEFAULT 0 NOT NULL,
+    app_id integer,
+    thumburl character varying(60),
+    private boolean DEFAULT false NOT NULL,
+    views integer DEFAULT 0 NOT NULL,
+    is_bot boolean DEFAULT false NOT NULL,
+    bannedfor boolean,
+    comment_count integer DEFAULT 0 NOT NULL,
+    club boolean DEFAULT false NOT NULL,
+    stickied character varying(40),
+    title character varying(500) NOT NULL,
+    url character varying(2083),
+    body character varying(20000),
+    body_html character varying(40000),
+    embed_url character varying(1500),
+    ban_reason character varying(25),
+    title_html character varying(1500) NOT NULL,
+    realupvotes integer,
+    flair character varying(350),
+    stickied_utc integer,
+    ghost boolean DEFAULT false NOT NULL,
+    sub character varying(20),
+    new boolean
+);
+
+
+--
+-- Name: bump_utc(public.submissions); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.bump_utc(public.submissions) RETURNS integer
+    LANGUAGE sql IMMUTABLE STRICT
+    AS $_$
+      SELECT CREATED_UTC
+      FROM comments
+      WHERE parent_submission = $1.id
+      ORDER BY created_utc desc
+      LIMIT 1
+      $_$;
+
+
+--
 -- Name: alts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -425,48 +482,6 @@ CREATE TABLE public.sub_blocks (
 
 
 --
--- Name: submissions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.submissions (
-    id integer NOT NULL,
-    author_id integer NOT NULL,
-    created_utc integer NOT NULL,
-    is_banned boolean DEFAULT false NOT NULL,
-    over_18 boolean DEFAULT false NOT NULL,
-    distinguish_level integer DEFAULT 0 NOT NULL,
-    deleted_utc integer DEFAULT 0 NOT NULL,
-    is_approved integer,
-    edited_utc integer DEFAULT 0 NOT NULL,
-    is_pinned boolean DEFAULT false NOT NULL,
-    upvotes integer DEFAULT 1 NOT NULL,
-    downvotes integer DEFAULT 0 NOT NULL,
-    app_id integer,
-    thumburl character varying(60),
-    private boolean DEFAULT false NOT NULL,
-    views integer DEFAULT 0 NOT NULL,
-    is_bot boolean DEFAULT false NOT NULL,
-    bannedfor boolean,
-    comment_count integer DEFAULT 0 NOT NULL,
-    club boolean DEFAULT false NOT NULL,
-    stickied character varying(40),
-    title character varying(500) NOT NULL,
-    url character varying(2083),
-    body character varying(20000),
-    body_html character varying(40000),
-    embed_url character varying(1500),
-    ban_reason character varying(25),
-    title_html character varying(1500) NOT NULL,
-    realupvotes integer,
-    flair character varying(350),
-    stickied_utc integer,
-    ghost boolean DEFAULT false NOT NULL,
-    sub character varying(20),
-    new boolean
-);
-
-
---
 -- Name: submissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -573,7 +588,6 @@ CREATE TABLE public.users (
     profilecss character varying(4000),
     coins integer DEFAULT 0 NOT NULL,
     agendaposter integer DEFAULT 0 NOT NULL,
-    suicide_utc integer DEFAULT 0 NOT NULL,
     post_count integer DEFAULT 0 NOT NULL,
     comment_count integer DEFAULT 0 NOT NULL,
     highres character varying(60),
