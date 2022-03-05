@@ -258,7 +258,7 @@ def remove_mod(v, sub):
 def create_sub(v):
 	if SITE_NAME == 'Drama' and v.id not in (AEVANN_ID, CARP_ID): abort(403)
 
-	if v.id == MENTION_ID: cost = 0
+	if request.host == 'rdrama.net': cost = 0
 	else:
 		num = v.subs_created + 1
 		for a in v.alts:
@@ -277,7 +277,7 @@ def create_sub2(v):
 	if not name: abort(400)
 	name = name.strip().lower()
 
-	if v.id == MENTION_ID: cost = 0
+	if request.host == 'rdrama.net': cost = 0
 	else:
 		num = v.subs_created + 1
 		for a in v.alts:
