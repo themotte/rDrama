@@ -15,7 +15,7 @@
 		<th>Name</th>
 		<th>Marsey</th>
 		<th role="button" onclick="sort_table(3)">Usage</th>
-		{% if SITE_NAME == 'Drama' %}<th role="button" onclick="sort_table(1)">Author</th>{% endif %}
+		{% if SITE_NAME == 'Drama' %}<th role="button" onclick="sort_table(4)">Author</th>{% endif %}
 	</tr>
 </thead>
 <tbody id="followers-table">
@@ -26,7 +26,7 @@
 			<td>{{marsey.name}}</td>
 			<td><img class="marsey" loading="lazy" data-bs-toggle="tooltip" alt=":{{marsey.name}}:" title=":{{marsey.name}}:" src="/e/{{marsey.name}}.webp?v=1012" ></td>
 			<td>{{marsey.count}}</td>
-			<td><a style="color:#{{author.namecolor}};font-weight:bold" href="/@{{author.username}}"><img loading="lazy" src="{{author.profile_url}}" class="pp20"><span {% if author.patron %}class="patron" style="background-color:#{{author.namecolor}}"{% endif %}>{{author.username}}</span></a></td>
+			<td>{{author.truecoins}}</td>
 		</tr>
 	{% endfor %}
 {% else %}
