@@ -573,7 +573,6 @@ CREATE TABLE public.users (
     profilecss character varying(4000),
     coins integer DEFAULT 0 NOT NULL,
     agendaposter integer DEFAULT 0 NOT NULL,
-    suicide_utc integer DEFAULT 0 NOT NULL,
     post_count integer DEFAULT 0 NOT NULL,
     comment_count integer DEFAULT 0 NOT NULL,
     highres character varying(60),

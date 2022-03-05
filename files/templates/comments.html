@@ -432,7 +432,7 @@
 
 
 					<ul class="d-none d-md-flex list-inline text-right text-md-left"><li>
-						{% if v and request.path.startswith('/@') and v.admin_level == 0%}
+						{% if v and request.path.startswith('/@') and v.admin_level < 2%}
 							{% if voted==1 %}
 								<button class="btn caction py-0 m-0 px-3 nobackground arrow-up mx-0 comment-{{c.id}}-up active"></button>
 							{% endif %}
@@ -449,7 +449,7 @@
 							<span data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"  class="comment-score-{{c.id}} score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}">{{score}}</span>
 						</button>
 						
-						{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
+						{% if v and request.path.startswith('/@') and v.admin_level < 2 %}
 							{% if voted==-1 %}
 								<li class=" arrow-down py-0 m-0 px-3 comment-{{c.id}}-down active"></li>
 							{% endif %}

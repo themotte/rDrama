@@ -307,17 +307,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	if (sort == "hot" or (v and v.id == Q_ID)) and ccmode == "false" and not gt and not lt:
 		posts = posts.filter_by(stickied=None)
 
-	if v and v.admin_level == 0:
-		blocking = [x[0] for x in g.db.query(
-			UserBlock.target_id).filter_by(
-			user_id=v.id).all()]
-		blocked = [x[0] for x in g.db.query(
-			UserBlock.user_id).filter_by(
-			target_id=v.id).all()]
-		posts = posts.filter(
-			Submission.author_id.notin_(blocking),
-			Submission.author_id.notin_(blocked)
-		)
+	if v and v.admin_level < 2:
+		posts = posts.filter(Submission.author_id.notin_(v.userblocks))
 
 	if not (v and v.changelogsub):
 		posts=posts.filter(not_(Submission.title.ilike('[changelog]%')))
@@ -365,10 +356,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 			if v and v.all_blocks: pins = pins.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
 		else: pins = pins.filter(Submission.sub == None)
 
-		if v and v.admin_level == 0:
-			blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
-			blocked = [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]
-			pins = pins.filter(Submission.author_id.notin_(blocking), Submission.author_id.notin_(blocked))
+		if v and v.admin_level < 2:
+			pins = pins.filter(Submission.author_id.notin_(v.userblocks))
 
 		pins = pins.all()
 
@@ -419,17 +408,8 @@ def changeloglist(v=None, sort="new", page=1 ,t="all"):
 
 	posts = g.db.query(Submission.id).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
 
-	if v and v.admin_level == 0:
-		blocking = [x[0] for x in g.db.query(
-			UserBlock.target_id).filter_by(
-			user_id=v.id).all()]
-		blocked = [x[0] for x in g.db.query(
-			UserBlock.user_id).filter_by(
-			target_id=v.id).all()]
-		posts = posts.filter(
-			Submission.author_id.notin_(blocking),
-			Submission.author_id.notin_(blocked)
-		)
+	if v.admin_level < 2:
+		posts = posts.filter(Submission.author_id.notin_(v.userblocks))
 
 	admins = [x[0] for x in g.db.query(User.id).filter(User.admin_level > 0).all()]
 	posts = posts.filter(Submission.title.ilike('_changelog%'), Submission.author_id.in_(admins))
@@ -481,22 +461,18 @@ def random_post(v):
 @cache.memoize(timeout=86400)
 def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 
-	cc_or_private = [x[0] for x in g.db.query(Submission.id).filter(or_(Submission.club == True, Submission.private == True)).all()]
+	comments = g.db.query(Comment.id).filter(Comment.parent_submission != None)
 
-	comments = g.db.query(Comment.id).filter(Comment.parent_submission != None, Comment.parent_submission.notin_(cc_or_private))
+	if v.admin_level < 2:
+		private = [x[0] for x in g.db.query(Submission.id).filter(Submission.private == True).all()]
 
-	if v and v.admin_level <= 3:
-		blocking = [x[0] for x in g.db.query(
-			UserBlock.target_id).filter_by(
-			user_id=v.id).all()]
-		blocked = [x[0] for x in g.db.query(
-			UserBlock.user_id).filter_by(
-			target_id=v.id).all()]
+		comments = comments.filter(Comment.author_id.notin_(v.userblocks), Comment.is_banned==False, Comment.deleted_utc == 0, Comment.parent_submission.notin_(private))
 
-		comments = comments.filter(Comment.author_id.notin_(blocking), Comment.author_id.notin_(blocked))
 
-	if not v or not v.admin_level > 1:
-		comments = comments.filter(Comment.is_banned==False, Comment.deleted_utc == 0)
+	if not v.paid_dues:
+		club = [x[0] for x in g.db.query(Submission.id).filter(Submission.club == True).all()]
+		comments = comments.filter(Comment.parent_submission.notin_(club))
+
 
 	now = int(time.time())
 	if t == 'hour':

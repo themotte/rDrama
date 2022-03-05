@@ -57,9 +57,11 @@ def searchposts(v):
 
 	posts = g.db.query(Submission.id)
 	
-	if not (v and v.paid_dues): posts = posts.filter(Submission.club == False)
+	if not v.paid_dues: posts = posts.filter_by(club=False)
 	
-	if not (v and v.admin_level > 1): posts = posts.filter(Submission.private == False)
+	if v.admin_level < 2:
+		posts = posts.filter(Submission.deleted_utc == 0, Submission.is_banned == False, Submission.private == False, Submission.author_id.notin_(v.userblocks))
+
 	
 
 	if 'author' in criteria:
@@ -114,21 +116,6 @@ def searchposts(v):
 				)
 			)
 
-	if not (v and v.admin_level > 1): posts = posts.filter(Submission.deleted_utc == 0, Submission.is_banned == False)
-
-	if v and v.admin_level > 1: pass
-	elif v:
-		blocking = [x[0] for x in g.db.query(
-			UserBlock.target_id).filter_by(
-			user_id=v.id).all()]
-		blocked = [x[0] for x in g.db.query(
-			UserBlock.user_id).filter_by(
-			target_id=v.id).all()]
-
-		posts = posts.filter(
-			Submission.author_id.notin_(blocking),
-			Submission.author_id.notin_(blocked),
-		)
 
 	if t:
 		now = int(time.time())
@@ -232,8 +219,6 @@ def searchcomments(v):
 
 	if 'over18' in criteria: comments = comments.filter(Comment.over_18 == True)
 
-	if not (v and v.admin_level > 1): comments = comments.filter(Comment.deleted_utc == 0, Comment.is_banned == False)
-
 	if t:
 		now = int(time.time())
 		if t == 'hour':
@@ -250,6 +235,16 @@ def searchcomments(v):
 			cutoff = 0
 		comments = comments.filter(Comment.created_utc >= cutoff)
 
+
+	if v.admin_level < 2:
+		private = [x[0] for x in g.db.query(Submission.id).filter(Submission.private == True).all()]
+
+		comments = comments.filter(Comment.author_id.notin_(v.userblocks), Comment.is_banned==False, Comment.deleted_utc == 0, Comment.parent_submission.notin_(private))
+
+
+	if not v.paid_dues:
+		club = [x[0] for x in g.db.query(Submission.id).filter(Submission.club == True).all()]
+		comments = comments.filter(Comment.parent_submission.notin_(club))
 
 
 	if sort == "new":

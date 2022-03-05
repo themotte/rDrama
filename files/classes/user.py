@@ -67,7 +67,6 @@ class User(Base):
 	comment_count = Column(Integer, default=0)
 	received_award_count = Column(Integer, default=0)
 	created_utc = Column(Integer)
-	suicide_utc = Column(Integer, default=0)
 	rent_utc = Column(Integer, default=0)
 	steal_utc = Column(Integer, default=0)
 	fail_utc = Column(Integer, default=0)
@@ -585,23 +584,17 @@ class User(Base):
 		return [x[0] for x in posts]
 
 	@lazy
+	def userblocks(self):
+		return [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()] + [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]
+
+	@lazy
 	def saved_idlist(self, page=1):
 
 		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).filter_by(user_id=self.id).all()]
 		posts = g.db.query(Submission.id).filter(Submission.id.in_(saved), Submission.is_banned == False, Submission.deleted_utc == 0)
 
-		if self.admin_level == 0:
-			blocking = [x[0] for x in g.db.query(
-				UserBlock.target_id).filter_by(
-				user_id=self.id).all()]
-			blocked = [x[0] for x in g.db.query(
-				UserBlock.user_id).filter_by(
-				target_id=self.id).all()]
-
-			posts = posts.filter(
-				Submission.author_id.notin_(blocking),
-				Submission.author_id.notin_(blocked)
-			)
+		if self.admin_level < 2:
+			posts = posts.filter(Submission.author_id.notin_(self.blocks))
 
 		return [x[0] for x in posts.order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).all()]
 
@@ -611,18 +604,8 @@ class User(Base):
 		saved = [x[0] for x in g.db.query(CommentSaveRelationship.comment_id).filter_by(user_id=self.id).all()]
 		comments = g.db.query(Comment.id).filter(Comment.id.in_(saved), Comment.is_banned == False, Comment.deleted_utc == 0)
 
-		if self.admin_level == 0:
-			blocking = [x[0] for x in g.db.query(
-				UserBlock.target_id).filter_by(
-				user_id=self.id).all()]
-			blocked = [x[0] for x in g.db.query(
-				UserBlock.user_id).filter_by(
-				target_id=self.id).all()]
-
-			comments = comments.filter(
-				Comment.author_id.notin_(blocking),
-				Comment.author_id.notin_(blocked)
-			)
+		if self.admin_level < 2:
+			comments = comments.filter(Comment.author_id.notin_(self.blocks))
 
 		return [x[0] for x in comments.order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).all()]
 
