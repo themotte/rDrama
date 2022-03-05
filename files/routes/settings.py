@@ -348,40 +348,6 @@ def settings_profile_post(v):
 
 		updated = True
 
-	quadrant = request.values.get("quadrant")
-	if quadrant and request.host == 'pcmemes.net'.lower():
-		v.quadrant = quadrant
-		v.customtitle = quadrant
-		if quadrant=="Centrist":
-			v.namecolor = "7f8fa6"
-			v.titlecolor = "7f8fa6"
-		elif quadrant=="LibLeft":
-			v.namecolor = "62ca56"
-			v.titlecolor = "62ca56"
-		elif quadrant=="LibRight":
-			v.namecolor = "f8db58"
-			v.titlecolor = "f8db58"
-		elif quadrant=="AuthLeft":
-			v.namecolor = "ff0000"
-			v.titlecolor = "ff0000"
-		elif quadrant=="AuthRight":
-			v.namecolor = "2a96f3"
-			v.titlecolor = "2a96f3"
-		elif quadrant=="LibCenter":
-			v.namecolor = "add357"
-			v.titlecolor = "add357"
-		elif quadrant=="AuthCenter":
-			v.namecolor = "954b7a"
-			v.titlecolor = "954b7a"
-		elif quadrant=="Left":
-			v.namecolor = "b1652b"
-			v.titlecolor = "b1652b"
-		elif quadrant=="Right":
-			v.namecolor = "91b9A6"
-			v.titlecolor = "91b9A6"
-
-		updated = True
-
 	if updated:
 		g.db.add(v)
 		g.db.commit()

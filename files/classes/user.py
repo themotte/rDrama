@@ -30,7 +30,6 @@ class User(Base):
 	__tablename__ = "users"
 
 	if SITE == "pcmemes.net":
-		quadrant = Column(String)
 		basedcount = Column(Integer, default=0)
 		pills = deferred(Column(String, default=""))
 

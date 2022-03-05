@@ -2476,9 +2476,6 @@ a.bg-light:hover, a.bg-light:focus, button.bg-light:hover, button.bg-light:focus
 .font-italic {
     font-style: italic !important;
 }
-.text-white {
-    color: #fff !important;
-}
 .text-primary {
     color: var(--primary) !important;
 }
@@ -5007,4 +5004,7 @@ th, td {
 
 .text-small-mobile {
     font-size: min(3vw,14px) !important;
+}
+.text-white, th a {
+    color: #fff !important;
 }

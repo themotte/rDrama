@@ -55,7 +55,3 @@
     background-color: var(--yellow) !important;
     color: white !important;
 }
-
-.table a {
-    color: var(--primary) !important;
-}

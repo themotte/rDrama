@@ -7,9 +7,9 @@
 	<script src="/static/assets/js/bootstrap.js?v=245"></script>
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?v=172">
+		<link rel="stylesheet" href="/static/assets/css/main.css?v=173">
 		{% if SITE_NAME == 'Drama' and not request.path.startswith('/s/') %}
-			<link rel="stylesheet" href="/static/assets/css/ukraine.css?v=1">
+			<link rel="stylesheet" href="/static/assets/css/ukraine.css?v=2">
 		{% endif %}
 		<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?v=27">
 		{% if v.agendaposter %}
@@ -35,9 +35,9 @@
 		{% endif %}
 	{% else %}
 		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?v=172">
+		<link rel="stylesheet" href="/static/assets/css/main.css?v=173">
 		{% if SITE_NAME == 'Drama' and not request.path.startswith('/s/') %}
-			<link rel="stylesheet" href="/static/assets/css/ukraine.css?v=1">
+			<link rel="stylesheet" href="/static/assets/css/ukraine.css?v=2">
 		{% endif %}
 		<link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?v=27">
 	{% endif %}
