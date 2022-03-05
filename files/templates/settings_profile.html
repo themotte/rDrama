@@ -10,38 +10,6 @@
 
 		<div class="settings">
 
-			{% if request.host == "pcmemes.net".lower() %}
-
-			<h2 class="h5" name="referral">Quadrant</h2>
-
-			<div class="settings-section rounded">
-
-					<div class="d-lg-flex border-bottom">
-						<div class="title w-lg-25">
-							<label for="quadrant">Quadrant</label>
-						</div>
-
-						<div class="body w-lg-100">
-							<p>Choose your quadrant.</p>
-							<div class="input-group mb2">
-								<select autocomplete="off" id='quadrant' class="form-control" form="profile-settings" name="quadrant" onchange="post_toast(this,'/settings/profile?quadrant='+document.getElementById('quadrant').value, '1')">
-								{% for entry in ["Centrist", "LibLeft", "LibRight", "AuthLeft", "AuthRight", "LibCenter", "AuthCenter", "Left", "Right"] %}
-									<option value="{{entry}}" {% if v.quadrant==entry %} selected {% endif %}>
-										{{entry}}
-									</option>
-								{% endfor %}
-							</select>
-							</div>
-
-						</div>
-
-				</div>
-			</div>
-			{% endif %}
-
-
-
-
 
 			{% if SITE_NAME == 'Drama' %}
 				<h2 class="h5" name="referral">House</h2>

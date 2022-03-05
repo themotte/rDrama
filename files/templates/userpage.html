@@ -104,7 +104,7 @@
 					</div> 
 				</div>
 
-				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img alt="{{u.quadrant}} quadrant" loading="lazy" height="20" src="/static/assets/images/quadrants/{{u.quadrant}}.webp?v=1008">{% endif %}{{u.customtitle | safe}}</p>
+				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{{u.customtitle | safe}}</p>
 				{% else %}<pre></pre>
 				{% endif %}
 
@@ -399,7 +399,7 @@
 				{% if v and v.has_follower(u) and not v.is_nofollow %}
 					<span class="followsyou badge badge-secondary text-small align-middle mx-1">Follows you</span>
 				{% endif %}
-				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img alt="@{{u.quadrant}} quadrant" loading="lazy" height="20" src="/static/assets/images/quadrants/{{u.quadrant}}.webp?v=1008">{% endif %}{{u.customtitle | safe}}</p>
+				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{{u.customtitle | safe}}</p>
 				{% else %}
 					<pre></pre>
 				{% endif %}
