@@ -17,6 +17,7 @@ from .mod_logs import *
 from .mod import *
 from .exiles import *
 from .sub_block import *
+from .sub_subscription import *
 from files.__main__ import Base, cache
 from files.helpers.security import *
 import random
@@ -25,6 +26,9 @@ from os import environ, remove, path
 defaulttheme = environ.get("DEFAULT_THEME", "midnight").strip()
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 cardview = bool(int(environ.get("CARD_VIEW", 1)))
+
+if SITE_NAME == 'Drama': defaultsubs = 1
+else: defaultsubs = 2
 
 class User(Base):
 	__tablename__ = "users"
@@ -127,6 +131,7 @@ class User(Base):
 	original_username = deferred(Column(String))
 	referred_by = Column(Integer, ForeignKey("users.id"))
 	subs_created = Column(Integer, default=0)
+	subs = Column(Integer, default=defaultsubs)
 
 	badges = relationship("Badge", viewonly=True)
 	subscriptions = relationship("Subscription", viewonly=True)
@@ -163,9 +168,18 @@ class User(Base):
 	def all_blocks(self):
 		return [x[0] for x in g.db.query(SubBlock.sub).filter_by(user_id=self.id).all()]
 
+	@property
+	@lazy
+	def subbed_subs(self):
+		return [x[0] for x in g.db.query(SubSubscription.sub).filter_by(user_id=self.id).all()]
+
 	@lazy
 	def blocks(self, sub):
 		return g.db.query(SubBlock).filter_by(user_id=self.id, sub=sub).one_or_none()
+
+	@lazy
+	def subscribed_to(self, sub):
+		return g.db.query(SubSubscription).filter_by(user_id=self.id, sub=sub).one_or_none()
 
 	@lazy
 	def mod_date(self, sub):
