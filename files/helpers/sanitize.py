@@ -236,7 +236,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			if remoji == 'marseyrandom': remoji = choice(marseys_const)
 
 			if path.isfile(f'files/assets/images/emojis/{remoji}.webp'):
-				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" class="{classes}" src="/e/{remoji}.webp" >', new, flags=re.I|re.A)
+				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" class="{classes}" src="/e/{remoji}.webp">', new, flags=re.I|re.A)
 				if comment: marseys_used.add(emoji)
 					
 		sanitized = sanitized.replace(old, new)
@@ -326,7 +326,7 @@ def filter_emojis_only(title, edit=False, graceful=False):
 	signal.signal(signal.SIGALRM, handler2)
 	signal.alarm(1)
 	
-	title = title.replace("<script","").replace("script>","").replace('<','&lt;').replace('>','&gt;').replace("&", "&amp;").replace('"', '&quot;').replace("'", "&#039;").replace("\ufeff", "").replace("𒐪","").replace('‎','').replace("\n", "").replace("\r", "").replace("\t", "").strip()
+	title = title.replace("<script","").replace("script>","").replace("&", "&amp;").replace('<','&lt;').replace('>','&gt;').replace('"', '&quot;').replace("'", "&#039;").replace("\ufeff", "").replace("𒐪","").replace('‎','').replace("\n", "").replace("\r", "").replace("\t", "").strip()
 
 	title = bleach.clean(title, tags=[])
 
