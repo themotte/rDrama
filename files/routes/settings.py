@@ -859,12 +859,12 @@ def settings_name_change(v):
 						   v=v,
 						   error="This isn't a valid username.")
 
-	name = new_name.replace('\\', '').replace('_','\_').replace('%','')
+	search_name = new_name.replace('\\', '').replace('_','\_').replace('%','')
 
 	x= g.db.query(User).filter(
 		or_(
-			User.username.ilike(name),
-			User.original_username.ilike(name)
+			User.username.ilike(search_name),
+			User.original_username.ilike(search_name)
 			)
 		).one_or_none()
 

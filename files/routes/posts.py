@@ -890,10 +890,10 @@ def submit_post(v, sub=None):
 		
 		url = urlunparse(new_url)
 
-		url  = url.replace('\\', '').replace('_', '\_').replace('%', '').strip()
+		search_url  = url.replace('\\', '').replace('_', '\_').replace('%', '').strip()
 
 		repost = g.db.query(Submission).filter(
-			Submission.url.ilike(url),
+			Submission.url.ilike(search_url),
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False
 		).one_or_none()
