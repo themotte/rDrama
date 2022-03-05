@@ -5005,6 +5005,6 @@ th, td {
 .text-small-mobile {
     font-size: min(3vw,14px) !important;
 }
-.text-white, th {
+.text-white, th a {
     color: #fff !important;
 }
