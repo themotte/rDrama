@@ -61,7 +61,6 @@ SLURS = {
 	"kike": "https://sciencedirect.com/science/article/abs/pii/S016028960600033X",
 	"janny": "j-slur",
 	"jannie": "j-slur",
-	"janny": "j-slur",
 	"latinos": "latinx",
 	"latino": "latinx",
 	"latinas": "latinx",
