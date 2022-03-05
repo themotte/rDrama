@@ -167,29 +167,27 @@ def front_all(v, sub=None, subdomain=None):
 
 	if sort == 'bump': t='all'
 	
-	if request.host == 'rdrama.net': defaultsubs = 'Exclude subs'
-	else: defaultsubs = 'Include subs'
-
-	if v: subs=session.get('subs', defaultsubs)
-	else: subs=defaultsubs
-
 	try: gt=int(request.values.get("utc_greater_than", 0))
 	except: gt=0
 
 	try: lt=int(request.values.get("utc_less_than", 0))
 	except: lt=0
 
+	if SITE_NAME == 'Drama': defaultsubs = 1
+	else: defaultsubs = 2
+	subs = v.subs if v else defaultsubs
+
 	ids, next_exists = frontlist(sort=sort,
 					page=page,
 					t=t,
 					v=v,
 					ccmode=ccmode,
-					subs=subs,
 					filter_words=v.filter_words if v else [],
 					gt=gt,
 					lt=lt,
 					sub=sub,
 					site=SITE,
+					subs=subs
 					)
 
 	posts = get_posts(ids, v=v)
@@ -270,22 +268,28 @@ def front_all(v, sub=None, subdomain=None):
 			g.db.commit()
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
-	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode, sub=sub, subs=subs, home=True)
+	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode, sub=sub, home=True)
 
 
 
 @cache.memoize(timeout=86400)
-def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", subs='Include subs', filter_words='', gt=0, lt=0, sub=None, site=None):
+def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=0, lt=0, sub=None, site=None, subs=None):
 
 	posts = g.db.query(Submission)
 	
-	if sub: posts = posts.filter_by(sub=sub.name)
-	elif subs == "View subs only":
-		posts = posts.filter(Submission.sub != None)
-		if v and v.all_blocks: posts = posts.filter(Submission.sub.notin_(v.all_blocks))
-	elif subs == "Include subs":
-		if v and v.all_blocks: posts = posts.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
-	else: posts = posts.filter(Submission.sub == None)
+	if sub:
+		posts = posts.filter_by(sub=sub.name)
+	elif not v:
+		posts = posts.filter(Submission.sub == None)
+	elif v.subs == 1:
+		posts = posts.filter(or_(Submission.sub == None, Submission.sub.in_(v.subbed_subs)))
+	elif v.subs == 2:
+		posts = posts.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
+	elif v.subs == 3:
+		posts = posts.filter(Submission.sub.in_(v.subbed_subs))
+	elif v.subs == 4:
+		posts = posts.filter(Submission.sub != None, Submission.sub.notin_(v.all_blocks))
+
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
 	if lt: posts = posts.filter(Submission.created_utc < lt)
@@ -352,13 +356,18 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 
 	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false" and not gt and not lt:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
-		if sub: pins = pins.filter_by(sub=sub.name)
-		elif subs == "View subs only":
-			pins = pins.filter(Submission.sub != None)
-			if v and v.all_blocks: pins = pins.filter(Submission.sub.notin_(v.all_blocks))
-		elif subs == "Include subs":
-			if v and v.all_blocks: pins = pins.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
-		else: pins = pins.filter(Submission.sub == None)
+		if sub:
+			pins = pins.filter_by(sub=sub.name)
+		elif not v:
+			pins = pins.filter(Submission.sub == None)
+		elif v.subs == 1:
+			pins = pins.filter(or_(Submission.sub == None, Submission.sub.in_(v.subbed_subs)))
+		elif v.subs == 2:
+			pins = pins.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
+		elif v.subs == 3:
+			pins = pins.filter(Submission.sub.in_(v.subbed_subs))
+		elif v.subs == 4:
+			pins = pins.filter(Submission.sub.notin_(v.all_blocks))
 
 		if v and v.admin_level < 2:
 			pins = pins.filter(Submission.author_id.notin_(v.userblocks))

@@ -6,6 +6,50 @@ from .front import frontlist
 
 
 
+@app.post("/s/<sub>/subscribe")
+@auth_required
+def subscribe_sub(v, sub):
+	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
+	if not sub: abort(404)
+	sub = sub.name
+
+	existing = g.db.query(SubSubscription).filter_by(user_id=v.id, sub=sub).one_or_none()
+
+	if not existing:
+		subscribe = SubSubscription(user_id=v.id, sub=sub)
+		g.db.add(subscribe)
+		g.db.commit()
+		cache.delete_memoized(frontlist)
+
+	return {"message": "Subscribed to sub!"}
+
+
+@app.post("/s/<sub>/unsubscribe")
+@auth_required
+def unsubscribe_sub(v, sub):
+	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
+	if not sub: abort(404)
+	sub = sub.name
+
+	subscribe = g.db.query(SubSubscription).filter_by(user_id=v.id, sub=sub).one_or_none()
+
+	if subscribe:
+		g.db.delete(subscribe)
+		g.db.commit()
+		cache.delete_memoized(frontlist)
+
+	return {"message": "Unsubscribed from sub!"}
+
+
+@app.get("/s/<sub>/subscribers")
+@auth_required
+def subscribers(v, sub):
+	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
+	if not sub: abort(404)
+
+	users = g.db.query(User).join(SubSubscription, SubSubscription.user_id==User.id).filter_by(sub=sub.name).all()
+
+	return render_template("sub/subscribers.html", v=v, sub=sub, users=users)
 
 
 
@@ -130,7 +174,7 @@ def block_sub(v, sub):
 	if not sub: abort(404)
 	sub = sub.name
 
-	# if v.mods(sub): return {"error": "You can't block subs you mod!"}
+	if v.mods(sub): return {"error": "You can't block subs you mod!"}
 
 	existing = g.db.query(SubBlock).filter_by(user_id=v.id, sub=sub).one_or_none()
 
@@ -450,8 +494,15 @@ def sub_sidebar(v, sub):
 
 
 @app.get("/sub_toggle/<mode>")
-def sub_toggle(mode):
-	if mode in ('Exclude subs', 'Include subs', 'View subs only'): session["subs"] = mode
+@auth_required
+def sub_toggle(mode, v):
+	try: mode = int(mode)
+	except: abort(400)
+
+	if mode in (1,2,3,4) and v.subs != mode:
+		v.subs = mode
+		g.db.add(v)
+		g.db.commit()
 
 	if request.referrer and len(request.referrer) > 1 and request.referrer.startswith(SITE_FULL):
 		return redirect(request.referrer)
