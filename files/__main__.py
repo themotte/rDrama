@@ -22,7 +22,7 @@ for f in (f'files/templates/sidebar_{environ.get("SITE_NAME").strip()}.html', 'd
 		with open(f, 'w', encoding="utf-8"): pass
 
 app = Flask(__name__, template_folder='templates')
-app.register_blueprint(api_1_0, subdomain='www')
+app.register_blueprint(app, subdomain='www')
 app.url_map.strict_slashes = False
 app.jinja_env.cache = {}
 app.jinja_env.auto_reload = True
