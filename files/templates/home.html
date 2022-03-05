@@ -97,6 +97,7 @@
 				<div class="dropdown dropdown-actions ml-2 ddd">
 					<button class="btn btn-secondary dropdown-toggle text-small-m ddd" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						{% if sort=="hot" %}<i class="fas fa-fire mr-2 text-small-m"></i>{% endif %}
+						{% if sort=="bump" %}<i class="fas fa-arrow-up mr-2 text-small-m"></i>{% endif %}
 						{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-2 text-small-m"></i>{% endif %}
 						{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-2 text-small-m"></i>{% endif %}
 						{% if sort=="new" %}<i class="fas fa-sparkles mr-2 text-small-m"></i>{% endif %}
@@ -107,6 +108,7 @@
 					</button>
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton2" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
 						{% if sort != "hot" %}<a class="dropdown-item text-small-m" href="?sort=hot&t={{t}}&ccmode={{ccmode}}"><i class="fas fa-fire mr-2 text-small-m"></i>Hot</a>{% endif %}
+						{% if sort != "bump" %}<a class="dropdown-item text-small-m" href="?sort=bump&t={{t}}&ccmode={{ccmode}}"><i class="fas fa-arrow-up mr-2 text-small-m"></i>Bump</a>{% endif %}
 						{% if sort != "top" %}<a class="dropdown-item text-small-m" href="?sort=top&t={{t}}&ccmode={{ccmode}}"><i class="fas fa-arrow-alt-circle-up mr-2 text-small-m"></i>Top</a>{% endif %}
 						{% if sort != "bottom" %}<a class="dropdown-item text-small-m" href="?sort=bottom&t={{t}}&ccmode={{ccmode}}"><i class="fas fa-arrow-alt-circle-down mr-2 text-small-m"></i>Bottom</a>{% endif %}
 						{% if sort != "new" %}<a class="dropdown-item text-small-m" href="?sort=new&t={{t}}&ccmode={{ccmode}}"><i class="fas fa-sparkles mr-2 text-small-m"></i>New</a>{% endif %}
