@@ -20,7 +20,7 @@
 </thead>
 <tbody id="followers-table">
 {% if SITE_NAME == 'Drama' %}
-	{% for marsey, author in marseys %}
+	{% for marsey, author in marseys[:10] %}
 		<tr>
 			<td>{{loop.index}}</td>
 			<td>{{marsey.name}}</td>
