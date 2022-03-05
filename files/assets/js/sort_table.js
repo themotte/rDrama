@@ -11,12 +11,12 @@ function sort_table(n) {
 			x = rows[i].getElementsByTagName("TD")[n];
 			y = rows[i + 1].getElementsByTagName("TD")[n];
 			if (dir == "asc") {
-				if (parseInt(x.innerHTML) > parseInt(y.innerHTML)) {
+				if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
 					shouldSwitch = true;
 					break;
 				}
 			} else if (dir == "desc") {
-				if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
+				if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
 					shouldSwitch = true;
 					break;
 				}
