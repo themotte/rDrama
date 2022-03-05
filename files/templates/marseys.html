@@ -1,21 +1,17 @@
 {% extends "default.html" %}
 {% block content %}
-
-<script src="/static/assets/js/sort_table.js?v=240"></script>
-
 <pre>
 
 	
 </pre>
-<div class="overflow-x-auto">
-<table  id="sortable_table"class="table table-striped mb-5">
+<div class="overflow-x-auto"><table class="table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>
 		<th>#</th>
 		<th>Name</th>
 		<th>Marsey</th>
-		<th role="button" onclick="sort_table(3)">Usage</th>
-		{% if SITE_NAME == 'Drama' %}<th role="button" onclick="sort_table(4)">Author</th>{% endif %}
+		<th><a href="?sort=usage">Usage</a></th>
+		{% if SITE_NAME == 'Drama' %}<th><a href="?sort=author">Author</a></th>{% endif %}
 	</tr>
 </thead>
 <tbody id="followers-table">
@@ -26,7 +22,7 @@
 			<td>{{marsey.name}}</td>
 			<td><img class="marsey" loading="lazy" data-bs-toggle="tooltip" alt=":{{marsey.name}}:" title=":{{marsey.name}}:" src="/e/{{marsey.name}}.webp?v=1012" ></td>
 			<td>{{marsey.count}}</td>
-			<td>{{author.truecoins}}</td>
+			<td><a style="color:#{{author.namecolor}};font-weight:bold" href="/@{{author.username}}"><img loading="lazy" src="{{author.profile_url}}" class="pp20"><span {% if author.patron %}class="patron" style="background-color:#{{author.namecolor}}"{% endif %}>{{author.username}}</span></a></td>
 		</tr>
 	{% endfor %}
 {% else %}
