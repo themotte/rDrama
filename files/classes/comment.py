@@ -12,6 +12,7 @@ from files.helpers.lazy import lazy
 from .flags import CommentFlag
 from random import randint
 from .votes import CommentVote
+from math import floor
 
 class Comment(Base):
 
