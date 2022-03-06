@@ -49,6 +49,13 @@ def notif_comment(text, autojanny=False):
 	try: existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, body_html=text_html).one_or_none()
 	except:
 		existing = g.db.query(Comment).filter_by(author_id=author_id, parent_submission=None, body_html=text_html).all()
+		
+
+		notifs = g.db.query(Notification).filter(Notification.comment_id.in_([x.id for x in existing])).all()
+		for c in notifs: g.db.delete(c)
+		g.db.flush()
+
+		
 		for c in existing: g.db.delete(c)
 		g.db.flush()
 		existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, body_html=text_html).one_or_none()
