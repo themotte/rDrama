@@ -513,5 +513,5 @@ def sub_toggle(mode, v):
 @app.get("/subs")
 @auth_desired
 def subs(v):
-	subs = g.db.query(Sub, func.count(Submission.sub)).outerjoin(Sub, Sub.name == Submission.sub).group_by(Sub.name).order_by(func.count(Sub.name).desc()).all()[:-1]
+	subs = g.db.query(Sub, func.count(Submission.sub)).outerjoin(Submission, Sub.name == Submission.sub).group_by(Sub.name).order_by(func.count(Sub.name).desc()).all()
 	return render_template('sub/subs.html', v=v, subs=subs)
