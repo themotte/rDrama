@@ -23,10 +23,10 @@
 {% for sub, count in subs %}
 	<tr>
 		<td>{{loop.index}}</td>
-		<td><a href="/s/{{sub.name}}" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>{{sub.name}}</a></td>
+		<td><a href="/s/{{sub.name}}">{{sub.name}}</a></td>
 		<td>{{count}}</td>
-		<td><a href="/s/{{sub.name}}/subscribers" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>{{sub.subscription_num}}</a></td>
-		<td><a href="/s/{{sub.name}}/blockers" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>{{sub.block_num}}</a></td>
+		<td><a href="/s/{{sub.name}}/subscribers">{{sub.subscription_num}}</a></td>
+		<td><a href="/s/{{sub.name}}/blockers">{{sub.block_num}}</a></td>
 	</tr>
 {% endfor %}
 </table>
