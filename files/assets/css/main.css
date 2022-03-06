@@ -2990,7 +2990,6 @@ label.color-radio span {
     color: var(--black);
 }
 label {
-    text-transform: uppercase;
     font-weight: 600;
     font-size: 12px;
     letter-spacing: 0.025rem;
@@ -3876,7 +3875,6 @@ ul.comment-section {
     border-bottom-right-radius: 0.25rem;
 }
 .custom-control-label {
-    text-transform: uppercase;
     font-weight: 600;
     font-size: 1rem;
     letter-spacing: 0;
