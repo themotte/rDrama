@@ -21,8 +21,8 @@ def marseys(v):
 	if SITE_NAME == 'Drama':
 		marseys = g.db.query(Marsey, User).join(User, User.id==Marsey.author_id)
 		sort = request.values.get("sort", "usage")
-		if sort == "usage": marseys = marseys.order_by(Marsey.count.desc())
-		else: marseys = marseys.order_by(User.username)
+		if sort == "usage": marseys = marseys.order_by(Marsey.count.desc(), User.username)
+		else: marseys = marseys.order_by(User.username, Marsey.count.desc())
 	else:
 		marseys = g.db.query(Marsey).order_by(Marsey.count.desc())
 	return render_template("marseys.html", v=v, marseys=marseys)
