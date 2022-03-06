@@ -365,7 +365,7 @@ def kick(v, pid):
 	if not post.sub: abort(403)
 	if not v.mods(post.sub): abort(403)
 
-	post.sub = 'general'
+	post.sub = None
 	g.db.add(post)
 	g.db.commit()
 
