@@ -488,7 +488,7 @@ class Comment(Base):
 		elif blackjack_status == 'won':
 			body += f"<strong class='ml-2'>Won {wager} {currency_kind}.</strong>"
 		elif blackjack_status == 'blackjack':
-			body += f"<strong class='ml-2'>Blackjack! Won {floor(wager_value * 3/2)} {currency_kind}.</strong>"
+			body += f"<strong class='ml-2'>Blackjack! Won {floor(wager * 3/2)} {currency_kind}.</strong>"
 
 		body += '</span>'
 		return body
