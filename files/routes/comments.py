@@ -1048,7 +1048,8 @@ def unsave_comment(cid, v):
 def handle_blackjack_action(cid, v):
 	comment = get_comment(cid)
 	if 'active' in comment.blackjack_result:
-		action = request.values.get("action", "")
+		try: action = request.values.get("thing").strip().lower()
+		except: abort(400)
 
 		if action == 'hit': player_hit(comment)
 		elif action == 'stay': player_stayed(comment)
@@ -1056,7 +1057,7 @@ def handle_blackjack_action(cid, v):
 		g.db.add(comment)
 		g.db.add(v)
 		g.db.commit()
-	return { "message" : "..." }
+	return {"response" : comment.blackjack_html(v)}
 
 
 def diff_words(answer, guess):
@@ -1078,6 +1079,7 @@ def diff_words(answer, guess):
 			diffs[i] = 0
 	return diffs
 
+
 @app.post("/wordle/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
@@ -1088,7 +1090,7 @@ def handle_wordle_action(cid, v):
 	guesses, status, answer = comment.wordle_result.split("_")
 	count = len(guesses.split(" -> "))
 
-	try: guess = request.values.get("guess").strip().lower()
+	try: guess = request.values.get("thing").strip().lower()
 	except: abort(400)
 
 	if len(guess) != 5 or not d.check(guess) and guess not in WORDLE_LIST:
@@ -1106,4 +1108,4 @@ def handle_wordle_action(cid, v):
 		g.db.add(comment)
 		g.db.commit()
 	
-	return {"message" : "."}
+	return {"response" : comment.wordle_html(v)}

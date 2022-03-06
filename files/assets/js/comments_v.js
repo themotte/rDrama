@@ -326,52 +326,47 @@ function choice_vote(cid, parentid) {
 	curr.value = cid
 }
 
-function handle_blackjack_action(cid, action) {
-	const form = new FormData();
-	form.append('formkey', formkey());
-	form.append('comment_id', cid);
-	form.append('action', action);
-	
-	const xhr = new XMLHttpRequest();
-	xhr.open("post", `/blackjack/${cid}`);
-	xhr.setRequestHeader('xhr', 'xhr');
+function handle_action(type, cid, thing) {
 
-	xhr.onload = function() {
-		if (xhr.status == 200)
-		{
-			location.hash = `comment-${cid}`;
-			location.reload();
-		}
+
+	const btns = document.getElementsByClassName(`action-${cid}`)
+	for (const btn of btns)
+	{
+		btn.disabled = true;
+		btn.classList.add('disabled');
 	}
-	xhr.send(form);
-}
 
-function handle_wordle_action(cid, guess) {
 	const form = new FormData();
 	form.append('formkey', formkey());
 	form.append('comment_id', cid);
-	form.append('guess', guess);
+	form.append('thing', thing);
 	
 	const xhr = new XMLHttpRequest();
-	xhr.open("post", `/wordle/${cid}`);
+	xhr.open("post", `/${type}/${cid}`);
 	xhr.setRequestHeader('xhr', 'xhr');
 
-	xhr.onload = function() {
-		if (xhr.status == 200)
-		{
-			location.hash = `comment-${cid}`;
-			location.reload();
+
+
+	xhr.onload=function(){
+		let data
+		try {data = JSON.parse(xhr.response)}
+		catch(e) {console.log(e)}
+		if (data && data["response"]) {
+			const element = document.getElementById(`${type}-${cid}`);
+			element.innerHTML = data["response"]
 		}
 		else {
-			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
-			try
-			{
-				data = JSON.parse(xhr.response)
-			 	document.getElementById('toast-post-error-text').innerText = data["error"];
-				bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
-			}
-			catch {}
+			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			else document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
+			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
+		setTimeout(() => {
+			for (const btn of btns)
+			{		
+				btn.disabled = false;
+				btn.classList.remove('disabled');
+			}
+		}, 2000);
 	}
-	xhr.send(form);
+	xhr.send(form)
 }

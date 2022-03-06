@@ -437,3 +437,56 @@ class Comment(Base):
 	@property
 	@lazy
 	def active_flags(self): return self.flags.count()
+
+	@lazy
+	def wordle_html(self, v):
+		if not self.wordle_result: return ''
+
+		split_wordle_result = self.wordle_result.split('_')
+		wordle_guesses = split_wordle_result[0]
+		wordle_status = split_wordle_result[1]
+		wordle_answer = split_wordle_result[2]
+
+		body = f"<span id='wordle-{self.id}' class='ml-2'><small>{wordle_guesses}</small>"
+
+		if wordle_status == 'active' and v and v.id == self.author_id:
+			body += f'''<input autocomplete="off" id="guess_box" type="text" name="guess" class="form-control" maxsize="4" style="width: 200px;display: initial"placeholder="5-letter guess"></input><button class="action-{self.id} btn btn-success small" style="text-transform: uppercase; padding: 2px"onclick="handle_action('wordle','{self.id}',document.getElementById('guess_box').value)">Guess</button>'''
+		elif wordle_status == 'won':
+			body += "<strong class='ml-2'>Correct!</strong>"
+		elif wordle_status == 'lost':
+			body += f"<strong class='ml-2'>Lost. The answer was: {wordle_answer}</strong>"
+		
+		body += '</span>'
+		return body
+
+	@lazy
+	def blackjack_html(self, v):
+		if not self.blackjack_result: return ''
+
+		split_result = self.blackjack_result.split('_')
+		blackjack_status = split_result[3]
+		player_hand = split_result[0].replace('X', '10')
+		dealer_hand = split_result[1].split('/')[0] if blackjack_status == 'active' else split_result[1]
+		dealer_hand = dealer_hand.replace('X', '10')
+		wager = split_result[4]
+		kind = split_result[5]
+		currency_kind = "Coins" if kind == "coins" else "Marseybucks"
+
+		body = f"<span id='blackjack-{self.id}' class='ml-2'><em>{player_hand} vs. {dealer_hand}</em>"
+		
+		if blackjack_status == 'active' and v.id == self.author_id:
+			body += f'''<button class="action-{self.id} btn btn-success small" style="text-transform: uppercase; padding: 2px"onclick="handle_action('blackjack','{self.id}','hit')">Hit</button>
+			<button class="action-{self.id} btn btn-danger small" style="text-transform: uppercase; padding: 2px"onclick="handle_action('blackjack','{self.id}','stay')">Stay</button>'''
+		elif blackjack_status == 'push':
+			body += f"<strong class='ml-2'>Pushed. Refunded {wager} {currency_kind}.</strong>"
+		elif blackjack_status == 'bust':
+			body += f"<strong class='ml-2'>Bust. Lost {wager} {currency_kind}.</strong>"
+		elif blackjack_status == 'lost':
+			body += f"<strong class='ml-2'>Lost {wager} {currency_kind}.</strong>"
+		elif blackjack_status == 'won':
+			body += f"<strong class='ml-2'>Won {wager} {currency_kind}.</strong>"
+		elif blackjack_status == 'blackjack':
+			body += f"<strong class='ml-2'>Blackjack! Won {floor(wager_value * 3/2)} {currency_kind}.</strong>"
+
+		body += '</span>'
+		return body

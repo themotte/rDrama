@@ -157,23 +157,6 @@
 	{% set isreply = False %}
 {% endif %}
 
-{% if c.blackjack_result %}
-	{% set split_result = c.blackjack_result.split('_') %}
-	{% set blackjack_status = split_result[3] %}
-	{% set player_hand = split_result[0].replace('X', '10') %}
-	{% set dealer_hand = split_result[1].split('/')[0] if blackjack_status == 'active' else split_result[1] %}
-	{% set dealer_hand = dealer_hand.replace('X', '10') %}
-	{% set wager = split_result[4] %}
-	{% set kind = split_result[5] %}
-{% endif %}
-
-{% if c.wordle_result %}
-	{% set split_wordle_result = c.wordle_result.split('_') %}
-	{% set wordle_guesses = split_wordle_result[0] %}
-	{% set wordle_status = split_wordle_result[1] %}
-	{% set wordle_answer = split_wordle_result[2] %}
-{% endif %}
-
 <div id="comment-{{c.id}}" class="anchor {% if c.unread %}unread{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %} {% if c.collapse_for_user(v,request.path) %}collapsed{% endif %}" style="{% if isreply %}padding-left:0!important;{% elif not c.unread %}border-left: 2px solid {% if c.ghost %}var(--primary){% else %}#{{c.author.namecolor}};{% endif %}{% endif %} {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
 	{% if not isreply %}
 		<span class="comment-collapse-desktop d-none d-md-block" {% if not c.unread %}style="border-left: 2px solid {% if c.ghost %}var(--primary){% else %}#{{c.author.namecolor}}{% endif %}"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
@@ -255,35 +238,11 @@
 				{% endif %}
 
 				{% if c.blackjack_result %}
-				{% set currency_kind = "Coins" if kind == "coins" else "Marseybucks" %}
-				<em>{{player_hand}} vs. {{dealer_hand}}</em>
-					{% if blackjack_status == 'active' and v.id == c.author_id %}
-					<button class="btn btn-success small" style="text-transform: uppercase; padding: 2px"onclick="handle_blackjack_action('{{c.id}}', 'hit')">Hit</button>
-					<button class="btn btn-danger small" style="text-transform: uppercase; padding: 2px"onclick="handle_blackjack_action('{{c.id}}', 'stay')">Stay</button>
-					{% elif blackjack_status == 'push' %}
-					<strong>Pushed. Refunded {{wager}} {{currency_kind}}.</strong>
-					{% elif blackjack_status == 'bust' %}
-					<strong>Bust. Lost {{wager}} {{currency_kind}}.</strong>
-					{% elif blackjack_status == 'lost' %}
-					<strong>Lost {{wager}} {{currency_kind}}.</strong>
-					{% elif blackjack_status == 'won' %}
-					<strong>Won {{wager}} {{currency_kind}}.</strong>
-					{% elif blackjack_status == 'blackjack' %}
-					<strong>Blackjack! Won {{(wager|int * 3/2)|round(0, 'floor')|int}} {{currency_kind}}.</strong>
-					{% endif %}
+					{{c.blackjack_html(v) | safe}}
 				{% endif %}
 
 				{% if c.wordle_result %}
-					<small>{{wordle_guesses}}</small>
-					{% if wordle_status == 'active' and v.id == c.author_id %}
-					<input autocomplete="off" id="guess_box" type="text" name="guess" class="form-control" maxsize="4" style="width: 200px;
-					display: initial"placeholder="5-letter guess"></input>
-					<button class="btn btn-success small" style="text-transform: uppercase; padding: 2px"onclick="handle_wordle_action('{{c.id}}', document.getElementById('guess_box').value)">Guess</button>
-					{% elif wordle_status == 'won' %}
-					<strong>Correct!</strong>
-					{% elif wordle_status == 'lost' %}
-					<strong>Lost. The answer was: {{wordle_answer}}</strong>
-					{% endif %}
+					{{c.wordle_html(v) | safe}}
 				{% endif %}
 			</div>
 			{% if c.active_flags %}
@@ -874,7 +833,7 @@
 
 	{% if v %}
 		<script src="/static/assets/js/marked.js?v=248"></script>
-		<script src="/static/assets/js/comments_v.js?v=261"></script>
+		<script src="/static/assets/js/comments_v.js?v=262"></script>
 	{% endif %}
 
 	<script src="/static/assets/js/clipboard.js?v=250"></script>
