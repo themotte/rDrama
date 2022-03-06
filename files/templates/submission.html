@@ -996,9 +996,9 @@
 					lastCount = comments['{{p.id}}']
 					if (lastCount)
 					{
-						{% for c in p.comments2 %}
-							{% if not (v and v.id==c[0]) and not c.voted %}
-								if ({{c[1]*1000}} > lastCount.t) 
+						{% for c in p.comments %}
+							{% if not (v and v.id==c.author_id) and not c.voted %}
+								if ({{c.created_utc*1000}} > lastCount.t) 
 								try {document.getElementById("comment-{{c.id}}-only").classList.add('unread2')}
 								catch(e) {}
 							{% endif %}
