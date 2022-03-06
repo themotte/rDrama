@@ -331,7 +331,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 		ti = int(time.time()) + 3600
 		posts = posts.order_by(-1000000*(Submission.realupvotes + 1 + Submission.comment_count/5 + (func.length(Submission.body_html)-func.length(func.replace(Submission.body_html,'</a>',''))))/(func.power(((ti - Submission.created_utc)/1000), 1.23)))
 	elif sort == "bump":
-		posts = posts.filter(Submission.comment_count > 0).order_by(Submission.bump_utc.desc())
+		posts = posts.filter(Submission.comment_count > 1).order_by(Submission.bump_utc.desc())
 	elif sort == "new":
 		posts = posts.order_by(Submission.created_utc.desc())
 	elif sort == "old":
