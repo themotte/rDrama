@@ -473,58 +473,58 @@
 {% endif %}
 
 
-<meta charset="utf-8" >
-<meta property="og:type" content="article" >
+<meta charset="utf-8">
+<meta property="og:type" content="article">
 
 {% if comment_info and not comment_info.is_banned and not comment_info.deleted_utc %}
 <title>{{'@'+comment_info.author_name}} comments on "{{p.plaintitle(v)}} - {{SITE_NAME}}"</title>
 
 
-<meta property="og:article:author" content="{{'@'+comment_info.author_name}}" >
-<meta property="article:published_time" content="{{comment_info.created_datetime}}" >
-{% if comment_info.edited_utc %}<meta property="article:modified_time" content="{{comment_info.edited_string}}" >{% endif %}
-<meta property="og:description" name="description" content="{{comment_info.plainbody(v)}}" >
-<meta property="og:author" name="author" content="{{'@'+comment_info.author_name}}" >
-<meta property="og:title" content="{{'@'+comment_info.author_name}} comments on {{p.plaintitle(v)}} - {{SITE_NAME}}" >
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}" >
+<meta property="og:article:author" content="{{'@'+comment_info.author_name}}">
+<meta property="article:published_time" content="{{comment_info.created_datetime}}">
+{% if comment_info.edited_utc %}<meta property="article:modified_time" content="{{comment_info.edited_string}}">{% endif %}
+<meta property="og:description" name="description" content="{{comment_info.plainbody(v)}}">
+<meta property="og:author" name="author" content="{{'@'+comment_info.author_name}}">
+<meta property="og:title" content="{{'@'+comment_info.author_name}} comments on {{p.plaintitle(v)}} - {{SITE_NAME}}">
+<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}">
 {% if p.is_video %}
-	<meta property="og:video" content="{{p.realurl(v)}}" >
+	<meta property="og:video" content="{{p.realurl(v)}}">
 {% endif %}
-<meta property="og:url" content="{{comment_info.permalink}}" >
-<meta property="og:site_name" content="{{request.host}}" >
+<meta property="og:url" content="{{comment_info.permalink}}">
+<meta property="og:site_name" content="{{request.host}}">
 
-<meta name="twitter:card" content="summary" >
+<meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="{{SITE_FULL}}/">
-<meta name="twitter:title" content="{{'@'+comment_info.author_name}} comments on {{p.plaintitle(v)}} - {{SITE_NAME}}" >
+<meta name="twitter:title" content="{{'@'+comment_info.author_name}} comments on {{p.plaintitle(v)}} - {{SITE_NAME}}">
 <meta name="twitter:creator" content="{{'@'+comment_info.author_name}}">
-<meta name="twitter:description" content="{{comment_info.plainbody(v)}}" >
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}" >
-<meta name="twitter:url" content="{{p.permalink}}" >
+<meta name="twitter:description" content="{{comment_info.plainbody(v)}}">
+<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}">
+<meta name="twitter:url" content="{{p.permalink}}">
 
 {% else %}
 <title>{{p.plaintitle(v)}} - {{SITE_NAME}}</title>
 
 
 {% if p.author %}<meta property="og:article:author" content="{{'@'+p.author_name}}">{% endif %}
-<meta property="article:published_time" content="{{p.created_datetime}}" >
-{% if p.edited_utc %}<meta property="article:modified_time" content="{{p.edited_string}}" >{% endif %}
-<meta property="og:description" name="description" content="{{p.plainbody(v)}}" >
-{% if p.author %}<meta property="og:author" name="author" content="{{'@'+p.author_name}}" >{% endif %}
-<meta property="og:title" content="{{p.plaintitle(v)}} - {{SITE_NAME}}" >
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}" >
+<meta property="article:published_time" content="{{p.created_datetime}}">
+{% if p.edited_utc %}<meta property="article:modified_time" content="{{p.edited_string}}">{% endif %}
+<meta property="og:description" name="description" content="{{p.plainbody(v)}}">
+{% if p.author %}<meta property="og:author" name="author" content="{{'@'+p.author_name}}">{% endif %}
+<meta property="og:title" content="{{p.plaintitle(v)}} - {{SITE_NAME}}">
+<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}">
 {% if p.url and p.is_video %}
-<meta property="og:video" content="{{p.realurl(v)}}" >
+<meta property="og:video" content="{{p.realurl(v)}}">
 {% endif %}
-<meta property="og:url" content="{{p.permalink}}" >
-<meta property="og:site_name" content="{{request.host}}" >
+<meta property="og:url" content="{{p.permalink}}">
+<meta property="og:site_name" content="{{request.host}}">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="{{SITE_FULL}}/">
-<meta name="twitter:title" content="{{p.plaintitle(v)}} - {{SITE_NAME}}" >
+<meta name="twitter:title" content="{{p.plaintitle(v)}} - {{SITE_NAME}}">
 {% if p.author %}<meta name="twitter:creator" content="{{'@'+p.author_name}}">{% endif %}
-<meta name="twitter:description" content="{{p.plainbody(v)}}" >
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}" >
-<meta name="twitter:url" content="{{p.permalink}}" >
+<meta name="twitter:description" content="{{p.plainbody(v)}}">
+<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}">
+<meta name="twitter:url" content="{{p.permalink}}">
 
 {% endif %}
 {% endblock %}

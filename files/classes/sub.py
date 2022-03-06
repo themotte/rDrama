@@ -4,6 +4,7 @@ from files.__main__ import Base
 from files.helpers.lazy import lazy
 from os import environ
 from .sub_subscription import *
+from .sub_block import *
 
 SITE_NAME = environ.get("SITE_NAME", '').strip()
 SITE = environ.get("DOMAIN", '').strip()
@@ -21,6 +22,8 @@ class Sub(Base):
 	css = Column(String)
 
 	subscriptions = relationship("SubSubscription", lazy="dynamic", primaryjoin="SubSubscription.sub==Sub.name", viewonly=True)
+	blocks = relationship("SubBlock", lazy="dynamic", primaryjoin="SubBlock.sub==Sub.name", viewonly=True)
+
 
 	def __repr__(self):
 		return f"<Sub(name={self.name})>"
@@ -41,3 +44,8 @@ class Sub(Base):
 	@lazy
 	def subscription_num(self):
 		return self.subscriptions.count()
+
+	@property
+	@lazy
+	def block_num(self):
+		return self.blocks.count()

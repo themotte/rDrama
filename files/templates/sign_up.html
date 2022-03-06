@@ -11,22 +11,22 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 		<meta name="author" content="">
-		<meta property="og:type" content="article" >
-		<meta property="og:title" content="{{SITE_NAME}}" >
-		<meta property="og:site_name" content="{{request.host}}" >
-		<meta property="og:image" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013" >
+		<meta property="og:type" content="article">
+		<meta property="og:title" content="{{SITE_NAME}}">
+		<meta property="og:site_name" content="{{request.host}}">
+		<meta property="og:image" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013">
 		<meta property="og:url" content="{{request.host}}">
 		<meta property="og:description" name="description" content="{{SITE_NAME}} - {{config('DESCRIPTION')}}">
-		<meta property="og:author" name="author" content="{{SITE_FULL}}/" >
-		<meta property="og:site_name" content="{{request.host}}" >
+		<meta property="og:author" name="author" content="{{SITE_FULL}}/">
+		<meta property="og:site_name" content="{{request.host}}">
 
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="{{SITE_FULL}}/">
-		<meta name="twitter:title" content="{{SITE_NAME}}" >
+		<meta name="twitter:title" content="{{SITE_NAME}}">
 		<meta name="twitter:creator" content="{{SITE_FULL}}/">
-		<meta name="twitter:description" content="{{SITE_NAME}} - {{config('DESCRIPTION')}}" >
-		<meta name="twitter:image" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013" >
-		<meta name="twitter:url" content="{{request.host}}" >
+		<meta name="twitter:description" content="{{SITE_NAME}} - {{config('DESCRIPTION')}}">
+		<meta name="twitter:image" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013">
+		<meta name="twitter:url" content="{{request.host}}">
 
 		<title>{% if ref_user %}{{ref_user.username}} invites you to {{SITE_NAME}}{% else %}Sign up - {{SITE_NAME}}{% endif %}</title>
 
@@ -91,7 +91,7 @@
 												<small class="d-inline-block text-muted ml-1">(optional)</small>
 
 												<input style="background-color: var(--gray-800)" autocomplete="off" class="form-control" id="email-register"
-												aria-describedby="emailHelpRegister" type="email" pattern='([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+' name="email" readonly onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');this.blur();this.focus()}" >
+												aria-describedby="emailHelpRegister" type="email" pattern='([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+' name="email" readonly onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');this.blur();this.focus()}">
 
 												<label for="password-register" class="mt-3">Password</label>
 

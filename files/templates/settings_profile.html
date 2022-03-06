@@ -397,7 +397,7 @@
 
 									<form action="/settings/song_change" method="post">
 										<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
-										<input autocomplete="off" type="text" name="song" class="form-control" value="{% if v.song %}https://youtu.be/{{v.song}}{% endif %}" placeholder='Enter a youtube video link here' >
+										<input autocomplete="off" type="text" name="song" class="form-control" value="{% if v.song %}https://youtu.be/{{v.song}}{% endif %}" placeholder='Enter a youtube video link here'>
 										<br><small>In some browsers, users have to click at least once anywhere in the profile page for the anthem to play.</small>
 										<div class="d-flex mt-2">
 											<input autocomplete="off" class="btn btn-primary ml-auto" type="submit" value="Change Profile Anthem">

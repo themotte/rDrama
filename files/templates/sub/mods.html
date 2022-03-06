@@ -23,7 +23,7 @@
 		<td>
 			{% if v.id == user.id or v.mod_date(sub.name) and v.mod_date(sub.name) < mod.created_utc %}
 				<form action="/s/{{sub.name}}/remove_mod" method="post">
-					<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}" >
+					<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 					<input autocomplete="off" type="hidden" name="uid" value="{{user.id}}">
 					<input class="btn btn-primary" style="margin-top:-5px" autocomplete="off" class="btn btn-primary ml-auto" type="submit" value="{% if v.id == user.id %}Resign{% else %}Remove Mod{% endif %}">
 				</form>
@@ -36,7 +36,7 @@
 
 {% if v.mods(sub.name) %}
 	<form action="/s/{{sub.name}}/add_mod" method="post">
-		<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}" >
+		<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 		<input class="form-control" style="display:inline;width:250px" autocomplete="off" type="text" name="user" class="form-control" placeholder="Enter username..">
 		<input class="btn btn-primary" style="margin-top:-5px" autocomplete="off" class="btn btn-primary ml-auto" type="submit" value="Add Mod">
 	</form>

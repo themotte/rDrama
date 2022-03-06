@@ -14,8 +14,10 @@
 	<tr>
 		<th>#</th>
 		<th>Name</th>
-		<th role="button" onclick="sort_table(2)" >Posts</th>
-		<th role="button" onclick="sort_table(3)" >Subscribers</th>
+		<th role="button" onclick="sort_table(2)">Posts</th>
+		<th role="button" onclick="sort_table(3)">Subscribers</th>
+		<th role="button" onclick="sort_table(4)">Blockers</th>
+
 	</tr>
 </thead>
 {% for sub, count in subs %}
@@ -24,6 +26,7 @@
 		<td><a href="/s/{{sub.name}}" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>{{sub.name}}</a></td>
 		<td>{{count}}</a>
 		<td>{{sub.subscription_num}}</td>
+		<td>{{sub.block_num}}</td>
 	</tr>
 {% endfor %}
 </table>
