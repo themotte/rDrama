@@ -63,6 +63,63 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: submissions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.submissions (
+    id integer NOT NULL,
+    author_id integer NOT NULL,
+    created_utc integer NOT NULL,
+    is_banned boolean DEFAULT false NOT NULL,
+    over_18 boolean DEFAULT false NOT NULL,
+    distinguish_level integer DEFAULT 0 NOT NULL,
+    deleted_utc integer DEFAULT 0 NOT NULL,
+    is_approved integer,
+    edited_utc integer DEFAULT 0 NOT NULL,
+    is_pinned boolean DEFAULT false NOT NULL,
+    upvotes integer DEFAULT 1 NOT NULL,
+    downvotes integer DEFAULT 0 NOT NULL,
+    app_id integer,
+    thumburl character varying(60),
+    private boolean DEFAULT false NOT NULL,
+    views integer DEFAULT 0 NOT NULL,
+    is_bot boolean DEFAULT false NOT NULL,
+    bannedfor boolean,
+    comment_count integer DEFAULT 0 NOT NULL,
+    club boolean DEFAULT false NOT NULL,
+    stickied character varying(40),
+    title character varying(500) NOT NULL,
+    url character varying(2083),
+    body character varying(20000),
+    body_html character varying(40000),
+    embed_url character varying(1500),
+    ban_reason character varying(25),
+    title_html character varying(1500) NOT NULL,
+    realupvotes integer,
+    flair character varying(350),
+    stickied_utc integer,
+    ghost boolean DEFAULT false NOT NULL,
+    sub character varying(20),
+    new boolean
+);
+
+
+--
+-- Name: bump_utc(public.submissions); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.bump_utc(public.submissions) RETURNS integer
+    LANGUAGE sql IMMUTABLE STRICT
+    AS $_$
+      SELECT CREATED_UTC
+      FROM comments
+      WHERE parent_submission = $1.id
+      ORDER BY created_utc desc
+      LIMIT 1
+      $_$;
+
+
+--
 -- Name: alts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -425,44 +482,12 @@ CREATE TABLE public.sub_blocks (
 
 
 --
--- Name: submissions; Type: TABLE; Schema: public; Owner: -
+-- Name: sub_subscriptions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.submissions (
-    id integer NOT NULL,
-    author_id integer NOT NULL,
-    created_utc integer NOT NULL,
-    is_banned boolean DEFAULT false NOT NULL,
-    over_18 boolean DEFAULT false NOT NULL,
-    distinguish_level integer DEFAULT 0 NOT NULL,
-    deleted_utc integer DEFAULT 0 NOT NULL,
-    is_approved integer,
-    edited_utc integer DEFAULT 0 NOT NULL,
-    is_pinned boolean DEFAULT false NOT NULL,
-    upvotes integer DEFAULT 1 NOT NULL,
-    downvotes integer DEFAULT 0 NOT NULL,
-    app_id integer,
-    thumburl character varying(60),
-    private boolean DEFAULT false NOT NULL,
-    views integer DEFAULT 0 NOT NULL,
-    is_bot boolean DEFAULT false NOT NULL,
-    bannedfor boolean,
-    comment_count integer DEFAULT 0 NOT NULL,
-    club boolean DEFAULT false NOT NULL,
-    stickied character varying(40),
-    title character varying(500) NOT NULL,
-    url character varying(2083),
-    body character varying(20000),
-    body_html character varying(40000),
-    embed_url character varying(1500),
-    ban_reason character varying(25),
-    title_html character varying(1500) NOT NULL,
-    realupvotes integer,
-    flair character varying(350),
-    stickied_utc integer,
-    ghost boolean DEFAULT false NOT NULL,
-    sub character varying(20),
-    new boolean
+CREATE TABLE public.sub_subscriptions (
+    user_id integer NOT NULL,
+    sub character varying(20) NOT NULL
 );
 
 
@@ -573,7 +598,6 @@ CREATE TABLE public.users (
     profilecss character varying(4000),
     coins integer DEFAULT 0 NOT NULL,
     agendaposter integer DEFAULT 0 NOT NULL,
-    suicide_utc integer DEFAULT 0 NOT NULL,
     post_count integer DEFAULT 0 NOT NULL,
     comment_count integer DEFAULT 0 NOT NULL,
     highres character varying(60),
@@ -619,7 +643,8 @@ CREATE TABLE public.users (
     patron_utc integer DEFAULT 0 NOT NULL,
     rehab integer,
     house character varying(16),
-    subs_created integer DEFAULT 0 NOT NULL
+    subs_created integer DEFAULT 0 NOT NULL,
+    subs integer NOT NULL
 );
 
 
@@ -918,6 +943,14 @@ ALTER TABLE ONLY public.sub_blocks
 
 
 --
+-- Name: sub_subscriptions sub_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sub_subscriptions
+    ADD CONSTRAINT sub_subscriptions_pkey PRIMARY KEY (user_id, sub);
+
+
+--
 -- Name: submissions submissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1179,6 +1212,13 @@ CREATE INDEX fki_save_relationship_submission_fkey ON public.save_relationship U
 --
 
 CREATE INDEX fki_sub_blocks_sub_fkey ON public.sub_blocks USING btree (sub);
+
+
+--
+-- Name: fki_sub_subscriptions_sub_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX fki_sub_subscriptions_sub_fkey ON public.sub_subscriptions USING btree (sub);
 
 
 --
@@ -1767,6 +1807,22 @@ ALTER TABLE ONLY public.sub_blocks
 
 ALTER TABLE ONLY public.submissions
     ADD CONSTRAINT sub_fkey FOREIGN KEY (sub) REFERENCES public.subs(name);
+
+
+--
+-- Name: sub_subscriptions sub_subscriptions_sub_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sub_subscriptions
+    ADD CONSTRAINT sub_subscriptions_sub_fkey FOREIGN KEY (sub) REFERENCES public.subs(name) MATCH FULL;
+
+
+--
+-- Name: sub_subscriptions sub_subscriptions_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sub_subscriptions
+    ADD CONSTRAINT sub_subscriptions_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) MATCH FULL;
 
 
 --
