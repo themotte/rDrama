@@ -24,9 +24,9 @@
 	<tr>
 		<td>{{loop.index}}</td>
 		<td><a href="/s/{{sub.name}}" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>{{sub.name}}</a></td>
-		<td>{{count}}</a>
-		<td>{{sub.subscription_num}}</td>
-		<td>{{sub.block_num}}</td>
+		<td>{{count}}</td>
+		<td><a href="/s/{{sub.name}}/subscribers" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>{{sub.subscription_num}}</a></td>
+		<td><a href="/s/{{sub.name}}/blockers" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>{{sub.block_num}}</a></td>
 	</tr>
 {% endfor %}
 </table>
