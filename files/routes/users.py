@@ -180,74 +180,6 @@ def downvoting(v, username):
 
 	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Down', name2=f'Who @{username} hates')
 
-@app.post("/pay_rent")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
-def pay_rent(v):
-	if v.coins < 500: return {"error":"You must have more than 500 coins."}
-	v.coins -= 500
-	v.rent_utc = int(time.time())
-	g.db.add(v)
-	u = get_account(253)
-	u.coins += 500
-	g.db.add(u)
-	send_repeatable_notification(u.id, f"@{v.username} has paid rent!")
-	g.db.commit()
-	return {"message": "Rent paid!"}
-
-
-@app.post("/steal")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
-def steal(v):
-	if int(time.time()) - v.created_utc < 604800:
-		return {"error":"You must have an account older than 1 week in order to attempt stealing."}
-	if v.coins < 5000:
-		return {"error":"You must have more than 5000 coins in order to attempt stealing."}
-	u = get_account(253)
-	if random.randint(1, 10) < 5:
-		v.coins += 700
-		v.steal_utc = int(time.time())
-		g.db.add(v)
-		u.coins -= 700
-		g.db.add(u)
-		send_repeatable_notification(u.id, f"Some [grubby little rentoid](/@{v.username}) has absconded with 700 of your hard-earned coins to fuel his Funko Pop addiction. Stop being so trusting.")
-		send_repeatable_notification(v.id, "You have successfully shorted your heroic landlord 700 coins in rent. You're slightly less materially poor, but somehow even moreso morally. Are you proud of yourself?")
-		g.db.commit()
-		return {"message": "Attempt successful!"}
-
-	else:
-		if random.random() < 0.15:
-			send_repeatable_notification(u.id, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you sold his Nintendo Switch for 500 coins and called the cops. He was sentenced to one (1) day in renthog prison.")
-			send_repeatable_notification(v.id, "The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. The police take you away and laugh as you impotently stutter A-ACAB :sob:  You are fined 500 coins and sentenced to one (1) day in renthog prison.")
-			v.ban(days=1, reason="Jailed thief")
-			v.fail_utc = int(time.time())
-		else:
-			send_repeatable_notification(u.id, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you showed mercy in exchange for a 500 coin tip. This time.")
-			send_repeatable_notification(v.id, "The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. You were able to convince him to spare your life with a 500 coin tip. This time.")
-			v.fail2_utc = int(time.time())
-		v.coins -= 500
-		g.db.add(v)
-		u.coins += 500
-		g.db.add(u)
-		g.db.commit()
-		return {"message": "Attempt failed!"}
-
-
-@app.get("/rentoids")
-@auth_required
-def rentoids(v):
-	users = g.db.query(User).filter(User.rent_utc > 0).all()
-	return render_template("rentoids.html", v=v, users=users)
-
-
-@app.get("/thiefs")
-@auth_required
-def thiefs(v):
-	successful = g.db.query(User).filter(User.steal_utc > 0).all()
-	failed = g.db.query(User).filter(User.fail_utc > 0).all()
-	failed2 = g.db.query(User).filter(User.fail2_utc > 0).all()
-	return render_template("thiefs.html", v=v, successful=successful, failed=failed, failed2=failed2)
 
 
 @app.post("/@<username>/suicide")
@@ -708,14 +640,8 @@ def u_username(username, v=None):
 
 		
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2 and not v.eye)):
-		
-		if v and u.id == LLM_ID:
-			if int(time.time()) - v.rent_utc > 600:
-				if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
-				return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
-		else:
-			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
-			return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
+		return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 
 	
 	if v and hasattr(u, 'is_blocking') and u.is_blocking:
@@ -798,13 +724,8 @@ def u_username_comments(username, v=None):
 
 
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2 and not v.eye)):
-		if v and u.id == LLM_ID:
-			if int(time.time()) - v.rent_utc > 600:
-				if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
-				return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
-		else:
-			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
-			return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
+		return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 
 	if v and hasattr(u, 'is_blocking') and u.is_blocking:
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"You are blocking @{u.username}."}
