@@ -89,6 +89,8 @@ def toggle_club(pid, v):
 @auth_required
 def publish(pid, v):
 	post = get_post(pid)
+	if not post.private: return {"message": "Post published!"}
+
 	if post.author_id != v.id: abort(403)
 	post.private = False
 	post.created_utc = int(time.time())

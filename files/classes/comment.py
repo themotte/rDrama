@@ -469,7 +469,7 @@ class Comment(Base):
 		player_hand = split_result[0].replace('X', '10')
 		dealer_hand = split_result[1].split('/')[0] if blackjack_status == 'active' else split_result[1]
 		dealer_hand = dealer_hand.replace('X', '10')
-		wager = split_result[4]
+		wager = int(split_result[4])
 		try: kind = split_result[5]
 		except: kind = "coins"
 		currency_kind = "Coins" if kind == "coins" else "Marseybucks"
