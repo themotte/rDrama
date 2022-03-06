@@ -127,7 +127,6 @@ if SITE in {'rdrama.net','devrama.xyz'}:
 	BASEDBOT_ID = 0
 
 	A_ID = 1230
-	MENTION_ID = 9376
 	KIPPY_ID = 7150
 	TAX_NOTIF_ID = 995
 	PIZZASHILL_ID = 2424
@@ -159,7 +158,6 @@ elif SITE == "pcmemes.net":
 	BASEDBOT_ID = 800
 
 	A_ID = 0
-	MENTION_ID = 0
 	KIPPY_ID = 1592
 	PIZZASHILL_ID = 0
 	TAX_NOTIF_ID = 1592
@@ -191,7 +189,6 @@ else:
 	BASEDBOT_ID = 0
 
 	A_ID = 0
-	MENTION_ID = 0
 	KIPPY_ID = 0
 	TAX_NOTIF_ID = 9
 	PIZZASHILL_ID = 0

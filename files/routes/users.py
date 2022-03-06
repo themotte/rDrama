@@ -671,7 +671,7 @@ def following(username, v):
 @app.get("/views")
 @auth_required
 def visitors(v):
-	if v.admin_level < 1 and not v.patron: return render_template("errors/patron.html", v=v)
+	if v.admin_level < 2 and not v.patron: return render_template("errors/patron.html", v=v)
 	viewers=sorted(v.viewers, key = lambda x: x.last_view_utc, reverse=True)
 	return render_template("viewers.html", v=v, viewers=viewers)
 
@@ -697,7 +697,7 @@ def u_username(username, v=None):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"That username is reserved for: {u.reserved}"}
 		return render_template("userpage_reserved.html", u=u, v=v)
 
-	if v and u.id != v.id and u.patron:
+	if v and u.id != v.id and (u.patron or u.admin_level > 1):
 		view = g.db.query(ViewerRelationship).filter_by(viewer_id=v.id, user_id=u.id).one_or_none()
 
 		if view: view.last_view_utc = int(time.time())
