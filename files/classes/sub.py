@@ -40,5 +40,4 @@ class Sub(Base):
 	@property
 	@lazy
 	def subscription_num(self):
-		print(self.subscriptions.count(), flush=True)
 		return self.subscriptions.count()
