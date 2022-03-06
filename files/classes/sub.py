@@ -1,7 +1,9 @@
 from sqlalchemy import *
+from sqlalchemy.orm import relationship
 from files.__main__ import Base
 from files.helpers.lazy import lazy
 from os import environ
+from .sub_subscription import *
 
 SITE_NAME = environ.get("SITE_NAME", '').strip()
 SITE = environ.get("DOMAIN", '').strip()
@@ -18,6 +20,8 @@ class Sub(Base):
 	bannerurl = Column(String)
 	css = Column(String)
 
+	subscriptions = relationship("SubSubscription", lazy="dynamic", primaryjoin="SubSubscription.sub==Sub.name", viewonly=True)
+
 	def __repr__(self):
 		return f"<Sub(name={self.name})>"
 
@@ -32,3 +36,9 @@ class Sub(Base):
 	def banner_url(self):
 		if self.bannerurl: return SITE_FULL + self.bannerurl
 		return f'{SITE_FULL}/static/assets/images/{SITE_NAME}/banner.webp?v=1042'
+
+	@property
+	@lazy
+	def subscription_num(self):
+		print(self.subscriptions.count(), flush=True)
+		return self.subscriptions.count()
