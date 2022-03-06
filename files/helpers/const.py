@@ -679,7 +679,7 @@ imgur_regex = re.compile('(https://i\.imgur\.com/([^_]*?))\.(jpg|png|jpeg|webp)(
 reddit_regex = re.compile('(^|\s|<p>)\/?((r|u)\/(\w|-){3,25})', flags=re.A)
 sub_regex = re.compile('(^|\s|<p>)\/?(s\/(\w|-){3,25})', flags=re.A)
 youtube_regex = re.compile('" target="_blank">(https://youtube\.com/watch\?v\=(.*?))</a>(?!</code>)', flags=re.A)
-strikethrough_regex = re.compile('~~(.*?)~~', flags=re.A)
+strikethrough_regex = re.compile('~{1,2}([^~]+)~{1,2}', flags=re.A)
 
 emoji_regex = re.compile("[^a]>\s*(:[!#]{0,2}\w+:\s*)+<\/", flags=re.A)
 emoji_regex2 = re.compile('(?<!"):([!#A-Za-z0-9]{1,30}?):', flags=re.A)

@@ -213,9 +213,11 @@ def api_comment(v):
 	if v.marseyawarded and parent_post.id not in (37696,37697,37749,37833,37838):
 		if not marsey_regex.fullmatch(body): return {"error":"You can only type marseys!"}, 403
 
-	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
-	elif v.bird and len(body) > 140 and parent_post.id not in (37696,37697,37749,37833,37838):
-		return {"error":"You have to type less than 140 characters!"}, 403
+	if parent_post.id not in (37696,37697,37749,37833,37838):
+		if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
+			return {"error":"You have to type more than 280 characters!"}, 403
+		elif v.bird and len(body) > 140:
+			return {"error":"You have to type less than 140 characters!"}, 403
 
 	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
 	
@@ -338,13 +340,6 @@ def api_comment(v):
 		body += '\n\n<p>' + random.choice(FORTUNE_REPLIES) + '</p>'
 
 	body_html = sanitize(body, comment=True)
-
-	if parent_post.id not in (37696,37697,37749,37833,37838):
-		if v.longpost:
-			if len(body) < 280 or ' [](' in body or body.startswith('[]('):
-				return {"error":"You have to type more than 280 characters!"}, 403
-		elif v.bird:
-			if len(body) > 140 : return {"error":"You have to type less than 140 characters!"}, 403
 
 	bans = filter_comment_html(body_html)
 
@@ -725,8 +720,10 @@ def edit_comment(cid, v):
 		if v.marseyawarded and not marsey_regex.fullmatch(body):
 			return {"error":"You can only type marseys!"}, 403
 
-		if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
-		elif v.bird and len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
+		if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
+			return {"error":"You have to type more than 280 characters!"}, 403
+		elif v.bird and len(body) > 140:
+			return {"error":"You have to type less than 140 characters!"}, 403
 
 		body = image_regex.sub(r'![](\1)', body)
 
@@ -760,11 +757,6 @@ def edit_comment(cid, v):
 				g.db.add(c_choice)
 
 		body_html = sanitize(body, edit=True)
-
-		if v.longpost:
-			if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
-		elif v.bird:
-			if len(body) > 140 : return {"error":"You have to type less than 140 characters!"}, 403
 
 		bans = filter_comment_html(body_html)
 

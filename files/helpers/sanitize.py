@@ -113,6 +113,8 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	
 	sanitized = markdown(sanitized)
 
+	sanitized = strikethrough_regex.sub(r'<del>\1</del>', sanitized)
+
 	sanitized = sanitized.replace("\ufeff", "").replace("𒐪","").replace("<script","").replace("script>","").replace('‎','')
 
 	if alert:

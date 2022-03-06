@@ -467,8 +467,10 @@ def edit_post(pid, v):
 	if v.marseyawarded and (not marsey_regex.fullmatch(title) or body and not marsey_regex.fullmatch(body)):
 		return {"error":"You can only type marseys!"}, 403
 
-	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
-	elif v.bird and len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
+	if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
+		return {"error":"You have to type more than 280 characters!"}, 403
+	elif v.bird and len(body) > 140:
+		return {"error":"You have to type less than 140 characters!"}, 403
 
 	if title != p.title:
 		if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
@@ -535,11 +537,6 @@ def edit_post(pid, v):
 			return {"error": reason}, 403
 
 		p.body = body
-
-		if v.longpost:
-			if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
-		elif v.bird:
-			if len(body) > 140 : return {"error":"You have to type less than 140 characters!"}, 403
 
 		if len(body_html) > 40000: return {"error":"Submission body too long!"}, 400
 
@@ -849,10 +846,10 @@ def submit_post(v, sub=None):
 	title_html = filter_emojis_only(title, graceful=True)
 	if len(title_html) > 1500: return error("Rendered title is too big!")
 
-	if v.longpost:
-		if len(body) < 280 or ' [](' in body or body.startswith('[]('): return error("You have to type more than 280 characters!")
-	elif v.bird:
-		if len(body) > 140 : return error("You have to type less than 140 characters!")
+	if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
+		return {"error":"You have to type more than 280 characters!"}, 403
+	elif v.bird and len(body) > 140:
+		return {"error":"You have to type less than 140 characters!"}, 403
 
 
 	embed = None
@@ -945,9 +942,6 @@ def submit_post(v, sub=None):
 
 	if v.marseyawarded and (not marsey_regex.fullmatch(title) or body and not marsey_regex.fullmatch(body)):
 			return error("You can only type marseys!")
-
-	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return error("You have to type more than 280 characters!")
-	elif v.bird and len(body) > 140: return error("You have to type less than 140 characters!")
 
 	dup = g.db.query(Submission).filter(
 		Submission.author_id == v.id,
@@ -1051,11 +1045,6 @@ def submit_post(v, sub=None):
 		body += '\n\n<p>' + random.choice(FORTUNE_REPLIES) + '</p>'
 
 	body_html = sanitize(body)
-
-	if v.longpost:
-		if len(body) < 280 or ' [](' in body or body.startswith('[]('): return error("You have to type more than 280 characters!")
-	elif v.bird:
-		if len(body) > 140 : return error("You have to type less than 140 characters!")
 
 	if len(body_html) > 40000: return error("Submission body too long!")
 
