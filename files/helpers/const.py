@@ -128,7 +128,7 @@ if SITE in {'rdrama.net','devrama.xyz'}:
 
 	A_ID = 1230
 	KIPPY_ID = 7150
-	TAX_NOTIF_ID = 995
+	GIFT_NOTIF_ID = 995
 	PIZZASHILL_ID = 2424
 	HIL_ID = 4245
 	CRAT_ID = 747
@@ -160,7 +160,7 @@ elif SITE == "pcmemes.net":
 	A_ID = 0
 	KIPPY_ID = 1592
 	PIZZASHILL_ID = 0
-	TAX_NOTIF_ID = 1592
+	GIFT_NOTIF_ID = 1592
 	HIL_ID = 0
 	CRAT_ID = 0
 	IDIO_ID = 0
@@ -190,7 +190,7 @@ else:
 
 	A_ID = 0
 	KIPPY_ID = 0
-	TAX_NOTIF_ID = 9
+	GIFT_NOTIF_ID = 9
 	PIZZASHILL_ID = 0
 	HIL_ID = 0
 	CRAT_ID = 0
@@ -367,14 +367,6 @@ AWARDS = {
 		"color": "text-blue",
 		"price": 300
 	},
-	"ghost": {
-		"kind": "ghost",
-		"title": "Ghost",
-		"description": "Hides the usernames of everyone in the thread",
-		"icon": "fas fa-ghost",
-		"color": "text-white",
-		"price": 500
-	},
 	"rehab": {
 		"kind": "rehab",
 		"title": "Rehab",
@@ -438,6 +430,14 @@ AWARDS = {
 		"icon": "fas fa-snooze",
 		"color": "text-purple",
 		"price": 2500
+	},
+	"ghost": {
+		"kind": "ghost",
+		"title": "Ghost",
+		"description": "Hides the usernames of everyone in the thread",
+		"icon": "fas fa-ghost",
+		"color": "text-white",
+		"price": 3000
 	},
 	"marsey": {
 		"kind": "marsey",
@@ -634,7 +634,8 @@ dues = int(environ.get("DUES").strip())
 christian_emojis = (':#marseyjesus:',':#marseyimmaculate:',':#marseymothermary:',':#marseyfatherjoseph:',':#gigachadorthodox:',':#marseyorthodox:',':#marseyorthodoxpat:')
 
 db = db_session()
-marseys_const = [x[0] for x in db.query(Marsey.name).all()] + ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','exclamationpoint','period','questionmark']
+marseys_const = [x[0] for x in db.query(Marsey.name).filter(Marsey.name!='marseychud').all()]
+marseys_const2 = marseys_const + ['marseychud','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','exclamationpoint','period','questionmark']
 db.close()
 
 if SITE_NAME == 'PCM':
@@ -648,9 +649,11 @@ else:
 
 valid_password_regex = re.compile("^.{8,100}$", flags=re.A)
 
-marsey_regex = re.compile("^(:[!#A-Za-z0-9]{1,30}?:\s*)+$", flags=re.A)
+marseyaward_body_regex = re.compile(">[^<\s+]|[^>\s+]<", flags=re.A)
 
-marsey_regex2 = re.compile("[a-z0-9]{1,30}", flags=re.A)
+marseyaward_title_regex = re.compile("(<img[^>]+>)+", flags=re.A)
+
+marsey_regex = re.compile("[a-z0-9]{1,30}", flags=re.A)
 
 image_regex = re.compile("(^https:\/\/.*\.(png|jpg|jpeg|gif|webp|maxwidth=9999|fidelity=high)($|\s))", flags=re.I|re.M|re.A)
 
@@ -716,3 +719,5 @@ def torture_ap(body, username):
 	return body
 
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
+
+ADMIGGERS = (37696,37697,37749,37833,37838)

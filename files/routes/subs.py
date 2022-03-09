@@ -82,33 +82,6 @@ def exile_post(v, pid):
 
 
 
-@app.post("/unexile/post/<pid>")
-@is_not_permabanned
-def unexile_post(v, pid):
-	try: pid = int(pid)
-	except: abort(400)
-
-	p = get_post(pid)
-	sub = p.sub
-	if not sub: abort(400)
-
-	if not v.mods(sub): abort(403)
-
-	u = p.author
-
-	if u.exiled_from(sub):
-		exile = g.db.query(Exile).filter_by(user_id=u.id, sub=sub).one_or_none()
-		g.db.delete(exile)
-
-		send_notification(u.id, f"@{v.username} has revoked your exile from /s/{sub}")
-
-		g.db.commit()
-	
-	return {"message": "User unexiled successfully!"}
-
-
-
-
 @app.post("/exile/comment/<cid>")
 @is_not_permabanned
 def exile_comment(v, cid):
@@ -136,21 +109,12 @@ def exile_comment(v, cid):
 	return {"message": "User exiled successfully!"}
 
 
-
-
-@app.post("/unexile/comment/<cid>")
+@app.post("/s/<sub>/unexile/<uid>")
 @is_not_permabanned
-def unexile_comment(v, cid):
-	try: cid = int(cid)
-	except: abort(400)
-
-	c = get_comment(cid)
-	sub = c.post.sub
-	if not sub: abort(400)
+def unexile(v, sub, uid):
+	u = get_account(uid)
 
 	if not v.mods(sub): abort(403)
-
-	u = c.author
 
 	if u.exiled_from(sub):
 		exile = g.db.query(Exile).filter_by(user_id=u.id, sub=sub).one_or_none()
@@ -160,7 +124,10 @@ def unexile_comment(v, cid):
 
 		g.db.commit()
 	
-	return {"message": "User unexiled successfully!"}
+	
+	if request.headers.get("Authorization") or request.headers.get("xhr"): return {"message": "User unexiled successfully!"}
+	return redirect(f'/s/{sub}/exilees')
+
 
 
 

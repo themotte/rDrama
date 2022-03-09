@@ -220,7 +220,7 @@ def transfer_coins(v, username):
 		else: tax = 0
 
 		log_message = f"@{v.username} has transferred {amount} coins to @{receiver.username}"
-		send_repeatable_notification(TAX_NOTIF_ID, log_message)
+		send_repeatable_notification(GIFT_NOTIF_ID, log_message)
 
 		receiver.coins += amount-tax
 		v.coins -= amount
@@ -251,7 +251,7 @@ def transfer_bux(v, username):
 		if amount < 100: return {"error": "You have to gift at least 100 marseybux."}, 400
 
 		log_message = f"@{v.username} has transferred {amount} Marseybux to @{receiver.username}"
-		send_repeatable_notification(TAX_NOTIF_ID, log_message)
+		send_repeatable_notification(GIFT_NOTIF_ID, log_message)
 
 		receiver.procoins += amount
 		v.procoins -= amount
@@ -736,7 +736,9 @@ def u_username_comments(username, v=None):
 		return render_template("userpage_blocked.html", u=u, v=v)
 
 
-	page = max(int(request.values.get("page", "1")), 1)
+	try: page = max(int(request.values.get("page", "1")), 1)
+	except: page = 1
+	
 	sort=request.values.get("sort","new")
 	t=request.values.get("t","all")
 
