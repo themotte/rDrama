@@ -135,12 +135,14 @@ def notifications(v):
 @app.get("/logged_out")
 @app.get("/h/<sub>")
 @app.get("/logged_out/h/<sub>")
+@app.get("/s/<sub>")
+@app.get("/logged_out/s/<sub>")
 @limiter.limit("3/second;30/minute;1000/hour;5000/day")
 @auth_desired
 def front_all(v, sub=None, subdomain=None):
 	if sub: sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	
-	if request.path.startswith('/h/') and not sub: abort(404)
+	if request.path.startswith('/h/') or request.path.startswith('/s/') and not sub: abort(404)
 
 	if g.webview and not session.get("session_id"):
 		session.permanent = True
