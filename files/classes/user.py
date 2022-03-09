@@ -477,7 +477,7 @@ class User(Base):
 	@property
 	@lazy
 	def profile_url(self):
-		if self.agendaposter: return f"/e/marseychud.webp"
+		if self.agendaposter: return f"/e/chudsey.webp"
 		if self.profileurl: 
 			if self.profileurl.startswith('/'): return SITE_FULL + self.profileurl
 			return self.profileurl
