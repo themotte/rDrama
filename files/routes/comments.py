@@ -62,10 +62,10 @@ def pusher_thread(interests, c):
 @app.get("/post/<pid>/<anything>/<cid>")
 @app.get("/logged_out/comment/<cid>")
 @app.get("/logged_out/post/<pid>/<anything>/<cid>")
-@app.get("/s/<sub>/comment/<cid>")
-@app.get("/s/<sub>/post/<pid>/<anything>/<cid>")
-@app.get("/logged_out/s/<sub>/comment/<cid>")
-@app.get("/logged_out/s/<sub>/post/<pid>/<anything>/<cid>")
+@app.get("/h/<sub>/comment/<cid>")
+@app.get("/h/<sub>/post/<pid>/<anything>/<cid>")
+@app.get("/logged_out/h/<sub>/comment/<cid>")
+@app.get("/logged_out/h/<sub>/post/<pid>/<anything>/<cid>")
 @auth_desired
 def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 	
@@ -185,7 +185,7 @@ def api_comment(v):
 
 	parent_post = get_post(parent_submission, v=v)
 	sub = parent_post.sub
-	if sub and v.exiled_from(sub): return {"error": f"You're exiled from /s/{sub}"}, 403
+	if sub and v.exiled_from(sub): return {"error": f"You're exiled from /h/{sub}"}, 403
 
 	if parent_post.club and not (v and (v.paid_dues or v.id == parent_post.author_id)): abort(403)
 

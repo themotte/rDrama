@@ -590,11 +590,11 @@
 
 					<div class="post-meta text-left mb-2">
 						{% if p.sub %}
-							<a href='/s/{{p.sub}}'>/s/{{p.sub}}</a>&nbsp;&nbsp;
+							<a href='/h/{{p.sub}}'>/h/{{p.sub}}</a>&nbsp;&nbsp;
 						{% endif %}
 
 						{% if p.sub and p.author.exiled_from(p.sub) %}
-							<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User has been exiled from /s/{{p.sub}}"></i></a>
+							<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User has been exiled from /h/{{p.sub}}"></i></a>
 						{% endif %}
 				
 						{% if p.bannedfor %}

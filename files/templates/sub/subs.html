@@ -6,7 +6,7 @@
 
 	
 </pre>
-<h5>List of subs</h5>
+<h5>List of holes</h5>
 <pre></pre>
 <div class="overflow-x-auto">
 <table id="sortable_table" class="table table-striped mb-5">
@@ -23,10 +23,10 @@
 {% for sub, count in subs %}
 	<tr>
 		<td>{{loop.index}}</td>
-		<td><a href="/s/{{sub.name}}">{{sub.name}}</a></td>
-		<td><a href="/s/{{sub.name}}">{{count}}</a></td>
-		<td><a href="/s/{{sub.name}}/subscribers">{{sub.subscription_num}}</a></td>
-		<td><a href="/s/{{sub.name}}/blockers">{{sub.block_num}}</a></td>
+		<td><a href="/h/{{sub.name}}">{{sub.name}}</a></td>
+		<td><a href="/h/{{sub.name}}">{{count}}</a></td>
+		<td><a href="/h/{{sub.name}}/subscribers">{{sub.subscription_num}}</a></td>
+		<td><a href="/h/{{sub.name}}/blockers">{{sub.block_num}}</a></td>
 	</tr>
 {% endfor %}
 </table>

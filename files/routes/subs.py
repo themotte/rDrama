@@ -6,7 +6,7 @@ from .front import frontlist
 
 
 
-@app.post("/s/<sub>/subscribe")
+@app.post("/h/<sub>/subscribe")
 @auth_required
 def subscribe_sub(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
@@ -24,7 +24,7 @@ def subscribe_sub(v, sub):
 	return {"message": "Subscribed to sub!"}
 
 
-@app.post("/s/<sub>/unsubscribe")
+@app.post("/h/<sub>/unsubscribe")
 @auth_required
 def unsubscribe_sub(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
@@ -41,7 +41,7 @@ def unsubscribe_sub(v, sub):
 	return {"message": "Unsubscribed from sub!"}
 
 
-@app.get("/s/<sub>/subscribers")
+@app.get("/h/<sub>/subscribers")
 @auth_required
 def subscribers(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
@@ -74,7 +74,7 @@ def exile_post(v, pid):
 		exile = Exile(user_id=u.id, sub=sub, exiler_id=v.id)
 		g.db.add(exile)
 
-		send_notification(u.id, f"@{v.username} has exiled you from /s/{sub} for [{p.title}]({p.shortlink})")
+		send_notification(u.id, f"@{v.username} has exiled you from /h/{sub} for [{p.title}]({p.shortlink})")
 
 		g.db.commit()
 	
@@ -102,14 +102,14 @@ def exile_comment(v, cid):
 		exile = Exile(user_id=u.id, sub=sub, exiler_id=v.id)
 		g.db.add(exile)
 
-		send_notification(u.id, f"@{v.username} has exiled you from /s/{sub} for [{c.permalink}]({c.shortlink})")
+		send_notification(u.id, f"@{v.username} has exiled you from /h/{sub} for [{c.permalink}]({c.shortlink})")
 
 		g.db.commit()
 	
 	return {"message": "User exiled successfully!"}
 
 
-@app.post("/s/<sub>/unexile/<uid>")
+@app.post("/h/<sub>/unexile/<uid>")
 @is_not_permabanned
 def unexile(v, sub, uid):
 	u = get_account(uid)
@@ -120,13 +120,13 @@ def unexile(v, sub, uid):
 		exile = g.db.query(Exile).filter_by(user_id=u.id, sub=sub).one_or_none()
 		g.db.delete(exile)
 
-		send_notification(u.id, f"@{v.username} has revoked your exile from /s/{sub}")
+		send_notification(u.id, f"@{v.username} has revoked your exile from /h/{sub}")
 
 		g.db.commit()
 	
 	
 	if request.headers.get("Authorization") or request.headers.get("xhr"): return {"message": "User unexiled successfully!"}
-	return redirect(f'/s/{sub}/exilees')
+	return redirect(f'/h/{sub}/exilees')
 
 
 
@@ -134,7 +134,7 @@ def unexile(v, sub, uid):
 
 
 
-@app.post("/s/<sub>/block")
+@app.post("/h/<sub>/block")
 @auth_required
 def block_sub(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
@@ -154,7 +154,7 @@ def block_sub(v, sub):
 	return {"message": "Sub blocked successfully!"}
 
 
-@app.post("/s/<sub>/unblock")
+@app.post("/h/<sub>/unblock")
 @auth_required
 def unblock_sub(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
@@ -170,7 +170,7 @@ def unblock_sub(v, sub):
 
 	return {"message": "Sub unblocked successfully!"}
 
-@app.get("/s/<sub>/mods")
+@app.get("/h/<sub>/mods")
 @auth_required
 def mods(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
@@ -181,7 +181,7 @@ def mods(v, sub):
 	return render_template("sub/mods.html", v=v, sub=sub, users=users)
 
 
-@app.get("/s/<sub>/exilees")
+@app.get("/h/<sub>/exilees")
 @auth_required
 def exilees(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
@@ -192,7 +192,7 @@ def exilees(v, sub):
 	return render_template("sub/exilees.html", v=v, sub=sub, users=users)
 
 
-@app.get("/s/<sub>/blockers")
+@app.get("/h/<sub>/blockers")
 @auth_required
 def blockers(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
@@ -204,7 +204,7 @@ def blockers(v, sub):
 
 
 
-@app.post("/s/<sub>/add_mod")
+@app.post("/h/<sub>/add_mod")
 @limiter.limit("1/second;5/day")
 @is_not_permabanned
 def add_mod(v, sub):
@@ -227,14 +227,14 @@ def add_mod(v, sub):
 		g.db.add(mod)
 
 		if v.id != user.id:
-			send_repeatable_notification(user.id, f"@{v.username} has added you as a mod to /s/{sub}")
+			send_repeatable_notification(user.id, f"@{v.username} has added you as a mod to /h/{sub}")
 
 		g.db.commit()
 	
-	return redirect(f'/s/{sub}/mods')
+	return redirect(f'/h/{sub}/mods')
 
 
-@app.post("/s/<sub>/remove_mod")
+@app.post("/h/<sub>/remove_mod")
 @is_not_permabanned
 def remove_mod(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
@@ -262,11 +262,11 @@ def remove_mod(v, sub):
 	g.db.delete(mod)
 
 	if v.id != user.id:
-		send_repeatable_notification(user.id, f"@{v.username} has removed you as a mod from /s/{sub}")
+		send_repeatable_notification(user.id, f"@{v.username} has removed you as a mod from /h/{sub}")
 
 	g.db.commit()
 	
-	return redirect(f'/s/{sub}/mods')
+	return redirect(f'/h/{sub}/mods')
 
 @app.get("/create_sub")
 @is_not_permabanned
@@ -319,7 +319,7 @@ def create_sub2(v):
 		g.db.add(mod)
 		g.db.commit()
 
-	return redirect(f'/s/{sub.name}')
+	return redirect(f'/h/{sub.name}')
 
 @app.post("/kick/<pid>")
 @is_not_permabanned
@@ -341,7 +341,7 @@ def kick(v, pid):
 	return {"message": "Post kicked successfully!"}
 
 
-@app.get('/s/<sub>/settings')
+@app.get('/h/<sub>/settings')
 @is_not_permabanned
 def sub_settings(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
@@ -352,7 +352,7 @@ def sub_settings(v, sub):
 	return render_template('sub/settings.html', v=v, sidebar=sub.sidebar, sub=sub)
 
 
-@app.post('/s/<sub>/sidebar')
+@app.post('/h/<sub>/sidebar')
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def post_sub_sidebar(v, sub):
@@ -369,10 +369,10 @@ def post_sub_sidebar(v, sub):
 
 	g.db.commit()
 
-	return redirect(f'/s/{sub.name}/settings')
+	return redirect(f'/h/{sub.name}/settings')
 
 
-@app.post('/s/<sub>/css')
+@app.post('/h/<sub>/css')
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def post_sub_css(v, sub):
@@ -386,10 +386,10 @@ def post_sub_css(v, sub):
 
 	g.db.commit()
 
-	return redirect(f'/s/{sub.name}/settings')
+	return redirect(f'/h/{sub.name}/settings')
 
 
-@app.get("/s/<sub>/css")
+@app.get("/h/<sub>/css")
 def get_sub_css(sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	if not sub: abort(404)
@@ -398,7 +398,7 @@ def get_sub_css(sub):
 	return resp
 
 
-@app.post("/s/<sub>/banner")
+@app.post("/h/<sub>/banner")
 @limiter.limit("1/second;10/day")
 @is_not_permabanned
 def sub_banner(v, sub):
@@ -427,9 +427,9 @@ def sub_banner(v, sub):
 		g.db.add(sub)
 		g.db.commit()
 
-	return redirect(f'/s/{sub.name}/settings')
+	return redirect(f'/h/{sub.name}/settings')
 
-@app.post("/s/<sub>/sidebar_image")
+@app.post("/h/<sub>/sidebar_image")
 @limiter.limit("1/second;10/day")
 @is_not_permabanned
 def sub_sidebar(v, sub):
@@ -457,7 +457,7 @@ def sub_sidebar(v, sub):
 		g.db.add(sub)
 		g.db.commit()
 
-	return redirect(f'/s/{sub.name}/settings')
+	return redirect(f'/h/{sub.name}/settings')
 
 
 @app.get("/sub_toggle/<mode>")
@@ -477,7 +477,7 @@ def sub_toggle(mode, v):
 	return redirect('/')
 
 
-@app.get("/subs")
+@app.get("/holes")
 @auth_desired
 def subs(v):
 	subs = g.db.query(Sub, func.count(Submission.sub)).outerjoin(Submission, Sub.name == Submission.sub).group_by(Sub.name).order_by(func.count(Submission.sub).desc()).all()

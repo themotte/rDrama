@@ -80,7 +80,7 @@ def publish(pid, v):
 
 		if v.followers:
 			text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
-			if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
+			if post.sub: text += f" in <a href='/h/{post.sub}'>/h/{post.sub}"
 
 			cid = notif_comment(text, autojanny=True)
 			for follow in v.followers:
@@ -101,12 +101,12 @@ def publish(pid, v):
 	return {"message": "Post published!"}
 
 @app.get("/submit")
-@app.get("/s/<sub>/submit")
+@app.get("/h/<sub>/submit")
 @auth_required
 def submit_get(v, sub=None):
 	if sub: sub = g.db.query(Sub.name).filter_by(name=sub.strip().lower()).one_or_none()
 	
-	if request.path.startswith('/s/') and not sub: abort(404)
+	if request.path.startswith('/h/') and not sub: abort(404)
 
 	SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
 
@@ -116,10 +116,10 @@ def submit_get(v, sub=None):
 @app.get("/post/<pid>/<anything>")
 @app.get("/logged_out/post/<pid>")
 @app.get("/logged_out/post/<pid>/<anything>")
-@app.get("/s/<sub>/post/<pid>")
-@app.get("/s/<sub>/post/<pid>/<anything>")
-@app.get("/logged_out/s/<sub>/post/<pid>")
-@app.get("/logged_out/s/<sub>/post/<pid>/<anything>")
+@app.get("/h/<sub>/post/<pid>")
+@app.get("/h/<sub>/post/<pid>/<anything>")
+@app.get("/logged_out/h/<sub>/post/<pid>")
+@app.get("/logged_out/h/<sub>/post/<pid>/<anything>")
 @auth_desired
 def post_id(pid, anything=None, v=None, sub=None):
 	if not v and not request.path.startswith('/logged_out') and not request.headers.get("Authorization"):
@@ -783,7 +783,7 @@ def thumbnail_thread(pid):
 
 
 @app.post("/submit")
-@app.post("/s/<sub>/submit")
+@app.post("/h/<sub>/submit")
 @limiter.limit("1/second;6/minute;200/hour;1000/day")
 @auth_required
 def submit_post(v, sub=None):
@@ -802,14 +802,14 @@ def submit_post(v, sub=None):
 
 
 	sub = request.values.get("sub")
-	if sub: sub = sub.replace('/s/','').replace('s/','')
+	if sub: sub = sub.replace('/h/','').replace('s/','')
 
 	if sub and sub != 'none':
 		sname = sub.strip().lower()
 		sub = g.db.query(Sub.name).filter_by(name=sname).one_or_none()
-		if not sub: return error(f"/s/{sname} not found!")
+		if not sub: return error(f"/h/{sname} not found!")
 		sub = sub[0]
-		if v.exiled_from(sub): return error(f"You're exiled from /s/{sub}")
+		if v.exiled_from(sub): return error(f"You're exiled from /h/{sub}")
 	else: sub = None
 
 	if v.is_suspended: return error("You can't perform this action while banned.")
@@ -1141,7 +1141,7 @@ def submit_post(v, sub=None):
 
 		if request.values.get('followers') and v.followers:
 			text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
-			if post.sub: text += f" in <a href='/s/{post.sub}'>/s/{post.sub}"
+			if post.sub: text += f" in <a href='/h/{post.sub}'>/h/{post.sub}"
 
 			cid = notif_comment(text, autojanny=True)
 			for follow in v.followers:

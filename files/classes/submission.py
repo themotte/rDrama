@@ -209,7 +209,7 @@ class Submission(Base):
 	@lazy
 	def shortlink(self):
 		link = f"/post/{self.id}"
-		if self.sub: link = f"/s/{self.sub}{link}"
+		if self.sub: link = f"/h/{self.sub}{link}"
 
 		if self.club: return link + '/-'
 
