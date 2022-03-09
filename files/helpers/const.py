@@ -367,14 +367,6 @@ AWARDS = {
 		"color": "text-blue",
 		"price": 300
 	},
-	"ghost": {
-		"kind": "ghost",
-		"title": "Ghost",
-		"description": "Hides the usernames of everyone in the thread",
-		"icon": "fas fa-ghost",
-		"color": "text-white",
-		"price": 500
-	},
 	"rehab": {
 		"kind": "rehab",
 		"title": "Rehab",
@@ -438,6 +430,14 @@ AWARDS = {
 		"icon": "fas fa-snooze",
 		"color": "text-purple",
 		"price": 2500
+	},
+	"ghost": {
+		"kind": "ghost",
+		"title": "Ghost",
+		"description": "Hides the usernames of everyone in the thread",
+		"icon": "fas fa-ghost",
+		"color": "text-white",
+		"price": 3000
 	},
 	"marsey": {
 		"kind": "marsey",

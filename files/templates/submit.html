@@ -189,12 +189,8 @@
 												{% endif %}
 
 												<div class="custom-control custom-checkbox">
-														<input {% if ghost != 42069 and v.coins < ghost and v.procoins < ghost %}disabled{% endif %} autocomplete="off" type="checkbox" class="custom-control-input" id="ghost" name="ghost">
-														{% if ghost == 42069 %}
-															<label class="custom-control-label" for="ghost">Ghost Thread (will use a ghost award you own)</label>
-														{% else %}
-															<label class="custom-control-label" for="ghost">Ghost Thread (cost: {{ghost}} coins or marseybux)</label>
-														{% endif %}
+														<input autocomplete="off" type="checkbox" class="custom-control-input" id="ghost" name="ghost">
+														<label class="custom-control-label" for="ghost">Ghost Thread</label>
 												</div>
 
 												<pre>

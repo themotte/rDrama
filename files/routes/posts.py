@@ -40,32 +40,6 @@ discounts = {
 
 titleheaders = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
-def ghost_price(v):
-	if v.patron == 1: discount = 0.90
-	elif v.patron == 2: discount = 0.85
-	elif v.patron == 3: discount = 0.80
-	elif v.patron == 4: discount = 0.75
-	elif v.patron == 5: discount = 0.70
-	elif v.patron == 6: discount = 0.65
-	else: discount = 1
-	for badge in [69,70,71,72,73]:
-		if v.has_badge(badge): discount -= discounts[badge]
-
-	return int(500*discount)
-
-
-def submit_ghost(v,db):
-	ghost = db.query(AwardRelationship.id).filter(
-		AwardRelationship.kind == 'ghost',
-		AwardRelationship.user_id == v.id,
-		AwardRelationship.submission_id == None,
-		AwardRelationship.comment_id == None
-	).first()
-
-	if ghost: ghost = 42069
-	else: ghost = ghost_price(v)
-	return ghost
-
 
 @app.post("/toggle_club/<pid>")
 @auth_required
@@ -136,7 +110,7 @@ def submit_get(v, sub=None):
 
 	SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
 
-	return render_template("submit.html", SUBS=SUBS, v=v, sub=sub, ghost=submit_ghost(v,g.db))
+	return render_template("submit.html", SUBS=SUBS, v=v, sub=sub)
 
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
@@ -824,7 +798,7 @@ def submit_post(v, sub=None):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": error}, 403
 	
 		SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
-		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body, ghost=submit_ghost(v,g.db)), 400
+		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body), 400
 
 
 	sub = request.values.get("sub")
@@ -1083,32 +1057,12 @@ def submit_post(v, sub=None):
 		title=title[:500],
 		title_html=title_html,
 		sub=sub,
-		ghost=False
+		ghost=bool(request.values.get("ghost",""))
 	)
 
 	g.db.add(post)
 	g.db.flush()
 
-	if request.values.get('ghost'):
-
-		ghost_award = g.db.query(AwardRelationship).filter(
-			AwardRelationship.kind == 'ghost',
-			AwardRelationship.user_id == v.id,
-			AwardRelationship.submission_id == None,
-			AwardRelationship.comment_id == None
-		).first()
-		
-		if ghost_award:
-			ghost_award.submission_id = post.id
-			post.ghost = True
-		else:
-			price = ghost_price(v)
-			if v.coins >= price:
-				v.coins -= price
-				post.ghost = True
-			elif v.procoins >= price:
-				v.procoins -= price
-				post.ghost = True
 
 	if v and v.admin_level > 2:
 		for option in bet_options:
