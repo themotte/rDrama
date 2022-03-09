@@ -142,7 +142,7 @@ def notifications(v):
 def front_all(v, sub=None, subdomain=None):
 	if sub: sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	
-	if request.path.startswith('/h/') or request.path.startswith('/s/') and not sub: abort(404)
+	if (request.path.startswith('/h/') or request.path.startswith('/s/')) and not sub: abort(404)
 
 	if g.webview and not session.get("session_id"):
 		session.permanent = True
