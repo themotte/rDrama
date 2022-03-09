@@ -20,9 +20,8 @@ import requests
 from shutil import copyfile
 from sys import stdout
 
-marseys = [f':#{x}:' for x in marseys_const2]
 
-snappyquotes = marseys
+snappyquotes = [f':#{x}:' for x in marseys_const2]
 if SITE_NAME == 'Drama':
 	with open(f'snappy.txt', "r", encoding="utf-8") as f:
 		snappyquotes += f.read().split("\n{[para]}\n")
