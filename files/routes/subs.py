@@ -21,7 +21,7 @@ def subscribe_sub(v, sub):
 		g.db.commit()
 		cache.delete_memoized(frontlist)
 
-	return {"message": "Subscribed to sub!"}
+	return {"message": f"Subscribed to /h/{sub}"}
 
 
 @app.post("/h/<sub>/unsubscribe")
@@ -38,7 +38,7 @@ def unsubscribe_sub(v, sub):
 		g.db.commit()
 		cache.delete_memoized(frontlist)
 
-	return {"message": "Unsubscribed from sub!"}
+	return {"message": f"Unsubscribed from /h/{sub}"}
 
 
 @app.get("/h/<sub>/subscribers")
