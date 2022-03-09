@@ -22,11 +22,10 @@ from sys import stdout
 
 marseys = [f':#{x}:' for x in marseys_const2]
 
-if path.exists(f'snappy_{SITE_NAME}.txt'):
-	with open(f'snappy_{SITE_NAME}.txt', "r", encoding="utf-8") as f:
-		if SITE == 'pcmemes.net': snappyquotes = f.read().split("{[para]}")
-		else: snappyquotes = f.read().split("\n{[para]}\n") + marseys
-else: snappyquotes = marseys
+snappyquotes = marseys
+if SITE_NAME == 'Drama':
+	with open(f'snappy.txt', "r", encoding="utf-8") as f:
+		snappyquotes += f.read().split("\n{[para]}\n")
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 

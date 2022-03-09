@@ -207,7 +207,7 @@ def api_comment(v):
 	body = request.values.get("body", "").strip()[:10000]
 
 	if v.admin_level > 1 and parent_post.id == 37749 and level == 1:
-		with open(f"snappy_{SITE_NAME}.txt", "a", encoding="utf-8") as f:
+		with open(f"snappy.txt", "a", encoding="utf-8") as f:
 			f.write('\n{[para]}\n' + body)
 
 	if parent_post.id not in ADMIGGERS:
