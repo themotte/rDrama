@@ -210,10 +210,7 @@ def api_comment(v):
 		with open(f"snappy_{SITE_NAME}.txt", "a", encoding="utf-8") as f:
 			f.write('\n{[para]}\n' + body)
 
-	if v.marseyawarded and parent_post.id not in (37696,37697,37749,37833,37838):
-		if not marsey_regex.fullmatch(body): return {"error":"You can only type marseys!"}, 403
-
-	if parent_post.id not in (37696,37697,37749,37833,37838):
+	if parent_post.id not in ADMIGGERS:
 		if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
 			return {"error":"You have to type more than 280 characters!"}, 403
 		elif v.bird and len(body) > 140:
@@ -272,7 +269,7 @@ def api_comment(v):
 							marsey = loads(body.lower())
 							name = marsey["name"]
 
-							if not marsey_regex2.fullmatch(name):
+							if not marsey_regex.fullmatch(name):
 								return {"error": "Invalid name!"}, 403
 
 							if "author" in marsey: user = get_user(marsey["author"])
@@ -332,7 +329,7 @@ def api_comment(v):
 				body += f"\n\n{url}"
 			else: return {"error": "Image/Video files only"}, 400
 
-	if v.agendaposter and not v.marseyawarded and parent_post.id not in (37696,37697,37749,37833,37838):
+	if v.agendaposter and not v.marseyawarded and parent_post.id not in ADMIGGERS:
 		body = torture_ap(body, v.username)
 
 	if '#fortune' in body:
@@ -340,6 +337,9 @@ def api_comment(v):
 		body += '\n\n<p>' + random.choice(FORTUNE_REPLIES) + '</p>'
 
 	body_html = sanitize(body, comment=True)
+
+	if v.marseyawarded and parent_post.id not in ADMIGGERS and marseyaward_body_regex.search(body_html):
+		return {"error":"You can only type marseys!"}, 403
 
 	bans = filter_comment_html(body_html)
 
@@ -349,7 +349,7 @@ def api_comment(v):
 		if ban.reason: reason += f" {ban.reason}"
 		return {"error": reason}, 401
 
-	if parent_post.id not in (37696,37697,37749,37833,37838) and '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower() and AGENDAPOSTER_PHRASE not in body.lower():
+	if parent_post.id not in ADMIGGERS and '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower() and AGENDAPOSTER_PHRASE not in body.lower():
 		existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
 																	Comment.deleted_utc == 0,
 																	Comment.parent_comment_id == parent_comment_id,
@@ -363,7 +363,7 @@ def api_comment(v):
 
 	is_bot = bool(request.headers.get("Authorization"))
 
-	if '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower() and parent_post.id not in (37696,37697,37749,37833,37838) and not is_bot and not v.marseyawarded and AGENDAPOSTER_PHRASE not in body.lower() and len(body) > 10:
+	if '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower() and parent_post.id not in ADMIGGERS and not is_bot and not v.marseyawarded and AGENDAPOSTER_PHRASE not in body.lower() and len(body) > 10:
 		now = int(time.time())
 		cutoff = now - 60 * 60 * 24
 
@@ -477,7 +477,7 @@ def api_comment(v):
 		n = Notification(comment_id=c_based.id, user_id=v.id)
 		g.db.add(n)
 
-	if parent_post.id not in (37696,37697,37749,37833,37838):
+	if parent_post.id not in ADMIGGERS:
 		if v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in c.body.lower():
 
 			c.is_banned = True
@@ -717,9 +717,6 @@ def edit_comment(cid, v):
 		return {"error":"You have to actually type something!"}, 400
 
 	if body != c.body or request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
-		if v.marseyawarded and not marsey_regex.fullmatch(body):
-			return {"error":"You can only type marseys!"}, 403
-
 		if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
 			return {"error":"You have to type more than 280 characters!"}, 403
 		elif v.bird and len(body) > 140:
@@ -820,6 +817,9 @@ def edit_comment(cid, v):
 				else: return {"error": "Image/Video files only"}, 400
 
 			body_html = sanitize(body, edit=True)
+
+			if v.marseyawarded and marseyaward_body_regex.search(body_html):
+				return {"error":"You can only type marseys!"}, 403
 
 		if len(body_html) > 20000: abort(400)
 
@@ -927,7 +927,8 @@ def pin_comment(cid, v):
 	if not comment.is_pinned:
 		if v.id != comment.post.author_id: abort(403)
 		
-		comment.is_pinned = v.username + " (OP)"
+		if comment.post.ghost: comment.is_pinned = "(OP)"
+		else: comment.is_pinned = v.username + " (OP)"
 
 		g.db.add(comment)
 

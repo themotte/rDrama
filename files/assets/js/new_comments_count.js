@@ -6,10 +6,12 @@ if (typeof showNewCommentCounts === 'undefined') {
 		if (lastCount) {
 			const newComments = newTotal - lastCount.c
 			if (newComments > 0) {
-				document.querySelectorAll(`#post-${postId} .new-comments`).forEach(elem => {
+				elems = document.getElementsByClassName(`${postId}-new-comments`)
+				for (const elem of elems)
+				{
 					elem.textContent = ` (+${newComments})`
 					elem.classList.remove("d-none")
-				})
+				}
 			}
 		}
 	}

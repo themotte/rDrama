@@ -233,9 +233,9 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 				classes = 'emoji-md'
 				remoji = emoji
 
-			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const): classes += ' golden'
+			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): classes += ' golden'
 
-			if remoji == 'marseyrandom': remoji = choice(marseys_const)
+			if remoji == 'marseyrandom': remoji = choice(marseys_const2)
 
 			if path.isfile(f'files/assets/images/emojis/{remoji}.webp'):
 				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" class="{classes}" src="/e/{remoji}.webp">', new, flags=re.I|re.A)
@@ -255,10 +255,10 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			classes = 'emoji mirrored'
-			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const): classes += ' golden'
+			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): classes += ' golden'
 
 			old = emoji
-			if emoji == 'marseyrandom': emoji = choice(marseys_const)
+			if emoji == 'marseyrandom': emoji = choice(marseys_const2)
 			else: emoji = old
 
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
@@ -266,10 +266,10 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 				if comment: marseys_used.add(emoji)
 		else:
 			classes = 'emoji'
-			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const): classes += ' golden'
+			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): classes += ' golden'
 			
 			old = emoji
-			if emoji == 'marseyrandom': emoji = choice(marseys_const)
+			if emoji == 'marseyrandom': emoji = choice(marseys_const2)
 			else: emoji = old
 
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
@@ -345,10 +345,10 @@ def filter_emojis_only(title, edit=False, graceful=False):
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			classes = 'emoji mirrored'
-			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const): classes += ' golden'
+			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): classes += ' golden'
 
 			old = emoji
-			if emoji == 'marseyrandom': emoji = choice(marseys_const)
+			if emoji == 'marseyrandom': emoji = choice(marseys_const2)
 			else: emoji = old
 
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
@@ -356,10 +356,10 @@ def filter_emojis_only(title, edit=False, graceful=False):
 
 		else:
 			classes = 'emoji'
-			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const): classes += ' golden'
+			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): classes += ' golden'
 
 			old = emoji
-			if emoji == 'marseyrandom': emoji = choice(marseys_const)
+			if emoji == 'marseyrandom': emoji = choice(marseys_const2)
 			else: emoji = old
 
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):

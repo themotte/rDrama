@@ -460,11 +460,11 @@
 	<style>
 		@keyframes post-tilt {
 			from {transform: rotate(1deg);}
-			to {transform: rotate({{p.award_count("tilt")*4}}deg);}
+			to {transform: rotate({{p.award_count("tilt")}}deg);}
 		}
 		#post-root {
 			animation-name: post-tilt !important;
-			animation-duration: 30s !important;
+			animation-duration: 7s !important;
 			animation-iteration-count: infinite !important;
 			animation-direction: alternate !important;
 			animation-timing-function: linear !important;
@@ -775,7 +775,7 @@
 						<li class="list-inline-item">
 							<a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}">
 								<i class="fas fa-comment-dots"></i>{{p.comment_count}}
-								<span class="text-info d-none new-comments"></span>
+								<span class="text-info d-none {{p.id}}-new-comments"></span>
 							</a>
 						</li>
 
@@ -842,7 +842,7 @@
 				<li class="list-inline-item mr-auto">
 					<a href="{{p.permalink}}">
 						<i class="fas fa-comment-dots"></i>{{p.comment_count}}
-						<span class="text-info d-none new-comments"></span>
+						<span class="text-info d-none {{p.id}}-new-comments"></span>
 					</a>
 
 					{% if v and v.admin_level > 1 %}
@@ -922,7 +922,7 @@
 			<input autocomplete="off" type="hidden" name="parent_fullname" value="t2_{{p.id}}">
 			<input autocomplete="off" id="reply-form-submission-{{p.fullname}}" type="hidden" name="submission" value="{{p.id}}">
 			{% if v %}
-			<textarea autocomplete="off" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('reply-form-body-{{p.fullname}}', 'form-preview-{{p.id}}');charLimit('reply-form-body-{{p.fullname}}','charcount-reply')" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
+			<textarea autocomplete="off" {% if not (p and p.id in ADMIGGERS) %}{% if v.longpost %}minlength="280"{% elif v.bird %}maxlength="140"{% endif %}{% endif %} maxlength="10000" oninput="markdown('reply-form-body-{{p.fullname}}', 'form-preview-{{p.id}}');charLimit('reply-form-body-{{p.fullname}}','charcount-reply')" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
 			{% endif %}
 
 			<div class="text-small font-weight-bold mt-1" id="charcount-reply" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
@@ -1048,7 +1048,7 @@
 {% endif %}
 
 {% if not v or v.highlightcomments %}
-	<script src="/static/assets/js/new_comments_count.js?v=240"></script>
+	<script src="/static/assets/js/new_comments_count.js?v=242"></script>
 {% endif %}
 
 <script src="/static/assets/js/clipboard.js?v=240"></script>

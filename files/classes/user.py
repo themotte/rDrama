@@ -477,11 +477,15 @@ class User(Base):
 	@property
 	@lazy
 	def profile_url(self):
-		if self.agendaposter: return f"{SITE_FULL}/static/assets/images/defaultpictures/agendaposter/{random.randint(1, 51)}.webp?v=1008"
+		if self.agendaposter: return f"/e/marseychud.webp"
 		if self.profileurl: 
 			if self.profileurl.startswith('/'): return SITE_FULL + self.profileurl
 			return self.profileurl
-		if SITE_NAME == 'Drama': return f"{SITE_FULL}/static/assets/images/defaultpictures/{random.randint(1, 150)}.webp?v=1008"
+		if SITE_NAME == 'Drama': 
+			self.profileurl = '/e/' + random.choice(marseys_const) + '.webp'
+			g.db.add(self)
+			g.db.commit()
+			return self.profileurl
 		return f"{SITE_FULL}/static/assets/images/default-profile-pic.webp?v=1008"
 
 	@lazy

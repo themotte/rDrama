@@ -265,11 +265,11 @@
 				<style>
 					@keyframes c{{c.id}}-tilt {
 						from {transform: rotate(1deg);}
-						to {transform: rotate({{c.award_count("tilt")*4}}deg);}
+						to {transform: rotate({{c.award_count("tilt")}}deg);}
 					}
 					.comment-{{c.id}}-only {
 						animation-name: c{{c.id}}-tilt !important;
-						animation-duration: 30s !important;
+						animation-duration: 7s !important;
 						animation-iteration-count: infinite !important;
 						animation-direction: alternate !important;
 						animation-timing-function: linear !important;
@@ -498,7 +498,7 @@
 	{% set sub = c.post.sub %}
 	{% if sub and v.mods(sub) and not c.author.mods(sub) %}
 		<button id="exile-{{c.id}}" class="d-none {% if not c.author.exiled_from(sub) %}d-md-block{% endif %} dropdown-item list-inline-item text-danger" onclick="post_toast2(this,'/exile/comment/{{c.id}}','exile-{{c.id}}','unexile-{{c.id}}')"><i class="fas fa-campfire text-danger fa-fw"></i>Exile user</button>
-		<button id="unexile-{{c.id}}" class="d-none {% if c.author.exiled_from(sub) %}d-md-block{% endif %} dropdown-item list-inline-item text-success" onclick="post_toast2(this,'/unexile/comment/{{c.id}}','exile-{{c.id}}','unexile-{{c.id}}')"><i class="fas fa-campfire text-success fa-fw"></i>Unexile user</button>
+		<button id="unexile-{{c.id}}" class="d-none {% if c.author.exiled_from(sub) %}d-md-block{% endif %} dropdown-item list-inline-item text-success" onclick="post_toast2(this,'/s/{{sub}}/unexile/{{c.author_id}}','exile-{{c.id}}','unexile-{{c.id}}')"><i class="fas fa-campfire text-success fa-fw"></i>Unexile user</button>
 	{% endif %}
 {% endif %}
 
@@ -674,7 +674,7 @@
 							{% set sub = c.post.sub %}
 							{% if sub and v.mods(sub) and not c.author.mods(sub) %}
 								<a data-bs-dismiss="modal" id="exile2-{{c.id}}" class="{% if c.author.exiled_from(sub) %}d-none{% endif %} list-group-item text-danger" onclick="post_toast2(this,'/exile/comment/{{c.id}}','exile2-{{c.id}}','unexile2-{{c.id}}')"><i class="fas fa-campfire text-danger mr-2"></i>Exile user</a>
-								<a data-bs-dismiss="modal" id="unexile2-{{c.id}}" class="{% if not c.author.exiled_from(sub) %}d-none{% endif %} list-group-item text-success" onclick="post_toast2(this,'/unexile/comment/{{c.id}}','exile2-{{c.id}}','unexile2-{{c.id}}')"><i class="fas fa-campfire text-success mr-2"></i>Unexile user</a>
+								<a data-bs-dismiss="modal" id="unexile2-{{c.id}}" class="{% if not c.author.exiled_from(sub) %}d-none{% endif %} list-group-item text-success" onclick="post_toast2(this,'/s/{{sub}}/unexile/{{c.author_id}}','exile2-{{c.id}}','unexile2-{{c.id}}')"><i class="fas fa-campfire text-success mr-2"></i>Unexile user</a>
 							{% endif %}
 						{% endif %}
 					{% endif %}

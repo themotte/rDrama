@@ -20,12 +20,12 @@ import requests
 from shutil import copyfile
 from sys import stdout
 
-marseys = [f':#{x}:' for x in marseys_const]
+marseys = [f':#{x}:' for x in marseys_const2]
 
 if path.exists(f'snappy_{SITE_NAME}.txt'):
 	with open(f'snappy_{SITE_NAME}.txt', "r", encoding="utf-8") as f:
 		if SITE == 'pcmemes.net': snappyquotes = f.read().split("{[para]}")
-		else: snappyquotes = [f.read().split("\n{[para]}\n")] + marseys
+		else: snappyquotes = f.read().split("\n{[para]}\n") + marseys
 else: snappyquotes = marseys
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
@@ -464,9 +464,6 @@ def edit_post(pid, v):
 
 	if len(body) > 20000: return {"error":"Character limit is 20000!"}, 403
 
-	if v.marseyawarded and (not marsey_regex.fullmatch(title) or body and not marsey_regex.fullmatch(body)):
-		return {"error":"You can only type marseys!"}, 403
-
 	if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
 		return {"error":"You have to type more than 280 characters!"}, 403
 	elif v.bird and len(body) > 140:
@@ -476,6 +473,10 @@ def edit_post(pid, v):
 		if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 
 		title_html = filter_emojis_only(title, edit=True)
+
+		if v.marseyawarded and not marseyaward_title_regex.fullmatch(title_html):
+			return {"error":"You can only type marseys!"}, 403
+
 		p.title = title[:500]
 		p.title_html = title_html
 
@@ -526,6 +527,9 @@ def edit_post(pid, v):
 				g.db.add(c)
 
 		body_html = sanitize(body, edit=True)
+
+		if v.marseyawarded and marseyaward_body_regex.search(body_html):
+			return {"error":"You can only type marseys!"}, 403
 
 		bans = filter_comment_html(body_html)
 		if bans:
@@ -844,6 +848,10 @@ def submit_post(v, sub=None):
 	if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 
 	title_html = filter_emojis_only(title, graceful=True)
+
+	if v.marseyawarded and not marseyaward_title_regex.fullmatch(title_html):
+		return {"error":"You can only type marseys!"}, 403
+
 	if len(title_html) > 1500: return error("Rendered title is too big!")
 
 	if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
@@ -939,9 +947,6 @@ def submit_post(v, sub=None):
 
 	elif len(title) > 500:
 		return error("There's a 500 character limit for titles.")
-
-	if v.marseyawarded and (not marsey_regex.fullmatch(title) or body and not marsey_regex.fullmatch(body)):
-			return error("You can only type marseys!")
 
 	dup = g.db.query(Submission).filter(
 		Submission.author_id == v.id,
@@ -1045,6 +1050,9 @@ def submit_post(v, sub=None):
 		body += '\n\n<p>' + random.choice(FORTUNE_REPLIES) + '</p>'
 
 	body_html = sanitize(body)
+
+	if v.marseyawarded and marseyaward_body_regex.search(body_html):
+		return {"error":"You can only type marseys!"}, 403
 
 	if len(body_html) > 40000: return error("Submission body too long!")
 
