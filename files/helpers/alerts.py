@@ -88,15 +88,17 @@ def add_notif(cid, uid):
 def NOTIFY_USERS(text, v):
 	notify_users = set()
 	for word, id in NOTIFIED_USERS.items():
-		if id == 0: continue
-		if word in text.lower() and id not in notify_users and v.id != id: notify_users.add(id)
+		if id == 0 or v.id == id: continue
+		if word in text.lower() and id not in notify_users: notify_users.add(id)
 
 	captured = []
 	for i in mention_regex.finditer(text):
+		if v.username.lower() == i.group(2).lower(): continue
+
 		if i.group(0) in captured: continue
 		captured.append(i.group(0))
 
 		user = get_user(i.group(2), graceful=True)
-		if user and not v.any_block_exists(user): notify_users.add(user.id)
+		if user and v.id != user.id and not v.any_block_exists(user): notify_users.add(user.id)
 
 	return notify_users
