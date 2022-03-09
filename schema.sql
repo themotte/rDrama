@@ -915,14 +915,6 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: users one_profile_url; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT one_profile_url UNIQUE (profileurl);
-
-
---
 -- Name: save_relationship save_relationship_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
