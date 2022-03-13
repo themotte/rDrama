@@ -458,15 +458,15 @@
 
 {% if p.award_count("tilt") %}
 	<style>
-		@media (max-width: 720px) {
-			@keyframes post-tilt {
-				from {transform: rotate(0deg);}
-				to {transform: rotate(0.25deg);}
-			}
-		}
 		@keyframes post-tilt {
 			from {transform: rotate(0.5deg);}
 			to {transform: rotate({{p.award_count("tilt")}}deg);}
+		}
+		@media (max-width: 720px) {
+			@keyframes post-tilt {
+				from {transform: rotate(0deg);}
+				to {transform: rotate(1deg);}
+			}
 		}
 		#post-root {
 			animation-name: post-tilt !important;

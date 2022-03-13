@@ -263,15 +263,15 @@
 			
 			{% if c.award_count("tilt") %}
 				<style>
-					@media (max-width: 720px) {
-						@keyframes c{{c.id}}-tilt {
-							from {transform: rotate(0deg);}
-							to {transform: rotate(0.25deg);}
-						}
-					}
 					@keyframes c{{c.id}}-tilt {
 						from {transform: rotate(0.5deg);}
 						to {transform: rotate({{c.award_count("tilt")}}deg);}
+					}
+					@media (max-width: 720px) {
+						@keyframes c{{c.id}}-tilt {
+							from {transform: rotate(0deg);}
+							to {transform: rotate(1deg);}
+						}
 					}
 					.comment-{{c.id}}-only {
 						animation-name: c{{c.id}}-tilt !important;
