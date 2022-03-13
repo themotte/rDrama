@@ -265,15 +265,15 @@
 				<style>
 					@keyframes c{{c.id}}-tilt {
 						0% {transform: rotate(0deg);}
-						25% {transform: rotate({{p.award_count("tilt")}}deg);}
-						75% {transform: rotate(-{{p.award_count("tilt")}}deg);}
+						25% {transform: rotate({{c.award_count("tilt")}}deg);}
+						75% {transform: rotate(-{{c.award_count("tilt")}}deg);}
 						100% {transform: rotate(0deg);}
 					}
 					@media (max-width: 720px) {
 						@keyframes c{{c.id}}-tilt {
 							0% {transform: rotate(0deg);}
-							25% {transform: rotate({{p.award_count("tilt")/4}}deg);}
-							75% {transform: rotate(-{{p.award_count("tilt")/4}}deg);}
+							25% {transform: rotate({{c.award_count("tilt")/4}}deg);}
+							75% {transform: rotate(-{{c.award_count("tilt")/4}}deg);}
 							100% {transform: rotate(0deg);}
 						}					
 					}
