@@ -465,7 +465,7 @@
 		@media (max-width: 720px) {
 			@keyframes post-tilt {
 				from {transform: rotate(0deg);}
-				to {transform: rotate(1deg);}
+				to {transform: rotate({{p.award_count("tilt")/4}}deg);}
 			}
 		}
 		#post-root {
