@@ -434,7 +434,7 @@ AWARDS = {
 	"ghost": {
 		"kind": "ghost",
 		"title": "Ghost",
-		"description": "Hides the usernames of everyone in the thread",
+		"description": "???",
 		"icon": "fas fa-ghost",
 		"color": "text-white",
 		"price": 3000
