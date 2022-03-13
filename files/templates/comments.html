@@ -264,13 +264,17 @@
 			{% if c.award_count("tilt") %}
 				<style>
 					@keyframes c{{c.id}}-tilt {
-						from {transform: rotate(0.5deg);}
-						to {transform: rotate({{c.award_count("tilt")}}deg);}
+						0% {transform: rotate(0deg);}
+						25% {transform: rotate({{p.award_count("tilt")}}deg);}
+						75% {transform: rotate(-{{p.award_count("tilt")}}deg);}
+						100% {transform: rotate(0deg);}
 					}
 					@media (max-width: 720px) {
 						@keyframes c{{c.id}}-tilt {
-							from {transform: rotate(0.5deg);}
-							to {transform: rotate({{c.award_count("tilt")/4}}deg);}
+							0% {transform: rotate(0deg);}
+							25% {transform: rotate({{p.award_count("tilt")/4}}deg);}
+							75% {transform: rotate(-{{p.award_count("tilt")/4}}deg);}
+							100% {transform: rotate(0deg);}
 						}					
 					}
 					.comment-{{c.id}}-only {
