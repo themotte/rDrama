@@ -299,7 +299,7 @@ def api_comment(v):
 									send_notification(user.id, text)
 
 								old_badge = user.has_badge(17)
-								if badge: g.db.delete(badge)
+								if old_badge: g.db.delete(old_badge)
 
 
 							if all_by_author < 10 and not user.has_badge(17):
