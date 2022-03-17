@@ -61,7 +61,7 @@ def notifications(v):
 				x.read = True
 				c.unread = True
 				g.db.add(x)
-			c.notif_utc = x.created_utc
+			if x.created_utc > 1620391248: c.notif_utc = x.created_utc
 			listing.append(c)
 
 		g.db.commit()
@@ -85,7 +85,7 @@ def notifications(v):
 			try: c = comments[i]
 			except: continue
 			if not x.read: c.unread = True
-			c.notif_utc = x.created_utc
+			if x.created_utc > 1620391248: c.notif_utc = x.created_utc
 			x.read = True
 			g.db.add(x)
 			i += 1
