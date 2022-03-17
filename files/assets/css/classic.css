@@ -490,7 +490,7 @@ a.nav-link:hover {
     color:black !important;
 }
 
-#frontpage .btn.btn-secondary.text-small-m {
+#frontpage .btn.btn-secondary.{
 	color: #ff0 !important;
 	text-shadow: -1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000 !important;
 	background: transparent !important;
