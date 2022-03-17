@@ -98,7 +98,7 @@ def publish(pid, v):
 
 	g.db.commit()
 
-	return {"message": "Post published!"}
+	return redirect(p.permalink)
 
 @app.get("/submit")
 @app.get("/h/<sub>/submit")

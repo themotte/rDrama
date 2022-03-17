@@ -3,7 +3,7 @@
 
 {% if v and v.id==p.author_id %}
     {% if p.private %}
-        <a class="list-inline-item" role="button" onclick="post_toast(this,'/publish/{{p.id}}')"><i class="fas fa-globe"></i>Publish</a>
+        <a class="list-inline-item" href='/publish/{{p.id}}'><i class="fas fa-globe"></i>Publish</a>
     {% endif %}
 {% endif %}
 

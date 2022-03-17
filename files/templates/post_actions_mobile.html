@@ -20,7 +20,7 @@
     {% endif %}
 
     {% if p.private %}
-        <button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" role="button" onclick="post_toast(this,'/publish/{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-globe text-center text-muted mr-3"></i>Publish</button>
+        <a class="nobackground btn btn-link btn-block btn-lg text-left text-muted" href='/publish/{{p.id}}'><i class="fas fa-globe text-center text-muted mr-3"></i>Publish</a>
     {% endif %}
 
     {% if request.path.startswith('/@') %}
