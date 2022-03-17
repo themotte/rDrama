@@ -1,7 +1,7 @@
 import random
 
 special_min = 100
-special_max = 1000
+special_max = 200
 standard_min = 10
 standard_max = 100
 

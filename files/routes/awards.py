@@ -77,6 +77,7 @@ def shop(v):
 	elif v.patron == 4: discount = 0.75
 	elif v.patron == 5: discount = 0.70
 	elif v.patron == 6: discount = 0.65
+	elif v.patron == 7: discount = 0.60
 	else: discount = 1
 
 	for badge in [69,70,71,72,73]:
@@ -217,8 +218,6 @@ def award_post(pid, v):
 
 	if not post:
 		return {"error": "That post doesn't exist."}, 404
-
-	if kind == "ghost" and post.distinguish_level: return {"error": "You can't use the ghost award on distinguished posts."}, 403
 
 	post_award.submission_id = post.id
 	g.db.add(post_award)
@@ -392,12 +391,6 @@ def award_post(pid, v):
 			g.db.add(badge)
 			g.db.flush()
 			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "ghost":
-		post.ghost = True
-		g.db.add(post)
-		for c in post.comments:
-			c.ghost = True
-			g.db.add(c)
 	elif kind == "rehab":
 		if author.rehab: author.rehab += 86400
 		else: author.rehab = int(time.time()) + 86400
@@ -443,8 +436,6 @@ def award_comment(cid, v):
 
 	if not c:
 		return {"error": "That comment doesn't exist."}, 404
-
-	if kind == "ghost" and c.distinguish_level: return {"error": "You can't use the ghost award on distinguished comments."}, 403
 
 	comment_award.comment_id = c.id
 	g.db.add(comment_award)
@@ -615,9 +606,6 @@ def award_comment(cid, v):
 			g.db.add(badge)
 			g.db.flush()
 			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "ghost":
-		c.ghost = True
-		g.db.add(c)
 	elif kind == "rehab":
 		if author.rehab: author.rehab += 86400
 		else: author.rehab = int(time.time()) + 86400

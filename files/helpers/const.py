@@ -83,7 +83,7 @@ SLURS = {
 	"dancing israelis": "i love Israel",
 	"sodomite": "total dreamboat",
 	"pajeet": "sexy Indian dude",
-	"female": "birthing person",
+	"female": "bleeder",
 	"landlord": "landchad",
 	"tenant": "renthog",
 	"renter": "rentoid",

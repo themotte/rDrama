@@ -68,16 +68,13 @@
 							{% elif v.subs == 2 %}
 								Include all holes
 							{% elif v.subs == 3 %}
-								View subscribed holes only
-							{% elif v.subs == 4 %}
 								View holes only
 							{% endif %}
 						</button>
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
 							{% if v.subs != 1 %}<a class="dropdown-item text-small-m" href="/sub_toggle/1"><i class="fas fa-user-group mr-2 text-small-m"></i>Include subscribed holes</a>{% endif %}
 							{% if v.subs != 2 %}<a class="dropdown-item text-small-m" href="/sub_toggle/2"><i class="fas fa-user-group mr-2 text-small-m"></i>Include all holes</a>{% endif %}
-							{% if v.subs != 3 %}<a class="dropdown-item text-small-m" href="/sub_toggle/3"><i class="fas fa-user-group mr-2 text-small-m"></i>View subscribed holes only</a>{% endif %}
-							{% if v.subs != 4 %}<a class="dropdown-item text-small-m" href="/sub_toggle/4"><i class="fas fa-user-group mr-2 text-small-m"></i>View holes only</a>{% endif %}
+							{% if v.subs != 3 %}<a class="dropdown-item text-small-m" href="/sub_toggle/3"><i class="fas fa-user-group mr-2 text-small-m"></i>View holes only</a>{% endif %}
 						</div>
 					</div>
 				{% endif %}

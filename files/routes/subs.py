@@ -466,7 +466,7 @@ def sub_toggle(mode, v):
 	try: mode = int(mode)
 	except: abort(400)
 
-	if mode in (1,2,3,4) and v.subs != mode:
+	if mode in (1,2,3) and v.subs != mode:
 		v.subs = mode
 		g.db.add(v)
 		g.db.commit()
