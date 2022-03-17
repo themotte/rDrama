@@ -226,6 +226,9 @@ def award_post(pid, v):
 
 	author = post.author
 
+	if author.id == PIZZASHILL_ID:
+		return {"error": "Pizzashill is immune to awards."}, 403
+
 	if v.id != author.id:
 		msg = f"@{v.username} has given your [post]({post.shortlink}) the {AWARDS[kind]['title']} Award!"
 		if note: msg += f"\n\n> {note}"
@@ -443,6 +446,9 @@ def award_comment(cid, v):
 	note = request.values.get("note", "").strip()
 
 	author = c.author
+
+	if author.id == PIZZASHILL_ID:
+		return {"error": "Pizzashill is immune to awards."}, 403
 
 	if v.id != author.id:
 		msg = f"@{v.username} has given your [comment]({c.shortlink}) the {AWARDS[kind]['title']} Award!"

@@ -871,7 +871,9 @@ def submit_post(v, sub=None):
 		
 		url = urlunparse(new_url)
 
-		search_url  = url.replace('\\', '').replace('_', '\_').replace('%', '').strip()
+		search_url = url.replace('%', '')
+		search_url = reddit_post_regex.sub(r'\1%', search_url)
+		search_url = search_url.replace('\\', '').replace('_', '\_').strip()
 
 		repost = g.db.query(Submission).filter(
 			Submission.url.ilike(search_url),
@@ -1288,6 +1290,8 @@ def submit_post(v, sub=None):
 		autovote = Vote(user_id=AEVANN_ID, submission_id=post.id, vote_type=1)
 		g.db.add(autovote)
 		autovote = Vote(user_id=CRAT_ID, submission_id=post.id, vote_type=1)
+		g.db.add(autovote)
+		autovote = Vote(user_id=PIZZASHILLSHILL_ID, submission_id=post.id, vote_type=1)
 		g.db.add(autovote)
 		v.coins += 3
 		v.truecoins += 3

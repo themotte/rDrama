@@ -130,6 +130,7 @@ if SITE in {'rdrama.net','devrama.xyz'}:
 	KIPPY_ID = 7150
 	GIFT_NOTIF_ID = 995
 	PIZZASHILL_ID = 2424
+	PIZZASHILLSHILL_ID = 9712
 	HIL_ID = 4245
 	CRAT_ID = 747
 	IDIO_ID = 30
@@ -160,6 +161,7 @@ elif SITE == "pcmemes.net":
 	A_ID = 0
 	KIPPY_ID = 1592
 	PIZZASHILL_ID = 0
+	PIZZASHILLSHILL_ID = 0
 	GIFT_NOTIF_ID = 1592
 	HIL_ID = 0
 	CRAT_ID = 0
@@ -192,6 +194,7 @@ else:
 	KIPPY_ID = 0
 	GIFT_NOTIF_ID = 9
 	PIZZASHILL_ID = 0
+	PIZZASHILLSHILL_ID = 0
 	HIL_ID = 0
 	CRAT_ID = 0
 	IDIO_ID = 0
@@ -692,6 +695,8 @@ emoji_regex4 = re.compile('(?<!"):([!A-Za-z0-9]{1,30}?):', flags=re.A)
 snappy_url_regex = re.compile('<a href=\"(https?:\/\/[a-z]{1,20}\.[^\"]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">(.*?)<\/a>', flags=re.A)
 
 email_regex = re.compile('([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+', flags=re.A)
+
+reddit_post_regex = re.compile('(https:\/\/old.reddit.com\/r\/\w{1,30}\/comments\/[a-z0-9]+).*', flags=re.A)
 
 slur_regex = re.compile(rf"((?<=\s|>)|^)({single_words})((?=[\s<,.$]|s[\s<,.$]))", flags=re.I|re.A)
 slur_regex_upper = re.compile(rf"((?<=\s|>)|^)({single_words.upper()})((?=[\s<,.$]|S[\s<,.$]))", flags=re.A)
