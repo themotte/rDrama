@@ -699,7 +699,7 @@ def thumbnail_thread(pid):
 
 	if SITE_NAME == 'Drama':
 		for t in ("submission","comment"):
-			word = random.choice(('rdrama','marsey','r/drama'))
+			word = random.choice(('rdrama','marsey'))
 
 			try:
 				data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={word}&size=1', timeout=5).json()["data"]
