@@ -481,12 +481,6 @@ class User(Base):
 		if self.profileurl: 
 			if self.profileurl.startswith('/'): return SITE_FULL + self.profileurl
 			return self.profileurl
-		if SITE_NAME == 'Drama': 
-			self.profileurl = '/e/' + random.choice(marseys_const) + '.webp'
-			try: g.db.add(self)
-			except: pass
-			g.db.commit()
-			return self.profileurl
 		return f"{SITE_FULL}/static/assets/images/default-profile-pic.webp?v=1008"
 
 	@lazy
