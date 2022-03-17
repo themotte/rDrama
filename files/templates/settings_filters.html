@@ -23,7 +23,7 @@
 						<p>Change how many posts appear on every page.</p>
 						<div class="input-group mb2">
 							<select autocomplete="off" id='frontsize' class="form-control" form="profile-settings" name="frontsize" onchange="post_toast(this,'/settings/profile?frontsize='+document.getElementById('frontsize').value)">
-							{% for entry in [25, 50, 100] %}
+							{% for entry in [15, 25, 50, 100] %}
 								<option value="{{entry}}"{{' selected' if v.frontsize==entry}}>{{entry}}</option>
 							{% endfor %}
 						</select>
