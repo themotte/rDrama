@@ -10,6 +10,8 @@ from json import loads, dump
 from random import random, choice
 import signal
 import time
+from urllib.parse import ParseResult, urlunparse, urlparse
+
 
 allowed_tags = tags = ['b',
 						'blockquote',
@@ -115,7 +117,13 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 	sanitized = strikethrough_regex.sub(r'<del>\1</del>', sanitized)
 
-	sanitized = sanitized.replace("\ufeff", "").replace("𒐪","").replace("<script","").replace("script>","").replace('‎','')
+	sanitized = sanitized.replace("\ufeff", "").replace("𒐪","").replace("<script","").replace("script>","").replace('‎','').replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube").replace("old.reddit.com/gallery", "reddit.com/gallery")
+
+	if "https://youtube.com/watch?v=" in sanitized: sanitized = sanitized.replace("?t=", "&t=")
+
+	for rd in ["://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it"]:
+		sanitized = sanitized.replace(rd, "://old.reddit.com")
+
 
 	if alert:
 		captured = []
@@ -194,6 +202,32 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 				try: tag.string = tag["href"]
 				except: tag.string = ""
 
+
+			parsed_url = urlparse(tag.get("href"))
+
+			domain = parsed_url.netloc
+			if domain == 'old.reddit.com':
+				new_url = ParseResult(scheme="https",
+						netloc=parsed_url.netloc,
+						path=parsed_url.path,
+						params=parsed_url.params,
+						query=None,
+						fragment=parsed_url.fragment)
+			else:
+				qd = parse_qs(parsed_url.query)
+				filtered = {k: val for k, val in qd.items() if not k.startswith('utm_') and not k.startswith('ref_')}
+
+				new_url = ParseResult(scheme="https",
+									netloc=parsed_url.netloc,
+									path=parsed_url.path,
+									params=parsed_url.params,
+									query=urlencode(filtered, doseq=True),
+									fragment=parsed_url.fragment)
+			
+			
+			new_url = urlunparse(new_url)
+			if tag.string == tag["href"]: tag.string = new_url
+			tag["href"] = new_url
 
 
 	sanitized = str(soup)
@@ -276,10 +310,6 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 				sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', sanitized, flags=re.I|re.A)
 				if comment: marseys_used.add(emoji)
 
-	sanitized = sanitized.replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube")
-
-	if "https://youtube.com/watch?v=" in sanitized: sanitized = sanitized.replace("?t=", "&t=")
-
 	captured = []
 	for i in youtube_regex.finditer(sanitized):
 		if i.group(0) in captured: continue
@@ -298,11 +328,6 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 		htmlsource += '"></lite-youtube>'
 
 		sanitized = sanitized.replace(replacing, htmlsource)
-
-	for rd in ["://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it"]:
-		sanitized = sanitized.replace(rd, "://old.reddit.com")
-
-	sanitized = sanitized.replace("old.reddit.com/gallery", "reddit.com/gallery")
 
 
 	sanitized = unlinked_regex.sub(r'\1<a href="\2" rel="nofollow noopener noreferrer" target="_blank">\2</a>', sanitized)

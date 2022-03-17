@@ -23,16 +23,6 @@ GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 
 month = datetime.now().strftime('%B')
 
-@app.get('/admin/default')
-@admin_level_required(3)
-def default(v):
-	for u in g.db.query(User).filter(User.profileurl == None).all():
-		u.profileurl = '/e/' + random.choice(marseys_const) + '.webp'
-		g.db.add(u)
-		print(u.username, flush=True)
-	g.db.commit()
-	return 'done'
-
 @app.get('/admin/merge/<id1>/<id2>')
 @admin_level_required(3)
 def merge(v, id1, id2):
