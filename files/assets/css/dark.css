@@ -66,6 +66,6 @@ pre {
 	background: None !important;
 }
 
-#frontpage .post-title a:visited {
+#frontpage .post-title a:visited, .visited {
 	color: #7a7a7a !important;
 }

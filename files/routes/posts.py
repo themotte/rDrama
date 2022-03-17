@@ -414,7 +414,9 @@ def morecomments(v, cid):
 		c = g.db.query(Comment).filter_by(id=cid).one_or_none()
 		comments = c.replies
 
-	p = comments[0].post
+	if comments: p = comments[0].post
+	else: p = None
+	
 	return render_template("comments.html", v=v, comments=comments, p=p, render_replies=True, ajax=True)
 
 @app.post("/edit_post/<pid>")

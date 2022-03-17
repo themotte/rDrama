@@ -29,7 +29,7 @@ body, .navbar-light, .navbar-dark, .card, .modal-content, .comment-write textare
 	background: None !important;
 }
 
-#frontpage .post-title a:visited {
+#frontpage .post-title a:visited, .visited {
 	color: #6e6e6e !important;
 }
 

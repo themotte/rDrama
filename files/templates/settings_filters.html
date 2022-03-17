@@ -67,7 +67,7 @@
 							<p>Change the default sorting for posts.</p>
 							<div class="input-group mb2">
 								<select autocomplete="off" id='defaultsorting' class="form-control" form="profile-settings" name="defaultsorting" onchange="post_toast(this,'/settings/profile?defaultsorting='+document.getElementById('defaultsorting').value)">
-								{% for entry in ["hot", "new", "old", "top", "bottom", "controversial", "comments"] %}
+								{% for entry in ["hot", "bump", "new", "old", "top", "bottom", "controversial", "comments"] %}
 								<option value="{{entry}}"{{' selected' if v.defaultsorting==entry}}>{{entry}}</option>
 								{% endfor %}
 							</select>

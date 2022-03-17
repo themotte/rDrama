@@ -81,7 +81,7 @@ blockquote {
 	background: None !important;
 }
 
-#frontpage .post-title a:visited {
+#frontpage .post-title a:visited, .visited {
 	color: #949494 !important;
 }
 

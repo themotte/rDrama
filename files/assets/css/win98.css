@@ -126,7 +126,7 @@ blockquote {
 	padding: 20px !important;
 }
 
-#frontpage .post-title a:visited {
+#frontpage .post-title a:visited, .visited {
 	color: #5c5c5c !important;
 }
 

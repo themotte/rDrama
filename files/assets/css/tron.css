@@ -209,7 +209,7 @@
 	color: var(--primary) !important;
 }
 
-#frontpage .post-title a:visited {
+#frontpage .post-title a:visited, .visited {
 	color: #b0b0b0 !important;
 }
 

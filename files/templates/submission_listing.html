@@ -205,7 +205,7 @@
 				&nbsp;&nbsp;{{p.views}} thread views
 			</div>
 
-			<h5 class="card-title post-title text-left w-lg-95 mb-0 pb-0 pb-md-1"><a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}" class="stretched-link {% if p.author.agendaposter %}agendaposter{% endif %}">
+			<h5 class="card-title post-title text-left w-lg-95 mb-0 pb-0 pb-md-1"><a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}" class="{% if voted %}visited{% endif %} stretched-link {% if p.author.agendaposter %}agendaposter{% endif %}">
 				{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
 				{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
 				{{p.realtitle(v) | safe}}
