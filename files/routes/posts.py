@@ -21,7 +21,9 @@ from shutil import copyfile
 from sys import stdout
 
 
-snappyquotes = [f':#{x}:' for x in marseys_const2]
+if SITE_NAME == 'PCM': snappyquotes = []
+else: snappyquotes = [f':#{x}:' for x in marseys_const2]
+
 if path.exists(f'snappy_{SITE_NAME}.txt'):
 	with open(f'snappy_{SITE_NAME}.txt', "r", encoding="utf-8") as f:
 		snappyquotes += f.read().split("\n{[para]}\n")
