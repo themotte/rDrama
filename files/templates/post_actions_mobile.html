@@ -1,3 +1,11 @@
+{% if v and v.id==p.author_id and p.private %}
+    <form class="btn-block" action="/publish/{{p.id}}" method="post">
+        <input type="hidden" name="formkey", value="{{v.formkey}}">
+        <button class="nobackground btn btn-link btn-lg text-left text-muted" data-bs-dismiss="modal" type="submit"><i class="fas fa-globe text-center mr-3"></i>Publish</button>
+    </form>
+{% endif %}
+
+
 {% if not p.ghost %}<a class="btn-block" href="/votes?link={{p.fullname}}"><button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</button></a>{% endif %}
 
 <button data-bs-dismiss="modal" class="copy-link nobackground btn btn-link btn-block btn-lg text-left text-muted" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://rdrama.gay{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="far fa-copy text-center text-muted mr-3"></i>Copy link</button>
@@ -17,10 +25,6 @@
     {% if v.admin_level == 1 %}
         <button id="distinguish2-{{p.id}}" class="{% if p.distinguish_level %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left" role="button" onclick="post_toast2(this,'/distinguish/{{p.id}}','distinguish2-{{p.id}}','undistinguish2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-crown text-center mr-3"></i>Distinguish</button>
         <button id="undistinguish2-{{p.id}}" class="{% if not p.distinguish_level %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left" role="button" onclick="post_toast2(this,'/distinguish/{{p.id}}','distinguish2-{{p.id}}','undistinguish2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-crown text-center mr-3"></i>Undistinguish</button>
-    {% endif %}
-
-    {% if p.private %}
-        <a class="nobackground btn btn-link btn-block btn-lg text-left text-muted" href='/publish/{{p.id}}'><i class="fas fa-globe text-center text-muted mr-3"></i>Publish</a>
     {% endif %}
 
     {% if request.path.startswith('/@') %}

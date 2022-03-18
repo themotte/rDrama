@@ -1,11 +1,8 @@
-
-{% if v and v.id==p.author_id %}
-    {% if p.private %}
-        <form action="/publish/{{p.id}}" method="post">
-            <input type="hidden" name="formkey", value="{{v.formkey}}">
-            <button class="list-inline-item text-small p-0 m-0 mr-3 border-0 nobackground font-weight-bold" type="submit"><i class="fas fa-globe"></i>Publish</button>
-        </form>
-    {% endif %}
+{% if v and v.id==p.author_id and p.private %}
+    <form action="/publish/{{p.id}}" method="post">
+        <input type="hidden" name="formkey", value="{{v.formkey}}">
+        <button class="list-inline-item text-small p-0 m-0 mr-3 border-0 nobackground font-weight-bold" type="submit"><i class="fas fa-globe"></i>Publish</button>
+    </form>
 {% endif %}
 
 
