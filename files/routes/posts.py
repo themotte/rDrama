@@ -440,17 +440,18 @@ def edit_post(pid, v):
 
 	if len(body) > 20000: return {"error":"Character limit is 20000!"}, 403
 
-	if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
-		return {"error":"You have to type more than 280 characters!"}, 403
-	elif v.bird and len(body) > 140:
-		return {"error":"You have to type less than 140 characters!"}, 403
+	if v.id == p.author_id:
+		if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
+			return {"error":"You have to type more than 280 characters!"}, 403
+		elif v.bird and len(body) > 140:
+			return {"error":"You have to type less than 140 characters!"}, 403
 
 	if title != p.title:
-		if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
+		if v.id == p.author_id and v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 
 		title_html = filter_emojis_only(title, edit=True)
 
-		if v.marseyawarded and not marseyaward_title_regex.fullmatch(title_html):
+		if v.id == p.author_id and v.marseyawarded and not marseyaward_title_regex.fullmatch(title_html):
 			return {"error":"You can only type marseys!"}, 403
 
 		p.title = title[:500]
@@ -476,7 +477,7 @@ def edit_post(pid, v):
 	if body != p.body:
 		body = image_regex.sub(r'![](\1)', body)
 
-		if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
+		if v.id == p.author_id and v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
 		if not p.options.count():
 			for i in poll_regex.finditer(body):
@@ -504,7 +505,7 @@ def edit_post(pid, v):
 
 		body_html = sanitize(body, edit=True)
 
-		if v.marseyawarded and marseyaward_body_regex.search(body_html):
+		if v.id == p.author_id and v.marseyawarded and marseyaward_body_regex.search(body_html):
 			return {"error":"You can only type marseys!"}, 403
 
 		bans = filter_comment_html(body_html)
@@ -522,7 +523,7 @@ def edit_post(pid, v):
 
 		p.body_html = body_html
 
-		if v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in f'{p.body}{p.title}'.lower():
+		if v.id == p.author_id and v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in f'{p.body}{p.title}'.lower():
 
 			p.is_banned = True
 			p.ban_reason = "AutoJanny"
