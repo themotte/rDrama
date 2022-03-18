@@ -191,3 +191,7 @@ a.nav-link:hover {
 .srd {
     background-color: var(--black3) !important
 }
+
+#navbar .form-control.w-100 {
+	color: var(--white) !important;
+}
