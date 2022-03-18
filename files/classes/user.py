@@ -27,9 +27,6 @@ defaulttheme = environ.get("DEFAULT_THEME", "midnight").strip()
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 cardview = bool(int(environ.get("CARD_VIEW", 1)))
 
-if SITE_NAME == 'Drama': defaultsubs = 2
-else: defaultsubs = 2
-
 class User(Base):
 	__tablename__ = "users"
 
@@ -127,7 +124,7 @@ class User(Base):
 	original_username = deferred(Column(String))
 	referred_by = Column(Integer, ForeignKey("users.id"))
 	subs_created = Column(Integer, default=0)
-	subs = Column(Integer, default=defaultsubs)
+	subs = Column(Integer, default=2)
 
 	badges = relationship("Badge", viewonly=True)
 	subscriptions = relationship("Subscription", viewonly=True)
