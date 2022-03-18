@@ -3966,7 +3966,7 @@ pre .com, code .com {
 }
 .gif-categories img {
     border-radius: 0.35rem;
-    height: 200px;
+    height: 100px;
     width: 100%;
     object-fit: cover;
     -webkit-transition: all 0.15s ease;
