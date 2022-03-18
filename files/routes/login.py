@@ -531,7 +531,9 @@ def request_2fa_disable():
 def reset_2fa():
 
 	now=int(time.time())
-	t=int(request.values.get("t"))
+	t = request.values.get("t")
+	if not t: abort(400)
+	t = int(t)
 
 	if now > t+3600*24:
 		return render_template("message.html",

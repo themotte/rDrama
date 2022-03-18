@@ -569,7 +569,7 @@ def edit_post(pid, v):
 
 def archiveorg(url):
 	try: requests.get(f'https://web.archive.org/save/{url}', headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}, timeout=100)
-	except Exception as e: print(e)
+	except: pass
 
 
 def thumbnail_thread(pid):
@@ -881,7 +881,7 @@ def submit_post(v, sub=None):
 			Submission.url.ilike(search_url),
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False
-		).one_or_none()
+		).first()
 
 		if repost: return redirect(repost.permalink)
 
@@ -1286,12 +1286,10 @@ def submit_post(v, sub=None):
 		send_discord_message(post.permalink)
 		cache.delete_memoized(changeloglist)
 
-	if v.id in {PIZZASHILL_ID, HIL_ID}:
+	if v.id == PIZZASHILL_ID:
 		autovote = Vote(user_id=CARP_ID, submission_id=post.id, vote_type=1)
 		g.db.add(autovote)
 		autovote = Vote(user_id=AEVANN_ID, submission_id=post.id, vote_type=1)
-		g.db.add(autovote)
-		autovote = Vote(user_id=CRAT_ID, submission_id=post.id, vote_type=1)
 		g.db.add(autovote)
 		autovote = Vote(user_id=PIZZASHILLSHILL_ID, submission_id=post.id, vote_type=1)
 		g.db.add(autovote)

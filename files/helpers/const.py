@@ -76,6 +76,7 @@ SLURS = {
 	"sheeny": "Israeli friend",
 	"sheenies": "Israeli friends",
 	"hymie": "Israeli friend",
+	"god": "Allah (SWT)",
 	"allah": "Allah (SWT)",
 	"mohammad": "Prophet Mohammad (PBUH)",
 	"muhammad": "Prophet Mohammad (PBUH)",
@@ -83,7 +84,6 @@ SLURS = {
 	"dancing israelis": "i love Israel",
 	"sodomite": "total dreamboat",
 	"pajeet": "sexy Indian dude",
-	"female": "bleeder",
 	"landlord": "landchad",
 	"tenant": "renthog",
 	"renter": "rentoid",
@@ -131,8 +131,6 @@ if SITE in {'rdrama.net','devrama.xyz'}:
 	GIFT_NOTIF_ID = 995
 	PIZZASHILL_ID = 2424
 	PIZZASHILLSHILL_ID = 9712
-	HIL_ID = 4245
-	CRAT_ID = 747
 	IDIO_ID = 30
 	CARP_ID = 995
 	JOAN_ID = 28
@@ -163,8 +161,6 @@ elif SITE == "pcmemes.net":
 	PIZZASHILL_ID = 0
 	PIZZASHILLSHILL_ID = 0
 	GIFT_NOTIF_ID = 1592
-	HIL_ID = 0
-	CRAT_ID = 0
 	IDIO_ID = 0
 	CARP_ID = 0
 	JOAN_ID = 0
@@ -195,8 +191,6 @@ else:
 	GIFT_NOTIF_ID = 9
 	PIZZASHILL_ID = 0
 	PIZZASHILLSHILL_ID = 0
-	HIL_ID = 0
-	CRAT_ID = 0
 	IDIO_ID = 0
 	CARP_ID = 0
 	JOAN_ID = 0
@@ -716,9 +710,8 @@ def censor_slurs(body, logged_user):
 	return body
 
 def torture_ap(body, username):
-	body = slur_regex_upper.sub(sub_matcher_upper, body)
-	body = slur_regex.sub(sub_matcher, body)
-	for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
+	for k, l in AJ_REPLACEMENTS.items():
+		body = body.replace(k, l)
 	body = torture_regex.sub(rf'\1@{username} ', body)
 	body = torture_regex2.sub(rf'\1@{username} is ', body)
 	return body

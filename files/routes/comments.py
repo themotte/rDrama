@@ -659,22 +659,12 @@ def api_comment(v):
 		g.db.add(autovote)
 		autovote = CommentVote(user_id=AEVANN_ID, comment_id=c.id, vote_type=1)
 		g.db.add(autovote)
-		autovote = CommentVote(user_id=CRAT_ID, comment_id=c.id, vote_type=1)
-		g.db.add(autovote)
 		autovote = CommentVote(user_id=PIZZASHILLSHILL_ID, comment_id=c.id, vote_type=1)
 		g.db.add(autovote)
 		v.coins += 3
 		v.truecoins += 3
 		g.db.add(v)
 		c.upvotes += 3
-		g.db.add(c)
-	elif v.id == HIL_ID:
-		autovote = CommentVote(user_id=CARP_ID, comment_id=c.id, vote_type=1)
-		g.db.add(autovote)
-		v.coins += 1
-		v.truecoins += 1
-		g.db.add(v)
-		c.upvotes += 1
 		g.db.add(c)
 
 	if not v.rehab:
