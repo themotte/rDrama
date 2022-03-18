@@ -77,7 +77,7 @@ body, .card, #main-content-row {
 }
 
 /*post*/
-.post-meta, .post-actions a, .nav-link .fas, label, small, .comment-actions * {
+.post-meta, .post-actions a, .post-actions button, .nav-link .fas, label, small, .comment-actions * {
 	color: var(--grey) !important;
 }
 

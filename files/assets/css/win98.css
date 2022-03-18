@@ -130,7 +130,7 @@ blockquote {
 	color: #5c5c5c !important;
 }
 
-.post-actions a {
+.post-actions a, .post-actions button {
 	color: var(--muted) !important;
 }
 

@@ -3340,7 +3340,7 @@ small, .small {
 .modal .post-actions .list-group-item:focus, .modal .post-actions .list-group-item:hover {
     background-color: var(--gray-300);
 }
-.modal .post-actions a {
+.modal .post-actions a, .post-actions button {
     color: var(--black);
     font-size: 1rem;
 }
@@ -3368,7 +3368,7 @@ small, .small {
 .post-actions .dropdown-item:hover .fa, .post-actions .dropdown-item:hover .fas {
     color: var(--gray);
 }
-.post-actions a:hover .fa, .post-actions a:hover .fas {
+.post-actions a, .post-actions button:hover .fa, .post-actions a, .post-actions button:hover .fas {
     color: var(--black);
 }
 .post-actions:hover, .post-actions:focus {
@@ -3474,12 +3474,12 @@ small, .small {
 .post-actions .list-inline .list-inline-item .dropdown-item:active {
     color: var(--white);
 }
-.post-actions a {
+.post-actions a, .post-actions button {
     color: var(--gray-100);
     text-decoration: none;
     text-transform: none;
 }
-.post-actions a:hover {
+.post-actions a, .post-actions button:hover {
     color: var(--black);
 }
 .post-actions .dropdown-item:hover {
@@ -4128,7 +4128,7 @@ pre .com, code .com {
     .post-actions {
         font-weight: 400;
 }
-    .post-actions a {
+    .post-actions a, .post-actions button {
         font-size: 1rem;
         color: var(--gray-200);
 }

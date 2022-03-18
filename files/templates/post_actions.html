@@ -1,12 +1,15 @@
 
-{% if not p.ghost %}<a class="list-inline-item" href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a>{% endif %}
-
 {% if v and v.id==p.author_id %}
     {% if p.private %}
-        <a class="list-inline-item" href='/publish/{{p.id}}'><i class="fas fa-globe"></i>Publish</a>
+        <form action="/publish/{{p.id}}" method="post">
+            <input type="hidden" name="formkey", value="{{v.formkey}}">
+            <button class="list-inline-item text-small p-0 m-0 mr-3 border-0 nobackground font-weight-bold" type="submit"><i class="fas fa-globe"></i>Publish</button>
+        </form>
     {% endif %}
 {% endif %}
 
+
+{% if not p.ghost %}<a class="list-inline-item" href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a>{% endif %}
 
 {% if v %}
     <a class="list-inline-item text-muted d-none d-md-inline-block" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/award_post/{{p.id}}')"><i class="fas fa-gift fa-fw"></i>Give Award</a>

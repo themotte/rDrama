@@ -137,7 +137,7 @@ a {
 }
 
 /*post*/
-.post-meta, .post-actions a, .nav-link .fas, label, small, .comment-actions * {
+.post-meta, .post-actions a, .post-actions button, .nav-link .fas, label, small, .comment-actions * {
 	color: var(--black1) !important;
 }
 
