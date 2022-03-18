@@ -37,6 +37,21 @@
 	print(r.json())
 </pre>
 <p>The expected result of this would be a large JSON representation of the posts on the frontpage sorted by the number of comments</p>
+
+<br>
+
+<p>Aother python example:</p>
+<pre>	import requests
+
+	headers={"Authorization": "access_token_goes_here"}
+
+	url="{{SITE_FULL}}/unread"
+
+	r=requests.get(url, headers=headers)
+
+	print(r.json())
+</pre>
+<p>The expected result of this would be a JSON representation of unread notifications for your account</p>
 <pre>
 
 
@@ -79,4 +94,19 @@
 	print(r.json())
 </pre>
 <p>The expected result of this would be a large JSON representation of the posts on the frontpage sorted by the number of comments</p>
+
+<br>
+
+<p>Aother python example:</p>
+<pre>	import requests
+
+	headers={"Authorization": "access_token_goes_here"}
+
+	url="{{SITE_FULL}}/unread"
+
+	r=requests.get(url, headers=headers)
+
+	print(r.json())
+</pre>
+<p>The expected result of this would be a JSON representation of unread notifications for your account</p>
 {% endblock %}
