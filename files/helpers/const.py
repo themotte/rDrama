@@ -664,6 +664,8 @@ choice_regex = re.compile("\s*&&([^\$\n]+)&&\s*", flags=re.A)
 
 embed_removing_regex = re.compile('!\[\]\((.*?)\)', flags=re.A)
 
+image_check_regex = re.compile('!\[\]\(((?![^?\n]*\.(png|jpg|jpeg|gif|webp)).*?)\)', flags=re.I|re.A)
+
 title_regex = re.compile("[^\w ]", flags=re.A)
 
 based_regex = re.compile("based and (.{1,20}?)(-| )pilled", flags=re.I|re.A)

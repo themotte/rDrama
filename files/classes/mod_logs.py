@@ -109,268 +109,271 @@ class ModAction(Base):
 	def permalink(self):
 		return f"{SITE_FULL}/log/{self.id}"	
 
-ACTIONTYPES={
-	"grant_awards": {
-		"str": "granted awards to {self.target_link}",
-		"icon": "fa-gift",
-		"color": "bg-primary",
+ACTIONTYPES = {
+    'agendaposter': {
+		"str": 'set chud theme on {self.target_link}', 
+		"icon": 'fa-snooze', 
+		"color": 'bg-danger'
 	},
-	"check": {
-		"str": "gave {self.target_link} a checkmark",
-		"icon": "fa-badge-check",
-		"color": "bg-success",
+	'approve_app': {
+		"str": 'approved an application by {self.target_link}', 
+		"icon": 'fa-robot', 
+		"color": 'bg-success'
 	},
-	"uncheck": {
-		"str": "removed checkmark from {self.target_link}",
-		"icon": "fa-badge-check",
-		"color": "bg-muted",
+	'badge_grant': {
+		"str": 'granted badge to {self.target_link}', 
+		"icon": 'fa-badge', 
+		"color": 'bg-success'
 	},
-	"ban_domain": {
-		"str": "banned a domain",
-		"icon": "fa-globe",
-		"color": "bg-danger",
+	'badge_remove': {
+		"str": 'removed badge from {self.target_link}', 
+		"icon": 'fa-badge', 
+		"color": 'bg-danger'
 	},
-	"unban_domain": {
-		"str": "unbanned a domain",
-		"icon": "fa-globe",
-		"color": "bg-success",
+	'ban_comment': {
+		"str": 'removed {self.target_link}', 
+		"icon": 'fa-comment', 
+		"color": 'bg-danger'
 	},
-	"approve_app": {
-		"str": "approved an application by {self.target_link}",
-		"icon": "fa-robot",
-		"color": "bg-success",
+	'ban_domain': {
+		"str": 'banned a domain', 
+		"icon": 'fa-globe', 
+		"color": 'bg-danger'
 	},
-	"revoke_app": {
-		"str": "revoked an application by {self.target_link}",
-		"icon": "fa-robot",
-		"color": "bg-muted",
+	'ban_post': {
+		"str": 'removed post {self.target_link}', 
+		"icon": 'fa-feather-alt', 
+		"color": 'bg-danger'
 	},
-	"reject_app": {
-		"str": "rejected an application request by {self.target_link}",
-		"icon": "fa-robot",
-		"color": "bg-muted",
+	'ban_user': {
+		"str": 'banned user {self.target_link}', 
+		"icon": 'fa-user-slash', 
+		"color": 'bg-danger'
 	},
-	"change_sidebar": {
-		"str": "changed the sidebar",
-		"icon": "fa-columns",
-		"color": "bg-primary",
+	'change_sidebar': {
+		"str": 'changed the sidebar', 
+		"icon": 'fa-columns', 
+		"color": 'bg-primary'
 	},
-	"disable_signups": {
-		"str": "disabled signups",
-		"icon": "fa-users",
-		"color": "bg-danger",
+	'check': {
+		"str": 'gave {self.target_link} a checkmark', 
+		"icon": 'fa-badge-check', 
+		"color": 'bg-success'
 	},
-	"enable_signups": {
-		"str": "enabled signups",
-		"icon": "fa-users",
-		"color": "bg-success",
+	'club_allow': {
+		"str": 'allowed user {self.target_link} into the {cc}', 
+		"icon": 'fa-golf-club', 
+		"color": 'bg-success'
 	},
-	"disable_under_attack": {
-		"str": "disabled under attack mode",
-		"icon": "fa-shield",
-		"color": "bg-muted",
+	'club_ban': {
+		"str": 'disallowed user {self.target_link} from the {cc}', 
+		"icon": 'fa-golf-club', 
+		"color": 'bg-danger'
 	},
-	"enable_under_attack": {
-		"str": "enabled under attack mode",
-		"icon": "fa-shield",
-		"color": "bg-success",
+	'delete_report': {
+		"str": 'deleted report on {self.target_link}', 
+		"icon": 'fa-flag', 
+		"color": 'bg-danger'
 	},
-	"ban_user":{
-		"str":'banned user {self.target_link}',
-		"icon":"fa-user-slash",
-		"color": "bg-danger",
+	'disable_signups': {
+		"str": 'disabled signups', 
+		"icon": 'fa-users', 
+		"color": 'bg-danger'
 	},
-	"unban_user":{
-		"str":'unbanned user {self.target_link}',
-		"icon": "fa-user",
-		"color": "bg-success",
+	'disable_under_attack': {
+		"str": 'disabled under attack mode', 
+		"icon": 'fa-shield', 
+		"color": 'bg-muted'
 	},
-	"nuke_user":{
-		"str":'removed all content of {self.target_link}',
-		"icon":"fa-radiation-alt",
-		"color": "bg-danger",
+	'distinguish_comment': {
+		"str": 'distinguished their {self.target_link}', 
+		"icon": 'fa-crown', 
+		"color": 'bg-success'
 	},
-	"unnuke_user":{
-		"str":'approved all content of {self.target_link}',
-		"icon": "fa-radiation-alt",
-		"color": "bg-success",
+	'distinguish_post': {
+		"str": 'distinguished their post {self.target_link}', 
+		"icon": 'fa-crown', 
+		"color": 'bg-success'
 	},
-	"shadowban": {
-		"str": 'shadowbanned {self.target_link}',
-		"icon": "fa-eye-slash",
-		"color": "bg-danger",
+	'distribute': {
+		"str": 'distributed bet winnings to voters on {self.target_link}', 
+		"icon": 'fa-dollar-sign', 
+		"color": 'bg-success'
 	},
-	"unshadowban": {
-		"str": 'unshadowbanned {self.target_link}',
-		"icon": "fa-eye",
-		"color": "bg-success",
+	'dump_cache': {
+		"str": 'dumped cache', 
+		"icon": 'fa-trash-alt', 
+		"color": 'bg-muted'
 	},
-	"agendaposter": {
-		"str": "set chud theme on {self.target_link}",
-		"icon": "fa-snooze",
-		"color": "bg-danger",
+	'enable_signups': {
+		"str": 'enabled signups', 
+		"icon": 'fa-users', 
+		"color": 'bg-success'
 	},
-	"unagendaposter": {
-		"str": "removed chud theme from {self.target_link}",
-		"icon": "fa-snooze",
-		"color": "bg-success",
+	'enable_under_attack': {
+		"str": 'enabled under attack mode', 
+		"icon": 'fa-shield', 
+		"color": 'bg-success'
 	},
-	"set_flair_locked":{
-		"str":"set {self.target_link}'s flair (locked)",
-		"icon": "fa-award",
-		"color": "bg-primary",
+	'grant_awards': {
+		"str": 'granted awards to {self.target_link}', 
+		"icon": 'fa-gift', 
+		"color": 'bg-primary'
 	},
-	"set_flair_notlocked":{
-		"str":"set {self.target_link}'s flair (not locked)",
-		"icon": "fa-award",
-		"color": "bg-primary",
+	'link_accounts': {
+		"str": 'linked {self.target_link}', 
+		"icon": 'fa-link', 
+		"color": 'bg-success'
 	},
-	"pin_comment":{
-		"str":'pinned a {self.target_link}',
-		"icon":"fa-thumbtack fa-rotate--45",
-		"color": "bg-success",
+	'make_admin': {
+		"str": 'made {self.target_link} admin', 
+		"icon": 'fa-user-crown', 
+		"color": 'bg-success'
 	},
-	"unpin_comment":{
-		"str":'un-pinned a {self.target_link}',
-		"icon":"fa-thumbtack fa-rotate--45",
-		"color": "bg-muted",
+	'make_meme_admin': {
+		"str": 'made {self.target_link} meme admin', 
+		"icon": 'fa-user-crown', 
+		"color": 'bg-success'
 	},
-	"pin_post":{
-		"str":'pinned post {self.target_link}',
-		"icon":"fa-thumbtack fa-rotate--45",
-		"color": "bg-success",
+	'monthly': {
+		"str": 'distributed monthly marseybux', 
+		"icon": 'fa-sack-dollar', 
+		"color": 'bg-success'
 	},
-	"unpin_post":{
-		"str":'un-pinned post {self.target_link}',
-		"icon":"fa-thumbtack fa-rotate--45",
-		"color": "bg-muted",
+	'nuke_user': {
+		"str": 'removed all content of {self.target_link}', 
+		"icon": 'fa-radiation-alt', 
+		"color": 'bg-danger'
 	},
-	"set_nsfw":{
-		"str":'set nsfw on post {self.target_link}',
-		"icon":"fa-eye-evil",
-		"color": "bg-danger",
+	'pin_comment': {
+		"str": 'pinned a {self.target_link}', 
+		"icon": 'fa-thumbtack fa-rotate--45', 
+		"color": 'bg-success'
 	},
-	"unset_nsfw":{
-		"str":'un-set nsfw on post {self.target_link}',
-		"icon":"fa-eye-evil",
-		"color": "bg-success",
+	'pin_post': {
+		"str": 'pinned post {self.target_link}', 
+		"icon": 'fa-thumbtack fa-rotate--45', 
+		"color": 'bg-success'
 	},
-	"ban_post":{
-		"str": 'removed post {self.target_link}',
-		"icon":"fa-feather-alt",
-		"color": "bg-danger",
+	'purge_cache': {
+		"str": 'purged cache', 
+		"icon": 'fa-memory', 
+		"color": 'bg-muted'
 	},
-	"unban_post":{
-		"str": 'reinstated post {self.target_link}',
-		"icon":"fa-feather-alt",
-		"color": "bg-success",
+	'reject_app': {
+		"str": 'rejected an application request by {self.target_link}', 
+		"icon": 'fa-robot', 
+		"color": 'bg-muted'
 	},
-	"ban_comment":{
-		"str": 'removed {self.target_link}',
-		"icon":"fa-comment",
-		"color": "bg-danger",
+	'remove_admin': {
+		"str": 'removed {self.target_link} as admin', 
+		"icon": 'fa-user-crown', 
+		"color": 'bg-danger'
 	},
-	"unban_comment":{
-		"str": 'reinstated {self.target_link}',
-		"icon":"fa-comment",
-		"color": "bg-success",
+	'remove_meme_admin': {
+		"str": 'removed {self.target_link} as meme admin', 
+		"icon": 'fa-user-crown', 
+		"color": 'bg-danger'
 	},
-	"delete_report":{
-		"str": 'deleted report on {self.target_link}',
-		"icon":"fa-flag",
-		"color": "bg-danger",
+	'revert': {
+		"str": 'reverted {self.target_link} mod actions', 
+		"icon": 'fa-history', 
+		"color": 'bg-danger'
 	},
-	"make_admin": {
-		"str": 'made {self.target_link} admin',
-		"icon": "fa-user-crown",
-		"color": "bg-success",
+	'revoke_app': {
+		"str": 'revoked an application by {self.target_link}', 
+		"icon": 'fa-robot', 
+		"color": 'bg-muted'
 	},
-	"remove_admin": {
-		"str": 'removed {self.target_link} as admin',
-		"icon": "fa-user-crown",
-		"color": "bg-danger",
+	'set_flair_locked': {
+		"str": "set {self.target_link}'s flair (locked)", 
+		"icon": 'fa-award', 
+		"color": 'bg-primary'
 	},
-	"make_meme_admin": {
-		"str": 'made {self.target_link} meme admin',
-		"icon": "fa-user-crown",
-		"color": "bg-success",
+	'set_flair_notlocked': {
+		"str": "set {self.target_link}'s flair (not locked)", 
+		"icon": 'fa-award', 
+		"color": 'bg-primary'
 	},
-	"remove_meme_admin": {
-		"str": 'removed {self.target_link} as meme admin',
-		"icon": "fa-user-crown",
-		"color": "bg-danger",
+	'set_nsfw': {
+		"str": 'set nsfw on post {self.target_link}', 
+		"icon": 'fa-eye-evil', 
+		"color": 'bg-danger'
 	},
-	"distribute":{
-		"str": 'distributed bet winnings to voters on {self.target_link}',
-		"icon":"fa-dollar-sign",
-		"color": "bg-success",
+	'shadowban': {
+		"str": 'shadowbanned {self.target_link}', 
+		"icon": 'fa-eye-slash', 
+		"color": 'bg-danger'
 	},
-	"revert":{
-		"str": 'reverted {self.target_link} mod actions',
-		"icon":"fa-history",
-		"color": "bg-danger",
+	'unagendaposter': {
+		"str": 'removed chud theme from {self.target_link}', 
+		"icon": 'fa-snooze', 
+		"color": 'bg-success'
 	},
-	"club_allow":{
-		"str":'allowed user {self.target_link} into the {cc}',
-		"icon":"fa-golf-club",
-		"color": "bg-success",
+	'unban_comment': {
+		"str": 'reinstated {self.target_link}', 
+		"icon": 'fa-comment', 
+		"color": 'bg-success'
 	},
-	"club_ban":{
-		"str":'disallowed user {self.target_link} from the {cc}',
-		"icon": "fa-golf-club",
-		"color": "bg-danger",
+	'unban_domain': {
+		"str": 'unbanned a domain', 
+		"icon": 'fa-globe', 
+		"color": 'bg-success'
 	},
-	"monthly":{
-		"str": 'distributed monthly marseybux',
-		"icon":"fa-sack-dollar",
-		"color": "bg-success",
+	'unban_post': {
+		"str": 'reinstated post {self.target_link}', 
+		"icon": 'fa-feather-alt', 
+		"color": 'bg-success'
 	},
-	"purge_cache":{
-		"str": 'purged cache',
-		"icon":"fa-memory",
-		"color": "bg-muted",
+	'unban_user': {
+		"str": 'unbanned user {self.target_link}', 
+		"icon": 'fa-user', 
+		"color": 'bg-success'
 	},
-	"dump_cache":{
-		"str": 'dumped cache',
-		"icon":"fa-trash-alt",
-		"color": "bg-muted",
+	'uncheck': {
+		"str": 'removed checkmark from {self.target_link}', 
+		"icon": 'fa-badge-check', 
+		"color": 'bg-muted'
 	},
-	"badge_grant":{
-		"str":'granted badge to {self.target_link}',
-		"icon":"fa-badge",
-		"color": "bg-success",
+	'undistinguish_comment': {
+		"str": 'un-distinguished their {self.target_link}', 
+		"icon": 'fa-crown', 
+		"color": 'bg-muted'
 	},
-	"badge_remove":{
-		"str":'removed badge from {self.target_link}',
-		"icon": "fa-badge",
-		"color": "bg-danger",
+	'undistinguish_post': {
+		"str": 'un-distinguished their post {self.target_link}', 
+		"icon": 'fa-crown', 
+		"color": 'bg-muted'
 	},
-	"link_accounts":{
-		"str": 'linked {self.target_link}',
-		"icon":"fa-link",
-		"color": "bg-success",
+	'unnuke_user': {
+		"str": 'approved all content of {self.target_link}', 
+		"icon": 'fa-radiation-alt', 
+		"color": 'bg-success'
 	},
-	"distinguish_comment":{
-		"str":'distinguished their {self.target_link}',
-		"icon": "fa-crown",
-		"color": "bg-success"
+	'unpin_comment': {
+		"str": 'un-pinned a {self.target_link}', 
+		"icon": 'fa-thumbtack fa-rotate--45', 
+		"color": 'bg-muted'
 	},
-	"distinguish_post":{
-		"str":'distinguished their post {self.target_link}',
-		"icon": "fa-crown",
-		"color": "bg-success"
+	'unpin_post': {
+		"str": 'un-pinned post {self.target_link}', 
+		"icon": 'fa-thumbtack fa-rotate--45', 
+		"color": 'bg-muted'
 	},
-	"undistinguish_comment":{
-		"str":'un-distinguished their {self.target_link}',
-		"icon": "fa-crown",
-		"color": "bg-muted"
-		},
-	"undistinguish_post":{
-		"str":'un-distinguished their post {self.target_link}',
-		"icon": "fa-crown",
-		"color": "bg-muted"
+	'unset_nsfw': {
+		"str": 'un-set nsfw on post {self.target_link}', 
+		"icon": 'fa-eye-evil', 
+		"color": 'bg-success'
 	},
+	'unshadowban': {
+		"str": 'unshadowbanned {self.target_link}', 
+		"icon": 'fa-eye', 
+		"color": 'bg-success'
+	}
 }
+
+ACTIONTYPES = {key: value for key, value in sorted(ACTIONTYPES.items())}
+print(ACTIONTYPES, flush=True)
 
 ACTIONTYPES2 = deepcopy(ACTIONTYPES)
 ACTIONTYPES2.pop("shadowban")

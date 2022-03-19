@@ -111,6 +111,8 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	signal.signal(signal.SIGALRM, handler)
 	signal.alarm(1)
 	
+	sanitized = image_check_regex.sub(r'\1', sanitized)
+
 	sanitized = markdown(sanitized)
 
 	sanitized = strikethrough_regex.sub(r'<del>\1</del>', sanitized)
