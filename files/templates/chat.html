@@ -50,7 +50,7 @@
 </div>
 
 <script src="/assets/js/socketio.js"></script>
-<script src="/assets/js/chat.js?v=4"></script>
+<script src="/assets/js/chat.js?v=5"></script>
 
 <style>
 
@@ -63,6 +63,15 @@
   min-width: 42px;
   width: 42px;
   height: 42px;
+}
+
+#chat-window::-webkit-scrollbar {
+  display: none;
+}
+
+#chat-window {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 </style>
