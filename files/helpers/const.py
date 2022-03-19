@@ -652,6 +652,8 @@ marseyaward_title_regex = re.compile("(<img[^>]+>)+", flags=re.A)
 
 marsey_regex = re.compile("[a-z0-9]{1,30}", flags=re.A)
 
+tags_regex = re.compile("[a-z0-9: ]{1,200}", flags=re.A)
+
 image_regex = re.compile("(^https:\/\/.*\.(png|jpg|jpeg|gif|webp|maxwidth=9999|fidelity=high)($|\s))", flags=re.I|re.M|re.A)
 
 valid_sub_regex = re.compile("^[a-zA-Z0-9_\-]{3,20}$", flags=re.A)

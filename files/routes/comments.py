@@ -267,24 +267,25 @@ def api_comment(v):
 					elif v.admin_level > 2 and parent_post.id == 37838:
 						try:
 							marsey = loads(body.lower())
-							name = marsey["name"]
 
-							if not marsey_regex.fullmatch(name):
-								return {"error": "Invalid name!"}, 403
+							name = marsey["name"]
+							if not marsey_regex.fullmatch(name): return {"error": "Invalid name!"}, 400
+							existing = g.db.query(Marsey.name).filter_by(name=name).one_or_none()
+							if existing: return {"error": "A marsey with this name already exists!"}, 403
+
+							tags = marsey["tags"]
+							if not tags_regex.fullmatch(tags): return {"error": "Invalid tags!"}, 400
 
 							if "author" in marsey: user = get_user(marsey["author"])
 							elif "author_id" in marsey: user = get_account(marsey["author_id"])
 							else: abort(400)
 
-							existing = g.db.query(Marsey.name).filter_by(name=name).one_or_none()
-							if existing: return {"error": "A marsey with this name already exists!"}, 403
-
-							marsey = Marsey(name=marsey["name"], author_id=user.id, tags=marsey["tags"], count=0)
-							g.db.add(marsey)
 							filename = f'files/assets/images/emojis/{name}.webp'
 							copyfile(oldname, filename)
 							process_image(filename, 200)
 
+							marsey = Marsey(name=name, author_id=user.id, tags=tags, count=0)
+							g.db.add(marsey)
 
 							all_by_author = g.db.query(Marsey.author_id).filter_by(author_id=user.id).count()
 
@@ -301,8 +302,7 @@ def api_comment(v):
 								old_badge = user.has_badge(17)
 								if old_badge: g.db.delete(old_badge)
 
-
-							if all_by_author < 10 and not user.has_badge(17):
+							elif all_by_author < 10 and not user.has_badge(17):
 								new_badge = Badge(badge_id=17, user_id=user.id)
 
 								g.db.add(new_badge)
