@@ -33,7 +33,7 @@ def fix(v):
 		if str(req) == '<Response [200]>': 
 			post.url = req.url.replace('/https://i.ibb.co/','if_/https://i.ibb.co/')
 			post.thumburl = post.url
-			print(post.url, flush=True)
+			print(post.permalink, flush=True)
 			g.db.add(post)
 			g.db.commit()
 	return 'sex'
