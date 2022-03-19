@@ -1,4 +1,4 @@
-from time import gmtime, strftime
+import time
 from files.helpers.wrappers import auth_required
 from files.helpers.sanitize import sanitize
 from datetime import datetime
@@ -24,7 +24,7 @@ def speak(data, v):
 		"avatar": v.profile_url,
 		"username":v.username,
 		"text":text,
-		"time": strftime("%d %b %Y at %H:%M:%S", gmtime(int(time.time()))),
+		"time": time.strftime("%d %b %Y at %H:%M:%S", time.gmtime(int(time.time()))),
 		"userlink":v.url
 	}
 
