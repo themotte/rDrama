@@ -323,8 +323,9 @@ def api_comment(v):
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
-					try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']['link']
-					except: return {"error": "Imgur error"}, 400
+					req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
+					try: url = req['link']
+					except: return {"error": req['error']}, 400
 				if url.endswith('.'): url += 'mp4'
 				body += f"\n\n{url}"
 			else: return {"error": "Image/Video files only"}, 400
@@ -802,8 +803,9 @@ def edit_comment(cid, v):
 				elif file.content_type.startswith('video/'):
 					file.save("video.mp4")
 					with open("video.mp4", 'rb') as f:
-						try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']['link']
-						except: return {"error": "Imgur error"}, 400
+						req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
+						try: url = req['link']
+						except: return {"error": req['error']}, 400
 					if url.endswith('.'): url += 'mp4'
 					body += f"\n\n{url}"
 				else: return {"error": "Image/Video files only"}, 400
