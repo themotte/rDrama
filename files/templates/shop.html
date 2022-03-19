@@ -55,11 +55,12 @@
 					<th scope="col">Price</th>
 					<th scope="col">Owned</th>
 					<th scope="col">Buy</th>
+					<th scope="col">Description</th>
 				</tr>
 			</thead>
 			<tbody>
 		{% for a in awards %}
-			<tr data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a['description']}}">
+			<tr>
 				<td><i class="{{a['icon']}} {{a['color']}}" style="font-size: 30px"></i></td>
 				<td>{{a['title']}}</td>
 				{% if a['baseprice'] != a['price'] %}
@@ -73,6 +74,9 @@
 				<td>
 					{% if a['kind'] != "benefactor" %}<a class="d-flex btn btn-success {% if v.coins < a['price'] %}disabled{% endif %}" role="button" onclick="post_toast(this,'/buy/{{kind}}')"><span class="m-auto">Buy with coins</span></a>{% endif %}
 					{% if a['kind'] != "grass" %}<a class="d-flex marseybux btn btn-success {% if v.procoins < a['price'] %}disabled{% endif %}" role="button" onclick="post_toast(this,'/buy/{{kind}}?mb=true')"><span class="m-auto">Buy with marseybux</span></a>{% endif %}
+				</td>
+				<td>
+					{{a['description']}}
 				</td>
 			</tr>
 		{% endfor %}
