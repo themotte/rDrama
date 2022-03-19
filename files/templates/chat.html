@@ -1,27 +1,8 @@
 {% extends "default.html" %}
 
-{% block PseudoSubmitForm %}{% endblock %}
-{% block sidebar %}{% endblock %}
-{% block navbar %}{% endblock %}
-{% block sortnav %}{% endblock %}
-{% block viewfilters %}{% endblock %}
-{% block mobilenavbar %}{% endblock %}
-{% block mobile_description %}{% endblock %}
-
 {% block title %}
-<title>Chat</title>
-<meta name="description" content="Chat">
-{% endblock %}
-
-{% block desktopbanner %}
-{% endblock %}
-
-{% block infobar %}
-<div class="border-right py-3 px-3">
-  <span data-toggle="tooltip" data-placement="bottom" title="people online right now" class="text-muted">
-    <i class="far fa-user fa-sm mr-1"></i><span class="board-chat-count"></span>
-  </span>
-</div>
+  <title>Chat</title>
+  <meta name="description" content="Chat">
 {% endblock %}
 
 {% block content %}
@@ -37,42 +18,15 @@
       </div>
     </div>
   </div>
-  {% if request.path.endswith('/chat') %}
   <div class="position-relative form-group d-flex pb-3">
     <div class="position-absolute text-muted text-small" style="bottom: -1.5rem; line-height: 1;">
       <span id="typing-indicator"></span>
       <span id="loading-indicator" class="d-none"></span>
     </div>
     <input id="input-text" type="text" class="form-control" placeholder="Message #, or type /help" autocomplete="off" autofocus />
-    {% if v.has_premium %}
-        <label class="btn btn-secondary ml-3 mb-0" for="chat-image-upload">
-          <div id="filename-show"><i class="fad fa-image"></i></div>
-          <input id="chat-image-upload" type="file" name="image" accept="image/*" onchange="upload_chat_image()" hidden>
-        </label>
-    {% endif %}
     <button id="chatsend" class="btn btn-primary ml-3" type="submit">Send</button>
   </div>
-  <input id="autojoin" type="hidden" value="True">
-  {% else %}
-  <div class="position-relative form-group pb-3">
-    <div class="position-absolute text-muted text-small" style="bottom: -.5rem; line-height: 1;">
-      <span id="typing-indicator"></span>
-      <span id="loading-indicator" class="d-none"></span>
-    </div>
-    <input id="input-text" type="text" class="form-control" placeholder="Message or type /help" autocomplete="off">
-    <div class="d-flex mt-3">
-      {% if v.has_premium %}
-          <label class="btn btn-secondary w-20 mr-3 mb-0 ml-auto" for="chat-image-upload">
-            <div id="filename-show"><i class="fad fa-image"></i></div>
-            <input id="chat-image-upload" type="file" name="image" accept="image/*" onchange="upload_chat_image()" hidden>
-          </label>
-      {% endif %}
-      <button id="chatsend" class="btn btn-primary w-100 ml-auto" type="submit">Send</button>
-    </div>
-  </div>
-  <input id="autojoin" type="hidden" value="{{ v.auto_join_chat }}">
-    {% endif %}
-  <input id="guildname" type="hidden" value="general">
+
   <input id="username" type="hidden" value="{{ v.username }}">
 
   <div id="chat-line-template" class="d-none">
@@ -96,7 +50,7 @@
 </div>
 
 <script src="/assets/js/socketio.js"></script>
-<script src="/assets/js/chat.js?v=2"></script>
+<script src="/assets/js/chat.js?v=3"></script>
 
 <style>
 
@@ -105,55 +59,12 @@
   overflow-y: scroll;
 }
 
-#loading-indicator:after {
-  overflow: hidden;
-  display: inline-block;
-  vertical-align: bottom;
-  -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
-  animation: ellipsis steps(4,end) 900ms infinite;
-  content: "\2026"; /* ascii code for the ellipsis character */
-  width: 0px;
-}
-
-@keyframes ellipsis {
-  to {
-    width: 20px;    
-  }
-}
-
-@-webkit-keyframes ellipsis {
-  to {
-    width: 20px;    
-  }
-}
-
-.chat-mention {
-  background-color: rgba(128, 90, 213, 0.3);
-}
-
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-#chat-window::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-#chat-window {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
 .fullchat .chat-profile {
   min-width: 42px;
   width: 42px;
   height: 42px;
 }
 
-.sidebarchat .chat-profile {
-  min-width: 30px;
-  width: 30px;
-  height: 30px;
-}
 </style>
 
 {% endblock %}
