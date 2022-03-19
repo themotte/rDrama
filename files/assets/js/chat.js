@@ -13,5 +13,5 @@ socket.on('speak', function(json) {
 	document.getElementsByClassName('userlink')[0].href = json['userlink']
 	document.getElementsByClassName('username')[0].value = json['username']
 	document.getElementsByClassName('chat-message').innerHTML = json['text']
-	document.getElementById('chat-text').append(document.getElementsByClassName('chat-line')[0])
+	document.getElementById('chat-text').append(document.getElementsByClassName('chat-line')[0].cloneNode(true))
 })
