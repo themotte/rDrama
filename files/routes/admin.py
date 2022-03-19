@@ -41,7 +41,7 @@ def fix(v):
 			print(post.permalink, flush=True)
 			g.db.add(post)
 			try: g.db.commit()
-			except: continue
+			except: g.db.rollback()
 	return 'sex'
 
 @app.post('/admin/merge/<id1>/<id2>')
