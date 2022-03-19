@@ -248,7 +248,7 @@ def log(v):
 	next_exists=len(actions)>25
 	actions=actions[:25]
 
-	admins = [x[0] for x in g.db.query(User.username).filter(User.admin_level > 1).all()]
+	admins = [x[0] for x in g.db.query(User.username).filter(User.admin_level > 1).order_by(User.username).all()]
 
 	return render_template("log.html", v=v, admins=admins, types=types, admin=admin, type=kind, actions=actions, next_exists=next_exists, page=page)
 
