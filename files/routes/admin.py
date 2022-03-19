@@ -24,12 +24,6 @@ GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 month = datetime.now().strftime('%B')
 
 
-@app.get("/chat")
-@auth_required
-def chat( v):
-	return render_template("chat.html", v=v)
-
-
 @app.post('/admin/merge/<id1>/<id2>')
 @admin_level_required(3)
 def merge(v, id1, id2):
