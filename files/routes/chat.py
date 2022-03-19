@@ -7,14 +7,15 @@ from files.__main__ import app
 from flask import render_template
 import sys
 
+
+@app.get("/chat")
+@auth_required
+def chat( v):
+	return render_template("chat.html", v=v)
+
+
 if "load_chat" in sys.argv:
 	sex = SocketIO(app)
-
-	@app.get("/chat")
-	@auth_required
-	def chat( v):
-		return render_template("chat.html", v=v)
-
 
 	@sex.on('speak')
 	@auth_required
