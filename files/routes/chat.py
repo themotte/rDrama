@@ -8,7 +8,7 @@ from flask import render_template
 import sys
 
 if "load_chat" in sys.argv:
-	sex = SocketIO(app, async_mode='gevent-websocket')
+	sex = SocketIO(app)
 
 	@app.get("/chat")
 	@auth_required
