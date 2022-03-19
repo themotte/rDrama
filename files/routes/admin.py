@@ -32,7 +32,7 @@ def fix(v):
 	if num: li = li[:int(num)]
 	for post in li:
 		print(post.id, flush=True)
-		try: req = requests.get(f"https://web.archive.org/{post.url}", timeout=5)
+		try: req = requests.get(f"https://web.archive.org/{post.url}", timeout=1)
 		except: continue
 		if str(req) == '<Response [200]>':
 			print(post.url, flush=True)
@@ -40,7 +40,8 @@ def fix(v):
 			post.thumburl = post.url
 			print(post.permalink, flush=True)
 			g.db.add(post)
-			g.db.commit()
+			try: g.db.commit()
+			except: continue
 	return 'sex'
 
 @app.post('/admin/merge/<id1>/<id2>')
