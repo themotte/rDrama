@@ -27,7 +27,7 @@ month = datetime.now().strftime('%B')
 @app.get('/fix')
 @admin_level_required(3)
 def fix(v):
-	li = g.db.query(Submission).filter(Submission.url.like('https://i.ibb.co/%.webp'), Submission.id < 17000).all()
+	li = g.db.query(Submission).filter(Submission.url.like('https://i.ibb.co/%.webp'), Submission.id < 17000).order_by(id).all()
 	num = request.values.get('num')
 	if num: li = li[:int(num)]
 	for post in li:
