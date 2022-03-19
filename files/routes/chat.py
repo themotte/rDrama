@@ -4,7 +4,7 @@ from files.helpers.sanitize import *
 from flask import *
 from files.__main__ import app, db_session
 from datetime import datetime
-from flask_socketio import SocketIO
+from flask_socketio import *
 
 sex = SocketIO(app)
 
