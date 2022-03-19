@@ -29,7 +29,7 @@
 <div class="container p-md-0 chat-container">
 
   <div id="chat-window">
-    <div id="chat-text" {% if request.path.endswith('/chat') %}class="fullchat"{% else %}class="sidebarchat"{% endif %}>
+    <div id="chat-text" class="fullchat">
     </div>
     <div id="system-template">
       <div class="system-line">
@@ -93,194 +93,14 @@
       </div>
     </div>
   </div>
-
-  <div id="msg-in-template" class="d-none">
-    <div class="chat-line my-2 chat-mention">
-      <div class="d-flex align-items-center">
-        <span class="rounded mb-auto d-none d-md-block chat-profile" data-toggle="tooltip" data-placement="right">
-          <img class="desktop-avatar rounded-circle w-100">
-        </span>
-        <div class="pl-md-3 text-muted">
-          <div>
-            <img class="mobile-avatar profile-pic-30 mr-2 d-inline-block d-md-none" >
-            from <a href="" class="font-weight-bold text-black userlink" target="_blank">@<span class="username"></span></a> to <b>me</b>.<i class="fad fa-eye-slash ml-1"></i>
-            <div style="overflow:hidden" class="pl-4 pl-md-0 ml-4 ml-md-0">
-              <span class="chat-message text-black"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="msg-out-template" class="d-none">
-    <div class="chat-line my-2">
-      <div class="d-flex align-items-center">
-        <span class="rounded mb-auto d-none d-md-block chat-profile">
-          <img class="desktop-avatar rounded-circle w-100" data-toggle="tooltip" data-placement="right">
-        </span>
-        <div class="pl-md-3 text-muted">
-          <div>
-            <img class="mobile-avatar profile-pic-30 mr-2 d-inline-block d-md-none" >
-            from <b>me</b> to <a href="" class="font-weight-bold text-black userlink" target="_blank">@<span class="username"></span></a>.<i class="fad fa-eye-slash ml-1"></i>
-            <div style="overflow:hidden" class="pl-4 pl-md-0 ml-4 ml-md-0">
-              <span class="chat-message text-black"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="bot-template" class="d-none">
-    <div class="chat-line my-2">
-      <div class="d-flex align-items-center">
-        <span class="rounded mb-auto d-none d-md-block chat-profile">
-          <img class="desktop-avatar rounded-circle w-100" data-toggle="tooltip" data-placement="right">
-        </span>
-        <div class="pl-md-3 text-muted">
-          <div>
-            <img class="mobile-avatar profile-pic-30 mr-2 d-inline-block d-md-none" >
-            <a href="" class="font-weight-bold text-black userlink" target="_blank">@<span class="username"></span></a><i class="fad fa-robot text-info ml-1"></i>
-            <div style="overflow:hidden" class="pl-4 pl-md-0 ml-4 ml-md-0">
-              <span class="chat-message text-black"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="help-template" class="d-none">
-    <div class="system-line">
-      <p class="message text-muted"></p>
-    </div>
-  </div>
-
-  <div id="me-template" class="d-none">
-    <div class="system-line">
-      <p><i class="message text-muted"></i></p>
-    </div>
-  </div>
-
-  <div id="system-info" class="d-none">
-    <div class="system-line">
-      <p class="message text-primary"></p>
-    </div>
-  </div>
-
-  <div id="system-warning" class="d-none">
-    <div class="system-line">
-      <p class="message text-danger"></p>
-    </div>
-  </div>
-
-  <div id="gm-template" class="d-none">
-    <div class="chat-line my-2">
-      <div class="d-flex align-items-center">
-        <span class="rounded mb-auto d-none d-md-block chat-profile">
-          <img class="desktop-avatar rounded-circle w-100">
-        </span>
-        <div class="pl-md-3 text-muted">
-          <div>
-            <img class="mobile-avatar profile-pic-30 mr-2 d-inline-block d-md-none" data-toggle="tooltip" data-placement="right">
-            <a href="" class="font-weight-bold text-warning userlink" target="_blank">@<span class="username"></span></a><i class="fad fa-crown text-warning ml-1"></i>
-            <div style="overflow:hidden" class="pl-4 pl-md-0 ml-4 ml-md-0">
-              <span class="chat-message text-black"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="motd-template" class="d-none">
-    <div class="chat-line my-2">
-      <div class="d-flex align-items-center">
-        <span class="rounded mb-auto d-none d-md-block chat-profile" data-toggle="tooltip" data-placement="right">
-          <img class="desktop-avatar rounded-circle w-100">
-        </span>
-        <div class="pl-md-3 text-muted">
-          <div>
-            <img class="mobile-avatar profile-pic-30 mr-2 d-inline-block d-md-none" >
-            <a href="" class="font-weight-bold text-primary userlink" target="_blank">+<span class="username"></span></a><i class="fad fa-chess-rook text-primary ml-1"></i>
-            <div style="overflow:hidden" class="pl-4 pl-md-0 ml-4 ml-md-0">
-              <span class="chat-message text-black"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="admin-template" class="d-none">
-    <div class="chat-line my-2">
-      <div class="d-flex align-items-center">
-        <span class="rounded mb-auto d-none d-md-block chat-profile" data-toggle="tooltip" data-placement="right">
-          <img class="desktop-avatar rounded-circle w-100">
-        </span>
-        <div class="pl-md-3 text-muted">
-          <div>
-            <img class="mobile-avatar profile-pic-30 mr-2 d-inline-block d-md-none" >
-            <a href="" class="font-weight-bold text-danger userlink" target="_blank">@<span class="username"></span></a><i class="fad fa-shield text-danger ml-1"></i>
-            <div style="overflow:hidden" class="pl-4 pl-md-0 ml-4 ml-md-0">
-              <span class="chat-message text-black"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="wallop-template" class="d-none">
-    <div class="chat-line my-2">
-      <div class="d-flex align-items-center">
-        <span class="rounded mb-auto d-none d-md-block chat-profile">
-          <img class="desktop-avatar rounded-circle w-100">
-        </span>
-        <div class="pl-md-3 text-muted">
-          <div>
-            <img class="mobile-avatar profile-pic-30 mr-2 d-inline-block d-md-none" data-toggle="tooltip" data-placement="right">
-            <a href="" class="font-weight-bold text-danger userlink" target="_blank">@<span class="username"></span></a><i class="fad fa-shield text-danger ml-1"></i><i class="fad fa-bullhorn text-danger ml-1"></i>
-            <div style="overflow:hidden" class="pl-4 pl-md-0 ml-4 ml-md-0">
-              <span class="chat-message font-weight-bold text-black"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <script src="/assets/js/jquery-2.0.3.min.js"></script>
 <script src="/assets/js/socketio.js"></script>
 
-<script src="/assets/js/chat.js?v=2.38.0a"></script>
+<script src="/assets/js/chat.js?v=1"></script>
 
 <style>
-
-/*
-.sidebar-chat:focus-within #chat-text {
-  overflow-y:scroll;
-  animation: chatexpand ease-out 500ms;
-  max-height:calc(100vh - 300px);
-}
-
-.sidebar-chat:not(:focus-within) #chat-text {
-  overflow-y:scroll;
-  max-height: 200px;
-}
-
-@keyframes chatexpand {
-  from  {max-height: 200px;}
-  to    {max-height:calc(100vh - 300px);}
-}
-@-webkit-keyframes chatexpand {
-  from  {max-height: 200px;}
-  to    {max-height:calc(100vh - 300px);}
-  }
-}
-*/
 
 #chat-window {
   max-height:calc(100vh - 300px);
