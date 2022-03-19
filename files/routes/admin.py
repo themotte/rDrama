@@ -32,7 +32,8 @@ def fix(v):
 	if num: li = li[:int(num)]
 	for post in li:
 		print(post.id, flush=True)
-		req = requests.get(f"https://web.archive.org/{post.url}", timeout=5)
+		try: req = requests.get(f"https://web.archive.org/{post.url}", timeout=5)
+		except: continue
 		if str(req) == '<Response [200]>':
 			print(post.url, flush=True)
 			post.url = req.url.replace('/https://i.ibb.co/','if_/https://i.ibb.co/')
