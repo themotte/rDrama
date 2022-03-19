@@ -29,7 +29,7 @@ month = datetime.now().strftime('%B')
 def fix(v):
 	li = g.db.query(Submission).filter(Submission.url.like('https://i.ibb.co/%.webp')).all()
 	num = request.values.get('num')
-	if num: li = li[:num]
+	if num: li = li[:int(num)]
 	for post in li:
 		print(post.id, flush=True)
 		req = requests.get(f"https://web.archive.org/{post.url}", timeout=5)
