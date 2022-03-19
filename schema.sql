@@ -80,7 +80,7 @@ CREATE TABLE public.submissions (
     upvotes integer DEFAULT 1 NOT NULL,
     downvotes integer DEFAULT 0 NOT NULL,
     app_id integer,
-    thumburl character varying(60),
+    thumburl character varying(100),
     private boolean DEFAULT false NOT NULL,
     views integer DEFAULT 0 NOT NULL,
     is_bot boolean DEFAULT false NOT NULL,
