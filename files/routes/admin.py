@@ -33,7 +33,8 @@ def fix(v):
 	for post in li:
 		print(post.id, flush=True)
 		req = requests.get(f"https://web.archive.org/{post.url}", timeout=5)
-		if str(req) == '<Response [200]>': 
+		if str(req) == '<Response [200]>':
+			print(post.url, flush=True)
 			post.url = req.url.replace('/https://i.ibb.co/','if_/https://i.ibb.co/')
 			post.thumburl = post.url
 			print(post.permalink, flush=True)
