@@ -14,20 +14,19 @@ def chat( v):
 	return render_template("chat.html", v=v)
 
 
-if "load_chat" in sys.argv:
-	sex = SocketIO(app)
+sex = SocketIO(app)
 
-	@sex.on('speak')
-	@auth_required
-	def speak(data, v):
+@sex.on('speak')
+@auth_required
+def speak(data, v):
 
-		data={
-			"avatar": v.profile_url,
-			"username":v.username,
-			"text":sanitize(data[:1000].strip()),
-			"time": time.strftime("%d %b %Y at %H:%M:%S", time.gmtime(int(time.time()))),
-			"userlink":v.url
-		}
+	data={
+		"avatar": v.profile_url,
+		"username":v.username,
+		"text":sanitize(data[:1000].strip()),
+		"time": time.strftime("%d %b %Y at %H:%M:%S", time.gmtime(int(time.time()))),
+		"userlink":v.url
+	}
 
-		emit('speak', data)
-		return '', 204
+	emit('speak', data)
+	return '', 204
