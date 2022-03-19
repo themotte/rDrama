@@ -1,18 +1,16 @@
-import time
-from files.helpers.wrappers import *
-from files.helpers.sanitize import *
-from flask import *
-from files.__main__ import app, db_session
+from time import gmtime
+from files.helpers.wrappers import auth_required
+from files.helpers.sanitize import sanitize
 from datetime import datetime
-from flask_socketio import *
+from flask_socketio import SocketIO, emit
 
 sex = SocketIO(app)
+
 
 @app.get("/chat")
 @auth_required
 def chat( v):
 	return render_template("chat.html", v=v)
-
 
 
 @sex.on('speak')
@@ -28,7 +26,7 @@ def speak(data, v):
 		"avatar": v.profile_url,
 		"username":v.username,
 		"text":text,
-		"time": time.strftime("%d %b %Y at %H:%M:%S", time.gmtime(int(time.time()))),
+		"time": time.strftime("%d %b %Y at %H:%M:%S", gmtime(int(time.time()))),
 		"userlink":v.url
 	}
 
