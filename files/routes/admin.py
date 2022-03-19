@@ -27,8 +27,11 @@ month = datetime.now().strftime('%B')
 @app.get('/fix')
 @admin_level_required(3)
 def fix(v):
-	for post in g.db.query(Submission).filter(Submission.url.like('https://i.ibb.co/%.webp')):
-		print(post.id,flush=True)
+	li = g.db.query(Submission).filter(Submission.url.like('https://i.ibb.co/%.webp')).all()
+	num = request.values.get('num')
+	if num: li = li[:num]
+	for post in li:
+		print(post.id, flush=True)
 		req = requests.get(f"https://web.archive.org/{post.url}", timeout=5)
 		if str(req) == '<Response [200]>': 
 			post.url = req.url.replace('/https://i.ibb.co/','if_/https://i.ibb.co/')
