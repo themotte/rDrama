@@ -16,7 +16,7 @@ def chat( v):
 @auth_required
 def speak(data, v):
 
-	text = sanitize(data['text'][0:1000].strip())
+	text = sanitize(data['text'][:1000].strip())
 
 	data={
 		"avatar": v.profile_url,
