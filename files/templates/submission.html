@@ -656,7 +656,7 @@
 					<div id="flaggers" class="flaggers d-none">
 						<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
 						<pre></pre>
-						<ul style="padding-left:20px; margin-bottom: 0;">
+						<ul style="padding-left:20px; margin-bottom: 0;word-wrap:break-word">
 							{% for f in p.flags %}
 								<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %} {% if v and v.admin_level > 1 %}<a role="button" onclick="post_toast(this,'/del_report/post/{{f.post_id}}/{{f.user_id}}')">[remove]</a>{% endif %}</li>
 							{% endfor %}

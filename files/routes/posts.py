@@ -440,17 +440,18 @@ def edit_post(pid, v):
 
 	if len(body) > 20000: return {"error":"Character limit is 20000!"}, 403
 
-	if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
-		return {"error":"You have to type more than 280 characters!"}, 403
-	elif v.bird and len(body) > 140:
-		return {"error":"You have to type less than 140 characters!"}, 403
+	if v.id == p.author_id:
+		if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
+			return {"error":"You have to type more than 280 characters!"}, 403
+		elif v.bird and len(body) > 140:
+			return {"error":"You have to type less than 140 characters!"}, 403
 
 	if title != p.title:
-		if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
+		if v.id == p.author_id and v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 
 		title_html = filter_emojis_only(title, edit=True)
 
-		if v.marseyawarded and not marseyaward_title_regex.fullmatch(title_html):
+		if v.id == p.author_id and v.marseyawarded and not marseyaward_title_regex.fullmatch(title_html):
 			return {"error":"You can only type marseys!"}, 403
 
 		p.title = title[:500]
@@ -476,7 +477,7 @@ def edit_post(pid, v):
 	if body != p.body:
 		body = image_regex.sub(r'![](\1)', body)
 
-		if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
+		if v.id == p.author_id and v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
 		if not p.options.count():
 			for i in poll_regex.finditer(body):
@@ -504,7 +505,7 @@ def edit_post(pid, v):
 
 		body_html = sanitize(body, edit=True)
 
-		if v.marseyawarded and marseyaward_body_regex.search(body_html):
+		if v.id == p.author_id and v.marseyawarded and marseyaward_body_regex.search(body_html):
 			return {"error":"You can only type marseys!"}, 403
 
 		bans = filter_comment_html(body_html)
@@ -522,7 +523,7 @@ def edit_post(pid, v):
 
 		p.body_html = body_html
 
-		if v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in f'{p.body}{p.title}'.lower():
+		if v.id == p.author_id and v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in f'{p.body}{p.title}'.lower():
 
 			p.is_banned = True
 			p.ban_reason = "AutoJanny"
@@ -793,7 +794,7 @@ def submit_post(v, sub=None):
 	title = request.values.get("title", "").strip()[:500].replace('‎','')
 
 	url = request.values.get("url", "").strip()
-		
+	
 	body = request.values.get("body", "").strip().replace('‎','')
 
 	def error(error):
@@ -839,21 +840,21 @@ def submit_post(v, sub=None):
 	embed = None
 
 	if url:
-		url = url.replace("nitter.net", "twitter.com").replace("old.reddit.com/gallery", "reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube").replace("https://www.twitter", "https://twitter")
+		for rd in ("://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it", "://teddit.net"):
+			url = url.replace(rd, "://old.reddit.com")
+
+		url = url.replace("nitter.net", "twitter.com").replace("old.reddit.com/gallery", "reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube").replace("https://www.twitter", "https://twitter").replace("https://www.instagram", "https://instagram").replace("https://www.tiktok", "https://tiktok")
 
 		if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
 		elif "/media.giphy.com/" in url or "/c.tenor.com/" in url: url = url.replace(".gif", ".webp")
 		elif "/i.ibb.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp").replace(".gif", ".webp")
-
-		for rd in ("://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it", "://teddit.net"):
-			url = url.replace(rd, "://old.reddit.com")
 
 		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 
 		parsed_url = urlparse(url)
 
 		domain = parsed_url.netloc
-		if domain == 'old.reddit.com':
+		if domain in ('old.reddit.com','twitter.com','instagram.com','tiktok.com'):
 			new_url = ParseResult(scheme="https",
 					netloc=parsed_url.netloc,
 					path=parsed_url.path,
