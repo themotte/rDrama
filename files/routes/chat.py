@@ -6,7 +6,6 @@ from flask_socketio import SocketIO, emit
 
 sex = SocketIO(app)
 
-
 @app.get("/chat")
 @auth_required
 def chat( v):
@@ -17,10 +16,7 @@ def chat( v):
 @auth_required
 def speak(data, v):
 
-	raw_text=data['text'][0:1000].lstrip().rstrip()
-	if not raw_text:return
-
-	text = sanitize(raw_text)
+	text = sanitize(data['text'][0:1000].strip())
 
 	data={
 		"avatar": v.profile_url,
