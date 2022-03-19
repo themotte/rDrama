@@ -25,12 +25,12 @@
 
 		<form action="/authorize" method="post" class="mt-md-3" id="login">
 
-				<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
-				<input autocomplete="off" type="hidden" name="scopes" value="{{scopes_txt}}">
-				<input autocomplete="off" type="hidden" name="redirect_uri" value="{{redirect_uri}}">
-				<input autocomplete="off" type="hidden" name="permanent" value="{{permanent}}">
-				<input autocomplete="off" type="hidden" name="client_id" value="{{application.client_id}}">
-				<input autocomplete="off" type="hidden" name="state" value="{{state}}">
+				<input type="hidden" name="formkey" value="{{v.formkey}}">
+				<input type="hidden" name="scopes" value="{{scopes_txt}}">
+				<input type="hidden" name="redirect_uri" value="{{redirect_uri}}">
+				<input type="hidden" name="permanent" value="{{permanent}}">
+				<input type="hidden" name="client_id" value="{{application.client_id}}">
+				<input type="hidden" name="state" value="{{state}}">
 
 				<input autocomplete="off" type="submit" class="btn btn-primary" id="auth_button" value="Authorize {{application.app_name}}">
 

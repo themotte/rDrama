@@ -32,7 +32,7 @@
 
 				<div>
 					<form action="/h/{{sub.name}}/sidebar_image" method="post" enctype="multipart/form-data">
-						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
 						<label class="btn btn-secondary text-capitalize mr-2 mb-0">
 							Update<input autocomplete="off" type="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} hidden name="sidebar" onchange="form.submit()">
 						</label>
@@ -68,7 +68,7 @@
 
 				<div>
 					<form action="/h/{{sub.name}}/banner" method="post" enctype="multipart/form-data">
-						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
 						<label class="btn btn-secondary text-capitalize mr-2 mb-0">
 							Update<input autocomplete="off" type="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*" hidden name="banner" onchange="form.submit()">
 						</label>
@@ -98,7 +98,7 @@
 			<div class="body d-lg-flex">
 				<div class="w-lg-100">
 					<form id="sidebar" action="/h/{{sub.name}}/sidebar" method="post">
-						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
 						<textarea autocomplete="off" maxlength="500" class="form-control rounded" id="bio-text" aria-label="With textarea" placeholder="Enter sidebar here..." rows="10" name="sidebar" form="sidebar">{% if sub.sidebar %}{{sub.sidebar}}{% endif %}</textarea>
 
 						<div class="d-flex mt-2">
@@ -123,7 +123,7 @@
 			<div class="body d-lg-flex">
 				<div class="w-lg-100">
 					<form id="css" action="/h/{{sub.name}}/css" method="post">
-						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
 						<textarea autocomplete="off" maxlength="4000" class="form-control rounded" id="bio-text" aria-label="With textarea" placeholder="Enter css here..." rows="10" name="css" form="css">{% if sub.css %}{{sub.css}}{% endif %}</textarea>
 
 						<div class="d-flex mt-2">

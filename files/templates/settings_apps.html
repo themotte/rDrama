@@ -26,7 +26,7 @@
 								<label for="over18">{{app.app_name}}</label>
 						</div>
 						<div class="body w-lg-100">
-				<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+				<input type="hidden" name="formkey" value="{{v.formkey}}">
 				<label for="edit-{{app.id}}-name" class="mb-0 w-lg-25">App Name</label>
 				<input autocomplete="off" id="edit-{{app.id}}-name" class="form-control" type="text" name="name" value="{{app.app_name}}">
 				
@@ -65,7 +65,7 @@
 								<label for="over18">{{app.app_name}}</label>
 						</div>
 						<div class="body w-lg-100">
-				<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+				<input type="hidden" name="formkey" value="{{v.formkey}}">
 				<label for="edit-{{app.id}}-name" class="mb-0 w-lg-25">App Name</label>
 				<input autocomplete="off" id="edit-{{app.id}}-name" class="form-control" type="text" name="name" value="{{app.app_name}}">
 
@@ -102,7 +102,7 @@
 								<label for="over18">{{auth.application.app_name}}</label>
 						</div>
 						<div class="body w-lg-100">
-				<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+				<input type="hidden" name="formkey" value="{{v.formkey}}">
 				<label class="mb-0 w-lg-25">Description</label>
 				<textarea autocomplete="off" class="form-control" name="description" maxlength="256" readonly="readonly">{{auth.application.description}}</textarea>
 			</div>
@@ -123,7 +123,7 @@
 	<div class="settings-section rounded">
 		<div class="d-lg-flex">
 			<div class="body w-lg-100">
-				<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+				<input type="hidden" name="formkey" value="{{v.formkey}}">
 				<label for="form-username">Username</label>
 				<input autocomplete="off" type="text" id="form-username" class="form-control" name="username" value="{{v.username}}" readonly>
 				<label for="form-appname">Application Name</label>

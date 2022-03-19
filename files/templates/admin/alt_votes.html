@@ -74,9 +74,9 @@
 
 <a role="button" class="btn btn-secondary" onclick="document.getElementById('linkbtn').classList.toggle('d-none');">Link Accounts</a>
 <form action="/admin/link_accounts" method="post">
-	<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
-	<input autocomplete="off" type="hidden" name="u1" value="{{u1.id}}">
-	<input autocomplete="off" type="hidden" name="u2" value="{{u2.id}}">
+	<input type="hidden" name="formkey" value="{{v.formkey}}">
+	<input type="hidden" name="u1" value="{{u1.id}}">
+	<input type="hidden" name="u2" value="{{u2.id}}">
 	<input autocomplete="off" type="submit" id="linkbtn" class="btn btn-primary d-none" value="Confirm Link: {{u1.username}} and {{u2.username}}">
 </form>
 

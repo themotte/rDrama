@@ -10,7 +10,7 @@
 			</div>
 			<div id="awardModalBody" class="modal-body mb-3">
 				<form id="awardTarget" class="pt-3 pb-0" action="" method="post">
-					<input autocomplete="off" type="hidden" name="formkey", value="{{v.formkey}}">
+					<input type="hidden" name="formkey", value="{{v.formkey}}">
 					<div class="card-columns award-columns awards-wrapper">
 						{% for award in v.user_awards %}
 							<a role="button" id="{{award.kind}}" class="card" onclick="pick('{{award.kind}}', {{award.price}} <= {{v.procoins}}, {{award.price}} <= {{v.coins}})">

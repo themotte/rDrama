@@ -133,7 +133,7 @@
 				<div class="d-flex">
 
 					<form action="/settings/themecolor" id="themecolor-form" method="post" class="color-picker" style="line-height: 0">
-							<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+							<input type="hidden" name="formkey" value="{{v.formkey}}">
 
 							{% for themecolor in COLORS %}
 							<input autocomplete="off" type="radio" name="themecolor" id="themecolor-{{themecolor}}" value="{{themecolor}}" {% if v.themecolor == themecolor %}checked{% endif %} onclick="document.getElementById('themecolor-form').submit()">
@@ -205,7 +205,7 @@
 
 							<div>
 								<form action="/settings/images/profile" method="post" enctype="multipart/form-data">
-									<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<label class="btn btn-secondary text-capitalize mr-2 mb-0">
 										Update<input autocomplete="off" type="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} hidden name="profile" onchange="form.submit()">
 									</label>
@@ -216,7 +216,7 @@
 							{% if v.profileurl %}
 							<div>
 								<form action="/settings/delete/profile" method="post">
-									<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<button type="submit" value="Delete" class="btn btn-link fa-lg"><i class="far fa-trash-alt text-danger"></i></button>
 								</form>
 							</div>
@@ -247,7 +247,7 @@
 
 							<div>
 								<form action="/settings/images/banner" method="post" enctype="multipart/form-data">
-									<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<label class="btn btn-secondary text-capitalize mr-2 mb-0">
 										Update<input autocomplete="off" type="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*" hidden name="banner" onchange="form.submit()">
 									</label>
@@ -259,7 +259,7 @@
 
 								{% if v.bannerurl %}
 								<form action="/settings/delete/banner" method="post">
-									<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<button type="submit" value="Delete" class="btn btn-link fa-lg"><i class="far fa-trash-alt text-danger"></i></button>
 								</form>{% endif %}
 
@@ -326,7 +326,7 @@
 
 								{% if v.discord_id %}
 									<form action="/settings/remove_discord" method="post">
-									<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<input autocomplete="off" type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Disconnect Discord">
 									</form>
 
@@ -378,7 +378,7 @@
 									<p>Your original username will always stay reserved for you: <code>{{v.original_username}}</code></p>
 
 									<form action="/settings/name_change" method="post">
-										<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<input autocomplete="off" type="text" name="name" class="form-control" value="{{v.username}}">
 										<small>3-25 characters, including letters, numbers, _ , and -</small>
 										<div class="d-flex mt-2">
@@ -396,7 +396,7 @@
 									<p>Must be a youtube video link.</p>
 
 									<form action="/settings/song_change" method="post">
-										<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<input autocomplete="off" type="text" name="song" class="form-control" value="{% if v.song %}https://youtu.be/{{v.song}}{% endif %}" placeholder='Enter a youtube video link here'>
 										<br><small>In some browsers, users have to click at least once anywhere in the profile page for the anthem to play.</small>
 										<div class="d-flex mt-2">
@@ -413,7 +413,7 @@
 								<div class="d-flex">
 
 									<form action="/settings/namecolor" id="color-form" method="post" class="color-picker" style="line-height: 0">
-											<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+											<input type="hidden" name="formkey" value="{{v.formkey}}">
 
 											{% for color in COLORS %}
 											<input autocomplete="off" type="radio" name="color" id="color-{{color}}" value="{{color}}" {% if v.namecolor == color %}checked{% endif %} onclick="document.getElementById('color-form').submit()">
@@ -435,7 +435,7 @@
 								<p class="text-small mb-2">Or type a color code:</p>
 								<div class="d-flex">
 								<form action="/settings/namecolor" id="color-code-form" method="post">
-									<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<input autocomplete="off" class="form-control" type="text" name="color" id="color-code" maxlength="6" value="{% if v.namecolor %}{{v.namecolor}}{% endif %}">
 									<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input autocomplete="off" type="text" for="color-code" onclick="form.submit()" hidden=""></label>
 								</form>
@@ -449,7 +449,7 @@
 								<div class="w-lg-100">
 
 									<form id="profile-settings" action="/settings/title_change" method="post">
-										<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<input maxlength=100 {% if v.flairchanged %}disabled{% endif %} autocomplete="off" id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if v.flairchanged %}Your flair has been locked until {{ti}}{% elif v.customtitleplain %}{{v.customtitleplain}}{% endif %}">
 										<div class="d-flex mt-2">
 											<a class="format" role="button"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Add Emoji"></i></a>
@@ -469,7 +469,7 @@
 								<div class="d-flex">
 
 									<form action="/settings/titlecolor" id="titlecolor-form" method="post" class="color-picker" style="line-height: 0">
-											<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+											<input type="hidden" name="formkey" value="{{v.formkey}}">
 
 											{% for titlecolor in COLORS %}
 											<input autocomplete="off" type="radio" name="titlecolor" id="titlecolor-{{titlecolor}}" value="{{titlecolor}}" {% if v.titlecolor == titlecolor %}checked{% endif %} onclick="document.getElementById('titlecolor-form').submit()">
@@ -493,7 +493,7 @@
 								<p class="text-small mb-2">Or type a color code:</p>
 								<div class="d-flex">
 								<form action="/settings/titlecolor" id="color-code-form" method="post">
-									<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<input autocomplete="off" class="form-control" type="text" name="titlecolor" id="color-code" maxlength="6" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
 									<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input autocomplete="off" type="text" for="color-code" onclick="form.submit()" hidden=""></label>
 								</form>
@@ -514,7 +514,7 @@
 									<div class="d-flex">
 		
 										<form action="/settings/verifiedcolor" id="verifiedcolor-form" method="post" class="color-picker" style="line-height: 0">
-												<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+												<input type="hidden" name="formkey" value="{{v.formkey}}">
 		
 											{% for verifiedcolor in COLORS %}
 												<input autocomplete="off" type="radio" name="verifiedcolor" id="verifiedcolor-{{verifiedcolor}}" value="{{verifiedcolor}}" {% if v.verifiedcolor == verifiedcolor %}checked{% endif %} onclick="document.getElementById('verifiedcolor-form').submit()">
@@ -536,7 +536,7 @@
 									<p class="text-small mb-2">Or type a color code:</p>
 									<div class="d-flex">
 									<form action="/settings/verifiedcolor" id="color-code-form" method="post">
-										<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<input autocomplete="off" class="form-control" type="text" name="verifiedcolor" id="color-code" maxlength="6" value="{% if v.verifiedcolor %}{{v.verifiedcolor}}{% endif %}">
 										<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input autocomplete="off" type="text" for="color-code" onclick="form.submit()" hidden=""></label>
 									</form>
@@ -553,7 +553,7 @@
 
 								<div class="w-lg-100">						
 									<form id="profile-bio" action="/settings/profile" method="post" enctype="multipart/form-data">
-										<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<div class="input-group mb-2">
 											<textarea autocomplete="off"  id="bio-text" class="form-control rounded" aria-label="With textarea" placeholder="Tell the community a bit about yourself." rows="3" name="bio" form="profile-bio" maxlength="1500">{% if v.bio %}{{v.bio}}{% endif %}</textarea>
 										</div>
@@ -590,7 +590,7 @@
 							
 								<div class="w-lg-100">						
 									<form id="profile-friends" action="/settings/profile" method="post" enctype="multipart/form-data">
-										<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<div class="input-group mb-2">
 											<textarea autocomplete="off"  id="friends-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter your friends on the site..." rows="3" name="friends" form="profile-friends" maxlength="1500">{% if v.friends %}{{v.friends}}{% endif %}</textarea>
 										</div>
@@ -611,7 +611,7 @@
 							
 								<div class="w-lg-100">						
 									<form id="profile-enemies" action="/settings/profile" method="post" enctype="multipart/form-data">
-										<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<div class="input-group mb-2">
 											<textarea autocomplete="off"  id="enemies-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter your enemies on the site..." rows="3" name="enemies" form="profile-enemies" maxlength="1500">{% if v.enemies %}{{v.enemies}}{% endif %}</textarea>
 										</div>
@@ -632,7 +632,7 @@
 
 								<div class="w-lg-100">						
 									<form id="profile-sig" action="/settings/profile" method="post" enctype="multipart/form-data">
-										<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<div class="input-group mb-2">
 											<textarea autocomplete="off"  id="sig-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter a signature..." rows="3" name="sig" form="profile-sig" maxlength="200">{% if v.sig %}{{v.sig}}{% endif %}</textarea>
 										</div>

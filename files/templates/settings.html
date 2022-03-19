@@ -177,8 +177,8 @@
 				{% if mfa_secret %}
 				<div>
 					<form action="/settings/security" method="post">
-						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
-						<input autocomplete="off" type="hidden" name="2fa_secret" value="{{mfa_secret}}">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						<input type="hidden" name="2fa_secret" value="{{mfa_secret}}">
 						<div class="modal-body">
 							<p>
 								<span class="font-weight-bold">Step 1:</span> Scan this barcode (or enter the code) using a two-factor authentication app such as Google Authenticator or Authy.
@@ -206,8 +206,8 @@
 				{% else %}
 				<div>
 					<form action="/settings/security" method="post">
-						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
-						<input autocomplete="off" type="hidden" name="2fa_secret" value="{{mfa_secret}}">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						<input type="hidden" name="2fa_secret" value="{{mfa_secret}}">
 						<div class="modal-body">
 
 							<div class="alert alert-warning" role="alert">

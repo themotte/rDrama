@@ -460,9 +460,10 @@ def sub_sidebar(v, sub):
 	return redirect(f'/h/{sub.name}/settings')
 
 
-@app.get("/sub_toggle/<mode>")
+@app.post("/sub_toggle")
 @auth_required
-def sub_toggle(mode, v):
+def sub_toggle(v):
+	mode = request.values.get('mode')
 	try: mode = int(mode)
 	except: abort(400)
 

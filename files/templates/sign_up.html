@@ -73,12 +73,12 @@
 
 												{% if error %}<span class="text-danger">{{error}}</span><br>{% endif %}
 
-												<input autocomplete="off" type="hidden" name="formkey" value="{{formkey}}">
-												<input autocomplete="off" type="hidden" name="now" value="{{now}}">
+												<input type="hidden" name="formkey" value="{{formkey}}">
+												<input type="hidden" name="now" value="{{now}}">
 
-												{% if redirect %}<input autocomplete="off" type="hidden" name="redirect" value="{{redirect}}">{% endif %}
+												{% if redirect %}<input type="hidden" name="redirect" value="{{redirect}}">{% endif %}
 												{% if ref_user %}
-												<input autocomplete="off" type="hidden" name="referred_by" value="{{ref_user.id}}">{% endif %}
+												<input type="hidden" name="referred_by" value="{{ref_user.id}}">{% endif %}
 
 												<label for="username-register" class="mt-3">Username</label>
 

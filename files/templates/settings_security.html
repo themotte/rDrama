@@ -19,7 +19,7 @@
 		<p class="text-small text-muted">Change the email address used to sign in to your account.</p>
 		<div class="settings-section rounded">
 			<form	action="/settings/security" method="post">
-				<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+				<input type="hidden" name="formkey" value="{{v.formkey}}">
 				<div class="body">
 					<div class="d-lg-flex">
 						<label for="new-email" class="w-lg-25">Email</label>
@@ -121,8 +121,8 @@
 
 		<div class="footer">
 
-			<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
-			<input autocomplete="off" type="hidden" name="now" value="1563891643">
+			<input type="hidden" name="formkey" value="{{v.formkey}}">
+			<input type="hidden" name="now" value="1563891643">
 
 			<div class="d-flex">
 
@@ -172,7 +172,7 @@
 <div class="settings-section rounded">
 
 <form	action="/settings/log_out_all_others" method="post">
-<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+<input type="hidden" name="formkey" value="{{v.formkey}}">
 
 <div class="body">
 
@@ -229,7 +229,7 @@
 </div>
 <div class="" id="deleteFormContainer">
 	<form id="deleteAccountForm" method="post" action="/settings/delete_account">
-		<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+		<input type="hidden" name="formkey" value="{{v.formkey}}">
 		<div class="modal-body body">
 
 			<div class="d-lg-flex">
