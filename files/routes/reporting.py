@@ -26,6 +26,13 @@ def api_flag_post(pid, v):
 		if reason.startswith('!') and v.admin_level > 1:
 			post.flair = reason[1:]
 			g.db.add(post)
+			ma=ModAction(
+				kind="flair_post",
+				user_id=v.id,
+				target_submission_id=post.id,
+				_note=f'"{post.flair}"'
+			)
+			g.db.add(ma)
 		else:
 			flag = Flag(post_id=post.id, user_id=v.id, reason=reason)
 			g.db.add(flag)

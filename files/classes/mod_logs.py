@@ -205,6 +205,11 @@ ACTIONTYPES = {
 		"icon": 'fa-trash-alt', 
 		"color": 'bg-muted'
 	},
+	'edit_post': {
+		"str": 'edited {self.target_link}', 
+		"icon": 'fa-edit', 
+		"color": 'bg-primary'
+	},
 	'enable_signups': {
 		"str": 'enabled signups', 
 		"icon": 'fa-users', 
@@ -214,6 +219,11 @@ ACTIONTYPES = {
 		"str": 'enabled under attack mode', 
 		"icon": 'fa-shield', 
 		"color": 'bg-success'
+	},
+	'flair_post': {
+		"str": 'set a flair on {self.target_link}', 
+		"icon": 'fa-tag', 
+		"color": 'bg-primary'
 	},
 	'grant_awards': {
 		"str": 'granted awards to {self.target_link}', 
@@ -375,3 +385,5 @@ ACTIONTYPES = {
 ACTIONTYPES2 = deepcopy(ACTIONTYPES)
 ACTIONTYPES2.pop("shadowban")
 ACTIONTYPES2.pop("unshadowban")
+ACTIONTYPES2.pop("flair_post")
+ACTIONTYPES2.pop("edit_post")

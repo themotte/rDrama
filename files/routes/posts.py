@@ -553,17 +553,23 @@ def edit_post(pid, v):
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
 
-
-	if v.id == p.author_id:
-		if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
-		g.db.add(p)
-
 	if not p.private and not p.ghost:
 		notify_users = NOTIFY_USERS(f'{p.title} {p.body}', v)
 		if notify_users:
 			cid = notif_comment2(p)
 			for x in notify_users:
 				add_notif(cid, x)
+
+	if v.id == p.author_id:
+		if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
+		g.db.add(p)
+	else:
+		ma=ModAction(
+			kind="edit_post",
+			user_id=v.id,
+			target_submission_id=p.id
+		)
+		g.db.add(ma)
 
 	g.db.commit()
 
