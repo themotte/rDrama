@@ -372,9 +372,6 @@ ACTIONTYPES = {
 	}
 }
 
-ACTIONTYPES = {key: value for key, value in sorted(ACTIONTYPES.items())}
-print(ACTIONTYPES, flush=True)
-
 ACTIONTYPES2 = deepcopy(ACTIONTYPES)
 ACTIONTYPES2.pop("shadowban")
 ACTIONTYPES2.pop("unshadowban")
