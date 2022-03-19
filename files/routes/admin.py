@@ -32,7 +32,7 @@ def fix(v):
 	if num: li = li[:int(num)]
 	for post in li:
 		print(post.id, flush=True)
-		try: req = requests.get(f"https://web.archive.org/{post.url}", timeout=10)
+		try: req = requests.get(f"https://web.archive.org/{post.url}", timeout=5)
 		except Exception as e:
 			print(e)
 			continue
