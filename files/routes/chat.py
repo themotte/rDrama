@@ -6,7 +6,7 @@ from flask_socketio import SocketIO, emit
 from files.__main__ import app
 from flask import render_template
 
-sex = SocketIO(app, async_mode='gevent')
+sex = SocketIO(app, async_mode='gevent-websocket')
 
 @app.get("/chat")
 @auth_required
