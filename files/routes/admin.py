@@ -23,6 +23,21 @@ GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 
 month = datetime.now().strftime('%B')
 
+
+@app.get('/fix')
+@admin_level_required(3)
+def fix(v):
+	for post in g.db.query(Submission).filter(Submission.url.like('https://i.ibb.co/%.webp')):
+		print(post.id,flush=True)
+		req = requests.get(f"https://web.archive.org/{post.url}", timeout=5)
+		if str(req) == '<Response [200]>': 
+			post.url = req.url.replace('/https://i.ibb.co/','if_/https://i.ibb.co/')
+			post.thumburl = post.url
+			print(post.url, flush=True)
+			g.db.add(post)
+			g.db.commit()
+	return 'sex'
+
 @app.post('/admin/merge/<id1>/<id2>')
 @admin_level_required(3)
 def merge(v, id1, id2):
