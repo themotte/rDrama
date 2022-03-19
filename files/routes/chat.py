@@ -29,3 +29,4 @@ def speak(data, v):
 	}
 
 	emit('speak', data)
+	return True
