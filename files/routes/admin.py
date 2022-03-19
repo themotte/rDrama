@@ -23,7 +23,7 @@ GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 
 month = datetime.now().strftime('%B')
 
-@app.get('/admin/merge/<id1>/<id2>')
+@app.post('/admin/merge/<id1>/<id2>')
 @admin_level_required(3)
 def merge(v, id1, id2):
 	if v.id != AEVANN_ID: abort(403)
@@ -83,7 +83,7 @@ def merge(v, id1, id2):
 	return redirect(user1.url)
 
 
-@app.get('/admin/merge_all/<id>')
+@app.post('/admin/merge_all/<id>')
 @admin_level_required(3)
 def merge_all(v, id):
 	if v.id != AEVANN_ID: abort(403)

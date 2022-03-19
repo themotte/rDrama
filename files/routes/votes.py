@@ -89,7 +89,10 @@ def api_vote_post(post_id, new, v):
 		post.author.coins += 1
 		post.author.truecoins += 1
 		g.db.add(post.author)
-		real = new == -1 or (not v.agendaposter and not v.shadowbanned and (bool(v.profileurl) or bool(v.customtitle) or v.namecolor != DEFAULT_COLOR))
+
+		if new == 1 and (v.agendaposter or v.shadowbanned or (v.is_banned and not v.unban_utc) or (v.profileurl.startswith('/e/') and not v.customtitle and v.namecolor == DEFAULT_COLOR)): real = False
+		else: real = True
+
 		vote = Vote(user_id=v.id,
 					vote_type=new,
 					submission_id=post_id,
@@ -150,7 +153,10 @@ def api_vote_comment(comment_id, new, v):
 		comment.author.coins += 1
 		comment.author.truecoins += 1
 		g.db.add(comment.author)
-		real = new == -1 or (not v.agendaposter and not v.shadowbanned and (bool(v.profileurl) or bool(v.customtitle) or v.namecolor != DEFAULT_COLOR))
+
+		if new == 1 and (v.agendaposter or v.shadowbanned or (v.is_banned and not v.unban_utc) or (v.profileurl.startswith('/e/') and not v.customtitle and v.namecolor == DEFAULT_COLOR)): real = False
+		else: real = True
+
 		vote = CommentVote(user_id=v.id,
 						vote_type=new,
 						comment_id=comment_id,
