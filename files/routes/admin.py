@@ -13,7 +13,7 @@ from files.classes import *
 from flask import *
 from files.__main__ import app, cache, limiter
 from .front import frontlist
-from files.helpers.discord import add_role, set_nick
+from files.helpers.discord import add_role
 from datetime import datetime
 import requests
 from urllib.parse import quote, urlencode
@@ -22,16 +22,6 @@ GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
 GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 
 month = datetime.now().strftime('%B')
-
-
-@app.get('/nick')
-@admin_level_required(3)
-def nick(v):
-	for u in g.db.query(User).filter(User.discord_id != None):
-		set_nick(u, u.username)
-		print(u.username)
-
-	return 'sex'
 
 
 @app.post('/admin/merge/<id1>/<id2>')
