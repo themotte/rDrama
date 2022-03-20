@@ -1,14 +1,15 @@
-import time
-from files.helpers.wrappers import auth_required
-from files.helpers.sanitize import sanitize
-from files.helpers.const import *
-from datetime import datetime
-from flask_socketio import SocketIO, emit
-from files.__main__ import app
-from flask import render_template
-import sys
+from files.helpers.const import SITE
 
 if SITE=='devrama.xyz':
+	import time
+	from files.helpers.wrappers import auth_required
+	from files.helpers.sanitize import sanitize
+	from datetime import datetime
+	from flask_socketio import SocketIO, emit
+	from files.__main__ import app
+	from flask import render_template
+	import sys
+
 	@app.get("/chat")
 	@auth_required
 	def chat( v):
