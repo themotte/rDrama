@@ -28,25 +28,25 @@
 		<div class="pop-badges ml-3 mr-3 my-2">
 		</div>
 
-	  <div class="border-top d-flex align-items-center p-3 gap-3 smol">
+	 <div class="border-top d-flex align-items-center p-3 gap-3 smol">
 		<span>
-		  <strong class="pop-postcount text-black"></strong>
-		  <span class="text-black">posts</span>
+		 <strong class="pop-postcount text-black"></strong>
+		 <span class="text-black">posts</span>
 		</span>
 		<span class="ml-3">
-		  <strong class="pop-commentcount text-black"></strong>
-		  <span class="text-black">comments</span>
+		 <strong class="pop-commentcount text-black"></strong>
+		 <span class="text-black">comments</span>
 		</span>
 		<span class="ml-3">
 			<strong class="pop-coins text-black"></strong>
 			<span class="text-black">coins</span>
-		</span>  
+		</span> 
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="/" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} class="pop-viewmore ml-auto text-decoration-none">
-		  View
-		  <i class="fas fa-arrow-right fa-sm px-1"></i>
+		 View
+		 <i class="fas fa-arrow-right fa-sm px-1"></i>
 		</a>
-	  </div>
+	 </div>
 	</div>
 </div>
 
@@ -86,7 +86,7 @@
 					<div class="mx-auto arrow-up post-{{p.id}}-up active"></div>
 					{% endif %}
 
-					<span  class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+					<span class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
 					{% if voted==-1 %}
 						<div class="text-muted mx-auto arrow-down post-{{p.id}}-down active"></div>
@@ -94,19 +94,19 @@
 
 				{% elif v %}
 
-				<div  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1')" class="post-{{p.id}}-up mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
+				<div tabindex="0" role="button" onclick="vote('{{v.id}}','post', '{{p.id}}', '1')" class="post-{{p.id}}-up mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
 
-				<span  class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+				<span class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1')" class="post-{{p.id}}-down text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
+				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('{{v.id}}','post', '{{p.id}}', '-1')" class="post-{{p.id}}-down text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
 
 				{% else %}
 
-				<div  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1')" class="post-{{p.id}}-up mx-auto arrow-up" onclick="location.href='/login';"></div>
+				<div tabindex="0" role="button" onclick="vote('{{v.id}}','post', '{{p.id}}', '1')" class="post-{{p.id}}-up mx-auto arrow-up" onclick="location.href='/login';"></div>
 
-				<span  class="post-{{p.id}}-score-none score{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+				<span class="post-{{p.id}}-score-none score{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1')" class="post-{{p.id}}-down text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
+				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('{{v.id}}','post', '{{p.id}}', '-1')" class="post-{{p.id}}-down text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
 
 				{% endif %}
 
@@ -141,8 +141,8 @@
 
 
 		</div>
-		  
-		  
+		 
+		 
 		<div class="card-block text-left x-scroll-parent my-md-auto w-100">
 
 			<div class="post-meta text-left x-scroll mb-md-2">
@@ -194,7 +194,7 @@
 
 					{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{p.author.verified}}"></i>
 					{% endif %}
-					<a class="user-name text-decoration-none" onclick='popclick({{p.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color: #{{p.author.namecolor}};  font-weight: bold;"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and SITE_NAME == 'Drama' %}class="mod"{% endif %}>{{p.author_name}}</span></a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
+					<a class="user-name text-decoration-none" onclick='popclick({{p.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color: #{{p.author.namecolor}}; font-weight: bold;"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and SITE_NAME == 'Drama' %}class="mod"{% endif %}>{{p.author_name}}</span></a>{% if p.author.customtitle %}<bdi style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
 				{% endif %}
 				<span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('timestamp-{{p.id}}','{{p.created_utc}}')" id="timestamp-{{p.id}}">&nbsp;{{p.age_string}}</span>
 				&nbsp;
@@ -205,7 +205,8 @@
 				&nbsp;&nbsp;{{p.views}} thread views
 			</div>
 
-			<h5 class="card-title post-title text-left w-lg-95 mb-0 pb-0 pb-md-1"><a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}" class="{% if voted and v.id == AEVANN_ID and p.author_id != PIZZASHILL_ID %}visited{% endif %} stretched-link {% if p.author.agendaposter %}agendaposter{% endif %}">
+			<h5 class="card-title post-title text-left w-lg-95 mb-0 pb-0 pb-md-1">
+				<a id="{{p.id}}-title" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}" class="{% if voted and v.id == AEVANN_ID and p.author_id != PIZZASHILL_ID %}visited{% endif %} stretched-link {% if p.author.agendaposter %}agendaposter{% endif %}">
 				{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
 				{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
 				{{p.realtitle(v) | safe}}
@@ -265,7 +266,7 @@
 					</span>
 					{% endif %}
 
-					<span  class="post-mobile-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+					<span class="post-mobile-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
 					{% if voted==-1 %}
 						<span class="ml-2 my-0 arrow-down post-{{p.id}}-down active"></span>
@@ -276,24 +277,24 @@
 				{% elif v %}
 				<li id="voting-{{p.id}}-mobile" class="voting list-inline-item d-md-none">
 
-					<span  tabindex="0" role="button" onclick="vote('post-mobile', '{{p.id}}', '1')" class="post-mobile-{{p.id}}-up mx-0 pr-1 arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}">
+					<span tabindex="0" role="button" onclick="vote('{{v.id}}','post-mobile', '{{p.id}}', '1')" class="post-mobile-{{p.id}}-up mx-0 pr-1 arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}">
 					</span>
 
-					<span  class="post-mobile-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+					<span class="post-mobile-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-					<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post-mobile', '{{p.id}}', '-1')" class="post-mobile-{{p.id}}-down mx-0 pl-1 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}">
+					<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('{{v.id}}','post-mobile', '{{p.id}}', '-1')" class="post-mobile-{{p.id}}-down mx-0 pl-1 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}">
 					</span>
 
 				</li>
 				{% else %}
 				<li id="voting-{{p.id}}-mobile" class="voting list-inline-item d-md-none">
-					<span  tabindex="0" class="arrow-{{p.id}}-mobile-up mx-0 pr-1 arrow-mobile-up" onclick="location.href='/login';">
+					<span tabindex="0" class="arrow-{{p.id}}-mobile-up mx-0 pr-1 arrow-mobile-up" onclick="location.href='/login';">
 						<i class="fas fa-arrow-alt-up mx-0" aria-hidden="true"></i>
 					</span>
 
-					<span  class="post-mobile-score-{{p.id}} score{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+					<span class="post-mobile-score-{{p.id}} score{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-					<span  tabindex="0" class="arrow-{{p.id}}-mobile-down arrow-mobile-down mx-0 pl-1 my-0" onclick="location.href='/login';">
+					<span tabindex="0" class="arrow-{{p.id}}-mobile-down arrow-mobile-down mx-0 pl-1 my-0" onclick="location.href='/login';">
 						<i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
 					</span>
 				</li>
