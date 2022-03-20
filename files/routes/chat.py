@@ -28,10 +28,5 @@ def speak(data, v):
 		"userlink":v.url
 	}
 
-	emit('speak', data)
+	emit('speak', data, broadcast=True)
 	return '', 204
-
-@sex.on('join')
-def join_room(data):
-    join_room('1')
-    return '', 204
