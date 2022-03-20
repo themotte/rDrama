@@ -32,7 +32,6 @@ def speak(data, v):
 	return '', 204
 
 @sex.on('connect')
-@auth_required
-def join_room(data, v):
+def join_room(data):
     join_room('1')
     return '', 204
