@@ -8,7 +8,7 @@ from files.__main__ import app
 from flask import render_template
 import sys
 
-if SITE_NAME=='PCM':
+if SITE=='devrama.xyz':
 	@app.get("/chat")
 	@auth_required
 	def chat( v):
