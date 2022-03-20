@@ -1,0 +1,76 @@
+{% extends "default.html" %}
+
+{% block title %}
+  <title>Chat</title>
+  <meta name="description" content="Chat">
+{% endblock %}
+
+{% block content %}
+
+<div id="chat-line-template" class="d-none">
+  <div class="chat-line my-2">
+    <div class="d-flex align-items-center">
+      <span class="rounded mb-auto d-none d-md-block chat-profile">
+        <img class="desktop-avatar rounded-circle w-100">
+      </span>
+      <div class="pl-md-3 text-muted">
+        <div>
+          <img class="mobile-avatar profile-pic-30 mr-2 d-inline-block d-md-none" data-toggle="tooltip" data-placement="right">
+          <a href="" class="font-weight-bold text-black userlink" target="_blank">@<span class="username"></span></a>
+          <div style="overflow:hidden">
+            <span class="chat-message text-black text-break"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container p-md-0 chat-container">
+  <div id="chat-window">
+    <div id="chat-text" class="fullchat">
+    </div>
+    <div id="system-template">
+      <div class="system-line">
+        <p class="message text-muted"></p>
+      </div>
+    </div>
+  </div>
+  <div class="position-relative form-group d-flex pb-3">
+    <div class="position-absolute text-muted text-small" style="bottom: -1.5rem; line-height: 1;">
+      <span id="typing-indicator"></span>
+      <span id="loading-indicator" class="d-none"></span>
+    </div>
+    <input id="input-text" type="text" class="form-control" placeholder="Message" autocomplete="off" autofocus />
+    <button id="chatsend" class="btn btn-primary ml-3" type="submit">Send</button>
+  </div>
+</div>
+
+<script src="/assets/js/socketio.js"></script>
+<script src="/assets/js/chat.js?v=11"></script>
+
+<style>
+
+#chat-window {
+  max-height:calc(100vh - 300px);
+  overflow-y: scroll;
+}
+
+.fullchat .chat-profile {
+  min-width: 42px;
+  width: 42px;
+  height: 42px;
+}
+
+#chat-window::-webkit-scrollbar {
+  display: none;
+}
+
+#chat-window {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+</style>
+
+{% endblock %}

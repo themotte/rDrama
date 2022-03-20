@@ -1,5 +1,4 @@
-import gevent.monkey
-gevent.monkey.patch_all()
+
 from os import environ, path
 import secrets
 from flask import *
