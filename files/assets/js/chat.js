@@ -15,7 +15,3 @@ socket.on('speak', function(json) {
 	document.getElementsByClassName('chat-message')[0].innerHTML = json['text']
 	document.getElementById('chat-text').append(document.getElementsByClassName('chat-line')[0].cloneNode(true))
 })
-
-socket.on('connect', function() {
-	socket.emit('join room', '1')
-})

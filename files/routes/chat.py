@@ -31,7 +31,7 @@ def speak(data, v):
 	emit('speak', data)
 	return '', 204
 
-@sex.on('join room')
+@sex.on('connect')
 @auth_required
 def join_room(data, v):
     join_room('1')
