@@ -656,32 +656,6 @@ def settings_images_banner(v):
 	return render_template("settings_profile.html", v=v, msg="Banner successfully updated.")
 
 
-@app.post("/settings/delete/profile")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
-def settings_delete_profile(v):
-
-	if v.profileurl or v.highres:
-		v.deletepfp()
-		g.db.add(v)
-		g.db.commit()
-
-	return render_template("settings_profile.html", v=v,
-						   msg="Profile picture successfully removed.")
-
-@app.post("/settings/delete/banner")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
-def settings_delete_banner(v):
-
-	if v.bannerurl:
-		v.deletebanner()
-		g.db.add(v)
-		g.db.commit()
-
-	return render_template("settings_profile.html", v=v,  msg="Banner successfully removed.")
-
-
 @app.get("/settings/blocks")
 @auth_required
 def settings_blockedpage(v):

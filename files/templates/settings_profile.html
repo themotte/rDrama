@@ -213,15 +213,6 @@
 
 							</div>
 
-							{% if v.profileurl %}
-							<div>
-								<form action="/settings/delete/profile" method="post">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
-									<button type="submit" value="Delete" class="btn btn-link fa-lg"><i class="far fa-trash-alt text-danger"></i></button>
-								</form>
-							</div>
-							{% endif %}
-
 						</div>
 
 						<div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files are supported. Max file size is {% if v and v.patron %}8{% else %}4{% endif %} MB.</div>
@@ -252,16 +243,6 @@
 										Update<input autocomplete="off" type="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*" hidden name="banner" onchange="form.submit()">
 									</label>
 								</form>
-
-							</div>
-
-							<div>
-
-								{% if v.bannerurl %}
-								<form action="/settings/delete/banner" method="post">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
-									<button type="submit" value="Delete" class="btn btn-link fa-lg"><i class="far fa-trash-alt text-danger"></i></button>
-								</form>{% endif %}
 
 							</div>
 
