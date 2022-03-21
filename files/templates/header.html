@@ -29,7 +29,7 @@
 
 	<div class="navbar navbar-expand-md navbar-light" id="navbar">
 		<div class="container-fluid" style="padding:0;">
-			<div class="flex-grow-1">
+			<div>
 				<a href="/" class="navbar-brand mr-auto">
 					{% if SITE_NAME == 'Drama' %}
 						<img alt="header icon" height=33 width=43 src="/static/assets/images/{{SITE_NAME}}/headericon.webp?v=1015">
@@ -38,14 +38,15 @@
 					{% else %}
 						<img alt="header icon" height=33 src="/static/assets/images/{{SITE_NAME}}/headericon.webp?v=1015">
 					{% endif %}
-
-					{% if sub %}
-						<a href="/h/{{sub.name}}" class="font-weight-bold ml-2">/h/{{sub.name}}</a>
-					{% elif SITE_NAME == 'Drama' %}
-						<img alt="logo" src="/static/assets/images/{{SITE_NAME}}/logo.webp?v=1010" height=20 width=77>
-					{% endif %}
 				</a>
 			</div>
+			
+			{% if sub %}
+				<a href="/h/{{sub.name}}" class="font-weight-bold ml-2 flex-grow-1 mt-1" style="font-size:max(14px,1.2vw)">/h/{{sub.name}}</a>
+			{% elif SITE_NAME == 'Drama' %}
+				<img alt="logo" src="/static/assets/images/{{SITE_NAME}}/logo.webp?v=1010" height=20 width=77>
+			{% endif %}
+
 			<div class="flex-grow-1 d-fl d-none d-md-block">
 				<form class="form-inline search flex-nowrap mx-0 mx-lg-auto" {% if err %}style="margin-right:40rem!important"{% endif %} action="{% if request.path.startswith('/search') %}{{request.path}}{% else %}/search/posts/{% endif %}" method="get">
 					<input autocomplete="off" class="form-control w-100" type="search" placeholder="Search" aria-label="Search" name="q" value="{{request.values.get('q', '')}}">
