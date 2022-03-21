@@ -176,7 +176,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 	for tag in soup.find_all("img"):
 		if tag.get("src") and not tag["src"].startswith('/pp/'):
-			tag["class"] = "in-comment-image"
+			tag["class"] = "img"
 			tag["loading"] = "lazy"
 			tag["data-src"] = tag["src"]
 			tag["src"] = "/static/assets/images/loading.webp"
@@ -311,7 +311,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	sanitized = unlinked_regex.sub(r'\1<a href="\2" rel="nofollow noopener noreferrer" target="_blank">\2</a>', sanitized)
 
 	if not noimages:
-		sanitized = video_regex.sub(r'<p><video controls preload="none" class="embedvid"><source src="\1" type="video/mp4"></video>', sanitized)
+		sanitized = video_regex.sub(r'<p><video controls preload="none" class="vid"><source src="\1"></video>', sanitized)
 
 	if comment:
 		for marsey in g.db.query(Marsey).filter(Marsey.name.in_(marseys_used)).all():

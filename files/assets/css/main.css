@@ -4463,7 +4463,7 @@ blockquote p {
         margin: 1.75rem auto !important;
 }
 }
-.in-comment-image:not(img[src*="/uid/"]):not(img[src*="/pp/"]), .preview img {
+.in-comment-image:not(img[src*="/uid/"]):not(img[src*="/pp/"]), .preview img, .img:not(img[src*="/uid/"]):not(img[src*="/pp/"]), .preview img {
     max-height: 150px !important;
     max-width: 100% !important;
     border-radius: 0.2rem !important;
@@ -4471,7 +4471,7 @@ blockquote p {
     margin-bottom: 0.5rem !important;
     cursor: pointer;
 }
-.embedvid {
+.embedvid, .vid {
     max-height: 20rem !important;
     max-width: 100% !important;
     margin-top: 0.5rem !important;
