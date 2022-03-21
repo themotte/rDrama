@@ -94,19 +94,19 @@
 
 				{% elif v %}
 
-				<div tabindex="0" role="button" onclick="vote('{{v.id}}','post', '{{p.id}}', '1')" class="post-{{p.id}}-up mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
+				<div tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1', '{{v.id}}')" class="post-{{p.id}}-up mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
 
 				<span class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('{{v.id}}','post', '{{p.id}}', '-1')" class="post-{{p.id}}-down text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
+				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1', '{{v.id}}')" class="post-{{p.id}}-down text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
 
 				{% else %}
 
-				<div tabindex="0" role="button" onclick="vote('{{v.id}}','post', '{{p.id}}', '1')" class="post-{{p.id}}-up mx-auto arrow-up" onclick="location.href='/login';"></div>
+				<div tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1', '{{v.id}}')" class="post-{{p.id}}-up mx-auto arrow-up" onclick="location.href='/login';"></div>
 
 				<span class="post-{{p.id}}-score-none score{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('{{v.id}}','post', '{{p.id}}', '-1')" class="post-{{p.id}}-down text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
+				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1', '{{v.id}}')" class="post-{{p.id}}-down text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
 
 				{% endif %}
 
@@ -277,12 +277,12 @@
 				{% elif v %}
 				<li id="voting-{{p.id}}-mobile" class="voting list-inline-item d-md-none">
 
-					<span tabindex="0" role="button" onclick="vote('{{v.id}}','post-mobile', '{{p.id}}', '1')" class="post-mobile-{{p.id}}-up mx-0 pr-1 arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}">
+					<span tabindex="0" role="button" onclick="vote('post-mobile', '{{p.id}}', '1', '{{v.id}}')" class="post-mobile-{{p.id}}-up mx-0 pr-1 arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}">
 					</span>
 
 					<span class="post-mobile-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-					<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('{{v.id}}','post-mobile', '{{p.id}}', '-1')" class="post-mobile-{{p.id}}-down mx-0 pl-1 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}">
+					<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('post-mobile', '{{p.id}}', '-1', '{{v.id}}')" class="post-mobile-{{p.id}}-down mx-0 pl-1 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}">
 					</span>
 
 				</li>
