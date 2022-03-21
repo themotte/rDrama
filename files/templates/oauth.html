@@ -11,15 +11,6 @@
 		<h1 class="h2">{{application.app_name}}</h1>
 
 		<p class="mb-md-5">wants to access your @{{v.username}} account.</p>
-		<p>It will be able to:</p>
-		<ul>
-		{% for scope in scopes %}
-				<li>{{SCOPES[scope]}}</li>
-		{% endfor %}
-		{% if permanent %}
-		<li>Maintain this access indefinitely, or until you revoke it</li>
-		{% endif %}
-		</ul>
 
 		<p class="mb-md-5">It will not be able to see your password, or change your account settings.</p>
 

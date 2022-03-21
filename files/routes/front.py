@@ -177,9 +177,9 @@ def front_all(v, sub=None, subdomain=None):
 	try: lt=int(request.values.get("utc_less_than", 0))
 	except: lt=0
 
-	if SITE_NAME == 'Drama': defaultsubs = 1
-	else: defaultsubs = 2
-	subs = v.subs if v else defaultsubs
+	if v: subs = v.subs
+	elif SITE_NAME == 'Drama': subs = 1
+	else: subs = 2
 
 	ids, next_exists = frontlist(sort=sort,
 					page=page,
