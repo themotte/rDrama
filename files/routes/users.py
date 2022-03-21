@@ -884,6 +884,7 @@ def remove_follow(username, v):
 
 	return {"message": "Follower removed!"}
 
+@app.get("/pp/<id>")
 @app.get("/uid/<id>/pic")
 @app.get("/uid/<id>/pic/profile")
 @app.get("/logged_out/uid/<id>/pic")

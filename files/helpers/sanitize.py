@@ -127,11 +127,11 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 			u = get_user(i.group(1), graceful=True)
 			if u:
-				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
+				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''', 1)
 	else:
 		sanitized = reddit_regex.sub(r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized)
 
-		sanitized = sub_regex.sub(r'\1<a href="/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized)
+		sanitized = sub_regex.sub(r'\1<a href="/\2">/\2</a>', sanitized)
 
 		captured = []
 		for i in mention_regex.finditer(sanitized):
@@ -144,7 +144,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 				if noimages:
 					sanitized = sanitized.replace(i.group(0), f'{i.group(1)}<a href="/id/{u.id}">@{u.username}</a>', 1)
 				else:
-					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
+					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''', 1)
 
 
 	sanitized = imgur_regex.sub(r'\1_d.webp?maxwidth=9999&fidelity=high', sanitized)
@@ -175,7 +175,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	soup = BeautifulSoup(sanitized, 'lxml')
 
 	for tag in soup.find_all("img"):
-		if tag.get("src") and tag.get("class") != ['pp20']:
+		if tag.get("src") and not tag["src"].startswith('/pp/'):
 			tag["class"] = "in-comment-image"
 			tag["loading"] = "lazy"
 			tag["data-src"] = tag["src"]
@@ -187,6 +187,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			tag['referrerpolicy'] = "no-referrer"
 
 	for tag in soup.find_all("a"):
+		del tag["rel"]
 		if tag.get("href"):
 			if not tag["href"].startswith(SITE_FULL) and not tag["href"].startswith('/') and not tag["href"].startswith(SITE_FULL2):
 				tag["target"] = "_blank"

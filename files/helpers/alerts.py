@@ -54,7 +54,7 @@ def notif_comment(text, autojanny=False):
 
 def notif_comment2(p):
 
-	search_html = f'%</a> has mentioned you: <a href="/post/{p.id}" rel="nofollow">%'
+	search_html = f'%</a> has mentioned you: <a href="/post/{p.id}">%'
 
 	existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.parent_submission == None, Comment.body_html.like(search_html)).first()
 	

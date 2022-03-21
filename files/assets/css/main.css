@@ -3178,7 +3178,7 @@ small, .small {
     width: 28px;
     height: 28px;
 }
-.profile-pic-20, .pp20, img[src*="/uid/"] {
+.profile-pic-20, .pp20, img[src*="/uid/"], img[src*="/pp/"] {
     margin-right: 0.25rem !important;
     width: 20px;
     height: 20px;
@@ -4463,7 +4463,7 @@ blockquote p {
         margin: 1.75rem auto !important;
 }
 }
-.in-comment-image:not(img[src*="/uid/"]), .preview img {
+.in-comment-image:not(img[src*="/uid/"]):not(img[src*="/pp/"]), .preview img {
     max-height: 150px !important;
     max-width: 100% !important;
     border-radius: 0.2rem !important;
