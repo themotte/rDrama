@@ -39,10 +39,10 @@
 						<img alt="header icon" height=33 src="/static/assets/images/{{SITE_NAME}}/headericon.webp?v=1015">
 					{% endif %}
 
-					{% if SITE_NAME == 'Drama' %}
+					{% if sub %}
+					<a href="/h/{{sub.name}}" class="font-weight-bold position-absolute" style="top: 15px;">/h/{{sub.name}}</a>
+					{% elif SITE_NAME == 'Drama' %}
 						<img alt="logo" src="/static/assets/images/{{SITE_NAME}}/logo.webp?v=1010" height=20 width=77>
-					{% elif sub %}
-						<a href="/h/{{sub.name}}" class="font-weight-bold ml-2 mt-2">/h/{{sub.name}}</a>
 					{% endif %}
 				</a>
 			</div>

@@ -1998,6 +1998,9 @@ a.bg-light:hover, a.bg-light:focus, button.bg-light:hover, button.bg-light:focus
 .d-none {
     display: none !important;
 }
+.d-inline {
+    display: inline !important;
+}
 .d-inline-block {
     display: inline-block !important;
 }
