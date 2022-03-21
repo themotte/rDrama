@@ -136,7 +136,7 @@ def searchposts(v):
 	if sort == "new":
 		posts = posts.order_by(Submission.created_utc.desc())
 	elif sort == "old":
-		posts = posts.order_by(Submission.created_utc.asc())
+		posts = posts.order_by(Submission.created_utc)
 	elif sort == "controversial":
 		posts = posts.order_by((Submission.upvotes+1)/(Submission.downvotes+1) + (Submission.downvotes+1)/(Submission.upvotes+1), Submission.downvotes.desc())
 	elif sort == "top":
@@ -250,7 +250,7 @@ def searchcomments(v):
 	if sort == "new":
 		comments = comments.order_by(Comment.created_utc.desc())
 	elif sort == "old":
-		comments = comments.order_by(Comment.created_utc.asc())
+		comments = comments.order_by(Comment.created_utc)
 	elif sort == "controversial":
 		comments = comments.order_by((Comment.upvotes+1)/(Comment.downvotes+1) + (Comment.downvotes+1)/(Comment.upvotes+1), Comment.downvotes.desc())
 	elif sort == "top":

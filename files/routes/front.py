@@ -331,25 +331,21 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 
 	if sort == "hot":
 		ti = int(time.time()) + 3600
-		posts = posts.order_by(-1000000*(Submission.realupvotes + 1 + Submission.comment_count/5 + (func.length(Submission.body_html)-func.length(func.replace(Submission.body_html,'</a>',''))))/(func.power(((ti - Submission.created_utc)/1000), 1.23)))
-
-		if v and v.id == AEVANN_ID:
-			for p in posts:
-				print(-1000000*(p.realupvotes + 1 + p.comment_count/5 + (len(p.body_html)-len(p.body_html.replace('</a>',''))))/((ti - p.created_utc)/1000)**1.23, flush=True)
+		posts = posts.order_by(-1000000*(Submission.realupvotes + 1 + Submission.comment_count/5 + (func.length(Submission.body_html)-func.length(func.replace(Submission.body_html,'</a>',''))))/(func.power(((ti - Submission.created_utc)/1000), 1.23)), Submission.created_utc.desc())
 	elif sort == "bump":
-		posts = posts.filter(Submission.comment_count > 1).order_by(Submission.bump_utc.desc())
+		posts = posts.filter(Submission.comment_count > 1).order_by(Submission.bump_utc.desc(), Submission.created_utc.desc())
 	elif sort == "new":
 		posts = posts.order_by(Submission.created_utc.desc())
 	elif sort == "old":
-		posts = posts.order_by(Submission.created_utc.asc())
+		posts = posts.order_by(Submission.created_utc)
 	elif sort == "controversial":
-		posts = posts.order_by((Submission.upvotes+1)/(Submission.downvotes+1) + (Submission.downvotes+1)/(Submission.upvotes+1), Submission.downvotes.desc())
+		posts = posts.order_by((Submission.upvotes+1)/(Submission.downvotes+1) + (Submission.downvotes+1)/(Submission.upvotes+1), Submission.downvotes.desc(), Submission.created_utc.desc())
 	elif sort == "top":
-		posts = posts.order_by(Submission.downvotes - Submission.upvotes)
+		posts = posts.order_by(Submission.downvotes - Submission.upvotes, Submission.created_utc.desc())
 	elif sort == "bottom":
-		posts = posts.order_by(Submission.upvotes - Submission.downvotes)
+		posts = posts.order_by(Submission.upvotes - Submission.downvotes, Submission.created_utc.desc())
 	elif sort == "comments":
-		posts = posts.order_by(Submission.comment_count.desc())
+		posts = posts.order_by(Submission.comment_count.desc(), Submission.created_utc.desc())
 
 	if v: size = v.frontsize or 0
 	else: size = 25
@@ -449,7 +445,7 @@ def changeloglist(v=None, sort="new", page=1 ,t="all"):
 	if sort == "new":
 		posts = posts.order_by(Submission.created_utc.desc())
 	elif sort == "old":
-		posts = posts.order_by(Submission.created_utc.asc())
+		posts = posts.order_by(Submission.created_utc)
 	elif sort == "controversial":
 		posts = posts.order_by((Submission.upvotes+1)/(Submission.downvotes+1) + (Submission.downvotes+1)/(Submission.upvotes+1), Submission.downvotes.desc())
 	elif sort == "top":
@@ -509,7 +505,7 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 	if sort == "new":
 		comments = comments.order_by(Comment.created_utc.desc())
 	elif sort == "old":
-		comments = comments.order_by(Comment.created_utc.asc())
+		comments = comments.order_by(Comment.created_utc)
 	elif sort == "controversial":
 		comments = comments.order_by((Comment.upvotes+1)/(Comment.downvotes+1) + (Comment.downvotes+1)/(Comment.upvotes+1), Comment.downvotes.desc())
 	elif sort == "top":

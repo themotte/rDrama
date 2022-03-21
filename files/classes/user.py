@@ -288,7 +288,7 @@ class User(Base):
 		if sort == "new":
 			posts = posts.order_by(Submission.created_utc.desc())
 		elif sort == "old":
-			posts = posts.order_by(Submission.created_utc.asc())
+			posts = posts.order_by(Submission.created_utc)
 		elif sort == "controversial":
 			posts = posts.order_by((Submission.upvotes+1)/(Submission.downvotes+1) + (Submission.downvotes+1)/(Submission.upvotes+1), Submission.downvotes.desc())
 		elif sort == "top":
@@ -444,7 +444,7 @@ class User(Base):
 			)
 		).filter(
 			User.id != self.id
-		).order_by(User.username.asc()).all()
+		).order_by(User.username).all()
 
 		data = [x for x in data]
 		output = []
