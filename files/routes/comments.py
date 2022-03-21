@@ -286,6 +286,7 @@ def api_comment(v):
 
 							marsey = Marsey(name=name, author_id=user.id, tags=tags, count=0)
 							g.db.add(marsey)
+							g.db.flush()
 
 							all_by_author = g.db.query(Marsey.author_id).filter_by(author_id=user.id).count()
 
