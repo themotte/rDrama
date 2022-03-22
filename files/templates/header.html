@@ -34,7 +34,7 @@
 					{% if SITE_NAME == 'Drama' %}
 						<img alt="header icon" height=33 width=43 src="/static/assets/images/{{SITE_NAME}}/headericon.webp?v=1015">
 					{% else %}
-						<img alt="header icon {% if not sub %}flex-grow-1{% endif %}" height=33 src="/static/assets/images/{{SITE_NAME}}/headericon.webp?v=1015">
+						<img {% if not sub %}class="flex-grow-1"{% endif %} alt="header icon" height=33 src="/static/assets/images/{{SITE_NAME}}/headericon.webp?v=1015">
 					{% endif %}
 				</a>
 			</div>
