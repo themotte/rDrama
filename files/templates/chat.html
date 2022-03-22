@@ -76,46 +76,7 @@
 	</div>
 </div>
 
-<script src="/assets/js/socketio.js"></script>
-
-<style>
-	#chat-window {
-		max-height:calc(100vh - 300px);
-		overflow-y: scroll;
-	}
-
-	.fullchat .chat-profile {
-		min-width: 42px;
-		width: 42px;
-		height: 42px;
-	}
-
-	#chat-window::-webkit-scrollbar {
-		display: none;
-	}
-
-	#chat-window {
-		-ms-overflow-style: none;
-		scrollbar-width: none;
-	}
-
-	.chat-mention {
-		background-color: var(--primary55);
-		border-radius: 5px;
-	}
-
-	.profile-pic-30 {
-		width: 30px;
-		height: 30px;
-		border-radius: 50%;
-		text-align: center;
-		object-fit: cover;
-	}
-
-	.chat-message p {
-		display: inline-block;
-	}
-</style>
+<script data-cfasync="false" src="/assets/js/socketio.js"></script>
 
 <script data-cfasync="false">
 	let socket=io()
@@ -267,6 +228,46 @@
 		}
 	})
 </script>
+
+
+<style>
+	#chat-window {
+		max-height:calc(100vh - 300px);
+		overflow-y: scroll;
+	}
+
+	.fullchat .chat-profile {
+		min-width: 42px;
+		width: 42px;
+		height: 42px;
+	}
+
+	#chat-window::-webkit-scrollbar {
+		display: none;
+	}
+
+	#chat-window {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+
+	.chat-mention {
+		background-color: var(--primary55);
+		border-radius: 5px;
+	}
+
+	.profile-pic-30 {
+		width: 30px;
+		height: 30px;
+		border-radius: 50%;
+		text-align: center;
+		object-fit: cover;
+	}
+
+	.chat-message p {
+		display: inline-block;
+	}
+</style>
 
 {% include "emoji_modal.html" %}
 
