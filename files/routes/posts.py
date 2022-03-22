@@ -468,7 +468,8 @@ def edit_post(pid, v):
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
-					req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
+					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
+					except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
 					try: url = req['link']
 					except: return {"error": req['error']}, 400
 				if url.endswith('.'): url += 'mp4'
@@ -1024,7 +1025,8 @@ def submit_post(v, sub=None):
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
-					req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
+					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
+					except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
 					try: url = req['link']
 					except: return {"error": req['error']}, 400
 				if url.endswith('.'): url += 'mp4'
@@ -1130,7 +1132,8 @@ def submit_post(v, sub=None):
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
-				req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
+				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
+				except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
 				try: url = req['link']
 				except: return {"error": req['error']}, 400
 			if url.endswith('.'): url += 'mp4'
