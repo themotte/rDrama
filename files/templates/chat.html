@@ -48,9 +48,8 @@
 								<a class="font-weight-bold text-black userlink" style="color:#{{m['namecolor']}}" target="_blank" href="/@{{m['username']}}">{{m['username']}}</a>
 								<div style="overflow:hidden">
 									{% set text=m['text'] %}
-									<span class="chat-message text-black text-break">{{m['text_html'] | safe}}
-										<button class="btn d-inline-block"><i onclick="quote('{{text}}')" class="fas fa-reply" aria-hidden="true"></i></button
-									</span>
+									<span class="chat-message text-black text-break">{{m['text_html'] | safe}}</span>
+									<button class="btn d-inline-block pt-0"><i onclick="quote('{{text}}')" class="fas fa-reply" aria-hidden="true"></i></button>
 								</div>
 							</div>
 						</div>
