@@ -25,6 +25,7 @@ if SITE=='pcmemes.net':
 		data={
 			"avatar": v.profile_url,
 			"username":v.username,
+			"namecolor":v.namecolor,
 			"text":sanitize(data[:1000].strip()),
 			"time": time.strftime("%d %b %Y at %H:%M:%S", time.gmtime(int(time.time()))),
 			"userlink":v.url
