@@ -26,7 +26,7 @@
 	<tr style="border-top:2px solid var(--primary)">
 		<td>{{pos[0]}}</td>
 		<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-		<td><a href="{{request.path}}/{{v.id}}/posts">{{pod[1]}}</a></td>
+		<td><a href="{{request.path}}/{{v.id}}/posts">{{pos[1]}}</a></td>
 	</tr>
 {% endif %}
 </tbody>
