@@ -87,6 +87,9 @@ function changename(s1,s2) {
 	document.getElementById(s1).innerHTML = escapeHTML(filename.slice(0, -2));
 }
 
-function unlock(id) {
-	document.getElementById(id).classList.remove('disabled')
+function unlock(id, t) {
+	if (t.value.length)
+		document.getElementById(id).classList.remove('disabled')
+	else
+		document.getElementById(id).classList.add('disabled')
 }
