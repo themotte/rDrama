@@ -5,7 +5,9 @@ Flask-Caching
 Flask-Compress
 Flask-Limiter
 Flask-Mail
+Flask-Socketio
 gevent
+gevent-websocket
 greenlet
 gunicorn
 lxml
