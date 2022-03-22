@@ -14,7 +14,13 @@
 
 
 		{% if v %}
-			<style>:root{--primary:#{{v.themecolor}}}</style>
+			<style>
+				:root{
+					--primary:#{{v.themecolor}};
+					--primary55:#{{v.themecolor}}55;
+				}
+
+			</style>
 			<link rel="stylesheet" href="/static/assets/css/main.css?v=186"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?v=30">
 			{% if v.agendaposter %}
 				<style>
