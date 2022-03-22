@@ -718,7 +718,7 @@ def thumbnail_thread(pid):
 
 			for i in data:
 
-				if i["author"] == 'GoMarsey': continue
+				if i["subreddit"] == 'PokemonGoRaids': continue
 
 				body_html = sanitize(f'New {word} mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 

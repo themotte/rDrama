@@ -1,6 +1,6 @@
-from files.helpers.const import SITE
-
-if SITE in ('pcmemes.net', 'localhost'):
+import sys
+if "load_chat" in sys.argv:
+	from files.helpers.const import SITE_FULL
 	import time
 	from files.helpers.wrappers import auth_required
 	from files.helpers.sanitize import sanitize
@@ -10,29 +10,34 @@ if SITE in ('pcmemes.net', 'localhost'):
 	from flask import render_template
 	import sys
 
-	socketio = SocketIO(app, async_mode='gevent')
+	socketio = SocketIO(app, async_mode='gevent', cors_allowed_origins=[SITE_FULL])
 	typing = []
 	online = []
+	messages = []
 
 	@app.get("/chat")
 	@auth_required
 	def chat( v):
-		return render_template("chat.html", v=v)
+		return render_template("chat.html", v=v, messages=messages)
 
 	@socketio.on('speak')
 	@limiter.limit("5/second;30/minute")
 	@auth_required
 	def speak(data, v):
-		if not data: abort(403)
+		global messages
+		text = data[:1000].strip()
+		if not text: abort(403)
 
 		data={
 			"avatar": v.profile_url,
 			"username":v.username,
 			"namecolor":v.namecolor,
-			"text":sanitize(data[:1000].strip()),
-			"time": time.strftime("%d %b %Y at %H:%M:%S", time.gmtime(int(time.time())))
+			"text":text,
+			"text_html":sanitize(text),
 		}
 
+		messages.append(data)
+		messages = messages[:20]
 		emit('speak', data, broadcast=True)
 		return '', 204
 

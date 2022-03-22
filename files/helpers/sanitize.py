@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from bleach.linkifier import LinkifyFilter
 from functools import partial
 from .get import *
+from .patter import pat
 from os import path, environ
 import re
 from mistletoe import markdown
@@ -243,7 +244,11 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			if path.isfile(f'files/assets/images/emojis/{remoji}.webp'):
 				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" class="{classes}" src="/e/{remoji}.webp">', new, flags=re.I|re.A)
 				if comment: marseys_used.add(emoji)
-					
+			elif remoji.endswith('pat') and path.isfile(f"files/assets/images/emojis/{remoji.replace('pat','')}.webp"):
+				pat(remoji.replace('pat',''))
+				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" class="{classes}" src="/e/{remoji}.webp">', new, flags=re.I|re.A)
+
+
 		sanitized = sanitized.replace(old, new)
 
 	emojis = list(emoji_regex3.finditer(sanitized))
@@ -263,10 +268,6 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			old = emoji
 			if emoji == 'marseyrandom': emoji = choice(marseys_const2)
 			else: emoji = old
-
-			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" class="{classes}" src="/e/{emoji}.webp">', sanitized, flags=re.I|re.A)
-				if comment: marseys_used.add(emoji)
 		else:
 			classes = 'emoji'
 			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): classes += ' golden'
@@ -275,9 +276,13 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			if emoji == 'marseyrandom': emoji = choice(marseys_const2)
 			else: emoji = old
 
-			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', sanitized, flags=re.I|re.A)
-				if comment: marseys_used.add(emoji)
+
+		if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
+			sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', sanitized, flags=re.I|re.A)
+			if comment: marseys_used.add(emoji)
+		elif emoji.endswith('pat') and path.isfile(f"files/assets/images/emojis/{emoji.replace('pat','')}.webp"):
+			pat(emoji.replace('pat',''))
+			sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" class="{classes}" src="/e/{emoji}.webp">', sanitized, flags=re.I|re.A)
 
 
 	for rd in ["://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it"]:
@@ -353,10 +358,7 @@ def filter_emojis_only(title, edit=False, graceful=False):
 			old = emoji
 			if emoji == 'marseyrandom': emoji = choice(marseys_const2)
 			else: emoji = old
-
-			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				title = re.sub(f'(?<!"):!{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" src="/e/{emoji}.webp" class="{classes}">', title, flags=re.I|re.A)
-
+			old = '!' + emoji
 		else:
 			classes = 'emoji'
 			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): classes += ' golden'
@@ -365,8 +367,13 @@ def filter_emojis_only(title, edit=False, graceful=False):
 			if emoji == 'marseyrandom': emoji = choice(marseys_const2)
 			else: emoji = old
 
-			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', title, flags=re.I|re.A)
+
+		if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
+			title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', title, flags=re.I|re.A)
+		elif emoji.endswith('pat') and path.isfile(f"files/assets/images/emojis/{emoji.replace('pat','')}.webp"):
+			pat(emoji.replace('pat',''))
+			title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', title, flags=re.I|re.A)
+
 
 	title = strikethrough_regex.sub(r'<del>\1</del>', title)
 
