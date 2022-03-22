@@ -188,9 +188,9 @@
 	}
 
 	function quote(text) {
-		textbox.style.height = '80px'
 		textbox.value = '> ' + text + '\n\n'
 		textbox.focus()
+		autoExpand(textbox);
 	}
 
 	textbox.addEventListener("keyup", function(e) {
