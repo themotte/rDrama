@@ -1,6 +1,7 @@
 from files.helpers.const import SITE
 
-if SITE != 'rdrama.net':
+if SITE in ('pcmemes.net', 'localhost'):
+	import time
 	from files.helpers.wrappers import auth_required
 	from files.helpers.sanitize import sanitize
 	from datetime import datetime
@@ -9,13 +10,10 @@ if SITE != 'rdrama.net':
 	from flask import render_template
 	import sys
 
-	socketio = SocketIO(app)
+	socketio = SocketIO(app, async_mode='gevent')
 	typing = []
 	online = []
 	messages = []
-
-	if __name__ == '__main__':
-		socketio.run(app)
 
 	@app.get("/chat")
 	@auth_required
