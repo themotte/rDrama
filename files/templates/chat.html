@@ -22,7 +22,7 @@
 			</span>
 			<div class="pl-md-3 text-muted">
 				<div>
-					<img class="mobile-avatar profile-pic-30 mr-2 d-inline-block d-md-none" data-toggle="tooltip" data-placement="right">
+					<img class="mobile-avatar profile-pic-30 mr-1 d-inline-block d-md-none" data-toggle="tooltip" data-placement="right">
 					<a href="" class="font-weight-bold text-black userlink" target="_blank"></a>
 					<div style="overflow:hidden">
 						<span class="chat-message text-black text-break"></span>
@@ -33,9 +33,27 @@
 	</div>
 </div>
 
-<div class="container p-md-0 chat-container">
+<div class="container py-0 chat-container">
 	<div id="chat-window">
 		<div id="chat-text" class="fullchat">
+			{% for m in messages %}
+				<div class="chat-line my-2">
+					<div class="d-flex align-items-center">
+						<span class="rounded mb-auto d-none d-md-block chat-profile">
+							<img class="desktop-avatar rounded-circle w-100" src="{{m['avatar']}}">
+						</span>
+						<div class="pl-md-3 text-muted">
+							<div>
+								<img src="{{m['avatar']}}" class="mobile-avatar profile-pic-30 mr-1 d-inline-block d-md-none" data-toggle="tooltip" data-placement="right">
+								<a class="font-weight-bold text-black userlink" style="color:#{{m['namecolor']}}" target="_blank" href="/@{{m['username']}}">{{m['username']}}</a>
+								<div style="overflow:hidden">
+									<span class="chat-message text-black text-break">{{m['text'] | safe}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>		
+			{% endfor %}
 		</div>
 		<div id="system-template">
 			<div class="system-line">
@@ -81,6 +99,14 @@
 		background-color: var(--primary55);
 		border-radius: 5px;
 	}
+
+	.profile-pic-30 {
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	text-align: center;
+	object-fit: cover;
+	}
 </style>
 
 <script>
@@ -94,6 +120,8 @@
 	let focused = true;
 	let is_typing = false;
 	let alert=true;
+
+	box.scrollTo(0, box.scrollHeight)
 
 	function flash(){
 		let title = document.getElementsByTagName('title')[0]
@@ -134,6 +162,7 @@
 
 		scrolled_down = (box.scrollHeight - box.scrollTop <= window.innerHeight-109)
 		document.getElementsByClassName('desktop-avatar')[0].src = json['avatar']
+		document.getElementsByClassName('mobile-avatar')[0].src = json['avatar']
 		document.getElementsByClassName('userlink')[0].href = '/@' + json['username']
 		document.getElementsByClassName('userlink')[0].innerHTML = json['username']
 		document.getElementsByClassName('userlink')[0].style.color = '#' + json['namecolor']
@@ -149,6 +178,7 @@
 		{
 			socket.emit('speak', text);
 			textbox.value = ''
+			textbox.style.height = '40px'
 			is_typing = false
 			socket.emit('typing', false);
 		}

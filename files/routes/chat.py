@@ -13,16 +13,18 @@ if SITE in ('pcmemes.net', 'localhost'):
 	socketio = SocketIO(app, async_mode='gevent')
 	typing = []
 	online = []
+	messages = []
 
 	@app.get("/chat")
 	@auth_required
 	def chat( v):
-		return render_template("chat.html", v=v)
+		return render_template("chat.html", v=v, messages=messages)
 
 	@socketio.on('speak')
 	@limiter.limit("5/second;30/minute")
 	@auth_required
 	def speak(data, v):
+		global messages
 		data = data[:1000].strip()
 		if not data: abort(403)
 
@@ -34,6 +36,8 @@ if SITE in ('pcmemes.net', 'localhost'):
 			"time": time.strftime("%d %b %Y at %H:%M:%S", time.gmtime(int(time.time())))
 		}
 
+		messages.append(data)
+		messages = messages[:20]
 		emit('speak', data, broadcast=True)
 		return '', 204
 
