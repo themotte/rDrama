@@ -19,14 +19,14 @@
 	<tr {% if v.id == user[0].id %}class="self"{% endif %}>
 		<td>{{loop.index}}</td>
 		<td><a style="color:#{{user[0].namecolor}}" href="/@{{user[0].username}}"><img loading="lazy" src="{{user[0].profile_url}}" class="pp20"><span {% if user[0].patron %}class="patron" style="background-color:#{{user[0].namecolor}}"{% endif %}>{{user[0].username}}</span></a></td>
-		<td>{{user[1]}}</td>
+		<td><a href="{{request.path}}/{{user[0].id}}/posts">{{user[1]}}</a></td>
 	</tr>
 {% endfor %}
 {% if pos and (pos[0] > 25 or not pos[1]) %}
 	<tr style="border-top:2px solid var(--primary)">
 		<td>{{pos[0]}}</td>
 		<td><a style="color:#{{v.namecolor}};font-weight:bold" href="/@{{v.username}}"><img loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
-		<td>{{pos[1]}}</td>
+		<td><a href="{{request.path}}/{{v.id}}/posts">{{pod[1]}}</a></td>
 	</tr>
 {% endif %}
 </tbody>

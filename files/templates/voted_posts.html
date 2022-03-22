@@ -1,0 +1,65 @@
+{% extends "userpage.html" %}
+
+{% block adminpanel %}{% endblock %}
+{% block pagetype %}userpage{% endblock %}
+{% block banner %}{% endblock %}
+{% block mobileBanner %}{% endblock %}
+{% block desktopBanner %}{% endblock %}
+{% block desktopUserBanner %}{% endblock %}
+{% block mobileUserBanner %}{% endblock %}
+
+{% block fixedMobileBarJS %}
+{% endblock %}
+
+{% block title %}
+<title>Posts</title>
+{% endblock %}
+
+{% block content %}
+
+<ul class="nav post-nav py-2">
+	<li class="nav-item">
+		<a class="nav-link {% if request.path.endswith('/posts') %}active" href="{{request.path}}"{% else %}" href="{{request.path.replace('comments','posts')}}"{% endif %}>
+			Posts
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link {% if request.path.endswith('/comments') %}active" href="{{request.path}}"{% else %}" href="{{request.path.replace('posts','comments')}}"{% endif %}>
+			Comments
+		</a>
+	</li>
+</ul>
+
+<div class="row no-gutters">
+
+	<div class="col">
+
+	{% block listing %}
+		<div class="posts">
+			{% include "submission_listing.html" %}
+		</div>
+	{% endblock %}
+	</div>
+</div>
+{% endblock %}
+
+{% block pagenav %}
+<nav aria-label="Page navigation">
+	<ul class="pagination pagination-sm py-3 pl-3 mb-0">
+		{% if page>1 %}
+		<li class="page-item">
+			<small><a class="page-link" href="?page={{page-1}}" tabindex="-1">Prev</a></small>
+		</li>
+		{% else %}
+		<li class="page-item disabled"><span class="page-link">Prev</span></li>
+		{% endif %}
+		{% if next_exists %}
+		<li class="page-item">
+			<small><a class="page-link" href="?page={{page+1}}">Next</a></small>
+		</li>
+		{% else %}
+		<li class="page-item disabled"><span class="page-link">Next</span></li>
+		{% endif %}
+	</ul>
+</nav>
+{% endblock %}
