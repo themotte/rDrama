@@ -1,6 +1,6 @@
 from files.helpers.const import SITE
 
-if SITE=='devrama.xyz':
+if SITE=='pcmemes.net':
 	import time
 	from files.helpers.wrappers import auth_required
 	from files.helpers.sanitize import sanitize
