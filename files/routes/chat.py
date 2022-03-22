@@ -1,7 +1,6 @@
 from files.helpers.const import SITE
 
 if SITE in ('pcmemes.net', 'localhost'):
-	import time
 	from files.helpers.wrappers import auth_required
 	from files.helpers.sanitize import sanitize
 	from datetime import datetime
@@ -14,6 +13,9 @@ if SITE in ('pcmemes.net', 'localhost'):
 	typing = []
 	online = []
 	messages = []
+
+	if __name__ == '__main__':
+		socketio.run(app)
 
 	@app.get("/chat")
 	@auth_required
@@ -33,7 +35,6 @@ if SITE in ('pcmemes.net', 'localhost'):
 			"username":v.username,
 			"namecolor":v.namecolor,
 			"text":sanitize(data),
-			"time": time.strftime("%d %b %Y at %H:%M:%S", time.gmtime(int(time.time())))
 		}
 
 		messages.append(data)
