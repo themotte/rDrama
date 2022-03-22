@@ -23,13 +23,14 @@ if SITE in ('pcmemes.net', 'localhost'):
 	@limiter.limit("5/second;30/minute")
 	@auth_required
 	def speak(data, v):
+		data = data[:1000].strip()
 		if not data: abort(403)
 
 		data={
 			"avatar": v.profile_url,
 			"username":v.username,
 			"namecolor":v.namecolor,
-			"text":sanitize(data[:1000].strip()),
+			"text":sanitize(data),
 			"time": time.strftime("%d %b %Y at %H:%M:%S", time.gmtime(int(time.time())))
 		}
 
