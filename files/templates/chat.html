@@ -47,7 +47,12 @@
 								<img src="{{m['avatar']}}" class="mobile-avatar profile-pic-30 mr-1 d-inline-block d-md-none" data-toggle="tooltip" data-placement="right">
 								<a class="font-weight-bold text-black userlink" style="color:#{{m['namecolor']}}" target="_blank" href="/@{{m['username']}}">{{m['username']}}</a>
 								<div style="overflow:hidden">
-									<span class="chat-message text-black text-break">{{m['text'] | safe}}</span>
+									{% set text=m['text'] %}
+									<span class="chat-message text-black text-break">{{m['text_html'] | safe}}
+										<button onclick="quote('{{text}}')">
+											<i class="fas fa-reply" aria-hidden="true"></i>
+										</button>
+									</span>
 								</div>
 							</div>
 						</div>
@@ -146,7 +151,7 @@
 
 
 	socket.on('speak', function(json) {
-		let text = json['text']
+		let text = json['text_html']
 
 		if (text.includes('<a href="/id/{{v.id}}">')){
 			chatline.classList.add('chat-mention');
@@ -184,6 +189,10 @@
 		}
 	}
 
+	function quote(text) {
+		textbox.value = text + '\n'
+		textbox.focus()
+	}
 
 	textbox.addEventListener("keyup", function(e) {
 		if (!e.shiftKey && e.key === 'Enter') {

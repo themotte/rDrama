@@ -25,14 +25,15 @@ if "load_chat" in sys.argv:
 	@auth_required
 	def speak(data, v):
 		global messages
-		data = data[:1000].strip()
-		if not data: abort(403)
+		text = data[:1000].strip()
+		if not text: abort(403)
 
 		data={
 			"avatar": v.profile_url,
 			"username":v.username,
 			"namecolor":v.namecolor,
-			"text":sanitize(data),
+			"text":text,
+			"text_html":sanitize(text),
 		}
 
 		messages.append(data)
