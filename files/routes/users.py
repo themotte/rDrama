@@ -14,7 +14,7 @@ from collections import Counter
 import gevent
 from sys import stdout
 
-if PUSHER_ID != '3435tdfsdudebussylmaoxxt43':
+if PUSHER_ID != 'blahblahblah':
 	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
 def pusher_thread2(interests, notifbody, username):
@@ -582,7 +582,7 @@ def message2(v, username):
 
 	message = request.values.get("message", "").strip()[:10000].strip()
 
-	if not message: return {"error": "message is empty"}
+	if not message: return {"error": "Message is empty!"}
 
 	if 'linkedin.com' in message: return {"error": "This domain 'linkedin.com' is banned."}, 403
 
@@ -611,7 +611,7 @@ def message2(v, username):
 	notif = Notification(comment_id=c.id, user_id=user.id)
 	g.db.add(notif)
 
-	if PUSHER_ID != '3435tdfsdudebussylmaoxxt43':
+	if PUSHER_ID != 'blahblahblah':
 		if len(message) > 500: notifbody = message[:500] + '...'
 		else: notifbody = message
 
@@ -629,7 +629,7 @@ def messagereply(v):
 
 	message = request.values.get("body", "").strip()[:10000].strip()
 
-	if not message: return {"error": "message is empty"}
+	if not message: return {"error": "Message is empty!"}
 
 	if 'linkedin.com' in message: return {"error": "this domain 'linkedin.com' is banned"}
 
@@ -659,7 +659,7 @@ def messagereply(v):
 		notif = Notification(comment_id=new_comment.id, user_id=user_id)
 		g.db.add(notif)
 
-		if PUSHER_ID != '3435tdfsdudebussylmaoxxt43':
+		if PUSHER_ID != 'blahblahblah':
 			if len(message) > 500: notifbody = message[:500] + '...'
 			else: notifbody = message
 			

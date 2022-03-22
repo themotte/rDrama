@@ -525,7 +525,7 @@ def reported_comments(v):
 def admin_home(v):
 	with open('disable_signups', 'r') as f: x = f.read()
 
-	if CF_ZONE == '3435tdfsdudebussylmaoxxt43': response = 'high'
+	if CF_ZONE == 'blahblahblah': response = 'high'
 	else: response = requests.get(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, timeout=5).json()['result']['value']
 	
 	x2 = response == 'under_attack'

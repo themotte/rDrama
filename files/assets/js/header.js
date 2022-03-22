@@ -74,14 +74,8 @@ function post_toast(t, url, reload, data) {
 
 }
 
-function escapeHTML(unsafe)
-{
-    return unsafe
-         .replace(/&/g, "&amp;")
-         .replace(/</g, "&lt;")
-         .replace(/>/g, "&gt;")
-         .replace(/"/g, "&quot;")
-         .replace(/'/g, "&#039;");
+function escapeHTML(unsafe) {
+    return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
 function changename(s1,s2) {
@@ -91,4 +85,11 @@ function changename(s1,s2) {
 		filename += e.name.substr(0, 20) + ', ';
 	}
 	document.getElementById(s1).innerHTML = escapeHTML(filename.slice(0, -2));
+}
+
+function unlock(id, t) {
+	if (t.value.length)
+		document.getElementById(id).classList.remove('disabled')
+	else
+		document.getElementById(id).classList.add('disabled')
 }
