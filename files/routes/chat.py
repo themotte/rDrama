@@ -1,4 +1,4 @@
-from files.helpers.const import SITE
+from files.helpers.const import SITE, SITE_FULL
 
 if SITE != 'rdrama.net':
 	import time
