@@ -1,8 +1,6 @@
 from files.helpers.const import SITE
 
 if SITE in ('pcmemes.net', 'localhost'):
-	count = 0
-
 	import time
 	from files.helpers.wrappers import auth_required
 	from files.helpers.sanitize import sanitize
@@ -14,6 +12,7 @@ if SITE in ('pcmemes.net', 'localhost'):
 
 	socketio = SocketIO(app, async_mode='gevent')
 	typing = []
+	online = []
 
 	@app.get("/chat")
 	@auth_required
@@ -37,10 +36,11 @@ if SITE in ('pcmemes.net', 'localhost'):
 		return '', 204
 
 	@socketio.on('connect')
-	def connect():
-		global count
-		count += 1
-		emit("count", count, broadcast=True)
+	@auth_required
+	def connect(v):
+		if v.username not in online:
+			online.append(v.username)
+			emit("online", online, broadcast=True)
 
 		emit('typing', typing)
 		return '', 204
@@ -48,9 +48,10 @@ if SITE in ('pcmemes.net', 'localhost'):
 	@socketio.on('disconnect')
 	@auth_required
 	def disconnect(v):
-		global count
-		count -= 1
-		emit("count", count, broadcast=True)
+		if v.username in online:
+			online.remove(v.username)
+			emit("online", online, broadcast=True)
+
 		if v.username in typing: typing.remove(v.username)
 		emit('typing', typing, broadcast=True)
 		return '', 204

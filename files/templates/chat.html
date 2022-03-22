@@ -8,7 +8,7 @@
 {% block content %}
 
 <div class="border-right py-3 px-3">
-	<span data-toggle="tooltip" data-placement="bottom" title="people online right now" class="text-muted">
+	<span data-toggle="tooltip" data-placement="bottom" data-bs-title="Users online right now" title="Users online right now" class="text-muted">
 		<i class="far fa-user fa-sm mr-1"></i>
 		<span class="board-chat-count">0</span>
 	</span>
@@ -157,8 +157,12 @@
 		}
 	})
 
-	socket.on('count', function(data){
-		document.getElementsByClassName('board-chat-count')[0].innerHTML = data
+	socket.on('online', function(data){
+		document.getElementsByClassName('board-chat-count')[0].innerHTML = data.length
+		let online = ''
+		for (const u of data)
+			online += `<li><a href="/@${u}" class="text-lg">${u}</a></li>`
+		document.getElementById('online').innerHTML = online
 	})
 
 	window.addEventListener('blur', function(){

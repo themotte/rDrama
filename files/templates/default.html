@@ -287,11 +287,14 @@
 			{% endblock %}
 
 		</div>
-		{% if home or sub and p %}
-			{% block sidebar %}
+		{% block sidebar %}
+			{% if home or sub and p %}
 				{% include "sidebar_" + SITE_NAME + ".html" %}
-			{% endblock %}
-		{% endif %}
+			{% elif request.path == '/chat' %}
+				<div id="online" class="col sidebar text-left d-none d-lg-block pt-3 bg-white" style="max-width:300px">
+				</div>
+			{% endif %}
+		{% endblock %}
 	</div>
 </div>
 
