@@ -143,10 +143,14 @@
 
 
 	function send() {
-		socket.emit('speak', textbox.value);
-		textbox.value = ''
-		is_typing = false
-		socket.emit('typing', false);
+		text = textbox.value.trim()
+		if (text)
+		{
+			socket.emit('speak', text);
+			textbox.value = ''
+			is_typing = false
+			socket.emit('typing', false);
+		}
 	}
 
 
