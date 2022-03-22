@@ -21,6 +21,7 @@ if SITE in ('pcmemes.net', 'localhost'):
 		return render_template("chat.html", v=v)
 
 	@socketio.on('speak')
+	@limiter.limit("3/second;30/minute")
 	@auth_required
 	def speak(data, v):
 
