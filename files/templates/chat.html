@@ -49,9 +49,7 @@
 								<div style="overflow:hidden">
 									{% set text=m['text'] %}
 									<span class="chat-message text-black text-break">{{m['text_html'] | safe}}
-										<button onclick="quote('{{text}}')">
-											<i class="fas fa-reply" aria-hidden="true"></i>
-										</button>
+										<i onclick="quote('{{text}}')" class="fas fa-reply" aria-hidden="true"></i>
 									</span>
 								</div>
 							</div>
@@ -106,11 +104,11 @@
 	}
 
 	.profile-pic-30 {
-	width: 30px;
-	height: 30px;
-	border-radius: 50%;
-	text-align: center;
-	object-fit: cover;
+		width: 30px;
+		height: 30px;
+		border-radius: 50%;
+		text-align: center;
+		object-fit: cover;
 	}
 </style>
 
@@ -190,6 +188,7 @@
 	}
 
 	function quote(text) {
+		textbox.style.height = '76px'
 		textbox.value = text + '\n'
 		textbox.focus()
 	}
