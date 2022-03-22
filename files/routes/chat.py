@@ -8,7 +8,7 @@ if SITE in ('pcmemes.net', 'localhost'):
 	from files.helpers.sanitize import sanitize
 	from datetime import datetime
 	from flask_socketio import SocketIO, emit
-	from files.__main__ import app
+	from files.__main__ import app, limiter
 	from flask import render_template
 	import sys
 
