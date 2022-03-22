@@ -149,14 +149,6 @@
 		socket.emit('typing', false);
 	}
 
-
-	textbox.addEventListener("keyup", function(e) {
-		if (!e.shiftKey && e.key === 'Enter') {
-			e.preventDefault();
-			send()
-		}
-	})
-
 	socket.on('online', function(data){
 		document.getElementsByClassName('board-chat-count')[0].innerHTML = data.length
 		let online = ''
