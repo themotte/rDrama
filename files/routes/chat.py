@@ -1,6 +1,6 @@
 from files.helpers.const import SITE
 
-if SITE in ('pcmemes.net', 'localhost'):
+if SITE != 'rdrama.net':
 	import time
 	from files.helpers.wrappers import auth_required
 	from files.helpers.sanitize import sanitize
