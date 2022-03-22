@@ -1,83 +1,209 @@
 {% extends "default.html" %}
 
 {% block title %}
-  <title>Chat</title>
-  <meta name="description" content="Chat">
+	<title>Chat</title>
+	<meta name="description" content="Chat">
 {% endblock %}
 
 {% block content %}
 
 <div class="border-right py-3 px-3">
-  <span data-toggle="tooltip" data-placement="bottom" title="people online right now" class="text-muted">
-    <i class="far fa-user fa-sm mr-1"></i>
-    <span class="board-chat-count">0</span>
-  </span>
+	<span data-toggle="tooltip" data-placement="bottom" title="people online right now" class="text-muted">
+		<i class="far fa-user fa-sm mr-1"></i>
+		<span class="board-chat-count">0</span>
+	</span>
 </div>
 
 <div id="chat-line-template" class="d-none">
-  <div class="chat-line my-2">
-    <div class="d-flex align-items-center">
-      <span class="rounded mb-auto d-none d-md-block chat-profile">
-        <img class="desktop-avatar rounded-circle w-100">
-      </span>
-      <div class="pl-md-3 text-muted">
-        <div>
-          <img class="mobile-avatar profile-pic-30 mr-2 d-inline-block d-md-none" data-toggle="tooltip" data-placement="right">
-          <a href="" class="font-weight-bold text-black userlink" target="_blank"></a>
-          <div style="overflow:hidden">
-            <span class="chat-message text-black text-break"></span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="chat-line my-2">
+		<div class="d-flex align-items-center">
+			<span class="rounded mb-auto d-none d-md-block chat-profile">
+				<img class="desktop-avatar rounded-circle w-100">
+			</span>
+			<div class="pl-md-3 text-muted">
+				<div>
+					<img class="mobile-avatar profile-pic-30 mr-2 d-inline-block d-md-none" data-toggle="tooltip" data-placement="right">
+					<a href="" class="font-weight-bold text-black userlink" target="_blank"></a>
+					<div style="overflow:hidden">
+						<span class="chat-message text-black text-break"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="container p-md-0 chat-container">
-  <div id="chat-window">
-    <div id="chat-text" class="fullchat">
-    </div>
-    <div id="system-template">
-      <div class="system-line">
-        <p class="message text-muted"></p>
-      </div>
-    </div>
-  </div>
-  <div class="position-relative form-group d-flex pb-3">
-    <div class="position-absolute text-muted text-small" style="bottom: -1.5rem; line-height: 1;">
-      <span id="typing-indicator"></span>
-      <span id="loading-indicator" class="d-none"></span>
-    </div>
-    <input id="input-text" type="text" class="form-control" placeholder="Message" autocomplete="off" autofocus />
-    <button id="chatsend" onclick="send()" class="btn btn-primary ml-3" type="submit">Send</button>
-  </div>
+	<div id="chat-window">
+		<div id="chat-text" class="fullchat">
+		</div>
+		<div id="system-template">
+			<div class="system-line">
+				<p class="message text-muted"></p>
+			</div>
+		</div>
+	</div>
+	<div class="position-relative form-group d-flex pb-3">
+		<div class="position-absolute text-muted text-small" style="bottom: -1.5rem; line-height: 1;">
+			<span id="typing-indicator"></span>
+			<span id="loading-indicator" class="d-none"></span>
+		</div>
+		<input id="input-text" type="text" class="form-control" placeholder="Message" autocomplete="off" autofocus />
+		<button id="chatsend" onclick="send()" class="btn btn-primary ml-3" type="submit">Send</button>
+	</div>
 </div>
 
 <script src="/assets/js/socketio.js"></script>
-<script src="/assets/js/chat.js?v=13"></script>
 
 <style>
+	#chat-window {
+		max-height:calc(100vh - 300px);
+		overflow-y: scroll;
+	}
 
-#chat-window {
-  max-height:calc(100vh - 300px);
-  overflow-y: scroll;
-}
+	.fullchat .chat-profile {
+		min-width: 42px;
+		width: 42px;
+		height: 42px;
+	}
 
-.fullchat .chat-profile {
-  min-width: 42px;
-  width: 42px;
-  height: 42px;
-}
+	#chat-window::-webkit-scrollbar {
+		display: none;
+	}
 
-#chat-window::-webkit-scrollbar {
-  display: none;
-}
+	#chat-window {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
 
-#chat-window {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
+	.chat-mention {
+		background-color: rgba(128, 90, 213, 0.3);
+	}
 </style>
+
+<script>
+	let socket=io()
+	let chatline = document.getElementsByClassName('chat-line')[0]
+	let box = document.getElementById('chat-window')
+	let textbox = document.getElementById('input-text')
+	let icon = document.getElementById('favicon')
+	let notifs = 0;
+	let scrolled_down = true;
+	let focused = true;
+	let is_typing = false;
+	let alert=true;
+
+	function flash(){
+		let title = document.getElementsByTagName('title')[0]
+		if (notifs >= 1 && !focused){
+			title.innerHTML = `[+${notifs}] Chat`;
+			if (alert) {
+				icon.href = '/static/assets/images/{{SITE_NAME}}/alert.webp'
+				alert=false;
+			}
+			else {
+				icon.href = '/assets/images/{{SITE_NAME}}/icon.webp'
+				alert=true;
+			}
+			setTimeout(flash, 500)
+		}
+		else {
+			icon.href = '/assets/images/{{SITE_NAME}}/icon.webp'
+			notifs = 0
+			title.innerHTML = 'Chat';
+		}
+	}
+
+
+	socket.on('speak', function(json) {
+		let text = json['text']
+
+		if (text.includes('<a href="/id/{{v.id}}">')){
+			chatline.classList.add('chat-mention');
+		}
+		else {
+			chatline.classList.remove('chat-mention');
+		};
+
+		notifs = notifs + 1;
+		if (notifs == 1) {
+			setTimeout(flash, 500);
+		}
+
+		scrolled_down = (box.scrollHeight - box.scrollTop <= window.innerHeight-109)
+		document.getElementsByClassName('desktop-avatar')[0].src = json['avatar']
+		document.getElementsByClassName('userlink')[0].href = '/@' + json['username']
+		document.getElementsByClassName('userlink')[0].innerHTML = json['username']
+		document.getElementsByClassName('userlink')[0].style.color = '#' + json['namecolor']
+		document.getElementsByClassName('chat-message')[0].innerHTML = text
+		document.getElementById('chat-text').append(document.getElementsByClassName('chat-line')[0].cloneNode(true))
+		if (scrolled_down) box.scrollTo(0,box.scrollHeight)
+	})
+
+
+	function send() {
+		socket.emit('speak', textbox.value);
+		textbox.value = ''
+		is_typing = false
+		socket.emit('typing', false);
+	}
+
+
+	textbox.addEventListener("keyup", function(event) {
+		if (event.key === 'Enter') {
+			event.preventDefault();
+			send()
+		}
+	})
+
+	socket.on('count', function(data){
+		document.getElementsByClassName('board-chat-count')[0].innerHTML = data
+	})
+
+	window.addEventListener('blur', function(){
+		focused=false
+	})
+	window.addEventListener('focus', function(){
+		focused=true
+	})
+
+
+	textbox.addEventListener("input", function() {
+		text = textbox.value
+		if (!text && is_typing==true){
+			is_typing=false;
+			socket.emit('typing', false);
+		}
+		else if (text && is_typing==false) {
+			is_typing=true;
+			socket.emit('typing', true);
+		}
+	})
+
+
+	socket.on('typing', function (users){
+		if (users.length==0){
+			document.getElementById('typing-indicator').innerHTML = '';
+			document.getElementById('loading-indicator').classList.add('d-none');
+		}
+		else if (users.length==1){
+			document.getElementById('typing-indicator').innerHTML = '<b>'+users[0]+"</b> is typing...";
+			document.getElementById('loading-indicator').classList.remove('d-none');
+		}
+		else if (users.length==2){
+			document.getElementById('typing-indicator').innerHTML = '<b>'+users[0]+"</b> and <b>"+users[1]+"</b> are typing...";
+			document.getElementById('loading-indicator').classList.remove('d-none');
+		}
+		else if (users.length==3){
+			document.getElementById('typing-indicator').innerHTML = '<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, and <b>"+users[2]+"</b> are typing...";
+			document.getElementById('loading-indicator').classList.remove('d-none');
+		}
+		else if (users.length>=4){
+			more=users.length-3
+			document.getElementById('typing-indicator').innerHTML = '<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, <b>"+users[2]+"</b> and "+more.toString()+" more are typing...";
+			document.getElementById('loading-indicator').classList.remove('d-none');
+		}
+	})
+</script>
 
 {% endblock %}

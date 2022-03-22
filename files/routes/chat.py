@@ -13,6 +13,7 @@ if SITE in ('pcmemes.net', 'localhost'):
 	import sys
 
 	socketio = SocketIO(app, async_mode='gevent')
+	typing = []
 
 	@app.get("/chat")
 	@auth_required
@@ -38,10 +39,27 @@ if SITE in ('pcmemes.net', 'localhost'):
 	def connect():
 		global count
 		count += 1
-		emit("count", count)
+		emit("count", count, broadcast=True)
+
+		emit('typing', typing)
+		return '', 204
 
 	@socketio.on('disconnect')
-	def disconnect():
+	@auth_required
+	def disconnect(v):
 		global count
 		count -= 1
-		emit("count", count)
+		emit("count", count, broadcast=True)
+		if v.username in typing: typing.remove(v.username)
+		emit('typing', typing, broadcast=True)
+		return '', 204
+
+	@socketio.on('typing')
+	@auth_required
+	def typing_indicator(data, v):
+
+		if data and v.username not in typing: typing.append(v.username)
+		elif not data and v.username in typing: typing.remove(v.username)
+
+		emit('typing', typing, broadcast=True)
+		return '', 204
