@@ -23,6 +23,7 @@ if SITE in ('pcmemes.net', 'localhost'):
 	@limiter.limit("5/second;30/minute")
 	@auth_required
 	def speak(data, v):
+		if not data: abort(403)
 
 		data={
 			"avatar": v.profile_url,
