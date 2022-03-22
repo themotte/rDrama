@@ -10,7 +10,7 @@ if SITE != 'rdrama.net':
 	from flask import render_template
 	import sys
 
-	socketio = SocketIO(app, async_mode='gevent', cors_allowed_origins='*')
+	socketio = SocketIO(app, async_mode='gevent', cors_allowed_origins=SITE_FULL)
 	typing = []
 	online = []
 	messages = []
