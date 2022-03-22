@@ -26,6 +26,7 @@
 					<a href="" class="font-weight-bold text-black userlink" target="_blank"></a>
 					<div style="overflow:hidden">
 						<span class="chat-message text-black text-break"></span>
+						<button class="quote-btn btn d-inline-block pt-0"><i class="fas fa-reply" aria-hidden="true"></i></button>
 					</div>
 				</div>
 			</div>
@@ -47,8 +48,8 @@
 								<img src="{{m['avatar']}}" class="mobile-avatar profile-pic-30 mr-1 d-inline-block d-md-none" data-toggle="tooltip" data-placement="right">
 								<a class="font-weight-bold text-black userlink" style="color:#{{m['namecolor']}}" target="_blank" href="/@{{m['username']}}">{{m['username']}}</a>
 								<div style="overflow:hidden">
-									{% set text=m['text'] %}
 									<span class="chat-message text-black text-break">{{m['text_html'] | safe}}</span>
+									{% set text=m['text'] %}
 									<button class="btn d-inline-block pt-0"><i onclick="quote('{{text}}')" class="fas fa-reply" aria-hidden="true"></i></button>
 								</div>
 							</div>
@@ -152,9 +153,10 @@
 
 
 	socket.on('speak', function(json) {
-		let text = json['text_html']
+		let text = json['text']
+		let text_html = json['text_html']
 
-		if (text.includes('<a href="/id/{{v.id}}">')){
+		if (text_html.includes('<a href="/id/{{v.id}}">')){
 			chatline.classList.add('chat-mention');
 		}
 		else {
@@ -172,7 +174,8 @@
 		document.getElementsByClassName('userlink')[0].href = '/@' + json['username']
 		document.getElementsByClassName('userlink')[0].innerHTML = json['username']
 		document.getElementsByClassName('userlink')[0].style.color = '#' + json['namecolor']
-		document.getElementsByClassName('chat-message')[0].innerHTML = text
+		document.getElementsByClassName('quote-btn')[0].onclick = `quote('${text}')`
+		document.getElementsByClassName('chat-message')[0].innerHTML = text_html
 		document.getElementById('chat-text').append(document.getElementsByClassName('chat-line')[0].cloneNode(true))
 		if (scrolled_down) box.scrollTo(0, box.scrollHeight)
 	})
