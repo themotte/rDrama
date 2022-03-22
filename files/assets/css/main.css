@@ -4579,8 +4579,8 @@ input[type=radio] ~ .custom-control-label::before {
     width: 60px !important;
 }
 .emj, .emoji, .bigemoji, .emoji-md, .emoji-lg {
-    max-width: min(150px,25%) !important;
-    max-height: min(150px,25%) !important;
+    max-width: min(150px,25vw) !important;
+    max-height: min(150px,25vw) !important;
     display: inline-block;
     -o-object-fit: contain;
     object-fit: contain;
