@@ -246,9 +246,9 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" class="{classes}" src="/e/{remoji}.webp">', new, flags=re.I|re.A)
 				if comment: marseys_used.add(emoji)
 			elif remoji.endswith('pat') and path.isfile(f"files/assets/images/emojis/{remoji.replace('pat','')}.webp"):
-				requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{emoji}.webp"]}, timeout=5)
+				requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{emoji}"]}, timeout=5)
 				pat(remoji.replace('pat',''))
-				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" class="{classes}" src="/e/{remoji}.webp">', new, flags=re.I|re.A)
+				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" class="{classes}" src="/e/{remoji}">', new, flags=re.I|re.A)
 
 
 		sanitized = sanitized.replace(old, new)
@@ -283,9 +283,9 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', sanitized, flags=re.I|re.A)
 			if comment: marseys_used.add(emoji)
 		elif emoji.endswith('pat') and path.isfile(f"files/assets/images/emojis/{emoji.replace('pat','')}.webp"):
-			requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{emoji}.webp"]}, timeout=5)
+			requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{emoji}"]}, timeout=5)
 			pat(emoji.replace('pat',''))
-			sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" class="{classes}" src="/e/{emoji}.webp">', sanitized, flags=re.I|re.A)
+			sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" class="{classes}" src="/e/{emoji}">', sanitized, flags=re.I|re.A)
 
 
 	for rd in ["://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it"]:
@@ -374,9 +374,9 @@ def filter_emojis_only(title, edit=False, graceful=False):
 		if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 			title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', title, flags=re.I|re.A)
 		elif emoji.endswith('pat') and path.isfile(f"files/assets/images/emojis/{emoji.replace('pat','')}.webp"):
-			requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{emoji}.webp"]}, timeout=5)
+			requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{emoji}"]}, timeout=5)
 			pat(emoji.replace('pat',''))
-			title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', title, flags=re.I|re.A)
+			title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}">', title, flags=re.I|re.A)
 
 
 	title = strikethrough_regex.sub(r'<del>\1</del>', title)
