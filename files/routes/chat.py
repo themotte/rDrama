@@ -16,7 +16,7 @@ if SITE=='pcmemes.net':
 		return render_template("chat.html", v=v)
 
 
-	sex = SocketIO(app, logger=True, engineio_logger=True, debug=True, async_mode='gevent')
+	sex = SocketIO(app, async_mode='gevent')
 
 	@sex.on('speak')
 	@auth_required
