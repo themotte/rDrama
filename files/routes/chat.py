@@ -6,7 +6,7 @@ if "load_chat" in sys.argv:
 	from files.helpers.sanitize import sanitize
 	from datetime import datetime
 	from flask_socketio import SocketIO, emit
-	from files.__main__ import app, limiter, r
+	from files.__main__ import app, limiter, cache
 	from flask import render_template
 	import sys
 	import atexit
