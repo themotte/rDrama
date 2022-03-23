@@ -65,7 +65,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="position-relative form-group d-flex pb-3">
+	<div id='message' class="d-none position-relative form-group d-flex pb-3">
 		<div class="position-absolute text-muted text-small" style="bottom: -1.5rem; line-height: 1;">
 			<span id="typing-indicator"></span>
 			<span id="loading-indicator" class="d-none"></span>
@@ -76,7 +76,7 @@
 	</div>
 </div>
 
-<script data-cfasync="false" src="/assets/js/socketio.js"></script>
+<script data-cfasync="false" src="/assets/js/socketio.js?v=1"></script>
 
 <script data-cfasync="false">
 	let socket=io()
