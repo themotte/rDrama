@@ -271,6 +271,12 @@ def front_all(v, sub=None, subdomain=None):
 			if badge: g.db.delete(badge)
 			g.db.commit()
 
+		if v.deflector and v.deflector < time.time():
+			v.deflector = None
+			send_repeatable_notification(v.id, "Your deflector has expired!")
+			g.db.add(v)
+			g.db.commit()
+
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
 	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode, sub=sub, home=True)
 
