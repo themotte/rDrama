@@ -6,9 +6,10 @@ if "load_chat" in sys.argv:
 	from files.helpers.sanitize import sanitize
 	from datetime import datetime
 	from flask_socketio import SocketIO, emit
-	from files.__main__ import app, limiter
+	from files.__main__ import app, limiter, r
 	from flask import render_template
 	import sys
+	import atexit
 
 	socketio = SocketIO(app, async_mode='gevent', cors_allowed_origins=[SITE_FULL])
 	typing = []
@@ -71,3 +72,8 @@ if "load_chat" in sys.argv:
 
 		emit('typing', typing, broadcast=True)
 		return '', 204
+
+
+	def close_running_threads():
+		r.set('chat', messages)
+	atexit.register(close_running_threads)

@@ -1300,12 +1300,9 @@ def submit_post(v, sub=None):
 		cache.delete_memoized(changeloglist)
 
 	if v.id == PIZZASHILL_ID:
-		autovote = Vote(user_id=CARP_ID, submission_id=post.id, vote_type=1)
-		g.db.add(autovote)
-		autovote = Vote(user_id=AEVANN_ID, submission_id=post.id, vote_type=1)
-		g.db.add(autovote)
-		autovote = Vote(user_id=PIZZASHILLSHILL_ID, submission_id=post.id, vote_type=1)
-		g.db.add(autovote)
+		for uid in PIZZA_VOTERS:
+			autovote = Vote(user_id=uid, submission_id=post.id, vote_type=1)
+			g.db.add(autovote)
 		v.coins += 3
 		v.truecoins += 3
 		g.db.add(v)

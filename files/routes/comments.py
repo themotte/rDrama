@@ -658,12 +658,9 @@ def api_comment(v):
 	c.voted = 1
 	
 	if v.id == PIZZASHILL_ID:
-		autovote = CommentVote(user_id=CARP_ID, comment_id=c.id, vote_type=1)
-		g.db.add(autovote)
-		autovote = CommentVote(user_id=AEVANN_ID, comment_id=c.id, vote_type=1)
-		g.db.add(autovote)
-		autovote = CommentVote(user_id=PIZZASHILLSHILL_ID, comment_id=c.id, vote_type=1)
-		g.db.add(autovote)
+		for uid in PIZZA_VOTERS:
+			autovote = CommentVote(user_id=uid, comment_id=c.id, vote_type=1)
+			g.db.add(autovote)
 		v.coins += 3
 		v.truecoins += 3
 		g.db.add(v)
