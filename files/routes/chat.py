@@ -1,6 +1,7 @@
 import sys
-if "load_chat" in sys.argv:
-	from files.helpers.const import SITE_FULL
+from files.helpers.const import SITE, SITE_FULL
+
+if "load_chat" in sys.argv or SITE == 'localhost':
 	import time
 	from files.helpers.wrappers import auth_required
 	from files.helpers.sanitize import sanitize
