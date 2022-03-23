@@ -14,7 +14,7 @@ if "load_chat" in sys.argv:
 	socketio = SocketIO(app, async_mode='gevent', cors_allowed_origins=[SITE_FULL])
 	typing = []
 	online = []
-	messages = []
+	messages = r.get('chat')
 
 	@app.get("/chat")
 	@auth_required
