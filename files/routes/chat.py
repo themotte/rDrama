@@ -16,6 +16,7 @@ if "load_chat" in sys.argv:
 	online = []
 	messages = cache.get('chat') or []
 
+
 	@app.get("/chat")
 	@auth_required
 	def chat( v):
