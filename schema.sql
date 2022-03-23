@@ -640,7 +640,8 @@ CREATE TABLE public.users (
     rehab integer,
     house character varying(16),
     subs_created integer DEFAULT 0 NOT NULL,
-    subs integer NOT NULL
+    subs integer NOT NULL,
+    deflector integer
 );
 
 
