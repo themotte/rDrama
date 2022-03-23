@@ -473,7 +473,7 @@ AWARDS = {
 	"deflector": {
         "kind": "deflector",
         "title": "deflector",
-        "description": "Causes all awards received for the next 10 hours to be deflected back at their giver.",
+        "description": "Causes most awards received for the next 10 hours to be deflected back at their giver.",
         "icon": "fas fa-shield",
         "color": "text-pink",
         "price": 7000

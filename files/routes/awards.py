@@ -232,7 +232,7 @@ def award_post(pid, v):
 	if kind == "benefactor" and author.id == v.id:
 		return {"error": "You can't use this award on yourself."}, 400
 
-	if author.deflector:
+	if author.deflector and AWARDS[kind]['price'] > 300 and kind not in ('pin','unpin'):
 		msg = f"@{v.username} has tried to give your [post]({post.shortlink}) the {AWARDS[kind]['title']} Award but it was deflected and applied to them :marseytroll:"
 		send_repeatable_notification(author.id, msg)
 		msg = f"@{author.username} is under the effect of a deflector award; your {AWARDS[kind]['title']} Award has been deflected back to you :marseytroll:"
@@ -459,7 +459,7 @@ def award_comment(cid, v):
 	if author.id == PIZZASHILL_ID:
 		return {"error": "Pizzashill is immune to awards."}, 403
 
-	if author.deflector:
+	if author.deflector and AWARDS[kind]['price'] > 300 and kind not in ('pin','unpin'):
 		msg = f"@{v.username} has tried to give your [comment]({c.shortlink}) the {AWARDS[kind]['title']} Award but it was deflected and applied to them :marseytroll:"
 		send_repeatable_notification(author.id, msg)
 		msg = f"@{author.username} is under the effect of a deflector award; your {AWARDS[kind]['title']} Award has been deflected back to you :marseytroll:"
