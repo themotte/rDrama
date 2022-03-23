@@ -13,8 +13,6 @@ let alert=true;
 let vid = document.getElementById('vid').value
 let site_name = document.getElementById('site_name').value
 
-box.scrollTo(0, box.scrollHeight)
-
 function flash(){
 	let title = document.getElementsByTagName('title')[0]
 	if (notifs >= 1 && !focused){

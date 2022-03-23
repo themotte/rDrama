@@ -79,7 +79,7 @@
 <input id="vid" type="hidden" value="{{v.id}}">
 <input id="site_name" type="hidden" value="{{SITE_NAME}}">
 
-<script data-cfasync="false" src="/assets/js/chat.js?v=20"></script>
+<script data-cfasync="false" src="/assets/js/chat.js?v=21"></script>
 
 <style>
 	#chat-window {
@@ -120,6 +120,9 @@
 	}
 </style>
 
+<script>
+	box.scrollTo(0, box.scrollHeight)
+</script>
 {% include "emoji_modal.html" %}
 
 {% endblock %}
