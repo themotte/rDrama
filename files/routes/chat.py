@@ -14,7 +14,7 @@ if "load_chat" in sys.argv:
 	socketio = SocketIO(app, async_mode='gevent', cors_allowed_origins=[SITE_FULL])
 	typing = []
 	online = []
-	messages = r.get('chat')
+	messages = cache.get('chat')
 
 	@app.get("/chat")
 	@auth_required
@@ -75,5 +75,5 @@ if "load_chat" in sys.argv:
 
 
 	def close_running_threads():
-		r.set('chat', messages)
+		cache.set('chat', messages)
 	atexit.register(close_running_threads)
