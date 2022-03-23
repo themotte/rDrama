@@ -9,57 +9,6 @@ from flask import g, request
 from files.helpers.sanitize import filter_emojis_only
 from copy import deepcopy
 
-AWARDS3 = {
-	"fireflies": {
-		"kind": "fireflies",
-		"title": "Fireflies",
-		"description": "Makes fireflies swarm the post.",
-		"icon": "fas fa-sparkles",
-		"color": "text-warning",
-		"price": 300
-	},
-	"shit": {
-		"kind": "shit",
-		"title": "Shit",
-		"description": "Makes flies swarm the post.",
-		"icon": "fas fa-poop",
-		"color": "text-black-50",
-		"price": 300
-	},
-	"train": {
-		"kind": "train",
-		"title": "Train",
-		"description": "Summons a train on the post.",
-		"icon": "fas fa-train",
-		"color": "text-pink",
-		"price": 300
-	},
-	"scooter": {
-		"kind": "scooter",
-		"title": "Scooter",
-		"description": "Summons a scooter on the post.",
-		"icon": "fas fa-flag-usa",
-		"color": "text-muted",
-		"price": 300
-	},
-	"wholesome": {
-		"kind": "wholesome",
-		"title": "Wholesome",
-		"description": "Summons a wholesome marsey on the post.",
-		"icon": "fas fa-smile-beam",
-		"color": "text-yellow",
-		"price": 300
-	},
-	"tilt": {
-		"kind": "tilt",
-		"title": "Tilt",
-		"description": "Tilts the post by 1 degree (up to 4)",
-		"icon": "fas fa-car-tilt",
-		"color": "text-blue",
-		"price": 300
-	},
-}
-
 @app.get("/shop")
 @app.get("/settings/shop")
 @auth_required
@@ -232,16 +181,17 @@ def award_post(pid, v):
 	if kind == "benefactor" and author.id == v.id:
 		return {"error": "You can't use this award on yourself."}, 400
 
-	if author.deflector and AWARDS[kind]['price'] > 300 and kind not in ('pin','unpin'):
-		msg = f"@{v.username} has tried to give your [post]({post.shortlink}) the {AWARDS[kind]['title']} Award but it was deflected and applied to them :marseytroll:"
-		send_repeatable_notification(author.id, msg)
-		msg = f"@{author.username} is under the effect of a deflector award; your {AWARDS[kind]['title']} Award has been deflected back to you :marseytroll:"
-		send_repeatable_notification(v.id, msg)
-		author = v
-	elif v.id != author.id:
-		msg = f"@{v.username} has given your [post]({post.shortlink}) the {AWARDS[kind]['title']} Award!"
-		if note: msg += f"\n\n> {note}"
-		send_repeatable_notification(author.id, msg)
+	if v.id != author.id:
+		if author.deflector and AWARDS[kind]['price'] > 300 and kind not in ('pin','unpin'):
+			msg = f"@{v.username} has tried to give your [post]({post.shortlink}) the {AWARDS[kind]['title']} Award but it was deflected and applied to them :marseytroll:"
+			send_repeatable_notification(author.id, msg)
+			msg = f"@{author.username} is under the effect of a deflector award; your {AWARDS[kind]['title']} Award has been deflected back to you :marseytroll:"
+			send_repeatable_notification(v.id, msg)
+			author = v
+		else:
+			msg = f"@{v.username} has given your [post]({post.shortlink}) the {AWARDS[kind]['title']} Award!"
+			if note: msg += f"\n\n> {note}"
+			send_repeatable_notification(author.id, msg)
 
 	if kind == "ban":
 		link = f"[this post]({post.shortlink})"
@@ -459,16 +409,17 @@ def award_comment(cid, v):
 	if author.id == PIZZASHILL_ID:
 		return {"error": "Pizzashill is immune to awards."}, 403
 
-	if author.deflector and AWARDS[kind]['price'] > 300 and kind not in ('pin','unpin'):
-		msg = f"@{v.username} has tried to give your [comment]({c.shortlink}) the {AWARDS[kind]['title']} Award but it was deflected and applied to them :marseytroll:"
-		send_repeatable_notification(author.id, msg)
-		msg = f"@{author.username} is under the effect of a deflector award; your {AWARDS[kind]['title']} Award has been deflected back to you :marseytroll:"
-		send_repeatable_notification(v.id, msg)
-		author = v
-	elif v.id != author.id:
-		msg = f"@{v.username} has given your [comment]({c.shortlink}) the {AWARDS[kind]['title']} Award!"
-		if note: msg += f"\n\n> {note}"
-		send_repeatable_notification(author.id, msg)
+	if v.id != author.id:
+		if author.deflector and AWARDS[kind]['price'] > 300 and kind not in ('pin','unpin'):
+			msg = f"@{v.username} has tried to give your [comment]({c.shortlink}) the {AWARDS[kind]['title']} Award but it was deflected and applied to them :marseytroll:"
+			send_repeatable_notification(author.id, msg)
+			msg = f"@{author.username} is under the effect of a deflector award; your {AWARDS[kind]['title']} Award has been deflected back to you :marseytroll:"
+			send_repeatable_notification(v.id, msg)
+			author = v
+		else:
+			msg = f"@{v.username} has given your [comment]({c.shortlink}) the {AWARDS[kind]['title']} Award!"
+			if note: msg += f"\n\n> {note}"
+			send_repeatable_notification(author.id, msg)
 
 	if kind == "benefactor" and author.id == v.id:
 		return {"error": "You can't use this award on yourself."}, 400

@@ -570,6 +570,11 @@ for k, val in AWARDS.items():
 	if val['description'] == '???': AWARDS2.pop(k)
 	if SITE == 'pcmemes.net' and k in ('ban','pizzashill','marsey','bird','grass','chud'): AWARDS2.pop(k)
 
+
+AWARDS3 = {}
+for k, val in AWARDS2.items():
+	if val['price'] == 300: AWARDS3[k] = val
+
 TROLLTITLES = [
 	"how will @{username} ever recover?",
 	"@{username} BTFO",
