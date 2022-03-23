@@ -464,7 +464,7 @@ def changeloglist(v=None, sort="new", page=1 ,t="all"):
 @auth_required
 def random_post(v):
 
-	x = g.db.query(Submission).filter(Submission.deleted_utc == 0, Submission.is_banned == False)
+	x = g.db.query(Submission).filter(Submission.deleted_utc == 0, Submission.is_banned == False, Submission.private == False)
 	total = x.count()
 	n = random.randint(1, total - 2)
 
