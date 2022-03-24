@@ -23,6 +23,14 @@ if "load_chat" in sys.argv or SITE == 'localhost':
 	def chat( v):
 		return render_template("chat.html", v=v, messages=messages)
 
+
+	@app.get('/static/chat.js')
+	@limiter.exempt
+	def chatjs(path):
+		resp = make_response(send_from_directory('assets', 'js/chat.js'))
+		return resp
+
+
 	@socketio.on('speak')
 	@limiter.limit("3/second;10/minute")
 	@auth_required
