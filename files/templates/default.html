@@ -8,7 +8,7 @@
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
 		<link rel="stylesheet" href="/static/assets/css/main.css?v=188">
-		<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?v=30">
+		<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?v=31">
 		{% if v.agendaposter %}
 			<style>
 				html {
@@ -33,7 +33,7 @@
 	{% else %}
 		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
 		<link rel="stylesheet" href="/static/assets/css/main.css?v=188">
-		<link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?v=30">
+		<link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?v=31">
 	{% endif %}
 
 	{% if sub and sub.css and not request.path.endswith('settings') %}
