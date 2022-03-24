@@ -132,6 +132,8 @@ textbox.addEventListener("input", function() {
 	if (!text && is_typing==true){
 		is_typing=false;
 		socket.emit('typing', false);
+		textbox.style.height = '40px'
+		textbox.style.maxHeight = '40px'
 	}
 	else if (text && is_typing==false) {
 		is_typing=true;
