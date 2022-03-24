@@ -121,7 +121,7 @@
 					{% for m in messages %}
 						{% set text_html = m['text_censored'] if v.slurreplacer else m['text_html'] %}
 						{% set link = '<a href="/id/' + v.id|string + '">' %}
-						{% set same = m['username'] == messages[loop.index-2]['username'] %}
+						{% set same = loop.index > 1 and m['username'] == messages[loop.index-2]['username'] %}
 						<div class="chat-line {% if link in text_html %}chat-mention{% endif %} {% if not same %}diff{% endif %}">
 							<div class="d-flex align-items-center">
 								<div class="pl-md-3 text-muted">
