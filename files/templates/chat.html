@@ -1,126 +1,165 @@
-{% extends "default.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="description" content="{{config('DESCRIPTION')}}">
+	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
 
-{% block title %}
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<meta name="author" content="">
+
+	<link id="favicon" rel="icon" type="image/png" href="/static/assets/images/{{SITE_NAME}}/icon.webp?v=1012">
+
 	<title>Chat</title>
-	<meta name="description" content="Chat">
-{% endblock %}
 
-{% block content %}
+	<style>:root{--primary:#{{v.themecolor}}}</style>
+	<link rel="stylesheet" href="/static/assets/css/main.css?v=188">
+	<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?v=30">
+	{% if v.css %}
+		<link rel="stylesheet" href="/@{{v.username}}/css">
+	{% endif %}
 
-<div class="border-right py-3 px-3">
-	<span data-toggle="tooltip" data-placement="bottom" data-bs-title="Users online right now" title="Users online right now" class="text-muted">
-		<i class="far fa-user fa-sm mr-1"></i>
-		<span class="board-chat-count">0</span>
-	</span>
-</div>
+	<style>
+		#chat-window {
+			max-height:90vh;
+			overflow-y: scroll;
+		}
 
-<div id="chat-line-template" class="d-none">
-	<div class="chat-line my-2">
-		<div class="d-flex align-items-center">
-			<span class="rounded mb-auto d-none d-md-block chat-profile">
-				<img class="desktop-avatar rounded-circle w-100">
-			</span>
-			<div class="pl-md-3 text-muted">
-				<div>
-					<img class="mobile-avatar profile-pic-30 mr-1 d-inline-block d-md-none" data-toggle="tooltip" data-placement="right">
-					<a href="" class="font-weight-bold text-black userlink" target="_blank"></a>
-					<div style="overflow:hidden">
-						<span class="chat-message text-black text-break"></span>
-						<span class="text d-none"></span>
-						<button class="quote-btn btn d-inline-block pt-0" onclick="quote(this)"><i class="fas fa-reply" aria-hidden="true"></i></button>
-					</div>
-				</div>
+		#chat-window .chat-profile {
+			min-width: 42px;
+			width: 42px;
+			height: 42px;
+		}
+
+		#chat-window::-webkit-scrollbar {
+			display: none;
+		}
+
+		#chat-window {
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+		}
+
+		.chat-mention {
+			background-color: var(--primary55);
+			border-radius: 5px;
+		}
+
+		.chat-message p {
+			display: inline-block;
+		}
+
+		.diff {
+			margin-top: 1rem;
+		}
+
+		@media (max-width: 768px) {
+			#shrink * {
+				font-size: 10px !important;
+			}
+			.fa-reply:before {
+				font-size: 9px;
+			}
+			.diff {
+				margin-top: 0.5rem;
+			}
+		}
+
+		#input-text {
+			max-height: 50px!important;
+		}
+
+		p {
+			margin: 0!important;
+			margin-left: 27px !important;
+		}
+	</style>
+</head>
+
+<body>
+	<script src="/static/assets/js/bootstrap.js?v=245"></script>
+
+	{% include "header.html" %}
+	
+	<div class="container {% if request.path=='/' or '/post/' in request.path or '/comment/' in request.path %}transparent{% endif %}">
+		<div class="row justify-content-around" id="main-content-row">
+			<div class="col h-100 {% block customPadding %}{% if request.path.startswith('/@') %}user-gutters{% else %}custom-gutters{% endif %}{% endblock %}" id="main-content-col">	
+
+			<div class="border-right py-3 px-3">
+				<span data-toggle="tooltip" data-placement="bottom" data-bs-title="Users online right now" title="Users online right now" class="text-muted">
+					<i class="far fa-user fa-sm mr-1"></i>
+					<span class="board-chat-count">0</span>
+				</span>
 			</div>
-		</div>
-	</div>
-</div>
 
-<div class="container py-0 chat-container">
-	<div id="chat-window">
-		<div id="chat-text" class="fullchat">
-			{% for m in messages %}
-				{% set text_html = m['text_html'] %}
-				{% set link = '<a href="/id/' + v.id|string + '">' %}
-				<div class="chat-line my-2 {% if link in text_html %}chat-mention{% endif %}">
+			<div id="chat-line-template" class="d-none">
+				<div class="chat-line">
 					<div class="d-flex align-items-center">
-						<span class="rounded mb-auto d-none d-md-block chat-profile">
-							<img class="desktop-avatar rounded-circle w-100" src="{{m['avatar']}}">
-						</span>
 						<div class="pl-md-3 text-muted">
 							<div>
-								<img src="{{m['avatar']}}" class="mobile-avatar profile-pic-30 mr-1 d-inline-block d-md-none" data-toggle="tooltip" data-placement="right">
-								<a class="font-weight-bold text-black userlink" style="color:#{{m['namecolor']}}" target="_blank" href="/@{{m['username']}}">{{m['username']}}</a>
+								<img class="avatar pp20 mr-1" data-toggle="tooltip" data-placement="right">
+								<a href="" class="font-weight-bold text-black userlink" target="_blank"></a>
 								<div style="overflow:hidden">
-									<span class="chat-message text-black text-break">{{text_html | safe}}</span>
-									<span class="d-none">{{m['text']}}</span>
-									<button class="btn d-inline-block pt-0" onclick="quote(this)"><i class="fas fa-reply" aria-hidden="true"></i></button>
+									<span class="chat-message text-black text-break"></span>
+									<span class="text d-none"></span>
+									<button class="quote-btn btn d-inline-block py-0" onclick="quote(this)"><i class="fas fa-reply" aria-hidden="true"></i></button>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>		
-			{% endfor %}
-		</div>
-		<div id="system-template">
-			<div class="system-line">
-				<p class="message text-muted"></p>
+				</div>
+			</div>
+			<div id="shrink">
+				<div id="chat-window" class="container py-0">
+					{% for m in messages %}
+						{% set text_html = m['text_censored'] if v.slurreplacer else m['text_html'] %}
+						{% set link = '<a href="/id/' + v.id|string + '">' %}
+						{% set same = m['username'] == messages[loop.index-2]['username'] %}
+						<div class="chat-line {% if link in text_html %}chat-mention{% endif %} {% if not same %}diff{% endif %}">
+							<div class="d-flex align-items-center">
+								<div class="pl-md-3 text-muted">
+									<div>
+										{% if not same %}<img src="{{m['avatar']}}" class="avatar pp20 mr-1" data-toggle="tooltip" data-placement="right">{% endif %}
+
+										<a class="{% if same %}d-none{% endif %} font-weight-bold text-black userlink" style="color:#{{m['namecolor']}}" target="_blank" href="/@{{m['username']}}">{{m['username']}}</a>
+
+										<div style="overflow:hidden">
+											<span class="chat-message text-black text-break">{{text_html | safe}}</span>
+											<span class="d-none">{{m['text']}}</span>
+											<button class="btn d-inline-block py-0" onclick="quote(this)"><i class="fas fa-reply" aria-hidden="true"></i></button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+
+				<div id='message' class="d-none position-relative form-group d-flex mt-4">
+					<div class="position-absolute text-muted text-small" style="bottom: -1.5rem; line-height: 1;">
+						<span id="typing-indicator"></span>
+						<span id="loading-indicator" class="d-none"></span>
+					</div>
+					<i class="btn btn-secondary mr-2 fas fa-smile-beam" style="padding-top:0.65rem" onclick="loadEmojis('input-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-placement="bottom" title="Add Emoji"></i>
+					<textarea id="input-text" minlength="1" maxlength="1000" type="text" class="form-control" placeholder="Message" autocomplete="off" autofocus rows="1"></textarea>
+					<button id="chatsend" onclick="send()" class="btn btn-primary ml-3" type="submit">Send</button>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div id='message' class="d-none position-relative form-group d-flex pb-3">
-		<div class="position-absolute text-muted text-small" style="bottom: -1.5rem; line-height: 1;">
-			<span id="typing-indicator"></span>
-			<span id="loading-indicator" class="d-none"></span>
+
+		<div id="online" class="col sidebar text-left d-none d-lg-block pt-3 bg-white" style="max-width:300px">
 		</div>
-		<i class="btn btn-secondary mr-2 fas fa-smile-beam" style="padding-top:0.65rem" onclick="loadEmojis('input-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-placement="bottom" title="Add Emoji"></i>
-		<textarea id="input-text" minlength="1" maxlength="1000" type="text" class="form-control" placeholder="Message" autocomplete="off" autofocus rows="1"></textarea>
-		<button id="chatsend" onclick="send()" class="btn btn-primary ml-3" type="submit">Send</button>
+
 	</div>
+
 </div>
 
 <input id="vid" type="hidden" value="{{v.id}}">
 <input id="site_name" type="hidden" value="{{SITE_NAME}}">
+<input id="slurreplacer" type="hidden" value="{{v.slurreplacer}}">
 
-<script data-cfasync="false" src="/assets/js/chat.js?v=29"></script>
-
-<style>
-	#chat-window {
-		max-height:calc(100vh - 300px);
-		overflow-y: scroll;
-	}
-
-	.fullchat .chat-profile {
-		min-width: 42px;
-		width: 42px;
-		height: 42px;
-	}
-
-	#chat-window::-webkit-scrollbar {
-		display: none;
-	}
-
-	#chat-window {
-		-ms-overflow-style: none;
-		scrollbar-width: none;
-	}
-
-	.chat-mention {
-		background-color: var(--primary55);
-		border-radius: 5px;
-	}
-
-	.profile-pic-30 {
-		width: 30px;
-		height: 30px;
-		border-radius: 50%;
-		text-align: center;
-		object-fit: cover;
-	}
-
-	.chat-message p {
-		display: inline-block;
-	}
-</style>
+<script data-cfasync="false" src="/chat.js?v=4"></script>
 
 <script>
 	box.scrollTo(0, box.scrollHeight)
@@ -129,4 +168,6 @@
 {% include "emoji_modal.html" %}
 {% include "expanded_image_modal.html" %}
 
-{% endblock %}
+<script src="/static/assets/js/lozad.js?v=240"></script>
+
+</body>

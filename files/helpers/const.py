@@ -472,7 +472,7 @@ AWARDS = {
 	},
 	"deflector": {
         "kind": "deflector",
-        "title": "deflector",
+        "title": "Deflector",
         "description": "Causes most awards received for the next 10 hours to be deflected back at their giver.",
         "icon": "fas fa-shield",
         "color": "text-pink",
@@ -724,7 +724,7 @@ def sub_matcher_upper(match):
 	return SLURS[match.group(0).lower()].upper()
 
 def censor_slurs(body, logged_user):
-	if not logged_user or logged_user.slurreplacer:
+	if not logged_user or logged_user == 'chat' or logged_user.slurreplacer:
 		body = slur_regex_upper.sub(sub_matcher_upper, body)
 		body = slur_regex.sub(sub_matcher, body)
 	return body

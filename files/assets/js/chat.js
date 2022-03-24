@@ -7,6 +7,7 @@ const textbox = document.getElementById('input-text')
 const icon = document.getElementById('favicon')
 const vid = document.getElementById('vid').value
 const site_name = document.getElementById('site_name').value
+const slurreplacer = document.getElementById('slurreplacer').value
 
 let notifs = 0;
 let scrolled_down = true;
@@ -38,7 +39,10 @@ function flash(){
 
 socket.on('speak', function(json) {
 	let text = json['text']
-	let text_html = json['text_html']
+	let text_html
+
+	if (slurreplacer == 'True') text_html = json['text_censored']
+	else text_html = json['text_html']
 
 	if (text_html.includes(`<a href="/id/${vid}">`)){
 		chatline.classList.add('chat-mention');
@@ -47,20 +51,30 @@ socket.on('speak', function(json) {
 		chatline.classList.remove('chat-mention');
 	};
 
-	notifs = notifs + 1;
-	if (notifs == 1) {
-		setTimeout(flash, 500);
+	scrolled_down = (box.scrollHeight - box.scrollTop <= window.innerHeight-109)
+
+	let users = document.getElementsByClassName('userlink');
+	let last_user = users[users.length-1].innerHTML;
+
+	if (last_user == json['username']) {
+		document.getElementsByClassName('userlink')[0].classList.add('d-none')
+		document.getElementsByClassName('avatar')[0].classList.add('d-none')
+		document.getElementsByClassName('userlink')[0].href = '/@' + json['username']
+		document.getElementsByClassName('userlink')[0].style.color = '#' + json['namecolor']	
+		document.getElementsByClassName('chat-line')[0].classList.remove('diff')
+	}
+	else {
+		document.getElementsByClassName('avatar')[0].src = json['avatar']
+		document.getElementsByClassName('chat-line')[0].classList.add('diff')
 	}
 
-	scrolled_down = (box.scrollHeight - box.scrollTop <= window.innerHeight-109)
-	document.getElementsByClassName('desktop-avatar')[0].src = json['avatar']
-	document.getElementsByClassName('mobile-avatar')[0].src = json['avatar']
-	document.getElementsByClassName('userlink')[0].href = '/@' + json['username']
 	document.getElementsByClassName('userlink')[0].innerHTML = json['username']
-	document.getElementsByClassName('userlink')[0].style.color = '#' + json['namecolor']
 	document.getElementsByClassName('text')[0].innerHTML = text
-	document.getElementsByClassName('chat-message')[0].innerHTML = text_html
-	document.getElementById('chat-text').append(document.getElementsByClassName('chat-line')[0].cloneNode(true))
+	document.getElementsByClassName('chat-message')[0].innerHTML = text_html.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '')
+
+	let line = document.getElementsByClassName('chat-line')[0].cloneNode(true)
+	bs_trigger(line)
+	box.append(line)
 	if (scrolled_down) box.scrollTo(0, box.scrollHeight)
 })
 
@@ -78,7 +92,7 @@ function send() {
 }
 
 function quote(t) {
-	textbox.style.height = '80px'
+	textbox.style.height = '50px'
 	text = t.previousElementSibling.innerHTML.replace(/&gt;/g, ">").replace(/\n/g, "\n>")
 	textbox.value = '> ' + text + '\n\n@' + t.parentElement.previousElementSibling.innerHTML + ' '
 	textbox.focus()

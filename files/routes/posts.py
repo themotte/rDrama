@@ -1034,10 +1034,6 @@ def submit_post(v, sub=None):
 			else:
 				return error("Image/Video files only.")
 
-	if '#fortune' in body:
-		body = body.replace('#fortune', '')
-		body += '\n\n<p>' + random.choice(FORTUNE_REPLIES) + '</p>'
-
 	body_html = sanitize(body)
 
 	if v.marseyawarded and marseyaward_body_regex.search(body_html):

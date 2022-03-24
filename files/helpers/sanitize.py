@@ -326,6 +326,10 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			marsey.count += 1
 			g.db.add(marsey)
 
+	if '#fortune' in sanitized:
+		sanitized = sanitized.replace('#fortune', '')
+		sanitized += '\n\n<p>' + random.choice(FORTUNE_REPLIES) + '</p>'
+
 	signal.alarm(0)
 
 	return sanitized

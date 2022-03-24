@@ -13,7 +13,7 @@ from sqlalchemy import *
 import gevent
 import redis
 import time
-from sys import stdout
+from sys import stdout, argv
 import faulthandler
 from json import loads
 
@@ -116,4 +116,8 @@ def after_request(response):
 	response.headers.add("X-Frame-Options", "deny")
 	return response
 
-from files.routes import *
+if "load_chat" in argv or app.config["SERVER_NAME"] == 'localhost':
+	from files.routes.chat import *
+
+if "load_chat" not in argv:
+	from files.routes import *

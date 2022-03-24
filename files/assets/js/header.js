@@ -29,12 +29,34 @@ function formkey() {
 	else return null;
 }
 
-if (typeof bs_trigger === 'undefined') {
-	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+
+function bs_trigger(e) {
+	let tooltipTriggerList = [].slice.call(e.querySelectorAll('[data-bs-toggle="tooltip"]'));
 	tooltipTriggerList.map(function(element){
 		return bootstrap.Tooltip.getOrCreateInstance(element);
 	});
+
+	const popoverTriggerList = [].slice.call(e.querySelectorAll('[data-bs-toggle="popover"]'));
+	popoverTriggerList.map(function(popoverTriggerEl) {
+		const popoverId = popoverTriggerEl.getAttribute('data-content-id');
+		const contentEl = e.getElementById(popoverId);
+		if (contentEl) {
+			return bootstrap.Popover.getOrCreateInstance(popoverTriggerEl, {
+				content: contentEl.innerHTML,
+				html: true,
+			});
+		}
+	})
 }
+
+bs_trigger(document)
+
+
+function expandDesktopImage(image) {
+	document.getElementById("desktop-expanded-image").src = image.replace("200w_d.webp", "giphy.webp");
+	document.getElementById("desktop-expanded-image-link").href = image;
+	document.getElementById("desktop-expanded-image-wrap-link").href=image;
+};
 
 function post_toast(t, url, reload, data) {
 	t.disabled = true;

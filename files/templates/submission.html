@@ -999,8 +999,9 @@
 			xhr.setRequestHeader('xhr', 'xhr');
 			xhr.onload=function(){
 				if (xhr.status==200) {
-					document.getElementById(`viewmore-${offset}`).innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
-					bs_trigger()
+					let e = document.getElementById(`viewmore-${offset}`);
+					e.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
+					bs_trigger(e)
 
 					comments = JSON.parse(localStorage.getItem("old-comment-counts")) || {}
 					lastCount = comments['{{p.id}}']
