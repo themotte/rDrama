@@ -15,7 +15,7 @@
 </div>
 
 <div id="chat-line-template" class="d-none">
-	<div class="chat-line my-2">
+	<div class="chat-line">
 		<div class="d-flex align-items-center">
 			<span class="rounded mb-auto d-none d-md-block chat-profile">
 				<img class="desktop-avatar rounded-circle w-100">
@@ -41,7 +41,7 @@
 			{% for m in messages %}
 				{% set text_html = m['text_html'] %}
 				{% set link = '<a href="/id/' + v.id|string + '">' %}
-				<div class="chat-line my-2 {% if link in text_html %}chat-mention{% endif %}">
+				<div class="chat-line {% if link in text_html %}chat-mention{% endif %}">
 					<div class="d-flex align-items-center">
 						<span class="rounded mb-auto d-none d-md-block chat-profile">
 							<img class="desktop-avatar rounded-circle w-100" src="{{m['avatar']}}">
@@ -119,6 +119,12 @@
 
 	.chat-message p {
 		display: inline-block;
+	}
+
+	@media (max-width: 768px) {
+		* {
+			font-size: 10px !important;
+		}
 	}
 </style>
 
