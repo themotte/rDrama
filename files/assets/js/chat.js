@@ -78,6 +78,7 @@ function send() {
 }
 
 function quote(text) {
+	console.log(text)
 	textbox.style.height = '80px'
 	textbox.value = '> ' + text + '\n\n'
 	textbox.focus()
