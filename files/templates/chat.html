@@ -26,8 +26,8 @@
 					<a href="" class="font-weight-bold text-black userlink" target="_blank"></a>
 					<div style="overflow:hidden">
 						<span class="chat-message text-black text-break"></span>
-						<span class="text d-none"></span>
-						<button class="quote-btn btn d-inline-block pt-0" onclick="quote2()"><i class="fas fa-reply" aria-hidden="true"></i></button>
+						<input type="hidden" class="text">
+						<button class="quote-btn btn d-inline-block pt-0" onclick="quote(this.previousSibling.value)"><i class="fas fa-reply" aria-hidden="true"></i></button>
 					</div>
 				</div>
 			</div>
@@ -79,7 +79,7 @@
 <input id="vid" type="hidden" value="{{v.id}}">
 <input id="site_name" type="hidden" value="{{SITE_NAME}}">
 
-<script data-cfasync="false" src="/assets/js/chat.js?v=22"></script>
+<script data-cfasync="false" src="/assets/js/chat.js?v=23"></script>
 
 <style>
 	#chat-window {

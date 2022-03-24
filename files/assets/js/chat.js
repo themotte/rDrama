@@ -58,7 +58,7 @@ socket.on('speak', function(json) {
 	document.getElementsByClassName('userlink')[0].href = '/@' + json['username']
 	document.getElementsByClassName('userlink')[0].innerHTML = json['username']
 	document.getElementsByClassName('userlink')[0].style.color = '#' + json['namecolor']
-	document.getElementsByClassName('text')[0].innerHTML = text
+	document.getElementsByClassName('text')[0].value = text
 	document.getElementsByClassName('chat-message')[0].innerHTML = text_html
 	document.getElementById('chat-text').append(document.getElementsByClassName('chat-line')[0].cloneNode(true))
 	if (scrolled_down) box.scrollTo(0, box.scrollHeight)
@@ -79,13 +79,6 @@ function send() {
 
 function quote(text) {
 	textbox.style.height = '80px'
-	textbox.value = '> ' + text + '\n\n'
-	textbox.focus()
-}
-
-function quote2() {
-	textbox.style.height = '80px'
-	text = document.getElementsByClassName('text')[0].innerHTML
 	textbox.value = '> ' + text + '\n\n'
 	textbox.focus()
 }
