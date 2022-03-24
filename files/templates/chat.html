@@ -126,7 +126,9 @@
 							<div class="d-flex align-items-center">
 								<div class="pl-md-3 text-muted">
 									<div>
-										{% if not same %}<img src="{{m['avatar']}}" class="avatar pp20 mr-1" data-toggle="tooltip" data-placement="right">{% endif %}
+										{% if not same %}
+											<img src="{{m['avatar']}}" class="avatar pp20 mr-1" data-toggle="tooltip" data-placement="right">
+										{% endif %}
 
 										<a class="{% if same %}d-none{% endif %} font-weight-bold text-black userlink" style="color:#{{m['namecolor']}}" target="_blank" href="/@{{m['username']}}">{{m['username']}}</a>
 
