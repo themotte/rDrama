@@ -35,6 +35,7 @@ if "load_chat" in sys.argv or SITE == 'localhost':
 	@limiter.limit("3/second;10/minute")
 	@auth_required
 	def speak(data, v):
+		if v.is_banned: abort(403)
 		global messages
 		text = data[:1000].strip()
 		if not text: abort(403)
