@@ -24,7 +24,7 @@ if "load_chat" in sys.argv or SITE == 'localhost':
 		return render_template("chat.html", v=v, messages=messages)
 
 
-	@app.get('/static/chat.js')
+	@app.get('/chat.js')
 	@limiter.exempt
 	def chatjs():
 		resp = make_response(send_from_directory('assets', 'js/chat.js'))
