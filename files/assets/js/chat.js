@@ -11,7 +11,6 @@ const site_name = document.getElementById('site_name').value
 const slurreplacer = document.getElementById('slurreplacer').value
 
 let notifs = 0;
-let scrolled_down = true;
 let focused = true;
 let is_typing = false;
 let alert=true;
@@ -55,8 +54,7 @@ socket.on('speak', function(json) {
 	let users = document.getElementsByClassName('userlink');
 	let last_user = users[users.length-1].innerHTML;
 
-	console.log(last_user)
-	console.log(json['username'])
+	let scrolled_down = (box.scrollHeight - box.scrollTop <= window.innerHeight-109)
 
 	if (last_user == json['username']) {
 		document.getElementsByClassName('chat-line')[0].classList.remove('diff')
@@ -79,7 +77,7 @@ socket.on('speak', function(json) {
 	let line = document.getElementsByClassName('chat-line')[0].cloneNode(true)
 	bs_trigger(line)
 	box.append(line)
-	box.scrollTo(0, box.scrollHeight)
+	if (scrolled_down) box.scrollTo(0, box.scrollHeight)
 })
 
 
