@@ -54,7 +54,7 @@ socket.on('speak', function(json) {
 	let users = document.getElementsByClassName('userlink');
 	let last_user = users[users.length-1].innerHTML;
 
-	let scrolled_down = (box.scrollHeight - box.scrollTop <= window.innerHeight-109)
+	let scrolled_down = (box.scrollHeight - box.scrollTop <= window.innerHeight)
 
 	if (last_user == json['username']) {
 		document.getElementsByClassName('chat-line')[0].classList.remove('diff')
