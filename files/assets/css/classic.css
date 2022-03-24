@@ -510,3 +510,12 @@ a.nav-link:hover {
 	background: rgba(136,136,136,0.2);
 	padding: 12px;
 }
+
+/*chat*/
+#chat-window {
+    background-color: white !important;
+}
+
+.chat-message {
+        color: var(--black2) !important;
+}
