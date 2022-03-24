@@ -79,7 +79,8 @@ function send() {
 
 function quote(t) {
 	textbox.style.height = '80px'
-	textbox.value = '> ' + t.previousElementSibling.innerHTML + '\n\n'
+	text = t.previousElementSibling.innerHTML.replace(/&gt;/g, ">").replace(/\n/g, "\n>")
+	textbox.value = '> ' + text + '\n\n'
 	textbox.focus()
 }
 
