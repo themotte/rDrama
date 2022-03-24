@@ -66,19 +66,27 @@
 			}
 		}
 
-		#input-text {
-			max-height: 50px!important;
+		p {
+			margin: 0 !important;
+			margin-left: 27px !important;
 		}
 
-		p {
-			margin: 0!important;
+		blockquote p {
+			padding-bottom: 0.3rem !important;
+			padding-top: 0.3rem !important;
+			margin-left: 0 !important;
+		}
+
+		blockquote {
+			margin: 0 !important;
 			margin-left: 27px !important;
+			margin-bottom: 5px !important;
 		}
 	</style>
 </head>
 
 <body>
-	<script src="/static/assets/js/bootstrap.js?v=245"></script>
+	<script src="/static/assets/js/bootstrap.js?v=248"></script>
 
 	{% include "header.html" %}
 	
@@ -159,7 +167,7 @@
 <input id="site_name" type="hidden" value="{{SITE_NAME}}">
 <input id="slurreplacer" type="hidden" value="{{v.slurreplacer}}">
 
-<script data-cfasync="false" src="/chat.js?v=4"></script>
+<script data-cfasync="false" src="/chat.js?v=7"></script>
 
 <script>
 	box.scrollTo(0, box.scrollHeight)
