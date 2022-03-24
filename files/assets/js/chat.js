@@ -92,6 +92,7 @@ function send() {
 		is_typing = false
 		socket.emit('typing', false);
 	}
+	autoExpand(textbox);
 }
 
 function quote(t) {
