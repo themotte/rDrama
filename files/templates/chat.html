@@ -26,7 +26,8 @@
 					<a href="" class="font-weight-bold text-black userlink" target="_blank"></a>
 					<div style="overflow:hidden">
 						<span class="chat-message text-black text-break"></span>
-						<button class="text quote-btn btn d-inline-block pt-0" onclick="quote(this.value)"><i class="fas fa-reply" aria-hidden="true"></i></button>
+						<span class="text d-none"></span>
+						<button class="quote-btn btn d-inline-block pt-0" onclick="quote(this)"><i class="fas fa-reply" aria-hidden="true"></i></button>
 					</div>
 				</div>
 			</div>
@@ -51,8 +52,8 @@
 								<a class="font-weight-bold text-black userlink" style="color:#{{m['namecolor']}}" target="_blank" href="/@{{m['username']}}">{{m['username']}}</a>
 								<div style="overflow:hidden">
 									<span class="chat-message text-black text-break">{{text_html | safe}}</span>
-									{% set text=m['text'] %}
-									<button class="btn d-inline-block pt-0"><i onclick="quote('{{text}}')" class="fas fa-reply" aria-hidden="true"></i></button>
+									<span class="d-none">{{m['text']}}</span>
+									<button class="btn d-inline-block pt-0" onclick="quote(this)"><i class="fas fa-reply" aria-hidden="true"></i></button>
 								</div>
 							</div>
 						</div>
@@ -80,7 +81,7 @@
 <input id="vid" type="hidden" value="{{v.id}}">
 <input id="site_name" type="hidden" value="{{SITE_NAME}}">
 
-<script data-cfasync="false" src="/assets/js/chat.js?v=24"></script>
+<script data-cfasync="false" src="/assets/js/chat.js?v=25"></script>
 
 <style>
 	#chat-window {
