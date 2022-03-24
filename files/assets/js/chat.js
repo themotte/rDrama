@@ -133,13 +133,8 @@ socket.on('typing', function (users){
 		document.getElementById('typing-indicator').innerHTML = '<b>'+users[0]+"</b> and <b>"+users[1]+"</b> are typing...";
 		document.getElementById('loading-indicator').classList.remove('d-none');
 	}
-	else if (users.length==3){
+	else {
 		document.getElementById('typing-indicator').innerHTML = '<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, and <b>"+users[2]+"</b> are typing...";
-		document.getElementById('loading-indicator').classList.remove('d-none');
-	}
-	else if (users.length>=4){
-		more=users.length-3
-		document.getElementById('typing-indicator').innerHTML = '<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, <b>"+users[2]+"</b> and "+more.toString()+" more are typing...";
 		document.getElementById('loading-indicator').classList.remove('d-none');
 	}
 })
