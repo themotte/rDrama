@@ -16,6 +16,7 @@ else:
 
 typing = []
 online = []
+muted = cache.get('muted') or {}
 messages = cache.get('chat') or []
 total = cache.get('total') or 0
 
@@ -37,6 +38,12 @@ def chatjs():
 @auth_required
 def speak(data, v):
 	if v.is_banned: return '', 403
+
+	vname = v.username.lower()
+	if vname in muted:
+		if time.time() > muted[vname]: return '', 403
+		else: del muted[vname]
+
 	global messages, total
 	text = data[:1000].strip()
 	if not text: return '', 403
@@ -55,6 +62,14 @@ def speak(data, v):
 	messages = messages[-50:]
 	total += 1
 	emit('speak', data, broadcast=True)
+
+	if v.admin_level > 1:
+		text = text.lower()
+		for i in mute_regex.finditer(text):
+			username = i.group(1)
+			duration = int(int(i.group(2)) * 60 + time.time())
+			muted[username] = duration
+
 	return '', 204
 
 @socketio.on('connect')
@@ -92,4 +107,5 @@ def typing_indicator(data, v):
 def close_running_threads():
 	cache.set('chat', messages)
 	cache.set('total', total)
+	cache.set('muted', muted)
 atexit.register(close_running_threads)
