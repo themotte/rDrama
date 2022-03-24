@@ -843,7 +843,7 @@
 
 	{% if v %}
 		<script src="/static/assets/js/marked.js?v=249"></script>
-		<script src="/static/assets/js/comments_v.js?v=262"></script>
+		<script src="/static/assets/js/comments_v.js?v=263"></script>
 	{% endif %}
 
 	<script src="/static/assets/js/clipboard.js?v=250"></script>
@@ -854,7 +854,7 @@
 
 	{% include "expanded_image_modal.html" %}
 
-	<script src="/static/assets/js/comments+submission_listing.js?v=253"></script>
+	<script src="/static/assets/js/comments+submission_listing.js?v=254"></script>
 	<script src="/static/assets/js/comments.js?v=253"></script>
 
 	<script>
@@ -885,8 +885,9 @@
 			xhr.setRequestHeader('xhr', 'xhr');
 			xhr.onload=function(){
 				if (xhr.status==200) {
-					document.getElementById(`morecomments-${cid}`).innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
-					bs_trigger()
+					let e = document.getElementById(`morecomments-${cid}`)
+					e.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
+					bs_trigger(e)
 
 					{% if p %}
 						comments = JSON.parse(localStorage.getItem("old-comment-counts")) || {}

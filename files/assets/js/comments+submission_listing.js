@@ -10,33 +10,6 @@ function pinned_timestamp(id) {
 	if (!pintooltip.includes('until')) el.setAttribute("data-bs-original-title", `${pintooltip} until ${time}`)
 }
 
-function expandDesktopImage(image) {
-	document.getElementById("desktop-expanded-image").src = image.replace("200w_d.webp", "giphy.webp");
-	document.getElementById("desktop-expanded-image-link").href = image;
-	document.getElementById("desktop-expanded-image-wrap-link").href=image;
-};
-
-function bs_trigger() {
-	let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-	tooltipTriggerList.map(function(element){
-		return bootstrap.Tooltip.getOrCreateInstance(element);
-	});
-
-	const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-	popoverTriggerList.map(function(popoverTriggerEl) {
-		const popoverId = popoverTriggerEl.getAttribute('data-content-id');
-		const contentEl = document.getElementById(popoverId);
-		if (contentEl) {
-			return bootstrap.Popover.getOrCreateInstance(popoverTriggerEl, {
-				content: contentEl.innerHTML,
-				html: true,
-			});
-		}
-	})
-}
-
-bs_trigger()
-
 function popclick(author) {
 	setTimeout(() => {
 		let popover = document.getElementsByClassName("popover")

@@ -335,10 +335,6 @@ def api_comment(v):
 	if v.agendaposter and not v.marseyawarded and parent_post.id not in ADMIGGERS:
 		body = torture_ap(body, v.username)
 
-	if '#fortune' in body:
-		body = body.replace('#fortune', '')
-		body += '\n\n<p>' + random.choice(FORTUNE_REPLIES) + '</p>'
-
 	body_html = sanitize(body, comment=True)
 
 	if v.marseyawarded and parent_post.id not in ADMIGGERS and marseyaward_body_regex.search(body_html):
