@@ -91,14 +91,10 @@ function send() {
 		textbox.value = ''
 		is_typing = false
 		socket.emit('typing', false);
-		textbox.style.height = '40px'
-		textbox.style.maxHeight = '40px'
 	}
 }
 
 function quote(t) {
-	textbox.style.height = '80px'
-	textbox.style.maxHeight = '80px'
 	text = t.previousElementSibling.innerHTML.replace(/&gt;/g, ">").replace(/\n/g, "\n>")
 	textbox.value = '> ' + text + '\n\n@' + t.parentElement.previousElementSibling.innerHTML + ' '
 	textbox.focus()
@@ -132,8 +128,6 @@ textbox.addEventListener("input", function() {
 	if (!text && is_typing==true){
 		is_typing=false;
 		socket.emit('typing', false);
-		textbox.style.height = '40px'
-		textbox.style.maxHeight = '40px'
 	}
 	else if (text && is_typing==false) {
 		is_typing=true;
