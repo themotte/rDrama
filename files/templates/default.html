@@ -6,12 +6,7 @@
 
 	<script src="/static/assets/js/bootstrap.js?v=245"></script>
 	{% if v %}
-		<style>
-			:root{
-				--primary:#{{v.themecolor}};
-				--primary55:#{{v.themecolor}}55;
-			}
-		</style>
+		<style>:root{--primary:#{{v.themecolor}}}</style>
 		<link rel="stylesheet" href="/static/assets/css/main.css?v=188">
 		<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?v=30">
 		{% if v.agendaposter %}
