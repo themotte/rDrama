@@ -89,9 +89,10 @@ function send() {
 	{
 		socket.emit('speak', text);
 		textbox.value = ''
-		textbox.style.height = '40px'
 		is_typing = false
 		socket.emit('typing', false);
+		textbox.style.height = '40px'
+		textbox.style.maxHeight = '40px'
 	}
 }
 
