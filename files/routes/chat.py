@@ -24,7 +24,7 @@ if "load_chat" in sys.argv or SITE == 'localhost':
 		return render_template("chat.html", v=v, messages=messages)
 
 	@socketio.on('speak')
-	@limiter.limit("5/second;30/minute")
+	@limiter.limit("3/second;10/minute")
 	@auth_required
 	def speak(data, v):
 		global messages
