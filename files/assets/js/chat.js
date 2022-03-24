@@ -98,6 +98,7 @@ function quote(t) {
 	text = t.previousElementSibling.innerHTML.replace(/&gt;/g, ">").replace(/\n/g, "\n>")
 	textbox.value = '> ' + text + '\n\n@' + t.parentElement.previousElementSibling.innerHTML + ' '
 	textbox.focus()
+	autoExpand(textbox);
 }
 
 textbox.addEventListener("keyup", function(e) {
