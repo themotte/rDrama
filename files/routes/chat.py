@@ -40,7 +40,7 @@ if "load_chat" in sys.argv or SITE == 'localhost':
 		}
 
 		messages.append(data)
-		messages = messages[:500]
+		messages = messages[-500:]
 		emit('speak', data, broadcast=True)
 		return '', 204
 
