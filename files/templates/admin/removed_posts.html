@@ -1,28 +1,35 @@
-{% extends "admin/image_posts.html" %}
+{% extends "userpage.html" %}
 
+{% block adminpanel %}{% endblock %}
+{% block pagetype %}userpage{% endblock %}
+{% block banner %}{% endblock %}
+{% block mobileBanner %}{% endblock %}
+{% block desktopBanner %}{% endblock %}
+{% block desktopUserBanner %}{% endblock %}
+{% block mobileUserBanner %}{% endblock %}
+
+{% block fixedMobileBarJS %}
+{% endblock %}
 
 {% block title %}
-<title>Removed Content</title>
+<title>removed Posts</title>
 
 {% endblock %}
 
 {% block content %}
 
-<div class="row justify-content-around mx-lg-5 d-lg-none no-gutters">
-	<div class="col bg-light border-bottom rounded-md p-3">
-		<div class="profile-details">
-			<div class="media">
-			<div class="media-body">
-				<pre></pre>
-				<h5 class="h6 d-inline-block">Removed Posts</h5>
-
-			</div>
-
-		</div>
-
-	</div>
-</div>
-</div>
+<ul class="nav post-nav py-2">
+	<li class="nav-item">
+		<a class="nav-link {% if request.path=="/admin/removed/posts" %} active{% endif %}" href="/admin/removed/posts">
+			<div>Posts</div>
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link {% if request.path=="/admin/removed/comments" %} active{% endif %}" href="/admin/removed/comments">
+			<div>Comments</div>
+		</a>
+	</li>
+</ul>
 
 <div class="row no-gutters">
 
