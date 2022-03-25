@@ -38,7 +38,9 @@ function bs_trigger(e) {
 	const popoverTriggerList = [].slice.call(e.querySelectorAll('[data-bs-toggle="popover"]'));
 	popoverTriggerList.map(function(popoverTriggerEl) {
 		const popoverId = popoverTriggerEl.getAttribute('data-content-id');
-		const contentEl = e.querySelector(`#${popoverId}`);
+		let contentEl;
+		try {contentEl = e.getElementById(popoverId);}
+		catch(t) {contentEl = e.getElementById(popoverId);}
 		if (contentEl) {
 			return bootstrap.Popover.getOrCreateInstance(popoverTriggerEl, {
 				content: contentEl.innerHTML,
