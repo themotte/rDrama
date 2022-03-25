@@ -41,7 +41,7 @@ def speak(data, v):
 
 	vname = v.username.lower()
 	if vname in muted:
-		if time.time() > muted[vname]: return '', 403
+		if time.time() < muted[vname]: return '', 403
 		else: del muted[vname]
 
 	global messages, total
@@ -57,11 +57,13 @@ def speak(data, v):
 		"text_html":text_html,
 		"text_censored":censor_slurs(text_html, 'chat')
 	}
+	
+	broadcast = not v.shadowbanned
+	emit('speak', data, broadcast=broadcast)
 
 	messages.append(data)
 	messages = messages[-50:]
 	total += 1
-	emit('speak', data, broadcast=True)
 
 	if v.admin_level > 1:
 		text = text.lower()
