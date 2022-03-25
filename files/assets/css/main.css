@@ -4372,7 +4372,7 @@ div.deleted.banned {
     border-radius: 5px !important;
     color: white !important;
 }
-.patron[style*="background-color:#ffffff;"] {
+.patron[style*="background-color:#FFFFFF;"] {
     color: black !important;
 }
 .container, .container-fluid {
