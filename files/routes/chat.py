@@ -58,11 +58,13 @@ def speak(data, v):
 		"text_censored":censor_slurs(text_html, 'chat')
 	}
 	
-	broadcast = not v.shadowbanned
-	emit('speak', data, broadcast=broadcast)
+	if v.shadowbanned:
+		emit('speak', data)
+	else:
+		emit('speak', data, broadcast=True)
+		messages.append(data)
+		messages = messages[-50:]
 
-	messages.append(data)
-	messages = messages[-50:]
 	total += 1
 
 	if v.admin_level > 1:
