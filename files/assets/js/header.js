@@ -40,7 +40,7 @@ function bs_trigger(e) {
 		const popoverId = popoverTriggerEl.getAttribute('data-content-id');
 		let contentEl;
 		try {contentEl = e.getElementById(popoverId);}
-		catch(t) {contentEl = e.getElementById(popoverId);}
+		catch(t) {contentEl = document.getElementById(popoverId);}
 		if (contentEl) {
 			return bootstrap.Popover.getOrCreateInstance(popoverTriggerEl, {
 				content: contentEl.innerHTML,
