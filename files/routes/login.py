@@ -150,8 +150,9 @@ def login_post():
 		redir = redir.replace("/logged_out", "").strip()
 		if not redir.startswith(SITE_FULL) and not redir.startswith('/'): redir = '/'
 
-	if redir.startswith(SITE_FULL): return redirect(redir)
-	if redir.startswith('/'): return redirect(f'{SITE_FULL}{redir}')
+	if redir:
+		if redir.startswith(SITE_FULL): return redirect(redir)
+		if redir.startswith('/'): return redirect(f'{SITE_FULL}{redir}')
 	return redirect(f'{SITE_FULL}/')
 
 @app.get("/me")
