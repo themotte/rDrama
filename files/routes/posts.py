@@ -461,7 +461,7 @@ def edit_post(pid, v):
 		files = request.files.getlist('file')[:4]
 		for file in files:
 			if file.content_type.startswith('image/'):
-				name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+				name = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(name)
 				url = process_image(name)
 				body += f"\n\n![]({url})"
@@ -698,7 +698,7 @@ def thumbnail_thread(pid):
 		db.close()
 		return
 
-	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+	name = f'/images/{time.time()}'.replace('.','') + '.webp'
 
 	with open(name, "wb") as file:
 		for chunk in image_req.iter_content(1024):
@@ -1019,7 +1019,7 @@ def submit_post(v, sub=None):
 		files = request.files.getlist('file2')[:4]
 		for file in files:
 			if file.content_type.startswith('image/'):
-				name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+				name = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(name)
 				body += f"\n\n![]({process_image(name)})"
 			elif file.content_type.startswith('video/'):
@@ -1118,7 +1118,7 @@ def submit_post(v, sub=None):
 		file = request.files['file']
 
 		if file.content_type.startswith('image/'):
-			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+			name = f'/images/{time.time()}'.replace('.','') + '.webp'
 			file.save(name)
 			post.url = process_image(name)
 

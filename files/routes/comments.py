@@ -234,7 +234,7 @@ def api_comment(v):
 		files = request.files.getlist('file')[:4]
 		for file in files:
 			if file.content_type.startswith('image/'):
-				oldname = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+				oldname = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(oldname)
 				image = process_image(oldname)
 				if image == "": return {"error":"Image upload failed"}
@@ -791,7 +791,7 @@ def edit_comment(cid, v):
 			files = request.files.getlist('file')[:4]
 			for file in files:
 				if file.content_type.startswith('image/'):
-					name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+					name = f'/images/{time.time()}'.replace('.','') + '.webp'
 					file.save(name)
 					url = process_image(name)
 					body += f"\n\n![]({url})"

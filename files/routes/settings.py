@@ -250,7 +250,7 @@ def settings_profile_post(v):
 		if request.files.get('file'):
 			file = request.files['file']
 			if file.content_type.startswith('image/'):
-				name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+				name = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(name)
 				url = process_image(name)
 				bio += f"\n\n![]({url})"
@@ -603,7 +603,7 @@ def settings_images_profile(v):
 
 	file = request.files["profile"]
 
-	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+	name = f'/images/{time.time()}'.replace('.','') + '.webp'
 	file.save(name)
 	highres = process_image(name)
 
@@ -642,7 +642,7 @@ def settings_images_banner(v):
 
 	file = request.files["banner"]
 
-	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+	name = f'/images/{time.time()}'.replace('.','') + '.webp'
 	file.save(name)
 	bannerurl = process_image(name)
 

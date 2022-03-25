@@ -304,7 +304,7 @@ def submit_contact(v):
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if file.content_type.startswith('image/'):
-			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+			name = f'/images/{time.time()}'.replace('.','') + '.webp'
 			file.save(name)
 			url = process_image(name)
 			body_html += f'<img data-bs-target="#expandImageModal" data-bs-toggle="modal" onclick="expandDesktopImage(this.src)" class="img" src="{url}" loading="lazy">'

@@ -415,7 +415,7 @@ def sub_banner(v, sub):
 
 	file = request.files["banner"]
 
-	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+	name = f'/images/{time.time()}'.replace('.','') + '.webp'
 	file.save(name)
 	bannerurl = process_image(name)
 
@@ -445,7 +445,7 @@ def sub_sidebar(v, sub):
 	if not v.mods(sub.name): abort(403)
 	
 	file = request.files["sidebar"]
-	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+	name = f'/images/{time.time()}'.replace('.','') + '.webp'
 	file.save(name)
 	sidebarurl = process_image(name)
 
