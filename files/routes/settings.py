@@ -34,6 +34,7 @@ tiers={
 @auth_required
 def removebackground(v):
 	v.background = None
+	v.theme = 'midnight'
 	g.db.add(v)
 	g.db.commit()
 	return {"message": "Background removed!"}
@@ -326,7 +327,10 @@ def settings_profile_post(v):
 
 	theme = request.values.get("theme")
 	if theme:
-		if theme in {"dramblr", "classic", "classic_dark", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"}:
+		if theme in {"dramblr", "classic", "classic_dark", "transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"}:
+			if theme == "transparent" and not v.background: 
+				return {"error": "You need to set a background to use the transparent theme!"}
+			if theme != "transparent": v.background = None
 			v.theme = theme
 			if theme == "win98": v.themecolor = "30409f"
 			updated = True
