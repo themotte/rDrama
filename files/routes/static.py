@@ -141,10 +141,10 @@ def cached_chart(days):
 
 	if days > 31:
 		file = "/weekly_chart.png"
-		day_cutoffs = [today_cutoff - 86400 * 7 * i for i in range(35)][1:]
+		day_cutoffs = [today_cutoff - 86400 * 7 * i for i in range(45)][1:]
 	else:
 		file = "/daily_chart.png"
-		day_cutoffs = [today_cutoff - 86400 * i for i in range(35)][1:]
+		day_cutoffs = [today_cutoff - 86400 * i for i in range(45)][1:]
 
 	day_cutoffs.insert(0, calendar.timegm(now))
 
@@ -156,11 +156,11 @@ def cached_chart(days):
 
 	comment_stats = [g.db.query(Comment.id).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.is_banned == False, Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count() for i in range(len(day_cutoffs) - 1)][::-1]
 
-	plt.rcParams["figure.figsize"] = (20,20)
+	plt.rcParams["figure.figsize"] = (30, 20)
 
-	signup_chart = plt.subplot2grid((20, 4), (0, 0), rowspan=5, colspan=4)
-	posts_chart = plt.subplot2grid((20, 4), (7, 0), rowspan=5, colspan=4)
-	comments_chart = plt.subplot2grid((20, 4), (14, 0), rowspan=5, colspan=4)
+	signup_chart = plt.subplot2grid((30, 20), (0, 0), rowspan=6, colspan=30)
+	posts_chart = plt.subplot2grid((30, 20), (10, 0), rowspan=6, colspan=30)
+	comments_chart = plt.subplot2grid((30, 20), (20, 0), rowspan=6, colspan=30)
 
 	signup_chart.grid(), posts_chart.grid(), comments_chart.grid()
 
