@@ -481,8 +481,43 @@ def random_post(v):
 	post = x.offset(n).limit(1).one_or_none()
 	return redirect(f"{SITE_FULL}/post/{post.id}")
 
+@app.get("/comments")
+@auth_required
+def all_comments(v):
+
+
+	page = int(request.values.get("page", 1))
+
+	sort=request.values.get("sort", "new")
+	t=request.values.get("t", defaulttimefilter)
+
+	try: gt=int(request.values.get("utc_greater_than", 0))
+	except: gt=0
+
+	try: lt=int(request.values.get("utc_less_than", 0))
+	except: lt=0
+
+	idlist = comment_idlist(v=v,
+							page=page,
+							sort=sort,
+							t=t,
+							gt=gt,
+							lt=lt
+							)
+
+	comments = get_comments(idlist, v=v)
+
+	next_exists = len(idlist) > 25
+
+	idlist = idlist[:25]
+
+	if request.headers.get("Authorization"): return {"data": [x.json for x in comments]}
+	return render_template("home_comments.html", v=v, sort=sort, t=t, page=page, comments=comments, standalone=True, next_exists=next_exists)
+
+
+
 @cache.memoize(timeout=86400)
-def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
+def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", gt=0, lt=0):
 
 	comments = g.db.query(Comment.id).filter(Comment.parent_submission != None)
 
@@ -497,20 +532,24 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 		comments = comments.filter(Comment.parent_submission.notin_(club))
 
 
-	now = int(time.time())
-	if t == 'hour':
-		cutoff = now - 3600
-	elif t == 'day':
-		cutoff = now - 86400
-	elif t == 'week':
-		cutoff = now - 604800
-	elif t == 'month':
-		cutoff = now - 2592000
-	elif t == 'year':
-		cutoff = now - 31536000
-	else:
-		cutoff = 0
-	comments = comments.filter(Comment.created_utc >= cutoff)
+	if gt: comments = comments.filter(Comment.created_utc > gt)
+	if lt: comments = comments.filter(Comment.created_utc < lt)
+
+	if not gt and not lt:
+		now = int(time.time())
+		if t == 'hour':
+			cutoff = now - 3600
+		elif t == 'day':
+			cutoff = now - 86400
+		elif t == 'week':
+			cutoff = now - 604800
+		elif t == 'month':
+			cutoff = now - 2592000
+		elif t == 'year':
+			cutoff = now - 31536000
+		else:
+			cutoff = 0
+		comments = comments.filter(Comment.created_utc >= cutoff)
 
 	if sort == "new":
 		comments = comments.order_by(Comment.created_utc.desc())
@@ -525,31 +564,6 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 
 	comments = comments.offset(25 * (page - 1)).limit(26).all()
 	return [x[0] for x in comments]
-
-@app.get("/comments")
-@auth_required
-def all_comments(v):
-
-
-	page = int(request.values.get("page", 1))
-
-	sort=request.values.get("sort", "new")
-	t=request.values.get("t", defaulttimefilter)
-
-	idlist = comment_idlist(v=v,
-							page=page,
-							sort=sort,
-							t=t,
-							)
-
-	comments = get_comments(idlist, v=v)
-
-	next_exists = len(idlist) > 25
-
-	idlist = idlist[:25]
-
-	if request.headers.get("Authorization"): return {"data": [x.json for x in comments]}
-	return render_template("home_comments.html", v=v, sort=sort, t=t, page=page, comments=comments, standalone=True, next_exists=next_exists)
 
 
 @app.get("/transfers")
