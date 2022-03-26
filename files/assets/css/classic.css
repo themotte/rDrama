@@ -507,7 +507,7 @@ a.nav-link:hover {
 }
 
 .comment-anchor:target, .unread2 {
-	background: rgba(136,136,136,0.2);
+	background: rgba(136,136,136,0.2) !important;
 	padding: 12px;
 }
 

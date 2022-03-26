@@ -52,6 +52,7 @@ def settings_profile_post(v):
 	if request.values.get("background", v.background) != v.background:
 		updated = True
 		v.background = request.values.get("background")
+		v.theme = 'transparent'
 
 	elif request.values.get("slurreplacer", v.slurreplacer) != v.slurreplacer:
 		updated = True
@@ -325,9 +326,7 @@ def settings_profile_post(v):
 
 	theme = request.values.get("theme")
 	if theme:
-		if theme in {"dramblr","classic","classic_dark","transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"}:
-			if theme == "transparent" and not v.background: 
-				return {"error": "You need to set a background to use the transparent theme!"}
+		if theme in {"dramblr", "classic", "classic_dark", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"}:
 			v.theme = theme
 			if theme == "win98": v.themecolor = "30409f"
 			updated = True
