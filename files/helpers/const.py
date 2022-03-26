@@ -438,6 +438,14 @@ AWARDS = {
 		"color": "text-purple",
 		"price": 2500
 	},
+	"deflector": {
+        "kind": "deflector",
+        "title": "Deflector",
+        "description": "Causes most awards received for the next 10 hours to be deflected back at their giver.",
+        "icon": "fas fa-shield",
+        "color": "text-pink",
+        "price": 2750
+    },
 	"marsey": {
 		"kind": "marsey",
 		"title": "Marsey",
@@ -470,14 +478,6 @@ AWARDS = {
 		"color": "text-blue",
 		"price": 4000
 	},
-	"deflector": {
-        "kind": "deflector",
-        "title": "Deflector",
-        "description": "Causes most awards received for the next 10 hours to be deflected back at their giver.",
-        "icon": "fas fa-shield",
-        "color": "text-pink",
-        "price": 7000
-    },
 	"grass": {
 		"kind": "grass",
 		"title": "Grass",
