@@ -308,7 +308,7 @@
 								{% if v.discord_id %}
 									<form action="/settings/remove_discord" method="post">
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
-									<input autocomplete="off" type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Disconnect Discord">
+									<input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Disconnect Discord">
 									</form>
 
 									<div class="text-small-extra text-muted mt-3">Disconnecting your Discord account will remove you from the {{SITE_NAME}} Discord server.</div>

@@ -35,7 +35,7 @@
 			<div id="filename"><i class="far fa-image"></i></div>
 			<input autocomplete="off" id="file-upload" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename','file-upload')" hidden>
 		</label>
-		<input autocomplete="off" type="submit" value="Submit" class="btn btn-primary mt-3">
+		<input type="submit" value="Submit" class="btn btn-primary mt-3">
 	</form>
 
 	<pre>
