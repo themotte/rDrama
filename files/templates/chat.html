@@ -57,13 +57,16 @@
 
 		@media (max-width: 768px) {
 			#shrink * {
-				font-size: 10px;
+				font-size: 10px !important;
 			}
 			.fa-reply:before {
 				font-size: 9px;
 			}
 			.diff {
 				margin-top: 0.5rem;
+			}
+			#chat-window {
+				max-height: calc(100vh - 200px);
 			}
 		}
 
