@@ -328,7 +328,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 	if '#fortune' in sanitized:
 		sanitized = sanitized.replace('#fortune', '')
-		sanitized += '\n\n<p>' + random.choice(FORTUNE_REPLIES) + '</p>'
+		sanitized += '\n\n<p>' + choice(FORTUNE_REPLIES) + '</p>'
 
 	signal.alarm(0)
 
