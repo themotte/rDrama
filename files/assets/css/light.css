@@ -78,3 +78,7 @@ blockquote {
 #profilestuff > * {
 	color: var(--gray-400) !important;
 }
+
+.comment-anchor:target, .unread2 {
+    background: #00000055 !important;
+}

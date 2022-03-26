@@ -507,11 +507,10 @@ a.nav-link:hover {
 }
 
 .comment-anchor:target, .unread2 {
-	background: rgba(136,136,136,0.2) !important;
+	background: #88888833 !important;
 	padding: 12px;
 }
 
-/*chat*/
 #chat-window {
     background-color: white !important;
 }

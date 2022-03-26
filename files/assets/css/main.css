@@ -4810,7 +4810,7 @@ html {
     display: block;
 }
 .comment-anchor:target, .unread2 {
-    background: rgba(255,255,255,0.2) !important;
+    background: #ffffff33 !important;
     padding: 12px;
 }
 
