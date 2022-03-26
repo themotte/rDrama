@@ -34,6 +34,11 @@ function flash(){
 		notifs = 0
 		title.innerHTML = 'Chat';
 	}
+
+	if (is_typing) {
+		is_typing = false
+		socket.emit('typing', false);
+	}
 }
 
 

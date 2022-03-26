@@ -91,6 +91,12 @@
 			overflow: hidden;
 			margin-left: 27px;
 		}
+
+		.quote {
+			display: inline-block !important;
+			padding: 0 0.5rem !important;
+			margin-bottom: 0.25rem !important;
+		}
 	</style>
 </head>
 
@@ -120,7 +126,7 @@
 								<div class="cdiv">
 									<span class="chat-message text-black text-break"></span>
 									<span class="text d-none"></span>
-									<button class="quote-btn btn d-inline-block py-0 mb-1" onclick="quote(this)"><i class="fas fa-reply" aria-hidden="true"></i></button>
+									<button class="quote btn" onclick="quote(this)"><i class="fas fa-reply" aria-hidden="true"></i></button>
 								</div>
 							</div>
 						</div>
@@ -146,7 +152,7 @@
 										<div class="cdiv">
 											<span class="chat-message text-black text-break">{{text_html | safe}}</span>
 											<span class="d-none">{{m['text']}}</span>
-											<button class="btn d-inline-block py-0" onclick="quote(this)"><i class="fas fa-reply" aria-hidden="true"></i></button>
+											<button class="quote btn" onclick="quote(this)"><i class="fas fa-reply" aria-hidden="true"></i></button>
 										</div>
 									</div>
 								</div>
@@ -178,7 +184,7 @@
 <input id="site_name" type="hidden" value="{{SITE_NAME}}">
 <input id="slurreplacer" type="hidden" value="{{v.slurreplacer}}">
 
-<script data-cfasync="false" src="/chat.js?v=9"></script>
+<script data-cfasync="false" src="/chat.js?v=10"></script>
 
 <script>
 	box.scrollTo(0, box.scrollHeight)
@@ -188,5 +194,6 @@
 {% include "expanded_image_modal.html" %}
 
 <script src="/static/assets/js/lozad.js?v=240"></script>
+<script src="/static/assets/js/lite-youtube.js?v=240"></script>
 
 </body>
