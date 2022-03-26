@@ -688,7 +688,7 @@ title_regex = re.compile("[^\w ]", flags=re.A)
 
 based_regex = re.compile("based and (.{1,20}?)(-| )pilled", flags=re.I|re.A)
 
-controversial_regex = re.compile('(/comments/.*?)"', flags=re.A)
+controversial_regex = re.compile('["> ](https:\/\/old.reddit.com/r/[a-zA-Z0-9_]{3,20}\/comments\/.*?)["< ]', flags=re.A)
 
 fishylinks_regex = re.compile("https?://\S+", flags=re.A)
 
