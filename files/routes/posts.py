@@ -1236,6 +1236,7 @@ def submit_post(v, sub=None):
 				rev = post.url.replace('https://old.reddit.com/', '')
 				rev = f"* [unddit.com](https://unddit.com/{rev})\n"
 			else: rev = ''
+			
 			newposturl = post.url
 			if newposturl.startswith('/'): newposturl = f"{SITE_FULL}{newposturl}"
 			body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{newposturl})\n* [archive.ph](https://archive.ph/?url={quote(newposturl)}&run=1) (click to archive)\n\n"			
