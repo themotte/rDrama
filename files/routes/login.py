@@ -85,7 +85,9 @@ def login_post():
 	template = ''
 
 	username = request.values.get("username")
-	username  = username.replace('\\', '').replace('_', '\_').replace('%', '').strip()
+
+	if not username: abort(400)
+	username  = username.lstrip('@').replace('\\', '').replace('_', '\_').replace('%', '').strip()
 
 	if not username: abort(400)
 	if username.startswith('@'): username = username[1:]
@@ -372,14 +374,16 @@ def get_forgot():
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 def post_forgot():
 
-	username = request.values.get("username").lstrip('@')
+	username = request.values.get("username")
+	if not username: abort(400)
+
 	email = request.values.get("email",'').strip().lower()
 
 	if not email_regex.fullmatch(email):
 		return render_template("forgot_password.html", error="Invalid email.")
 
 
-	username  = username.replace('\\', '').replace('_', '\_').replace('%', '').strip()
+	username  = username.lstrip('@').replace('\\', '').replace('_', '\_').replace('%', '').strip()
 	email  = email.replace('\\', '').replace('_', '\_').replace('%', '').strip()
 
 	user = g.db.query(User).filter(
