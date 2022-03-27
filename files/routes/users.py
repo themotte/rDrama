@@ -84,7 +84,9 @@ gevent.spawn(leaderboard_thread())
 @app.get("/@<username>/upvoters/<uid>/posts")
 @auth_required
 def upvoters_posts(v, username, uid):
-	id = get_user(username).id
+	u = get_user(username)
+	if u.is_private and v.id != u.id: abort(403)
+	id = u.id
 	uid = int(uid)
 
 	page = max(1, int(request.values.get("page", 1)))
@@ -103,7 +105,9 @@ def upvoters_posts(v, username, uid):
 @app.get("/@<username>/upvoters/<uid>/comments")
 @auth_required
 def upvoters_comments(v, username, uid):
-	id = get_user(username).id
+	u = get_user(username)
+	if u.is_private and v.id != u.id: abort(403)
+	id = u.id
 	uid = int(uid)
 
 	page = max(1, int(request.values.get("page", 1)))
@@ -122,8 +126,11 @@ def upvoters_comments(v, username, uid):
 @app.get("/@<username>/downvoters/<uid>/posts")
 @auth_required
 def downvoters_posts(v, username, uid):
-	id = get_user(username).id
+	u = get_user(username)
+	if u.is_private and v.id != u.id: abort(403)
+	id = u.id
 	uid = int(uid)
+
 	page = max(1, int(request.values.get("page", 1)))
 
 	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==-1, Submission.author_id==id, Vote.user_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
@@ -140,8 +147,11 @@ def downvoters_posts(v, username, uid):
 @app.get("/@<username>/downvoters/<uid>/comments")
 @auth_required
 def downvoters_comments(v, username, uid):
-	id = get_user(username).id
+	u = get_user(username)
+	if u.is_private and v.id != u.id: abort(403)
+	id = u.id
 	uid = int(uid)
+
 	page = max(1, int(request.values.get("page", 1)))
 
 	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.deleted_utc == 0, CommentVote.vote_type==-1, Comment.author_id==id, CommentVote.user_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
@@ -161,8 +171,11 @@ def downvoters_comments(v, username, uid):
 @app.get("/@<username>/upvoting/<uid>/posts")
 @auth_required
 def upvoting_posts(v, username, uid):
-	id = get_user(username).id
+	u = get_user(username)
+	if u.is_private and v.id != u.id: abort(403)
+	id = u.id
 	uid = int(uid)
+
 	page = max(1, int(request.values.get("page", 1)))
 
 	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==1, Vote.user_id==id, Submission.author_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
@@ -179,8 +192,11 @@ def upvoting_posts(v, username, uid):
 @app.get("/@<username>/upvoting/<uid>/comments")
 @auth_required
 def upvoting_comments(v, username, uid):
-	id = get_user(username).id
+	u = get_user(username)
+	if u.is_private and v.id != u.id: abort(403)
+	id = u.id
 	uid = int(uid)
+
 	page = max(1, int(request.values.get("page", 1)))
 
 	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.deleted_utc == 0, CommentVote.vote_type==1, CommentVote.user_id==id, Comment.author_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
@@ -197,8 +213,11 @@ def upvoting_comments(v, username, uid):
 @app.get("/@<username>/downvoting/<uid>/posts")
 @auth_required
 def downvoting_posts(v, username, uid):
-	id = get_user(username).id
+	u = get_user(username)
+	if u.is_private and v.id != u.id: abort(403)
+	id = u.id
 	uid = int(uid)
+
 	page = max(1, int(request.values.get("page", 1)))
 
 	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==-1, Vote.user_id==id, Submission.author_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
@@ -215,8 +234,11 @@ def downvoting_posts(v, username, uid):
 @app.get("/@<username>/downvoting/<uid>/comments")
 @auth_required
 def downvoting_comments(v, username, uid):
-	id = get_user(username).id
+	u = get_user(username)
+	if u.is_private and v.id != u.id: abort(403)
+	id = u.id
 	uid = int(uid)
+
 	page = max(1, int(request.values.get("page", 1)))
 
 	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.deleted_utc == 0, CommentVote.vote_type==-1, CommentVote.user_id==id, Comment.author_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
@@ -250,7 +272,9 @@ def agendaposters(v):
 @app.get("/@<username>/upvoters")
 @auth_required
 def upvoters(v, username):
-	id = get_user(username).id
+	u = get_user(username)
+	if u.is_private and v.id != u.id: abort(403)
+	id = u.id
 
 	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
 
@@ -276,7 +300,9 @@ def upvoters(v, username):
 @app.get("/@<username>/downvoters")
 @auth_required
 def downvoters(v, username):
-	id = get_user(username).id
+	u = get_user(username)
+	if u.is_private and v.id != u.id: abort(403)
+	id = u.id
 
 	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==-1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
 
@@ -300,7 +326,9 @@ def downvoters(v, username):
 @app.get("/@<username>/upvoting")
 @auth_required
 def upvoting(v, username):
-	id = get_user(username).id
+	u = get_user(username)
+	if u.is_private and v.id != u.id: abort(403)
+	id = u.id
 
 	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
 
@@ -324,7 +352,9 @@ def upvoting(v, username):
 @app.get("/@<username>/downvoting")
 @auth_required
 def downvoting(v, username):
-	id = get_user(username).id
+	u = get_user(username)
+	if u.is_private and v.id != u.id: abort(403)
+	id = u.id
 
 	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==-1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
 
