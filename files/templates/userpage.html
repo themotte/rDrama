@@ -108,9 +108,7 @@
 				{% else %}<pre></pre>
 				{% endif %}
 				
-				{% if not u.is_private or (v and v.id == u.id) %}
-					<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Simps</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Haters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Simps for</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Hates</a></div>
-				{% endif %}
+				<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Simps</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Haters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Simps for</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Hates</a></div>
 
 				<div class="font-weight-bolder">
 					<span id="profile-coins-amount">{{u.coins}}</span>
@@ -406,9 +404,7 @@
 					<pre></pre>
 				{% endif %}
 
-				{% if not u.is_private or (v and v.id == u.id) %}
-					<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Simps</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Haters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Simps for</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Hates</a></div>
-				{% endif %}
+				<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Simps</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Haters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Simps for</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Hates</a></div>
 
 				<div class="font-weight-normal">
 					<span id="profile-coins-amount-mobile" class="font-weight-bold">{{u.coins}}</span>

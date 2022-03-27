@@ -85,7 +85,7 @@ gevent.spawn(leaderboard_thread())
 @auth_required
 def upvoters_posts(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
+	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
 	id = u.id
 	uid = int(uid)
 
@@ -106,7 +106,7 @@ def upvoters_posts(v, username, uid):
 @auth_required
 def upvoters_comments(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
+	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
 	id = u.id
 	uid = int(uid)
 
@@ -127,7 +127,7 @@ def upvoters_comments(v, username, uid):
 @auth_required
 def downvoters_posts(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
+	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
 	id = u.id
 	uid = int(uid)
 
@@ -148,7 +148,7 @@ def downvoters_posts(v, username, uid):
 @auth_required
 def downvoters_comments(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
+	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
 	id = u.id
 	uid = int(uid)
 
@@ -172,7 +172,7 @@ def downvoters_comments(v, username, uid):
 @auth_required
 def upvoting_posts(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
+	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
 	id = u.id
 	uid = int(uid)
 
@@ -193,7 +193,7 @@ def upvoting_posts(v, username, uid):
 @auth_required
 def upvoting_comments(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
+	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
 	id = u.id
 	uid = int(uid)
 
@@ -214,7 +214,7 @@ def upvoting_comments(v, username, uid):
 @auth_required
 def downvoting_posts(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
+	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
 	id = u.id
 	uid = int(uid)
 
@@ -235,7 +235,7 @@ def downvoting_posts(v, username, uid):
 @auth_required
 def downvoting_comments(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
+	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
 	id = u.id
 	uid = int(uid)
 
@@ -272,9 +272,7 @@ def agendaposters(v):
 @app.get("/@<username>/upvoters")
 @auth_required
 def upvoters(v, username):
-	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
-	id = u.id
+	id = get_user(username).id
 
 	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
 
@@ -300,9 +298,7 @@ def upvoters(v, username):
 @app.get("/@<username>/downvoters")
 @auth_required
 def downvoters(v, username):
-	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
-	id = u.id
+	id = get_user(username).id
 
 	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==-1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
 
@@ -326,9 +322,7 @@ def downvoters(v, username):
 @app.get("/@<username>/upvoting")
 @auth_required
 def upvoting(v, username):
-	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
-	id = u.id
+	id = get_user(username).id
 
 	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
 
@@ -352,9 +346,7 @@ def upvoting(v, username):
 @app.get("/@<username>/downvoting")
 @auth_required
 def downvoting(v, username):
-	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
-	id = u.id
+	id = get_user(username).id
 
 	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==-1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
 
@@ -836,7 +828,7 @@ def u_username(username, v=None):
 		
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2 and not v.eye)):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
-		return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
+		return render_template("userpage_private.html", u=u, v=v)
 
 	
 	if v and hasattr(u, 'is_blocking') and u.is_blocking:
@@ -920,7 +912,7 @@ def u_username_comments(username, v=None):
 
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2 and not v.eye)):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
-		return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
+		return render_template("userpage_private.html", u=u, v=v)
 
 	if v and hasattr(u, 'is_blocking') and u.is_blocking:
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"You are blocking @{u.username}."}
