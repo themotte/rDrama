@@ -195,3 +195,8 @@ a.nav-link:hover {
 #navbar .form-control.w-100 {
 	color: var(--white) !important;
 }
+
+/*chat*/
+.chat-message {
+	color: var(--white) !important;
+}
