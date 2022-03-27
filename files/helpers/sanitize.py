@@ -330,8 +330,10 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 		sanitized = sanitized.replace('#fortune', '')
 		sanitized += '\n\n<p>' + choice(FORTUNE_REPLIES) + '</p>'
 
-	sanitized = utm_regex.sub(sanitized)
-	
+	sanitized = sanitized.replace('&amp;','&')
+	sanitized = utm_regex.sub('', sanitized)
+	sanitized = utm_regex2.sub('', sanitized)
+
 	signal.alarm(0)
 
 	return sanitized

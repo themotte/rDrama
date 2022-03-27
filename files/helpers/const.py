@@ -714,7 +714,8 @@ email_regex = re.compile('([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|
 
 reddit_post_regex = re.compile('(https:\/\/old.reddit.com\/r\/\w{1,30}\/comments\/[a-z0-9]+).*', flags=re.A)
 
-utm_regex = re.compile('utm_[a-z]+=[a-z0-9_]+&?"', flags=re.A)
+utm_regex = re.compile('utm_[a-z]+=[a-z0-9_]+&', flags=re.A)
+utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
 
 slur_regex = re.compile(rf"((?<=\s|>)|^)({single_words})((?=[\s<,.$]|s[\s<,.$]))", flags=re.I|re.A)
 slur_regex_upper = re.compile(rf"((?<=\s|>)|^)({single_words.upper()})((?=[\s<,.$]|S[\s<,.$]))", flags=re.A)
