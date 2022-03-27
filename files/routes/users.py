@@ -85,7 +85,7 @@ gevent.spawn(leaderboard_thread())
 @auth_required
 def upvoters_posts(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
+	if u.is_private and v.id != u.id: abort(403)
 	id = u.id
 	uid = int(uid)
 
@@ -106,7 +106,7 @@ def upvoters_posts(v, username, uid):
 @auth_required
 def upvoters_comments(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
+	if u.is_private and v.id != u.id: abort(403)
 	id = u.id
 	uid = int(uid)
 
@@ -127,7 +127,7 @@ def upvoters_comments(v, username, uid):
 @auth_required
 def downvoters_posts(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
+	if u.is_private and v.id != u.id: abort(403)
 	id = u.id
 	uid = int(uid)
 
@@ -148,7 +148,7 @@ def downvoters_posts(v, username, uid):
 @auth_required
 def downvoters_comments(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
+	if u.is_private and v.id != u.id: abort(403)
 	id = u.id
 	uid = int(uid)
 
@@ -172,7 +172,7 @@ def downvoters_comments(v, username, uid):
 @auth_required
 def upvoting_posts(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
+	if u.is_private and v.id != u.id: abort(403)
 	id = u.id
 	uid = int(uid)
 
@@ -193,7 +193,7 @@ def upvoting_posts(v, username, uid):
 @auth_required
 def upvoting_comments(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
+	if u.is_private and v.id != u.id: abort(403)
 	id = u.id
 	uid = int(uid)
 
@@ -214,7 +214,7 @@ def upvoting_comments(v, username, uid):
 @auth_required
 def downvoting_posts(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
+	if u.is_private and v.id != u.id: abort(403)
 	id = u.id
 	uid = int(uid)
 
@@ -235,7 +235,7 @@ def downvoting_posts(v, username, uid):
 @auth_required
 def downvoting_comments(v, username, uid):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: return render_template("userpage_private.html", u=u, v=v)
+	if u.is_private and v.id != u.id: abort(403)
 	id = u.id
 	uid = int(uid)
 
