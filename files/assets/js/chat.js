@@ -76,7 +76,7 @@ socket.on('speak', function(json) {
 	}
 
 	document.getElementsByClassName('userlink')[0].innerHTML = json['username']
-	document.getElementsByClassName('text')[0].innerHTML = text
+	document.getElementsByClassName('text')[0].innerHTML = escapeHTML(text)
 	document.getElementsByClassName('chat-message')[0].innerHTML = text_html.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '')
 
 	let line = document.getElementsByClassName('chat-line')[0].cloneNode(true)
