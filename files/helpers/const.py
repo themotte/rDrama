@@ -688,7 +688,7 @@ title_regex = re.compile("[^\w ]", flags=re.A)
 
 based_regex = re.compile("based and (.{1,20}?)(-| )pilled", flags=re.I|re.A)
 
-controversial_regex = re.compile('["> ](https:\/\/old.reddit.com/r/[a-zA-Z0-9_]{3,20}\/comments\/.*?)["< ]', flags=re.A)
+controversial_regex = re.compile('["> ](https:\/\/old\.reddit\.com/r/[a-zA-Z0-9_]{3,20}\/comments\/.*?)["< ]', flags=re.A)
 
 fishylinks_regex = re.compile("https?://\S+", flags=re.A)
 
@@ -712,7 +712,7 @@ snappy_url_regex = re.compile('<a href=\"(https?:\/\/[a-z]{1,20}\.[^\"]+)\" rel=
 
 email_regex = re.compile('([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+', flags=re.A)
 
-reddit_post_regex = re.compile('(https:\/\/old.reddit.com\/r\/\w{1,30}\/comments\/[a-z0-9]+).*', flags=re.A)
+reddit_post_regex = re.compile('(https:\/\/old\.reddit\.com\/r\/\w{1,30}\/comments\/[a-z0-9]+).*', flags=re.A)
 
 utm_regex = re.compile('utm_[a-z]+=[a-z0-9_]+&', flags=re.A)
 utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
