@@ -345,6 +345,7 @@ def award_post(pid, v):
 		author.patron = 1
 		author.patron_utc += int(time.time()) + 2629746
 		author.procoins += 2500
+		if author.discord_id: add_role(author, "1")
 		if not v.has_badge(103):
 			badge = Badge(user_id=v.id, badge_id=103)
 			g.db.add(badge)
@@ -575,6 +576,7 @@ def award_comment(cid, v):
 		author.patron = 1
 		author.patron_utc += int(time.time()) + 2629746
 		author.procoins += 2500
+		if author.discord_id: add_role(author, "1")
 		if not v.has_badge(103):
 			badge = Badge(user_id=v.id, badge_id=103)
 			g.db.add(badge)

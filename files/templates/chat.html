@@ -14,7 +14,7 @@
 	<title>Chat</title>
 
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/static/assets/css/main.css?v=202">
+	<link rel="stylesheet" href="/static/assets/css/main.css?v=203">
 	<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?v=33">
 	{% if v.css %}
 		<link rel="stylesheet" href="/@{{v.username}}/css">
@@ -66,7 +66,7 @@
 				margin-top: 0.5rem;
 			}
 			#chat-window {
-				max-height: calc(100vh - 190px);
+				max-height: calc(100vh - 255px);
 			}
 		}
 
@@ -192,6 +192,7 @@
 
 {% include "emoji_modal.html" %}
 {% include "expanded_image_modal.html" %}
+{% include "mobile_navigation_bar.html" %}
 
 <script src="/static/assets/js/lozad.js?v=240"></script>
 <script src="/static/assets/js/lite-youtube.js?v=240"></script>

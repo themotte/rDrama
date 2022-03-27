@@ -10,6 +10,8 @@ function collapse_comment(comment_id) {
 		element.scrollIntoView()
 		window.scrollBy(0, - 100)
 	}
+
+	document.getElementById(`flaggers-${comment_id}`).classList.add('d-none')
 };
 
 function poll_vote_no_v() {

@@ -171,10 +171,10 @@ def front_all(v, sub=None, subdomain=None):
 
 	if sort == 'bump': t='all'
 	
-	try: gt=int(request.values.get("utc_greater_than", 0))
+	try: gt=int(request.values.get("after", 0))
 	except: gt=0
 
-	try: lt=int(request.values.get("utc_less_than", 0))
+	try: lt=int(request.values.get("before", 0))
 	except: lt=0
 
 	if v: subs = v.subs
@@ -204,6 +204,7 @@ def front_all(v, sub=None, subdomain=None):
 			v.patron = 0
 			v.patron_utc = 0
 			send_repeatable_notification(v.id, "Your paypig status has expired!")
+			if v.discord_id: remove_role(v, "1")
 			g.db.add(v)
 			g.db.commit()
 
@@ -491,10 +492,10 @@ def all_comments(v):
 	sort=request.values.get("sort", "new")
 	t=request.values.get("t", defaulttimefilter)
 
-	try: gt=int(request.values.get("utc_greater_than", 0))
+	try: gt=int(request.values.get("after", 0))
 	except: gt=0
 
-	try: lt=int(request.values.get("utc_less_than", 0))
+	try: lt=int(request.values.get("before", 0))
 	except: lt=0
 
 	idlist = comment_idlist(v=v,
