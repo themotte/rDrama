@@ -605,7 +605,7 @@ FORTUNE_REPLIES = ('<b style="color:#6023f8">Your fortune: Allah Wills It</b>','
 
 ROLES={
 	"owner": "864612849199480914",
-	"admin": "879459632656048180" if environ.get("DOMAIN") == "pcmemes.net" else "846509661288267776",
+	"admin": "846509661288267776",
 	"linked": "890342909390520382",
 	"1": "868129042346414132",
 	"2": "875569477671067688",
