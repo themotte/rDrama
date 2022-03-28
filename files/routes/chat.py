@@ -51,11 +51,11 @@ def speak(data, v):
 
 	data={
 		"avatar": v.profile_url,
-		"username":v.username,
-		"namecolor":v.namecolor,
-		"text":text,
-		"text_html":text_html,
-		"text_censored":censor_slurs(text_html, 'chat')
+		"username": v.username,
+		"namecolor": v.namecolor,
+		"text": text,
+		"text_html": text_html,
+		"text_censored": censor_slurs(text_html, 'chat')
 	}
 	
 	if v.shadowbanned:
