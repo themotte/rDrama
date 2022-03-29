@@ -397,7 +397,7 @@ class Comment(Base):
 			if not self.total_choice_voted(v): body += ' d-none'	
 			body += f'"> - <a href="/votes?link=t3_{c.id}"><span id="choice-{c.id}">{c.upvotes}</span> votes</a></span></label></div>'
 
-		if self.author.sig_html and not self.ghost and (self.author_id == MOOSE_ID or not (v and v.sigs_disabled)):
+		if self.author.sig_html and (self.author_id == MOOSE_ID or (not self.ghost and not (v and v.sigs_disabled))):
 			body += f"<hr>{self.author.sig_html}"
 
 		return body

@@ -418,7 +418,7 @@ class Submission(Base):
 			body += "</div>"
 
 
-		if self.author.sig_html and not self.ghost and (self.author_id == MOOSE_ID or not (v and v.sigs_disabled)):
+		if self.author.sig_html and (self.author_id == MOOSE_ID or (not self.ghost and not (v and v.sigs_disabled))):
 			body += f"<hr>{self.author.sig_html}"
 
 		return body
