@@ -351,7 +351,7 @@ def archives(path):
 @app.get('/e/<emoji>')
 @limiter.exempt
 def emoji(emoji):
-	if not emoji.endswith('.webp'): emoji += '.webp'
+	if not emoji.endswith('.webp'): abort(404)
 	resp = make_response(send_from_directory('assets/images/emojis', emoji))
 	resp.headers.remove("Cache-Control")
 	resp.headers.add("Cache-Control", "public, max-age=3153600")

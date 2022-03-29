@@ -12,15 +12,15 @@ function markdown(first, second) {
 			var remoji = emoji.replace(/:/g,'').toLowerCase();
 			if (remoji.startsWith("!#") || remoji.startsWith("#!"))
 			{
-				input = input.replace(emoji, "<img class='emoji-lg mirrored' src='/e/" + remoji.substring(2) + "'>")
+				input = input.replace(emoji, "<img class='emoji-lg mirrored' src='/e/" + remoji.substring(2) + ".webp'>")
 			} else if (remoji.startsWith("#"))
 			{
-				input = input.replace(emoji, "<img class='emoji-lg' src='/e/" + remoji.substring(1) + "'>")
+				input = input.replace(emoji, "<img class='emoji-lg' src='/e/" + remoji.substring(1) + ".webp'>")
 			} else if (remoji.startsWith("!"))
 			{
-				input = input.replace(emoji, "<img height=30 class='emoji mirrored' src='/e/" + remoji.substring(1) + "'>")
+				input = input.replace(emoji, "<img height=30 class='emoji mirrored' src='/e/" + remoji.substring(1) + ".webp'>")
 			} else {
-				input = input.replace(emoji, "<img height=30 class='emoji' src='/e/" + remoji + "'>")
+				input = input.replace(emoji, "<img height=30 class='emoji' src='/e/" + remoji + ".webp'>")
 			}
 		}
 	}
