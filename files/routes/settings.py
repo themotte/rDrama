@@ -430,7 +430,7 @@ def gumroad(v):
 	tier = tiers[response["variants_and_quantity"]]
 	if v.patron == tier: return {"error": f"{patron} rewards already claimed"}, 400
 
-	existing = g.db.query(User.id).filter_by(email=v.email, is_activated=True, patron=tier).one_or_none()
+	existing = g.db.query(User.id).filter(User.email == v.email, User.is_activated == True, User.patron >= tier).one_or_none()
 	if existing: return {"error": f"{patron} rewards already claimed on another account"}, 400
 
 	if v.patron:
