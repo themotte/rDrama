@@ -3,6 +3,7 @@ from files.helpers.wrappers import *
 from files.helpers.alerts import *
 from files.helpers.get import *
 from files.helpers.const import *
+from files.helpers.discord import *
 from files.classes.award import *
 from .front import frontlist
 from flask import g, request
