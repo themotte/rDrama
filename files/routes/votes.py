@@ -19,7 +19,7 @@ def admin_vote_info_get(v):
 		else: abort(400)
 	except: abort(400)
 
-	if thing.ghost and v.admin_level < 3: abort(403)
+	if thing.ghost and v.id != AEVANN_ID: abort(403)
 
 	if not thing.author:
 		print(thing.id, flush=True)

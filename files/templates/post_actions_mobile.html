@@ -6,7 +6,7 @@
 {% endif %}
 
 
-{% if not p.ghost %}<a class="btn-block" href="/votes?link={{p.fullname}}"><button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</button></a>{% endif %}
+{% if not p.ghost and v.id != AEVANN_ID %}<a class="btn-block" href="/votes?link={{p.fullname}}"><button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</button></a>{% endif %}
 
 <button data-bs-dismiss="modal" class="copy-link nobackground btn btn-link btn-block btn-lg text-left text-muted" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://rdrama.gay{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="far fa-copy text-center text-muted mr-3"></i>Copy link</button>
 
