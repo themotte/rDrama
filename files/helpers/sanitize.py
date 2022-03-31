@@ -181,7 +181,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			tag["class"] = "img"
 			tag["loading"] = "lazy"
 			tag["data-src"] = tag["src"]
-			tag["src"] = "/static/assets/images/loading.webp"
+			tag["src"] = "/assets/images/loading.webp"
 			tag['alt'] = f'![]({tag["data-src"]})'
 			tag["onclick"] = "expandDesktopImage(this.src);"
 			tag["data-bs-toggle"] = "modal"

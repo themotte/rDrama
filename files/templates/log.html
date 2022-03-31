@@ -6,11 +6,11 @@
 {% block content %}
 {% if v %}
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/static/assets/css/main.css?v=203"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?v=34">
+	<link rel="stylesheet" href="/assets/css/main.css?v=204"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=34">
 	{% if v.agendaposter %}
 		<style>
 			html {
-				cursor:url('/static/assets/images/dildo.webp?v=1008'), auto;
+				cursor:url('/assets/images/dildo.webp?v=1008'), auto;
 			}
 			.nav-item .text-small.font-weight-bold::before {
 				content: "((("
@@ -30,7 +30,7 @@
 	{% endif %}
 {% else %}
 	<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-	<link rel="stylesheet" href="/static/assets/css/main.css?v=203"><link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?v=34">
+	<link rel="stylesheet" href="/assets/css/main.css?v=204"><link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=34">
 {% endif %}
 
 <div class="row justify-content-around">
@@ -142,6 +142,6 @@
 	</div>
 </div>
 
-<script src="/static/assets/js/clipboard.js?v=240"></script>
+<script src="/assets/js/clipboard.js?v=240"></script>
 
 {% endblock %}

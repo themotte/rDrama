@@ -152,7 +152,7 @@
 			}
 		</style>
 		<div class="toe toe1" height="100%" width="100%">
-			<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?v=1">
+			<img alt="Blade's toe" class="toeimg" src="/assets/images/PCM/toe.webp?v=1">
 		</div>
 		
 		{% if p.award_count("toe") > 1 %}
@@ -163,7 +163,7 @@
 				}
 			</style>
 			<div class="toe toe2" height="100%" width="100%">
-				<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?v=1">
+				<img alt="Blade's toe" class="toeimg" src="/assets/images/PCM/toe.webp?v=1">
 			</div>
 		{% endif %}
 		
@@ -175,7 +175,7 @@
 				}
 			</style>
 			<div class="toe toe3" height="100%" width="100%">
-				<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?v=1">
+				<img alt="Blade's toe" class="toeimg" src="/assets/images/PCM/toe.webp?v=1">
 			</div>
 		{% endif %}
 		
@@ -187,7 +187,7 @@
 				}
 			</style>
 			<div class="toe toe4" height="100%" width="100%">
-				<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?v=1">
+				<img alt="Blade's toe" class="toeimg" src="/assets/images/PCM/toe.webp?v=1">
 			</div>
 		{% endif %}
 	{% endif %}
@@ -268,7 +268,7 @@
 		<div class="toe" height="100%" width="100%">
 			<marquee class="toe" scrollamount=10 behavior="alternate" direction="up" height="100%" width="100%">
 				<marquee direction="right" scrollamount=10 behavior="alternate" height="100%" width="100%">
-					<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?v=1">
+					<img alt="Blade's toe" class="toeimg" src="/assets/images/PCM/toe.webp?v=1">
 				</marquee>
 			</marquee>
 		</div>
@@ -276,7 +276,7 @@
 		{% if p.award_count("toe") > 1 %}
 			<marquee class="toe" scrollamount=10 behavior="alternate" direction="down" height="100%">
 				<marquee direction="right" scrollamount=10 behavior="alternate" width="100%">
-					<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?v=1">
+					<img alt="Blade's toe" class="toeimg" src="/assets/images/PCM/toe.webp?v=1">
 				</marquee>
 			</marquee>
 		{% endif %}
@@ -284,7 +284,7 @@
 		{% if p.award_count("toe") > 2 %}
 			<marquee class="toe" scrollamount=10 behavior="alternate" direction="up" height="100%">
 				<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
-					<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?v=1">
+					<img alt="Blade's toe" class="toeimg" src="/assets/images/PCM/toe.webp?v=1">
 				</marquee>
 			</marquee>
 		{% endif %}
@@ -292,7 +292,7 @@
 		{% if p.award_count("toe") > 3 %}
 			<marquee class="toe" scrollamount=10 behavior="alternate" direction="down" height="100%">
 				<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
-					<img alt="Blade's toe" class="toeimg" src="/static/assets/images/PCM/toe.webp?v=1">
+					<img alt="Blade's toe" class="toeimg" src="/assets/images/PCM/toe.webp?v=1">
 				</marquee>
 			</marquee>
 		{% endif %}
@@ -395,24 +395,24 @@
 	</style>
 
 	<marquee class="croag croag1" direction="left" scrollamount=10 width="100%">
-		<img alt="croag" class="croagimg mirrored" src="/static/assets/images/PCM/croag.webp?v=1">
+		<img alt="croag" class="croagimg mirrored" src="/assets/images/PCM/croag.webp?v=1">
 	</marquee>
 
 	{% if p.award_count("croag") > 1 %}
 		<marquee class="croag croag2" direction="right" scrollamount=10 width="100%">
-			<img alt="croag" class="croagimg" src="/static/assets/images/PCM/croag.webp?v=1">
+			<img alt="croag" class="croagimg" src="/assets/images/PCM/croag.webp?v=1">
 		</marquee>
 	{% endif %}
 
 	{% if p.award_count("croag") > 2 %}
 		<marquee class="croag croag3" direction="left" scrollamount=10 width="100%">
-			<img alt="croag" class="croagimg mirrored" src="/static/assets/images/PCM/croag.webp?v=1">
+			<img alt="croag" class="croagimg mirrored" src="/assets/images/PCM/croag.webp?v=1">
 		</marquee>
 	{% endif %}
 
 	{% if p.award_count("croag") > 3 %}
 		<marquee class="croag croag4" direction="right" scrollamount=10 width="100%">
-			<img alt="croag" class="croagimg" src="/static/assets/images/PCM/croag.webp?v=1">
+			<img alt="croag" class="croagimg" src="/assets/images/PCM/croag.webp?v=1">
 		</marquee>
 	{% endif %}
 {% endif %}
@@ -496,7 +496,7 @@
 <meta property="og:description" name="description" content="{{comment_info.plainbody(v)}}">
 <meta property="og:author" name="author" content="{{'@'+comment_info.author_name}}">
 <meta property="og:title" content="{{'@'+comment_info.author_name}} comments on {{p.plaintitle(v)}} - {{SITE_NAME}}">
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}">
+<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}">
 {% if p.is_video %}
 	<meta property="og:video" content="{{p.realurl(v)}}">
 {% endif %}
@@ -508,7 +508,7 @@
 <meta name="twitter:title" content="{{'@'+comment_info.author_name}} comments on {{p.plaintitle(v)}} - {{SITE_NAME}}">
 <meta name="twitter:creator" content="{{'@'+comment_info.author_name}}">
 <meta name="twitter:description" content="{{comment_info.plainbody(v)}}">
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}">
+<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}">
 <meta name="twitter:url" content="{{p.permalink}}">
 
 {% else %}
@@ -521,7 +521,7 @@
 <meta property="og:description" name="description" content="{{p.plainbody(v)}}">
 {% if p.author %}<meta property="og:author" name="author" content="{{'@'+p.author_name}}">{% endif %}
 <meta property="og:title" content="{{p.plaintitle(v)}} - {{SITE_NAME}}">
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}">
+<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}">
 {% if p.url and p.is_video %}
 <meta property="og:video" content="{{p.realurl(v)}}">
 {% endif %}
@@ -533,7 +533,7 @@
 <meta name="twitter:title" content="{{p.plaintitle(v)}} - {{SITE_NAME}}">
 {% if p.author %}<meta name="twitter:creator" content="{{'@'+p.author_name}}">{% endif %}
 <meta name="twitter:description" content="{{p.plainbody(v)}}">
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}">
+<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{SITE_NAME}}/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013{% endif %}">
 <meta name="twitter:url" content="{{p.permalink}}">
 
 {% endif %}
@@ -694,9 +694,9 @@
 							{% if p.domain == "twitter.com" %}
 								{{p.embed_url | safe}}
 								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
-									<script src="/static/assets/js/twitterlight.js?v=242"></script>
+									<script src="/assets/js/twitterlight.js?v=243"></script>
 								{% else %}
-									<script src="/static/assets/js/twitter.js?v=242"></script>
+									<script src="/assets/js/twitter.js?v=243"></script>
 								{% endif %}
 							{% elif p.domain in ['youtu.be','youtube.com'] and p.embed_url and p.embed_url.startswith('<lite-youtube') %}
 								{{p.embed_url | safe}}
@@ -1048,32 +1048,32 @@
 {% endif %}
 
 {% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
-	<script src="/static/assets/js/togglePostEdit.js?v=240"></script>
+	<script src="/assets/js/togglePostEdit.js?v=240"></script>
 {% endif %}
 
 {% if v %}
-	<script src="/static/assets/js/submission.js?v=240"></script>
+	<script src="/assets/js/submission.js?v=240"></script>
 {% endif %}
 
 {% if not v or v.highlightcomments %}
-	<script src="/static/assets/js/new_comments_count.js?v=242"></script>
+	<script src="/assets/js/new_comments_count.js?v=242"></script>
 {% endif %}
 
-<script src="/static/assets/js/clipboard.js?v=240"></script>
+<script src="/assets/js/clipboard.js?v=240"></script>
 
 {% if not p.comment_count %}
 	{% include "comments.html" %}
 {% endif %}
 
 {% if p.award_count("shit") %}
-	<script src="/static/assets/js/critters.js?v=240"></script>
-	<script src="/static/assets/js/bugs.js?v=240"></script>
+	<script src="/assets/js/critters.js?v=240"></script>
+	<script src="/assets/js/bugs.js?v=241"></script>
 {% endif %}
 
 
 {% if p.award_count("fireflies") %}
-	<script src="/static/assets/js/critters.js?v=240"></script>
-	<script src="/static/assets/js/fireflies.js?v=240"></script>
+	<script src="/assets/js/critters.js?v=240"></script>
+	<script src="/assets/js/fireflies.js?v=241"></script>
 {% endif %}
 
 

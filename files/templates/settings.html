@@ -5,20 +5,20 @@
 	<meta name="description" content="{{config('DESCRIPTION')}}">
 	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
 
-	<script src="/static/assets/js/bootstrap.js?v=245"></script>
+	<script src="/assets/js/bootstrap.js?v=245"></script>
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 	<meta name="author" content="">
 
-	<link rel="icon" type="image/png" href="/static/assets/images/{{SITE_NAME}}/icon.webp?v=1012">
+	<link rel="icon" type="image/png" href="/assets/images/{{SITE_NAME}}/icon.webp?v=1012">
 
 	<title>{% block pagetitle %}Settings - {{SITE_NAME}}{% endblock %}</title>
 		<meta property="og:type" content="article">
 		<meta property="og:title" content="{{SITE_NAME}}">
 		<meta property="og:site_name" content="{{request.host}}">
-		<meta property="og:image" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013">
+		<meta property="og:image" content="/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013">
 		<meta property="og:url" content="{{request.host}}">
 		<meta property="og:description" name="description" content="{{SITE_NAME}} - {{config('DESCRIPTION')}}">
 		<meta property="og:author" name="author" content="@{{SITE_FULL}}/">
@@ -29,16 +29,16 @@
 		<meta name="twitter:title" content="{{SITE_NAME}}">
 		<meta name="twitter:creator" content="@{{SITE_FULL}}/">
 		<meta name="twitter:description" content="{{SITE_NAME}} - {{config('DESCRIPTION')}}">
-		<meta name="twitter:image" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013">
+		<meta name="twitter:image" content="/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013">
 		<meta name="twitter:url" content="{{request.host}}">
 
 
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/static/assets/css/main.css?v=190"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?v=34">
+	<link rel="stylesheet" href="/assets/css/main.css?v=190"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=34">
 	{% if v.agendaposter %}
 		<style>
 			html {
-				cursor:url('/static/assets/images/dildo.webp?v=1008'), auto;
+				cursor:url('/assets/images/dildo.webp?v=1008'), auto;
 			}
 			.nav-item .text-small.font-weight-bold::before {
 				content: "((("
@@ -58,7 +58,7 @@
 	{% endif %}
 </head>
 
-<body id="settings" style="overflow-x: hidden; {% if v and v.background %} background:url(/static/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}">
+<body id="settings" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}">
 
 	{% include "header.html" %}
 		<div class="container">
@@ -258,7 +258,7 @@
 
 {% block onload %}{% endblock %}
 
-<script src="/static/assets/js/clipboard.js?v=240"></script>
+<script src="/assets/js/clipboard.js?v=240"></script>
 
 </body>
 

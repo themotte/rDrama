@@ -312,7 +312,7 @@ class User(Base):
 	@lazy
 	def bio_html_eager(self):
 		if self.bio_html == None: return ''
-		return self.bio_html.replace('data-src', 'src').replace('src="/static/assets/images/loading.webp"', '')
+		return self.bio_html.replace('data-src', 'src').replace('src="/assets/images/loading.webp"', '')
 
 	@property
 	@lazy
@@ -470,7 +470,7 @@ class User(Base):
 	@lazy
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
-		else: return f"{SITE_FULL}/static/assets/images/{SITE_NAME}/site_preview.webp?v=1013"
+		else: return f"{SITE_FULL}/assets/images/{SITE_NAME}/site_preview.webp?v=1013"
 
 	@property
 	@lazy
@@ -479,7 +479,7 @@ class User(Base):
 		if self.profileurl: 
 			if self.profileurl.startswith('/'): return SITE_FULL + self.profileurl
 			return self.profileurl
-		return f"{SITE_FULL}/static/assets/images/default-profile-pic.webp?v=1008"
+		return f"{SITE_FULL}/assets/images/default-profile-pic.webp?v=1008"
 
 	@lazy
 	def json_popover(self, v):

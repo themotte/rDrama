@@ -20,17 +20,17 @@ function flash(){
 	if (notifs >= 1 && !focused){
 		title.innerHTML = `[+${notifs}] Chat`;
 		if (alert) {
-			icon.href = `/static/assets/images/${site_name}/alert.webp?v=1`
+			icon.href = `/assets/images/${site_name}/alert.webp?v=1`
 			alert=false;
 		}
 		else {
-			icon.href = `/static/assets/images/${site_name}/icon.webp?v=1012`
+			icon.href = `/assets/images/${site_name}/icon.webp?v=1012`
 			alert=true;
 		}
 		setTimeout(flash, 500)
 	}
 	else {
-		icon.href = `/static/assets/images/${site_name}/icon.webp?v=1012`
+		icon.href = `/assets/images/${site_name}/icon.webp?v=1012`
 		notifs = 0
 		title.innerHTML = 'Chat';
 	}

@@ -4663,7 +4663,7 @@ lite-youtube > .lty-playbtn {
     left: 50%;
     z-index: 1;
     background-color: transparent;
-    background-image: url('/static/assets/images/youtube.webp?v=1008');
+    background-image: url('/assets/images/youtube.webp?v=1008');
     transition: filter .1s cubic-bezier(0, 0, 0.2, 1);
     border: none;
 }

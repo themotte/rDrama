@@ -270,13 +270,6 @@ def log_item(id, v):
 
 	return render_template("log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=types)
 
-@app.get("/static/assets/favicon.ico")
-def favicon():
-	try: f = send_file(f"./assets/images/{SITE_NAME}/icon.webp")
-	except:
-		print('/static/assets/favicon.ico', flush=True)
-		abort(404)
-	return f
 
 @app.get("/api")
 @auth_required

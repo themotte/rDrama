@@ -554,7 +554,7 @@ def get_profilecss(username):
 @app.get("/@<username>/song")
 def usersong(username):
 	user = get_user(username)
-	if user.song: return redirect(f"{SITE_FULL}/static/song/{user.song}.mp3")
+	if user.song: return redirect(f"{SITE_FULL}/song/{user.song}.mp3")
 	else: abort(404)
 
 @app.get("/song/<song>")

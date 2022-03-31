@@ -6,19 +6,19 @@
 	<meta name="description" content="{{config('DESCRIPTION')}}">
 	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
 
-	<script src="/static/assets/js/bootstrap.js?v=245"></script>
+	<script src="/assets/js/bootstrap.js?v=245"></script>
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 	<meta name="author" content="">
-	<meta name="thumbnail" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013">
-	<link rel="icon" type="image/png" href="/static/assets/images/{{SITE_NAME}}/icon.webp?v=1012">
+	<meta name="thumbnail" content="/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013">
+	<link rel="icon" type="image/png" href="/assets/images/{{SITE_NAME}}/icon.webp?v=1012">
 
 	<meta property="og:type" content="article">
 	<meta property="og:title" content="{{SITE_NAME}}">
 	<meta property="og:site_name" content="{{request.host}}">
-	<meta property="og:image" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013">
+	<meta property="og:image" content="/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013">
 	<meta property="og:url" content="{{SITE_FULL}}{{request.full_path}}">
 	<meta property="og:description" name="description" content="{{SITE_NAME}} - {{config('DESCRIPTION')}}">
 	<meta property="og:author" name="author" content="{{SITE_FULL}}/">
@@ -29,7 +29,7 @@
 	<meta name="twitter:title" content="{{SITE_NAME}}">
 	<meta name="twitter:creator" content="{{SITE_FULL}}/">
 	<meta name="twitter:description" content="{{SITE_NAME}} - {{config('DESCRIPTION')}}">
-	<meta name="twitter:image" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013">
+	<meta name="twitter:image" content="/assets/images/{{SITE_NAME}}/site_preview.webp?v=1013">
 	<meta name="twitter:url" content="{{SITE_FULL}}{{request.full_path}}">
 
 
@@ -39,14 +39,14 @@
 	
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?v=203"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?v=34">
+		<link rel="stylesheet" href="/assets/css/main.css?v=204"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=34">
 	{% else %}
 		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?v=203"><link rel="stylesheet" href="/static/assets/css/{{config('DEFAULT_THEME')}}.css?v=34">
+		<link rel="stylesheet" href="/assets/css/main.css?v=204"><link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=34">
 	{% endif %}
 </head>
 
-<body id="settings2" style="overflow-x: hidden; {% if v and v.background %} background:url(/static/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}">
+<body id="settings2" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}">
 
 {% include "header.html" %}
 
