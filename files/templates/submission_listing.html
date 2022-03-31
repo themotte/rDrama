@@ -117,7 +117,7 @@
 
 			<div style="z-index: 3;">
 				{% if p.club and not (v and (v.paid_dues or v.id == p.author_id)) %}
-					<img alt="post thumnail" loading="lazy" src="/e/marseyglow.webp?v=1008" class="post-img">
+					<img alt="post thumnail" loading="lazy" src="/e/marseyglow.webp" class="post-img">
 				{% elif not p.url %}
 					<a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}">
 						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
