@@ -360,7 +360,7 @@ def api_comment(v):
 	if parent.author.any_block_exists(v) and v.admin_level < 2:
 		return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
 
-	is_bot = bool(request.headers.get("Authorization")) or v.id == SNAPPY_ID
+	is_bot = bool(request.headers.get("Authorization")) or (SITE == 'pcmemes.net' and v.id == SNAPPY_ID)
 
 	if '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower() and parent_post.id not in ADMIGGERS and not is_bot and not v.marseyawarded and AGENDAPOSTER_PHRASE not in body.lower() and len(body) > 10:
 		now = int(time.time())

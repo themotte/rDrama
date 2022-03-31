@@ -1056,6 +1056,8 @@ def submit_post(v, sub=None):
 	
 	if embed and len(embed) > 1500: embed = None
 
+	is_bot = bool(request.headers.get("Authorization")) or (SITE == 'pcmemes.net' and v.id == SNAPPY_ID)
+
 	post = Submission(
 		private=bool(request.values.get("private","")),
 		club=club,
@@ -1063,7 +1065,7 @@ def submit_post(v, sub=None):
 		over_18=bool(request.values.get("over_18","")),
 		new=bool(request.values.get("new","")),
 		app_id=v.client.application.id if v.client else None,
-		is_bot = bool(request.headers.get("Authorization")) or v.id == SNAPPY_ID,
+		is_bot = is_bot,
 		url=url,
 		body=body[:20000],
 		body_html=body_html,
