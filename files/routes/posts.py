@@ -728,6 +728,7 @@ def thumbnail_thread(pid):
 				new_comment = Comment(author_id=NOTIFICATIONS_ID,
 									parent_submission=None,
 									body_html=body_html,
+									distinguish_level=6
 									)
 				db.add(new_comment)
 				db.flush()
@@ -751,7 +752,8 @@ def thumbnail_thread(pid):
 
 				new_comment = Comment(author_id=NOTIFICATIONS_ID,
 									parent_submission=None,
-									body_html=body_html
+									body_html=body_html,
+									distinguish_level=6
 									)
 
 				db.add(new_comment)
@@ -778,6 +780,7 @@ def thumbnail_thread(pid):
 				new_comment = Comment(author_id=NOTIFICATIONS_ID,
 									parent_submission=None,
 									body_html=body_html,
+									distinguish_level=6
 									)
 				db.add(new_comment)
 				db.flush()

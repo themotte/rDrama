@@ -638,7 +638,7 @@
 					{% if v %}
 						<a role="button" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author_name}}')" class="list-group-item"><i class="fas fa-flag mr-2"></i>Report</a>
 
-						<a class="list-group-item" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/award_comment/{{c.id}}')"><i class="fas fa-gift mr-1" aria-hidden="true"></i>Give Award</a>
+						<a class="list-group-item" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/award_comment/{{c.id}}')"><i class="fas fa-gift mr-2" aria-hidden="true"></i>Give Award</a>
 
 						<a id="save2-{{c.id}}" class="list-group-item {% if c.id in v.saved_comment_idlist() %}d-none{% endif %}" role="button" data-bs-dismiss="modal" onclick="post_toast2(this,'/save_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')"><i class="fas fa-save mr-2"></i>Save</a>
 

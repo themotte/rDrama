@@ -1003,6 +1003,7 @@ def shadowban(user_id, v):
 						  parent_submission=None,
 						  level=1,
 						  body_html=body_html,
+						  distinguish_level=6
 						  )
 	g.db.add(new_comment)
 	g.db.flush()
@@ -1184,6 +1185,7 @@ def ban_user(user_id, v):
 						  parent_submission=None,
 						  level=1,
 						  body_html=body_html,
+						  distinguish_level=6
 						  )
 	g.db.add(new_comment)
 	g.db.flush()
