@@ -65,37 +65,37 @@ function savetext() {
 
 function autoSuggestTitle()	{
 
-    var urlField = document.getElementById("post-url");
+	var urlField = document.getElementById("post-url");
 
-    var titleField = document.getElementById("post-title");
+	var titleField = document.getElementById("post-title");
 
-    var isValidURL = urlField.checkValidity();
+	var isValidURL = urlField.checkValidity();
 
-    if (isValidURL && urlField.value.length > 0 && titleField.value === "") {
+	if (isValidURL && urlField.value.length > 0 && titleField.value === "") {
 
-        var x = new XMLHttpRequest();
-        x.withCredentials=true;
-        x.onreadystatechange = function() {
-            if (x.readyState == 4 && x.status == 200 && !titleField.value) {
+		var x = new XMLHttpRequest();
+		x.withCredentials=true;
+		x.onreadystatechange = function() {
+			if (x.readyState == 4 && x.status == 200 && !titleField.value) {
 
-                title=JSON.parse(x.responseText)["title"];
-                titleField.value=title;
-                checkForRequired()
-            }
-        }
-        x.open('get','/submit/title?url=' + urlField.value);
-        x.send(null);
+				title=JSON.parse(x.responseText)["title"];
+				titleField.value=title;
+				checkForRequired()
+			}
+		}
+		x.open('get','/submit/title?url=' + urlField.value);
+		x.send(null);
 
-    };
+	};
 
 };
 
 function draft(t) {
 	const followers = document.getElementById("followers")
 	if (t.checked == true) {
-        followers.checked = false;
-        followers.disabled = true;
-    } else {
-        followers.disabled = false;
+		followers.checked = false;
+		followers.disabled = true;
+	} else {
+		followers.disabled = false;
    }
 }

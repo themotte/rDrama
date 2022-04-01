@@ -90,61 +90,61 @@ blockquote p {
 }
 
 .comment {
-    background-color: var(--gray-700) !important;
+	background-color: var(--gray-700) !important;
 }
 
 .navbar-light, .navbar .container-fluid, #mobile-bottom-navigation-bar {
-    background:#ffe url(https://i.imgur.com/kAfDGxF.png);
-    background-size: contain;
+	background:#ffe url(https://i.imgur.com/kAfDGxF.png);
+	background-size: contain;
 }
 
 blockquote {
 	background-color: transparent;
-    border-color: #789922 !important;
-    border-width: 1px !important;
+	border-color: #789922 !important;
+	border-width: 1px !important;
 }
 
 blockquote a {
-    color: navy;
+	color: navy;
 }
 
 .comment-collapse-desktop {
-    border-color: maroon !important;
-    border-width: 1px !important;
+	border-color: maroon !important;
+	border-width: 1px !important;
 }
 
 .score-up, .active.arrow-up::before, .arrow-up::after, .arrow-up:hover::before {
-    color: maroon !important;
+	color: maroon !important;
 }
 
 .score-down, .active.arrow-down::before, .arrow-down::after, .arrow-down:hover::before {
-    color: maroon !important;
+	color: maroon !important;
 }
 
 .arrow-up::before, .arrow-down::before, .score {
-    color: var(--gray-400);
+	color: var(--gray-400);
 }
 
 .srd {
-    background-color: var(--gray-700) !important;
+	background-color: var(--gray-700) !important;
 }
 
 .srd a {
-    color: maroon !important;
+	color: maroon !important;
 }
 
 :root {
-    --primary: maroon;
+	--primary: maroon;
 }
 
 .caction {
-    color: var(--gray-400) !important;
+	color: var(--gray-400) !important;
 }
 
 .user-name span {
-    color: #117743 !important;
+	color: #117743 !important;
 }
 
 .comment-anchor:target, .unread2 {
-    background: #ffffff88 !important;
+	background: #ffffff88 !important;
 }

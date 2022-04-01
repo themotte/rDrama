@@ -110,7 +110,7 @@ class ModAction(Base):
 		return f"{SITE_FULL}/log/{self.id}"	
 
 ACTIONTYPES = {
-    'agendaposter': {
+	'agendaposter': {
 		"str": 'set chud theme on {self.target_link}', 
 		"icon": 'fa-snooze', 
 		"color": 'bg-danger'

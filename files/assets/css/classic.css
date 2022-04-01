@@ -2,22 +2,22 @@
 	--white: #f1f1f1 !important;
 	--black1: #888 !important;
 	--black2: #222222 !important;
-    --black3: #4f4f4f !important;
+	--black3: #4f4f4f !important;
 	--grey : #ccc !important;
 	--red: #b40457 !important;
-    --blue: #369 !important;
-    --upvote: #ff8b60 !important;
-    --downvote: #9393ff !important;
-    --sticky: #228822 !important;
-    
-    --primary: var(--black1) !important;
-    --bg1: url('../images/classic1.webp') !important;
-    --bg2: url('../images/classic2.webp') !important;
+	--blue: #369 !important;
+	--upvote: #ff8b60 !important;
+	--downvote: #9393ff !important;
+	--sticky: #228822 !important;
+	
+	--primary: var(--black1) !important;
+	--bg1: url('../images/classic1.webp') !important;
+	--bg2: url('../images/classic2.webp') !important;
 }
 
 /*navbar*/
 .navbar-light, .navbar .container-fluid, #mobile-bottom-navigation-bar {
-    background-color: var(--white) !important;
+	background-color: var(--white) !important;
 }
 
 .form-inline.search input {
@@ -25,23 +25,23 @@
 }
 
 .nav.settings-nav {
-    background-color: var(--red);
+	background-color: var(--red);
 }
 
 .nav-link.active {
-    color: var(--white) !important;
-    box-shadow: inset 0 -2px 0 var(--white) !important;
+	color: var(--white) !important;
+	box-shadow: inset 0 -2px 0 var(--white) !important;
 }
 
 .nav-link {
-    color: var(--grey) !important;
+	color: var(--grey) !important;
 }
 
 /*common*/
 body, .card, #main-content-row {
 	background-color: var(--white) !important;
-    background-image: var(--bg2);
-    color: var(--black1);
+	background-image: var(--bg2);
+	color: var(--black1);
 }
 
 .posts .card {
@@ -50,28 +50,28 @@ body, .card, #main-content-row {
 
 .btn-primary, .btn-secondary {
 	background-color: var(--red) !important;
-    color: white !important;
+	color: white !important;
 	border-color: transparent;
 }
 
 .score-up, .active.arrow-up::before, .arrow-up::after, .arrow-up:hover::before {
-    color: var(--upvote) !important;
+	color: var(--upvote) !important;
 }
 
 .score-down, .active.arrow-down::before, .arrow-down::after, .arrow-down:hover::before {
-    color: var(--downvote) !important;
+	color: var(--downvote) !important;
 }
 
 .arrow-up::before, .arrow-down::before, .score {
-    color: var(--black1);
+	color: var(--black1);
 }
 
 .controversial {
-    color: var(--red) !important;
+	color: var(--red) !important;
 }
 
 a {
-    color: var(--blue);
+	color: var(--blue);
 }
 
 .post-title a {
@@ -79,7 +79,7 @@ a {
 }
 
 .fa-thumbtack.text-admin, .card.stickied .post-title a {
-    color: var(--sticky) !important;
+	color: var(--sticky) !important;
 }
 
 .flaggers, .flaggers a {
@@ -89,25 +89,25 @@ a {
 }
 
 .dropdown-menu, .dropdown-menu a {
-    color: var(--black3);
-    background-color: white;
+	color: var(--black3);
+	background-color: white;
 }
 
 .popover, .pop-username, .pop-bio, .popover-user-profile, .popover-user-profile * {
-    background-color: var(--white);
-    color: var(--black3);
-    border-color: var(--black1) !important;
+	background-color: var(--white);
+	color: var(--black3);
+	border-color: var(--black1) !important;
 }
 
 .text-muted {
-    color: var(--grey) !important;
+	color: var(--grey) !important;
 }
 
 /*frontpage*/
 #frontpage .container {
-    max-width: 2160px;
-    padding-left: 20px;
-    padding-right: 20px;
+	max-width: 2160px;
+	padding-left: 20px;
+	padding-right: 20px;
 }
 
 #frontpage .d-lg-flex, 
@@ -129,11 +129,11 @@ a {
 	color:yellow;
 	text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black !important;
 	border-color: transparent;
-    font-size: 1.3rem;
+	font-size: 1.3rem;
 }
 
 #frontpage .dropdown-toggle, #frontpage i.fas.mr-1 {
-    color:yellow !important;
+	color:yellow !important;
 }
 
 /*post*/
@@ -155,7 +155,7 @@ a {
 }
 
 .comment-collapse-desktop {
-    border-left: none !important;
+	border-left: none !important;
 }
 
 blockquote {
@@ -165,8 +165,8 @@ blockquote {
 }
 
 .form-control, .comment-box.form-control.rounded {
-    background-color: white !important;
-    color: var(--black2) !important;
+	background-color: white !important;
+	color: var(--black2) !important;
 }
 
 .comment-box, .form-control{
@@ -174,320 +174,320 @@ blockquote {
 }
 
 .text-info.new-comments {
-    color: #ff4500 !important;
+	color: #ff4500 !important;
 }
 
 #thread #dropdownMenuButton {
 	background-color: var(--red) !important;
-    color: white !important;
+	color: white !important;
 	border-color: transparent;
 }
 
 .btn.format {
-    background-color: transparent !important;
-    color: var(--black1) !important;
-    border-color: transparent !important;
+	background-color: transparent !important;
+	color: var(--black1) !important;
+	border-color: transparent !important;
 }
 
 /*userpage*/
 #userpage .nav.settings-nav {
-    background-color: transparent;
+	background-color: transparent;
 }
 
 #userpage .nav-link {
-    color: var(--red) !important;
+	color: var(--red) !important;
 }
 
 #userpage .nav-link.active {
-    box-shadow: inset 0 -2px 0 var(--red) !important;
+	box-shadow: inset 0 -2px 0 var(--red) !important;
 }
 
 /*leaderboard*/
 #settings2 .container, #settings2 .container-fluid {
-    background-color: transparent !important;
+	background-color: transparent !important;
 }
 
 #settings2 .bg-white {
-    background-color: var(--white) !important;
+	background-color: var(--white) !important;
 }
 
 #settings2 .text-muted {
-    color: var(--black1) !important;
+	color: var(--black1) !important;
 }
 
 #settings2 .nav.settings-nav {
-    margin: auto !important;
+	margin: auto !important;
 }
 
 #settings2 .table {
-    color: var(--black1);
+	color: var(--black1);
 }
 
 /*shop*/
 #message .container {
-    background-color: transparent !important;
+	background-color: transparent !important;
 }
 
 #message .table {
-    color: var(--black1);
+	color: var(--black1);
 }
 
 /*submit*/
 #submit .container {
-    background-color: transparent !important
+	background-color: transparent !important
 }
 
 #submit .text-muted {
-    color: var(--black1) !important;
+	color: var(--black1) !important;
 }
 
 #submit #create_button {
 	background-color: var(--red) !important;
-    color: white !important;
+	color: white !important;
 	border-color: transparent;
 }
 
 #submit .btn.format {
-    background-color: transparent !important;
-    color: var(--black1) !important;
-    border-color: transparent !important;
+	background-color: transparent !important;
+	color: var(--black1) !important;
+	border-color: transparent !important;
 }
 
 #submit .row.fixed-bottom {
-    background-color: var(--white) !important
+	background-color: var(--white) !important
 }
 
 /*settings*/
 #settings .text-small, #settings .text-small-extra {
-    color: var(--black1) !important;
+	color: var(--black1) !important;
 }
 
 #settings .custom-control-label::before {
-    background-color: var(--grey) !important;
+	background-color: var(--grey) !important;
 }
 
 #settings .custom-control-input:checked ~ .custom-control-label::before {
-    opacity: 1;
-    background-color: var(--black1) !important;
-    border: var(--blue) solid 0.1px;
+	opacity: 1;
+	background-color: var(--black1) !important;
+	border: var(--blue) solid 0.1px;
 }
 
 /*assorted patches I don't feel like categorizing*/
 #followers-table td {
-    color: var(--black3);
+	color: var(--black3);
 }
 
 .btn-danger {
-    border-color: #E53E3E !important;
-    color: red !important;
+	border-color: #E53E3E !important;
+	color: red !important;
 }
 
 .btn.caction .score-up {
-    color: var(--upvote) !important;
+	color: var(--upvote) !important;
 }
 
 .btn.caction .score-down {
-    color: var(--downvote) !important;
+	color: var(--downvote) !important;
 }
 
 .user-info .text-muted {
-    color: var(--black1) !important;
+	color: var(--black1) !important;
 }
 
 .shop .btn {
-    background-color: var(--black1) !important;
+	background-color: var(--black1) !important;
 }
 
 #mobile-bottom-navigation-bar .text-primary {
-    color: var(--red) !important;
+	color: var(--red) !important;
 }
 
 #mobile-bottom-navigation-bar .text-muted {
-    color: var(--black1) !important;
+	color: var(--black1) !important;
 }
 
 #settings2 .nav-link.active .fas {
-    color: var(--white) !important;
+	color: var(--white) !important;
 }
 
 #navbarResponsive .nav-link {
-    color: var(--black1) !important;
+	color: var(--black1) !important;
 }
 
 .mobile-nav-icon {
-    color: var(--black1);
+	color: var(--black1);
 }
 
 /*patch*/
 #frontpage .container {
-    margin-top: -5px
+	margin-top: -5px
 }
 
 .table {
-    color: var(--black3)
+	color: var(--black3)
 }
 
-:root {    
-    --gold: #f59e0b !important;
-    --pink: #ec72de !important;
-    --purple: #9333ea !important;
-    --bluecheck: #1DA1F2 !important;
-    --red-hover: #d2106c !important
+:root {	
+	--gold: #f59e0b !important;
+	--pink: #ec72de !important;
+	--purple: #9333ea !important;
+	--bluecheck: #1DA1F2 !important;
+	--red-hover: #d2106c !important
 }
 
 #settings2 .text-muted {
-    color: var(--black3)!important;
+	color: var(--black3)!important;
 }
 
 .fa-robot {
-    color: var(--purple) !important;
+	color: var(--purple) !important;
 }
 
 .fa-broom {
-    color: var(--sticky) !important;
+	color: var(--sticky) !important;
 }
 
 .post-title span.patron {
-    background-color: var(--purple)
+	background-color: var(--purple)
 }
 
 .btn-primary:hover, .btn-secondary:hover {
-    background-color: var(--red-hover) !important;
-    color: white!important;
-    border-color: var(--red-hover)
+	background-color: var(--red-hover) !important;
+	color: white!important;
+	border-color: var(--red-hover)
 }
 
 .dropdown-menu a:hover {
-    color: var(--red);
-    background-color: #fff;
-    font-weight: bold;
+	color: var(--red);
+	background-color: #fff;
+	font-weight: bold;
 }
 
 #frontpage .card-header div {
-    z-index: 2 !important;
+	z-index: 2 !important;
 }
 
 #navbarResponsive .nav-link:hover i {
-    color: var(--red) !important;
+	color: var(--red) !important;
 }
 
 .btn-secondary:focus, .btn-secondary.focus {
-    box-shadow: none;
-    background-color: white!important;
-    color: var(--red)!important;
-    border-color: var(--red);
+	box-shadow: none;
+	background-color: white!important;
+	color: var(--red)!important;
+	border-color: var(--red);
 }
 
 .shop .btn {
-    border-color: var(--grey) !important;
-    background-color: var(--red) !important;
+	border-color: var(--grey) !important;
+	background-color: var(--red) !important;
 }
 
 .nav-link.active {
-    font-weight: bold;
+	font-weight: bold;
 }
 
 a.text-danger, button.text-danger {
-    color: #dc3545 !important
+	color: #dc3545 !important
 }
 
 a.text-info, button.text-info {
-    color: var(--sticky) !important
+	color: var(--sticky) !important
 }
 
 label.custom-control-label::after, label.custom-control-label::before {
-    background-color: var(--black1) !important
+	background-color: var(--black1) !important
 }
 
 .custom-control-input:checked ~ .custom-control-label::after {
-    background-color: var(--grey) !important;
+	background-color: var(--grey) !important;
 }
 
 #settings .sticky {
-    top: 70px;
+	top: 70px;
 }
 
 .border-bottom {
-    border-bottom: 1px solid var(--grey) !important;
+	border-bottom: 1px solid var(--grey) !important;
 }
 
 a.nav-link:hover {
-    color: white !important
+	color: white !important
 }
 
 .nav.settings-nav {
-    border: 1px solid var(--red-hover)
+	border: 1px solid var(--red-hover)
 }
 
 #thread .anchor.comment {
-    border-left: 2px solid var(--grey)!important;
+	border-left: 2px solid var(--grey)!important;
 }  
 
 .anchor.comment.mt-0 {
-    border-left: none !important;
+	border-left: none !important;
 }
 
 .notifs .anchor.comment {
-    border-left: none !important;
+	border-left: none !important;
 }
 
 .notifs .comment-collapse-desktop {
-    border-left: 2px solid var(--grey)!important;
+	border-left: 2px solid var(--grey)!important;
 }
 
 #userpage .nav.settings-nav {
-    border:none;
+	border:none;
 }
 
 #userpage .btn-danger {
-    background-color:red !important;
-    color: white !important;
-    border-color: var(--gold) !important
+	background-color:red !important;
+	color: white !important;
+	border-color: var(--gold) !important
 }
 
 #userpage .btn-success {
-    background-color: var(--sticky) !important;
-    color: white !important;
-    border-color: var(--gold) !important
+	background-color: var(--sticky) !important;
+	color: white !important;
+	border-color: var(--gold) !important
 }
 
 #userpage .container-fluid.pb-0.text-center.bg-white.d-md-none {
-    margin-top: -32px !important;
+	margin-top: -32px !important;
 }
 
 #userpage .profile-pic-65 {
-    border-radius: 0;
-    border-color: transparent !important;
+	border-radius: 0;
+	border-color: transparent !important;
 }
 
 #settings2 .nav.settings-nav .fas {
-    color: var(--grey) !important
+	color: var(--grey) !important
 }
 
 #settings2 .nav-link.active .fas {
-    color: white !important
+	color: white !important
 }
 
 #settings2 .btn .fas {
-    color: white !important
+	color: white !important
 }
 
 #frontpage .settings .d-lg-flex {
-    display: block !important;
+	display: block !important;
 }
 
 #frontpage .container .col-lg-8 {
-    background-image: none !important;
+	background-image: none !important;
 }
 
 #post-text a, #post-text img {
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-top: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
 }
 
 .tooltip {
-    color:black !important;
+	color:black !important;
 }
 
 #frontpage .btn.btn-secondary.text-small-m {
@@ -512,9 +512,9 @@ a.nav-link:hover {
 }
 
 #chat-window {
-    background-color: white !important;
+	background-color: white !important;
 }
 
 .chat-message {
-        color: var(--black2) !important;
+		color: var(--black2) !important;
 }
