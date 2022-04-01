@@ -64,12 +64,11 @@ pre {
 	color: #CFCFCF;
 }
 
-:not(.dropdown-menu):not(.popover) {
-	background: transparent;
+.row, .col, .comment-section, .container {
+	background: transparent !important;
 }
 
 .container {
-	background: rgba(28, 34, 41, 0.85) !important;
 	border-radius: 0 !important;
 }
 
