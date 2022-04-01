@@ -64,7 +64,7 @@ pre {
 	color: #CFCFCF;
 }
 
-.row, .col, .comment-section {
+:not(.dropdown-menu):not(.popover) {
 	background: transparent;
 }
 
