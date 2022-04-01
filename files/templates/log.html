@@ -6,7 +6,7 @@
 {% block content %}
 {% if v %}
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/assets/css/main.css?v=204"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=35">
+	<link rel="stylesheet" href="/assets/css/main.css?v=204"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=36">
 	{% if v.agendaposter %}
 		<style>
 			html {
@@ -30,7 +30,7 @@
 	{% endif %}
 {% else %}
 	<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-	<link rel="stylesheet" href="/assets/css/main.css?v=204"><link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=35">
+	<link rel="stylesheet" href="/assets/css/main.css?v=204"><link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=36">
 {% endif %}
 
 <div class="row justify-content-around">
