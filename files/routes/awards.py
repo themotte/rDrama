@@ -344,7 +344,8 @@ def award_post(pid, v):
 			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "benefactor":
 		author.patron = 1
-		author.patron_utc += int(time.time()) + 2629746
+		if author.patron_utc: author.patron_utc += 2629746
+		else: author.patron_utc = int(time.time())
 		author.procoins += 2500
 		if author.discord_id: add_role(author, "1")
 		if not v.has_badge(103):
@@ -575,7 +576,8 @@ def award_comment(cid, v):
 			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "benefactor":
 		author.patron = 1
-		author.patron_utc += int(time.time()) + 2629746
+		if author.patron_utc: author.patron_utc += 2629746
+		else: author.patron_utc = int(time.time())
 		author.procoins += 2500
 		if author.discord_id: add_role(author, "1")
 		if not v.has_badge(103):

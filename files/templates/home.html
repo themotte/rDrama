@@ -2,6 +2,14 @@
 
 {% block desktopBanner %}
 
+{% if v and v.id == AEVANN_ID %}
+	<style>
+		#frontpage .post-title a:not(.visited):visited {
+			color: var(--black) !important;
+		}
+	</style>
+{% endif %}
+
 {% if v and environ.get("FP") %}
 	{% if not v.fp %}
 		<script>
@@ -252,11 +260,4 @@
 	</script>
 {% endif %}
 
-{% if v and v.id == AEVANN_ID %}
-	<style>
-		#frontpage .post-title a:not(.visited):visited {
-			color: var(--black) !important;
-		}
-	</style>
-{% endif %}
 {% endblock %}
