@@ -24,7 +24,7 @@
 		<td>{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}}" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a>{% if user.admin_level == 1 and v and v.admin_level > 1 %}<i class="fas fa-broom align-middle ml-2 color-white" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Meme Admin"></i>{% endif %}</td>
 		<td style="text-align:right;">{{user.truecoins}}</td>
-		<td style="text-align:right;">{{user.modaction_num}}</td>
+		<td style="text-align:right;"><a href="/log?admin={{user.username}}">{{user.modaction_num}}</a></td>
 	</tr>
 {% endfor %}
 </table>
