@@ -25,4 +25,4 @@ def process_image(filename=None, resize=0):
 			i = ImageOps.exif_transpose(i)
 			i.save(filename, format="WEBP", method=6)
 
-	return f'/static{filename}'
+	return filename
