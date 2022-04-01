@@ -65,7 +65,7 @@ pre {
 }
 
 .row, .col, .comment-section {
-	background: transparent !important;
+	background: transparent;
 }
 
 .container {
