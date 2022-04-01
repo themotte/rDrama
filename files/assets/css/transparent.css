@@ -64,11 +64,12 @@ pre {
 	color: #CFCFCF;
 }
 
-.row, .col, .comment-section, .container {
+.row, .col, .comment-section {
 	background: transparent !important;
 }
 
 .container {
+	background: rgba(28, 34, 41, 0.85) !important;
 	border-radius: 0 !important;
 }
 
