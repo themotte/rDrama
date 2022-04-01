@@ -7,16 +7,12 @@ function sort_table(n) {
 		rows = table.rows;
 		for (i = 1; i < (rows.length - 1); i++) {
 			shouldSwitch = false;
-			x = rows[i].getElementsByTagName("TD")[n];
-			y = rows[i + 1].getElementsByTagName("TD")[n];
-			const x_child = x.getElementsByTagName('a')
-			if (x_child) {
-				x = x_child[0]
-			}
-			const y_child = y.getElementsByTagName('a')
-			if (y_child) {
-				y = y_child[0]
-			}
+			let x = rows[i].getElementsByTagName("TD")[n];
+			let y = rows[i + 1].getElementsByTagName("TD")[n];
+			const x_child = x.getElementsByTagName('a')[0]
+			if (typeof x_child != 'undefined') x = x_child
+			const y_child = y.getElementsByTagName('a')[0]
+			if (typeof y_child != 'undefined') y = y_child
 			if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
 				shouldSwitch = true;
 				break;

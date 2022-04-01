@@ -254,7 +254,7 @@
 	<div class="d-none" id="pusherid">{{PUSHER_ID}}</div>
 	<script src="/assets/js/pusher.js?v=242"></script>
 	<script>
-		if (typeof Android !== 'undefined') {
+		if (typeof Android != 'undefined') {
 			Android.Subscribe('{{request.host}}{{v.id}}');
 		}
 	</script>
