@@ -146,7 +146,6 @@ def front_all(v, sub=None, subdomain=None):
 	if (request.path.startswith('/h/') or request.path.startswith('/s/')) and not sub: abort(404)
 
 	if g.webview and not session.get("session_id"):
-		session.permanent = True
 		session["session_id"] = secrets.token_hex(49)
 
 	if not v and request.path == "/" and not request.headers.get("Authorization"):
