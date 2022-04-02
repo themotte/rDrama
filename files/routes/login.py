@@ -139,6 +139,7 @@ def login_post():
 	else:
 		abort(400)
 
+	session.permanent = True
 	session["session_id"] = token_hex(49)
 	session["lo_user"] = account.id
 	session["login_nonce"] = account.login_nonce
@@ -355,6 +356,7 @@ def sign_up_post(v):
 
 	send_notification(new_user.id, WELCOME_MSG)
 
+	session.permanent = True
 	session["session_id"] = token_hex(49)
 	session["lo_user"] = new_user.id
 
