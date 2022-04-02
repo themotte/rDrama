@@ -720,7 +720,7 @@ def thumbnail_thread(pid):
 
 				if i["subreddit"] == 'PokemonGoRaids': continue
 
-				body_html = sanitize(f'New {word} mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
+				body_html = sanitize(f'New rdrama mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
 
 				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, body_html=body_html).one_or_none()
 				if existing_comment: break
