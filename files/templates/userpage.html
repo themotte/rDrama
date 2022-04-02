@@ -21,7 +21,7 @@
 <meta property="og:site_name" content="{{request.host}}">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="{{SITE_FULL}}/">
+<meta name="twitter:site" content="{{SITE_FULL}}">
 <meta name="twitter:title" content="{{u.username}}'s profile - {{SITE_NAME}}">
 <meta name="twitter:creator" content="@{{u.username}}">
 <meta name="twitter:description" content="{{u.coins}} coins - Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers -{% endif %} {% if not u.is_private %} {{0 if u.shadowbanned else u.post_count}} Posts - {{0 if u.shadowbanned else u.comment_count}} Comments - {% endif %}{{u.bio}}">
@@ -159,7 +159,7 @@
 						<p class="text-uppercase my-0 pb-1" style="font-weight: bold; font-size: 12px;">Moderator of</p>
 						{% for a in u.moderated_subs %}
 							<span class="d-inline-block mx-1">
-								<a href="{{SITE_FULL}}/h/{{a['sub']}}">/h/{{a['sub']}}</a>
+								<a href="/h/{{a['sub']}}">/h/{{a['sub']}}</a>
 							</span>
 						{% endfor %}
 					</div>
@@ -454,7 +454,7 @@
 						<p class="text-uppercase my-0 pb-1" style="font-weight: bold; font-size: 12px;">Moderator of</p>
 						{% for a in u.moderated_subs %}
 							<span class="d-inline-block mx-1">
-								<a href="{{SITE_FULL}}/h/{{a['sub']}}">/h/{{a['sub']}}</a>
+								<a href="/h/{{a['sub']}}">/h/{{a['sub']}}</a>
 							</span>
 						{% endfor %}
 					</div>
