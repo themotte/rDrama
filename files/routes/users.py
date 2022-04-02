@@ -796,14 +796,8 @@ def visitors(v):
 
 
 @app.get("/@<username>")
-@app.get("/logged_out/@<username>")
 @auth_desired
 def u_username(username, v=None):
-
-
-	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
-
-	if v and request.path.startswith('/logged_out'): v = None
 
 
 	u = get_user(username, v=v)
@@ -888,14 +882,8 @@ def u_username(username, v=None):
 
 
 @app.get("/@<username>/comments")
-@app.get("/logged_out/@<username>/comments")
 @auth_desired
 def u_username_comments(username, v=None):
-
-
-	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
-
-	if v and request.path.startswith('/logged_out'): v = None
 
 	user = get_user(username, v=v)
 

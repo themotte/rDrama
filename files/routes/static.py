@@ -38,23 +38,13 @@ def marsey_list():
 	return str(marseys).replace("'",'"')
 
 @app.get("/terms")
-@app.get("/logged_out/terms")
 @auth_desired
 def terms(v):
-	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
-
-	if v and request.path.startswith('/logged_out'): v = None
-
 	return render_template("terms.html", v=v)
 
 @app.get('/sidebar')
-@app.get('/logged_out/sidebar')
 @auth_desired
 def sidebar(v):
-	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
-
-	if v and request.path.startswith('/logged_out'): v = None
-
 	return render_template('sidebar.html', v=v)
 
 
