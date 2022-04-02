@@ -69,7 +69,7 @@ def pusher_thread(interests, c):
 @auth_desired
 def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 	
-	if not v and not request.path.startswith('/logged_out'): return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
+	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
 	
 	if v and request.path.startswith('/logged_out'): v = None
 
