@@ -199,7 +199,7 @@
 				{% if c.ghost %}
 					👻
 				{% else %}
-					{% if SITE_NAME=='Drama' and c.author.house %}
+					{% if SITE_NAME=='rDrama' and c.author.house %}
 						<img src="/assets/images/{{SITE_NAME}}/houses/{{c.author.house}}.webp?v=7" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="House {{c.author.house}}" alt="House {{c.author.house}}">
 					{% endif %}
 
@@ -208,7 +208,7 @@
 					{% if not c.author %}
 						{{c.print()}}
 					{% endif %}
-					<a class="user-name text-decoration-none" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color:#{{c.author.namecolor}}; font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level and SITE_NAME == 'Drama' %}class="mod"{% endif %}>{{c.author_name}}</span></a>
+					<a class="user-name text-decoration-none" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color:#{{c.author.namecolor}}; font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level and SITE_NAME == 'rDrama' %}class="mod"{% endif %}>{{c.author_name}}</span></a>
 					{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}
 				{% endif %}
 

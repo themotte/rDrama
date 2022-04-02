@@ -11,11 +11,11 @@
 		<th>Name</th>
 		<th>Marsey</th>
 		<th><a href="?sort=usage">Usage</a></th>
-		{% if SITE_NAME == 'Drama' %}<th><a href="?sort=author">Author</a></th>{% endif %}
+		{% if SITE_NAME == 'rDrama' %}<th><a href="?sort=author">Author</a></th>{% endif %}
 	</tr>
 </thead>
 <tbody id="followers-table">
-{% if SITE_NAME == 'Drama' %}
+{% if SITE_NAME == 'rDrama' %}
 	{% for marsey, author in marseys %}
 		<tr>
 			<td>{{loop.index}}</td>

@@ -402,7 +402,7 @@ def remove_meme_admin(v, username):
 @limiter.limit("1/day")
 @admin_level_required(3)
 def monthly(v):
-	if SITE_NAME == 'Drama' and v.id != AEVANN_ID: abort (403)
+	if SITE_NAME == 'rDrama' and v.id != AEVANN_ID: abort (403)
 
 	data = {'access_token': GUMROAD_TOKEN}
 

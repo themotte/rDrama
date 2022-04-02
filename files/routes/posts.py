@@ -708,7 +708,7 @@ def thumbnail_thread(pid):
 	db.add(post)
 	db.commit()
 
-	if SITE_NAME == 'Drama':
+	if SITE_NAME == 'rDrama':
 		for t in ("submission","comment"):
 			word = random.choice(('rdrama','marsey'))
 

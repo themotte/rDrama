@@ -158,11 +158,11 @@ def front_all(v, sub=None, subdomain=None):
 
 	if v:
 		defaultsorting = v.defaultsorting
-		if sub or SITE_NAME != 'Drama': defaulttime = 'all'
+		if sub or SITE_NAME != 'rDrama': defaulttime = 'all'
 		else: defaulttime = v.defaulttime
 	else:
 		defaultsorting = "hot"
-		if sub or SITE_NAME != 'Drama': defaulttime = 'all'
+		if sub or SITE_NAME != 'rDrama': defaulttime = 'all'
 		else: defaulttime = defaulttimefilter
 
 	sort=request.values.get("sort", defaultsorting)
@@ -178,7 +178,7 @@ def front_all(v, sub=None, subdomain=None):
 	except: lt=0
 
 	if v: subs = v.subs
-	elif SITE_NAME == 'Drama': subs = 1
+	elif SITE_NAME == 'rDrama': subs = 1
 	else: subs = 2
 
 	ids, next_exists = frontlist(sort=sort,

@@ -18,7 +18,7 @@ def privacy(v):
 @app.get("/marseys")
 @auth_required
 def marseys(v):
-	if SITE_NAME == 'Drama':
+	if SITE_NAME == 'rDrama':
 		marseys = g.db.query(Marsey, User).join(User, User.id==Marsey.author_id)
 		sort = request.values.get("sort", "usage")
 		if sort == "usage": marseys = marseys.order_by(Marsey.count.desc(), User.username)
@@ -30,7 +30,7 @@ def marseys(v):
 @app.get("/marsey_list")
 @cache.memoize(timeout=600)
 def marsey_list():
-	if SITE_NAME == 'Drama':
+	if SITE_NAME == 'rDrama':
 		marseys = [f"{x.name} : {y} {x.tags}" for x, y in g.db.query(Marsey, User.username).join(User, User.id==Marsey.author_id).order_by(Marsey.count.desc())]
 	else:
 		marseys = [f"{x.name} : {x.tags}" for x in g.db.query(Marsey).order_by(Marsey.count.desc())]

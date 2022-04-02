@@ -93,7 +93,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 	
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
-		elif SITE_NAME == 'Drama': pid = 6489
+		elif SITE_NAME == 'rDrama': pid = 6489
 		elif request.host == 'pcmemes.net': pid = 2487
 		else: pid = 1
 	
@@ -509,7 +509,7 @@ def api_comment(v):
 			g.db.add(n)
 
 
-		if SITE_NAME == 'Drama' and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
+		if SITE_NAME == 'rDrama' and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
 		
 			body = random.choice(LONGPOST_REPLIES)
 
@@ -551,7 +551,7 @@ def api_comment(v):
 			g.db.add(n)
 
 
-		if SITE_NAME == 'Drama' and random.random() < 0.001:
+		if SITE_NAME == 'rDrama' and random.random() < 0.001:
 		
 			body = "zoz"
 			body_html2 = sanitize(body)
