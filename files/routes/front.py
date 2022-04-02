@@ -42,7 +42,7 @@ def notifications(v):
 	messages = request.values.get('messages')
 	modmail = request.values.get('modmail')
 	posts = request.values.get('posts')
-	if modmail and v.admin_level > 2:
+	if modmail and v.admin_level > 1:
 		comments = g.db.query(Comment).filter(Comment.sentto==2).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
