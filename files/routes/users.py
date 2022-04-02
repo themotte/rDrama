@@ -554,7 +554,7 @@ def get_profilecss(username):
 @app.get("/@<username>/song")
 def usersong(username):
 	user = get_user(username)
-	if user.song: return redirect(f"{SITE_FULL}/song/{user.song}.mp3")
+	if user.song: return redirect(f"/song/{user.song}.mp3")
 	else: abort(404)
 
 @app.get("/song/<song>")
@@ -587,7 +587,7 @@ def unsubscribe(v, post_id):
 @app.get("/report_bugs")
 @auth_required
 def reportbugs(v):
-	return redirect(f'{SITE_FULL}/post/{BUG_THREAD}')
+	return redirect(f'/post/{BUG_THREAD}')
 
 @app.post("/@<username>/message")
 @limiter.limit("1/second;10/minute;20/hour;50/day")
@@ -771,7 +771,7 @@ def user_id(id, v):
 @app.get("/u/<username>")
 @auth_required
 def redditor_moment_redirect(username, v):
-	return redirect(f"{SITE_FULL}/@{username}")
+	return redirect(f"/@{username}")
 
 @app.get("/@<username>/followers")
 @auth_required
@@ -801,7 +801,7 @@ def visitors(v):
 def u_username(username, v=None):
 
 
-	if not v and not request.path.startswith('/logged_out'): return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
+	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
 
 	if v and request.path.startswith('/logged_out'): v = None
 
@@ -893,13 +893,13 @@ def u_username(username, v=None):
 def u_username_comments(username, v=None):
 
 
-	if not v and not request.path.startswith('/logged_out'): return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
+	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
 
 	if v and request.path.startswith('/logged_out'): v = None
 
 	user = get_user(username, v=v)
 
-	if username != user.username: return redirect(f'{SITE_FULL}/@{user.username}/comments')
+	if username != user.username: return redirect(f'/@{user.username}/comments')
 
 	u = user
 
@@ -1083,7 +1083,7 @@ def user_profile_uid(v, id):
 		try: id = int(id, 36)
 		except: abort(404)
 
-	if not v and not request.path.startswith('/logged_out'): return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
+	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
 
 	if v and request.path.startswith('/logged_out'): v = None
 

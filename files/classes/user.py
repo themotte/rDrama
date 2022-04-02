@@ -350,7 +350,7 @@ class User(Base):
 	@property
 	@lazy
 	def url(self):
-		return f"{SITE_FULL}/@{self.username}"
+		return f"/@{self.username}"
 
 	def __repr__(self):
 		return f"<User(id={self.id})>"
@@ -470,7 +470,7 @@ class User(Base):
 	@lazy
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
-		else: return f"{SITE_FULL}/assets/images/{SITE_NAME}/site_preview.webp?v=1013"
+		else: return f"/assets/images/{SITE_NAME}/site_preview.webp?v=1013"
 
 	@property
 	@lazy
@@ -479,7 +479,7 @@ class User(Base):
 		if self.profileurl: 
 			if self.profileurl.startswith('/'): return SITE_FULL + self.profileurl
 			return self.profileurl
-		return f"{SITE_FULL}/assets/images/default-profile-pic.webp?v=1008"
+		return "/assets/images/default-profile-pic.webp?v=1008"
 
 	@lazy
 	def json_popover(self, v):

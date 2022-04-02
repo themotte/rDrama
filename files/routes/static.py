@@ -41,7 +41,7 @@ def marsey_list():
 @app.get("/logged_out/terms")
 @auth_desired
 def terms(v):
-	if not v and not request.path.startswith('/logged_out'): return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
+	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
 
 	if v and request.path.startswith('/logged_out'): v = None
 
@@ -51,7 +51,7 @@ def terms(v):
 @app.get('/logged_out/sidebar')
 @auth_desired
 def sidebar(v):
-	if not v and not request.path.startswith('/logged_out'): return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
+	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
 
 	if v and request.path.startswith('/logged_out'): v = None
 
@@ -333,7 +333,7 @@ def submit_contact(v):
 
 @app.get('/archives')
 def archivesindex():
-	return redirect(f"{SITE_FULL}/archives/index.html")
+	return redirect("/archives/index.html")
 
 @app.get('/archives/<path:path>')
 def archives(path):

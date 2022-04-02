@@ -73,7 +73,7 @@ def request_api_keys(v):
 
 	g.db.commit()
 
-	return redirect(f'{SITE_FULL}/settings/apps')
+	return redirect('/settings/apps')
 
 
 @app.post("/delete_app/<aid>")
@@ -93,7 +93,7 @@ def delete_oauth_app(v, aid):
 
 	g.db.commit()
 
-	return redirect(f'{SITE_FULL}/apps')
+	return redirect('/apps')
 
 
 @app.post("/edit_app/<aid>")
@@ -114,7 +114,7 @@ def edit_oauth_app(v, aid):
 
 	g.db.commit()
 
-	return redirect(f'{SITE_FULL}/settings/apps')
+	return redirect('/settings/apps')
 
 
 @app.post("/admin/app/approve/<aid>")

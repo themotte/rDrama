@@ -121,11 +121,11 @@ def login_post():
 		now = int(time.time())
 
 		if now - int(request.values.get("time")) > 600:
-			return redirect(f'{SITE_FULL}/login')
+			return redirect('/login')
 
 		formhash = request.values.get("hash")
 		if not validate_hash(f"{account.id}+{request.values.get('time')}+2fachallenge", formhash):
-			return redirect(f"{SITE_FULL}/login")
+			return redirect("/login")
 
 		if not account.validate_2fa(request.values.get("2fa_token", "").strip()):
 			hash = generate_hash(f"{account.id}+{time}+2fachallenge")
@@ -154,7 +154,7 @@ def login_post():
 	if redir:
 		if redir.startswith(SITE_FULL): return redirect(redir)
 		if redir.startswith('/'): return redirect(f'{SITE_FULL}{redir}')
-	return redirect(f'{SITE_FULL}/')
+	return redirect('/')
 
 @app.get("/me")
 @app.get("/@me")
@@ -258,7 +258,7 @@ def sign_up_post(v):
 			user = g.db.query(User).filter_by(id=request.values.get("referred_by")).one_or_none()
 			if user: args["ref"] = user.username
 
-		return redirect(f"{SITE_FULL}/signup?{urlencode(args)}")
+		return redirect(f"/signup?{urlencode(args)}")
 
 	if now - int(form_timestamp) < 5:
 		return signup_error("There was a problem. Please try again.")
@@ -442,7 +442,7 @@ def get_reset():
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def post_reset(v):
-	if v: return redirect(f'{SITE_FULL}/')
+	if v: return redirect('/')
 
 	user_id = request.values.get("user_id")
 

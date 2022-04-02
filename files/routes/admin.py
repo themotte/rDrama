@@ -35,7 +35,7 @@ def merge(v, id1, id2):
 		path = request.path
 		qs = urlencode(dict(request.values))
 		argval = quote(f"{path}?{qs}", safe='')
-		return redirect(f"{SITE_FULL}/login?redirect={argval}")
+		return redirect(f"/login?redirect={argval}")
 
 	user1 = get_account(id1)
 	user2 = get_account(id2)
@@ -95,7 +95,7 @@ def merge_all(v, id):
 		path = request.path
 		qs = urlencode(dict(request.values))
 		argval = quote(f"{path}?{qs}", safe='')
-		return redirect(f"{SITE_FULL}/login?redirect={argval}")
+		return redirect(f"/login?redirect={argval}")
 
 	user = get_account(id)
 
@@ -849,7 +849,7 @@ def admin_link_accounts(v):
 	g.db.add(ma)
 
 	g.db.commit()
-	return redirect(f"{SITE_FULL}/admin/alt_votes?u1={g.db.query(User).get(u1).username}&u2={g.db.query(User).get(u2).username}")
+	return redirect(f"/admin/alt_votes?u1={g.db.query(User).get(u1).username}&u2={g.db.query(User).get(u2).username}")
 
 
 @app.get("/admin/removed/posts")
@@ -1582,7 +1582,7 @@ def admin_toggle_ban_domain(v):
 
 	g.db.commit()
 
-	return redirect(f"{SITE_FULL}/admin/banned_domains/")
+	return redirect("/admin/banned_domains/")
 
 
 @app.post("/admin/nuke_user")

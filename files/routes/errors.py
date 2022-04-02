@@ -19,7 +19,7 @@ def error_401(e):
 		path = request.path
 		qs = urlencode(dict(request.values))
 		argval = quote(f"{path}?{qs}", safe='')
-		return redirect(f"{SITE_FULL}/login?redirect={argval}")
+		return redirect(f"/login?redirect={argval}")
 
 @app.errorhandler(403)
 def error_403(e):
@@ -62,4 +62,4 @@ def allow_nsfw():
 	if redir:
 		if redir.startswith(SITE_FULL): return redirect(redir)
 		if redir.startswith('/'): return redirect(f'{SITE_FULL}{redir}')
-	return redirect(f'{SITE_FULL}/')
+	return redirect('/')
