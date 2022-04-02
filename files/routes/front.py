@@ -133,11 +133,8 @@ def notifications(v):
 
 
 @app.get("/")
-@app.get("/logged_out")
 @app.get("/h/<sub>")
-@app.get("/logged_out/h/<sub>")
 @app.get("/s/<sub>")
-@app.get("/logged_out/s/<sub>")
 @limiter.limit("3/second;30/minute;1000/hour;5000/day")
 @auth_desired
 def front_all(v, sub=None, subdomain=None):
@@ -147,11 +144,6 @@ def front_all(v, sub=None, subdomain=None):
 
 	if g.webview and not session.get("session_id"):
 		session["session_id"] = secrets.token_hex(49)
-
-	if not v and request.path == "/" and not request.headers.get("Authorization"):
-		return redirect(f"/logged_out{request.full_path}")
-
-	if v and request.path.startswith('/logged_out'): v = None
 
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: abort(400)
