@@ -125,6 +125,7 @@ def notifications(v):
 		for c in comments:
 			if c.parent_submission:
 				c.replies2 = [x for x in c.child_comments if c.author_id == v.id or x.id in all]
+				if c.id == 1661969: print(c.replies2)
 				cids = cids | set(x.id for x in c.replies2)
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment in comments):
 					c = c.parent_comment
@@ -138,7 +139,6 @@ def notifications(v):
 
 			if c not in listing: listing.append(c)
 
-	print(cids)
 	comms = get_comments(list(cids), v=v)
 
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
