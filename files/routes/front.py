@@ -104,11 +104,11 @@ def notifications(v):
 
 		print("1: " + str(time.time() - t), flush=True)
 
-		all = g.db.query(Notification.comment_id).join(Comment, Notification.comment_id == Comment.id).filter(Comment.is_banned == False,
+		all = [x[0] for x in g.db.query(Notification.comment_id).join(Comment, Notification.comment_id == Comment.id).filter(Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
-		).order_by(Comment.top_comment_id.desc()).limit(25).all()
+		).order_by(Comment.top_comment_id.desc()).limit(25).all()]
 
 		print("2: " + str(time.time() - t), flush=True)
 
