@@ -127,9 +127,9 @@ def notifications(v):
 				c.replies2 = [x for x in c.child_comments if c.author_id == v.id or x.id in all]
 				cids = cids | set(x.id for x in c.replies2)
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment in comments):
+					c = c.parent_comment
 					c.replies2 = [x for x in c.child_comments if c.author_id == v.id or x.id in all]
 					cids = cids | set(x.id for x in c.replies2)
-					c = c.parent_comment
 				cids.add(c.id)
 			else:
 				while c.parent_comment:
