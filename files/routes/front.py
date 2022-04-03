@@ -9,7 +9,8 @@ defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 @app.post("/clear")
 @auth_required
 def clear(v):
-	for n in v.notifications.filter_by(read=False).all():
+	notifs = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(Notification.read == False, Notification.user_id == v.id).all()
+	for n in notifs:
 		n.read = True
 		g.db.add(n)
 	g.db.commit()
@@ -18,7 +19,7 @@ def clear(v):
 @app.get("/unread")
 @auth_required
 def unread(v):
-	listing = g.db.query(Comment).join(Notification.comment).filter(
+	listing = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(
 		Notification.read == False,
 		Notification.user_id == v.id,
 		Comment.is_banned == False,
@@ -26,12 +27,12 @@ def unread(v):
 		Comment.author_id != AUTOJANNY_ID,
 	).order_by(Notification.created_utc.desc()).all()
 
-	for n in v.notifications.filter_by(read=False).all():
+	for n, c in listing:
 		n.read = True
 		g.db.add(n)
 	g.db.commit()
 
-	return {"data":[x.json for x in listing]}
+	return {"data":[x[1].json for x in listing]}
 
 
 @app.get("/notifications")
@@ -58,7 +59,8 @@ def notifications(v):
 
 		listing = []
 
-		for index, n. c in enumerate(notifications[:100]):
+		for index, x in enumerate(notifications[:100]):
+			n, c = x
 			if n.read and index > 24: break
 			elif not n.read:
 				n.read = True
@@ -75,7 +77,8 @@ def notifications(v):
 
 		listing = []
 
-		for index, n, c in enumerate(notifications[:100]):
+		for index, x in enumerate(notifications[:100]):
+			n, c = x
 			if n.read and index > 24: break
 			elif not n.read:
 				n.read = True
