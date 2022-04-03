@@ -426,7 +426,7 @@ class User(Base):
 	@property
 	@lazy
 	def not_post_notifications_count(self):
-		return self.notifications_count - self.post_notifications_count
+		return self.notifications_count - self.post_notifications_count - self.reddit_notifications_count
 
 	@property
 	@lazy
