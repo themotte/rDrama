@@ -47,6 +47,9 @@ def buy(v, award):
 	if award == 'benefactor' and not request.values.get("mb"):
 		return {"error": "You can only buy the Benefactor award with marseybux."}, 403
 
+	if award == 'ghost' and v.admin_level < 2:
+		return {"error": "Only admins can buy that award."}, 403
+
 	AWARDS = deepcopy(AWARDS2)
 
 	if award not in AWARDS: abort(400)
