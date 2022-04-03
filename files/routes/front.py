@@ -140,7 +140,7 @@ def notifications(v):
 
 			if c not in listing: listing.append(c)
 
-	if c.parent_submission: comms = get_comments(list(cids), v=v)
+	comms = get_comments(list(cids), v=v)
 
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
