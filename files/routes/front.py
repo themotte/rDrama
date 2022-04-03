@@ -48,12 +48,11 @@ def notifications(v):
 	if modmail and v.admin_level > 1:
 		comments = g.db.query(Comment).filter(Comment.sentto==2).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
-		comments = comments[:25]
+		listing = comments[:25]
 	elif messages:
 		comments = g.db.query(Comment).filter(Comment.sentto != None, or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None, Comment.level == 1).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
-		comments = comments[:25]
-		comments = [x.parent_comm]
+		listing = comments[:25]
 	elif posts:
 		notifications = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(Notification.user_id == v.id, Comment.author_id == AUTOJANNY_ID).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
 
@@ -104,11 +103,11 @@ def notifications(v):
 		g.db.commit()
 
 
-		all = set(x[0] for x in g.db.query(Notification.comment_id).join(Comment, Notification.comment_id == Comment.id).filter(Comment.is_banned == False,
+		all = set([x[0] for x in g.db.query(Notification.comment_id).join(Comment, Notification.comment_id == Comment.id).filter(Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
-		).order_by(Comment.top_comment_id.desc()).offset(50 * (page - 1)).limit(100).all())
+		).order_by(Comment.top_comment_id.desc()).offset(50 * (page - 1)).limit(100).all()])
 
 		comments = g.db.query(Comment).join(Notification).distinct(Comment.top_comment_id).filter(
 			Notification.user_id == v.id,
@@ -121,17 +120,14 @@ def notifications(v):
 		next_exists = (len(comments) > 50)
 		comments = comments[:50]
 
-	
-	cids = set()
-
-	if not posts and not reddit:
+		cids = set()
 		listing = []
 		for c in comments:
 			if c.parent_submission:
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment in comments):
 					c = c.parent_comment
 					c.replies2 = [x for x in c.child_comments if c.author_id == v.id or x.id in all]
-					cids = cids | set(x.id for x in c.replies2)
+					cids = cids | set([x.id for x in c.replies2])
 				cids.add(c.id)
 			else:
 				while c.parent_comment:
