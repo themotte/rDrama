@@ -88,12 +88,12 @@ def notifications(v):
 
 		next_exists = (len(notifications) > len(listing))
 	else:
-		notifications = v.notifications.join(Notification.comment).filter(
+		notifications = v.notifications.join(Notification.comment).distinct(Comment.top_comment_id).filter(
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
-		).order_by(Notification.created_utc.desc()).offset(50 * (page - 1)).limit(51).all()
+		).order_by(Comment.top_comment_id.desc()).offset(50 * (page - 1)).limit(51).all()
 
 		next_exists = (len(notifications) > 50)
 		notifications = notifications[:50]
@@ -115,20 +115,11 @@ def notifications(v):
 		listing = []
 		for c in comments:
 			if c.parent_submission:
-				
-				if c.replies2 == None: c.replies2 = []
-				for x in c.child_comments:
-					if x.author_id == v.id:
-						x.voted = 1
-						if x not in c.replies2: c.replies2.append(x)
-
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment in comments):
 					parent = c.parent_comment
 					if parent.replies2 == None: parent.replies2 = [c]
 					elif c not in parent.replies2: parent.replies2.append(c)
 					c = parent
-
-				if c.replies2 == None: c.replies2 = []
 			else:
 				while c.parent_comment:
 					c = c.parent_comment
