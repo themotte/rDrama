@@ -129,8 +129,9 @@ def notifications(v):
 					cids.update(x.id for x in c.replies2)
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment in comments):
 					c = c.parent_comment
-					c.replies2 = c.child_comments.filter(Comment.author_id == v.id, Comment.id.in_(all)).all()
-					cids.update(x.id for x in c.replies2)
+					if not c.replies2:
+						c.replies2 = c.child_comments.filter(Comment.author_id == v.id, Comment.id.in_(all)).all()
+						cids.update(x.id for x in c.replies2)
 				cids.add(c.id)
 			else:
 				while c.parent_comment:
