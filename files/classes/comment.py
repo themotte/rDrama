@@ -54,7 +54,7 @@ class Comment(Base):
 	author = relationship("User", primaryjoin="User.id==Comment.author_id")
 	senttouser = relationship("User", primaryjoin="User.id==Comment.sentto", viewonly=True)
 	parent_comment = relationship("Comment", remote_side=[id], viewonly=True)
-	child_comments = relationship("Comment", remote_side=[parent_comment_id], viewonly=True)
+	child_comments = relationship("Comment", lazy="dynamic", remote_side=[parent_comment_id], viewonly=True)
 	awards = relationship("AwardRelationship", viewonly=True)
 	reports = relationship("CommentFlag", viewonly=True)
 	
