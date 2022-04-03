@@ -9,7 +9,7 @@ This code runs https://rdrama.net and https://pcmemes.net
 2- Run the following commands in the terminal:
 
 ```
-git clone https://github.com/Aevann1/Drama/
+git clone https://github.com/Aevann1/rDrama/
 
 cd Drama
 
