@@ -37,6 +37,7 @@ def unread(v):
 @app.get("/notifications")
 @auth_required
 def notifications(v):
+	t = time.time()
 	try: page = int(request.values.get('page', 1))
 	except: page = 1
 	messages = request.values.get('messages')
@@ -88,6 +89,13 @@ def notifications(v):
 
 		next_exists = (len(notifications) > len(listing))
 	else:
+		all = [x.comment_id for x in v.notifications.join(Notification.comment).filter(
+			Comment.is_banned == False,
+			Comment.deleted_utc == 0,
+			Comment.author_id != AUTOJANNY_ID,
+			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
+		).order_by(Comment.top_comment_id.desc()).all()]
+
 		notifications = v.notifications.join(Notification.comment).distinct(Comment.top_comment_id).filter(
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
@@ -116,10 +124,9 @@ def notifications(v):
 		for c in comments:
 			if c.parent_submission:
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment in comments):
-					parent = c.parent_comment
-					if parent.replies2 == None: parent.replies2 = [c]
-					elif c not in parent.replies2: parent.replies2.append(c)
-					c = parent
+					c = c.parent_comment
+					c.replies2 = [x for x in c.child_comments if c.author_id == v.id or x.id in all]
+				c.replies2 = [x for x in c.child_comments if c.author_id == v.id or x.id in all]
 			else:
 				while c.parent_comment:
 					c = c.parent_comment
@@ -130,6 +137,7 @@ def notifications(v):
 
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
+	print(time.time() - t, flush=True)
 	return render_template("notifications.html",
 							v=v,
 							notifications=listing,
