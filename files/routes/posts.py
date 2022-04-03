@@ -1281,8 +1281,9 @@ def submit_post(v, sub=None):
 			if body.startswith('!slots1000'):
 				check_for_slots_command(body, snappy, c)
 
+			g.db.flush()
 			post.comment_count += 1
-			if len(body_html) < 40000: post.replies = [c]
+			post.replies = [c]
 
 	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
