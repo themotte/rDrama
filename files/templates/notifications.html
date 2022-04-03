@@ -17,12 +17,12 @@
 	<ul class="nav settings-nav" style="padding:0 30px;">
 	<li class="nav-item">
 		<a class="nav-link py-3{% if not '=true' in request.full_path %} active{% endif %}" href="/notifications">
-		All{% if v.not_post_notifications_count %} <span class="font-weight-bold" style="color:red">({{v.not_post_notifications_count}})</span>{% endif %}
+		All {% if v.not_post_notifications_count %} <span class="font-weight-bold" style="color:red">({{v.not_post_notifications_count}})</span>{% endif %}
 		</a>
 	</li>
 	<li class="nav-item">
 		<a class="nav-link py-3{% if '/notifications?posts=true' in request.full_path %} active{% endif %}" href="/notifications?posts=true">
-		Posts{% if v.post_notifications_count %} <span class="font-weight-bold" style="color:blue">({{v.post_notifications_count}})</span>{% endif %}
+		Posts {% if v.post_notifications_count %}<span class="font-weight-bold" style="color:blue">({{v.post_notifications_count}})</span>{% endif %}
 		</a>
 	</li>
 	<li class="nav-item">
@@ -40,7 +40,7 @@
 	{% if v.admin_level %}
 		<li class="nav-item">
 			<a class="nav-link py-3{% if '/notifications?reddit=true' in request.full_path %} active{% endif %}" href="/notifications?reddit=true">
-			Reddit
+			Reddit {% if v.reddit_notifications_count %}<span class="font-weight-bold" style="color:#805ad5">({{v.reddit_notifications_count}})</span>{% endif %}
 			</a>
 		</li>
 	{% endif %}
