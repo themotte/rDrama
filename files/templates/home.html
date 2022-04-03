@@ -82,13 +82,13 @@
 			{% block navbar %}
 			<div class="d-flex align-items-center">
 				{% if v %}
-					<!-- {% if v.paid_dues %}
+					{% if v.paid_dues %}
 						{% if ccmode=="true"%}
 							<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-primary text-primary mx-2" href="?sort={{sort}}&t={{t}}&ccmode=false"><i class="fas fa-golf-club mr-2 "></i>CC</a>
 						{% else %}
 							<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-secondary mx-2" href="?sort={{sort}}&t={{t}}&ccmode=true"><i class="fas fa-golf-club mr-2 "></i>CC</a>
 						{% endif %}
-					{% endif %} -->
+					{% endif %}
 				
 					<div class="dropdown dropdown-actions mx-2 d-none d-lg-block">
 						<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
