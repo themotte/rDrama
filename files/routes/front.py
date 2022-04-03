@@ -89,12 +89,12 @@ def notifications(v):
 
 		next_exists = (len(notifications) > len(listing))
 	else:
-		all = [x.comment_id for x in v.notifications.join(Notification.comment).filter(
+		all = set([x.comment_id for x in v.notifications.join(Notification.comment).filter(
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
-		).order_by(Comment.top_comment_id.desc()).all()]
+		).order_by(Comment.top_comment_id.desc()).all()])
 
 		notifications = v.notifications.join(Notification.comment).distinct(Comment.top_comment_id).filter(
 			Comment.is_banned == False,
