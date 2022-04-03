@@ -94,7 +94,7 @@ def notifications(v):
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
-		).order_by(Comment.top_comment_id.desc()).all()])
+		).order_by(Comment.top_comment_id.desc()).limit(100 + 50*page).all()])
 
 		notifications = v.notifications.join(Notification.comment).distinct(Comment.top_comment_id).filter(
 			Comment.is_banned == False,
