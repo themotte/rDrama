@@ -49,9 +49,10 @@ def notifications(v):
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif messages:
-		comments = g.db.query(Comment).filter(Comment.sentto != None, or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None, not_(Comment.child_comments.any())).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
+		comments = g.db.query(Comment).filter(Comment.sentto != None, or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None, Comment.level == 1).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
+		comments = [x.parent_comm]
 	elif posts:
 		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ID).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
 
@@ -89,6 +90,19 @@ def notifications(v):
 
 		next_exists = (len(notifications) > len(listing))
 	else:
+		unread = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(
+			Notification.read == False,
+			Notification.user_id == v.id,
+			Comment.author_id != AUTOJANNY_ID,
+			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
+			)
+		for x in unread:
+			x[0].read = True
+			x[1].unread = True
+			g.db.add(x[0])
+		g.db.commit()
+
+
 		all = set([x.comment_id for x in v.notifications.join(Notification.comment).filter(
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
@@ -96,29 +110,20 @@ def notifications(v):
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Comment.top_comment_id.desc()).offset(50 * (page - 1)).limit(100).all()])
 
-		notifications = v.notifications.join(Notification.comment).distinct(Comment.top_comment_id).filter(
+		comments = g.db.query(Comment).join(Notification).distinct(Comment.top_comment_id).filter(
+			Notification.user_id == v.id,
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Comment.top_comment_id.desc()).offset(50 * (page - 1)).limit(51).all()
 
-		next_exists = (len(notifications) > 50)
-		notifications = notifications[:50]
-		cids = [x.comment_id for x in notifications]
-		comments = get_comments(cids, v=v, load_parent=True)
+		next_exists = (len(comments) > 50)
+		comments = comments[:50]
 
-		i = 0
-		for x in notifications:
-			try: c = comments[i]
-			except: continue
-			if not x.read: c.unread = True
-			if x.created_utc > 1620391248: c.notif_utc = x.created_utc
-			x.read = True
-			g.db.add(x)
-			i += 1
-		g.db.commit()
-		
+	
+	cids = set()
+
 	if not posts and not reddit:
 		listing = []
 		for c in comments:
@@ -126,7 +131,9 @@ def notifications(v):
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment in comments):
 					c = c.parent_comment
 					c.replies2 = [x for x in c.child_comments if c.author_id == v.id or x.id in all]
-				c.replies2 = [x for x in c.child_comments if c.author_id == v.id or x.id in all]
+					cids.update([x.id for x in c.replies2])
+				cids.add(c.id)
+				comms = get_comments(list(cids), v=v)
 			else:
 				while c.parent_comment:
 					c = c.parent_comment
