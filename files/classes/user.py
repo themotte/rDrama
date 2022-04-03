@@ -420,6 +420,11 @@ class User(Base):
 
 	@property
 	@lazy
+	def reddit_notifications_count(self):
+		return g.db.query(Notification.user_id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.author_id == AUTOJANNY_ID, Comment.body_html.like('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')).count()
+
+	@property
+	@lazy
 	def not_post_notifications_count(self):
 		return self.notifications_count - self.post_notifications_count
 
