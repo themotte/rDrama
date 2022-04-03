@@ -122,9 +122,7 @@ def notifications(v):
 						x.voted = 1
 						if x not in c.replies2: c.replies2.append(x)
 
-				counter = 0
-				while counter < 10 and c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment in comments):
-					counter += 1
+				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment in comments):
 					parent = c.parent_comment
 					if parent.replies2 == None: parent.replies2 = [c]
 					elif c not in parent.replies2: parent.replies2.append(c)
