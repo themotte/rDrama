@@ -120,21 +120,19 @@ def notifications(v):
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 
+		print("1: " + str(time.time() - t), flush=True)
+
 		cids = set()
 		listing = []
 		for c in comments:
 			if c.parent_submission:
-				print(c.replies2)
 				if not c.replies2:
-					print('fuq')
-					c.replies2 = c.child_comments.filter(Comment.author_id == v.id, Comment.id.in_(all)).all()
+					c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(all))).all()
 					cids.update(x.id for x in c.replies2)
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment in comments):
 					c = c.parent_comment
-					print(c.replies2)
 					if not c.replies2:
-						print('ni')
-						c.replies2 = c.child_comments.filter(Comment.author_id == v.id, Comment.id.in_(all)).all()
+						c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(all))).all()
 						cids.update(x.id for x in c.replies2)
 				cids.add(c.id)
 			else:
@@ -144,11 +142,13 @@ def notifications(v):
 
 			if c not in listing: listing.append(c)
 
+	print("2: " + str(time.time() - t), flush=True)
+
 	comms = get_comments(list(cids), v=v)
 
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
-	print(time.time() - t, flush=True)
+	print("3: " + str(time.time() - t), flush=True)
 	return render_template("notifications.html",
 							v=v,
 							notifications=listing,
