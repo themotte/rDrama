@@ -107,7 +107,7 @@ def notifications(v):
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
-		).order_by(Comment.top_comment_id.desc()).offset(50 * (page - 1)).limit(100).all())
+		).order_by(Comment.top_comment_id.desc()).limit(50 + 50*page).all())
 
 		comments = g.db.query(Comment).join(Notification).distinct(Comment.top_comment_id).filter(
 			Notification.user_id == v.id,
