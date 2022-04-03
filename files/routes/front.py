@@ -42,6 +42,7 @@ def notifications(v):
 	messages = request.values.get('messages')
 	modmail = request.values.get('modmail')
 	posts = request.values.get('posts')
+	reddit = request.values.get('reddit')
 	if modmail and v.admin_level > 1:
 		comments = g.db.query(Comment).filter(Comment.sentto==2).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
@@ -68,12 +69,30 @@ def notifications(v):
 		g.db.commit()
 
 		next_exists = (len(notifications) > len(listing))
+	elif reddit:
+		notifications = v.notifications.join(Notification.comment).filter(Comment.body_html.like('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
 
+		listing = []
+
+		for index, x in enumerate(notifications[:100]):
+			c = x.comment
+			if x.read and index > 24: break
+			elif not x.read:
+				x.read = True
+				c.unread = True
+				g.db.add(x)
+			if x.created_utc > 1620391248: c.notif_utc = x.created_utc
+			listing.append(c)
+
+		g.db.commit()
+
+		next_exists = (len(notifications) > len(listing))
 	else:
 		notifications = v.notifications.join(Notification.comment).filter(
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
+			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Notification.created_utc.desc()).offset(50 * (page - 1)).limit(51).all()
 
 		next_exists = (len(notifications) > 50)

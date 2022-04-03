@@ -37,6 +37,13 @@
 			</a>
 		</li>
 	{% endif %}
+	{% if v.admin_level %}
+		<li class="nav-item">
+			<a class="nav-link py-3{% if '/notifications?reddit=true' in request.full_path %} active{% endif %}" href="/notifications?reddit=true">
+			Reddit
+			</a>
+		</li>
+	{% endif %}
 	</ul>
   </div>
 </div>
