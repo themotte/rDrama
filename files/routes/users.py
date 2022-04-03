@@ -633,13 +633,14 @@ def message2(v, username):
 	notif = Notification(comment_id=c.id, user_id=user.id)
 	g.db.add(notif)
 
+	g.db.commit()
+
 	if PUSHER_ID != 'blahblahblah':
 		if len(message) > 500: notifbody = message[:500] + '...'
 		else: notifbody = message
 
-		gevent.spawn(pusher_thread2, f'{request.host}{user.id}', notifbody, v.username)
-
-	g.db.commit()
+		try: gevent.spawn(pusher_thread2, f'{request.host}{user.id}', notifbody, v.username)
+		except: pass
 
 	return {"message": "Message sent!"}
 

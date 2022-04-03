@@ -626,7 +626,8 @@ def api_comment(v):
 				g.db.add(n)
 
 			if parent.author.id != v.id and PUSHER_ID != 'blahblahblah':				
-				gevent.spawn(pusher_thread, f'{request.host}{parent.author.id}', c)
+				try: gevent.spawn(pusher_thread, f'{request.host}{parent.author.id}', c)
+				except: pass
 
 				
 
