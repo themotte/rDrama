@@ -111,7 +111,7 @@ def notifications(v):
 			i += 1
 		g.db.commit()
 		
-	if not posts:
+	if not posts and not reddit:
 		listing = []
 		for c in comments:
 			if c.parent_submission:
