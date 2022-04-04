@@ -130,6 +130,7 @@ def notifications(v):
 		cids = set()
 		listing = []
 		for c in comments:
+			print(c.id)
 			if c.parent_submission:
 				if c.replies2 == None:
 					c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(all))).all()
