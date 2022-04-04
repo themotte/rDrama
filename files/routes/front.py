@@ -123,7 +123,7 @@ def notifications(v):
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(100).all()]
 
-		comms = get_comments(list(cids), v=v)
+		comms = get_comments(cids, v=v)
 
 		listing = []
 		for c in comments:
