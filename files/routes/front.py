@@ -117,30 +117,35 @@ def notifications(v):
 
 		print("2: " + str(time.time() - t), flush=True)
 
-		cids = g.db.query(Comment).join(Notification).filter(
+		cids = set([x[0] for x in g.db.query(Comment.id).join(Notification).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
-		).order_by(Comment.top_comment_id.desc())
-
+		).order_by(Comment.top_comment_id.desc()).limit(1000).all()] + [x.id for x in comments])
 
 		print("3: " + str(time.time() - t), flush=True)
+
+		comms = get_comments(list(cids), v=v)
+
+		print("4: " + str(time.time() - t), flush=True)
 
 		listing = []
 		for c in comments:
 			if c.parent_submission:
 				if c.replies2 == None:
-					c.replies2 = c.child_comments.filter(Comment.author_id == v.id).all() + cids.filter(Comment.parent_comment_id == c.id).all()
+					c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
 					for x in c.replies2:
 						if x.replies2 == None: x.replies2 = []
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment.id in cids):
 					c = c.parent_comment
 					if c.replies2 == None:
-						c.replies2 = c.child_comments.filter(Comment.author_id == v.id).all() + cids.filter(Comment.parent_comment_id == c.id).all()
+						c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
 						for x in c.replies2:
 							if x.replies2 == None: x.replies2 = []
+
+				cids.add(c.id)
 			else:
 				while c.parent_comment:
 					c = c.parent_comment
@@ -150,7 +155,7 @@ def notifications(v):
 
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
-	print("4: " + str(time.time() - t), flush=True)
+	print("5: " + str(time.time() - t), flush=True)
 	return render_template("notifications.html",
 							v=v,
 							notifications=listing,
