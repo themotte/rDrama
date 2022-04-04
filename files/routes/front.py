@@ -105,7 +105,7 @@ def notifications(v):
 		print("1: " + str(time.time()-t))
 		t = time.time()
 
-		sq = g.db.query(Comment.id, Notification.created_utc).distinct(Comment.top_comment_id).filter(
+		sq = g.db.query(Comment.id, Notification.created_utc).join(Notification, Notification.comment_id == Comment.id).distinct(Comment.top_comment_id).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
