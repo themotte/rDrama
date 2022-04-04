@@ -34,7 +34,6 @@ def unread(v):
 
 	return {"data":[x[1].json for x in listing]}
 
-from pprint import pprint
 
 @app.get("/notifications")
 @auth_required
@@ -105,7 +104,7 @@ def notifications(v):
 
 		print("1: " + str(time.time() - t), flush=True)
 
-		sq = g.db.query(Comment).join(Notification).distinct(Comment.top_comment_id).filter(
+		sq = g.db.query(Comment.id).join(Notification).distinct(Comment.top_comment_id).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
@@ -113,9 +112,7 @@ def notifications(v):
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Comment.top_comment_id.desc()).subquery()
 
-		pprint(vars(sq))
-
-		comments = g.db.query(sq.c).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
+		comments = g.db.query(Comment).join(sq, sq.c.id == Comment.id).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
@@ -138,7 +135,6 @@ def notifications(v):
 
 		listing = []
 		for c in comments:
-			print(c.id, flush=True)
 			if c.parent_submission:
 				if c.replies2 == None:
 					c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
