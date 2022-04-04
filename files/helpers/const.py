@@ -698,7 +698,7 @@ unlinked_regex = re.compile('''(^|\s|<p>)(https:\/\/[\w\-.#&/=\?@%+]+)''', flags
 imgur_regex = re.compile('(https://i\.imgur\.com/([a-z0-9]+))\.(jpg|png|jpeg|webp)(?!</code>)', flags=re.I|re.A)
 reddit_regex = re.compile('(^|\s|<p>)\/?((r|u)\/(\w|-){3,25})', flags=re.A)
 sub_regex = re.compile('(^|\s|<p>)\/?(h\/(\w|-){3,25})', flags=re.A)
-youtube_regex = re.compile('" target="_blank">(https://youtube\.com/watch\?v\=([a-z0-9-_]+)[\w\-.#&/=\?@%+]+)</a>(?!</code>)', flags=re.I|re.A)
+youtube_regex = re.compile('" target="_blank">(https:\/\/youtube\.com\/watch\?v\=([a-z0-9-_]{5,20})[\w\-.#&/=\?@%+]*)</a>(?!</code>)', flags=re.I|re.A)
 strikethrough_regex = re.compile('''~{1,2}([^~/'"]+)~{1,2}''', flags=re.A)
 
 mute_regex = re.compile("/mute @([a-z0-9_\-]{3,25}) ([0-9])+", flags=re.A)
