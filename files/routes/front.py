@@ -115,16 +115,17 @@ def notifications(v):
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 
-		cids = set([x[0] for x in g.db.query(Comment.id).join(Notification).filter(
+		cids = [x[0] for x in g.db.query(Comment.id).join(Notification).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
-		).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(500).all()] + [x.id for x in comments])
+		).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(500).all()]
 
-		comms = get_comments(list(cids), v=v)
+		comms = get_comments(cids, v=v)
 
+		
 		listing = []
 		for c in comments:
 			if c.parent_submission:
