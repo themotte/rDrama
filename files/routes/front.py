@@ -131,13 +131,14 @@ def notifications(v):
 		for c in comments:
 			if c.parent_submission:
 				if c.replies2 == None:
-					c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).order_by(Comment.id.desc()).all()
+					c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
 					for x in c.replies2:
-						if x.replies2 == None: x.replies2 = []
+						if x.replies2 == None:
+							x.replies2 = x.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment.id in cids):
 					c = c.parent_comment
 					if c.replies2 == None:
-						c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).order_by(Comment.id.desc()).all()
+						c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
 						for x in c.replies2:
 							if x.replies2 == None: x.replies2 = []
 			else:
