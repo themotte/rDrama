@@ -543,6 +543,8 @@ def edit_post(pid, v):
 			g.db.add(c_jannied)
 			g.db.flush()
 
+			c_jannied.top_comment_id = c_jannied.id
+
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
 
@@ -725,6 +727,9 @@ def thumbnail_thread(pid):
 				db.add(new_comment)
 				db.flush()
 
+				new_comment.top_comment_id = new_comment.id
+
+
 				admins = db.query(User).filter(User.admin_level > 0).all()
 				for admin in admins:
 					notif = Notification(comment_id=new_comment.id, user_id=admin.id)
@@ -751,6 +756,9 @@ def thumbnail_thread(pid):
 				db.add(new_comment)
 				db.flush()
 
+				new_comment.top_comment_id = new_comment.id
+
+
 				notif = Notification(comment_id=new_comment.id, user_id=val)
 				db.add(notif)
 
@@ -776,6 +784,9 @@ def thumbnail_thread(pid):
 									)
 				db.add(new_comment)
 				db.flush()
+
+				new_comment.top_comment_id = new_comment.id
+
 
 				admins = db.query(User).filter(User.admin_level > 2).all()
 				for admin in admins:
@@ -1187,6 +1198,8 @@ def submit_post(v, sub=None):
 		g.db.add(c_jannied)
 		g.db.flush()
 
+		c_jannied.top_comment_id = c_jannied.id
+
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
@@ -1282,6 +1295,9 @@ def submit_post(v, sub=None):
 				check_for_slots_command(body, snappy, c)
 
 			g.db.flush()
+
+			c.top_comment_id = c.id
+
 			post.comment_count += 1
 			post.replies = [c]
 

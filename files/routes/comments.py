@@ -185,14 +185,11 @@ def api_comment(v):
 	if parent_fullname.startswith("t2_"):
 		parent = parent_post
 		parent_comment_id = None
-		top_comment_id = None
 		level = 1
 	elif parent_fullname.startswith("t3_"):
 		parent = get_comment(parent_fullname.split("_")[1], v=v)
 		parent_comment_id = parent.id
 		level = parent.level + 1
-		if level == 2: top_comment_id = parent.id
-		else: top_comment_id = parent.top_comment_id
 		if parent.author_id == v.id: rts = True
 	else: abort(400)
 
@@ -397,7 +394,6 @@ def api_comment(v):
 	c = Comment(author_id=v.id,
 				parent_submission=parent_submission,
 				parent_comment_id=parent_comment_id,
-				top_comment_id=top_comment_id,
 				level=level,
 				over_18=parent_post.over_18 or request.values.get("over_18")=="true",
 				is_bot=is_bot,
@@ -410,6 +406,9 @@ def api_comment(v):
 	c.upvotes = 1
 	g.db.add(c)
 	g.db.flush()
+
+	if c.level == 1: c.top_comment_id = c.id
+	else: c.top_comment_id = parent.top_comment_id
 
 	for option in options:
 		c_option = Comment(author_id=AUTOPOLLER_ID,
