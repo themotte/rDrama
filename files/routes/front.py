@@ -93,7 +93,7 @@ def notifications(v):
 			Notification.user_id == v.id,
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
-		).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(100).all()
+		).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(25).all()
 		
 		for n, c in comments:
 			if n.created_utc > 1620391248: c.notif_utc = n.created_utc
