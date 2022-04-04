@@ -136,7 +136,9 @@ def notifications(v):
 		print("4: " + str(time.time()-t))
 		t = time.time()
 
-		comms = get_comments([x[0].id for x in all], v=v)
+		cids = [x[0].id for x in all]
+
+		comms = get_comments(cids, v=v)
 
 		listing = []
 
