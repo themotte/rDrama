@@ -136,29 +136,29 @@ def notifications(v):
 		print(time.time() - sex)
 
 
-		# print("3: " + str(time.time() - t), flush=True)
+	# 	# print("3: " + str(time.time() - t), flush=True)
 
-		listing = []
-		for c in comments:
-			if c.parent_submission:
-				if c.replies2 == None:
-					c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
-					for x in c.replies2:
-						if x.replies2 == None: x.replies2 = []
-				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment.id in cids):
-					c = c.parent_comment
-					if c.replies2 == None:
-						c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
-						for x in c.replies2:
-							if x.replies2 == None: x.replies2 = []
-			else:
-				while c.parent_comment:
-					c = c.parent_comment
-				c.replies2 = g.db.query(Comment).filter_by(parent_comment_id=c.id).order_by(Comment.id).all()
+	# 	listing = []
+	# 	for c in comments:
+	# 		if c.parent_submission:
+	# 			if c.replies2 == None:
+	# 				c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
+	# 				for x in c.replies2:
+	# 					if x.replies2 == None: x.replies2 = []
+	# 			while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment.id in cids):
+	# 				c = c.parent_comment
+	# 				if c.replies2 == None:
+	# 					c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
+	# 					for x in c.replies2:
+	# 						if x.replies2 == None: x.replies2 = []
+	# 		else:
+	# 			while c.parent_comment:
+	# 				c = c.parent_comment
+	# 			c.replies2 = g.db.query(Comment).filter_by(parent_comment_id=c.id).order_by(Comment.id).all()
 
-			if c not in listing: listing.append(c)
+	# 		if c not in listing: listing.append(c)
 
-	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
+	# if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
 	# print("5: " + str(time.time() - t), flush=True)
 	return render_template("notifications.html",
