@@ -116,7 +116,7 @@ def notifications(v):
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%'),
 			Comment.parent_submission != None
-		).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(500).all()
+		).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(100).all()
 
 		print("3: " + str(time.time()-t))
 		t = time.time()
