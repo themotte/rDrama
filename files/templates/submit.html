@@ -179,7 +179,7 @@
 														<label class="custom-control-label" for="private">Draft</label>
 												</div>
 
-												{% if request.host != 'rdrama.net' %}
+												{% if request.host != 'rdrama.net' or v.admin_level > 1 %}
 													<div class="custom-control custom-checkbox">
 														<input autocomplete="off" type="checkbox" class="custom-control-input" id="club" name="club">
 														<label class="custom-control-label" for="club">{{CC_TITLE}} thread</label>

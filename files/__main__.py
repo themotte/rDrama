@@ -116,8 +116,7 @@ def after_request(response):
 	response.headers.add("X-Frame-Options", "deny")
 	return response
 
-if "load_chat" in argv or app.config["SERVER_NAME"] == 'localhost':
+if "load_chat" in argv:
 	from files.routes.chat import *
-
-if "load_chat" not in argv:
+else:
 	from files.routes import *

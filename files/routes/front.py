@@ -147,6 +147,7 @@ def notifications(v):
 
 			if c not in listing: listing.append(c)
 
+	print(time.time() - t)
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
 	return render_template("notifications.html",

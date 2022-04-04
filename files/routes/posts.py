@@ -1056,7 +1056,7 @@ def submit_post(v, sub=None):
 		if ban.reason: reason += f" {ban.reason}"
 		return error(reason)
 
-	if request.host == 'rdrama.net': club = False
+	if request.host == 'rdrama.net' and v.admin_level < 2: club = False
 	else: club = bool(request.values.get("club",""))
 	
 	if embed and len(embed) > 1500: embed = None
