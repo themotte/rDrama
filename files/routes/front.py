@@ -104,16 +104,6 @@ def notifications(v):
 
 		print("1: " + str(time.time() - t), flush=True)
 
-		all = g.db.query(Comment).join(Notification).filter(
-			Notification.user_id == v.id,
-			Comment.is_banned == False,
-			Comment.deleted_utc == 0,
-			Comment.author_id != AUTOJANNY_ID,
-			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
-		).order_by(Comment.top_comment_id.desc()).offset(25 * (page - 1)).limit(100).all()
-
-		print("2: " + str(time.time() - t), flush=True)
-
 		comments = g.db.query(Comment).join(Notification).distinct(Comment.top_comment_id).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
@@ -125,6 +115,16 @@ def notifications(v):
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 
+		print("2: " + str(time.time() - t), flush=True)
+
+		all = set([x[0] for x in g.db.query(Comment.id).join(Notification).filter(
+			Notification.user_id == v.id,
+			Comment.is_banned == False,
+			Comment.deleted_utc == 0,
+			Comment.author_id != AUTOJANNY_ID,
+			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
+		).order_by(Comment.top_comment_id.desc()).offset(25 * (page - 1)).limit(100).all()] + [x.id for x in comments])
+
 		print("3: " + str(time.time() - t), flush=True)
 
 		cids = set()
@@ -132,14 +132,14 @@ def notifications(v):
 		for c in comments:
 			if c.parent_submission:
 				if c.replies2 == None:
-					c.replies2 = [x for x in c.child_comments if x.author_id == v.id or x in all]
+					c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(all))).all()
 					cids.update(x.id for x in c.replies2)
 					for x in c.replies2:
 						if x.replies2 == None: x.replies2 = []
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment.id in all):
 					c = c.parent_comment
 					if c.replies2 == None:
-						c.replies2 = [x for x in c.child_comments if x.author_id == v.id or x in all]
+						c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(all))).all()
 						cids.update(x.id for x in c.replies2)
 						for x in c.replies2:
 							if x.replies2 == None: x.replies2 = []
