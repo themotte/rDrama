@@ -90,22 +90,10 @@ def notifications(v):
 
 		next_exists = (len(notifications) > len(listing))
 	else:
-		unread = g.db.query(Notification, Comment).join(Comment).filter(
-			Notification.read == False,
-			Notification.user_id == v.id,
-			Comment.author_id != AUTOJANNY_ID,
-			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%'))
-		
-		for n, c in unread:
-			n.read = True
-			c.unread = True
-			g.db.add(c)
-		g.db.commit()
-
 		print("1: " + str(time.time()-t))
 		t = time.time()
 
-		sq = g.db.query(Comment.id, Notification.created_utc).join(Notification).distinct(Comment.top_comment_id).filter(
+		sq = g.db.query(Comment.id).join(Notification, Notification.comment_id == Comment.id).distinct(Comment.top_comment_id).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
@@ -113,18 +101,15 @@ def notifications(v):
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Comment.top_comment_id.desc(), Notification.created_utc.desc()).subquery()
 
-		print("2: " + str(time.time()-t))
-		t = time.time()
-
 		comments = g.db.query(Comment).join(sq, sq.c.id == Comment.id).order_by(sq.c.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
-		print("3: " + str(time.time()-t))
+		print("2: " + str(time.time()-t))
 		t = time.time()
 
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 
-		all = g.db.query(Comment, Notification.created_utc).join(Notification).filter(
+		all = g.db.query(Comment).join(Notification, Notification.comment_id == Comment.id).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
@@ -133,28 +118,17 @@ def notifications(v):
 			Comment.parent_submission != None
 		).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(500).all()
 
+		print("3: " + str(time.time()-t))
+		t = time.time()
+
+		cids = [x.id for x in all]
+		comms = get_comments(cids, v=v)
+		listing = []
+
 		print("4: " + str(time.time()-t))
 		t = time.time()
 
-		cids = [x[0].id for x in all]
-
-		comms = get_comments(cids, v=v)
-
-		listing = []
-
 		print("5: " + str(time.time()-t))
-		t = time.time()
-
-		for c, n in all:
-			if n > 1620391248: c.notif_utc = n
-			c.replies2 = []
-			parent = c.parent_comment
-			if parent and c.parent_submission:
-				if not parent.replies2: parent.replies2 = [c]
-				else: parent.replies2.append(c)
-
-
-		print("6: " + str(time.time()-t))
 		t = time.time()
 
 		for c in comments:
@@ -168,7 +142,7 @@ def notifications(v):
 
 			if c not in listing: listing.append(c)
 
-	print("7: " + str(time.time()-t))
+	print("6: " + str(time.time()-t))
 
 	print("all: " + str(time.time()-sex))
 
