@@ -34,6 +34,7 @@ def unread(v):
 
 	return {"data":[x[1].json for x in listing]}
 
+from pprint import pprint
 
 @app.get("/notifications")
 @auth_required
@@ -111,6 +112,8 @@ def notifications(v):
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Comment.top_comment_id.desc()).subquery()
+
+		pprint(vars(sq))
 
 		comments = g.db.query(sq.c).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
