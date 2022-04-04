@@ -189,11 +189,6 @@ class User(Base):
 
 	@property
 	@lazy
-	def notifications(self):
-		return g.db.query(Notification).filter_by(user_id=self.id)
-
-	@property
-	@lazy
 	def created_date(self):
 
 		return time.strftime("%d %b %Y", time.gmtime(self.created_utc))
