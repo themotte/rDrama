@@ -100,7 +100,7 @@ def stats():
 @app.get("/chart")
 @auth_required
 def chart(v):
-	days = int(request.values.get("days", 0))
+	days = bool(request.values.get("days"))
 	file = cached_chart(days)
 	try: f = send_file(file)
 	except:
@@ -124,17 +124,12 @@ def cached_chart(days):
 											 )
 	today_cutoff = calendar.timegm(midnight_this_morning)
 
-	if not days:
-		firstsignup = g.db.query(User.created_utc).filter(User.created_utc != 0).order_by(User.created_utc).first()[0] - 86400
-		nowstamp = int(time.time())
-		days = int((nowstamp - firstsignup) / 86400)
-
-	if days > 31:
-		file = "/weekly_chart.png"
-		day_cutoffs = [today_cutoff - 86400 * 7 * i for i in range(47)][1:]
-	else:
+	if days:
 		file = "/daily_chart.png"
 		day_cutoffs = [today_cutoff - 86400 * i for i in range(47)][1:]
+	else:
+		file = "/weekly_chart.png"
+		day_cutoffs = [today_cutoff - 86400 * 7 * i for i in range(47)][1:]
 
 	day_cutoffs.insert(0, calendar.timegm(now))
 
