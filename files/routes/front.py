@@ -126,7 +126,7 @@ def notifications(v):
 		print(time.time() - sex)
 
 		sex = time.time()
-		cids = g.db.query(Comment.id).join(Notification).filter(
+		cids = g.db.query(Comment).join(Notification).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
