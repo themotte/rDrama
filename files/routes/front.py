@@ -102,7 +102,7 @@ def notifications(v):
 			g.db.add(c)
 		g.db.commit()
 
-		print("1: " + str(time.time() - t), flush=True)
+		# print("1: " + str(time.time() - t), flush=True)
 
 		comments = g.db.query(Comment).join(Notification).distinct(Comment.top_comment_id).filter(
 			Notification.user_id == v.id,
@@ -115,8 +115,7 @@ def notifications(v):
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 
-		print("2: " + str(time.time() - t), flush=True)
-
+		print(sex = time.time())
 		cids = [x[0] for x in g.db.query(Comment.id).join(Notification).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
@@ -124,9 +123,20 @@ def notifications(v):
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Comment.top_comment_id.desc()).all()]
+		print(time.time() - sex)
+
+		print(sex = time.time())
+		cids = g.db.query(Comment.id).join(Notification).filter(
+			Notification.user_id == v.id,
+			Comment.is_banned == False,
+			Comment.deleted_utc == 0,
+			Comment.author_id != AUTOJANNY_ID,
+			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
+		).order_by(Comment.top_comment_id.desc()).all()
+		print(time.time() - sex)
 
 
-		print("3: " + str(time.time() - t), flush=True)
+		# print("3: " + str(time.time() - t), flush=True)
 
 		listing = []
 		for c in comments:
@@ -150,7 +160,7 @@ def notifications(v):
 
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
-	print("5: " + str(time.time() - t), flush=True)
+	# print("5: " + str(time.time() - t), flush=True)
 	return render_template("notifications.html",
 							v=v,
 							notifications=listing,
