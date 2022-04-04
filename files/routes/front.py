@@ -147,6 +147,7 @@ def notifications(v):
 
 		for c, n in all:
 			if n > 1620391248: c.notif_utc = n
+			c.replies2 = []
 			parent = c.parent_comment
 			if parent and c.parent_submission:
 				if not parent.replies2: parent.replies2 = [c]
