@@ -117,7 +117,7 @@ def notifications(v):
 
 		print("2: " + str(time.time() - t), flush=True)
 
-		all = set([x[0] for x in g.db.query(Comment.id).join(Notification).filter(
+		cids = set([x[0] for x in g.db.query(Comment.id).join(Notification).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
@@ -127,20 +127,21 @@ def notifications(v):
 
 		print("3: " + str(time.time() - t), flush=True)
 
-		cids = set()
+		comms = get_comments(list(cids), v=v)
+
+		print("4: " + str(time.time() - t), flush=True)
+
 		listing = []
 		for c in comments:
 			if c.parent_submission:
 				if c.replies2 == None:
-					c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(all))).all()
-					cids.update(x.id for x in c.replies2)
+					c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
 					for x in c.replies2:
 						if x.replies2 == None: x.replies2 = []
-				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment.id in all):
+				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment.id in cids):
 					c = c.parent_comment
 					if c.replies2 == None:
-						c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(all))).all()
-						cids.update(x.id for x in c.replies2)
+						c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
 						for x in c.replies2:
 							if x.replies2 == None: x.replies2 = []
 
@@ -151,10 +152,6 @@ def notifications(v):
 				c.replies2 = g.db.query(Comment).filter_by(parent_comment_id=c.id).order_by(Comment.id).all()
 
 			if c not in listing: listing.append(c)
-
-	print("4: " + str(time.time() - t), flush=True)
-
-	comms = get_comments(list(cids), v=v)
 
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
