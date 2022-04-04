@@ -800,10 +800,10 @@ def edit_comment(cid, v):
 
 			body_html = sanitize(body, edit=True)
 
-			if v.marseyawarded and marseyaward_body_regex.search(body_html):
-				return {"error":"You can only type marseys!"}, 403
-
 		if len(body_html) > 20000: abort(400)
+
+		if v.marseyawarded and marseyaward_body_regex.search(body_html):
+			return {"error":"You can only type marseys!"}, 403
 
 		c.body = body[:10000]
 		c.body_html = body_html

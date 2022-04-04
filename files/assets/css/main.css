@@ -4462,8 +4462,9 @@ blockquote p {
 	padding-top: 0.7rem;
 }
 .unread {
-	padding: 10px !important;
+	padding: 10px 10px 0 10px!important;
 	border: 2px solid var(--primary) !important;
+	margin-bottom: 1rem;
 }
 @media (min-width: 576px) {
 	.modal-dialog {

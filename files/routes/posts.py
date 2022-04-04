@@ -261,6 +261,10 @@ def post_id(pid, anything=None, v=None, sub=None):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def viewmore(v, pid, sort, offset):
+	pid = int(pid)
+	post = get_post(pid, v=v)
+	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
+
 	offset = int(offset)
 	try: ids = set(int(x) for x in request.values.get("ids").split(','))
 	except: abort(400)
@@ -341,7 +345,6 @@ def viewmore(v, pid, sort, offset):
 
 	comments2 = []
 	count = 0
-	post = get_post(pid, v=v)
 	if post.created_utc > 1638672040:
 		for comment in comments:
 			comments2.append(comment)
