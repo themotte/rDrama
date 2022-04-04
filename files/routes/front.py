@@ -9,7 +9,7 @@ defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 @app.post("/clear")
 @auth_required
 def clear(v):
-	notifs = g.db.query(Notification).join(Comment).filter(Notification.read == False, Notification.user_id == v.id).all()
+	notifs = g.db.query(Notification).join(Comment, Notification.comment_id == Comment.id).filter(Notification.read == False, Notification.user_id == v.id).all()
 	for n in notifs:
 		n.read = True
 		g.db.add(n)
@@ -19,7 +19,7 @@ def clear(v):
 @app.get("/unread")
 @auth_required
 def unread(v):
-	listing = g.db.query(Notification, Comment).join(Comment).filter(
+	listing = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(
 		Notification.read == False,
 		Notification.user_id == v.id,
 		Comment.is_banned == False,
@@ -38,7 +38,7 @@ def unread(v):
 @app.get("/notifications")
 @auth_required
 def notifications(v):
-	sex = time.time()
+	t = time.time()
 	try: page = int(request.values.get('page', 1))
 	except: page = 1
 	messages = request.values.get('messages')
@@ -54,7 +54,7 @@ def notifications(v):
 		next_exists = (len(comments) > 25)
 		listing = comments[:25]
 	elif posts:
-		notifications = g.db.query(Notification, Comment).join(Comment).filter(Notification.user_id == v.id, Comment.author_id == AUTOJANNY_ID).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
+		notifications = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(Notification.user_id == v.id, Comment.author_id == AUTOJANNY_ID).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
 
 		listing = []
 
@@ -72,7 +72,7 @@ def notifications(v):
 
 		next_exists = (len(notifications) > len(listing))
 	elif reddit:
-		notifications = g.db.query(Notification, Comment).join(Comment).filter(Notification.user_id == v.id, Comment.body_html.like('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
+		notifications = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(Notification.user_id == v.id, Comment.body_html.like('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
 
 		listing = []
 
@@ -90,8 +90,20 @@ def notifications(v):
 
 		next_exists = (len(notifications) > len(listing))
 	else:
-		print("1: " + str(time.time()-sex))
-		t = time.time()
+		comments = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(
+			Notification.user_id == v.id,
+			Comment.author_id != AUTOJANNY_ID,
+			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
+		).offset(25 * (page - 1)).limit(25).all()
+		
+		for n, c in comments:
+			if n.created_utc > 1620391248: c.notif_utc = n.created_utc
+			if not n.read:
+				n.read = True
+				c.unread = True
+				g.db.add(c)
+
+		g.db.commit()
 
 		sq = g.db.query(Comment.id, Notification.created_utc).join(Notification, Notification.comment_id == Comment.id).distinct(Comment.top_comment_id).filter(
 			Notification.user_id == v.id,
@@ -103,45 +115,32 @@ def notifications(v):
 
 		comments = g.db.query(Comment).join(sq, sq.c.id == Comment.id).order_by(sq.c.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
-		print("2: " + str(time.time()-t))
-		t = time.time()
-
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 
-		all = g.db.query(Comment).join(Notification, Notification.comment_id == Comment.id).filter(
+		cids = [x[0] for x in g.db.query(Comment.id).join(Notification, Notification.comment_id == Comment.id).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
-			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%'),
-			Comment.parent_submission != None
-		).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(100).all()
+			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
+		).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(500).all()]
 
-		print("3: " + str(time.time()-t))
-		t = time.time()
-
-		cids = [x.id for x in all]
 		comms = get_comments(cids, v=v)
+
 		listing = []
-
-		print("4: " + str(time.time()-t))
-		t = time.time()
-
-		for c in all:
-			c.replies2 = []
-			parent = c.parent_comment
-			if parent:
-				if not parent.replies2: parent.replies2 = [c]
-				else: parent.replies2.append(c)
-
-		print("5: " + str(time.time()-t))
-		t = time.time()
-
 		for c in comments:
 			if c.parent_submission:
+				if c.replies2 == None:
+					c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
+					for x in c.replies2:
+						if x.replies2 == None: x.replies2 = []
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment.id in cids):
 					c = c.parent_comment
+					if c.replies2 == None:
+						c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
+						for x in c.replies2:
+							if x.replies2 == None: x.replies2 = []
 			else:
 				while c.parent_comment:
 					c = c.parent_comment
@@ -149,10 +148,7 @@ def notifications(v):
 
 			if c not in listing: listing.append(c)
 
-	print("6: " + str(time.time()-t))
-
-	print("all: " + str(time.time()-sex))
-
+	print(time.time() - t)
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
 	return render_template("notifications.html",
