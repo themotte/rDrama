@@ -1056,7 +1056,7 @@ def submit_post(v, sub=None):
 		if ban.reason: reason += f" {ban.reason}"
 		return error(reason)
 
-	if v.club_allowed == False: club = False
+	if request.host == 'rdrama.net': club = False
 	else: club = bool(request.values.get("club",""))
 	
 	if embed and len(embed) > 1500: embed = None
@@ -1065,7 +1065,7 @@ def submit_post(v, sub=None):
 
 	post = Submission(
 		private=bool(request.values.get("private","")),
-		club=False,
+		club=club,
 		author_id=v.id,
 		over_18=bool(request.values.get("over_18","")),
 		new=bool(request.values.get("new","")),
