@@ -623,11 +623,13 @@ def message2(v, username):
 						  parent_submission=None,
 						  level=1,
 						  sentto=user.id,
-						  body_html=text_html,
+						  body_html=text_html
 						  )
 	g.db.add(c)
 
 	g.db.flush()
+
+	c.top_comment_id = c.id
 
 
 	notif = Notification(comment_id=c.id, user_id=user.id)
@@ -670,7 +672,7 @@ def messagereply(v):
 	new_comment = Comment(author_id=v.id,
 							parent_submission=None,
 							parent_comment_id=id,
-							top_comment_id=parent.top_comment_id if parent.top_comment_id else parent.id,
+							top_comment_id=parent.top_comment_id,
 							level=parent.level + 1,
 							sentto=user_id,
 							body_html=text_html,

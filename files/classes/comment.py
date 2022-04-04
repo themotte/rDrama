@@ -29,7 +29,7 @@ class Comment(Base):
 	distinguish_level = Column(Integer, default=0)
 	deleted_utc = Column(Integer, default=0)
 	is_approved = Column(Integer, ForeignKey("users.id"))
-	level = Column(Integer, default=0)
+	level = Column(Integer, default=1)
 	parent_comment_id = Column(Integer, ForeignKey("comments.id"))
 	top_comment_id = Column(Integer)
 	over_18 = Column(Boolean, default=False)

@@ -13,6 +13,9 @@ def create_comment(text_html, autojanny=False):
 							distinguish_level=6)
 	g.db.add(new_comment)
 	g.db.flush()
+
+	new_comment.top_comment_id = new_comment.id
+
 	return new_comment.id
 
 def send_repeatable_notification(uid, text, autojanny=False):
