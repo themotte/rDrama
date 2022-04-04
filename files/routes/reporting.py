@@ -70,10 +70,12 @@ def api_flag_comment(cid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def remove_report_post(v, pid, uid):
-	
-	pid = int(pid)
-	uid = int(uid)
-	
+
+	try:
+		pid = int(pid)
+		uid = int(uid)
+	except: abort(400)
+
 	report = g.db.query(Flag).filter_by(post_id=pid, user_id=uid).one()
 	
 	g.db.delete(report)
