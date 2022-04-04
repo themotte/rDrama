@@ -102,8 +102,6 @@ def notifications(v):
 			g.db.add(c)
 		g.db.commit()
 
-		print("1: " + str(time.time() - t), flush=True)
-
 		sq = g.db.query(Comment.id).join(Notification).distinct(Comment.top_comment_id).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
@@ -117,8 +115,6 @@ def notifications(v):
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 
-		print("2: " + str(time.time() - t), flush=True)
-
 		cids = set([x[0] for x in g.db.query(Comment.id).join(Notification).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
@@ -127,11 +123,7 @@ def notifications(v):
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Comment.top_comment_id.desc()).offset(25 * (page - 1)).limit(1000).all()] + [x.id for x in comments])
 
-		print("3: " + str(time.time() - t), flush=True)
-
 		comms = get_comments(list(cids), v=v)
-
-		print("4: " + str(time.time() - t), flush=True)
 
 		listing = []
 		for c in comments:
