@@ -38,7 +38,6 @@ def unread(v):
 @app.get("/notifications")
 @auth_required
 def notifications(v):
-	t = time.time()
 	try: page = int(request.values.get('page', 1))
 	except: page = 1
 	messages = request.values.get('messages')
@@ -148,7 +147,6 @@ def notifications(v):
 
 			if c not in listing: listing.append(c)
 
-	print(time.time() - t)
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
 	return render_template("notifications.html",
