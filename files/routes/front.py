@@ -128,6 +128,13 @@ def notifications(v):
 		print("4: " + str(time.time()-t))
 		t = time.time()
 
+		for c in all:
+			c.replies2 = []
+			parent = c.parent_comment
+			if parent:
+				if not parent.replies2: parent.replies2 = [c]
+				else: parent.replies2.append(c)
+
 		print("5: " + str(time.time()-t))
 		t = time.time()
 
