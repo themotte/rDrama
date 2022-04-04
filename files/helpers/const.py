@@ -694,7 +694,7 @@ fishylinks_regex = re.compile("https?://\S+", flags=re.A)
 
 spoiler_regex = re.compile('\|\|(.*?)\|\|', flags=re.A)
 video_regex = re.compile('<p><a href="(https:\/\/.*?\.(mp4|webm|mov))" rel="nofollow noopener noreferrer" target="_blank">(https:\/\/.*?\.(mp4|webm|mov))<\/a><\/p>', flags=re.I|re.A)
-unlinked_regex = re.compile('(^|\s|<p>)(https:\/\/[^ <>]*)', flags=re.A)
+unlinked_regex = re.compile('''(^|\s|<p>)(https:\/\/[^ <>"']*)''', flags=re.A)
 imgur_regex = re.compile('(https://i\.imgur\.com/([^_]*?))\.(jpg|png|jpeg|webp)(?!</code>)', flags=re.A)
 reddit_regex = re.compile('(^|\s|<p>)\/?((r|u)\/(\w|-){3,25})', flags=re.A)
 sub_regex = re.compile('(^|\s|<p>)\/?(h\/(\w|-){3,25})', flags=re.A)
