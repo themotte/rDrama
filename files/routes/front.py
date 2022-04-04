@@ -150,7 +150,7 @@ def notifications(v):
 
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
-	print("5: " + str(time.time() - t), flush=True)
+	print("4: " + str(time.time() - t), flush=True)
 	return render_template("notifications.html",
 							v=v,
 							notifications=listing,
