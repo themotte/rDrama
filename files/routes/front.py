@@ -139,8 +139,6 @@ def notifications(v):
 						c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
 						for x in c.replies2:
 							if x.replies2 == None: x.replies2 = []
-
-				cids.add(c.id)
 			else:
 				while c.parent_comment:
 					c = c.parent_comment
