@@ -115,7 +115,7 @@ def notifications(v):
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 
-		print(sex = time.time())
+		sex = time.time()
 		cids = [x[0] for x in g.db.query(Comment.id).join(Notification).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
@@ -125,7 +125,7 @@ def notifications(v):
 		).order_by(Comment.top_comment_id.desc()).all()]
 		print(time.time() - sex)
 
-		print(sex = time.time())
+		sex = time.time()
 		cids = g.db.query(Comment.id).join(Notification).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
