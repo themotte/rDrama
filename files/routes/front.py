@@ -161,14 +161,16 @@ def notifications(v):
 	# if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
 	# print("5: " + str(time.time() - t), flush=True)
-	return render_template("notifications.html",
-							v=v,
-							notifications=listing,
-							next_exists=next_exists,
-							page=page,
-							standalone=True,
-							render_replies=True
-						   )
+	# return render_template("notifications.html",
+	# 						v=v,
+	# 						notifications=listing,
+	# 						next_exists=next_exists,
+	# 						page=page,
+	# 						standalone=True,
+	# 						render_replies=True
+	# 					   )
+
+	return 'fuq'
 
 
 @app.get("/")
