@@ -38,7 +38,6 @@ def unread(v):
 @app.get("/notifications")
 @auth_required
 def notifications(v):
-	sex = time.time()
 	t = time.time()
 	try: page = int(request.values.get('page', 1))
 	except: page = 1
@@ -91,7 +90,7 @@ def notifications(v):
 
 		next_exists = (len(notifications) > len(listing))
 	else:
-		print("1: " + str(time.time()-t))
+		print("1: " + str(time.time()-sex))
 		t = time.time()
 
 		sq = g.db.query(Comment.id, Notification.created_utc).join(Notification, Notification.comment_id == Comment.id).distinct(Comment.top_comment_id).filter(
