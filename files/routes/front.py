@@ -125,11 +125,8 @@ def notifications(v):
 			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Comment.top_comment_id.desc()).all()]
 
+
 		print("3: " + str(time.time() - t), flush=True)
-
-		comms = get_comments(list(cids), v=v)
-
-		print("4: " + str(time.time() - t), flush=True)
 
 		listing = []
 		for c in comments:
@@ -144,8 +141,6 @@ def notifications(v):
 						c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
 						for x in c.replies2:
 							if x.replies2 == None: x.replies2 = []
-
-				cids.add(c.id)
 			else:
 				while c.parent_comment:
 					c = c.parent_comment
