@@ -132,14 +132,14 @@ def notifications(v):
 		for c in comments:
 			if c.parent_submission:
 				if c.replies2 == None:
-					c.replies2 = [x for x in c.child_comments if x.author_id == v.id or x.id.in_(all)]
+					c.replies2 = [x for x in c.child_comments if x.author_id == v.id or x in all]
 					cids.update(x.id for x in c.replies2)
 					for x in c.replies2:
 						if x.replies2 == None: x.replies2 = []
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment.id in all):
 					c = c.parent_comment
 					if c.replies2 == None:
-						c.replies2 = [x for x in c.child_comments if x.author_id == v.id or x.id.in_(all)]
+						c.replies2 = [x for x in c.child_comments if x.author_id == v.id or x in all]
 						cids.update(x.id for x in c.replies2)
 						for x in c.replies2:
 							if x.replies2 == None: x.replies2 = []
