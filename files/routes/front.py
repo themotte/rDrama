@@ -9,7 +9,7 @@ defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 @app.post("/clear")
 @auth_required
 def clear(v):
-	notifs = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(Notification.read == False, Notification.user_id == v.id).all()
+	notifs = g.db.query(Notification).join(Comment, Notification.comment_id == Comment.id).filter(Notification.read == False, Notification.user_id == v.id).all()
 	for n in notifs:
 		n.read = True
 		g.db.add(n)
