@@ -38,7 +38,7 @@ def unread(v):
 @app.get("/notifications")
 @auth_required
 def notifications(v):
-	t = time.time()
+	sex = time.time()
 	try: page = int(request.values.get('page', 1))
 	except: page = 1
 	messages = request.values.get('messages')
