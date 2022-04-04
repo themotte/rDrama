@@ -670,7 +670,7 @@ marsey_regex = re.compile("[a-z0-9]{1,30}", flags=re.A)
 
 tags_regex = re.compile("[a-z0-9: ]{1,200}", flags=re.A)
 
-image_regex = re.compile("(^https:\/\/.*\.(png|jpg|jpeg|gif|webp|maxwidth=9999|fidelity=high)($|\s))", flags=re.I|re.M|re.A)
+image_regex = re.compile("(^https:\/\/[\w\-.#&/=\?@%+]+\.(png|jpg|jpeg|gif|webp|maxwidth=9999|fidelity=high)($|\s))", flags=re.I|re.M|re.A)
 
 valid_sub_regex = re.compile("^[a-zA-Z0-9_\-]{3,20}$", flags=re.A)
 
@@ -688,18 +688,18 @@ title_regex = re.compile("[^\w ]", flags=re.A)
 
 based_regex = re.compile("based and (.{1,20}?)(-| )pilled", flags=re.I|re.A)
 
-controversial_regex = re.compile('["> ](https:\/\/old\.reddit\.com/r/[a-zA-Z0-9_]{3,20}\/comments\/.*?)["< ]', flags=re.A)
+controversial_regex = re.compile('["> ](https:\/\/old\.reddit\.com/r/[a-zA-Z0-9_]{3,20}\/comments\/[\w\-.#&/=\?@%+]+)["< ]', flags=re.A)
 
 fishylinks_regex = re.compile("https?://\S+", flags=re.A)
 
-spoiler_regex = re.compile('\|\|(.*?)\|\|', flags=re.A)
-video_regex = re.compile('<p><a href="(https:\/\/.*?\.(mp4|webm|mov))" rel="nofollow noopener noreferrer" target="_blank">(https:\/\/.*?\.(mp4|webm|mov))<\/a><\/p>', flags=re.I|re.A)
-unlinked_regex = re.compile('''(^|\s|<p>)(https:\/\/[^ <>"']*)''', flags=re.A)
-imgur_regex = re.compile('(https://i\.imgur\.com/([^_]*?))\.(jpg|png|jpeg|webp)(?!</code>)', flags=re.A)
+spoiler_regex = re.compile('''\|\|([^/'"]+)\|\|''', flags=re.A)
+video_regex = re.compile('<p><a href="(https:\/\/[\w\-.#&/=\?@%+]+\.(mp4|webm|mov))" rel="nofollow noopener noreferrer" target="_blank">(https:\/\/[\w\-.#&/=\?@%+]+\.(mp4|webm|mov))<\/a><\/p>', flags=re.I|re.A)
+unlinked_regex = re.compile('''(^|\s|<p>)(https:\/\/[\w\-.#&/=\?@%+]+)''', flags=re.A)
+imgur_regex = re.compile('(https://i\.imgur\.com/([a-z0-9]+))\.(jpg|png|jpeg|webp)(?!</code>)', flags=re.I|re.A)
 reddit_regex = re.compile('(^|\s|<p>)\/?((r|u)\/(\w|-){3,25})', flags=re.A)
 sub_regex = re.compile('(^|\s|<p>)\/?(h\/(\w|-){3,25})', flags=re.A)
-youtube_regex = re.compile('" target="_blank">(https://youtube\.com/watch\?v\=([a-z0-9-_]+).*?)</a>(?!</code>)', flags=re.I|re.A)
-strikethrough_regex = re.compile('~{1,2}([^~]+)~{1,2}', flags=re.A)
+youtube_regex = re.compile('" target="_blank">(https://youtube\.com/watch\?v\=([a-z0-9-_]+)[\w\-.#&/=\?@%+]+)</a>(?!</code>)', flags=re.I|re.A)
+strikethrough_regex = re.compile('''~{1,2}([^~/'"]+)~{1,2}''', flags=re.A)
 
 mute_regex = re.compile("/mute @([a-z0-9_\-]{3,25}) ([0-9])+", flags=re.A)
 
@@ -708,11 +708,11 @@ emoji_regex2 = re.compile('(?<!"):([!#A-Za-z0-9]{1,30}?):', flags=re.A)
 emoji_regex3 = re.compile('(?<!#"):([!#A-Za-z0-9]{1,30}?):', flags=re.A)
 emoji_regex4 = re.compile('(?<!"):([!A-Za-z0-9]{1,30}?):', flags=re.A)
 
-snappy_url_regex = re.compile('<a href=\"(https?:\/\/[a-z]{1,20}\.[^\"]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">(.*?)<\/a>', flags=re.A)
+snappy_url_regex = re.compile('<a href=\"(https?:\/\/[a-z]{1,20}\.[\w\-.#&/=?@%+]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">([\w\-.#&/=?@%+]+)<\/a>', flags=re.A)
 
 email_regex = re.compile('([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+', flags=re.A)
 
-reddit_post_regex = re.compile('(https:\/\/old\.reddit\.com\/r\/\w{1,30}\/comments\/[a-z0-9]+).*', flags=re.A)
+reddit_post_regex = re.compile('(https:\/\/old\.reddit\.com\/r\/\w{1,30}\/comments\/[a-z0-9]+)[\w\-.#&/=?@%+]+', flags=re.A)
 
 utm_regex = re.compile('utm_[a-z]+=[a-z0-9_]+&', flags=re.A)
 utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
