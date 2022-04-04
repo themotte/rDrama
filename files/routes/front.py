@@ -19,7 +19,7 @@ def clear(v):
 @app.get("/unread")
 @auth_required
 def unread(v):
-	listing = g.db.query(Notification, Comment).filter(
+	listing = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(
 		Notification.read == False,
 		Notification.user_id == v.id,
 		Comment.is_banned == False,
@@ -54,7 +54,7 @@ def notifications(v):
 		next_exists = (len(comments) > 25)
 		listing = comments[:25]
 	elif posts:
-		notifications = g.db.query(Notification, Comment).filter(Notification.user_id == v.id, Comment.author_id == AUTOJANNY_ID).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
+		notifications = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(Notification.user_id == v.id, Comment.author_id == AUTOJANNY_ID).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
 
 		listing = []
 
@@ -72,7 +72,7 @@ def notifications(v):
 
 		next_exists = (len(notifications) > len(listing))
 	elif reddit:
-		notifications = g.db.query(Notification, Comment).filter(Notification.user_id == v.id, Comment.body_html.like('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
+		notifications = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(Notification.user_id == v.id, Comment.body_html.like('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
 
 		listing = []
 
@@ -90,7 +90,7 @@ def notifications(v):
 
 		next_exists = (len(notifications) > len(listing))
 	else:
-		unread = g.db.query(Notification, Comment).filter(
+		unread = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(
 			Notification.read == False,
 			Notification.user_id == v.id,
 			Comment.author_id != AUTOJANNY_ID,
