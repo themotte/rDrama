@@ -4009,6 +4009,7 @@ pre .com, code .com {
 		padding-top: 72px;
 }
 }
+
 @media (max-width: 767.98px) {
 	html {
 		font-size: 14px;
@@ -4055,7 +4056,7 @@ pre .com, code .com {
 		box-shadow: none;
 }
 	.mobile-nav-icon {
-		padding: 0.25rem 0.5rem;
+		padding: 0.25rem 0.6rem;
 }
 	#thread, #submit {
 		background-color: var(--light);
@@ -5009,4 +5010,9 @@ th, td {
 }
 .text-white, th a {
 	color: #fff !important;
+}
+@media (max-width: 300px) {
+	.mobile-nav-icon {
+		padding: 0.25rem 0.6rem;
+	}
 }
