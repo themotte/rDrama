@@ -1469,7 +1469,7 @@ def get_post_title(v):
 	url = request.values.get("url")
 	if not url: abort(400)
 
-	try: x = requests.get(url, headers=titleheaders, timeout=5)
+	try: x = requests.get(url, headers=titleheaders, timeout=5, proxies={"http":"http://127.0.0.1:18080","https":"http://127.0.0.1:18080"} )
 	except: abort(400)
 
 	soup = BeautifulSoup(x.content, 'lxml')
