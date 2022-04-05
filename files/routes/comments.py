@@ -657,20 +657,18 @@ def api_comment(v):
 
 		check_for_blackjack_commands(body, v, c)
 
-	if not c.slots_result and not c.blackjack_result:
-		
-		if v.marseyawarded and parent_post.id not in ADMIGGERS and marseyaward_body_regex.search(body_html):
-			return {"error":"You can only type marseys!"}, 403
-
-		if not c.wordle_result and not rts:
-			parent_post.comment_count += 1
-			g.db.add(parent_post)
+	if not c.slots_result and not c.blackjack_result and v.marseyawarded and parent_post.id not in ADMIGGERS and marseyaward_body_regex.search(body_html):
+		return {"error":"You can only type marseys!"}, 403
 
 	check_for_treasure(body, c)
 
 	if "!wordle" in body:
 		answer = random.choice(WORDLE_LIST)
 		c.wordle_result = f'_active_{answer}'
+
+	if not c.slots_result and not c.blackjack_result and not c.wordle_result and not rts:
+		parent_post.comment_count += 1
+		g.db.add(parent_post)
 
 	g.db.commit()
 
