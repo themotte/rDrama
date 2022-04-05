@@ -4809,7 +4809,7 @@ html {
 	display: block;
 }
 .comment-anchor:target, .unread {
-	background: #ffffff33 !important;
+	background: #ffffff22 !important;
 	padding: 12px;
 }
 
