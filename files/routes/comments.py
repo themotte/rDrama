@@ -326,9 +326,6 @@ def api_comment(v):
 
 	body_html = sanitize(body, comment=True)
 
-	if v.marseyawarded and parent_post.id not in ADMIGGERS and marseyaward_body_regex.search(body_html):
-		return {"error":"You can only type marseys!"}, 403
-
 	bans = filter_comment_html(body_html)
 
 	if bans:
@@ -660,11 +657,16 @@ def api_comment(v):
 
 		check_for_blackjack_commands(body, v, c)
 
-	check_for_treasure(body, c)
+	if not c.slots_result and not c.blackjack_result:
+		
+		if v.marseyawarded and parent_post.id not in ADMIGGERS and marseyaward_body_regex.search(body_html):
+			return {"error":"You can only type marseys!"}, 403
 
-	if not c.slots_result and not c.blackjack_result and not c.wordle_result and not rts:
-		parent_post.comment_count += 1
-		g.db.add(parent_post)
+		if not c.wordle_result and not rts:
+			parent_post.comment_count += 1
+			g.db.add(parent_post)
+
+	check_for_treasure(body, c)
 
 	if "!wordle" in body:
 		answer = random.choice(WORDLE_LIST)
