@@ -5011,8 +5011,8 @@ th, td {
 .text-white, th a {
 	color: #fff !important;
 }
-@media (max-width: 350px) {
+@media (max-width: 300px) {
 	.mobile-nav-icon {
-		padding: 0.25rem 0.6rem;
+		padding: 0.25rem 0.5rem;
 	}
 }
