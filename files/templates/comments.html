@@ -867,7 +867,7 @@
 				{% for c in p.comments %}
 					{% if not (v and v.id==c.author_id) and not c.voted %}
 						if ({{c.created_utc*1000}} > lastCount.t) 
-						try {document.getElementById("comment-{{c.id}}-only").classList.add('unread')}
+						try {document.getElementById("comment-{{c.id}}").classList.add('unread')}
 						catch(e) {}
 					{% endif %}
 				{% endfor %}
@@ -898,7 +898,7 @@
 							{% for c in p.comments %}
 								{% if not (v and v.id==c.author_id) and not c.voted %}
 									if ({{c.created_utc*1000}} > lastCount.t) 
-									try {document.getElementById("comment-{{c.id}}-only").classList.add('unread')}
+									try {document.getElementById("comment-{{c.id}}").classList.add('unread')}
 									catch(e) {}
 								{% endif %}
 							{% endfor %}
@@ -920,16 +920,16 @@
 	<div id="viewmore-{{offset}}"><button id="viewbtn" class="btn btn-primary" onclick="viewmore({{pid}},'{{sort}}',{{offset}},{{ids}})">VIEW MORE COMMENTS</a></div>
 {% endif %}
 
-{% if not ajax and v and v.theme != 'transparent' %}
+{% if not ajax and v and v.theme == 'midnight' %}
 	<script>
 		const color = getComputedStyle(document.body).getPropertyValue('background-color');  
 		const markTemplate = (name) => {
-			return `<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='50px' width='100px'><text transform='translate(20, 40) rotate(-45)' fill='${color}' fill-opacity="0.05" font-size='20'>${name}</text></svg>`;
+			return `<svg xmlns='http://www.w3.org/2000/svg' version='1.1' width='50px' height='50px'><text transform='translate(10, 50) rotate(-45)' fill='rgba(45,45,45,0.1)' font-size='20'>${name}</text></svg>`;
 		};
 		const base64Mark = btoa(markTemplate("{{v.id}}"));
 		
 		var style = document.createElement('style');
-		style.innerHTML = `#post-text,.comment-text{background-image:url("data:image/svg+xml;base64,${base64Mark}")}`;
+		style.innerHTML = `#post-text,.comment-section > .comment{background-image:url("data:image/svg+xml;base64,${base64Mark}")}`;
 		document.getElementsByTagName('head')[0].appendChild(style);
 	</script>
 {% endif %}
