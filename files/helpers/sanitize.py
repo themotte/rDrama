@@ -303,6 +303,8 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 		url = i.group(1)
 		yt_id = i.group(2).split('&')[0].split('%')[0]
+		if not yt_id_regex.fullmatch(yt_id): continue
+
 		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{url}</a>'
 
 		params = parse_qs(urlparse(url.replace('&amp;','&')).query)

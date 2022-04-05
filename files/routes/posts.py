@@ -612,7 +612,7 @@ def thumbnail_thread(pid):
 	headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
 	try:
-		x=requests.get(fetch_url, headers=headers, timeout=5)
+		x=requests.get(fetch_url, headers=headers, timeout=5, proxies=proxies)
 	except:
 		db.close()
 		return
@@ -663,7 +663,7 @@ def thumbnail_thread(pid):
 		for url in thumb_candidate_urls:
 
 			try:
-				image_req=requests.get(url, headers=headers, timeout=5)
+				image_req=requests.get(url, headers=headers, timeout=5, proxies=proxies)
 			except:
 				continue
 
@@ -918,18 +918,18 @@ def submit_post(v, sub=None):
 			url = unquote(url).replace('?t', '&t')
 			yt_id = url.split('https://youtube.com/watch?v=')[1].split('&')[0].split('%')[0]
 
-			req = requests.get(f"https://www.googleapis.com/youtube/v3/videos?id={yt_id}&key={YOUTUBE_KEY}&part=contentDetails", timeout=5).json()
+			if yt_id_regex.fullmatch(yt_id):
+				req = requests.get(f"https://www.googleapis.com/youtube/v3/videos?id={yt_id}&key={YOUTUBE_KEY}&part=contentDetails", timeout=5).json()
+				if req.get('items'):
+					params = parse_qs(urlparse(url).query)
+					t = params.get('t', params.get('start', [0]))[0]
+					if isinstance(t, str): t = t.replace('s','')
 
-			if req.get('items'):
-				params = parse_qs(urlparse(url).query)
-				t = params.get('t', params.get('start', [0]))[0]
-				if isinstance(t, str): t = t.replace('s','')
-
-				embed = f'<lite-youtube videoid="{yt_id}" params="autoplay=1&modestbranding=1'
-				if t:
-					try: embed += f'&start={int(t)}'
-					except: pass
-				embed += '"></lite-youtube>'
+					embed = f'<lite-youtube videoid="{yt_id}" params="autoplay=1&modestbranding=1'
+					if t:
+						try: embed += f'&start={int(t)}'
+						except: pass
+					embed += '"></lite-youtube>'
 			
 		elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
 			id = url.split("/post/")[1]
@@ -1469,7 +1469,7 @@ def get_post_title(v):
 	url = request.values.get("url")
 	if not url: abort(400)
 
-	try: x = requests.get(url, headers=titleheaders, timeout=5, proxies={"http":"http://127.0.0.1:18080","https":"http://127.0.0.1:18080"} )
+	try: x = requests.get(url, headers=titleheaders, timeout=5, proxies=proxies)
 	except: abort(400)
 
 	soup = BeautifulSoup(x.content, 'lxml')
