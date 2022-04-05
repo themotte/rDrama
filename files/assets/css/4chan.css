@@ -145,6 +145,6 @@ blockquote a {
 	color: #117743 !important;
 }
 
-.comment-anchor:target, .unread2 {
+.comment-anchor:target, .unread {
 	background: #ffffff88 !important;
 }

@@ -4461,11 +4461,6 @@ blockquote p {
 	padding-bottom: 0.7rem;
 	padding-top: 0.7rem;
 }
-.unread {
-	padding: 10px 10px 0 10px!important;
-	border: 2px solid var(--primary) !important;
-	margin-bottom: 1rem;
-}
 @media (min-width: 576px) {
 	.modal-dialog {
 		max-width: 50% !important;
@@ -4812,7 +4807,7 @@ html {
 	content: '';
 	display: block;
 }
-.comment-anchor:target, .unread2 {
+.comment-anchor:target, .unread {
 	background: #ffffff33 !important;
 	padding: 12px;
 }

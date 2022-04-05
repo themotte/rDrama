@@ -506,7 +506,7 @@ a.nav-link:hover {
 	padding-bottom: 0 !important;
 }
 
-.comment-anchor:target, .unread2 {
+.comment-anchor:target, .unread {
 	background: #88888833 !important;
 	padding: 12px;
 }
