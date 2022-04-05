@@ -21,21 +21,9 @@ def shop(v):
 	for useraward in g.db.query(AwardRelationship).filter(AwardRelationship.user_id == v.id, AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).all():
 		if useraward.kind in AWARDS: AWARDS[useraward.kind]["owned"] += 1
 
-	if v.patron == 1: discount = 0.90
-	elif v.patron == 2: discount = 0.85
-	elif v.patron == 3: discount = 0.80
-	elif v.patron == 4: discount = 0.75
-	elif v.patron == 5: discount = 0.70
-	elif v.patron == 6: discount = 0.65
-	elif v.patron == 7: discount = 0.60
-	else: discount = 1
-
-	for badge in [69,70,71,72,73]:
-		if v.has_badge(badge): discount -= discounts[badge]
-
 	for val in AWARDS.values():
 		val["baseprice"] = int(val["price"])
-		val["price"] = int(val["price"]*discount)
+		val["price"] = int(val["price"] * v.discount)
 
 	sales = g.db.query(func.sum(User.coins_spent)).scalar()
 	return render_template("shop.html", awards=list(AWARDS.values()), v=v, sales=sales)
@@ -55,18 +43,7 @@ def buy(v, award):
 	if award not in AWARDS: abort(400)
 	price = AWARDS[award]["price"]
 
-	if v.patron == 1: discount = 0.90
-	elif v.patron == 2: discount = 0.85
-	elif v.patron == 3: discount = 0.80
-	elif v.patron == 4: discount = 0.75
-	elif v.patron == 5: discount = 0.70
-	elif v.patron == 6: discount = 0.65
-	else: discount = 1
-
-	for badge in [69,70,71,72,73]:
-		if v.has_badge(badge): discount -= discounts[badge]
-
-	price = int(price*discount)
+	price = int(price * v.discount)
 
 	if request.values.get("mb"):
 		if v.procoins < price: return {"error": "Not enough marseybux."}, 400

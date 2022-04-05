@@ -195,6 +195,23 @@ class User(Base):
 
 	@property
 	@lazy
+	def discount(self):
+		if self.patron == 1: discount = 0.90
+		elif self.patron == 2: discount = 0.85
+		elif self.patron == 3: discount = 0.80
+		elif self.patron == 4: discount = 0.75
+		elif self.patron == 5: discount = 0.70
+		elif self.patron == 6: discount = 0.65
+		else: discount = 1
+
+		for badge in [69,70,71,72,73]:
+			if self.has_badge(badge): discount -= discounts[badge]
+
+		return discount
+		
+
+	@property
+	@lazy
 	def user_awards(self):
 
 		return_value = list(AWARDS2.values())

@@ -13,7 +13,7 @@
 					<input type="hidden" name="formkey", value="{{v.formkey}}">
 					<div class="card-columns award-columns awards-wrapper">
 						{% for award in v.user_awards %}
-							<a role="button" id="{{award.kind}}" class="card" onclick="pick('{{award.kind}}', {{award.price}} <= {{v.procoins}}, {{award.price}} <= {{v.coins}})">
+							<a role="button" id="{{award.kind}}" class="card" onclick="pick('{{award.kind}}', {{award.price}}*{{v.discount}} <= {{v.procoins}}, {{award.price}}*{{v.discount}} <= {{v.coins}})">
 								<i class="{{award.icon}} {{award.color}}"></i>
 								<div class="pt-2" style="font-weight: bold; font-size: 14px; color:#E1E1E1">{{award.title}}</div>
 								<div class="text-muted"><span id="{{award.kind}}-owned">{{award.owned}}</span> owned</div>
