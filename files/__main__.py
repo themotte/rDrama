@@ -88,6 +88,10 @@ mail = Mail(app)
 
 @app.before_request
 def before_request():
+	host = request.headers.get("Host", "")
+	if host.strip().lower() != app.config["SERVER_NAME"].strip().lower(): return {"error":f"Unauthorized host provided ({host})."}, 401
+	if request.headers.get("CF-Worker", "") != "": return {"error":"Cloudflare workers are not allowed to access this website."}, 401
+
 	if request.method.lower() != "get" and app.config["READ_ONLY"]:
 		return {"error":f"{app.config['SITE_NAME']} is currently in read-only mode."}, 500
 
