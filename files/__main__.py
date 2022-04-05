@@ -88,7 +88,7 @@ mail = Mail(app)
 
 @app.before_request
 def before_request():
-	# if request.host != app.config["SERVER_NAME"]: return {"error":"Unauthorized host provided."}, 401
+	if request.host != app.config["SERVER_NAME"]: return {"error":"Unauthorized host provided."}, 401
 	if request.headers.get("CF-Worker"): return {"error":"Cloudflare workers are not allowed to access this website."}, 401
 
 	if request.method.lower() != "get" and app.config["READ_ONLY"]:
