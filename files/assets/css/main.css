@@ -4055,7 +4055,7 @@ pre .com, code .com {
 		box-shadow: none;
 }
 	.mobile-nav-icon {
-		padding: 0.25rem 0.6rem;
+		padding: 0.25rem 0.5rem;
 }
 	#thread, #submit {
 		background-color: var(--light);
