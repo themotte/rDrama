@@ -265,6 +265,7 @@ class Submission(Base):
 
 		data = {'author_name': self.author_name if self.author else '',
 				'permalink': self.permalink,
+				'shortlink': self.shortlink,
 				'is_banned': bool(self.is_banned),
 				'deleted_utc': self.deleted_utc,
 				'created_utc': self.created_utc,
