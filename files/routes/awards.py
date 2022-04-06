@@ -41,9 +41,9 @@ def buy(v, award):
 	AWARDS = deepcopy(AWARDS2)
 
 	if award not in AWARDS: abort(400)
-	price = AWARDS[award]["price"]
+	og_price = AWARDS[award]["price"]
 
-	price = int(price * v.discount)
+	price = int(og_price * v.discount)
 
 	if request.values.get("mb"):
 		if v.procoins < price: return {"error": "Not enough marseybux."}, 400
@@ -115,10 +115,14 @@ def buy(v, award):
 			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 
 	else:
-		award = AwardRelationship(user_id=v.id, kind=award)
-		g.db.add(award)
+		award_object = AwardRelationship(user_id=v.id, kind=award)
+		g.db.add(award_object)
 
 	g.db.add(v)
+
+	if CARP_ID and v.id != CARP_ID and og_price >= 10000:
+		send_repeatable_notification(CARP_ID, f"@{v.username} has bought a `{award}` award!")
+
 	g.db.commit()
 
 	return {"message": "Award bought!"}

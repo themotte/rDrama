@@ -374,6 +374,14 @@ AWARDS = {
 		"color": "text-blue",
 		"price": 300
 	},
+	"glowie": {
+        "kind": "glowie",
+        "title": "Glowie",
+        "description": "Indicates that the recipient can be seen when driving. Just run them over.",
+        "icon": "fas fa-user-secret",
+        "color": "text-green",
+        "price": 300
+    },
 	"rehab": {
 		"kind": "rehab",
 		"title": "Rehab",
