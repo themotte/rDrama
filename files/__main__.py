@@ -119,5 +119,7 @@ def after_request(response):
 	response.headers.add("X-Frame-Options", "deny")
 	return response
 
-from files.routes.chat import *
-from files.routes import *
+if "load_chat" in argv:
+	from files.routes.chat import *
+else:
+	from files.routes import *

@@ -1,17 +1,8 @@
 function collapse_comment(comment_id) {
-	const comment = "comment-" + comment_id
-	const element = document.getElementById(comment)
-	const closed = element.classList.toggle("collapsed")
-	const top = element.getBoundingClientRect().y
-
-	document.querySelectorAll(`#${comment} .collapsed`).forEach(n => n.classList.remove('collapsed'))
-
-	if (closed && top < 0) {
-		element.scrollIntoView()
-		window.scrollBy(0, - 100)
-	}
-
-	document.getElementById(`flaggers-${comment_id}`).classList.add('d-none')
+	const c = "#comment-" + comment_id
+	document.querySelectorAll(c).forEach(n => n.classList.toggle('collapsed'))
+	const flags = document.getElementById(`flaggers-${comment_id}`)
+	if (flags) flags.classList.add('d-none')
 };
 
 function poll_vote_no_v() {
