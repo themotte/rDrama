@@ -55,7 +55,8 @@ def speak(data, v):
 		"namecolor": v.namecolor,
 		"text": text,
 		"text_html": text_html,
-		"text_censored": censor_slurs(text_html, 'chat')
+		"text_censored": censor_slurs(text_html, 'chat'),
+		"time": int(time.time())
 	}
 	
 	if v.shadowbanned:
