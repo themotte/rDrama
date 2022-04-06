@@ -437,6 +437,11 @@ class User(Base):
 
 	@property
 	@lazy
+	def normal_count(self):
+		return notifications_count - post_notifications_count - reddit_notifications_count
+
+	@property
+	@lazy
 	def do_posts(self):
 		return self.post_notifications_count and self.notifications_count-self.reddit_notifications_count == self.post_notifications_count
 
