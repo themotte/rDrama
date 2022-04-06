@@ -438,7 +438,7 @@ class User(Base):
 	@property
 	@lazy
 	def normal_count(self):
-		return notifications_count - post_notifications_count - reddit_notifications_count
+		return self.notifications_count - self.post_notifications_count - self.reddit_notifications_count
 
 	@property
 	@lazy
