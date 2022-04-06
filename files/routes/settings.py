@@ -709,7 +709,10 @@ def settings_block_user(v):
 
 	if not user: return {"error": "That user doesn't exist."}, 404
 	
-	if user.unblockable: return {"error": "This user is unblockable."}, 403
+	if user.unblockable:
+		send_repeatable_notification(user.id, f"@{v.username} has tried to block you and failed because of your unblockable status!")
+		g.db.commit()
+		return {"error": "This user is unblockable."}, 403
 
 	if user.id == v.id:
 		return {"error": "You can't block yourself."}, 409
