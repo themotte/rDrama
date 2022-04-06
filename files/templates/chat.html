@@ -149,6 +149,10 @@
 
 										<a class="{% if same %}d-none{% endif %} font-weight-bold text-black userlink" style="color:#{{m['namecolor']}}" target="_blank" href="/@{{m['username']}}">{{m['username']}}</a>
 
+										{% if not same %}
+											<span class="text-black time ml-2">{{m['time'] | timestamp}}</a>
+										{% endif %}
+
 										<div class="cdiv">
 											<span class="chat-message text-black text-break">{{text_html | safe}}</span>
 											<span class="d-none">{{m['text']}}</span>
