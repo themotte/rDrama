@@ -698,7 +698,10 @@ unlinked_regex = re.compile('''(^|\s|<p>)(https:\/\/[\w\-.#&/=\?@%+]{5,250})''',
 imgur_regex = re.compile('(https://i\.imgur\.com/([a-z0-9]+))\.(jpg|png|jpeg|webp)(?!</code>)', flags=re.I|re.A)
 reddit_regex = re.compile('(^|\s|<p>)\/?((r|u)\/(\w|-){3,25})', flags=re.A)
 sub_regex = re.compile('(^|\s|<p>)\/?(h\/(\w|-){3,25})', flags=re.A)
+
 youtube_regex = re.compile('" target="_blank">(https:\/\/youtube\.com\/watch\?v\=([a-z0-9-_]{5,20})[\w\-.#&/=\?@%+]*)</a>(?!</code>)', flags=re.I|re.A)
+yt_id_regex = re.compile('[a-z0-9-_]{5,20}', flags=re.I|re.A)
+
 strikethrough_regex = re.compile('''~{1,2}([^~]+)~{1,2}''', flags=re.A)
 
 mute_regex = re.compile("/mute @([a-z0-9_\-]{3,25}) ([0-9])+", flags=re.A)
@@ -716,8 +719,6 @@ reddit_post_regex = re.compile('(https:\/\/old\.reddit\.com\/r\/\w{1,30}\/commen
 
 utm_regex = re.compile('utm_[a-z]+=[a-z0-9_]+&', flags=re.A)
 utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
-
-yt_id_regex = re.compile('[A-Za-z0-9]{5,15}', flags=re.A)
 
 slur_regex = re.compile(rf"((?<=\s|>)|^)({single_words})((?=[\s<,.$]|s[\s<,.$]))", flags=re.I|re.A)
 slur_regex_upper = re.compile(rf"((?<=\s|>)|^)({single_words.upper()})((?=[\s<,.$]|S[\s<,.$]))", flags=re.A)
