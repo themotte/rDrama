@@ -5015,4 +5015,8 @@ th, td {
 	.mobile-nav-icon {
 		padding: 0.25rem 0.5rem;
 	}
+	.settings-nav .nav-link {
+		font-size: 1rem;
+		padding: 0.75rem 0.5rem;
+	}
 }
