@@ -260,4 +260,32 @@
 	</script>
 {% endif %}
 
+{% if request.path == '/' and g.timestamp > session.get('tooltip_last_dismissed',0)+60*60*24*30 and not g.webview %}
+	<div id="mobile-prompt-container" class="fixed-top">
+		<div id="mobile-prompt" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-container="#mobile-prompt-container" data-bs-placement="top" data-bs-trigger="click" data-bs-original-title="Install the {{SITE_NAME}} webapp by saving this page to your home screen!"></div>
+	</div>
+
+	<script>
+		if (!("standalone" in window.navigator) && !(window.navigator.standalone)) {
+			if (window.innerWidth <= 737) {
+				const tt = bootstrap.Tooltip.getOrCreateInstance(document.getElementById('mobile-prompt'))
+				tt.show()
+				document.getElementsByClassName('tooltip')[0].onclick = function(event){
+					tt.hide()
+					var xhr = new XMLHttpRequest();
+					xhr.withCredentials=true;
+					xhr.open("POST", '/dismiss_mobile_tip', true);
+					xhr.send();
+				}
+			}
+		} 
+	</script>
+
+	<style>
+		#mobile-prompt + .bs-tooltip-bottom {
+			transform: translate3d(98%, 0px, 0px) !important
+		}
+	</style>
+{% endif %}
+
 {% endblock %}

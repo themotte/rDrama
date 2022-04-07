@@ -106,6 +106,8 @@ def before_request():
 	if 'iphone' in ua or 'ipad' in ua or 'ipod' in ua or 'mac os' in ua or ' firefox/' in ua: g.inferior_browser = True
 	else: g.inferior_browser = False
 
+	g.timestamp = int(time.time())
+
 
 @app.teardown_appcontext
 def teardown_request(error):

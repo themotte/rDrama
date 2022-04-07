@@ -426,3 +426,10 @@ def settings_security(v):
 def googleplayapp():
 	with open("files/assets/assetlinks.json", "r") as f:
 		return Response(f.read(), mimetype='application/json')
+
+
+
+@app.post("/dismiss_mobile_tip")
+def dismiss_mobile_tip():
+	session["tooltip_last_dismissed"] = int(time.time())
+	return "", 204
