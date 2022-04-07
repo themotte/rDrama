@@ -5020,8 +5020,14 @@ th, td {
 	}
 }
 
-.glow p, .glow h1 {
-	text-shadow: 0 0 5px green, 0 0 2px lightgreen;
+.glow .post-title, .glow a, .glow  {
+    color:lightgreen;
+    text-shadow:1px 1px 3px darkgreen, 0 0 5px green;
+}
+
+.glow img {
+    filter: brightness(150%) sepia(100%) hue-rotate(80deg) saturate(200%);
+    box-shadow: 0 0 5px darkgreen;
 }
 
 .text-green {
