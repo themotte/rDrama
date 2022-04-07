@@ -30,7 +30,7 @@ if PUSHER_ID != 'blahblahblah':
 
 WORDLE_COLOR_MAPPINGS = {-1: "🟥", 0: "🟨", 1: "🟩"}
 
-def pusher_thread(interests, c):
+def pusher_thread(interests, c, username):
 	if len(c.body) > 500: notifbody = c.body[:500] + '...'
 	else: notifbody = c.body
 
@@ -39,7 +39,7 @@ def pusher_thread(interests, c):
 		publish_body={
 			'web': {
 				'notification': {
-					'title': f'New reply by @{c.author_name}',
+					'title': f'New reply by @{username}',
 					'body': notifbody,
 					'deep_link': f'{SITE_FULL}/comment/{c.id}?context=8&read=true#context',
 					'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?v=1012',
@@ -47,7 +47,7 @@ def pusher_thread(interests, c):
 			},
 			'fcm': {
 				'notification': {
-					'title': f'New reply by @{c.author_name}',
+					'title': f'New reply by @{username}',
 					'body': notifbody,
 				},
 				'data': {
@@ -622,7 +622,7 @@ def api_comment(v):
 				g.db.add(n)
 
 			if parent.author.id != v.id and PUSHER_ID != 'blahblahblah':				
-				try: gevent.spawn(pusher_thread, f'{request.host}{parent.author.id}', c)
+				try: gevent.spawn(pusher_thread, f'{request.host}{parent.author.id}', c, c.author_name)
 				except: pass
 
 				
