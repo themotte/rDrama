@@ -1,7 +1,14 @@
-function collapse_comment(comment_id) {
-	const c = "#comment-" + comment_id
-	document.querySelectorAll(c).forEach(n => n.classList.toggle('collapsed'))
-	const flags = document.getElementById(`flaggers-${comment_id}`)
+function collapse_comment(id, element) {
+	console.log(element)
+	const closed = element.classList.toggle("collapsed")
+	const top = element.getBoundingClientRect().y
+
+	if (closed && top < 0) {
+		element.scrollIntoView()
+		window.scrollBy(0, - 100)
+	}
+
+	const flags = document.getElementById(`flaggers-${id}`)
 	if (flags) flags.classList.add('d-none')
 };
 

@@ -63,14 +63,14 @@
 {% if (c.is_banned or c.deleted_utc or c.is_blocking) and not (v and v.admin_level > 1) and not (v and v.id==c.author_id) %}
 
 <div id="comment-{{c.id}}" class="comment">
-		<span class="comment-collapse-desktop d-none d-md-block" style="border-left: 2px solid #{{c.author.namecolor}}"onclick="collapse_comment('{{c.id}}')"></span>
+		<span class="comment-collapse-desktop d-none d-md-block" style="border-left: 2px solid #{{c.author.namecolor}}"onclick="collapse_comment('{{c.id}}', this.parentElement)"></span>
 
 		<div class="comment-body">
 
 				<div id="comment-{{c.id}}-only" class="comment-{{c.id}}-only">
 
 						<div class="user-info">
-							<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
+							<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement.parentElement.parentElement)"></span>
 							{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
 							{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author_name}}{% endif %}
 						</div>
@@ -160,14 +160,14 @@
 
 <div id="comment-{{c.id}}" class="anchor {% if c.unread %}unread{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %} {% if c.collapse_for_user(v,request.path) %}collapsed{% endif %}" style="{% if isreply %}padding-left:0!important;{% else %}border-left: 2px solid {% if c.ghost %}var(--primary){% else %}#{{c.author.namecolor}};{% endif %}{% endif %} {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
 	{% if not isreply %}
-		<span class="comment-collapse-desktop d-none d-md-block" style="border-left: 2px solid {% if c.ghost %}var(--primary){% else %}#{{c.author.namecolor}}{% endif %}" onclick="collapse_comment('{{c.id}}')"></span>
+		<span class="comment-collapse-desktop d-none d-md-block" style="border-left: 2px solid {% if c.ghost %}var(--primary){% else %}#{{c.author.namecolor}}{% endif %}" onclick="collapse_comment('{{c.id}}', this.parentElement)"></span>
 	{% endif %}
 	<div class="comment-body">
 
 		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
 
 			<div class="user-info">
-				<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
+				<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement.parentElement.parentElement.parentElement)"></span>
 
 				{% if c.awards %}
 					{% for a in c.awards %}
@@ -856,7 +856,7 @@
 	{% include "expanded_image_modal.html" %}
 
 	<script src="/assets/js/comments+submission_listing.js?v=255"></script>
-	<script src="/assets/js/comments.js?v=255"></script>
+	<script src="/assets/js/comments.js?v=256"></script>
 
 	<script>
 		{% if p and (not v or v.highlightcomments) %}
