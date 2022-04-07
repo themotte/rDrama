@@ -23,7 +23,7 @@
 
 										<div class="col-12">
 
-												<div id="post-{{p.id}}" class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+												<div id="post-{{p.id}}" class="{% if p.award_count('glowie') %}glow{% endif %} card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 														<div class="card-block my-md-auto{% if p.is_banned %} banned{% endif %}">
 																<div class="post-meta text-left d-md-none mb-1">{% if p.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}{% if p.is_banned %}removed by @{{p.ban_reason}}{% else %}[Deleted by user]{% endif %}</div>
 																<h5 class="card-title post-title text-left mb-0 mb-md-1">{{p.plaintitle(v)}}</h5>
