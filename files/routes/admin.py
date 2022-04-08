@@ -169,7 +169,6 @@ if SITE_NAME == 'PCM':
 
 
 @app.post("/@<username>/make_admin")
-@limiter.limit("1/second;5/day")
 @admin_level_required(3)
 def make_admin(v, username):
 	user = get_user(username)
@@ -189,7 +188,6 @@ def make_admin(v, username):
 
 
 @app.post("/@<username>/remove_admin")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def remove_admin(v, username):
 	user = get_user(username)
