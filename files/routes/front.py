@@ -71,7 +71,7 @@ def notifications(v):
 
 		next_exists = (len(notifications) > len(listing))
 	elif reddit:
-		notifications = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(Notification.user_id == v.id, Comment.body_html.like('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
+		notifications = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(Notification.user_id == v.id, Comment.body_html.like('<html><body><p>New site mention: <a href="https://old.reddit.com/r/%')).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
 
 		listing = []
 
@@ -92,7 +92,7 @@ def notifications(v):
 		comments = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(
 			Notification.user_id == v.id,
 			Comment.author_id != AUTOJANNY_ID,
-			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
+			Comment.body_html.notlike('<html><body><p>New site mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(100).all()
 		
 		for n, c in comments:
@@ -109,7 +109,7 @@ def notifications(v):
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
-			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
+			Comment.body_html.notlike('<html><body><p>New site mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Comment.top_comment_id.desc(), Notification.created_utc.desc()).subquery()
 
 		comments = g.db.query(Comment).join(sq, sq.c.id == Comment.id).order_by(sq.c.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
@@ -122,7 +122,7 @@ def notifications(v):
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
-			Comment.body_html.notlike('<html><body><p>New rdrama mention: <a href="https://old.reddit.com/r/%')
+			Comment.body_html.notlike('<html><body><p>New site mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(500).all()]
 
 		comms = get_comments(cids, v=v)
