@@ -601,9 +601,16 @@
 						<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 						<textarea required autocomplete="off" minlength="1" maxlength="10000" name="body" form="reply-to-t3_{{c.id}}" data-id="{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3" oninput="markdown('reply-form-body-{{c.id}}', 'message-reply-{{c.id}}')"></textarea> 
 						<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
-							<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.id}}" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji">
-								<i id="emoji-reply-btn-{{c.id}}" class="fas fa-smile-beam"></i>
+							<label class="btn btn-secondary m-0 mt-3 mr-1" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji">
+								<i class="fas fa-smile-beam"></i>
 							</label>
+
+							{% if c.sentto == 2 %}
+								<label class="btn btn-secondary m-0 mt-3" for="file-upload">
+									<div id="filename"><i class="far fa-image"></i></div>
+									<input autocomplete="off" id="file-upload" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename','file-upload')" hidden>
+								</label>
+							{% endif %}
 						</div>
 
 						<a role="button" onclick="document.getElementById('reply-message-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
@@ -843,7 +850,7 @@
 
 	{% if v %}
 		<script src="/assets/js/marked.js?v=250"></script>
-		<script src="/assets/js/comments_v.js?v=263"></script>
+		<script src="/assets/js/comments_v.js?v=264"></script>
 	{% endif %}
 
 	<script src="/assets/js/clipboard.js?v=250"></script>

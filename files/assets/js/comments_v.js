@@ -152,6 +152,10 @@ function post_reply(id){
 	form.append('formkey', formkey());
 	form.append('parent_id', id);
 	form.append('body', document.getElementById('reply-form-body-'+id).value);
+
+	for (const e of document.getElementById('file-upload').files)
+		form.append('file', e);
+
 	const xhr = new XMLHttpRequest();
 	xhr.open("post", "/reply");
 	xhr.setRequestHeader('xhr', 'xhr');

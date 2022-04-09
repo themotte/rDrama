@@ -610,11 +610,11 @@ def message2(v, username):
 
 	message = embed_removing_regex.sub(r'\1', message)
 
-	text_html = sanitize(message, noimages=True)
+	body_html = sanitize(message, noimages=True)
 
 	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
 															Comment.sentto == user.id,
-															Comment.body_html == text_html,
+															Comment.body_html == body_html,
 															).one_or_none()
 
 	if existing: return {"error": "Message already exists."}, 403
@@ -623,7 +623,7 @@ def message2(v, username):
 						  parent_submission=None,
 						  level=1,
 						  sentto=user.id,
-						  body_html=text_html
+						  body_html=body_html
 						  )
 	g.db.add(c)
 
@@ -654,7 +654,7 @@ def messagereply(v):
 
 	message = request.values.get("body", "").strip()[:10000].strip()
 
-	if not message: return {"error": "Message is empty!"}
+	if not message and not request.files.get("file"): return {"error": "Message is empty!"}
 
 	if 'linkedin.com' in message: return {"error": "this domain 'linkedin.com' is banned"}
 
@@ -667,7 +667,26 @@ def messagereply(v):
 	if parent.sentto == 2: user_id = None
 	elif v.id == user_id: user_id = parent.sentto
 
-	text_html = sanitize(message, noimages=True)
+	body_html = sanitize(message, noimages=True)
+
+	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
+		file=request.files["file"]
+		if file.content_type.startswith('image/'):
+			name = f'/images/{time.time()}'.replace('.','') + '.webp'
+			file.save(name)
+			url = process_image(name)
+			body_html += f'<img data-bs-target="#expandImageModal" data-bs-toggle="modal" onclick="expandDesktopImage(this.src)" class="img" src="{url}" loading="lazy">'
+		elif file.content_type.startswith('video/'):
+			file.save("video.mp4")
+			with open("video.mp4", 'rb') as f:
+				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
+				except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
+				try: url = req['link']
+				except: return {"error": req['error']}, 400
+			if url.endswith('.'): url += 'mp4'
+			body_html += f"<p>{url}</p>"
+		else: return {"error": "Image/Video files only"}, 400
+
 
 	new_comment = Comment(author_id=v.id,
 							parent_submission=None,
@@ -675,7 +694,7 @@ def messagereply(v):
 							top_comment_id=parent.top_comment_id,
 							level=parent.level + 1,
 							sentto=user_id,
-							body_html=text_html,
+							body_html=body_html,
 							)
 	g.db.add(new_comment)
 	g.db.flush()
