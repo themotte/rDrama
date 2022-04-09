@@ -678,7 +678,7 @@ marsey_regex = re.compile("[a-z0-9]{1,30}", flags=re.A)
 
 tags_regex = re.compile("[a-z0-9: ]{1,200}", flags=re.A)
 
-image_regex = re.compile("(^https:\/\/[\w\-.#&/=\?@%+]{5,250}\.(png|jpg|jpeg|gif|webp|maxwidth=9999|fidelity=high)($|\s))", flags=re.I|re.M|re.A)
+image_regex = re.compile("(^https:\/\/[\w\-.#&/=\?@%;+]{5,250}\.(png|jpg|jpeg|gif|webp|maxwidth=9999|fidelity=high)($|\s))", flags=re.I|re.M|re.A)
 
 valid_sub_regex = re.compile("^[a-zA-Z0-9_\-]{3,20}$", flags=re.A)
 
@@ -701,8 +701,8 @@ controversial_regex = re.compile('["> ](https:\/\/old\.reddit\.com/r/[a-zA-Z0-9_
 fishylinks_regex = re.compile("https?://\S+", flags=re.A)
 
 spoiler_regex = re.compile('''\|\|(.+)\|\|''', flags=re.A)
-video_regex = re.compile('<p><a href="(https:\/\/[\w\-.#&/=\?@%+]{5,250}\.(mp4|webm|mov))" rel="nofollow noopener noreferrer" target="_blank">(https:\/\/[\w\-.#&/=\?@%+]{5,250}\.(mp4|webm|mov))<\/a><\/p>', flags=re.I|re.A)
-unlinked_regex = re.compile('''(^|\s|<p>)(https:\/\/[\w\-.#&/=\?@%+]{5,250})''', flags=re.A)
+video_regex = re.compile('<p><a href="(https:\/\/[\w\-.#&/=\?@%;+]{5,250}\.(mp4|webm|mov))" rel="nofollow noopener noreferrer" target="_blank">(https:\/\/[\w\-.#&/=\?@%;+]{5,250}\.(mp4|webm|mov))<\/a><\/p>', flags=re.I|re.A)
+unlinked_regex = re.compile('''(^|\s|<p>)(https:\/\/[\w\-.#&/=\?@%;+]{5,250})''', flags=re.A)
 imgur_regex = re.compile('(https://i\.imgur\.com/([a-z0-9]+))\.(jpg|png|jpeg|webp)(?!</code>)', flags=re.I|re.A)
 reddit_regex = re.compile('(^|\s|<p>)\/?((r|u)\/(\w|-){3,25})', flags=re.A)
 sub_regex = re.compile('(^|\s|<p>)\/?(h\/(\w|-){3,25})', flags=re.A)
@@ -719,7 +719,7 @@ emoji_regex2 = re.compile('(?<!"):([!#A-Za-z0-9]{1,30}?):', flags=re.A)
 emoji_regex3 = re.compile('(?<!#"):([!#A-Za-z0-9]{1,30}?):', flags=re.A)
 emoji_regex4 = re.compile('(?<!"):([!A-Za-z0-9]{1,30}?):', flags=re.A)
 
-snappy_url_regex = re.compile('<a href=\"(https?:\/\/[a-z]{1,20}\.[\w:~,()\-.#&\/=?@%+]{5,250})\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">([\w:~,()\-.#&\/=?@%+]{5,250})<\/a>', flags=re.A)
+snappy_url_regex = re.compile('<a href=\"(https?:\/\/[a-z]{1,20}\.[\w:~,()\-.#&\/=?@%;+]{5,250})\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">([\w:~,()\-.#&\/=?@%;+]{5,250})<\/a>', flags=re.A)
 
 email_regex = re.compile('([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,100})+', flags=re.A)
 
