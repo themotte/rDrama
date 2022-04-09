@@ -187,8 +187,8 @@
 												{% endif %}
 
 												<div class="custom-control custom-checkbox">
-														<input onchange='draft(this);' autocomplete="off" type="checkbox" class="custom-control-input" id="ghost" name="ghost">
-														<label class="custom-control-label" for="ghost">Ghost Thread</label>
+														<input onchange='draft(this);' autocomplete="off" type="checkbox" class="custom-control-input" id="ghost" name="ghost" {% if v.coins < 100 %}disabled{% endif %}>
+														<label class="custom-control-label" for="ghost">Ghost Thread (cost: 100 coins)</label>
 												</div>
 
 												<pre>

@@ -432,10 +432,6 @@ def gumroad(v):
 
 	existing = g.db.query(User.id).filter(User.email == v.email, User.is_activated == True, User.patron >= tier).one_or_none()
 	if existing: return {"error": f"{patron} rewards already claimed on another account"}, 400
-
-	if v.patron:
-		badge = v.has_badge(20+v.patron)
-		if badge: g.db.delete(badge)
 	
 	v.patron = tier
 	if v.discord_id: add_role(v, f"{tier}")

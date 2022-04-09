@@ -892,18 +892,18 @@ def submit_post(v, sub=None):
 		
 		url = urlunparse(new_url)
 
-		search_url = url.replace('%', '')
-		search_url = reddit_post_regex.sub(r'\1%', search_url)
-		search_url = search_url.replace('\\', '').replace('_', '\_').strip()
+		if url.endswith('/'): url = url[:-1]
+		if reddit_post_regex.fullmatch(url):
+			url = reddit_post_regex.sub(r'https://old.reddit.com/\1', url)
 
+
+		search_url = url.replace('%', '').replace('\\', '').replace('_', '\_').strip()
 		repost = g.db.query(Submission).filter(
 			Submission.url.ilike(search_url),
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False
 		).first()
-
 		if repost: return redirect(repost.permalink)
-
 
 		domain_obj = get_domain(domain)
 		if not domain_obj: domain_obj = get_domain(domain+parsed_url.path)
@@ -1067,6 +1067,11 @@ def submit_post(v, sub=None):
 
 	is_bot = bool(request.headers.get("Authorization")) or (SITE == 'pcmemes.net' and v.id == SNAPPY_ID)
 
+	if request.values.get("ghost") and v.coins >= 100:
+		v.coins -= 100
+		ghost = True
+	else: ghost = False
+
 	post = Submission(
 		private=bool(request.values.get("private","")),
 		club=club,
@@ -1082,7 +1087,7 @@ def submit_post(v, sub=None):
 		title=title[:500],
 		title_html=title_html,
 		sub=sub,
-		ghost=bool(request.values.get("ghost",""))
+		ghost=ghost
 	)
 
 	g.db.add(post)

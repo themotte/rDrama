@@ -289,9 +289,6 @@ def api_comment(v):
 									text = f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}"
 									send_notification(user.id, text)
 
-								old_badge = user.has_badge(17)
-								if old_badge: g.db.delete(old_badge)
-
 							elif all_by_author < 10 and not user.has_badge(17):
 								new_badge = Badge(badge_id=17, user_id=user.id)
 
