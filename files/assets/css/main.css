@@ -5025,11 +5025,6 @@ th, td {
     text-shadow:1px 1px 1px darkgreen, 0 0 5px green;
 }
 
-.glow img {
-    filter: brightness(80%) sepia(100%) hue-rotate(80deg) saturate(200%);
-    box-shadow: 0 0 5px lime;
-}
-
 .glow .score-up, .glow .active.arrow-up::before, .glow .arrow-up::after, .glow .arrow-up:hover::before {
     color: lime !important;
 }
