@@ -113,10 +113,14 @@ function checkRepost(t) {
 		form.append("url", url);
 
 		xhr.onload=function(){
-			const permalink = xhr.response
-			console.log(permalink)
-			if (permalink) {
-				system.innerHTML = `<span class='text-danger'>This is a repost of <a href=${permalink}>${permalink}</a></span>`;
+			try {data = JSON.parse(xhr.response)}
+			catch(e) {console.log(e)}
+			
+			if (data && data["permalink"]) {
+				const permalink = data["permalink"]
+				if (permalink) {
+					system.innerHTML = `<span class='text-danger'>This is a repost of <a href=${permalink}>${permalink}</a></span>`;
+				}
 			}
 		}
 		xhr.send(form)

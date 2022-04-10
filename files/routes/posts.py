@@ -854,8 +854,8 @@ def api_is_repost():
 		Submission.deleted_utc == 0,
 		Submission.is_banned == False
 	).first()
-	if repost: return repost.permalink
-	else: return ''
+	if repost: return {'permalink': repost.permalink}
+	else: return {'permalink': ''}
 
 @app.post("/submit")
 @app.post("/h/<sub>/submit")
