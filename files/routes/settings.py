@@ -55,6 +55,12 @@ def settings_profile_post(v):
 		v.background = request.values.get("background")
 		v.theme = 'transparent'
 
+	elif request.values.get("reddit", v.reddit) != v.reddit:
+		reddit = request.values.get("reddit")
+		if reddit in {'old.reddit.com', 'reddit.com', 'teddit.net', 'libredd.it', 'unddit.com'}:
+			updated = True
+			v.reddit = reddit
+
 	elif request.values.get("slurreplacer", v.slurreplacer) != v.slurreplacer:
 		updated = True
 		v.slurreplacer = request.values.get("slurreplacer") == 'true'
@@ -78,14 +84,6 @@ def settings_profile_post(v):
 	elif request.values.get("newtabexternal", v.newtabexternal) != v.newtabexternal:
 		updated = True
 		v.newtabexternal = request.values.get("newtabexternal") == 'true'
-
-	elif request.values.get("oldreddit", v.oldreddit) != v.oldreddit:
-		updated = True
-		v.oldreddit = request.values.get("oldreddit") == 'true'
-
-	elif request.values.get("teddit", v.teddit) != v.teddit:
-		updated = True
-		v.teddit = request.values.get("teddit") == 'true'
 
 	elif request.values.get("nitter", v.nitter) != v.nitter:
 		updated = True

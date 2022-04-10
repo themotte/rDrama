@@ -346,9 +346,9 @@ class Submission(Base):
 	@lazy
 	def realurl(self, v):
 		if v and self.url and self.url.startswith("https://old.reddit.com/"):
-			url = self.url
-			if v.teddit: url = self.url.replace("old.reddit.com", "teddit.net")
-			elif not v.oldreddit: url = self.url.replace("old.reddit.com", "reddit.com")
+
+			url = self.url.replace("old.reddit.com", v.reddit)
+
 			if '/comments/' in url and "sort=" not in url:
 				if "?" in url: url += "&context=9" 
 				else: url += "?context=8"
@@ -368,8 +368,7 @@ class Submission(Base):
 		body = censor_slurs(body, v)
 
 		if v:
-			if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
-			elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
+			body = body.replace("old.reddit.com", v.reddit)
 
 			if v.nitter and '/i/' not in body and '/retweets' not in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
@@ -434,8 +433,7 @@ class Submission(Base):
 		body = censor_slurs(body, v)
 
 		if v:
-			if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
-			elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
+			body = body.replace("old.reddit.com", v.reddit)
 
 			if v.nitter and '/i/' not in body and '/retweets' not in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
