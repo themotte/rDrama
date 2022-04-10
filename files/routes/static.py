@@ -10,6 +10,12 @@ import matplotlib.pyplot as plt
 from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
 from files.classes.badges import BadgeDef
 
+@app.get("/r/drama/comments/<id>/<title>")
+@app.get("/r/Drama/comments/<id>/<title>")
+def rdrama(id, title):
+	id = ''.join(f'{x}/' for x in id)
+	return redirect(f'/archives/drama/comments/{id}{title}.html')
+
 @app.get("/privacy")
 @auth_required
 def privacy(v):
