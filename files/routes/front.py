@@ -198,7 +198,6 @@ def front_all(v, sub=None, subdomain=None):
 	except: lt=0
 
 	if v: subs = v.subs
-	elif SITE_NAME == 'rDrama': subs = 1
 	else: subs = 2
 
 	ids, next_exists = frontlist(sort=sort,
