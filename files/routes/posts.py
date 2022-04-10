@@ -517,7 +517,7 @@ def edit_post(pid, v):
 
 		p.body = body
 
-		if len(body_html) > 40000: return {"error":"Submission body too long!"}, 400
+		if len(body_html) > 40000: return {"error":"Submission body_html too long! (max 40k characters)"}, 400
 
 		p.body_html = body_html
 
@@ -844,9 +844,6 @@ def api_is_repost():
 	url = urlunparse(new_url)
 
 	if url.endswith('/'): url = url[:-1]
-	if reddit_post_regex.fullmatch(url):
-		url = reddit_post_regex.sub(r'https://old.reddit.com/\1', url)
-
 
 	search_url = url.replace('%', '').replace('\\', '').replace('_', '\_').strip()
 	repost = g.db.query(Submission).filter(
@@ -947,9 +944,6 @@ def submit_post(v, sub=None):
 		url = urlunparse(new_url)
 
 		if url.endswith('/'): url = url[:-1]
-		if reddit_post_regex.fullmatch(url):
-			url = reddit_post_regex.sub(r'https://old.reddit.com/\1', url)
-
 
 		search_url = url.replace('%', '').replace('\\', '').replace('_', '\_').strip()
 		repost = g.db.query(Submission).filter(
@@ -1105,7 +1099,7 @@ def submit_post(v, sub=None):
 	if v.marseyawarded and marseyaward_body_regex.search(body_html):
 		return {"error":"You can only type marseys!"}, 403
 
-	if len(body_html) > 40000: return error("Submission body too long!")
+	if len(body_html) > 40000: return error("Submission body_html too long! (max 40k characters)")
 
 	bans = filter_comment_html(body_html)
 	if bans:
