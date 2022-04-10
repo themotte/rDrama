@@ -594,7 +594,7 @@
 		{% endif %}
 
 		{% if request.path == '/notifications' and c.level == 1 and c.sentto and not c.parent_submission and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
-			<a class="btn btn-primary mt-3" role="button" onclick="openReplyBox('reply-message-{{c.id}}')">Reply</a>
+			<a class="btn btn-primary mt-2" role="button" onclick="openReplyBox('reply-message-{{c.id}}')">Reply</a>
 			<div id="reply-message-{{c.id}}" class="d-none">
 				<div id="comment-form-space-{{c.id}}" class="comment-write collapsed child">		
 					<form id="reply-to-message-{{c.id}}" action="/reply" method="post" class="input-group" enctype="multipart/form-data">
