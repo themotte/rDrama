@@ -150,8 +150,11 @@ function post_reply(id){
 	form.append('parent_id', id);
 	form.append('body', document.getElementById('reply-form-body-'+id).value);
 
-	for (const e of document.getElementById('file-upload').files)
-		form.append('file', e);
+	try {
+		for (const e of document.getElementById('file-upload').files)
+			form.append('file', e);
+	}
+	catch(e) {}
 
 	const xhr = new XMLHttpRequest();
 	xhr.open("post", "/reply");
@@ -187,8 +190,12 @@ function comment_edit(id){
 
 	form.append('formkey', formkey());
 	form.append('body', document.getElementById('comment-edit-body-'+id).value);
-	for (const e of document.getElementById('file-edit-reply-'+id).files)
-		form.append('file', e);
+
+	try {
+		for (const e of document.getElementById('file-edit-reply-'+id).files)
+			form.append('file', e);
+	}
+	catch(e) {}
 
 	const xhr = new XMLHttpRequest();
 	xhr.open("post", "/edit_comment/"+id);
@@ -228,9 +235,12 @@ function post_comment(fullname){
 	form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
 	form.append('body', document.getElementById('reply-form-body-'+fullname).value);
 
-	for (const e of document.getElementById('file-upload-reply-'+fullname).files)
-		form.append('file', e);
-
+	try {
+		for (const e of document.getElementById('file-upload-reply-'+fullname).files)
+			form.append('file', e);
+	}
+	catch(e) {}
+	
 	const xhr = new XMLHttpRequest();
 	xhr.open("post", "/comment");
 	xhr.setRequestHeader('xhr', 'xhr');
