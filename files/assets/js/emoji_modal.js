@@ -31,7 +31,7 @@ function loadEmojis(form) {
 					
 				'wolf': ['wombiezolf','wolfdramanomicon','wolfamogus','wolfmarine','wolfromulusremus','wolfrope','wolftinfoil','wolfmarseymask','wolfputin','wolfdrama','wolfcumjar','wolflgbt','wolfmarseyhead','wolfnoir','wolfsherifssmoking','wolftrans','wolfvaporwave','wolfangry','wolfbrains','wolfcry','wolfdead','wolfdevilish','wolffacepalm','wolfhappy','wolfidea','wolfkoala','wolflaugh','wolflove','wolfmeditate','wolfphone','wolfrainbow','wolfroses','wolfsad','wolfsfear','wolfsleep','wolftear','wolfthink','wolfthumbsup','wolfupsidedown','wolfvictory','wolfwave','wolfwink'],
 		
-				'misc': ['chadyescapy','chadnocapy','xdoubt','gigachadjesus','yotsubafish','yotsubalol','sigmatalking','zoroarkconfused','zoroarkhappy','zoroarkpout','zoroarksleepy','casanovanova','deuxwaifu','flairlessmong','hardislife','redditgigachad','rfybear','etika','sneed','retardedchildren','bruh','autism','doot','kylieface','queenyes','wholesomeseal','gigachadglow','gigachadorthodox','gigachad','gigachad2','gigachad3']
+				'misc': ['sherpat','chadyescapy','chadnocapy','xdoubt','gigachadjesus','yotsubafish','yotsubalol','sigmatalking','zoroarkconfused','zoroarkhappy','zoroarkpout','zoroarksleepy','casanovanova','deuxwaifu','flairlessmong','hardislife','redditgigachad','rfybear','etika','sneed','retardedchildren','bruh','autism','doot','kylieface','queenyes','wholesomeseal','gigachadglow','gigachadorthodox','gigachad','gigachad2','gigachad3']
 			}
 
 			ruqq = document.getElementById('EMOJIS_ruqqie')
