@@ -29,11 +29,6 @@
 		let audio = new Audio('/assets/crab.mp3');
 		audio.loop=true;
 
-		function toggle() {
-			if (audio.paused) audio.play()
-			else audio.pause()
-		}
-
 		audio.play();
 		window.addEventListener('click', () => {
 			if (audio.paused) audio.play(); 
@@ -47,9 +42,11 @@
 		let audio = new Audio(`/assets/farts/${fart}.mp3`);
 
 		audio.play();
-		window.addEventListener('click', () => {
-			if (audio.paused) audio.play(); 
-		}, {once : true});
+		if (audio.paused) {
+			window.addEventListener('click', () => {
+				if (audio.paused) audio.play(); 
+			}, {once : true})
+		}
 	</script>
 {% endif %}
 
