@@ -340,6 +340,12 @@ def award_post(pid, v):
 	elif kind == "deflector":
 		if author.deflector: author.deflector += 36000
 		else: author.deflector = int(time.time()) + 36000
+	elif kind == "beano":
+		if not author.has_badge(128):
+			badge = Badge(user_id=author.id, badge_id=128)
+			g.db.add(badge)
+			g.db.flush()
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 
 	if author.received_award_count: author.received_award_count += 1
 	else: author.received_award_count = 1
@@ -572,6 +578,12 @@ def award_comment(cid, v):
 	elif kind == "deflector":
 		if author.deflector: author.deflector += 36000
 		else: author.deflector = int(time.time()) + 36000
+	elif kind == "beano":
+		if not author.has_badge(128):
+			badge = Badge(user_id=author.id, badge_id=128)
+			g.db.add(badge)
+			g.db.flush()
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 
 	if author.received_award_count: author.received_award_count += 1
 	else: author.received_award_count = 1

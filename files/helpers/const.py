@@ -389,7 +389,15 @@ AWARDS = {
 		"icon": "fas fa-dice-six",
 		"color": "text-black",
 		"price": 777
-	}, 
+	},
+	"beano": {
+        "kind": "beano",
+        "title": "Beano",
+        "description": "Stops you from embarrassing yourself with your flatulence",
+        "icon": "fas fa-gas-pump-slash",
+        "color": "text-green",
+        "price": 1000
+    },
 	"progressivestack": {
 		"kind": "progressivestack",
 		"title": "Progressive Stack",
