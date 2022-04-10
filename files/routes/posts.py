@@ -803,6 +803,60 @@ def thumbnail_thread(pid):
 	return
 
 
+@app.post("/is_repost")
+def api_is_repost():
+
+	url = request.values.get('url')
+	if not url: abort(400)
+
+	for rd in ("://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it", "://teddit.net"):
+		url = url.replace(rd, "://old.reddit.com")
+
+	url = url.replace("nitter.net", "twitter.com").replace("old.reddit.com/gallery", "reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube").replace("https://www.twitter", "https://twitter").replace("https://www.instagram", "https://instagram").replace("https://www.tiktok", "https://tiktok")
+
+	if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
+	elif "/media.giphy.com/" in url or "/c.tenor.com/" in url: url = url.replace(".gif", ".webp")
+	elif "/i.ibb.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp").replace(".gif", ".webp")
+
+	if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): url = url.replace("https://streamable.com/", "https://streamable.com/e/")
+
+	parsed_url = urlparse(url)
+
+	domain = parsed_url.netloc
+	if domain in ('old.reddit.com','twitter.com','instagram.com','tiktok.com'):
+		new_url = ParseResult(scheme="https",
+				netloc=parsed_url.netloc,
+				path=parsed_url.path,
+				params=parsed_url.params,
+				query=None,
+				fragment=parsed_url.fragment)
+	else:
+		qd = parse_qs(parsed_url.query)
+		filtered = {k: val for k, val in qd.items() if not k.startswith('utm_') and not k.startswith('ref_')}
+
+		new_url = ParseResult(scheme="https",
+							netloc=parsed_url.netloc,
+							path=parsed_url.path,
+							params=parsed_url.params,
+							query=urlencode(filtered, doseq=True),
+							fragment=parsed_url.fragment)
+	
+	url = urlunparse(new_url)
+
+	if url.endswith('/'): url = url[:-1]
+	if reddit_post_regex.fullmatch(url):
+		url = reddit_post_regex.sub(r'https://old.reddit.com/\1', url)
+
+
+	search_url = url.replace('%', '').replace('\\', '').replace('_', '\_').strip()
+	repost = g.db.query(Submission).filter(
+		Submission.url.ilike(search_url),
+		Submission.deleted_utc == 0,
+		Submission.is_banned == False
+	).first()
+	if repost: return repost.permalink
+	else: return ''
+
 @app.post("/submit")
 @app.post("/h/<sub>/submit")
 @limiter.limit("1/second;6/minute;200/hour;1000/day")

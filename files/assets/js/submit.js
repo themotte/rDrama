@@ -99,3 +99,26 @@ function draft(t) {
 		followers.disabled = false;
    }
 }
+
+function checkRepost(t) {
+	const system = document.getElementById('system')
+	system.innerHTML = `To post an image, use a direct image link such as i.imgur.com`;
+	const url = t.value
+
+	if (url) {
+		const xhr = new XMLHttpRequest();
+		xhr.open("post", "/is_repost");
+		xhr.setRequestHeader('xhr', 'xhr');
+		var form = new FormData()
+		form.append("url", url);
+
+		xhr.onload=function(){
+			const permalink = xhr.response
+			console.log(permalink)
+			if (permalink) {
+				system.innerHTML = `<span class='text-danger'>This is a repost of <a href=${permalink}>${permalink}</a></span>`;
+			}
+		}
+		xhr.send(form)
+	}
+}

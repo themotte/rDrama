@@ -22,9 +22,6 @@ function post_toast3(t, url, button1, button2) {
 		}
 	}
 
-
-	form.append("formkey", formkey());
-
 	xhr.onload = function() {
 		let data
 		try {data = JSON.parse(xhr.response)}

@@ -101,8 +101,8 @@
 
 												<div id="urlblock">
 														<label for="URL" class="mt-3">URL</label>
-														<input autocomplete="off" class="form-control" id="post-url" aria-describedby="URLHelp" name="url" type="url" placeholder="Optional if you have text." value="{{request.values.get('url','')}}" required oninput="checkForRequired();hide_image();savetext(){% if SITE_NAME != 'PCM' %};autoSuggestTitle(){% endif %}">
-														<small class="form-text text-muted">To post an image, use a direct image link such as i.imgur.com</small>
+														<input autocomplete="off" class="form-control" id="post-url" aria-describedby="URLHelp" name="url" type="url" placeholder="Optional if you have text." value="{{request.values.get('url','')}}" required oninput="checkForRequired();hide_image();savetext();checkRepost(this){% if SITE_NAME != 'PCM' %};autoSuggestTitle(){% endif %}">
+														<small id="system" class="form-text text-muted">To post an image, use a direct image link such as i.imgur.com</small>
 												</div>
 												<div id="image-upload-block">
 													<div><label class="mt-3">Attachment Upload</label></div>
@@ -268,7 +268,7 @@
 
 		<script src="/assets/js/marked.js?v=250"></script>
 		<script src="/assets/js/formatting.js?v=240"></script>
-		<script src="/assets/js/submit.js?v=251"></script>
+		<script src="/assets/js/submit.js?v=252"></script>
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
 
