@@ -517,7 +517,7 @@ def edit_post(pid, v):
 
 		p.body = body
 
-		if len(body_html) > 40000: return {"error":"Submission body too long!"}, 400
+		if len(body_html) > 40000: return {"error":"Submission body_html too long! (max 40k characters)"}, 400
 
 		p.body_html = body_html
 
@@ -1105,7 +1105,7 @@ def submit_post(v, sub=None):
 	if v.marseyawarded and marseyaward_body_regex.search(body_html):
 		return {"error":"You can only type marseys!"}, 403
 
-	if len(body_html) > 40000: return error("Submission body too long!")
+	if len(body_html) > 40000: return error("Submission body_html too long! (max 40k characters)")
 
 	bans = filter_comment_html(body_html)
 	if bans:
