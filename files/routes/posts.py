@@ -844,9 +844,6 @@ def api_is_repost():
 	url = urlunparse(new_url)
 
 	if url.endswith('/'): url = url[:-1]
-	if reddit_post_regex.fullmatch(url):
-		url = reddit_post_regex.sub(r'https://old.reddit.com/\1', url)
-
 
 	search_url = url.replace('%', '').replace('\\', '').replace('_', '\_').strip()
 	repost = g.db.query(Submission).filter(
@@ -947,9 +944,6 @@ def submit_post(v, sub=None):
 		url = urlunparse(new_url)
 
 		if url.endswith('/'): url = url[:-1]
-		if reddit_post_regex.fullmatch(url):
-			url = reddit_post_regex.sub(r'https://old.reddit.com/\1', url)
-
 
 		search_url = url.replace('%', '').replace('\\', '').replace('_', '\_').strip()
 		repost = g.db.query(Submission).filter(

@@ -731,8 +731,6 @@ snappy_url_regex = re.compile('<a href=\"(https?:\/\/[a-z]{1,20}\.[\w:~,()\-.#&\
 
 email_regex = re.compile('([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,100})+', flags=re.A)
 
-reddit_post_regex = re.compile('https:\/\/old\.reddit\.com\/r\/\w{1,30}\/comments\/([a-z0-9]+)(\/\w{0,100})?', flags=re.A)
-
 utm_regex = re.compile('utm_[a-z]+=[a-z0-9_]+&', flags=re.A)
 utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
 
