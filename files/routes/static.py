@@ -315,7 +315,7 @@ def submit_contact(v):
 	g.db.flush()
 	new_comment.top_comment_id = new_comment.id
 	
-	for admin in g.db.query(User).filter(User.admin_level > 1).all():
+	for admin in g.db.query(User).filter(User.admin_level > 2).all():
 		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
 		g.db.add(notif)
 
