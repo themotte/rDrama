@@ -81,7 +81,7 @@ class User(Base):
 	flairchanged = Column(Integer)
 	newtab = Column(Boolean, default=False)
 	newtabexternal = Column(Boolean, default=True)
-	reddit = Column(String)
+	reddit = Column(String, default='old.reddit.com')
 	nitter = Column(Boolean)
 	mute = Column(Boolean)
 	unmutable = Column(Boolean)
