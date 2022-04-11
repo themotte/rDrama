@@ -57,7 +57,7 @@ def settings_profile_post(v):
 
 	elif request.values.get("reddit", v.reddit) != v.reddit:
 		reddit = request.values.get("reddit")
-		if reddit in {'old.reddit.com', 'reddit.com', 'teddit.net', 'libredd.it', 'unddit.com'}:
+		if reddit in {'old.reddit.com', 'reddit.com', 'i.reddit.com', 'teddit.net', 'libredd.it', 'unddit.com'}:
 			updated = True
 			v.reddit = reddit
 

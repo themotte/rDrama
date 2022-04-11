@@ -185,7 +185,7 @@
 						<p>Change the domain you would like to view reddit posts in.</p>
 						<div class="input-group mb2">
 							<select autocomplete="off" id='reddit' class="form-control" form="profile-settings" name="reddit" onchange="post_toast(this,'/settings/profile?reddit='+document.getElementById('reddit').value)">
-							{% for entry in ['old.reddit.com', 'reddit.com', 'unddit.com', 'teddit.net', 'libredd.it'] %}
+							{% for entry in ['old.reddit.com', 'reddit.com', 'i.reddit.com', 'unddit.com', 'teddit.net', 'libredd.it'] %}
 								<option value="{{entry}}"{{' selected' if v.reddit==entry}}>{{entry}}</option>
 							{% endfor %}
 						</select>
