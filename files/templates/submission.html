@@ -39,7 +39,7 @@
 {% if not (v and v.has_badge(128)) %}
 	<script>
 		fart = Math.floor(Math.random() * 4) + 1
-		let audio = new Audio(`/assets/${fart}.mp3`);
+		let audio = new Audio(`/assets/images/${fart}.webp`);
 
 		audio.play();
 		if (audio.paused) {
