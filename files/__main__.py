@@ -15,11 +15,7 @@ import redis
 import time
 from sys import stdout, argv
 import faulthandler
-from json import loads
-
-for f in (f'files/templates/sidebar_{environ.get("SITE_NAME").strip()}.html', 'disable_signups', 'fart_mode'):
-	if not path.exists(f):
-		with open(f, 'w', encoding="utf-8"): pass
+import json
 
 app = Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
@@ -51,8 +47,6 @@ app.config["SPAM_URL_SIMILARITY_THRESHOLD"] = float(environ.get("SPAM_URL_SIMILA
 app.config["SPAM_SIMILAR_COUNT_THRESHOLD"] = int(environ.get("SPAM_SIMILAR_COUNT_THRESHOLD", 10))
 app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"] = float(environ.get("COMMENT_SPAM_SIMILAR_THRESHOLD", 0.5))
 app.config["COMMENT_SPAM_COUNT_THRESHOLD"] = int(environ.get("COMMENT_SPAM_COUNT_THRESHOLD", 10))
-app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", "0")))
-app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
 app.config["CACHE_TYPE"] = "RedisCache"
 app.config["CACHE_REDIS_URL"] = environ.get("REDIS_URL", "redis://localhost")
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -61,6 +55,7 @@ app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = environ.get("MAIL_USERNAME", "").strip()
 app.config['MAIL_PASSWORD'] = environ.get("MAIL_PASSWORD", "").strip()
 app.config['DESCRIPTION'] = environ.get("DESCRIPTION", "rdrama.net caters to drama in all forms such as: Real life, videos, photos, gossip, rumors, news sites, Reddit, and Beyond™. There isn't drama we won't touch, and we want it all!").strip()
+app.config['SETTINGS'] = {}
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_responses=True, ssl_cert_reqs=None)
 
@@ -88,13 +83,14 @@ mail = Mail(app)
 
 @app.before_request
 def before_request():
+	
+	with open('site_settings.json', 'r') as f:
+		app.config['SETTINGS'] = json.load(f)
+
 	if request.host != app.config["SERVER_NAME"]: return {"error":"Unauthorized host provided."}, 401
 	if request.headers.get("CF-Worker"): return {"error":"Cloudflare workers are not allowed to access this website."}, 401
 
-	if request.method.lower() != "get" and app.config["READ_ONLY"]:
-		return {"error":f"{app.config['SITE_NAME']} is currently in read-only mode."}, 500
-
-	if app.config["BOT_DISABLE"] and request.headers.get("Authorization"): abort(503)
+	if not app.config['SETTINGS']['Bots'] and request.headers.get("Authorization"): abort(503)
 
 	g.db = db_session()
 

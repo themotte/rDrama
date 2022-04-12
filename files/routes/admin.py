@@ -521,66 +521,53 @@ def reported_comments(v):
 @app.get("/admin")
 @admin_level_required(2)
 def admin_home(v):
-	with open('disable_signups', 'r') as f: x = f.read()
-
 	if CF_ZONE == 'blahblahblah': response = 'high'
 	else: response = requests.get(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, timeout=5).json()['result']['value']
-	
-	x2 = response == 'under_attack'
+	under_attack = response == 'under_attack'
 
-	with open('fart_mode', 'r') as f: x3 = f.read()
+	return render_template("admin/admin_home.html", v=v, under_attack=under_attack, site_settings=app.config['SETTINGS'])
 
-	return render_template("admin/admin_home.html", v=v, x=x, x2=x2, x3=x3)
 
-@app.post("/admin/disable_signups")
+@app.post("/admin/site_settings/<setting>")
 @admin_level_required(3)
-def disable_signups(v):
-	with open('disable_signups', 'r') as f: content = f.read()
+def change_settings(v, setting):
+	site_settings = app.config['SETTINGS']
+	site_settings[setting] = not site_settings[setting] 
+	with open("site_settings.json", "w") as f:
+		json.dump(site_settings, f)
 
-	with open('disable_signups', 'w') as f:
-		if content == "yes":
-			f.write("no")
-			ma = ModAction(
-				kind="enable_signups",
-				user_id=v.id,
-			)
-			g.db.add(ma)
-			g.db.commit()
-			return {"message": "Signups enabled!"}
-		else:
-			f.write("yes")
-			ma = ModAction(
-				kind="disable_signups",
-				user_id=v.id,
-			)
-			g.db.add(ma)
-			g.db.commit()
-			return {"message": "Signups disabled!"}
+	if site_settings[setting]: word = 'enable'
+	else: word = 'disable'
 
-@app.post("/admin/fart_mode")
-@admin_level_required(3)
-def fart_mode(v):
-	with open('fart_mode', 'r') as f: content = f.read()
+	body = f"@{v.username} has {word}d `{setting}` in the [admin dashboard](/admin)!"
 
-	with open('fart_mode', 'w') as f:
-		if content == "yes":
-			f.write("no")
-			ma = ModAction(
-				kind="enable_fart_mode",
-				user_id=v.id,
-			)
-			g.db.add(ma)
-			g.db.commit()
-			return {"message": "Fart mode disabled!"}
-		else:
-			f.write("yes")
-			ma = ModAction(
-				kind="disable_fart_mode",
-				user_id=v.id,
-			)
-			g.db.add(ma)
-			g.db.commit()
-			return {"message": "Fart mode enabled!"}
+	body_html = sanitize(body, noimages=True)
+
+	new_comment = Comment(author_id=NOTIFICATIONS_ID,
+						  parent_submission=None,
+						  level=1,
+						  body_html=body_html,
+						  sentto=2,
+						  distinguish_level=6
+						  )
+	g.db.add(new_comment)
+	g.db.flush()
+
+	new_comment.top_comment_id = new_comment.id
+
+	for admin in g.db.query(User).filter(User.admin_level > 2, User.id != v.id).all():
+		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
+		g.db.add(notif)
+
+	ma = ModAction(
+		kind=f"{word}_{setting}",
+		user_id=v.id,
+	)
+	g.db.add(ma)
+
+	g.db.commit()
+
+	return {'message': f"{setting} {word}d successfully!"}
 
 
 @app.post("/admin/purge_cache")

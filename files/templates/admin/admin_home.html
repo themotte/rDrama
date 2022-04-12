@@ -58,19 +58,30 @@
 {% endif %}
 
 {% if v.admin_level > 2 %}
+
 	<div class="custom-control custom-switch">
-		<input autocomplete="off" type="checkbox" class="custom-control-input" id="disable_signups" name="disable_signups" {% if x == "yes" %}checked{% endif %} onchange="post_toast(this,'/admin/disable_signups');">
-		<label class="custom-control-label" for="disable_signups">Disable signups</label>
+		<input autocomplete="off" type="checkbox" class="custom-control-input" id="signups" {% if site_settings['Signups'] %}checked{% endif %} onchange="post_toast(this,'/admin/site_settings/Signups');">
+		<label class="custom-control-label" for="signups">Signups</label>
 	</div>
 
 	<div class="custom-control custom-switch">
-		<input autocomplete="off" type="checkbox" class="custom-control-input" id="under_attack" name="under_attack" {% if x2 %}checked{% endif %} onchange="post_toast(this,'/admin/under_attack');">
+		<input autocomplete="off" type="checkbox" class="custom-control-input" id="bots" {% if site_settings['Bots']  %}checked{% endif %} onchange="post_toast(this,'/admin/site_settings/Bots');">
+		<label class="custom-control-label" for="bots">Bots</label>
+	</div>
+
+	<div class="custom-control custom-switch">
+		<input autocomplete="off" type="checkbox" class="custom-control-input" id="Fart mode" {% if site_settings['Fart mode']  %}checked{% endif %} onchange="post_toast(this,'/admin/site_settings/Fart mode');">
+		<label class="custom-control-label" for="Fart mode">Fart mode</label>
+	</div>
+
+	<div class="custom-control custom-switch">
+		<input autocomplete="off" type="checkbox" class="custom-control-input" id="Readonly mode" {% if site_settings['Readonly mode']  %}checked{% endif %} onchange="post_toast(this,'/admin/site_settings/Readonly mode');">
+		<label class="custom-control-label" for="Readonly mode">Readonly mode</label>
+	</div>
+
+	<div class="custom-control custom-switch">
+		<input autocomplete="off" type="checkbox" class="custom-control-input" id="under_attack" name="under_attack" {% if under_attack%}checked{% endif %} onchange="post_toast(this,'/admin/under_attack');">
 		<label class="custom-control-label" for="under_attack">Under attack mode</label>
-	</div>
-
-	<div class="custom-control custom-switch">
-		<input autocomplete="off" type="checkbox" class="custom-control-input" id="fart_mode" name="fart_mode" {% if x3 == "yes" %}checked{% endif %} onchange="post_toast(this,'/admin/fart_mode');">
-		<label class="custom-control-label" for="fart_mode">Fart mode</label>
 	</div>
 
 	<button class="btn btn-primary mt-3" onclick="post_toast(this,'/admin/purge_cache');">PURGE CACHE</button>

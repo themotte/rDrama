@@ -7,30 +7,32 @@ from random import randint
 def get_logged_in_user():
 	if not (hasattr(g, 'db') and g.db): g.db = db_session()
 
+	v = None
+
 	token = request.headers.get("Authorization","").strip()
 	if token:
 		client = g.db.query(ClientAuth).filter(ClientAuth.access_token == token).one_or_none()
-
-		if not client: return None
-
-		v = client.user
-		v.client = client
+		if client: 
+			v = client.user
+			v.client = client
 	else:
 		lo_user = session.get("lo_user")
-		if not lo_user: return None
+		if lo_user:
+			nonce = session.get("login_nonce", 0)
+			id = int(lo_user)
+			v = g.db.query(User).filter_by(id=id).one_or_none()
+			if v and nonce >= v.login_nonce:
+				if v.id != id: abort(400)
+				v.client = None
 
-		nonce = session.get("login_nonce", 0)
-		id = int(lo_user)
-		v = g.db.query(User).filter_by(id=id).one_or_none()
-		if not v or nonce < v.login_nonce: return None
+				if request.method != "GET":
+					submitted_key = request.values.get("formkey")
+					if not submitted_key: abort(401)
+					elif not v.validate_formkey(submitted_key): abort(401)
 
-		if v.id != id: abort(400)
-		v.client = None
 
-		if request.method != "GET":
-			submitted_key = request.values.get("formkey")
-			if not submitted_key: abort(401)
-			elif not v.validate_formkey(submitted_key): abort(401)
+	if request.method.lower() != "get" and app.config['SETTINGS']['Readonly mode'] and not (v and v.admin_level):
+		abort(403)
 
 	return v
 

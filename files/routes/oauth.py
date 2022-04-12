@@ -52,7 +52,7 @@ def request_api_keys(v):
 
 	g.db.add(new_app)
 
-	body = f"{v.username} has requested API keys for `{request.values.get('name')}`. You can approve or deny the request [here](/admin/apps)."
+	body = f"@{v.username} has requested API keys for `{request.values.get('name')}`. You can approve or deny the request [here](/admin/apps)."
 
 	body_html = sanitize(body, noimages=True)
 

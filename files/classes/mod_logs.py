@@ -175,13 +175,23 @@ ACTIONTYPES = {
 		"icon": 'fa-flag', 
 		"color": 'bg-danger'
 	},
-	'disable_fart_mode': {
+	'disable_Bots': {
+		"str": 'disabled Bots', 
+		"icon": 'fa-robot', 
+		"color": 'bg-danger'
+	},
+	'disable_Fart mode': {
 		"str": 'disabled fart mode', 
 		"icon": 'fa-gas-pump-slash', 
 		"color": 'bg-danger'
 	},
-	'disable_signups': {
-		"str": 'disabled signups', 
+	'disable_Readonly mode': {
+		"str": 'disabled readonly mode', 
+		"icon": 'fa-book', 
+		"color": 'bg-danger'
+	},
+	'disable_Signups': {
+		"str": 'disabled Signups', 
 		"icon": 'fa-users', 
 		"color": 'bg-danger'
 	},
@@ -215,13 +225,23 @@ ACTIONTYPES = {
 		"icon": 'fa-edit', 
 		"color": 'bg-primary'
 	},
-	'enable_fart_mode': {
+	'enable_Bots': {
+		"str": 'enabled Bots', 
+		"icon": 'fa-robot', 
+		"color": 'bg-success'
+	},
+	'enable_Fart mode': {
 		"str": 'enabled fart mode', 
 		"icon": 'fa-gas-pump', 
 		"color": 'bg-success'
 	},
-	'enable_signups': {
-		"str": 'enabled signups', 
+	'enable_Readonly mode': {
+		"str": 'enabled readonly mode', 
+		"icon": 'fa-book', 
+		"color": 'bg-success'
+	},
+	'enable_Signups': {
+		"str": 'enabled Signups', 
 		"icon": 'fa-users', 
 		"color": 'bg-success'
 	},
