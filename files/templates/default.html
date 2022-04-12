@@ -8,7 +8,7 @@
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
 		<link rel="stylesheet" href="/assets/css/main.css?v=223">
-		<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=41">
+		<link rel="stylesheet" href="/assets/css/transparent.css?v=41">
 		{% if v.agendaposter %}
 			<style>
 				html {
@@ -223,7 +223,7 @@
 
  </head>
 
- <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" style="{% if path != '/formatting' %}overflow-x: hidden; {% endif %}{% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) center center fixed !important; background-color: #000!important;{% endif %}">
+ <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" style="{% if path != '/formatting' %}overflow-x: hidden; {% endif %}{% if v and v.background %} background:url(/assets/images/backgrounds/anime/1.webp) center center fixed !important; background-color: #000!important;{% endif %}">
 
 {% block Banner %}
 	{% if '@' not in request.path %}		
