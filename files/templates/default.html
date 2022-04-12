@@ -7,8 +7,8 @@
 	<script src="/assets/js/bootstrap.js?v=245"></script>
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=223">
-		<link rel="stylesheet" href="/assets/css/transparent.css?v=41">
+		<link rel="stylesheet" href="/assets/css/main.css?v=224">
+		<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=42">
 		{% if v.agendaposter %}
 			<style>
 				html {
@@ -32,8 +32,8 @@
 		{% endif %}
 	{% else %}
 		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=223">
-		<link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=41">
+		<link rel="stylesheet" href="/assets/css/main.css?v=224">
+		<link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=42">
 	{% endif %}
 
 	{% if sub and sub.css and not request.path.endswith('settings') %}

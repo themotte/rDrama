@@ -80,3 +80,7 @@ pre {
 #frontpage .post-title a:visited, .visited {
 	color: #7a7a7a !important;
 }
+
+.sidebar {
+	background: None !important;
+}
