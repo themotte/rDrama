@@ -31,7 +31,7 @@ def get_logged_in_user():
 					elif not v.validate_formkey(submitted_key): abort(401)
 
 
-	if request.method.lower() != "get" and app.config['SETTINGS']['Readonly mode'] and not (v and v.admin_level):
+	if request.method.lower() != "get" and app.config['SETTINGS']['Read-only mode'] and not (v and v.admin_level):
 		abort(403)
 
 	return v

@@ -185,7 +185,7 @@ ACTIONTYPES = {
 		"icon": 'fa-gas-pump-slash', 
 		"color": 'bg-danger'
 	},
-	'disable_Readonly mode': {
+	'disable_Read-only mode': {
 		"str": 'disabled readonly mode', 
 		"icon": 'fa-book', 
 		"color": 'bg-danger'
@@ -235,7 +235,7 @@ ACTIONTYPES = {
 		"icon": 'fa-gas-pump', 
 		"color": 'bg-success'
 	},
-	'enable_Readonly mode': {
+	'enable_Read-only mode': {
 		"str": 'enabled readonly mode', 
 		"icon": 'fa-book', 
 		"color": 'bg-success'
