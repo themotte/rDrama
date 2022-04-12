@@ -17,7 +17,7 @@ from sys import stdout, argv
 import faulthandler
 from json import loads
 
-for f in (f'files/templates/sidebar_{environ.get("SITE_NAME").strip()}.html', 'disable_signups'):
+for f in (f'files/templates/sidebar_{environ.get("SITE_NAME").strip()}.html', 'disable_signups', 'fart_mode'):
 	if not path.exists(f):
 		with open(f, 'w', encoding="utf-8"): pass
 

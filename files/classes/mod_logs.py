@@ -175,6 +175,11 @@ ACTIONTYPES = {
 		"icon": 'fa-flag', 
 		"color": 'bg-danger'
 	},
+	'disable_fart_mode': {
+		"str": 'disabled fart mode', 
+		"icon": 'fa-gas-pump-slash', 
+		"color": 'bg-danger'
+	},
 	'disable_signups': {
 		"str": 'disabled signups', 
 		"icon": 'fa-users', 
@@ -209,6 +214,11 @@ ACTIONTYPES = {
 		"str": 'edited {self.target_link}', 
 		"icon": 'fa-edit', 
 		"color": 'bg-primary'
+	},
+	'enable_fart_mode': {
+		"str": 'enabled fart mode', 
+		"icon": 'fa-gas-pump', 
+		"color": 'bg-success'
 	},
 	'enable_signups': {
 		"str": 'enabled signups', 

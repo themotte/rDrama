@@ -528,7 +528,9 @@ def admin_home(v):
 	
 	x2 = response == 'under_attack'
 
-	return render_template("admin/admin_home.html", v=v, x=x, x2=x2)
+	with open('fart_mode', 'r') as f: x3 = f.read()
+
+	return render_template("admin/admin_home.html", v=v, x=x, x2=x2, x3=x3)
 
 @app.post("/admin/disable_signups")
 @admin_level_required(3)
@@ -554,6 +556,31 @@ def disable_signups(v):
 			g.db.add(ma)
 			g.db.commit()
 			return {"message": "Signups disabled!"}
+
+@app.post("/admin/fart_mode")
+@admin_level_required(3)
+def fart_mode(v):
+	with open('fart_mode', 'r') as f: content = f.read()
+
+	with open('fart_mode', 'w') as f:
+		if content == "yes":
+			f.write("no")
+			ma = ModAction(
+				kind="enable_fart_mode",
+				user_id=v.id,
+			)
+			g.db.add(ma)
+			g.db.commit()
+			return {"message": "Fart mode enabled!"}
+		else:
+			f.write("yes")
+			ma = ModAction(
+				kind="disable_fart_mode",
+				user_id=v.id,
+			)
+			g.db.add(ma)
+			g.db.commit()
+			return {"message": "Fart mode disabled!"}
 
 
 @app.post("/admin/purge_cache")

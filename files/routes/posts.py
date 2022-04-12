@@ -253,9 +253,13 @@ def post_id(pid, anything=None, v=None, sub=None):
 	g.db.commit()
 	if request.headers.get("Authorization"): return post.json
 	else:
+		with open('fart_mode', 'r') as f:
+			if f.read() == "yes": fart = True
+			else: fart = False
+
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
-		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset, sub=post.subr)
+		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset, sub=post.subr, fart=fart)
 
 @app.get("/viewmore/<pid>/<sort>/<offset>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")

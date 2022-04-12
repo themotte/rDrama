@@ -68,6 +68,11 @@
 		<label class="custom-control-label" for="under_attack">Under attack mode</label>
 	</div>
 
+	<div class="custom-control custom-switch">
+		<input autocomplete="off" type="checkbox" class="custom-control-input" id="fart_mode" name="fart_mode" {% if x3 == "yes" %}checked{% endif %} onchange="post_toast(this,'/admin/fart_mode');">
+		<label class="custom-control-label" for="fart_mode">Fart mode</label>
+	</div>
+
 	<button class="btn btn-primary mt-3" onclick="post_toast(this,'/admin/purge_cache');">PURGE CACHE</button>
 {% endif %}
 
