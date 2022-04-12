@@ -934,7 +934,7 @@ def agendaposter(user_id, v):
 		send_notification(user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 
 
-	send_repeatable_notification(user.id, f"@{v.username} has marked you as an agendaposter ({note}).")
+	send_repeatable_notification(user.id, f"@{v.username} has marked you as a chud ({note}).")
 
 	g.db.commit()
 	
@@ -965,7 +965,7 @@ def unagendaposter(user_id, v):
 	badge = user.has_badge(28)
 	if badge: g.db.delete(badge)
 
-	send_repeatable_notification(user.id, f"@{v.username} has unmarked you as an agendaposter.")
+	send_repeatable_notification(user.id, f"@{v.username} has unmarked you as a chud.")
 
 	g.db.commit()
 	return {"message": "Chud theme disabled!"}
@@ -1483,7 +1483,7 @@ def api_unban_comment(c_id, v):
 	if not comment: abort(404)
 	
 	if comment.author.agendaposter and AGENDAPOSTER_PHRASE not in comment.body.lower():
-		return {"error": "You can't bypass the agendaposter award!"}
+		return {"error": "You can't bypass the chud award!"}
 
 	if comment.is_banned:
 		ma=ModAction(
