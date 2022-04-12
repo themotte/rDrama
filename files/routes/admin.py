@@ -571,7 +571,7 @@ def fart_mode(v):
 			)
 			g.db.add(ma)
 			g.db.commit()
-			return {"message": "Fart mode enabled!"}
+			return {"message": "Fart mode disabled!"}
 		else:
 			f.write("yes")
 			ma = ModAction(
@@ -580,7 +580,7 @@ def fart_mode(v):
 			)
 			g.db.add(ma)
 			g.db.commit()
-			return {"message": "Fart mode disabled!"}
+			return {"message": "Fart mode enabled!"}
 
 
 @app.post("/admin/purge_cache")
