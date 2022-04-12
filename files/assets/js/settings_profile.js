@@ -49,15 +49,23 @@ function updatebgselection(){
 			]
 		},
 		{
-		folder: "pixelart",
-		backgrounds:
-		[
-			"1.webp",
-			"2.webp",
-			"3.webp",
-			"4.webp",
-			"5.webp",
-		]
+			folder: "pixelart",
+			backgrounds:
+			[
+				"1.webp",
+				"2.webp",
+				"3.webp",
+				"4.webp",
+				"5.webp",
+			]
+		},
+		{
+			folder: "anime",
+			backgrounds:
+			[
+				"1.webp",
+				"2.webp"
+			]
 		}
 	]
 		let bgContainer = document.getElementById(`bgcontainer`);
