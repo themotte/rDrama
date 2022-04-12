@@ -46,7 +46,7 @@
 	{% endif %}
 </head>
 
-<body id="settings2" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/anime/1.webp) center center fixed !important; background-color: #000!important;{% endif %}">
+<body id="settings2" style="overflow-x: hidden;  background:url(/assets/images/backgrounds/anime/{{'2' if v and v.id == 8195 else '1'}}.webp) center center fixed !important; background-color: #000!important;">
 
 {% include "header.html" %}
 
