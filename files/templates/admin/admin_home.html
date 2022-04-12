@@ -58,7 +58,7 @@
 {% endif %}
 
 {% if v.admin_level > 2 %}
-
+	<pre></pre>
 	<div class="custom-control custom-switch">
 		<input autocomplete="off" type="checkbox" class="custom-control-input" id="signups" {% if site_settings['Signups'] %}checked{% endif %} onchange="post_toast(this,'/admin/site_settings/Signups');">
 		<label class="custom-control-label" for="signups">Signups</label>
