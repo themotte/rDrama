@@ -26,7 +26,7 @@
 		{% block stylesheets %}
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=227"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=46">
+			<link rel="stylesheet" href="/assets/css/main.css?v=228"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=46">
 			{% if v.agendaposter %}
 				<style>
 					html {
@@ -50,7 +50,7 @@
 			{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=227">
+			<link rel="stylesheet" href="/assets/css/main.css?v=228">
 			<link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=46">
 		{% endif %}
 		{% endblock %}
