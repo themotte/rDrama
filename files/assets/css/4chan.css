@@ -17,6 +17,7 @@
 	--gray-700: #F0E0D6;
 	--gray-800: #F0E0D6;
 	--gray-900: #F0E0D6;
+	--background: #F0E0D6;
 }
 
 .text-muted {
@@ -90,7 +91,7 @@ blockquote p {
 }
 
 .comment {
-	background-color: var(--gray-700) !important;
+	background-color: var(--background) !important;
 }
 
 .navbar-light, .navbar .container-fluid, #mobile-bottom-navigation-bar {
@@ -126,7 +127,7 @@ blockquote a {
 }
 
 .srd {
-	background-color: var(--gray-700) !important;
+	background-color: var(--background) !important;
 }
 
 .srd a {
