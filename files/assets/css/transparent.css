@@ -30,17 +30,14 @@
 }
 
 .form-control {
-	background: transparent;
 	border-color: var(--primary) !important;
 }
 
 .btn {
-	background: transparent;
 	border-color: var(--primary) !important;
 }
 
 .form-control:disabled, .form-control[readonly] {
-	background: transparent;
 	border-color: var(--primary) !important;
 }
 
@@ -52,20 +49,8 @@
 	border-color: #E53E3E !important;
 }
 
-#frontpage .pseudo-submit-form.card .card-body .form-control {
-	border-color: transparent !important;
-}
-
-.btn-lg {
-	border-color: transparent !important;
-}
-
 pre {
 	color: #CFCFCF;
-}
-
-.row, .col, .comment-section {
-	background: transparent;
 }
 
 .container {
@@ -73,14 +58,7 @@ pre {
 	border-radius: 0 !important;
 }
 
-.col-12 .card {
-	background: None !important;
-}
 
 #frontpage .post-title a:visited, .visited {
 	color: #7a7a7a !important;
-}
-
-.sidebar {
-	background: None !important;
 }
