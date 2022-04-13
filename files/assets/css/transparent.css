@@ -5,7 +5,7 @@
 	--secondary: #383838;
 	--white: #E1E1E1;
 	--black: #CFCFCF;
-	--light: #000000;
+	--light: none;
 	--muted: #E1E1E1;
 	--gray: #383838;
 	--gray-100: #E1E1E1;
@@ -13,10 +13,10 @@
 	--gray-300: #383838;
 	--gray-400: #303030;
 	--gray-500: #000000;
-	--gray-600: #000000;
-	--gray-700: #000000;
-	--gray-800: #000000;
-	--gray-900: #000000;
+	--gray-600: none;
+	--gray-700: none;
+	--gray-800: none;
+	--gray-900: none;
 }
 
 
