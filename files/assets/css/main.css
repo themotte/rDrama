@@ -1828,7 +1828,7 @@ button.close {
 	line-break: auto;
 	font-size: 0.875rem;
 	word-wrap: break-word;
-	background-color: var(--gray-500);
+	background-color: #fff;
 	background-clip: padding-box;
 	border: 1px solid rgba(0, 0, 0, 0.2);
 	border-radius: 0.3rem;
@@ -2930,7 +2930,7 @@ label.color-radio span {
 	border-color: var(--primary);
 }
 .form-inline.search .form-control:active, .form-inline.search .form-control:focus {
-	background-color: var(--gray-500);
+	background-color: var(--gray-900);
 	color: var(--black);
 }
 .form-inline.search .form-control, .form-control[readonly] {
@@ -2978,7 +2978,7 @@ label.color-radio span {
 }
 .form-control:focus, .form-control:active {
 	color: var(--black);
-	background-color: var(--gray-500);
+	background-color: var(--gray-900);
 	outline: 0;
 	border-color: var(--primary);
 	box-shadow: none;
@@ -3012,7 +3012,7 @@ label.terms {
 .dropdown-menu {
 	padding: 0.5rem;
 	color: var(--white);
-	background-color: var(--gray-500);
+	background-color: var(--gray-600);
 }
 .dropdown-item {
 	padding: 0.5rem 1rem;
@@ -4361,6 +4361,7 @@ div.deleted.banned {
 	border: 1px solid var(--primary);
 	padding: 10px;
 	border-radius: 3px;
+	background-color: var(--gray-700) !important;
 }
 .text-info {
 	color: var(--primary) !important;
