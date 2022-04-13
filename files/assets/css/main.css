@@ -3012,7 +3012,7 @@ label.terms {
 .dropdown-menu {
 	padding: 0.5rem;
 	color: var(--white);
-	background-color: var(--gray-800);
+	background-color: var(--gray-600);
 }
 .dropdown-item {
 	padding: 0.5rem 1rem;
