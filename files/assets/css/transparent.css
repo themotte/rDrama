@@ -64,6 +64,6 @@ pre {
 	color: #7a7a7a !important;
 }
 
-.dropdown {
+.dropdown-menu {
 	background-color: var(--gray-500);
 }
