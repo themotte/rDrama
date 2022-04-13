@@ -4383,9 +4383,6 @@ div.deleted.banned {
 .btn {
 	background-color: var(--gray-700) !important;
 }
-.nobackground {
-	background: None !important;
-}
 textarea {
 	resize: both !important;
 }

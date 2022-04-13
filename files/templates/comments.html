@@ -404,18 +404,18 @@
 					<ul class="d-none d-md-flex list-inline text-right text-md-left"><li>
 						{% if v and request.path.startswith('/@') and v.admin_level < 2%}
 							{% if voted==1 %}
-								<button class="btn caction py-0 m-0 px-3 nobackground arrow-up mx-0 comment-{{c.id}}-up active"></button>
+								<button class="btn caction py-0 m-0 px-3 arrow-up mx-0 comment-{{c.id}}-up active"></button>
 							{% endif %}
 						{% elif v %}
 						
-							<button  tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '1')" class="comment-{{c.id}}-up btn caction py-0 m-0 px-3 nobackground arrow-up upvote-button mx-0 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
+							<button  tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '1')" class="comment-{{c.id}}-up btn caction py-0 m-0 px-3 arrow-up upvote-button mx-0 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
 						
 						{% else %}
-							<button  tabindex="0" class="comment-{{c.id}}-up btn caction nobackground py-0 m-0 px-3 arrow-up" onclick="location.href='/login';"></button>
+							<button  tabindex="0" class="comment-{{c.id}}-up btn caction py-0 m-0 px-3 arrow-up" onclick="location.href='/login';"></button>
 						
 						{% endif %}
 						
-						<button class="btn caction nobackground p-0 m-0">
+						<button class="btn caction p-0 m-0">
 							<span data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"  class="comment-score-{{c.id}} score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}">{{score}}</span>
 						</button>
 						
@@ -424,46 +424,46 @@
 								<li class=" arrow-down py-0 m-0 px-3 comment-{{c.id}}-down active"></li>
 							{% endif %}
 						{% elif v %}
-							<button {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '-1')" class="comment-{{c.id}}-down btn caction py-0 m-0 px-3 nobackground arrow-down downvote-button comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}"></button>
+							<button {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '-1')" class="comment-{{c.id}}-down btn caction py-0 m-0 px-3 arrow-down downvote-button comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}"></button>
 						
 						{% else %}
 						
-							<button {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" class="comment-{{c.id}}-down btn caction py-0 m-0 px-3 nobackground arrow-down" onclick="location.href='/login';"></button>
+							<button {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" class="comment-{{c.id}}-down btn caction py-0 m-0 px-3 arrow-down" onclick="location.href='/login';"></button>
 						
 						{% endif %}
 						
-						{% if not c.ghost or v.id == AEVANN_ID %}<a href="/votes?link={{c.fullname}}" class="btn caction nobackground px-1 text-muted"><i class="fas fa-arrows-v"></i>Votes</a>{% endif %}
+						{% if not c.ghost or v.id == AEVANN_ID %}<a href="/votes?link={{c.fullname}}" class="btn caction px-1 text-muted"><i class="fas fa-arrows-v"></i>Votes</a>{% endif %}
 						
-						<a class="btn caction nobackground px-1 text-muted" href="{{c.permalink}}"><i class="fas fa-book-open"></i>Context</a>
+						<a class="btn caction px-1 text-muted" href="{{c.permalink}}"><i class="fas fa-book-open"></i>Context</a>
 
-						<button class="btn caction py-0 nobackground px-1 text-muted copy-link" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://marsey.cat{{c.shortlink}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</button>
+						<button class="btn caction py-0 px-1 text-muted copy-link" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://marsey.cat{{c.shortlink}}{% else %}{{c.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</button>
 
 						{% if v %}
-							<button class="btn caction py-0 nobackground px-1 text-muted" role="button" onclick="openReplyBox('reply-to-{{c.id}}')"><i class="fas fa-reply" aria-hidden="true"></i>Reply</button>
+							<button class="btn caction py-0 px-1 text-muted" role="button" onclick="openReplyBox('reply-to-{{c.id}}')"><i class="fas fa-reply" aria-hidden="true"></i>Reply</button>
 
-							<button class="btn caction py-0 nobackground px-1 text-muted" data-bs-toggle="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author_name}}',)"><i class="fas fa-flag fa-fw"></i>Report</button>
+							<button class="btn caction py-0 px-1 text-muted" data-bs-toggle="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author_name}}',)"><i class="fas fa-flag fa-fw"></i>Report</button>
 
-							<button class="btn caction py-0 nobackground px-1 text-muted" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/award_comment/{{c.id}}')"><i class="fas fa-gift" aria-hidden="true"></i>Give Award</button>
+							<button class="btn caction py-0 px-1 text-muted" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/award_comment/{{c.id}}')"><i class="fas fa-gift" aria-hidden="true"></i>Give Award</button>
 							
-							<button id="unsave-{{c.id}}" class="btn caction py-0 nobackground px-1 {% if c.id in v.saved_comment_idlist() %}d-md-inline-block{% endif %} text-muted d-none" role="button" onclick="post_toast3(this,'/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Unsave</button>
+							<button id="unsave-{{c.id}}" class="btn caction py-0 px-1 {% if c.id in v.saved_comment_idlist() %}d-md-inline-block{% endif %} text-muted d-none" role="button" onclick="post_toast3(this,'/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Unsave</button>
 							
-							<button id="save-{{c.id}}" class="btn caction py-0 nobackground px-1 {% if c.id not in v.saved_comment_idlist() %}d-md-inline-block{% endif %} text-muted d-none" role="button" onclick="post_toast3(this,'/save_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Save</button>
+							<button id="save-{{c.id}}" class="btn caction py-0 px-1 {% if c.id not in v.saved_comment_idlist() %}d-md-inline-block{% endif %} text-muted d-none" role="button" onclick="post_toast3(this,'/save_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Save</button>
 						{% endif %}
 
 						{% if c.parent_submission %}
 							{% if v and c.author_id == v.id %}
-								<button class="btn caction py-0 nobackground px-1 text-muted" onclick="toggleEdit('{{c.id}}')"><i class="fas fa-edit fa-fw"></i>Edit</button>
+								<button class="btn caction py-0 px-1 text-muted" onclick="toggleEdit('{{c.id}}')"><i class="fas fa-edit fa-fw"></i>Edit</button>
 								
-								<button id="undelete-{{c.id}}" class="btn caction py-0 nobackground px-1 text-muted {% if not c.deleted_utc %}d-none{% endif %}" onclick="post_toast2(this,'/undelete/comment/{{c.id}}','delete-{{c.id}}','undelete-{{c.id}}');document.getElementById('comment-{{c.id}}').classList.remove('deleted')"><i class="fas fa-trash-alt fa-fw"></i>Undelete</button>
+								<button id="undelete-{{c.id}}" class="btn caction py-0 px-1 text-muted {% if not c.deleted_utc %}d-none{% endif %}" onclick="post_toast2(this,'/undelete/comment/{{c.id}}','delete-{{c.id}}','undelete-{{c.id}}');document.getElementById('comment-{{c.id}}').classList.remove('deleted')"><i class="fas fa-trash-alt fa-fw"></i>Undelete</button>
 
-								<button id="delete-{{c.id}}" class="btn caction py-0 nobackground px-1 text-muted {% if c.deleted_utc %}d-none{% endif %}" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Delete</button>
+								<button id="delete-{{c.id}}" class="btn caction py-0 px-1 text-muted {% if c.deleted_utc %}d-none{% endif %}" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Delete</button>
 							{% elif v and c.body %}
-								<button class="btn caction py-0 nobackground px-1 text-muted" onclick="expandMarkdown(this,'{{c.id}}')"><i class="fas text-expand-icon-{{c.id}} fa-expand-alt"></i><span>View source</span></button>
+								<button class="btn caction py-0 px-1 text-muted" onclick="expandMarkdown(this,'{{c.id}}')"><i class="fas text-expand-icon-{{c.id}} fa-expand-alt"></i><span>View source</span></button>
 							{% endif %}
 						{% endif %}
 
 						{% if v %}
-							<button style="margin-top:0.2rem" class="btn caction py-0 nobackground px-1 text-muted" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-h fa-fw"></i></button>
+							<button style="margin-top:0.2rem" class="btn caction py-0 px-1 text-muted" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-h fa-fw"></i></button>
 							<ul class="dropdown-menu">
 {% if v.admin_level and v.id==c.author_id %}
 <button id="undistinguish-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.distinguish_level %}d-md-block{% endif %} text-info"  onclick="post_toast3(this,'/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','no')"><i class="fas fa-id-badge text-info fa-fw"></i>Undistinguish</button>
