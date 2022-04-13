@@ -14,8 +14,8 @@
 	<title>Chat</title>
 
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/assets/css/main.css?v=232">
-	<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=50">
+	<link rel="stylesheet" href="/assets/css/main.css?v=233">
+	<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=51">
 	{% if v.css %}
 		<link rel="stylesheet" href="/@{{v.username}}/css">
 	{% endif %}
@@ -100,7 +100,7 @@
 	</style>
 </head>
 
-<body {% if SITE_NAME == 'rDrama' %}style="background:url(/assets/images/backgrounds/anime/{{'2' if v and v.id == 8195 else '1'}}.webp) center center fixed !important; background-color: var(--background)!important"{% endif %}>
+<body>
 	<script src="/assets/js/bootstrap.js?v=249"></script>
 
 	{% include "header.html" %}

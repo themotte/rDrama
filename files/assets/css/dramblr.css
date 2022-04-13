@@ -130,6 +130,6 @@ background-color:var(--gray-100);
 color: var(--gray-700);
 }
 
-.dropdown {
+.dropdown-menu {
 	background-color: var(--gray-800);
 }

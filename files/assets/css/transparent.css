@@ -67,3 +67,11 @@ pre {
 .dropdown-menu {
 	background-color: var(--gray-500);
 }
+
+.form-inline.search .form-control:active, .form-inline.search .form-control:focus {
+	background-color: var(--gray-500);
+}
+
+.form-control:focus, .form-control:active {
+	background-color: var(--gray-500);
+}
