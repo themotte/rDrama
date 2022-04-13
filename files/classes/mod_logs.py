@@ -201,12 +201,12 @@ ACTIONTYPES = {
 		"color": 'bg-muted'
 	},
 	'distinguish_comment': {
-		"str": 'distinguished their {self.target_link}', 
+		"str": 'distinguished {self.target_link}', 
 		"icon": 'fa-crown', 
 		"color": 'bg-success'
 	},
 	'distinguish_post': {
-		"str": 'distinguished their post {self.target_link}', 
+		"str": 'distinguished {self.target_link}', 
 		"icon": 'fa-crown', 
 		"color": 'bg-success'
 	},
@@ -376,12 +376,12 @@ ACTIONTYPES = {
 		"color": 'bg-muted'
 	},
 	'undistinguish_comment': {
-		"str": 'un-distinguished their {self.target_link}', 
+		"str": 'un-distinguished {self.target_link}', 
 		"icon": 'fa-crown', 
 		"color": 'bg-muted'
 	},
 	'undistinguish_post': {
-		"str": 'un-distinguished their post {self.target_link}', 
+		"str": 'un-distinguished {self.target_link}', 
 		"icon": 'fa-crown', 
 		"color": 'bg-muted'
 	},
