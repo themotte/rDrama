@@ -856,7 +856,7 @@ def api_is_repost():
 
 @app.post("/submit")
 @app.post("/h/<sub>/submit")
-@limiter.limit("1/second;6/minute;200/hour;1000/day")
+@limiter.limit("1/second;2/minute;10/hour;50/day")
 @auth_required
 def submit_post(v, sub=None):
 
