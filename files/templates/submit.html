@@ -26,7 +26,7 @@
 		{% block stylesheets %}
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=231"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=48">
+			<link rel="stylesheet" href="/assets/css/main.css?v=231"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=49">
 			{% if v.agendaposter %}
 				<style>
 					html {
@@ -51,11 +51,11 @@
 		{% else %}
 			<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
 			<link rel="stylesheet" href="/assets/css/main.css?v=231">
-			<link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=48">
+			<link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=49">
 		{% endif %}
 		{% endblock %}
 
-<body id="submit" {% if SITE_NAME == 'rDrama' %}style="overflow-x: hidden;  background:url(/assets/images/backgrounds/anime/{{'2' if v and v.id == 8195 else '1'}}.webp) center center fixed !important; background-color: var(--gray-700)!important;display: block;"{% endif %}>
+<body id="submit" {% if SITE_NAME == 'rDrama' %}style="overflow-x: hidden;  background:url(/assets/images/backgrounds/anime/{{'2' if v and v.id == 8195 else '1'}}.webp) center center fixed !important; background-color: var(--background)!important;display: block;"{% endif %}>
 
 				{% include "header.html" %}
 

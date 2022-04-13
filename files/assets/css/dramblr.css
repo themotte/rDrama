@@ -12,6 +12,7 @@
 	--gray-700: #2d3c50;
 	--gray-800: #1e293b;
 	--gray-900: #0f172a;
+	--background: #2d3c50;
 }
 
 body, .container.transparent, .card {
@@ -19,7 +20,7 @@ body, .container.transparent, .card {
 }
 
 .navbar-light {
-	background-color: var(--gray-700) !important
+	background-color: var(--background) !important
 }
 
 p {
@@ -31,7 +32,7 @@ p {
 }
 
 blockquote {
-	background-color: var(--gray-700);
+	background-color: var(--background);
 }
 
 #frontpage #main-content-row, .sidebar {
@@ -64,7 +65,7 @@ blockquote {
 }
 
 #mobile-bottom-navigation-bar {
-	background-color: var(--gray-700) !important;
+	background-color: var(--background) !important;
 	border-color: var(--gray-600) !important;
 }
 
@@ -121,7 +122,7 @@ blockquote {
 }
 
 .modal-content {
-	background-color: var(--gray-700)
+	background-color: var(--background)
 }
 
 .tooltip{

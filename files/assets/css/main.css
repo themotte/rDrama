@@ -2591,7 +2591,7 @@ html {
 }
 body {
 	color: var(--black);
-	background-color: var(--gray-700);
+	background-color: var(--background);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
@@ -2610,14 +2610,14 @@ pre {
 	background-color: var(--gray-600);
 }
 #page {
-	background-color: var(--gray-700);
+	background-color: var(--background);
 }
 #article {
 	padding-top: 0;
-	background-color: var(--gray-700);
+	background-color: var(--background);
 }
 #thread, #userpage {
-	background-color: var(--gray-700);
+	background-color: var(--background);
 }
 #article .navbar-light .navbar-nav .nav-link {
 	color: var(--black);
@@ -3252,7 +3252,7 @@ small, .small {
 	background-color: var(--gray-900);
 }
 #thread .card {
-	background-color: var(--gray-700);
+	background-color: var(--background);
 }
 #frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type {
 	border-top-left-radius: 0.35rem;
@@ -3569,7 +3569,7 @@ small, .small {
 	font-size: 1rem;
 }
 .comment-section {
-	background-color: var(--gray-700);
+	background-color: var(--background);
 }
 .comment p {
 	word-break: break-word;
@@ -4019,7 +4019,7 @@ pre .com, code .com {
 		max-width: none;
 }
 	body, #settings, #notifications, #submit {
-		background-color: var(--gray-700);
+		background-color: var(--background);
 }
 	#thread, #userpage {
 		background-color: var(--gray-600);
@@ -4361,7 +4361,7 @@ div.deleted.banned {
 	border: 1px solid var(--primary);
 	padding: 10px;
 	border-radius: 3px;
-	background-color: var(--gray-700) !important;
+	background-color: var(--background) !important;
 }
 .text-info {
 	color: var(--primary) !important;
@@ -4379,10 +4379,10 @@ div.deleted.banned {
 	color: black !important;
 }
 .container, .container-fluid {
-	background-color: var(--gray-700) !important;
+	background-color: var(--background) !important;
 }
 .btn {
-	background-color: var(--gray-700) !important;
+	background-color: var(--background) !important;
 }
 .nobackground {
 	background: None !important;

@@ -15,7 +15,7 @@
 
 	<style>:root{--primary:#{{v.themecolor}}}</style>
 	<link rel="stylesheet" href="/assets/css/main.css?v=231">
-	<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=48">
+	<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=49">
 	{% if v.css %}
 		<link rel="stylesheet" href="/@{{v.username}}/css">
 	{% endif %}
@@ -80,7 +80,7 @@
 		}
 
 		#online {
-			background-color: var(--gray-700) !important;
+			background-color: var(--background) !important;
 		}
 
 		.chat-line .btn {
@@ -100,7 +100,7 @@
 	</style>
 </head>
 
-<body {% if SITE_NAME == 'rDrama' %}style="background:url(/assets/images/backgrounds/anime/{{'2' if v and v.id == 8195 else '1'}}.webp) center center fixed !important; background-color: var(--gray-700)!important"{% endif %}>
+<body {% if SITE_NAME == 'rDrama' %}style="background:url(/assets/images/backgrounds/anime/{{'2' if v and v.id == 8195 else '1'}}.webp) center center fixed !important; background-color: var(--background)!important"{% endif %}>
 	<script src="/assets/js/bootstrap.js?v=249"></script>
 
 	{% include "header.html" %}
