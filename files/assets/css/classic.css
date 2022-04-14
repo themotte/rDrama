@@ -40,7 +40,7 @@
 /*common*/
 body, .card, #main-content-row {
 	background-color: var(--white) !important;
-	background-image: var(--bg2);
+	background-image: var(--bg2) !important;
 	color: var(--black1);
 }
 
@@ -121,7 +121,7 @@ a {
 }
 
 #frontpage .col.h-100.custom-gutters .row .col {
-	background-image: var(--bg1);
+	background-image: var(--bg1) !important;
 }
 
 #frontpage .dropdown .btn {

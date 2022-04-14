@@ -39,14 +39,14 @@
 	
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=233"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=51">
+		<link rel="stylesheet" href="/assets/css/main.css?v=233"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=52">
 	{% else %}
 		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=233"><link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=51">
+		<link rel="stylesheet" href="/assets/css/main.css?v=233"><link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=52">
 	{% endif %}
 </head>
 
-<body id="settings2" {% if SITE_NAME == 'rDrama' %}style="overflow-x: hidden;  background:url(/assets/images/backgrounds/anime/{{'2' if v and v.id == 8195 else '1'}}.webp) center center fixed !important; background-color: var(--background)!important;"{% endif %}>
+<body id="settings2" {% if SITE_NAME == 'rDrama' %}style="overflow-x: hidden;  background:url(/assets/images/backgrounds/anime/{{'2' if v and v.id == 8195 else '1'}}.webp) center center fixed; background-color: var(--background)!important;"{% endif %}>
 
 {% include "header.html" %}
 
