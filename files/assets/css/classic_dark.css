@@ -44,7 +44,7 @@ body, .card, #main-content-row {
 }
 
 .dropdown-menu, .dropdown-menu a {
-	color: var(--black3);
+	color: var(--grey);
 	background-color: var(--black2);
 }
 
