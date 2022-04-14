@@ -152,8 +152,8 @@ def award_post(pid, v):
 
 	author = post.author
 
-	if author.id == PIZZASHILL_ID:
-		return {"error": "Pizzashill is immune to awards."}, 403
+	if author.id in (PIZZASHILL_ID, DAD_ID):
+		return {"error": "This user is immune to awards."}, 403
 
 	if kind == "benefactor" and author.id == v.id:
 		return {"error": "You can't use this award on yourself."}, 400
@@ -391,8 +391,8 @@ def award_comment(cid, v):
 
 	author = c.author
 
-	if author.id == PIZZASHILL_ID:
-		return {"error": "Pizzashill is immune to awards."}, 403
+	if author.id in (PIZZASHILL_ID, DAD_ID):
+		return {"error": "This user is immune to awards."}, 403
 
 	if v.id != author.id:
 		if author.deflector and AWARDS[kind]['price'] > 300 and kind not in ('pin','unpin','benefactor'):
