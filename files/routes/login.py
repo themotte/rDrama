@@ -248,7 +248,11 @@ def sign_up_post(v):
 
 	now = int(time.time())
 
-	username = request.values.get("username").strip()
+	username = request.values.get("username")
+	
+	if not username: abort(400)
+
+	username = username.strip()
 
 	def signup_error(error):
 

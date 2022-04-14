@@ -370,6 +370,9 @@ def viewmore(v, pid, sort, offset):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def morecomments(v, cid):
+	try: cid = int(cid)
+	except: abort(400)
+
 	tcid = g.db.query(Comment.top_comment_id).filter_by(id=cid).one_or_none()[0]
 
 	if v:

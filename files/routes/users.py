@@ -859,7 +859,8 @@ def u_username(username, v=None):
 
 	sort = request.values.get("sort", "new")
 	t = request.values.get("t", "all")
-	page = int(request.values.get("page", "1"))
+	try: page = int(request.values.get("page", "1"))
+	except: abort(400)
 	page = max(page, 1)
 
 	ids = u.userpagelisting(v=v, page=page, sort=sort, t=t)

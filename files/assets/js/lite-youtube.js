@@ -52,6 +52,7 @@
 		const iframeEl = document.createElement('iframe');
 		iframeEl.width = 560;
 		iframeEl.height = 315;
+		iframeEl.sandbox = 'allow-scripts allow-same-origin';
 		iframeEl.title = this.playLabel;
 		iframeEl.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
 		iframeEl.allowFullscreen = true;
