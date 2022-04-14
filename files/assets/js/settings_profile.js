@@ -12,6 +12,14 @@ function updatebgselection(){
 	var bgselector = document.getElementById("backgroundSelector");
 	const backgrounds = [
 		{
+			folder: "anime",
+			backgrounds:
+			[
+				"1.webp",
+				"2.webp"
+			]
+		},
+		{
 			folder: "fantasy",
 			backgrounds: 
 			[
@@ -59,14 +67,6 @@ function updatebgselection(){
 				"5.webp",
 			]
 		},
-		{
-			folder: "anime",
-			backgrounds:
-			[
-				"1.webp",
-				"2.webp"
-			]
-		}
 	]
 		let bgContainer = document.getElementById(`bgcontainer`);
 		let str = '';

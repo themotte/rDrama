@@ -171,7 +171,7 @@
 					<p>Change the background for the website.</p>
 					<div class="input-group mb2">
 							<select autocomplete="off" id='backgroundSelector' class="form-control" form="profile-settings" name="background" onchange="updatebgselection();">
-							{% for entry in ["fantasy", "solarpunk", "pixelart"] %}
+							{% for entry in ["anime", "fantasy", "solarpunk", "pixelart"] %}
 								<option value="{{entry}}">
 									{{entry}}
 								</option>
@@ -689,7 +689,7 @@
 </div>
 
 
-<script src="/assets/js/settings_profile.js?v=244"></script>
+<script src="/assets/js/settings_profile.js?v=245"></script>
 
 {% include "emoji_modal.html" %}
 {% include "gif_modal.html" %}
