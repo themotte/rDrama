@@ -112,8 +112,12 @@ def notifications(v):
 			Comment.body_html.notlike('<html><body><p>New site mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Comment.top_comment_id.desc(), Notification.created_utc.desc()).subquery()
 
-		comments = g.db.query(Comment).join(sq, sq.c.id == Comment.id).order_by(sq.c.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+		comments = g.db.query(Comment).join(sq, sq.c.id == Comment.id).order_by(sq.c.created_utc.desc())
+		if not (v and (v.shadowbanned or v.admin_level > 1)):
+			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
 
+		comments = comments.offset(25 * (page - 1)).limit(26).all()
+		
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 
