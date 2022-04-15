@@ -30,10 +30,6 @@ body, .navbar-light, .navbar-dark, .card, .modal-content, .comment-write textare
 	background: None !important;
 }
 
-#frontpage .post-title a:visited, .visited {
-	color: #6e6e6e !important;
-}
-
 .tooltip-inner {
 	color: #383838 !important;
 }
@@ -44,4 +40,8 @@ body, .navbar-light, .navbar-dark, .card, .modal-content, .comment-write textare
 
 .page-link {
 	background-color: #ccc;
+}
+
+#frontpage .post-title a:visited, .visited {
+	color: #6e6e6e !important;
 }

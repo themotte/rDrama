@@ -1,4 +1,4 @@
-@import 'classic.css?v=22';
+@import 'classic.css?v=55';
 
 /*navbar*/
 .navbar-light, .navbar .container-fluid, #mobile-bottom-navigation-bar {
@@ -199,4 +199,8 @@ a.nav-link:hover {
 /*chat*/
 .chat-message {
 	color: var(--white) !important;
+}
+
+#frontpage .post-title a:visited, .visited {
+	color: #6e6e6e !important;
 }

@@ -210,10 +210,6 @@
 	color: var(--primary) !important;
 }
 
-#frontpage .post-title a:visited, .visited {
-	color: #b0b0b0 !important;
-}
-
 .followsyou {
 	background-color: var(--dark) !important;
 	border: 1px solid var(--primary) !important;
@@ -221,4 +217,8 @@
 
 #frontpage .pseudo-submit-form.card, .form-inline.search .form-control, .form-control[readonly] {
 	border: 2px solid var(--gray-200) !important;
+}
+
+#frontpage .post-title a:visited, .visited {
+	color: #b0b0b0 !important;
 }

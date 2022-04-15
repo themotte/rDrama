@@ -59,11 +59,6 @@ pre {
 	border-radius: 0 !important;
 }
 
-
-#frontpage .post-title a:visited, .visited {
-	color: #7a7a7a !important;
-}
-
 .dropdown-menu {
 	background-color: var(--gray-500);
 }
@@ -74,4 +69,8 @@ pre {
 
 .form-control:focus, .form-control:active {
 	background-color: var(--gray-500);
+}
+
+#frontpage .post-title a:visited, .visited {
+	color: #7a7a7a !important;
 }

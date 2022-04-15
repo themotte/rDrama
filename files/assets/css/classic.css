@@ -518,3 +518,7 @@ a.nav-link:hover {
 .chat-message {
 		color: var(--black2) !important;
 }
+
+#frontpage .post-title a:visited, .visited {
+	color: #6e6e6e !important;
+}

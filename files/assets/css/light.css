@@ -68,10 +68,6 @@ pre {
 	background: None !important;
 }
 
-#frontpage .post-title a:visited, .visited {
-	color: #7a7a7a !important;
-}
-
 blockquote {
 	color: var(--gray-400);
 }
@@ -82,4 +78,8 @@ blockquote {
 
 .comment-anchor:target, .unread {
 	background: #00000055 !important;
+}
+
+#frontpage .post-title a:visited, .visited {
+	color: #7a7a7a !important;
 }

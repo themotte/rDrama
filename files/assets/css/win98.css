@@ -127,10 +127,6 @@ blockquote {
 	padding: 20px !important;
 }
 
-#frontpage .post-title a:visited, .visited {
-	color: #5c5c5c !important;
-}
-
 .post-actions a, .post-actions button {
 	color: var(--muted) !important;
 }
@@ -162,4 +158,8 @@ blockquote {
 
 .comment-anchor:target, .unread {
 	background: #ffffffaa !important;
+}
+
+#frontpage .post-title a:visited, .visited {
+	color: #5c5c5c !important;
 }

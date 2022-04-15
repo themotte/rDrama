@@ -133,3 +133,7 @@ color: var(--gray-700);
 .dropdown-menu {
 	background-color: var(--gray-800);
 }
+
+#frontpage .post-title a:visited, .visited {
+	color: #6e6e6e !important;
+}
