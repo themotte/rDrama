@@ -3181,7 +3181,7 @@ small, .small {
 	width: 28px;
 	height: 28px;
 }
-.profile-pic-20, .pp20, img[src*="/uid/"], img[src*="/pp/"] {
+.profile-pic-20, .pp20, img[src^="/uid/"], img[src^="/pp/"] {
 	margin-right: 0.25rem !important;
 	width: 20px;
 	height: 20px;
@@ -4281,13 +4281,13 @@ div.deleted.banned {
 .object-cover {
 	object-fit: cover;
 }
-.spoiler {
+.spoiler, spoiler {
 	color: var(--white);
 	background-color: var(--white);
 	font-weight: 600 !important;
 	padding: 1px 3px 1px 3px;
 }
-.spoiler:hover {
+.spoiler:hover, spoiler:hover {
 	color: var(--gray);
 }
 @media (min-width: 768px) {
@@ -4375,7 +4375,7 @@ div.deleted.banned {
 	border-radius: 5px !important;
 	color: white !important;
 }
-.patron[style*="background-color:#FFFFFF;"] {
+.patron[style="background-color:#FFFFFF;"] {
 	color: black !important;
 }
 .container, .container-fluid {
@@ -4468,7 +4468,7 @@ blockquote p {
 		margin: 1.75rem auto !important;
 }
 }
-.in-comment-image:not(img[src*="/uid/"]):not(img[src*="/pp/"]), .preview img, .img:not(img[src*="/uid/"]):not(img[src*="/pp/"]), .preview img {
+.in-comment-image:not(img[src*="/uid/"]):not(img[src*="/pp/"]), .preview img, .img:not(img[src*="/uid/"]):not(img[src*="/pp/"]), img[alt^="![]("], .preview img {
 	max-height: 150px !important;
 	max-width: 100% !important;
 	border-radius: 0.2rem !important;
@@ -4476,7 +4476,7 @@ blockquote p {
 	margin-bottom: 0.5rem !important;
 	cursor: pointer;
 }
-.embedvid, .vid {
+video {
 	max-height: 20rem !important;
 	max-width: 100% !important;
 	margin-top: 0.5rem !important;
@@ -4539,10 +4539,11 @@ blockquote p {
 .text-removed {
 	color: #ffabab !important;
 }
-.mirrored {
+.mirrored, img[alt^=":!"], img[alt^=":#!"] {
 	transform: scaleX(-1);
--webkit-transform: scaleX(-1);
+	-webkit-transform: scaleX(-1);
 }
+
 @media (max-width: 768px) {
 	.popover-bio * {
 		font-size: 0.8rem !important;
@@ -4572,15 +4573,16 @@ input[type=radio] ~ .custom-control-label::before {
 .emoji-modal {
 	max-width: 90% !important 
 }
-.emj, .emoji, strong a img {
+.bigemoji, .emoji-md, img[alt^=":"]:not(img[alt*="#"]) {
+	height: 60px;
+	width: 60px;
+}
+.emj, .emoji, strong a img, img[alt^=":"]:not(img[b]) {
 	height: 30px !important;
 	width: 30px !important;
 }
-.bigemoji, .emoji-md {
-	height: 60px !important;
-	width: 60px !important;
-}
-.emj, .emoji, .bigemoji, .emoji-md, .emoji-lg {
+.emj, .emoji, .bigemoji, .emoji-md, .emoji-lg, img[alt^=":"]
+{
 	max-width: min(150px,25vw) !important;
 	max-height: min(150px,25vw) !important;
 	display: inline-block;
@@ -4714,7 +4716,7 @@ table {
 	from {filter: sepia(100%) saturate(2) drop-shadow(-1px 1px 1px gold)}
 	to {filter: sepia(100%) saturate(3) drop-shadow(-1px 1px 3px gold)}
 }
-img.golden {
+img.golden, img[g] {
 	animation-name: golden !important;
 	animation-duration: 1s !important;
 	animation-iteration-count: infinite !important;
@@ -5039,4 +5041,8 @@ th, td {
 
 .text-green {
 	color: green !important;
+}
+
+img[src="/e/marseylong1"], img[src="/e/marseylong2"], img[src="/e/marseyllama1"], img[src="/e/marseyllama2"] {
+	margin-bottom: 0!important;
 }

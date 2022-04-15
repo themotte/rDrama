@@ -13,115 +13,23 @@ import signal
 import time
 import requests
 
-allowed_tags = tags = ['b',
-						'blockquote',
-						'br',
-						'code',
-						'del',
-						'em',
-						'h1',
-						'h2',
-						'h3',
-						'h4',
-						'h5',
-						'h6',
-						'hr',
-						'i',
-						'li',
-						'ol',
-						'p',
-						'pre',
-						'strong',
-						'sub',
-						'sup',
-						'table',
-						'tbody',
-						'th',
-						'thead',
-						'td',
-						'tr',
-						'ul',
-						'marquee',
-						'a',
-						'img',
-						'span',
-						'ruby',
-						'rp',
-						'rt',
-						]
-
-no_images = ['b',
-						'blockquote',
-						'br',
-						'code',
-						'del',
-						'em',
-						'h1',
-						'h2',
-						'h3',
-						'h4',
-						'h5',
-						'h6',
-						'hr',
-						'i',
-						'li',
-						'ol',
-						'p',
-						'pre',
-						'strong',
-						'sub',
-						'sup',
-						'table',
-						'tbody',
-						'th',
-						'thead',
-						'td',
-						'tr',
-						'ul',
-						'marquee',
-						'a',
-						'span',
-						'ruby',
-						'rp',
-						'rt',
-						]
-
-def sanitize_marquee(tag, name, value):
-	if name in allowed_attributes['*'] or name in ['direction', 'behavior', 'scrollamount']: return True
-
-	if name in {'height', 'width'}:
-		try: value = int(value.replace('px', ''))
-		except: return False
-		if 0 < value <= 250: return True
-
-	return False
-
-allowed_attributes = {
-		'*': ['href', 'style', 'src', 'title', 'loading'],
-		'marquee': sanitize_marquee}
-
-allowed_protocols = ['http', 'https']
-
-allowed_styles = ['color', 'background-color', 'font-weight', 'text-align']
-
-
-def handler(signum, frame):
-	print("Forever is over!")
-	raise Exception("end of time")
-
 
 def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
+	def handler(signum, frame):
+		print("Timeout!")
+		raise Exception("Timeout")
+
 	signal.signal(signal.SIGALRM, handler)
 	signal.alarm(1)
-	
+
 	sanitized = image_check_regex.sub(r'\1', sanitized)
 
 	sanitized = markdown(sanitized)
 
 	sanitized = strikethrough_regex.sub(r'<del>\1</del>', sanitized)
 
-	sanitized = sanitized.replace('‎','').replace('​','').replace("\ufeff", "").replace("𒐪","").replace("<script","").replace("script>","")
+	sanitized = sanitized.replace('‎','').replace('​','').replace("\ufeff", "").replace("𒐪","")
 
 	if alert:
 		captured = []
@@ -153,41 +61,14 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 	sanitized = imgur_regex.sub(r'\1_d.webp?maxwidth=9999&fidelity=high', sanitized)
 
-	if noimages:
-		sanitized = bleach.Cleaner(tags=no_images,
-									attributes=allowed_attributes,
-									protocols=allowed_protocols,
-									styles=allowed_styles,
-									filters=[partial(LinkifyFilter,
-													skip_tags=["pre"],
-													parse_email=False,
-													)
-											]
-									).clean(sanitized)
-	else:
-		sanitized = bleach.Cleaner(tags=allowed_tags,
-							attributes=allowed_attributes,
-							protocols=['http', 'https'],
-							styles=['color','font-weight','transform','-webkit-transform'],
-							filters=[partial(LinkifyFilter,
-											skip_tags=["pre"],
-											parse_email=False,
-											)
-									]
-							).clean(sanitized)
-
 	soup = BeautifulSoup(sanitized, 'lxml')
 
 	for tag in soup.find_all("img"):
 		if tag.get("src") and not tag["src"].startswith('/pp/'):
-			tag["class"] = "img"
 			tag["loading"] = "lazy"
 			tag["data-src"] = tag["src"]
 			tag["src"] = "/assets/images/loading.webp"
 			tag['alt'] = f'![]({tag["data-src"]})'
-			tag["onclick"] = "expandDesktopImage(this.src);"
-			tag["data-bs-toggle"] = "modal"
-			tag["data-bs-target"] = "#expandImageModal"
 			tag['referrerpolicy'] = "no-referrer"
 
 	for tag in soup.find_all("a"):
@@ -205,7 +86,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 	sanitized = str(soup)
 	
-	sanitized = spoiler_regex.sub(r'<span class="spoiler">\1</span>', sanitized)
+	sanitized = spoiler_regex.sub(r'<spoiler>\1</spoiler>', sanitized)
 	
 	if comment: marseys_used = set()
 
@@ -218,38 +99,27 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 		captured.append(i.group(0))
 
 		old = i.group(0)
-		if 'marseylong1' in old or 'marseylong2' in old or 'marseyllama1' in old or 'marseyllama2' in old: new = old.lower().replace(">", " class='mb-0'>")
-		else: new = old.lower()
-		
+		new = old.lower()
+
 		captured2 = []
 		for i in emoji_regex2.finditer(new):
 			if i.group(0) in captured2: continue
 			captured2.append(i.group(0))
 
 			emoji = i.group(1).lower()
-			if emoji.startswith("#!") or emoji.startswith("!#"):
-				classes = 'emoji-lg mirrored'
-				remoji = emoji[2:]
-			elif emoji.startswith("#"):
-				classes = 'emoji-lg'
-				remoji = emoji[1:]
-			elif emoji.startswith("!"):
-				classes = 'emoji-md mirrored'
-				remoji = emoji[1:]
-			else:
-				classes = 'emoji-md'
-				remoji = emoji
+			remoji = emoji.replace('!','').replace('#','')
 
-			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): classes += ' golden'
+			golden = ' '
+			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): golden = 'g '
 
 			if remoji == 'marseyrandom': remoji = choice(marseys_const2)
 
 			if path.isfile(f'files/assets/images/emojis/{remoji}.webp'):
-				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" class="{classes}" src="/e/{remoji}.webp">', new, flags=re.I|re.A)
+				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" b {golden}src="/e/{remoji}.webp">', new, flags=re.I|re.A)
 				if comment: marseys_used.add(emoji)
 			elif remoji.endswith('pat') and path.isfile(f"files/assets/images/emojis/{remoji.replace('pat','')}.webp"):
 				pat(remoji.replace('pat',''))
-				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" class="{classes}" src="/e/{remoji}.webp">', new, flags=re.I|re.A)
+				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" b {golden}src="/e/{remoji}.webp">', new, flags=re.I|re.A)
 				requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{emoji}.webp"]}, timeout=5)
 
 
@@ -263,30 +133,21 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 		if i.group(0) in captured: continue
 		captured.append(i.group(0))
 
-		emoji = i.group(1).lower().replace('#','')
-		if emoji.startswith("!"):
-			emoji = emoji[1:]
-			classes = 'emoji mirrored'
-			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): classes += ' golden'
+		emoji = i.group(1).lower()
+		golden = ' '
+		if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): golden = 'g '
 
-			old = emoji
-			if emoji == 'marseyrandom': emoji = choice(marseys_const2)
-			else: emoji = old
-		else:
-			classes = 'emoji'
-			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): classes += ' golden'
-			
-			old = emoji
-			if emoji == 'marseyrandom': emoji = choice(marseys_const2)
-			else: emoji = old
+		old = emoji
+		emoji = emoji.replace('!','').replace('#','')
+		if emoji == 'marseyrandom': emoji = choice(marseys_const2)
 
 
 		if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-			sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', sanitized, flags=re.I|re.A)
+			sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" {golden}src="/e/{emoji}.webp">', sanitized, flags=re.I|re.A)
 			if comment: marseys_used.add(emoji)
 		elif emoji.endswith('pat') and path.isfile(f"files/assets/images/emojis/{emoji.replace('pat','')}.webp"):
 			pat(emoji.replace('pat',''))
-			sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" class="{classes}" src="/e/{emoji}.webp">', sanitized, flags=re.I|re.A)
+			sanitized = re.sub(f'(?<!"):{i.group(1).lower()}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{old}:" title=":!{old}:" {golden}src="/e/{emoji}.webp">', sanitized, flags=re.I|re.A)
 			requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{emoji}.webp"]}, timeout=5)
 
 
@@ -299,6 +160,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	if "https://youtube.com/watch?v=" in sanitized: sanitized = sanitized.replace("?t=", "&t=")
 
 	captured = []
+	print(sanitized,flush=True)
 	for i in youtube_regex.finditer(sanitized):
 		if i.group(0) in captured: continue
 		captured.append(i.group(0))
@@ -323,7 +185,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	sanitized = unlinked_regex.sub(r'\1<a href="\2" rel="nofollow noopener noreferrer" target="_blank">\2</a>', sanitized)
 
 	if not noimages:
-		sanitized = video_regex.sub(r'<p><video controls preload="none" class="vid"><source src="\1"></video>', sanitized)
+		sanitized = video_regex.sub(r'<p><video controls preload="none"><source src="\1"></video>', sanitized)
 
 	if comment:
 		for marsey in g.db.query(Marsey).filter(Marsey.name.in_(marseys_used)).all():
@@ -338,22 +200,81 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	sanitized = utm_regex.sub('', sanitized)
 	sanitized = utm_regex2.sub('', sanitized)
 
+
+	sanitized = sanitized.replace('<html><body>','').replace('</body></html>','')
+
+
+	allowed_tags = ['b','blockquote','br','code','del','em','h1','h2','h3','h4','h5','h6','hr','i','li','ol','p','pre','strong','sub','sup','table','tbody','th','thead','td','tr','ul','marquee','a','span','ruby','rp','rt','spoiler']
+	if not noimages: allowed_tags += ['img','video','lite-youtube','source']
+
+	def allowed_attributes(tag, name, value):
+
+		if name == 'style': return True
+
+		if tag == 'marquee':
+			if name in ['direction', 'behavior', 'scrollamount']: return True
+			if name in {'height', 'width'}:
+				try: value = int(value.replace('px', ''))
+				except: return False
+				if 0 < value <= 250: return True
+			return False
+		
+		if tag == 'a':
+			if name == 'href': return True
+			if name == 'rel' and value == 'nofollow noopener noreferrer': return True
+			if name == 'target' and value == '_blank': return True
+			return False
+
+		if tag == 'img':
+			if name == 'loading' and value == 'lazy': return True
+			if name == 'referrpolicy' and value == 'no-referrer': return True
+			if name == 'data-bs-toggle' and value == 'tooltip': return True
+			if name in ['src','data-src','alt','title','g','b']: return True
+			return False
+
+		if tag == 'lite-youtube':
+			if name == 'params' and value.startswith('autoplay=1&modestbranding=1'): return True
+			if name == 'videoid': return True
+			return False
+
+		if tag == 'video':
+			if name == 'controls' and value == '': return True
+			if name == 'preload' and value == 'none': return True
+			return False
+
+		if tag == 'source':
+			if name == 'src': return True
+			return False
+
+
+
+	sanitized = bleach.Cleaner(tags=allowed_tags,
+								attributes=allowed_attributes,
+								protocols=['http', 'https'],
+								styles=['color', 'background-color', 'font-weight', 'text-align'],
+								filters=[partial(LinkifyFilter,skip_tags=["pre"],parse_email=False)]
+								).clean(sanitized)
+
+
+
 	signal.alarm(0)
 
 	return sanitized
 
-def handler2(signum, frame):
-	print("Forever is over!")
-	raise Exception("end of time")
+
+
+
 
 def filter_emojis_only(title, edit=False, graceful=False):
 
-	signal.signal(signal.SIGALRM, handler2)
+	def handler(signum, frame):
+		print("Timeout!")
+		raise Exception("Timeout")
+
+	signal.signal(signal.SIGALRM, handler)
 	signal.alarm(1)
 	
-	title = title.replace('‎','').replace('​','').replace("\ufeff", "").replace("𒐪","").replace("\n", "").replace("\r", "").replace("\t", "").replace("<script","").replace("script>","").replace("&", "&amp;").replace('<','&lt;').replace('>','&gt;').replace('"', '&quot;').replace("'", "&#039;").strip()
-
-	title = bleach.clean(title, tags=[])
+	title = title.replace('‎','').replace('​','').replace("\ufeff", "").replace("𒐪","").replace("\n", "").replace("\r", "").replace("\t", "").replace("&", "&amp;").replace('<','&lt;').replace('>','&gt;').replace('"', '&quot;').replace("'", "&#039;").strip()
 
 	emojis = list(emoji_regex4.finditer(title))
 	if len(emojis) > 20: edit = True
@@ -364,34 +285,34 @@ def filter_emojis_only(title, edit=False, graceful=False):
 		captured.append(i.group(0))
 
 		emoji = i.group(1).lower()
+		golden = ' '
+		if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): golden = 'g '
 
-		if emoji.startswith("!"):
-			emoji = emoji[1:]
-			classes = 'emoji mirrored'
-			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): classes += ' golden'
-
-			old = emoji
-			if emoji == 'marseyrandom': emoji = choice(marseys_const2)
-			else: emoji = old
-			old = '!' + emoji
-		else:
-			classes = 'emoji'
-			if not edit and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): classes += ' golden'
-
-			old = emoji
-			if emoji == 'marseyrandom': emoji = choice(marseys_const2)
-			else: emoji = old
-
+		old = emoji
+		emoji = emoji.replace('!','').replace('#','')
+		if emoji == 'marseyrandom': emoji = choice(marseys_const2)		
 
 		if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-			title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', title, flags=re.I|re.A)
+			title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" {golden}src="/e/{emoji}.webp">', title, flags=re.I|re.A)
 		elif emoji.endswith('pat') and path.isfile(f"files/assets/images/emojis/{emoji.replace('pat','')}.webp"):
 			pat(emoji.replace('pat',''))
-			title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" class="{classes}" src="/e/{emoji}.webp">', title, flags=re.I|re.A)
+			title = re.sub(f'(?<!"):{old}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:" {golden}src="/e/{emoji}.webp">', title, flags=re.I|re.A)
 			requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{emoji}.webp"]}, timeout=5)
 
 
 	title = strikethrough_regex.sub(r'<del>\1</del>', title)
+
+
+	def allowed_attributes(tag, name, value):
+
+		if tag == 'img':
+			if name == 'loading' and value == 'lazy': return True
+			if name == 'data-bs-toggle' and value == 'tooltip': return True
+			if name in ['src','alt','title','g']: return True
+			return False
+
+
+	sanitized = bleach.clean(title, tags=['img','del'], attributes=allowed_attributes, protocols=['http','https'])
 
 	signal.alarm(0)
 
