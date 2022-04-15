@@ -76,11 +76,15 @@ class Submission(Base):
 		if self.downvotes > 5 and 0.25 < self.upvotes / self.downvotes < 4: return True
 		return False
 
-	@property
 	@lazy
-	def flags(self):
-		return g.db.query(Flag).filter_by(post_id=self.id).order_by(Flag.created_utc)
-
+	def flags(self, v):
+		flags = g.db.query(Flag).filter_by(post_id=self.id).order_by(Flag.created_utc).all()
+		if not (v and (v.shadowbanned or v.admin_level > 2)):
+			for flag in flags:
+				if flag.user.shadowbanned:
+					flags.remove(flag)
+		return flags
+	
 	@property
 	@lazy
 	def options(self):
@@ -261,7 +265,7 @@ class Submission(Base):
 	@lazy
 	def json_raw(self):
 		flags = {}
-		for f in self.flags: flags[f.user.username] = f.reason
+		for f in self.flags(None): flags[f.user.username] = f.reason
 
 		data = {'author_name': self.author_name if self.author else '',
 				'permalink': self.permalink,
@@ -477,6 +481,5 @@ class Submission(Base):
 		if self.url: return self.url.lower().endswith('.webp') or self.url.lower().endswith('.jpg') or self.url.lower().endswith('.png') or self.url.lower().endswith('.gif') or self.url.lower().endswith('.jpeg') or self.url.lower().endswith('?maxwidth=9999') or self.url.lower().endswith('&fidelity=high')
 		else: return False
 
-	@property
 	@lazy
-	def active_flags(self): return self.flags.count()
+	def active_flags(self, v): return len(self.flags(v))

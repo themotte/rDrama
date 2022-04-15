@@ -231,7 +231,7 @@ def get_comments(cids, v=None, load_parent=False):
 			blocked.c.target_id,
 		).filter(Comment.id.in_(cids))
  
-		if not (v and (v.shadowbanned or v.admin_level > 1)):
+		if not (v and (v.shadowbanned or v.admin_level > 2)):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
 
 		comments = comments.join(

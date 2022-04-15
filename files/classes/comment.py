@@ -72,10 +72,14 @@ class Comment(Base):
 	def top_comment(self):
 		return g.db.query(Comment).filter_by(id=self.top_comment_id).one_or_none()
 
-	@property
 	@lazy
-	def flags(self):
-		return g.db.query(CommentFlag).filter_by(comment_id=self.id).order_by(CommentFlag.created_utc)
+	def flags(self, v):
+		flags = g.db.query(CommentFlag).filter_by(comment_id=self.id).order_by(CommentFlag.created_utc).all()
+		if not (v and (v.shadowbanned or v.admin_level > 2)):
+			for flag in flags:
+				if flag.user.shadowbanned:
+					flags.remove(flag)
+		return flags
 
 	@lazy
 	def poll_voted(self, v):
@@ -256,7 +260,7 @@ class Comment(Base):
 	@lazy
 	def json_raw(self):
 		flags = {}
-		for f in self.flags: flags[f.user.username] = f.reason
+		for f in self.flags(None): flags[f.user.username] = f.reason
 
 		data= {
 			'id': self.id,
@@ -434,10 +438,9 @@ class Comment(Base):
 	@lazy
 	def is_op(self): return self.author_id==self.post.author_id
 	
-	@property
 	@lazy
-	def active_flags(self): return self.flags.count()
-
+	def active_flags(self, v): return len(self.flags(v))
+	
 	@lazy
 	def wordle_html(self, v):
 		if not self.wordle_result: return ''

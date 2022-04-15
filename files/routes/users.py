@@ -600,8 +600,6 @@ def message2(v, username):
 	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked:
 		return {"error": "This user is blocking you."}, 403
 
-	if v.shadowbanned and user.admin_level < 2: return {"message": "Message sent!"}
-
 	message = request.values.get("message", "").strip()[:10000].strip()
 
 	if not message: return {"error": "Message is empty!"}
@@ -629,11 +627,21 @@ def message2(v, username):
 
 	g.db.flush()
 
+	if blackjack and blackjack in c.body_html.lower():
+		v.shadowbanned = 'AutoJanny'
+		g.db.add(v)
+		notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=CARP_ID).one_or_none()
+		if not notif:
+			notif = Notification(comment_id=c.id, user_id=CARP_ID)
+			g.db.add(notif)
+			g.db.flush()
+
 	c.top_comment_id = c.id
 
-
-	notif = Notification(comment_id=c.id, user_id=user.id)
-	g.db.add(notif)
+	notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=user.id).one_or_none()
+	if not notif:
+		notif = Notification(comment_id=c.id, user_id=user.id)
+		g.db.add(notif)
 
 	g.db.commit()
 
@@ -688,7 +696,7 @@ def messagereply(v):
 		else: return {"error": "Image/Video files only"}, 400
 
 
-	new_comment = Comment(author_id=v.id,
+	c = Comment(author_id=v.id,
 							parent_submission=None,
 							parent_comment_id=id,
 							top_comment_id=parent.top_comment_id,
@@ -696,12 +704,23 @@ def messagereply(v):
 							sentto=user_id,
 							body_html=body_html,
 							)
-	g.db.add(new_comment)
+	g.db.add(c)
 	g.db.flush()
 
+	if blackjack and blackjack in c.body_html.lower():
+		v.shadowbanned = 'AutoJanny'
+		g.db.add(v)
+		notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=CARP_ID).one_or_none()
+		if not notif:
+			notif = Notification(comment_id=c.id, user_id=CARP_ID)
+			g.db.add(notif)
+			g.db.flush()
+
 	if user_id and user_id != v.id and user_id != 2:
-		notif = Notification(comment_id=new_comment.id, user_id=user_id)
-		g.db.add(notif)
+		notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=user_id).one_or_none()
+		if not notif:
+			notif = Notification(comment_id=c.id, user_id=user_id)
+			g.db.add(notif)
 
 		if PUSHER_ID != 'blahblahblah':
 			if len(message) > 500: notifbody = message[:500] + '...'
@@ -731,14 +750,14 @@ def messagereply(v):
 			)
 
 
-	if new_comment.top_comment.sentto == 2:
+	if c.top_comment.sentto == 2:
 		admins = g.db.query(User).filter(User.admin_level > 2, User.id != v.id).all()
 		for admin in admins:
-			notif = Notification(comment_id=new_comment.id, user_id=admin.id)
+			notif = Notification(comment_id=c.id, user_id=admin.id)
 			g.db.add(notif)
 	g.db.commit()
 
-	return {"comment": render_template("comments.html", v=v, comments=[new_comment], ajax=True)}
+	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True)}
 
 @app.get("/2faqr/<secret>")
 @auth_required

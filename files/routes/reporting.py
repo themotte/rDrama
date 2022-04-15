@@ -12,32 +12,37 @@ def api_flag_post(pid, v):
 
 	post = get_post(pid)
 
-	if not v.shadowbanned:
-		reason = request.values.get("reason", "").strip()[:100]
+	reason = request.values.get("reason", "").strip()
 
-		if not reason.startswith('!'):
-			existing = g.db.query(Flag.post_id).filter_by(user_id=v.id, post_id=post.id).one_or_none()
-			if existing: return "", 409
+	if blackjack and blackjack in reason.lower():
+		v.shadowbanned = 'AutoJanny'
+		send_repeatable_notification(CARP_ID, f"reports on {post.permalink}")
 
-		reason = filter_emojis_only(reason)
+	reason = reason[:100]
 
-		if len(reason) > 350: return {"error": "Too long."}
+	if not reason.startswith('!'):
+		existing = g.db.query(Flag.post_id).filter_by(user_id=v.id, post_id=post.id).one_or_none()
+		if existing: return "", 409
 
-		if reason.startswith('!') and v.admin_level > 1:
-			post.flair = reason[1:]
-			g.db.add(post)
-			ma=ModAction(
-				kind="flair_post",
-				user_id=v.id,
-				target_submission_id=post.id,
-				_note=f'"{post.flair}"'
-			)
-			g.db.add(ma)
-		else:
-			flag = Flag(post_id=post.id, user_id=v.id, reason=reason)
-			g.db.add(flag)
+	reason = filter_emojis_only(reason)
 
-		g.db.commit()
+	if len(reason) > 350: return {"error": "Too long."}
+
+	if reason.startswith('!') and v.admin_level > 1:
+		post.flair = reason[1:]
+		g.db.add(post)
+		ma=ModAction(
+			kind="flair_post",
+			user_id=v.id,
+			target_submission_id=post.id,
+			_note=f'"{post.flair}"'
+		)
+		g.db.add(ma)
+	else:
+		flag = Flag(post_id=post.id, user_id=v.id, reason=reason)
+		g.db.add(flag)
+
+	g.db.commit()
 
 	return {"message": "Post reported!"}
 
@@ -49,19 +54,25 @@ def api_flag_comment(cid, v):
 
 	comment = get_comment(cid)
 	
-	if not v.shadowbanned:
-		existing = g.db.query(CommentFlag.comment_id).filter_by( user_id=v.id, comment_id=comment.id).one_or_none()
-		if existing: return "", 409
+	existing = g.db.query(CommentFlag.comment_id).filter_by( user_id=v.id, comment_id=comment.id).one_or_none()
+	if existing: return "", 409
 
-		reason = request.values.get("reason", "").strip()[:100]
-		reason = filter_emojis_only(reason)
+	reason = request.values.get("reason", "").strip()
 
-		if len(reason) > 350: return {"error": "Too long."}
+	if blackjack and blackjack in reason.lower():
+		v.shadowbanned = 'AutoJanny'
+		send_repeatable_notification(CARP_ID, f"reports on {comment.permalink}")
 
-		flag = CommentFlag(comment_id=comment.id, user_id=v.id, reason=reason)
+	reason = reason[:100]
 
-		g.db.add(flag)
-		g.db.commit()
+	reason = filter_emojis_only(reason)
+
+	if len(reason) > 350: return {"error": "Too long."}
+
+	flag = CommentFlag(comment_id=comment.id, user_id=v.id, reason=reason)
+
+	g.db.add(flag)
+	g.db.commit()
 
 	return {"message": "Comment reported!"}
 

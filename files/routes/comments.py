@@ -125,7 +125,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 			blocked.c.target_id,
 		)
 
-		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
+		if not (v and v.shadowbanned) and not (v and v.admin_level > 2):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
 		 
 		comments=comments.filter(

@@ -49,7 +49,11 @@ def notifications(v):
 		next_exists = (len(comments) > 25)
 		listing = comments[:25]
 	elif messages:
-		comments = g.db.query(Comment).filter(Comment.sentto != None, or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None, Comment.level == 1).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
+		if v and (v.shadowbanned or v.admin_level > 2):
+			comments = g.db.query(Comment).filter(Comment.sentto != None, or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None, Comment.level == 1).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
+		else:
+			comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.sentto != None, or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None, Comment.level == 1).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
+
 		next_exists = (len(comments) > 25)
 		listing = comments[:25]
 	elif posts:
@@ -112,7 +116,7 @@ def notifications(v):
 			Comment.body_html.notlike('<html><body><p>New site mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Comment.top_comment_id.desc(), Notification.created_utc.desc()).subquery()
 
-		if v and (v.shadowbanned or v.admin_level > 1):
+		if v and (v.shadowbanned or v.admin_level > 2):
 			comments = g.db.query(Comment).join(sq, sq.c.id == Comment.id).order_by(sq.c.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 		else:
 			comments = g.db.query(Comment).join(sq, sq.c.id == Comment.id).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None).order_by(sq.c.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()

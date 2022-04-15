@@ -422,7 +422,12 @@ class User(Base):
 	@property
 	@lazy
 	def notifications_count(self):
-		return g.db.query(Notification.user_id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.is_banned == False, Comment.deleted_utc == 0).count()
+		notifs = g.db.query(Notification.user_id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.is_banned == False, Comment.deleted_utc == 0)
+		
+		if not self.shadowbanned and self.admin_level < 3:
+			notifs = notifs.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
+		
+		return notifs.count()
 
 	@property
 	@lazy
@@ -516,8 +521,8 @@ class User(Base):
 				'bannerurl': self.banner_url,
 				'bio_html': self.bio_html_eager,
 				'coins': self.coins,
-				'post_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level)) else self.post_count,
-				'comment_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level)) else self.comment_count,
+				'post_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level > 2)) else self.post_count,
+				'comment_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level > 2)) else self.comment_count,
 				'badges': [x.path for x in self.badges],
 				}
 
