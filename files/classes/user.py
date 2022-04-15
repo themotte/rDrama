@@ -437,7 +437,7 @@ class User(Base):
 	@property
 	@lazy
 	def reddit_notifications_count(self):
-		return g.db.query(Notification.user_id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.is_banned == False, Comment.deleted_utc == 0, Comment.body_html.like('$<p>New site mention: <a href="https://old.reddit.com/r/%')).count()
+		return g.db.query(Notification.user_id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.is_banned == False, Comment.deleted_utc == 0, Comment.body_html.like('$<p>New site mention: <a href="https://old.reddit.com/r/%'), Comment.parent_submission == None, Comment.author_id == NOTIFICATIONS_ID).count()
 
 	@property
 	@lazy
