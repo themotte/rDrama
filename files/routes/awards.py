@@ -152,7 +152,7 @@ def award_post(pid, v):
 
 	author = post.author
 
-	if author.id in (PIZZASHILL_ID, DAD_ID):
+	if author.id in (PIZZASHILL_ID, DAD_ID) and v.id not in (PIZZASHILL_ID, DAD_ID):
 		return {"error": "This user is immune to awards."}, 403
 
 	if kind == "benefactor" and author.id == v.id:
@@ -391,7 +391,7 @@ def award_comment(cid, v):
 
 	author = c.author
 
-	if author.id in (PIZZASHILL_ID, DAD_ID):
+	if author.id in (PIZZASHILL_ID, DAD_ID) and v.id not in (PIZZASHILL_ID, DAD_ID):
 		return {"error": "This user is immune to awards."}, 403
 
 	if v.id != author.id:
