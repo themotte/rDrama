@@ -520,6 +520,11 @@ def edit_post(pid, v):
 
 		p.body = body
 
+		if blackjack and blackjack in f'{p.body} {p.title} {p.url}':
+			v.shadowbanned = 'AutoJanny'
+			g.db.add(v)
+			send_repeatable_notification(CARP_ID, p.permalink)
+
 		if len(body_html) > 40000: return {"error":"Submission body_html too long! (max 40k characters)"}, 400
 
 		p.body_html = body_html
@@ -1144,6 +1149,10 @@ def submit_post(v, sub=None):
 	g.db.add(post)
 	g.db.flush()
 
+	if blackjack and blackjack in f'{post.body} {post.title} {post.url}':
+		v.shadowbanned = 'AutoJanny'
+		g.db.add(v)
+		send_repeatable_notification(CARP_ID, post.permalink)
 
 	if v and v.admin_level > 2:
 		for option in bet_options:
