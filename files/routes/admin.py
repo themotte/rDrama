@@ -1157,11 +1157,11 @@ def ban_user(user_id, v):
 			x.ban(admin=v, reason=passed_reason, days=days)
 
 	if days:
-		if reason: text = f"Your account has been banned for **{days}** days for the following reason:\n\n> {reason}"
-		else: text = f"Your account has been banned for **{days}** days."
+		if reason: text = f"@{v.username} has banned you for **{days}** days for the following reason:\n\n> {reason}"
+		else: text = f"@{v.username} has banned you for **{days}** days."
 	else:
-		if reason: text = f"Your account has been permanently banned for the following reason:\n\n> {reason}"
-		else: text = "Your account has been permanently banned."
+		if reason: text = f"@{v.username} has banned you permanently for the following reason:\n\n> {reason}"
+		else: text = f"@{v.username} has banned you permanently."
 
 	send_repeatable_notification(user.id, text)
 	
