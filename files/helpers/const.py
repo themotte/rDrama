@@ -41,17 +41,16 @@ SLURS = {
 	"faggot": "cute twink",
 	"fag": "cute twink",
 	"pedophile": "libertarian",
-	"pedo": "libertarian",
+	" pedo": "libertarian",
 	"kill yourself": "keep yourself safe",
-	"kys": "keep yourself safe",
-	"kyle": "Kylie",
-	"n1g": "BIPOC",
-	"nlg": "BIPOC",
-	"nig": "BIPOC",
+	" kys ": "keep yourself safe",
 	"n1gger": "BIPOC",
 	"nlgger": "BIPOC",
 	"nigger": "BIPOC",
-	"rapist": "male feminist",
+	" n1g ": "BIPOC",
+	" nlg ": "BIPOC",
+	" nig ": "BIPOC",
+	" rapist": "male feminist",
 	"steve akins": "penny verity oaken",
 	"trannie": "🚂🚃🚃",
 	"tranny": "🚂🚃🚃",
@@ -101,8 +100,7 @@ SLURS = {
 	"kung flu": "SARS-CoV-2 syndemic",
 	"elon musk": "rocket daddy",
 	" elon ": " rocket daddy ",
-	"fake and gay": "fake and straight",
-	'<img loading="lazy" data-bs-toggle="tooltip" alt=":n:" title=":n:" class="emoji-md" src="/e/n.webp"> <img loading="lazy" data-bs-toggle="tooltip" alt=":i:" title=":i:" class="emoji-md" src="/e/i.webp"><img loading="lazy" data-bs-toggle="tooltip" alt=":g:" title=":g:" class="emoji-md" src="/e/g.webp"><img loading="lazy" data-bs-toggle="tooltip" alt=":g:" title=":g:" class="emoji-md" src="/e/g.webp"><img loading="lazy" data-bs-toggle="tooltip" alt=":e:" title=":e:" class="emoji-md" src="/e/e.webp"><img loading="lazy" data-bs-toggle="tooltip" alt=":r:" title=":r:" class="emoji-md" src="/e/r.webp">':'<img loading="lazy" data-bs-toggle="tooltip" alt=":b:" title=":b:" class="emoji-md" src="/e/b.webp"> <img loading="lazy" data-bs-toggle="tooltip" alt=":i:" title=":i:" class="emoji-md" src="/e/i.webp"><img loading="lazy" data-bs-toggle="tooltip" alt=":p:" title=":p:" class="emoji-md" src="/e/p.webp"><img loading="lazy" data-bs-toggle="tooltip" alt=":o:" title=":o:" class="emoji-md" src="/e/o.webp"><img loading="lazy" data-bs-toggle="tooltip" alt=":c:" title=":c:" class="emoji-md" src="/e/c.webp">'
+	"fake and gay": "fake and straight"
 }
 
 single_words = "|".join([slur.lower() for slur in SLURS.keys()])
@@ -734,8 +732,8 @@ email_regex = re.compile('([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|
 utm_regex = re.compile('utm_[a-z]+=[a-z0-9_]+&', flags=re.A)
 utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
 
-slur_regex = re.compile(rf"((?<=\s|>)|^)({single_words})((?=[\s<,.$]|s[\s<,.$]))", flags=re.I|re.A)
-slur_regex_upper = re.compile(rf"((?<=\s|>)|^)({single_words.upper()})((?=[\s<,.$]|S[\s<,.$]))", flags=re.A)
+slur_regex = re.compile(f"(?<! href=[^>]{0,255})({single_words})", flags=re.I|re.A)
+slur_regex_upper = re.compile(f"(?<! href=[^>]{0,255})({single_words.upper()})", flags=re.A)
 torture_regex = re.compile('(^|\s)(i|me) ', flags=re.I|re.A)
 torture_regex2 = re.compile("(^|\s)i'm ", flags=re.I|re.A)
 
