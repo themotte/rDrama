@@ -160,7 +160,6 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	if "https://youtube.com/watch?v=" in sanitized: sanitized = sanitized.replace("?t=", "&t=")
 
 	captured = []
-	print(sanitized,flush=True)
 	for i in youtube_regex.finditer(sanitized):
 		if i.group(0) in captured: continue
 		captured.append(i.group(0))
