@@ -4573,13 +4573,13 @@ input[type=radio] ~ .custom-control-label::before {
 .emoji-modal {
 	max-width: 90% !important 
 }
+.emj, .emoji, strong a img, img[alt^=":"]:not(img[b]):not(img[alt*="#"]) {
+	height: 30px !important;
+	width: 30px !important;
+}
 .bigemoji, .emoji-md, img[alt^=":"]:not(img[alt*="#"]) {
 	height: 60px;
 	width: 60px;
-}
-.emj, .emoji, strong a img, img[alt^=":"]:not(img[b]) {
-	height: 30px !important;
-	width: 30px !important;
 }
 .emj, .emoji, .bigemoji, .emoji-md, .emoji-lg, img[alt^=":"]
 {
