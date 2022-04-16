@@ -96,7 +96,8 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 		captured.append(i.group(0))
 
 		old = i.group(0)
-		new = old.lower()
+		if 'marseylong1' in old or 'marseylong2' in old or 'marseyllama1' in old or 'marseyllama2' in old: new = old.lower().replace(">", " class='mb-0'>")
+		else: new = old.lower()
 
 		captured2 = []
 		for i in emoji_regex2.finditer(new):
@@ -239,6 +240,9 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			if name == 'src': return True
 			return False
 
+		if tag == 'p':
+			if name == 'class' and value == 'mb-0': return True
+			return False
 
 
 	sanitized = bleach.Cleaner(tags=allowed_tags,
