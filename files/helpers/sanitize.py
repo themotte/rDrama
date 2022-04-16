@@ -248,7 +248,8 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	sanitized = bleach.Cleaner(tags=allowed_tags,
 								attributes=allowed_attributes,
 								protocols=['http', 'https'],
-								styles=['color', 'background-color', 'font-weight', 'text-align']
+								styles=['color', 'background-color', 'font-weight', 'text-align'],
+								filters=[partial(LinkifyFilter,skip_tags=["pre"],parse_email=False)]
 								).clean(sanitized)
 
 

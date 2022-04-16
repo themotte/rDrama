@@ -205,7 +205,7 @@ else:
 	MOM_ID = 0
 	DONGER_ID = 0
 	BUG_THREAD = 0
-	WELCOME_MSG = f"Welcome to {SITE}!"
+	WELCOME_MSG = f"Welcome to {SITE_NAME}!"
 
 PUSHER_ID = environ.get("PUSHER_ID", "").strip()
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
