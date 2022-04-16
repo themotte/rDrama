@@ -18,17 +18,18 @@ def get_logged_in_user():
 	else:
 		lo_user = session.get("lo_user")
 		if lo_user:
-			nonce = session.get("login_nonce", 0)
 			id = int(lo_user)
 			v = g.db.query(User).filter_by(id=id).one_or_none()
-			if v and nonce >= v.login_nonce:
-				if v.id != id: abort(400)
-				v.client = None
+			if v:
+				nonce = session.get("login_nonce", 0)
+				if nonce < v.login_nonce or v.id != id: abort(401)
 
 				if request.method != "GET":
 					submitted_key = request.values.get("formkey")
 					if not submitted_key: abort(401)
-					elif not v.validate_formkey(submitted_key): abort(401)
+					if not v.validate_formkey(submitted_key): abort(401)
+
+				v.client = None
 
 
 	if request.method.lower() != "get" and app.config['SETTINGS']['Read-only mode'] and not (v and v.admin_level):
