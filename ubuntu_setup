@@ -28,3 +28,4 @@ ufw allow from 104.16.0.0/13
 ufw allow from 104.24.0.0/14
 ufw allow from 172.64.0.0/13
 ufw allow from 131.0.72.0/22
+ufw enable
