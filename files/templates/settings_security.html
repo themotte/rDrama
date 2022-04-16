@@ -53,7 +53,9 @@
 						<input autocomplete="off" class="btn btn-primary ml-auto" type="submit" value="Add email">
 					{% endif %}
 				</div>
-				<span class="text-small-extra text-muted pl-1">Must be same email as gumroad</span>
+				{% if SITE_NAME != 'Cringetopia' %}
+					<span class="text-small-extra text-muted pl-1">Must be same email as gumroad</span>
+				{% endif %}
 			</div>
 		</form>
 	</div>
