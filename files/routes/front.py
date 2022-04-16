@@ -108,7 +108,7 @@ def notifications(v):
 
 		g.db.commit()
 
-		sq = g.db.query(Comment.id, Notification.created_utc).join(Notification, Notification.comment_id == Comment.id).distinct(Comment.top_comment_id).filter(
+		sq = g.db.query(Comment.id, Notification.created_utc).join(Notification, Notification.comment_id == Comment.id).distinct(Comment.parent_comment_id).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
