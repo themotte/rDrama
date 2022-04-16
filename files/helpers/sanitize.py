@@ -24,52 +24,6 @@ def callback(attrs, new=False):
 	return attrs
 
 
-def allowed_attributes(tag, name, value):
-
-	if name == 'style': return True
-
-	if tag == 'marquee':
-		if name in ['direction', 'behavior', 'scrollamount']: return True
-		if name in {'height', 'width'}:
-			try: value = int(value.replace('px', ''))
-			except: return False
-			if 0 < value <= 250: return True
-		return False
-	
-	if tag == 'a':
-		if name == 'href': return True
-		if name == 'rel' and value == 'nofollow noopener noreferrer': return True
-		if name == 'target' and value == '_blank': return True
-		return False
-
-	if tag == 'img':
-		if name in ['src','data-src'] and not value.startswith('/') and noimages: return False
-
-		if name == 'loading' and value == 'lazy': return True
-		if name == 'referrpolicy' and value == 'no-referrer': return True
-		if name == 'data-bs-toggle' and value == 'tooltip': return True
-		if name in ['src','data-src','alt','title','g','b']: return True
-		return False
-
-	if tag == 'lite-youtube':
-		if name == 'params' and value.startswith('autoplay=1&modestbranding=1'): return True
-		if name == 'videoid': return True
-		return False
-
-	if tag == 'video':
-		if name == 'controls' and value == '': return True
-		if name == 'preload' and value == 'none': return True
-		return False
-
-	if tag == 'source':
-		if name == 'src': return True
-		return False
-
-	if tag == 'p':
-		if name == 'class' and value == 'mb-0': return True
-		return False
-
-
 def handler(signum, frame):
 	print("Timeout!")
 	raise Exception("Timeout")
@@ -249,6 +203,52 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	if not noimages: allowed_tags += ['video','source']
 
 
+	def allowed_attributes(tag, name, value):
+
+		if name == 'style': return True
+
+		if tag == 'marquee':
+			if name in ['direction', 'behavior', 'scrollamount']: return True
+			if name in {'height', 'width'}:
+				try: value = int(value.replace('px', ''))
+				except: return False
+				if 0 < value <= 250: return True
+			return False
+		
+		if tag == 'a':
+			if name == 'href': return True
+			if name == 'rel' and value == 'nofollow noopener noreferrer': return True
+			if name == 'target' and value == '_blank': return True
+			return False
+
+		if tag == 'img':
+			if name in ['src','data-src'] and not value.startswith('/') and noimages: return False
+
+			if name == 'loading' and value == 'lazy': return True
+			if name == 'referrpolicy' and value == 'no-referrer': return True
+			if name == 'data-bs-toggle' and value == 'tooltip': return True
+			if name in ['src','data-src','alt','title','g','b']: return True
+			return False
+
+		if tag == 'lite-youtube':
+			if name == 'params' and value.startswith('autoplay=1&modestbranding=1'): return True
+			if name == 'videoid': return True
+			return False
+
+		if tag == 'video':
+			if name == 'controls' and value == '': return True
+			if name == 'preload' and value == 'none': return True
+			return False
+
+		if tag == 'source':
+			if name == 'src': return True
+			return False
+
+		if tag == 'p':
+			if name == 'class' and value == 'mb-0': return True
+			return False
+
+
 	sanitized = bleach.Cleaner(tags=allowed_tags,
 								attributes=allowed_attributes,
 								protocols=['http', 'https'],
@@ -266,7 +266,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 
 
-def allowed_attributes2(tag, name, value):
+def allowed_attributes(tag, name, value):
 
 	if tag == 'img':
 		if name == 'loading' and value == 'lazy': return True
@@ -308,7 +308,7 @@ def filter_emojis_only(title, edit=False, graceful=False):
 
 	title = strikethrough_regex.sub(r'<del>\1</del>', title)
 
-	sanitized = bleach.clean(title, tags=['img','del'], attributes=allowed_attributes2, protocols=['http','https'])
+	sanitized = bleach.clean(title, tags=['img','del'], attributes=allowed_attributes, protocols=['http','https'])
 
 	signal.alarm(0)
 
