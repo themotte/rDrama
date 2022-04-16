@@ -5,6 +5,7 @@ from json import loads
 from files.__main__ import db_session
 from files.classes.sub import Sub
 from files.classes.marsey import Marsey
+import regex
 
 SITE = environ.get("DOMAIN", '').strip()
 SITE_NAME = environ.get("SITE_NAME", '').strip()
@@ -713,7 +714,7 @@ imgur_regex = re.compile('(https://i\.imgur\.com/([a-z0-9]+))\.(jpg|png|jpeg|web
 reddit_regex = re.compile('(^|\s|<p>)\/?((r|u)\/(\w|-){3,25})', flags=re.A)
 sub_regex = re.compile('(^|\s|<p>)\/?(h\/(\w|-){3,25})', flags=re.A)
 
-youtube_regex = re.compile('" target="_blank">(https:\/\/youtube\.com\/watch\?v\=([a-z0-9-_]{5,20})[\w\-.#&/=\?@%+]*)</a>(?!</code>)', flags=re.I|re.A)
+youtube_regex = re.compile('(?<!<code>)https:\/\/youtube\.com\/watch\?v\=([a-z0-9-_]{5,20})[\w\-.#&/=\?@%+]*', flags=re.I|re.A)
 yt_id_regex = re.compile('[a-z0-9-_]{5,20}', flags=re.I|re.A)
 
 strikethrough_regex = re.compile('''~{1,2}([^~]+)~{1,2}''', flags=re.A)
@@ -732,8 +733,8 @@ email_regex = re.compile('([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|
 utm_regex = re.compile('utm_[a-z]+=[a-z0-9_]+&', flags=re.A)
 utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
 
-slur_regex = re.compile(f"(?<! href=[^>]{0,255})({single_words})", flags=re.I|re.A)
-slur_regex_upper = re.compile(f"(?<! href=[^>]{0,255})({single_words.upper()})", flags=re.A)
+slur_regex = regex.compile(f"(?<!<(a|img|video) [^>]*)({single_words})", flags=regex.I|regex.A)
+slur_regex_upper = regex.compile(f"(?<!<(a|img|video) [^>]*)({single_words.upper()})", flags=regex.A)
 torture_regex = re.compile('(^|\s)(i|me) ', flags=re.I|re.A)
 torture_regex2 = re.compile("(^|\s)i'm ", flags=re.I|re.A)
 
@@ -744,6 +745,9 @@ def sub_matcher_upper(match):
 	return SLURS[match.group(0).lower()].upper()
 
 def censor_slurs(body, logged_user):
+	if '=":marseygigaretard:" data' in body:
+		for i in slur_regex.finditer(body):
+			print(i)
 	if not logged_user or logged_user == 'chat' or logged_user.slurreplacer:
 		body = slur_regex_upper.sub(sub_matcher_upper, body)
 		body = slur_regex.sub(sub_matcher, body)

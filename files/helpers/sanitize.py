@@ -158,24 +158,19 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 	captured = []
 	for i in youtube_regex.finditer(sanitized):
-		if i.group(0) in captured: continue
-		captured.append(i.group(0))
-
-		url = i.group(1)
-		yt_id = i.group(2).split('&')[0].split('%')[0]
-		if not yt_id_regex.fullmatch(yt_id): continue
-
-		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{url}</a>'
+		url = i.group(0)
+		if url in captured: continue
+		captured.append(url)
 
 		params = parse_qs(urlparse(url.replace('&amp;','&')).query)
 		t = params.get('t', params.get('start', [0]))[0]
 		if isinstance(t, str): t = t.replace('s','')
 
-		htmlsource = f'<lite-youtube videoid="{yt_id}" params="autoplay=1&modestbranding=1'
+		htmlsource = f'<lite-youtube videoid="{i.group(1)}" params="autoplay=1&modestbranding=1'
 		if t: htmlsource += f'&start={t}'
 		htmlsource += '"></lite-youtube>'
 
-		sanitized = sanitized.replace(replacing, htmlsource)
+		sanitized = sanitized.replace(url, htmlsource)
 
 
 	sanitized = unlinked_regex.sub(r'\1<a href="\2" rel="nofollow noopener noreferrer" target="_blank">\2</a>', sanitized)
@@ -249,8 +244,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	sanitized = bleach.Cleaner(tags=allowed_tags,
 								attributes=allowed_attributes,
 								protocols=['http', 'https'],
-								styles=['color', 'background-color', 'font-weight', 'text-align'],
-								filters=[partial(LinkifyFilter,skip_tags=["pre"],parse_email=False)]
+								styles=['color', 'background-color', 'font-weight', 'text-align']
 								).clean(sanitized)
 
 
