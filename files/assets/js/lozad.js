@@ -9,7 +9,7 @@ for (const e of images) {
 	e.setAttribute("data-bs-toggle", "modal")
 	e.setAttribute("data-bs-target", "#expandImageModal")
 	e.onclick = function(e) {
-		image = e.target.dataset.src
+		const image = e.target.dataset.src
 		document.getElementById("desktop-expanded-image").src = image.replace("200w_d.webp", "giphy.webp");
 		document.getElementById("desktop-expanded-image-link").href = image;
 		document.getElementById("desktop-expanded-image-wrap-link").href = image;	
