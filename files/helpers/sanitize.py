@@ -53,10 +53,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			u = get_user(i.group(2), graceful=True)
 
 			if u and (not g.v.any_block_exists(u) or g.v.admin_level > 1):
-				if noimages:
-					sanitized = sanitized.replace(i.group(0), f'{i.group(1)}<a href="/id/{u.id}">@{u.username}</a>', 1)
-				else:
-					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''')
+				sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''')
 
 
 	sanitized = imgur_regex.sub(r'\1_d.webp?maxwidth=9999&fidelity=high', sanitized)
@@ -203,8 +200,8 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	sanitized = sanitized.replace('<html><body>','').replace('</body></html>','')
 
 
-	allowed_tags = ['b','blockquote','br','code','del','em','h1','h2','h3','h4','h5','h6','hr','i','li','ol','p','pre','strong','sub','sup','table','tbody','th','thead','td','tr','ul','marquee','a','span','ruby','rp','rt','spoiler']
-	if not noimages: allowed_tags += ['img','video','lite-youtube','source']
+	allowed_tags = ['b','blockquote','br','code','del','em','h1','h2','h3','h4','h5','h6','hr','i','li','ol','p','pre','strong','sub','sup','table','tbody','th','thead','td','tr','ul','marquee','a','span','ruby','rp','rt','spoiler','img','lite-youtube']
+	if not noimages: allowed_tags += ['video','source']
 
 	def allowed_attributes(tag, name, value):
 
@@ -225,6 +222,8 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			return False
 
 		if tag == 'img':
+			if name in ['src','data-src'] and not value.startswith('/') and noimages: return False
+
 			if name == 'loading' and value == 'lazy': return True
 			if name == 'referrpolicy' and value == 'no-referrer': return True
 			if name == 'data-bs-toggle' and value == 'tooltip': return True
