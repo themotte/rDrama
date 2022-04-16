@@ -13,6 +13,15 @@ import signal
 import time
 import requests
 
+def callback(attrs, new=False):
+	href = attrs[(None, "href")]
+
+	if not href.startswith(SITE_FULL) and not href.startswith('/') and not href.startswith(SITE_FULL2):
+		attrs[(None, "target")] = "_blank"
+		attrs[(None, "rel")] = "nofollow noopener noreferrer"	
+
+	return attrs
+
 
 def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
@@ -67,6 +76,10 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			tag["src"] = "/assets/images/loading.webp"
 			tag['alt'] = f'![]({tag["data-src"]})'
 			tag['referrerpolicy'] = "no-referrer"
+
+	for tag in soup.find_all("a"):
+		if tag.get("href") and fishylinks_regex.fullmatch(str(tag.string)):
+			tag.string = tag["href"]
 
 
 	sanitized = str(soup)
@@ -237,17 +250,9 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 								attributes=allowed_attributes,
 								protocols=['http', 'https'],
 								styles=['color', 'background-color', 'font-weight', 'text-align'],
-								filters=[partial(LinkifyFilter,skip_tags=["pre"],parse_email=False)]
+								filters=[partial(LinkifyFilter,skip_tags=["pre"],parse_email=False, callbacks=[callback])]
 								).clean(sanitized)
 
-
-	for tag in soup.find_all("a"):
-		if tag.get("href"):
-			if not tag["href"].startswith(SITE_FULL) and not tag["href"].startswith('/') and not tag["href"].startswith(SITE_FULL2):
-				tag["target"] = "_blank"
-				tag["rel"] = "nofollow noopener noreferrer"
-
-			if fishylinks_regex.fullmatch(str(tag.string)): tag.string = tag["href"]
 
 
 	signal.alarm(0)
