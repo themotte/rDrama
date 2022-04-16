@@ -710,11 +710,11 @@ fishylinks_regex = re.compile("https?://\S+", flags=re.A)
 spoiler_regex = re.compile('''\|\|(.+)\|\|''', flags=re.A)
 video_regex = re.compile('<p><a href="(https:\/\/[\w\-.#&/=\?@%;+]{5,250}\.(mp4|webm|mov))" rel="nofollow noopener noreferrer" target="_blank">(https:\/\/[\w\-.#&/=\?@%;+]{5,250}\.(mp4|webm|mov))<\/a><\/p>', flags=re.I|re.A)
 unlinked_regex = re.compile('''(^|\s|<p>)(https:\/\/[\w\-.#&/=\?@%;+]{5,250})''', flags=re.A)
-imgur_regex = re.compile('(https://i\.imgur\.com/([a-z0-9]+))\.(jpg|png|jpeg|webp)(?!</code>)', flags=re.I|re.A)
+imgur_regex = re.compile('(https://i\.imgur\.com/([a-z0-9]+))\.(jpg|png|jpeg|webp)(?!</(code|pre)>)', flags=re.I|re.A)
 reddit_regex = re.compile('(^|\s|<p>)\/?((r|u)\/(\w|-){3,25})', flags=re.A)
 sub_regex = re.compile('(^|\s|<p>)\/?(h\/(\w|-){3,25})', flags=re.A)
 
-youtube_regex = re.compile('(?<!<code>)https:\/\/youtube\.com\/watch\?v\=([a-z0-9-_]{5,20})[\w\-.#&/=\?@%+]*', flags=re.I|re.A)
+youtube_regex = re.compile('(?<!<(code|pre)>)https:\/\/youtube\.com\/watch\?v\=([a-z0-9-_]{5,20})[\w\-.#&/=\?@%+]*', flags=re.I|re.A)
 yt_id_regex = re.compile('[a-z0-9-_]{5,20}', flags=re.I|re.A)
 
 strikethrough_regex = re.compile('''~{1,2}([^~]+)~{1,2}''', flags=re.A)

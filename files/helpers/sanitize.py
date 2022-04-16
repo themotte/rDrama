@@ -68,18 +68,6 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 			tag['alt'] = f'![]({tag["data-src"]})'
 			tag['referrerpolicy'] = "no-referrer"
 
-	for tag in soup.find_all("a"):
-		del tag["rel"]
-		if tag.get("href"):
-			if not tag["href"].startswith(SITE_FULL) and not tag["href"].startswith('/') and not tag["href"].startswith(SITE_FULL2):
-				tag["target"] = "_blank"
-				tag["rel"] = "nofollow noopener noreferrer"
-
-			if fishylinks_regex.fullmatch(str(tag.string)):
-				try: tag.string = tag["href"]
-				except: tag.string = ""
-
-
 
 	sanitized = str(soup)
 	
@@ -252,6 +240,14 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 								filters=[partial(LinkifyFilter,skip_tags=["pre"],parse_email=False)]
 								).clean(sanitized)
 
+
+	for tag in soup.find_all("a"):
+		if tag.get("href"):
+			if not tag["href"].startswith(SITE_FULL) and not tag["href"].startswith('/') and not tag["href"].startswith(SITE_FULL2):
+				tag["target"] = "_blank"
+				tag["rel"] = "nofollow noopener noreferrer"
+
+			if fishylinks_regex.fullmatch(str(tag.string)): tag.string = tag["href"]
 
 
 	signal.alarm(0)
