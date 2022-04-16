@@ -227,6 +227,8 @@ class Comment(Base):
 	@property
 	def replies3(self):
 		if self.replies2 != None: return self.replies2
+		if not self.parent_submission:
+			return sorted(self.child_comments, key=lambda x: x.created_utc)
 		return sorted((x for x in self.child_comments if x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)), key=lambda x: x.realupvotes, reverse=True)
 
 	@property
