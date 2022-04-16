@@ -42,21 +42,19 @@
 				</div>
 				<small id="emailpasswordRequired" class="form-text font-weight-bold text-danger d-none mt-1">Password required to update your email.</small>
 			</div>
-			{% if SITE_NAME != 'Cringetopia' %}
-				<div class="footer">
-					<div class="d-flex">
+			<div class="footer">
+				<div class="d-flex">
+					{% if SITE_NAME != 'Cringetopia' %}
 						<a class="btn btn-success" role="button" onclick="post_toast(this,'/settings/gumroad')">Claim paypig rewards</a>
-						{% if v.email %}
-						<input autocomplete="off" class="btn btn-primary ml-auto"
-						type="submit" value="Update email">
-						{% else %}
-						<input autocomplete="off" class="btn btn-primary ml-auto"
-						type="submit" value="Add email">
-						{% endif %}
-					</div>
-					<span class="text-small-extra text-muted pl-1">Must be same email as gumroad</span>
+					{% endif %}
+					{% if v.email %}
+						<input autocomplete="off" class="btn btn-primary ml-auto" type="submit" value="Update email">
+					{% else %}
+						<input autocomplete="off" class="btn btn-primary ml-auto" type="submit" value="Add email">
+					{% endif %}
 				</div>
-			{% endif %}
+				<span class="text-small-extra text-muted pl-1">Must be same email as gumroad</span>
+			</div>
 		</form>
 	</div>
 
