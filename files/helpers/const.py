@@ -745,9 +745,6 @@ def sub_matcher_upper(match):
 	return SLURS[match.group(0).lower()].upper()
 
 def censor_slurs(body, logged_user):
-	if '=":marseygigaretard:" data' in body:
-		for i in slur_regex.finditer(body):
-			print(i)
 	if not logged_user or logged_user == 'chat' or logged_user.slurreplacer:
 		body = slur_regex_upper.sub(sub_matcher_upper, body)
 		body = slur_regex.sub(sub_matcher, body)
