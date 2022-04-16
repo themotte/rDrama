@@ -149,10 +149,10 @@ def cached_chart(days):
 	today_cutoff = calendar.timegm(midnight_this_morning)
 
 	if days:
-		file = "/daily_chart.png"
+		file = "daily_chart.png"
 		day_cutoffs = [today_cutoff - 86400 * i for i in range(47)][1:]
 	else:
-		file = "/weekly_chart.png"
+		file = "weekly_chart.png"
 		day_cutoffs = [today_cutoff - 86400 * 7 * i for i in range(47)][1:]
 
 	day_cutoffs.insert(0, calendar.timegm(now))

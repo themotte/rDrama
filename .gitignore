@@ -11,3 +11,5 @@ venv/
 flask_session/
 .DS_Store
 site_settings
+daily_chart.png
+weekly_chart.png
