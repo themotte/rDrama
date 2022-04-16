@@ -41,7 +41,7 @@
   
 <div class="row" style="overflow: visible;padding-top:5px;">
 	<div class="col">
-		{% if v %}
+		{% if v and SITE_NAME != 'Cringetopia' %}
 			<div class="mt-3 d-lg-none">
 				{% if sub %}
 					{% if v.subs == 1 %}
@@ -81,7 +81,7 @@
 
 			{% block navbar %}
 			<div class="d-flex align-items-center">
-				{% if v %}
+				{% if v and SITE_NAME != 'Cringetopia' %}
 					{% if v.paid_dues %}
 						{% if ccmode=="true"%}
 							<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-primary text-primary mx-2" href="?sort={{sort}}&t={{t}}&ccmode=false"><i class="fas fa-golf-club mr-2 "></i>CC</a>
