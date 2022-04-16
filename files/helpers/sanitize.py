@@ -250,7 +250,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 								attributes=allowed_attributes,
 								protocols=['http', 'https'],
 								styles=['color', 'background-color', 'font-weight', 'text-align'],
-								filters=[partial(LinkifyFilter,skip_tags=["pre"],parse_email=False, callbacks=[callback])]
+								filters=[partial(LinkifyFilter, skip_tags=["pre"], parse_email=False, callbacks=[callback])]
 								).clean(sanitized)
 
 
