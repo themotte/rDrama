@@ -12,4 +12,19 @@ sudo pip3 install -r requirements.txt
 mkdir /songs
 mkdir /images
 . imei.sh
-gunicorn files.__main__:app -k gevent -w 1 --reload -b 0.0.0.0:80:80 --max-requests 1000 --max-requests-jitter 500
+ufw allow ssh
+ufw allow from 173.245.48.0/20
+ufw allow from 103.21.244.0/22
+ufw allow from 103.22.200.0/22
+ufw allow from 103.31.4.0/22
+ufw allow from 141.101.64.0/18
+ufw allow from 108.162.192.0/18
+ufw allow from 190.93.240.0/20
+ufw allow from 188.114.96.0/20
+ufw allow from 197.234.240.0/22
+ufw allow from 198.41.128.0/17
+ufw allow from 162.158.0.0/15
+ufw allow from 104.16.0.0/13
+ufw allow from 104.24.0.0/14
+ufw allow from 172.64.0.0/13
+ufw allow from 131.0.72.0/22
