@@ -490,12 +490,25 @@ def changeloglist(v=None, sort="new", page=1 ,t="all"):
 @auth_required
 def random_post(v):
 
-	x = g.db.query(Submission).filter(Submission.deleted_utc == 0, Submission.is_banned == False, Submission.private == False)
-	total = x.count()
-	n = random.randint(1, total - 2)
+	p = g.db.query(Submission.id).filter(Submission.deleted_utc == 0, Submission.is_banned == False, Submission.private == False).order_by(func.random()).first()
 
-	post = x.offset(n).limit(1).one_or_none()
-	return redirect(f"/post/{post.id}")
+	if p: p = p[0]
+	else: abort(404)
+
+	return redirect(f"/post/{p.id}")
+
+
+@app.get("/random_user")
+@auth_required
+def random_user(v):
+
+	u = g.db.query(User.username).filter(User.song != None).order_by(func.random()).first()
+	
+	if u: u = u[0]
+	else: abort(404)
+
+	return redirect(f"/@{x}")
+
 
 @app.get("/comments")
 @auth_required
