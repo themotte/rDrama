@@ -82,7 +82,7 @@
 		</button>
 
 		<div class="collapse navbar-collapse" id="navbarResponsive">
-			<ul class="navbar-nav ml-auto d-none d-md-flex">
+			<ul class="navbar-nav ml-auto d-none d-md-flex {% if not v %}pad{% endif %}">
 				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
 					<a class="nav-link" href="/chat/" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chat"><i class="fas fa-messages"></i></a>
 				</li>
@@ -263,4 +263,13 @@
 
 {% if v and not err %}
 	<div id="formkey" class="d-none">{{v.formkey}}</div>
+{% endif %}
+
+{% if not v %}
+	<style>
+		.pad {
+			padding-bottom: 7.4px;
+			padding-top: 7.4px;
+		}
+	</style>
 {% endif %}
