@@ -37,7 +37,7 @@ def allowed_attributes(tag, name, value):
 
 	if tag == 'img':
 		if name in ['src','data-src']:
-			if embed_check_regex.fullmatch(value): return True
+			if value.startswith('/') or value.startswith(f'{SITE_FULL}/') or embed_check_regex.fullmatch(value): return True
 			else: return False
 
 		if name == 'loading' and value == 'lazy': return True
