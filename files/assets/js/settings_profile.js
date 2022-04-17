@@ -18,7 +18,8 @@ function updatebgselection(){
 				"1.webp",
 				"2.webp",
 				"3.webp",
-				"4.webp"
+				"4.webp",
+				"5.webp"
 			]
 		},
 		{
