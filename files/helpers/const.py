@@ -756,6 +756,9 @@ proxies = {"http":"http://127.0.0.1:18080","https":"http://127.0.0.1:18080"}
 blackjack = environ.get("BLACKJACK", "").strip()
 
 approved_embed_hosts = [
+	'rdrama.net',
+	'pcmemes.net',
+	'cringetopia.org',
 	'imgur.com',
 	'ibb.co',
 	'lain.la',
@@ -799,7 +802,8 @@ approved_embed_hosts = [
 	'kiwifarms.net',
 	'amazonaws.com',
 	'githubusercontent.com',
-	'unilad.co.uk'
+	'unilad.co.uk',
+	'grrrgraphics.com'
 	]
 
 hosts = "|".join(approved_embed_hosts).replace('.','\.')
