@@ -573,21 +573,6 @@ class User(Base):
 
 		return data
 
-	def deletepfp(self):
-		if self.highres and '/images/' in self.highres:
-			image = '/images/' + self.highres.split('/images/')[1]
-			if path.exists(image): remove(image)
-		if self.profileurl and '/images/' in self.profileurl:
-			image = '/images/' + self.profileurl.split('/images/')[1]
-			if path.exists(image): remove(image)
-		self.highres = None
-		self.profileurl = None
-
-	def deletebanner(self):
-		if self.bannerurl and '/images/' in self.bannerurl:
-			image = '/images/' + self.bannerurl.split('/images/')[1]
-			if path.exists(image): remove(image)
-		self.bannerurl = None
 
 	def ban(self, admin=None, reason=None, days=0):
 		if days:

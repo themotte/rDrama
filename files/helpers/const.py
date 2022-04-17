@@ -810,8 +810,8 @@ approved_embed_hosts = [
 
 hosts = "|".join(approved_embed_hosts).replace('.','\.')
 
-image_check_regex = re.compile(f'!\[\]\(((?!(https:\/\/([a-z0-9-]*\.)*({hosts}))?\/).*?)\)', flags=re.A)
+image_check_regex = re.compile(f'!\[\]\(((?!(https:\/\/([a-z0-9-]+\.)*({hosts}))?\/).*?)\)', flags=re.A)
 
-embed_check_regex = regex.compile(f'(?<!<(code|pre|a)>)(https:\/\/([a-z0-9-]*\.)*({hosts}))?\/[\w:~,()\-.#&\/=?@%;+]*', flags=regex.A)
+embed_check_regex = regex.compile(f'(?<!<(code|pre|a)>)(https:\/\/([a-z0-9-]+\.)*({hosts}))?\/[\w:~,()\-.#&\/=?@%;+]*', flags=regex.A)
 
-video_regex = regex.compile(f'((?<!<(code|pre|a)>)(https:\/\/([a-z0-9-]*\.)*({hosts}))?\/[\w:~,()\-.#&\/=?@%;+]*?\.(mp4|webm|mov))', flags=regex.A)
+video_regex = regex.compile(f'((?<!<(code|pre|a)>)(https:\/\/([a-z0-9-]+\.)*({hosts}))?\/[\w:~,()\-.#&\/=?@%;+]*?\.(mp4|webm|mov))', flags=regex.A)
