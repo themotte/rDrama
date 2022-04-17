@@ -730,8 +730,8 @@ email_regex = re.compile('([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|
 utm_regex = re.compile('utm_[a-z]+=[a-z0-9_]+&', flags=re.A)
 utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
 
-slur_regex = regex.compile(f"(?<!<(a|img|video) [^<]*)({single_words})", flags=regex.I|regex.A)
-slur_regex_upper = regex.compile(f"(?<!<(a|img|video) [^<]*)({single_words.upper()})", flags=regex.A)
+slur_regex = regex.compile(f"(?<!<(a|img|source) [^<]*)({single_words})", flags=regex.I|regex.A)
+slur_regex_upper = regex.compile(f"(?<!<(a|img|source) [^<]*)({single_words.upper()})", flags=regex.A)
 torture_regex = re.compile('(^|\s)(i|me) ', flags=re.I|re.A)
 torture_regex2 = re.compile("(^|\s)i'm ", flags=re.I|re.A)
 
