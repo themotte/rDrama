@@ -515,7 +515,8 @@ def random_post(v):
 def all_comments(v):
 
 
-	page = int(request.values.get("page", 1))
+	try: page = int(request.values.get("page", 1))
+	except: page = 1
 
 	sort=request.values.get("sort", "new")
 	t=request.values.get("t", defaulttimefilter)
@@ -603,7 +604,8 @@ def transfers(v):
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in comments.all()]}
 
-	page = int(request.values.get("page", 1))
+	try: page = int(request.values.get("page", 1))
+	except: page = 1
 	comments = comments.offset(25 * (page - 1)).limit(26).all()
 	next_exists = len(comments) > 25
 	comments = comments[:25]

@@ -712,7 +712,8 @@ def badge_remove_post(v):
 @admin_level_required(2)
 def users_list(v):
 
-	page = int(request.values.get("page", 1))
+	try: page = int(request.values.get("page", 1))
+	except: page = 1
 
 	users = g.db.query(User).filter_by(is_banned=0
 									   ).order_by(User.created_utc.desc()
@@ -868,7 +869,8 @@ def admin_link_accounts(v):
 @admin_level_required(2)
 def admin_removed(v):
 
-	page = int(request.values.get("page", 1))
+	try: page = int(request.values.get("page", 1))
+	except: page = 1
 
 	if page < 1: abort(400)
 	
@@ -894,7 +896,8 @@ def admin_removed(v):
 @admin_level_required(2)
 def admin_removed_comments(v):
 
-	page = int(request.values.get("page", 1))
+	try: page = int(request.values.get("page", 1))
+	except: page = 1
 	
 	ids = g.db.query(Comment.id).join(User, User.id == Comment.author_id).filter(or_(Comment.is_banned==True, User.shadowbanned != None)).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
