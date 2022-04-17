@@ -5,7 +5,7 @@ from files.helpers.wrappers import *
 from files.helpers.sanitize import *
 from files.helpers.filters import *
 from files.helpers.alerts import *
-from files.helpers.discord import send_discord_message
+from files.helpers.discord import send_discord_message, send_cringetopia_message
 from files.helpers.const import *
 from files.helpers.slots import *
 from files.classes import *
@@ -88,15 +88,16 @@ def publish(pid, v):
 				if post.club and not user.paid_dues: continue
 				add_notif(cid, user.id)
 
+	g.db.commit()
 
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
 
-	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()):
+	if SITE == 'cringetopia.org':
+		send_cringetopia_message(post.permalink)
+	elif v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()):
 		send_discord_message(post.permalink)
 		cache.delete_memoized(changeloglist)
-
-	g.db.commit()
 
 	return redirect(post.permalink)
 
@@ -1375,12 +1376,6 @@ def submit_post(v, sub=None):
 	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
-	cache.delete_memoized(frontlist)
-	cache.delete_memoized(User.userpagelisting)
-	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()) and not post.private:
-		send_discord_message(post.permalink)
-		cache.delete_memoized(changeloglist)
-
 	if v.id == PIZZASHILL_ID:
 		for uid in PIZZA_VOTERS:
 			autovote = Vote(user_id=uid, submission_id=post.id, vote_type=1)
@@ -1392,6 +1387,15 @@ def submit_post(v, sub=None):
 		g.db.add(post)
 
 	g.db.commit()
+
+	cache.delete_memoized(frontlist)
+	cache.delete_memoized(User.userpagelisting)
+
+	if SITE == 'cringetopia.org':
+		send_cringetopia_message(post.permalink)
+	elif v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()) and not post.private:
+		send_discord_message(post.permalink)
+		cache.delete_memoized(changeloglist)
 
 	if request.headers.get("Authorization"): return post.json
 	else:
