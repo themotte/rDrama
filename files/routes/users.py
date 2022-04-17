@@ -606,9 +606,7 @@ def message2(v, username):
 
 	if 'linkedin.com' in message: return {"error": "This domain 'linkedin.com' is banned."}, 403
 
-	message = embed_removing_regex.sub(r'\1', message)
-
-	body_html = sanitize(message, noimages=True)
+	body_html = sanitize(message)
 
 	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
 															Comment.sentto == user.id,
@@ -666,8 +664,6 @@ def messagereply(v):
 
 	if 'linkedin.com' in message: return {"error": "this domain 'linkedin.com' is banned"}
 
-	message = embed_removing_regex.sub(r'\1', message)
-
 	id = int(request.values.get("parent_id"))
 	parent = get_comment(id, v=v)
 	user_id = parent.author.id
@@ -675,7 +671,7 @@ def messagereply(v):
 	if parent.sentto == 2: user_id = None
 	elif v.id == user_id: user_id = parent.sentto
 
-	body_html = sanitize(message, noimages=True)
+	body_html = sanitize(message)
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]

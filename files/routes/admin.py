@@ -541,7 +541,7 @@ def change_settings(v, setting):
 
 	body = f"@{v.username} has {word}d `{setting}` in the [admin dashboard](/admin)!"
 
-	body_html = sanitize(body, noimages=True)
+	body_html = sanitize(body)
 
 	new_comment = Comment(author_id=NOTIFICATIONS_ID,
 						  parent_submission=None,

@@ -1,6 +1,6 @@
 import bleach
 from bs4 import BeautifulSoup
-from bleach.linkifier import LinkifyFilter
+from bleach.linkifier import LinkifyFilter, build_url_re
 from functools import partial
 from .get import *
 from .patter import pat
@@ -13,6 +13,59 @@ import signal
 import time
 import requests
 
+TLDS = ['ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar','arpa','as','asia','at','au','aw','ax','az','ba','bb','bd','be','bf','bg','bh','bi','biz','bj','bm','bn','bo','br','bs','bt','bv','bw','by','bz','ca','cafe','cat','cc','cd','cf','cg','ch','ci','ck','cl','club','cm','cn','co','com','coop','cr','cu','cv','cx','cy','cz','de','dj','dk','dm','do','dz','ec','edu','ee','eg','er','es','et','eu','fi','fj','fk','fm','fo','fr','ga','gb','gd','ge','gf','gg','gh','gi','gl','gm','gn','gov','gp','gq','gr','gs','gt','gu','gw','gy','hk','hm','hn','hr','ht','hu','id','ie','il','im','in','info','int','io','iq','ir','is','it','je','jm','jo','jobs','jp','ke','kg','kh','ki','km','kn','kp','kr','kw','ky','kz','la','lb','lc','li','lk','lr','ls','lt','lu','lv','ly','ma','mc','md','me','mg','mh','mil','mk','ml','mm','mn','mo','mobi','mp','mq','mr','ms','mt','mu','museum','mv','mw','mx','my','mz','na','name','nc','ne','net','nf','ng','ni','nl','no','np','nr','nu','nz','om','org','pa','pe','pf','pg','ph','pk','pl','pm','pn','post','pr','pro','ps','pt','pw','py','qa','re','ro','rs','ru','rw','sa','sb','sc','sd','se','sg','sh','si','sj','sk','sl','sm','sn','so','social','sr','ss','st','su','sv','sx','sy','sz','tc','td','tel','tf','tg','th','tj','tk','tl','tm','tn','to','tp','tr','travel','tt','tv','tw','tz','ua','ug','uk','us','uy','uz','va','vc','ve','vg','vi','vn','vu','wf','win','ws','xn','xxx','ye','yt','yu','za','zm','zw']
+
+allowed_tags = ['b','blockquote','br','code','del','em','h1','h2','h3','h4','h5','h6','hr','i','li','ol','p','pre','strong','sub','sup','table','tbody','th','thead','td','tr','ul','marquee','a','span','ruby','rp','rt','spoiler','img','lite-youtube','video','source']
+
+def allowed_attributes(tag, name, value):
+
+	if name == 'style': return True
+
+	if tag == 'marquee':
+		if name in ['direction', 'behavior', 'scrollamount']: return True
+		if name in {'height', 'width'}:
+			try: value = int(value.replace('px', ''))
+			except: return False
+			if 0 < value <= 250: return True
+		return False
+	
+	if tag == 'a':
+		if name == 'href': return True
+		if name == 'rel' and value == 'nofollow noopener noreferrer': return True
+		if name == 'target' and value == '_blank': return True
+		return False
+
+	if tag == 'img':
+		if name in ['src','data-src']:
+			if value.startswith('/') or embed_check_regex.fullmatch(value): return True
+			else: return False
+
+		if name == 'loading' and value == 'lazy': return True
+		if name == 'referrpolicy' and value == 'no-referrer': return True
+		if name == 'data-bs-toggle' and value == 'tooltip': return True
+		if name in ['alt','title','g','b']: return True
+		return False
+
+	if tag == 'lite-youtube':
+		if name == 'params' and value.startswith('autoplay=1&modestbranding=1'): return True
+		if name == 'videoid': return True
+		return False
+
+	if tag == 'video':
+		if name == 'controls' and value == '': return True
+		if name == 'preload' and value == 'none': return True
+		return False
+
+	if tag == 'source':
+		return True
+		return False
+
+	if tag == 'p':
+		if name == 'class' and value == 'mb-0': return True
+		return False
+
+
+url_re = build_url_re(tlds=TLDS, protocols=['http', 'https'])
 
 def callback(attrs, new=False):
 	href = attrs[(None, "href")]
@@ -29,7 +82,7 @@ def handler(signum, frame):
 	raise Exception("Timeout")
 
 
-def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
+def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	signal.signal(signal.SIGALRM, handler)
 	signal.alarm(1)
@@ -176,11 +229,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 		sanitized = sanitized.replace(url, htmlsource)
 
-
-	sanitized = unlinked_regex.sub(r'\1<a href="\2" rel="nofollow noopener noreferrer" target="_blank">\2</a>', sanitized)
-
-	if not noimages:
-		sanitized = video_regex.sub(r'<p><video controls preload="none"><source src="\1"></video>', sanitized)
+	sanitized = video_regex.sub(r'<video controls preload="none"><source src="\1"></video>', sanitized)
 
 	if comment:
 		for marsey in g.db.query(Marsey).filter(Marsey.name.in_(marseys_used)).all():
@@ -199,61 +248,12 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	sanitized = sanitized.replace('<html><body>','').replace('</body></html>','')
 
 
-	allowed_tags = ['b','blockquote','br','code','del','em','h1','h2','h3','h4','h5','h6','hr','i','li','ol','p','pre','strong','sub','sup','table','tbody','th','thead','td','tr','ul','marquee','a','span','ruby','rp','rt','spoiler','img','lite-youtube']
-	if not noimages: allowed_tags += ['video','source']
-
-
-	def allowed_attributes(tag, name, value):
-
-		if name == 'style': return True
-
-		if tag == 'marquee':
-			if name in ['direction', 'behavior', 'scrollamount']: return True
-			if name in {'height', 'width'}:
-				try: value = int(value.replace('px', ''))
-				except: return False
-				if 0 < value <= 250: return True
-			return False
-		
-		if tag == 'a':
-			if name == 'href': return True
-			if name == 'rel' and value == 'nofollow noopener noreferrer': return True
-			if name == 'target' and value == '_blank': return True
-			return False
-
-		if tag == 'img':
-			if name in ['src','data-src'] and not value.startswith('/') and noimages: return False
-
-			if name == 'loading' and value == 'lazy': return True
-			if name == 'referrpolicy' and value == 'no-referrer': return True
-			if name == 'data-bs-toggle' and value == 'tooltip': return True
-			if name in ['src','data-src','alt','title','g','b']: return True
-			return False
-
-		if tag == 'lite-youtube':
-			if name == 'params' and value.startswith('autoplay=1&modestbranding=1'): return True
-			if name == 'videoid': return True
-			return False
-
-		if tag == 'video':
-			if name == 'controls' and value == '': return True
-			if name == 'preload' and value == 'none': return True
-			return False
-
-		if tag == 'source':
-			if name == 'src': return True
-			return False
-
-		if tag == 'p':
-			if name == 'class' and value == 'mb-0': return True
-			return False
-
 
 	sanitized = bleach.Cleaner(tags=allowed_tags,
 								attributes=allowed_attributes,
 								protocols=['http', 'https'],
 								styles=['color', 'background-color', 'font-weight', 'text-align'],
-								filters=[partial(LinkifyFilter, skip_tags=["pre"], parse_email=False, callbacks=[callback])]
+								filters=[partial(LinkifyFilter, skip_tags=["pre"], parse_email=False, callbacks=[callback], url_re=url_re)]
 								).clean(sanitized)
 
 
@@ -266,13 +266,13 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 
 
-def allowed_attributes(tag, name, value):
+def allowed_attributes_emojis(tag, name, value):
 
 	if tag == 'img':
 		if name == 'loading' and value == 'lazy': return True
 		if name == 'data-bs-toggle' and value == 'tooltip': return True
 		if name in ['src','alt','title','g']: return True
-		return False
+	return False
 
 
 def filter_emojis_only(title, edit=False, graceful=False):
@@ -308,7 +308,7 @@ def filter_emojis_only(title, edit=False, graceful=False):
 
 	title = strikethrough_regex.sub(r'<del>\1</del>', title)
 
-	sanitized = bleach.clean(title, tags=['img','del'], attributes=allowed_attributes, protocols=['http','https'])
+	sanitized = bleach.clean(title, tags=['img','del'], attributes=allowed_attributes_emojis, protocols=['http','https'])
 
 	signal.alarm(0)
 

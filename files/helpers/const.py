@@ -692,10 +692,6 @@ poll_regex = re.compile("\s*\$\$([^\$\n]+)\$\$\s*", flags=re.A)
 bet_regex = re.compile("\s*\$\$\$([^\$\n]+)\$\$\$\s*", flags=re.A)
 choice_regex = re.compile("\s*&&([^\$\n]+)&&\s*", flags=re.A)
 
-embed_removing_regex = re.compile('!\[\]\((.*?)\)', flags=re.A)
-
-image_check_regex = re.compile('!\[\]\(((?![^?\n]*\.(png|jpg|jpeg|gif|webp)).*?)\)', flags=re.I|re.A)
-
 title_regex = re.compile("[^\w ]", flags=re.A)
 
 based_regex = re.compile("based and (.{1,20}?)(-| )pilled", flags=re.I|re.A)
@@ -705,13 +701,11 @@ controversial_regex = re.compile('["> ](https:\/\/old\.reddit\.com/r/[a-zA-Z0-9_
 fishylinks_regex = re.compile("https?://\S+", flags=re.A)
 
 spoiler_regex = re.compile('''\|\|(.+)\|\|''', flags=re.A)
-video_regex = re.compile('<p><a href="(https:\/\/[\w\-.#&/=\?@%;+]{5,250}\.(mp4|webm|mov))" rel="nofollow noopener noreferrer" target="_blank">(https:\/\/[\w\-.#&/=\?@%;+]{5,250}\.(mp4|webm|mov))<\/a><\/p>', flags=re.I|re.A)
-unlinked_regex = re.compile('''(^|\s|<p>)(https:\/\/[\w\-.#&/=\?@%;+]{5,250})''', flags=re.A)
-imgur_regex = re.compile('(https://i\.imgur\.com/([a-z0-9]+))\.(jpg|png|jpeg|webp)(?!</(code|pre)>)', flags=re.I|re.A)
 reddit_regex = re.compile('(^|\s|<p>)\/?((r|u)\/(\w|-){3,25})', flags=re.A)
 sub_regex = re.compile('(^|\s|<p>)\/?(h\/(\w|-){3,25})', flags=re.A)
 
-youtube_regex = regex.compile('(?<!<(code|pre)>)https:\/\/youtube\.com\/watch\?v\=([a-z0-9-_]{5,20})[\w\-.#&/=\?@%+]*', flags=regex.I|regex.A)
+imgur_regex = re.compile('(https://i\.imgur\.com/([a-z0-9]+))\.(jpg|png|jpeg|webp)(?!<\/(code|pre|a)>)', flags=re.I|re.A)
+youtube_regex = regex.compile('(?<!<(code|pre|a)>)https:\/\/youtube\.com\/watch\?v\=([a-z0-9-_]{5,20})[\w\-.#&/=\?@%+]*', flags=regex.I|regex.A)
 yt_id_regex = re.compile('[a-z0-9-_]{5,20}', flags=re.I|re.A)
 
 strikethrough_regex = re.compile('''~{1,2}([^~]+)~{1,2}''', flags=re.A)
@@ -761,3 +755,46 @@ ADMIGGERS = (37696,37697,37749,37833,37838)
 proxies = {"http":"http://127.0.0.1:18080","https":"http://127.0.0.1:18080"}
 
 blackjack = environ.get("BLACKJACK", "").strip()
+
+approved_embed_hosts = [
+	'i.imgur.com',
+	'i\.ibb\.co',
+	'pomf2\.lain\.la',
+	'pngfind\.com',
+	'i\.kym-cdn\.com',
+	'i2\.kym-cdn\.com',
+	'i\.redd\.it',
+	'cdn\.substack\.com',
+	'cdn\.discordapp\.com',
+	'2\.bp\.blogspot\.com',
+	'files\.catbox\.moe',
+	'i\.pinimg\.com',
+	'kindpng\.com',
+	'cdn\.shopify\.com',
+	'media\.discordapp\.net',
+	'pbs\.twimg\.com',
+	'upload\.wikimedia\.org',
+	'i0\.wp\.com',
+	'seekpng\.com',
+	'i\.dailymail\.co\.uk',
+	'de\.catbox\.moe',
+	'www\.cdc\.gov',
+	'm\.media-amazon\.com',
+	'www\.washingtonpost\.com',
+	'i\.imgflip\.com',
+	'farm2\.static\.flickr\.com',
+	'img-9gag-fun\.9cache\.com',
+	'i\.ytimg\.com',
+	'a57\.foxnews\.com',
+	'external-content\.duckduckgo\.com',
+	'blogs-images\.forbes\.com',
+	'images\.gr-assets\.com'
+	]
+
+hosts = "|".join(approved_embed_hosts)
+
+image_check_regex = re.compile(f'!\[\]\(((?!https:\/\/({hosts})\/).*?)\)', flags=re.A)
+
+embed_check_regex = regex.compile(f'(?<!<(code|pre|a)>)https:\/\/({hosts})\/[\w:~,()\-.#&\/=?@%;+]*', flags=regex.A)
+
+video_regex = regex.compile(f'((?<!<(code|pre|a)>)https:\/\/({hosts})\/[\w:~,()\-.#&\/=?@%;+]*?\.(mp4|webm|mov))', flags=regex.A)

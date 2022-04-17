@@ -301,7 +301,7 @@ def submit_contact(v):
 	if not body: abort(400)
 
 	body = f'This message has been sent automatically to all admins via [/contact](/contact)\n\nMessage:\n\n' + body
-	body_html = sanitize(body, noimages=True)
+	body_html = sanitize(body)
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]

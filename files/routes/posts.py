@@ -727,7 +727,7 @@ def thumbnail_thread(pid):
 
 				if i["subreddit"] == 'PokemonGoRaids': continue
 
-				body_html = sanitize(f'New site mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
+				body_html = sanitize(f'New site mention: https://old.reddit.com{i["permalink"]}?context=89')
 
 				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, body_html=body_html).one_or_none()
 				if existing_comment: break
@@ -755,7 +755,7 @@ def thumbnail_thread(pid):
 			except: break
 
 			for i in data:
-				body_html = sanitize(f'New mention of you: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
+				body_html = sanitize(f'New mention of you: https://old.reddit.com{i["permalink"]}?context=89')
 
 				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None,body_html=body_html).one_or_none()
 				if existing_comment: break
@@ -784,7 +784,7 @@ def thumbnail_thread(pid):
 			except: break
 
 			for i in data:
-				body_html = sanitize(f'New site mention: https://old.reddit.com{i["permalink"]}?context=89', noimages=True)
+				body_html = sanitize(f'New site mention: https://old.reddit.com{i["permalink"]}?context=89')
 
 				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, body_html=body_html).one_or_none()
 
@@ -960,7 +960,7 @@ def submit_post(v, sub=None):
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False
 		).first()
-		if repost: return redirect(repost.permalink)
+		if repost and SITE != 'localhost': return redirect(repost.permalink)
 
 		domain_obj = get_domain(domain)
 		if not domain_obj: domain_obj = get_domain(domain+parsed_url.path)
@@ -1012,7 +1012,7 @@ def submit_post(v, sub=None):
 		Submission.body == body
 	).one_or_none()
 
-	if dup: return redirect(dup.permalink)
+	if dup and SITE != 'localhost': return redirect(dup.permalink)
 
 	now = int(time.time())
 	cutoff = now - 60 * 60 * 24
