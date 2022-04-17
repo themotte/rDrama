@@ -170,7 +170,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 		t = params.get('t', params.get('start', [0]))[0]
 		if isinstance(t, str): t = t.replace('s','')
 
-		htmlsource = f'<lite-youtube videoid="{i.group(1)}" params="autoplay=1&modestbranding=1'
+		htmlsource = f'<lite-youtube videoid="{i.group(2)}" params="autoplay=1&modestbranding=1'
 		if t: htmlsource += f'&start={t}'
 		htmlsource += '"></lite-youtube>'
 
