@@ -759,6 +759,7 @@ approved_embed_hosts = [
 	'rdrama.net',
 	'pcmemes.net',
 	'cringetopia.org',
+	'devrama.xyz',
 	'imgur.com',
 	'ibb.co',
 	'lain.la',
