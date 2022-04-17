@@ -67,7 +67,6 @@ bs_trigger(document)
 
 
 function expandDesktopImage(image) {
-	document.getElementById("desktop-expanded-image").src = "";
 	document.getElementById("desktop-expanded-image").src = image.replace("200w_d.webp", "giphy.webp");
 	document.getElementById("desktop-expanded-image-link").href = image;
 	document.getElementById("desktop-expanded-image-wrap-link").href = image;
