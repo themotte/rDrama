@@ -92,50 +92,35 @@ def notifications(v):
 		g.db.commit()
 
 		next_exists = (len(notifications) > len(listing))
-	else:
-		comments = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(
-			Notification.user_id == v.id,
-			Comment.author_id != AUTOJANNY_ID,
-			Comment.body_html.notlike('%<p>New site mention: <a href="https://old.reddit.com/r/%')
-		).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(100).all()
-		
-		for n, c in comments:
-			if n.created_utc > 1620391248: c.notif_utc = n.created_utc
-			if not n.read:
-				n.read = True
-				c.unread = True
-				g.db.add(c)
-
-		g.db.commit()
-
-		sq = g.db.query(Comment.id, Notification.created_utc).join(Notification, Notification.comment_id == Comment.id).filter(
+	else:		
+		comments = g.db.query(Comment, Notification).join(Notification, Notification.comment_id == Comment.id).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('%<p>New site mention: <a href="https://old.reddit.com/r/%')
-		).order_by(Notification.created_utc.desc()).subquery()
+		).order_by(Notification.created_utc.desc())
 
-		if v and (v.shadowbanned or v.admin_level > 2):
-			comments = g.db.query(Comment).join(sq, sq.c.id == Comment.id).order_by(sq.c.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
-		else:
-			comments = g.db.query(Comment).join(sq, sq.c.id == Comment.id).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None).order_by(sq.c.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
-		
+		if not (v and (v.shadowbanned or v.admin_level > 2)):
+			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
+
+		comments = comments.offset(25 * (page - 1)).limit(26).all()
+
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 
-		cids = [x[0] for x in g.db.query(Comment.id).join(Notification, Notification.comment_id == Comment.id).filter(
-			Notification.user_id == v.id,
-			Comment.is_banned == False,
-			Comment.deleted_utc == 0,
-			Comment.author_id != AUTOJANNY_ID,
-			Comment.body_html.notlike('%<p>New site mention: <a href="https://old.reddit.com/r/%')
-		).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(500).all()]
+		cids = [x[0].id for x in comments]
 
 		comms = get_comments(cids, v=v)
 
 		listing = []
-		for c in comments:
+		for c, n in comments:
+			if n.created_utc > 1620391248: c.notif_utc = n.created_utc
+			if not n.read:
+				n.read = True
+				c.unread = True
+				g.db.add(n)
+
 			if c.parent_submission:
 				if c.replies2 == None:
 					c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
@@ -156,6 +141,8 @@ def notifications(v):
 				c.replies2 = g.db.query(Comment).filter_by(parent_comment_id=c.id).order_by(Comment.id).all()
 
 			if c not in listing: listing.append(c)
+
+	g.db.commit()
 
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
