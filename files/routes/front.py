@@ -486,7 +486,7 @@ def changeloglist(v=None, sort="new", page=1 ,t="all"):
 	return [x[0] for x in posts]
 
 
-@app.get("/random")
+@app.get("/random_post")
 @auth_required
 def random_post(v):
 
@@ -495,7 +495,7 @@ def random_post(v):
 	if p: p = p[0]
 	else: abort(404)
 
-	return redirect(f"/post/{p.id}")
+	return redirect(f"/post/{p}")
 
 
 @app.get("/random_user")
@@ -507,7 +507,7 @@ def random_user(v):
 	if u: u = u[0]
 	else: abort(404)
 
-	return redirect(f"/@{x}")
+	return redirect(f"/@{u}")
 
 
 @app.get("/comments")
