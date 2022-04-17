@@ -37,7 +37,7 @@ def allowed_attributes(tag, name, value):
 
 	if tag == 'img':
 		if name in ['src','data-src']:
-			if value.startswith('/') or embed_check_regex.fullmatch(value): return True
+			if value.startswith('/') or value.startswith(f'{SITE_FULL}/') or embed_check_regex.fullmatch(value): return True
 			else: return False
 
 		if name == 'loading' and value == 'lazy': return True
@@ -70,7 +70,7 @@ url_re = build_url_re(tlds=TLDS, protocols=['http', 'https'])
 def callback(attrs, new=False):
 	href = attrs[(None, "href")]
 
-	if not href.startswith(SITE_FULL) and not href.startswith('/') and not href.startswith(SITE_FULL2):
+	if not href.startswith('/') and not href.startswith(f'{SITE_FULL}/'):
 		attrs[(None, "target")] = "_blank"
 		attrs[(None, "rel")] = "nofollow noopener noreferrer"	
 

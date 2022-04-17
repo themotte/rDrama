@@ -12,7 +12,6 @@ SITE_NAME = environ.get("SITE_NAME", '').strip()
 if SITE == "localhost": SITE_FULL = 'http://' + SITE
 else: SITE_FULL = 'https://' + SITE
 
-SITE_FULL2 = 'http://' + SITE
 
 if SITE == 'pcmemes.net': CC = "SPLASH MOUNTAIN"
 else: CC = "COUNTRY CLUB"
@@ -757,46 +756,53 @@ proxies = {"http":"http://127.0.0.1:18080","https":"http://127.0.0.1:18080"}
 blackjack = environ.get("BLACKJACK", "").strip()
 
 approved_embed_hosts = [
-	'i.imgur.com',
-	'i\.ibb\.co',
-	'pomf2\.lain\.la',
+	'imgur.com',
+	'ibb\.co',
+	'lain\.la',
 	'pngfind\.com',
-	'i\.kym-cdn\.com',
-	'i2\.kym-cdn\.com',
-	'i\.redd\.it',
-	'cdn\.substack\.com',
-	'cdn\.discordapp\.com',
-	'2\.bp\.blogspot\.com',
-	'files\.catbox\.moe',
-	'i\.pinimg\.com',
+	'kym-cdn\.com',
+	'redd\.it',
+	'substack\.com',
+	'blogspot\.com',
+	'catbox\.moe',
+	'pinimg\.com',
 	'kindpng\.com',
-	'cdn\.shopify\.com',
-	'media\.discordapp\.net',
-	'pbs\.twimg\.com',
-	'upload\.wikimedia\.org',
-	'i0\.wp\.com',
+	'shopify\.com',
+	'discordapp\.com',
+	'discordapp\.net',
+	'twimg\.com',
+	'wikimedia\.org',
+	'wp\.com',
+	'wordpress\.com',
 	'seekpng\.com',
-	'i\.dailymail\.co\.uk',
-	'de\.catbox\.moe',
-	'www\.cdc\.gov',
-	'm\.media-amazon\.com',
-	'www\.washingtonpost\.com',
-	'i\.imgflip\.com',
-	'farm2\.static\.flickr\.com',
-	'img-9gag-fun\.9cache\.com',
-	'i\.ytimg\.com',
-	'a57\.foxnews\.com',
-	'external-content\.duckduckgo\.com',
-	'blogs-images\.forbes\.com',
-	'images\.gr-assets\.com',
-	'c\.tenor\.com',
-	'media\.giphy\.com'
+	'dailymail\.co\.uk',
+	'cdc\.gov',
+	'media-amazon\.com',
+	'washingtonpost\.com',
+	'imgflip\.com',
+	'flickr\.com',
+	'9cache\.com',
+	'ytimg\.com',
+	'foxnews\.com',
+	'duckduckgo\.com',
+	'forbes\.com',
+	'gr-assets\.com',
+	'tenor\.com',
+	'giphy\.com',
+	'makeagif\.com',
+	'gfycat\.com',
+	'tumblr\.com',
+	'yarn\.co',
+	'gifer\.com',
+	'prnt\.sc',
+	'staticflickr\.com',
+	'kiwifarms\.net'
 	]
 
 hosts = "|".join(approved_embed_hosts)
 
-image_check_regex = re.compile(f'!\[\]\(((?!https:\/\/({hosts})\/).*?)\)', flags=re.A)
+image_check_regex = re.compile(f'!\[\]\(((?!https:\/\/([a-z0-9-]\.)*({hosts})\/).*?)\)', flags=re.A)
 
-embed_check_regex = regex.compile(f'(?<!<(code|pre|a)>)https:\/\/({hosts})\/[\w:~,()\-.#&\/=?@%;+]*', flags=regex.A)
+embed_check_regex = regex.compile(f'(?<!<(code|pre|a)>)https:\/\/([a-z0-9-]\.)*({hosts})\/[\w:~,()\-.#&\/=?@%;+]*', flags=regex.A)
 
-video_regex = regex.compile(f'((?<!<(code|pre|a)>)https:\/\/({hosts})\/[\w:~,()\-.#&\/=?@%;+]*?\.(mp4|webm|mov))', flags=regex.A)
+video_regex = regex.compile(f'((?<!<(code|pre|a)>)https:\/\/([a-z0-9-]\.)*({hosts})\/[\w:~,()\-.#&\/=?@%;+]*?\.(mp4|webm|mov))', flags=regex.A)

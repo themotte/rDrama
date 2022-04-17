@@ -60,6 +60,6 @@ def allow_nsfw():
 	session["over_18"] = int(time.time()) + 3600
 	redir = request.values.get("redir")
 	if redir:
-		if redir.startswith(SITE_FULL): return redirect(redir)
+		if redir.startswith(f'{SITE_FULL}/'): return redirect(redir)
 		if redir.startswith('/'): return redirect(f'{SITE_FULL}{redir}')
 	return redirect('/')

@@ -11,10 +11,10 @@ def login_get(v):
 	redir = request.values.get("redirect")
 	if redir:
 		redir = redir.replace("/logged_out", "").strip()
-		if not redir.startswith(SITE_FULL) and not redir.startswith('/'): redir = None
+		if not redir.startswith(f'{SITE_FULL}/') and not redir.startswith('/'): redir = None
 
 	if v and redir:
-		if redir.startswith(SITE_FULL): return redirect(redir)
+		if redir.startswith(f'{SITE_FULL}/'): return redirect(redir)
 		elif redir.startswith('/'): return redirect(f'{SITE_FULL}{redir}')
 
 	return render_template("login.html", failed=False, redirect=redir)
@@ -150,10 +150,10 @@ def login_post():
 	redir = request.values.get("redirect")
 	if redir:
 		redir = redir.replace("/logged_out", "").strip()
-		if not redir.startswith(SITE_FULL) and not redir.startswith('/'): redir = '/'
+		if not redir.startswith(f'{SITE_FULL}/') and not redir.startswith('/'): redir = '/'
 
 	if redir:
-		if redir.startswith(SITE_FULL): return redirect(redir)
+		if redir.startswith(f'{SITE_FULL}/'): return redirect(redir)
 		if redir.startswith('/'): return redirect(f'{SITE_FULL}{redir}')
 	return redirect('/')
 

@@ -472,7 +472,7 @@ def sub_toggle(v):
 		g.db.add(v)
 		g.db.commit()
 
-	if request.referrer and len(request.referrer) > 1 and request.referrer.startswith(SITE_FULL):
+	if request.referrer and len(request.referrer) > 1 and request.referrer.startswith(f'{SITE_FULL}/'):
 		return redirect(request.referrer)
 
 	return redirect('/')
