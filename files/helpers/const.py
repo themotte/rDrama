@@ -789,8 +789,8 @@ approved_embed_hosts = [
 	'external-content\.duckduckgo\.com',
 	'blogs-images\.forbes\.com',
 	'images\.gr-assets\.com',
-	'c.tenor.com',
-	'media.giphy.com'
+	'c\.tenor\.com',
+	'media\.giphy\.com'
 	]
 
 hosts = "|".join(approved_embed_hosts)
