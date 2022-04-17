@@ -108,13 +108,13 @@ def notifications(v):
 
 		g.db.commit()
 
-		sq = g.db.query(Comment.id, Notification.created_utc).join(Notification, Notification.comment_id == Comment.id).distinct(Comment.parent_comment_id).filter(
+		sq = g.db.query(Comment.id, Notification.created_utc).join(Notification, Notification.comment_id == Comment.id).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('%<p>New site mention: <a href="https://old.reddit.com/r/%')
-		).order_by(Comment.parent_comment_id.desc(), Notification.created_utc.desc()).subquery()
+		).order_by(Notification.created_utc.desc()).subquery()
 
 		if v and (v.shadowbanned or v.admin_level > 2):
 			comments = g.db.query(Comment).join(sq, sq.c.id == Comment.id).order_by(sq.c.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
