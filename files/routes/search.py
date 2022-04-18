@@ -160,13 +160,6 @@ def searchposts(v):
 
 	posts = get_posts(ids, v=v)
 
-	if v and v.admin_level>3 and "domain" in criteria:
-		domain=criteria['domain']
-		domain_obj=get_domain(domain)
-	else:
-		domain=None
-		domain_obj=None
-
 	if request.headers.get("Authorization"): return {"total":total, "data":[x.json for x in posts]}
 
 	return render_template("search.html",
@@ -177,9 +170,7 @@ def searchposts(v):
 						   listing=posts,
 						   sort=sort,
 						   t=t,
-						   next_exists=next_exists,
-						   domain=domain,
-						   domain_obj=domain_obj
+						   next_exists=next_exists
 						   )
 
 @app.get("/search/comments")

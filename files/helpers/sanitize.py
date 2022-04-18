@@ -270,8 +270,8 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 		
 		url = urlparse(href)
 		domain = url.netloc
-		path = url.path
-		domain_list.add(domain+path)
+		url_path = url.path
+		domain_list.add(domain+url_path)
 
 		parts = domain.split(".")
 		for i in range(len(parts)):
