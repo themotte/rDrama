@@ -23,8 +23,16 @@ def error_401(e):
 
 @app.errorhandler(403)
 def error_403(e):
-	if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "403 Forbidden"}, 403
-	else: return render_template('errors/403.html', err=True), 403
+
+	description = e.description
+	if description == "You don't have the permission to access the requested resource. It is either read-protected or not readable by the server.": description = ''
+	
+	if request.headers.get("Authorization") or request.headers.get("xhr"):
+		if not description: description = "403 Forbidden"
+		return {"error": description}, 403
+	else:
+		if not description: description = "YOU AREN'T WELCOME HERE GO AWAY"
+		return render_template('errors/403.html', description=description, err=True), 403
 
 
 @app.errorhandler(404)

@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 from files.helpers.alerts import *
 from files.helpers.sanitize import *
-from files.helpers.filters import filter_comment_html
 from files.helpers.discord import remove_user, set_nick
 from files.helpers.const import *
 from files.mail import *
@@ -141,16 +140,6 @@ def settings_profile_post(v):
 		sig = image_regex.sub(r'![](\1)', sig)
 
 		sig_html = sanitize(sig)
-		bans = filter_comment_html(sig_html)
-
-
-		if bans:
-			ban = bans[0]
-			reason = f"Remove the {ban.domain} link from your sig and try again."
-			if ban.reason:
-				reason += f" {ban.reason}"
-				
-			return {"error": reason}, 401
 
 		if len(sig_html) > 1000:
 			return render_template("settings_profile.html",
@@ -174,13 +163,6 @@ def settings_profile_post(v):
 		friends = image_regex.sub(r'![](\1)', friends)
 
 		friends_html = sanitize(friends)
-		bans = filter_comment_html(friends_html)
-
-		if bans:
-			ban = bans[0]
-			reason = f"Remove the {ban.domain} link from your friends list and try again."
-			if ban.reason: reason += f" {ban.reason}"
-			return {"error": reason}, 401
 
 		if len(friends_html) > 2000:
 			return render_template("settings_profile.html",
@@ -210,13 +192,6 @@ def settings_profile_post(v):
 		enemies = image_regex.sub(r'![](\1)', enemies)
 
 		enemies_html = sanitize(enemies)
-		bans = filter_comment_html(enemies_html)
-
-		if bans:
-			ban = bans[0]
-			reason = f"Remove the {ban.domain} link from your enemies list and try again."
-			if ban.reason: reason += f" {ban.reason}"
-			return {"error": reason}, 401
 
 		if len(enemies_html) > 2000:
 			return render_template("settings_profile.html",
@@ -266,20 +241,11 @@ def settings_profile_post(v):
 				return render_template("settings_profile.html", v=v, error="Image/Video files only."), 400
 		
 		bio_html = sanitize(bio)
-		bans = filter_comment_html(bio_html)
 
 		if len(bio_html) > 10000:
 			return render_template("settings_profile.html",
 								   v=v,
 								   error="Your bio is too long")
-
-		if bans:
-			ban = bans[0]
-			reason = f"Remove the {ban.domain} link from your bio and try again."
-			if ban.reason:
-				reason += f" {ban.reason}"
-				
-			return {"error": reason}, 401
 
 		if len(bio_html) > 10000: abort(400)
 

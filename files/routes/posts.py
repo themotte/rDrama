@@ -3,7 +3,6 @@ import gevent
 import requests
 from files.helpers.wrappers import *
 from files.helpers.sanitize import *
-from files.helpers.filters import *
 from files.helpers.alerts import *
 from files.helpers.discord import send_discord_message, send_cringetopia_message
 from files.helpers.const import *
@@ -510,14 +509,6 @@ def edit_post(pid, v):
 		if v.id == p.author_id and v.marseyawarded and marseyaward_body_regex.search(body_html):
 			return {"error":"You can only type marseys!"}, 403
 
-		bans = filter_comment_html(body_html)
-		if bans:
-			ban = bans[0]
-			reason = f"Remove the {ban.domain} link from your post and try again."
-			if ban.reason:
-				reason += f" {ban.reason}"
-								
-			return {"error": reason}, 403
 
 		p.body = body
 
@@ -1110,12 +1101,7 @@ def submit_post(v, sub=None):
 
 	if len(body_html) > 40000: return error("Submission body_html too long! (max 40k characters)")
 
-	bans = filter_comment_html(body_html)
-	if bans:
-		ban = bans[0]
-		reason = f"Remove the {ban.domain} link from your post and try again."
-		if ban.reason: reason += f" {ban.reason}"
-		return error(reason)
+
 
 	if request.host == 'rdrama.net' and v.admin_level < 2: club = False
 	else: club = bool(request.values.get("club",""))

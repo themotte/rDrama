@@ -1,5 +1,4 @@
 from files.helpers.wrappers import *
-from files.helpers.filters import *
 from files.helpers.alerts import *
 from files.helpers.images import *
 from files.helpers.const import *
@@ -323,13 +322,6 @@ def api_comment(v):
 
 	body_html = sanitize(body, comment=True)
 
-	bans = filter_comment_html(body_html)
-
-	if bans:
-		ban = bans[0]
-		reason = f"Remove the {ban.domain} link from your comment and try again."
-		if ban.reason: reason += f" {ban.reason}"
-		return {"error": reason}, 401
 
 	if parent_post.id not in ADMIGGERS and '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower() and AGENDAPOSTER_PHRASE not in body.lower():
 		existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
@@ -737,16 +729,6 @@ def edit_comment(cid, v):
 
 		body_html = sanitize(body, edit=True)
 
-		bans = filter_comment_html(body_html)
-
-		if bans:
-			
-			ban = bans[0]
-			reason = f"Remove the {ban.domain} link from your comment and try again."
-			
-			if ban.reason: reason += f" {ban.reason}"	
-		
-			return {'error': reason}, 400
 		if '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower() and AGENDAPOSTER_PHRASE not in body.lower():
 			now = int(time.time())
 			cutoff = now - 60 * 60 * 24

@@ -805,7 +805,7 @@ approved_embed_hosts = [
 
 hosts = "|".join(approved_embed_hosts).replace('.','\.')
 
-image_check_regex = re.compile(f'!\[\]\(((?!(https:\/\/([a-z0-9-]+\.)*({hosts})\/|\/images\/)).*?)\)', flags=re.A)
+image_check_regex = re.compile(f'!\[\]\(((?!(https:\/\/([a-z0-9-]+\.)*({hosts})\/|\/)).*?)\)', flags=re.A)
 
 embed_fullmatch_regex = re.compile(f'https:\/\/([a-z0-9-]+\.)*({hosts})\/[\w:~,()\-.#&\/=?@%;+]*', flags=re.A)
 

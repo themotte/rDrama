@@ -257,6 +257,34 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 
 
+	soup = BeautifulSoup(sanitized, 'lxml')
+
+	links = soup.find_all("a")
+
+	domain_list = set()
+
+	for link in links:
+
+		href = link.get("href")
+		if not href: continue
+		
+		url = urlparse(href)
+		domain = url.netloc
+		path = url.path
+		domain_list.add(domain+path)
+
+		parts = domain.split(".")
+		for i in range(len(parts)):
+			new_domain = parts[i]
+			for j in range(i + 1, len(parts)):
+				new_domain += "." + parts[j]
+				domain_list.add(new_domain)
+
+	bans = g.db.query(BannedDomain.domain).filter(BannedDomain.domain.in_(list(domain_list))).all()
+
+	if bans: abort(403, description=f"Remove the banned domains {bans} and try again!")
+
+
 	signal.alarm(0)
 
 	return sanitized
