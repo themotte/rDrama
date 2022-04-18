@@ -169,11 +169,9 @@
 			<div class="user-info">
 				<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement.parentElement.parentElement.parentElement)"></span>
 
-				{% if c.awards %}
-					{% for a in c.awards %}
-						<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
-					{% endfor %}
-				{% endif %}
+				{% for a in c.awards|reverse %}
+					<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
+				{% endfor %}
 
 				{% if c.post %}
 					{% set sub = c.post.sub %}
@@ -443,7 +441,7 @@
 
 							<button class="btn caction py-0 nobackground px-1 text-muted" data-bs-toggle="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author_name}}',)"><i class="fas fa-flag fa-fw"></i>Report</button>
 
-							<button class="btn caction py-0 nobackground px-1 text-muted" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/award_comment/{{c.id}}')"><i class="fas fa-gift" aria-hidden="true"></i>Give Award</button>
+							<button class="btn caction py-0 nobackground px-1 text-muted" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" data-url="/award_comment/{{c.id}}"><i class="fas fa-gift" aria-hidden="true"></i>Give Award</button>
 							
 							<button id="unsave-{{c.id}}" class="btn caction py-0 nobackground px-1 {% if c.id in v.saved_comment_idlist() %}d-md-inline-block{% endif %} text-muted d-none" role="button" onclick="post_toast3(this,'/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Unsave</button>
 							
@@ -645,7 +643,7 @@
 					{% if v %}
 						<a role="button" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author_name}}')" class="list-group-item"><i class="fas fa-flag mr-2"></i>Report</a>
 
-						<a class="list-group-item" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/award_comment/{{c.id}}')"><i class="fas fa-gift mr-2" aria-hidden="true"></i>Give Award</a>
+						<a class="list-group-item" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" data-url="/award_comment/{{c.id}}"><i class="fas fa-gift mr-2" aria-hidden="true"></i>Give Award</a>
 
 						<a id="save2-{{c.id}}" class="list-group-item {% if c.id in v.saved_comment_idlist() %}d-none{% endif %}" role="button" data-bs-dismiss="modal" onclick="post_toast2(this,'/save_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')"><i class="fas fa-save mr-2"></i>Save</a>
 

@@ -9,7 +9,7 @@
 {% if not p.ghost or v.id == AEVANN_ID %}<a class="list-inline-item" href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a>{% endif %}
 
 {% if v %}
-	<a class="list-inline-item text-muted d-none d-md-inline-block" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/award_post/{{p.id}}')"><i class="fas fa-gift fa-fw"></i>Give Award</a>
+	<a class="list-inline-item text-muted d-none d-md-inline-block" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" data-url='/award_post/{{p.id}}'><i class="fas fa-gift fa-fw"></i>Give Award</a>
 {% endif %}
 
 <a class="list-inline-item copy-link" role="button" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://chapotraphouse.club{{p.shortlink}}{% else %}{{p.permalink}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>

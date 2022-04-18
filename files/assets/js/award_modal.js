@@ -1,3 +1,7 @@
+document.getElementById('awardModal').addEventListener('show.bs.modal', function (event) {
+  document.getElementById("awardTarget").action = event.relatedTarget.dataset.url;
+});
+
 function vote(type, id, dir, vid) {
 	const upvotes = document.getElementsByClassName(type + '-' + id + '-up');
 	const downvotes = document.getElementsByClassName(type + '-' + id + '-down');
@@ -82,11 +86,6 @@ function vote(type, id, dir, vid) {
 	var form = new FormData()
 	form.append("formkey", formkey());
 	xhr.send(form);
-}
-
-function awardModal(link) {
-	var target = document.getElementById("awardTarget");
-	target.action = link;
 }
 
 function pick(kind, canbuy1, canbuy2) {
