@@ -28,7 +28,7 @@
 				{% endif %}
 			</div>
 
-			{% if v.id in (AEVANN_ID,CARP_ID) %}
+			{% if v.admin_level > 2 %}
 				<a class="btn btn-primary btn-block mb-3" href="/create_sub">CREATE HOLE</a>
 			{% endif %}
 			{% if v.mods(sub.name) %}
@@ -40,7 +40,7 @@
 		<a class="btn btn-primary btn-block mb-3" href="/h/{{sub.name}}/exilees">HOLE EXILEES</a>
 		<a class="btn btn-primary btn-block mb-3" href="/h/{{sub.name}}/blockers">HOLE BLOCKERS</a>
 	{% else %}
-		{% if v and v.id in (AEVANN_ID,CARP_ID) %}
+		{% if v and v.admin_level > 2 %}
 			<a class="btn btn-primary btn-block mb-3" href="/create_sub">CREATE HOLE</a>
 		{% endif %}
 		<a class="btn btn-primary btn-block mb-3" href="/post/16583">EMOJI MEGATHREAD</a>

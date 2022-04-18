@@ -280,6 +280,11 @@ ACTIONTYPES = {
 		"icon": 'fa-sack-dollar', 
 		"color": 'bg-success'
 	},
+	'move_hole': {
+		"str": 'moved {self.target_link} to <a href="/h/{self.target_post.sub}">/h/{self.target_post.sub}</a>', 
+		"icon": 'fa-manhole', 
+		"color": 'bg-primary'
+	},
 	'nuke_user': {
 		"str": 'removed all content of {self.target_link}', 
 		"icon": 'fa-radiation-alt', 
