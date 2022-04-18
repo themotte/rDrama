@@ -718,7 +718,7 @@ def thumbnail_thread(pid):
 
 				if i["subreddit"] == 'PokemonGoRaids': continue
 
-				body_html = sanitize(f'New site mention: https://old.reddit.com{i["permalink"]}?context=89')
+				body_html = f'''<p>New site mention: <a href="https://old.reddit.com{i["permalink"]}?context=89" rel="nofollow noopener noreferrer" target="_blank">https://old.reddit.com{i["permalink"]}?context=89</a></p>'''
 
 				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, body_html=body_html).one_or_none()
 				if existing_comment: break
@@ -746,7 +746,8 @@ def thumbnail_thread(pid):
 			except: break
 
 			for i in data:
-				body_html = sanitize(f'New mention of you: https://old.reddit.com{i["permalink"]}?context=89')
+
+				body_html = f'''<p>New mention of you: <a href="https://old.reddit.com{i["permalink"]}?context=89" rel="nofollow noopener noreferrer" target="_blank">https://old.reddit.com{i["permalink"]}?context=89</a></p>'''
 
 				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None,body_html=body_html).one_or_none()
 				if existing_comment: break
@@ -775,7 +776,7 @@ def thumbnail_thread(pid):
 			except: break
 
 			for i in data:
-				body_html = sanitize(f'New site mention: https://old.reddit.com{i["permalink"]}?context=89')
+				body_html = f'''<p>New site mention: <a href="https://old.reddit.com{i["permalink"]}?context=89" rel="nofollow noopener noreferrer" target="_blank">https://old.reddit.com{i["permalink"]}?context=89</a></p>'''
 
 				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, body_html=body_html).one_or_none()
 
