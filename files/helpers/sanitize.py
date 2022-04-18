@@ -37,7 +37,7 @@ def allowed_attributes(tag, name, value):
 
 	if tag == 'img':
 		if name in ['src','data-src']:
-			if value.startswith('/') or value.startswith(f'{SITE_FULL}/') or embed_check_regex.fullmatch(value): return True
+			if value.startswith('/') or value.startswith(f'{SITE_FULL}/') or embed_fullmatch_regex.fullmatch(value): return True
 			else: return False
 
 		if name == 'loading' and value == 'lazy': return True
@@ -57,7 +57,7 @@ def allowed_attributes(tag, name, value):
 		return False
 
 	if tag == 'source':
-		return True
+		if name == 'src' and embed_fullmatch_regex.fullmatch(value): return True
 		return False
 
 	if tag == 'p':
@@ -215,21 +215,20 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	captured = []
 	for i in youtube_regex.finditer(sanitized):
-		url = i.group(0)
-		if url in captured: continue
-		captured.append(url)
+		if i.group(0) in captured: continue
+		captured.append(i.group(0))
 
-		params = parse_qs(urlparse(url.replace('&amp;','&')).query)
+		params = parse_qs(urlparse(i.group(2).replace('&amp;','&')).query)
 		t = params.get('t', params.get('start', [0]))[0]
 		if isinstance(t, str): t = t.replace('s','')
 
-		htmlsource = f'<lite-youtube videoid="{i.group(2)}" params="autoplay=1&modestbranding=1'
+		htmlsource = f'{i.group(1)}<lite-youtube videoid="{i.group(3)}" params="autoplay=1&modestbranding=1'
 		if t: htmlsource += f'&start={t}'
 		htmlsource += '"></lite-youtube>'
 
-		sanitized = sanitized.replace(url, htmlsource)
+		sanitized = sanitized.replace(i.group(0), htmlsource)
 
-	sanitized = video_regex.sub(r'<video controls preload="none"><source src="\1"></video>', sanitized)
+	sanitized = video_sub_regex.sub(r'\1<video controls preload="none"><source src="\2"></video>', sanitized)
 
 	if comment:
 		for marsey in g.db.query(Marsey).filter(Marsey.name.in_(marseys_used)).all():
