@@ -370,7 +370,7 @@ def downvoting(v, username):
 
 
 @app.post("/@<username>/suicide")
-@limiter.limit("5/day")
+@limiter.limit("1/second;5/day")
 @auth_required
 def suicide(v, username):
 	user = get_user(username)
