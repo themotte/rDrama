@@ -1218,7 +1218,7 @@ def submit_post(v, sub=None):
 			for x in notify_users:
 				add_notif(cid, x)
 
-		if request.values.get('followers') and v.followers:
+		if (request.values.get('followers') or is_bot) and v.followers:
 			text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
 			if post.sub: text += f" in <a href='/h/{post.sub}'>/h/{post.sub}"
 
