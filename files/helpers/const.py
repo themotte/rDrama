@@ -31,7 +31,6 @@ AJ_REPLACEMENTS = {
 SLURS = {
 	"retarded": "r-slurred",
 	"retard": "r-slur",
-	"tard": "r-slur",
 	"gayfag": "gaystrag",
 	"poorfag": "poorstrag",
 	"richfag": "richstrag",
