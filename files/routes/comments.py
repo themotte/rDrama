@@ -93,10 +93,10 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 	except: abort(404)
 	
 	post = get_post(pid, v=v)
-		
+	
 	if post.over_18 and not (v and v.over_18) and not session.get('over_18', 0) >= int(time.time()):
 		if request.headers.get("Authorization"): return {'error': 'This content is not suitable for some users and situations.'}
-		else: render_template("errors/nsfw.html", v=v)
+		else: return render_template("errors/nsfw.html", v=v)
 
 	try: context = min(int(request.values.get("context", 0)), 8)
 	except: context = 0

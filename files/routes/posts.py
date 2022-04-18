@@ -129,6 +129,10 @@ def post_id(pid, anything=None, v=None, sub=None):
 
 	post = get_post(pid, v=v)
 
+	if post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"Must be 18+ to view"}, 451
+		return render_template("errors/nsfw.html", v=v)
+
 	if post.new or 'megathread' in post.title.lower(): defaultsortingcomments = 'new'
 	elif v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
@@ -247,10 +251,6 @@ def post_id(pid, anything=None, v=None, sub=None):
 
 	post.views += 1
 	g.db.add(post)
-	if post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"Must be 18+ to view"}, 451
-		return render_template("errors/nsfw.html", v=v)
-
 	g.db.commit()
 	if request.headers.get("Authorization"): return post.json
 	else:
