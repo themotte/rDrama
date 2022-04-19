@@ -11,6 +11,7 @@ sudo psql -U postgres -f seed-db.sql postgres
 sudo pip3 install -r requirements.txt
 mkdir /songs
 mkdir /images
+snap install opera-proxy
 . imei.sh
 ufw allow ssh
 ufw allow from 173.245.48.0/20
