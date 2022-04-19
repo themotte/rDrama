@@ -71,7 +71,6 @@ SLURS = {
 	"sheeny": "Israeli friend",
 	"sheenies": "Israeli friends",
 	"hymie": "Israeli friend",
-	"allah": "Allah (SWT)",
 	"mohammad": "Prophet Mohammad (PBUH)",
 	"muhammad": "Prophet Mohammad (PBUH)",
 	"i hate marsey": "i love marsey",
