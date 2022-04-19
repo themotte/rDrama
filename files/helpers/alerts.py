@@ -45,10 +45,14 @@ def send_notification(uid, text, autojanny=False):
 
 def notif_comment(text, autojanny=False):
 
-	if autojanny: author_id = AUTOJANNY_ID
-	else: author_id = NOTIFICATIONS_ID
+	if autojanny:
+		author_id = AUTOJANNY_ID
+		alert = True
+	else:
+		author_id = NOTIFICATIONS_ID
+		alert = False
 
-	text_html = sanitize(text, alert=True)
+	text_html = sanitize(text, alert=alert)
 
 	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, body_html=text_html).one_or_none()
 	
