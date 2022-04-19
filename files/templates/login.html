@@ -91,7 +91,7 @@
 {% if g.webview %}														<div class="custom-control custom-checkbox mt-4">
 																<input autocomplete="off" type="checkbox" class="custom-control-input" id="termsCheck" required>
 																<label class="custom-control-label terms" for="termsCheck">I accept the <a
-																		href="/terms" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>terms of use</a></label>
+																		href="/logged_out/terms" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>terms of use</a></label>
 														</div>
 {% endif %}
 														<div class="text-center text-muted text-small mt-5 mb-3">

@@ -226,24 +226,30 @@
  <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" {% if SITE_NAME == 'rDrama' and not v or v and (v.shadowbanned or v.is_banned or v.agendaposter) %}style="overflow-x: hidden;background:url(/assets/images/backgrounds/anime/1.webp?v=3) center center fixed; background-color: var(--background)"{% elif v and v.background %}style="{% if path != '/formatting' %}overflow-x: hidden; {% endif %} background:url(/assets/images/backgrounds/{{v.background}}?v=3) center center fixed; background-color: var(--background){% if 'anime' not in v.background %};background-size: cover{% endif %}"{% endif %}>
 
 {% block Banner %}
-	{% if '@' not in request.path %}		
-		{% if sub %}
-			<img alt="/h/{{sub.name}} banner" role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" onclick="expandDesktopImage('{{sub.banner_url}}')" loading="lazy" src="{{sub.banner_url}}" width=100% style="object-fit:cover;max-height:25vw">
-		{% elif SITE_NAME == 'rDrama' %}
-			{% set path = "assets/images/" + SITE_NAME + "/banners" %}
-			{% set image = "/" + path + "/" + listdir('files/' + path)|random() + '?v=24' %}
+	{% if '@' not in request.path %}
+		{% if v %}
+			{% if sub %}
+				<img alt="/h/{{sub.name}} banner" role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" onclick="expandDesktopImage('{{sub.banner_url}}')" loading="lazy" src="{{sub.banner_url}}" width=100% style="object-fit:cover;max-height:25vw">
+			{% elif SITE_NAME == 'rDrama' %}
+				{% set path = "assets/images/" + SITE_NAME + "/banners" %}
+				{% set image = "/" + path + "/" + listdir('files/' + path)|random() + '?v=24' %}
 
-			<a href="https://secure.transequality.org/site/Donation2?df_id=1480">
-				{% if v and (v.shadowbanned or v.is_banned or v.agendaposter) %}
-					<img alt="site banner" src="/assets/images/rDrama/banner2.webp?v=1" width="100%">
-				{% else %}
-					<img alt="site banner" src="{{image}}" width="100%">
-				{% endif %}
-			</a>
+				<a href="https://secure.transequality.org/site/Donation2?df_id=1480">
+					{% if v and (v.shadowbanned or v.is_banned or v.agendaposter) %}
+						<img alt="site banner" src="/assets/images/rDrama/banner2.webp?v=1" width="100%">
+					{% else %}
+						<img alt="site banner" src="{{image}}" width="100%">
+					{% endif %}
+				</a>
+			{% else %}
+				<a href="/">
+					<img alt="site banner" src="/assets/images/{{SITE_NAME}}/banner.webp?v=1042" width="100%">
+				</a>	
+			{% endif %}
 		{% else %}
-			<a href="/">
-				<img alt="site banner" src="/assets/images/{{SITE_NAME}}/banner.webp?v=1042" width="100%">
-			</a>	
+			<a href="/login">
+				<img class="banner" alt="site banner" src="/assets/images/{{SITE_NAME}}/cached.webp?v=1013" width="100%">
+			</a>
 		{% endif %}
 	{% endif %}
 {% endblock %}
