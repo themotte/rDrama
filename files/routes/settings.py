@@ -825,12 +825,12 @@ def settings_song_change(v):
 		return render_template("settings_profile.html", v=v, error="Can't use a live youtube video!")
 
 	if "H" in duration:
-		return render_template("settings_profile.html", v=v, error="Duration of the video must not exceed 10 minutes.")
+		return render_template("settings_profile.html", v=v, error="Duration of the video must not exceed 15 minutes.")
 
 	if "M" in duration:
 		duration = int(duration.split("PT")[1].split("M")[0])
-		if duration > 10: 
-			return render_template("settings_profile.html", v=v, error="Duration of the video must not exceed 10 minutes.")
+		if duration > 15: 
+			return render_template("settings_profile.html", v=v, error="Duration of the video must not exceed 15 minutes.")
 
 
 	if v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
