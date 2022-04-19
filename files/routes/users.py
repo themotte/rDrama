@@ -833,14 +833,8 @@ def visitors(v):
 
 
 @app.get("/@<username>")
-@app.get("/logged_out/@<username>")
 @auth_desired
 def u_username(username, v=None):
-
-
-	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
-
-	if v and request.path.startswith('/logged_out'): v = None
 
 
 	u = get_user(username, v=v)
@@ -926,14 +920,8 @@ def u_username(username, v=None):
 
 
 @app.get("/@<username>/comments")
-@app.get("/logged_out/@<username>/comments")
 @auth_desired
 def u_username_comments(username, v=None):
-
-
-	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
-
-	if v and request.path.startswith('/logged_out'): v = None
 
 	user = get_user(username, v=v)
 
@@ -1113,11 +1101,8 @@ def remove_follow(username, v):
 	return {"message": "Follower removed!"}
 
 @app.get("/pp/<id>")
-@app.get("/logged_out/pp/<id>")
 @app.get("/uid/<id>/pic")
-@app.get("/logged_out/uid/<id>/pic")
 @app.get("/uid/<id>/pic/profile")
-@app.get("/logged_out/uid/<id>/pic/profile")
 @limiter.exempt
 @auth_desired
 def user_profile_uid(v, id):
@@ -1125,10 +1110,6 @@ def user_profile_uid(v, id):
 	except:
 		try: id = int(id, 36)
 		except: abort(404)
-
-	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
-
-	if v and request.path.startswith('/logged_out'): v = None
 
 	x=get_account(id)
 	return redirect(x.profile_url)
