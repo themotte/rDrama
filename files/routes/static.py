@@ -19,20 +19,21 @@ def rdrama(id, title):
 @app.get('/logged_out/')
 @app.get('/logged_out/<path:old>')
 def logged_out(old = ""):
-        # Remove trailing question mark from request.full_path which flask adds if there are no query parameters
-        redirect_url = request.full_path.replace("/logged_out", "", 1)
-        if redirect_url.endswith("?"):
-            redirect_url = redirect_url[:-1]
+	# Remove trailing question mark from request.full_path which flask adds if there are no query parameters
+	redirect_url = request.full_path.replace("/logged_out", "", 1)
+	if redirect_url.endswith("?"):
+		redirect_url = redirect_url[:-1]
 
-        # Handle cases like /logged_out?asdf by adding a slash to the beginning
-        if not redirect_url.startswith('/'):
-            redirect_url = f"/{redirect_url}"
+	# Handle cases like /logged_out?asdf by adding a slash to the beginning
+	if not redirect_url.startswith('/'):
+		redirect_url = f"/{redirect_url}"
 
-        # Prevent redirect loop caused by visiting /logged_out/logged_out/logged_out/etc...
-        if redirect_url.startswith('/logged_out'):
-            abort(400)
+	# Prevent redirect loop caused by visiting /logged_out/logged_out/logged_out/etc...
+	if redirect_url.startswith('/logged_out'):
+		abort(400)
 
-        return redirect(redirect_url)
+	return redirect(redirect_url)
+
 
 @app.get("/privacy")
 @auth_required
@@ -133,8 +134,23 @@ def chart(v):
 	return f
 
 
+@app.get("/weekly_chart")
+@auth_required
+def weekly_chart(v):
+	file = cached_chart(kind="weekly")
+	f = send_file(file)
+	return f
+
+@app.get("/daily_chart")
+@auth_required
+def daily_chart(v):
+	file = cached_chart(kind="daily")
+	f = send_file(file)
+	return f
+
+
 @cache.memoize(timeout=86400)
-def cached_chart(days):
+def cached_chart(kind):
 	now = time.gmtime()
 	midnight_this_morning = time.struct_time((now.tm_year,
 											  now.tm_mon,
@@ -148,11 +164,11 @@ def cached_chart(days):
 											 )
 	today_cutoff = calendar.timegm(midnight_this_morning)
 
-	if days:
-		file = "daily_chart.png"
+	if kind == "daily":
+		file = "/daily_chart.png"
 		day_cutoffs = [today_cutoff - 86400 * i for i in range(47)][1:]
 	else:
-		file = "weekly_chart.png"
+		file = "/weekly_chart.png"
 		day_cutoffs = [today_cutoff - 86400 * 7 * i for i in range(47)][1:]
 
 	day_cutoffs.insert(0, calendar.timegm(now))
