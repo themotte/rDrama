@@ -815,3 +815,5 @@ imgur_regex = re.compile('(https://i\.imgur\.com/([a-z0-9]+))\.(jpg|png|jpeg|web
 youtube_regex = re.compile('(<p>[^<]*)(https:\/\/youtube\.com\/watch\?v\=([a-z0-9-_]{5,20})[\w\-.#&/=\?@%+]*)', flags=re.I|re.A)
 
 yt_id_regex = re.compile('[a-z0-9-_]{5,20}', flags=re.I|re.A)
+
+procoins_li = (0,2500,5000,10000,25000,50000,125000,250000)

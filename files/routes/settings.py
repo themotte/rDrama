@@ -394,16 +394,11 @@ def gumroad(v):
 	existing = g.db.query(User.id).filter(User.email == v.email, User.is_activated == True, User.patron >= tier).one_or_none()
 	if existing: return {"error": f"{patron} rewards already claimed on another account"}, 400
 	
+	procoins = procoins_li[tier] - procoins_li[v.patron]
+	if procoins < 0: return {"error": f"{patron} rewards already claimed"}, 400
+
 	v.patron = tier
 	if v.discord_id: add_role(v, f"{tier}")
-
-	if v.patron == 1: procoins = 2500
-	elif v.patron == 2: procoins = 5000
-	elif v.patron == 3: procoins = 10000
-	elif v.patron == 4: procoins = 25000
-	elif v.patron == 5: procoins = 50000
-	elif v.patron == 6: procoins = 125000
-	elif v.patron == 7: procoins = 250000
 
 	v.procoins += procoins
 	send_repeatable_notification(v.id, f"You have received {procoins} Marseybux! You can use them to buy awards in the [shop](/shop).")

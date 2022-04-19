@@ -3,8 +3,8 @@ import random
 from math import floor
 
 deck_count = 4
-ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K", "A"]
-suits = ["♠️", "♥️", "♣️", "♦️"]
+ranks = ("2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K", "A")
+suits = ("♠️", "♥️", "♣️", "♦️")
 coins_command_word = "!blackjack"
 marseybucks_command_word = "!blackjackmb"
 minimum_bet = 100
