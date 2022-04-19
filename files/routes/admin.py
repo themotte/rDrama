@@ -1531,10 +1531,10 @@ def admin_distinguish_comment(c_id, v):
 
 	if comment.distinguish_level:
 		comment.distinguish_level = 0
-		kind = 'distinguish_comment'
+		kind = 'undistinguish_comment'
 	else:
 		comment.distinguish_level = v.admin_level
-		kind = 'undistinguish_comment'
+		kind = 'distinguish_comment'
 
 	g.db.add(comment)
 
