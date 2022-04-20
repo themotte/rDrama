@@ -1177,15 +1177,19 @@ def ban_user(user_id, v):
 
 	if 'reason' in request.values:
 		if reason.startswith("/post/"):
-			post = int(reason.split("/post/")[1].split(None, 1)[0])
-			post = get_post(post)
-			post.bannedfor = True
-			g.db.add(post)
+			try:
+				post = int(reason.split("/post/")[1].split(None, 1)[0])
+				post = get_post(post)
+				post.bannedfor = True
+				g.db.add(post)
+			except: pass
 		elif reason.startswith("/comment/"):
-			comment = int(reason.split("/comment/")[1].split(None, 1)[0])
-			comment = get_comment(comment)
-			comment.bannedfor = True
-			g.db.add(comment)
+			try:
+				comment = int(reason.split("/comment/")[1].split(None, 1)[0])
+				comment = get_comment(comment)
+				comment.bannedfor = True
+				g.db.add(comment)
+			except: pass
 
 
 	body = f"@{v.username} has banned @{user.username} ({note})"
