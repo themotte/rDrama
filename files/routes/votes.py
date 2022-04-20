@@ -53,7 +53,7 @@ def admin_vote_info_get(v):
 
 @app.post("/vote/post/<post_id>/<new>")
 @limiter.limit("5/second;60/minute;600/hour;1000/day")
-@auth_required
+@is_not_permabanned
 def api_vote_post(post_id, new, v):
 
 	if new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': return {"error": "forbidden."}, 403
@@ -112,7 +112,7 @@ def api_vote_post(post_id, new, v):
 
 @app.post("/vote/comment/<comment_id>/<new>")
 @limiter.limit("5/second;60/minute;600/hour;1000/day")
-@auth_required
+@is_not_permabanned
 def api_vote_comment(comment_id, new, v):
 
 	if new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': return {"error": "forbidden."}, 403
@@ -177,7 +177,7 @@ def api_vote_comment(comment_id, new, v):
 
 
 @app.post("/vote/poll/<comment_id>")
-@auth_required
+@is_not_permabanned
 def api_vote_poll(comment_id, v):
 	
 	vote = request.values.get("vote")
@@ -210,7 +210,7 @@ def api_vote_poll(comment_id, v):
 
 @app.post("/bet/<comment_id>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
+@is_not_permabanned
 def bet(comment_id, v):
 	
 	if v.coins < 200: return {"error": "You don't have 200 coins!"}
@@ -238,7 +238,7 @@ def bet(comment_id, v):
 	return "", 204
 
 @app.post("/vote/choice/<comment_id>")
-@auth_required
+@is_not_permabanned
 def api_vote_choice(comment_id, v):
 
 	comment_id = int(comment_id)
