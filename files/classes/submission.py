@@ -451,6 +451,7 @@ class Submission(Base):
 	def realtitle(self, v):
 		if self.club and not (v and (v.paid_dues or v.id == self.author_id)):
 			if v: return random.choice(TROLLTITLES).format(username=v.username)
+			elif SITE == 'cringetopia.org': return f'Please make an account to see this post'
 			else: return f'{CC} MEMBERS ONLY'
 		elif self.title_html: title = self.title_html
 		else: title = self.title
