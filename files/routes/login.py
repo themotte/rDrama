@@ -145,6 +145,8 @@ def login_post():
 	session["login_nonce"] = account.login_nonce
 	if account.id == AEVANN_ID: session["verified"] = time.time()
 
+	check_for_alts(account.id)
+
 	g.db.commit()
 
 	redir = request.values.get("redirect")
