@@ -123,15 +123,8 @@ def stats():
 			}
 
 @app.get("/chart")
-@auth_required
 def chart(v):
-	days = bool(request.values.get("days"))
-	file = cached_chart(days)
-	try: f = send_file(file)
-	except:
-		print('/chart', flush=True)
-		abort(404)
-	return f
+	return redirect('/weekly_chart')
 
 
 @app.get("/weekly_chart")
