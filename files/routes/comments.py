@@ -393,7 +393,7 @@ def api_comment(v):
 	g.db.add(c)
 	g.db.flush()
 
-	if blackjack and blackjack in c.body.lower():
+	if blackjack and any(i in c.body.lower() for i in blackjack.split()):
 		v.shadowbanned = 'AutoJanny'
 		notif = Notification(comment_id=c.id, user_id=CARP_ID)
 		g.db.add(notif)
@@ -792,7 +792,7 @@ def edit_comment(cid, v):
 		c.body = body[:10000]
 		c.body_html = body_html
 
-		if blackjack and blackjack in c.body.lower():
+		if blackjack and any(i in c.body.lower() for i in blackjack.split()):
 			v.shadowbanned = 'AutoJanny'
 			g.db.add(v)
 			notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=CARP_ID).one_or_none()

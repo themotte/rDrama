@@ -512,7 +512,7 @@ def edit_post(pid, v):
 
 		p.body = body
 
-		if blackjack and blackjack in f'{p.body} {p.title} {p.url}'.lower():
+		if blackjack and any(i in f'{p.body} {p.title} {p.url}'.lower() for i in blackjack.split()):
 			v.shadowbanned = 'AutoJanny'
 			g.db.add(v)
 			send_repeatable_notification(CARP_ID, p.permalink)
@@ -1137,7 +1137,7 @@ def submit_post(v, sub=None):
 	g.db.add(post)
 	g.db.flush()
 
-	if blackjack and blackjack in f'{post.body} {post.title} {post.url}'.lower():
+	if blackjack and any(i in f'{post.body} {post.title} {post.url}'.lower() for i in blackjack.split()):
 		v.shadowbanned = 'AutoJanny'
 		g.db.add(v)
 		send_repeatable_notification(CARP_ID, post.permalink)

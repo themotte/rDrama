@@ -14,7 +14,7 @@ def api_flag_post(pid, v):
 
 	reason = request.values.get("reason", "").strip()
 
-	if blackjack and blackjack in reason.lower():
+	if blackjack and any(i in reason.lower() for i in blackjack.split()):
 		v.shadowbanned = 'AutoJanny'
 		send_repeatable_notification(CARP_ID, f"reports on {post.permalink}")
 
@@ -68,7 +68,7 @@ def api_flag_comment(cid, v):
 
 	reason = request.values.get("reason", "").strip()
 
-	if blackjack and blackjack in reason.lower():
+	if blackjack and any(i in reason.lower() for i in blackjack.split()):
 		v.shadowbanned = 'AutoJanny'
 		send_repeatable_notification(CARP_ID, f"reports on {comment.permalink}")
 
