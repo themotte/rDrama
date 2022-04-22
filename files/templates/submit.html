@@ -55,7 +55,7 @@
 		{% endif %}
 		{% endblock %}
 
-<body id="submit" {% if SITE_NAME == 'rDrama' and not v or v and (v.shadowbanned or v.is_banned or v.agendaposter) %}style="overflow-x: hidden;background:url(/assets/images/backgrounds/anime/1.webp?v=3) center center fixed; background-color: var(--background)"{% elif v and v.background %}style="overflow-x: hidden;  background:url(/assets/images/backgrounds/{{v.background}}?v=3) center center fixed; background-color: var(--background)display: block{% if 'anime' not in v.background %};background-size: cover{% endif %}"{% endif %}>
+<body id="submit" {% if SITE_NAME == 'rDrama' and v and (v.shadowbanned or v.is_banned or v.agendaposter) %}style="overflow-x: hidden;background:url(/assets/images/backgrounds/anime/1.webp?v=3) center center fixed; background-color: var(--background)"{% elif v and v.background %}style="overflow-x: hidden;  background:url(/assets/images/backgrounds/{{v.background}}?v=3) center center fixed; background-color: var(--background)display: block{% if 'anime' not in v.background %};background-size: cover{% endif %}"{% endif %}>
 
 				{% include "header.html" %}
 
