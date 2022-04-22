@@ -38,18 +38,11 @@ SLURS = {
 	"oldfag": "oldstrag",
 	"faggotry": "cute twinkry",
 	"faggot": "cute twink",
-	" fag ": "cute twink",
 	"pedophile": "libertarian",
-	" pedo": "libertarian",
 	"kill yourself": "keep yourself safe",
-	" kys ": "keep yourself safe",
 	"n1gger": "BIPOC",
 	"nlgger": "BIPOC",
 	"nigger": "BIPOC",
-	" n1g ": "BIPOC",
-	" nlg ": "BIPOC",
-	" nig ": "BIPOC",
-	" rapist": "male feminist",
 	"steve akins": "penny verity oaken",
 	"trannie": "🚂🚃🚃",
 	"tranny": "🚂🚃🚃",
@@ -89,8 +82,15 @@ SLURS = {
 	"china virus": "SARS-CoV-2 syndemic",
 	"kung flu": "SARS-CoV-2 syndemic",
 	"elon musk": "rocket daddy",
+	"fake and gay": "fake and straight",
+	" kys ": " keep yourself safe ",
+	" n1g ": " BIPOC ",
+	" nlg ": " BIPOC ",
+	" nig ": " BIPOC ",
+	" fag ": " cute twink ",
+	" pedo": " libertarian",
 	" elon ": " rocket daddy ",
-	"fake and gay": "fake and straight"
+	" rapist": " male feminist "
 }
 
 single_words = "|".join([slur.lower() for slur in SLURS.keys()])
