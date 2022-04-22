@@ -7,7 +7,7 @@
 		{% set image = "/" + path + "/" + listdir('files/' + path)|random() + '?v=40' %}
 	{% endif %}
 
-	{% if v and (v.shadowbanned or v.is_banned or v.agendaposter) %}
+	{% if v and (v.is_banned or v.agendaposter) %}
 		<img class="mb-4" alt="sidebar image" role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" onclick="expandDesktopImage('/assets/images/rDrama/sidebar2.webp')" loading="lazy" src="/assets/images/rDrama/sidebar2.webp" width=100%>
 	{% else %}
 		<img class="mb-4" alt="sidebar image" role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" onclick="expandDesktopImage('{{image}}')" loading="lazy" src="{{image}}" width=100%>
