@@ -817,3 +817,5 @@ yt_id_regex = re.compile('[a-z0-9-_]{5,20}', flags=re.I|re.A)
 image_regex = re.compile("(^|\s)(https:\/\/[\w\-.#&/=\?@%;+]{5,250}(\.png|\.jpg|\.jpeg|\.gif|\.webp|maxwidth=9999|fidelity=high))($|\s)", flags=re.I|re.A)
 
 procoins_li = (0,2500,5000,10000,25000,50000,125000,250000)
+
+linefeeds_regex = re.compile("([^\n])\n([^\n])", flags=re.A)
