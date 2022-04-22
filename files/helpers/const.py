@@ -673,7 +673,7 @@ valid_password_regex = re.compile("^.{8,100}$", flags=re.A)
 
 marseyaward_body_regex = re.compile(">[^<\s+]|[^>\s+]<", flags=re.A)
 
-marseyaward_title_regex = re.compile("(<img[^>]+>)+", flags=re.A)
+marseyaward_title_regex = re.compile("( *<img[^>]+>)+", flags=re.A)
 
 marsey_regex = re.compile("[a-z0-9]{1,30}", flags=re.A)
 
