@@ -991,10 +991,12 @@ def shadowban(user_id, v):
 	if user.admin_level != 0: abort(403)
 	user.shadowbanned = v.username
 	g.db.add(user)
+
 	for alt in user.alts:
 		if alt.admin_level: break
 		alt.shadowbanned = v.username
 		g.db.add(alt)
+
 	ma = ModAction(
 		kind="shadowban",
 		user_id=v.id,
