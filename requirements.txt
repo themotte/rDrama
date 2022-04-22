@@ -18,7 +18,6 @@ psutil
 pyotp
 qrcode
 redis
-regex
 requests
 SQLAlchemy
 psycopg2-binary

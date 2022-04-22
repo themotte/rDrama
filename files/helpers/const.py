@@ -677,8 +677,6 @@ marsey_regex = re.compile("[a-z0-9]{1,30}", flags=re.A)
 
 tags_regex = re.compile("[a-z0-9: ]{1,200}", flags=re.A)
 
-image_regex = regex.compile("(?<=^|\s)(https:\/\/[\w\-.#&/=\?@%;+]{5,250}(\.png|\.jpg|\.jpeg|\.gif|\.webp|maxwidth=9999|fidelity=high))(?=$|\s)", flags=regex.I|regex.A)
-
 valid_sub_regex = re.compile("^[a-zA-Z0-9_\-]{3,20}$", flags=re.A)
 
 query_regex = re.compile("(\w+):(\S+)", flags=re.A)
@@ -715,16 +713,16 @@ email_regex = re.compile('([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|
 utm_regex = re.compile('utm_[a-z]+=[a-z0-9_]+&', flags=re.A)
 utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
 
-slur_regex = regex.compile(f"(?<!<(a|img|source) [^<]*)({single_words})", flags=regex.I|regex.A)
-slur_regex_upper = regex.compile(f"(?<!<(a|img|source) [^<]*)({single_words.upper()})", flags=regex.A)
+slur_regex = re.compile(f"(<p>[^<]*)({single_words.upper()})", flags=re.I|re.A)
+slur_regex_upper = re.compile(f"(<p>[^<]*)({single_words.upper()})", flags=re.A)
 torture_regex = re.compile('(^|\s)(i|me) ', flags=re.I|re.A)
 torture_regex2 = re.compile("(^|\s)i'm ", flags=re.I|re.A)
 
 def sub_matcher(match):
-	return SLURS[match.group(0).lower()]
+	return match.group(1) + SLURS[match.group(2).lower()]
 
 def sub_matcher_upper(match):
-	return SLURS[match.group(0).lower()].upper()
+	return match.group(1) + SLURS[match.group(2).lower()].upper()
 
 def censor_slurs(body, logged_user):
 	if not logged_user or logged_user == 'chat' or logged_user.slurreplacer:
@@ -813,5 +811,7 @@ imgur_regex = re.compile('(https://i\.imgur\.com/([a-z0-9]+))\.(jpg|png|jpeg|web
 youtube_regex = re.compile('(<p>[^<]*)(https:\/\/youtube\.com\/watch\?v\=([a-z0-9-_]{5,20})[\w\-.#&/=\?@%+]*)', flags=re.I|re.A)
 
 yt_id_regex = re.compile('[a-z0-9-_]{5,20}', flags=re.I|re.A)
+
+image_regex = re.compile("(^|\s)(https:\/\/[\w\-.#&/=\?@%;+]{5,250}(\.png|\.jpg|\.jpeg|\.gif|\.webp|maxwidth=9999|fidelity=high))($|\s)", flags=re.I|re.A)
 
 procoins_li = (0,2500,5000,10000,25000,50000,125000,250000)

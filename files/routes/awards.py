@@ -613,12 +613,16 @@ def admin_userawards_post(v):
 	try: u = request.values.get("username").strip()
 	except: abort(404)
 
+	whitelist = ("shit", "fireflies", "train", "scooter", "wholesome", "tilt", "glowie")
+
 	u = get_user(u, graceful=False, v=v)
 
 	notify_awards = {}
 
 	for key, value in request.values.items():
 		if key not in AWARDS: continue
+
+		if v.admin_level < 3 and key not in whitelist: continue
 
 		if value:
 			
