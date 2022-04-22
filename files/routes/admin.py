@@ -277,6 +277,7 @@ def revert_actions(v, username):
 	
 	for item in posts + comments:
 		item.is_banned = False
+		item.ban_reason = None
 		g.db.add(item)
 
 	users = (x[0] for x in g.db.query(ModAction.target_user_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind.in_(('shadowban', 'ban_user'))).all())
@@ -1313,6 +1314,7 @@ def unban_post(post_id, v):
 		g.db.add(ma)
 
 	post.is_banned = False
+	post.ban_reason = None
 	post.is_approved = v.id
 
 	g.db.add(post)
@@ -1509,6 +1511,7 @@ def api_unban_comment(c_id, v):
 		g.db.add(ma)
 
 	comment.is_banned = False
+	comment.ban_reason = None
 	comment.is_approved = v.id
 
 	g.db.add(comment)
@@ -1615,14 +1618,16 @@ def admin_nuke_user(v):
 		if post.is_banned:
 			continue
 			
-		post.is_banned=True
+		post.is_banned = True
+		post.ban_reason = v.username
 		g.db.add(post)
 
 	for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
 		if comment.is_banned:
 			continue
 
-		comment.is_banned=True
+		comment.is_banned = True
+		comment.ban_reason = v.username
 		g.db.add(comment)
 
 	ma=ModAction(
@@ -1648,14 +1653,16 @@ def admin_nunuke_user(v):
 		if not post.is_banned:
 			continue
 			
-		post.is_banned=False
+		post.is_banned = False
+		post.ban_reason = None
 		g.db.add(post)
 
 	for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
 		if not comment.is_banned:
 			continue
 
-		comment.is_banned=False
+		comment.is_banned = False
+		comment.ban_reason = None
 		g.db.add(comment)
 
 	ma=ModAction(
