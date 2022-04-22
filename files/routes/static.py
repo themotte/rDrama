@@ -92,6 +92,11 @@ def stats():
 
 	active_users = set(posters) | set(commenters) | set(voters) | set(commentvoters)
 
+	furries = g.db.query(User.id).filter(User.house.like('Furry%')).count()
+	femboys = g.db.query(User.id).filter(User.house.like('Femboy%')).count()
+	vampires = g.db.query(User.id).filter(User.house.like('Vampire%')).count()
+	racists = g.db.query(User.id).filter(User.house.like('Racist%')).count()
+
 	return {"marseys": g.db.query(Marsey.name).count(),
 			"users": g.db.query(User.id).count(),
 			"private users": g.db.query(User.id).filter_by(is_private=True).count(),
@@ -119,7 +124,11 @@ def stats():
 			"total downvotes": g.db.query(Vote.submission_id).filter_by(vote_type=-1).count() + g.db.query(CommentVote.comment_id).filter_by(vote_type=-1).count(),
 			"total awards": g.db.query(AwardRelationship.id).count(),
 			"awards given": g.db.query(AwardRelationship.id).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count(),
-			"users who posted, commented, or voted in the past 7 days": len(active_users)
+			"users who posted, commented, or voted in the past 7 days": len(active_users),
+			"House furry members": furries,
+			"House femboy members": femboys,
+			"House vampire members": vampires,
+			"House racist members": racists
 			}
 
 @app.get("/chart")
