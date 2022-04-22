@@ -643,7 +643,7 @@ def message2(v, username):
 
 	g.db.commit()
 
-	if PUSHER_ID != 'blahblahblah':
+	if PUSHER_ID != 'blahblahblah' and not v.shadowbanned:
 		if len(message) > 500: notifbody = message[:500] + '...'
 		else: notifbody = message
 
@@ -718,7 +718,7 @@ def messagereply(v):
 			notif = Notification(comment_id=c.id, user_id=user_id)
 			g.db.add(notif)
 
-		if PUSHER_ID != 'blahblahblah':
+		if PUSHER_ID != 'blahblahblah' and not v.shadowbanned:
 			if len(message) > 500: notifbody = message[:500] + '...'
 			else: notifbody = message
 			

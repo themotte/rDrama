@@ -615,7 +615,7 @@ def api_comment(v):
 				n = Notification(comment_id=c.id, user_id=x)
 				g.db.add(n)
 
-			if parent.author.id != v.id and PUSHER_ID != 'blahblahblah':				
+			if parent.author.id != v.id and PUSHER_ID != 'blahblahblah' and not v.shadowbanned:				
 				try: gevent.spawn(pusher_thread, f'{request.host}{parent.author.id}', c, c.author_name)
 				except: pass
 
