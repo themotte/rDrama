@@ -83,14 +83,16 @@ SLURS = {
 	"kung flu": "SARS-CoV-2 syndemic",
 	"elon musk": "rocket daddy",
 	"fake and gay": "fake and straight",
+
+	" rapist": " male feminist ",
+	" pedo": " libertarian",
+
 	" kys ": " keep yourself safe ",
 	" n1g ": " BIPOC ",
 	" nlg ": " BIPOC ",
 	" nig ": " BIPOC ",
 	" fag ": " cute twink ",
-	" pedo": " libertarian",
 	" elon ": " rocket daddy ",
-	" rapist": " male feminist "
 }
 
 single_words = "|".join([slur.lower() for slur in SLURS.keys()])
