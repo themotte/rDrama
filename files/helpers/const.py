@@ -189,6 +189,37 @@ elif SITE == "pcmemes.net":
 	DONGER_ID = 0
 	BUG_THREAD = 4103
 	WELCOME_MSG = "Welcome to pcmemes.net! Don't forget to turn off the slur filter [here](/settings/content#slurreplacer)"
+elif SITE == 'cringetopia.org':
+	NOTIFICATIONS_ID = 1
+	AUTOJANNY_ID = 2
+	SNAPPY_ID = 3
+	LONGPOSTBOT_ID = 4
+	ZOZBOT_ID = 5
+	AUTOPOLLER_ID = 6
+	AUTOBETTER_ID = 7
+	AUTOCHOICE_ID = 8
+	BASEDBOT_ID = 0
+
+	A_ID = 0
+	KIPPY_ID = 0
+	GIFT_NOTIF_ID = 9
+	PIZZASHILL_ID = 0
+	PIZZA_VOTERS = ()
+	IDIO_ID = 0
+	CARP_ID = 43
+	JOAN_ID = 0
+	MOOSE_ID = 0
+	AEVANN_ID = 9
+	HOMO_ID = 0
+	SOREN_ID = 0
+	Q_ID = 0
+	LAWLZ_ID = 0
+	LLM_ID = 0
+	DAD_ID = 0
+	MOM_ID = 0
+	DONGER_ID = 0
+	BUG_THREAD = 0
+	WELCOME_MSG = f"Welcome to {SITE_NAME}!"
 else:
 	NOTIFICATIONS_ID = 1
 	AUTOJANNY_ID = 2
@@ -219,9 +250,6 @@ else:
 	MOM_ID = 0
 	DONGER_ID = 0
 	BUG_THREAD = 0
-	WELCOME_MSG = f"Welcome to {SITE_NAME}!"
-
-if SITE == 'cringetopia.org':
 	WELCOME_MSG = "Hi there! It's me, your soon-to-be favorite Cringetopia user @carpathianflorist here to give you a brief rundown on some of the sick features we have here. You'll probably want to start by following me, though. So go ahead and click my name and then smash that Follow button. This is actually really important, so go on. Hurry.\n\nThanks!\n\nNext up: If you're a member of the media, similarly just shoot me a DM and I'll set about verifying you and then we can take care of your sad journalism stuff.\n\n**FOR EVERYONE ELSE**\n\n Begin by navigating to [the settings page](/settings/profile) (we'll be prettying this up so it's less convoluted soon, don't worry) and getting some basic customization done.\n\n### Themes\n\nDefinitely change your theme right away, the default one (Midnight) is pretty enough, but why not use something *exotic* like Win98, or *flashy* like Tron? Even Coffee is super tasteful and way more fun than the default. More themes to come when we get around to it!\n\n### Avatar/pfp\n\nYou'll want to set this pretty soon. Set the banner too while you're at it. Your profile is important!\n\n### Flairs\n\nSince you're already on the settings page, you may as well set a flair, too. As with your username, you can - obviously - choose the color of this, either with a hex value or just from the preset colors. And also like your username, you can change this at any time.\n\n### PROFILE ANTHEMS\n\nSpeaking of profiles, hey, remember MySpace? Do you miss autoplaying music assaulting your ears every time you visited a friend's page? Yeah, we brought that back. Enter a YouTube URL, wait a few seconds for it to process, and then BAM! you've got a profile anthem which people cannot mute. Unless they spend 20,000 coins in the shop for a mute button. Which you can then remove from your profile by spending 40,000 coins on an unmuteable anthem. Get fucked poors!\n\n### Coins?\n\nCoins is basically our take on the karma system. Except unlike the karma system, it's not gay and boring and stupid and useless. Coins can be spent at [Marsey's Dramacoin Emporium](/shop) on upgrades to your user experience (many more coming than what's already listed there), and best of all on tremendously annoying awards to fuck with your fellow autists. We're always adding more, so check back regularly in case you happen to miss one of the announcement posts.\n\nLike karma, Coins is obtained by getting upvotes on your threads and comments. *Unlike* karma, it's also obtained by getting downvotes on your threads and comments. Downvotes don't really do anything here - they pay the same amount of Coins and they increase thread/comment ranking just the same as an upvote. You just use them to express petty disapproval and hopefully start a fight. Because all votes are visible here. To hell with your anonymity.\n\nCoins can also be traded amongst users from their profiles. Note that there is a 3% transaction fee.\n\n### Badges\n\nRemember all those neat little metallic icons you saw on my profile when you were following me? If not, scroll back up and go have a look. And doublecheck to make sure you pressed the Follow button. Anyway, those are badges. You earn them by doing a variety of things. Some of them even offer benefits, like discounts at the shop. A [complete list of badges and their requirements can be found here](/badges), though I add more pretty regularly, so keep an eye on the changelog.\n\n### Other stuff\n\nWe're always adding new features, and we take a fun-first approach to development. If you have a suggestion for something that would be fun, funny, annoying - or best of all, some combination of all three - definitely make a thread about it. Or just DM me if you're shy. Weirdo. Anyway there's also the [leaderboards](/leaderboard), boring stuff like two-factor authentication you can toggle on somewhere in the settings page (psycho), the ability to save posts and comments, more than a thousand emojis, and on and on and on and on. This is just the basics, mostly to help you get acquainted with some of the things you can do here to make it more easy on the eyes, customizable, and enjoyable. If you don't enjoy it, just go away! We're not changing things to suit you! Get out of here loser! And no, you can't delete your account :na:\n\nI love you.<BR>*xoxo Carp* 💋"
 
 PUSHER_ID = environ.get("PUSHER_ID", "").strip()
