@@ -39,7 +39,7 @@
 			
 			{% if sub %}
 				<a href="/h/{{sub.name}}" class="font-weight-bold ml-2 flex-grow-1 mt-1" style="font-size:max(14px,1.2vw)">/h/{{sub.name}}</a>
-			{% elif SITE_NAME == 'rDrama' %}
+			{% elif SITE_NAME != 'PCM' %}
 				<style>
 					@media (min-width: 350px) {
 						#logo {
@@ -49,7 +49,7 @@
 					}
 				</style>
 				<a href="/" class="flex-grow-1">
-					<img id="logo" alt="logo" src="/assets/images/{{SITE_NAME}}/logo.webp?v=1011" height=15 width=73>
+					<img id="logo" alt="logo" src="/assets/images/{{SITE_NAME}}/logo.webp?v=1011" height=15>
 				</a>
 			{% endif %}
 
@@ -151,7 +151,7 @@
 							<div><img alt="your profile picture" loading="lazy" src="{{v.profile_url}}" class="profile-pic-35"></div>
 							<div class="text-left pl-2">
 								<div style="color: #{{v.namecolor}}" class="text-small font-weight-bold {% if v.patron %}patron{% endif %}"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></div>
-								<div class="text-small-extra"><img alt="coins" class="mr-1 ml-1" data-bs-toggle="tooltip" data-bs-placement="bottom" height="13" width="16" src="/assets/images/marseycoin.webp?v=1008" title="coins" aria-label="coins"><span id="user-coins-amount">{{v.coins}}</span> Coins</div>
+								<div class="text-small-extra"><img alt="coins" class="mr-1 ml-1" data-bs-toggle="tooltip" data-bs-placement="bottom" height="13" src="/assets/images/{{SITE_NAME}}/coins.webp?v=1" title="coins" aria-label="coins"><span id="user-coins-amount">{{v.coins}}</span> Coins</div>
 								<div class="text-small-extra"><img alt="marseybux" class="mr-1 ml-1" data-bs-toggle="tooltip" data-bs-placement="bottom" height="13" width="30" src="/assets/images/marseybux.webp?v=1008" title="Marseybux" aria-label="Marseybux"><span id="user-bux-amount">{{v.procoins}}</span> Marseybux</div>
 							</div>
 						</div>
