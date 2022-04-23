@@ -22,8 +22,6 @@ from sys import stdout
 
 d = Dict("en_US")
 
-IMGUR_KEY = environ.get("IMGUR_KEY").strip()
-
 if PUSHER_ID != 'blahblahblah':
 	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 

@@ -27,8 +27,6 @@ if path.exists(f'snappy_{SITE_NAME}.txt'):
 	with open(f'snappy_{SITE_NAME}.txt', "r", encoding="utf-8") as f:
 		snappyquotes += f.read().split("\n{[para]}\n")
 
-IMGUR_KEY = environ.get("IMGUR_KEY").strip()
-
 discounts = {
 	69: 0.02,
 	70: 0.04,

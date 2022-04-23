@@ -252,6 +252,7 @@ else:
 	BUG_THREAD = 0
 	WELCOME_MSG = f"Welcome to {SITE_NAME}!"
 
+IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 PUSHER_ID = environ.get("PUSHER_ID", "").strip()
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 DEFAULT_COLOR = environ.get("DEFAULT_COLOR", "fff").strip()

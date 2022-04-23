@@ -132,7 +132,7 @@ def stats():
 			}
 
 @app.get("/chart")
-def chart(v):
+def chart():
 	return redirect('/weekly_chart')
 
 

@@ -673,7 +673,7 @@ def messagereply(v):
 
 	body_html = sanitize(message)
 
-	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
+	if v.admin_level > 1 and request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if file.content_type.startswith('image/'):
 			name = f'/images/{time.time()}'.replace('.','') + '.webp'

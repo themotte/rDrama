@@ -14,7 +14,6 @@ from shutil import copyfile
 import requests
 
 GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
-IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
 
 tiers={
