@@ -800,7 +800,7 @@ def edit_comment(cid, v):
 				notif = Notification(comment_id=c.id, user_id=CARP_ID)
 				g.db.add(notif)
 
-		if v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in c.body.lower():
+		if v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in c.body.lower() and not c.is_banned:
 
 			c.is_banned = True
 			c.ban_reason = "AutoJanny"

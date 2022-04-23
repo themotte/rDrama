@@ -521,7 +521,7 @@ def edit_post(pid, v):
 
 		p.body_html = body_html
 
-		if v.id == p.author_id and v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in f'{p.body}{p.title}'.lower():
+		if v.id == p.author_id and v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in f'{p.body}{p.title}'.lower() and not p.is_banned:
 
 			p.is_banned = True
 			p.ban_reason = "AutoJanny"
