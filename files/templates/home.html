@@ -54,7 +54,7 @@
 				{% elif SITE_NAME == 'rDrama' %}
 					<div class="dropdown dropdown-actions mx-2">
 						<button class="btn btn-primary btn-block dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<i class="fas fa-user-group mr-3 "></i>
+							<i class="fas fa-circle mr-3 "></i>
 							{% if v.subs == 1 %}
 								Include subscribed holes
 							{% elif v.subs == 2 %}
@@ -67,9 +67,9 @@
 							<form action="/sub_toggle" method="post">
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 
-								{% if v.subs != 1 %}<button class="dropdown-item text-center" type="submit" name="mode" value="1"><i class="fas fa-user-group mr-3"></i>Include subscribed holes</button>{% endif %}
-								{% if v.subs != 2 %}<button class="dropdown-item text-center" type="submit" name="mode" value="2"><i class="fas fa-user-group mr-3"></i>Include all holes</button>{% endif %}
-								{% if v.subs != 3 %}<button class="dropdown-item text-center" type="submit" name="mode" value="3"><i class="fas fa-user-group mr-3"></i>View holes only</button>{% endif %}
+								{% if v.subs != 1 %}<button class="dropdown-item text-center" type="submit" name="mode" value="1"><i class="fas fa-circle mr-3"></i>Include subscribed holes</button>{% endif %}
+								{% if v.subs != 2 %}<button class="dropdown-item text-center" type="submit" name="mode" value="2"><i class="fas fa-circle mr-3"></i>Include all holes</button>{% endif %}
+								{% if v.subs != 3 %}<button class="dropdown-item text-center" type="submit" name="mode" value="3"><i class="fas fa-circle mr-3"></i>View holes only</button>{% endif %}
 							</form>
 						</div>
 					</div>
@@ -92,7 +92,7 @@
 				
 					<div class="dropdown dropdown-actions mx-2 d-none d-lg-block">
 						<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<i class="fas fa-user-group mr-2"></i>
+							<i class="fas fa-circle mr-2"></i>
 							{% if v.subs == 1 %}
 								Include subscribed holes
 							{% elif v.subs == 2 %}
@@ -105,9 +105,9 @@
 							<form action="/sub_toggle" method="post">
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 
-								{% if v.subs != 1 %}<button class="dropdown-item" type="submit" name="mode" value="1"><i class="fas fa-user-group mr-2"></i>Include subscribed holes</button>{% endif %}
-								{% if v.subs != 2 %}<button class="dropdown-item" type="submit" name="mode" value="2"><i class="fas fa-user-group mr-2"></i>Include all holes</button>{% endif %}
-								{% if v.subs != 3 %}<button class="dropdown-item" type="submit" name="mode" value="3"><i class="fas fa-user-group mr-2"></i>View holes only</button>{% endif %}
+								{% if v.subs != 1 %}<button class="dropdown-item" type="submit" name="mode" value="1"><i class="fas fa-circle mr-2"></i>Include subscribed holes</button>{% endif %}
+								{% if v.subs != 2 %}<button class="dropdown-item" type="submit" name="mode" value="2"><i class="fas fa-circle mr-2"></i>Include all holes</button>{% endif %}
+								{% if v.subs != 3 %}<button class="dropdown-item" type="submit" name="mode" value="3"><i class="fas fa-circle mr-2"></i>View holes only</button>{% endif %}
 							</form>
 						</div>
 					</div>
