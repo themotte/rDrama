@@ -474,7 +474,7 @@ def edit_post(pid, v):
 			else: return {"error": "Image/Video files only"}, 400
 
 	if body != p.body:
-		body = image_regex.sub(r'\1![](\2)\3', body)
+		body = image_regex.sub(r'\1![](\2)\4', body)
 
 		if v.id == p.author_id and v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
@@ -1054,7 +1054,7 @@ def submit_post(v, sub=None):
 	if len(url) > 2048:
 		return error("There's a 2048 character limit for URLs.")
 
-	body = image_regex.sub(r'\1![](\2)\3', body)
+	body = image_regex.sub(r'\1![](\2)\4', body)
 
 	if v and v.admin_level > 2:
 		bet_options = []

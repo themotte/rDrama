@@ -88,6 +88,26 @@ def stats():
 	vampires = g.db.query(User.id).filter(User.house.like('Vampire%')).count()
 	racists = g.db.query(User.id).filter(User.house.like('Racist%')).count()
 
+	furries2 = g.db.query(User.id).filter(User.house == 'Furry Founder').count()
+	femboys2 = g.db.query(User.id).filter(User.house == 'Femboy Founder').count()
+	vampires2 = g.db.query(User.id).filter(User.house == 'Vampire Founder').count()
+	racists2 = g.db.query(User.id).filter(User.house == 'Racist Founder').count()
+
+	furries3 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Furry%')).scalar()
+	femboys3 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Femboy%')).scalar()
+	vampires3 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Vampire%')).scalar()
+	racists3 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Racist%')).scalar()
+
+	furries4 = g.db.query(func.sum(User.post_count)).filter(User.house.like('Furry%')).scalar()
+	femboys4 = g.db.query(func.sum(User.post_count)).filter(User.house.like('Femboy%')).scalar()
+	vampires4 = g.db.query(func.sum(User.post_count)).filter(User.house.like('Vampire%')).scalar()
+	racists4 = g.db.query(func.sum(User.post_count)).filter(User.house.like('Racist%')).scalar()
+
+	furries5 = g.db.query(func.sum(User.comment_count)).filter(User.house.like('Furry%')).scalar()
+	femboys5 = g.db.query(func.sum(User.comment_count)).filter(User.house.like('Femboy%')).scalar()
+	vampires5 = g.db.query(func.sum(User.comment_count)).filter(User.house.like('Vampire%')).scalar()
+	racists5 = g.db.query(func.sum(User.comment_count)).filter(User.house.like('Racist%')).scalar()
+
 	return {"marseys": g.db.query(Marsey.name).count(),
 			"users": g.db.query(User.id).count(),
 			"private users": g.db.query(User.id).filter_by(is_private=True).count(),
@@ -119,7 +139,27 @@ def stats():
 			"House furry members": furries,
 			"House femboy members": femboys,
 			"House vampire members": vampires,
-			"House racist members": racists
+			"House racist members": racists,
+
+			"House furry founders": furries2,
+			"House femboy founders": femboys2,
+			"House vampire founders": vampires2,
+			"House racist founders": racists2,
+
+			"House furry total truescore": furries3,
+			"House femboy total truescore": femboys3,
+			"House vampire total truescore": vampires3,
+			"House racist total truescore": racists3,
+
+			"House furry total posts": furries4,
+			"House femboy total posts": femboys4,
+			"House vampire total posts": vampires4,
+			"House racist total posts": racists4,
+
+			"House furry total comments": furries5,
+			"House femboy total comments": femboys5,
+			"House vampire total comments": vampires5,
+			"House racist total comments": racists5,
 			}
 
 @app.get("/chart")
