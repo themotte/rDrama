@@ -41,7 +41,7 @@
   
 <div class="row" style="overflow: visible;padding-top:5px;">
 	<div class="col">
-		{% if v and SITE_NAME != 'Cringetopia' %}
+		{% if v %}
 			<div class="mt-3 d-lg-none">
 				{% if sub %}
 					{% if v.subs == 1 %}
@@ -51,7 +51,7 @@
 						<a class="btn btn-primary btn-block {% if v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/block','block-sub','unblock-sub');this.classList.toggle('d-none');nextElementSibling.classList.toggle('d-none')">Block /h/{{sub.name}}</a>
 						<a class="btn btn-primary btn-block {% if not v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/unblock','block-sub','unblock-sub');this.classList.toggle('d-none');previousElementSibling.classList.toggle('d-none')">Unblock /h/{{sub.name}}</a>
 					{% endif %}
-				{% else %}
+				{% elif SITE_NAME == 'rDrama' %}
 					<div class="dropdown dropdown-actions mx-2">
 						<button class="btn btn-primary btn-block dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							<i class="fas fa-user-group mr-3 "></i>
@@ -81,7 +81,7 @@
 
 			{% block navbar %}
 			<div class="d-flex align-items-center">
-				{% if v and SITE_NAME != 'Cringetopia' %}
+				{% if v and SITE_NAME == 'rDrama' %}
 					{% if v.paid_dues %}
 						{% if ccmode=="true"%}
 							<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-primary text-primary mx-2" href="?sort={{sort}}&t={{t}}&ccmode=false"><i class="fas fa-golf-club mr-2 "></i>CC</a>

@@ -77,20 +77,18 @@
 
 												<input type="hidden" name="formkey" value="{{v.formkey}}">
 
-												{% if SITE != 'cringetopia.org' %}
-													<label class='mt-4' for="title">Hole</label>
+												<label class='mt-4' for="title">Hole</label>
 
-													<div class="input-group mb2">
-														<input list="subs" autocomplete="off" id='sub' class="form-control" form="submitform" name="sub" oninput="savetext()" {% if sub %}value="{{sub.name}}"{% endif %} placeholder="Optional">
-														<datalist id="subs">
-															{% for s in SUBS %}
-																<option value="{{s}}"></option>
-															{% endfor %}
-														</datalist>
-														
-													</div>
-													<div class="mt-1" style="font-size: min(3.5vw,14px)"><span style="color:#ffcccb ">WARNING</span>: Selecting a hole considerably reduces the number of people who will see your post. Don't select a hole unless that's what you want.</div>
-												{% endif %}
+												<div class="input-group mb2">
+													<input list="subs" autocomplete="off" id='sub' class="form-control" form="submitform" name="sub" oninput="savetext()" {% if sub %}value="{{sub.name}}"{% endif %} placeholder="Optional">
+													<datalist id="subs">
+														{% for s in SUBS %}
+															<option value="{{s}}"></option>
+														{% endfor %}
+													</datalist>
+													
+												</div>
+												<div class="mt-1" style="font-size: min(3.5vw,14px)"><span style="color:#ffcccb ">WARNING</span>: Selecting a hole considerably reduces the number of people who will see your post. Don't select a hole unless that's what you want.</div>
 
 												<label class='mt-4' for="title">Post Title</label>
 
