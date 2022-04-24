@@ -1302,11 +1302,14 @@ def submit_post(v, sub=None):
 			if post.url.startswith('https://old.reddit.com/r/'):
 				rev = post.url.replace('https://old.reddit.com/', '')
 				rev = f"* [unddit.com](https://unddit.com/{rev})\n"
+			elif post.url.startswith("https://old.reddit.com/u/"):
+				rev = post.url.replace('https://old.reddit.com/u/', '')
+				rev = f"* [camas.github.io](https://camas.github.io/reddit-search/#\u007b\"author\":\"{rev}\",\"resultSize\":100\u007d)\n"
 			else: rev = ''
 			
 			newposturl = post.url
 			if newposturl.startswith('/'): newposturl = f"{SITE_FULL}{newposturl}"
-			body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{newposturl})\n* [archive.ph](https://archive.ph/?url={quote(newposturl)}&run=1) (click to archive)\n\n"			
+			body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{newposturl})\n* [archive.ph](https://archive.ph/?url={quote(newposturl)}&run=1) (click to archive)\n* [ghostarchive.org](https://ghostarchive.org/search?term={quote(newposturl)}) (click to archive)\n\n"			
 			gevent.spawn(archiveorg, newposturl)
 
 		captured = []
@@ -1322,10 +1325,14 @@ def submit_post(v, sub=None):
 
 			if f'**[{title}]({href})**:\n\n' not in body:
 				body += f'**[{title}]({href})**:\n\n'
-				if href.startswith('https://old.reddit.com/'):
+				if href.startswith('https://old.reddit.com/r/'):
 					body += f'* [unddit.com](https://unddit.com/{href.replace("https://old.reddit.com/", "")})\n'
+				if href.startswith('https://old.reddit.com/u/'):
+					rev = post.url.replace('https://old.reddit.com/u/', '')
+					body += f"* [camas.github.io](https://camas.github.io/reddit-search/#\u007b\"author\":\"{rev}\",\"resultSize\":100\u007d)\n"
 				body += f'* [archive.org](https://web.archive.org/{href})\n'
-				body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'
+				body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n'
+				body += f'* [ghostarchive.org](https://ghostarchive.org/search?term={quote(href)}) (click to archive)\n\n'
 				gevent.spawn(archiveorg, href)
 
 		body_html = sanitize(body)
