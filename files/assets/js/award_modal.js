@@ -19,7 +19,7 @@ function vote(type, id, dir, vid) {
 				upvote.classList.remove('active')
 				scoretext.textContent = score - 1
 				votedirection = "0"
-				if (vid && vid == '1') document.getElementById(id+'-title').classList.remove('visited')
+				if (vid && ['1','9'].includes(vid)) document.getElementById(id+'-title').classList.remove('visited')
 			} else if (downvote.classList.contains('active')) {
 				upvote.classList.add('active')
 				downvote.classList.remove('active')
@@ -29,7 +29,7 @@ function vote(type, id, dir, vid) {
 				upvote.classList.add('active')
 				scoretext.textContent = score + 1
 				votedirection = "1"
-				if (vid && vid == '1') document.getElementById(id+'-title').classList.add('visited')
+				if (vid && ['1','9'].includes(vid)) document.getElementById(id+'-title').classList.add('visited')
 			}
 
 			if (upvote.classList.contains('active')) {
@@ -51,7 +51,7 @@ function vote(type, id, dir, vid) {
 				downvote.classList.remove('active')
 				scoretext.textContent = score + 1
 				votedirection = "0"
-				if (vid && vid == '1') document.getElementById(id+'-title').classList.remove('visited')
+				if (vid && ['1','9'].includes(vid)) document.getElementById(id+'-title').classList.remove('visited')
 			} else if (upvote.classList.contains('active')) {
 				downvote.classList.add('active')
 				upvote.classList.remove('active')
@@ -61,7 +61,7 @@ function vote(type, id, dir, vid) {
 				downvote.classList.add('active')
 				scoretext.textContent = score - 1
 				votedirection = "-1"
-				if (vid && vid == '1') document.getElementById(id+'-title').classList.add('visited')
+				if (vid && ['1','9'].includes(vid)) document.getElementById(id+'-title').classList.add('visited')
 			}
 
 			if (upvote.classList.contains('active')) {

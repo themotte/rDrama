@@ -202,7 +202,7 @@ elif SITE == 'cringetopia.org':
 
 	A_ID = 0
 	KIPPY_ID = 0
-	GIFT_NOTIF_ID = 9
+	GIFT_NOTIF_ID = 43
 	PIZZASHILL_ID = 0
 	PIZZA_VOTERS = ()
 	IDIO_ID = 0

@@ -35,11 +35,6 @@ def logged_out(old = ""):
 	return redirect(redirect_url)
 
 
-@app.get("/privacy")
-@auth_required
-def privacy(v):
-	return render_template("privacy.html", v=v)
-
 @app.get("/marseys")
 @auth_required
 def marseys(v):
@@ -62,11 +57,7 @@ def marsey_list():
 
 	return str(marseys).replace("'",'"')
 
-@app.get("/terms")
-@auth_desired
-def terms(v):
-	return render_template("terms.html", v=v)
-
+@app.get('/rules')
 @app.get('/sidebar')
 @auth_desired
 def sidebar(v):
