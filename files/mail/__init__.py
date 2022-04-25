@@ -10,7 +10,7 @@ from files.classes import *
 from files.__main__ import app, mail, limiter
 from flask_mail import Message
 
-name = environ.get("SITE_NAME").strip()
+name = environ.get("SITE_NAME")
 
 def send_mail(to_address, subject, html):
 

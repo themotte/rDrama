@@ -4,10 +4,10 @@ from files.helpers.discord import add_role
 from files.__main__ import app
 import requests
 
-SERVER_ID = environ.get("DISCORD_SERVER_ID",'').strip()
-CLIENT_ID = environ.get("DISCORD_CLIENT_ID",'').strip()
-CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET",'').strip()
-BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN").strip()
+SERVER_ID = environ.get("DISCORD_SERVER_ID",'')
+CLIENT_ID = environ.get("DISCORD_CLIENT_ID",'')
+CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET",'')
+BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN")
 DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
 WELCOME_CHANNEL="846509313941700618"
 

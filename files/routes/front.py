@@ -4,7 +4,7 @@ from files.helpers.discord import *
 from files.__main__ import app, cache, limiter
 from files.classes.submission import Submission
 
-defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
+defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all")
 
 @app.post("/clear")
 @auth_required
