@@ -29,7 +29,7 @@
 
 	<div class="navbar navbar-expand-md navbar-light" id="navbar">
 		<div class="container-fluid" style="padding:0;">
-			<a href="/" class="navbar-brand mr-auto {% if SITE_NAME == 'PCM' and not sub %}flex-grow-1{% endif %}">
+			<a href="/" class="navbar-brand mr-auto {% if SITE_NAME in ('PCM','WPD') and not sub %}flex-grow-1{% endif %}">
 				<img alt="header icon" height=33 src="/assets/images/{{SITE_NAME}}/headericon.webp?v=1017">
 			</a>
 			
