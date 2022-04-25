@@ -212,7 +212,7 @@
 
 			<div class="post-actions mt-2 d-none d-md-block">
 				<ul class="list-inline text-right d-flex">
-						{% if p.body %}
+						{% if p.realbody(v) %}
 							<a class="list-inline-item" role="button" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
 						{% endif %}
 						<li class="list-inline-item">
@@ -244,7 +244,7 @@
 
 			</li>
 			
-			{% if p.body and request.path != "/changelog"%}
+			{% if p.realbody(v) and request.path != "/changelog"%}
 				<a class="list-inline-item" role="button" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
 			{% endif %}
 
@@ -443,5 +443,5 @@
 {% include "expanded_image_modal.html" %}
 
 <script src="/assets/js/clipboard.js?v=240"></script>
-<script src="/assets/js/comments+submission_listing.js?v=256"></script>
+<script src="/assets/js/comments+submission_listing.js?v=257"></script>
 <script src="/assets/js/submission_listing.js?v=240"></script>

@@ -1,12 +1,3 @@
-function post(url) {
-	const xhr = new XMLHttpRequest();
-	xhr.open("POST", url);
-	xhr.setRequestHeader('xhr', 'xhr');
-	var form = new FormData()
-	form.append("formkey", formkey());
-	xhr.send(form);
-};
-
 function post_toast3(t, url, button1, button2) {
 	t.disabled=true;
 	t.classList.add("disabled");
@@ -304,38 +295,6 @@ document.onpaste = function(event) {
 			document.getElementById('filename-show-edit-' + id).textContent = filename;
 		}
 	}
-}
-
-function poll_vote(cid, parentid) {
-	for(let el of document.getElementsByClassName('presult-'+parentid)) {
-		el.classList.remove('d-none');
-	}
-	var type = document.getElementById(cid).checked;
-	var scoretext = document.getElementById('poll-' + cid);
-	var score = Number(scoretext.textContent);
-	if (type == true) scoretext.textContent = score + 1;
-	else scoretext.textContent = score - 1;
-	post('/vote/poll/' + cid + '?vote=' + type);
-}
-
-function choice_vote(cid, parentid) {
-	for(let el of document.getElementsByClassName('presult-'+parentid)) {
-		el.classList.remove('d-none');
-	}
-	
-	let curr = document.getElementById(`current-${parentid}`)
-	if (curr && curr.value)
-	{
-		var scoretext = document.getElementById('choice-' + curr.value);
-		var score = Number(scoretext.textContent);
-		scoretext.textContent = score - 1;
-	}
-
-	var scoretext = document.getElementById('choice-' + cid);
-	var score = Number(scoretext.textContent);
-	scoretext.textContent = score + 1;
-	post('/vote/choice/' + cid);
-	curr.value = cid
 }
 
 function handle_action(type, cid, thing) {

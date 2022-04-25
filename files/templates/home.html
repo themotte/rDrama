@@ -237,18 +237,6 @@
 </nav>
 {% endif %}
 
-<script>
-	function post(url) {
-		const xhr = new XMLHttpRequest();
-		xhr.open("POST", url);
-		xhr.setRequestHeader('xhr', 'xhr');
-		var form = new FormData()
-		form.append("formkey", formkey());
-		xhr.onload = function() {location.reload()}
-		xhr.send(form);
-	};
-</script>
-
 {% if PUSHER_ID != 'blahblahblah' and v %}
 	<div class="d-none" id="strid">{{request.host}}{{v.id}}</div>
 	<div class="d-none" id="pusherid">{{PUSHER_ID}}</div>

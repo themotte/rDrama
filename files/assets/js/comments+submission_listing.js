@@ -39,3 +39,58 @@ document.addEventListener("click", function(){
 	}
 	else document.querySelectorAll('.popover').forEach(e => e.remove());
 });
+
+function post(url) {
+	const xhr = new XMLHttpRequest();
+	xhr.open("POST", url);
+	xhr.setRequestHeader('xhr', 'xhr');
+	var form = new FormData()
+	form.append("formkey", formkey());
+	xhr.send(form);
+};
+
+function poll_vote(cid, parentid) {
+	for(let el of document.getElementsByClassName('presult-'+parentid)) {
+		el.classList.remove('d-none');
+	}
+	var type = document.getElementById(cid).checked;
+	var scoretext = document.getElementById('poll-' + cid);
+	var score = Number(scoretext.textContent);
+	if (type == true) scoretext.textContent = score + 1;
+	else scoretext.textContent = score - 1;
+	post('/vote/poll/' + cid + '?vote=' + type);
+}
+
+function choice_vote(cid, parentid) {
+	for(let el of document.getElementsByClassName('presult-'+parentid)) {
+		el.classList.remove('d-none');
+	}
+	
+	let curr = document.getElementById(`current-${parentid}`)
+	if (curr && curr.value)
+	{
+		var scoretext = document.getElementById('choice-' + curr.value);
+		var score = Number(scoretext.textContent);
+		scoretext.textContent = score - 1;
+	}
+
+	var scoretext = document.getElementById('choice-' + cid);
+	var score = Number(scoretext.textContent);
+	scoretext.textContent = score + 1;
+	post('/vote/choice/' + cid);
+	curr.value = cid
+}
+
+function bet_vote(cid) {
+	for(let el of document.getElementsByClassName('bet')) {
+		el.disabled = true;
+	}
+	for(let el of document.getElementsByClassName('cost')) {
+		el.classList.add('d-none')
+	}
+	var scoretext = document.getElementById('bet-' + cid);
+	var score = Number(scoretext.textContent);
+	scoretext.textContent = score + 1;
+	post('/bet/' + cid);
+	document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - 200;
+}
