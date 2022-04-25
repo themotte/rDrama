@@ -18,8 +18,8 @@ from datetime import datetime
 import requests
 from urllib.parse import quote, urlencode
 
-GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri")
-GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "")
+GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
+GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 
 month = datetime.now().strftime('%B')
 

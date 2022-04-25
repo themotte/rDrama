@@ -23,8 +23,8 @@ from files.helpers.security import *
 import random
 from os import environ, remove, path
 
-defaulttheme = environ.get("DEFAULT_THEME", "midnight")
-defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all")
+defaulttheme = environ.get("DEFAULT_THEME", "midnight").strip()
+defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 cardview = bool(int(environ.get("CARD_VIEW", 1)))
 
 class User(Base):

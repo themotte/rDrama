@@ -13,8 +13,8 @@ from files.helpers.discord import add_role
 from shutil import copyfile
 import requests
 
-GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "")
-GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri")
+GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
+GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
 
 tiers={
 	"(Paypig)": 1,

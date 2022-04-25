@@ -24,7 +24,7 @@ def feeds_user(v=None, sort='hot', t='all'):
 	
 	posts = get_posts(ids)
 
-	domain = environ.get("DOMAIN")
+	domain = environ.get("DOMAIN").strip()
 
 	doc, tag, text = Doc().tagtext()
 
