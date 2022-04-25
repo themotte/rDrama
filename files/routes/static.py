@@ -198,10 +198,10 @@ def cached_chart(kind):
 	today_cutoff = calendar.timegm(midnight_this_morning)
 
 	if kind == "daily":
-		file = "/daily_chart.png"
+		file = f"{SITE}_daily.png"
 		day_cutoffs = [today_cutoff - 86400 * i for i in range(47)][1:]
 	else:
-		file = "/weekly_chart.png"
+		file = f"{SITE}_weekly.png"
 		day_cutoffs = [today_cutoff - 86400 * 7 * i for i in range(47)][1:]
 
 	day_cutoffs.insert(0, calendar.timegm(now))
