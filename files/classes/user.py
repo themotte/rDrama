@@ -501,7 +501,7 @@ class User(Base):
 	@lazy
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
-		else: return f"/assets/images/{SITE_NAME}/site_preview.webp?v=1013"
+		else: return f"/assets/images/{SITE_NAME}/site_preview.webp?v=1014"
 
 	@property
 	@lazy

@@ -38,7 +38,7 @@ class Sub(Base):
 	@lazy
 	def banner_url(self):
 		if self.bannerurl: return SITE_FULL + self.bannerurl
-		return f'/assets/images/{SITE_NAME}/banner.webp?v=1042'
+		return f'/assets/images/{SITE_NAME}/banner.webp?v=1043'
 
 	@property
 	@lazy
