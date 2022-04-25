@@ -83,7 +83,32 @@ def stats():
 
 	active_users = set(posters) | set(commenters) | set(voters) | set(commentvoters)
 
-	stats = {"marseys": g.db.query(Marsey.name).count(),
+	furries = g.db.query(User.id).filter(User.house.like('Furry%')).count()
+	femboys = g.db.query(User.id).filter(User.house.like('Femboy%')).count()
+	vampires = g.db.query(User.id).filter(User.house.like('Vampire%')).count()
+	racists = g.db.query(User.id).filter(User.house.like('Racist%')).count()
+
+	furries2 = g.db.query(User.id).filter(User.house == 'Furry Founder').count()
+	femboys2 = g.db.query(User.id).filter(User.house == 'Femboy Founder').count()
+	vampires2 = g.db.query(User.id).filter(User.house == 'Vampire Founder').count()
+	racists2 = g.db.query(User.id).filter(User.house == 'Racist Founder').count()
+
+	furries3 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Furry%')).scalar()
+	femboys3 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Femboy%')).scalar()
+	vampires3 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Vampire%')).scalar()
+	racists3 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Racist%')).scalar()
+
+	furries4 = g.db.query(func.sum(User.post_count)).filter(User.house.like('Furry%')).scalar()
+	femboys4 = g.db.query(func.sum(User.post_count)).filter(User.house.like('Femboy%')).scalar()
+	vampires4 = g.db.query(func.sum(User.post_count)).filter(User.house.like('Vampire%')).scalar()
+	racists4 = g.db.query(func.sum(User.post_count)).filter(User.house.like('Racist%')).scalar()
+
+	furries5 = g.db.query(func.sum(User.comment_count)).filter(User.house.like('Furry%')).scalar()
+	femboys5 = g.db.query(func.sum(User.comment_count)).filter(User.house.like('Femboy%')).scalar()
+	vampires5 = g.db.query(func.sum(User.comment_count)).filter(User.house.like('Vampire%')).scalar()
+	racists5 = g.db.query(func.sum(User.comment_count)).filter(User.house.like('Racist%')).scalar()
+
+	return {"marseys": g.db.query(Marsey.name).count(),
 			"users": g.db.query(User.id).count(),
 			"private users": g.db.query(User.id).filter_by(is_private=True).count(),
 			"banned users": g.db.query(User.id).filter(User.is_banned > 0).count(),
@@ -111,36 +136,7 @@ def stats():
 			"total awards": g.db.query(AwardRelationship.id).count(),
 			"awards given": g.db.query(AwardRelationship.id).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count(),
 			"users who posted, commented, or voted in the past 7 days": len(active_users),
-			}
-
-
-	if SITE_NAME == 'rDrama':
-		furries = g.db.query(User.id).filter(User.house.like('Furry%')).count()
-		femboys = g.db.query(User.id).filter(User.house.like('Femboy%')).count()
-		vampires = g.db.query(User.id).filter(User.house.like('Vampire%')).count()
-		racists = g.db.query(User.id).filter(User.house.like('Racist%')).count()
-
-		furries2 = g.db.query(User.id).filter(User.house == 'Furry Founder').count()
-		femboys2 = g.db.query(User.id).filter(User.house == 'Femboy Founder').count()
-		vampires2 = g.db.query(User.id).filter(User.house == 'Vampire Founder').count()
-		racists2 = g.db.query(User.id).filter(User.house == 'Racist Founder').count()
-
-		furries3 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Furry%')).scalar()
-		femboys3 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Femboy%')).scalar()
-		vampires3 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Vampire%')).scalar()
-		racists3 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Racist%')).scalar()
-
-		furries4 = g.db.query(func.sum(User.post_count)).filter(User.house.like('Furry%')).scalar()
-		femboys4 = g.db.query(func.sum(User.post_count)).filter(User.house.like('Femboy%')).scalar()
-		vampires4 = g.db.query(func.sum(User.post_count)).filter(User.house.like('Vampire%')).scalar()
-		racists4 = g.db.query(func.sum(User.post_count)).filter(User.house.like('Racist%')).scalar()
-
-		furries5 = g.db.query(func.sum(User.comment_count)).filter(User.house.like('Furry%')).scalar()
-		femboys5 = g.db.query(func.sum(User.comment_count)).filter(User.house.like('Femboy%')).scalar()
-		vampires5 = g.db.query(func.sum(User.comment_count)).filter(User.house.like('Vampire%')).scalar()
-		racists5 = g.db.query(func.sum(User.comment_count)).filter(User.house.like('Racist%')).scalar()
-
-		stats2 = {"House furry members": furries,
+			"House furry members": furries,
 			"House femboy members": femboys,
 			"House vampire members": vampires,
 			"House racist members": racists,
@@ -163,11 +159,8 @@ def stats():
 			"House furry total comments": furries5,
 			"House femboy total comments": femboys5,
 			"House vampire total comments": vampires5,
-			"House racist total comments": racists5}
-
-		stats = stats | stats2
-
-	return stats
+			"House racist total comments": racists5,
+			}
 
 @app.get("/chart")
 def chart():
@@ -205,8 +198,10 @@ def cached_chart(kind):
 	today_cutoff = calendar.timegm(midnight_this_morning)
 
 	if kind == "daily":
+		file = f"/{SITE}_daily.png"
 		day_cutoffs = [today_cutoff - 86400 * i for i in range(47)][1:]
 	else:
+		file = f"/{SITE}_weekly.png"
 		day_cutoffs = [today_cutoff - 86400 * 7 * i for i in range(47)][1:]
 
 	day_cutoffs.insert(0, calendar.timegm(now))
@@ -252,8 +247,6 @@ def cached_chart(kind):
 	signup_chart.legend(loc='upper left', frameon=True)
 	posts_chart.legend(loc='upper left', frameon=True)
 	comments_chart.legend(loc='upper left', frameon=True)
-
-	file = f"../{SITE}_{kind}.png"
 
 	plt.savefig(file)
 	plt.clf()
