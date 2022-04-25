@@ -35,7 +35,7 @@
 			
 			{% if sub %}
 				<a href="/h/{{sub.name}}" class="font-weight-bold ml-2 flex-grow-1 mt-1" style="font-size:max(14px,1.2vw)">/h/{{sub.name}}</a>
-			{% elif SITE_NAME != 'PCM' %}
+			{% elif SITE_NAME not in ('PCM','WPD') %}
 				<style>
 					@media (min-width: 350px) {
 						#logo {
