@@ -12,7 +12,6 @@ sudo pip3 install -r requirements.txt
 mkdir /songs
 mkdir /images
 snap install opera-proxy
-. imei.sh
 ufw allow ssh
 ufw allow from 173.245.48.0/20
 ufw allow from 103.21.244.0/22
@@ -29,4 +28,5 @@ ufw allow from 104.16.0.0/13
 ufw allow from 104.24.0.0/14
 ufw allow from 172.64.0.0/13
 ufw allow from 131.0.72.0/22
-ufw enable
+echo "y" | ufw enable
+. imei.sh
