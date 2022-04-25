@@ -537,7 +537,8 @@ def all_comments(v):
 							sort=sort,
 							t=t,
 							gt=gt,
-							lt=lt
+							lt=lt,
+							site=SITE
 							)
 
 	comments = get_comments(idlist, v=v)
@@ -552,9 +553,14 @@ def all_comments(v):
 
 
 @cache.memoize(timeout=86400)
-def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", gt=0, lt=0):
+def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", gt=0, lt=0, site=None):
 
 	comments = g.db.query(Comment.id).filter(Comment.parent_submission != None)
+
+	if site == 'cringetopia.org':
+		comments = comments.join(Submission, Comment.parent_submission == Submission.id).filter(Submission.site == 1)
+	elif site == 'watchpeopledie.co':
+		comments = comments.join(Submission, Comment.parent_submission == Submission.id).filter(Submission.site == 2)
 
 	if v.admin_level < 2:
 		private = [x[0] for x in g.db.query(Submission.id).filter(Submission.private == True).all()]
