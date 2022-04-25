@@ -318,6 +318,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	elif v.subs == 3:
 		posts = posts.filter(Submission.sub != None, Submission.sub.notin_(v.all_blocks))
 
+	if site == 'cringetopia.org': posts = posts.filter_by(site=1)
+	elif site == 'watchpeopledie.co': posts = posts.filter_by(site=2)
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
 	if lt: posts = posts.filter(Submission.created_utc < lt)
@@ -397,6 +399,9 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 
 		if v and v.admin_level < 2:
 			pins = pins.filter(Submission.author_id.notin_(v.userblocks))
+
+		if site == 'cringetopia.org': pins = pins.filter_by(site=1)
+		elif site == 'watchpeopledie.co': pins = pins.filter_by(site=2)
 
 		pins = pins.all()
 

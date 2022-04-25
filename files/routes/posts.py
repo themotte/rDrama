@@ -1128,6 +1128,9 @@ def submit_post(v, sub=None):
 		ghost=ghost
 	)
 
+	if SITE == 'cringetopia.org': post.site = 1
+	elif SITE == 'watchpeopledie.co': post.site = 2
+
 	g.db.add(post)
 	g.db.flush()
 
