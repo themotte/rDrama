@@ -89,6 +89,8 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	sanitized = linefeeds_regex.sub(r'\1\n\n\2', sanitized)
 
+	sanitized = image_regex.sub(r'\1![](\2)\4', sanitized)
+
 	sanitized = image_check_regex.sub(r'\1', sanitized)
 
 	sanitized = markdown(sanitized)

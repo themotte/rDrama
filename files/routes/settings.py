@@ -136,8 +136,6 @@ def settings_profile_post(v):
 	elif (v.patron or v.id == MOOSE_ID) and request.values.get("sig"):
 		sig = request.values.get("sig")[:200]
 
-		sig = image_regex.sub(r'\1![](\2)\4', sig)
-
 		sig_html = sanitize(sig)
 
 		if len(sig_html) > 1000:
@@ -158,8 +156,6 @@ def settings_profile_post(v):
 
 	elif request.values.get("friends"):
 		friends = request.values.get("friends")[:500]
-
-		friends = image_regex.sub(r'\1![](\2)\4', friends)
 
 		friends_html = sanitize(friends)
 
@@ -188,8 +184,6 @@ def settings_profile_post(v):
 	elif request.values.get("enemies"):
 		enemies = request.values.get("enemies")[:500]
 
-		enemies = image_regex.sub(r'\1![](\2)\4', enemies)
-
 		enemies_html = sanitize(enemies)
 
 		if len(enemies_html) > 2000:
@@ -216,8 +210,6 @@ def settings_profile_post(v):
 
 	elif request.values.get("bio") or request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
 		bio = request.values.get("bio")[:1500]
-
-		bio = image_regex.sub(r'\1![](\2)\4', bio)
 
 		if request.files.get('file'):
 			file = request.files['file']

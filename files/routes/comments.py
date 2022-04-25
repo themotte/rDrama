@@ -204,8 +204,6 @@ def api_comment(v):
 
 	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
 	
-	body = image_regex.sub(r'\1![](\2)\4', body)
-
 	options = []
 	for i in poll_regex.finditer(body):
 		options.append(i.group(1))
@@ -693,8 +691,6 @@ def edit_comment(cid, v):
 			return {"error":"You have to type more than 280 characters!"}, 403
 		elif v.bird and len(body) > 140:
 			return {"error":"You have to type less than 140 characters!"}, 403
-
-		body = image_regex.sub(r'\1![](\2)\4', body)
 
 		if v.agendaposter and not v.marseyawarded:
 			body = torture_ap(body, v.username)
