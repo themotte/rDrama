@@ -205,10 +205,8 @@ def cached_chart(kind):
 	today_cutoff = calendar.timegm(midnight_this_morning)
 
 	if kind == "daily":
-		file = f"../{SITE}_daily.png"
 		day_cutoffs = [today_cutoff - 86400 * i for i in range(47)][1:]
 	else:
-		file = f"../{SITE}_weekly.png"
 		day_cutoffs = [today_cutoff - 86400 * 7 * i for i in range(47)][1:]
 
 	day_cutoffs.insert(0, calendar.timegm(now))
@@ -254,6 +252,8 @@ def cached_chart(kind):
 	signup_chart.legend(loc='upper left', frameon=True)
 	posts_chart.legend(loc='upper left', frameon=True)
 	comments_chart.legend(loc='upper left', frameon=True)
+
+	file = f"../{SITE}_{kind}.png"
 
 	plt.savefig(file)
 	plt.clf()
