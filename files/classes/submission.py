@@ -19,8 +19,6 @@ class Submission(Base):
 	__tablename__ = "submissions"
 
 	id = Column(Integer, primary_key=True)
-	if SITE in ('cringetopia.org','watchpeopledie.co'):
-		site = Column(Integer)
 	author_id = Column(Integer, ForeignKey("users.id"))
 	edited_utc = Column(Integer, default=0)
 	created_utc = Column(Integer)
