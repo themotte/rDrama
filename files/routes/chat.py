@@ -16,9 +16,9 @@ else:
 
 typing = []
 online = []
-muted = cache.get('muted') or {}
-messages = cache.get('chat') or []
-total = cache.get('total') or 0
+muted = cache.get(f'{SITE}_muted') or {}
+messages = cache.get(f'{SITE}_chat') or []
+total = cache.get(f'{SITE}_total') or 0
 
 @app.get("/chat")
 @auth_required
@@ -110,7 +110,7 @@ def typing_indicator(data, v):
 
 
 def close_running_threads():
-	cache.set('chat', messages)
-	cache.set('total', total)
-	cache.set('muted', muted)
+	cache.set(f'{SITE}_chat', messages)
+	cache.set(f'{SITE}_total', total)
+	cache.set(f'{SITE}_muted', muted)
 atexit.register(close_running_threads)
