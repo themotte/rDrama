@@ -44,9 +44,6 @@ if SITE_NAME == 'Cringetopia':
 		"i hate carp": "i love Carp",
 		"heil hitler": "hello kitty",
 
-		" n1g ": " 🏀 ",
-		" nlg ": " 🏀 ",
-		" nig ": " 🏀 ",
 		" fag ": " cute twink ",
 	}
 else:
@@ -106,15 +103,10 @@ else:
 		"elon musk": "rocket daddy",
 		"fake and gay": "fake and straight",
 
-		" rapist": " male feminist ",
-		" pedo": " libertarian",
-
+		" rapist ": " male feminist ",
+		" pedo ": " libertarian ",
 		" kys ": " keep yourself safe ",
-		" n1g ": " BIPOC ",
-		" nlg ": " BIPOC ",
-		" nig ": " BIPOC ",
 		" fag ": " cute twink ",
-		" elon ": " rocket daddy ",
 	}
 
 single_words = "|".join([slur.lower() for slur in SLURS.keys()])
