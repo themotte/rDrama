@@ -506,11 +506,11 @@ class User(Base):
 	@property
 	@lazy
 	def profile_url(self):
-		if self.agendaposter: return f"/assets/images/astolfo.webp?v=1"
+		if self.agendaposter: return f"{SITE_FULL}/assets/images/astolfo.webp?v=1"
 		if self.profileurl: 
 			if self.profileurl.startswith('/'): return SITE_FULL + self.profileurl
 			return self.profileurl
-		return "/assets/images/default-profile-pic.webp?v=1008"
+		return f"{SITE_FULL}/assets/images/default-profile-pic.webp?v=1008"
 
 	@lazy
 	def json_popover(self, v):
