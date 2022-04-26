@@ -253,13 +253,13 @@ class Submission(Base):
 	@property
 	@lazy
 	def thumb_url(self):
-		if self.over_18: return "/assets/images/nsfw.webp?v=1"
-		elif not self.url: return f"/assets/images/{SITE_NAME}/default_text.webp?v=1"
+		if self.over_18: return f"{SITE_FULL}/assets/images/nsfw.webp?v=1"
+		elif not self.url: return f"{SITE_FULL}/assets/images/{SITE_NAME}/default_text.webp?v=1"
 		elif self.thumburl: 
 			if self.thumburl.startswith('/'): return SITE_FULL + self.thumburl
 			return self.thumburl
-		elif self.is_youtube or self.is_video: return "/assets/images/default_thumb_yt.webp?v=1"
-		else: return "/assets/images/default_thumb_link.webp?v=1"
+		elif self.is_youtube or self.is_video: return f"{SITE_FULL}/assets/images/default_thumb_yt.webp?v=1"
+		else: return f"{SITE_FULL}/assets/images/default_thumb_link.webp?v=1"
 
 	@property
 	@lazy
