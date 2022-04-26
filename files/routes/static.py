@@ -165,7 +165,7 @@ def stats():
 			"House vampire total comments": vampires5,
 			"House racist total comments": racists5}
 
-		stats = stats | stats2
+		stats.update(stats2)
 
 	return stats
 
