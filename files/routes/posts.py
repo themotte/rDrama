@@ -424,8 +424,8 @@ def morecomments(v, cid):
 def edit_post(pid, v):
 	if v.admin_level < 3:
 		if v and v.patron:
-			if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 4 MB (8 MB for paypigs)."}, 413
-		elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB (8 MB for paypigs)."}, 413
+			if request.content_length > 16 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
+		elif request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
 
 	p = get_post(pid)
 
@@ -885,8 +885,8 @@ def submit_post(v, sub=None):
 	
 	if v.admin_level < 3:
 		if v and v.patron:
-			if request.content_length > 8 * 1024 * 1024: return error( "Max file size is 4 MB (8 MB for paypigs).")
-		elif request.content_length > 4 * 1024 * 1024: return error( "Max file size is 4 MB (8 MB for paypigs).")
+			if request.content_length > 16 * 1024 * 1024: return error( "Max file size is 8 MB (16 MB for paypigs).")
+		elif request.content_length > 8 * 1024 * 1024: return error( "Max file size is 8 MB (16 MB for paypigs).")
 
 	if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 

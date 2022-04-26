@@ -166,8 +166,8 @@ def api_comment(v):
 
 	if v.admin_level < 3:
 		if v and v.patron:
-			if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 4 MB (8 MB for paypigs)."}, 413
-		elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB (8 MB for paypigs)."}, 413
+			if request.content_length > 16 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
+		elif request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
 
 	parent_submission = request.values.get("submission").strip()
 	parent_fullname = request.values.get("parent_fullname").strip()
@@ -674,8 +674,8 @@ def edit_comment(cid, v):
 
 	if v.admin_level < 3:
 		if v and v.patron:
-			if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 4 MB (8 MB for paypigs)."}, 413
-		elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB (8 MB for paypigs)."}, 413
+			if request.content_length > 16 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
+		elif request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
 
 	c = get_comment(cid, v=v)
 

@@ -47,7 +47,7 @@ def error_405(e):
 
 @app.errorhandler(413)
 def error_413(e):
-	return {"error": "Max file size is 4 MB (8 MB for paypigs)"}, 413
+	return {"error": "Max file size is 8 MB (16 MB for paypigs)"}, 413
 
 @app.errorhandler(429)
 def error_429(e):
