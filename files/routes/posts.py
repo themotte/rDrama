@@ -476,7 +476,7 @@ def edit_post(pid, v):
 	if body != p.body:
 		if v.id == p.author_id and v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
-		if not p.options.count():
+		if not p.options:
 			for i in poll_regex.finditer(body):
 				body = body.replace(i.group(0), "")
 				c = Comment(author_id=AUTOPOLLER_ID,
@@ -488,7 +488,7 @@ def edit_post(pid, v):
 					)
 				g.db.add(c)
 
-		if not p.choices.count():
+		if not p.choices:
 			for i in choice_regex.finditer(body):
 				body = body.replace(i.group(0), "")
 				c = Comment(author_id=AUTOCHOICE_ID,

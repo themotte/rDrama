@@ -88,19 +88,19 @@ class Submission(Base):
 	@property
 	@lazy
 	def options(self):
-		return g.db.query(Comment).filter_by(parent_submission = self.id, author_id = AUTOPOLLER_ID, level=1).order_by(Comment.id)
+		return g.db.query(Comment).filter_by(parent_submission = self.id, author_id = AUTOPOLLER_ID, level=1).order_by(Comment.id).all()
 
 
 	@property
 	@lazy
 	def choices(self):
-		return g.db.query(Comment).filter_by(parent_submission = self.id, author_id = AUTOCHOICE_ID, level=1).order_by(Comment.id)
+		return g.db.query(Comment).filter_by(parent_submission = self.id, author_id = AUTOCHOICE_ID, level=1).order_by(Comment.id).all()
 
 
 	@property
 	@lazy
 	def bet_options(self):
-		return g.db.query(Comment).filter_by(parent_submission = self.id, author_id = AUTOBETTER_ID, level=1)
+		return g.db.query(Comment).filter_by(parent_submission = self.id, author_id = AUTOBETTER_ID, level=1).all()
 
 	def total_poll_voted(self, v):
 		if v:
