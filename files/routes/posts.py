@@ -42,9 +42,7 @@ titleheaders = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWe
 @auth_required
 def toggle_club(pid, v):
 
-	if v.club_allowed == False: abort(403)
 	post = get_post(pid)
-	if v.admin_level < 2: abort(403)
 
 	post.club = not post.club
 	g.db.add(post)
@@ -1096,10 +1094,7 @@ def submit_post(v, sub=None):
 
 	if len(body_html) > 40000: return error("Submission body_html too long! (max 40k characters)")
 
-
-
-	if request.host == 'rdrama.net' and v.admin_level < 2: club = False
-	else: club = bool(request.values.get("club",""))
+	club = bool(request.values.get("club",""))
 	
 	if embed and len(embed) > 1500: embed = None
 

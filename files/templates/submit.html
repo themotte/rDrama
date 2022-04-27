@@ -179,12 +179,10 @@
 														<label class="custom-control-label" for="private">Draft</label>
 												</div>
 
-												{% if request.host != 'rdrama.net' or v.admin_level > 1 %}
-													<div class="custom-control custom-checkbox">
-														<input autocomplete="off" type="checkbox" class="custom-control-input" id="club" name="club">
-														<label class="custom-control-label" for="club">{{CC_TITLE}} thread</label>
-													</div>
-												{% endif %}
+												<div class="custom-control custom-checkbox">
+													<input autocomplete="off" type="checkbox" class="custom-control-input" id="club" name="club">
+													<label class="custom-control-label" for="club">{{CC_TITLE}} thread</label>
+												</div>
 
 												<div class="custom-control custom-checkbox">
 														<input onchange='draft(this);' autocomplete="off" type="checkbox" class="custom-control-input" id="ghost" name="ghost" {% if v.coins < 100 %}disabled{% endif %}>
