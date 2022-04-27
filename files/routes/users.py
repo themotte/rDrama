@@ -1059,7 +1059,7 @@ def unfollow_user(username, v):
 	target = get_user(username)
 
 	if target.fish:
-		send_repeatable_notification(target.id, f"@{v.username} has tried to unfollow you and failed because of your fish award!")
+		send_notification(target.id, f"@{v.username} has tried to unfollow you and failed because of your fish award!")
 		g.db.commit()
 		return {"error": "You can't unfollow this user!"}
 
