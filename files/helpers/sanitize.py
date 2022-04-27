@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 from bleach.linkifier import LinkifyFilter, build_url_re
 from functools import partial
 from .get import *
-from .patter import pat
 from os import path, environ
 import re
 from mistletoe import markdown
@@ -112,11 +111,11 @@ def render_emoji(html, regexp, edit, marseys_used=set(), b=False):
 		if emoji.endswith('pat'):
 			if path.isfile(f"files/assets/images/emojis/{emoji.replace('pat','')}.webp"):
 				attrs += ' pat'
-				emoji_html = f'<span class="pat-container" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:"><img src="/assets/images/pat/hand.webp" class="pat-hand">{emoji_partial.format(old, f"/e/{emoji[:-3]}.webp", attrs)}</span>'
+				emoji_html = f'<span class="pat-container" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:"><img src="/assets/images/hand.webp" class="pat-hand">{emoji_partial.format(old, f"/e/{emoji[:-3]}.webp", attrs)}</span>'
 			elif emoji.startswith('@'):
 				if u := get_user(emoji[1:-3], graceful=True):
 					attrs += ' pat'
-					emoji_html = f'<span class="pat-container" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:"><img src="/assets/images/pat/hand.webp" class="pat-hand">{emoji_partial.format(old, f"/pp/{u.id}", attrs)}</span>'
+					emoji_html = f'<span class="pat-container" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:"><img src="/assets/images/hand.webp" class="pat-hand">{emoji_partial.format(old, f"/pp/{u.id}", attrs)}</span>'
 		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 			emoji_html = emoji_partial.format(old, f'/e/{emoji}.webp', attrs)
 
