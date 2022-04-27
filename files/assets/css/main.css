@@ -4598,9 +4598,11 @@ img[pat] {
     animation: pat-pfp-anim 0.3s infinite !important;
     transform-origin: bottom center;
     margin-top: 10%;
-    border-radius: 50%;
     text-align: center;
     object-fit: cover;
+}
+img[pat][src^="/pp/"] {
+	border-radius: 50%;
 }
 .pat-hand {
     position: absolute;
