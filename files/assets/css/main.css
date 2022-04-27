@@ -4601,7 +4601,6 @@ img[pat] {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: var(--gray-600);
 }
 .pat-hand {
     position: absolute;

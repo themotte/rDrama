@@ -109,17 +109,16 @@ def render_emoji(html, regexp, edit, marseys_used=set(), b=False):
 		emoji_partial = '<img loading="lazy" data-bs-toggle="tooltip" alt=":{0}:" title=":{0}:" src="{1}"{2}>'
 		emoji_html = None
 
-		if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-			emoji_html = emoji_partial.format(old, f'/e/{emoji}.webp', attrs)
-		elif emoji.endswith('pat'):
+		if emoji.endswith('pat'):
 			if path.isfile(f"files/assets/images/emojis/{emoji.replace('pat','')}.webp"):
-				pat(emoji.replace('pat',''))
-				emoji_html = emoji_partial.format(old, f'/e/{emoji}.webp', attrs)
-				requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{emoji}.webp"]}, timeout=5)
+				attrs += ' pat'
+				emoji_html = f'<span class="pat-container" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:"><img src="/assets/images/pat/hand.webp" class="pat-hand">{emoji_partial.format(old, f"/e/{emoji[:-3]}.webp", attrs)}</span>'
 			elif emoji.startswith('@'):
 				if u := get_user(emoji[1:-3], graceful=True):
 					attrs += ' pat'
 					emoji_html = f'<span class="pat-container" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:"><img src="/assets/images/pat/hand.webp" class="pat-hand">{emoji_partial.format(old, f"/pp/{u.id}", attrs)}</span>'
+		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
+			emoji_html = emoji_partial.format(old, f'/e/{emoji}.webp', attrs)
 
 
 		if emoji_html:
