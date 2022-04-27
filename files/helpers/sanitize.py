@@ -105,17 +105,18 @@ def render_emoji(html, regexp, edit, marseys_used=set(), b=False):
 		emoji = emoji.replace('!','').replace('#','')
 		if emoji == 'marseyrandom': emoji = choice(marseys_const2)
 
+		emoji_partial_pat = '<img loading="lazy" alt=":{0}:" src="{1}"{2}>'
 		emoji_partial = '<img loading="lazy" data-bs-toggle="tooltip" alt=":{0}:" title=":{0}:" src="{1}"{2}>'
 		emoji_html = None
 
 		if emoji.endswith('pat'):
 			if path.isfile(f"files/assets/images/emojis/{emoji.replace('pat','')}.webp"):
 				attrs += ' pat'
-				emoji_html = f'<span class="pat-container" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:"><img src="/assets/images/hand.webp" class="pat-hand">{emoji_partial.format(old, f"/e/{emoji[:-3]}.webp", attrs)}</span>'
+				emoji_html = f'<span class="pat-container" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:"><img src="/assets/images/hand.webp" class="pat-hand">{emoji_partial_pat.format(old, f"/e/{emoji[:-3]}.webp", attrs)}</span>'
 			elif emoji.startswith('@'):
 				if u := get_user(emoji[1:-3], graceful=True):
 					attrs += ' pat'
-					emoji_html = f'<span class="pat-container" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:"><img src="/assets/images/hand.webp" class="pat-hand">{emoji_partial.format(old, f"/pp/{u.id}", attrs)}</span>'
+					emoji_html = f'<span class="pat-container" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:"><img src="/assets/images/hand.webp" class="pat-hand">{emoji_partial_pat.format(old, f"/pp/{u.id}", attrs)}</span>'
 		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 			emoji_html = emoji_partial.format(old, f'/e/{emoji}.webp', attrs)
 
@@ -206,10 +207,10 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 		sanitized = sanitized.replace(old, new)
 
-	emojis = list(emoji_regex3.finditer(sanitized))
+	emojis = list(emoji_regex2.finditer(sanitized))
 	if len(emojis) > 20: edit = True
 
-	sanitized = render_emoji(sanitized, emoji_regex3, edit, marseys_used)
+	sanitized = render_emoji(sanitized, emoji_regex2, edit, marseys_used)
 
 	for rd in ["://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it", "://teddit.net"]:
 		sanitized = sanitized.replace(rd, "://old.reddit.com")
@@ -315,7 +316,7 @@ def filter_emojis_only(title, edit=False, graceful=False):
 	
 	title = title.replace('‎','').replace('​','').replace("\ufeff", "").replace("𒐪","").replace("\n", "").replace("\r", "").replace("\t", "").replace("&", "&amp;").replace('<','&lt;').replace('>','&gt;').replace('"', '&quot;').replace("'", "&#039;").strip()
 
-	title = render_emoji(title, emoji_regex4, edit)
+	title = render_emoji(title, emoji_regex3, edit)
 
 	title = strikethrough_regex.sub(r'<del>\1</del>', title)
 
