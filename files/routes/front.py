@@ -157,6 +157,7 @@ def notifications(v):
 
 
 @app.get("/")
+@app.get("/catalog")
 @app.get("/h/<sub>")
 @app.get("/s/<sub>")
 @limiter.limit("3/second;30/minute;1000/hour;5000/day")

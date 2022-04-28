@@ -36,6 +36,10 @@
 		<link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=56">
 	{% endif %}
 
+	{% if request.path == '/catalog' %}
+		<link rel="stylesheet" href="/assets/css/catalog.css?v=1">
+	{% endif %}
+
 	{% if sub and sub.css and not request.path.endswith('settings') %}
 		<link rel="stylesheet" href="/h/{{sub.name}}/css" type="text/css">
 	{% endif %}
