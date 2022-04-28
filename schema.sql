@@ -1883,3 +1883,12 @@ ALTER TABLE ONLY public.viewers
 
 ALTER TABLE ONLY public.votes
     ADD CONSTRAINT vote_submission_key FOREIGN KEY (submission_id) REFERENCES public.submissions(id);
+
+
+--
+-- Name: votes vote_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.votes
+    ADD CONSTRAINT vote_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
