@@ -172,7 +172,7 @@
 									<a class="dropdown-item" rel="nofollow noopener noreferrer" href="/report_bugs"><i class="fas fa-bug fa-fw mr-3"></i>Bugs/Suggestions</a>
 								{% endif %}
 
-								{% if request.host != 'pcmemes.net' %}
+								{% if request.host not in ('pcmemes.net','watchpeopledie.co') %}
 									<a class="dropdown-item" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a>
 								{% endif %}
 								{% if SITE_NAME != 'Cringetopia' %}
@@ -228,7 +228,7 @@
 
 				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/rDrama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
 
-				{% if request.host != 'pcmemes.net' %}
+				{% if request.host not in ('pcmemes.net','watchpeopledie.co') %}
 					<a class="nav-item nav-link" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a>
 				{% endif %}
 				{% if SITE_NAME != 'Cringetopia' %}
