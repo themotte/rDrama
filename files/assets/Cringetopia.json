@@ -1,0 +1,8 @@
+{
+  "name": "Cringetopia",
+  "short_name": "Cringetopia",
+  "start_url": "https://cringetopia.org",
+  "display": "standalone",
+  "background_color": "#2A96F3",
+  "description": "Cringetopia"
+}
