@@ -431,6 +431,7 @@ def changelog(v):
 					page=page,
 					t=t,
 					v=v,
+					site=SITE
 					)
 
 	next_exists = (len(ids) > 25)
@@ -443,7 +444,7 @@ def changelog(v):
 
 
 @cache.memoize(timeout=86400)
-def changeloglist(v=None, sort="new", page=1 ,t="all"):
+def changeloglist(v=None, sort="new", page=1, t="all", site=None):
 
 	posts = g.db.query(Submission.id).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
 
