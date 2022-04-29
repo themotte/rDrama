@@ -43,6 +43,7 @@ titleheaders = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWe
 def toggle_club(pid, v):
 
 	post = get_post(pid)
+	if post.author_id != v.id and v.admin_level < 2: abort(403)
 
 	post.club = not post.club
 	g.db.add(post)
