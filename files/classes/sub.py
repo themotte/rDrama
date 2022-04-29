@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 from files.__main__ import Base
 from files.helpers.lazy import lazy
 from os import environ
-from .sub_subscription import *
 from .sub_block import *
 
 SITE_NAME = environ.get("SITE_NAME", '').strip()
@@ -21,7 +20,6 @@ class Sub(Base):
 	bannerurl = Column(String)
 	css = Column(String)
 
-	subscriptions = relationship("SubSubscription", lazy="dynamic", primaryjoin="SubSubscription.sub==Sub.name", viewonly=True)
 	blocks = relationship("SubBlock", lazy="dynamic", primaryjoin="SubBlock.sub==Sub.name", viewonly=True)
 
 

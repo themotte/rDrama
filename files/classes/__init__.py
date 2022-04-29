@@ -15,7 +15,6 @@ from .mod_logs import *
 from .award import *
 from .marsey import *
 from .sub_block import *
-from .sub_subscription import *
 from .saves import *
 from .views import *
 from .notifications import *
