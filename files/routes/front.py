@@ -194,9 +194,6 @@ def front_all(v, sub=None, subdomain=None):
 	try: lt=int(request.values.get("before", 0))
 	except: lt=0
 
-	if v: subs = v.subs
-	else: subs = 2
-
 	ids, next_exists = frontlist(sort=sort,
 					page=page,
 					t=t,
@@ -206,8 +203,7 @@ def front_all(v, sub=None, subdomain=None):
 					gt=gt,
 					lt=lt,
 					sub=sub,
-					site=SITE,
-					subs=subs
+					site=SITE
 					)
 
 	posts = get_posts(ids, v=v)
@@ -300,7 +296,7 @@ def front_all(v, sub=None, subdomain=None):
 
 
 @cache.memoize(timeout=86400)
-def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=0, lt=0, sub=None, site=None, subs=2):
+def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=0, lt=0, sub=None, site=None):
 
 	posts = g.db.query(Submission)
 	
@@ -312,12 +308,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 		posts = posts.filter_by(sub=sub.name)
 	elif not v:
 		if subs == 1: posts = posts.filter(Submission.sub == None)
-	elif v.subs == 1:
-		posts = posts.filter(or_(Submission.sub == None, Submission.sub.in_(v.subbed_subs)))
-	elif v.subs == 2:
+	else:
 		posts = posts.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
-	elif v.subs == 3:
-		posts = posts.filter(Submission.sub != None, Submission.sub.notin_(v.all_blocks))
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
 	if lt: posts = posts.filter(Submission.created_utc < lt)
@@ -391,12 +383,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 			pins = pins.filter_by(sub=sub.name)
 		elif not v:
 			if subs == 1: pins = pins.filter(Submission.sub == None)
-		elif v.subs == 1:
-			pins = pins.filter(or_(Submission.sub == None, Submission.sub.in_(v.subbed_subs)))
-		elif v.subs == 2:
+		else:
 			pins = pins.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
-		elif v.subs == 3:
-			pins = pins.filter(Submission.sub != None, Submission.sub.notin_(v.all_blocks))
 
 		if v and v.admin_level < 2:
 			pins = pins.filter(Submission.author_id.notin_(v.userblocks))

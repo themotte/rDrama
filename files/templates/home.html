@@ -44,35 +44,8 @@
 		{% if v %}
 			<div class="mt-3 d-lg-none">
 				{% if sub %}
-					{% if v.subs == 1 %}
-						<a class="btn btn-primary btn-block {% if v.subscribed_to(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/subscribe','subscribe-sub','unsubscribe-sub');this.classList.toggle('d-none');nextElementSibling.classList.toggle('d-none')">Subscribe to /h/{{sub.name}}</a>
-						<a class="btn btn-primary btn-block {% if not v.subscribed_to(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/unsubscribe','subscribe-sub','unsubscribe-sub');this.classList.toggle('d-none');previousElementSibling.classList.toggle('d-none')">Unsubscribe from /h/{{sub.name}}</a>
-					{% else %}
-						<a class="btn btn-primary btn-block {% if v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/block','block-sub','unblock-sub');this.classList.toggle('d-none');nextElementSibling.classList.toggle('d-none')">Block /h/{{sub.name}}</a>
-						<a class="btn btn-primary btn-block {% if not v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/unblock','block-sub','unblock-sub');this.classList.toggle('d-none');previousElementSibling.classList.toggle('d-none')">Unblock /h/{{sub.name}}</a>
-					{% endif %}
-				{% elif SITE_NAME == 'rDrama' %}
-					<div class="dropdown dropdown-actions mx-2">
-						<button class="btn btn-primary btn-block dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<i class="fas fa-circle mr-3 "></i>
-							{% if v.subs == 1 %}
-								Include subscribed holes
-							{% elif v.subs == 2 %}
-								Include all holes
-							{% elif v.subs == 3 %}
-								View holes only
-							{% endif %}
-						</button>
-						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);min-width:100%">
-							<form action="/sub_toggle" method="post">
-								<input type="hidden" name="formkey" value="{{v.formkey}}">
-
-								{% if v.subs != 1 %}<button class="dropdown-item text-center" type="submit" name="mode" value="1"><i class="fas fa-circle mr-3"></i>Include subscribed holes</button>{% endif %}
-								{% if v.subs != 2 %}<button class="dropdown-item text-center" type="submit" name="mode" value="2"><i class="fas fa-circle mr-3"></i>Include all holes</button>{% endif %}
-								{% if v.subs != 3 %}<button class="dropdown-item text-center" type="submit" name="mode" value="3"><i class="fas fa-circle mr-3"></i>View holes only</button>{% endif %}
-							</form>
-						</div>
-					</div>
+					<a class="btn btn-primary btn-block {% if v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/block','block-sub','unblock-sub');this.classList.toggle('d-none');nextElementSibling.classList.toggle('d-none')">Block /h/{{sub.name}}</a>
+					<a class="btn btn-primary btn-block {% if not v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/unblock','block-sub','unblock-sub');this.classList.toggle('d-none');previousElementSibling.classList.toggle('d-none')">Unblock /h/{{sub.name}}</a>
 				{% endif %}
 			</div>
 		{% endif %}
@@ -89,28 +62,6 @@
 							<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-secondary mx-2" href="?sort={{sort}}&t={{t}}&ccmode=true"><i class="fas fa-golf-club mr-2 "></i>CC</a>
 						{% endif %}
 					{% endif %}
-				
-					<div class="dropdown dropdown-actions mx-2 d-none d-lg-block">
-						<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<i class="fas fa-circle mr-2"></i>
-							{% if v.subs == 1 %}
-								Include subscribed holes
-							{% elif v.subs == 2 %}
-								Include all holes
-							{% elif v.subs == 3 %}
-								View holes only
-							{% endif %}
-						</button>
-						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-							<form action="/sub_toggle" method="post">
-								<input type="hidden" name="formkey" value="{{v.formkey}}">
-
-								{% if v.subs != 1 %}<button class="dropdown-item" type="submit" name="mode" value="1"><i class="fas fa-circle mr-2"></i>Include subscribed holes</button>{% endif %}
-								{% if v.subs != 2 %}<button class="dropdown-item" type="submit" name="mode" value="2"><i class="fas fa-circle mr-2"></i>Include all holes</button>{% endif %}
-								{% if v.subs != 3 %}<button class="dropdown-item" type="submit" name="mode" value="3"><i class="fas fa-circle mr-2"></i>View holes only</button>{% endif %}
-							</form>
-						</div>
-					</div>
 				{% endif %}
 
 				<div class="dropdown dropdown-actions mx-2">

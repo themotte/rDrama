@@ -6,54 +6,6 @@ from .front import frontlist
 
 
 
-@app.post("/h/<sub>/subscribe")
-@auth_required
-def subscribe_sub(v, sub):
-	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
-	if not sub: abort(404)
-	sub = sub.name
-
-	existing = g.db.query(SubSubscription).filter_by(user_id=v.id, sub=sub).one_or_none()
-
-	if not existing:
-		subscribe = SubSubscription(user_id=v.id, sub=sub)
-		g.db.add(subscribe)
-		g.db.commit()
-		cache.delete_memoized(frontlist)
-
-	return {"message": f"Subscribed to /h/{sub}"}
-
-
-@app.post("/h/<sub>/unsubscribe")
-@auth_required
-def unsubscribe_sub(v, sub):
-	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
-	if not sub: abort(404)
-	sub = sub.name
-
-	subscribe = g.db.query(SubSubscription).filter_by(user_id=v.id, sub=sub).one_or_none()
-
-	if subscribe:
-		g.db.delete(subscribe)
-		g.db.commit()
-		cache.delete_memoized(frontlist)
-
-	return {"message": f"Unsubscribed from /h/{sub}"}
-
-
-@app.get("/h/<sub>/subscribers")
-@auth_required
-def subscribers(v, sub):
-	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
-	if not sub: abort(404)
-
-	users = g.db.query(User).join(SubSubscription, SubSubscription.user_id==User.id).filter_by(sub=sub.name).all()
-
-	return render_template("sub/subscribers.html", v=v, sub=sub, users=users)
-
-
-
-
 @app.post("/exile/post/<pid>")
 @is_not_permabanned
 def exile_post(v, pid):
@@ -458,25 +410,6 @@ def sub_sidebar(v, sub):
 		g.db.commit()
 
 	return redirect(f'/h/{sub.name}/settings')
-
-
-@app.post("/sub_toggle")
-@auth_required
-def sub_toggle(v):
-	mode = request.values.get('mode')
-	try: mode = int(mode)
-	except: abort(400)
-
-	if mode in (1,2,3) and v.subs != mode:
-		v.subs = mode
-		g.db.add(v)
-		g.db.commit()
-
-	if request.referrer and len(request.referrer) > 1 and request.referrer.startswith(f'{SITE_FULL}/'):
-		return redirect(request.referrer)
-
-	return redirect('/')
-
 
 @app.get("/holes")
 @auth_desired

@@ -15,7 +15,6 @@
 		<th>#</th>
 		<th>Name</th>
 		<th role="button" onclick="sort_table(2)">Posts</th>
-		{% if SITE_NAME == 'rDrama' %}<th role="button" onclick="sort_table(3)">Subscribers</th>{% endif %}
 		<th role="button" onclick="sort_table(4)">Blockers</th>
 
 	</tr>
@@ -25,7 +24,6 @@
 		<td>{{loop.index}}</td>
 		<td><a href="/h/{{sub.name}}">{{sub.name}}</a></td>
 		<td><a href="/h/{{sub.name}}">{{count}}</a></td>
-		{% if SITE_NAME == 'rDrama' %}<td><a href="/h/{{sub.name}}/subscribers">{{sub.subscription_num}}</a></td>{% endif %}
 		<td><a href="/h/{{sub.name}}/blockers">{{sub.block_num}}</a></td>
 	</tr>
 {% endfor %}

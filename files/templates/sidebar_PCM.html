@@ -9,13 +9,8 @@
 		{% endif %}
 		{% if v %}
 			<div class="d-lg-block d-none btn-block">
-				{% if v.subs == 1 %}
-					<a class="btn btn-primary btn-block {% if v.subscribed_to(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/subscribe','subscribe-sub','unsubscribe-sub');this.classList.toggle('d-none');nextElementSibling.classList.toggle('d-none')">SUBSCRIBE TO HOLE</a>
-					<a class="btn btn-primary btn-block {% if not v.subscribed_to(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/unsubscribe','subscribe-sub','unsubscribe-sub');this.classList.toggle('d-none');previousElementSibling.classList.toggle('d-none')">UNSUBSCRIBE FROM HOLE</a>
-				{% else %}
-					<a class="btn btn-primary btn-block {% if v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/block','block-sub','unblock-sub');this.classList.toggle('d-none');nextElementSibling.classList.toggle('d-none')">BLOCK HOLE</a>
-					<a class="btn btn-primary btn-block {% if not v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/unblock','block-sub','unblock-sub');this.classList.toggle('d-none');previousElementSibling.classList.toggle('d-none')">UNBLOCK HOLE</a>
-				{% endif %}
+				<a class="btn btn-primary btn-block {% if v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/block','block-sub','unblock-sub');this.classList.toggle('d-none');nextElementSibling.classList.toggle('d-none')">BLOCK HOLE</a>
+				<a class="btn btn-primary btn-block {% if not v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/unblock','block-sub','unblock-sub');this.classList.toggle('d-none');previousElementSibling.classList.toggle('d-none')">UNBLOCK HOLE</a>
 			</div>
 		{% endif %}
 		<a class="btn btn-primary btn-block" href="/h/{{sub.name}}/mods">HOLE MODS</a>
