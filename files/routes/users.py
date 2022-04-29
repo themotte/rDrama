@@ -751,7 +751,7 @@ def messagereply(v):
 		print(ids, flush=True)
 		notifications = g.db.query(Notification).filter(Notification.comment_id.in_(ids))
 		for n in notifications:
-			print(n.id, flush=True)
+			print(n.comment_id, flush=True)
 			g.db.delete(n)
 
 		admins = g.db.query(User).filter(User.admin_level > 2, User.id != v.id).all()
