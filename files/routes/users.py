@@ -747,6 +747,11 @@ def messagereply(v):
 
 
 	if c.top_comment.sentto == 2:
+		ids = [x.id for x in c.top_comment.replies]
+		notifications = g.db.query(Notification).filter(Notification.comment_id.in_(ids))
+		for n in notifications:
+			g.db.delete(n)
+
 		admins = g.db.query(User).filter(User.admin_level > 2, User.id != v.id).all()
 		for admin in admins:
 			notif = Notification(comment_id=c.id, user_id=admin.id)
