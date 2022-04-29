@@ -1037,7 +1037,6 @@ def shadowban(user_id, v):
 @admin_level_required(2)
 def unshadowban(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
-	if user.admin_level != 0: abort(403)
 	user.shadowbanned = None
 	user.ban_evade = 0
 	g.db.add(user)
