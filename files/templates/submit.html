@@ -220,53 +220,16 @@
 		</div>
 		{% endblock %}
 
-		<script>
-			document.getElementById('post-title').value = localStorage.getItem("post_title")
-			document.getElementById('post-text').value = localStorage.getItem("post_text")
-			document.getElementById('post-url').value = localStorage.getItem("post_url")
-
-			{% if request.path == '/submit' %}
+		{% if request.path == '/submit' %}
+			<script>
 				let sub = document.getElementById('sub')
 				if (sub) sub.value = localStorage.getItem("sub")
-			{% endif %}
-
-			function checkForRequired() {
-
-				var title = document.getElementById("post-title");
-				var url = document.getElementById("post-url");
-				var text = document.getElementById("post-text");
-				var button = document.getElementById("create_button");
-				var image = document.getElementById("file-upload");
-				var image2 = document.getElementById("file-upload-submit");
-
-				if (url.value.length > 0 || image.value.length > 0 || image2.value.length > 0) {
-					text.required = false;
-					url.required=false;
-				} else if (text.value.length > 0 || image.value.length > 0 || image2.value.length > 0) {
-					url.required = false;
-				} else {
-					text.required = true;
-					url.required = true;
-				}
-
-				var isValidTitle = title.checkValidity();
-				var isValidURL = url.checkValidity();
-				var isValidText = text.checkValidity();
-
-				if (isValidTitle && (isValidURL || image.value.length > 0 || image2.value.length > 0)) {
-					button.disabled = false;
-				} else if (isValidTitle && isValidText) {
-					button.disabled = false;
-				} else {
-					button.disabled = true;
-				}
-			}
-			checkForRequired()
-		</script>
+			</script>
+		{% endif %}
 
 		<script src="/assets/js/marked.js?v=250"></script>
 		<script src="/assets/js/formatting.js?v=240"></script>
-		<script src="/assets/js/submit.js?v=253"></script>
+		<script src="/assets/js/submit.js?v=254"></script>
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
 
