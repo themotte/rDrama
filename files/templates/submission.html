@@ -13,6 +13,13 @@
 
 {% block title %}
 
+<style>
+	body > .container {
+		padding-left: 20px !important;
+		padding-right: 20px !important;
+	}
+</style>
+
 {% if success %}
 	<script>
 		history.pushState(null, null, '{{p.permalink}}');
