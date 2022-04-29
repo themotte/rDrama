@@ -747,7 +747,7 @@ def messagereply(v):
 
 
 	if c.top_comment.sentto == 2:
-		ids = [x.id for x in c.top_comment.replies] + c.top_comment.id
+		ids = [x.id for x in c.top_comment.replies] + [c.top_comment.id]
 		notifications = g.db.query(Notification).filter(Notification.comment_id.in_(ids))
 		for n in notifications:
 			g.db.delete(n)
