@@ -68,11 +68,11 @@ def sidebar(v):
 @auth_required
 def participation_stats(v):
 
-	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=stats())
+	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=stats(site=SITE))
 
 
 @cache.memoize(timeout=86400)
-def stats():
+def stats(site=None):
 	day = int(time.time()) - 86400
 
 	week = int(time.time()) - 604800
@@ -177,20 +177,20 @@ def chart():
 @app.get("/weekly_chart")
 @auth_required
 def weekly_chart(v):
-	file = cached_chart(kind="weekly")
+	file = cached_chart(kind="weekly", site=SITE)
 	f = send_file(file)
 	return f
 
 @app.get("/daily_chart")
 @auth_required
 def daily_chart(v):
-	file = cached_chart(kind="daily")
+	file = cached_chart(kind="daily", site=SITE)
 	f = send_file(file)
 	return f
 
 
 @cache.memoize(timeout=86400)
-def cached_chart(kind):
+def cached_chart(kind, site):
 	now = time.gmtime()
 	midnight_this_morning = time.struct_time((now.tm_year,
 											  now.tm_mon,
