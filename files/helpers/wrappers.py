@@ -35,6 +35,10 @@ def get_logged_in_user():
 	if request.method.lower() != "get" and app.config['SETTINGS']['Read-only mode'] and not (v and v.admin_level):
 		abort(403)
 
+	if v and v.patron:
+		if request.content_length > 16 * 1024 * 1024: abort(413)
+	elif request.content_length > 8 * 1024 * 1024: abort(413)
+
 	return v
 
 def check_ban_evade(v):

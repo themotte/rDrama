@@ -354,10 +354,6 @@ def get_sub_css(sub):
 @limiter.limit("1/second;10/day")
 @is_not_permabanned
 def sub_banner(v, sub):
-	if v and v.patron:
-		if request.content_length > 16 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
-	elif request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
-
 	if request.headers.get("cf-ipcountry") == "T1": return {"error":"Image uploads are not allowed through TOR."}, 403
 
 	sub = g.db.query(Sub).filter_by(name=sub.lower().strip()).one_or_none()
@@ -385,10 +381,6 @@ def sub_banner(v, sub):
 @limiter.limit("1/second;10/day")
 @is_not_permabanned
 def sub_sidebar(v, sub):
-	if v and v.patron:
-		if request.content_length > 16 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
-	elif request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
-
 	if request.headers.get("cf-ipcountry") == "T1": return {"error":"Image uploads are not allowed through TOR."}, 403
 
 	sub = g.db.query(Sub).filter_by(name=sub.lower().strip()).one_or_none()

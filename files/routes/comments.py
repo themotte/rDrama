@@ -164,11 +164,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 def api_comment(v):
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
 
-	if v.admin_level < 3:
-		if v and v.patron:
-			if request.content_length > 16 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
-		elif request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
-
 	parent_submission = request.values.get("submission").strip()
 	parent_fullname = request.values.get("parent_fullname").strip()
 
@@ -674,11 +669,6 @@ def api_comment(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def edit_comment(cid, v):
-
-	if v.admin_level < 3:
-		if v and v.patron:
-			if request.content_length > 16 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
-		elif request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
 
 	c = get_comment(cid, v=v)
 

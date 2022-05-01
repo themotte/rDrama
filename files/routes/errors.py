@@ -49,7 +49,7 @@ def error_405(e):
 def error_413(e):
 	return {"error": "Max file size is 8 MB (16 MB for paypigs)"}, 413
 	if request.headers.get("Authorization") or request.headers.get("xhr"):
-		return {"error": "Max image size is 8 MB (16 MB for paypigs)"}, 413
+		return {"error": "Max file size is 8 MB (16 MB for paypigs)"}, 413
 	else: return render_template('errors/413.html', err=True), 413
 
 @app.errorhandler(429)

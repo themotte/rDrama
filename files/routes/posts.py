@@ -421,11 +421,6 @@ def morecomments(v, cid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def edit_post(pid, v):
-	if v.admin_level < 3:
-		if v and v.patron:
-			if request.content_length > 16 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
-		elif request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB (16 MB for paypigs)."}, 413
-
 	p = get_post(pid)
 
 	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
@@ -890,11 +885,6 @@ def submit_post(v, sub=None):
 
 	if v.is_suspended: return error("You can't perform this action while banned.")
 	
-	if v.admin_level < 3:
-		if v and v.patron:
-			if request.content_length > 16 * 1024 * 1024: return error( "Max file size is 8 MB (16 MB for paypigs).")
-		elif request.content_length > 8 * 1024 * 1024: return error( "Max file size is 8 MB (16 MB for paypigs).")
-
 	if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 
 	title_html = filter_emojis_only(title, graceful=True)
