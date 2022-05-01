@@ -306,7 +306,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 		posts = posts.filter(Submission.id.notin_(voted))
 
 	if sub: posts = posts.filter_by(sub=sub.name)
-	elif not v: posts = posts.filter(Submission.sub == None)
 	else: posts = posts.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
@@ -378,7 +377,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false" and not gt and not lt:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
-		elif not v: pins = pins.filter(Submission.sub == None)
 		else: pins = pins.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
 
 		if v and v.admin_level < 2:

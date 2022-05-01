@@ -41,11 +41,13 @@
   
 <div class="row" style="overflow: visible;padding-top:5px;">
 	<div class="col">
-		{% if v %}
-			<div class="mt-3 d-lg-none">
-				{% if sub %}
+		{% if sub %}
+			<div class="mt-3">
+				{% if v %}
 					<a class="btn btn-primary btn-block {% if v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/block','block-sub','unblock-sub');this.classList.toggle('d-none');nextElementSibling.classList.toggle('d-none')">Block /h/{{sub.name}}</a>
 					<a class="btn btn-primary btn-block {% if not v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/unblock','block-sub','unblock-sub');this.classList.toggle('d-none');previousElementSibling.classList.toggle('d-none')">Unblock /h/{{sub.name}}</a>
+				{% else %}
+					<a class="btn btn-primary btn-block" href="/login">Block /h/{{sub.name}}</a>
 				{% endif %}
 			</div>
 		{% endif %}
