@@ -890,14 +890,14 @@ def submit_post(v, sub=None):
 	title_html = filter_emojis_only(title, graceful=True)
 
 	if v.marseyawarded and not marseyaward_title_regex.fullmatch(title_html):
-		return {"error":"You can only type marseys!"}, 403
+		return error("You can only type marseys!")
 
 	if len(title_html) > 1500: return error("Rendered title is too big!")
 
 	if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
-		return {"error":"You have to type more than 280 characters!"}, 403
+		return error("You have to type more than 280 characters!")
 	elif v.bird and len(body) > 140:
-		return {"error":"You have to type less than 140 characters!"}, 403
+		return error("You have to type less than 140 characters!")
 
 
 	embed = None
@@ -1078,12 +1078,12 @@ def submit_post(v, sub=None):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
 					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-					except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
+					except requests.Timeout: return error("Video upload timed out, please try again!")
 					try: url = req['link']
 					except:
-						error = req['error']
-						if error == 'File exceeds max duration': error += ' (60 seconds)'
-						return {"error": error}, 400
+						err = req['error']
+						if err == 'File exceeds max duration': err += ' (60 seconds)'
+						return error(err)
 				if url.endswith('.'): url += 'mp4'
 				body += f"\n\n{url}"
 			else:
@@ -1092,7 +1092,7 @@ def submit_post(v, sub=None):
 	body_html = sanitize(body)
 
 	if v.marseyawarded and marseyaward_body_regex.search(body_html):
-		return {"error":"You can only type marseys!"}, 403
+		return error("You can only type marseys!")
 
 	if len(body_html) > 40000: return error("Submission body_html too long! (max 40k characters)")
 
@@ -1187,12 +1187,12 @@ def submit_post(v, sub=None):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
 				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-				except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
+				except requests.Timeout: return error("Video upload timed out, please try again!")
 				try: url = req['link']
 				except:
-					error = req['error']
-					if error == 'File exceeds max duration': error += ' (60 seconds)'
-					return {"error": error}, 400
+					err = req['error']
+					if err == 'File exceeds max duration': err += ' (60 seconds)'
+					return error(err)
 			if url.endswith('.'): url += 'mp4'
 			post.url = url
 		else:

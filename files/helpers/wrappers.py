@@ -36,8 +36,8 @@ def get_logged_in_user():
 		abort(403)
 
 	if v and v.patron:
-		if request.content_length > 16 * 1024 * 1024: abort(413)
-	elif request.content_length > 8 * 1024 * 1024: abort(413)
+		if request.content_length and request.content_length > 16 * 1024 * 1024: abort(413)
+	elif request.content_length and request.content_length > 8 * 1024 * 1024: abort(413)
 
 	return v
 
