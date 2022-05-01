@@ -262,7 +262,7 @@ class User(Base):
 		return False
 
 	@cache.memoize(timeout=86400)
-	def userpagelisting(self, v=None, page=1, sort="new", t="all"):
+	def userpagelisting(self, site=None, v=None, page=1, sort="new", t="all"):
 
 		if self.shadowbanned and not (v and (v.admin_level > 1 or v.id == self.id)): return []
 

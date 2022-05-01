@@ -1228,7 +1228,7 @@ def unban_user(user_id, v):
 
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
-	if not user: abort(400)
+	if not user or not user.is_banned: abort(400)
 
 	user.is_banned = 0
 	user.unban_utc = 0
@@ -1238,11 +1238,11 @@ def unban_user(user_id, v):
 	g.db.add(user)
 
 	for x in user.alts:
+		if x.is_banned: send_repeatable_notification(x.id, f"@{v.username} has unbanned you!")
 		x.is_banned = 0
 		x.unban_utc = 0
 		x.ban_evade = 0
 		x.ban_reason = None
-		send_repeatable_notification(x.id, f"@{v.username} has unbanned you!")
 		g.db.add(x)
 
 	ma=ModAction(

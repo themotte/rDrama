@@ -69,10 +69,10 @@ document.onpaste = function(event) {
 				fileReader.addEventListener("load", function () {document.getElementById('image-preview').setAttribute('src', this.result);});  
 				document.getElementById('file-upload').setAttribute('required', 'false');	
 			}
-			checkForRequired();
 			document.getElementById('post-url').value = null;
 			localStorage.setItem("post_url", "")
 		}
+		checkForRequired();
 	}
 }
 
@@ -86,8 +86,8 @@ document.getElementById('file-upload').addEventListener('change', function(){
 		var fileReader = new FileReader();
 		fileReader.readAsDataURL(f.files[0]);
 		fileReader.addEventListener("load", function () {document.getElementById('image-preview').setAttribute('src', this.result);});  
-		checkForRequired();
 	}
+	checkForRequired();
 })
 
 function savetext() {

@@ -4,7 +4,7 @@
 		{% set image=sub.sidebar_url %}
 	{% else %}
 		{% set path = "assets/images/" + SITE_NAME + "/sidebar" %}
-		{% set image = "/" + path + "/" + listdir('files/' + path)|random() + '?v=41' %}
+		{% set image = "/" + path + "/" + listdir('files/' + path)|random() + '?v=42' %}
 	{% endif %}
 
 	{% if v and (v.is_banned or v.agendaposter) %}
@@ -19,8 +19,8 @@
 		{% endif %}
 		{% if v %}
 			<div class="d-lg-block d-none btn-block">
-				<a class="btn btn-primary btn-block mb-3 {% if v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/block','block-sub','unblock-sub');this.classList.toggle('d-none');nextElementSibling.classList.toggle('d-none')">BLOCK HOLE</a>
-				<a class="btn btn-primary btn-block mb-3 {% if not v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/unblock','block-sub','unblock-sub');this.classList.toggle('d-none');previousElementSibling.classList.toggle('d-none')">UNBLOCK HOLE</a>
+				<a class="btn btn-primary btn-block mb-3 {% if v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/block','block-sub','unblock-sub');this.classList.toggle('d-none');nextElementSibling.classList.toggle('d-none')">Block /h/{{sub.name}}</a>
+				<a class="btn btn-primary btn-block mb-3 {% if not v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/unblock','block-sub','unblock-sub');this.classList.toggle('d-none');previousElementSibling.classList.toggle('d-none')">Unblock /h/{{sub.name}}</a>
 			</div>
 
 			{% if v.admin_level > 2 %}

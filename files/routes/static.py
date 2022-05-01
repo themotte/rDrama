@@ -372,7 +372,10 @@ def submit_contact(v):
 				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
 				except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
 				try: url = req['link']
-				except: return {"error": req['error']}, 400
+				except:
+					error = req['error']
+					if error == 'File exceeds max duration': error += ' (60 seconds)'
+					return {"error": error}, 400
 			if url.endswith('.'): url += 'mp4'
 			body_html += f"<p>{url}</p>"
 		else: return {"error": "Image/Video files only"}, 400

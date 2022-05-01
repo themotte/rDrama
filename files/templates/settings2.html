@@ -39,10 +39,10 @@
 	
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=244"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=56">
+		<link rel="stylesheet" href="/assets/css/main.css?v=246"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=56">
 	{% else %}
 		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=244"><link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=56">
+		<link rel="stylesheet" href="/assets/css/main.css?v=246"><link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=56">
 	{% endif %}
 </head>
 
@@ -77,7 +77,7 @@
 										<a class="nav-link{% if request.path.endswith('/blocks') %} active{% endif %}" href="/blocks"><i class="fas fa-user-slash pr-2"></i>Blocks</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link{% if request.path.endswith('/changelog') %} active{% endif %}" href="/changelog"><i class="fas fa-clipboard pr-2"></i>Changelog</a>
+										<a class="nav-link{% if request.path.endswith('/changelog') %} active{% endif %}" href="https://rdrama.net/changelog"><i class="fas fa-clipboard pr-2"></i>Changelog</a>
 									</li>
 								</ul>
 							</div>
@@ -108,7 +108,7 @@
 							<a style="padding: 0.75rem 1rem"class="nav-link{% if request.path.endswith('/blocks') %} active{% endif %}" href="/blocks"><i class="fas fa-eye-slash text-lg mr-0"></i></a>
 						</li>
 						<li class="nav-item">
-							<a style="padding: 0.75rem 1rem"class="nav-link{% if request.path.endswith('/changelog') %} active{% endif %}" href="/changelog"><i class="fas fa-clipboard text-lg mr-0"></i></a>
+							<a style="padding: 0.75rem 1rem"class="nav-link{% if request.path.endswith('/changelog') %} active{% endif %}" href="https://rdrama.net/changelog"><i class="fas fa-clipboard text-lg mr-0"></i></a>
 						</li>
 					</ul>
 				</div>

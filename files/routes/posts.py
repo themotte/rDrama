@@ -467,7 +467,10 @@ def edit_post(pid, v):
 					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
 					except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
 					try: url = req['link']
-					except: return {"error": req['error']}, 400
+					except:
+						error = req['error']
+						if error == 'File exceeds max duration': error += ' (60 seconds)'
+						return {"error": error}, 400
 				if url.endswith('.'): url += 'mp4'
 				body += f"\n\n{url}"
 			else: return {"error": "Image/Video files only"}, 400
@@ -688,6 +691,11 @@ def thumbnail_thread(pid):
 		image = PILimage.open(BytesIO(x.content))
 
 	else:
+		db.close()
+		return
+
+	size = len(image.fp.read())
+	if size > 8 * 1024 * 1024:
 		db.close()
 		return
 
@@ -1082,7 +1090,10 @@ def submit_post(v, sub=None):
 					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
 					except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
 					try: url = req['link']
-					except: return {"error": req['error']}, 400
+					except:
+						error = req['error']
+						if error == 'File exceeds max duration': error += ' (60 seconds)'
+						return {"error": error}, 400
 				if url.endswith('.'): url += 'mp4'
 				body += f"\n\n{url}"
 			else:
@@ -1188,7 +1199,10 @@ def submit_post(v, sub=None):
 				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
 				except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
 				try: url = req['link']
-				except: return {"error": req['error']}, 400
+				except:
+					error = req['error']
+					if error == 'File exceeds max duration': error += ' (60 seconds)'
+					return {"error": error}, 400
 			if url.endswith('.'): url += 'mp4'
 			post.url = url
 		else:

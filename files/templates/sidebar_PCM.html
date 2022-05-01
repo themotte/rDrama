@@ -9,8 +9,8 @@
 		{% endif %}
 		{% if v %}
 			<div class="d-lg-block d-none btn-block">
-				<a class="btn btn-primary btn-block {% if v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/block','block-sub','unblock-sub');this.classList.toggle('d-none');nextElementSibling.classList.toggle('d-none')">BLOCK HOLE</a>
-				<a class="btn btn-primary btn-block {% if not v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/unblock','block-sub','unblock-sub');this.classList.toggle('d-none');previousElementSibling.classList.toggle('d-none')">UNBLOCK HOLE</a>
+				<a class="btn btn-primary btn-block {% if v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/block','block-sub','unblock-sub');this.classList.toggle('d-none');nextElementSibling.classList.toggle('d-none')">Block /h/{{sub.name}}</a>
+				<a class="btn btn-primary btn-block {% if not v.blocks(sub.name) %}d-none{% endif %}" onclick="post_toast(this,'/h/{{sub.name}}/unblock','block-sub','unblock-sub');this.classList.toggle('d-none');previousElementSibling.classList.toggle('d-none')">Unblock /h/{{sub.name}}</a>
 			</div>
 		{% endif %}
 		<a class="btn btn-primary btn-block" href="/h/{{sub.name}}/mods">HOLE MODS</a>

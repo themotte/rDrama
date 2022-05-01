@@ -113,7 +113,7 @@
 														<input autocomplete="off" id="file-upload" type="file" name="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*, video/*" hidden>
 													</label>
 													<small class="form-text text-muted">Optional if you have text.</small>
-													<small class="form-text text-muted">You can upload images or videos.</small>
+													<small class="form-text text-muted">You can upload images or videos up to 60 seconds.</small>
 												</div>
 												</div>
 
@@ -227,9 +227,9 @@
 			</script>
 		{% endif %}
 
-		<script src="/assets/js/marked.js?v=250"></script>
+		<script src="/assets/js/marked.js?v=251"></script>
 		<script src="/assets/js/formatting.js?v=240"></script>
-		<script src="/assets/js/submit.js?v=254"></script>
+		<script src="/assets/js/submit.js?v=255"></script>
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
 

@@ -686,7 +686,10 @@ def messagereply(v):
 				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
 				except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
 				try: url = req['link']
-				except: return {"error": req['error']}, 400
+				except:
+					error = req['error']
+					if error == 'File exceeds max duration': error += ' (60 seconds)'
+					return {"error": error}, 400
 			if url.endswith('.'): url += 'mp4'
 			body_html += f"<p>{url}</p>"
 		else: return {"error": "Image/Video files only"}, 400
@@ -887,7 +890,7 @@ def u_username(username, v=None):
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
-	ids = u.userpagelisting(v=v, page=page, sort=sort, t=t)
+	ids = u.userpagelisting(site=SITE, v=v, page=page, sort=sort, t=t)
 
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
