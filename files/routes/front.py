@@ -346,7 +346,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 		posts = posts.join(User, User.id == Submission.author_id).filter(User.shadowbanned == None)
 
 	if request.host == 'rdrama.net': num = 5
-	else: num = 1
+	else: num = 0.1
 
 	if sort == "hot":
 		ti = int(time.time()) + 3600
