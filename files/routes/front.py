@@ -377,10 +377,10 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	if (sort == "hot" or (v and v.id == Q_ID)) and page == 1 and ccmode == "false" and not gt and not lt:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
-		elif v: pins = pins.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
-
-		if v and v.admin_level < 2:
-			pins = pins.filter(Submission.author_id.notin_(v.userblocks))
+		elif v:
+			pins = pins.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
+			if v.admin_level < 2:
+				pins = pins.filter(Submission.author_id.notin_(v.userblocks))
 
 		pins = pins.all()
 
