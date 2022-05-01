@@ -19,4 +19,4 @@ function banModal(link, id, name) {
 
 		xhr.send(fd);
 	}
-};
+}
