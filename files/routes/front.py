@@ -38,8 +38,9 @@ def unread(v):
 @app.get("/notifications")
 @auth_required
 def notifications(v):
-	try: page = int(request.values.get('page', 1))
+	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
+
 	messages = request.values.get('messages')
 	modmail = request.values.get('modmail')
 	posts = request.values.get('posts')
@@ -406,8 +407,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 def changelog(v):
 
 
-	page = int(request.values.get("page") or 1)
-	page = max(page, 1)
+	try: page = max(int(request.values.get("page", 1)), 1)
+	except: page = 1
 
 	sort=request.values.get("sort", "new")
 	t=request.values.get('t', "all")
@@ -501,7 +502,7 @@ def random_user(v):
 def all_comments(v):
 
 
-	try: page = int(request.values.get("page", 1))
+	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
 	sort=request.values.get("sort", "new")
@@ -591,8 +592,9 @@ def transfers(v):
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in comments.all()]}
 
-	try: page = int(request.values.get("page", 1))
+	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
+
 	comments = comments.offset(25 * (page - 1)).limit(26).all()
 	next_exists = len(comments) > 25
 	comments = comments[:25]

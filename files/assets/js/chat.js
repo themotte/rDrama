@@ -159,3 +159,5 @@ socket.on('typing', function (users){
 		document.getElementById('loading-indicator').classList.remove('d-none');
 	}
 })
+
+box.scrollTo(0, box.scrollHeight)

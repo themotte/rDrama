@@ -12,7 +12,7 @@ from files.__main__ import app
 @auth_required
 def feeds_user(v=None, sort='hot', t='all'):
 
-	try: page = int(request.values.get("page", 1))
+	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
 	ids, next_exists = frontlist(

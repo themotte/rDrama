@@ -282,7 +282,9 @@ def admins(v):
 @auth_required
 def log(v):
 
-	page = int(request.values.get("page",1))
+	try: page = max(int(request.values.get("page", 1)), 1)
+	except: page = 1
+
 	admin = request.values.get("admin")
 	if admin: admin_id = get_id(admin)
 	else: admin_id = 0

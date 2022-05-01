@@ -717,6 +717,10 @@ def messagereply(v):
 		if not notif:
 			notif = Notification(comment_id=c.id, user_id=user_id)
 			g.db.add(notif)
+			ids = [c.top_comment.id] + [x.id for x in c.top_comment.replies]
+			notifications = g.db.query(Notification).filter(Notification.comment_id.in_(ids), Notification.user_id == user_id)
+			for n in notifications:
+				g.db.delete(n)
 
 		if PUSHER_ID != 'blahblahblah' and not v.shadowbanned:
 			if len(message) > 500: notifbody = message[:500] + '...'
@@ -746,16 +750,17 @@ def messagereply(v):
 			)
 
 
-	ids = [c.top_comment.id] + [x.id for x in c.top_comment.replies]
-	notifications = g.db.query(Notification).filter(Notification.comment_id.in_(ids))
-	for n in notifications:
-		g.db.delete(n)
-
 	if c.top_comment.sentto == 2:
 		admins = g.db.query(User).filter(User.admin_level > 2, User.id != v.id).all()
 		for admin in admins:
 			notif = Notification(comment_id=c.id, user_id=admin.id)
 			g.db.add(notif)
+
+		ids = [c.top_comment.id] + [x.id for x in c.top_comment.replies]
+		notifications = g.db.query(Notification).filter(Notification.comment_id.in_(ids))
+		for n in notifications:
+			g.db.delete(n)
+
 	g.db.commit()
 
 	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True)}
@@ -879,9 +884,8 @@ def u_username(username, v=None):
 
 	sort = request.values.get("sort", "new")
 	t = request.values.get("t", "all")
-	try: page = int(request.values.get("page", "1"))
-	except: abort(400)
-	page = max(page, 1)
+	try: page = max(int(request.values.get("page", 1)), 1)
+	except: page = 1
 
 	ids = u.userpagelisting(v=v, page=page, sort=sort, t=t)
 
