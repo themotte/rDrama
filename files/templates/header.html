@@ -57,6 +57,10 @@
 				</form>
 			</div>
 
+			{% if g.webview %}
+				<a class="mobile-nav-icon d-md-none" onclick="location.reload()"><i class="fas fa-arrow-rotate-right align-middle text-gray-500 black"></i></a>
+			{% endif %}
+
 			{% if v %}
 				{% if v.notifications_count %}
 					<a class="mobile-nav-icon d-md-none pl-0" href="/notifications{% if v.do_posts %}?posts=true{% elif v.do_reddit %}?reddit=true{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notifications"><i class="fas fa-bell align-middle text-danger" {% if v.do_posts %}style="color:blue!important"{% elif v.do_reddit %}style="color:#805ad5!important"{% endif %}></i><span class="notif-count ml-1" style="padding-left: 4.5px;{% if v.do_posts %}background:blue{% elif v.do_reddit %}background:#805ad5{% endif %}">{{v.notifications_count}}</span></a>
@@ -159,7 +163,7 @@
 								<button class="dropdown-item copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fas fa-user-friends fa-fw mr-3"></i>Invite friends</button>
 							</div>
 							<div class="px-2">
-								<a class="dropdown-item" href="/assets/{{config('SITE_NAME')}}_v2.2.apk?v=1"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
+								<a class="dropdown-item" href="/assets/app_{{config('SITE_NAME')}}.apk?v=1"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
 
 								<a class="dropdown-item" href="https://rdrama.net/changelog"><i class="fas fa-clipboard fa-fw mr-3"></i>Changelog</a>
 
@@ -221,7 +225,7 @@
 					</li>
 				{% endif %}
 				
-				<a class="nav-item nav-link" href="/assets/{{config('SITE_NAME')}}_v2.2.apk?v=1"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
+				<a class="nav-item nav-link" href="/assets/app_{{config('SITE_NAME')}}.apk?v=1"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
 
 				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/rDrama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
 
