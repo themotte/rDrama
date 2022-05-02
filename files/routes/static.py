@@ -66,13 +66,10 @@ def sidebar(v):
 
 @app.get("/stats")
 @auth_required
+@cache.memoize(timeout=86400)
 def participation_stats(v):
 
-	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=stats(site=SITE))
 
-
-@cache.memoize(timeout=86400)
-def stats(site=None):
 	day = int(time.time()) - 86400
 
 	week = int(time.time()) - 604800
@@ -203,7 +200,8 @@ def stats(site=None):
 
 	g.db.commit()
 
-	return stats
+	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=stats)
+
 
 @app.get("/chart")
 def chart():

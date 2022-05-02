@@ -1,5 +1,6 @@
 {% extends "default.html" %}
 {% block content %}
+<script src="/assets/js/sort_table.js?v=242"></script>
 <pre>
 
 
@@ -11,15 +12,16 @@
 
 
 </pre>
-<div class="overflow-x-auto"><table class="table table-striped mb-5">
+<div class="overflow-x-auto">
+<table id="sortable_table" class="table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>
 		<th>#</th>
 		<th>Name</th>
 		<th>Image</th>
 		<th>Description</th>
-		<th>#</th>
-		<th>Rarity</th>
+		<th role="button" onclick="sort_table(4)">#</th>
+		<th role="button" onclick="sort_table(5)">Rarity</th>
 	</tr>
 </thead>
 {% for badge in badges %}
