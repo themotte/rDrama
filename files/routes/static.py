@@ -48,7 +48,7 @@ def marseys(v):
 	return render_template("marseys.html", v=v, marseys=marseys)
 
 @app.get("/marsey_list")
-@cache.memoize(timeout=600)
+@cache.memoize(timeout=600, make_name=make_name)
 def marsey_list():
 	if SITE_NAME == 'rDrama':
 		marseys = [f"{x.name} : {y} {x.tags}" for x, y in g.db.query(Marsey, User.username).join(User, User.id==Marsey.author_id).order_by(Marsey.count.desc())]
@@ -494,7 +494,7 @@ def robots_txt():
 
 @app.get("/badges")
 @auth_required
-@cache.memoize(timeout=3600)
+@cache.memoize(timeout=3600, make_name=make_name)
 def badges(v):
 	badges = g.db.query(BadgeDef).order_by(BadgeDef.id).all()
 	counts_raw = g.db.query(Badge.badge_id, func.count()).group_by(Badge.badge_id).all()
