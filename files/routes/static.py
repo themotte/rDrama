@@ -496,8 +496,6 @@ def robots_txt():
 @auth_required
 @cache.memoize(timeout=3600)
 def badges(v):
-	nonlurk_truecoins = 100
-
 	badges = g.db.query(BadgeDef).order_by(BadgeDef.id).all()
 	counts_raw = g.db.query(Badge.badge_id, func.count()).group_by(Badge.badge_id).all()
 	users = g.db.query(User.id).count()
@@ -506,7 +504,7 @@ def badges(v):
 	for c in counts_raw:
 		counts[c[0]] = (c[1], float(c[1]) * 100 / max(users, 1))
 
-	return render_template("badges.html", v=v, badges=badges, counts=counts, nonlurk=users, nonlurk_tc=nonlurk_truecoins)
+	return render_template("badges.html", v=v, badges=badges, counts=counts)
 
 @app.get("/blocks")
 @auth_required
