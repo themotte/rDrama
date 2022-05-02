@@ -138,9 +138,9 @@ def stats(site=None):
 		stats.update(stats2)
 
 		ids = (NOTIFICATIONS_ID, AUTOJANNY_ID, SNAPPY_ID, LONGPOSTBOT_ID, ZOZBOT_ID)
+		bots = g.db.query(User).filter(User.id.in_(ids))
 
-		for id in ids:
-			u = get_account(id)
+		for u in bots:
 			g.db.add(u)
 
 			if u.patron_utc and u.patron_utc < time.time():
