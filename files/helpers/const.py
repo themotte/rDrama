@@ -832,6 +832,7 @@ approved_embed_hosts = [
 	'dailymail.co.uk',
 	'cdc.gov',
 	'media-amazon.com',
+	'ssl-images-amazon.com',
 	'washingtonpost.com',
 	'imgflip.com',
 	'flickr.com',
