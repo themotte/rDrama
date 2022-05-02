@@ -1508,6 +1508,7 @@ def api_ban_comment(c_id, v):
 		kind="ban_comment",
 		user_id=v.id,
 		target_comment_id=comment.id,
+                note=request.values.get('note'),
 		)
 	g.db.add(ma)
 	g.db.commit()
