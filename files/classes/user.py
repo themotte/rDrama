@@ -4,6 +4,7 @@ import pyotp
 from files.helpers.discord import remove_user
 from files.helpers.images import *
 from files.helpers.const import *
+from files.helpers.alerts import *
 from .alts import Alt
 from .saves import *
 from .notifications import Notification
