@@ -4,7 +4,6 @@ import pyotp
 from files.helpers.discord import remove_user
 from files.helpers.images import *
 from files.helpers.const import *
-from files.helpers.alerts import *
 from .alts import Alt
 from .saves import *
 from .notifications import Notification
@@ -496,84 +495,6 @@ class User(Base):
 	@property
 	@lazy
 	def profile_url(self):
-		if self.patron_utc and self.patron_utc < time.time():
-			self.patron = 0
-			self.patron_utc = 0
-			send_repeatable_notification(self.id, "Your paypig status has expired!")
-			if self.discord_id: remove_role(v, "1")
-			g.db.add(self)
-			g.db.commit()
-
-		if self.unban_utc and self.unban_utc < time.time():
-			self.is_banned = 0
-			self.unban_utc = 0
-			self.ban_evade = 0
-			send_repeatable_notification(self.id, "You have been unbanned!")
-			g.db.add(self)
-			g.db.commit()
-
-		if self.agendaposter and self.agendaposter < time.time():
-			self.agendaposter = 0
-			send_repeatable_notification(self.id, "Your chud theme has expired!")
-			g.db.add(self)
-			badge = self.has_badge(28)
-			if badge: g.db.delete(badge)
-			g.db.commit()
-
-		if self.flairchanged and self.flairchanged < time.time():
-			self.flairchanged = None
-			send_repeatable_notification(self.id, "Your flair lock has expired. You can now change your flair!")
-			g.db.add(self)
-			badge = self.has_badge(96)
-			if badge: g.db.delete(badge)
-			g.db.commit()
-
-		if self.marseyawarded and self.marseyawarded < time.time():
-			self.marseyawarded = None
-			send_repeatable_notification(self.id, "Your marsey award has expired!")
-			g.db.add(self)
-			badge = self.has_badge(98)
-			if badge: g.db.delete(badge)
-			g.db.commit()
-
-		if self.longpost and self.longpost < time.time():
-			self.longpost = None
-			send_repeatable_notification(self.id, "Your pizzashill award has expired!")
-			g.db.add(self)
-			badge = self.has_badge(97)
-			if badge: g.db.delete(badge)
-			g.db.commit()
-
-		if self.bird and self.bird < time.time():
-			self.bird = None
-			send_repeatable_notification(self.id, "Your bird site award has expired!")
-			g.db.add(self)
-			badge = self.has_badge(95)
-			if badge: g.db.delete(badge)
-			g.db.commit()
-
-		if self.progressivestack and self.progressivestack < time.time():
-			self.progressivestack = None
-			send_repeatable_notification(self.id, "Your progressive stack has expired!")
-			g.db.add(self)
-			badge = self.has_badge(94)
-			if badge: g.db.delete(badge)
-			g.db.commit()
-
-		if self.rehab and self.rehab < time.time():
-			self.rehab = None
-			send_repeatable_notification(self.id, "Your rehab has finished!")
-			g.db.add(self)
-			badge = self.has_badge(109)
-			if badge: g.db.delete(badge)
-			g.db.commit()
-
-		if self.deflector and self.deflector < time.time():
-			self.deflector = None
-			send_repeatable_notification(self.id, "Your deflector has expired!")
-			g.db.add(self)
-			g.db.commit()
-
 		if self.agendaposter: return f"{SITE_FULL}/assets/images/astolfo.webp?v=1"
 		if self.profileurl: 
 			if self.profileurl.startswith('/'): return SITE_FULL + self.profileurl
