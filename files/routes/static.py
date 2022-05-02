@@ -167,6 +167,72 @@ def stats(site=None):
 
 		stats.update(stats2)
 
+		ids = (NOTIFICATIONS_ID, AUTOJANNY_ID, SNAPPY_ID, LONGPOSTBOT_ID, ZOZBOT_ID)
+
+		for id in ids:
+			u = get_account(id)
+			g.db.add(u)
+
+			if u.patron_utc and u.patron_utc < time.time():
+				u.patron = 0
+				u.patron_utc = 0
+				send_repeatable_notification(u.id, "Your paypig status has expired!")
+				if u.discord_id: remove_role(v, "1")
+
+			if u.unban_utc and u.unban_utc < time.time():
+				u.is_banned = 0
+				u.unban_utc = 0
+				u.ban_evade = 0
+				send_repeatable_notification(u.id, "You have been unbanned!")
+
+			if u.agendaposter and u.agendaposter < time.time():
+				u.agendaposter = 0
+				send_repeatable_notification(u.id, "Your chud theme has expired!")
+				badge = u.has_badge(28)
+				if badge: g.db.delete(badge)
+
+			if u.flairchanged and u.flairchanged < time.time():
+				u.flairchanged = None
+				send_repeatable_notification(u.id, "Your flair lock has expired. You can now change your flair!")
+				badge = u.has_badge(96)
+				if badge: g.db.delete(badge)
+
+			if u.marseyawarded and u.marseyawarded < time.time():
+				u.marseyawarded = None
+				send_repeatable_notification(u.id, "Your marsey award has expired!")
+				badge = u.has_badge(98)
+				if badge: g.db.delete(badge)
+
+			if u.longpost and u.longpost < time.time():
+				u.longpost = None
+				send_repeatable_notification(u.id, "Your pizzashill award has expired!")
+				badge = u.has_badge(97)
+				if badge: g.db.delete(badge)
+
+			if u.bird and u.bird < time.time():
+				u.bird = None
+				send_repeatable_notification(u.id, "Your bird site award has expired!")
+				badge = u.has_badge(95)
+				if badge: g.db.delete(badge)
+
+			if u.progressivestack and u.progressivestack < time.time():
+				u.progressivestack = None
+				send_repeatable_notification(u.id, "Your progressive stack has expired!")
+				badge = u.has_badge(94)
+				if badge: g.db.delete(badge)
+
+			if u.rehab and u.rehab < time.time():
+				u.rehab = None
+				send_repeatable_notification(u.id, "Your rehab has finished!")
+				badge = u.has_badge(109)
+				if badge: g.db.delete(badge)
+
+			if u.deflector and u.deflector < time.time():
+				u.deflector = None
+				send_repeatable_notification(u.id, "Your deflector has expired!")
+
+	g.db.commit()
+
 	return stats
 
 @app.get("/chart")
