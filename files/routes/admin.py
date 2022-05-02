@@ -1130,6 +1130,28 @@ def admin_title_change(user_id, v):
 
 	return redirect(user.url)
 
+@app.post('/modnote_add/<user_id>')
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@admin_level_required(2)
+def add_user_modnote(user_id, v):
+	user = g.db.query(User).filter_by(id=user_id).one_or_none()
+
+	if not user: abort(404)
+
+        # Do not abort if mod making note is outranked by notee
+        # Anyone can note about anyone
+
+	ma=ModAction(
+		kind="modnote_add",
+		user_id=v.id,
+		target_user_id=user.id,
+		_note=request.values.get('note')
+        )
+	g.db.add(ma)
+	g.db.flush()
+	g.db.commit()
+	return {"message": f"Mod note added for @{user.username}!"}
+
 @app.post("/ban_user/<user_id>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
@@ -1486,6 +1508,7 @@ def api_ban_comment(c_id, v):
 		kind="ban_comment",
 		user_id=v.id,
 		target_comment_id=comment.id,
+                note=request.values.get('note'),
 		)
 	g.db.add(ma)
 	g.db.commit()

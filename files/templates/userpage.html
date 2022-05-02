@@ -273,6 +273,11 @@
 						{% endif %}
 						<pre></pre>
 
+						<form id="addmodnote" action="/modnote_add/{{u.id}}" method="post">
+							<input type="hidden" name="formkey", value="{{v.formkey}}">
+							<textarea autocomplete="off" type="string" name="note" class="form-control" placeholder="What do you want to say about this user?"></textarea>
+							<input type="submit" class="btn btn-success" value="Add Mod Note About User">
+						</form>
 						<form id="agendaposter1" class="{% if u.agendaposter %}d-none{% endif %}" action="/agendaposter/{{u.id}}" method="post">
 							<input type="hidden" name="formkey", value="{{v.formkey}}">
 							<input autocomplete="off" type="number" step="any" name="days" class="form-control" placeholder="Days (0 or blank = permanent)">

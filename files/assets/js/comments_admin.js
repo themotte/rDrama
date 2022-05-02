@@ -1,7 +1,21 @@
+function postWithData(url, data) {
+	const xhr = new XMLHttpRequest();
+	xhr.open("POST", url);
+	xhr.setRequestHeader('xhr', 'xhr');
+	var form = new FormData()
+	form.append("formkey", formkey());
+	for (var k in data) {
+		form.append(k, data[k]);
+	}
+	xhr.send(form);
+}
+
 function removeComment(post_id,button1,button2) {
 	url="/ban_comment/"+post_id
 
-	post(url)
+	var note = prompt("Mod Note");
+	var data = note ? { note : note } : {};
+	postWithData(url, data);
 
 	try {
 		document.getElementById("comment-"+post_id+"-only").classList.add("banned");
@@ -22,7 +36,9 @@ function removeComment(post_id,button1,button2) {
 function approveComment(post_id,button1,button2) {
 	url="/unban_comment/"+post_id
 
-	post(url)
+	var note = prompt("Mod Note");
+	var data = note ? { note : note } : {};
+	postWithData(url, data);
 
 	try {
 		document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
@@ -44,7 +60,9 @@ function approveComment(post_id,button1,button2) {
 function removeComment2(post_id,button1,button2) {
 	url="/ban_comment/"+post_id
 
-	post(url)
+	var note = prompt("Mod Note");
+	var data = note ? { note : note } : {};
+	postWithData(url, data);
 
 	document.getElementById("comment-"+post_id+"-only").classList.add("banned");
 	var button=document.getElementById("remove-"+post_id);
@@ -60,7 +78,9 @@ function removeComment2(post_id,button1,button2) {
 function approveComment2(post_id,button1,button2) {
 	url="/unban_comment/"+post_id
 
-	post(url)
+	var note = prompt("Mod Note");
+	var data = note ? { note : note } : {};
+	postWithData(url, data);
 
 	document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
 	var button=document.getElementById("remove-"+post_id);
