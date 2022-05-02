@@ -66,7 +66,7 @@ def sidebar(v):
 
 @app.get("/stats")
 @auth_required
-@cache.memoize(timeout=86400)
+@cache.memoize(timeout=86400, make_name=make_name)
 def participation_stats(v):
 
 

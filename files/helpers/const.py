@@ -5,6 +5,7 @@ from json import loads
 from files.__main__ import db_session
 from files.classes.sub import Sub
 from files.classes.marsey import Marsey
+from flask import request
 
 SITE = environ.get("DOMAIN", '').strip()
 SITE_NAME = environ.get("SITE_NAME", '').strip()
@@ -876,3 +877,5 @@ image_regex = re.compile("(^|\s)(https:\/\/[\w\-.#&/=\?@%;+]{5,250}(\.png|\.jpg|
 procoins_li = (0,2500,5000,10000,25000,50000,125000,250000)
 
 linefeeds_regex = re.compile("([^\n])\n([^\n])", flags=re.A)
+
+def make_name(*args, **kwargs): return request.base_url
