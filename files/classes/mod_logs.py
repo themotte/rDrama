@@ -275,6 +275,11 @@ ACTIONTYPES = {
 		"icon": 'fa-user-crown', 
 		"color": 'bg-success'
 	},
+	'modnote_add': {
+		"str": 'added a mod note about user',
+		"icon": 'fa-comment-dots',
+		"color": 'bg-success'
+	},
 	'monthly': {
 		"str": 'distributed monthly marseybux', 
 		"icon": 'fa-sack-dollar', 
