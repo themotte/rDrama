@@ -57,7 +57,9 @@
 				</form>
 			</div>
 
-			<a class="mobile-nav-icon d-md-none" onclick="location.reload()"><i class="fas fa-arrow-rotate-right align-middle text-gray-500 black"></i></a>
+			{% if g.webview %}
+				<a class="mobile-nav-icon d-md-none" onclick="location.reload()"><i class="fas fa-arrow-rotate-right align-middle text-gray-500 black"></i></a>
+			{% endif %}
 
 			{% if v %}
 				{% if v.notifications_count %}
