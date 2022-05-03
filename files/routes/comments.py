@@ -160,7 +160,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 
 @app.post("/comment")
 @limiter.limit("1/day")
-@limiter.limit("1/day", key_func=lambda:f'{request.host}-{egg}')
+@limiter.limit("1/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def api_comment(v):
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
