@@ -385,6 +385,7 @@ def contact(v):
 
 @app.post("/send_admin")
 @limiter.limit("1/second;2/minute;6/hour;10/day")
+@limiter.limit("1/second;2/minute;6/hour;10/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def submit_contact(v):
 	body = request.values.get("message")

@@ -56,6 +56,7 @@ def toggle_club(pid, v):
 
 @app.post("/publish/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def publish(pid, v):
 	post = get_post(pid)
@@ -419,6 +420,7 @@ def morecomments(v, cid):
 
 @app.post("/edit_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def edit_post(pid, v):
 	p = get_post(pid)
@@ -856,6 +858,7 @@ def api_is_repost():
 @app.post("/submit")
 @app.post("/h/<sub>/submit")
 @limiter.limit("1/second;2/minute;10/hour;50/day")
+@limiter.limit("1/second;2/minute;10/hour;50/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def submit_post(v, sub=None):
 
@@ -1395,6 +1398,7 @@ def submit_post(v, sub=None):
 
 @app.post("/delete_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def delete_post_pid(pid, v):
 
@@ -1416,6 +1420,7 @@ def delete_post_pid(pid, v):
 
 @app.post("/undelete_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def undelete_post_pid(pid, v):
 	post = get_post(pid)
@@ -1471,6 +1476,7 @@ def toggle_post_nsfw(pid, v):
 
 @app.post("/save_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def save_post(pid, v):
 
@@ -1487,6 +1493,7 @@ def save_post(pid, v):
 
 @app.post("/unsave_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def unsave_post(pid, v):
 
@@ -1520,6 +1527,7 @@ def api_pin_post(post_id, v):
 
 @app.get("/submit/title")
 @limiter.limit("6/minute")
+@limiter.limit("6/minute", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def get_post_title(v):
 

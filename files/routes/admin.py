@@ -710,11 +710,7 @@ def users_list(v):
 	try: page = int(request.values.get("page", 1))
 	except: page = 1
 
-	users = g.db.query(User).filter_by(is_banned=0
-									   ).order_by(User.created_utc.desc()
-												  ).offset(25 * (page - 1)).limit(26)
-
-	users = [x for x in users]
+	users = g.db.query(User).order_by(User.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	next_exists = (len(users) > 25)
 	users = users[:25]
@@ -725,6 +721,30 @@ def users_list(v):
 						   next_exists=next_exists,
 						   page=page,
 						   )
+
+
+@app.get("/badge_owners/<bid>")
+@auth_required
+def bid_list(v, bid):
+
+	try: bid = int(bid)
+	except: abort(400)
+
+	try: page = int(request.values.get("page", 1))
+	except: page = 1
+
+	users = g.db.query(User).join(Badge, Badge.user_id == User.id).filter(Badge.badge_id==bid).offset(25 * (page - 1)).limit(26).all()
+
+	next_exists = (len(users) > 25)
+	users = users[:25]
+
+	return render_template("admin/new_users.html",
+						   v=v,
+						   users=users,
+						   next_exists=next_exists,
+						   page=page,
+						   )
+
 
 @app.get("/admin/alt_votes")
 @admin_level_required(2)

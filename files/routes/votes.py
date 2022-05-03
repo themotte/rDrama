@@ -7,7 +7,6 @@ from files.__main__ import app, limiter, cache
 from os import environ
 
 @app.get("/votes")
-@limiter.limit("5/second;60/minute;200/hour;1000/day")
 @auth_required
 def admin_vote_info_get(v):
 	link = request.values.get("link")
@@ -53,6 +52,7 @@ def admin_vote_info_get(v):
 
 @app.post("/vote/post/<post_id>/<new>")
 @limiter.limit("5/second;60/minute;600/hour;1000/day")
+@limiter.limit("5/second;60/minute;600/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @is_not_permabanned
 def api_vote_post(post_id, new, v):
 
@@ -116,6 +116,7 @@ def api_vote_post(post_id, new, v):
 
 @app.post("/vote/comment/<comment_id>/<new>")
 @limiter.limit("5/second;60/minute;600/hour;1000/day")
+@limiter.limit("5/second;60/minute;600/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @is_not_permabanned
 def api_vote_comment(comment_id, new, v):
 
@@ -218,6 +219,7 @@ def api_vote_poll(comment_id, v):
 
 @app.post("/bet/<comment_id>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @is_not_permabanned
 def bet(comment_id, v):
 	

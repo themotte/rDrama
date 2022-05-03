@@ -169,6 +169,7 @@ def me(v):
 
 @app.post("/logout")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def logout(v):
 

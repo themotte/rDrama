@@ -160,6 +160,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 
 @app.post("/comment")
 @limiter.limit("1/second;20/minute;200/hour;1000/day")
+@limiter.limit("1/second;20/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def api_comment(v):
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
@@ -667,6 +668,7 @@ def api_comment(v):
 
 @app.post("/edit_comment/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def edit_comment(cid, v):
 
@@ -842,6 +844,7 @@ def edit_comment(cid, v):
 
 @app.post("/delete/comment/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def delete_comment(cid, v):
 
@@ -863,6 +866,7 @@ def delete_comment(cid, v):
 
 @app.post("/undelete/comment/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def undelete_comment(cid, v):
 
@@ -969,6 +973,7 @@ def mod_unpin(cid, v):
 
 @app.post("/save_comment/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def save_comment(cid, v):
 
@@ -986,6 +991,7 @@ def save_comment(cid, v):
 
 @app.post("/unsave_comment/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def unsave_comment(cid, v):
 
@@ -1001,6 +1007,7 @@ def unsave_comment(cid, v):
 
 @app.post("/blackjack/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def handle_blackjack_action(cid, v):
 	comment = get_comment(cid)
@@ -1041,6 +1048,7 @@ def diff_words(answer, guess):
 
 @app.post("/wordle/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def handle_wordle_action(cid, v):
 

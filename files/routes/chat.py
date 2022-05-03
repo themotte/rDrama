@@ -35,6 +35,7 @@ def chatjs():
 
 @socketio.on('speak')
 @limiter.limit("3/second;10/minute")
+@limiter.limit("3/second;10/minute", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def speak(data, v):
 	if v.is_banned: return '', 403

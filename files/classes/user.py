@@ -190,6 +190,7 @@ class User(Base):
 		elif self.patron == 4: discount = 0.75
 		elif self.patron == 5: discount = 0.70
 		elif self.patron == 6: discount = 0.65
+		elif self.patron == 7: discount = 0.60
 		else: discount = 1
 
 		for badge in [69,70,71,72,73]:

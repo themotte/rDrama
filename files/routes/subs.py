@@ -158,6 +158,7 @@ def blockers(v, sub):
 
 @app.post("/h/<sub>/add_mod")
 @limiter.limit("1/second;5/day")
+@limiter.limit("1/second;5/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @is_not_permabanned
 def add_mod(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
@@ -306,6 +307,7 @@ def sub_settings(v, sub):
 
 @app.post('/h/<sub>/sidebar')
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @is_not_permabanned
 def post_sub_sidebar(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
@@ -326,6 +328,7 @@ def post_sub_sidebar(v, sub):
 
 @app.post('/h/<sub>/css')
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @is_not_permabanned
 def post_sub_css(v, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
@@ -352,6 +355,7 @@ def get_sub_css(sub):
 
 @app.post("/h/<sub>/banner")
 @limiter.limit("1/second;10/day")
+@limiter.limit("1/second;10/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @is_not_permabanned
 def sub_banner(v, sub):
 	if request.headers.get("cf-ipcountry") == "T1": return {"error":"Image uploads are not allowed through TOR."}, 403
@@ -379,6 +383,7 @@ def sub_banner(v, sub):
 
 @app.post("/h/<sub>/sidebar_image")
 @limiter.limit("1/second;10/day")
+@limiter.limit("1/second;10/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @is_not_permabanned
 def sub_sidebar(v, sub):
 	if request.headers.get("cf-ipcountry") == "T1": return {"error":"Image uploads are not allowed through TOR."}, 403
