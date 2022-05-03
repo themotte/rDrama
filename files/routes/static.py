@@ -496,9 +496,11 @@ def robots_txt():
 		abort(404)
 	return f
 
+no = (21,22,23,24,25,26,27)
+
 @cache.memoize(timeout=3600)
 def badge_list(site):
-	badges = g.db.query(BadgeDef).order_by(BadgeDef.id).all()
+	badges = g.db.query(BadgeDef).filter(BadgeDef.id.notin_(no)).order_by(BadgeDef.id).all()
 	counts_raw = g.db.query(Badge.badge_id, func.count()).group_by(Badge.badge_id).all()
 	users = g.db.query(User.id).count()
 
