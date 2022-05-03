@@ -809,6 +809,7 @@ approved_embed_hosts = [
 	'rdrama.net',
 	'pcmemes.net',
 	'cringetopia.org',
+	'watchpeopledie.co',
 	'devrama.xyz',
 	'imgur.com',
 	'ibb.co',
