@@ -30,7 +30,7 @@
 		<td><img alt="{{badge.name}}" loading="lazy" src="/assets/images/badges/{{badge.id}}.webp?v=1016" width=45.83 height=50>
 		<td>{{badge.description}}</td>
 		{%- set ct = counts[badge.id] if badge.id in counts else (0, 0) %}
-		<td class="badges-rarity-qty">{{ ct[0] }}</td>
+		<td class="badges-rarity-qty"><a href="/badge_owners/{{badge.id}}">{{ ct[0] }}</a></td>
 		<td class="badges-rarity-ratio">{{ "{:0.3f}".format(ct[1]) }}%</td>
 	</tr>
 {% endfor %}
