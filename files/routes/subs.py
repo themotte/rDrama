@@ -1,10 +1,10 @@
 from files.__main__ import app, limiter, mail
 from files.helpers.alerts import *
 from files.helpers.wrappers import *
+from files.helpers.sanitize import sanitize_css
 from files.classes import *
 from .front import frontlist
-
-
+import cssutils
 
 @app.post("/exile/post/<pid>")
 @is_not_permabanned
@@ -336,7 +336,23 @@ def post_sub_css(v, sub):
 	
 	if not v.mods(sub.name): abort(403)
 
-	sub.css = request.values.get('css', '').strip()
+	css = request.values.get('css', '').strip()
+
+
+	parser = cssutils.CSSParser(raiseExceptions=True,fetcher=lambda url: None)
+
+	try: css = parser.parseString(css)
+	except Exception as e: return {"error": str(e)}, 400
+
+	for rule in css:
+		error = sanitize_css(rule)
+		if error: return render_template('sub/settings.html', v=v, sidebar=sub.sidebar, sub=sub, error=error)
+
+	css = css.cssText.decode('utf-8')
+
+	sub.css = css
+
+
 	g.db.add(sub)
 
 	g.db.commit()

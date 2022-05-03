@@ -4,6 +4,18 @@
 
 {% block content %}
 
+{% if error %}
+<div class="alert alert-danger alert-dismissible fade show mb-3 mt-4" role="alert">
+	<i class="fas fa-exclamation-circle my-auto"></i>
+	<span>
+		{{error}}
+	</span>
+	<button class="close" data-bs-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true"><i class="far fa-times"></i></span>
+	</button>
+</div>
+{% endif %}
+
 {% if msg %}
 	<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
 		<i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
@@ -110,8 +122,6 @@
 		</div>
 	</div>
 </div>
-
-
 
 <div class="row">
 	<div class="col col-md-8">

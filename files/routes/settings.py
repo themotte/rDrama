@@ -12,6 +12,7 @@ from files.helpers.sanitize import filter_emojis_only
 from files.helpers.discord import add_role
 from shutil import copyfile
 import requests
+import cssutils
 
 GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
@@ -641,6 +642,19 @@ def settings_profilecss_get(v):
 @auth_required
 def settings_profilecss(v):
 	profilecss = request.values.get("profilecss").strip().replace('\\', '').strip()[:4000]
+
+	parser = cssutils.CSSParser(raiseExceptions=True,fetcher=lambda url: None)
+
+	try: css = parser.parseString(profilecss)
+	except Exception as e: return {"error": str(e)}, 400
+
+	for rule in css:
+		error = sanitize_css(rule)
+		if error: return render_template("settings_profilecss.html", error=error, v=v)
+
+	profilecss = css.cssText.decode('utf-8')
+
+
 	v.profilecss = profilecss
 	g.db.add(v)
 	g.db.commit()

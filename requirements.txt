@@ -1,5 +1,6 @@
 beautifulsoup4
 bleach==4.1.0
+cssutils
 Flask
 Flask-Caching
 Flask-Compress
@@ -20,6 +21,7 @@ qrcode
 redis
 requests
 SQLAlchemy
+tldextract
 psycopg2-binary
 pusher_push_notifications
 pyenchant
