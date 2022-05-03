@@ -5073,3 +5073,9 @@ th, td {
 .text-green {
 	color: green !important;
 }
+
+.party-hat {
+    height: 20px;
+    position: absolute;
+    transform: translate(-36px, -10px);
+}
