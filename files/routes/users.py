@@ -554,6 +554,15 @@ def get_profilecss(username):
 	resp.headers.add("Content-Type", "text/css")
 	return resp
 
+@app.get("/id/<id>/profilecss")
+def get_profilecss_id(id):
+	user = get_account(id)
+	if user.profilecss: profilecss = user.profilecss
+	else: profilecss = ""
+	resp=make_response(profilecss)
+	resp.headers.add("Content-Type", "text/css")
+	return resp
+
 @app.get("/@<username>/song")
 def usersong(username):
 	user = get_user(username)
