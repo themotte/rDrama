@@ -1,14 +1,14 @@
 cd /rDrama
 cp ./env /env
 . /env
-sudo apt update
-sudo apt -y upgrade
-sudo apt -y install postgresql postgresql-contrib redis-server python3-pip libenchant1c2a ffmpeg
+apt update
+apt -y upgrade
+apt -y install postgresql postgresql-contrib redis-server python3-pip libenchant1c2a ffmpeg
 cp pg_hba.conf /etc/postgresql/12/main/pg_hba.conf
-sudo service postgresql restart
-sudo psql -U postgres -f schema.sql postgres
-sudo psql -U postgres -f seed-db.sql postgres
-sudo pip3 install -r requirements.txt
+service postgresql restart
+psql -U postgres -f schema.sql postgres
+psql -U postgres -f seed-db.sql postgres
+pip3 install -r requirements.txt
 mkdir /songs
 mkdir /images
 snap install opera-proxy
