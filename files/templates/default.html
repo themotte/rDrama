@@ -7,7 +7,7 @@
 	<script src="/assets/js/bootstrap.js?v=245"></script>
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=250">
+		<link rel="stylesheet" href="/assets/css/main.css?v=251">
 		<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=56">
 		{% if v.agendaposter %}
 			<style>
@@ -32,7 +32,7 @@
 		{% endif %}
 	{% else %}
 		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=250">
+		<link rel="stylesheet" href="/assets/css/main.css?v=251">
 		<link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=56">
 	{% endif %}
 
@@ -258,7 +258,7 @@
 			</a>
 		{% else %}
 			<a href="/">
-				<img alt="site banner" src="/assets/images/{{SITE_NAME}}/banner.webp?v=1045" width="100%">
+				<img alt="site banner" src="/assets/images/{{SITE_NAME}}/banner.webp?v=1046" width="100%">
 			</a>	
 		{% endif %}
 	{% endif %}
