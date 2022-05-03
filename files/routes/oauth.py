@@ -18,6 +18,7 @@ def authorize_prompt(v):
 
 @app.post("/authorize")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def authorize(v):
 
@@ -40,6 +41,7 @@ def authorize(v):
 
 @app.post("/api_keys")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @is_not_permabanned
 def request_api_keys(v):
 
@@ -81,6 +83,7 @@ def request_api_keys(v):
 
 @app.post("/delete_app/<aid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def delete_oauth_app(v, aid):
 
@@ -101,6 +104,7 @@ def delete_oauth_app(v, aid):
 
 @app.post("/edit_app/<aid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @is_not_permabanned
 def edit_oauth_app(v, aid):
 
@@ -264,6 +268,7 @@ def admin_apps_list(v):
 
 @app.post("/oauth/reroll/<aid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;30/minute;200/hour;1000/day", key_func=lambda:f'{request.host}-{session.get("lo_user")}')
 @auth_required
 def reroll_oauth_tokens(aid, v):
 
