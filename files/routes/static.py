@@ -66,10 +66,13 @@ def sidebar(v):
 
 @app.get("/stats")
 @auth_required
-@cache.memoize(timeout=86400, make_name=make_name)
 def participation_stats(v):
 
+	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=stats(site=SITE))
 
+
+@cache.memoize(timeout=86400)
+def stats(site=None):
 	day = int(time.time()) - 86400
 
 	week = int(time.time()) - 604800
@@ -200,7 +203,7 @@ def participation_stats(v):
 
 	g.db.commit()
 
-	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=stats)
+	return stats
 
 
 @app.get("/chart")
@@ -493,10 +496,8 @@ def robots_txt():
 		abort(404)
 	return f
 
-@app.get("/badges")
-@auth_required
-@cache.memoize(timeout=3600, make_name=make_name)
-def badges(v):
+@cache.memoize(timeout=3600)
+def badge_list(site):
 	badges = g.db.query(BadgeDef).order_by(BadgeDef.id).all()
 	counts_raw = g.db.query(Badge.badge_id, func.count()).group_by(Badge.badge_id).all()
 	users = g.db.query(User.id).count()
@@ -504,7 +505,13 @@ def badges(v):
 	counts = {}
 	for c in counts_raw:
 		counts[c[0]] = (c[1], float(c[1]) * 100 / max(users, 1))
+	
+	return badges, counts
 
+@app.get("/badges")
+@auth_required
+def badges(v):
+	badges, counts = badge_list(SITE)
 	return render_template("badges.html", v=v, badges=badges, counts=counts)
 
 @app.get("/blocks")
