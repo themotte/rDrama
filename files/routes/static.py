@@ -284,10 +284,6 @@ def cached_chart(kind, site):
 	comments_chart.set_ylabel("Comments")
 	comments_chart.set_xlabel("Time (UTC)")
 
-	signup_chart.legend(loc='upper left', frameon=True)
-	posts_chart.legend(loc='upper left', frameon=True)
-	comments_chart.legend(loc='upper left', frameon=True)
-
 	file = f"/{SITE}_{kind}.png"
 
 	plt.savefig(file)

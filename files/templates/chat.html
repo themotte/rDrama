@@ -40,6 +40,8 @@
 		#chat-window {
 			-ms-overflow-style: none;
 			scrollbar-width: none;
+			display: flex !important;
+			flex-direction: column-reverse !important;
 		}
 
 		.chat-mention {
@@ -188,7 +190,7 @@
 <input id="site_name" type="hidden" value="{{SITE_NAME}}">
 <input id="slurreplacer" type="hidden" value="{{v.slurreplacer}}">
 
-<script src="/chat.js?v=17"></script>
+<script src="/chat.js?v=18"></script>
 
 {% include "emoji_modal.html" %}
 {% include "expanded_image_modal.html" %}

@@ -3,7 +3,7 @@ cp ./env /env
 . /env
 apt update
 apt -y upgrade
-apt -y install git postgresql postgresql-contrib redis-server python3-pip libenchant1c2a ffmpeg tmux nginx
+apt -y install git postgresql postgresql-contrib redis-server python3-pip libenchant1c2a ffmpeg tmux nginx snapd
 cp pg_hba.conf /etc/postgresql/12/main/pg_hba.conf
 service postgresql restart
 psql -U postgres -f schema.sql postgres

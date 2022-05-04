@@ -59,8 +59,6 @@ socket.on('speak', function(json) {
 	let users = document.getElementsByClassName('userlink');
 	let last_user = users[users.length-1].innerHTML;
 
-	let scrolled_down = (box.scrollHeight - box.scrollTop <= window.innerHeight)
-
 	if (last_user == json['username']) {
 		document.getElementsByClassName('chat-line')[0].classList.remove('diff')
 		document.getElementsByClassName('userlink')[0].classList.add('d-none')
@@ -82,7 +80,6 @@ socket.on('speak', function(json) {
 	let line = document.getElementsByClassName('chat-line')[0].cloneNode(true)
 	bs_trigger(line)
 	box.append(line)
-	if (scrolled_down) box.scrollTo(0, box.scrollHeight)
 })
 
 
@@ -162,5 +159,3 @@ socket.on('typing', function (users){
 		document.getElementById('loading-indicator').classList.remove('d-none');
 	}
 })
-
-box.scrollTo(0, box.scrollHeight)
