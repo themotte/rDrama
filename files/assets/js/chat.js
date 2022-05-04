@@ -100,7 +100,10 @@ function send() {
 
 function quote(t) {
 	text = t.previousElementSibling.innerHTML.replace(/&gt;/g, ">").replace(/\n/g, "\n>")
-	textbox.value = '> ' + text + '\n\n@' + t.parentElement.previousElementSibling.innerHTML + ' '
+	let username
+	try {username = t.parentElement.previousElementSibling.innerHTML}
+	catch(e) {username = t.parentElement.parentElement.previousElementSibling.innerHTML}
+	textbox.value = '> ' + text + '\n\n@' + username + ' '
 	textbox.focus()
 	autoExpand(textbox);
 }
