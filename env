@@ -1,6 +1,6 @@
 MASTER_KEY=blahblahblah
 DOMAIN=localhost
-SITE_NAME=rDrama
+SITE_NAME=TheMotte
 GIPHY_KEY=blahblahblah
 DISCORD_SERVER_ID=blahblahblah
 DISCORD_CLIENT_ID=blahblahblah
