@@ -1,6 +1,5 @@
 beautifulsoup4
 bleach==4.1.0
-cssutils
 Flask
 Flask-Caching
 Flask-Compress

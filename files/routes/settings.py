@@ -12,7 +12,7 @@ from files.helpers.sanitize import filter_emojis_only
 from files.helpers.discord import add_role
 from shutil import copyfile
 import requests
-import cssutils
+import tldextract
 
 GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
@@ -643,16 +643,15 @@ def settings_profilecss_get(v):
 def settings_profilecss(v):
 	profilecss = request.values.get("profilecss").strip().replace('\\', '').strip()[:4000]
 
-	parser = cssutils.CSSParser(raiseExceptions=True,fetcher=lambda url: None)
 
-	try: css = parser.parseString(profilecss)
-	except Exception as e: return {"error": str(e)}, 400
-
-	for rule in css:
-		error = sanitize_css(rule)
-		if error: return render_template("settings_profilecss.html", error=error, v=v)
-
-	profilecss = css.cssText.decode('utf-8')
+	urls = list(css_regex.finditer(profilecss)) + list(css_regex2.finditer(profilecss))
+	for i in urls:
+		url = i.group(1)
+		if url.startswith('/'): continue
+		domain = tldextract.extract(url).registered_domain
+		if domain not in approved_embed_hosts:
+			error = f"The domain '{domain}' is not allowed, please use one of these domains\n\n{approved_embed_hosts}."
+			return render_template("settings_profilecss.html", error=error, v=v)
 
 
 	v.profilecss = profilecss

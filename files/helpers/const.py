@@ -812,7 +812,6 @@ approved_embed_hosts = [
 	'watchpeopledie.co',
 	'devrama.xyz',
 	'imgur.com',
-	'ibb.co',
 	'lain.la',
 	'pngfind.com',
 	'kym-cdn.com',
@@ -857,7 +856,11 @@ approved_embed_hosts = [
 	'githubusercontent.com',
 	'unilad.co.uk',
 	'grrrgraphics.com',
-	'redditmedia.com'
+	'redditmedia.com',
+	'deviantart.com',
+	'deviantart.net',
+	'googleapis.com',
+	'bing.com'
 	]
 
 hosts = "|".join(approved_embed_hosts).replace('.','\.')
@@ -875,6 +878,9 @@ youtube_regex = re.compile('(<p>[^<]*)(https:\/\/youtube\.com\/watch\?v\=([a-z0-
 yt_id_regex = re.compile('[a-z0-9-_]{5,20}', flags=re.I|re.A)
 
 image_regex = re.compile("(^|\s)(https:\/\/[\w\-.#&/=\?@%;+]{5,250}(\.png|\.jpg|\.jpeg|\.gif|\.webp|maxwidth=9999|fidelity=high))($|\s)", flags=re.I|re.A)
+
+css_regex = re.compile('''url\(['"]?(.*?)['"]?\)''', flags=re.I|re.A)
+css_regex2 = re.compile('''['"](http.*?)['"]''', flags=re.I|re.A)
 
 procoins_li = (0,2500,5000,10000,25000,50000,125000,250000)
 

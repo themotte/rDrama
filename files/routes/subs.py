@@ -1,10 +1,9 @@
 from files.__main__ import app, limiter, mail
 from files.helpers.alerts import *
 from files.helpers.wrappers import *
-from files.helpers.sanitize import sanitize_css
 from files.classes import *
 from .front import frontlist
-import cssutils
+import tldextract
 
 @app.post("/exile/post/<pid>")
 @is_not_permabanned
@@ -339,22 +338,19 @@ def post_sub_css(v, sub):
 	css = request.values.get('css', '').strip()
 
 
-	parser = cssutils.CSSParser(raiseExceptions=True,fetcher=lambda url: None)
+	urls = list(css_regex.finditer(css)) + list(css_regex2.finditer(css))
+	for i in urls:
+		url = i.group(1)
+		if url.startswith('/'): continue
+		domain = tldextract.extract(url).registered_domain
+		if domain not in approved_embed_hosts:
+			error = f"The domain '{domain}' is not allowed, please use one of these domains\n\n{approved_embed_hosts}."
+			return render_template('sub/settings.html', v=v, sidebar=sub.sidebar, sub=sub, error=error)
 
-	try: css = parser.parseString(css)
-	except Exception as e: return {"error": str(e)}, 400
 
-	for rule in css:
-		error = sanitize_css(rule)
-		if error: return render_template('sub/settings.html', v=v, sidebar=sub.sidebar, sub=sub, error=error)
-
-	css = css.cssText.decode('utf-8')
 
 	sub.css = css
-
-
 	g.db.add(sub)
-
 	g.db.commit()
 
 	return redirect(f'/h/{sub.name}/settings')
