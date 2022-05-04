@@ -45,7 +45,7 @@ if SITE_NAME == 'Cringetopia':
 		"i hate carp": "i love Carp",
 		"heil hitler": "hello kitty",
 
-		" fag ": " cute twink ",
+		" fag": " cute twink",
 	}
 else:
 	SLURS = {
@@ -104,10 +104,10 @@ else:
 		"elon musk": "rocket daddy",
 		"fake and gay": "fake and straight",
 
-		" rapist ": " male feminist ",
-		" pedo ": " libertarian ",
-		" kys ": " keep yourself safe ",
-		" fag ": " cute twink ",
+		" rapist": " male feminist",
+		" pedo": " libertarian",
+		" kys": " keep yourself safe",
+		" fag": " cute twink",
 	}
 
 single_words = "|".join([slur.lower() for slur in SLURS.keys()])
