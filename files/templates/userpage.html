@@ -59,10 +59,6 @@
 								</span>
 								{% endif %}
 
-								{% if SITE_NAME=='rDrama' and u.house %}
-									<img class="ml-3" src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?v=7" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="House {{u.house}}" alt="House {{u.house}}">
-								{% endif %}
-
 								{% if u.verified %}
 									<span><i class="fas fa-badge-check align-middle ml-2 {% if u.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if u.verifiedcolor %}#{{u.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{u.verified}}"></i></span>
 								{% endif %}
@@ -378,10 +374,6 @@
 					<span>
 						<i class="fas fa-user-tag text-info align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Original Username: @{{u.original_username}}"></i>
 					</span>
-				{% endif %}
-
-				{% if SITE_NAME=='rDrama' and u.house %}
-					<img class="ml-2" src="/assets/images/{{SITE_NAME}}/houses/{{u.house}}.webp?v=7" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="House {{u.house}}" alt="House {{u.house}}">
 				{% endif %}
 
 				{% if u.verified %}

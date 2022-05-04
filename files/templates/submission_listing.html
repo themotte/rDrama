@@ -186,9 +186,6 @@
 				{% if p.ghost %}
 					👻
 				{% else %}
-					{% if SITE_NAME=='rDrama' and p.author.house %}
-						<img src="/assets/images/{{SITE_NAME}}/houses/{{p.author.house}}.webp?v=7" height="20" data-bs-toggle="tooltip" data-bs-placement="bottom" title="House {{p.author.house}}" alt="House {{p.author.house}}">
-					{% endif %}
 
 					{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if p.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{p.author.verified}}"></i>
 					{% endif %}
