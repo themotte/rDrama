@@ -181,6 +181,13 @@ class User(Base):
 
 		return time.strftime("%d %b %Y", time.gmtime(self.created_utc))
 
+
+	@property
+	@lazy
+	def is_cakeday(self):
+		print(time.now(), flush=True)
+		return True
+
 	@property
 	@lazy
 	def discount(self):
