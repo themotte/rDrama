@@ -161,7 +161,7 @@ def notifications(v):
 @app.get("/catalog")
 @app.get("/h/<sub>")
 @app.get("/s/<sub>")
-@limiter.limit("3/second;30/minute;1000/hour;5000/day")
+@limiter.limit("3/second;30/minute;5000/hour;10000/day")
 @auth_desired
 def front_all(v, sub=None, subdomain=None):
 	if sub: sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
