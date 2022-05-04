@@ -3687,7 +3687,7 @@ It is not surprising that admins would remove such a symbol and this "controvers
 {[para]}
 People suggest the worst snappy quotes
 {[para]}
-You had your chance. Downvoted and reported. This conversation is over.
+▼You had your chance. Downvoted and reported. This conversation is over.
 {[para]}
 # I just hacked your web application.
 

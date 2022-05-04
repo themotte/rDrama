@@ -1284,6 +1284,9 @@ def submit_post(v, sub=None):
 				if body.startswith('OP is a Trump supporter'):
 					flag = Flag(post_id=post.id, user_id=SNAPPY_ID, reason='Trump supporter')
 					g.db.add(flag)
+				elif body.startswith('You had your chance. Downvoted and reported'):
+					flag = Flag(post_id=post.id, user_id=SNAPPY_ID, reason='Retard')
+					g.db.add(flag)
 			elif body.startswith('▲'):
 				body = body[1:]
 				vote = Vote(user_id=SNAPPY_ID,
