@@ -47,15 +47,31 @@ def marseys(v):
 		marseys = g.db.query(Marsey).order_by(Marsey.count.desc())
 	return render_template("marseys.html", v=v, marseys=marseys)
 
-@app.get("/marsey_list")
+@app.get("/marsey_list.json")
 @cache.memoize(timeout=600)
 def marsey_list():
-	if SITE_NAME == 'rDrama':
-		marseys = [f"{x.name} : {y} {x.tags}" for x, y in g.db.query(Marsey, User.username).join(User, User.id==Marsey.author_id).order_by(Marsey.count.desc())]
-	else:
-		marseys = [f"{x.name} : {x.tags}" for x in g.db.query(Marsey).order_by(Marsey.count.desc())]
+	# From database
+	emojis = [{
+		"name": emoij.name,
+		"author": author if SITE_NAME == 'rDrama' else "rDrama's chads",
+		# yikes, I don't really like this DB schema. Next time be better
+		"tags": emoij.tags.split(" ") + [emoij.name[len("marsey"):] if emoij.name.startswith("marsey") else emoij.name] + ([author] if SITE_NAME == 'rDrama' else []),
+		"count": emoij.count,
+		"class": "Marsey"
+	} for emoij, author in g.db.query(Marsey, User.username).join(User, User.id==Marsey.author_id).order_by(Marsey.count.desc())]
 
-	return str(marseys).replace("'",'"')
+	# Stastic shit
+	shit = open("files/assets/shit emojis.json", "r", encoding="utf-8")
+	emojis = emojis + json.load(shit)
+	shit.close()
+
+	if SITE_NAME == 'Cringetopia':
+		shit = open("files/assets/shit emojis.cringetopia.json", "r", encoding="utf-8")
+		emojis = emojis + json.load(shit)
+		shit.close()
+
+	# return str(marseys).replace("'",'"')
+	return jsonify(emojis)
 
 @app.get('/rules')
 @app.get('/sidebar')
