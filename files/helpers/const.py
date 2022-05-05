@@ -49,6 +49,10 @@ if SITE_NAME == 'Cringetopia':
 	}
 else:
 	SLURS = {
+		"california": "commiefornia",
+		"hollywood": "hollyweird",
+		"tiananmen square": "tiananmen square didn't happen (but it should have)",
+		"dasha": "beautiful angelic perfect Dasha/future Mrs. Carp",
 		"retarded": "r-slurred",
 		"retard": "r-slur",
 		"gayfag": "gaystrag",
