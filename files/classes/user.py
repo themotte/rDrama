@@ -181,6 +181,16 @@ class User(Base):
 
 		return time.strftime("%d %b %Y", time.gmtime(self.created_utc))
 
+
+	@property
+	@lazy
+	def is_cakeday(self):
+		if time.time() - self.created_utc > 363 * 86400:
+			date = time.strftime("%d %b", time.gmtime(self.created_utc))
+			now = time.strftime("%d %b", time.gmtime())
+			if date == now: return True
+		return False
+
 	@property
 	@lazy
 	def discount(self):
