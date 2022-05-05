@@ -109,14 +109,12 @@ else:
 		"elon musk": "rocket daddy",
 		"fake and gay": "fake and straight",
 
+		" rapist": " male feminist",
+
 		" kys ": " keep yourself safe ",
-
-		" rapist ": " male feminist ",
 		" pedo ": " libertarian ",
-		" fag ": " cute twink ",
-
-		" rapists ": " male feminists ",
 		" pedos ": " libertarians ",
+		" fag ": " cute twink ",
 		" fags ": " cute twinks ",
 	}
 
