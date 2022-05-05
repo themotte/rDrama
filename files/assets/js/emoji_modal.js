@@ -32,9 +32,6 @@ const emoijWorkingDOM = document.getElementById("emojis-work");
 /** @type {HTMLInputElement} */
 const emojiSearchBarDOM = document.getElementById('emoji_search');
 
-/** @type {HTMLSelectElement} */
-const emojiSearchAlgoDOM = document.getElementById("emoji-algo");
-
 /** @type {HTMLInputElement} */
 let emojiInputTargetDOM = undefined;
 
