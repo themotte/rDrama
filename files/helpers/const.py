@@ -45,12 +45,11 @@ if SITE_NAME == 'Cringetopia':
 		"i hate carp": "i love Carp",
 		"heil hitler": "hello kitty",
 
-		" fag": " cute twink",
+		" fag ": " cute twink ",
+		" fags ": " cute twinks ",
 	}
 else:
 	SLURS = {
-		" fag": " cute twink",
-
 		"california": "commiefornia",
 		"hollywood": "hollyweird",
 		"tiananmen square": "tiananmen square didn't happen (but it should have)",
@@ -111,8 +110,12 @@ else:
 		"fake and gay": "fake and straight",
 
 		" rapist": " male feminist",
-		" pedo": " libertarian",
-		" kys": " keep yourself safe",
+
+		" kys ": " keep yourself safe ",
+		" pedo ": " libertarian ",
+		" pedos ": " libertarians ",
+		" fag ": " cute twink ",
+		" fags ": " cute twinks ",
 	}
 
 single_words = "|".join([slur.lower() for slur in SLURS.keys()])
