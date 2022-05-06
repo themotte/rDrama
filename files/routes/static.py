@@ -16,24 +16,6 @@ def rdrama(id, title):
 	id = ''.join(f'{x}/' for x in id)
 	return redirect(f'/archives/drama/comments/{id}{title}.html')
 
-@app.get('/logged_out/')
-@app.get('/logged_out/<path:old>')
-def logged_out(old = ""):
-	# Remove trailing question mark from request.full_path which flask adds if there are no query parameters
-	redirect_url = request.full_path.replace("/logged_out", "", 1)
-	if redirect_url.endswith("?"):
-		redirect_url = redirect_url[:-1]
-
-	# Handle cases like /logged_out?asdf by adding a slash to the beginning
-	if not redirect_url.startswith('/'):
-		redirect_url = f"/{redirect_url}"
-
-	# Prevent redirect loop caused by visiting /logged_out/logged_out/logged_out/etc...
-	if redirect_url.startswith('/logged_out'):
-		abort(400)
-
-	return redirect(redirect_url)
-
 
 @app.get("/marseys")
 @auth_required
@@ -75,8 +57,13 @@ def marsey_list():
 
 @app.get('/rules')
 @app.get('/sidebar')
+@app.get('/logged_out/rules')
+@app.get('/logged_out/sidebar')
 @auth_desired
 def sidebar(v):
+	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
+	if v and request.path.startswith('/logged_out'): v = None
+
 	return render_template('sidebar.html', v=v)
 
 

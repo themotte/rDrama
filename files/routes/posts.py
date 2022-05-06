@@ -114,8 +114,15 @@ def submit_get(v, sub=None):
 @app.get("/post/<pid>/<anything>")
 @app.get("/h/<sub>/post/<pid>")
 @app.get("/h/<sub>/post/<pid>/<anything>")
+@app.get("/logged_out/post/<pid>")
+@app.get("/logged_out/post/<pid>/<anything>")
+@app.get("/logged_out/h/<sub>/post/<pid>")
+@app.get("/logged_out/h/<sub>/post/<pid>/<anything>")
 @auth_desired
 def post_id(pid, anything=None, v=None, sub=None):
+
+	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
+	if v and request.path.startswith('/logged_out'): v = None
 
 	try: pid = int(pid)
 	except Exception as e: pass
