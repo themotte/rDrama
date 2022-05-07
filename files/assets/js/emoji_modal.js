@@ -10,7 +10,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-Copyright (C) 2022 Dr Steven Transmisia, anti-hate engineer
+Copyright (C) 2022 Dr Steven Transmisia, anti-evil engineer
 */
 
 // Status
@@ -42,20 +42,18 @@ const favorite_emojis = JSON.parse(localStorage.getItem("favorite_emojis")) || {
 let emojiDOMs = {};
 
 const EMOIJ_SEARCH_ENGINE_MIN_INTERVAL = 350;
-class EmojiSearchEngine {
-	constructor () {
-		this.working = false;
-		this.queries = [];
-	}
-
-	addQuery(query) {
+let emojiSearcher = {
+	working: false,
+	queries: [],
+	
+	addQuery: function(query)
+	{
 		this.queries.push(query);
 		if(!this.working)
 			this.work();
-		
-	}
-
-	async work() {
+	},
+	
+	work: async function work() {
 		this.working = true;
 
 		while(this.queries.length > 0)
@@ -91,8 +89,7 @@ class EmojiSearchEngine {
 
 		this.working = false;
 	}
-}
-let emojiSearcher = new EmojiSearchEngine();
+};
 
 // tags dictionary. KEEP IT SORT
 class EmoijsDictNode
@@ -171,7 +168,7 @@ emojiRequest.open("GET", '/marsey_list.json');
 emojiRequest.onload = async (e) => {
 	let emojis  = JSON.parse(emojiRequest.response);
 	if(! (emojis instanceof Array ))
-		throw new TypeError("[EMOIJ DIALOG] rDrama's server should have sent a JSON-coded Array!")
+		throw new TypeError("[EMOIJ DIALOG] rDrama's server should have sent a JSON-coded Array!");
 
 	let classes = new Set();
 	const bussyDOM = document.createElement("div");
@@ -321,18 +318,38 @@ function emojiAddToInput(event)
 			strToInsert = emojiSelectSuffixDOMs[i].value + strToInsert;
 
 	strToInsert = ":" + strToInsert + ":"
+	const newPos =  emojiInputTargetDOM.selectionStart + strToInsert.length;
+	
 	emojiInputTargetDOM.setRangeText(strToInsert);
-	emojiInputTargetDOM.selectionStart = emojiInputTargetDOM.selectionEnd = emojiInputTargetDOM.selectionStart + strToInsert.length;
-
+	
+	// Sir, come out and drink your Chromium complaint web
+	// I HATE CHROME. I HATE CHROME
+	if(window.chrome !== undefined)
+		setTimeout(function(){
+			console.warn("Chrome detected, r-slured mode enabled.");
+		
+			// AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+			// JUST WORK STUPID CHROME PIECE OF SHIT
+			emojiInputTargetDOM.focus();
+			for(let i = 0; i < 2; i++)
+				emojiInputTargetDOM.setSelectionRange(newPos, newPos);
+			
+			emojiInputTargetDOM.focus();
+			for(let i = 0; i < 2; i++)
+				emojiInputTargetDOM.setSelectionRange(newPos, newPos);
+		}, 1);
+	else
+		emojiInputTargetDOM.setSelectionRange(newPos, newPos);
+	
 	// kick-start the preview
 	emojiInputTargetDOM.dispatchEvent(new Event('input'));
 
 	// Update favs. from old code
 	if (favorite_emojis[event.currentTarget.dataset.emojiName])
-		favorite_emojis[event.currentTarget.dataset.emojiName] += 1
+		favorite_emojis[event.currentTarget.dataset.emojiName] += 1;
 	else
-		favorite_emojis[event.currentTarget.dataset.emojiName] = 1
-	localStorage.setItem("favorite_emojis", JSON.stringify(favorite_emojis))
+		favorite_emojis[event.currentTarget.dataset.emojiName] = 1;
+	localStorage.setItem("favorite_emojis", JSON.stringify(favorite_emojis));
 }
 
 function loadEmojis(inputTargetIDName)
@@ -343,5 +360,5 @@ function loadEmojis(inputTargetIDName)
 		emojiRequest.send();
 	}
 
-	emojiInputTargetDOM = document.getElementById(inputTargetIDName)
+	emojiInputTargetDOM = document.getElementById(inputTargetIDName);
 }
