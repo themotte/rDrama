@@ -56,6 +56,12 @@
 
 			{% block navbar %}
 			<div class="d-flex align-items-center">
+				{% if request.path=='/catalog' %}
+					<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Catalog View" class="btn btn-primary text-primary mx-2" href="/?sort={{sort}}&t={{t}}&ccmode=false"><i class="fas fa-columns-3 mr-2 "></i>Catalog</a>
+				{% else %}
+					<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Catalog View" class="btn btn-secondary mx-2" href="/catalog?sort={{sort}}&t={{t}}&ccmode=false"><i class="fas fa-columns-3 mr-2 "></i>Catalog</a>
+				{% endif %}
+
 				{% if v and SITE_NAME == 'rDrama' %}
 					{% if v.paid_dues %}
 						{% if ccmode=="true"%}
