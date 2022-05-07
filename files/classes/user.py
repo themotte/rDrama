@@ -192,6 +192,7 @@ class User(Base):
 				if not self.has_badge(134):
 					new_badge = Badge(badge_id=134, user_id=self.id)
 					g.db.add(new_badge)
+					g.db.commit()
 				return True
 		return False
 

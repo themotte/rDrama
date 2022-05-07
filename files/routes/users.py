@@ -776,7 +776,8 @@ def messagereply(v):
 			g.db.add(notif)
 
 		ids = [c.top_comment.id] + [x.id for x in c.top_comment.replies]
-		notifications = g.db.query(Notification).filter(Notification.comment_id.in_(ids))
+		uids = [x.id for x in admins]
+		notifications = g.db.query(Notification).filter(Notification.comment_id.in_(ids), Notification.user_id.in_(uids))
 		for n in notifications:
 			g.db.delete(n)
 

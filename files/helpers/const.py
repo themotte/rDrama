@@ -32,8 +32,8 @@ if SITE_NAME == 'Cringetopia':
 	SLURS = {
 		"retarded": "neurodivergent",
 		"retard": "neurodivergent",
-		"faggotry": "cute twinkry",
 		"faggot": "cute twink",
+		"fag": "cute twink",
 		"n1gger": "🏀",
 		"nlgger": "🏀",
 		"nigger": "🏀",
@@ -43,11 +43,7 @@ if SITE_NAME == 'Cringetopia':
 		"autistic": "neurodivergent",
 		"holohoax": "i tried to claim the Holocaust didn't happen because I am a pencil-dicked imbecile and the word filter caught me lol",
 		"i hate carp": "i love Carp",
-		"heil hitler": "hello kitty",
-
-		" fag ": " cute twink ",
-		" fags ": " cute twinks ",
-	}
+		"heil hitler": "hello kitty",	}
 else:
 	SLURS = {
 		"california": "commiefornia",
@@ -61,8 +57,8 @@ else:
 		"richfag": "richstrag",
 		"newfag": "newstrag",
 		"oldfag": "oldstrag",
-		"faggotry": "cute twinkry",
 		"faggot": "cute twink",
+		"fag": "cute twink",
 		"pedophile": "libertarian",
 		"kill yourself": "keep yourself safe",
 		"n1gger": "BIPOC",
@@ -114,8 +110,6 @@ else:
 		" kys ": " keep yourself safe ",
 		" pedo ": " libertarian ",
 		" pedos ": " libertarians ",
-		" fag ": " cute twink ",
-		" fags ": " cute twinks ",
 	}
 
 single_words = "|".join([slur.lower() for slur in SLURS.keys()])
@@ -893,6 +887,8 @@ youtube_regex = re.compile('(<p>[^<]*)(https:\/\/youtube\.com\/watch\?v\=([a-z0-
 yt_id_regex = re.compile('[a-z0-9-_]{5,20}', flags=re.I|re.A)
 
 image_regex = re.compile("(^|\s)(https:\/\/[\w\-.#&/=\?@%;+]{5,250}(\.png|\.jpg|\.jpeg|\.gif|\.webp|maxwidth=9999|fidelity=high))($|\s)", flags=re.I|re.A)
+
+link_fix_regex = re.compile("(?!.*(http|\/))(.*\[[^\]]+\]\()([^)]+\))", flags=re.A)
 
 css_regex = re.compile('''url\(['"]?(.*?)['"]?\)''', flags=re.I|re.A)
 css_regex2 = re.compile('''['"](http.*?)['"]''', flags=re.I|re.A)

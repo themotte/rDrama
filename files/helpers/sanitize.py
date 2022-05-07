@@ -137,6 +137,8 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	sanitized = image_check_regex.sub(r'\1', sanitized)
 
+	sanitized = link_fix_regex.sub(r'\2https://\3', sanitized)
+
 	sanitized = markdown(sanitized)
 
 	sanitized = strikethrough_regex.sub(r'<del>\1</del>', sanitized)

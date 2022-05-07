@@ -34,13 +34,13 @@ def marseys(v):
 def marsey_list():
 	# From database
 	emojis = [{
-		"name": emoij.name,
+		"name": emoji.name,
 		"author": author if SITE_NAME == 'rDrama' else "rDrama's chads",
 		# yikes, I don't really like this DB schema. Next time be better
-		"tags": emoij.tags.split(" ") + [emoij.name[len("marsey"):] if emoij.name.startswith("marsey") else emoij.name] + ([author] if SITE_NAME == 'rDrama' else []),
-		"count": emoij.count,
+		"tags": emoji.tags.split(" ") + [emoji.name[len("marsey"):] if emoji.name.startswith("marsey") else emoji.name] + ([author] if SITE_NAME == 'rDrama' else []),
+		"count": emoji.count,
 		"class": "Marsey"
-	} for emoij, author in g.db.query(Marsey, User.username).join(User, User.id==Marsey.author_id).order_by(Marsey.count.desc())]
+	} for emoji, author in g.db.query(Marsey, User.username).join(User, User.id==Marsey.author_id).order_by(Marsey.count.desc())]
 
 	# Stastic shit
 	shit = open("files/assets/shit emojis.json", "r", encoding="utf-8")
