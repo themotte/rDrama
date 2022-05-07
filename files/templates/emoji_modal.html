@@ -29,19 +29,19 @@
 				<fieldset class="p-2">
 					<label style="display: inline">Options:</legend>
 
-					<div style="display: inline" title="Makes the emoji larger">
-						<input type="checkbox" id="emoij-sel-0" value="#" class="emoij-suffix">
-						<label for="emoij-sel-0">Large</label>
+					<div style="display: inline" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Makes the emoji larger">
+						<input type="checkbox" id="emoji-sel-0" value="#" class="emoji-suffix">
+						<label for="emoji-sel-0">Large</label>
 					</div>
 
-					<div style="display: inline" title="Mirror the emoji along the Y axis">
-						<input type="checkbox" id="emoij-sel-1" value="!" class="emoij-suffix">
-						<label for="emoij-sel-1">Mirror</label>
+					<div style="display: inline" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mirror the emoji along the Y axis">
+						<input type="checkbox" id="emoji-sel-1" value="!" class="emoji-suffix">
+						<label for="emoji-sel-1">Mirror</label>
 					</div>
 
-					<div style="display: inline" title="Adds a hand that pats the emoji.&#10;Does not work with animated emoji">
-						<input type="checkbox" id="emoij-sel-2" value="pat" class="emoij-postfix">
-						<label for="emoij-sel-2">Pat</label>
+					<div style="display: inline" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Adds a hand that pats the emoji">
+						<input type="checkbox" id="emoji-sel-2" value="pat" class="emoji-postfix">
+						<label for="emoji-sel-2">Pat</label>
 					</div>
 				</fieldset>
 				<!--
@@ -70,7 +70,7 @@
 								border: none
 							}
 						</style>
-						<template id="emoij-button-template">
+						<template id="emoji-button-template">
 							<button class="btn m-1 px-0 emoji2" data-bs-toggle="tooltip" delay:="0">
 								<img loading="lazy" width=50>
 							</button>
@@ -83,4 +83,4 @@
 	</div>
 </div>
 
-<script src="/assets/js/emoji_modal.js?v=274"></script>
+<script src="/assets/js/emoji_modal.js?v=275"></script>

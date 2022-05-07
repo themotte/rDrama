@@ -58,9 +58,3 @@ def send_discord_message(message):
 	data={"content": message}
 	requests.post("https://discordapp.com/api/channels/924485611715452940/messages", headers=headers, data=data, timeout=5)
 	requests.post("https://discordapp.com/api/channels/924486091795484732/messages", headers=headers, data=data, timeout=5)
-
-
-def send_cringetopia_message(message):
-	headers = {"Authorization": f"Bot {BOT_TOKEN}"}
-	data={"content": message}
-	requests.post("https://discordapp.com/api/channels/965264044531527740/messages", headers=headers, data=data, timeout=5)

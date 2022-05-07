@@ -14,20 +14,20 @@ Copyright (C) 2022 Dr Steven Transmisia, anti-hate engineer
 */
 
 // Status
-let emoijEngineStarted = false;
+let emojiEngineStarted = false;
 
 // DOM stuff
 const classesSelectorDOM = document.getElementById("emoji-modal-tabs");
-const emojiButtonTemplateDOM = document.getElementById("emoij-button-template");
+const emojiButtonTemplateDOM = document.getElementById("emoji-button-template");
 const emojiResultsDOM = document.getElementById("tab-content");
 
 /** @type {HTMLInputElement[]} */
-const emojiSelectSuffixDOMs = document.getElementsByClassName("emoij-suffix");
+const emojiSelectSuffixDOMs = document.getElementsByClassName("emoji-suffix");
 /** @type {HTMLInputElement[]} */
-const emojiSelectPostfixDOMs= document.getElementsByClassName("emoij-postfix");
+const emojiSelectPostfixDOMs= document.getElementsByClassName("emoji-postfix");
 
 const emojiNotFoundDOM = document.getElementById("no-emojis-found");
-const emoijWorkingDOM = document.getElementById("emojis-work");
+const emojiWorkingDOM = document.getElementById("emojis-work");
 
 /** @type {HTMLInputElement} */
 const emojiSearchBarDOM = document.getElementById('emoji_search');
@@ -38,8 +38,8 @@ let emojiInputTargetDOM = undefined;
 // Emojis usage stats. I don't really like this format but I'll keep it for backward comp.
 const favorite_emojis = JSON.parse(localStorage.getItem("favorite_emojis")) || {};
 
-/** Associative array of all the emoijs' DOM */
-let emoijDOMs = {};
+/** Associative array of all the emojis' DOM */
+let emojiDOMs = {};
 
 const EMOIJ_SEARCH_ENGINE_MIN_INTERVAL = 350;
 class EmojiSearchEngine {
@@ -75,10 +75,10 @@ class EmojiSearchEngine {
 			}
 
 			// Search
-			const resultSet = emoijsSearchDictionary.searchFor(query);
+			const resultSet = emojisSearchDictionary.searchFor(query);
 
 			// update stuff 
-			for(const [emojiName, emojiDOM] of Object.entries(emoijDOMs))
+			for(const [emojiName, emojiDOM] of Object.entries(emojiDOMs))
 				emojiDOM.hidden = !resultSet.has(emojiName);
 
 			emojiNotFoundDOM.hidden = resultSet.size !== 0;
@@ -95,18 +95,18 @@ class EmojiSearchEngine {
 let emojiSearcher = new EmojiSearchEngine();
 
 // tags dictionary. KEEP IT SORT
-class EmoijsDictNode
+class EmojisDictNode
 {
 	constructor(tag, name) {
 		this.tag = tag;
-		this.emoijNames = [name];
+		this.emojiNames = [name];
 	}
 }
-const emoijsSearchDictionary = {
+const emojisSearchDictionary = {
 	dict: [],
 
-	updateTag: function(tag, emoijName) {
-		if(tag === undefined || emoijName === undefined)
+	updateTag: function(tag, emojiName) {
+		if(tag === undefined || emojiName === undefined)
 			return;
 
 		let low = 0;
@@ -122,13 +122,13 @@ const emoijsSearchDictionary = {
 
 		let target = low;
 		if(this.dict[target] !== undefined && this.dict[target].tag === tag)
-			this.dict[target].emoijNames.push(emoijName);
+			this.dict[target].emojiNames.push(emojiName);
 		else
-			this.dict.splice(target ,0,new EmoijsDictNode(tag, emoijName));
+			this.dict.splice(target ,0,new EmojisDictNode(tag, emojiName));
 	},
 
 	/**
-	 * We find the name of each emoijs that has a tag that starts with query.
+	 * We find the name of each emojis that has a tag that starts with query.
 	 * 
 	 * Basically I run a binary search to find a tag that starts with a query, then I look left and right
 	 * for other tags tat start with the query. As the array is ordered this algo is sound.
@@ -154,22 +154,22 @@ const emoijsSearchDictionary = {
 
 		let target = low;
 		for(let i = target; i >= 0 && this.dict[i].tag.startsWith(query); i--)
-			for(let j = 0; j < this.dict[i].emoijNames.length; j++)
-				result = result.add(this.dict[i].emoijNames[j]);
+			for(let j = 0; j < this.dict[i].emojiNames.length; j++)
+				result = result.add(this.dict[i].emojiNames[j]);
 		
 		for(let i = target + 1; i < this.dict.length && this.dict[i].tag.startsWith(query); i++)
-			for(let j = 0; j < this.dict[i].emoijNames.length; j++)
-				result = result.add(this.dict[i].emoijNames[j]);
+			for(let j = 0; j < this.dict[i].emojiNames.length; j++)
+				result = result.add(this.dict[i].emojiNames[j]);
 		
 		return result;
 	}
 };
 
-// get public emoijs list
-const emoijRequest = new XMLHttpRequest();
-emoijRequest.open("GET", '/marsey_list.json');
-emoijRequest.onload = async (e) => {
-	let emojis  = JSON.parse(emoijRequest.response);
+// get public emojis list
+const emojiRequest = new XMLHttpRequest();
+emojiRequest.open("GET", '/marsey_list.json');
+emojiRequest.onload = async (e) => {
+	let emojis  = JSON.parse(emojiRequest.response);
 	if(! (emojis instanceof Array ))
 		throw new TypeError("[EMOIJ DIALOG] rDrama's server should have sent a JSON-coded Array!")
 
@@ -181,23 +181,23 @@ emoijRequest.onload = async (e) => {
 	{
 		let emoji = emojis[i];
 
-		emoijsSearchDictionary.updateTag(emoji.name, emoji.name);
+		emojisSearchDictionary.updateTag(emoji.name, emoji.name);
 		if(emoji.author !== undefined)
-			emoijsSearchDictionary.updateTag(emoji.author.toLowerCase(), emoji.name);
+			emojisSearchDictionary.updateTag(emoji.author.toLowerCase(), emoji.name);
 
 		if(emoji.tags instanceof Array)
 			for(let i = 0; i < emoji.tags.length; i++)
-				emoijsSearchDictionary.updateTag(emoji.tags[i], emoji.name);
+				emojisSearchDictionary.updateTag(emoji.tags[i], emoji.name);
 
 		classes.add(emoji.class);
 
-		// Create emoij DOM
+		// Create emoji DOM
 		const emojiDOM = document.importNode(emojiButtonTemplateDOM.content, true).children[0];
 
 		emojiDOM.title = emoji.name + "\nauthor\t" + emoji.author + "\nused\t" + emoji.count;
 		emojiDOM.dataset.className = emoji.class;
 		emojiDOM.dataset.emojiName = emoji.name;
-		emojiDOM.onclick = emoijAddToInput;
+		emojiDOM.onclick = emojiAddToInput;
 		emojiDOM.hidden = true; 
 
 		const emojiIMGDOM = emojiDOM.children[0];
@@ -208,7 +208,7 @@ emoijRequest.onload = async (e) => {
 		emojiIMGDOM.loading = "lazy";
 
 		// Save reference
-		emoijDOMs[emoji.name] = emojiDOM;
+		emojiDOMs[emoji.name] = emojiDOM;
 
 		// Add to the document!
 		bussyDOM.appendChild(emojiDOM);
@@ -238,15 +238,15 @@ emoijRequest.onload = async (e) => {
 	);
 			
 	for (const emoji of Object.keys(sortable).slice(0, 25))
-		if(emoijDOMs[emoji] instanceof HTMLElement)
-			emoijDOMs[emoji].hidden = false;
+		if(emojiDOMs[emoji] instanceof HTMLElement)
+			emojiDOMs[emoji].hidden = false;
 	
 	// Send it to the render machine! 
 	emojiResultsDOM.appendChild(bussyDOM);
 	console.log("Ho impiegato " + (Date.now() - startTime) + " ms per generare il DOM delle emoji (bussy)");
 
 	emojiResultsDOM.hidden = false;
-	emoijWorkingDOM.hidden = true;
+	emojiWorkingDOM.hidden = true;
 	emojiSearchBarDOM.disabled = false;
 }
 
@@ -264,7 +264,7 @@ function switchEmojiTab(e)
 	// Special case: favorites
 	if(className === "favorite")
 	{
-		for(const emojiDOM of Object.values(emoijDOMs))
+		for(const emojiDOM of Object.values(emojiDOMs))
 			emojiDOM.hidden = true;
 
 		// copied from the old one
@@ -273,13 +273,13 @@ function switchEmojiTab(e)
 		);
 		
 		for (const emoji of Object.keys(sortable).slice(0, 25))
-			if(emoijDOMs[emoji] instanceof HTMLElement)
-				emoijDOMs[emoji].hidden = false;
+			if(emojiDOMs[emoji] instanceof HTMLElement)
+				emojiDOMs[emoji].hidden = false;
 		
 		return;
 	}
 
-	for(const emojiDOM of Object.values(emoijDOMs))
+	for(const emojiDOM of Object.values(emojiDOMs))
 		emojiDOM.hidden = emojiDOM.dataset.className !== className;
 
 }
@@ -296,7 +296,7 @@ emojiSearchBarDOM.oninput = async function(event) {
  * Add the selected emoji to the targeted text area
  * @param {Event} event 
  */
-function emoijAddToInput(event)
+function emojiAddToInput(event)
 {
 	// This should not happen if used properly but whatever
 	if(!(emojiInputTargetDOM instanceof HTMLTextAreaElement) && !(emojiInputTargetDOM instanceof HTMLInputElement))
@@ -333,10 +333,10 @@ function emoijAddToInput(event)
 
 function loadEmojis(inputTargetIDName)
 {
-	if(!emoijEngineStarted)
+	if(!emojiEngineStarted)
 	{
-		emoijEngineStarted = true;
-		emoijRequest.send();
+		emojiEngineStarted = true;
+		emojiRequest.send();
 	}
 
 	emojiInputTargetDOM = document.getElementById(inputTargetIDName)
