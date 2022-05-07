@@ -5079,3 +5079,9 @@ th, td {
     position: absolute;
     transform: translate(-36px, -10px);
 }
+
+.party-hat2 {
+    height: 50px;
+    position: absolute;
+    transform: translate(-100px,-30px);
+}
