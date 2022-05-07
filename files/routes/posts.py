@@ -1342,6 +1342,9 @@ def submit_post(v, sub=None):
 				body += f'* [ghostarchive.org](https://ghostarchive.org/search?term={quote(href)}) (click to archive)\n\n'
 				gevent.spawn(archiveorg, href)
 
+		if body == '!slots':
+			body = f'!slots{snappy.coins}'
+
 		body_html = sanitize(body)
 
 		if len(body_html) < 40000:
@@ -1362,7 +1365,7 @@ def submit_post(v, sub=None):
 			snappy.coins += 1
 			g.db.add(snappy)
 			
-			if body.startswith('!slots1000'):
+			if body.startswith('!slots'):
 				check_for_slots_command(body, snappy, c)
 
 			g.db.flush()

@@ -888,6 +888,8 @@ yt_id_regex = re.compile('[a-z0-9-_]{5,20}', flags=re.I|re.A)
 
 image_regex = re.compile("(^|\s)(https:\/\/[\w\-.#&/=\?@%;+]{5,250}(\.png|\.jpg|\.jpeg|\.gif|\.webp|maxwidth=9999|fidelity=high))($|\s)", flags=re.I|re.A)
 
+link_fix_regex = re.compile("(?!.*(http|\/))(.*\[[^\]]+\]\()([^)]+\))", flags=re.A)
+
 css_regex = re.compile('''url\(['"]?(.*?)['"]?\)''', flags=re.I|re.A)
 css_regex2 = re.compile('''['"](http.*?)['"]''', flags=re.I|re.A)
 

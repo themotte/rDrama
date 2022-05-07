@@ -95,7 +95,7 @@ class EmojiSearchEngine {
 let emojiSearcher = new EmojiSearchEngine();
 
 // tags dictionary. KEEP IT SORT
-class EmojisDictNode
+class EmoijsDictNode
 {
 	constructor(tag, name) {
 		this.tag = tag;
@@ -124,7 +124,7 @@ const emojisSearchDictionary = {
 		if(this.dict[target] !== undefined && this.dict[target].tag === tag)
 			this.dict[target].emojiNames.push(emojiName);
 		else
-			this.dict.splice(target ,0,new EmojisDictNode(tag, emojiName));
+			this.dict.splice(target ,0,new EmoijsDictNode(tag, emojiName));
 	},
 
 	/**
@@ -194,7 +194,11 @@ emojiRequest.onload = async (e) => {
 		// Create emoji DOM
 		const emojiDOM = document.importNode(emojiButtonTemplateDOM.content, true).children[0];
 
-		emojiDOM.title = emoji.name + "\nauthor\t" + emoji.author + "\nused\t" + emoji.count;
+		emojiDOM.title = emoji.name
+		if(emoji.author !== undefined)
+			emojiDOM.title += "\nauthor\t" + emoji.author
+		if(emoji.count !== undefined)
+			emojiDOM.title += "\nused\t" + emoji.count;
 		emojiDOM.dataset.className = emoji.class;
 		emojiDOM.dataset.emojiName = emoji.name;
 		emojiDOM.onclick = emojiAddToInput;
