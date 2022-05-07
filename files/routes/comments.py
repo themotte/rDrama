@@ -19,6 +19,7 @@ from collections import Counter
 from enchant import Dict
 import gevent
 from sys import stdout
+import os
 
 d = Dict("en_US")
 
@@ -227,11 +228,13 @@ def api_comment(v):
 				if image == "": return {"error":"Image upload failed"}
 				if v.admin_level > 2 and level == 1:
 					if parent_post.id == 37696:
-						filename = 'files/assets/images/rDrama/sidebar/' + str(len(listdir('files/assets/images/rDrama/sidebar'))+1) + '.webp'
+						num = int(os.listdir('files/assets/images/rDrama/sidebar')[-1].split('.webp')[0]) + 1
+						filename = f'files/assets/images/rDrama/sidebar/{num}.webp'
 						copyfile(oldname, filename)
 						process_image(v.patron, filename, 400)
 					elif parent_post.id == 37697:
-						filename = 'files/assets/images/rDrama/banners/' + str(len(listdir('files/assets/images/rDrama/banners'))+1) + '.webp'
+						num = int(os.listdir('files/assets/images/rDrama/banners')[-1].split('.webp')[0]) + 1
+						filename = f'files/assets/images/rDrama/banners/{num}.webp'
 						copyfile(oldname, filename)
 						process_image(v.patron, filename)
 					elif parent_post.id == 37833:
