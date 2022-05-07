@@ -5075,18 +5075,21 @@ th, td {
 }
 
 .party-hat {
+	cursor: pointer;
     height: 20px;
     position: absolute;
     transform: translate(-36px, -10px);
 }
 
 .party-hat2 {
+	cursor: pointer;
     height: 50px;
     position: absolute;
     transform: translate(-100px,-30px);
 }
 
 .party-hat3 {
+	cursor: pointer;
     height: 40px;
     position: absolute;
     transform: translate(-70px,-22px);
