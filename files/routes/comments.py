@@ -223,17 +223,17 @@ def api_comment(v):
 			if file.content_type.startswith('image/'):
 				oldname = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(oldname)
-				image = process_image(oldname)
+				image = process_image(v.patron, oldname)
 				if image == "": return {"error":"Image upload failed"}
 				if v.admin_level > 2 and level == 1:
 					if parent_post.id == 37696:
 						filename = 'files/assets/images/rDrama/sidebar/' + str(len(listdir('files/assets/images/rDrama/sidebar'))+1) + '.webp'
 						copyfile(oldname, filename)
-						process_image(filename, 400)
+						process_image(v.patron, filename, 400)
 					elif parent_post.id == 37697:
 						filename = 'files/assets/images/rDrama/banners/' + str(len(listdir('files/assets/images/rDrama/banners'))+1) + '.webp'
 						copyfile(oldname, filename)
-						process_image(filename)
+						process_image(v.patron, filename)
 					elif parent_post.id == 37833:
 						try:
 							badge_def = loads(body)
@@ -247,7 +247,7 @@ def api_comment(v):
 							g.db.flush()
 							filename = f'files/assets/images/badges/{badge.id}.webp'
 							copyfile(oldname, filename)
-							process_image(filename, 200)
+							process_image(v.patron, filename, 200)
 							requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/assets/images/badges/{badge.id}.webp"]}, timeout=5)
 						except Exception as e:
 							return {"error": str(e)}, 400
@@ -269,7 +269,7 @@ def api_comment(v):
 
 							filename = f'files/assets/images/emojis/{name}.webp'
 							copyfile(oldname, filename)
-							process_image(filename, 200)
+							process_image(v.patron, filename, 200)
 
 							marsey = Marsey(name=name, author_id=user.id, tags=tags, count=0)
 							g.db.add(marsey)
@@ -308,14 +308,10 @@ def api_comment(v):
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
-					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
+					try: req = requests.request("POST", "https://pomf2.lain.la/upload.php", files={'files[]': f}, timeout=5).json()
 					except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
-					try: url = req['link']
-					except:
-						error = req['error']
-						if error == 'File exceeds max duration': error += ' (60 seconds)'
-						return {"error": error}, 400
-				if url.endswith('.'): url += 'mp4'
+					try: url = req['files'][0]['url']
+					except: return {"error": req['description']}, 400
 				body += f"\n\n{url}"
 			else: return {"error": "Image/Video files only"}, 400
 
@@ -765,19 +761,15 @@ def edit_comment(cid, v):
 				if file.content_type.startswith('image/'):
 					name = f'/images/{time.time()}'.replace('.','') + '.webp'
 					file.save(name)
-					url = process_image(name)
+					url = process_image(v.patron, name)
 					body += f"\n\n![]({url})"
 				elif file.content_type.startswith('video/'):
 					file.save("video.mp4")
 					with open("video.mp4", 'rb') as f:
-						try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
+						try: req = requests.request("POST", "https://pomf2.lain.la/upload.php", files={'files[]': f}, timeout=5).json()
 						except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
-						try: url = req['link']
-						except:
-							error = req['error']
-							if error == 'File exceeds max duration': error += ' (60 seconds)'
-							return {"error": error}, 400
-					if url.endswith('.'): url += 'mp4'
+						try: url = req['files'][0]['url']
+						except: return {"error": req['description']}, 400
 					body += f"\n\n{url}"
 				else: return {"error": "Image/Video files only"}, 400
 

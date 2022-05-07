@@ -2,9 +2,16 @@ from PIL import Image, ImageOps
 from PIL.ImageSequence import Iterator
 from webptools import gifwebp
 import subprocess
+import os
+from flask import abort
 
-def process_image(filename=None, resize=0):
-	
+def process_image(patron, filename=None, resize=0):
+	size = os.stat(filename).st_size
+
+	if size > 16 * 1024 * 1024 or not patron and size > 8 * 1024 * 1024:
+		os.remove(filename)
+		abort(413)
+
 	i = Image.open(filename)
 
 	if resize and i.width > resize:

@@ -694,19 +694,15 @@ def messagereply(v):
 		if file.content_type.startswith('image/'):
 			name = f'/images/{time.time()}'.replace('.','') + '.webp'
 			file.save(name)
-			url = process_image(name)
+			url = process_image(v.patron, name)
 			body_html += f'<img data-bs-target="#expandImageModal" data-bs-toggle="modal" onclick="expandDesktopImage(this.src)" class="img" src="{url}" loading="lazy">'
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
-				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-				except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
-				try: url = req['link']
-				except:
-					error = req['error']
-					if error == 'File exceeds max duration': error += ' (60 seconds)'
-					return {"error": error}, 400
-			if url.endswith('.'): url += 'mp4'
+				try: req = requests.request("POST", "https://pomf2.lain.la/upload.php", files={'files[]': f}, timeout=5).json()
+				except requests.exceptions.ConnectionError: return {"error": "Video upload timed out, please try again!"}
+				try: url = req['files'][0]['url']
+				except: return {"error": req['description']}, 400
 			body_html += f"<p>{url}</p>"
 		else: return {"error": "Image/Video files only"}, 400
 

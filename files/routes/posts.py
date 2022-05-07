@@ -461,19 +461,15 @@ def edit_post(pid, v):
 			if file.content_type.startswith('image/'):
 				name = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(name)
-				url = process_image(name)
+				url = process_image(v.patron, name)
 				body += f"\n\n![]({url})"
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
-					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
+					try: req = requests.request("POST", "https://pomf2.lain.la/upload.php", files={'files[]': f}, timeout=5).json()
 					except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
-					try: url = req['link']
-					except:
-						error = req['error']
-						if error == 'File exceeds max duration': error += ' (60 seconds)'
-						return {"error": error}, 400
-				if url.endswith('.'): url += 'mp4'
+					try: url = req['files'][0]['url']
+					except: return {"error": req['description']}, 400
 				body += f"\n\n{url}"
 			else: return {"error": "Image/Video files only"}, 400
 
@@ -707,7 +703,7 @@ def thumbnail_thread(pid):
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	post.thumburl = process_image(name, resize=100)
+	post.thumburl = process_image(0, name, resize=100)
 	db.add(post)
 	db.commit()
 
@@ -1081,18 +1077,14 @@ def submit_post(v, sub=None):
 			if file.content_type.startswith('image/'):
 				name = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(name)
-				body += f"\n\n![]({process_image(name)})"
+				body += f"\n\n![]({process_image(v.patron, name)})"
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
-					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-					except requests.Timeout: return error("Video upload timed out, please try again!")
-					try: url = req['link']
-					except:
-						err = req['error']
-						if err == 'File exceeds max duration': err += ' (60 seconds)'
-						return error(err)
-				if url.endswith('.'): url += 'mp4'
+					try: req = requests.request("POST", "https://pomf2.lain.la/upload.php", files={'files[]': f}, timeout=5).json()
+					except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
+					try: url = req['files'][0]['url']
+					except: return {"error": req['description']}, 400
 				body += f"\n\n{url}"
 			else:
 				return error("Image/Video files only.")
@@ -1186,22 +1178,18 @@ def submit_post(v, sub=None):
 		if file.content_type.startswith('image/'):
 			name = f'/images/{time.time()}'.replace('.','') + '.webp'
 			file.save(name)
-			post.url = process_image(name)
+			post.url = process_image(v.patron, name)
 
 			name2 = name.replace('.webp', 'r.webp')
 			copyfile(name, name2)
-			post.thumburl = process_image(name2, resize=100)	
+			post.thumburl = process_image(v.patron, name2, resize=100)	
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
-				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-				except requests.Timeout: return error("Video upload timed out, please try again!")
-				try: url = req['link']
-				except:
-					err = req['error']
-					if err == 'File exceeds max duration': err += ' (60 seconds)'
-					return error(err)
-			if url.endswith('.'): url += 'mp4'
+				try: req = requests.request("POST", "https://pomf2.lain.la/upload.php", files={'files[]': f}, timeout=5).json()
+				except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
+				try: url = req['files'][0]['url']
+				except: return {"error": req['description']}, 400
 			post.url = url
 		else:
 			return error("Image/Video files only.")

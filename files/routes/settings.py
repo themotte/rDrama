@@ -214,19 +214,15 @@ def settings_profile_post(v):
 			if file.content_type.startswith('image/'):
 				name = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(name)
-				url = process_image(name)
+				url = process_image(v.patron, name)
 				bio += f"\n\n![]({url})"
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
-					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
+					try: req = requests.request("POST", "https://pomf2.lain.la/upload.php", files={'files[]': f}, timeout=5).json()
 					except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
-					try: url = req['link']
-					except:
-						error = req['error']
-						if error == 'File exceeds max duration': error += ' (60 seconds)'
-						return {"error": error}, 400
-				if url.endswith('.'): url += 'mp4'
+					try: url = req['files'][0]['url']
+					except: return {"error": req['description']}, 400
 				bio += f"\n\n{url}"
 			else:
 				if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "Image/Video files only"}, 400
@@ -556,13 +552,13 @@ def settings_images_profile(v):
 
 	name = f'/images/{time.time()}'.replace('.','') + '.webp'
 	file.save(name)
-	highres = process_image(name)
+	highres = process_image(v.patron, name)
 
 	if not highres: abort(400)
 
 	name2 = name.replace('.webp', 'r.webp')
 	copyfile(name, name2)
-	imageurl = process_image(name2, resize=100)
+	imageurl = process_image(v.patron, name2, resize=100)
 
 	if not imageurl: abort(400)
 
@@ -592,7 +588,7 @@ def settings_images_banner(v):
 
 	name = f'/images/{time.time()}'.replace('.','') + '.webp'
 	file.save(name)
-	bannerurl = process_image(name)
+	bannerurl = process_image(v.patron, name)
 
 	if bannerurl:
 		if v.bannerurl and '/images/' in v.bannerurl:

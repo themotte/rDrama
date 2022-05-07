@@ -381,7 +381,7 @@ def sub_banner(v, sub):
 
 	name = f'/images/{time.time()}'.replace('.','') + '.webp'
 	file.save(name)
-	bannerurl = process_image(name)
+	bannerurl = process_image(v.patron, name)
 
 	if bannerurl:
 		if sub.bannerurl and '/images/' in sub.bannerurl:
@@ -408,7 +408,7 @@ def sub_sidebar(v, sub):
 	file = request.files["sidebar"]
 	name = f'/images/{time.time()}'.replace('.','') + '.webp'
 	file.save(name)
-	sidebarurl = process_image(name)
+	sidebarurl = process_image(v.patron, name)
 
 	if sidebarurl:
 		if sub.sidebarurl and '/images/' in sub.sidebarurl:
