@@ -1216,11 +1216,11 @@ def saved_comments(v, username):
 def fp(v, fp):
 	v.fp = fp
 	users = g.db.query(User).filter(User.fp == fp, User.id != v.id).all()
-	if users: print(f'{v.username}: fp {v.fp}')
+	if users: print(f'{v.username}: fp')
 	if v.email and v.is_activated:
 		alts = g.db.query(User).filter(User.email == v.email, User.is_activated, User.id != v.id).all()
 		if alts:
-			print(f'{v.username}: email {v.email}')
+			print(f'{v.username}: email')
 			users += alts
 	for u in users:
 		li = [v.id, u.id]
