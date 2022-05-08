@@ -232,13 +232,14 @@ def api_comment(v):
 						li = [int(x.split('.webp')[0]) for x in li]
 						li = sorted(li)
 						num = li[-1] + 1
-						print(num)
 						filename = f'files/assets/images/rDrama/sidebar/{num}.webp'
 						copyfile(oldname, filename)
 						process_image(v.patron, filename, 400)
-						print(num)
 					elif parent_post.id == 37697:
-						num = int(sorted(os.listdir('files/assets/images/rDrama/banners'))[-1].split('.webp')[0]) + 1
+						li = os.listdir('files/assets/images/rDrama/sidebar')
+						li = [int(x.split('.webp')[0]) for x in li]
+						li = sorted(li)
+						num = li[-1] + 1
 						filename = f'files/assets/images/rDrama/banners/{num}.webp'
 						copyfile(oldname, filename)
 						process_image(v.patron, filename)
