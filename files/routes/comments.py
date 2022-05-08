@@ -231,7 +231,7 @@ def api_comment(v):
 						li = os.listdir('files/assets/images/rDrama/sidebar')
 						li = [int(x.split('.webp')[0]) for x in li]
 						li = sorted(li)
-						num = li[[-1]] + 1
+						num = li[-1] + 1
 						print(num)
 						filename = f'files/assets/images/rDrama/sidebar/{num}.webp'
 						copyfile(oldname, filename)
