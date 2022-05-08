@@ -4,7 +4,7 @@
 		{% set image=sub.sidebar_url %}
 	{% else %}
 		{% set path = "assets/images/" + SITE_NAME + "/sidebar" %}
-		{% set image = "/" + path + "/" + listdir('files/' + path)|random() + '?v=42' %}
+		{% set image = "/" + path + "/" + listdir('files/' + path)|random() + '?v=43' %}
 	{% endif %}
 
 	{% if v and (v.is_banned or v.agendaposter) %}
