@@ -169,15 +169,15 @@ def notifications(v):
 @auth_desired
 def front_all(v, sub=None, subdomain=None):
 
+	if g.webview and not session.get("session_id"):
+		session["session_id"] = secrets.token_hex(49)
+
 	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
 	if v and request.path.startswith('/logged_out'): v = None
 
 	if sub: sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	
 	if (request.path.startswith('/h/') or request.path.startswith('/s/')) and not sub: abort(404)
-
-	if g.webview and not session.get("session_id"):
-		session["session_id"] = secrets.token_hex(49)
 
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: abort(400)
