@@ -179,7 +179,7 @@ emojiRequest.onload = async (e) => {
 		let emoji = emojis[i];
 
 		emojisSearchDictionary.updateTag(emoji.name, emoji.name);
-		if(emoji.author !== undefined)
+		if(emoji.author !== undefined && emoji.author !== "rDrama's chads")
 			emojisSearchDictionary.updateTag(emoji.author.toLowerCase(), emoji.name);
 
 		if(emoji.tags instanceof Array)
