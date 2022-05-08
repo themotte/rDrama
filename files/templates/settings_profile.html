@@ -448,7 +448,11 @@
 								<label class="text-black w-lg-25">Flair</label>
 
 								<div class="w-lg-100">
-
+									
+									{% if v.flairchanged %}
+										{% set ti = datetime.utcfromtimestamp(v.flairchanged).strftime('%Y-%m-%d %H:%M:%S') %}
+									{% endif %}
+								
 									<form id="profile-settings" action="/settings/title_change" method="post">
 										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<input maxlength=100 {% if v.flairchanged %}disabled{% endif %} autocomplete="off" id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if v.flairchanged %}Your flair has been locked until {{ti}}{% elif v.customtitleplain %}{{v.customtitleplain}}{% endif %}">

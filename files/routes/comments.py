@@ -496,7 +496,7 @@ def api_comment(v):
 			g.db.add(n)
 
 
-		if SITE_NAME == 'rDrama' and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
+		if SITE_NAME == 'rDrama' and len(c.body.split()) >= 200 and "<" not in body and "</blockquote>" not in body_html:
 		
 			body = random.choice(LONGPOST_REPLIES)
 

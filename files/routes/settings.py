@@ -901,6 +901,4 @@ def settings(v):
 @app.get("/settings/profile")
 @auth_required
 def settings_profile(v):
-	if v.flairchanged: ti = datetime.utcfromtimestamp(v.flairchanged).strftime('%Y-%m-%d %H:%M:%S')
-	else: ti = ''
-	return render_template("settings_profile.html", v=v, ti=ti)
+	return render_template("settings_profile.html", v=v)
