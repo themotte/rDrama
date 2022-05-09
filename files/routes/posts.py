@@ -95,7 +95,7 @@ def publish(pid, v):
 	return redirect(post.permalink)
 
 @app.get("/submit")
-@app.get("/h/<sub>/submit")
+# @app.get("/h/<sub>/submit")
 @auth_required
 def submit_get(v, sub=None):
 	if sub: sub = g.db.query(Sub.name).filter_by(name=sub.strip().lower()).one_or_none()
@@ -108,8 +108,8 @@ def submit_get(v, sub=None):
 
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
-@app.get("/h/<sub>/post/<pid>")
-@app.get("/h/<sub>/post/<pid>/<anything>")
+# @app.get("/h/<sub>/post/<pid>")
+# @app.get("/h/<sub>/post/<pid>/<anything>")
 @auth_desired
 def post_id(pid, anything=None, v=None, sub=None):
 
@@ -758,7 +758,7 @@ def api_is_repost():
 	else: return {'permalink': ''}
 
 @app.post("/submit")
-@app.post("/h/<sub>/submit")
+# @app.post("/h/<sub>/submit")
 @limiter.limit("1/second;2/minute;10/hour;50/day")
 @auth_required
 def submit_post(v, sub=None):
