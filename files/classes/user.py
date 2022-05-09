@@ -22,6 +22,7 @@ from files.helpers.security import *
 import random
 from os import environ, remove, path
 
+
 defaulttheme = "TheMotte"
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 cardview = bool(int(environ.get("CARD_VIEW", 1)))
