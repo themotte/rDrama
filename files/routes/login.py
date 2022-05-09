@@ -321,7 +321,7 @@ def sign_up_post(v):
 		session["history"] = []
 	else: admin_level=0
 
-	profileurl = '/e/' + random.choice(marseys_const) + '.webp'
+	profileurl = '/e/feather.webp'
 
 	new_user = User(
 		username=username,
