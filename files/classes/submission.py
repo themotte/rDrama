@@ -51,7 +51,7 @@ class Submission(Base):
 	flair = Column(String)
 	ban_reason = Column(String)
 	embed_url = Column(String)
-	new = Column(Boolean, default=True)
+	new = Column(Boolean, default=False)
 
 	author = relationship("User", primaryjoin="Submission.author_id==User.id")
 	oauth_app = relationship("OauthApp", viewonly=True)
