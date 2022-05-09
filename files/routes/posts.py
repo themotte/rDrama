@@ -1016,7 +1016,6 @@ def submit_post(v, sub=None):
 		club=club,
 		author_id=v.id,
 		over_18=bool(request.values.get("over_18","")),
-		new=True,  # always sort as new by default
 		app_id=v.client.application.id if v.client else None,
 		is_bot = is_bot,
 		url=url,
@@ -1186,7 +1185,7 @@ def submit_post(v, sub=None):
 	if request.headers.get("Authorization"): return post.json
 	else:
 		post.voted = 1
-		if post.new or 'megathread' in post.title.lower(): sort = 'new'
+		if 'megathread' in post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
 		return render_template('submission.html', v=v, p=post, sort=sort, render_replies=True, offset=0, success=True, sub=post.subr)
 
