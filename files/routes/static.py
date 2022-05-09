@@ -34,7 +34,6 @@ def logged_out(old = ""):
 
 	return redirect(redirect_url)
 
-
 @app.get("/marseys")
 @auth_required
 def marseys(v):
@@ -57,12 +56,15 @@ def marsey_list():
 
 	return str(marseys).replace("'",'"')
 
-@app.get('/rules')
 @app.get('/sidebar')
 @auth_desired
 def sidebar(v):
 	return render_template('sidebar.html', v=v)
 
+@app.get('/rules')
+@auth_desired
+def rules(v):
+	return render_template('rules.html', v=v)
 
 @app.get("/stats")
 @auth_required
