@@ -51,7 +51,7 @@ class Submission(Base):
 	flair = Column(String)
 	ban_reason = Column(String)
 	embed_url = Column(String)
-	new = Column(Boolean)
+	new = Column(Boolean, default=True)
 
 	author = relationship("User", primaryjoin="Submission.author_id==User.id")
 	oauth_app = relationship("OauthApp", viewonly=True)
@@ -65,7 +65,6 @@ class Submission(Base):
 
 	def __init__(self, *args, **kwargs):
 		if "created_utc" not in kwargs: kwargs["created_utc"] = int(time.time())
-		if 'new' in kwargs: kwargs['new'] = True # Always default to sort by new
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
