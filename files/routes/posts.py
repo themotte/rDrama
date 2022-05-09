@@ -88,9 +88,7 @@ def publish(pid, v):
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
 
-	if SITE == 'cringetopia.org':
-		send_cringetopia_message(post.permalink)
-	elif v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()):
+	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()):
 		send_discord_message(post.permalink)
 		cache.delete_memoized(changeloglist)
 
@@ -702,37 +700,6 @@ def thumbnail_thread(pid):
 	db.add(post)
 	db.commit()
 
-
-	if SITE == 'pcmemes.net':
-		for t in ("submission","comment"):
-
-			try:
-				data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q=pcmemes.net&size=1', timeout=5).json()["data"]
-			except: break
-
-			for i in data:
-				body_html = f'''<p>New site mention: <a href="https://old.reddit.com{i["permalink"]}?context=89" rel="nofollow noopener noreferrer" target="_blank">https://old.reddit.com{i["permalink"]}?context=89</a></p>'''
-
-				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, body_html=body_html).one_or_none()
-
-				if existing_comment: break
-
-				new_comment = Comment(author_id=NOTIFICATIONS_ID,
-									parent_submission=None,
-									body_html=body_html,
-									distinguish_level=6
-									)
-				db.add(new_comment)
-				db.flush()
-
-				new_comment.top_comment_id = new_comment.id
-
-
-				admins = db.query(User).filter(User.admin_level > 2).all()
-				for admin in admins:
-					notif = Notification(comment_id=new_comment.id, user_id=admin.id)
-					db.add(notif)
-
 	db.commit()
 	db.close()
 	stdout.flush()
@@ -1037,7 +1004,7 @@ def submit_post(v, sub=None):
 	
 	if embed and len(embed) > 1500: embed = None
 
-	is_bot = bool(request.headers.get("Authorization")) or (SITE == 'pcmemes.net' and v.id == SNAPPY_ID)
+	is_bot = bool(request.headers.get("Authorization"))
 
 	if request.values.get("ghost") and v.coins >= 100:
 		v.coins -= 100
@@ -1212,9 +1179,7 @@ def submit_post(v, sub=None):
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
 
-	if SITE == 'cringetopia.org':
-		send_cringetopia_message(post.permalink)
-	elif v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()) and not post.private:
+	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()) and not post.private:
 		send_discord_message(post.permalink)
 		cache.delete_memoized(changeloglist)
 
