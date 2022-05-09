@@ -65,6 +65,7 @@ class Submission(Base):
 
 	def __init__(self, *args, **kwargs):
 		if "created_utc" not in kwargs: kwargs["created_utc"] = int(time.time())
+		if 'new' in kwargs: kwargs['new'] = True # Always default to sort by new
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
