@@ -11,16 +11,6 @@
 								</div>
 						</a>
 				</button>
-{% if v and v.defaultsorting == 'new' %}
-				<button class="col px-0 btn btn-dead m-0" style="background: None !important; border: None;">
-						<a href="/?sort=hot&t=all" class="text-decoration-none" role="button">
-								<div class="text-center {% if request.full_path=='/?sort=hot&t=all' %}text-primary{% else %}text-muted{% endif %}">
-										<i class="fas fa-fire text-lg"></i>
-										<div class="text-small">Hot</div>
-								</div>
-						</a>
-				</button>
-{% else %}
 				<button class="col px-0 btn btn-dead m-0" style="background: None !important; border: None;">
 						<a href="/?sort=new&t=all" class="text-decoration-none" role="button">
 								<div class="text-center {% if request.full_path=='/?sort=new&t=all' %}text-primary{% else %}text-muted{% endif %}">
@@ -29,7 +19,6 @@
 								</div>
 						</a>
 				</button>
-{% endif %}
 				<button class="col px-2 btn btn-dead m-0" style="background: None !important; border: None;">
 						<a href="/comments" class="text-decoration-none" role="button">
 								<div class="text-center {% if request.path=='/comments' %}text-primary{% else %}text-muted{% endif %}">

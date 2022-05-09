@@ -105,7 +105,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 	top_comment = c
 
 	if v: defaultsortingcomments = v.defaultsortingcomments
-	else: defaultsortingcomments = "top"
+	else: defaultsortingcomments = "new"
 	sort=request.values.get("sort", defaultsortingcomments)
 
 	if v:
