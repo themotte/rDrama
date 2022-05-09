@@ -177,11 +177,9 @@ def front_all(v, sub=None, subdomain=None):
 	if v:
 		defaultsorting = v.defaultsorting
 		defaulttime = 'all'
-		else: defaulttime = v.defaulttime
 	else:
 		defaultsorting = "new"
 		defaulttime = 'all'
-		else: defaulttime = defaulttimefilter
 
 	sort=request.values.get("sort", defaultsorting)
 	t=request.values.get('t', defaulttime)
