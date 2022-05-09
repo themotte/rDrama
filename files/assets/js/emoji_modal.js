@@ -179,7 +179,7 @@ emojiRequest.onload = async (e) => {
 		let emoji = emojis[i];
 
 		emojisSearchDictionary.updateTag(emoji.name, emoji.name);
-		if(emoji.author !== undefined)
+		if(emoji.author !== undefined && emoji.author !== "rDrama's chads")
 			emojisSearchDictionary.updateTag(emoji.author.toLowerCase(), emoji.name);
 
 		if(emoji.tags instanceof Array)
@@ -192,7 +192,7 @@ emojiRequest.onload = async (e) => {
 		const emojiDOM = document.importNode(emojiButtonTemplateDOM.content, true).children[0];
 
 		emojiDOM.title = emoji.name
-		if(emoji.author !== undefined)
+		if(emoji.author !== undefined && emoji.author !== "rDrama's chads")
 			emojiDOM.title += "\nauthor\t" + emoji.author
 		if(emoji.count !== undefined)
 			emojiDOM.title += "\nused\t" + emoji.count;
