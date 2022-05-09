@@ -478,13 +478,8 @@ def leaderboard(v):
 	sq = g.db.query(User.id, func.rank().over(order_by=User.received_award_count.desc()).label("rank")).subquery()
 	pos5 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
-	if request.host == 'pcmemes.net':
-		users6 = users.order_by(User.basedcount.desc()).limit(25).all()
-		sq = g.db.query(User.id, func.rank().over(order_by=User.basedcount.desc()).label("rank")).subquery()
-		pos6 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
-	else:
-		users6 = None
-		pos6 = None
+	users6 = None
+	pos6 = None
 
 	users7 = users.order_by(User.coins_spent.desc()).limit(25).all()
 	sq = g.db.query(User.id, func.rank().over(order_by=User.coins_spent.desc()).label("rank")).subquery()

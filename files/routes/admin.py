@@ -382,16 +382,6 @@ def monthly(v):
 			send_repeatable_notification(u.id, f"@{v.username} has given you {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
 		else: print(u.username)
 
-	if request.host == 'pcmemes.net':
-		u = g.db.query(User).filter_by(id=KIPPY_ID).one()
-		u.procoins += 50000
-		g.db.add(u)
-
-	if request.host == 'rdrama.net':
-		u = g.db.query(User).filter_by(id=A_ID).one()
-		u.procoins += 25000
-		g.db.add(u)
-
 	ma = ModAction(
 		kind="monthly",
 		user_id=v.id

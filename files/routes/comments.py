@@ -82,7 +82,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 	
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
-		elif request.host == 'pcmemes.net': pid = 2487
 		else: pid = 1
 	
 	try: pid = int(pid)
@@ -419,39 +418,6 @@ def api_comment(v):
 			)
 
 		g.db.add(c_choice)
-
-	if request.host == 'pcmemes.net' and c.body.lower().startswith("based"):
-		pill = based_regex.match(body)
-
-		if level == 1: basedguy = get_account(parent_post.author_id)
-		else: basedguy = get_account(c.parent_comment.author_id)
-		basedguy.basedcount += 1
-		if pill:
-			if basedguy.pills: basedguy.pills += f", {pill.group(1)}"
-			else: basedguy.pills += f"{pill.group(1)}"
-		g.db.add(basedguy)
-
-		body2 = f"@{basedguy.username}'s Based Count has increased by 1. Their Based Count is now {basedguy.basedcount}."
-		if basedguy.pills: body2 += f"\n\nPills: {basedguy.pills}"
-		
-		body_based_html = sanitize(body2)
-
-		c_based = Comment(author_id=BASEDBOT_ID,
-			parent_submission=parent_submission,
-			distinguish_level=6,
-			parent_comment_id=c.id,
-			level=level+1,
-			is_bot=True,
-			body_html=body_based_html,
-			top_comment_id=c.top_comment_id,
-			ghost=parent_post.ghost
-			)
-
-		g.db.add(c_based)
-		g.db.flush()
-
-		n = Notification(comment_id=c_based.id, user_id=v.id)
-		g.db.add(n)
 
 	if parent_post.id not in ADMIGGERS:
 		if v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in c.body.lower():

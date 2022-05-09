@@ -2,11 +2,7 @@
 	{% include "award_modal.html" %}
 {% endif %}
 
-{% if request.host == 'pcmemes.net' %}
-	{% set cc='SPLASH MOUNTAIN' %}
-{% else %}
-	{% set cc='COUNTRY CLUB' %}
-{% endif %}
+{% set cc='COUNTRY CLUB' %}
 
 {% if not v or v.highlightcomments %}
 	<script src="/assets/js/new_comments_count.js?v=242"></script>

@@ -12,11 +12,7 @@
 		<meta name="author" content="">
 		<link rel="icon" type="image/png" href="/assets/images/{{SITE_NAME}}/icon.webp?v=1015">
 
-		{% if request.host == 'pcmemes.net' %}
-			{% set cc='Splash Mountain' %}
-		{% else %}
-			{% set cc='Country Club' %}
-		{% endif %}
+		{% set cc='Country Club' %}
 
 		{% block title %}
 		<title>Create a post - {{SITE_NAME}}</title>
