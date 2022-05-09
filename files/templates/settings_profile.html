@@ -183,30 +183,7 @@
 				</div>
 
 			</div>
-			<div class="d-lg-flex border-bottom">
-			<div class="title w-lg-25">
-				<label for="theme">Website Backgrounds</label>
-			</div>
-				<div class="body w-lg-100">
-					<p>Change the background for the website.</p>
-					<div class="input-group mb2">
-							<select autocomplete="off" id='backgroundSelector' class="form-control" form="profile-settings" name="background" onchange="updatebgselection();">								
-							{% for entry in ["anime", "fantasy", "solarpunk", "pixelart"] %}
-								<option value="{{entry}}" {% if v.background and v.background.startswith(entry) %}selected{% endif %}>
-									{{entry}}
-								</option>
-							{% endfor %}
-						</select>
-					</div>
-					{% if v.background %}
-						<div class="d-flex mt-2">
-							<a class="btn btn-primary ml-auto" role="button" onclick="post_toast(this,'/settings/removebackground','1')">Remove Background</a>
-							<pre></pre>
-						</div>
-					{% endif %}
-					<div id="bgcontainer"></div>
-				</div>
-				</div>
+
 			</div>
 
 			<h2 class="h5">Profile Picture</h2>
