@@ -179,7 +179,7 @@ def front_all(v, sub=None, subdomain=None):
 		if sub or SITE_NAME != 'rDrama': defaulttime = 'all'
 		else: defaulttime = v.defaulttime
 	else:
-		defaultsorting = "hot"
+		defaultsorting = "new"
 		if sub or SITE_NAME != 'rDrama': defaulttime = 'all'
 		else: defaulttime = defaulttimefilter
 
