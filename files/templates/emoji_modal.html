@@ -8,13 +8,6 @@
 						<li class="nav-item">
 							<a class="nav-link active emojitab" data-bs-toggle="tab" href="#emoji-tab-favorite">Favorite</a>
 						</li>
-
-						{% if SITE_NAME == 'Cringetopia' %}
-							<li class="nav-item">
-								<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-cringetopia">Cringetopia</a>
-							</li>
-						{% endif %}
-
 						<li class="nav-item">
 							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-marsey">Marsey</a>
 						</li>
@@ -62,11 +55,6 @@
 						<div class="tab-pane fade show active" id="emoji-tab-favorite">
 							<div class="d-flex flex-wrap py-3 pl-2" id="EMOJIS_favorite"></div>
 						</div>
-						{% if SITE_NAME == 'Cringetopia' %}
-							<div class="tab-pane fade" id="emoji-tab-cringetopia">
-								<div class="d-flex flex-wrap py-3 pl-2" id="EMOJIS_cringetopia"></div>
-							</div>
-						{% endif %}
 						<div class="tab-pane fade" id="emoji-tab-marsey">
 							<div class="d-flex flex-wrap py-3 pl-2" id="EMOJIS_marsey"></div>
 						</div>

@@ -37,22 +37,13 @@ def logged_out(old = ""):
 @app.get("/marseys")
 @auth_required
 def marseys(v):
-	if SITE_NAME == 'rDrama':
-		marseys = g.db.query(Marsey, User).join(User, User.id==Marsey.author_id)
-		sort = request.values.get("sort", "usage")
-		if sort == "usage": marseys = marseys.order_by(Marsey.count.desc(), User.username)
-		else: marseys = marseys.order_by(User.username, Marsey.count.desc())
-	else:
-		marseys = g.db.query(Marsey).order_by(Marsey.count.desc())
+	marseys = g.db.query(Marsey).order_by(Marsey.count.desc())
 	return render_template("marseys.html", v=v, marseys=marseys)
 
 @app.get("/marsey_list")
 @cache.memoize(timeout=600, make_name=make_name)
 def marsey_list():
-	if SITE_NAME == 'rDrama':
-		marseys = [f"{x.name} : {y} {x.tags}" for x, y in g.db.query(Marsey, User.username).join(User, User.id==Marsey.author_id).order_by(Marsey.count.desc())]
-	else:
-		marseys = [f"{x.name} : {x.tags}" for x in g.db.query(Marsey).order_by(Marsey.count.desc())]
+	marseys = [f"{x.name} : {x.tags}" for x in g.db.query(Marsey).order_by(Marsey.count.desc())]
 
 	return str(marseys).replace("'",'"')
 
@@ -111,94 +102,6 @@ def participation_stats(v):
 			"awards given": g.db.query(AwardRelationship.id).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count(),
 			"users who posted, commented, or voted in the past 7 days": len(active_users),
 			}
-
-
-	if SITE_NAME == 'rDrama':
-		furries1 = g.db.query(User.id).filter(User.house.like('Furry%')).count()
-		femboys1 = g.db.query(User.id).filter(User.house.like('Femboy%')).count()
-		vampires1 = g.db.query(User.id).filter(User.house.like('Vampire%')).count()
-		racists1 = g.db.query(User.id).filter(User.house.like('Racist%')).count()
-
-		furries2 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Furry%')).scalar()
-		femboys2 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Femboy%')).scalar()
-		vampires2 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Vampire%')).scalar()
-		racists2 = g.db.query(func.sum(User.truecoins)).filter(User.house.like('Racist%')).scalar()
-
-		stats2 = {"House furry members": furries1,
-			"House femboy members": femboys1,
-			"House vampire members": vampires1,
-			"House racist members": racists1,
-			"House furry total truescore": furries2,
-			"House femboy total truescore": femboys2,
-			"House vampire total truescore": vampires2,
-			"House racist total truescore": racists2,
-			}
-
-		stats.update(stats2)
-
-		ids = (NOTIFICATIONS_ID, AUTOJANNY_ID, SNAPPY_ID, LONGPOSTBOT_ID, ZOZBOT_ID)
-		bots = g.db.query(User).filter(User.id.in_(ids))
-
-		for u in bots:
-			g.db.add(u)
-
-			if u.patron_utc and u.patron_utc < time.time():
-				u.patron = 0
-				u.patron_utc = 0
-				send_repeatable_notification(u.id, "Your paypig status has expired!")
-				if u.discord_id: remove_role(v, "1")
-
-			if u.unban_utc and u.unban_utc < time.time():
-				u.is_banned = 0
-				u.unban_utc = 0
-				u.ban_evade = 0
-				send_repeatable_notification(u.id, "You have been unbanned!")
-
-			if u.agendaposter and u.agendaposter < time.time():
-				u.agendaposter = 0
-				send_repeatable_notification(u.id, "Your chud theme has expired!")
-				badge = u.has_badge(28)
-				if badge: g.db.delete(badge)
-
-			if u.flairchanged and u.flairchanged < time.time():
-				u.flairchanged = None
-				send_repeatable_notification(u.id, "Your flair lock has expired. You can now change your flair!")
-				badge = u.has_badge(96)
-				if badge: g.db.delete(badge)
-
-			if u.marseyawarded and u.marseyawarded < time.time():
-				u.marseyawarded = None
-				send_repeatable_notification(u.id, "Your marsey award has expired!")
-				badge = u.has_badge(98)
-				if badge: g.db.delete(badge)
-
-			if u.longpost and u.longpost < time.time():
-				u.longpost = None
-				send_repeatable_notification(u.id, "Your pizzashill award has expired!")
-				badge = u.has_badge(97)
-				if badge: g.db.delete(badge)
-
-			if u.bird and u.bird < time.time():
-				u.bird = None
-				send_repeatable_notification(u.id, "Your bird site award has expired!")
-				badge = u.has_badge(95)
-				if badge: g.db.delete(badge)
-
-			if u.progressivestack and u.progressivestack < time.time():
-				u.progressivestack = None
-				send_repeatable_notification(u.id, "Your progressive stack has expired!")
-				badge = u.has_badge(94)
-				if badge: g.db.delete(badge)
-
-			if u.rehab and u.rehab < time.time():
-				u.rehab = None
-				send_repeatable_notification(u.id, "Your rehab has finished!")
-				badge = u.has_badge(109)
-				if badge: g.db.delete(badge)
-
-			if u.deflector and u.deflector < time.time():
-				u.deflector = None
-				send_repeatable_notification(u.id, "Your deflector has expired!")
 
 	g.db.commit()
 

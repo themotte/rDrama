@@ -23,58 +23,6 @@
 
 		<div class="settings">
 
-
-			{% if SITE_NAME == 'rDrama' %}
-				<h2 class="h5" name="referral">House</h2>
-
-				<div class="settings-section rounded">
-
-					<div class="d-lg-flex border-bottom">
-						<div class="title w-lg-25">
-							<label for="theme">House</label>
-						</div>
-
-						<div class="body w-lg-100">
-							{% if v.house %}
-								{% set cost=2000 %}
-								<p>Change your house (cost: {{cost}} coins or marseybux).</p>
-							{% else %}
-								{% set cost=500 %}
-								<p>Join a house (cost: {{cost}} coins or marseybux).</p>
-							{% endif %}
-							<div class="input-group mb2">
-								<select {% if v.coins < cost and v.procoins < cost %}disabled{% endif %} autocomplete="off" id='house' class="form-control" form="profile-settings" name="house" onchange="post_toast(this,'/settings/profile?house='+document.getElementById('house').value, '1')">
-								{% for entry in  ("None","Furry","Femboy","Vampire","Racist") %}
-									<option value="{{entry}}" {% if v.house==entry %} selected {% endif %}>
-										{{entry}}
-									</option>
-								{% endfor %}
-							</select>
-							</div>
-
-							</div>
-
-					</div>
-				</div>
-			{% endif %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			<h2 class="h5" name="referral">Theme</h2>
 
 			<div class="settings-section rounded">
@@ -129,11 +77,7 @@
 							<div class="input-group mb2">
 								<select autocomplete="off" id='theme' class="form-control" form="profile-settings" name="theme" onchange="post_toast(this,'/settings/profile?theme='+document.getElementById('theme').value, '1')">
 								
-								{% if SITE_NAME == 'rDrama' %}
-									{% set themes = ["dramblr", "classic", "classic_dark", "transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"] %}
-								{% else %}
-									{% set themes = ["dramblr", "reddit", "transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"] %}
-								{% endif %}
+								{% set themes = ["dramblr", "reddit", "transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"] %}
 								
 								{% for entry in themes %}
 									<option value="{{entry}}" {% if v.theme==entry %} selected {% endif %}>
@@ -310,41 +254,6 @@
 					</div>
 
 					
-					{% if SITE_NAME == 'rDrama' %}
-						<h2 class="h5" name="referral">Linked Accounts</h2>
-
-						<p class="text-small text-muted">Manage your connections to other services.</p>
-
-						<div class="settings-section rounded">
-
-							<div class="d-lg-flex">
-
-							<div class="title w-lg-25">
-								<label>Discord</label>
-							</div>
-
-							<div class="body w-lg-100">
-
-								{% if v.discord_id %}
-									<form action="/settings/remove_discord" method="post">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
-									<input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Disconnect Discord">
-									</form>
-
-									<div class="text-small-extra text-muted mt-3">Disconnecting your Discord account will remove you from the {{SITE_NAME}} Discord server.</div>
-								{% else %}
-									<a href="/discord" class="btn btn-primary">Link Discord</a>
-									<div class="text-small-extra text-muted mt-3">Link your Discord account to join the {{SITE_NAME}} Discord server.</div>
-								{% endif %}
-
-							</div>
-
-							</div>
-
-						</div>
-					{% endif %}
-
-
 					<h2 class="h5" name="referral">RSS Feed</h2>
 
 					<p class="text-small text-muted">Subscribe to the {{SITE_NAME}} RSS feed.</p>

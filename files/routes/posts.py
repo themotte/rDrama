@@ -20,8 +20,7 @@ from shutil import copyfile
 from sys import stdout
 
 
-if SITE_NAME == 'PCM': snappyquotes = []
-else: snappyquotes = [f':#{x}:' for x in marseys_const2]
+snappyquotes = [f':#{x}:' for x in marseys_const2]
 
 if path.exists(f'snappy_{SITE_NAME}.txt'):
 	with open(f'snappy_{SITE_NAME}.txt', "r", encoding="utf-8") as f:
@@ -702,67 +701,6 @@ def thumbnail_thread(pid):
 	post.thumburl = process_image(name, resize=100)
 	db.add(post)
 	db.commit()
-
-	if SITE_NAME == 'rDrama':
-		for t in ("submission","comment"):
-			word = random.choice(('rdrama','marsey'))
-
-			try:
-				data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={word}&size=1', timeout=5).json()["data"]
-			except: break
-
-			for i in data:
-
-				if i["subreddit"] == 'PokemonGoRaids': continue
-
-				body_html = f'''<p>New site mention: <a href="https://old.reddit.com{i["permalink"]}?context=89" rel="nofollow noopener noreferrer" target="_blank">https://old.reddit.com{i["permalink"]}?context=89</a></p>'''
-
-				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, body_html=body_html).one_or_none()
-				if existing_comment: break
-
-				new_comment = Comment(author_id=NOTIFICATIONS_ID,
-									parent_submission=None,
-									body_html=body_html,
-									distinguish_level=6
-									)
-				db.add(new_comment)
-				db.flush()
-
-				new_comment.top_comment_id = new_comment.id
-
-
-				admins = db.query(User).filter(User.admin_level > 0).all()
-				for admin in admins:
-					notif = Notification(comment_id=new_comment.id, user_id=admin.id)
-					db.add(notif)
-
-			k,val = random.choice(tuple(REDDIT_NOTIFS.items()))
-			
-			try:
-				data = requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={k}&size=1', timeout=5).json()["data"]
-			except: break
-
-			for i in data:
-
-				body_html = f'''<p>New mention of you: <a href="https://old.reddit.com{i["permalink"]}?context=89" rel="nofollow noopener noreferrer" target="_blank">https://old.reddit.com{i["permalink"]}?context=89</a></p>'''
-
-				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None,body_html=body_html).one_or_none()
-				if existing_comment: break
-
-				new_comment = Comment(author_id=NOTIFICATIONS_ID,
-									parent_submission=None,
-									body_html=body_html,
-									distinguish_level=6
-									)
-
-				db.add(new_comment)
-				db.flush()
-
-				new_comment.top_comment_id = new_comment.id
-
-
-				notif = Notification(comment_id=new_comment.id, user_id=val)
-				db.add(notif)
 
 
 	if SITE == 'pcmemes.net':

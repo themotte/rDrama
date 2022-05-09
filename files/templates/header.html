@@ -1,38 +1,23 @@
 
 <nav class="shadow shadow-md fixed-top">
-	{% if SITE_NAME == 'rDrama' %}
-		<style>
-			body {padding-top: 85.88px !important}
-			@media (max-width: 767.98px) {
-				body {
-					padding-top: 69.55px !important
-				}
+	<style>
+		body {padding-top: 60.89px !important}
+		@media (max-width: 767.98px) {
+			body {
+				padding-top: 44.55px !important
 			}
-		</style>
-	{% else %}
-		<style>
-			body {padding-top: 60.89px !important}
-			@media (max-width: 767.98px) {
-				body {
-					padding-top: 44.55px !important
-				}
-			}
-		</style>
-	{% endif %}
-
-	{% if SITE_NAME == 'rDrama' %}
-		{% include "journoid_banner.html" %}
-	{% endif %}
+		}
+	</style>
 
 	<div class="navbar navbar-expand-md navbar-light" id="navbar">
 		<div class="container-fluid" style="padding:0;">
-			<a href="/" class="navbar-brand mr-auto {% if SITE_NAME in ('PCM','WPD') and not sub %}flex-grow-1{% endif %}">
+			<a href="/" class="navbar-brand mr-auto">
 				<img alt="header icon" height=33 src="/assets/images/{{SITE_NAME}}/headericon.webp?v=1019">
 			</a>
 			
 			{% if sub %}
 				<a href="/h/{{sub.name}}" class="font-weight-bold ml-1 flex-grow-1 mt-1" style="font-size:max(14px,1.2vw)">/h/{{sub.name}}</a>
-			{% elif SITE_NAME not in ('PCM','WPD') %}
+			{% else %}
 				<style>
 					{% if g.webview %}
 						@media (min-width: 480px) {
@@ -173,17 +158,8 @@
 
 								<a class="dropdown-item" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/rDrama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
 
-								{% if SITE_NAME in ['rDrama', 'PCM'] %}
-									<a class="dropdown-item" rel="nofollow noopener noreferrer" href="/report_bugs"><i class="fas fa-bug fa-fw mr-3"></i>Bugs/Suggestions</a>
-								{% endif %}
+								<a class="dropdown-item" rel="nofollow noopener noreferrer" href="{{config('GUMROAD_LINK')}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a>
 
-								{% if SITE_NAME == 'rDrama' %}
-									<a class="dropdown-item" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a>
-								{% endif %}
-								{% if SITE_NAME != 'Cringetopia' %}
-									<a class="dropdown-item" rel="nofollow noopener noreferrer" href="{{config('GUMROAD_LINK')}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a>
-								{% endif %}
-								{% if SITE_NAME == 'rDrama' %}<a class="dropdown-item" href="/archives"><i class="fas fa-book fa-fw mr-3"></i>Archives</a>{% endif %}
 								<a class="dropdown-item" href="/contact"><i class="fas fa-file-signature fa-fw mr-3"></i>Contact us</a>
 							</div>
 							<div class="px-2">
@@ -233,13 +209,8 @@
 
 				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/rDrama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
 
-				{% if SITE_NAME == 'rDrama' %}
-					<a class="nav-item nav-link" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a>
-				{% endif %}
-				{% if SITE_NAME != 'Cringetopia' %}
-					<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="{{config('GUMROAD_LINK')}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a>
-				{% endif %}
-				{% if SITE_NAME == 'rDrama' %}<a class="nav-item nav-link" href="/archives"><i class="fas fa-book fa-fw mr-3"></i>Archives</a>{% endif %}
+				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="{{config('GUMROAD_LINK')}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a>
+
 				<a class="nav-item nav-link" href="/contact"><i class="fas fa-file-signature fa-fw mr-3"></i>Contact us</a>
 
 				<li class="nav-item border-top border-bottom mt-2 pt-2">

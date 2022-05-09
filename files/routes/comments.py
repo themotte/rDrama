@@ -82,7 +82,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 	
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
-		elif SITE_NAME == 'rDrama': pid = 6489
 		elif request.host == 'pcmemes.net': pid = 2487
 		else: pid = 1
 	
@@ -485,118 +484,6 @@ def api_comment(v):
 
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
-
-
-		if SITE_NAME == 'rDrama' and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
-		
-			body = random.choice(LONGPOST_REPLIES)
-
-
-			if body.startswith('▼'):
-				body = body[1:]
-				vote = CommentVote(user_id=LONGPOSTBOT_ID,
-							vote_type=-1,
-							comment_id=c.id,
-							real = True
-							)
-				g.db.add(vote)
-				c.downvotes = 1
-
-
-
-			body_html2 = sanitize(body)
-
-			c2 = Comment(author_id=LONGPOSTBOT_ID,
-				parent_submission=parent_submission,
-				parent_comment_id=c.id,
-				level=level+1,
-				is_bot=True,
-				body_html=body_html2,
-				top_comment_id=c.top_comment_id,
-				ghost=parent_post.ghost
-				)
-
-			g.db.add(c2)
-
-			longpostbot = g.db.query(User).filter_by(id = LONGPOSTBOT_ID).one_or_none()
-			longpostbot.comment_count += 1
-			longpostbot.coins += 1
-			g.db.add(longpostbot)
-			
-			g.db.flush()
-
-			n = Notification(comment_id=c2.id, user_id=v.id)
-			g.db.add(n)
-
-
-		if SITE_NAME == 'rDrama' and random.random() < 0.001:
-		
-			body = "zoz"
-			body_html2 = sanitize(body)
-
-
-
-
-			c2 = Comment(author_id=ZOZBOT_ID,
-				parent_submission=parent_submission,
-				parent_comment_id=c.id,
-				level=level+1,
-				is_bot=True,
-				body_html=body_html2,
-				top_comment_id=c.top_comment_id,
-				ghost=parent_post.ghost,
-				distinguish_level=6
-				)
-
-			g.db.add(c2)
-			g.db.flush()
-			n = Notification(comment_id=c2.id, user_id=v.id)
-			g.db.add(n)
-
-
-
-
-		
-			body = "zle"
-			body_html2 = sanitize(body)
-
-
-
-			c3 = Comment(author_id=ZOZBOT_ID,
-				parent_submission=parent_submission,
-				parent_comment_id=c2.id,
-				level=level+2,
-				is_bot=True,
-				body_html=body_html2,
-				top_comment_id=c.top_comment_id,
-				ghost=parent_post.ghost,
-				distinguish_level=6
-				)
-
-			g.db.add(c3)
-			g.db.flush()
-			
-			body = "zozzle"
-			body_html2 = sanitize(body)
-
-
-			c4 = Comment(author_id=ZOZBOT_ID,
-				parent_submission=parent_submission,
-				parent_comment_id=c3.id,
-				level=level+3,
-				is_bot=True,
-				body_html=body_html2,
-				top_comment_id=c.top_comment_id,
-				ghost=parent_post.ghost,
-				distinguish_level=6
-				)
-
-			g.db.add(c4)
-
-			zozbot = g.db.query(User).filter_by(id = ZOZBOT_ID).one_or_none()
-			zozbot.comment_count += 3
-			zozbot.coins += 3
-			g.db.add(zozbot)
 
 
 		if not v.shadowbanned:

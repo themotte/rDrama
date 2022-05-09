@@ -28,86 +28,66 @@ AJ_REPLACEMENTS = {
 	' TO ': " TOO ",
 }
 
-if SITE_NAME == 'Cringetopia':
-	SLURS = {
-		"retarded": "neurodivergent",
-		"retard": "neurodivergent",
-		"faggotry": "cute twinkry",
-		"faggot": "cute twink",
-		"n1gger": "🏀",
-		"nlgger": "🏀",
-		"nigger": "🏀",
-		"uss liberty incident": "tragic accident aboard the USS Liberty",
-		"lavon affair": "Lavon Misunderstanding",
-		"i hate marsey": "i love marsey",
-		"autistic": "neurodivergent",
-		"holohoax": "i tried to claim the Holocaust didn't happen because I am a pencil-dicked imbecile and the word filter caught me lol",
-		"i hate carp": "i love Carp",
-		"heil hitler": "hello kitty",
+SLURS = {
+	"retarded": "r-slurred",
+	"retard": "r-slur",
+	"gayfag": "gaystrag",
+	"poorfag": "poorstrag",
+	"richfag": "richstrag",
+	"newfag": "newstrag",
+	"oldfag": "oldstrag",
+	"faggotry": "cute twinkry",
+	"faggot": "cute twink",
+	"pedophile": "libertarian",
+	"kill yourself": "keep yourself safe",
+	"n1gger": "BIPOC",
+	"nlgger": "BIPOC",
+	"nigger": "BIPOC",
+	"steve akins": "penny verity oaken",
+	"trannie": "🚂🚃🚃",
+	"tranny": "🚂🚃🚃",
+	"troon": "🚂🚃🚃",
+	"nonewnormal": "HorseDewormerAddicts",
+	"kikery": "https://sciencedirect.com/science/article/abs/pii/S016028960600033X",
+	"kike": "https://sciencedirect.com/science/article/abs/pii/S016028960600033X",
+	"latinos": "latinx",
+	"latino": "latinx",
+	"latinas": "latinx",
+	"latina": "latinx",
+	"hispanics": "latinx",
+	"hispanic": "latinx",
+	"uss liberty incident": "tragic accident aboard the USS Liberty",
+	"lavon affair": "Lavon Misunderstanding",
+	"shylock": "Israeli friend",
+	"mohammad": "Prophet Mohammad (PBUH)",
+	"muhammad": "Prophet Mohammad (PBUH)",
+	"i hate marsey": "i love marsey",
+	"dancing israelis": "i love Israel",
+	"sodomite": "total dreamboat",
+	"pajeet": "sexy Indian dude",
+	"landlord": "landchad",
+	"tenant": "renthog",
+	"renter": "rentoid",
+	"autistic": "neurodivergent",
+	"holohoax": "i tried to claim the Holocaust didn't happen because I am a pencil-dicked imbecile and the word filter caught me lol",
+	"groomercord": "discord (actually a pretty cool service)",
+	"pedocord": "discord (actually a pretty cool service)",
+	"i hate carp": "i love Carp",
+	"manlet": "little king",
+	"gamer": "g*mer",
+	"journalist": "journ*list",
+	"journalism": "journ*lism",
+	"wuhan flu": "SARS-CoV-2 syndemic",
+	"china flu": "SARS-CoV-2 syndemic",
+	"china virus": "SARS-CoV-2 syndemic",
+	"kung flu": "SARS-CoV-2 syndemic",
+	"elon musk": "rocket daddy",
+	"fake and gay": "fake and straight",
 
-		" fag ": " cute twink ",
-	}
-else:
-	SLURS = {
-		"retarded": "r-slurred",
-		"retard": "r-slur",
-		"gayfag": "gaystrag",
-		"poorfag": "poorstrag",
-		"richfag": "richstrag",
-		"newfag": "newstrag",
-		"oldfag": "oldstrag",
-		"faggotry": "cute twinkry",
-		"faggot": "cute twink",
-		"pedophile": "libertarian",
-		"kill yourself": "keep yourself safe",
-		"n1gger": "BIPOC",
-		"nlgger": "BIPOC",
-		"nigger": "BIPOC",
-		"steve akins": "penny verity oaken",
-		"trannie": "🚂🚃🚃",
-		"tranny": "🚂🚃🚃",
-		"troon": "🚂🚃🚃",
-		"nonewnormal": "HorseDewormerAddicts",
-		"kikery": "https://sciencedirect.com/science/article/abs/pii/S016028960600033X",
-		"kike": "https://sciencedirect.com/science/article/abs/pii/S016028960600033X",
-		"latinos": "latinx",
-		"latino": "latinx",
-		"latinas": "latinx",
-		"latina": "latinx",
-		"hispanics": "latinx",
-		"hispanic": "latinx",
-		"uss liberty incident": "tragic accident aboard the USS Liberty",
-		"lavon affair": "Lavon Misunderstanding",
-		"shylock": "Israeli friend",
-		"mohammad": "Prophet Mohammad (PBUH)",
-		"muhammad": "Prophet Mohammad (PBUH)",
-		"i hate marsey": "i love marsey",
-		"dancing israelis": "i love Israel",
-		"sodomite": "total dreamboat",
-		"pajeet": "sexy Indian dude",
-		"landlord": "landchad",
-		"tenant": "renthog",
-		"renter": "rentoid",
-		"autistic": "neurodivergent",
-		"holohoax": "i tried to claim the Holocaust didn't happen because I am a pencil-dicked imbecile and the word filter caught me lol",
-		"groomercord": "discord (actually a pretty cool service)",
-		"pedocord": "discord (actually a pretty cool service)",
-		"i hate carp": "i love Carp",
-		"manlet": "little king",
-		"gamer": "g*mer",
-		"journalist": "journ*list",
-		"journalism": "journ*lism",
-		"wuhan flu": "SARS-CoV-2 syndemic",
-		"china flu": "SARS-CoV-2 syndemic",
-		"china virus": "SARS-CoV-2 syndemic",
-		"kung flu": "SARS-CoV-2 syndemic",
-		"elon musk": "rocket daddy",
-		"fake and gay": "fake and straight",
-
-		" rapist ": " male feminist ",
-		" pedo ": " libertarian ",
-		" kys ": " keep yourself safe ",
-		" fag ": " cute twink ",
+	" rapist ": " male feminist ",
+	" pedo ": " libertarian ",
+	" kys ": " keep yourself safe ",
+	" fag ": " cute twink ",
 	}
 
 single_words = "|".join([slur.lower() for slur in SLURS.keys()])
@@ -615,38 +595,9 @@ AWARDS = {
 	},
 }
 
-if SITE_NAME == 'PCM':
-	PCM_AWARDS = {
-		"croag": {
-			"kind": "croag",
-			"title": "Croag",
-			"description": "Summons Croag on the post.",
-			"icon": "fas fa-head-side",
-			"color": "text-gold",
-			"price": 500
-		},
-		"toe": {
-			"kind": "toe",
-			"title": "Toe Hype",
-			"description": "Summons Blade's toe on the post.",
-			"icon": "fas fa-socks",
-			"color": "text-blue",
-			"price": 500
-		},
-		"crab": {
-			"kind": "crab",
-			"title": "Crab",
-			"description": "Rave time!",
-			"icon": "fas fa-crab",
-			"color": "text-danger",
-			"price": 4000
-		}
-	}
-	AWARDS = {**PCM_AWARDS, **AWARDS}
-
 AWARDS2 = deepcopy(AWARDS)
 for k, val in AWARDS.items():
-	if val['description'] == '???' and not (k == 'ghost' and SITE_NAME == 'PCM'): AWARDS2.pop(k)
+	if val['description'] == '???': AWARDS2.pop(k)
 	if SITE == 'pcmemes.net' and k in ('ban','pizzashill','marsey','bird','grass','chud'): AWARDS2.pop(k)
 
 
@@ -682,8 +633,7 @@ NOTIFIED_USERS = {
 
 FORTUNE_REPLIES = ('<b style="color:#6023f8">Your fortune: Allah Wills It</b>','<b style="color:#d302a7">Your fortune: Inshallah, Only Good Things Shall Come To Pass</b>','<b style="color:#e7890c">Your fortune: Allah Smiles At You This Day</b>','<b style="color:#7fec11">Your fortune: Your Bussy Is In For A Blasting</b>','<b style="color:#43fd3b">Your fortune: You Will Be Propositioned By A High-Tier Twink</b>','<b style="color:#9d05da">Your fortune: Repent, You Have Displeased Allah And His Vengeance Is Nigh</b>','<b style="color:#f51c6a">Your fortune: Reply Hazy, Try Again</b>','<b style="color:#00cbb0">Your fortune: lmao you just lost 100 coins</b>','<b style="color:#2a56fb">Your fortune: Yikes 😬</b>','<b style="color:#0893e1">Your fortune: You Will Be Blessed With Many Black Bulls</b>','<b style="color:#16f174">Your fortune: NEETmax, The Day Is Lost If You Venture Outside</b>','<b style="color:#fd4d32">Your fortune: A Taste Of Jannah Awaits You Today</b>','<b style="color:#bac200">Your fortune: Watch Your Back</b>','<b style="color:#6023f8">Your fortune: Outlook good</b>','<b style="color:#d302a7">Your fortune: Godly Luck</b>','<b style="color:#e7890c">Your fortune: Good Luck</b>','<b style="color:#7fec11">Your fortune: Bad Luck</b>','<b style="color:#43fd3b">Your fortune: Good news will come to you by mail</b>','<b style="color:#9d05da">Your fortune: Very Bad Luck</b>','<b style="color:#00cbb0">Your fortune: ｷﾀ━━━━━━(ﾟ∀ﾟ)━━━━━━ !!!!</b>','<b style="color:#2a56fb">Your fortune: Better not tell you now</b>','<b style="color:#0893e1">Your fortune: You will meet a dark handsome stranger</b>','<b style="color:#16f174">Your fortune: （　´_ゝ`）ﾌｰﾝ</b>','<b style="color:#fd4d32">Your fortune: Excellent Luck</b>','<b style="color:#bac200">Your fortune: Average Luck</b>')
 
-if SITE_NAME == 'rDrama': patron = 'Paypig'
-else: patron = 'Patron'
+patron = 'Patron'
 
 REDDIT_NOTIFS = {
 	'idio3': IDIO_ID,
@@ -717,16 +667,10 @@ marseys_const = [x[0] for x in db.query(Marsey.name).filter(Marsey.name!='chudse
 marseys_const2 = marseys_const + ['chudsey','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','exclamationpoint','period','questionmark']
 db.close()
 
-if SITE_NAME == 'PCM':
-	valid_username_chars = 'a-zA-Z0-9_\-А-я'
-	valid_username_regex = re.compile("^[a-zA-Z0-9_\-А-я]{3,25}$", flags=re.A)
-	mention_regex = re.compile('(^|\s|<p>)@(([a-zA-Z0-9_\-А-я]){3,25})', flags=re.A)
-	mention_regex2 = re.compile('<p>@(([a-zA-Z0-9_\-А-я]){3,25})', flags=re.A)
-else:
-	valid_username_chars = 'a-zA-Z0-9_\-'
-	valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$", flags=re.A)
-	mention_regex = re.compile('(^|\s|<p>)@(([a-zA-Z0-9_\-]){1,25})', flags=re.A)
-	mention_regex2 = re.compile('<p>@(([a-zA-Z0-9_\-]){1,25})', flags=re.A)
+valid_username_chars = 'a-zA-Z0-9_\-'
+valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$", flags=re.A)
+mention_regex = re.compile('(^|\s|<p>)@(([a-zA-Z0-9_\-]){1,25})', flags=re.A)
+mention_regex2 = re.compile('<p>@(([a-zA-Z0-9_\-]){1,25})', flags=re.A)
 
 valid_password_regex = re.compile("^.{8,100}$", flags=re.A)
 
