@@ -99,8 +99,7 @@ CREATE TABLE public.submissions (
     flair character varying(350),
     stickied_utc integer,
     ghost boolean DEFAULT false NOT NULL,
-    sub character varying(20),
-    new boolean
+    sub character varying(20)
 );
 
 
