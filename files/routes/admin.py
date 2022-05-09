@@ -132,42 +132,6 @@ def merge_all(v, id):
 	return redirect(user.url)
 
 
-
-if SITE_NAME == 'PCM':
-	@app.get('/admin/sidebar')
-	@admin_level_required(3)
-	def get_sidebar(v):
-
-		try:
-			with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r', encoding="utf-8") as f: sidebar = f.read()
-		except:
-			sidebar = None
-
-		return render_template('admin/sidebar.html', v=v, sidebar=sidebar)
-
-
-	@app.post('/admin/sidebar')
-	@limiter.limit("1/second;30/minute;200/hour;1000/day")
-	@admin_level_required(3)
-	def post_sidebar(v):
-
-		text = request.values.get('sidebar', '').strip()
-
-		with open(f'files/templates/sidebar_{SITE_NAME}.html', 'w+', encoding="utf-8") as f: f.write(text)
-
-		with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r', encoding="utf-8") as f: sidebar = f.read()
-
-		ma = ModAction(
-			kind="change_sidebar",
-			user_id=v.id,
-		)
-		g.db.add(ma)
-
-		g.db.commit()
-
-		return render_template('admin/sidebar.html', v=v, sidebar=sidebar, msg='Sidebar edited successfully!')
-
-
 @app.post("/@<username>/make_admin")
 @admin_level_required(3)
 def make_admin(v, username):
@@ -401,8 +365,6 @@ def remove_meme_admin(v, username):
 @limiter.limit("1/day")
 @admin_level_required(3)
 def monthly(v):
-	if SITE_NAME == 'rDrama' and v.id != AEVANN_ID: abort (403)
-
 	data = {'access_token': GUMROAD_TOKEN}
 
 	emails = [x['email'] for x in requests.get(f'https://api.gumroad.com/v2/products/{GUMROAD_ID}/subscribers', data=data, timeout=5).json()["subscribers"]]
@@ -419,16 +381,6 @@ def monthly(v):
 			g.db.add(u)
 			send_repeatable_notification(u.id, f"@{v.username} has given you {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
 		else: print(u.username)
-
-	if request.host == 'pcmemes.net':
-		u = g.db.query(User).filter_by(id=KIPPY_ID).one()
-		u.procoins += 50000
-		g.db.add(u)
-
-	if request.host == 'rdrama.net':
-		u = g.db.query(User).filter_by(id=A_ID).one()
-		u.procoins += 25000
-		g.db.add(u)
 
 	ma = ModAction(
 		kind="monthly",

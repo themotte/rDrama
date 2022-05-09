@@ -176,11 +176,11 @@ def front_all(v, sub=None, subdomain=None):
 
 	if v:
 		defaultsorting = v.defaultsorting
-		if sub or SITE_NAME != 'rDrama': defaulttime = 'all'
+		defaulttime = 'all'
 		else: defaulttime = v.defaulttime
 	else:
 		defaultsorting = "new"
-		if sub or SITE_NAME != 'rDrama': defaulttime = 'all'
+		defaulttime = 'all'
 		else: defaulttime = defaulttimefilter
 
 	sort=request.values.get("sort", defaultsorting)
@@ -344,8 +344,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 	if not (v and v.shadowbanned):
 		posts = posts.join(User, User.id == Submission.author_id).filter(User.shadowbanned == None)
 
-	if request.host == 'rdrama.net': num = 5
-	else: num = 1
+	num = 1
 
 	if sort == "hot":
 		ti = int(time.time()) + 3600

@@ -56,16 +56,6 @@
 
 			{% block navbar %}
 			<div class="d-flex align-items-center">
-				{% if v and SITE_NAME == 'rDrama' %}
-					{% if v.paid_dues %}
-						{% if ccmode=="true"%}
-							<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-primary text-primary mx-2" href="?sort={{sort}}&t={{t}}&ccmode=false"><i class="fas fa-golf-club mr-2 "></i>CC</a>
-						{% else %}
-							<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only show country club posts" class="btn btn-secondary mx-2" href="?sort={{sort}}&t={{t}}&ccmode=true"><i class="fas fa-golf-club mr-2 "></i>CC</a>
-						{% endif %}
-					{% endif %}
-				{% endif %}
-
 				<div class="dropdown dropdown-actions mx-2">
 					<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						{% if t=="hour" %}<i class="fas fa-clock mr-2 "></i>

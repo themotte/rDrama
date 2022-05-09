@@ -4,8 +4,7 @@ from .const import *
 
 command_word = "!slots"
 casino_word = "!slotsmb"
-if SITE_NAME == 'rDrama': minimum_bet = 100
-else: minimum_bet = 10
+minimum_bet = 10
 maximum_bet = INFINITY
 payout_to_symbols = {
 	2: ["👣", "🍀", "🌈", "⭐️"],

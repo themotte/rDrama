@@ -597,8 +597,6 @@ def award_comment(cid, v):
 @app.get("/admin/awards")
 @admin_level_required(2)
 def admin_userawards_get(v):
-	if request.host == 'pcmemes.net' and v.admin_level < 3: abort(403)
-
 	if v.admin_level != 3:
 		return render_template("admin/awards.html", awards=list(AWARDS3.values()), v=v)
 
@@ -608,8 +606,6 @@ def admin_userawards_get(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_userawards_post(v):
-	if request.host == 'pcmemes.net' and v.admin_level < 3: abort(403)
-
 	try: u = request.values.get("username").strip()
 	except: abort(404)
 

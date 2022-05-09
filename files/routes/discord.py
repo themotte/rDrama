@@ -17,9 +17,6 @@ def join_discord(v):
 	
 	if v.shadowbanned: return {"error": "Internal server error"}
 	
-	if SITE_NAME == 'rDrama' and v.admin_level < 2 and v.patron == 0 and v.truecoins < 150:
-		return "You must receive 150 upvotes/downvotes from other users before being able to join the Discord server."
-
 	now=int(time.time())
 
 	state=generate_hash(f"{now}+{v.id}+discord")

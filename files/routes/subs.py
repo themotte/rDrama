@@ -223,14 +223,10 @@ def remove_mod(v, sub):
 @app.get("/create_sub")
 @is_not_permabanned
 def create_sub(v):
-	if SITE_NAME == 'rDrama' and v.admin_level < 3: abort(403)
-
-	if request.host == 'rdrama.net': cost = 0
-	else:
-		num = v.subs_created + 1
-		for a in v.alts:
-			num += a.subs_created
-		cost = num * 100
+	num = v.subs_created + 1
+	for a in v.alts:
+		num += a.subs_created
+	cost = num * 100
 	
 	return render_template("sub/create_sub.html", v=v, cost=cost)
 
@@ -238,18 +234,14 @@ def create_sub(v):
 @app.post("/create_sub")
 @is_not_permabanned
 def create_sub2(v):
-	if SITE_NAME == 'rDrama' and v.admin_level < 3: abort(403)
-
 	name = request.values.get('name')
 	if not name: abort(400)
 	name = name.strip().lower()
 
-	if request.host == 'rdrama.net': cost = 0
-	else:
-		num = v.subs_created + 1
-		for a in v.alts:
-			num += a.subs_created
-		cost = num * 100
+	num = v.subs_created + 1
+	for a in v.alts:
+		num += a.subs_created
+	cost = num * 100
 
 	if not valid_sub_regex.fullmatch(name):
 		return render_template("sub/create_sub.html", v=v, cost=cost, error="Sub name not allowed."), 400
