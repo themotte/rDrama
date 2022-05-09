@@ -38,6 +38,7 @@ class Submission(Base):
 	comment_count = Column(Integer, default=0)
 	is_approved = Column(Integer, ForeignKey("users.id"))
 	over_18 = Column(Boolean, default=False)
+	new = Column(Boolean, default=True)
 	is_bot = Column(Boolean, default=False)
 	upvotes = Column(Integer, default=1)
 	downvotes = Column(Integer, default=0)
