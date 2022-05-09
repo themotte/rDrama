@@ -1,0 +1,85 @@
+@charset "UTF-8";
+
+
+:root {
+	--dark: #c7c7c7;
+	--secondary: #c7c7c7;
+	--gray: #c7c7c7;
+	--gray-300: #c7c7c7;
+	--gray-400: #cfcfcf;	
+	--gray-500: #ffffff;
+	--gray-600: #ffffff;
+	--gray-700: #ffffff;
+	--gray-800: #ffffff;
+	--gray-900: #ffffff;
+	--light: #ffffff;
+	--muted: #1e1e1e;
+	--gray-100: #1e1e1e;
+	--gray-200: #1e1e1e;
+	--white: #1e1e1e;
+	--black: #303030;
+	--background: #ffffff;
+}
+
+* {
+	border-color: var(--primary);
+}
+
+.border {
+	border-color: var(--primary) !important;
+}
+
+.form-control {
+	background: transparent;
+	border-color: var(--primary) !important;
+}
+
+.btn {
+	background: transparent;
+	border-color: var(--primary) !important;
+}
+
+.form-control:disabled, .form-control[readonly] {
+	background: transparent;
+	border-color: var(--primary) !important;
+}
+
+.btn-success {
+	border-color: #38A169 !important;
+}
+
+.btn-danger {
+	border-color: #E53E3E !important;
+}
+
+#frontpage .pseudo-submit-form.card .card-body .form-control {
+	border-color: transparent !important;
+}
+
+.btn-lg {
+	border-color: transparent !important;
+}
+
+pre {
+	color: #CFCFCF;
+}
+
+.transparent {
+	background: None !important;
+}
+
+blockquote {
+	color: var(--gray-400);
+}
+
+#profilestuff > * {
+	color: var(--gray-400) !important;
+}
+
+.comment-anchor:target, .unread {
+	background: #00000055 !important;
+}
+
+#frontpage .post-title a:visited, .visited {
+	color: #7a7a7a !important;
+}

@@ -77,7 +77,7 @@
 							<div class="input-group mb2">
 								<select autocomplete="off" id='theme' class="form-control" form="profile-settings" name="theme" onchange="post_toast(this,'/settings/profile?theme='+document.getElementById('theme').value, '1')">
 								
-								{% set themes = ["dramblr", "reddit", "transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"] %}
+								{% set themes = ["TheMotte", "dramblr", "reddit", "transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"] %}
 								
 								{% for entry in themes %}
 									<option value="{{entry}}" {% if v.theme==entry %} selected {% endif %}>
@@ -624,3 +624,4 @@
 {% include "gif_modal.html" %}
 
 {% endblock %}
+
