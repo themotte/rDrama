@@ -121,6 +121,7 @@
 					<a class="nav-link" href="/comments" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Comments"><i class="fas fa-comment-dots"></i></a>
 				</li>
 
+				{% if v and v.admin_level > 1 %}
 				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
 					<a class="nav-link" href="/leaderboard" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Users"><i class="fas fa-trophy"></i></a>
 				</li>
@@ -128,6 +129,7 @@
 				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
 					<a class="nav-link" href="/shop" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shop"><i class="fas fa-store"></i></a>
 				</li>
+				{% endif %}
 			
 				<li class="nav-item d-flex align-items-center justify-content-center text-center">
 					<div class="dropdown">
