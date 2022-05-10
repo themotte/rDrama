@@ -11,3 +11,4 @@ venv/
 flask_session/
 .DS_Store
 site_settings.json
+.venv

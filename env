@@ -1,5 +1,5 @@
 MASTER_KEY=blahblahblah
-DOMAIN=localhost
+DOMAIN=dev.localhost
 SITE_NAME=TheMotte
 GIPHY_KEY=blahblahblah
 DISCORD_SERVER_ID=blahblahblah

@@ -26,3 +26,6 @@ pyenchant
 youtube-dl
 yattag
 webptools
+python-dotenv
+pytest
+beautifulsoup4

@@ -256,6 +256,8 @@ def sign_up_post(v):
 
 	username = username.strip()
 
+	print("1")
+
 	def signup_error(error):
 
 		args = {"error": error}
