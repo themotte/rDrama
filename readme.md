@@ -1,4 +1,4 @@
-This code runs https://rdrama.net and https://pcmemes.net
+This code runs https://www.themotte.org
 
 # Installation (Windows/Linux/MacOS)
 
@@ -11,7 +11,7 @@ This code runs https://rdrama.net and https://pcmemes.net
 3 - Run the following commands in the terminal:
 
 ```
-git clone https://github.com/Aevann1/rDrama/
+git clone https://github.com/themotte/rDrama/
 
 cd rDrama
 
