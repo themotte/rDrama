@@ -10,12 +10,6 @@ import matplotlib.pyplot as plt
 from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
 from files.classes.badges import BadgeDef
 
-@app.get("/r/drama/comments/<id>/<title>")
-@app.get("/r/Drama/comments/<id>/<title>")
-def rdrama(id, title):
-	id = ''.join(f'{x}/' for x in id)
-	return redirect(f'/archives/drama/comments/{id}{title}.html')
-
 @app.get('/logged_out/')
 @app.get('/logged_out/<path:old>')
 def logged_out(old = ""):
@@ -340,16 +334,6 @@ def submit_contact(v):
 	g.db.commit()
 	return render_template("contact.html", v=v, msg="Your message has been sent.")
 
-@app.get('/archives')
-def archivesindex():
-	return redirect("/archives/index.html")
-
-@app.get('/archives/<path:path>')
-def archives(path):
-	resp = make_response(send_from_directory('/archives', path))
-	if request.path.endswith('.css'): resp.headers.add("Content-Type", "text/css")
-	return resp
-
 @app.get('/e/<emoji>')
 @limiter.exempt
 def emoji(emoji):
@@ -450,13 +434,6 @@ def settings_security(v):
 						   v=v,
 						   mfa_secret=pyotp.random_base32() if not v.mfa_secret else None
 						   )
-
-@app.get("/.well-known/assetlinks.json")
-def googleplayapp():
-	with open("files/assets/assetlinks.json", "r") as f:
-		return Response(f.read(), mimetype='application/json')
-
-
 
 @app.post("/dismiss_mobile_tip")
 def dismiss_mobile_tip():
