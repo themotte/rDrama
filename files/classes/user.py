@@ -129,6 +129,7 @@ class User(Base):
 	authorizations = relationship("ClientAuth", viewonly=True)
 	awards = relationship("AwardRelationship", primaryjoin="User.id==AwardRelationship.user_id", viewonly=True)
 	referrals = relationship("User", viewonly=True)
+	notes = relationship("UserNote", foreign_keys='UserNote.reference_user', back_populates="user")
 
 	def __init__(self, **kwargs):
 

@@ -1,9 +1,9 @@
-
 import gevent.monkey
 gevent.monkey.patch_all()
 from os import environ, path
 import secrets
 from flask import *
+from flask_migrate import Migrate
 from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_compress import Compress
@@ -34,7 +34,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 3153600
 app.config["SESSION_COOKIE_NAME"] = "session_" + environ.get("SITE_NAME").strip().lower()
 app.config["VERSION"] = "1.0.0"
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config["SESSION_COOKIE_SECURE"] = True 
+app.config["SESSION_COOKIE_SECURE"] = True # change before commit
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 365
 app.config["DEFAULT_COLOR"] = environ.get("DEFAULT_COLOR", "ff0000").strip()
@@ -84,7 +84,6 @@ mail = Mail(app)
 
 @app.before_request
 def before_request():
-	
 	with open('site_settings.json', 'r') as f:
 		app.config['SETTINGS'] = json.load(f)
 

@@ -249,6 +249,37 @@ CREATE TABLE public.commentflags (
     created_utc integer NOT NULL
 );
 
+--
+-- Name: usernotes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.usernotes (
+    id integer NOT NULL,
+    author_id integer NOT NULL,
+    created_utc integer NOT NULL,
+    reference_user integer NOT NULL,
+    reference_comment integer,
+    note character varying(10000)
+);
+
+--
+-- Name: usernotes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.usernotes_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: usernotes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.usernotes_id_seq OWNED BY public.usernotes.id;
 
 --
 -- Name: comments; Type: TABLE; Schema: public; Owner: -
