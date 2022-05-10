@@ -23,10 +23,8 @@ def test_signup():
 		soup = BeautifulSoup(signup_get_response.text, 'html.parser')
 		formkey = next(tag for tag in soup.find_all("input") if tag.get("name") == "formkey").get("value")
 		form_timestamp = next(tag for tag in soup.find_all("input") if tag.get("name") == "now").get("value")
-		print("formkey is " + formkey)
-		print("now is " + form_timestamp)
 
-		sleep(5)
+		sleep(5) # dodge the bot check
 		username = "testuser" + str(round(time()))
 		signup_post_response = client.post("/signup", data={
 			"username": username,
