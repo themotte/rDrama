@@ -12,7 +12,7 @@ from copy import deepcopy
 
 @app.get("/shop")
 @app.get("/settings/shop")
-@auth_required
+@admin_level_required(2)
 def shop(v):
 	AWARDS = deepcopy(AWARDS2)
 
