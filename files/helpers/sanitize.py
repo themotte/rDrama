@@ -128,9 +128,8 @@ def render_emoji(html, regexp, edit, marseys_used=set(), b=False):
 
 def sanitize(sanitized, alert=False, comment=False, edit=False):
 
-	if os.name != "nt":
-		signal.signal(signal.SIGALRM, handler)
-		signal.alarm(1)
+	signal.signal(signal.SIGALRM, handler)
+	signal.alarm(1)
 
 	sanitized = linefeeds_regex.sub(r'\1\n\n\2', sanitized)
 
@@ -292,8 +291,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	if bans: abort(403, description=f"Remove the banned domains {bans} and try again!")
 
-	if os.name != "nt":
-		signal.alarm(0)
+	signal.alarm(0)
 
 	return sanitized
 

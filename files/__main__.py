@@ -24,8 +24,6 @@ app.jinja_env.cache = {}
 app.jinja_env.auto_reload = True
 faulthandler.enable()
 
-from dotenv import load_dotenv
-load_dotenv("env")
 
 app.config["SITE_NAME"]=environ.get("SITE_NAME").strip()
 app.config["GUMROAD_LINK"]=environ.get("GUMROAD_LINK", "https://marsey1.gumroad.com/l/tfcvri").strip()
