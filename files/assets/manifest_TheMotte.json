@@ -1,0 +1,8 @@
+{
+  "name": "The Motte",
+  "short_name": "The Motte",
+  "start_url": "https://www.themotte.org",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "description": "The Motte"
+}
