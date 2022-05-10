@@ -27,6 +27,7 @@
 								</div>
 						</a>
 				</button>
+				{% if v and v.admin_level > 1 %}
 				<button class="col px-0 btn btn-dead m-0" style="background: None !important; border: None;">
 						<a href="/leaderboard" class="text-decoration-none" role="button">
 								<div class="text-center {% if request.path=='/leaderboard' %}text-primary{% else %}text-muted{% endif %}">
@@ -35,6 +36,7 @@
 								</div>
 						</a>
 				</button>
+				{% endif %}
 {% if v %}
 				<button class="col px-0 btn btn-dead m-0" style="background: None !important; border: None;">
 						<a href="/chat" class="text-decoration-none" role="button">
@@ -44,6 +46,7 @@
 								</div>
 						</a>
 				</button>
+				{% if v and v.admin_level > 1 %}
 				<button class="col px-0 mr-3 btn btn-dead m-0" style="background: None !important; border: None;">
 						<a href="/shop" class="text-decoration-none" role="button">
 								<div class="text-center {% if request.path=='/shop' %}text-primary{% else %}text-muted{% endif %}">
@@ -52,6 +55,7 @@
 								</div>
 						</a>
 				</button>
+				{% endif %}
 {% else %}
 				<button class="col px-0 mr-3 btn btn-dead m-0" style="background: None !important; border: None;">
 						<a href="/signup" class="text-decoration-none" role="button">
