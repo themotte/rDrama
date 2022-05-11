@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 from time import time, sleep
 from files.__main__ import app
-from flask import session
 
 # these tests require `docker-compose up` first
 
@@ -13,18 +12,15 @@ def test_rules():
 
 def test_signup():
 	client = app.test_client()
-	with client: # this keeps the session between requests which is needed
+	with client: # this keeps the session between requests, which we need
 		signup_get_response = client.get("/signup")
 		assert signup_get_response.status_code == 200
-		# field with hidden formkey value looks like
-		'''
-		<input type="hidden" name="formkey" value="873097cb1d44410cdc20b0039addd853">
-		'''
 		soup = BeautifulSoup(signup_get_response.text, 'html.parser')
+		# these hidden input values seem to be used for anti-bot purposes and need to be submitted
 		formkey = next(tag for tag in soup.find_all("input") if tag.get("name") == "formkey").get("value")
 		form_timestamp = next(tag for tag in soup.find_all("input") if tag.get("name") == "now").get("value")
 
-		sleep(5) # dodge the bot check
+		sleep(5) # too-fast submissions are rejected (bot check?)
 		username = "testuser" + str(round(time()))
 		signup_post_response = client.post("/signup", data={
 			"username": username,
