@@ -18,3 +18,5 @@ class CommentSaveRelationship(Base):
 
 	user_id=Column(Integer, ForeignKey("users.id"), primary_key=True)
 	comment_id=Column(Integer, ForeignKey("comments.id"), primary_key=True)
+
+	Index('fki_comment_save_relationship_comment_fkey', comment_id)
