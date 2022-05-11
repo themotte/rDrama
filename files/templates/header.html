@@ -121,13 +121,12 @@
 					<a class="nav-link" href="/comments" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Comments"><i class="fas fa-comment-dots"></i></a>
 				</li>
 
+				{% if v and v.admin_level > 1 %}
 				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
 					<a class="nav-link" href="/leaderboard" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Users"><i class="fas fa-trophy"></i></a>
 				</li>
 
-				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-					<a class="nav-link" href="/shop" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shop"><i class="fas fa-store"></i></a>
-				</li>
+				{% endif %}
 			
 				<li class="nav-item d-flex align-items-center justify-content-center text-center">
 					<div class="dropdown">
@@ -137,8 +136,6 @@
 							<div><img alt="your profile picture" loading="lazy" src="{{v.profile_url}}" class="profile-pic-35"></div>
 							<div class="text-left pl-2">
 								<div style="color: #{{v.namecolor}}" class="text-small font-weight-bold {% if v.patron %}patron{% endif %}"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></div>
-								<div class="text-small-extra"><img alt="coins" class="mr-1 ml-1" data-bs-toggle="tooltip" data-bs-placement="bottom" height="13" src="/assets/images/{{SITE_NAME}}/coins.webp?v=2" title="coins" aria-label="coins"><span id="user-coins-amount">{{v.coins}}</span> Coins</div>
-								<div class="text-small-extra"><img alt="marseybux" class="mr-1 ml-1" data-bs-toggle="tooltip" data-bs-placement="bottom" height="13" width="30" src="/assets/images/marseybux.webp?v=1008" title="Marseybux" aria-label="Marseybux"><span id="user-bux-amount">{{v.procoins}}</span> Marseybux</div>
 							</div>
 						</div>
 					</a>
@@ -152,11 +149,9 @@
 								<button class="dropdown-item copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fas fa-user-friends fa-fw mr-3"></i>Invite friends</button>
 							</div>
 							<div class="px-2">
-								<a class="dropdown-item" href="/assets/app_{{config('SITE_NAME')}}.apk?v=2"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
+								<a class="dropdown-item" href="/changelog"><i class="fas fa-clipboard fa-fw mr-3"></i>Changelog</a>
 
-								<a class="dropdown-item" href="https://rdrama.net/changelog"><i class="fas fa-clipboard fa-fw mr-3"></i>Changelog</a>
-
-								<a class="dropdown-item" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/rDrama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
+								<a class="dropdown-item" rel="nofollow noopener noreferrer" href="https://github.com/themotte/rDrama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
 
 								<a class="dropdown-item" rel="nofollow noopener noreferrer" href="{{config('GUMROAD_LINK')}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a>
 
@@ -205,9 +200,7 @@
 					</li>
 				{% endif %}
 				
-				<a class="nav-item nav-link" href="/assets/app_{{config('SITE_NAME')}}.apk?v=2"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
-
-				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/rDrama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
+				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="https://github.com/themotte/rDrama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
 
 				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="{{config('GUMROAD_LINK')}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a>
 

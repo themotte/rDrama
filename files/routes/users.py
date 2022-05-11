@@ -453,7 +453,7 @@ def transfer_bux(v, username):
 
 
 @app.get("/leaderboard")
-@auth_required
+@admin_level_required(2)
 def leaderboard(v):
 
 	users = g.db.query(User)

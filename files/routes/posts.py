@@ -95,7 +95,7 @@ def publish(pid, v):
 	return redirect(post.permalink)
 
 @app.get("/submit")
-@app.get("/h/<sub>/submit")
+# @app.get("/h/<sub>/submit")
 @auth_required
 def submit_get(v, sub=None):
 	if sub: sub = g.db.query(Sub.name).filter_by(name=sub.strip().lower()).one_or_none()
@@ -108,8 +108,8 @@ def submit_get(v, sub=None):
 
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
-@app.get("/h/<sub>/post/<pid>")
-@app.get("/h/<sub>/post/<pid>/<anything>")
+# @app.get("/h/<sub>/post/<pid>")
+# @app.get("/h/<sub>/post/<pid>/<anything>")
 @auth_desired
 def post_id(pid, anything=None, v=None, sub=None):
 
@@ -758,7 +758,7 @@ def api_is_repost():
 	else: return {'permalink': ''}
 
 @app.post("/submit")
-@app.post("/h/<sub>/submit")
+# @app.post("/h/<sub>/submit")
 @limiter.limit("1/second;2/minute;10/hour;50/day")
 @auth_required
 def submit_post(v, sub=None):
@@ -1016,7 +1016,6 @@ def submit_post(v, sub=None):
 		club=club,
 		author_id=v.id,
 		over_18=bool(request.values.get("over_18","")),
-		new=True,  # always sort as new by default
 		app_id=v.client.application.id if v.client else None,
 		is_bot = is_bot,
 		url=url,
@@ -1186,7 +1185,7 @@ def submit_post(v, sub=None):
 	if request.headers.get("Authorization"): return post.json
 	else:
 		post.voted = 1
-		if post.new or 'megathread' in post.title.lower(): sort = 'new'
+		if 'megathread' in post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
 		return render_template('submission.html', v=v, p=post, sort=sort, render_replies=True, offset=0, success=True, sub=post.subr)
 

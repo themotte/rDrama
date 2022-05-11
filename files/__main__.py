@@ -1,9 +1,9 @@
+
 import gevent.monkey
 gevent.monkey.patch_all()
 from os import environ, path
 import secrets
 from flask import *
-from flask_migrate import Migrate
 from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_compress import Compress
@@ -34,11 +34,11 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 3153600
 app.config["SESSION_COOKIE_NAME"] = "session_" + environ.get("SITE_NAME").strip().lower()
 app.config["VERSION"] = "1.0.0"
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config["SESSION_COOKIE_SECURE"] = True # change before commit
+app.config["SESSION_COOKIE_SECURE"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 365
 app.config["DEFAULT_COLOR"] = environ.get("DEFAULT_COLOR", "ff0000").strip()
-app.config["DEFAULT_THEME"] = environ.get("DEFAULT_THEME", "midnight").strip()
+app.config["DEFAULT_THEME"] = "TheMotte"
 app.config["FORCE_HTTPS"] = 1
 app.config["UserAgent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
 app.config["HCAPTCHA_SITEKEY"] = environ.get("HCAPTCHA_SITEKEY","").strip()
@@ -84,6 +84,7 @@ mail = Mail(app)
 
 @app.before_request
 def before_request():
+	
 	with open('site_settings.json', 'r') as f:
 		app.config['SETTINGS'] = json.load(f)
 

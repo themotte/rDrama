@@ -5,10 +5,6 @@
 		</script>
 	{% endif %}
 
-	{% if v %}
-		{% include "award_modal.html" %}
-	{% endif %}
-
 	<div style="display:none" id="popover">
 		<div class="popover-user-profile" role="tooltip">
 			<img loading="lazy" class="pop-banner w-100 h-64 object-cover">
@@ -205,7 +201,7 @@
 						{{c.print()}}
 					{% endif %}
 					<a class="user-name text-decoration-none" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color:#{{c.author.namecolor}}; font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
-					{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}} _U_</bdi>{% endif %}
+					{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}
 				{% endif %}
 
 				{% if c.parent_comment_id and not standalone and level != 1 %}<a href="#comment-{{c.parent_comment_id}}-only" class="text-muted ml-2"><i class="fas fa-reply fa-sm fa-fw fa-flip-horizontal mr-1"></i>{{c.parent_comment.author_name}}</a>{% endif %}
@@ -438,8 +434,6 @@
 
 							<button class="btn caction py-0 nobackground px-1 text-muted" data-bs-toggle="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author_name}}',)"><i class="fas fa-flag fa-fw"></i>Report</button>
 
-							<button class="btn caction py-0 nobackground px-1 text-muted" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" data-url="/award_comment/{{c.id}}"><i class="fas fa-gift" aria-hidden="true"></i>Give Award</button>
-							
 							<button id="unsave-{{c.id}}" class="btn caction py-0 nobackground px-1 {% if c.id in v.saved_comment_idlist() %}d-md-inline-block{% endif %} text-muted d-none" role="button" onclick="post_toast3(this,'/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Unsave</button>
 							
 							<button id="save-{{c.id}}" class="btn caction py-0 nobackground px-1 {% if c.id not in v.saved_comment_idlist() %}d-md-inline-block{% endif %} text-muted d-none" role="button" onclick="post_toast3(this,'/save_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Save</button>
@@ -639,8 +633,6 @@
 
 					{% if v %}
 						<a role="button" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author_name}}')" class="list-group-item"><i class="fas fa-flag mr-2"></i>Report</a>
-
-						<a class="list-group-item" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" data-url="/award_comment/{{c.id}}"><i class="fas fa-gift mr-2" aria-hidden="true"></i>Give Award</a>
 
 						<a id="save2-{{c.id}}" class="list-group-item {% if c.id in v.saved_comment_idlist() %}d-none{% endif %}" role="button" data-bs-dismiss="modal" onclick="post_toast2(this,'/save_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')"><i class="fas fa-save mr-2"></i>Save</a>
 

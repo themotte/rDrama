@@ -2,11 +2,11 @@ from .alts import *
 from .badges import *
 from .clients import *
 from .comment import *
-from .usernotes import *
 from .domains import *
 from .flags import *
 from .user import *
 from .userblock import *
+from .usernotes import *
 from .submission import *
 from .votes import *
 from .domains import *
