@@ -23,12 +23,12 @@
 #     from files.classes import *                              #
 # still imported the same stuff as before I ran the following: #
 #     $ find files/classes -type f -name '*.py' \              #
-#           -exec grep import '{}' ';' \                       #
-#           | grep ' import' \                                 #
-#           | grep -v 'from[.]\|__init__\|from files.classes'  #
-#           | sed 's/^[^:]*://g' \                             #
-#           | sort \                                           #
-#           | uniq                                             #
+#         -exec grep import '{}' ';' \                         #
+#         | grep 'import' \                                    #
+#         | grep -v 'from [.]\|__init__\|from files.classes' \ #
+#         | sed 's/^[^:]*://g' \                               #
+#         | sort \                                             #
+#         | uniq                                               #
 # and then reordered the list such that import * did not stomp #
 # over stuff that had been explicitly imported.                #
 ################################################################
@@ -38,6 +38,10 @@ from sqlalchemy import *
 from flask import *
 
 # Then everything except what's in files.*
+import pyotp
+import random
+import re
+import time
 from copy import deepcopy
 from datetime import datetime
 from flask import g
