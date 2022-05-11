@@ -10,14 +10,22 @@ class AwardRelationship(Base):
 	__tablename__ = "award_relationships"
 
 	id = Column(Integer, primary_key=True)
-	user_id = Column(Integer, ForeignKey("users.id"))
+	user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 	submission_id = Column(Integer, ForeignKey("submissions.id"))
 	comment_id = Column(Integer, ForeignKey("comments.id"))
-	kind = Column(String)
+	kind = Column(String, nullable=False)
 
 	user = relationship("User", primaryjoin="AwardRelationship.user_id==User.id", viewonly=True)
 	post = relationship("Submission", primaryjoin="AwardRelationship.submission_id==Submission.id", viewonly=True)
 	comment = relationship("Comment", primaryjoin="AwardRelationship.comment_id==Comment.id", viewonly=True)
+
+	Index('award_user_idx', user_id)
+	Index('award_post_idx', submission_id)
+	Index('award_comment_idx', comment_id)
+
+	__table_args__ = (
+		UniqueConstraint('user_id', 'submission_id', 'comment_id', name='award_constraint'),
+	)
 
 
 	@property
