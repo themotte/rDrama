@@ -9,9 +9,12 @@ from json import loads
 
 class BadgeDef(Base):
 	__tablename__ = "badge_defs"
+	__table_args__ = (
+		UniqueConstraint('name', name='badge_def_name_unique'),
+	)
 
 	id = Column(Integer, primary_key=True, autoincrement=True)
-	name = Column(String)
+	name = Column(String, nullable=False)
 	description = Column(String)
 
 	def __repr__(self):
@@ -26,6 +29,8 @@ class Badge(Base):
 	badge_id = Column(Integer,  ForeignKey('badge_defs.id'), primary_key=True)
 	description = Column(String)
 	url = Column(String)
+
+	Index('badges_badge_id_idx', badge_id)
 
 	user = relationship("User", viewonly=True)
 	badge = relationship("BadgeDef", primaryjoin="foreign(Badge.badge_id) == remote(BadgeDef.id)", viewonly=True)
