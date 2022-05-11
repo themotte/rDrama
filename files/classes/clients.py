@@ -65,10 +65,13 @@ class OauthApp(Base):
 class ClientAuth(Base):
 
 	__tablename__ = "client_auths"
+	__table_args__ = (
+		UniqueConstraint('access_token', name='unique_access'),
+	)
 
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	oauth_client = Column(Integer, ForeignKey("oauth_apps.id"), primary_key=True)
-	access_token = Column(String)
+	access_token = Column(String, nullable=False)
 	
 	user = relationship("User", viewonly=True)
 	application = relationship("OauthApp", viewonly=True)

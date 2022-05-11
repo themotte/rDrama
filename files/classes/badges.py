@@ -20,7 +20,6 @@ class BadgeDef(Base):
 	def __repr__(self):
 		return f"<BadgeDef(id={self.id})>"
 
-
 class Badge(Base):
 
 	__tablename__ = "badges"
