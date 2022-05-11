@@ -259,7 +259,8 @@ CREATE TABLE public.usernotes (
     created_utc integer NOT NULL,
     reference_user integer NOT NULL,
     reference_comment integer,
-    note character varying(10000)
+    note character varying(10000),
+    tag character varying(10)
 );
 
 --
