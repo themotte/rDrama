@@ -31,6 +31,14 @@ function popclick(author) {
 	; }, 1);
 }
 
+function shownotes(author) {
+	let popover = document.getElementById("popover-usernotes")
+
+	console.log(popover);
+
+	return false;
+}
+
 document.addEventListener("click", function(){
 	active = document.activeElement.getAttributeNode("class");
 	if (active && active.nodeValue == "user-name text-decoration-none"){

@@ -510,6 +510,7 @@ class User(Base):
 				'post_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level > 2)) else self.post_count,
 				'comment_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level > 2)) else self.comment_count,
 				'badges': [x.path for x in self.badges],
+				'notes': [x.json() for x in self.notes]
 				}
 
 		return data

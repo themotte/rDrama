@@ -83,3 +83,94 @@ blockquote {
 #frontpage .post-title a:visited, .visited {
 	color: #7a7a7a !important;
 }
+
+.usernote-link {
+	color: var(--primary);
+	text-decoration: none;
+	background-color: transparent;
+	cursor: pointer;
+}
+
+.usernote-link:hover {
+	text-decoration: underline;
+}
+
+.modal__overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0,0,0,0.6);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index:1033 !important;
+}
+
+.modal__container {
+	background-color: #fff;
+	padding: 30px;
+	max-width: 500px;
+	max-height: 100vh;
+	border-radius: 4px;
+	overflow-y: auto;
+	box-sizing: border-box;
+}
+
+.modal__header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.modal__title {
+	margin-top: 0;
+	margin-bottom: 0;
+	font-weight: 600;
+	font-size: 1.25rem;
+	line-height: 1.25;
+	color: #00449e;
+	box-sizing: border-box;
+}
+
+.modal__close {
+	background: transparent;
+	border: 0;
+}
+
+.modal__header .modal__close:before { content: "\2715"; }
+
+.modal__content {
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+	line-height: 1.5;
+	color: rgba(0,0,0,.8);
+}
+
+.modal__btn {
+	font-size: .875rem;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	padding-top: .5rem;
+	padding-bottom: .5rem;
+	background-color: #e6e6e6;
+	color: rgba(0,0,0,.8);
+	border-radius: .25rem;
+	border-style: none;
+	border-width: 0;
+	cursor: pointer;
+	-webkit-appearance: button;
+	text-transform: none;
+	overflow: visible;
+	line-height: 1.15;
+	margin: 0;
+}
+
+.micromodal-slide {
+	display: none;
+}
+
+.micromodal-slide.is-open {
+	display: block;
+}

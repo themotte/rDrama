@@ -40,3 +40,15 @@ class UserNote(Base):
 
 	def __repr__(self):
 		return f"<UserNote(id={self.id})>"
+
+	def json(self):
+		data = {'id': self.id,
+				'author_name': self.author.username,
+				'author_id': self.author.id,
+				'created': self.created_utc,
+				'comment_id': self.reference_comment,
+				'note': self.note,
+				'tag': self.tag
+				}
+
+		return data

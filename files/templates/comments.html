@@ -42,6 +42,29 @@
 		</div>
 		</div>
 	</div>
+	
+	<div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+		<div class="modal__overlay" tabindex="-1" data-micromodal-close>
+		  <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+			<header class="modal__header">
+			  <h2 class="modal__title" id="modal-1-title">
+				Micromodal
+			  </h2>
+			  <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+			</header>
+			<main class="modal__content" id="modal-1-content">
+			  <p>
+				Try hitting the <code>tab</code> key and notice how the focus stays within the modal itself. Also, <code>esc</code> to close modal.
+			  </p>
+			</main>
+			<footer class="modal__footer">
+			  <button class="modal__btn modal__btn-primary">Continue</button>
+			  <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">Close</button>
+			</footer>
+		  </div>
+		</div>
+	</div>
+
 {% endif %}
 
 {% macro single_comment(c, level=1) %}
@@ -201,6 +224,9 @@
 						{{c.print()}}
 					{% endif %}
 					<a class="user-name text-decoration-none" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color:#{{c.author.namecolor}}; font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
+					{% if v.admin_level > 2 %}
+						<span class="usernote-link" onclick='shownotes({{p.author.json_popover(v) | tojson}})'>_U_</span>
+					{% endif %}
 					{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}
 				{% endif %}
 
