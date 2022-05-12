@@ -10,10 +10,10 @@ from files.helpers.const import *
 class ModAction(Base):
 	__tablename__ = "modactions"
 	id = Column(Integer, primary_key=True)
-	user_id = Column(Integer, ForeignKey("users.id"))
+	# user_id = Column(Integer, ForeignKey("users.id"))
+	user_id = Column(Integer)
 	kind = Column(String)
-	# target_user_id = Column(Integer, ForeignKey("users.id"))
-	target_user_id = Column(Integer)
+	target_user_id = Column(Integer, ForeignKey("users.id"))
 	target_submission_id = Column(Integer, ForeignKey("submissions.id"))
 	target_comment_id = Column(Integer, ForeignKey("comments.id"))
 	_note=Column(String)
