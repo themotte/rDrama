@@ -42,7 +42,8 @@ class Submission(Base):
 	upvotes = Column(Integer, default=1, nullable=False)
 	downvotes = Column(Integer, default=0, nullable=False)
 	realupvotes = Column(Integer, default=1)
-	app_id=Column(Integer, ForeignKey("oauth_apps.id"))
+	# app_id=Column(Integer, ForeignKey("oauth_apps.id"))
+	app_id=Column(Integer)
 	title = Column(String, nullable=False)
 	title_html = Column(String, nullable=False)
 	url = Column(String)
@@ -65,14 +66,15 @@ class Submission(Base):
 	Index('submissions_over18_index', over_18)
 
 	author = relationship("User", primaryjoin="Submission.author_id==User.id")
-	oauth_app = relationship("OauthApp", viewonly=True)
+	# oauth_app = relationship("OauthApp", viewonly=True)
+	oauth_app = relationship("OauthApp", viewonly=True, primaryjoin='OauthApp.id==foreign(Submission.app_id)')
 	approved_by = relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id", viewonly=True)
 	awards = relationship("AwardRelationship", viewonly=True)
 	reports = relationship("Flag", viewonly=True)
 	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
 	subr = relationship("Sub", primaryjoin="foreign(Submission.sub)==remote(Sub.name)", viewonly=True)
 
-	bump_utc = deferred(Column(Integer, server_default=FetchedValue()))
+	# bump_utc = deferred(Column(Integer, server_default=FetchedValue()))
 
 	def __init__(self, *args, **kwargs):
 		if "created_utc" not in kwargs: kwargs["created_utc"] = int(time.time())
