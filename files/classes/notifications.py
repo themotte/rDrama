@@ -9,8 +9,8 @@ class Notification(Base):
 
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	comment_id = Column(Integer, ForeignKey("comments.id"), primary_key=True)
-	read = Column(Boolean, default=False)
-	created_utc = Column(Integer)
+	read = Column(Boolean, default=False, nullable=False)
+	created_utc = Column(Integer, nullable=False)
 
 	comment = relationship("Comment", viewonly=True)
 	user = relationship("User", viewonly=True)

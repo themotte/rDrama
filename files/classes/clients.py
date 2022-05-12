@@ -14,10 +14,10 @@ class OauthApp(Base):
 
 	id = Column(Integer, primary_key=True)
 	client_id = Column(String)
-	app_name = Column(String)
-	redirect_uri = Column(String)
-	description = Column(String)
-	author_id = Column(Integer, ForeignKey("users.id"))
+	app_name = Column(String(length=50), nullable=False)
+	redirect_uri = Column(String(length=50), nullable=False)
+	description = Column(String(length=256), nullable=False)
+	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
 	author = relationship("User", viewonly=True)
 

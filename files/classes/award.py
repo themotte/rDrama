@@ -8,6 +8,9 @@ from files.helpers.const import *
 class AwardRelationship(Base):
 
 	__tablename__ = "award_relationships"
+	__table_args__ = (
+		UniqueConstraint('user_id', 'submission_id', 'comment_id', name='award_constraint'),
+	)
 
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
@@ -22,10 +25,6 @@ class AwardRelationship(Base):
 	Index('award_user_idx', user_id)
 	Index('award_post_idx', submission_id)
 	Index('award_comment_idx', comment_id)
-
-	__table_args__ = (
-		UniqueConstraint('user_id', 'submission_id', 'comment_id', name='award_constraint'),
-	)
 
 
 	@property

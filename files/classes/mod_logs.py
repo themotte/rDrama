@@ -16,7 +16,7 @@ class ModAction(Base):
 	target_submission_id = Column(Integer, ForeignKey("submissions.id"))
 	target_comment_id = Column(Integer, ForeignKey("comments.id"))
 	_note=Column(String)
-	created_utc = Column(Integer)
+	created_utc = Column(Integer, nullable=False)
 
 	user = relationship("User", primaryjoin="User.id==ModAction.user_id", viewonly=True)
 	target_user = relationship("User", primaryjoin="User.id==ModAction.target_user_id", viewonly=True)

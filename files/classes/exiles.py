@@ -7,7 +7,7 @@ class Exile(Base):
 	__tablename__ = "exiles"
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	sub = Column(String, ForeignKey("subs.name"), primary_key=True)
-	exiler_id = Column(Integer, ForeignKey("users.id"))
+	exiler_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
 	exiler = relationship("User", primaryjoin="User.id==Exile.exiler_id", viewonly=True)
 

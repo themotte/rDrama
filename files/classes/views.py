@@ -10,7 +10,7 @@ class ViewerRelationship(Base):
 
 	user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
 	viewer_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
-	last_view_utc = Column(Integer)
+	last_view_utc = Column(Integer, nullable=False)
 
 	viewer = relationship("User", primaryjoin="ViewerRelationship.viewer_id == User.id", viewonly=True)
 
