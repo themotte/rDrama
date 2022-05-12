@@ -45,6 +45,8 @@ class UserNote(Base):
 		data = {'id': self.id,
 				'author_name': self.author.username,
 				'author_id': self.author.id,
+				'user_name': self.user.username,
+				'user_id': self.user.id,
 				'created': self.created_utc,
 				'comment_id': self.reference_comment,
 				'note': self.note,

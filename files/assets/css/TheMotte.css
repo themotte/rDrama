@@ -148,6 +148,17 @@ blockquote {
 	color: rgba(0,0,0,.8);
 }
 
+.modal__content textarea {
+	width: 400px;
+	resize: vertical !important;
+	min-height: 50px;
+}
+
+.modal__content .notes_content {
+	width: 400px;
+	min-height: 50px;
+}
+
 .modal__btn {
 	font-size: .875rem;
 	padding-left: 1rem;

@@ -217,6 +217,13 @@ def distribute(v, comment):
 	g.db.commit()
 	return {"message": f"Each winner has received {coinsperperson} coins!"}
 
+@app.post("/@<username>/create_note")
+@admin_level_required(3)
+def create_note(v,username):
+	print(username)
+	print(request.values.get('data'))
+	return make_response(jsonify({'success':True}), 200)
+
 @app.post("/@<username>/revert_actions")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)

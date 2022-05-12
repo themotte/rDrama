@@ -31,12 +31,40 @@ function popclick(author) {
 	; }, 1);
 }
 
-function shownotes(author) {
-	let popover = document.getElementById("popover-usernotes")
+CURRENT_TARGET = null;
 
-	console.log(popover);
+function fillnote(author) {
+	CURRENT_TARGET = author;
 
-	return false;
+	let notes = document.getElementById("modal-1");
+	let table = "";
+
+	notes.getElementsByClassName('notes_target')[0].innerText = author.username;
+
+	for(let i = 0; i < author.notes.length; ++i){
+		let note = author.notes[i];
+		table += "<tr>";
+		table += "<td>" + note.user_name + "</td>";
+		table += "<td>" + note.note + "</td>";
+		table += "<td>" + note.author_name + "</td>";
+		table += "</tr>"
+	}
+
+	notes.getElementsByClassName('notes_content')[0].innerHTML += table;
+}
+
+function sendnote() {
+	let note = document.querySelector("#modal-1 textarea").value;
+	const xhr = new XMLHttpRequest();
+	xhr.open("POST", CURRENT_TARGET.url + "/create_note");
+	xhr.setRequestHeader('xhr', 'xhr');
+	var form = new FormData()
+	form.append("formkey", formkey());
+	form.append("data", JSON.stringify({
+		'note': note,
+		'user': CURRENT_TARGET
+	}));
+	xhr.send(form);
 }
 
 document.addEventListener("click", function(){
