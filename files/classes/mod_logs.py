@@ -10,8 +10,7 @@ from files.helpers.const import *
 class ModAction(Base):
 	__tablename__ = "modactions"
 	id = Column(Integer, primary_key=True)
-	# user_id = Column(Integer, ForeignKey("users.id"))
-	user_id = Column(Integer)
+	user_id = Column(Integer, ForeignKey("users.id"))
 	kind = Column(String)
 	target_user_id = Column(Integer, ForeignKey("users.id"))
 	target_submission_id = Column(Integer, ForeignKey("submissions.id"))
@@ -25,8 +24,7 @@ class ModAction(Base):
 	Index('modaction_id_idx', id.desc())
 	Index('modaction_pid_idx', target_submission_id)
 
-	# user = relationship("User", primaryjoin="User.id==ModAction.user_id", viewonly=True)
-	user = relationship("User", primaryjoin="User.id==foreign(ModAction.user_id)", viewonly=True)
+	user = relationship("User", primaryjoin="User.id==ModAction.user_id", viewonly=True)
 	target_user = relationship("User", primaryjoin="User.id==ModAction.target_user_id", viewonly=True)
 	target_post = relationship("Submission", viewonly=True)
 

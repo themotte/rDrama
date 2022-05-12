@@ -12,8 +12,7 @@ class Vote(Base):
 	submission_id = Column(Integer, ForeignKey("submissions.id"), primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	vote_type = Column(Integer, nullable=False)
-	# app_id = Column(Integer, ForeignKey("oauth_apps.id"))
-	app_id = Column(Integer)
+	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	real = Column(Boolean, default=True, nullable=False)
 	created_utc = Column(Integer, nullable=False)
 
@@ -57,8 +56,7 @@ class CommentVote(Base):
 	comment_id = Column(Integer, ForeignKey("comments.id"), primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	vote_type = Column(Integer, nullable=False)
-	# app_id = Column(Integer, ForeignKey("oauth_apps.id"))
-	app_id = Column(Integer)
+	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	real = Column(Boolean, default=True, nullable=False)
 	created_utc = Column(Integer, nullable=False)
 
