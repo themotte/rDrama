@@ -29,6 +29,13 @@ cardview = bool(int(environ.get("CARD_VIEW", 1)))
 
 class User(Base):
 	__tablename__ = "users"
+	__table_args__ = (
+		UniqueConstraint('bannerurl', name='one_banner'),
+		UniqueConstraint('discord_id', name='one_discord_account'),
+		UniqueConstraint('id', name='uid_unique'),
+		UniqueConstraint('original_username', name='users_original_username_key'),
+		UniqueConstraint('username', name='users_username_key'),
+	)
 	id = Column(Integer, primary_key=True)
 	username = Column(String(length=255), nullable=False)
 	namecolor = Column(String(length=6), default=DEFAULT_COLOR, nullable=False)

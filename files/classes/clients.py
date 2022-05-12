@@ -11,6 +11,9 @@ import time
 class OauthApp(Base):
 
 	__tablename__ = "oauth_apps"
+	__table_args__ = (
+		UniqueConstraint('client_id', name='unique_id'),
+	)
 
 	id = Column(Integer, primary_key=True)
 	client_id = Column(String)
