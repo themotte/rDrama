@@ -12,6 +12,8 @@ class ViewerRelationship(Base):
 	viewer_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
 	last_view_utc = Column(Integer, nullable=False)
 
+	Index('fki_view_viewer_fkey', viewer_id)
+
 	viewer = relationship("User", primaryjoin="ViewerRelationship.viewer_id == User.id", viewonly=True)
 
 	def __init__(self, **kwargs):

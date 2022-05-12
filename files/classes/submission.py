@@ -52,6 +52,18 @@ class Submission(Base):
 	ban_reason = Column(String)
 	embed_url = Column(String)
 
+	Index('fki_submissions_approver_fkey', is_approved)
+	Index('post_app_id_idx', app_id)
+	Index('subimssion_binary_group_idx', is_banned, deleted_utc, over_18)
+	Index('submission_isbanned_idx', is_banned)
+	Index('submission_isdeleted_idx', deleted_utc)
+	Index('submission_new_sort_idx', is_banned, deleted_utc, created_utc.desc(), over_18)
+	Index('submission_pinned_idx', is_pinned)
+	Index('submissions_author_index', author_id)
+	Index('submissions_created_utc_asc_idx', created_utc.nullsfirst())
+	Index('submissions_created_utc_desc_idx', created_utc.desc())
+	Index('submissions_over18_index', over_18)
+
 	author = relationship("User", primaryjoin="Submission.author_id==User.id")
 	oauth_app = relationship("OauthApp", viewonly=True)
 	approved_by = relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id", viewonly=True)

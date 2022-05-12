@@ -8,6 +8,8 @@ class UserBlock(Base):
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	target_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 
+	Index('block_target_idx', target_id)
+
 	user = relationship("User", primaryjoin="User.id==UserBlock.user_id", viewonly=True)
 	target = relationship("User", primaryjoin="User.id==UserBlock.target_id", viewonly=True)
 

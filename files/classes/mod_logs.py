@@ -18,6 +18,12 @@ class ModAction(Base):
 	_note=Column(String)
 	created_utc = Column(Integer, nullable=False)
 
+	Index('fki_modactions_user_fkey', target_user_id)
+	Index('modaction_action_idx', kind)
+	Index('modaction_cid_idx', target_comment_id)
+	Index('modaction_id_idx', id.desc())
+	Index('modaction_pid_idx', target_submission_id)
+
 	user = relationship("User", primaryjoin="User.id==ModAction.user_id", viewonly=True)
 	target_user = relationship("User", primaryjoin="User.id==ModAction.target_user_id", viewonly=True)
 	target_post = relationship("Submission", viewonly=True)

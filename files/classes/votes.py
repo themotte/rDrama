@@ -16,6 +16,9 @@ class Vote(Base):
 	real = Column(Boolean, default=True, nullable=False)
 	created_utc = Column(Integer, nullable=False)
 
+	Index('votes_type_index', vote_type)
+	Index('vote_user_index', user_id)
+
 	user = relationship("User", lazy="subquery", viewonly=True)
 	post = relationship("Submission", lazy="subquery", viewonly=True)
 
@@ -56,6 +59,9 @@ class CommentVote(Base):
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	real = Column(Boolean, default=True, nullable=False)
 	created_utc = Column(Integer, nullable=False)
+
+	Index('cvote_user_index', user_id)
+	Index('commentvotes_comments_type_index', vote_type)
 
 	user = relationship("User", lazy="subquery")
 	comment = relationship("Comment", lazy="subquery", viewonly=True)

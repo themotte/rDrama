@@ -9,5 +9,9 @@ class Marsey(Base):
 	tags = Column(String(length=200), nullable=False)
 	count = Column(Integer, default=0, nullable=False)
 
+	Index('marseys_idx2', author_id)
+	Index('marseys_idx3', count.desc())
+	Index('marseys_idx', name)
+
 	def __repr__(self):
 		return f"<Marsey(name={self.name})>"

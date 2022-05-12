@@ -120,6 +120,27 @@ class User(Base):
 	referred_by = Column(Integer, ForeignKey("users.id"))
 	subs_created = Column(Integer, default=0, nullable=False)
 
+	Index(
+		'users_original_username_trgm_idx',
+		original_username,
+		postgresql_using='gin',
+		postgresql_ops={'description':'gin_trgm_ops'}
+	)
+	Index(
+		'users_username_trgm_idx',
+		username,
+		postgresql_using='gin',
+		postgresql_ops={'description':'gin_trgm_ops'}
+	)
+
+	Index('discord_id_idx', discord_id)
+	Index('fki_user_referrer_fkey', referred_by)
+	Index('user_banned_idx', is_banned)
+	Index('user_private_idx', is_private)
+	Index('users_created_utc_index', created_utc)
+	Index('users_subs_idx', stored_subscriber_count)
+	Index('users_unbanutc_idx', unban_utc.desc())
+
 	badges = relationship("Badge", viewonly=True)
 	subscriptions = relationship("Subscription", viewonly=True)
 	following = relationship("Follow", primaryjoin="Follow.user_id==User.id", viewonly=True)

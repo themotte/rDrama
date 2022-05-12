@@ -12,6 +12,10 @@ class Notification(Base):
 	read = Column(Boolean, default=False, nullable=False)
 	created_utc = Column(Integer, nullable=False)
 
+	Index('notification_read_idx', read)
+	Index('notifications_comment_idx', comment_id)
+	Index('notifs_user_read_idx', user_id, read)
+
 	comment = relationship("Comment", viewonly=True)
 	user = relationship("User", viewonly=True)
 

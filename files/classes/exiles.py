@@ -9,6 +9,9 @@ class Exile(Base):
 	sub = Column(String, ForeignKey("subs.name"), primary_key=True)
 	exiler_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
+	Index('fki_exile_exiler_fkey', exiler_id)
+	Index('fki_exile_sub_fkey', sub)
+
 	exiler = relationship("User", primaryjoin="User.id==Exile.exiler_id", viewonly=True)
 
 	def __repr__(self):

@@ -14,6 +14,8 @@ class Flag(Base):
 	reason = Column(String)
 	created_utc = Column(Integer, nullable=False)
 
+	Index('flag_user_idx', user_id)
+
 	user = relationship("User", primaryjoin = "Flag.user_id == User.id", uselist = False, viewonly=True)
 
 	def __init__(self, *args, **kwargs):
