@@ -21,3 +21,9 @@ docker-compose up
 4 - That's it! Visit `localhost` in your browser.
 
 5 - Optional: to change the domain from "localhost" to something else and configure the site settings, as well as integrate it with the external services the website uses, please edit the variables in the `env` file and then restart the docker container.
+
+# Run the E2E tests:
+
+(after `docker-compose up`)
+`docker exec themotte bash -c "cd service && python3 -m pytest -s"`
+
