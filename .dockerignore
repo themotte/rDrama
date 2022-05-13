@@ -1,0 +1,19 @@
+# everything from .gitignore
+image.*
+video.mp4
+video.webm
+cache/
+__pycache__/
+.idea/
+**/.pytest_cache/
+venv/
+.vscode/
+.sass-cache/
+flask_session/
+.DS_Store
+site_settings.json
+.venv
+
+# other stuff
+.git
+.github
