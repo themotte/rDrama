@@ -47,7 +47,14 @@ function fillnote(user,post) {
 		table += "</tr>"
 	}
 
-	dialog.getElementsByClassName('notes_content')[0].innerHTML += table;
+	table_element = dialog.getElementsByClassName('notes_content')[0]
+
+	while (table_element.childNodes.length > 2) {
+		table_element.removeChild(table_element.lastChild);
+	}
+
+	table_element.innerHTML += table;
+
 	dialog.dataset.context = JSON.stringify({
 		'url':  user.url,
 		'post': post,
@@ -61,6 +68,7 @@ function sendnote() {
 	console.log(context);
 
 	let note = document.querySelector("#modal-1 textarea").value;
+	let tag = document.querySelector("#modal-1 #usernote_tag").value;
 
 	const xhr = new XMLHttpRequest();
 	xhr.open("POST", context.url + "/create_note");
@@ -72,7 +80,7 @@ function sendnote() {
 		'note': note,
 		'post': context.post,
 		'user': context.user,
-		'tag': 0
+		'tag':  tag
 	}));
 	
 	xhr.send(form);

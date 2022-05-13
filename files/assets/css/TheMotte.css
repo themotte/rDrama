@@ -152,6 +152,16 @@ blockquote {
 	width: 400px;
 	resize: vertical !important;
 	min-height: 50px;
+	margin-top:20px;
+}
+
+.modal__content select {
+	display: table-cell;
+	width: 400px;
+	padding: 5px;
+	box-sizing: border-box;
+	margin-top:5px;
+	vertical-align: middle;
 }
 
 .modal__content .notes_content {

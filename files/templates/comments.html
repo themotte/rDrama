@@ -60,7 +60,19 @@
 						<th>Author</th>
 					</tr>
 				</table>
-				<textarea></textarea>
+				<form>
+					<textarea></textarea>
+					<select id="usernote_tag">
+						<option value="0"> Quality </option>
+						<option value="1"> Good    </option>
+						<option value="2"> Comment </option>
+						<option value="3"> Warning </option>
+						<option value="4"> Tempban </option>
+						<option value="5"> Permban </option>
+						<option value="6"> Spam    </option>
+						<option value="7"> Bot     </option>
+					</select>   
+				</form>
 			</main>
 			<footer class="modal__footer">
 			  <button class="modal__btn modal__btn-primary" onclick="sendnote()">Submit</button>
@@ -229,8 +241,11 @@
 						{{c.print()}}
 					{% endif %}
 					<a class="user-name text-decoration-none" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color:#{{c.author.namecolor}}; font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
-					{% if v and v.admin_level > 2  %}
-						<span class="usernote-link" onclick='shownotes({{c.author.json_popover(v) | tojson}})'>_U_</span>
+					{% if v and v.admin_level > 2 %}
+						<span 
+							class="usernote-link" 
+							data-micromodal-trigger="modal-1" 
+							onclick='fillnote( {{c.author.json_popover(v) | tojson}}, {{c.id}} )'>_U_</span>
 					{% endif %}
 					{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}
 				{% endif %}
