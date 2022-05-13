@@ -24,6 +24,4 @@ docker-compose up
 
 # Run the E2E tests:
 
-(after `docker-compose up`)
-`docker exec themotte bash -c "cd service && python3 -m pytest -s"`
-
+`./run_tests.py`
