@@ -31,18 +31,15 @@ function popclick(author) {
 	; }, 1);
 }
 
-CURRENT_TARGET = null;
+function fillnote(user,post) {
 
-function fillnote(author) {
-	CURRENT_TARGET = author;
-
-	let notes = document.getElementById("modal-1");
+	let dialog = document.getElementById("modal-1");
 	let table = "";
 
-	notes.getElementsByClassName('notes_target')[0].innerText = author.username;
+	dialog.getElementsByClassName('notes_target')[0].innerText = user.username;
 
-	for(let i = 0; i < author.notes.length; ++i){
-		let note = author.notes[i];
+	for(let i = 0; i < user.notes.length; ++i){
+		let note = user.notes[i];
 		table += "<tr>";
 		table += "<td>" + note.user_name + "</td>";
 		table += "<td>" + note.note + "</td>";
@@ -50,20 +47,34 @@ function fillnote(author) {
 		table += "</tr>"
 	}
 
-	notes.getElementsByClassName('notes_content')[0].innerHTML += table;
+	dialog.getElementsByClassName('notes_content')[0].innerHTML += table;
+	dialog.dataset.context = JSON.stringify({
+		'url':  user.url,
+		'post': post,
+		'user': user.id,
+	});
 }
 
 function sendnote() {
+	let dialog = document.getElementById("modal-1");
+	let context = JSON.parse(dialog.dataset.context);
+	console.log(context);
+
 	let note = document.querySelector("#modal-1 textarea").value;
+
 	const xhr = new XMLHttpRequest();
-	xhr.open("POST", CURRENT_TARGET.url + "/create_note");
+	xhr.open("POST", context.url + "/create_note");
 	xhr.setRequestHeader('xhr', 'xhr');
 	var form = new FormData()
+
 	form.append("formkey", formkey());
 	form.append("data", JSON.stringify({
 		'note': note,
-		'user': CURRENT_TARGET
+		'post': context.post,
+		'user': context.user,
+		'tag': 0
 	}));
+	
 	xhr.send(form);
 }
 

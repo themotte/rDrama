@@ -50,7 +50,7 @@ class UserNote(Base):
 				'created': self.created_utc,
 				'comment_id': self.reference_comment,
 				'note': self.note,
-				'tag': self.tag
+				'tag': self.tag.value
 				}
 
 		return data

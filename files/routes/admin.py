@@ -220,9 +220,35 @@ def distribute(v, comment):
 @app.post("/@<username>/create_note")
 @admin_level_required(3)
 def create_note(v,username):
-	print(username)
-	print(request.values.get('data'))
-	return make_response(jsonify({'success':True}), 200)
+
+	def result(msg,succ):
+		return make_response(jsonify({
+			'success':succ, 'message': msg
+		}), 200)
+
+	data = json.loads(request.values.get('data'))
+	user = g.db.query(User).filter_by(username=username).one_or_none()
+
+	if not user:
+		return result('User not found',False)
+
+	author_id = v.id
+	reference_user = user.id
+	reference_comment = data['post']
+	note = data['note']
+	tag = UserTag(data['tag'])
+
+	note = UserNote(
+		author_id=author_id,
+		reference_user=reference_user,
+		reference_comment=reference_comment,
+		note=note,
+		tag=tag)
+
+	g.db.add(note)
+	g.db.commit()
+
+	return result('Note saved',True)
 
 @app.post("/@<username>/revert_actions")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")

@@ -724,6 +724,12 @@ ALTER TABLE ONLY public.badge_defs ALTER COLUMN id SET DEFAULT nextval('public.b
 
 
 --
+-- Name: usernotes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.usernotes ALTER COLUMN id SET DEFAULT nextval('public.usernotes_id_seq'::regclass);
+
+--
 -- Name: comments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
