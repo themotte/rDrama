@@ -26,3 +26,4 @@ pyenchant
 youtube-dl
 yattag
 webptools
+pytest

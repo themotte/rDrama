@@ -291,7 +291,6 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	if bans: abort(403, description=f"Remove the banned domains {bans} and try again!")
 
-
 	signal.alarm(0)
 
 	return sanitized

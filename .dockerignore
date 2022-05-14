@@ -1,3 +1,4 @@
+# everything from .gitignore
 image.*
 video.mp4
 video.webm
@@ -11,3 +12,7 @@ venv/
 flask_session/
 .DS_Store
 .venv
+
+# other stuff
+.git
+.github
