@@ -43,44 +43,7 @@
 		</div>
 	</div>
 	
-	<div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
-		<div class="modal__overlay" tabindex="-1" data-micromodal-close>
-		  <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
-			<header class="modal__header">
-			  <h2 class="modal__title" id="modal-1-title">
-				Notes - <span class="notes_target"></span>
-			  </h2>
-			  <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
-			</header>
-			<main class="modal__content" id="modal-1-content">
-				<table class="notes_content">
-					<tr>
-						<th>User</th>
-						<th>Note</th>
-						<th>Author</th>
-					</tr>
-				</table>
-				<form>
-					<textarea></textarea>
-					<select id="usernote_tag">
-						<option value="0"> Quality </option>
-						<option value="1"> Good    </option>
-						<option value="2"> Comment </option>
-						<option value="3"> Warning </option>
-						<option value="4"> Tempban </option>
-						<option value="5"> Permban </option>
-						<option value="6"> Spam    </option>
-						<option value="7"> Bot     </option>
-					</select>   
-				</form>
-			</main>
-			<footer class="modal__footer">
-			  <button class="modal__btn modal__btn-primary" onclick="sendnote()">Submit</button>
-			  <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">Close</button>
-			</footer>
-		  </div>
-		</div>
-	</div>
+	{% include 'usernote.html' %}
 
 {% endif %}
 
@@ -245,7 +208,7 @@
 						<span 
 							class="usernote-link" 
 							data-micromodal-trigger="modal-1" 
-							onclick='fillnote( {{c.author.json_popover(v) | tojson}}, {{c.id}} )'>_U_</span>
+							onclick='fillnote( {{c.author.json_popover(v) | tojson}}, null, {{c.id}} )'>_U_</span>
 					{% endif %}
 					{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}
 				{% endif %}

@@ -148,8 +148,56 @@ blockquote {
 	color: rgba(0,0,0,.8);
 }
 
+.modal__content > .content__wrapper {
+	display: flex;
+	flex-direction: column;
+	min-width: 400px;
+}
+
+.modal__content > .content__wrapper > .table_content,
+.modal__content > .content__wrapper > .table_content > .table_note,
+.modal__content > .content__wrapper > .table_headers {
+	display: flex;
+}
+.modal__content > .content__wrapper > .table_content > .table_note {
+	margin-top: 10px;
+}
+.modal__content > .content__wrapper > .table_headers > *,
+.modal__content > .content__wrapper > .table_content > .table_note > * {
+	flex-basis: 20%;
+}
+.modal__content > .content__wrapper > .table_headers > *:nth-child(2),
+.modal__content > .content__wrapper > .table_content > .table_note > *:nth-child(2) {
+	flex-basis: 35%;
+	flex-grow: 1;
+}
+.modal__content > .content__wrapper > .table_content .table_note_message {
+	padding: 5px;
+	box-sizing: border-box;
+}
+.modal__content > .content__wrapper > .table_content > .table_note .table_note_date,
+.modal__content > .content__wrapper > .table_content > .table_note > .table_note_delete > span {
+	color: var(--primary);
+	border: none !important;
+	text-decoration: none;
+	background-color: transparent;
+	cursor: pointer;
+}
+.modal__content > .content__wrapper > .table_content > .table_note .table_note_date:hover,
+.modal__content > .content__wrapper > .table_content > .table_note > .table_note_delete > span:hover {
+	text-decoration: underline;
+}
+
+.modal__content > form {
+	display: flex;
+	flex-direction: column;
+}
+
+.modal__content > .content__wrapper > .table_content {
+	flex-direction: column;
+}
+
 .modal__content textarea {
-	width: 400px;
 	resize: vertical !important;
 	min-height: 50px;
 	margin-top:20px;
@@ -157,16 +205,10 @@ blockquote {
 
 .modal__content select {
 	display: table-cell;
-	width: 400px;
 	padding: 5px;
 	box-sizing: border-box;
 	margin-top:5px;
 	vertical-align: middle;
-}
-
-.modal__content .notes_content {
-	width: 400px;
-	min-height: 50px;
 }
 
 .modal__btn {

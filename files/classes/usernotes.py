@@ -26,12 +26,15 @@ class UserNote(Base):
 	created_utc = Column(Integer, nullable=False)
 	reference_user = Column(Integer, ForeignKey("users.id", ondelete='CASCADE'), nullable=False)
 	reference_comment = Column(Integer, ForeignKey("comments.id", ondelete='SET NULL'))
+	reference_post = Column(Integer, ForeignKey("submissions.id", ondelete='SET NULL'))
 	note = Column(String, nullable=False)
 	tag = Column(EnumType(UserTag), nullable=False)
 
 	author = relationship("User", foreign_keys='UserNote.author_id')
 	user = relationship("User", foreign_keys='UserNote.reference_user', back_populates="notes")
+
 	comment = relationship("Comment", back_populates="notes")
+	post = relationship("Submission", back_populates="notes")
 	
 	def __init__(self, *args, **kwargs):
 		if "created_utc" not in kwargs:
@@ -42,13 +45,20 @@ class UserNote(Base):
 		return f"<UserNote(id={self.id})>"
 
 	def json(self):
+		reference = None
+
+		if self.comment:
+			reference = self.comment.permalink
+		elif self.post:
+			reference = self.post.permalink
+
 		data = {'id': self.id,
 				'author_name': self.author.username,
 				'author_id': self.author.id,
 				'user_name': self.user.username,
 				'user_id': self.user.id,
 				'created': self.created_utc,
-				'comment_id': self.reference_comment,
+				'reference': reference,
 				'note': self.note,
 				'tag': self.tag.value
 				}
