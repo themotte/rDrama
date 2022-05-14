@@ -1,0 +1,14 @@
+name: "run_tests.py"
+
+on: [push, pull_request]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: run_tests.py
+      run: |
+        ./run_tests.py
