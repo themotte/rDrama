@@ -1,4 +1,7 @@
-This code runs https://www.themotte.org
+
+[![Build status](https://img.shields.io/github/workflow/status/TheMotte/rDrama/run_tests.py/frost)](https://github.com/TheMotte/rDrama/actions?query=workflow%3Arun_tests.py+branch%3Afrost)
+
+This code runs https://www.themotte.org .
 
 # Installation (Windows/Linux/MacOS)
 
