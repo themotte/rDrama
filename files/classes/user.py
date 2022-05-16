@@ -158,6 +158,7 @@ class User(Base):
 	authorizations = relationship("ClientAuth", viewonly=True)
 	awards = relationship("AwardRelationship", primaryjoin="User.id==AwardRelationship.user_id", viewonly=True)
 	referrals = relationship("User", viewonly=True)
+	notes = relationship("UserNote", foreign_keys='UserNote.reference_user', back_populates="user")
 
 	def __init__(self, **kwargs):
 
@@ -537,6 +538,7 @@ class User(Base):
 				'post_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level > 2)) else self.post_count,
 				'comment_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level > 2)) else self.comment_count,
 				'badges': [x.path for x in self.badges],
+				'notes': [x.json() for x in self.notes]
 				}
 
 		return data

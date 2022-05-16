@@ -71,16 +71,6 @@ def leaderboard_thread():
 
 gevent.spawn(leaderboard_thread())
 
-
-
-
-
-
-
-
-
-
-
 @app.get("/@<username>/upvoters/<uid>/posts")
 @auth_required
 def upvoters_posts(v, username, uid):

@@ -79,6 +79,7 @@ from .submission import Submission
 from .subscriptions import Subscription
 from .user import User
 from .userblock import UserBlock
+from .usernotes import UserTag, UserNote
 from .views import ViewerRelationship
 from .votes import Vote, CommentVote
 

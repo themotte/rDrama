@@ -31,6 +31,106 @@ function popclick(author) {
 	; }, 1);
 }
 
+function fillnote(user,post,comment) {
+
+	let dialog = document.getElementById("modal-1");
+	let table  = "";
+
+	for(let i = 0; i < user.notes.length; ++i){
+		let note_id = "note_" + i;
+		let note = user.notes[i];
+		let date = new Date(parseInt(note.created) * 1000);
+		let date_str = date.toLocaleDateString();
+		let time_str = date.toLocaleTimeString();
+
+		let tag = "None";
+		switch(note.tag){
+			case 0: tag = "Quality"; break;
+			case 1: tag = "Good"   ; break;
+			case 2: tag = "Comment"; break;
+			case 3: tag = "Warning"; break;
+			case 4: tag = "Tempban"; break;
+			case 5: tag = "Permban"; break;
+			case 6: tag = "Spam"   ; break;
+			case 7: tag = "Bot"    ; break;
+		}
+
+		table += "" +
+		"<div class=\"table_note\" id=\"" + note_id + "\" data-id=\"" + note.id + "\">" +
+			"<div class=\"table_note_author\">" + 
+				note.author_name + "<br/>" + 
+				"<a class=\"table_note_date\" href=\"" + note.reference + "\">" + date_str + ", " + time_str + "</a>" +
+			"</div>" +
+			"<div class=\"table_note_message\">" + note.note + "</div>" +
+			"<div class=\"table_note_tag\">" + tag + "</div>" +
+			"<div class=\"table_note_delete\"><span onclick=\"delete_note('" + note_id + "','" + user.url + "')\">Delete</span></div>" +
+		"</div>\n"
+	}
+
+	dialog.getElementsByClassName('notes_target')[0].innerText = user.username;
+	dialog.getElementsByClassName('table_content')[0].innerHTML = table;
+
+	dialog.dataset.context = JSON.stringify({
+		'url':  user.url,
+		'post': post,
+		'comment': comment,
+		'user': user.id,
+	});
+}
+
+function delete_note(element,url) {
+	let note = document.getElementById(element);
+	let id   = note.dataset.id;
+
+	const xhr = new XMLHttpRequest();
+	xhr.open("POST", url + "/delete_note/" + id);
+	xhr.setRequestHeader('xhr', 'xhr');
+	xhr.responseType = 'json';
+	
+	xhr.onload = function() {
+		if(xhr.status === 200) {
+			console.log(xhr.response);
+			location.reload();
+		}
+	}
+
+	var form = new FormData()
+	form.append("formkey", formkey());
+	xhr.send(form);
+}
+
+function send_note() {
+	let dialog = document.getElementById("modal-1");
+	let context = JSON.parse(dialog.dataset.context);
+
+	let note = document.querySelector("#modal-1 textarea").value;
+	let tag = document.querySelector("#modal-1 #usernote_tag").value;
+
+	const xhr = new XMLHttpRequest();
+	xhr.open("POST", context.url + "/create_note");
+	xhr.setRequestHeader('xhr', 'xhr');
+	xhr.responseType = 'json';
+	var form = new FormData()
+
+	form.append("formkey", formkey());
+	form.append("data", JSON.stringify({
+		'note': note,
+		'post': context.post,
+		'comment': context.comment,
+		'user': context.user,
+		'tag':  tag
+	}));
+	
+	xhr.onload = function() {
+		if(xhr.status === 200) {
+			console.log(xhr.response);
+			location.reload();
+		}
+	}
+
+	xhr.send(form);
+}
+
 document.addEventListener("click", function(){
 	active = document.activeElement.getAttributeNode("class");
 	if (active && active.nodeValue == "user-name text-decoration-none"){
