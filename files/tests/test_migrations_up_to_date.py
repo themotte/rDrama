@@ -55,8 +55,24 @@ def test_migrations_up_to_date():
 			base, ext = os.path.splitext(filename)
 			__import__(f'migrations.versions.{base}')
 			migration = getattr(migrations.versions, base)
-			assert ["pass"] == get_method_body_lines(migration.upgrade)
-			assert ["pass"] == get_method_body_lines(migration.downgrade)
+			upgrade_lines = get_method_body_lines(migration.upgrade)
+			assert ["pass"] == upgrade_lines, "\n".join([
+				"",
+				"Expected upgrade script to be empty (pass) but got",
+				*[f"\t>\t{l}" for l in upgrade_lines],
+				"To fix this issue, please run",
+				"\t$ flask db revision --autogenerate --message='short description of schema changes'",
+				"to generate a candidate migration, and make any necessary changes to that candidate migration (e.g. naming foreign key constraints)",
+			])
+			downgrade_lines = get_method_body_lines(migration.downgrade)
+			assert ["pass"] == downgrade_lines, "\n".join([
+				"",
+				"Expected downgrade script to be empty (pass) but got",
+				*[f"\t>{l}" for l in downgrade_lines],
+				"To fix this issue, please run",
+				"\tflask db revision --autogenerate --message='short description of schema changes'",
+				"to generate a candidate migration, and make any necessary changes to that candidate migration (e.g. naming foreign key constraints)",
+			])
 	finally:
 		for version in new_versions:
 			os.remove(version)
