@@ -35,12 +35,13 @@ print("Running test . . .")
 result = subprocess.run([
         "docker-compose",
         "exec",
+        '-T',
         "files",
         "bash", "-c", ' && '.join([
-			"cd service",
-			"FLASK_APP=files/cli:app python3 -m flask db upgrade",
-			"python3 -m pytest -s",
-		])
+            "cd service",
+            "FLASK_APP=files/cli:app python3 -m flask db upgrade",
+            "python3 -m pytest -s",
+        ])
     ])
 
 if not was_running:
