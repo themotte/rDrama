@@ -591,7 +591,11 @@ emoji_regex3 = re.compile(f"(?<!\"):([!@{valid_username_chars}]{{1,31}}?):", fla
 
 snappy_url_regex = re.compile('<a href=\"(https?:\/\/[a-z]{1,20}\.[\w:~,()\-.#&\/=?@%;+]{5,250})\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">([\w:~,()\-.#&\/=?@%;+]{5,250})<\/a>', flags=re.A)
 
-email_regex = re.compile('([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,100})+', flags=re.A)
+# Technically this allows stuff that is not a valid email address, but realistically
+# we care "does this email go to the correct person" rather than "is this email
+# address syntactically valid", so if we care we should be sending a confirmation
+# link, and otherwise should be pretty liberal in what we accept here.
+email_regex = re.compile('[^@]+@[^@]+\.[^@]+', flags=re.A)
 
 utm_regex = re.compile('utm_[a-z]+=[a-z0-9_]+&', flags=re.A)
 utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
