@@ -57,6 +57,7 @@ class Comment(Base):
 	child_comments = relationship("Comment", lazy="dynamic", remote_side=[parent_comment_id], viewonly=True)
 	awards = relationship("AwardRelationship", viewonly=True)
 	reports = relationship("CommentFlag", viewonly=True)
+	notes = relationship("UserNote", back_populates="comment")
 	
 	def __init__(self, *args, **kwargs):
 		if "created_utc" not in kwargs:

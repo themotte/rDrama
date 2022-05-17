@@ -217,6 +217,56 @@ def distribute(v, comment):
 	g.db.commit()
 	return {"message": f"Each winner has received {coinsperperson} coins!"}
 
+@app.post("/@<username>/delete_note/<id>")
+@admin_level_required(3)
+def delete_note(v,username,id):
+	g.db.query(UserNote).filter_by(id=id).delete()
+	g.db.commit()
+
+	return make_response(jsonify({
+		'success':True, 'message': 'Note deleted', 'note': id
+	}), 200)
+
+@app.post("/@<username>/create_note")
+@admin_level_required(3)
+def create_note(v,username):
+
+	def result(msg,succ,note):
+		return make_response(jsonify({
+			'success':succ, 'message': msg, 'note': note
+		}), 200)
+
+	data = json.loads(request.values.get('data'))
+	user = g.db.query(User).filter_by(username=username).one_or_none()
+
+	if not user:
+		return result('User not found',False,None)
+
+	author_id = v.id
+	reference_user = user.id
+	reference_comment = data.get('comment',None)
+	reference_post = data.get('post',None)
+	note = data['note']
+	tag = UserTag(int(data['tag']))
+
+	if reference_comment:
+		reference_post = None
+	elif reference_post:
+		reference_comment = None
+
+	note = UserNote(
+		author_id=author_id,
+		reference_user=reference_user,
+		reference_comment=reference_comment,
+		reference_post=reference_post,
+		note=note,
+		tag=tag)
+
+	g.db.add(note)
+	g.db.commit()
+
+	return result('Note saved',True,note.json())
+
 @app.post("/@<username>/revert_actions")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
