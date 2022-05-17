@@ -4,6 +4,10 @@
 	<script src="/assets/js/new_comments_count.js?v=242"></script>
 {% endif %}
 
+{% if v and v.admin_level > 2 %}
+	<script src="/assets/js/filter_actions.js?v=2"></script>
+{% endif %}
+
 <div style="display:none" id="popover">
 	<div class="popover-user-profile" role="tooltip">
 		<img loading="lazy" class="pop-banner w-100 h-64 object-cover">

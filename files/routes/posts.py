@@ -1025,7 +1025,8 @@ def submit_post(v, sub=None):
 		title=title[:500],
 		title_html=title_html,
 		sub=sub,
-		ghost=ghost
+		ghost=ghost,
+		filter_state='filtered' if v.admin_level == 0 else 'normal'
 	)
 
 	g.db.add(post)

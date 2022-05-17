@@ -303,6 +303,12 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 		voted = [x[0] for x in g.db.query(Vote.submission_id).filter_by(user_id=v.id).all()]
 		posts = posts.filter(Submission.id.notin_(voted))
 
+	if not v or v.admin_level < 2:
+		filter_clause = (Submission.filter_state != 'filtered') & (Submission.filter_state != 'removed')
+		if v:
+			filter_clause = filter_clause | (Submission.author_id == v.id)
+		posts = posts.filter(filter_clause)
+
 	if sub: posts = posts.filter_by(sub=sub.name)
 	elif v: posts = posts.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
 

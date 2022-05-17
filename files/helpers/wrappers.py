@@ -26,6 +26,10 @@ def get_logged_in_user():
 
 				if request.method != "GET":
 					submitted_key = request.values.get("formkey")
+					if not submitted_key and request.is_json:
+						json = request.get_json(silent=True)
+						if json and type(json) is dict:
+							submitted_key = json.get('formkey')
 					if not submitted_key: abort(401)
 					if not v.validate_formkey(submitted_key): abort(401)
 
