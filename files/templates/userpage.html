@@ -721,8 +721,8 @@
 </nav>
 {% endif %}
 
-<script src="/assets/js/marked.js?v=251"></script>
-
+<script src="/assets/js/vendor/marked.js?v=251"></script>
+<script src="/assets/js/marked.custom.js?v=251"></script>
 
 {% if v and v.id != u.id and '/comments' not in request.path %}
 	{% include "emoji_modal.html" %}
