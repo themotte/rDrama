@@ -12,7 +12,9 @@ class Flag(Base):
 	post_id = Column(Integer, ForeignKey("submissions.id"), primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	reason = Column(String)
-	created_utc = Column(Integer)
+	created_utc = Column(Integer, nullable=False)
+
+	Index('flag_user_idx', user_id)
 
 	user = relationship("User", primaryjoin = "Flag.user_id == User.id", uselist = False, viewonly=True)
 
@@ -45,7 +47,9 @@ class CommentFlag(Base):
 	comment_id = Column(Integer, ForeignKey("comments.id"), primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	reason = Column(String)
-	created_utc = Column(Integer)
+	created_utc = Column(Integer, nullable=False)
+
+	Index('cflag_user_idx', user_id)
 
 	user = relationship("User", primaryjoin = "CommentFlag.user_id == User.id", uselist = False, viewonly=True)
 
