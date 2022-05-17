@@ -581,8 +581,6 @@ def message2(v, username):
 
 	if not message: return {"error": "Message is empty!"}
 
-	if 'linkedin.com' in message: return {"error": "This domain 'linkedin.com' is banned."}, 403
-
 	body_html = sanitize(message)
 
 	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
@@ -638,8 +636,6 @@ def messagereply(v):
 	message = request.values.get("body", "").strip()[:10000].strip()
 
 	if not message and not request.files.get("file"): return {"error": "Message is empty!"}
-
-	if 'linkedin.com' in message: return {"error": "this domain 'linkedin.com' is banned"}
 
 	id = int(request.values.get("parent_id"))
 	parent = get_comment(id, v=v)
