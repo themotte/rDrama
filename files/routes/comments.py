@@ -243,59 +243,6 @@ def api_comment(v):
 							requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/assets/images/badges/{badge.id}.webp"]}, timeout=5)
 						except Exception as e:
 							return {"error": str(e)}, 400
-					elif v.admin_level > 2 and parent_post.id == 37838:
-						try:
-							marsey = loads(body.lower())
-
-							name = marsey["name"]
-							if not marsey_regex.fullmatch(name): return {"error": "Invalid name!"}, 400
-							existing = g.db.query(Marsey.name).filter_by(name=name).one_or_none()
-							if existing: return {"error": "A marsey with this name already exists!"}, 403
-
-							tags = marsey["tags"]
-							if not tags_regex.fullmatch(tags): return {"error": "Invalid tags!"}, 400
-
-							if "author" in marsey: user = get_user(marsey["author"])
-							elif "author_id" in marsey: user = get_account(marsey["author_id"])
-							else: abort(400)
-
-							filename = f'files/assets/images/emojis/{name}.webp'
-							copyfile(oldname, filename)
-							process_image(filename, 200)
-
-							marsey = Marsey(name=name, author_id=user.id, tags=tags, count=0)
-							g.db.add(marsey)
-							g.db.flush()
-
-							all_by_author = g.db.query(Marsey.author_id).filter_by(author_id=user.id).count()
-
-							if all_by_author >= 10 and not user.has_badge(16):
-								new_badge = Badge(badge_id=16, user_id=user.id)
-
-								g.db.add(new_badge)
-								g.db.flush()
-
-								if v.id != user.id:
-									text = f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}"
-									send_notification(user.id, text)
-
-							elif all_by_author < 10 and not user.has_badge(17):
-								new_badge = Badge(badge_id=17, user_id=user.id)
-
-								g.db.add(new_badge)
-								g.db.flush()
-
-								if v.id != user.id:
-									text = f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}"
-									send_notification(user.id, text)
-
-
-
-							requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{name}.webp"]}, timeout=5)
-							cache.delete_memoized(marsey_list)
-
-						except Exception as e:
-							return {"error": str(e)}, 400
 				body += f"\n\n![]({image})"
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
