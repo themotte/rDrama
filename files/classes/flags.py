@@ -37,7 +37,7 @@ class Flag(Base):
 
 	@lazy
 	def realreason(self, v):
-		return censor_slurs(self.reason, v)
+		return self.reason
 
 
 class CommentFlag(Base):
@@ -72,4 +72,4 @@ class CommentFlag(Base):
 
 	@lazy
 	def realreason(self, v):
-		return censor_slurs(self.reason, v)
+		return self.reason

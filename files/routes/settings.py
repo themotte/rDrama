@@ -611,8 +611,6 @@ def settings_css_get(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_css(v):
-	if v.agendaposter: return {"error": "Agendapostered users can't edit css!"}
-
 	css = request.values.get("css").strip().replace('\\', '').strip()[:4000]
 	v.css = css
 	g.db.add(v)

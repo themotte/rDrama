@@ -520,8 +520,7 @@ class User(Base):
 	@property
 	@lazy
 	def profile_url(self):
-		if self.agendaposter: return f"{SITE_FULL}/assets/images/astolfo.webp?v=1"
-		if self.profileurl: 
+		if self.profileurl:
 			if self.profileurl.startswith('/'): return SITE_FULL + self.profileurl
 			return self.profileurl
 		return f"{SITE_FULL}/assets/images/default-profile-pic.webp?v=1008"
