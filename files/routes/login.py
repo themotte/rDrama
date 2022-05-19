@@ -321,7 +321,7 @@ def sign_up_post(v):
 		session["history"] = []
 	else: admin_level=0
 
-	profileurl = '/e/' + random.choice(marseys_const) + '.webp'
+	profileurl = '/assets/images/default-profile-pic.webp'
 
 	new_user = User(
 		username=username,
@@ -332,7 +332,7 @@ def sign_up_post(v):
 		referred_by=ref_id or None,
 		ban_evade =  int(any((x.is_banned or x.shadowbanned) and not x.unban_utc for x in g.db.query(User).filter(User.id.in_(session.get("history", []))).all() if x)),
 		profileurl=profileurl
-		)
+	)
 
 	g.db.add(new_user)
 	g.db.flush()

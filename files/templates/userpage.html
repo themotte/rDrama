@@ -189,8 +189,6 @@
 							&nbsp;
 							<pre class="btn btn-secondary format d-inline-block m-0 fas fa-quote-right" aria-hidden="true" onclick="makeQuote('input-message')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote"></pre>
 							&nbsp;
-							<pre class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('input-message')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji"></pre>
-							&nbsp;
 							<input type="submit" value="Submit" class="btn btn-primary">
 						</form>
 
@@ -214,8 +212,6 @@
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<input maxlength=100 autocomplete="off" id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitleplain %}{{u.customtitleplain}}{% endif %}">
 									<div class="d-flex mt-2">
-										<a class="format" role="button"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Add Emoji"></i></a>
-										&nbsp;&nbsp;&nbsp;
 										<div class="custom-control custom-checkbox">
 											<input autocomplete="off" type="checkbox" class="custom-control-input" id="locked" name="locked" {% if u.flairchanged %}checked{% endif %}>
 											<label class="custom-control-label" for="locked">locked</label>
@@ -476,8 +472,6 @@
 						&nbsp;
 						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-quote-right" aria-hidden="true" onclick="makeQuote('input-message-mobile')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote"></pre>
 						&nbsp;
-						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('input-message-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji"></pre>
-						&nbsp;
 						<input type="submit" value="Submit" class="btn btn-primary">
 					</form>
 
@@ -497,8 +491,6 @@
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<input maxlength=100 autocomplete="off" id="customtitlebody-mobile" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitleplain %}{{u.customtitleplain}}{% endif %}">
 									<div class="d-flex mt-2">
-										<a class="format" role="button"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Add Emoji"></i></a>
-										&nbsp;&nbsp;&nbsp;
 										<div class="custom-control custom-checkbox">
 											<input autocomplete="off" type="checkbox" class="custom-control-input" id="locked-mobile" name="locked" {% if u.flairchanged %}checked{% endif %}>
 											<label class="custom-control-label" for="locked-mobile">locked</label>
@@ -723,10 +715,6 @@
 
 <script src="/assets/js/vendor/marked.js?v=251"></script>
 <script src="/assets/js/marked.custom.js?v=251"></script>
-
-{% if v and v.id != u.id and '/comments' not in request.path %}
-	{% include "emoji_modal.html" %}
-{% endif %}
 
 {% endblock %}
 

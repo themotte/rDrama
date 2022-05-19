@@ -7,7 +7,6 @@ from files.helpers.blackjack import *
 from files.helpers.treasure import *
 from files.classes import *
 from files.routes.front import comment_idlist
-from files.routes.static import marsey_list
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
