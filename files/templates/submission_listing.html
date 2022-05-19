@@ -60,7 +60,7 @@
 	{% set voted=-2 %}
 {% endif %}
 
-{% if p.active_flags(v) %}
+{% if v and p.active_flags(v) and v.can_manage_reports() %}
 	<div id="flaggers-{{p.id}}" class="flaggers d-none">
 		<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
 		<pre></pre>
@@ -175,7 +175,9 @@
 				{% if p.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You're blocking this user, but you can see this post because you're an admin."></i>{% endif %}
 				{% if p.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="This user is blocking you."></i>{% endif %}
 				{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
-				{% if p.active_flags(v) %}<a class="btn btn-primary" role="button" style="padding:1px 5px; font-size:10px"onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags(v)}} Reports</a>{% endif %}
+				{% if v and p.active_flags(v) and v.can_manage_reports() %}
+					<a class="btn btn-primary" role="button" style="padding:1px 5px; font-size:10px"onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags(v)}} Reports</a>
+				{% endif %}
 				
 				{% if not p.author %}
 					{{p.print()}}
