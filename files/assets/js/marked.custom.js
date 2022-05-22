@@ -21,7 +21,6 @@ function motteSpecialMarkdown(text) {
 	}
 
 	var spoilerMatch = text.match(/^(.*?)\|\|(.*?)\|\|(.*)$/);
-	var emojiMatch = text.match(/^(.*?):([a-zA-Z0-9_-]+):(.*)$/);
 
 	if (spoilerMatch) {
 		var left = spoilerMatch[1];
@@ -37,24 +36,6 @@ function motteSpecialMarkdown(text) {
 		appentTextOrElement(rightSpan, motteSpecialMarkdown(right));
 		parentSpan.appendChild(leftSpan);
 		parentSpan.appendChild(spoilerSpan);
-		parentSpan.appendChild(rightSpan);
-		return parentSpan;
-	} else if (emojiMatch) {
-		var left = emojiMatch[1];
-		var mid = emojiMatch[2];
-		var right = emojiMatch[3];
-		var parentSpan = document.createElement('span');
-		var leftSpan = document.createElement('span');
-		var emoji = document.createElement('img');
-		var rightSpan = document.createElement('span');
-		emoji.setAttribute('alt', ':' + mid + ':');
-		emoji.setAttribute('title', ':' + mid + ':');
-		emoji.setAttribute('data-bs-toggle', 'tooltip');
-		emoji.setAttribute('src', '/e/' + mid + '.webp');
-		appentTextOrElement(leftSpan, motteSpecialMarkdown(left));
-		appentTextOrElement(rightSpan, motteSpecialMarkdown(right));
-		parentSpan.appendChild(leftSpan);
-		parentSpan.appendChild(emoji);
 		parentSpan.appendChild(rightSpan);
 		return parentSpan;
 	} else {

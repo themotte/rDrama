@@ -310,8 +310,6 @@
 
 							<small class="btn btn-secondary format m-0" aria-hidden="true" onclick="commentForm('comment-edit-body-{{c.id}}');getGif()" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add GIF"><span class="font-weight-bolder text-uppercase">GIF</span></small>
 							&nbsp;
-							<small class="btn btn-secondary format m-0" aria-hidden="true" onclick="loadEmojis('comment-edit-body-{{c.id}}')" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji"><i class="fas fa-smile-beam"></i></small>
-							&nbsp;
 							
 							<label class="btn btn-secondary format m-0" for="file-edit-reply-{{c.id}}">
 								<div id="filename-edit-reply-{{c.id}}"><i class="far fa-image"></i></div>
@@ -557,11 +555,7 @@
 						<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.fullname}}" onclick="commentForm('reply-form-body-{{c.fullname}}');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add GIF">
 							<span id="gif-reply-btn-{{c.fullname}}" class="font-weight-bolder text-uppercase">GIF</span>
 						</label> 
-						&nbsp;
-						<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.fullname}}" onclick="loadEmojis('reply-form-body-{{c.fullname}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji">
-							<i id="emoji-reply-btn-{{c.fullname}}" class="fas fa-smile-beam"></i>
-						</label>
-						&nbsp;
+
 						<label class="btn btn-secondary format m-0" for="file-upload-reply-{{c.fullname}}">
 							<div id="filename-show-reply-{{c.fullname}}"><i class="far fa-image"></i></div>
 							<input autocomplete="off" id="file-upload-reply-{{c.fullname}}" type="file" multiple="multiple" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-reply-{{c.fullname}}','file-upload-reply-{{c.fullname}}')" hidden>
@@ -598,9 +592,6 @@
 						<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 						<textarea required autocomplete="off" minlength="1" maxlength="10000" name="body" form="reply-to-t3_{{c.id}}" data-id="{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3" oninput="markdown('reply-form-body-{{c.id}}', 'message-reply-{{c.id}}')"></textarea> 
 						<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
-							<label class="btn btn-secondary m-0 mt-3 mr-1" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji">
-								<i class="fas fa-smile-beam"></i>
-							</label>
 
 							{% if c.sentto == 2 %}
 								<label class="btn btn-secondary m-0 mt-3" for="file-upload">
@@ -773,7 +764,6 @@
 {% if not ajax %}
 	{% if v %}
 		{% include "gif_modal.html" %}
-		{% include "emoji_modal.html" %}
 		{% if v.admin_level > 1 %}
 			{% include "ban_modal.html" %}
 		{% endif %}

@@ -362,8 +362,6 @@
 										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<input maxlength=100 {% if v.flairchanged %}disabled{% endif %} autocomplete="off" id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if v.flairchanged %}Your flair has been locked until {{ti}}{% elif v.customtitleplain %}{{v.customtitleplain}}{% endif %}">
 										<div class="d-flex mt-2">
-											<a class="format" role="button"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Add Emoji"></i></a>
-											&nbsp;&nbsp;&nbsp;
 											<small>Limit of 100 characters</small>
 											<input {% if v.flairchanged %}disabled{% endif %} autocomplete="off" class="btn btn-primary ml-auto" id="titleSave" type="submit" value="Change Flair">
 										</div>
@@ -476,8 +474,6 @@
 											&nbsp;
 											<pre style="padding-top:0.7rem;line-height:1" class="btn btn-secondary format d-inline-block m-0 font-weight-bolder text-uppercase" onclick="commentForm('bio-text');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add GIF">GIF</pre>
 											&nbsp;
-											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('bio-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji"></pre>
-											&nbsp;
 											<label class="btn btn-secondary format d-inline-block m-0">
 												<div id="filename-show"><i class="far fa-image"></i></div>
 												<input autocomplete="off" id="file-upload" type="file" name="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*, video/*" onchange="changename('filename-show','file-upload')" hidden>
@@ -554,8 +550,6 @@
 											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-quote-right" aria-hidden="true" onclick="makeQuote('sig-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote"></pre>
 											&nbsp;
 											<pre style="padding-top:0.7rem;line-height:1" class="btn btn-secondary format d-inline-block m-0 font-weight-bolder text-uppercase" onclick="commentForm('sig-text');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add GIF">GIF</pre>
-											&nbsp;
-											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('sig-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji"></pre>
 										</div>
 										<pre></pre>
 										<div class="d-flex">
@@ -620,7 +614,6 @@
 
 <script src="/assets/js/settings_profile.js?v=251"></script>
 
-{% include "emoji_modal.html" %}
 {% include "gif_modal.html" %}
 
 {% endblock %}
