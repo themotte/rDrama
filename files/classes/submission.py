@@ -381,8 +381,6 @@ class Submission(Base):
 
 		body = self.body_html or ""
 
-		body = censor_slurs(body, v)
-
 		if v:
 			body = body.replace("old.reddit.com", v.reddit)
 
@@ -447,8 +445,6 @@ class Submission(Base):
 
 		if not body: return ""
 
-		body = censor_slurs(body, v)
-
 		if v:
 			body = body.replace("old.reddit.com", v.reddit)
 
@@ -468,8 +464,6 @@ class Submission(Base):
 		elif self.title_html: title = self.title_html
 		else: title = self.title
 
-		title = censor_slurs(title, v)
-
 		return title
 
 	@lazy
@@ -478,8 +472,6 @@ class Submission(Base):
 			if v: return random.choice(TROLLTITLES).format(username=v.username)
 			else: return f'{CC} MEMBERS ONLY'
 		else: title = self.title
-
-		title = censor_slurs(title, v)
 
 		return title
 
