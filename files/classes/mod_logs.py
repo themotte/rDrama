@@ -116,11 +116,6 @@ class ModAction(Base):
 		return f"/log/{self.id}"	
 
 ACTIONTYPES = {
-	'agendaposter': {
-		"str": 'set chud theme on {self.target_link}', 
-		"icon": 'fa-snooze', 
-		"color": 'bg-danger'
-	},
 	'approve_app': {
 		"str": 'approved an application by {self.target_link}', 
 		"icon": 'fa-robot', 
@@ -355,11 +350,6 @@ ACTIONTYPES = {
 		"str": 'shadowbanned {self.target_link}', 
 		"icon": 'fa-eye-slash', 
 		"color": 'bg-danger'
-	},
-	'unagendaposter': {
-		"str": 'removed chud theme from {self.target_link}', 
-		"icon": 'fa-snooze', 
-		"color": 'bg-success'
 	},
 	'unban_comment': {
 		"str": 'reinstated {self.target_link}', 

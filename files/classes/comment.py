@@ -357,7 +357,6 @@ class Comment(Base):
 		body = self.body_html or ""
 
 		if body:
-			body = censor_slurs(body, v)
 
 			if v:
 				body = body.replace("old.reddit.com", v.reddit)
@@ -423,7 +422,7 @@ class Comment(Base):
 
 		if not body: return ""
 
-		return censor_slurs(body, v)
+		return body
 
 	def print(self):
 		print(f'post: {self.id}, comment: {self.author_id}', flush=True)

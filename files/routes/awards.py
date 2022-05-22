@@ -213,18 +213,6 @@ def award_post(pid, v):
 			cache.delete_memoized(frontlist)
 		else: post.stickied_utc = t
 		g.db.add(post)
-	elif kind == "agendaposter" and not (author.agendaposter and author.agendaposter == 0):
-		if author.marseyawarded:
-			return {"error": "This user is the under the effect of a conflicting award: Marsey award."}, 404
-
-		if author.agendaposter and time.time() < author.agendaposter: author.agendaposter += 86400
-		else: author.agendaposter = int(time.time()) + 86400
-		
-		if not author.has_badge(28):
-			badge = Badge(user_id=author.id, badge_id=28)
-			g.db.add(badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "flairlock":
 		new_name = note[:100].replace("𒐪","")
 		if not new_name and author.flairchanged:
@@ -451,18 +439,6 @@ def award_comment(cid, v):
 			c.is_pinned_utc = None
 		else: c.is_pinned_utc = t
 		g.db.add(c)
-	elif kind == "agendaposter" and not (author.agendaposter and author.agendaposter == 0):
-		if author.marseyawarded:
-			return {"error": "This user is the under the effect of a conflicting award: Marsey award."}, 404
-
-		if author.agendaposter and time.time() < author.agendaposter: author.agendaposter += 86400
-		else: author.agendaposter = int(time.time()) + 86400
-		
-		if not author.has_badge(28):
-			badge = Badge(user_id=author.id, badge_id=28)
-			g.db.add(badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "flairlock":
 		new_name = note[:100].replace("𒐪","")
 		if not new_name and author.flairchanged:
