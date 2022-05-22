@@ -434,7 +434,6 @@ def edit_post(pid, v):
 			return {"error":"You have to type less than 140 characters!"}, 403
 
 	if title != p.title:
-		if v.id == p.author_id and v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 
 		title_html = filter_emojis_only(title, edit=True)
 
@@ -467,8 +466,6 @@ def edit_post(pid, v):
 			else: return {"error": "Image/Video files only"}, 400
 
 	if body != p.body:
-		if v.id == p.author_id and v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
-
 		if not p.options:
 			for i in poll_regex.finditer(body):
 				body = body.replace(i.group(0), "")
@@ -498,7 +495,6 @@ def edit_post(pid, v):
 		if v.id == p.author_id and v.marseyawarded and marseyaward_body_regex.search(body_html):
 			return {"error":"You can only type marseys!"}, 403
 
-
 		p.body = body
 
 		if blackjack and any(i in f'{p.body} {p.title} {p.url}'.lower() for i in blackjack.split()):
@@ -509,37 +505,6 @@ def edit_post(pid, v):
 		if len(body_html) > 40000: return {"error":"Submission body_html too long! (max 40k characters)"}, 400
 
 		p.body_html = body_html
-
-		if v.id == p.author_id and v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in f'{p.body}{p.title}'.lower() and not p.is_banned:
-
-			p.is_banned = True
-			p.ban_reason = "AutoJanny"
-
-			g.db.add(p)
-
-			body = AGENDAPOSTER_MSG.format(username=v.username, type='post', AGENDAPOSTER_PHRASE=AGENDAPOSTER_PHRASE)
-
-			body_jannied_html = sanitize(body)
-
-			c_jannied = Comment(author_id=NOTIFICATIONS_ID,
-				parent_submission=p.id,
-				level=1,
-				over_18=False,
-				is_bot=True,
-				app_id=None,
-				is_pinned='AutoJanny',
-				distinguish_level=6,
-				body_html=body_jannied_html,
-				ghost=p.ghost
-				)
-
-			g.db.add(c_jannied)
-			g.db.flush()
-
-			c_jannied.top_comment_id = c_jannied.id
-
-			n = Notification(comment_id=c_jannied.id, user_id=v.id)
-			g.db.add(n)
 
 	if not p.private and not p.ghost:
 		notify_users = NOTIFY_USERS(f'{p.title} {p.body}', v)
@@ -789,20 +754,9 @@ def submit_post(v, sub=None):
 
 	if v.is_suspended: return error("You can't perform this action while banned.")
 	
-	if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
-
 	title_html = filter_emojis_only(title, graceful=True)
 
-	if v.marseyawarded and not marseyaward_title_regex.fullmatch(title_html):
-		return error("You can only type marseys!")
-
 	if len(title_html) > 1500: return error("Rendered title is too big!")
-
-	if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
-		return error("You have to type more than 280 characters!")
-	elif v.bird and len(body) > 140:
-		return error("You have to type less than 140 characters!")
-
 
 	embed = None
 
@@ -889,7 +843,6 @@ def submit_post(v, sub=None):
 	if not title:
 		return error("Please enter a better title.")
 
-
 	elif len(title) > 500:
 		return error("There's a 500 character limit for titles.")
 
@@ -969,8 +922,6 @@ def submit_post(v, sub=None):
 		choices.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
-	if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
-
 	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
 		files = request.files.getlist('file2')[:4]
 		for file in files:
@@ -995,9 +946,6 @@ def submit_post(v, sub=None):
 
 	body_html = sanitize(body)
 
-	if v.marseyawarded and marseyaward_body_regex.search(body_html):
-		return error("You can only type marseys!")
-
 	if len(body_html) > 40000: return error("Submission body_html too long! (max 40k characters)")
 
 	club = bool(request.values.get("club",""))
@@ -1005,11 +953,6 @@ def submit_post(v, sub=None):
 	if embed and len(embed) > 1500: embed = None
 
 	is_bot = bool(request.headers.get("Authorization"))
-
-	if request.values.get("ghost") and v.coins >= 100:
-		v.coins -= 100
-		ghost = True
-	else: ghost = False
 
 	post = Submission(
 		private=bool(request.values.get("private","")),
@@ -1025,7 +968,7 @@ def submit_post(v, sub=None):
 		title=title[:500],
 		title_html=title_html,
 		sub=sub,
-		ghost=ghost,
+		ghost=False,
 		filter_state='filtered' if v.admin_level == 0 else 'normal'
 	)
 
@@ -1105,9 +1048,6 @@ def submit_post(v, sub=None):
 	if not post.thumburl and post.url:
 		gevent.spawn(thumbnail_thread, post.id)
 
-
-
-
 	if not post.private and not post.ghost:
 
 		notify_users = NOTIFY_USERS(f'{title} {body}', v)
@@ -1126,40 +1066,6 @@ def submit_post(v, sub=None):
 				user = get_account(follow.user_id)
 				if post.club and not user.paid_dues: continue
 				add_notif(cid, user.id)
-
-
-
-
-
-	if v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in f'{post.body}{post.title}'.lower():
-		post.is_banned = True
-		post.ban_reason = "AutoJanny"
-
-		body = AGENDAPOSTER_MSG.format(username=v.username, type='post', AGENDAPOSTER_PHRASE=AGENDAPOSTER_PHRASE)
-
-		body_jannied_html = sanitize(body)
-
-
-
-		c_jannied = Comment(author_id=NOTIFICATIONS_ID,
-			parent_submission=post.id,
-			level=1,
-			over_18=False,
-			is_bot=True,
-			app_id=None,
-			is_pinned='AutoJanny',
-			distinguish_level=6,
-			body_html=body_jannied_html,
-		)
-
-		g.db.add(c_jannied)
-		g.db.flush()
-
-		c_jannied.top_comment_id = c_jannied.id
-
-		n = Notification(comment_id=c_jannied.id, user_id=v.id)
-		g.db.add(n)
-
 
 	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
 	g.db.add(v)

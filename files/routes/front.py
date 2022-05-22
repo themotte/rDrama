@@ -227,14 +227,6 @@ def front_all(v, sub=None, subdomain=None):
 			g.db.add(v)
 			g.db.commit()
 
-		if v.agendaposter and v.agendaposter < time.time():
-			v.agendaposter = 0
-			send_repeatable_notification(v.id, "Your chud theme has expired!")
-			g.db.add(v)
-			badge = v.has_badge(28)
-			if badge: g.db.delete(badge)
-			g.db.commit()
-
 		if v.flairchanged and v.flairchanged < time.time():
 			v.flairchanged = None
 			send_repeatable_notification(v.id, "Your flair lock has expired. You can now change your flair!")

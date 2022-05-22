@@ -19,28 +19,28 @@ class Comment(Base):
 	__tablename__ = "comments"
 
 	id = Column(Integer, primary_key=True)
-	author_id = Column(Integer, ForeignKey("users.id"))
+	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 	parent_submission = Column(Integer, ForeignKey("submissions.id"))
-	created_utc = Column(Integer)
-	edited_utc = Column(Integer, default=0)
-	is_banned = Column(Boolean, default=False)
-	ghost = Column(Boolean, default=False)
+	created_utc = Column(Integer, nullable=False)
+	edited_utc = Column(Integer, default=0, nullable=False)
+	is_banned = Column(Boolean, default=False, nullable=False)
+	ghost = Column(Boolean, default=False, nullable=False)
 	bannedfor = Column(Boolean)
-	distinguish_level = Column(Integer, default=0)
-	deleted_utc = Column(Integer, default=0)
+	distinguish_level = Column(Integer, default=0, nullable=False)
+	deleted_utc = Column(Integer, default=0, nullable=False)
 	is_approved = Column(Integer, ForeignKey("users.id"))
-	level = Column(Integer, default=1)
+	level = Column(Integer, default=1, nullable=False)
 	parent_comment_id = Column(Integer, ForeignKey("comments.id"))
 	top_comment_id = Column(Integer)
-	over_18 = Column(Boolean, default=False)
-	is_bot = Column(Boolean, default=False)
+	over_18 = Column(Boolean, default=False, nullable=False)
+	is_bot = Column(Boolean, default=False, nullable=False)
 	is_pinned = Column(String)
 	is_pinned_utc = Column(Integer)
 	sentto = Column(Integer, ForeignKey("users.id"))
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
-	upvotes = Column(Integer, default=1)
-	downvotes = Column(Integer, default=0)
-	realupvotes = Column(Integer, default=1)
+	upvotes = Column(Integer, default=1, nullable=False)
+	downvotes = Column(Integer, default=0, nullable=False)
+	realupvotes = Column(Integer, default=1, nullable=False)
 	body = Column(String)
 	body_html = Column(String)
 	ban_reason = Column(String)
@@ -48,6 +48,12 @@ class Comment(Base):
 	blackjack_result = Column(String)
 	wordle_result = Column(String)
 	treasure_amount = Column(String)
+
+	Index('comment_parent_index', parent_comment_id)
+	Index('comment_post_id_index', parent_submission)
+	Index('comments_user_index', author_id)
+	Index('fki_comment_approver_fkey', is_approved)
+	Index('fki_comment_sentto_fkey', sentto)
 
 	oauth_app = relationship("OauthApp", viewonly=True)
 	post = relationship("Submission", viewonly=True)
@@ -351,7 +357,6 @@ class Comment(Base):
 		body = self.body_html or ""
 
 		if body:
-			body = censor_slurs(body, v)
 
 			if v:
 				body = body.replace("old.reddit.com", v.reddit)
@@ -417,7 +422,7 @@ class Comment(Base):
 
 		if not body: return ""
 
-		return censor_slurs(body, v)
+		return body
 
 	def print(self):
 		print(f'post: {self.id}, comment: {self.author_id}', flush=True)

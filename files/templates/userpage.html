@@ -189,8 +189,6 @@
 							&nbsp;
 							<pre class="btn btn-secondary format d-inline-block m-0 fas fa-quote-right" aria-hidden="true" onclick="makeQuote('input-message')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote"></pre>
 							&nbsp;
-							<pre class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('input-message')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji"></pre>
-							&nbsp;
 							<input type="submit" value="Submit" class="btn btn-primary">
 						</form>
 
@@ -214,8 +212,6 @@
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<input maxlength=100 autocomplete="off" id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitleplain %}{{u.customtitleplain}}{% endif %}">
 									<div class="d-flex mt-2">
-										<a class="format" role="button"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Add Emoji"></i></a>
-										&nbsp;&nbsp;&nbsp;
 										<div class="custom-control custom-checkbox">
 											<input autocomplete="off" type="checkbox" class="custom-control-input" id="locked" name="locked" {% if u.flairchanged %}checked{% endif %}>
 											<label class="custom-control-label" for="locked">locked</label>
@@ -248,14 +244,6 @@
 							</form>
 						{% endif %}
 						<pre></pre>
-
-						<form id="agendaposter1" class="{% if u.agendaposter %}d-none{% endif %}" action="/agendaposter/{{u.id}}" method="post">
-							<input type="hidden" name="formkey", value="{{v.formkey}}">
-							<input autocomplete="off" type="number" step="any" name="days" class="form-control" placeholder="Days (0 or blank = permanent)">
-							<input type="submit" class="btn btn-danger" value="Lock Chud Theme">
-						</form>
-						<a id="unagendaposter" class="{% if not u.agendaposter %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2(this,'/unagendaposter/{{u.id}}','agendaposter1','unagendaposter')">Disable Chud Theme</a>
-
 						<pre></pre>
 
 						<a id="shadowban" class="{% if u.shadowbanned %}d-none{% endif %} btn btn-danger" role="button" onclick="post_toast2(this,'/shadowban/{{u.id}}','shadowban','unshadowban')">Shadowban</a>
@@ -476,8 +464,6 @@
 						&nbsp;
 						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-quote-right" aria-hidden="true" onclick="makeQuote('input-message-mobile')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote"></pre>
 						&nbsp;
-						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('input-message-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji"></pre>
-						&nbsp;
 						<input type="submit" value="Submit" class="btn btn-primary">
 					</form>
 
@@ -497,8 +483,6 @@
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<input maxlength=100 autocomplete="off" id="customtitlebody-mobile" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitleplain %}{{u.customtitleplain}}{% endif %}">
 									<div class="d-flex mt-2">
-										<a class="format" role="button"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Add Emoji"></i></a>
-										&nbsp;&nbsp;&nbsp;
 										<div class="custom-control custom-checkbox">
 											<input autocomplete="off" type="checkbox" class="custom-control-input" id="locked-mobile" name="locked" {% if u.flairchanged %}checked{% endif %}>
 											<label class="custom-control-label" for="locked-mobile">locked</label>
@@ -533,14 +517,6 @@
 							</form>
 						{% endif %}
 						<pre></pre>
-
-						<form id="agendaposter2" class="{% if u.agendaposter %}d-none{% endif %}" action="/agendaposter/{{u.id}}" method="post">
-							<input type="hidden" name="formkey", value="{{v.formkey}}">
-							<input autocomplete="off" type="number" step="any" name="days" class="form-control" placeholder="Days (0 or blank = permanent)">
-							<input type="submit" class="btn btn-danger" value="Lock Chud Theme">
-						</form>
-						<a id="unagendaposter2" class="{% if not u.agendaposter %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2(this,'/unagendaposter/{{u.id}}','agendaposter2','unagendaposter2')">Disable Chud Theme</a>
-
 						<pre></pre>
 
 						<a id="shadowban2" class="{% if u.shadowbanned %}d-none{% endif %} btn btn-danger" role="button" onclick="post_toast2(this,'/shadowban/{{u.id}}','shadowban2','unshadowban2')">Shadowban</a>
@@ -721,12 +697,8 @@
 </nav>
 {% endif %}
 
-<script src="/assets/js/marked.js?v=251"></script>
-
-
-{% if v and v.id != u.id and '/comments' not in request.path %}
-	{% include "emoji_modal.html" %}
-{% endif %}
+<script src="/assets/js/vendor/marked.js?v=251"></script>
+<script src="/assets/js/marked.custom.js?v=251"></script>
 
 {% endblock %}
 

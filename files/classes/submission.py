@@ -19,32 +19,32 @@ class Submission(Base):
 	__tablename__ = "submissions"
 
 	id = Column(Integer, primary_key=True)
-	author_id = Column(Integer, ForeignKey("users.id"))
-	edited_utc = Column(Integer, default=0)
-	created_utc = Column(Integer)
+	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+	edited_utc = Column(Integer, default=0, nullable=False)
+	created_utc = Column(Integer, nullable=False)
 	thumburl = Column(String)
-	is_banned = Column(Boolean, default=False)
+	is_banned = Column(Boolean, default=False, nullable=False)
 	bannedfor = Column(Boolean)
-	ghost = Column(Boolean, default=False)
-	views = Column(Integer, default=0)
-	deleted_utc = Column(Integer, default=0)
-	distinguish_level = Column(Integer, default=0)
+	ghost = Column(Boolean, default=False, nullable=False)
+	views = Column(Integer, default=0, nullable=False)
+	deleted_utc = Column(Integer, default=0, nullable=False)
+	distinguish_level = Column(Integer, default=0, nullable=False)
 	stickied = Column(String)
 	stickied_utc = Column(Integer)
 	sub = Column(String, ForeignKey("subs.name"))
-	is_pinned = Column(Boolean, default=False)
-	private = Column(Boolean, default=False)
-	club = Column(Boolean, default=False)
-	comment_count = Column(Integer, default=0)
+	is_pinned = Column(Boolean, default=False, nullable=False)
+	private = Column(Boolean, default=False, nullable=False)
+	club = Column(Boolean, default=False, nullable=False)
+	comment_count = Column(Integer, default=0, nullable=False)
 	is_approved = Column(Integer, ForeignKey("users.id"))
-	over_18 = Column(Boolean, default=False)
-	is_bot = Column(Boolean, default=False)
-	upvotes = Column(Integer, default=1)
-	downvotes = Column(Integer, default=0)
+	over_18 = Column(Boolean, default=False, nullable=False)
+	is_bot = Column(Boolean, default=False, nullable=False)
+	upvotes = Column(Integer, default=1, nullable=False)
+	downvotes = Column(Integer, default=0, nullable=False)
 	realupvotes = Column(Integer, default=1)
 	app_id=Column(Integer, ForeignKey("oauth_apps.id"))
-	title = Column(String)
-	title_html = Column(String)
+	title = Column(String, nullable=False)
+	title_html = Column(String, nullable=False)
 	url = Column(String)
 	body = Column(String)
 	body_html = Column(String)
@@ -52,6 +52,18 @@ class Submission(Base):
 	ban_reason = Column(String)
 	embed_url = Column(String)
 	filter_state = Column(String)
+
+	Index('fki_submissions_approver_fkey', is_approved)
+	Index('post_app_id_idx', app_id)
+	Index('subimssion_binary_group_idx', is_banned, deleted_utc, over_18)
+	Index('submission_isbanned_idx', is_banned)
+	Index('submission_isdeleted_idx', deleted_utc)
+	Index('submission_new_sort_idx', is_banned, deleted_utc, created_utc.desc(), over_18)
+	Index('submission_pinned_idx', is_pinned)
+	Index('submissions_author_index', author_id)
+	Index('submissions_created_utc_asc_idx', created_utc.nullsfirst())
+	Index('submissions_created_utc_desc_idx', created_utc.desc())
+	Index('submissions_over18_index', over_18)
 
 	author = relationship("User", primaryjoin="Submission.author_id==User.id")
 	oauth_app = relationship("OauthApp", viewonly=True)
@@ -370,8 +382,6 @@ class Submission(Base):
 
 		body = self.body_html or ""
 
-		body = censor_slurs(body, v)
-
 		if v:
 			body = body.replace("old.reddit.com", v.reddit)
 
@@ -436,8 +446,6 @@ class Submission(Base):
 
 		if not body: return ""
 
-		body = censor_slurs(body, v)
-
 		if v:
 			body = body.replace("old.reddit.com", v.reddit)
 
@@ -457,8 +465,6 @@ class Submission(Base):
 		elif self.title_html: title = self.title_html
 		else: title = self.title
 
-		title = censor_slurs(title, v)
-
 		return title
 
 	@lazy
@@ -467,8 +473,6 @@ class Submission(Base):
 			if v: return random.choice(TROLLTITLES).format(username=v.username)
 			else: return f'{CC} MEMBERS ONLY'
 		else: title = self.title
-
-		title = censor_slurs(title, v)
 
 		return title
 

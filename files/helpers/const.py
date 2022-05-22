@@ -28,75 +28,10 @@ AJ_REPLACEMENTS = {
 }
 
 SLURS = {
-	"retarded": "r-slurred",
-	"retard": "r-slur",
-	"gayfag": "gaystrag",
-	"poorfag": "poorstrag",
-	"richfag": "richstrag",
-	"newfag": "newstrag",
-	"oldfag": "oldstrag",
-	"faggotry": "cute twinkry",
-	"faggot": "cute twink",
-	"pedophile": "libertarian",
-	"kill yourself": "keep yourself safe",
-	"n1gger": "BIPOC",
-	"nlgger": "BIPOC",
-	"nigger": "BIPOC",
-	"steve akins": "penny verity oaken",
-	"trannie": "🚂🚃🚃",
-	"tranny": "🚂🚃🚃",
-	"troon": "🚂🚃🚃",
-	"nonewnormal": "HorseDewormerAddicts",
-	"kikery": "https://sciencedirect.com/science/article/abs/pii/S016028960600033X",
-	"kike": "https://sciencedirect.com/science/article/abs/pii/S016028960600033X",
-	"latinos": "latinx",
-	"latino": "latinx",
-	"latinas": "latinx",
-	"latina": "latinx",
-	"hispanics": "latinx",
-	"hispanic": "latinx",
-	"uss liberty incident": "tragic accident aboard the USS Liberty",
-	"lavon affair": "Lavon Misunderstanding",
-	"shylock": "Israeli friend",
-	"mohammad": "Prophet Mohammad (PBUH)",
-	"muhammad": "Prophet Mohammad (PBUH)",
-	"i hate marsey": "i love marsey",
-	"dancing israelis": "i love Israel",
-	"sodomite": "total dreamboat",
-	"pajeet": "sexy Indian dude",
-	"landlord": "landchad",
-	"tenant": "renthog",
-	"renter": "rentoid",
-	"autistic": "neurodivergent",
-	"holohoax": "i tried to claim the Holocaust didn't happen because I am a pencil-dicked imbecile and the word filter caught me lol",
-	"groomercord": "discord (actually a pretty cool service)",
-	"pedocord": "discord (actually a pretty cool service)",
-	"i hate carp": "i love Carp",
-	"manlet": "little king",
-	"gamer": "g*mer",
-	"journalist": "journ*list",
-	"journalism": "journ*lism",
-	"wuhan flu": "SARS-CoV-2 syndemic",
-	"china flu": "SARS-CoV-2 syndemic",
-	"china virus": "SARS-CoV-2 syndemic",
-	"kung flu": "SARS-CoV-2 syndemic",
-	"elon musk": "rocket daddy",
-	"fake and gay": "fake and straight",
-
-	" rapist ": " male feminist ",
-	" pedo ": " libertarian ",
-	" kys ": " keep yourself safe ",
-	" fag ": " cute twink ",
 	}
 
 single_words = "|".join([slur.lower() for slur in SLURS.keys()])
 
-
-LONGPOST_REPLIES = ('Wow, you must be a JP fan.', 'This is one of the worst posts I have EVER seen. Delete it.', "No, don't reply like this, please do another wall of unhinged rant please.", '# 😴😴😴', "Ma'am we've been over this before. You need to stop.", "I've known more coherent downies.", "Your pulitzer's in the mail", "That's great and all, but I asked for my burger without cheese.", 'That degree finally paying off', "That's nice sweaty. Why don't you have a seat in the time out corner with Pizzashill until you calm down, then you can have your Capri Sun.", "All them words won't bring your pa back.", "You had a chance to not be completely worthless, but it looks like you threw it away. At least you're consistent.", 'Some people are able to display their intelligence by going on at length on a subject and never actually saying anything. This ability is most common in trades such as politics, public relations, and law. You have impressed me by being able to best them all, while still coming off as an absolute idiot.', "You can type 10,000 characters and you decided that these were the one's that you wanted.", 'Have you owned the libs yet?', "I don't know what you said, because I've seen another human naked.", 'Impressive. Normally people with such severe developmental disabilities struggle to write much more than a sentence or two. He really has exceded our expectations for the writing portion. Sadly the coherency of his writing, along with his abilities in the social skills and reading portions, are far behind his peers with similar disabilities.', "This is a really long way of saying you don't fuck.", "Sorry ma'am, looks like his delusions have gotten worse. We'll have to admit him.", ':#marseywoah:', 'If only you could put that energy into your relationships', 'Posts like this is why I do Heroine.', 'still unemployed then?', 'K', 'look im gunna have 2 ask u 2 keep ur giant dumps in the toilet not in my replys 😷😷😷', "Mommy is soooo proud of you, sweaty. Let's put this sperg out up on the fridge with all your other failures.", "Good job bobby, here's a star", "That was a mistake. You're about to find out the hard way why.", f'You sat down and wrote all this shit. You could have done so many other things with your life. What happened to your life that made you decide writing novels of bullshit on {SITE} was the best option?', "I don't have enough spoons to read this shit", "All those words won't bring daddy back.", 'OUT!', "Damn, you're really mad over this, but thanks for the effort you put into typing that all out! Sadly I won't read it all.", "Jesse what the fuck are you talking about??", "▼you're fucking bananas if you think I'm reading all that, take my downvote and shut up idiot", "Are you feeling okay bud?")
-
-AGENDAPOSTER_PHRASE = 'trans lives matter'
-
-AGENDAPOSTER_MSG = """Hi @{username},\n\nYour {type} has been automatically removed because you forgot to include `{AGENDAPOSTER_PHRASE}`.\n\nDon't worry, we're here to help! We won't let you post or comment anything that doesn't express your love and acceptance towards the trans community. Feel free to resubmit your {type} with `{AGENDAPOSTER_PHRASE}` included. \n\n*This is an automated message; if you need help, you can message us [here](/contact).*"""
 
 NOTIFICATIONS_ID = 1
 AUTOJANNY_ID = 2
@@ -369,14 +304,6 @@ AWARDS = {
 		"color": "text-blue",
 		"price": 1500
 	},
-	"agendaposter": {
-		"kind": "agendaposter",
-		"title": "Chud",
-		"description": "Forces the chud theme on the recipient for 24 hours.",
-		"icon": "fas fa-snooze",
-		"color": "text-purple",
-		"price": 2500
-	},
 	"deflector": {
 		"kind": "deflector",
 		"title": "Deflector",
@@ -591,38 +518,18 @@ emoji_regex3 = re.compile(f"(?<!\"):([!@{valid_username_chars}]{{1,31}}?):", fla
 
 snappy_url_regex = re.compile('<a href=\"(https?:\/\/[a-z]{1,20}\.[\w:~,()\-.#&\/=?@%;+]{5,250})\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">([\w:~,()\-.#&\/=?@%;+]{5,250})<\/a>', flags=re.A)
 
-email_regex = re.compile('([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,100})+', flags=re.A)
+# Technically this allows stuff that is not a valid email address, but realistically
+# we care "does this email go to the correct person" rather than "is this email
+# address syntactically valid", so if we care we should be sending a confirmation
+# link, and otherwise should be pretty liberal in what we accept here.
+email_regex = re.compile('[^@]+@[^@]+\.[^@]+', flags=re.A)
 
 utm_regex = re.compile('utm_[a-z]+=[a-z0-9_]+&', flags=re.A)
 utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
 
-slur_regex = re.compile(f"({single_words})(?![^<]*>)", flags=re.I|re.A)
-slur_regex_upper = re.compile(f"({single_words.upper()})(?![^<]*>)", flags=re.A)
-torture_regex = re.compile('(^|\s)(i|me) ', flags=re.I|re.A)
-torture_regex2 = re.compile("(^|\s)i'm ", flags=re.I|re.A)
-
-def sub_matcher(match):
-	return SLURS[match.group(0).lower()]
-
-def sub_matcher_upper(match):
-	return SLURS[match.group(0).lower()].upper()
-
-def censor_slurs(body, logged_user):
-	if not logged_user or logged_user == 'chat' or logged_user.slurreplacer:
-		body = slur_regex_upper.sub(sub_matcher_upper, body)
-		body = slur_regex.sub(sub_matcher, body)
-	return body
-
-def torture_ap(body, username):
-	for k, l in AJ_REPLACEMENTS.items():
-		body = body.replace(k, l)
-	body = torture_regex.sub(rf'\1@{username} ', body)
-	body = torture_regex2.sub(rf'\1@{username} is ', body)
-	return body
-
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 
-ADMIGGERS = (37696,37697,37749,37833,37838)
+ADMINISTRATORS = (37696, 37697, 37749, 37833, 37838)
 
 proxies = {"http":"http://127.0.0.1:18080","https":"http://127.0.0.1:18080"}
 

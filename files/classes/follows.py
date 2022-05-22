@@ -7,7 +7,9 @@ class Follow(Base):
 	__tablename__ = "follows"
 	target_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-	created_utc = Column(Integer)
+	created_utc = Column(Integer, nullable=False)
+
+	Index('follow_user_id_index', user_id)
 
 	user = relationship("User", uselist=False, primaryjoin="User.id==Follow.user_id", viewonly=True)
 	target = relationship("User", primaryjoin="User.id==Follow.target_id", viewonly=True)

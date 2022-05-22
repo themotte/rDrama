@@ -11,10 +11,13 @@ class Vote(Base):
 
 	submission_id = Column(Integer, ForeignKey("submissions.id"), primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-	vote_type = Column(Integer)
+	vote_type = Column(Integer, nullable=False)
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
-	real = Column(Boolean, default=True)
-	created_utc = Column(Integer)
+	real = Column(Boolean, default=True, nullable=False)
+	created_utc = Column(Integer, nullable=False)
+
+	Index('votes_type_index', vote_type)
+	Index('vote_user_index', user_id)
 
 	user = relationship("User", lazy="subquery", viewonly=True)
 	post = relationship("Submission", lazy="subquery", viewonly=True)
@@ -52,10 +55,13 @@ class CommentVote(Base):
 
 	comment_id = Column(Integer, ForeignKey("comments.id"), primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-	vote_type = Column(Integer)
+	vote_type = Column(Integer, nullable=False)
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
-	real = Column(Boolean, default=True)
-	created_utc = Column(Integer)
+	real = Column(Boolean, default=True, nullable=False)
+	created_utc = Column(Integer, nullable=False)
+
+	Index('cvote_user_index', user_id)
+	Index('commentvotes_comments_type_index', vote_type)
 
 	user = relationship("User", lazy="subquery")
 	comment = relationship("Comment", lazy="subquery", viewonly=True)
