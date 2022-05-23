@@ -63,33 +63,6 @@ def api_flag_comment(cid, v):
 	return {"message": "Comment reported!"}
 
 
-@app.post('/del_report/post/<pid>/<uid>')
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
-@admin_level_required(2)
-def remove_report_post(v, pid, uid):
-
-	try:
-		pid = int(pid)
-		uid = int(uid)
-	except: abort(400)
-
-	report = g.db.query(Flag).filter_by(post_id=pid, user_id=uid).one()
-	
-	g.db.delete(report)
-
-	ma=ModAction(
-		kind="delete_report",
-		user_id=v.id,
-		target_submission_id=pid
-	)
-
-	g.db.add(ma)
-
-	g.db.commit()
-
-	return {"message": "Report removed successfully!"}
-
-
 @app.post('/del_report/comment/<cid>/<uid>')
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
