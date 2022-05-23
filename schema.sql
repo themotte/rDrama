@@ -99,8 +99,7 @@ CREATE TABLE public.submissions (
     flair character varying(350),
     stickied_utc integer,
     ghost boolean DEFAULT false NOT NULL,
-    sub character varying(20),
-    filter_state character varying(40) NOT NULL
+    sub character varying(20)
 );
 
 
@@ -371,30 +370,11 @@ CREATE TABLE public.exiles (
 --
 
 CREATE TABLE public.flags (
-    id integer NOT NULL,
     user_id integer NOT NULL,
     post_id integer NOT NULL,
     reason character varying(350),
     created_utc integer NOT NULL
 );
-
---
--- Name: flags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.flags_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
---
--- Name: flags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.flags_id_seq OWNED BY public.flags.id;
 
 
 --
@@ -758,12 +738,6 @@ ALTER TABLE ONLY public.comments ALTER COLUMN id SET DEFAULT nextval('public.com
 
 
 --
--- Name: flags id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.flags ALTER COLUMN id SET DEFAULT nextval('public.flags_id_seq'::regclass);
-
---
 -- Name: modactions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -894,6 +868,13 @@ ALTER TABLE ONLY public.banneddomains
 ALTER TABLE ONLY public.exiles
     ADD CONSTRAINT exiles_pkey PRIMARY KEY (user_id, sub);
 
+
+--
+-- Name: flags flags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flags
+    ADD CONSTRAINT flags_pkey PRIMARY KEY (post_id, user_id);
 
 --
 -- Name: follows follows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
