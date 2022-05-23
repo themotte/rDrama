@@ -99,3 +99,7 @@ If another dev made schema changes, and you just merged them in, you can get you
 docker-compose exec -T files bash -c 'cd /service/; FLASK\_APP="files/cli:app" flask db upgrade
 ```
 You should not have to reboot your container, though it might be a good idea to do so anyway if the changes you are merging in are nontrivial (particularly if there have been changes to `docker-compose.yml` or `Dockerfile`).
+
+## So what's up with schema.sql, can I just change that?
+
+No, please do not do that. Instead, please make a migration as described above.
