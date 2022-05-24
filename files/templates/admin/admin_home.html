@@ -73,6 +73,11 @@
 	</div>
 
 	<div class="custom-control custom-switch">
+		<input autocomplete="off" type="checkbox" class="custom-control-input" id="FilterNewPosts" {% if site_settings['FilterNewPosts'] %}checked{% endif %} onchange="post_toast(this,'/admin/site_settings/FilterNewPosts');">
+		<label class="custom-control-label" for="FilterNewPosts">Filter New Posts</label>
+	</div>
+
+	<div class="custom-control custom-switch">
 		<input autocomplete="off" type="checkbox" class="custom-control-input" id="Read-only mode" {% if site_settings['Read-only mode']  %}checked{% endif %} onchange="post_toast(this,'/admin/site_settings/Read-only mode');">
 		<label class="custom-control-label" for="Read-only mode">Read-only mode</label>
 	</div>

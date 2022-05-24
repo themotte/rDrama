@@ -969,7 +969,7 @@ def submit_post(v, sub=None):
 		title_html=title_html,
 		sub=sub,
 		ghost=False,
-		filter_state='filtered' if v.admin_level == 0 else 'normal'
+		filter_state='filtered' if v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts'] else 'normal'
 	)
 
 	g.db.add(post)
