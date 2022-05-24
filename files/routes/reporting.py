@@ -27,6 +27,9 @@ def api_flag_post(pid, v):
 	else:
 		flag = Flag(post_id=post.id, user_id=v.id, reason=reason)
 		g.db.add(flag)
+		g.db.query(Submission) \
+			.where(Submission.id == post.id, Submission.filter_state != 'ignored') \
+			.update({Submission.filter_state: 'reported'})
 
 	g.db.commit()
 
@@ -61,7 +64,6 @@ def api_flag_comment(cid, v):
 	g.db.commit()
 
 	return {"message": "Comment reported!"}
-
 
 @app.post('/del_report/comment/<cid>/<uid>')
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
