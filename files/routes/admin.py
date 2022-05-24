@@ -475,7 +475,7 @@ def update_filter_status(v):
 	update_body = request.get_json()
 	new_status = update_body.get('new_status')
 	post_id = update_body.get('post_id')
-	if new_status not in ['normal', 'removed']:
+	if new_status not in ['normal', 'removed', 'ignored']:
 		return { 'result': f'Status of {new_status} is not permitted' }
 
 	rows_updated = g.db.query(Submission).where(Submission.id == post_id).update({Submission.filter_state: new_status})
