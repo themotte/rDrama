@@ -508,22 +508,20 @@ def image_posts_listing(v):
 @app.get("/admin/reported/posts")
 @admin_level_required(2)
 def reported_posts(v):
-
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Submission).filter_by(
-		is_approved=None,
-		is_banned=False
-	).join(Submission.reports).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26)
+	subs_just_ids = g.db.query(Submission) \
+		.filter(Submission.filter_state == 'reported') \
+		.order_by(Submission.id.desc()) \
+		.offset(25 * (page - 1)) \
+		.limit(26) \
+		.with_entities(Submission.id)
 
-	listing = [p.id for p in listing]
-	next_exists = len(listing) > 25
-	listing = listing[:25]
-
-	listing = get_posts(listing, v=v)
-
+	sub_ids = [x.id for x in subs_just_ids]
+	next_exists = len(sub_ids) > 25
+	listings = get_posts(sub_ids[:25], v=v)
 	return render_template("admin/reported_posts.html",
-						   next_exists=next_exists, listing=listing, page=page, v=v)
+						   next_exists=next_exists, listing=listings, page=page, v=v)
 
 
 @app.get("/admin/reported/comments")
