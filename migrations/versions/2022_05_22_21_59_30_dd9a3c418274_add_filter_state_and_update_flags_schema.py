@@ -17,7 +17,9 @@ depends_on = None
 
 
 def upgrade():
-	op.add_column('submissions', sa.Column('filter_state', sa.String(40), nullable=False))
+	op.add_column('submissions', sa.Column('filter_state', sa.String(40), nullable=True))
+	op.execute("UPDATE submissions SET filter_state = 'normal';")
+	op.alter_column('submissions', 'filter_state', nullable=False)
 	op.drop_constraint('flags_pkey', 'flags')
 	op.add_column('flags', sa.Column('id', sa.Integer, nullable=False, primary_key=True, autoincrement=True))
 
