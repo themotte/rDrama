@@ -9,14 +9,16 @@ from json import loads
 
 class BadgeDef(Base):
 	__tablename__ = "badge_defs"
+	__table_args__ = (
+		UniqueConstraint('name', name='badge_def_name_unique'),
+	)
 
 	id = Column(Integer, primary_key=True, autoincrement=True)
-	name = Column(String)
+	name = Column(String, nullable=False)
 	description = Column(String)
 
 	def __repr__(self):
 		return f"<BadgeDef(id={self.id})>"
-
 
 class Badge(Base):
 
@@ -27,6 +29,8 @@ class Badge(Base):
 	description = Column(String)
 	url = Column(String)
 
+	Index('badges_badge_id_idx', badge_id)
+
 	user = relationship("User", viewonly=True)
 	badge = relationship("BadgeDef", primaryjoin="foreign(Badge.badge_id) == remote(BadgeDef.id)", viewonly=True)
 
@@ -36,11 +40,7 @@ class Badge(Base):
 	@property
 	@lazy
 	def text(self):
-		if self.name == "Chud":
-			ti = self.user.agendaposter
-			if ti: text = self.badge.description + " until " + datetime.utcfromtimestamp(ti).strftime('%Y-%m-%d %H:%M:%S')
-			else: text = self.badge.description + " permanently"
-		elif self.badge_id in {94,95,96,97,98,109}:
+		if self.badge_id in {94,95,96,97,98,109}:
 			if self.badge_id == 94: ti = self.user.progressivestack
 			elif self.badge_id == 95: ti = self.user.bird
 			elif self.badge_id == 96: ti = self.user.flairchanged

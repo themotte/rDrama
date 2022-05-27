@@ -10,7 +10,8 @@ def test_rules():
 	assert response.text.startswith("<!DOCTYPE html>")
 
 
-def test_signup():
+def test_signup_and_post():
+	print("\nTesting signup and posting flow")
 	client = app.test_client()
 	with client: # this keeps the session between requests, which we need
 		signup_get_response = client.get("/signup")
@@ -35,6 +36,20 @@ def test_signup():
 		assert "error" not in signup_post_response.location
 
 		# we should now be logged in and able to post
+		submit_get_response = client.get("/submit")
+		assert submit_get_response.status_code == 200
+
+		submit_post_response = client.post("/submit", data={
+			"title": "my_cool_post",
+			"body": "hey_guys",
+		})
+		assert submit_post_response.status_code == 302
+		post_render_result = client.get(submit_post_response.location)
+		assert "my_cool_post" in post_render_result.text
+		assert "hey_guys" in post_render_result.text
+
+
+
 
 
 

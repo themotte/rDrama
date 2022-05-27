@@ -4,6 +4,7 @@
 	<script src="/assets/js/new_comments_count.js?v=242"></script>
 {% endif %}
 
+
 <div style="display:none" id="popover">
 	<div class="popover-user-profile" role="tooltip">
 		<img loading="lazy" class="pop-banner w-100 h-64 object-cover">
@@ -41,6 +42,8 @@
 	 </div>
 	</div>
 </div>
+
+{% include 'usernote.html' %}
 
 {% for p in listing %}
 
@@ -108,9 +111,7 @@
 		<div class="card-header bg-transparent border-0 d-flex flex-row flex-nowrap pl-2 pl-md-0 p-0 mr-md-2">
 
 			<div style="z-index: 3;">
-				{% if p.club and not (v and (v.paid_dues or v.id == p.author_id)) %}
-					<img alt="post thumnail" loading="lazy" src="/e/marseyglow.webp" class="post-img">
-				{% elif not p.url %}
+				{% if not p.url %}
 					<a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}">
 						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
@@ -182,6 +183,12 @@
 					{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if p.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{p.author.verified}}"></i>
 					{% endif %}
 					<a href="/@{{p.author_name}}" class="user-name text-decoration-none" onclick='popclick({{p.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color: #{{p.author.namecolor}}; font-weight: bold;"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level %}class="mod"{% endif %}>{{p.author_name}}</span></a>{% if p.author.customtitle %}<bdi style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
+					{% if v and v.admin_level > 2 %}
+						<span 
+							class="usernote-link" 
+							data-micromodal-trigger="modal-1" 
+							onclick='fillnote( {{p.author.json_popover(v) | tojson}}, {{p.id}}, null )'>_U_</span>
+					{% endif %}
 				{% endif %}
 				<span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('timestamp-{{p.id}}','{{p.created_utc}}')" id="timestamp-{{p.id}}">&nbsp;{{p.age_string}}</span>
 				&nbsp;
@@ -193,7 +200,7 @@
 			</div>
 
 			<h5 class="card-title post-title text-left w-lg-95 mb-0 pb-0 pb-md-1">
-				<a id="{{p.id}}-title" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}" class="{% if voted and v.id == AEVANN_ID %}visited{% endif %} stretched-link {% if p.author.agendaposter %}agendaposter{% endif %}">
+				<a id="{{p.id}}-title" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}" class="{% if voted and v.id == AEVANN_ID %}visited{% endif %} stretched-link">
 				{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
 				{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
 				{{p.realtitle(v) | safe}}
@@ -331,7 +338,7 @@
 
 {% if not p.club or v and (v.paid_dues or v.id == p.author_id) %}
 	{% if p.realbody(v) %}
-		<div class="d-none card rounded border pt-3 pb-2 my-2 {% if p.author.agendaposter %}agendaposter{% endif %}" id="post-text-{{p.id}}">
+		<div class="d-none card rounded border pt-3 pb-2 my-2" id="post-text-{{p.id}}">
 			{{p.realbody(v) | safe}}
 		</div>
 	{% endif %}

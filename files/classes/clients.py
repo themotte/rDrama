@@ -11,13 +11,16 @@ import time
 class OauthApp(Base):
 
 	__tablename__ = "oauth_apps"
+	__table_args__ = (
+		UniqueConstraint('client_id', name='unique_id'),
+	)
 
 	id = Column(Integer, primary_key=True)
 	client_id = Column(String)
-	app_name = Column(String)
-	redirect_uri = Column(String)
-	description = Column(String)
-	author_id = Column(Integer, ForeignKey("users.id"))
+	app_name = Column(String(length=50), nullable=False)
+	redirect_uri = Column(String(length=50), nullable=False)
+	description = Column(String(length=256), nullable=False)
+	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
 	author = relationship("User", viewonly=True)
 
@@ -65,10 +68,13 @@ class OauthApp(Base):
 class ClientAuth(Base):
 
 	__tablename__ = "client_auths"
+	__table_args__ = (
+		UniqueConstraint('access_token', name='unique_access'),
+	)
 
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	oauth_client = Column(Integer, ForeignKey("oauth_apps.id"), primary_key=True)
-	access_token = Column(String)
+	access_token = Column(String, nullable=False)
 	
 	user = relationship("User", viewonly=True)
 	application = relationship("OauthApp", viewonly=True)

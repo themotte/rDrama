@@ -191,26 +191,26 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 	
 	marseys_used = set()
 
-	emojis = list(emoji_regex.finditer(sanitized))
-	if len(emojis) > 20: edit = True
+	# emojis = list(emoji_regex.finditer(sanitized))
+	# if len(emojis) > 20: edit = True
 
-	captured = []
-	for i in emojis:
-		if i.group(0) in captured: continue
-		captured.append(i.group(0))
+	# captured = []
+	# for i in emojis:
+	# 	if i.group(0) in captured: continue
+	# 	captured.append(i.group(0))
 
-		old = i.group(0)
-		if 'marseylong1' in old or 'marseylong2' in old or 'marseyllama1' in old or 'marseyllama2' in old: new = old.lower().replace(">", " class='mb-0'>")
-		else: new = old.lower()
+	# 	old = i.group(0)
+	# 	if 'marseylong1' in old or 'marseylong2' in old or 'marseyllama1' in old or 'marseyllama2' in old: new = old.lower().replace(">", " class='mb-0'>")
+	# 	else: new = old.lower()
 
-		new = render_emoji(new, emoji_regex2, edit, marseys_used, True)
+	# 	new = render_emoji(new, emoji_regex2, edit, marseys_used, True)
 
-		sanitized = sanitized.replace(old, new)
+	# 	sanitized = sanitized.replace(old, new)
 
-	emojis = list(emoji_regex2.finditer(sanitized))
-	if len(emojis) > 20: edit = True
+	# emojis = list(emoji_regex2.finditer(sanitized))
+	# if len(emojis) > 20: edit = True
 
-	sanitized = render_emoji(sanitized, emoji_regex2, edit, marseys_used)
+	# sanitized = render_emoji(sanitized, emoji_regex2, edit, marseys_used)
 
 	for rd in ["://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it", "://teddit.net"]:
 		sanitized = sanitized.replace(rd, "://old.reddit.com")
@@ -315,7 +315,7 @@ def filter_emojis_only(title, edit=False, graceful=False):
 	
 	title = title.replace('‎','').replace('​','').replace("\ufeff", "").replace("𒐪","").replace("\n", "").replace("\r", "").replace("\t", "").replace("&", "&amp;").replace('<','&lt;').replace('>','&gt;').replace('"', '&quot;').replace("'", "&#039;").strip()
 
-	title = render_emoji(title, emoji_regex3, edit)
+	# title = render_emoji(title, emoji_regex3, edit)
 
 	title = strikethrough_regex.sub(r'<del>\1</del>', title)
 

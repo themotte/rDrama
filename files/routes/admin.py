@@ -217,6 +217,56 @@ def distribute(v, comment):
 	g.db.commit()
 	return {"message": f"Each winner has received {coinsperperson} coins!"}
 
+@app.post("/@<username>/delete_note/<id>")
+@admin_level_required(3)
+def delete_note(v,username,id):
+	g.db.query(UserNote).filter_by(id=id).delete()
+	g.db.commit()
+
+	return make_response(jsonify({
+		'success':True, 'message': 'Note deleted', 'note': id
+	}), 200)
+
+@app.post("/@<username>/create_note")
+@admin_level_required(3)
+def create_note(v,username):
+
+	def result(msg,succ,note):
+		return make_response(jsonify({
+			'success':succ, 'message': msg, 'note': note
+		}), 200)
+
+	data = json.loads(request.values.get('data'))
+	user = g.db.query(User).filter_by(username=username).one_or_none()
+
+	if not user:
+		return result('User not found',False,None)
+
+	author_id = v.id
+	reference_user = user.id
+	reference_comment = data.get('comment',None)
+	reference_post = data.get('post',None)
+	note = data['note']
+	tag = UserTag(int(data['tag']))
+
+	if reference_comment:
+		reference_post = None
+	elif reference_post:
+		reference_comment = None
+
+	note = UserNote(
+		author_id=author_id,
+		reference_user=reference_user,
+		reference_comment=reference_comment,
+		reference_post=reference_post,
+		note=note,
+		tag=tag)
+
+	g.db.add(note)
+	g.db.commit()
+
+	return result('Note saved',True,note.json())
+
 @app.post("/@<username>/revert_actions")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
@@ -864,77 +914,6 @@ def admin_removed_comments(v):
 						   )
 
 
-@app.post("/agendaposter/<user_id>")
-@admin_level_required(2)
-def agendaposter(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).one_or_none()
-
-	days = request.values.get("days") or 30
-	expiry = float(days)
-	expiry = int(time.time() + expiry*60*60*24)
-
-	user.agendaposter = expiry
-	g.db.add(user)
-
-	for alt in user.alts:
-		if alt.admin_level: return {"error": "User is an admin!"}
-		alt.agendaposter = expiry
-		g.db.add(alt)
-
-	note = f"for {days} days"
-
-	ma = ModAction(
-		kind="agendaposter",
-		user_id=v.id,
-		target_user_id=user.id,
-		note = note
-	)
-	g.db.add(ma)
-
-	if not user.has_badge(28):
-		badge = Badge(user_id=user.id, badge_id=28)
-		g.db.add(badge)
-		g.db.flush()
-		send_notification(user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-
-
-	send_repeatable_notification(user.id, f"@{v.username} has marked you as a chud ({note}).")
-
-	g.db.commit()
-	
-	return redirect(user.url)
-
-
-
-@app.post("/unagendaposter/<user_id>")
-@admin_level_required(2)
-def unagendaposter(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).one_or_none()
-
-	user.agendaposter = 0
-	g.db.add(user)
-
-	for alt in user.alts:
-		alt.agendaposter = 0
-		g.db.add(alt)
-
-	ma = ModAction(
-		kind="unagendaposter",
-		user_id=v.id,
-		target_user_id=user.id
-	)
-
-	g.db.add(ma)
-
-	badge = user.has_badge(28)
-	if badge: g.db.delete(badge)
-
-	send_repeatable_notification(user.id, f"@{v.username} has unmarked you as a chud.")
-
-	g.db.commit()
-	return {"message": "Chud theme disabled!"}
-
-
 @app.post("/shadowban/<user_id>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
@@ -1452,9 +1431,6 @@ def api_unban_comment(c_id, v):
 	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
 	if not comment: abort(404)
 	
-	if comment.author.agendaposter and AGENDAPOSTER_PHRASE not in comment.body.lower():
-		return {"error": "You can't bypass the chud award!"}
-
 	if comment.is_banned:
 		ma=ModAction(
 			kind="unban_comment",

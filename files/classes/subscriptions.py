@@ -7,6 +7,8 @@ class Subscription(Base):
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	submission_id = Column(Integer, ForeignKey("submissions.id"), primary_key=True)
 	
+	Index('subscription_user_index', user_id)
+
 	user = relationship("User", uselist=False, viewonly=True)
 
 	def __init__(self, *args, **kwargs):
