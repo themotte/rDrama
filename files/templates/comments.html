@@ -44,6 +44,8 @@
 	</div>
 {% endif %}
 
+{% include 'usernote.html' %}
+
 {% macro single_comment(c, level=1) %}
 
 {% set ups=c.upvotes %}
@@ -201,6 +203,12 @@
 						{{c.print()}}
 					{% endif %}
 					<a href="/@{{c.author_name}}" class="user-name text-decoration-none" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color:#{{c.author.namecolor}}; font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
+					{% if v and v.admin_level > 2 %}
+					<span 
+						class="usernote-link" 
+						data-micromodal-trigger="modal-1" 
+						onclick='fillnote( {{c.author.json_popover(v) | tojson}}, null, {{c.id}} )'>_U_</span>
+					{% endif %}
 					{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}
 				{% endif %}
 
@@ -279,7 +287,7 @@
 				</style>
 			{% endif %}
 
-			<div id="comment-text-{{c.id}}" class="comment-text mb-0 {% if c.author.agendaposter %}agendaposter{% endif %}">
+			<div id="comment-text-{{c.id}}" class="comment-text mb-0">
 				{{c.realbody(v) | safe}}
 			</div>
 			{% if c.parent_submission %}
@@ -301,8 +309,6 @@
 							&nbsp;
 
 							<small class="btn btn-secondary format m-0" aria-hidden="true" onclick="commentForm('comment-edit-body-{{c.id}}');getGif()" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add GIF"><span class="font-weight-bolder text-uppercase">GIF</span></small>
-							&nbsp;
-							<small class="btn btn-secondary format m-0" aria-hidden="true" onclick="loadEmojis('comment-edit-body-{{c.id}}')" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji"><i class="fas fa-smile-beam"></i></small>
 							&nbsp;
 							
 							<label class="btn btn-secondary format m-0" for="file-edit-reply-{{c.id}}">
@@ -549,11 +555,7 @@
 						<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.fullname}}" onclick="commentForm('reply-form-body-{{c.fullname}}');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add GIF">
 							<span id="gif-reply-btn-{{c.fullname}}" class="font-weight-bolder text-uppercase">GIF</span>
 						</label> 
-						&nbsp;
-						<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.fullname}}" onclick="loadEmojis('reply-form-body-{{c.fullname}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji">
-							<i id="emoji-reply-btn-{{c.fullname}}" class="fas fa-smile-beam"></i>
-						</label>
-						&nbsp;
+
 						<label class="btn btn-secondary format m-0" for="file-upload-reply-{{c.fullname}}">
 							<div id="filename-show-reply-{{c.fullname}}"><i class="far fa-image"></i></div>
 							<input autocomplete="off" id="file-upload-reply-{{c.fullname}}" type="file" multiple="multiple" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-reply-{{c.fullname}}','file-upload-reply-{{c.fullname}}')" hidden>
@@ -590,9 +592,6 @@
 						<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 						<textarea required autocomplete="off" minlength="1" maxlength="10000" name="body" form="reply-to-t3_{{c.id}}" data-id="{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3" oninput="markdown('reply-form-body-{{c.id}}', 'message-reply-{{c.id}}')"></textarea> 
 						<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
-							<label class="btn btn-secondary m-0 mt-3 mr-1" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji">
-								<i class="fas fa-smile-beam"></i>
-							</label>
 
 							{% if c.sentto == 2 %}
 								<label class="btn btn-secondary m-0 mt-3" for="file-upload">
@@ -765,7 +764,6 @@
 {% if not ajax %}
 	{% if v %}
 		{% include "gif_modal.html" %}
-		{% include "emoji_modal.html" %}
 		{% if v.admin_level > 1 %}
 			{% include "ban_modal.html" %}
 		{% endif %}
@@ -836,7 +834,8 @@
 	{% endif %}
 
 	{% if v %}
-		<script src="/assets/js/marked.js?v=251"></script>
+		<script src="/assets/js/vendor/marked.js?v=251"></script>
+		<script src="/assets/js/marked.custom.js?v=251"></script>
 		<script src="/assets/js/comments_v.js?v=266"></script>
 	{% endif %}
 

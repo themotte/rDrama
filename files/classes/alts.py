@@ -7,7 +7,9 @@ class Alt(Base):
 
 	user1 = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	user2 = Column(Integer, ForeignKey("users.id"), primary_key=True)
-	is_manual = Column(Boolean, default=False)
+	is_manual = Column(Boolean, nullable=False, default=False)
+
+	Index('alts_user2_idx', user2)
 
 	def __repr__(self):
 

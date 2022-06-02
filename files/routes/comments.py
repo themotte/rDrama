@@ -7,7 +7,6 @@ from files.helpers.blackjack import *
 from files.helpers.treasure import *
 from files.classes import *
 from files.routes.front import comment_idlist
-from files.routes.static import marsey_list
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
@@ -189,7 +188,7 @@ def api_comment(v):
 		with open(f"snappy_{SITE_NAME}.txt", "a", encoding="utf-8") as f:
 			f.write('\n{[para]}\n' + body)
 
-	if parent_post.id not in ADMIGGERS:
+	if parent_post.id not in ADMINISTRATORS:
 		if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
 			return {"error":"You have to type more than 280 characters!"}, 403
 		elif v.bird and len(body) > 140:
@@ -243,59 +242,6 @@ def api_comment(v):
 							requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/assets/images/badges/{badge.id}.webp"]}, timeout=5)
 						except Exception as e:
 							return {"error": str(e)}, 400
-					elif v.admin_level > 2 and parent_post.id == 37838:
-						try:
-							marsey = loads(body.lower())
-
-							name = marsey["name"]
-							if not marsey_regex.fullmatch(name): return {"error": "Invalid name!"}, 400
-							existing = g.db.query(Marsey.name).filter_by(name=name).one_or_none()
-							if existing: return {"error": "A marsey with this name already exists!"}, 403
-
-							tags = marsey["tags"]
-							if not tags_regex.fullmatch(tags): return {"error": "Invalid tags!"}, 400
-
-							if "author" in marsey: user = get_user(marsey["author"])
-							elif "author_id" in marsey: user = get_account(marsey["author_id"])
-							else: abort(400)
-
-							filename = f'files/assets/images/emojis/{name}.webp'
-							copyfile(oldname, filename)
-							process_image(filename, 200)
-
-							marsey = Marsey(name=name, author_id=user.id, tags=tags, count=0)
-							g.db.add(marsey)
-							g.db.flush()
-
-							all_by_author = g.db.query(Marsey.author_id).filter_by(author_id=user.id).count()
-
-							if all_by_author >= 10 and not user.has_badge(16):
-								new_badge = Badge(badge_id=16, user_id=user.id)
-
-								g.db.add(new_badge)
-								g.db.flush()
-
-								if v.id != user.id:
-									text = f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}"
-									send_notification(user.id, text)
-
-							elif all_by_author < 10 and not user.has_badge(17):
-								new_badge = Badge(badge_id=17, user_id=user.id)
-
-								g.db.add(new_badge)
-								g.db.flush()
-
-								if v.id != user.id:
-									text = f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}"
-									send_notification(user.id, text)
-
-
-
-							requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/e/{name}.webp"]}, timeout=5)
-							cache.delete_memoized(marsey_list)
-
-						except Exception as e:
-							return {"error": str(e)}, 400
 				body += f"\n\n![]({image})"
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
@@ -311,13 +257,9 @@ def api_comment(v):
 				body += f"\n\n{url}"
 			else: return {"error": "Image/Video files only"}, 400
 
-	if v.agendaposter and not v.marseyawarded and parent_post.id not in ADMIGGERS:
-		body = torture_ap(body, v.username)
-
 	body_html = sanitize(body, comment=True)
 
-
-	if parent_post.id not in ADMIGGERS and '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower() and AGENDAPOSTER_PHRASE not in body.lower():
+	if parent_post.id not in ADMINISTRATORS and '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower():
 		existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
 																	Comment.deleted_utc == 0,
 																	Comment.parent_comment_id == parent_comment_id,
@@ -331,7 +273,7 @@ def api_comment(v):
 
 	is_bot = bool(request.headers.get("Authorization"))
 
-	if '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower() and parent_post.id not in ADMIGGERS and not is_bot and not v.marseyawarded and AGENDAPOSTER_PHRASE not in body.lower() and len(body) > 10:
+	if '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower() and parent_post.id not in ADMINISTRATORS and not is_bot and not v.marseyawarded and len(body) > 10:
 		now = int(time.time())
 		cutoff = now - 60 * 60 * 24
 
@@ -419,39 +361,7 @@ def api_comment(v):
 
 		g.db.add(c_choice)
 
-	if parent_post.id not in ADMIGGERS:
-		if v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in c.body.lower():
-
-			c.is_banned = True
-			c.ban_reason = "AutoJanny"
-
-			g.db.add(c)
-
-
-			body = AGENDAPOSTER_MSG.format(username=v.username, type='comment', AGENDAPOSTER_PHRASE=AGENDAPOSTER_PHRASE)
-
-			body_jannied_html = sanitize(body)
-
-
-
-			c_jannied = Comment(author_id=NOTIFICATIONS_ID,
-				parent_submission=parent_submission,
-				distinguish_level=6,
-				parent_comment_id=c.id,
-				level=level+1,
-				is_bot=True,
-				body_html=body_jannied_html,
-				top_comment_id=c.top_comment_id,
-				ghost=parent_post.ghost
-				)
-
-			g.db.add(c_jannied)
-			g.db.flush()
-
-			n = Notification(comment_id=c_jannied.id, user_id=v.id)
-			g.db.add(n)
-
-
+	if parent_post.id not in ADMINISTRATORS:
 		if not v.shadowbanned:
 			notify_users = NOTIFY_USERS(body, v)
 			
@@ -500,7 +410,7 @@ def api_comment(v):
 
 		check_for_blackjack_commands(body, v, c)
 
-	if not c.slots_result and not c.blackjack_result and v.marseyawarded and parent_post.id not in ADMIGGERS and marseyaward_body_regex.search(body_html):
+	if not c.slots_result and not c.blackjack_result and v.marseyawarded and parent_post.id not in ADMINISTRATORS and marseyaward_body_regex.search(body_html):
 		return {"error":"You can only type marseys!"}, 403
 
 	check_for_treasure(body, c)
@@ -540,9 +450,6 @@ def edit_comment(cid, v):
 		elif v.bird and len(body) > 140:
 			return {"error":"You have to type less than 140 characters!"}, 403
 
-		if v.agendaposter and not v.marseyawarded:
-			body = torture_ap(body, v.username)
-
 		if not c.options:
 			for i in poll_regex.finditer(body):
 				body = body.replace(i.group(0), "")
@@ -571,7 +478,7 @@ def edit_comment(cid, v):
 
 		body_html = sanitize(body, edit=True)
 
-		if '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower() and AGENDAPOSTER_PHRASE not in body.lower():
+		if '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower():
 			now = int(time.time())
 			cutoff = now - 60 * 60 * 24
 
@@ -644,39 +551,6 @@ def edit_comment(cid, v):
 			if not notif:
 				notif = Notification(comment_id=c.id, user_id=CARP_ID)
 				g.db.add(notif)
-
-		if v.agendaposter and not v.marseyawarded and AGENDAPOSTER_PHRASE not in c.body.lower() and not c.is_banned:
-
-			c.is_banned = True
-			c.ban_reason = "AutoJanny"
-
-			g.db.add(c)
-
-
-			body = AGENDAPOSTER_MSG.format(username=v.username, type='comment', AGENDAPOSTER_PHRASE=AGENDAPOSTER_PHRASE)
-
-			body_jannied_html = sanitize(body)
-
-
-
-			c_jannied = Comment(author_id=NOTIFICATIONS_ID,
-				parent_submission=c.parent_submission,
-				distinguish_level=6,
-				parent_comment_id=c.id,
-				level=c.level+1,
-				is_bot=True,
-				body_html=body_jannied_html,
-				top_comment_id=c.top_comment_id,
-				ghost=c.ghost
-				)
-
-			g.db.add(c_jannied)
-			g.db.flush()
-
-			n = Notification(comment_id=c_jannied.id, user_id=v.id)
-			g.db.add(n)
-
-
 
 		if int(time.time()) - c.created_utc > 60 * 3: c.edited_utc = int(time.time())
 

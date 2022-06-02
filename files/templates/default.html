@@ -5,29 +5,12 @@
 	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' ajax.cloudflare.com; connect-src 'self' tls-use1.fpapi.io api.fpjs.io {% if PUSHER_ID != 'blahblahblah' %}{{PUSHER_ID}}.pushnotifications.pusher.com{% endif %}; object-src 'none';">
 
 	<script src="/assets/js/bootstrap.js?v=245"></script>
+	<script src="/assets/js/micromodal.js?v=245"></script>
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
 		<link rel="stylesheet" href="/assets/css/main.css?v=250">
 		<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=56">
-		{% if v.agendaposter %}
-			<style>
-				html {
-					cursor:url('/assets/images/dildo.webp?v=1008'), auto;
-				}
-				.nav-item .text-small.font-weight-bold::before {
-					content: "((("
-				}
-				.nav-item .text-small.font-weight-bold::after {
-					content: ")))"
-				}
-				.nav-item .text-small-extra.text-primary {
-					font-size: 0 !important
-				}
-				.nav-item .text-small-extra.text-primary i {
-					font-size: 11px !important
-				}
-			</style>
-		{% elif v.css %}
+		{% if v.css %}
 			<link rel="stylesheet" href="/@{{v.username}}/css">
 		{% endif %}
 	{% else %}
@@ -326,6 +309,10 @@
 {% endif %}
 
 <script src="/assets/js/lite-youtube.js?v=240"></script>
+
+<script>
+	MicroModal.init();
+</script>
 
 </body>
 

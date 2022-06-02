@@ -20,6 +20,8 @@ class Sub(Base):
 	bannerurl = Column(String)
 	css = Column(String)
 
+	Index('subs_idx', name)
+
 	blocks = relationship("SubBlock", lazy="dynamic", primaryjoin="SubBlock.sub==Sub.name", viewonly=True)
 
 
