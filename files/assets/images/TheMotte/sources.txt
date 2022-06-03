@@ -1,0 +1,8 @@
+alert.webp:        https://unsplash.com/photos/RBwBmTOkNlc
+banner.webp:       https://unsplash.com/photos/j-eOUoVUmQQ
+cover.webp:        https://unsplash.com/photos/1JBOZwuW7sI
+default_text.webp: https://unsplash.com/photos/xG8IQMqMITM
+headericon.webp:   https://unsplash.com/photos/RBwBmTOkNlc
+icon.webp:         https://unsplash.com/photos/RBwBmTOkNlc
+logo.webp:         CUSTOM
+site_preview.webp: https://unsplash.com/photos/QTGIHhAhdMU
