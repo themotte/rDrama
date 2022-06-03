@@ -127,6 +127,12 @@ blockquote {
 div.deleted {
 	background-color: var(--gray-400) !important;
 }
+div.deleted.banned {
+	background-color: var(--gray) !important;
+}
+.comment-body > .comment-anchor {
+	padding: 10px;
+}
 .comment-anchor:target, .unread {
 	background: #00000055 !important;
 }
