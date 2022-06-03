@@ -584,7 +584,7 @@ a.btn.disabled, fieldset:disabled a.btn {
 	border-color: var(--primary);
 }
 .btn-primary:hover {
-	color: #fff;
+	color: var;
 	background-color: var(--primary);
 	border-color: #0062cc;
 }

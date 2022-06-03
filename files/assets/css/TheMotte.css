@@ -2,6 +2,9 @@
 
 
 :root {
+	--primary: #1a6187;
+	--bright: #2384b8;
+	--very-bright: #78c0e6;
 	--dark: #c7c7c7;
 	--secondary: #c7c7c7;
 	--gray: #c7c7c7;
@@ -25,6 +28,33 @@
 	border-color: var(--primary);
 }
 
+a  { color: var(--primary); }
+
+.btn-primary { color: var(--primary); }
+.btn-primary:hover { color: var(--bright); }
+
+.btn-secondary { color: var(--primary); }
+.btn-secondary:hover { color: var(--bright); }
+
+.btn-success { color: var(--primary); }
+.btn-success:hover { color: var(--bright); }
+
+.btn-danger { color: var(--primary); }
+.btn-danger:hover { color: var(--bright); }
+
+.btn-primary.disabled, .btn-primary:disabled,
+.btn-secondary.disabled, .btn-secondary:disabled,
+.btn-success.disabled, .btn-success:disabled,
+.btn-danger.disabled, .btn-danger:disabled {
+	color: var(--muted);
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+	opacity: 1;
+	background-color: var(--very-bright) !important;
+	border: var(--primary) solid 0.1px;
+}
+
 .border {
 	border-color: var(--primary) !important;
 }
@@ -32,6 +62,10 @@
 .form-control {
 	background: transparent;
 	border-color: var(--primary) !important;
+}
+
+.form-control:focus {
+	border-color: var(--bright) !important;
 }
 
 .btn {
