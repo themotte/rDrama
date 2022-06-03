@@ -51,7 +51,7 @@
 								{% if u.unban_utc %}<h5 class="text-primary">>{{u.unban_string}}</h5>{% endif %}
 							{% endif %}
 							<div class="d-flex align-items-center mt-1 mb-2">
-								<h1 class="font-weight-bolder h3 mb-0" style="color: var(--bright)"><span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}}"{% endif %}>{{u.username}}</span></h1>
+								<h1 class="font-weight-bolder h3 mb-0" style="color: var(--primary-light1)"><span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}}"{% endif %}>{{u.username}}</span></h1>
 
 								{% if u.username != u.original_username %}
 								<span>

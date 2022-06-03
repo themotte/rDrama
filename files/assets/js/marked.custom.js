@@ -189,12 +189,15 @@ setTimeout(() => markdown('post-text','preview'), 200);
 
 function markdown(first, second) {
 	var input = document.getElementById(first).value;
-	
 	var dest = document.getElementById(second);
-	for (var i = 0; i < dest.children.length; i++) {
-		dest.removeChild(dest.children[i]);
+	if(input && dest){
+		for (var i = 0; i < dest.children.length; i++) {
+			dest.removeChild(dest.children[i]);
+		}
+		document
+			.getElementById(second)
+			.appendChild(safeMarkdown(input));
 	}
-	document.getElementById(second).appendChild(safeMarkdown(input));
 }
 
 function charLimit(form, text) {

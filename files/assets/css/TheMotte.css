@@ -3,8 +3,13 @@
 
 :root {
 	--primary: #1a6187;
-	--bright: #2384b8;
-	--very-bright: #78c0e6;
+
+	--primary-dark1: #165476;
+	--primary-dark2: #134662;
+
+	--primary-light1: #2280B3;
+	--primary-light2: #2F9CD7;
+
 	--dark: #c7c7c7;
 	--secondary: #c7c7c7;
 	--gray: #c7c7c7;
@@ -31,16 +36,16 @@
 a  { color: var(--primary); }
 
 .btn-primary { color: var(--primary); }
-.btn-primary:hover { color: var(--bright); }
+.btn-primary:hover { color: var(--primary-light1); }
 
 .btn-secondary { color: var(--primary); }
-.btn-secondary:hover { color: var(--bright); }
+.btn-secondary:hover { color: var(--primary-light1); }
 
 .btn-success { color: var(--primary); }
-.btn-success:hover { color: var(--bright); }
+.btn-success:hover { color: var(--primary-light1); }
 
 .btn-danger { color: var(--primary); }
-.btn-danger:hover { color: var(--bright); }
+.btn-danger:hover { color: var(--primary-light1); }
 
 .btn-primary.disabled, .btn-primary:disabled,
 .btn-secondary.disabled, .btn-secondary:disabled,
@@ -49,9 +54,19 @@ a  { color: var(--primary); }
 	color: var(--muted);
 }
 
+.comment-write .comment-format .format {
+	color: var(--primary);
+}
+.comment-write .comment-format .format:hover {
+	color: var(--primary-light1);
+}
+.format .fa-bold:hover, .format .fa-italic:hover, .format .fa-quote-right:hover, .format .fa-link:hover, .format .fa-image:hover {
+	color: var(--primary-light1);
+}
+
 .custom-control-input:checked ~ .custom-control-label::before {
 	opacity: 1;
-	background-color: var(--very-bright) !important;
+	background-color: var(--primary-light2) !important;
 	border: var(--primary) solid 0.1px;
 }
 
@@ -65,7 +80,7 @@ a  { color: var(--primary); }
 }
 
 .form-control:focus {
-	border-color: var(--bright) !important;
+	border-color: var(--primary-light1) !important;
 }
 
 .btn {
@@ -109,13 +124,39 @@ blockquote {
 #profilestuff > * {
 	color: var(--gray-400) !important;
 }
-
+div.deleted {
+	background-color: var(--gray-400) !important;
+}
 .comment-anchor:target, .unread {
 	background: #00000055 !important;
 }
-
-#frontpage .post-title a:visited, .visited {
-	color: #7a7a7a !important;
+#frontpage .posts .card, #userpage .posts .card, #search .posts .card {
+	border: none;
+}
+#frontpage .post-info {
+	display:flex;
+}
+#frontpage .post-actions {
+	margin-left:auto;
+}
+#frontpage .post-actions .list-inline {
+	align-items: center;
+	height:100%;
+}
+#frontpage .post-title a:hover {
+	text-decoration: underline;
+}
+a::not(.visited),
+#frontpage .post-title a:not(:visited),
+#userpage .post-title a:not(:visited),
+#search .post-title a:not(:visited) {
+	color: var(--primary-light1);
+}
+a.visited,
+#frontpage .post-title a:visited,
+#userpage .post-title a:visited,
+#search .post-title a:visited {
+	color: var(--primary-dark1);
 }
 
 .usernote-link {
