@@ -90,43 +90,7 @@
 						</div>
 
 				</div>
-				<div class="body d-lg-flex border-bottom">
 
-				<label class="text-black w-lg-25">Theme Color</label>
-
-				<div class="d-flex">
-
-					<form action="/settings/themecolor" id="themecolor-form" method="post" class="color-picker" style="line-height: 0">
-							<input type="hidden" name="formkey" value="{{v.formkey}}">
-
-							{% for themecolor in COLORS %}
-							<input autocomplete="off" type="radio" name="themecolor" id="themecolor-{{themecolor}}" value="{{themecolor}}" {% if v.themecolor == themecolor %}checked{% endif %} onclick="document.getElementById('themecolor-form').submit()">
-							<label class="color-radio" for="themecolor-{{themecolor}}">
-								<span style="background-color: #{{themecolor}}">
-								{% if v.themecolor.lower() == themecolor %}
-									<i class="fas fa-check text-white"></i>
-								{% else %}
-									&nbsp;
-								{% endif %}
-								</span>
-							</label>
-							{% endfor %}
-
-					</form>
-
-				</div>
-
-				<p class="text-small mb-2">Or type a color code:</p>
-				<div class="d-flex">
-					<form action="/settings/themecolor" id="color-code-form" method="post">
-						<input type="hidden" name="formkey" value="{{v.formkey}}">
-	
-						<input class="form-control" type="text" name="themecolor" id="color-code" value="{% if v.themecolor %}{{v.themecolor}}{% endif %}">
-						<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
-					</form>
-				</div>
-
-			</div>
 			<div class="d-lg-flex border-bottom">
 			<div class="title w-lg-25">
 				<label for="theme">Website Backgrounds</label>
@@ -297,60 +261,7 @@
 									</form>
 								</div>
 
-							</div>
-							<div class="body d-lg-flex border-bottom">
-
-								<label class="text-black w-lg-25">Profile Anthem</label>
-
-								<div class="w-lg-100">
-									<p>Must be a youtube video link.</p>
-
-									<form action="/settings/song_change" method="post">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
-										<input autocomplete="off" type="text" name="song" class="form-control" value="{% if v.song %}https://youtu.be/{{v.song}}{% endif %}" placeholder='Enter a youtube video link here'>
-										<br><small>In some browsers, users have to click at least once anywhere in the profile page for the anthem to play.</small>
-										<div class="d-flex mt-2">
-											<input autocomplete="off" class="btn btn-primary ml-auto" type="submit" value="Change Profile Anthem">
-										</div>
-									</form>
-								</div>
-
-							</div>
-							<div class="body d-lg-flex border-bottom">
-
-								<label class="text-black w-lg-25">Name Color</label>
-
-								<div class="d-flex">
-
-									<form action="/settings/namecolor" id="color-form" method="post" class="color-picker" style="line-height: 0">
-											<input type="hidden" name="formkey" value="{{v.formkey}}">
-
-											{% for color in COLORS %}
-											<input autocomplete="off" type="radio" name="color" id="color-{{color}}" value="{{color}}" {% if v.namecolor == color %}checked{% endif %} onclick="document.getElementById('color-form').submit()">
-											<label class="color-radio" for="color-{{color}}">
-												<span style="background-color: #{{color}}">
-												{% if v.namecolor.lower() == color %}
-													<i class="fas fa-check text-white"></i>
-												{% else %}
-													&nbsp;
-												{% endif %}
-												</span>
-											</label>
-											{% endfor %}
-
-									</form>
-
-								</div>
-
-								<p class="text-small mb-2">Or type a color code:</p>
-								<div class="d-flex">
-								<form action="/settings/namecolor" id="color-code-form" method="post">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
-									<input autocomplete="off" class="form-control" type="text" name="color" id="color-code" maxlength="6" value="{% if v.namecolor %}{{v.namecolor}}{% endif %}">
-									<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input autocomplete="off" type="text" for="color-code" onclick="form.submit()" hidden=""></label>
-								</form>
-								</div>
-							</div>							
+							</div>				
 
 							<div class="body d-lg-flex border-bottom">
 
@@ -509,28 +420,6 @@
 								</div>
 							
 							</div>
-							
-
-							<div class="body d-lg-flex border-bottom">
-
-								<label class="text-black w-lg-25">Enemies</label>
-							
-								<div class="w-lg-100">						
-									<form id="profile-enemies" action="/settings/profile" method="post" enctype="multipart/form-data">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
-										<div class="input-group mb-2">
-											<textarea autocomplete="off"  id="enemies-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter your enemies on the site..." rows="3" name="enemies" form="profile-enemies" maxlength="1500">{% if v.enemies %}{{v.enemies}}{% endif %}</textarea>
-										</div>
-										<pre></pre>
-										<div class="d-flex">
-											<small>Limit of 500 characters</small>
-											<input autocomplete="off" class="btn btn-primary ml-auto" id="enemiesSave" type="submit" value="Save Changes">
-										</div>
-									</form>
-								</div>
-							
-							</div>
-
 
 							{% if v.patron or v.id == MOOSE_ID %}
 							<div class="body d-lg-flex border-bottom">

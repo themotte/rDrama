@@ -61,7 +61,7 @@
 {% if (c.is_banned or c.deleted_utc or c.is_blocking) and not (v and v.admin_level > 1) and not (v and v.id==c.author_id) %}
 
 <div id="comment-{{c.id}}" class="comment">
-		<span class="comment-collapse-desktop d-none d-md-block" style="border-left: 2px solid #{{c.author.namecolor}}"onclick="collapse_comment('{{c.id}}', this.parentElement)"></span>
+		<span class="comment-collapse-desktop d-none d-md-block" onclick="collapse_comment('{{c.id}}', this.parentElement)"></span>
 
 		<div class="comment-body">
 
@@ -158,7 +158,7 @@
 
 <div id="comment-{{c.id}}" class="anchor comment {% if standalone and level==1 %} mt-0{% endif %} {% if c.collapse_for_user(v,request.path) %}collapsed{% endif %}" style="{% if isreply %}padding-left:0!important;{% else %}border-left: 2px solid {% if c.ghost %}var(--primary){% else %}#{{c.author.namecolor}};{% endif %}{% endif %}">
 	{% if not isreply %}
-		<span class="comment-collapse-desktop d-none d-md-block" style="border-left: 2px solid {% if c.ghost %}var(--primary){% else %}#{{c.author.namecolor}}{% endif %}" onclick="collapse_comment('{{c.id}}', this.parentElement)"></span>
+		<span class="comment-collapse-desktop d-none d-md-block" onclick="collapse_comment('{{c.id}}', this.parentElement)"></span>
 	{% endif %}
 	<div class="comment-body">
 

@@ -120,9 +120,22 @@ pre {
 blockquote {
 	color: var(--gray-400);
 }
-
+#account-menu {
+	left: -6px;
+}
+#main-navigation {
+	max-width: 2000px;
+	margin-left: auto;
+	margin-right: auto;
+}
 #profilestuff > * {
 	color: var(--gray-400) !important;
+}
+#profilestuff a {
+	color: var(--primary-light2) !important;
+}
+#profilestuff h1 {
+	color: var(--primary-light1) !important;
 }
 div.deleted {
 	background-color: var(--gray-400) !important;
@@ -139,16 +152,24 @@ div.deleted.banned {
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card {
 	border: none;
 }
+#search .post-info,
+#userpage .post-info,
 #frontpage .post-info {
 	display:flex;
 }
+#search .post-actions,
+#userpage .post-actions,
 #frontpage .post-actions {
 	margin-left:auto;
 }
+#search .post-actions .list-inline,
+#userpage .post-actions .list-inline,
 #frontpage .post-actions .list-inline {
 	align-items: center;
 	height:100%;
 }
+#search .post-title a:hover,
+#userpage .post-title a:hover,
 #frontpage .post-title a:hover {
 	text-decoration: underline;
 }
@@ -163,6 +184,12 @@ a.visited,
 #userpage .post-title a:visited,
 #search .post-title a:visited {
 	color: var(--primary-dark1);
+}
+.comment .comment-collapse-desktop {
+	border-left: 2px solid var(--primary-dark1) !important;
+}
+.comment .comment-collapse-desktop:hover {
+	border-left: 2px solid var(--primary-light2) !important;
 }
 
 .usernote-link {

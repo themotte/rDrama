@@ -287,10 +287,14 @@ def contact(v):
 @auth_required
 def submit_contact(v):
 	body = request.values.get("message")
+	email = request.values.get("email")
 	if not body: abort(400)
+	if not email: email = None
 
-	body = f'This message has been sent automatically to all admins via [/contact](/contact)\n\nMessage:\n\n' + body
-	body_html = sanitize(body)
+	header  = "This message has been sent automatically to all admins via [/contact](/contact)\n"
+	email   = f"<strong>Email</strong>: {email}\n"
+	message = f"<strong>Message</strong>:\n{body}\n\n"
+	html    = sanitize(f"{header}\n{email}\n{message}")
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
@@ -298,7 +302,7 @@ def submit_contact(v):
 			name = f'/images/{time.time()}'.replace('.','') + '.webp'
 			file.save(name)
 			url = process_image(name)
-			body_html += f'<img data-bs-target="#expandImageModal" data-bs-toggle="modal" onclick="expandDesktopImage(this.src)" class="img" src="{url}" loading="lazy">'
+			html += f'<img data-bs-target="#expandImageModal" data-bs-toggle="modal" onclick="expandDesktopImage(this.src)" class="img" src="{url}" loading="lazy">'
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
@@ -310,15 +314,13 @@ def submit_contact(v):
 					if error == 'File exceeds max duration': error += ' (60 seconds)'
 					return {"error": error}, 400
 			if url.endswith('.'): url += 'mp4'
-			body_html += f"<p>{url}</p>"
+			html += f"<p>{url}</p>"
 		else: return {"error": "Image/Video files only"}, 400
-
-
 
 	new_comment = Comment(author_id=v.id,
 						  parent_submission=None,
 						  level=1,
-						  body_html=body_html,
+						  body_html=html,
 						  sentto=2
 						  )
 	g.db.add(new_comment)

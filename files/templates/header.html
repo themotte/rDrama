@@ -1,5 +1,5 @@
 
-<nav class="shadow shadow-md fixed-top">
+<nav id="main-navigation" class="shadow shadow-md fixed-top">
 	<style>
 		body {padding-top: 60.89px !important}
 		@media (max-width: 767.98px) {
@@ -130,12 +130,12 @@
 						aria-haspopup="true" aria-expanded="false">
 						<div class="d-flex">
 							<div><img alt="your profile picture" loading="lazy" src="{{v.profile_url}}" class="profile-pic-35"></div>
-							<div class="text-left pl-2">
+							<div class="text-left pl-2 d-flex align-items-center">
 								<div style="color: var(--primary-light1)" class="text-small font-weight-bold {% if v.patron %}patron{% endif %}"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></div>
 							</div>
 						</div>
 					</a>
-					<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left border-0 shadow fade px-0">
+					<div id="account-menu" class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left border-0 shadow fade px-0">
 					<div class="px-2">
 						<a class="dropdown-item" href="{{v.url}}"><i class="fas fa-user-circle fa-fw mr-3"></i>My
 							profile</a>
@@ -148,8 +148,6 @@
 								<a class="dropdown-item" href="/changelog"><i class="fas fa-clipboard fa-fw mr-3"></i>Changelog</a>
 
 								<a class="dropdown-item" rel="nofollow noopener noreferrer" href="https://github.com/themotte/rDrama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
-
-								<a class="dropdown-item" rel="nofollow noopener noreferrer" href="{{config('GUMROAD_LINK')}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a>
 
 								<a class="dropdown-item" href="/contact"><i class="fas fa-file-signature fa-fw mr-3"></i>Contact us</a>
 							</div>

@@ -188,15 +188,13 @@ function safeMarkdown(input) {
 setTimeout(() => markdown('post-text','preview'), 200);
 
 function markdown(first, second) {
-	var input = document.getElementById(first).value;
+	var input = document.getElementById(first);
 	var dest = document.getElementById(second);
-	if(input && dest){
+	if(dest && input && input.value.trim() !== ''){
 		for (var i = 0; i < dest.children.length; i++) {
 			dest.removeChild(dest.children[i]);
 		}
-		document
-			.getElementById(second)
-			.appendChild(safeMarkdown(input));
+		dest.appendChild(safeMarkdown(input.value));
 	}
 }
 
