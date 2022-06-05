@@ -33,6 +33,15 @@
 	border-color: var(--primary);
 }
 
+.btn-secondary:not(:disabled):not(.disabled):active, 
+.btn-secondary:not(:disabled):not(.disabled).active, 
+.show > .btn-secondary.dropdown-toggle {
+	color: var(--primary-dark1);
+}
+.btn-secondary:focus, .btn-secondary.focus {
+	color: var(--primary-dark1);
+}
+
 a  { color: var(--primary); }
 
 .btn-primary { color: var(--primary); }
@@ -92,7 +101,6 @@ a  { color: var(--primary); }
 	background: transparent;
 	border-color: var(--primary) !important;
 }
-
 .btn-success {
 	border-color: #38A169 !important;
 }

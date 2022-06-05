@@ -751,6 +751,9 @@ input[type=submit].btn-block, input[type=reset].btn-block, input[type=button].bt
 .dropup, .dropdown {
 	position: relative;
 }
+.d-nowrap {
+	white-space: nowrap;
+}
 .dropdown-toggle {
 	white-space: nowrap;
 }
