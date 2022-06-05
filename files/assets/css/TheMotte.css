@@ -78,7 +78,10 @@ a  { color: var(--primary); }
 	background-color: var(--primary-light2) !important;
 	border: var(--primary) solid 0.1px;
 }
-
+.primary_banner {
+	min-height: 20vh;
+	object-fit: cover;
+}
 .border {
 	border-color: var(--primary) !important;
 }

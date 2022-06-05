@@ -59,16 +59,16 @@
 			{% endif %}
 			
 			{% if not err %}
-				<a class="mobile-nav-icon d-md-none" href="/random_user"><i class="fas fa-music align-middle text-gray-500 black"></i></a>
-				<a class="mobile-nav-icon d-md-none" href="/random_post"><i class="fas fa-random align-middle text-gray-500 black"></i></a>
+				<a class="mobile-nav-icon d-md-none" href="/random_user" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Random User"><i class="fas fa-user-circle align-middle text-gray-500 black"></i></a>
+				<a class="mobile-nav-icon d-md-none" href="/random_post" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Random Post"><i class="fas fa-random align-middle text-gray-500 black"></i></a>
 			{% if v and v.admin_level > 1 %}
-				<a class="mobile-nav-icon d-md-none" href="/admin"><i class="fas fa-crown align-middle text-gray-500 black"></i></a>
+				<a class="mobile-nav-icon d-md-none" href="/admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Admin"><i class="fas fa-crown align-middle text-gray-500 black"></i></a>
 			{% endif %}
 
 			{% if v %}
-				<a class="mobile-nav-icon d-md-none" href="{% if sub %}/h/{{sub.name}}{% endif %}/submit"><i class="fas fa-feather-alt align-middle text-gray-500 black"></i></a>
+				<a class="mobile-nav-icon d-md-none" href="{% if sub %}/h/{{sub.name}}{% endif %}/submit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="New Post"><i class="fas fa-edit align-middle text-gray-500 black"></i></a>
 			{% else %}
-				<a class="mobile-nav-icon d-md-none" href="/login"><i class="fas fa-feather-alt align-middle text-gray-500 black"></i></a>
+				<a class="mobile-nav-icon d-md-none" href="/login" data-bs-toggle="tooltip" data-bs-placement="bottom" title="New Post"><i class="fas fa-edit align-middle text-gray-500 black"></i></a>
 			{% endif %}
 			<button class="navbar-toggler" role="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
 			aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -195,8 +195,6 @@
 				{% endif %}
 				
 				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="https://github.com/themotte/rDrama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
-
-				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="{{config('GUMROAD_LINK')}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a>
 
 				<a class="nav-item nav-link" href="/contact"><i class="fas fa-file-signature fa-fw mr-3"></i>Contact us</a>
 
