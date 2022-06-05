@@ -275,7 +275,7 @@ def upvoters(v, username):
 		pos = (pos+1, users[pos][1])
 	except: pos = (len(users)+1, 0)
 
-	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Up', name2=f'@{username} biggest simps')
+	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Up', name2=f'Who upvotes @{username}')
 
 
 
@@ -301,7 +301,7 @@ def downvoters(v, username):
 		pos = (pos+1, users[pos][1])
 	except: pos = (len(users)+1, 0)
 
-	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Down', name2=f'@{username} biggest haters')
+	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Down', name2=f'Who downvotes @{username}')
 
 @app.get("/@<username>/upvoting")
 @auth_required
@@ -325,7 +325,7 @@ def upvoting(v, username):
 		pos = (pos+1, users[pos][1])
 	except: pos = (len(users)+1, 0)
 
-	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Up', name2=f'Who @{username} simps for')
+	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Up', name2=f'Who @{username} upvotes')
 
 @app.get("/@<username>/downvoting")
 @auth_required
@@ -349,7 +349,7 @@ def downvoting(v, username):
 		pos = (pos+1, users[pos][1])
 	except: pos = (len(users)+1, 0)
 
-	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Down', name2=f'Who @{username} hates')
+	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Down', name2=f'Who @{username} downvotes')
 
 
 

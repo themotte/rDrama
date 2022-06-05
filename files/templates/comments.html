@@ -61,7 +61,7 @@
 {% if (c.is_banned or c.deleted_utc or c.is_blocking) and not (v and v.admin_level > 1) and not (v and v.id==c.author_id) %}
 
 <div id="comment-{{c.id}}" class="comment">
-		<span class="comment-collapse-desktop d-none d-md-block" style="border-left: 2px solid #{{c.author.namecolor}}"onclick="collapse_comment('{{c.id}}', this.parentElement)"></span>
+		<span class="comment-collapse-desktop d-none d-md-block" onclick="collapse_comment('{{c.id}}', this.parentElement)"></span>
 
 		<div class="comment-body">
 
@@ -158,7 +158,7 @@
 
 <div id="comment-{{c.id}}" class="anchor comment {% if standalone and level==1 %} mt-0{% endif %} {% if c.collapse_for_user(v,request.path) %}collapsed{% endif %}" style="{% if isreply %}padding-left:0!important;{% else %}border-left: 2px solid {% if c.ghost %}var(--primary){% else %}#{{c.author.namecolor}};{% endif %}{% endif %}">
 	{% if not isreply %}
-		<span class="comment-collapse-desktop d-none d-md-block" style="border-left: 2px solid {% if c.ghost %}var(--primary){% else %}#{{c.author.namecolor}}{% endif %}" onclick="collapse_comment('{{c.id}}', this.parentElement)"></span>
+		<span class="comment-collapse-desktop d-none d-md-block" onclick="collapse_comment('{{c.id}}', this.parentElement)"></span>
 	{% endif %}
 	<div class="comment-body">
 
@@ -202,7 +202,7 @@
 					{% if not c.author %}
 						{{c.print()}}
 					{% endif %}
-					<a href="/@{{c.author_name}}" class="user-name text-decoration-none" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color:#{{c.author.namecolor}}; font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
+					<a href="/@{{c.author_name}}" class="user-name text-decoration-none" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color:var(--primary-light1); font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
 					{% if v and v.admin_level > 2 %}
 					<span 
 						class="usernote-link" 
@@ -551,11 +551,6 @@
 						&nbsp;
 						<a class="btn btn-secondary format m-0" role="button" onclick="makeQuote('reply-form-body-{{c.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote"><i class="fas fa-quote-right"></i></a>
 						&nbsp;
-
-						<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.fullname}}" onclick="commentForm('reply-form-body-{{c.fullname}}');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add GIF">
-							<span id="gif-reply-btn-{{c.fullname}}" class="font-weight-bolder text-uppercase">GIF</span>
-						</label> 
-
 						<label class="btn btn-secondary format m-0" for="file-upload-reply-{{c.fullname}}">
 							<div id="filename-show-reply-{{c.fullname}}"><i class="far fa-image"></i></div>
 							<input autocomplete="off" id="file-upload-reply-{{c.fullname}}" type="file" multiple="multiple" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-reply-{{c.fullname}}','file-upload-reply-{{c.fullname}}')" hidden>
