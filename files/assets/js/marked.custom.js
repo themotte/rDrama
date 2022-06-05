@@ -146,43 +146,47 @@ function tokenToHTMLElement(token) {
 }
 
 function safeMarkdown(input) {
-	var seenTokens = [];
-	var outputToken = {"type": "div", "raw": input, "text": "", "tokens": []};
-	function seeRecursive(token) {
-		seenTokens.push(token);
-		var children = (
-			token.tokens
-			|| token.items
-			|| (token.header||[]).concat(token.rows||[])
-			|| []
-		);
-		if (token.header) {
-			children = children.concat(token.header);
-		}
-		for (var y = 0; y < (token.rows||[]).length; y++) {
-			children = children.concat(token.rows[y]);
-		}
-		for (var i = 0; i < children.length; i++) {
-			seeRecursive(children[i]);
-		}
-	}
-	marked.use({
-		walkTokens: function(token) {
-			if (!seenTokens.includes(token)) {
-				outputToken.tokens.push(token);
-				seeRecursive(token);
-			}
-		},
-	});
-	marked(input);
-	marked.use({
-		walkTokens: false,
-		tokenizer: false,
-	});
+	// var seenTokens = [];
+	// var outputToken = {"type": "div", "raw": input, "text": "", "tokens": []};
+	// function seeRecursive(token) {
+	// 	seenTokens.push(token);
+	// 	var children = (
+	// 		token.tokens
+	// 		|| token.items
+	// 		|| (token.header||[]).concat(token.rows||[])
+	// 		|| []
+	// 	);
+	// 	if (token.header) {
+	// 		children = children.concat(token.header);
+	// 	}
+	// 	for (var y = 0; y < (token.rows||[]).length; y++) {
+	// 		children = children.concat(token.rows[y]);
+	// 	}
+	// 	for (var i = 0; i < children.length; i++) {
+	// 		seeRecursive(children[i]);
+	// 	}
+	// }
+	// marked.use({
+	// 	walkTokens: function(token) {
+	// 		if (!seenTokens.includes(token)) {
+	// 			outputToken.tokens.push(token);
+	// 			seeRecursive(token);
+	// 		}
+	// 	},
+	// });
+	// marked(input);
+	// marked.use({
+	// 	walkTokens: false,
+	// 	tokenizer: false,
+	// });
 
-	[ 'escape', 'del', ];
+	// [ 'escape', 'del', ];
 
-	return tokenToHTMLElement(outputToken);
+	// return tokenToHTMLElement(outputToken);
+
+	const html = marked.parse(input);
+	console.log(html);
+	return html;
 }
 
 setTimeout(() => markdown('post-text','preview'), 200);
@@ -194,7 +198,7 @@ function markdown(first, second) {
 	for (var i = 0; i < dest.children.length; i++) {
 		dest.removeChild(dest.children[i]);
 	}
-	document.getElementById(second).appendChild(safeMarkdown(input));
+	document.getElementById(second).innerHTML = safeMarkdown(input);
 }
 
 function charLimit(form, text) {
