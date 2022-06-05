@@ -33,6 +33,15 @@
 	border-color: var(--primary);
 }
 
+.btn-secondary:not(:disabled):not(.disabled):active, 
+.btn-secondary:not(:disabled):not(.disabled).active, 
+.show > .btn-secondary.dropdown-toggle {
+	color: var(--primary-dark1);
+}
+.btn-secondary:focus, .btn-secondary.focus {
+	color: var(--primary-dark1);
+}
+
 a  { color: var(--primary); }
 
 .btn-primary { color: var(--primary); }
@@ -69,7 +78,10 @@ a  { color: var(--primary); }
 	background-color: var(--primary-light2) !important;
 	border: var(--primary) solid 0.1px;
 }
-
+.primary_banner {
+	min-height: 20vh;
+	object-fit: cover;
+}
 .border {
 	border-color: var(--primary) !important;
 }
@@ -92,7 +104,6 @@ a  { color: var(--primary); }
 	background: transparent;
 	border-color: var(--primary) !important;
 }
-
 .btn-success {
 	border-color: #38A169 !important;
 }
