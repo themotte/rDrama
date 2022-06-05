@@ -185,8 +185,7 @@ function safeMarkdown(input) {
 	// return tokenToHTMLElement(outputToken);
 
 	const html = marked.parse(input);
-	console.log(html);
-	return html;
+	return DOMPurify.sanitize(html);
 }
 
 setTimeout(() => markdown('post-text','preview'), 200);
