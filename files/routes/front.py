@@ -392,8 +392,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 @app.get("/changelog")
 @auth_required
 def changelog(v):
-
-
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 

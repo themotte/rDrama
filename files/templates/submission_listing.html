@@ -139,6 +139,13 @@
 		<div class="card-block text-left x-scroll-parent my-md-auto w-100">
 
 			<div class="post-meta text-left x-scroll mb-md-2">
+				<h5 class="card-title post-title text-left mb-0 pb-0 pb-md-1">
+					<a id="{{p.id}}-title" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}" class="{% if voted and v.id == AEVANN_ID %}visited{% endif %}">
+					{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
+					{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
+					{{p.realtitle(v) | safe}}
+				</a></h5>
+
 				{% if p.sub %}
 					<a href='/h/{{p.sub}}'>/h/{{p.sub}}</a>&nbsp;&nbsp;
 				{% endif %}
@@ -146,68 +153,83 @@
 				{% if p.sub and p.author.exiled_from(p.sub) %}
 					<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User has been exiled from /h/{{p.sub}}"></i></a>
 				{% endif %}
-				
-				{% if p.bannedfor %}
-					<a role="button"><i class="fas fa-hammer-crash text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this post{% if p.author.banned_by %} by @{{p.author.banned_by.username}}{% endif %}"></i></a>
-				{% endif %}
-
-				{% for a in p.awards|reverse %}
-					<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
-				{% endfor %}
-
-				{% if v and v.admin_level > 1 and p.author.shadowbanned %}
-					<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{p.author.shadowbanned}}"></i>
-				{% endif %}
-
-				{% if p.stickied %}
-					<i id='pinned-{{p.id}}' class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned by @{{p.stickied}}" {% if p.stickied_utc %}onmouseover="pinned_timestamp('pinned-{{p.id}}')" data-timestamp={{p.stickied_utc}} {% endif %}></i>
-				{% endif %}
-
-				{% if p.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{SITE_NAME}} Admin, speaking officially"></i>{% endif %}
-				{% if p.is_pinned and request.path.startswith('/@') %}<i class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned to profile"></i>{% endif %}
-				{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
-				{% if p.is_bot %} <i class="fas fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom"	title="Bot"></i>{% endif %}
-				{% if p.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You're blocking this user, but you can see this post because you're an admin."></i>{% endif %}
-				{% if p.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="This user is blocking you."></i>{% endif %}
-				{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
-				{% if p.active_flags(v) %}<a class="btn btn-primary" role="button" style="padding:1px 5px; font-size:10px"onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags(v)}} Reports</a>{% endif %}
-				
-				{% if not p.author %}
-					{{p.print()}}
-				{% endif %}
-
-				{% if p.ghost %}
-					👻
-				{% else %}
-
-					{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if p.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{p.author.verified}}"></i>
-					{% endif %}
-					<a href="/@{{p.author_name}}" class="user-name text-decoration-none" onclick='popclick({{p.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="color: #{{p.author.namecolor}}; font-weight: bold;"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level %}class="mod"{% endif %}>{{p.author_name}}</span></a>{% if p.author.customtitle %}<bdi style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
-					{% if v and v.admin_level > 2 %}
-						<span 
-							class="usernote-link" 
-							data-micromodal-trigger="modal-1" 
-							onclick='fillnote( {{p.author.json_popover(v) | tojson}}, {{p.id}}, null )'>_U_</span>
-					{% endif %}
-				{% endif %}
-				<span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('timestamp-{{p.id}}','{{p.created_utc}}')" id="timestamp-{{p.id}}">&nbsp;{{p.age_string}}</span>
-				&nbsp;
-				({% if p.is_image %}image post{% elif p.is_video %}video post{% elif p.domain %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
-				{% if p.edited_utc %}
-					&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp-{{p.id}}" onmouseover="timestamp('edited_timestamp-{{p.id}}','{{p.edited_utc}}')">{{p.edited_string}}</span>
-				{% endif %}
-				&nbsp;&nbsp;{{p.views}} thread views
 			</div>
 
-			<h5 class="card-title post-title text-left w-lg-95 mb-0 pb-0 pb-md-1">
-				<a id="{{p.id}}-title" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}" class="{% if voted and v.id == AEVANN_ID %}visited{% endif %} stretched-link">
-				{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
-				{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
-				{{p.realtitle(v) | safe}}
-			</a></h5>
+			<div class="post-info text-left">
+				<div class="post-author x-scroll">
+					{% if p.bannedfor %}
+						<a role="button"><i class="fas fa-hammer-crash text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this post{% if p.author.banned_by %} by @{{p.author.banned_by.username}}{% endif %}"></i></a>
+					{% endif %}
 
-			<div class="post-actions mt-2 d-none d-md-block">
-				<ul class="list-inline text-right d-flex">
+					{% for a in p.awards|reverse %}
+						<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
+					{% endfor %}
+
+					{% if v and v.admin_level > 1 and p.author.shadowbanned %}
+						<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{p.author.shadowbanned}}"></i>
+					{% endif %}
+
+					{% if p.stickied %}
+						<i id='pinned-{{p.id}}' class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned by @{{p.stickied}}" {% if p.stickied_utc %}onmouseover="pinned_timestamp('pinned-{{p.id}}')" data-timestamp={{p.stickied_utc}} {% endif %}></i>
+					{% endif %}
+
+					{% if p.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{SITE_NAME}} Admin, speaking officially"></i>{% endif %}
+					{% if p.is_pinned and request.path.startswith('/@') %}<i class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned to profile"></i>{% endif %}
+					{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
+					{% if p.is_bot %} <i class="fas fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom"	title="Bot"></i>{% endif %}
+					{% if p.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You're blocking this user, but you can see this post because you're an admin."></i>{% endif %}
+					{% if p.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="This user is blocking you."></i>{% endif %}
+					{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
+					{% if p.active_flags(v) %}<a class="btn btn-primary" role="button" style="padding:1px 5px; font-size:10px"onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags(v)}} Reports</a>{% endif %}
+					
+
+					<span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('timestamp-{{p.id}}','{{p.created_utc}}')" id="timestamp-{{p.id}}">&nbsp;{{p.age_string}} by </span>
+
+					{% if not p.author %}
+						{{p.print()}}
+					{% endif %}
+
+					{% if p.ghost %}
+						👻
+					{% else %}
+
+						{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if p.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{p.author.verified}}"></i>
+						{% endif %}
+						<a href="/@{{p.author_name}}" 
+							class="user-name text-decoration-none" 
+
+							data-bs-placement="bottom" 
+							data-bs-toggle="popover" 
+							data-bs-trigger="click" 
+							data-content-id="popover" 
+							role="button" 
+							tabindex="0" 
+							style="color: var(--primary-light1); font-weight: bold;">
+								<span 
+									{% if p.author.patron and not p.distinguish_level %}
+										class="patron" 
+										style="background-color:#{{p.author.namecolor}};"
+									{% elif p.distinguish_level %}
+										class="mod"
+									{% endif %}>{{p.author_name}}</span>
+						</a>{% if p.author.customtitle %}<bdi style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
+						{% if v and v.admin_level > 2 %}
+							<span 
+								class="usernote-link" 
+								data-micromodal-trigger="modal-1" 
+								onclick='fillnote( {{p.author.json_popover(v) | tojson}}, {{p.id}}, null )'>_U_</span>
+						{% endif %}
+					{% endif %}
+					
+					&nbsp;
+					({% if p.is_image %}image post{% elif p.is_video %}video post{% elif p.domain %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
+					{% if p.edited_utc %}
+						&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp-{{p.id}}" onmouseover="timestamp('edited_timestamp-{{p.id}}','{{p.edited_utc}}')">{{p.edited_string}}</span>
+					{% endif %}
+					&nbsp;&nbsp;{{p.views}} thread views
+				</div>
+				<div class="post-actions d-none d-md-block">
+					<ul class="list-inline text-right d-flex">
 						{% if p.realbody(v) %}
 							<a class="list-inline-item" role="button" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
 						{% endif %}
@@ -218,8 +240,9 @@
 							</a>
 						</li>
 						{% include 'post_actions.html' %}
-			</ul>
-		</div>
+					</ul>
+				</div>
+			</div>
 	</div>
 </div>
 

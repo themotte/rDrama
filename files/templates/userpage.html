@@ -13,7 +13,7 @@
 <meta property="og:article:author" content="@{{u.username}}">
 <meta property="article:section" content="{{u.username}}'s profile - {{SITE_NAME}}">
 <meta property="article:published_time" content="{{u.created_date}}">
-<meta property="og:description" name="description" content="{{u.coins}} coins - Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers - {% endif %}{% if not u.is_private %} {{0 if u.shadowbanned else u.post_count}} Posts - {{0 if u.shadowbanned else u.comment_count}} Comments - {% endif %}{{u.bio}}">
+<meta property="og:description" name="description" content="Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers - {% endif %}{% if not u.is_private %} {{0 if u.shadowbanned else u.post_count}} Posts - {{0 if u.shadowbanned else u.comment_count}} Comments - {% endif %}{{u.bio}}">
 <meta property="og:author" name="author" content="@{{u.username}}">
 <meta property="og:title" content="{{u.username}}">
 <meta property="og:image" content="{{u.banner_url}}">
@@ -24,7 +24,7 @@
 <meta name="twitter:site" content="{{SITE_FULL}}">
 <meta name="twitter:title" content="{{u.username}}'s profile - {{SITE_NAME}}">
 <meta name="twitter:creator" content="@{{u.username}}">
-<meta name="twitter:description" content="{{u.coins}} coins - Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers -{% endif %} {% if not u.is_private %} {{0 if u.shadowbanned else u.post_count}} Posts - {{0 if u.shadowbanned else u.comment_count}} Comments - {% endif %}{{u.bio}}">
+<meta name="twitter:description" content="Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers -{% endif %} {% if not u.is_private %} {{0 if u.shadowbanned else u.post_count}} Posts - {{0 if u.shadowbanned else u.comment_count}} Comments - {% endif %}{{u.bio}}">
 <meta name="twitter:image" content="{{u.banner_url}}">
 <meta name="twitter:url" content="{{u.url}}">
 {% endblock %}
@@ -51,7 +51,7 @@
 								{% if u.unban_utc %}<h5 class="text-primary">>{{u.unban_string}}</h5>{% endif %}
 							{% endif %}
 							<div class="d-flex align-items-center mt-1 mb-2">
-								<h1 class="font-weight-bolder h3 mb-0" style="color: var(--bright)"><span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}}"{% endif %}>{{u.username}}</span></h1>
+								<h1 class="font-weight-bolder h3 mb-0"><span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}}"{% endif %}>{{u.username}}</span></h1>
 
 								{% if u.username != u.original_username %}
 								<span>
@@ -104,7 +104,7 @@
 				{% else %}<pre></pre>
 				{% endif %}
 				
-				<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Simps</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Haters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Simps for</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Hates</a></div>
+				<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Upvoters</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Downvoters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Upvoted</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Downvoted</a></div>
 
 				<div class="font-weight-bolder">
 					<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp;
@@ -113,12 +113,12 @@
 
 					joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{u.created_datetime}}">{{u.created_date}}</span>
 				</div>
-				{% if u.basedcount %}<p class="text-muted">Based Count: {{u.basedcount}}</p>{% endif %}
 
 				{% if u.bio_html %}
 					<pre></pre>
 					<div class="text-muted font-weight-bolder">{{u.bio_html | safe}}</div>
 				{% else %}
+					<pre></pre>
 					<p class="text-muted">No bio...</p>
 				{% endif %}
 
@@ -276,9 +276,7 @@
 						{% endif %}
 					<pre></pre>
 					<p>User ID: {{u.id}}</p>
-					<p>Coins spent: {{u.coins_spent}}</p>
-					<p>True score: {{u.truecoins}}</p>
-					<p>Winnings: {{u.winnings}}</p>
+
 					{% if u.is_private %}
 						<p>User has private mode enabled.</p>
 					{% endif %}
@@ -365,7 +363,7 @@
 					<pre></pre>
 				{% endif %}
 
-				<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Simps</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Haters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Simps for</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Hates</a></div>
+				<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Upvoters</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Downvoters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Upvoted</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Downvoted</a></div>
 
 				<div class="font-weight-normal">
 					<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp;
@@ -547,9 +545,7 @@
 				{% endif %}
 				<pre></pre>
 				<p>User ID: {{u.id}}</p>
-				<p>Coins spent: {{u.coins_spent}}</p>
-				<p>True score: {{u.truecoins}}</p>
-				<p>Winnings: {{u.winnings}}</p>
+
 				{% if u.is_private %}
 					<p>User has private mode enabled.</p>
 				{% endif %}
@@ -697,7 +693,8 @@
 </nav>
 {% endif %}
 
-<script src="/assets/js/vendor/marked.js?v=251"></script>
+<script src="/assets/js/vendor/purify.min.js?v=251"></script>
+<script src="/assets/js/vendor/marked.min.js?v=251"></script>
 <script src="/assets/js/marked.custom.js?v=251"></script>
 
 {% endblock %}
