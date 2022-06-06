@@ -43,7 +43,7 @@ Database migrations allow us to specify where data moves when there are schema c
 
 ## Database schema change workflow
 
-As an example, let's say we want to add a column `is\_filtered` to the `comments` table.
+As an example, let's say we want to add a column `is\_flagged` to the `comments` table.
 
 1. Update the `Comment` model in `files/classes/comment.py`
 ```python
