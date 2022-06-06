@@ -39,7 +39,7 @@
 <body id="login">
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top border-0">
-		<div class="container-fluid">
+		<div class="container-fluid d-none">
 				<button class="navbar-toggler d-none" role="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
 				aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -84,7 +84,7 @@
 												<label for="username-register" class="mt-3">Username</label>
 
 												<input autocomplete="off" class="form-control" id="username-register"
-												aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" min="3" max="25" required="">
+												aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" min="3" max="25" required autofocus tabindex="1">
 												<small id="usernameHelpRegister"></small>
 
 												<label for="email-register" class="mt-3">Email Address</label>
@@ -92,12 +92,12 @@
 												<small class="d-inline-block text-muted ml-1">(optional)</small>
 
 												<input style="background-color: var(--gray-800)" autocomplete="off" class="form-control" id="email-register"
-												aria-describedby="emailHelpRegister" type="email" pattern='([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+' name="email" readonly onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');this.blur();this.focus()}">
+												aria-describedby="emailHelpRegister" type="email" pattern='([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+' name="email" tabindex="2">
 
 												<label for="password-register" class="mt-3">Password</label>
 
 												<input autocomplete="off" class="form-control" id="password-register"
-												aria-describedby="passwordHelpReigster" type="password" name="password" required="">
+												aria-describedby="passwordHelpReigster" type="password" name="password" required tabindex="4">
 												<small id="passwordHelpRegister" class="form-text font-weight-bold text-muted d-none mt-1">Minimum of 8
 														characters
 												required.</small>
@@ -108,20 +108,20 @@
 
 												<input autocomplete="off" class="form-control" id="password_confirm"
 												aria-describedby="passwordConfirmHelp" type="password" name="password_confirm"
-												required="">
+												required tabindex="5">
 												<div class="custom-control custom-checkbox mt-4">
-														<input autocomplete="off" type="checkbox" class="custom-control-input" id="termsCheck" required>
-														<label class="custom-control-label terms" for="termsCheck">I accept the <a href="/sidebar">rules</a></label>
+														<input autocomplete="off" type="checkbox" class="custom-control-input" id="termsCheck" required tabindex="6">
+														<label class="custom-control-label terms" for="termsCheck">I accept the <a href="/sidebar" tabindex="8">rules</a></label>
 												</div>
 
 												{% if hcaptcha %}
 													<div class="h-captcha" data-sitekey="{{hcaptcha}}"></div>
 												{% endif %}
 
-												<button class="btn btn-primary login w-100 mt-3" id="register_button">Register</button>
+												<button class="btn btn-primary login w-100 mt-3" id="register_button" tabindex="7">Register</button>
 
 												<div class="text-center text-muted text-small mt-2 mb-0">
-																Already have an account? <a href="/login{{'?redirect='+redirect if redirect else ''}}" class="font-weight-bold toggle-login">Log in</a>
+																Already have an account? <a href="/login{{'?redirect='+redirect if redirect else ''}}" class="font-weight-bold toggle-login" tabindex="9">Log in</a>
 												</div>
 
 											</form>

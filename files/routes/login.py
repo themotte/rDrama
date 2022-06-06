@@ -321,7 +321,7 @@ def sign_up_post(v):
 		session["history"] = []
 	else: admin_level=0
 
-	profileurl = '/e/feather.webp'
+	profileurl = '/assets/images/default-profile-pic.webp'
 
 	new_user = User(
 		username=username,

@@ -6,8 +6,6 @@
 <title>Search for "{{query}}" - {{SITE_NAME}}"</title> <meta name="description" content="{{total}} result{{'s' if total != 1 else ''}}">
 {% endblock %}
 
-{% block PseudoSubmitForm %}{% endblock %}
-
 {% block navbar %}
 	{% if not '/users/' in request.path %}
 		<div class="mt-5 d-flex align-items-center">

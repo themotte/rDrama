@@ -398,8 +398,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false"
 @app.get("/changelog")
 @auth_required
 def changelog(v):
-
-
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
@@ -481,8 +479,7 @@ def random_post(v):
 @app.get("/random_user")
 @auth_required
 def random_user(v):
-
-	u = g.db.query(User.username).filter(User.song != None).order_by(func.random()).first()
+	u = g.db.query(User.username).order_by(func.random()).first()
 	
 	if u: u = u[0]
 	else: abort(404)

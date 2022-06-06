@@ -243,6 +243,11 @@ function post_comment(fullname){
 			commentForm=document.getElementById('comment-form-space-'+fullname);
 			commentForm.innerHTML = data["comment"].replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
 			bs_trigger(commentForm);
+
+			let placeholder = document.getElementById("placeholder-comment");
+			if(placeholder){
+				placeholder.parentNode.removeChild(placeholder);
+			}
 		}
 		else {
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];

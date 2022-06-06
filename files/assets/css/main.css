@@ -283,7 +283,7 @@ mark, .mark {
 }
 code {
 	font-size: 87.5%;
-	color: #e83e8c;
+	color: var(--primary-dark1);
 	word-wrap: break-word;
 }
 a > code {
@@ -750,6 +750,9 @@ input[type=submit].btn-block, input[type=reset].btn-block, input[type=button].bt
 }
 .dropup, .dropdown {
 	position: relative;
+}
+.d-nowrap {
+	white-space: nowrap;
 }
 .dropdown-toggle {
 	white-space: nowrap;
@@ -2151,9 +2154,18 @@ a.bg-light:hover, a.bg-light:focus, button.bg-light:hover, button.bg-light:focus
 }
 .shadow-sm {
 	box-shadow: 0 0.1px 3px 0 rgba(0, 0, 0, 0.05), 0 0.1px 2px 0 rgba(0, 0, 0, 0.03) !important;
+	-webkit-box-shadow: 0 0.1px 3px 0 rgba(0, 0, 0, 0.05), 0 0.1px 2px 0 rgba(0, 0, 0, 0.03) !important;
+	-moz-box-shadow: 0 0.1px 3px 0 rgba(0, 0, 0, 0.05), 0 0.1px 2px 0 rgba(0, 0, 0, 0.03) !important;
+}
+.shadow-lg {
+	box-shadow: -20px 20px 28px -20px rgba(0,0,0,0.51);
+	-webkit-box-shadow: -20px 20px 28px -20px rgba(0,0,0,0.51);
+	-moz-box-shadow: -20px 20px 28px -20px rgba(0,0,0,0.51);
 }
 .shadow {
 	box-shadow: 0 0.1px 3px rgba(190, 113, 113, 0.05), 0 0 0 0.1px rgba(0, 0, 0, 0.05) !important;
+	-webkit-box-shadow: 0 0.1px 3px rgba(190, 113, 113, 0.05), 0 0 0 0.1px rgba(0, 0, 0, 0.05) !important;
+	-moz-box-shadow: 0 0.1px 3px rgba(190, 113, 113, 0.05), 0 0 0 0.1px rgba(0, 0, 0, 0.05) !important;
 }
 .shadow-none {
 	box-shadow: none !important;
