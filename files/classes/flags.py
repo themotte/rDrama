@@ -9,8 +9,9 @@ class Flag(Base):
 
 	__tablename__ = "flags"
 
-	post_id = Column(Integer, ForeignKey("submissions.id"), primary_key=True)
-	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+	id = Column(Integer, primary_key=True)
+	post_id = Column(Integer, ForeignKey("submissions.id"), nullable=False)
+	user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 	reason = Column(String)
 	created_utc = Column(Integer, nullable=False)
 

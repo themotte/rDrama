@@ -51,6 +51,7 @@ class Submission(Base):
 	flair = Column(String)
 	ban_reason = Column(String)
 	embed_url = Column(String)
+	filter_state = Column(String, nullable=False)
 
 	Index('fki_submissions_approver_fkey', is_approved)
 	Index('post_app_id_idx', app_id)

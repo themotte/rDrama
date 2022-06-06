@@ -450,6 +450,42 @@ def shadowbanned(v):
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).order_by(User.shadowbanned).all()]
 	return render_template("shadowbanned.html", v=v, users=users)
 
+@app.get("/admin/filtered_submissions")
+@admin_level_required(2)
+def filtered_submissions(v):
+	try: page = int(request.values.get('page', 1))
+	except: page = 1
+
+	posts_just_ids = g.db.query(Submission) \
+		.order_by(Submission.id.desc()) \
+		.filter(Submission.filter_state == 'filtered') \
+		.limit(26) \
+		.offset(25 * (page - 1)) \
+		.with_entities(Submission.id)
+
+	post_ids = [x.id for x in posts_just_ids]
+	next_exists = (len(post_ids) > 25)
+	posts = get_posts(post_ids[:25], v=v)
+
+	return render_template("admin/filtered_submissions.html", v=v, listing=posts, next_exists=next_exists, page=page, sort="new")
+
+@app.post("/admin/update_filter_status")
+@admin_level_required(2)
+def update_filter_status(v):
+	update_body = request.get_json()
+	new_status = update_body.get('new_status')
+	post_id = update_body.get('post_id')
+	if new_status not in ['normal', 'removed', 'ignored']:
+		return { 'result': f'Status of {new_status} is not permitted' }
+
+	rows_updated = g.db.query(Submission).where(Submission.id == post_id).update({Submission.filter_state: new_status})
+
+	if rows_updated == 1:
+		g.db.commit()
+		return { 'result': 'Update successful' }
+	else:
+		return { 'result': f'Submission ID {post_id} does not exist' }
+
 
 @app.get("/admin/image_posts")
 @admin_level_required(2)
@@ -472,22 +508,20 @@ def image_posts_listing(v):
 @app.get("/admin/reported/posts")
 @admin_level_required(2)
 def reported_posts(v):
-
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Submission).filter_by(
-		is_approved=None,
-		is_banned=False
-	).join(Submission.reports).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26)
+	subs_just_ids = g.db.query(Submission) \
+		.filter(Submission.filter_state == 'reported') \
+		.order_by(Submission.id.desc()) \
+		.offset(25 * (page - 1)) \
+		.limit(26) \
+		.with_entities(Submission.id)
 
-	listing = [p.id for p in listing]
-	next_exists = len(listing) > 25
-	listing = listing[:25]
-
-	listing = get_posts(listing, v=v)
-
+	sub_ids = [x.id for x in subs_just_ids]
+	next_exists = len(sub_ids) > 25
+	listings = get_posts(sub_ids[:25], v=v)
 	return render_template("admin/reported_posts.html",
-						   next_exists=next_exists, listing=listing, page=page, v=v)
+						   next_exists=next_exists, listing=listings, page=page, v=v)
 
 
 @app.get("/admin/reported/comments")

@@ -876,7 +876,6 @@ ALTER TABLE ONLY public.exiles
 ALTER TABLE ONLY public.flags
     ADD CONSTRAINT flags_pkey PRIMARY KEY (post_id, user_id);
 
-
 --
 -- Name: follows follows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
