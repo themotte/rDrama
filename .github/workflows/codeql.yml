@@ -17,9 +17,6 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ frost ]
-  paths-ignore:
-    # ignore any third-party files (js/css)
-    - '**/vendor/*'
   schedule:
     - cron: '43 4 * * 2'
 
