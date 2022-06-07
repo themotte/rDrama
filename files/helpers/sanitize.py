@@ -154,18 +154,12 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''')
 	else:
 		sanitized = reddit_regex.sub(r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized)
-
 		sanitized = sub_regex.sub(r'\1<a href="/\2">/\2</a>', sanitized)
 
-		captured = []
 		for i in mention_regex.finditer(sanitized):
-			if i.group(0) in captured: continue
-			captured.append(i.group(0))
-
 			u = get_user(i.group(2), graceful=True)
-
 			if u and (not (g.v and g.v.any_block_exists(u)) or g.v.admin_level > 1):
-				sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''')
+				sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''', 1)
 
 
 	sanitized = imgur_regex.sub(r'\1_d.webp?maxwidth=9999&fidelity=high', sanitized)

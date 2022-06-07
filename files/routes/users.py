@@ -1079,6 +1079,8 @@ def remove_follow(username, v):
 
 	return {"message": "Follower removed!"}
 
+from urllib.parse import urlparse
+
 @app.get("/pp/<id>")
 @app.get("/uid/<id>/pic")
 @app.get("/uid/<id>/pic/profile")
@@ -1090,10 +1092,22 @@ def user_profile_uid(v, id):
 		try: id = int(id, 36)
 		except: abort(404)
 
-	x=get_account(id)
-	return redirect(x.profile_url)
+	name = f"/pp/{id}"
+	path = cache.get(name)
+	tout = 5 * 60 # 5 min
+
+	if not path:
+		user = get_account(id)
+		path = urlparse(user.profile_url).path
+		if path.startswith('/assets'):
+			path = path.lstrip('/')
+			path = os.path.join(app.root_path, path)
+		cache.set(name,path,timeout=tout)
+	
+	return send_file(path)
 
 @app.get("/@<username>/pic")
+@cache.cached(timeout=50)
 @limiter.exempt
 @auth_required
 def user_profile_name(v, username):
