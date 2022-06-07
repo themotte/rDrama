@@ -45,8 +45,9 @@ class CommentFlag(Base):
 
 	__tablename__ = "commentflags"
 
-	comment_id = Column(Integer, ForeignKey("comments.id"), primary_key=True)
-	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+	id = Column(Integer, primary_key=True)
+	comment_id = Column(Integer, ForeignKey("comments.id"), primary_key=False)
+	user_id = Column(Integer, ForeignKey("users.id"), primary_key=False)
 	reason = Column(String)
 	created_utc = Column(Integer, nullable=False)
 
