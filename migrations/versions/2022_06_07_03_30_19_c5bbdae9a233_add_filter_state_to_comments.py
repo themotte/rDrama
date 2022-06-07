@@ -22,6 +22,8 @@ def upgrade():
 	op.alter_column('comments', 'filter_state', nullable=False)
 	op.drop_constraint('commentflags_pkey', 'commentflags')
 	op.add_column('commentflags', sa.Column('id', sa.Integer, nullable=False, primary_key=True, autoincrement=True))
+	op.alter_column('commentflags', 'comment_id', nullable=True)
+	op.alter_column('commentflags', 'user_id', nullable=True)
 
 
 def downgrade():
