@@ -144,23 +144,30 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 	sanitized = sanitized.replace('‎','').replace('​','').replace("\ufeff", "").replace("𒐪","")
 
 	if alert:
-		captured = []
-		for i in mention_regex2.finditer(sanitized):
-			if i.group(0) in captured: continue
-			captured.append(i.group(0))
+		matches = { g.group(1):g for g in mention_regex2.finditer(sanitized) if g }
+		users = get_users(matches.keys(),graceful=True)
 
-			u = get_user(i.group(1), graceful=True)
+		captured = []
+		for u in users:
 			if u:
-				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''')
+				i = matches.get(u.username) or matches.get(u.original_username)
+				if i.group(0) not in captured:
+					captured.append(i.group(0))
+					sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''')
 	else:
 		sanitized = reddit_regex.sub(r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized)
 		sanitized = sub_regex.sub(r'\1<a href="/\2">/\2</a>', sanitized)
 
-		for i in mention_regex.finditer(sanitized):
-			u = get_user(i.group(2), graceful=True)
-			if u and (not (g.v and g.v.any_block_exists(u)) or g.v.admin_level > 1):
-				sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''', 1)
+		matches = [ m for m in mention_regex.finditer(sanitized) if m ]
+		names = set( m.group(2) for m in matches )
+		users = get_users(names,graceful=True)
 
+		for u in users:
+			if not u: continue
+			m = [ m for m in matches if u.username == m.group(2) or u.original_username == m.group(2) ]
+			for i in m:
+				if not (g.v and g.v.any_block_exists(u)) or g.v.admin_level > 1:
+					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''', 1)
 
 	sanitized = imgur_regex.sub(r'\1_d.webp?maxwidth=9999&fidelity=high', sanitized)
 
