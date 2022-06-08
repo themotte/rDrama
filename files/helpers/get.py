@@ -63,6 +63,29 @@ def get_user(username, v=None, graceful=False):
 
 	return user
 
+def get_users(usernames, v=None, graceful=False):
+	if not usernames:
+		if not graceful: abort(404)
+		else: return []
+
+	def clean(n):
+		return n.replace('\\', '').replace('_', '\_').replace('%', '').strip()
+
+	usernames = [ clean(n) for n in usernames ]
+
+	users = g.db.query(User).filter(
+		or_(
+			User.username == any_(usernames),
+			User.original_username == any_(usernames)
+			)
+		).all()
+
+	if not users:
+		if not graceful: abort(404)
+		else: return []
+
+	return users
+
 def get_account(id, v=None):
 
 	try: id = int(id)
