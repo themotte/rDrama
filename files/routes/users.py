@@ -1116,12 +1116,31 @@ def user_profile_uid(v, id):
 	return send_file(path)
 
 @app.get("/@<username>/pic")
-@cache.cached(timeout=50)
 @limiter.exempt
 @auth_required
 def user_profile_name(v, username):
-	x = get_user(username)
-	return redirect(x.profile_url)
+
+	name = f"/@{username}/pic"
+	path = cache.get(name)
+	tout = 5 * 60 # 5 min
+
+	# if the path isn't cached then make it
+	if not path:
+		user = get_user(username)
+		path = urlparse(user.profile_url).path
+		cache.set(name,path,timeout=tout)
+
+	# if not found, search relative to the root
+	if not os.path.exists(path):
+		path = os.path.join(app.root_path,path.lstrip('/'))
+		cache.set(name,path,timeout=tout)
+
+	# if not found, fail
+	if not os.path.exists(path):
+		cache.set(name,None)
+		abort(404)
+
+	return send_file(path)
 
 @app.get("/@<username>/saved/posts")
 @auth_required

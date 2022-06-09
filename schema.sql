@@ -93,6 +93,7 @@ CREATE TABLE public.submissions (
     body character varying(20000),
     body_html character varying(40000),
     embed_url character varying(1500),
+    filter_state character varying(30) NOT NULL,
     ban_reason character varying(25),
     title_html character varying(1500) NOT NULL,
     realupvotes integer,
@@ -370,11 +371,31 @@ CREATE TABLE public.exiles (
 --
 
 CREATE TABLE public.flags (
+    id integer NOT NULL,
     user_id integer NOT NULL,
     post_id integer NOT NULL,
     reason character varying(350),
     created_utc integer NOT NULL
 );
+
+--
+-- Name: flags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.flags_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: flags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.flags_id_seq OWNED BY public.flags.id;
 
 
 --
@@ -735,6 +756,12 @@ ALTER TABLE ONLY public.usernotes ALTER COLUMN id SET DEFAULT nextval('public.us
 --
 
 ALTER TABLE ONLY public.comments ALTER COLUMN id SET DEFAULT nextval('public.comments_id_seq'::regclass);
+
+--
+-- Name: flags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flags ALTER COLUMN id SET DEFAULT nextval('public.flags_id_seq'::regclass);
 
 
 --
