@@ -94,10 +94,15 @@ docker-compose exec -T files bash -c 'cd /service/; FLASK_APP="files/cli:app" fl
 
 ## Running migrations someone else checked in
 
-If another dev made schema changes, and you just merged them in, you can get your local database up to date with the changes by running
-```sh
-docker-compose exec -T files bash -c 'cd /service/; FLASK\_APP="files/cli:app" flask db upgrade
-```
+If you've just merged schema changes that another dev made, you can get your local database up to date by:
+
+* Open two terminals in the root of the project
+* Run `docker-compose up` in one terminal
+* Run this command in the other:
+	```sh
+	docker-compose exec -T files bash -c 'cd /service/; export FLASK\_APP="files/cli:app"; flask db upgrade';
+	```
+
 You should not have to reboot your container, though it might be a good idea to do so anyway if the changes you are merging in are nontrivial (particularly if there have been changes to `docker-compose.yml` or `Dockerfile`).
 
 ## So what's up with schema.sql, can I just change that?
