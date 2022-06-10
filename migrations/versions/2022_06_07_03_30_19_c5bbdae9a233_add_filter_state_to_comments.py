@@ -21,12 +21,10 @@ def upgrade():
 	op.execute("UPDATE comments SET filter_state = 'normal';")
 	op.alter_column('comments', 'filter_state', nullable=False)
 	op.drop_constraint('commentflags_pkey', 'commentflags')
-	op.add_column('commentflags', sa.Column('id', sa.Integer, nullable=False, primary_key=True, autoincrement=True))
-	op.alter_column('commentflags', 'comment_id', nullable=True)
-	op.alter_column('commentflags', 'user_id', nullable=True)
+	op.execute('alter table commentflags add column id serial primary key')
 
 
 def downgrade():
 	op.drop_column('comments', 'filter_state')
 	op.drop_column('commentflags', 'id')
-	op.create_primary_key('commentflags_pkey', 'commentflags', ['post_id', 'user_id'])
+	op.create_primary_key('commentflags_pkey', 'commentflags', ['comment_id', 'user_id'])
