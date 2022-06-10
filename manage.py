@@ -10,7 +10,7 @@ def _execute(command,**kwargs):
         universal_newlines=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-    ).stdout
+    )
 
 def _docker(command):
     return _execute([
@@ -23,7 +23,7 @@ def _docker(command):
 
 def _running():
     command = ['docker','container','inspect','-f','{{.State.Status}}','themotte']
-    result = _execute(command).strip()
+    result = _execute(command,check=True).stdout.strip()
     return result == "running"
 
 def _start():
@@ -48,18 +48,23 @@ def _operation(name, command):
 
     # run operation in docker container
     print(f"Running {name} . . .")
-    print(_docker(command))
+    result = _docker(command)
+    print(result.stdout)
 
     if not running:
         print("Stopping containers...")
         _stop()
 
+    return result
+
 def run_test(*args):
-    _operation("tests",[
+    result = _operation("tests",[
         "cd service",
         "FLASK_APP=files/cli:app python3 -m flask db upgrade",
         "python3 -m pytest -s",
     ])
+
+    sys.exit(result.returncode)
 
 def run_migrate(*args):
     command = 'upgrade'
@@ -67,11 +72,13 @@ def run_migrate(*args):
     if len(args) > 1:
         command = args[1]
 
-    _operation(command,[
+    result = _operation(command,[
         "cd service",
         "export FLASK_APP=files/cli:app",
         f"python3 -m flask db {command}",
     ])
+
+    sys.exit(result.returncode)
 
 def run_help(*args):
     print("Available commands: (test|migrate|help)")
