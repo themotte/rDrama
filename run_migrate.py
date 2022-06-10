@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
-import subprocess
-import sys
+import subprocess, time
 
 # we want to leave the container in whatever state it currently is, so check to see if it's running
 docker_inspect = subprocess.run([
@@ -27,31 +26,25 @@ else:
                 "--build",
                 "-d",
             ],
-            check = True,
-        )
+            check = True)
+    time.sleep(1)
 
-# run the test
-print("Running test . . .")
+# run the migrations
+print("Running migrations . . .")
 result = subprocess.run([
-        "docker-compose",
-        "exec",
-        '-T',
-        "files",
-        "bash", "-c", ' && '.join([
-            "cd service",
-            "FLASK_APP=files/cli:app python3 -m flask db upgrade",
-            "python3 -m pytest -s",
-        ])
+    "docker-compose", 
+    "exec", 
+    "-T",
+    "files", 
+    "bash", "-c", 
+    ' && '.join([
+        "cd service",
+        "export FLASK_APP=files/cli:app",
+        "python3 -m flask db upgrade",
     ])
+], capture_output=True)
 
-if not was_running:
-    # shut down, if we weren't running in the first place
-    print("Shutting down containers . . .")
-    subprocess.run([
-            "docker-compose",
-            "stop",
-        ],
-        check = True,
-    )
 
-sys.exit(result.returncode)
+print(f"Exit code: {result.returncode}")
+print(result.stderr.decode("utf-8").strip())
+print(result.stdout.decode("utf-8").strip())
