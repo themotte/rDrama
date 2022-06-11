@@ -1079,6 +1079,9 @@ def remove_follow(username, v):
 
 	return {"message": "Follower removed!"}
 
+from urllib.parse import urlparse
+import re
+
 @app.get("/pp/<id>")
 @app.get("/uid/<id>/pic")
 @app.get("/uid/<id>/pic/profile")
@@ -1090,15 +1093,54 @@ def user_profile_uid(v, id):
 		try: id = int(id, 36)
 		except: abort(404)
 
-	x=get_account(id)
-	return redirect(x.profile_url)
+	name = f"/pp/{id}"
+	path = cache.get(name)
+	tout = 5 * 60 # 5 min
+
+	# if the path isn't cached then make it
+	if not path:
+		user = get_account(id)
+		path = urlparse(user.profile_url).path
+		cache.set(name,path,timeout=tout)
+
+	# if not found, search relative to the root
+	if not os.path.exists(path):
+		path = os.path.join(app.root_path,path.lstrip('/'))
+		cache.set(name,path,timeout=tout)
+
+	# if not found, fail
+	if not os.path.exists(path):
+		cache.set(name,None)
+		abort(404)
+
+	return send_file(path)
 
 @app.get("/@<username>/pic")
 @limiter.exempt
 @auth_required
 def user_profile_name(v, username):
-	x = get_user(username)
-	return redirect(x.profile_url)
+
+	name = f"/@{username}/pic"
+	path = cache.get(name)
+	tout = 5 * 60 # 5 min
+
+	# if the path isn't cached then make it
+	if not path:
+		user = get_user(username)
+		path = urlparse(user.profile_url).path
+		cache.set(name,path,timeout=tout)
+
+	# if not found, search relative to the root
+	if not os.path.exists(path):
+		path = os.path.join(app.root_path,path.lstrip('/'))
+		cache.set(name,path,timeout=tout)
+
+	# if not found, fail
+	if not os.path.exists(path):
+		cache.set(name,None)
+		abort(404)
+
+	return send_file(path)
 
 @app.get("/@<username>/saved/posts")
 @auth_required

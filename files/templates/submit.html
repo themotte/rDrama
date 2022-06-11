@@ -12,8 +12,6 @@
 		<meta name="author" content="">
 		<link rel="icon" type="image/png" href="/assets/images/{{SITE_NAME}}/icon.webp?v=1015">
 
-		{% set cc='Country Club' %}
-
 		{% block title %}
 		<title>Create a post - {{SITE_NAME}}</title>
 		{% endblock %}
@@ -131,16 +129,6 @@
 												<div class="custom-control custom-checkbox">
 														<input onchange='draft(this);' autocomplete="off" type="checkbox" class="custom-control-input" id="private" name="private">
 														<label class="custom-control-label" for="private">Draft</label>
-												</div>
-
-												<div class="custom-control custom-checkbox">
-													<input autocomplete="off" type="checkbox" class="custom-control-input" id="club" name="club">
-													<label class="custom-control-label" for="club">{{CC_TITLE}} thread</label>
-												</div>
-
-												<div class="custom-control custom-checkbox">
-														<input onchange='draft(this);' autocomplete="off" type="checkbox" class="custom-control-input" id="ghost" name="ghost" {% if v.coins < 100 %}disabled{% endif %}>
-														<label class="custom-control-label" for="ghost">Ghost Thread (cost: 100 coins)</label>
 												</div>
 
 												<pre>
