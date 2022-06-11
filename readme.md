@@ -1,5 +1,5 @@
 
-[![Build status](https://img.shields.io/github/workflow/status/TheMotte/rDrama/run_tests.py/frost)](https://github.com/TheMotte/rDrama/actions?query=workflow%3Arun_tests.py+branch%3Afrost)
+[![Build status](https://img.shields.io/github/workflow/status/TheMotte/rDrama/E2ETests/frost)](https://github.com/TheMotte/rDrama/actions?query=workflow%3AE2ETests+branch%3Afrost)
 
 This code runs https://www.themotte.org .
 
@@ -27,7 +27,7 @@ docker-compose up
 
 # Run the E2E tests:
 
-`./run_tests.py`
+`./util/test.py`
 
 # Database Stuff
 
