@@ -92,6 +92,11 @@ which, if you're using the docker-compose, looks like
 docker-compose exec -T files bash -c 'cd /service/; FLASK_APP="files/cli:app" flask "$@"' . db upgrade
 ```
 
+Or with the util scripts:
+```sh
+./util/migrate.py upgrade
+```
+
 ## Running migrations someone else checked in
 
 If you've just merged schema changes that another dev made, you can get your local database up to date by:
@@ -100,8 +105,9 @@ If you've just merged schema changes that another dev made, you can get your loc
 * Run `docker-compose up` in one terminal
 * Run this command in the other:
 	```sh
-	docker-compose exec -T files bash -c 'cd /service/; export FLASK\_APP="files/cli:app"; flask db upgrade';
+	./util/test.py upgrade
 	```
+   (or see above section for manual upgrade command)
 
 You should not have to reboot your container, though it might be a good idea to do so anyway if the changes you are merging in are nontrivial (particularly if there have been changes to `docker-compose.yml` or `Dockerfile`).
 
