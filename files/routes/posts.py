@@ -465,31 +465,6 @@ def edit_post(pid, v):
 				body += f"\n\n{url}"
 			else: return {"error": "Image/Video files only"}, 400
 
-	if body != p.body:
-		if not p.options:
-			for i in poll_regex.finditer(body):
-				body = body.replace(i.group(0), "")
-				c = Comment(author_id=AUTOPOLLER_ID,
-					parent_submission=p.id,
-					level=1,
-					body_html=filter_emojis_only(i.group(1)),
-					upvotes=0,
-					is_bot=True
-					)
-				g.db.add(c)
-
-		if not p.choices:
-			for i in choice_regex.finditer(body):
-				body = body.replace(i.group(0), "")
-				c = Comment(author_id=AUTOCHOICE_ID,
-					parent_submission=p.id,
-					level=1,
-					body_html=filter_emojis_only(i.group(1)),
-					upvotes=0,
-					is_bot=True
-					)
-				g.db.add(c)
-
 		body_html = sanitize(body, edit=True)
 
 		if v.id == p.author_id and v.marseyawarded and marseyaward_body_regex.search(body_html):
@@ -979,38 +954,6 @@ def submit_post(v, sub=None):
 		v.shadowbanned = 'AutoJanny'
 		g.db.add(v)
 		send_repeatable_notification(CARP_ID, post.permalink)
-
-	if v and v.admin_level > 2:
-		for option in bet_options:
-			bet_option = Comment(author_id=AUTOBETTER_ID,
-				parent_submission=post.id,
-				level=1,
-				body_html=filter_emojis_only(option),
-				upvotes=0,
-				is_bot=True
-				)
-
-			g.db.add(bet_option)
-
-	for option in options:
-		c = Comment(author_id=AUTOPOLLER_ID,
-			parent_submission=post.id,
-			level=1,
-			body_html=filter_emojis_only(option),
-			upvotes=0,
-			is_bot=True
-			)
-		g.db.add(c)
-
-	for choice in choices:
-		c = Comment(author_id=AUTOCHOICE_ID,
-			parent_submission=post.id,
-			level=1,
-			body_html=filter_emojis_only(choice),
-			upvotes=0,
-			is_bot=True
-			)
-		g.db.add(c)
 
 	vote = Vote(user_id=v.id,
 				vote_type=1,

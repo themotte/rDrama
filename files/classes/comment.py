@@ -69,6 +69,8 @@ class Comment(Base):
 	def __init__(self, *args, **kwargs):
 		if "created_utc" not in kwargs:
 			kwargs["created_utc"] = int(time.time())
+		if 'filter_state' not in kwargs:
+			kwargs['filter_state'] = 'normal'
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):

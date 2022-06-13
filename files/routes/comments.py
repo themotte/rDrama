@@ -195,16 +195,6 @@ def api_comment(v):
 			return {"error":"You have to type less than 140 characters!"}, 403
 
 	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
-	
-	options = []
-	for i in poll_regex.finditer(body):
-		options.append(i.group(1))
-		body = body.replace(i.group(0), "")
-
-	choices = []
-	for i in choice_regex.finditer(body):
-		choices.append(i.group(1))
-		body = body.replace(i.group(0), "")
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		files = request.files.getlist('file')[:4]
@@ -322,7 +312,8 @@ def api_comment(v):
 				app_id=v.client.application.id if v.client else None,
 				body_html=body_html,
 				body=body[:10000],
-				ghost=parent_post.ghost
+				ghost=parent_post.ghost,
+				filter_state='normal' #todo this needs the real filter state calculator
 				)
 
 	c.upvotes = 1
@@ -336,30 +327,6 @@ def api_comment(v):
 
 	if c.level == 1: c.top_comment_id = c.id
 	else: c.top_comment_id = parent.top_comment_id
-
-	for option in options:
-		c_option = Comment(author_id=AUTOPOLLER_ID,
-			parent_submission=parent_submission,
-			parent_comment_id=c.id,
-			level=level+1,
-			body_html=filter_emojis_only(option),
-			upvotes=0,
-			is_bot=True
-			)
-
-		g.db.add(c_option)
-
-	for choice in choices:
-		c_choice = Comment(author_id=AUTOCHOICE_ID,
-			parent_submission=parent_submission,
-			parent_comment_id=c.id,
-			level=level+1,
-			body_html=filter_emojis_only(choice),
-			upvotes=0,
-			is_bot=True
-			)
-
-		g.db.add(c_choice)
 
 	if parent_post.id not in ADMINISTRATORS:
 		if not v.shadowbanned:
@@ -449,32 +416,6 @@ def edit_comment(cid, v):
 			return {"error":"You have to type more than 280 characters!"}, 403
 		elif v.bird and len(body) > 140:
 			return {"error":"You have to type less than 140 characters!"}, 403
-
-		if not c.options:
-			for i in poll_regex.finditer(body):
-				body = body.replace(i.group(0), "")
-				c_option = Comment(author_id=AUTOPOLLER_ID,
-					parent_submission=c.parent_submission,
-					parent_comment_id=c.id,
-					level=c.level+1,
-					body_html=filter_emojis_only(i.group(1)),
-					upvotes=0,
-					is_bot=True
-					)
-				g.db.add(c_option)
-
-		if not c.choices:
-			for i in choice_regex.finditer(body):
-				body = body.replace(i.group(0), "")
-				c_choice = Comment(author_id=AUTOCHOICE_ID,
-					parent_submission=c.parent_submission,
-					parent_comment_id=c.id,
-					level=c.level+1,
-					body_html=filter_emojis_only(i.group(1)),
-					upvotes=0,
-					is_bot=True
-					)
-				g.db.add(c_choice)
 
 		body_html = sanitize(body, edit=True)
 
