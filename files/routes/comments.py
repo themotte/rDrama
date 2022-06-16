@@ -303,6 +303,8 @@ def api_comment(v):
 
 	if len(body_html) > 20000: abort(400)
 
+	is_filtered = v.should_comments_be_filtered()
+
 	c = Comment(author_id=v.id,
 				parent_submission=parent_submission,
 				parent_comment_id=parent_comment_id,
@@ -313,7 +315,7 @@ def api_comment(v):
 				body_html=body_html,
 				body=body[:10000],
 				ghost=parent_post.ghost,
-				filter_state='normal' #todo this needs the real filter state calculator
+				filter_state='filtered' if is_filtered else 'normal'
 				)
 
 	c.upvotes = 1
@@ -329,7 +331,7 @@ def api_comment(v):
 	else: c.top_comment_id = parent.top_comment_id
 
 	if parent_post.id not in ADMINISTRATORS:
-		if not v.shadowbanned:
+		if not v.shadowbanned and not is_filtered:
 			notify_users = NOTIFY_USERS(body, v)
 			
 			for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])

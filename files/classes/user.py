@@ -17,9 +17,10 @@ from .mod_logs import *
 from .mod import *
 from .exiles import *
 from .sub_block import *
-from files.__main__ import Base, cache
+from files.__main__ import app, Base, cache
 from files.helpers.security import *
 import random
+from datetime import datetime
 from os import environ, remove, path
 
 
@@ -173,6 +174,14 @@ class User(Base):
 
 	def can_manage_reports(self):
 		return self.admin_level > 2
+
+	def should_comments_be_filtered(self):
+		site_settings = app.config['SETTINGS']
+		minComments = site_settings.get('FilterCommentsMinComments', 0)
+		minKarma = site_settings.get('FilterCommentsMinKarma', 0)
+		minAge = site_settings.get('FilterCommentsMinAgeDays', 0)
+		accountAgeDays = (datetime.now() - datetime.fromtimestamp(self.created_utc)).days
+		return self.comment_count < minComments or accountAgeDays < minAge or self.truecoins < minKarma
 
 	@lazy
 	def mods(self, sub):
