@@ -87,6 +87,20 @@
 		<label class="custom-control-label" for="under_attack">Under attack mode</label>
 	</div>
 
+<h4>Comment Filtering</h4>
+	<div class="custom-control custom-switch">
+		<input type="number" class="" id="min_comments" name="min_comments" value="{{ site_settings['FilterCommentsMinComments'] }}" />
+		<label for="min_comments">Minimum Comments</label>
+	</div>
+	<div class="custom-control custom-switch">
+		<input type="number" class="" id="min_karma" name="min_karma" value="{{ site_settings['FilterCommentsMinKarma'] }}" />
+		<label for="min_karma">Minimum Karma</label>
+	</div>
+	<div class="custom-control custom-switch">
+		<input type="number" class="" id="min_age" name="min_age" value="{{ site_settings['FilterCommentsMinAgeDays'] }}" />
+		<label for="min_age">Minimum Account Age (days)</label>
+	</div>
+
 	<button class="btn btn-primary mt-3" onclick="post_toast(this,'/admin/purge_cache');">PURGE CACHE</button>
 {% endif %}
 
