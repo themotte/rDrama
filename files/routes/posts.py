@@ -148,7 +148,13 @@ def post_id(pid, anything=None, v=None, sub=None):
 		
 		if not (v and v.shadowbanned) and not (v and v.admin_level > 2):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
- 
+
+		if not v or v.admin_level < 2:
+			filter_clause = (Comment.filter_state != 'filtered') & (Comment.filter_state != 'removed')
+			if v:
+				filter_clause = filter_clause | (Comment.author_id == v.id)
+			comments = comments.filter(filter_clause)
+
 		comments=comments.filter(Comment.parent_submission == post.id, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID))).join(
 			votes,
 			votes.c.comment_id == Comment.id,
