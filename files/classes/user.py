@@ -176,6 +176,8 @@ class User(Base):
 		return self.admin_level > 2
 
 	def should_comments_be_filtered(self):
+		if self.admin_level > 0:
+			return False
 		site_settings = app.config['SETTINGS']
 		minComments = site_settings.get('FilterCommentsMinComments', 0)
 		minKarma = site_settings.get('FilterCommentsMinKarma', 0)
