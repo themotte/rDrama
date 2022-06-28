@@ -533,6 +533,9 @@
 			<textarea autocomplete="off" class="d-none card border my-2 p-3 comment-box form-control rounded" id="markdown-{{c.id}}" readonly>{{c.body.strip()}}</textarea> 
 		{% endif %}
 
+		{% if ajax %}
+		{{ render_replies }}
+		{% endif %}
 
 		<div id="reply-to-{{c.id}}" class="d-none">
 			<div id="comment-form-space-{{c.fullname}}" class="comment-write collapsed child">
@@ -603,6 +606,9 @@
 				</div>
 			</div>
 		{% endif %}
+
+	{% else %}
+	<div id="replies-of-{{c.id}}"></div>
 	{% endif %}
 	</div>
 

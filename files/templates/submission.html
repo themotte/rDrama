@@ -516,7 +516,7 @@
 	{% endif %}
 
 	{% if p.replies %}
-	<div class="comment-section" id="comment-section">
+	<div class="comment-section" id="replies-of-{{p.id}}">
 	{% with comments=p.replies %}
 		{% include "comments.html" %}
 	{% endwith %}
@@ -559,7 +559,7 @@
 {% endif %}
 
 {% elif not p.replies and p.deleted_utc == 0 %}
-	<div class="comment-section text-center py-7" id="comment-section">
+	<div class="comment-section text-center py-7" id="replies-of-{{p.id}}">
 		<div class="row no-gutters" id="placeholder-comment">	
 			<div class="col">			
 				<span class="fa-stack fa-2x text-muted mb-4">
