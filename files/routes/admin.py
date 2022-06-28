@@ -450,7 +450,7 @@ def shadowbanned(v):
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).order_by(User.shadowbanned).all()]
 	return render_template("shadowbanned.html", v=v, users=users)
 
-@app.get("/admin/filtered_submissions")
+@app.get("/admin/filtered/posts")
 @admin_level_required(2)
 def filtered_submissions(v):
 	try: page = int(request.values.get('page', 1))
@@ -468,6 +468,25 @@ def filtered_submissions(v):
 	posts = get_posts(post_ids[:25], v=v)
 
 	return render_template("admin/filtered_submissions.html", v=v, listing=posts, next_exists=next_exists, page=page, sort="new")
+
+@app.get("/admin/filtered/comments")
+@admin_level_required(2)
+def filtered_comments(v):
+	try: page = int(request.values.get('page', 1))
+	except: page = 1
+
+	comments_just_ids = g.db.query(Comment) \
+		.order_by(Comment.id.desc()) \
+		.filter(Comment.filter_state == 'filtered') \
+		.limit(26) \
+		.offset(25 * (page - 1)) \
+		.with_entities(Comment.id)
+
+	comment_ids = [x.id for x in comments_just_ids]
+	next_exists = (len(comment_ids) > 25)
+	comments = get_comments(comment_ids[:25], v=v)
+
+	return render_template("admin/filtered_comments.html", v=v, listing=comments, next_exists=next_exists, page=page, sort="new")
 
 @app.post("/admin/update_filter_status")
 @admin_level_required(2)
