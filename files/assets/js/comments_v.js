@@ -246,8 +246,6 @@ function post_comment(fullname){
 			let comments = document.getElementById('comment-section');
 			let comment = data["comment"].replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
 
-			// clear out the text-center classes etc. used by placeholder
-			comments.className = 'comment-section';
 			comments.innerHTML = comment + comments.innerHTML;
 
 			bs_trigger(commentForm);
@@ -255,6 +253,8 @@ function post_comment(fullname){
 			// remove the placeholder if it exists
 			let placeholder = document.getElementById("placeholder-comment");
 			if(placeholder){
+				// clear out the text-center classes etc.
+				comments.className = 'comment-section';
 				placeholder.parentNode.removeChild(placeholder);
 			}
 		}
