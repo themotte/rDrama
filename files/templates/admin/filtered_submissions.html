@@ -14,12 +14,25 @@
 {% endblock %}
 
 {% block title %}
-<title>Filtered Submissions</title>
+<title>Filtered Posts</title>
 
 {% endblock %}
 
 
 {% block content %}
+
+<ul class="nav post-nav py-2">
+	<li class="nav-item">
+		<a class="nav-link {% if request.path=="/admin/filtered/posts" %} active{% endif %}" href="/admin/filtered/posts">
+			<div>Posts</div>
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link {% if request.path=="/admin/filtered/comments" %} active{% endif %}" href="/admin/filtered/comments">
+			<div>Comments</div>
+		</a>
+	</li>
+</ul>
 
 <div class="row no-gutters">
 
