@@ -241,9 +241,18 @@ function post_comment(fullname){
 		catch(e) {console.log(e)}
 		if (data && data["comment"]) {
 			commentForm=document.getElementById('comment-form-space-'+fullname);
-			commentForm.innerHTML = data["comment"].replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
+
+			// dynamically insert comment into the comments section at the top
+			let comments = document.getElementById('comment-section');
+			let comment = data["comment"].replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
+
+			// clear out the text-center classes etc. used by placeholder
+			comments.className = 'comment-section';
+			comments.innerHTML = comment + comments.innerHTML;
+
 			bs_trigger(commentForm);
 
+			// remove the placeholder if it exists
 			let placeholder = document.getElementById("placeholder-comment");
 			if(placeholder){
 				placeholder.parentNode.removeChild(placeholder);
