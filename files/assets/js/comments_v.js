@@ -240,12 +240,24 @@ function post_comment(fullname){
 		try {data = JSON.parse(xhr.response)}
 		catch(e) {console.log(e)}
 		if (data && data["comment"]) {
-			commentForm=document.getElementById('comment-form-space-'+fullname);
-			commentForm.innerHTML = data["comment"].replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
+			let id = fullname.split('_')[1];
+			let name = 'comment-form-space-' + fullname;
+			commentForm = document.getElementById(name);
+
+			// dynamically insert comment into the comments section of the current comment/post
+			let comments = document.getElementById('replies-of-' + id);
+			let comment = data["comment"].replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
+
+			comments.innerHTML = comment + comments.innerHTML;
+
 			bs_trigger(commentForm);
 
+			// remove the placeholder if it exists
 			let placeholder = document.getElementById("placeholder-comment");
 			if(placeholder){
+				// clear out the text-center classes etc.
+				comments.classList.remove('text-center');
+				comments.classList.remove('py-7');
 				placeholder.parentNode.removeChild(placeholder);
 			}
 		}
