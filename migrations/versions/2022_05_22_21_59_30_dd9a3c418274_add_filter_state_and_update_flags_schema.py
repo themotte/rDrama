@@ -27,4 +27,4 @@ def upgrade():
 def downgrade():
 	op.drop_column('submissions', 'filter_state')
 	op.drop_column('flags', 'id')
-	op.create_primary_key('flags_id_pk', 'flags', ['post_id', 'user_id'])
+	op.create_primary_key('flags_pkey', 'flags', ['post_id', 'user_id'])

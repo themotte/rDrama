@@ -1,4 +1,4 @@
-name: "run_tests.py"
+name: "E2ETests"
 
 on: [push, pull_request]
 
@@ -9,6 +9,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - name: run_tests.py
+    - name: Run tests
       run: |
-        ./run_tests.py
+        ./util/test.py
