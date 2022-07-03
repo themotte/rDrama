@@ -50,12 +50,26 @@ function filter_new_comment_status(id, new_status) {
 				const commentRow = document.getElementById(`comment-${id}`);
 				if(document.location.pathname === '/admin/filtered/comments' || document.location.pathname === '/admin/reported/comments' ) {
 					commentRow.parentElement.removeChild(commentRow);
+					const postRow = document.querySelector(`div.post-row-cid-${id}`);
+					if (postRow) {
+						postRow.parentElement.removeChild(postRow);
+					}
 				} else {
 					const approveLink = commentRow.querySelector('button#filter-approve')
 					const removeLink = commentRow.querySelector('button#filter-remove')
 					if(approveLink && removeLink) {
 						approveLink.parentElement.removeChild(approveLink);
 						removeLink.parentElement.removeChild(removeLink);
+					}
+
+					const reportButtonCell = document.getElementById(`flaggers-${id}`);
+					if(reportButtonCell) {
+						reportButtonCell.classList.add('d-none')
+					}
+
+					const reportButton = document.getElementById(`report-btn-${id}`);
+					if(reportButton) {
+						reportButton.parentElement.removeChild(reportButton);
 					}
 				}
 

@@ -559,16 +559,20 @@ def reported_comments(v):
 		is_approved=None,
 		is_banned=False
 	).join(Comment.reports).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	comments_just_ids = g.db.query(Comment) \
+			.filter(Comment.filter_state == 'reported') \
+			.order_by(Comment.id.desc()) \
+			.offset(25 * (page - 1)) \
+			.limit(26) \
+			.with_entities(Comment.id)
 
-	listing = [c.id for c in listing]
-	next_exists = len(listing) > 25
-	listing = listing[:25]
-
-	listing = get_comments(listing, v=v)
+	comment_ids = [c.id for c in comments_just_ids]
+	next_exists = len(comment_ids) > 25
+	comments = get_comments(comment_ids[:25], v=v)
 
 	return render_template("admin/reported_comments.html",
 						   next_exists=next_exists,
-						   listing=listing,
+						   listing=comments,
 						   page=page,
 						   v=v,
 						   standalone=True)
