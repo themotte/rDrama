@@ -118,7 +118,7 @@
 {% endif %}
 
 {% if standalone and level==1 %}
-<div class="post-info mb-1 mr-2 {% if request.path == '/notifications' %}mt-5{% else %}mt-3{% endif %}">
+<div class="post-info post-row-cid-{{c.id}} mb-1 mr-2 {% if request.path == '/notifications' %}mt-5{% else %}mt-3{% endif %}">
 	{% if c.post and c.post.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 	<span class="align-top">
 	{% if c.post %}
@@ -181,7 +181,7 @@
 				{% if c.bannedfor %}
 					<a role="button"><i class="fas fa-hammer-crash text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}"></i></a>
 				{% endif %}
-				{% if c.active_flags(v) %}<a class="btn btn-primary" style="padding:1px 5px; font-size:10px"role="button" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('d-none')">{{c.active_flags(v)}} Reports</a>{% endif %}
+				{% if v and c.filter_state == 'reported' and v.can_manage_reports() %}<a class="btn btn-primary" id="report-btn-{{c.id}}" style="padding:1px 5px; font-size:10px" role="button" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('d-none')">{{c.active_flags(v)}} Reports</a>{% endif %}
 				{% if c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 				{% if v and v.admin_level > 1 and c.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{c.author.shadowbanned}}"></i>{% endif %}
 				{% if c.is_pinned %}
@@ -245,13 +245,16 @@
 					{{c.wordle_html(v) | safe}}
 				{% endif %}
 			</div>
-			{% if c.active_flags(v) %}
+			{% if v and c.filter_state == 'reported' and v.can_manage_reports() %}
 			<div id="flaggers-{{c.id}}" class="flaggers d-none">
-				<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
+				<strong><i class="far fa-fw fa-flag"></i> Reports:</strong>
+				<a class="btn btn-primary" style="margin:1px 5px" onclick="filter_new_comment_status({{c.id}}, 'normal')">Approve</a>
+				<a class="btn btn-secondary" style="margin:1px 5px" onclick="filter_new_comment_status({{c.id}}, 'ignored')">Approve and Ignore</a>
+				<a class="btn btn-danger" style="margin:1px 5px" onclick="filter_new_comment_status({{c.id}}, 'removed')">Remove</a>
 				<pre></pre>
 				<ul style="padding-left:20px; margin-bottom: 0;word-wrap:break-word">
 					{% for f in c.flags(v) %}
-						<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %} {% if v and v.admin_level > 1 %}<a role="button" onclick="post_toast(this,'/del_report/comment/{{f.comment_id}}/{{f.user_id}}')">[remove]</a>{% endif %}</li>
+						<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %}</li>
 					{% endfor %}
 				</ul>
 			</div>
@@ -848,7 +851,7 @@
 	{% if v and v.admin_level > 1 %}
 		<script src="/assets/js/comments_admin.js?v=250"></script>
 		{% if v.admin_level > 2 %}
-			<script src="/assets/js/filter_actions.js?v=2"></script>
+			<script src="/assets/js/filter_actions.js?v=6"></script>
 		{% endif %}
 	{% endif %}
 
