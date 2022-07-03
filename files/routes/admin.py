@@ -494,17 +494,22 @@ def update_filter_status(v):
 	update_body = request.get_json()
 	new_status = update_body.get('new_status')
 	post_id = update_body.get('post_id')
+	comment_id = update_body.get('comment_id')
 	if new_status not in ['normal', 'removed', 'ignored']:
 		return { 'result': f'Status of {new_status} is not permitted' }
 
-	rows_updated = g.db.query(Submission).where(Submission.id == post_id).update({Submission.filter_state: new_status})
+	if post_id:
+		rows_updated = g.db.query(Submission).where(Submission.id == post_id).update({Submission.filter_state: new_status})
+	elif comment_id:
+		rows_updated = g.db.query(Comment).where(Comment.id == comment_id).update({Comment.filter_state: new_status})
+	else:
+		return { 'result': f'No valid item ID provided' }
 
 	if rows_updated == 1:
 		g.db.commit()
 		return { 'result': 'Update successful' }
 	else:
-		return { 'result': f'Submission ID {post_id} does not exist' }
-
+		return { 'result': 'Item ID does not exist' }
 
 @app.get("/admin/image_posts")
 @admin_level_required(2)
