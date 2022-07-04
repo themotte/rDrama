@@ -591,14 +591,23 @@ def admin_home(v):
 @admin_level_required(3)
 def change_settings(v, setting):
 	site_settings = app.config['SETTINGS']
-	site_settings[setting] = not site_settings[setting] 
+	new_value = request.form.get('new_value')
+	if new_value:
+		word = f'set {new_value} for'
+		if isinstance(site_settings[setting], int):
+			# we want to blow up if you try setting an int field to something that doesn't parse as an int
+			site_settings[setting] = int(new_value)
+		else:
+			# 422ing for any other types for now, feel free to add some more types if needed
+			abort(422)
+	else:
+		site_settings[setting] = not site_settings[setting]
+		if site_settings[setting]: word = 'enabled'
+		else: word = 'disabled'
 	with open("site_settings.json", "w") as f:
 		json.dump(site_settings, f)
 
-	if site_settings[setting]: word = 'enable'
-	else: word = 'disable'
-
-	body = f"@{v.username} has {word}d `{setting}` in the [admin dashboard](/admin)!"
+	body = f"@{v.username} has {word} `{setting}` in the [admin dashboard](/admin)!"
 
 	body_html = sanitize(body)
 
@@ -619,14 +628,14 @@ def change_settings(v, setting):
 		g.db.add(notif)
 
 	ma = ModAction(
-		kind=f"{word}_{setting}",
+			kind=f"{word}_{setting}".replace(' ', '_')[:32],
 		user_id=v.id,
 	)
 	g.db.add(ma)
 
 	g.db.commit()
 
-	return {'message': f"{setting} {word}d successfully!"}
+	return {'message': f"{word} {setting} successfully!"}
 
 
 @app.post("/admin/purge_cache")

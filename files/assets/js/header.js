@@ -73,8 +73,10 @@ function expandDesktopImage(image) {
 };
 
 function post_toast(t, url, reload, data) {
-	t.disabled = true;
-	t.classList.add("disabled");
+	if (t) {
+		t.disabled = true;
+		t.classList.add("disabled");
+	}
 	const xhr = new XMLHttpRequest();
 	xhr.open("POST", url);
 	xhr.setRequestHeader('xhr', 'xhr');
