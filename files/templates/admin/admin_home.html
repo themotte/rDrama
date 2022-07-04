@@ -89,15 +89,18 @@
 
 <h4>Comment Filtering</h4>
 	<div class="custom-control custom-switch">
-		<input type="number" class="" id="min_comments" name="min_comments" value="{{ site_settings['FilterCommentsMinComments'] }}" />
+		<input type="number" class="" id="min_comments" name="min_comments" value="{{ site_settings['FilterCommentsMinComments'] }}"
+			onblur="post_toast(null, '/admin/site_settings/FilterCommentsMinComments', false, { new_value: this.value })"/>
 		<label for="min_comments">Minimum Comments</label>
 	</div>
 	<div class="custom-control custom-switch">
-		<input type="number" class="" id="min_karma" name="min_karma" value="{{ site_settings['FilterCommentsMinKarma'] }}" />
+		<input type="number" class="" id="min_karma" name="min_karma" value="{{ site_settings['FilterCommentsMinKarma'] }}"
+				onblur="post_toast(null, '/admin/site_settings/FilterCommentsMinKarma', false, { new_value: this.value })"/>
 		<label for="min_karma">Minimum Karma</label>
 	</div>
 	<div class="custom-control custom-switch">
-		<input type="number" class="" id="min_age" name="min_age" value="{{ site_settings['FilterCommentsMinAgeDays'] }}" />
+		<input type="number" class="" id="min_age" name="min_age" value="{{ site_settings['FilterCommentsMinAgeDays'] }}"
+				onblur="post_toast(null, '/admin/site_settings/FilterCommentsMinAgeDays', false, { new_value: this.value })"/>
 		<label for="min_age">Minimum Account Age (days)</label>
 	</div>
 
