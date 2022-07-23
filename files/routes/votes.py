@@ -8,7 +8,7 @@ from os import environ
 
 @app.get("/votes")
 @limiter.limit("5/second;60/minute;200/hour;1000/day")
-@auth_required
+@admin_level_required(3)
 def admin_vote_info_get(v):
 	link = request.values.get("link")
 	if not link: return render_template("votes.html", v=v)
