@@ -68,7 +68,7 @@ def api_vote_post(post_id, new, v):
 
 	existing = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
 
-	coin_delta = 1
+	coin_delta = new
 	if v.id == post.author.id:
 		coin_delta = 0
 
@@ -138,7 +138,7 @@ def api_vote_comment(comment_id, new, v):
 	
 	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
 
-	coin_delta = 1
+	coin_delta = new
 	if v.id == comment.author_id:
 		coin_delta = 0
 
