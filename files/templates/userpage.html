@@ -104,7 +104,7 @@
 				{% else %}<pre></pre>
 				{% endif %}
 				
-				{% if u.admin_level >= 2 %}
+				{% if v.admin_level >= 2 %}
 					<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Upvoters</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Downvoters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Upvoted</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Downvoted</a></div>
 				{% endif %}
 
@@ -365,7 +365,7 @@
 					<pre></pre>
 				{% endif %}
 
-				{% if u.admin_level >= 2 %}
+				{% if v.admin_level >= 2 %}
 					<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Upvoters</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Downvoters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Upvoted</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Downvoted</a></div>
 				{% endif %}
 
