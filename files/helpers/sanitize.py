@@ -243,10 +243,6 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 			marsey.count += 1
 			g.db.add(marsey)
 
-	if '#fortune' in sanitized:
-		sanitized = sanitized.replace('#fortune', '')
-		sanitized += '\n\n<p>' + choice(FORTUNE_REPLIES) + '</p>'
-
 	sanitized = sanitized.replace('&amp;','&')
 	sanitized = utm_regex.sub('', sanitized)
 	sanitized = utm_regex2.sub('', sanitized)
