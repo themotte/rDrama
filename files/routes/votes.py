@@ -91,8 +91,6 @@ def api_vote_post(post_id, new, v):
 			# we'll be saving later anyway, so don't bother doing so here
 	else:
 		# create new vote data
-		DEFAULT_IMAGE = '/assets/images/default-profile-pic.webp'
-
 		vote = Vote(
 						user_id=v.id,
 						vote_type=new,
@@ -166,8 +164,6 @@ def api_vote_comment(comment_id, new, v):
 			# we'll be saving later anyway, so don't bother doing so here
 	else:
 		# create new vote data
-		DEFAULT_IMAGE = '/assets/images/default-profile-pic.webp'
-
 		vote = CommentVote(
 						user_id=v.id,
 						vote_type=new,
