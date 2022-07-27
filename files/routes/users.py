@@ -72,7 +72,7 @@ def leaderboard_thread():
 gevent.spawn(leaderboard_thread())
 
 @app.get("/@<username>/upvoters/<uid>/posts")
-@auth_required
+@admin_level_required(3)
 def upvoters_posts(v, username, uid):
 	u = get_user(username)
 	if u.is_private and v.id != u.id: abort(403)
@@ -93,7 +93,7 @@ def upvoters_posts(v, username, uid):
 
 
 @app.get("/@<username>/upvoters/<uid>/comments")
-@auth_required
+@admin_level_required(3)
 def upvoters_comments(v, username, uid):
 	u = get_user(username)
 	if u.is_private and v.id != u.id: abort(403)
@@ -114,7 +114,7 @@ def upvoters_comments(v, username, uid):
 
 
 @app.get("/@<username>/downvoters/<uid>/posts")
-@auth_required
+@admin_level_required(3)
 def downvoters_posts(v, username, uid):
 	u = get_user(username)
 	if u.is_private and v.id != u.id: abort(403)
@@ -135,7 +135,7 @@ def downvoters_posts(v, username, uid):
 
 
 @app.get("/@<username>/downvoters/<uid>/comments")
-@auth_required
+@admin_level_required(3)
 def downvoters_comments(v, username, uid):
 	u = get_user(username)
 	if u.is_private and v.id != u.id: abort(403)
@@ -159,7 +159,7 @@ def downvoters_comments(v, username, uid):
 
 
 @app.get("/@<username>/upvoting/<uid>/posts")
-@auth_required
+@admin_level_required(3)
 def upvoting_posts(v, username, uid):
 	u = get_user(username)
 	if u.is_private and v.id != u.id: abort(403)
@@ -180,7 +180,7 @@ def upvoting_posts(v, username, uid):
 
 
 @app.get("/@<username>/upvoting/<uid>/comments")
-@auth_required
+@admin_level_required(3)
 def upvoting_comments(v, username, uid):
 	u = get_user(username)
 	if u.is_private and v.id != u.id: abort(403)
@@ -201,7 +201,7 @@ def upvoting_comments(v, username, uid):
 
 
 @app.get("/@<username>/downvoting/<uid>/posts")
-@auth_required
+@admin_level_required(3)
 def downvoting_posts(v, username, uid):
 	u = get_user(username)
 	if u.is_private and v.id != u.id: abort(403)
@@ -222,7 +222,7 @@ def downvoting_posts(v, username, uid):
 
 
 @app.get("/@<username>/downvoting/<uid>/comments")
-@auth_required
+@admin_level_required(3)
 def downvoting_comments(v, username, uid):
 	u = get_user(username)
 	if u.is_private and v.id != u.id: abort(403)
@@ -254,7 +254,7 @@ def grassed(v):
 
 
 @app.get("/@<username>/upvoters")
-@auth_required
+@admin_level_required(3)
 def upvoters(v, username):
 	id = get_user(username).id
 
@@ -280,7 +280,7 @@ def upvoters(v, username):
 
 
 @app.get("/@<username>/downvoters")
-@auth_required
+@admin_level_required(3)
 def downvoters(v, username):
 	id = get_user(username).id
 
@@ -304,7 +304,7 @@ def downvoters(v, username):
 	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Down', name2=f'Who downvotes @{username}')
 
 @app.get("/@<username>/upvoting")
-@auth_required
+@admin_level_required(3)
 def upvoting(v, username):
 	id = get_user(username).id
 
@@ -328,7 +328,7 @@ def upvoting(v, username):
 	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Up', name2=f'Who @{username} upvotes')
 
 @app.get("/@<username>/downvoting")
-@auth_required
+@admin_level_required(3)
 def downvoting(v, username):
 	id = get_user(username).id
 
