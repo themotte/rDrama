@@ -167,7 +167,7 @@ def me(v):
 	else: return redirect(v.url)
 
 
-@app.post("/logout")
+@app.get("/logout")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def logout(v):
@@ -175,7 +175,7 @@ def logout(v):
 	session.pop("session_id", None)
 	session.pop("lo_user", None)
 
-	return {"message": "Logout successful!"}
+	return redirect('/')
 
 
 @app.get("/signup")
