@@ -56,62 +56,70 @@ def admin_vote_info_get(v):
 @is_not_permabanned
 def api_vote_post(post_id, new, v):
 
-	if new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': return {"error": "forbidden."}, 403
-
-	if new not in ["-1", "0", "1"]: abort(400)
-
+	# make sure we're allowed in (is this really necessary? I'm not sure)
 	if request.headers.get("Authorization"): abort(403)
 
+	# make sure new is valid
+	if new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': return {"error": "forbidden."}, 403
+	if new not in ["-1", "0", "1"]: abort(400)
 	new = int(new)
 
+	# get the post
+	try: post_id = int(post_id)
+	except: abort(404)
 	post = get_post(post_id)
 
-	existing = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
+	# verify that the post is allowed to be voted on
+	if post.author_id in {AUTOPOLLER_ID,AUTOBETTER_ID,AUTOCHOICE_ID}: return {"error": "forbidden."}, 403
+	
+	# get the old vote, if we have one
+	vote = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
 
-	coin_delta = 1
-	if v.id == post.author.id:
-		coin_delta = 0
+	# should we just do nothing? we could just do nothing
+	if vote and vote.vote_type == new: return "", 204
 
-	if existing and existing.vote_type == new: return "", 204
+	# at this point we are guaranteed to be making a change
 
-	if existing:
-		if existing.vote_type == 0 and new != 0:
-			post.author.coins += coin_delta
-			post.author.truecoins += coin_delta
-			g.db.add(post.author)
-			existing.vote_type = new
-			g.db.add(existing)
-		elif existing.vote_type != 0 and new == 0:
-			post.author.coins -= coin_delta
-			post.author.truecoins -= coin_delta
-			g.db.add(post.author)
-			g.db.delete(existing)
-		else:
-			existing.vote_type = new
-			g.db.add(existing)
-	elif new != 0:
-		post.author.coins += coin_delta
-		post.author.truecoins += coin_delta
-		g.db.add(post.author)
+	# author votes don't matter if it's the author themselves
+	points_matter = (v.id != post.author.id)
 
-		DEFAULT_IMAGE = '/assets/images/default-profile-pic.webp'
-
-		if new == 1 and (v.shadowbanned or (v.is_banned and not v.unban_utc) or (v.profile_url == DEFAULT_IMAGE and not v.customtitle and v.namecolor == DEFAULT_COLOR)): real = False
-		else: real = True
-
-		vote = Vote(user_id=v.id,
-					vote_type=new,
-					submission_id=post_id,
-					app_id=v.client.application.id if v.client else None,
-					real = real
+	if vote:
+		# remove the old score data
+		if points_matter:
+			post.author.coins -= vote.vote_type
+			post.author.truecoins -= vote.vote_type
+			# we'll be saving later anyway, so don't bother doing so here
+	else:
+		# create new vote data
+		vote = Vote(
+						user_id=v.id,
+						vote_type=new,
+						submission_id=post_id,
+						app_id=v.client.application.id if v.client else None,
 					)
-		g.db.add(vote)
+	
+	# update the vote data
+	vote.vote_type = new
 
+	real = True
+	if v.shadowbanned: real = False
+	if v.is_banned and not v.unban_utc: real = False
+	vote.real = real
+
+	# add relevant points
+	if points_matter:
+		post.author.coins += vote.vote_type
+		post.author.truecoins += vote.vote_type
+	
+	# database it up
+	g.db.add(post.author)
+	g.db.add(vote)
+	
+	# update post stats (this is horrendously slow?!)
 	g.db.flush()
 	post.upvotes = g.db.query(Vote.submission_id).filter_by(submission_id=post.id, vote_type=1).count()
 	post.downvotes = g.db.query(Vote.submission_id).filter_by(submission_id=post.id, vote_type=-1).count()
-	post.realupvotes = g.db.query(Vote.submission_id).filter_by(submission_id=post.id, real=True).count()
-	if post.author.progressivestack: post.realupvotes *= 2
+	post.realupvotes = g.db.query(Vote.submission_id).filter_by(submission_id=post.id, vote_type=1, real=True).count()
 	g.db.add(post)
 	g.db.commit()
 	return "", 204
@@ -121,68 +129,70 @@ def api_vote_post(post_id, new, v):
 @is_not_permabanned
 def api_vote_comment(comment_id, new, v):
 
-	if new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': return {"error": "forbidden."}, 403
-
-	if new not in ["-1", "0", "1"]: abort(400)
-
+	# make sure we're allowed in (is this really necessary? I'm not sure)
 	if request.headers.get("Authorization"): abort(403)
 
+	# make sure new is valid
+	if new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': return {"error": "forbidden."}, 403
+	if new not in ["-1", "0", "1"]: abort(400)
 	new = int(new)
 
+	# get the comment
 	try: comment_id = int(comment_id)
 	except: abort(404)
-
 	comment = get_comment(comment_id)
 
-	if comment.author_id in {AUTOPOLLER_ID,AUTOBETTER_ID,AUTOCHOICE_ID}: return {"error": "forbidden."}, 403
+	# verify that the comment is allowed to be voted on
+	if comment.author.id in {AUTOPOLLER_ID,AUTOBETTER_ID,AUTOCHOICE_ID}: return {"error": "forbidden."}, 403
 	
-	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
+	# get the old vote, if we have one
+	vote = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
 
-	coin_delta = 1
-	if v.id == comment.author_id:
-		coin_delta = 0
+	# should we just do nothing? we could just do nothing
+	if vote and vote.vote_type == new: return "", 204
 
-	if existing and existing.vote_type == new: return "", 204
+	# at this point we are guaranteed to be making a change
 
-	if existing:
-		if existing.vote_type == 0 and new != 0:
-			comment.author.coins += coin_delta
-			comment.author.truecoins += coin_delta
-			g.db.add(comment.author)
-			existing.vote_type = new
-			g.db.add(existing)
-		elif existing.vote_type != 0 and new == 0:
-			comment.author.coins -= coin_delta
-			comment.author.truecoins -= coin_delta
-			g.db.add(comment.author)
-			g.db.delete(existing)
-		else:
-			existing.vote_type = new
-			g.db.add(existing)
-	elif new != 0:
-		comment.author.coins += coin_delta
-		comment.author.truecoins += coin_delta
-		g.db.add(comment.author)
+	# author votes don't matter if it's the author themselves
+	points_matter = (v.id != comment.author.id)
 
-		DEFAULT_IMAGE = '/assets/images/default-profile-pic.webp'
-
-		if new == 1 and (v.shadowbanned or (v.is_banned and not v.unban_utc) or (v.profile_url == DEFAULT_IMAGE and not v.customtitle and v.namecolor == DEFAULT_COLOR)): real = False
-		else: real = True
-
-		vote = CommentVote(user_id=v.id,
+	if vote:
+		# remove the old score data
+		if points_matter:
+			comment.author.coins -= vote.vote_type
+			comment.author.truecoins -= vote.vote_type
+			# we'll be saving later anyway, so don't bother doing so here
+	else:
+		# create new vote data
+		vote = CommentVote(
+						user_id=v.id,
 						vote_type=new,
 						comment_id=comment_id,
 						app_id=v.client.application.id if v.client else None,
-						real=real
-						)
+					)
+	
+	# update the vote data
+	vote.vote_type = new
 
-		g.db.add(vote)
+	real = True
+	if v.shadowbanned: real = False
+	if v.is_banned and not v.unban_utc: real = False
+	vote.real = real
 
+	# add relevant points
+	if points_matter:
+		comment.author.coins += vote.vote_type
+		comment.author.truecoins += vote.vote_type
+	
+	# database it up
+	g.db.add(comment.author)
+	g.db.add(vote)
+	
+	# update comment stats (this is horrendously slow?!)
 	g.db.flush()
 	comment.upvotes = g.db.query(CommentVote.comment_id).filter_by(comment_id=comment.id, vote_type=1).count()
 	comment.downvotes = g.db.query(CommentVote.comment_id).filter_by(comment_id=comment.id, vote_type=-1).count()
-	comment.realupvotes = g.db.query(CommentVote.comment_id).filter_by(comment_id=comment.id, real=True).count()
-	if comment.author.progressivestack: comment.realupvotes *= 2
+	comment.realupvotes = g.db.query(CommentVote.comment_id).filter_by(comment_id=comment.id, vote_type=1, real=True).count()
 	g.db.add(comment)
 	g.db.commit()
 	return "", 204
