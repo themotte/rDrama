@@ -1,6 +1,6 @@
 MASTER_KEY=blahblahblah
 DOMAIN=localhost
-SITE_NAME=TheMotte
+SITE_NAME=The Motte
 GIPHY_KEY=blahblahblah
 DISCORD_SERVER_ID=blahblahblah
 DISCORD_CLIENT_ID=blahblahblah
@@ -28,7 +28,7 @@ DEFAULT_COLOR=ff66ac
 MAIL_SERVER=smtp.gmail.com
 MAIL_USERNAME=blahblahblah@gmail.com
 MAIL_PASSWORD=blahblahblah
-DESCRIPTION=DESCRIPTION GOES HERE
+DESCRIPTION=A place for people who want to test their ideas.
 CF_KEY=blahblahblah
 CF_ZONE=blahblahblah
 DEBIAN_FRONTEND=noninteractive
