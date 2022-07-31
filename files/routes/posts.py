@@ -446,12 +446,7 @@ def edit_post(pid, v):
 			return {"error":"You have to type less than 140 characters!"}, 403
 
 	if title != p.title:
-
 		title_html = filter_emojis_only(title, edit=True)
-
-		if v.id == p.author_id and v.marseyawarded and not marseyaward_title_regex.fullmatch(title_html):
-			return {"error":"You can only type marseys!"}, 403
-
 		p.title = title[:500]
 		p.title_html = title_html
 
@@ -477,21 +472,13 @@ def edit_post(pid, v):
 				body += f"\n\n{url}"
 			else: return {"error": "Image/Video files only"}, 400
 
-		body_html = sanitize(body, edit=True)
+	body_html = sanitize(body, edit=True)
 
-		if v.id == p.author_id and v.marseyawarded and marseyaward_body_regex.search(body_html):
-			return {"error":"You can only type marseys!"}, 403
+	p.body = body
 
-		p.body = body
+	if len(body_html) > 40000: return {"error":"Submission body_html too long! (max 40k characters)"}, 400
 
-		if blackjack and any(i in f'{p.body} {p.title} {p.url}'.lower() for i in blackjack.split()):
-			v.shadowbanned = 'AutoJanny'
-			g.db.add(v)
-			send_repeatable_notification(CARP_ID, p.permalink)
-
-		if len(body_html) > 40000: return {"error":"Submission body_html too long! (max 40k characters)"}, 400
-
-		p.body_html = body_html
+	p.body_html = body_html
 
 	if not p.private and not p.ghost:
 		notify_users = NOTIFY_USERS(f'{p.title} {p.body}', v)
