@@ -38,7 +38,7 @@ def pusher_thread(interests, c, username):
 					'title': f'New reply by @{username}',
 					'body': notifbody,
 					'deep_link': f'{SITE_FULL}/comment/{c.id}?context=8&read=true#context',
-					'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?v=1015',
+					'icon': f'{SITE_FULL}/assets/images/{SITE_ID}/icon.webp?v=1015',
 				}
 			},
 			'fcm': {
@@ -185,7 +185,7 @@ def api_comment(v):
 	body = request.values.get("body", "").strip()[:10000]
 
 	if v.admin_level > 2 and parent_post.id == 37749 and level == 1:
-		with open(f"snappy_{SITE_NAME}.txt", "a", encoding="utf-8") as f:
+		with open(f"snappy_{SITE_ID}.txt", "a", encoding="utf-8") as f:
 			f.write('\n{[para]}\n' + body)
 
 	if parent_post.id not in ADMINISTRATORS:

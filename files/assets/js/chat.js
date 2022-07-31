@@ -7,7 +7,7 @@ const box = document.getElementById('chat-window')
 const textbox = document.getElementById('input-text')
 const icon = document.getElementById('favicon')
 const vid = document.getElementById('vid').value
-const site_name = document.getElementById('site_name').value
+const site_id = document.getElementById('site_id').value
 const slurreplacer = document.getElementById('slurreplacer').value
 
 let notifs = 0;
@@ -20,17 +20,17 @@ function flash(){
 	if (notifs >= 1 && !focused){
 		title.innerHTML = `[+${notifs}] Chat`;
 		if (alert) {
-			icon.href = escapeHTML(`/assets/images/${site_name}/alert.webp?v=2`)
+			icon.href = escapeHTML(`/assets/images/${site_id}/alert.webp?v=2`)
 			alert=false;
 		}
 		else {
-			icon.href = escapeHTML(`/assets/images/${site_name}/icon.webp?v=1015`)
+			icon.href = escapeHTML(`/assets/images/${site_id}/icon.webp?v=1015`)
 			alert=true;
 		}
 		setTimeout(flash, 500)
 	}
 	else {
-		icon.href = escapeHTML(`/assets/images/${site_name}/icon.webp?v=1015`)
+		icon.href = escapeHTML(`/assets/images/${site_id}/icon.webp?v=1015`)
 		notifs = 0
 		title.innerHTML = 'Chat';
 	}

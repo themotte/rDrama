@@ -12,7 +12,7 @@
 	<div class="navbar navbar-expand-md navbar-light" id="navbar">
 		<div class="container-fluid" style="padding:0;">
 			<a href="/" class="navbar-brand mr-auto">
-				<img alt="header icon" height=33 src="/assets/images/{{SITE_NAME}}/headericon.webp?v=1019">
+				<img alt="header icon" height=33 src="/assets/images/{{SITE_ID}}/headericon.webp?v=1019">
 			</a>
 			
 			{% if sub %}
@@ -31,7 +31,7 @@
 					{% endif %}
 				</style>
 				<a href="/" class="flex-grow-1">
-					<img class="ml-1" id="logo" alt="logo" src="/assets/images/{{SITE_NAME}}/logo.webp?v=1013" width=70>
+					<img class="ml-1" id="logo" alt="logo" src="/assets/images/{{SITE_ID}}/logo.webp?v=1013" width=70>
 				</a>
 			{% endif %}
 
@@ -213,7 +213,7 @@
 				</li>
 			{% endif %}
 			<li class="mt-3">
-				{% include "sidebar_" + SITE_NAME + ".html" %}
+				{% include "sidebar_" + SITE_ID + ".html" %}
 			</li>
 		</ul>
 	</div>

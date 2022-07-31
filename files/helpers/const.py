@@ -8,7 +8,8 @@ from files.classes.marsey import Marsey
 from flask import request
 
 SITE = environ.get("DOMAIN", '').strip()
-SITE_NAME = environ.get("SITE_NAME", '').strip()
+SITE_ID = environ.get("SITE_ID", '').strip()
+SITE_TITLE = environ.get("SITE_TITLE", '').strip()
 if "localhost" in SITE: SITE_FULL = 'http://' + SITE
 else: SITE_FULL = 'https://' + SITE
 
@@ -62,7 +63,7 @@ DAD_ID = 0
 MOM_ID = 0
 DONGER_ID = 0
 BUG_THREAD = 0
-WELCOME_MSG = f"Welcome to {SITE_NAME}!"
+WELCOME_MSG = f"Welcome to {SITE_TITLE}!"
 ROLES={}
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()

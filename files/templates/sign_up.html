@@ -12,9 +12,9 @@
 
 		<meta name="author" content="">
 		<meta property="og:type" content="article">
-		<meta property="og:title" content="{{SITE_NAME}}">
+		<meta property="og:title" content="{{SITE_TITLE}}">
 		<meta property="og:site_name" content="{{request.host}}">
-		<meta property="og:image" content="/assets/images/{{SITE_NAME}}/site_preview.webp?v=1015">
+		<meta property="og:image" content="/assets/images/{{SITE_ID}}/site_preview.webp?v=1015">
 		<meta property="og:url" content="{{request.host}}">
 		<meta property="og:description" name="description" content="{{config('DESCRIPTION')}}">
 		<meta property="og:author" name="author" content="{{SITE_FULL}}">
@@ -22,13 +22,13 @@
 
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="{{SITE_FULL}}">
-		<meta name="twitter:title" content="{{SITE_NAME}}">
+		<meta name="twitter:title" content="{{SITE_TITLE}}">
 		<meta name="twitter:creator" content="{{SITE_FULL}}">
 		<meta name="twitter:description" content="{{config('DESCRIPTION')}}">
-		<meta name="twitter:image" content="/assets/images/{{SITE_NAME}}/site_preview.webp?v=1015">
+		<meta name="twitter:image" content="/assets/images/{{SITE_ID}}/site_preview.webp?v=1015">
 		<meta name="twitter:url" content="{{request.host}}">
 
-		<title>{% if ref_user %}{{ref_user.username}} invites you to {{SITE_NAME}}{% else %}Sign up - {{SITE_NAME}}{% endif %}</title>
+		<title>{% if ref_user %}{{ref_user.username}} invites you to {{SITE_TITLE}}{% else %}Sign up - {{SITE_TITLE}}{% endif %}</title>
 
 		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
 		<link rel="stylesheet" href="/assets/css/main.css?v=250">
@@ -64,7 +64,7 @@
 
 											{% if ref_user %}
 											<h1 class="h2">@{{ref_user.username}} has invited you!</h1>
-											<p class="text-muted mb-md-2">Looks like someone wants you to join {{SITE_NAME}}.</p>
+											<p class="text-muted mb-md-2">Looks like someone wants you to join {{SITE_TITLE}}.</p>
 											{% else %}
 											<h1 class="h2">Create your account.</h1>
 											<p class="text-muted mb-md-2">No email address required.</p>
@@ -140,7 +140,7 @@
 
 								<div class="splash-overlay"></div>
 
-								<img alt="cover" loading="lazy" class="splash-img" src="/assets/images/{{SITE_NAME}}/cover.webp?v=1014"></img>
+								<img alt="cover" loading="lazy" class="splash-img" src="/assets/images/{{SITE_ID}}/cover.webp?v=1014"></img>
 						</div>
 
 				</div>

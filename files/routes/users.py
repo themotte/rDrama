@@ -26,7 +26,7 @@ def pusher_thread2(interests, notifbody, username):
 					'title': f'New message from @{username}',
 					'body': notifbody,
 					'deep_link': f'{SITE_FULL}/notifications?messages=true',
-					'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp?v=1015',
+					'icon': f'{SITE_FULL}/assets/images/{SITE_ID}/icon.webp?v=1015',
 				}
 			},
 			'fcm': {
@@ -704,7 +704,7 @@ def messagereply(v):
 							'title': f'New message from @{v.username}',
 							'body': notifbody,
 							'deep_link': f'{SITE_FULL}/notifications?messages=true',
-							'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp"a=1010',
+							'icon': f'{SITE_FULL}/assets/images/{SITE_ID}/icon.webp"a=1010',
 						}
 					},
 					'fcm': {
@@ -742,7 +742,7 @@ def mfa_qr(secret, v):
 	qr = qrcode.QRCode(
 		error_correction=qrcode.constants.ERROR_CORRECT_L
 	)
-	qr.add_data(x.provisioning_uri(v.username, issuer_name=app.config["SITE_NAME"]))
+	qr.add_data(x.provisioning_uri(v.username, issuer_name=app.config["SITE_TITLE"]))
 	img = qr.make_image(fill_color="#000000", back_color="white")
 
 	mem = io.BytesIO()
