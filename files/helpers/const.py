@@ -8,7 +8,8 @@ from files.classes.marsey import Marsey
 from flask import request
 
 SITE = environ.get("DOMAIN", '').strip()
-SITE_NAME = environ.get("SITE_NAME", '').strip()
+SITE_ID = environ.get("SITE_ID", '').strip()
+SITE_TITLE = environ.get("SITE_TITLE", '').strip()
 if "localhost" in SITE: SITE_FULL = 'http://' + SITE
 else: SITE_FULL = 'https://' + SITE
 
@@ -62,7 +63,7 @@ DAD_ID = 0
 MOM_ID = 0
 DONGER_ID = 0
 BUG_THREAD = 0
-WELCOME_MSG = f"Welcome to {SITE_NAME}! Please read [the rules](/rules) first. Then [read some of our current conversations](/) and feel free to comment or post!\n\nWe encourage people to comment even if they aren't sure they fit in; as long as your comment follows [community rules](/rules), we are happy to have posters from all backgrounds, education levels, and specialties."
+WELCOME_MSG = f"Welcome to {SITE_TITLE}! Please read [the rules](/rules) first. Then [read some of our current conversations](/) and feel free to comment or post!\n\nWe encourage people to comment even if they aren't sure they fit in; as long as your comment follows [community rules](/rules), we are happy to have posters from all backgrounds, education levels, and specialties."
 ROLES={}
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()

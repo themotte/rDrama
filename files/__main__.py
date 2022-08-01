@@ -25,14 +25,15 @@ app.jinja_env.auto_reload = True
 faulthandler.enable()
 
 
-app.config["SITE_NAME"]=environ.get("SITE_NAME").strip()
+app.config["SITE_ID"]=environ.get("SITE_ID").strip()
+app.config["SITE_TITLE"]=environ.get("SITE_TITLE").strip()
 app.config["GUMROAD_LINK"]=environ.get("GUMROAD_LINK", "https://marsey1.gumroad.com/l/tfcvri").strip()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get("DATABASE_URL", "postgresql://postgres@localhost:5432")
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
 app.config["SERVER_NAME"] = environ.get("DOMAIN").strip()
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 3153600
-app.config["SESSION_COOKIE_NAME"] = "session_" + environ.get("SITE_NAME").strip().lower()
+app.config["SESSION_COOKIE_NAME"] = "session_" + environ.get("SITE_ID").strip().lower()
 app.config["VERSION"] = "1.0.0"
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config["SESSION_COOKIE_SECURE"] = "localhost" not in environ.get("DOMAIN")

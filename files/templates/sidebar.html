@@ -1,7 +1,7 @@
 {% extends "default.html" %}
 
 {% block title %}
-<title>{{SITE_NAME}} Sidebar</title>
+<title>{{SITE_TITLE}} Sidebar</title>
 {% endblock %}
 
 {% block content %}
@@ -13,7 +13,7 @@
 	<h1 class="text-muted text-uppercase">Sidebar</h5>
 
 	<div id="sidebar" class="my-3">
-		{% include "sidebar_" + SITE_NAME + ".html" %}
+		{% include "sidebar_" + SITE_ID + ".html" %}
 	</div>
 </div>
 {% endblock %}

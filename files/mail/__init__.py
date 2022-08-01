@@ -10,11 +10,12 @@ from files.classes import *
 from files.__main__ import app, mail, limiter
 from flask_mail import Message
 
-name = environ.get("SITE_NAME").strip()
+SITE_ID = environ.get("SITE_ID").strip()
+SITE_TITLE = environ.get("SITE_TITLE").strip()
 
 def send_mail(to_address, subject, html):
 
-	msg = Message(html=html, subject=subject, sender=f"{name}@{SITE}", recipients=[to_address])
+	msg = Message(html=html, subject=subject, sender=f"{SITE_ID}@{SITE}", recipients=[to_address])
 	mail.send(msg)
 
 
@@ -35,7 +36,7 @@ def send_verification_email(user, email=None):
 			  html=render_template("email/email_verify.html",
 								   action_url=link,
 								   v=user),
-			  subject=f"Validate your {name} account email."
+			  subject=f"Validate your {SITE_TITLE} account email."
 			  )
 
 

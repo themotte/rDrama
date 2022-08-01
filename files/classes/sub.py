@@ -5,7 +5,6 @@ from files.helpers.lazy import lazy
 from os import environ
 from .sub_block import *
 
-SITE_NAME = environ.get("SITE_NAME", '').strip()
 SITE = environ.get("DOMAIN", '').strip()
 if SITE == "localhost": SITE_FULL = 'http://' + SITE
 else: SITE_FULL = 'https://' + SITE
