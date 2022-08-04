@@ -60,6 +60,7 @@ app.config['MAIL_PASSWORD'] = environ.get("MAIL_PASSWORD", "").strip()
 app.config['DESCRIPTION'] = environ.get("DESCRIPTION", "DESCRIPTION GOES HERE").strip()
 app.config['SETTINGS'] = {}
 app.config['SQLALCHEMY_DATABASE_URI'] = app.config['DATABASE_URL']
+app.config['MULTIMEDIA_EMBEDDING_ENABLED'] = environ.get('MULTIMEDIA_EMBEDDING_ENABLED', "false").lower() == "true"
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_responses=True, ssl_cert_reqs=None)
 

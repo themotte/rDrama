@@ -12,9 +12,12 @@ import signal
 import time
 import requests
 
-TLDS = ('ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar','arpa','as','asia','at','au','aw','ax','az','ba','bb','bd','be','bf','bg','bh','bi','biz','bj','bm','bn','bo','br','bs','bt','bv','bw','by','bz','ca','cafe','cat','cc','cd','cf','cg','ch','ci','ck','cl','club','cm','cn','co','com','coop','cr','cu','cv','cx','cy','cz','de','dj','dk','dm','do','dz','ec','edu','ee','eg','er','es','et','eu','fi','fj','fk','fm','fo','fr','ga','gb','gd','ge','gf','gg','gh','gi','gl','gm','gn','gov','gp','gq','gr','gs','gt','gu','gw','gy','hk','hm','hn','hr','ht','hu','id','ie','il','im','in','info','int','io','iq','ir','is','it','je','jm','jo','jobs','jp','ke','kg','kh','ki','km','kn','kp','kr','kw','ky','kz','la','lb','lc','li','lk','lr','ls','lt','lu','lv','ly','ma','mc','md','me','mg','mh','mil','mk','ml','mm','mn','mo','mobi','mp','mq','mr','ms','mt','mu','museum','mv','mw','mx','my','mz','na','name','nc','ne','net','nf','ng','ni','nl','no','np','nr','nu','nz','om','org','pa','pe','pf','pg','ph','pk','pl','pm','pn','post','pr','pro','ps','pt','pw','py','qa','re','ro','rs','ru','rw','sa','sb','sc','sd','se','sg','sh','si','sj','sk','sl','sm','sn','so','social','sr','ss','st','su','sv','sx','sy','sz','tc','td','tel','tf','tg','th','tj','tk','tl','tm','tn','to','tp','tr','travel','tt','tv','tw','tz','ua','ug','uk','us','uy','uz','va','vc','ve','vg','vi','vn','vu','wf','win','ws','xn','xxx','xyz','ye','yt','yu','za','zm','zw')
+TLDS = ('ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar','arpa','as','asia','at','au','aw','ax','az','ba','bb','bd','be','bf','bg','bh','bi','biz','bj','bm','bn','bo','br','bs','bt','bv','bw','by','bz','ca','cafe','cat','cc','cd','cf','cg','ch','ci','ck','cl','club','cm','cn','co','com','coop','cr','cu','cv','cx','cy','cz','de','dj','dk','dm','do','dz','ec','edu','ee','eg','er','es','et','eu','fi','fj','fk','fm','fo','fr','ga','gb','gd','ge','gf','gg','gh','gi','gl','gm','gn','gov','gp','gq','gr','gs','gt','gu','gw','gy','hk','hm','hn','hr','ht','hu','id','ie','il','im','in','info','int','io','iq','ir','is','it','je','jm','jo','jobs','jp','ke','kg','kh','ki','km','kn','kp','kr','kw','ky','kz','la','lb','lc','li','lk','lr','ls','lt','lu','lv','ly','ma','mc','md','me','mg','mh','mil','mk','ml','mm','mn','mo','mobi','mp','mq','mr','ms','mt','mu','museum','mv','mw','mx','my','mz','na','name','nc','ne','net','nf','ng','ni','nl','no','np','nr','nu','nz','om','org','pa','pe','pf','pg','ph','pk','pl','pm','pn','post','pr','pro','ps','pt','pw','py','qa','re','ro','rs','ru','rw','sa','sb','sc','sd','se','sg','sh','si','sj','sk','sl','sm','sn','so','social','sr','ss','st','su','sv','sx','sy','sz','tc','td','tel','tf','tg','th','tj','tk','tl','tm','tn','to','tp','tr','travel','tt','tv','tw','tz','ua','ug','uk','us','uy','uz','va','vc','ve','vg','vi','vn','vu','wf','win','ws','xn','xxx','xyz','ye','yt','yu','za','zm','zw', 'moe')
 
-allowed_tags = ('b','blockquote','br','code','del','em','h1','h2','h3','h4','h5','h6','hr','i','li','ol','p','pre','strong','sub','sup','table','tbody','th','thead','td','tr','ul','marquee','a','span','ruby','rp','rt','spoiler','img','lite-youtube','video','source')
+allowed_tags = ('b','blockquote','br','code','del','em','h1','h2','h3','h4','h5','h6','hr','i','li','ol','p','pre','strong','sub','sup','table','tbody','th','thead','td','tr','ul','marquee','a','span','ruby','rp','rt','spoiler',)
+
+if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+	allowed_tags += ('img', 'lite-youtube', 'video', 'source',)
 
 def allowed_attributes(tag, name, value):
 
@@ -131,16 +134,26 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 	signal.signal(signal.SIGALRM, handler)
 	signal.alarm(1)
 
+	# double newlines, eg. hello\nworld becomes hello\n\nworld, which later becomes <p>hello</p><p>world</p>
 	sanitized = linefeeds_regex.sub(r'\1\n\n\2', sanitized)
 
-	sanitized = image_regex.sub(r'\1![](\2)\4', sanitized)
+	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+		# turn eg. https://wikipedia.org/someimage.jpg into ![](https://wikipedia.org/someimage.jpg)
+		sanitized = image_regex.sub(r'\1![](\2)\4', sanitized)
 
+	# if image url in whitelist, do nothing
+	# eg. ![](https://wikipedia.org/someimage.jpg) turns into ![](https://wikipedia.org/someimage.jpg)
+	# but if not, then extract url
+	# eg ![](https://example.org/someimage.jpg) turns into https://example.org/someimage.jpg
 	sanitized = image_check_regex.sub(r'\1', sanitized)
 
+	# transform markdown into html
 	sanitized = markdown(sanitized)
 
+	# turn ~something~ or ~~something~~  into <del>something</del>
 	sanitized = strikethrough_regex.sub(r'<del>\1</del>', sanitized)
 
+	# remove left-to-right mark; remove zero width space; remove zero width no-break space; remove Cuneiform Numeric Sign Eight;
 	sanitized = sanitized.replace('‎','').replace('​','').replace("\ufeff", "").replace("𒐪","")
 
 	if alert:
@@ -173,13 +186,14 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	soup = BeautifulSoup(sanitized, 'lxml')
 
-	for tag in soup.find_all("img"):
-		if tag.get("src") and not tag["src"].startswith('/pp/'):
-			tag["loading"] = "lazy"
-			tag["data-src"] = tag["src"]
-			tag["src"] = "/assets/images/loading.webp"
-			tag['alt'] = f'![]({tag["data-src"]})'
-			tag['referrerpolicy'] = "no-referrer"
+	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+		for tag in soup.find_all("img"):
+			if tag.get("src") and not tag["src"].startswith('/pp/'):
+				tag["loading"] = "lazy"
+				tag["data-src"] = tag["src"]
+				tag["src"] = "/assets/images/loading.webp"
+				tag['alt'] = f'![]({tag["data-src"]})'
+				tag['referrerpolicy'] = "no-referrer"
 
 	for tag in soup.find_all("a"):
 		if tag.get("href") and fishylinks_regex.fullmatch(str(tag.string)):
@@ -221,22 +235,24 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	if "https://youtube.com/watch?v=" in sanitized: sanitized = sanitized.replace("?t=", "&t=")
 
-	captured = []
-	for i in youtube_regex.finditer(sanitized):
-		if i.group(0) in captured: continue
-		captured.append(i.group(0))
+	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+		captured = []
+		for i in youtube_regex.finditer(sanitized):
+			if i.group(0) in captured: continue
+			captured.append(i.group(0))
 
-		params = parse_qs(urlparse(i.group(2).replace('&amp;','&')).query)
-		t = params.get('t', params.get('start', [0]))[0]
-		if isinstance(t, str): t = t.replace('s','')
+			params = parse_qs(urlparse(i.group(2).replace('&amp;','&')).query)
+			t = params.get('t', params.get('start', [0]))[0]
+			if isinstance(t, str): t = t.replace('s','')
 
-		htmlsource = f'{i.group(1)}<lite-youtube videoid="{i.group(3)}" params="autoplay=1&modestbranding=1'
-		if t: htmlsource += f'&start={t}'
-		htmlsource += '"></lite-youtube>'
+			htmlsource = f'{i.group(1)}<lite-youtube videoid="{i.group(3)}" params="autoplay=1&modestbranding=1'
+			if t: htmlsource += f'&start={t}'
+			htmlsource += '"></lite-youtube>'
 
-		sanitized = sanitized.replace(i.group(0), htmlsource)
+			sanitized = sanitized.replace(i.group(0), htmlsource)
 
-	sanitized = video_sub_regex.sub(r'\1<video controls preload="none"><source src="\2"></video>', sanitized)
+	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+		sanitized = video_sub_regex.sub(r'\1<video controls preload="none"><source src="\2"></video>', sanitized)
 
 	if comment:
 		for marsey in g.db.query(Marsey).filter(Marsey.name.in_(marseys_used)).all():
@@ -256,7 +272,8 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 								attributes=allowed_attributes,
 								protocols=['http', 'https'],
 								styles=['color', 'background-color', 'font-weight', 'text-align'],
-								filters=[partial(LinkifyFilter, skip_tags=["pre"], parse_email=False, callbacks=[callback], url_re=url_re)]
+								filters=[partial(LinkifyFilter, skip_tags=["pre"], parse_email=False, callbacks=[callback], url_re=url_re)],
+								strip=True,
 								).clean(sanitized)
 
 

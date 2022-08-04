@@ -457,7 +457,10 @@ def edit_post(pid, v):
 				name = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(name)
 				url = process_image(name)
-				body += f"\n\n![]({url})"
+				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+					body += f"\n\n![]({url})"
+				else:
+					body += f'\n\n<a href="{url}">{url}</a>'
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
@@ -469,7 +472,10 @@ def edit_post(pid, v):
 						if error == 'File exceeds max duration': error += ' (60 seconds)'
 						return {"error": error}, 400
 				if url.endswith('.'): url += 'mp4'
-				body += f"\n\n{url}"
+				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+					body += f"\n\n![]({url})"
+				else:
+					body += f'\n\n<a href="{url}">{url}</a>'
 			else: return {"error": "Image/Video files only"}, 400
 
 	body_html = sanitize(body, edit=True)
@@ -902,7 +908,11 @@ def submit_post(v, sub=None):
 			if file.content_type.startswith('image/'):
 				name = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(name)
-				body += f"\n\n![]({process_image(name)})"
+				image = process_image(name)
+				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+					body += f"\n\n![]({image})"
+				else:
+					body += f'\n\n<a href="{image}">{image}</a>'
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
@@ -914,7 +924,10 @@ def submit_post(v, sub=None):
 						if err == 'File exceeds max duration': err += ' (60 seconds)'
 						return error(err)
 				if url.endswith('.'): url += 'mp4'
-				body += f"\n\n{url}"
+				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+					body += f"\n\n![]({url})"
+				else:
+					body += f'\n\n<a href="{url}">{url}</a>'
 			else:
 				return error("Image/Video files only.")
 

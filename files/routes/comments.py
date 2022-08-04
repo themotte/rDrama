@@ -232,7 +232,10 @@ def api_comment(v):
 							requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/assets/images/badges/{badge.id}.webp"]}, timeout=5)
 						except Exception as e:
 							return {"error": str(e)}, 400
-				body += f"\n\n![]({image})"
+				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+					body += f"\n\n![]({image})"
+				else:
+					body += f'\n\n<a href="{image}">{image}</a>'
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
@@ -244,7 +247,10 @@ def api_comment(v):
 						if error == 'File exceeds max duration': error += ' (60 seconds)'
 						return {"error": error}, 400
 				if url.endswith('.'): url += 'mp4'
-				body += f"\n\n{url}"
+				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+					body += f"\n\n{url}"
+				else:
+					body += f'\n\n<a href="{url}">{url}</a>'
 			else: return {"error": "Image/Video files only"}, 400
 
 	body_html = sanitize(body, comment=True)

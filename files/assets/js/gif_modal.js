@@ -43,7 +43,7 @@ async function getGif(searchTerm) {
 
 		let response = await fetch("/giphy?searchTerm=" + searchTerm + "&limit=48");
 		let data = await response.json()
-		var max = data.length - 1
+		var max = data.data?.length === undefined ? 0 : data.data.length - 1
 		data = data.data
 					var gifURL = [];
 
@@ -70,7 +70,10 @@ async function getGif(searchTerm) {
 
 function insertGIF(url,form) {
 
-	var gif = "\n\n![](" + url +")";
+	// https://github.com/themotte/rDrama/issues/139
+	// when MULTIMEDIA_EMBEDDING_ENABLED == False, we want to insert an anchor, NOT an img
+	//var gif = "\n\n![](" + url +")";
+	var gif = '\n\n[' + url + '](' + url + ')';
 
 	var commentBox = document.getElementById(form);
 

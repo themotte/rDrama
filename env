@@ -33,3 +33,4 @@ DESCRIPTION=A place for people who want to test their ideas.
 CF_KEY=blahblahblah
 CF_ZONE=blahblahblah
 DEBIAN_FRONTEND=noninteractive
+MULTIMEDIA_EMBEDDING_ENABLED=False
