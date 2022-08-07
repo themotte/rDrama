@@ -15,7 +15,7 @@ from files.__main__ import app
 
 TLDS = ('ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar','arpa','as','asia','at','au','aw','ax','az','ba','bb','bd','be','bf','bg','bh','bi','biz','bj','bm','bn','bo','br','bs','bt','bv','bw','by','bz','ca','cafe','cat','cc','cd','cf','cg','ch','ci','ck','cl','club','cm','cn','co','com','coop','cr','cu','cv','cx','cy','cz','de','dj','dk','dm','do','dz','ec','edu','ee','eg','er','es','et','eu','fi','fj','fk','fm','fo','fr','ga','gb','gd','ge','gf','gg','gh','gi','gl','gm','gn','gov','gp','gq','gr','gs','gt','gu','gw','gy','hk','hm','hn','hr','ht','hu','id','ie','il','im','in','info','int','io','iq','ir','is','it','je','jm','jo','jobs','jp','ke','kg','kh','ki','km','kn','kp','kr','kw','ky','kz','la','lb','lc','li','lk','lr','ls','lt','lu','lv','ly','ma','mc','md','me','mg','mh','mil','mk','ml','mm','mn','mo','mobi','mp','mq','mr','ms','mt','mu','museum','mv','mw','mx','my','mz','na','name','nc','ne','net','nf','ng','ni','nl','no','np','nr','nu','nz','om','org','pa','pe','pf','pg','ph','pk','pl','pm','pn','post','pr','pro','ps','pt','pw','py','qa','re','ro','rs','ru','rw','sa','sb','sc','sd','se','sg','sh','si','sj','sk','sl','sm','sn','so','social','sr','ss','st','su','sv','sx','sy','sz','tc','td','tel','tf','tg','th','tj','tk','tl','tm','tn','to','tp','tr','travel','tt','tv','tw','tz','ua','ug','uk','us','uy','uz','va','vc','ve','vg','vi','vn','vu','wf','win','ws','xn','xxx','xyz','ye','yt','yu','za','zm','zw', 'moe')
 
-allowed_tags = ('b','blockquote','br','code','del','em','h1','h2','h3','h4','h5','h6','hr','i','li','ol','p','pre','strong','sub','sup','table','tbody','th','thead','td','tr','ul','marquee','a','span','ruby','rp','rt','spoiler',)
+allowed_tags = ('b','blockquote','br','code','del','em','h1','h2','h3','h4','h5','h6','hr','i','li','ol','p','pre','strong','sub','sup','table','tbody','th','thead','td','tr','ul','a','span','ruby','rp','rt','spoiler',)
 
 if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
 	allowed_tags += ('img', 'lite-youtube', 'video', 'source',)
@@ -24,14 +24,6 @@ def allowed_attributes(tag, name, value):
 
 	if name == 'style': return True
 
-	if tag == 'marquee':
-		if name in ['direction', 'behavior', 'scrollamount']: return True
-		if name in {'height', 'width'}:
-			try: value = int(value.replace('px', ''))
-			except: return False
-			if 0 < value <= 250: return True
-		return False
-	
 	if tag == 'a':
 		if name == 'href': return True
 		if name == 'rel' and value == 'nofollow noopener noreferrer': return True
