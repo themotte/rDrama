@@ -220,18 +220,20 @@ function post_comment(fullname){
 	btn.classList.add('disabled');
 
 	var form = new FormData();
+	let submissionEl = document.getElementById('reply-form-submission-'+fullname);
+	let bodyEl = document.getElementById('reply-form-body-'+fullname);
 
 	form.append('formkey', formkey());
 	form.append('parent_fullname', fullname);
-	form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
-	form.append('body', document.getElementById('reply-form-body-'+fullname).value);
+	form.append('submission', submissionEl.value);
+	form.append('body', bodyEl.value);
 
 	try {
 		for (const e of document.getElementById('file-upload-reply-'+fullname).files)
 			form.append('file', e);
 	}
 	catch(e) {}
-	
+
 	const xhr = new XMLHttpRequest();
 	xhr.open("post", "/comment");
 	xhr.setRequestHeader('xhr', 'xhr');
@@ -260,6 +262,10 @@ function post_comment(fullname){
 				comments.classList.remove('py-7');
 				placeholder.parentNode.removeChild(placeholder);
 			}
+
+			// clear comment textarea, and preview.
+			bodyEl.value = '';
+			document.getElementById('form-preview-'+id).innerHTML = '<p class="preview-msg">Comment preview</p>';
 		}
 		else {
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
