@@ -65,7 +65,9 @@ function markdown(first, second) {
 			dest.removeChild(dest.children[i]);
 		}
 		const html = marked.parse(input.value);
-		dest.innerHTML = DOMPurify.sanitize(html);
+		// https://github.com/themotte/rDrama/issues/139
+		// Remove disallowed tags completely.
+		dest.innerHTML = DOMPurify.sanitize(html, {FORBID_TAGS: ['img', 'video', 'source']});
 	}
 }
 

@@ -34,3 +34,4 @@ CF_KEY=blahblahblah
 CF_ZONE=blahblahblah
 DEBIAN_FRONTEND=noninteractive
 MENTION_LIMIT=100
+MULTIMEDIA_EMBEDDING_ENABLED=False
