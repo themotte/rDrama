@@ -214,7 +214,20 @@ function comment_edit(id){
 	xhr.send(form)
 }
 
+
 function post_comment(fullname){
+	const previewPlaceholderHTML= '<p class="preview-msg">Comment preview</p>';
+	function reset_preview(element_id) {
+		try {
+			document.getElementById(element_id).innerHTML = previewPlaceholderHTML;
+		} catch (e) {
+			// We fail silently if the element doesnt exist
+			if (!e instanceof TypeError) {
+				throw(e);
+			}
+		}
+	}
+
 	const btn = document.getElementById('save-reply-to-'+fullname)
 	btn.disabled = true
 	btn.classList.add('disabled');
@@ -265,7 +278,11 @@ function post_comment(fullname){
 
 			// clear comment textarea, and preview.
 			bodyEl.value = '';
-			document.getElementById('form-preview-'+id).innerHTML = '<p class="preview-msg">Comment preview</p>';
+			// when called from top-level comment, clear top-level preview
+			reset_preview('form-preview-'+id);
+			// when called from comment reply, clear comment reply preview
+			reset_preview('reply-edit-'+id);
+
 		}
 		else {
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];

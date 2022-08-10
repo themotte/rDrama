@@ -567,7 +567,7 @@
 					<a id="save-reply-to-{{c.fullname}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}')"role="button">Comment</a>
 					<a role="button" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form fl-r commentmob">Cancel</a> 
 				</form>
-				<div id="reply-edit-{{c.id}}" class="preview mb-3 mt-5"></div>
+				<div id="reply-edit-{{c.id}}" class="preview mb-3 mt-5"><p class="preview-msg">Comment preview</p></div>
 				<div class="form-text text-small p-0 m-0"><a href="/formatting" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>Formatting help</a></div>
 			</div>
 		</div>
@@ -842,7 +842,7 @@
 		<script src="/assets/js/vendor/purify.min.js?v=251"></script>
 		<script src="/assets/js/vendor/marked.min.js?v=251"></script>
 		<script src="/assets/js/marked.custom.js?v=252"></script>
-		<script src="/assets/js/comments_v.js?v=267"></script>
+		<script src="/assets/js/comments_v.js?v=268"></script>
 		<script src="/assets/js/award_modal.js?v=1"></script>
 	{% endif %}
 

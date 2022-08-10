@@ -357,12 +357,12 @@ a.visited,
 	display: block;
 }
 
-.comment-section div[id^="form-preview-"] {
+.comment-section div[id^="form-preview-"], div[id^="reply-edit-"] {
   border: 1px dashed black;
   border-radius: 0.35em;
   padding: 0.375rem 0.75rem;
 }
 
-.comment-section div[id^="form-preview-"] p.preview-msg {
+.comment-section div[id^="form-preview-"] p.preview-msg, div[id^="reply-edit-"] p.preview-msg {
   color: gray;
 }
