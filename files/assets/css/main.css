@@ -5154,3 +5154,12 @@ th, td {
 .mobile-comment-link {
 	color: var(--dark);
 }
+
+/* Fix for <ol> being populated with <li><p></p></li> in many contexts. */
+.post-body li > p:first-child,
+.comment-text li > p:first-child,
+.preview li > p:first-child,
+div[id^="form-preview-"] li > p:first-child,
+div[id^="reply-edit-"] li > p:first-child {
+	display: inline;
+}
