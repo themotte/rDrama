@@ -10,6 +10,15 @@ function filter_new_status(id, new_status) {
 				const postRow = document.getElementById(`post-${id}`);
 				if(document.location.pathname === '/admin/filtered/posts' || document.location.pathname === '/admin/reported/posts' ) {
 					postRow.parentElement.removeChild(postRow);
+				} else if(document.location.pathname.startsWith('/post/')) {
+					const flaggerBox = document.getElementById('flaggers');
+					if(flaggerBox) {
+						flaggerBox.parentElement.removeChild(flaggerBox);
+					}
+					const flaggerButton = document.getElementById('submission-report-button');
+					if(flaggerButton) {
+						flaggerButton.parentElement.removeChild(flaggerButton);
+					}
 				} else {
 					const approveLink = postRow.querySelector('a#filter-approve')
 					const removeLink = postRow.querySelector('a#filter-remove')
