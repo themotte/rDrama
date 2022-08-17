@@ -344,8 +344,7 @@ class Comment(Base):
 
 			if self.level>=2: data['parent_comment_id']= self.parent_comment_id
 
-		if "replies" in self.__dict__:
-			data['replies']=[x.json_core for x in self.replies]
+		data['replies']=[x.json_core for x in self.replies(None)]
 
 		return data
 
