@@ -3311,6 +3311,15 @@ small, .small {
 	font-size: 12px;
 	width: fit-content;
 }
+.post-meta-domain {
+	/* fixes very long domains overflowing submission_listing */
+	display: inline-block;
+	max-width: 20em;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+}
 #frontpage .posts .card .card-footer, #userpage .posts .card .card-footer, #thread .card .card-footer, #search .posts .card .card-footer {
 	border: 0;
 	background-color: transparent;

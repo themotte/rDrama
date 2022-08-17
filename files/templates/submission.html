@@ -192,7 +192,7 @@
 
             {% endif %}
 						<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp" onmouseover="timestamp('timestamp','{{p.created_utc}}')">&nbsp;{{p.age_string}}</span>
-						({% if p.is_image %}image post{% elif p.is_video %}video post{% elif p.domain %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
+						({% if p.is_image %}image post{% elif p.is_video %}video post{% elif p.domain %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" class="post-meta-domain" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>{{p.domain|truncate(35, True)}}</a>{% else %}text post{% endif %})
 
 						{% if p.edited_utc %}
 							&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('edited_timestamp','{{p.edited_utc}}')" id="edited_timestamp">{{p.edited_string}}</span>
