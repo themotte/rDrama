@@ -3311,6 +3311,15 @@ small, .small {
 	font-size: 12px;
 	width: fit-content;
 }
+.post-meta-domain {
+	/* fixes very long domains overflowing submission_listing */
+	display: inline-block;
+	max-width: 20em;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+}
 #frontpage .posts .card .card-footer, #userpage .posts .card .card-footer, #thread .card .card-footer, #search .posts .card .card-footer {
 	border: 0;
 	background-color: transparent;
@@ -4860,12 +4869,10 @@ html {
 }
 
 .mod {
-	padding: 2px 5px 3px 5px;
+	padding: 3px 5px 2px 5px;
 	border-radius: 5px;
-	color:white!important;
-	background: -moz-linear-gradient(180deg, red, orange, yellow, green, blue, indigo, violet);
-	background: -webkit-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet );
-	text-shadow:-1px -1px 0 black,1px -1px 0 black,-1px 1px 0 black,1px 1px 0 black;
+	color: white !important;
+	background-color: #ff0011; /* reddit admin red */
 }
 
 .popover {
