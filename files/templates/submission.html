@@ -169,7 +169,9 @@
 						{% if p.is_bot %} <i class="fas fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom"	title="Bot"></i>{% endif %}
 						{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
-						{% if p.active_flags(v) %}<a class="btn btn-primary" role="button" style="padding:1px 5px; font-size:10px"onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags(v)}} Reports</a>{% endif %}
+						{% if v and p.filter_state == 'reported' and v.can_manage_reports() %}
+							<a class="btn btn-primary" id="submission-report-button" role="button" style="padding:1px 5px; font-size:10px"onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags(v)}} Reports</a>
+						{% endif %}
 						
 						{% if not p.author %}
 							{{p.print()}}
@@ -199,13 +201,16 @@
 						{% endif %}
 						&nbsp;&nbsp;{{p.views}} thread views
 					</div>
-					{% if p.active_flags(v) %}
+					{% if v and p.filter_state == 'reported' and v.can_manage_reports() %}
 					<div id="flaggers" class="flaggers d-none">
-						<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
+						<strong><i class="far fa-fw fa-flag"></i> Reports:</strong>
+						<a class="btn btn-primary" style="margin:1px 5px" onclick="filter_new_status({{p.id}}, 'normal')">Approve</a>
+						<a class="btn btn-secondary" style="margin:1px 5px" onclick="filter_new_status({{p.id}}, 'ignored')">Approve and Ignore</a>
+						<a class="btn btn-danger" style="margin:1px 5px" onclick="filter_new_status({{p.id}}, 'removed')">Remove</a>
 						<pre></pre>
 						<ul style="padding-left:20px; margin-bottom: 0;word-wrap:break-word">
 							{% for f in p.flags(v) %}
-								<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %} {% if v and v.admin_level > 1 %}<a role="button" onclick="post_toast(this,'/del_report/post/{{f.post_id}}/{{f.user_id}}')">[remove]</a>{% endif %}</li>
+								<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %}</li>
 							{% endfor %}
 						</ul>
 					</div>
