@@ -4448,7 +4448,7 @@ textarea {
 }
 @media (min-width: 767.98px) {
 	.navbar {
-		padding: 0.5rem 3rem 0.4rem 0.5rem;
+		padding: 0.5rem 1.5rem 0.4rem 0.5rem;
 }
 }
 blockquote {
@@ -5056,6 +5056,10 @@ th, td {
 	.settings-nav .nav-link {
 		font-size: 12px;
 	}
+}
+
+#account-menu-header, #account-menu {
+	min-width: 10em;
 }
 
 .glow .post-title, .glow a, .glow .post-meta *, .glow .user-info *, .glow .comment-text, .glow .comment-actions *, .glow  {
