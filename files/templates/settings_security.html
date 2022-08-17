@@ -4,8 +4,6 @@
 
 {% block content %}
 
-<script src="/assets/js/settings_security.js?v=240"></script>
-
 <div class="row">
 
 <div class="col col-lg-8">
@@ -149,7 +147,7 @@
 	<div class="body w-lg-100">
 
 		<div class="custom-control custom-switch">
-		<input autocomplete="off" type="checkbox" class="custom-control-input" id="2faToggle" name="2faToggle" onchange="twoStepModal.show()" {% if v.mfa_secret %}checked{% endif %}>
+		<input autocomplete="off" type="checkbox" class="custom-control-input" id="2faToggle" name="2faToggle" {% if v.mfa_secret %}checked{% endif %}>
 		<label class="custom-control-label" for="2faToggle"></label>
 		</div>
 
@@ -258,5 +256,7 @@
 	</form>
 </div>
 </div>
+
+<script src="/assets/js/settings_security.js?v=241"></script>
 
 {% endblock %}
