@@ -1,6 +1,5 @@
 import time
 import gevent
-import requests
 from files.helpers.wrappers import *
 from files.helpers.sanitize import *
 from files.helpers.alerts import *
@@ -36,6 +35,24 @@ discounts = {
 
 titleheaders = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
+MAX_TITLE_LENGTH = 500
+MAX_URL_LENGTH = 2048
+MAX_BODY_LENGTH = 20000
+
+# Get request value `val` and ensure it is within length constraints
+# : Returns an either tuple (good_value, error)
+# : TODO it may make sense to do more sanitisation here
+def guarded_value(val, min_len, max_len):
+	raw = request.values.get(val, '').strip()
+	raw = raw.replace('\u200e', '')
+
+	if len(raw) < min_len:
+		return (None, ({"error": f"Minimum length for {val} is {min_len}"}, 403))
+
+	if len(raw) > max_len:
+		return (None, ({"error": f"Maximum length for {val} is {max_len}"}, 403))
+
+	return (raw, None)
 
 @app.post("/toggle_club/<pid>")
 @auth_required
@@ -425,6 +442,7 @@ def morecomments(v, cid):
 	
 	return render_template("comments.html", v=v, comments=comments, p=p, render_replies=True, ajax=True)
 
+
 @app.post("/edit_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
@@ -433,11 +451,11 @@ def edit_post(pid, v):
 
 	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
 
-	title = request.values.get("title", "").strip().replace('‎','')
+	title, err = guarded_value("title", 1, MAX_TITLE_LENGTH)
+	if err: return err
 
-	body = request.values.get("body", "").strip().replace('‎','')
-
-	if len(body) > 20000: return {"error":"Character limit is 20000!"}, 403
+	body, err = guarded_value("body", 0, MAX_BODY_LENGTH)
+	if err: return err
 
 	if v.id == p.author_id:
 		if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
@@ -446,8 +464,8 @@ def edit_post(pid, v):
 			return {"error":"You have to type less than 140 characters!"}, 403
 
 	if title != p.title:
+		p.title = title
 		title_html = filter_emojis_only(title, edit=True)
-		p.title = title[:500]
 		p.title_html = title_html
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
@@ -708,18 +726,20 @@ def api_is_repost():
 @auth_required
 def submit_post(v, sub=None):
 
-	title = request.values.get("title", "").strip()[:500].replace('‎','')
-
-	url = request.values.get("url", "").strip()
-	
-	body = request.values.get("body", "").strip().replace('‎','')
-
 	def error(error):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": error}, 403
 	
 		SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
 		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body), 400
 
+	title, err = guarded_value("title", 1, MAX_TITLE_LENGTH)
+	if err: return error(err[0]["error"])
+
+	url, err = guarded_value("url", 0, MAX_URL_LENGTH)
+	if err: return error(err[0]["error"])
+
+	body, err = guarded_value("body", 0, MAX_BODY_LENGTH)
+	if err: return error(err[0]["error"])
 
 	sub = request.values.get("sub")
 	if sub: sub = sub.replace('/h/','').replace('s/','')
@@ -817,14 +837,8 @@ def submit_post(v, sub=None):
 			embed = str(int(id))
 
 
-	if not url and not request.values.get("body") and not request.files.get("file") and not request.files.get("file2"):
+	if not url and not body and not request.files.get("file") and not request.files.get("file2"):
 		return error("Please enter a url or some text.")
-
-	if not title:
-		return error("Please enter a better title.")
-
-	elif len(title) > 500:
-		return error("There's a 500 character limit for titles.")
 
 	dup = g.db.query(Submission).filter(
 		Submission.author_id == v.id,
@@ -879,12 +893,6 @@ def submit_post(v, sub=None):
 					)
 			g.db.add(ma)
 		return redirect("/notifications")
-
-	if len(str(body)) > 20000:
-		return error("There's a 20000 character limit for text body.")
-
-	if len(url) > 2048:
-		return error("There's a 2048 character limit for URLs.")
 
 	if v and v.admin_level > 2:
 		bet_options = []
@@ -941,6 +949,10 @@ def submit_post(v, sub=None):
 
 	is_bot = bool(request.headers.get("Authorization"))
 
+	# Invariant: these values are guarded and obey the length bound
+	assert len(title) <= MAX_TITLE_LENGTH
+	assert len(body) <= MAX_BODY_LENGTH
+
 	post = Submission(
 		private=bool(request.values.get("private","")),
 		club=club,
@@ -949,10 +961,10 @@ def submit_post(v, sub=None):
 		app_id=v.client.application.id if v.client else None,
 		is_bot = is_bot,
 		url=url,
-		body=body[:20000],
+		body=body,
 		body_html=body_html,
 		embed_url=embed,
-		title=title[:500],
+		title=title,
 		title_html=title_html,
 		sub=sub,
 		ghost=False,
