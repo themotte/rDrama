@@ -1,3 +1,4 @@
+import functools
 import bleach
 from bs4 import BeautifulSoup
 from bleach.linkifier import LinkifyFilter, build_url_re
@@ -80,10 +81,6 @@ def callback(attrs, new=False):
 	return attrs
 
 
-def handler(signum, frame):
-	print("Timeout!")
-	raise Exception("Timeout")
-
 def render_emoji(html, regexp, edit, marseys_used=set(), b=False):
 	emojis = list(regexp.finditer(html))
 	captured = set()
@@ -122,10 +119,30 @@ def render_emoji(html, regexp, edit, marseys_used=set(), b=False):
 	return html
 
 
-def sanitize(sanitized, alert=False, comment=False, edit=False):
+def with_sigalrm_timeout(timeout: int):
+	'Use SIGALRM to raise an exception if the function executes for longer than timeout seconds'
 
-	signal.signal(signal.SIGALRM, handler)
-	signal.alarm(1)
+	# while trying to test this using time.sleep I discovered that gunicorn does in fact do some
+	# async so if we timeout on that (or on a db op) then the process is crashed without returning
+	# a proper 500 error. Oh well.
+	def sig_handler(signum, frame):
+		print("Timeout!", flush=True)
+		raise Exception("Timeout")
+
+	def inner(func):
+		@functools.wraps(inner)
+		def wrapped(*args, **kwargs):
+			signal.signal(signal.SIGALRM, sig_handler)
+			signal.alarm(timeout)
+			try:
+				return func(*args, **kwargs)
+			finally:
+				signal.alarm(0)
+		return wrapped
+	return inner
+
+@with_sigalrm_timeout(2)
+def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	# double newlines, eg. hello\nworld becomes hello\n\nworld, which later becomes <p>hello</p><p>world</p>
 	sanitized = linefeeds_regex.sub(r'\1\n\n\2', sanitized)
@@ -201,9 +218,9 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 
 	sanitized = str(soup)
-	
+
 	sanitized = spoiler_regex.sub(r'<spoiler>\1</spoiler>', sanitized)
-	
+
 	marseys_used = set()
 
 	# emojis = list(emoji_regex.finditer(sanitized))
@@ -288,7 +305,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 		href = link.get("href")
 		if not href: continue
-		
+
 		url = urlparse(href)
 		domain = url.netloc
 		url_path = url.path
@@ -305,8 +322,6 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	if bans: abort(403, description=f"Remove the banned domains {bans} and try again!")
 
-	signal.alarm(0)
-
 	return sanitized
 
 
@@ -322,11 +337,9 @@ def allowed_attributes_emojis(tag, name, value):
 	return False
 
 
+@with_sigalrm_timeout(1)
 def filter_emojis_only(title, edit=False, graceful=False):
 
-	signal.signal(signal.SIGALRM, handler)
-	signal.alarm(1)
-	
 	title = title.replace('‎','').replace('​','').replace("\ufeff", "").replace("𒐪","").replace("\n", "").replace("\r", "").replace("\t", "").replace("&", "&amp;").replace('<','&lt;').replace('>','&gt;').replace('"', '&quot;').replace("'", "&#039;").strip()
 
 	# title = render_emoji(title, emoji_regex3, edit)
@@ -334,8 +347,6 @@ def filter_emojis_only(title, edit=False, graceful=False):
 	title = strikethrough_regex.sub(r'<del>\1</del>', title)
 
 	sanitized = bleach.clean(title, tags=['img','del'], attributes=allowed_attributes_emojis, protocols=['http','https'])
-
-	signal.alarm(0)
 
 	if len(title) > 1500 and not graceful: abort(400)
 	else: return title
