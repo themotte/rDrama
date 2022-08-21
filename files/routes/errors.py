@@ -31,7 +31,7 @@ def error_403(e):
 		if not description: description = "403 Forbidden"
 		return {"error": description}, 403
 	else:
-		if not description: description = "YOU AREN'T WELCOME HERE GO AWAY"
+		if not description: description = "You don't have access to this page."
 		return render_template('errors/403.html', description=description, err=True), 403
 
 

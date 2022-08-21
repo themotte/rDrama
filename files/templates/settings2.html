@@ -63,23 +63,37 @@
 						<div class="col">
 							<div class="d-flex flex-row-reverse justify-content-end">
 								<ul class="nav settings-nav" style="margin-left: -15px;">
+									{% if v and v.admin_level >= 2 %}
+										<li class="nav-item">
+											<a class="nav-link{% if request.path.endswith('/leaderboard') %} active{% endif %}" href="/leaderboard">
+												<i class="fas fa-trophy pr-2"></i>Leaderboard
+											</a>
+										</li>
+									{% endif %}
 									<li class="nav-item">
-										<a class="nav-link{% if request.path.endswith('/leaderboard') %} active{% endif %}" href="/leaderboard"><i class="fas fa-trophy pr-2"></i>Leaderboard</a>
+										<a class="nav-link{% if request.path.endswith('/admins') %} active{% endif %}" href="/admins">
+											<i class="fas fa-crown pr-2"></i>Admins
+										</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link{% if request.path.endswith('/admins') %} active{% endif %}" href="/admins"><i class="fas fa-crown pr-2"></i>Admins</a>
+										<a class="nav-link{% if request.path.endswith('/log') %} active{% endif %}" href="/log">
+											<i class="fas fa-scroll-old pr-2"></i>Moderation Log
+										</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link{% if request.path.endswith('/log') %} active{% endif %}" href="/log"><i class="fas fa-scroll-old pr-2"></i>Moderation Log</a>
+										<a class="nav-link{% if request.path.endswith('/banned') %} active{% endif %}" href="/banned">
+											<i class="fas fa-user-slash pr-2"></i>Permabanned Users
+										</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link{% if request.path.endswith('/banned') %} active{% endif %}" href="/banned"><i class="fas fa-user-slash pr-2"></i>Permabanned Users</a>
+										<a class="nav-link{% if request.path.endswith('/blocks') %} active{% endif %}" href="/blocks">
+											<i class="fas fa-user-slash pr-2"></i>Blocks
+										</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link{% if request.path.endswith('/blocks') %} active{% endif %}" href="/blocks"><i class="fas fa-user-slash pr-2"></i>Blocks</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link{% if request.path.endswith('/changelog') %} active{% endif %}" href="/changelog"><i class="fas fa-clipboard pr-2"></i>Changelog</a>
+										<a class="nav-link{% if request.path.endswith('/changelog') %} active{% endif %}" href="/changelog">
+											<i class="fas fa-clipboard pr-2"></i>Changelog
+										</a>
 									</li>
 								</ul>
 							</div>
