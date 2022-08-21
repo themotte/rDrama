@@ -104,7 +104,7 @@
 				{% else %}<pre></pre>
 				{% endif %}
 				
-				{% if v.admin_level >= 2 %}
+				{% if v and v.admin_level >= 2 %}
 					<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Upvoters</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Downvoters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Upvoted</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Downvoted</a></div>
 				{% endif %}
 
@@ -167,7 +167,7 @@
 
 						<a class="btn btn-primary" role="button" onclick="post_toast(this,'/@{{u.username}}/suicide')">Get them help</a>
 
-						{% if v.admin_level > 2 %}
+						{% if v and v.admin_level > 2 %}
 							<a id="admin" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2(this,'/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
 
 							<a id="unadmin" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2(this,'/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
@@ -255,7 +255,7 @@
 
 						<pre></pre>
 						
-						{% if v.admin_level > 2 %}
+						{% if v and v.admin_level > 2 %}
 							<a id="verify" class="{% if u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2(this,'/admin/verify/{{u.id}}','verify','unverify')">Verify</a>
 							<a id="unverify" class="{% if not u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2(this,'/admin/unverify/{{u.id}}','verify','unverify')">Unverify</a>
 						{% endif %}
@@ -365,7 +365,7 @@
 					<pre></pre>
 				{% endif %}
 
-				{% if v.admin_level >= 2 %}
+				{% if v and v.admin_level >= 2 %}
 					<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Upvoters</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Downvoters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Upvoted</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Downvoted</a></div>
 				{% endif %}
 
@@ -442,7 +442,7 @@
 					<a class="btn btn-primary" role="button" onclick="toggleElement('message-mobile', 'input-message-mobile')">Message</a>
 					<a class="btn btn-primary" role="button" onclick="post_toast(this,'/@{{u.username}}/suicide')">Get them help</a>
 
-					{% if v.admin_level > 2 %} 
+					{% if v and v.admin_level > 2 %} 
 						<a id="admin2" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2(this,'/@{{u.username}}/make_admin','admin2','unadmin2')">Make admin</a>
 
 						<a id="unadmin2" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2(this,'/@{{u.username}}/remove_admin','admin2','unadmin2')">Remove admin</a>
@@ -471,7 +471,7 @@
 
 					<div id="message-preview-mobile" class="preview my-3"></div>
 
-					{% if v.admin_level > 1 %}
+					{% if v and v.admin_level > 1 %}
 
 					<button id="grant" class="{% if u.paid_dues %}d-none{% endif %} btn btn-success" onclick="post_toast2(this,'/@{{u.username}}/club_allow','grant','bar')">Grant club access</button>
 					<button id="bar" class="{% if u.club_allowed == False %}d-none{% endif %} btn btn-danger" onclick="post_toast2(this,'/@{{u.username}}/club_ban','grant','bar')">Bar from club</button>
@@ -528,7 +528,7 @@
 
 						<pre></pre>
 
-						{% if v.admin_level > 2 %}
+						{% if v and v.admin_level > 2 %}
 							<a id="verify2" class="{% if u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2(this,'/admin/verify/{{u.id}}','verify2','unverify2')">Verify</a>
 							<a id="unverify2" class="{% if not u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2(this,'/admin/unverify/{{u.id}}','verify2','unverify2')">Unverify</a>
 						{% endif %}
