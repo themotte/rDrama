@@ -162,9 +162,19 @@
 	</script>
 {% endif %}
 
-{% if request.path == '/' and g.timestamp > session.get('tooltip_last_dismissed',0)+60*60*24*30 and not g.webview %}
+{% if request.path in ('/','/logged_out') and g.timestamp > session.get('tooltip_last_dismissed',0)+60*60*24*30 and not g.webview %}
+	<style>
+		.beg-icon {
+			color: #919191;
+			float: left;
+			font-size: 10px;
+			margin-top: 0.25rem;
+			margin-right: 0.25rem;
+		}
+	</style>
+
 	<div id="mobile-prompt-container" class="fixed-top">
-		<div id="mobile-prompt" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-container="#mobile-prompt-container" data-bs-placement="top" data-bs-trigger="click" data-bs-original-title="Install the {{SITE_TITLE}} webapp by saving this page to your home screen!"></div>
+		<div id="mobile-prompt" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-container="#mobile-prompt-container" data-bs-placement="top" data-bs-trigger="click" data-bs-html="true" data-bs-original-title="<i class='beg-icon fas fa-x'></i>Install the {{SITE_TITLE}} webapp by saving this page to your home screen!"></div>
 	</div>
 
 	<script>
