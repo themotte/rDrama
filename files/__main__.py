@@ -27,7 +27,6 @@ faulthandler.enable()
 
 app.config["SITE_ID"]=environ.get("SITE_ID").strip()
 app.config["SITE_TITLE"]=environ.get("SITE_TITLE").strip()
-app.config["GUMROAD_LINK"]=environ.get("GUMROAD_LINK", "https://marsey1.gumroad.com/l/tfcvri").strip()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get("DATABASE_URL", "postgresql://postgres@localhost:5432")
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
