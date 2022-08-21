@@ -13,9 +13,6 @@ from files.helpers.discord import add_role
 from shutil import copyfile
 import requests
 
-GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
-GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
-
 tiers={
 	"(Paypig)": 1,
 	"(Renthog)": 2,
@@ -365,48 +362,6 @@ def themecolor(v):
 	g.db.add(v)
 	g.db.commit()
 	return redirect("/settings/profile")
-
-@app.post("/settings/gumroad")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
-def gumroad(v):
-	if not (v.email and v.is_activated):
-		return {"error": f"You must have a verified email to verify {patron} status and claim your rewards"}, 400
-
-	data = {'access_token': GUMROAD_TOKEN, 'email': v.email}
-	response = requests.get('https://api.gumroad.com/v2/sales', data=data, timeout=5).json()["sales"]
-
-	if len(response) == 0: return {"error": "Email not found"}, 404
-
-	response = response[0]
-	tier = tiers[response["variants_and_quantity"]]
-	if v.patron == tier: return {"error": f"{patron} rewards already claimed"}, 400
-
-	procoins = procoins_li[tier] - procoins_li[v.patron]
-	if procoins < 0: return {"error": f"{patron} rewards already claimed"}, 400
-
-	existing = g.db.query(User.id).filter(User.email == v.email, User.is_activated == True, User.patron >= tier).one_or_none()
-	if existing: return {"error": f"{patron} rewards already claimed on another account"}, 400
-
-	v.patron = tier
-	if v.discord_id: add_role(v, f"{tier}")
-
-	v.procoins += procoins
-	send_repeatable_notification(v.id, f"You have received {procoins} Marseybux! You can use them to buy awards in the [shop](/shop).")
-
-	if v.patron > 1 and v.verified == None: v.verified = "Verified"
-
-	g.db.add(v)
-
-	if not v.has_badge(20+tier):
-		new_badge = Badge(badge_id=20+tier, user_id=v.id)
-		g.db.add(new_badge)
-		g.db.flush()
-		send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-	
-	g.db.commit()
-
-	return {"message": f"{patron} rewards claimed!"}
 
 @app.post("/settings/titlecolor")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")

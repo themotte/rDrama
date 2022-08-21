@@ -18,9 +18,6 @@ from datetime import datetime
 import requests
 from urllib.parse import quote, urlencode
 
-GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
-GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
-
 month = datetime.now().strftime('%B')
 
 
@@ -409,38 +406,6 @@ def remove_meme_admin(v, username):
 
 	g.db.commit()
 	return {"message": "Meme admin removed!"}
-
-
-@app.post("/admin/monthly")
-@limiter.limit("1/day")
-@admin_level_required(3)
-def monthly(v):
-	data = {'access_token': GUMROAD_TOKEN}
-
-	emails = [x['email'] for x in requests.get(f'https://api.gumroad.com/v2/products/{GUMROAD_ID}/subscribers', data=data, timeout=5).json()["subscribers"]]
-
-	for u in g.db.query(User).filter(User.patron > 0, User.patron_utc == 0).all():
-		if u.patron > 4 or u.email and u.email.lower() in emails:
-			procoins = procoins_li[u.patron]
-			u.procoins += procoins
-			g.db.add(u)
-			send_repeatable_notification(u.id, f"@{v.username} has given you {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
-		elif u.patron == 1 and u.admin_level > 0:
-			procoins = 2500
-			u.procoins += procoins
-			g.db.add(u)
-			send_repeatable_notification(u.id, f"@{v.username} has given you {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
-		else: print(u.username)
-
-	ma = ModAction(
-		kind="monthly",
-		user_id=v.id
-	)
-	g.db.add(ma)
-
-	g.db.commit()
-	
-	return {"message": "Monthly coins granted"}
 
 
 @app.get("/admin/shadowbanned")
