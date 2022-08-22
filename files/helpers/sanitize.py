@@ -71,7 +71,9 @@ def allowed_attributes(tag, name, value):
 url_re = build_url_re(tlds=TLDS, protocols=['http', 'https'])
 
 def callback(attrs, new=False):
-	href = attrs[(None, "href")]
+	href = attrs.get((None, "href"), None)
+	if href == None:
+		return attrs
 
 	if not href.startswith('/') and not href.startswith(f'{SITE_FULL}/'):
 		attrs[(None, "target")] = "_blank"
