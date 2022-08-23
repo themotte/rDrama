@@ -6,12 +6,16 @@
 
 	--primary-dark1: #165476;
 	--primary-dark2: #134662;
+	--primary-dark3: #1d323d;
 
 	--primary-light1: #2280B3;
 	--primary-light2: #2F9CD7;
 
-	--dark: #c7c7c7;
+	--primary-muted: #95a9b4;
+
+	--dark: #686868;
 	--secondary: #c7c7c7;
+	--tertiary: #e0e0e0;
 	--gray: #c7c7c7;
 	--gray-300: #c7c7c7;
 	--gray-400: #cfcfcf;
@@ -21,12 +25,13 @@
 	--gray-800: #ffffff;
 	--gray-900: #ffffff;
 	--light: #ffffff;
-	--muted: #1e1e1e;
+	--muted: #9e9d9d;
 	--gray-100: #1e1e1e;
 	--gray-200: #1e1e1e;
 	--white: #1e1e1e;
 	--black: #303030;
 	--background: #ffffff;
+	--background-odd: #fafafa;
 }
 
 * {
@@ -166,7 +171,8 @@ div.deleted.banned {
 #search .post-info,
 #userpage .post-info,
 #frontpage .post-info {
-	display:flex;
+	display: flex;
+	flex-wrap: wrap;
 }
 #search .post-actions,
 #userpage .post-actions,

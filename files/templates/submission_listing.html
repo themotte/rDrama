@@ -49,415 +49,363 @@
 {% include 'usernote.html' %}
 
 {% for p in listing %}
+<div class="card-container">
 
-{% set ups=p.upvotes %}
-{% set downs=p.downvotes %}
-{% set score=ups-downs %}
+	{% set ups=p.upvotes %}
+	{% set downs=p.downvotes %}
+	{% set score=ups-downs %}
 
-{% if v %}
-	{% set voted= p.voted %}
-{% else %}
-	{% set voted=-2 %}
-{% endif %}
+	{% if v %}
+		{% set voted= p.voted %}
+	{% else %}
+		{% set voted=-2 %}
+	{% endif %}
 
-{% if v and p.filter_state == 'reported' and v.can_manage_reports() %}
-	<div id="flaggers-{{p.id}}" class="flaggers d-none">
-		<strong><i class="far fa-fw fa-flag"></i> Reports:</strong>
-		<a class="btn btn-primary" style="margin:1px 5px" onclick="filter_new_status({{p.id}}, 'normal')">Approve</a>
-		<a class="btn btn-secondary" style="margin:1px 5px" onclick="filter_new_status({{p.id}}, 'ignored')">Approve and Ignore</a>
-		<a class="btn btn-danger" style="margin:1px 5px" onclick="filter_new_status({{p.id}}, 'removed')">Remove</a>
-		<pre></pre>
-		<ul style="padding-left:20px; margin-bottom: 0;word-wrap:break-word">
-			{% for f in p.flags(v) %}
-				<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %}</li>
-			{% endfor %}
-		</ul>
-	</div>
-{% endif %}
+	{% if v and p.filter_state == 'reported' and v.can_manage_reports() %}
+		<div id="flaggers-{{p.id}}" class="flaggers d-none">
+			<strong><i class="far fa-fw fa-flag"></i> Reports:</strong>
+			<a class="btn btn-primary" style="margin:1px 5px" onclick="filter_new_status({{p.id}}, 'normal')">Approve</a>
+			<a class="btn btn-secondary" style="margin:1px 5px" onclick="filter_new_status({{p.id}}, 'ignored')">Approve and Ignore</a>
+			<a class="btn btn-danger" style="margin:1px 5px" onclick="filter_new_status({{p.id}}, 'removed')">Remove</a>
+			<pre></pre>
+			<ul style="padding-left:20px; margin-bottom: 0;word-wrap:break-word">
+				{% for f in p.flags(v) %}
+					<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %}</li>
+				{% endfor %}
+			</ul>
+		</div>
+	{% endif %}
 
-<div id="post-{{p.id}}" class="card{% if p.is_banned %} banned{% endif %}{% if p.deleted_utc %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}">
+	<div id="post-{{p.id}}" class="card{% if p.is_banned %} banned{% endif %}{% if p.deleted_utc %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}">
 
-	<div class="d-flex flex-row-reverse flex-md-row flex-nowrap justify-content-end">
+		<div class="d-flex flex-row flex-nowrap justify-content-end align-items-center">
 
-		{% if not postembed %}
-			<div class="voting my-2 d-none d-md-block pr-2">
-				{% if v and request.path.startswith('/@') and v.admin_level < 2 %}
+			{% if not postembed %}
+				<div class="voting my-0 my-md-2 d-block pr-2">
+					{% if v and request.path.startswith('/@') and v.admin_level < 2 %}
 
-					{% if voted==1 %}
-					<div class="mx-auto arrow-up post-{{p.id}}-up active"></div>
-					{% endif %}
+						{% if voted==1 %}
+						<div class="mx-auto arrow-up post-{{p.id}}-up active"></div>
+						{% endif %}
+
+						<span class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+
+						{% if voted==-1 %}
+							<div class="text-muted mx-auto arrow-down post-{{p.id}}-down active"></div>
+						{% endif %}
+
+					{% elif v %}
+
+					<div tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1', '{{v.id}}')" class="post-{{p.id}}-up mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
 
 					<span class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-					{% if voted==-1 %}
-						<div class="text-muted mx-auto arrow-down post-{{p.id}}-down active"></div>
+					<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1', '{{v.id}}')" class="post-{{p.id}}-down text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
+
+					{% else %}
+
+					<div tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1', '{{v.id}}')" class="post-{{p.id}}-up mx-auto arrow-up" onclick="location.href='/login';"></div>
+
+					<span class="post-{{p.id}}-score-none score{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+
+					<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1', '{{v.id}}')" class="post-{{p.id}}-down text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
+
 					{% endif %}
 
-				{% elif v %}
+				</div>
+			{% endif %}
 
-				<div tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1', '{{v.id}}')" class="post-{{p.id}}-up mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
+			<div class="card-header bg-transparent border-0 d-flex flex-row flex-nowrap p-0 mr-3">
 
-				<span class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+				<div style="z-index: 3;">
+					{% if not p.url %}
+						<a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}">
+							<img alt="post thumbnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
+						</a>
+					{% elif p.is_image %}
+						<img role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" onclick="expandDesktopImage('{{p.realurl(v)}}')" alt="post thumbnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
+					{% elif p.is_video %}
+						<a role="button" onclick="togglevideo({{p.id}})">
+							<img alt="post thumbnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
+						</a>
+					{% elif p.is_youtube %}
+						<a role="button" onclick="document.getElementById('video-{{p.id}}').classList.toggle('d-none')">
+							<img alt="post thumbnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
+						</a>
+					{% else %}
+						<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
+							<img alt="post thumbnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
+						</a>
+					{% endif %}
+				</div>
+			</div>
+			
+			
+			<div class="card-block d-flex flex-column text-left x-scroll-parent my-md-auto w-100">
 
-				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1', '{{v.id}}')" class="post-{{p.id}}-down text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
+				<div class="post-meta text-left mb-md-2">
+					<h5 class="card-title post-title text-left mb-0 pb-0 pb-md-1">
+						<a id="{{p.id}}-title" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}" class="{% if voted and v.id == AEVANN_ID %}visited{% endif %}">
+						{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
+						{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
+						{{p.realtitle(v) | safe}}
+					</a></h5>
 
-				{% else %}
+					{% if p.sub %}
+						<a href='/h/{{p.sub}}'>/h/{{p.sub}}</a>&nbsp;&nbsp;
+					{% endif %}
 
-				<div tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1', '{{v.id}}')" class="post-{{p.id}}-up mx-auto arrow-up" onclick="location.href='/login';"></div>
+					{% if p.sub and p.author.exiled_from(p.sub) %}
+						<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User has been exiled from /h/{{p.sub}}"></i></a>
+					{% endif %}
+				</div>
 
-				<span class="post-{{p.id}}-score-none score{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+				<div class="post-info text-left">
+					<div class="post-author">
+						<span class="post-traffic-info d-none d-md-inline-block">{{p.comment_count}} comments - {{p.views}} thread views</span>
 
-				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1', '{{v.id}}')" class="post-{{p.id}}-down text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
+						{% if p.bannedfor %}
+							<a role="button"><i class="fas fa-hammer-crash text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this post{% if p.author.banned_by %} by @{{p.author.banned_by.username}}{% endif %}"></i></a>
+						{% endif %}
 
+						{% for a in p.awards|reverse %}
+							<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
+						{% endfor %}
+
+						{% if v and v.admin_level > 1 and p.author.shadowbanned %}
+							<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{p.author.shadowbanned}}"></i>
+						{% endif %}
+
+						{% if p.stickied %}
+							<i id='pinned-{{p.id}}' class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned by @{{p.stickied}}" {% if p.stickied_utc %}onmouseover="pinned_timestamp('pinned-{{p.id}}')" data-timestamp={{p.stickied_utc}} {% endif %}></i>
+						{% endif %}
+
+						{% if p.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{SITE_TITLE}} Admin, speaking officially"></i>{% endif %}
+						{% if p.is_pinned and request.path.startswith('/@') %}<i class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned to profile"></i>{% endif %}
+						{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
+						{% if p.is_bot %} <i class="fas fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom"	title="Bot"></i>{% endif %}
+						{% if p.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You're blocking this user, but you can see this post because you're an admin."></i>{% endif %}
+						{% if p.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="This user is blocking you."></i>{% endif %}
+						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
+						{% if v and p.filter_state == 'reported' and v.can_manage_reports() %}
+						<a class="btn btn-primary" id="report-btn-{{p.id}}" role="button" style="padding:1px 5px; font-size:10px"onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags(v)}} Reports</a>
+						{% endif %}
+							
+
+						<span>
+							<span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('timestamp-{{p.id}}','{{p.created_utc}}')" id="timestamp-{{p.id}}">{{p.age_string}} by </span>
+
+							{% if not p.author %}
+								{{p.print()}}
+							{% endif %}
+
+							{% if p.ghost %}
+								👻
+							{% else %}
+
+								{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if p.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{p.author.verified}}"></i>
+								{% endif %}
+								<a href="/@{{p.author_name}}" 
+									class="user-name" 
+
+									data-bs-placement="bottom" 
+									data-bs-toggle="popover" 
+									data-bs-trigger="click" 
+									data-content-id="popover" 
+									role="button" 
+									tabindex="0" 
+									style="font-weight: bold;">
+										<span 
+											{% if p.author.patron and not p.distinguish_level %}
+												class="patron" 
+												style="background-color:#{{p.author.namecolor}};"
+											{% elif p.distinguish_level %}
+												class="mod"
+											{% endif %}>{{p.author_name}}</span>
+								</a>{% if p.author.customtitle %}<bdi style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
+								{% if v and v.admin_level > 2 %}
+									<span 
+										class="usernote-link" 
+										data-micromodal-trigger="modal-1" 
+										onclick='fillnote( {{p.author.json_popover(v) | tojson}}, {{p.id}}, null )'>_U_</span>
+								{% endif %}
+							{% endif %}
+						</span>
+						
+						<span>
+							({% if p.is_image %}image post{% elif p.is_video %}video post{% elif p.domain %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" class="post-meta-domain" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>{{p.domain|truncate(35, True)}}</a>{% else %}text post{% endif %})
+						</span>
+
+						{% if p.edited_utc %}
+							<span>Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp-{{p.id}}" onmouseover="timestamp('edited_timestamp-{{p.id}}','{{p.edited_utc}}')">{{p.edited_string}}</span></span>
+						{% endif %}
+					</div>
+					<div class="post-actions d-none d-md-block">
+						<ul class="list-inline text-right d-flex">
+							{% if p.realbody(v) %}
+								<a class="list-inline-item" role="button" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
+							{% endif %}
+							{% include 'post_actions.html' %}
+						</ul>
+					</div>
+				</div>
+
+				<div class="card-footer d-md-none mt-auto {% if request.path == '/changelog' %}px-0{% endif %}">
+					<div class="post-actions">
+						<ul class="list-inline text-right d-flex">
+							<li class="list-inline-item mr-auto">
+								<a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}">
+									<i class="fas fa-comment-dots mobile-comment-link"></i>{{p.comment_count}}
+									<span class="text-info d-none {{p.id}}-new-comments"></span>
+								</a>
+			
+								{% if v and v.admin_level > 1 %}
+									<a class="ml-2" role="button" data-bs-toggle="modal" data-bs-target="#adminModal-{{p.id}}">
+										<i class="fas fa-broom"></i>
+									</a>
+								{% endif %}
+			
+							</li>
+							
+							{% if p.realbody(v) and request.path != "/changelog"%}
+								<a class="list-inline-item" role="button" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
+							{% endif %}
+			
+							{% if v %}
+								<li class="list-inline-item">
+									<a role="button" data-bs-toggle="modal" data-bs-target="#actionsModal-{{p.id}}">
+										<i class="fas fa-ellipsis-h"></i>
+									</a>
+								</li>
+							{% endif %}
+						</ul>
+					</div>
+				</div>
+			
+				{% if v %}
+					<div class="modal fade d-md-none" id="actionsModal-{{p.id}}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered" role="document">
+							<div class="modal-content">
+								<div class="modal-header p-3">
+									<h5 class="col modal-title text-center h6">More options</h5>
+									<button class="close position-absolute py-3" style="right: 1rem"data-bs-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true"><i class="fas fa-times-circle text-gray-500"></i></span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<ul class="list-group post-actions">
+										{% include "post_actions_mobile.html" %}
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
 				{% endif %}
+			</div>
+		</div>
+	</div>
 
+	<script>
+		{% if not v or v.highlightcomments %}
+			showNewCommentCounts({{p.id}}, {{p.comment_count}})
+		{% endif %}
+	</script>
+
+
+	{% if v and v.admin_level > 1 %}
+		{% include "post_admin_actions_mobile.html" %}
+	{% endif %}
+
+
+	{% if not p.club or v and (v.paid_dues or v.id == p.author_id) %}
+		{% if p.realbody(v) %}
+			<div class="d-none card rounded border pt-3 pb-2 my-2" id="post-text-{{p.id}}">
+				{{p.realbody(v) | safe}}
 			</div>
 		{% endif %}
 
-		<div class="card-header bg-transparent border-0 d-flex flex-row flex-nowrap pl-2 pl-md-0 p-0 mr-md-2">
-
-			<div style="z-index: 3;">
-				{% if not p.url %}
-					<a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}">
-						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
-					</a>
-				{% elif p.is_image %}
-					<img role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" onclick="expandDesktopImage('{{p.realurl(v)}}')" alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
-				{% elif p.is_video %}
-					<a role="button" onclick="togglevideo({{p.id}})">
-						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
-					</a>
-				{% elif p.is_youtube %}
-					<a role="button" onclick="document.getElementById('video-{{p.id}}').classList.toggle('d-none')">
-						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
-					</a>
-				{% else %}
-					<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
-						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
-					</a>
-				{% endif %}
-			</div>
-
-
-		</div>
-		 
-		 
-		<div class="card-block text-left x-scroll-parent my-md-auto w-100">
-
-			<div class="post-meta text-left x-scroll mb-md-2">
-				<h5 class="card-title post-title text-left mb-0 pb-0 pb-md-1">
-					<a id="{{p.id}}-title" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}" class="{% if voted and v.id == AEVANN_ID %}visited{% endif %}">
-					{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
-					{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
-					{{p.realtitle(v) | safe}}
-				</a></h5>
-
-				{% if p.sub %}
-					<a href='/h/{{p.sub}}'>/h/{{p.sub}}</a>&nbsp;&nbsp;
-				{% endif %}
-
-				{% if p.sub and p.author.exiled_from(p.sub) %}
-					<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User has been exiled from /h/{{p.sub}}"></i></a>
-				{% endif %}
-			</div>
-
-			<div class="post-info text-left">
-				<div class="post-author x-scroll">
-					{% if p.bannedfor %}
-						<a role="button"><i class="fas fa-hammer-crash text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this post{% if p.author.banned_by %} by @{{p.author.banned_by.username}}{% endif %}"></i></a>
-					{% endif %}
-
-					{% for a in p.awards|reverse %}
-						<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
-					{% endfor %}
-
-					{% if v and v.admin_level > 1 and p.author.shadowbanned %}
-						<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{p.author.shadowbanned}}"></i>
-					{% endif %}
-
-					{% if p.stickied %}
-						<i id='pinned-{{p.id}}' class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned by @{{p.stickied}}" {% if p.stickied_utc %}onmouseover="pinned_timestamp('pinned-{{p.id}}')" data-timestamp={{p.stickied_utc}} {% endif %}></i>
-					{% endif %}
-
-					{% if p.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{SITE_TITLE}} Admin, speaking officially"></i>{% endif %}
-					{% if p.is_pinned and request.path.startswith('/@') %}<i class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned to profile"></i>{% endif %}
-					{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
-					{% if p.is_bot %} <i class="fas fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom"	title="Bot"></i>{% endif %}
-					{% if p.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You're blocking this user, but you can see this post because you're an admin."></i>{% endif %}
-					{% if p.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="This user is blocking you."></i>{% endif %}
-					{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
-					{% if v and p.filter_state == 'reported' and v.can_manage_reports() %}
-					<a class="btn btn-primary" id="report-btn-{{p.id}}" role="button" style="padding:1px 5px; font-size:10px"onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags(v)}} Reports</a>
-					{% endif %}
-						
-
-					<span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('timestamp-{{p.id}}','{{p.created_utc}}')" id="timestamp-{{p.id}}">&nbsp;{{p.age_string}} by </span>
-
-					{% if not p.author %}
-						{{p.print()}}
-					{% endif %}
-
-					{% if p.ghost %}
-						👻
-					{% else %}
-
-						{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if p.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{p.author.verified}}"></i>
-						{% endif %}
-						<a href="/@{{p.author_name}}" 
-							class="user-name text-decoration-none" 
-
-							data-bs-placement="bottom" 
-							data-bs-toggle="popover" 
-							data-bs-trigger="click" 
-							data-content-id="popover" 
-							role="button" 
-							tabindex="0" 
-							style="color: var(--primary-light1); font-weight: bold;">
-								<span 
-									{% if p.author.patron and not p.distinguish_level %}
-										class="patron" 
-										style="background-color:#{{p.author.namecolor}};"
-									{% elif p.distinguish_level %}
-										class="mod"
-									{% endif %}>{{p.author_name}}</span>
-						</a>{% if p.author.customtitle %}<bdi style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
-						{% if v and v.admin_level > 2 %}
-							<span 
-								class="usernote-link" 
-								data-micromodal-trigger="modal-1" 
-								onclick='fillnote( {{p.author.json_popover(v) | tojson}}, {{p.id}}, null )'>_U_</span>
-						{% endif %}
-					{% endif %}
-					
-					&nbsp;
-					({% if p.is_image %}image post{% elif p.is_video %}video post{% elif p.domain %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" class="post-meta-domain" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>{{p.domain|truncate(35, True)}}</a>{% else %}text post{% endif %})
-					{% if p.edited_utc %}
-						&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp-{{p.id}}" onmouseover="timestamp('edited_timestamp-{{p.id}}','{{p.edited_utc}}')">{{p.edited_string}}</span>
-					{% endif %}
-					&nbsp;&nbsp;{{p.views}} thread views
-				</div>
-				<div class="post-actions d-none d-md-block">
-					<ul class="list-inline text-right d-flex">
-						{% if p.realbody(v) %}
-							<a class="list-inline-item" role="button" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
-						{% endif %}
-						<li class="list-inline-item">
-							<a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}">
-								<i class="fas fa-comment-dots"></i>{{p.comment_count}}
-								<span class="text-info d-none {{p.id}}-new-comments"></span>
-							</a>
-						</li>
-						{% include 'post_actions.html' %}
-					</ul>
-				</div>
-			</div>
-	</div>
-</div>
-
-<div class="card-footer d-md-none mt-2 {% if request.path == '/changelog' %}px-0{% endif %}">
-	<div class="post-actions">
-		<ul class="list-inline text-right d-flex">
-			<li class="list-inline-item mr-auto">
-				<a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}">
-					<i class="fas fa-comment-dots"></i>{{p.comment_count}}
-					<span class="text-info d-none {{p.id}}-new-comments"></span>
+		{% if p.is_image and not p.over_18 and ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}
+			<div style="text-align: center" class="mt-3 mb-4">
+				<a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
+					<img loading="lazy" data-src="{{p.realurl(v)}}" src="/assets/images/loading.webp" class="img-fluid" style="max-height:20rem" alt="Unable to load image">
 				</a>
-
-				{% if v and v.admin_level > 1 %}
-					<a class="ml-2" role="button" data-bs-toggle="modal" data-bs-target="#adminModal-{{p.id}}">
-						<i class="fas fa-broom"></i>
-					</a>
-				{% endif %}
-
-			</li>
-			
-			{% if p.realbody(v) and request.path != "/changelog"%}
-				<a class="list-inline-item" role="button" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
-			{% endif %}
-
-			{% if v %}
-				<li class="list-inline-item">
-					<a role="button" data-bs-toggle="modal" data-bs-target="#actionsModal-{{p.id}}">
-						<i class="fas fa-ellipsis-h"></i>
-					</a>
-				</li>
-			{% endif %}
-			{% if not postembed %}
-				{% if v and request.path.startswith('/@') and v.admin_level < 2 %}
-				<li id="voting-{{p.id}}-mobile" class="voting list-inline-item d-md-none">
-
-					{% if voted==1 %}
-					<span class="mr-2 arrow-up post-{{p.id}}-up active">
-					</span>
-					{% endif %}
-
-					<span class="post-mobile-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
-
-					{% if voted==-1 %}
-						<span class="ml-2 my-0 arrow-down post-{{p.id}}-down active"></span>
-					{% endif %}
-
-
-				</li>
-				{% elif v %}
-				<li id="voting-{{p.id}}-mobile" class="voting list-inline-item d-md-none">
-
-					<span tabindex="0" role="button" onclick="vote('post-mobile', '{{p.id}}', '1', '{{v.id}}')" class="post-mobile-{{p.id}}-up mx-0 pr-1 arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}">
-					</span>
-
-					<span class="post-mobile-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
-
-					<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('post-mobile', '{{p.id}}', '-1', '{{v.id}}')" class="post-mobile-{{p.id}}-down mx-0 pl-1 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}">
-					</span>
-
-				</li>
-				{% else %}
-				<li id="voting-{{p.id}}-mobile" class="voting list-inline-item d-md-none">
-					<span tabindex="0" class="arrow-{{p.id}}-mobile-up mx-0 pr-1 arrow-mobile-up" onclick="location.href='/login';">
-						<i class="fas fa-arrow-alt-up mx-0" aria-hidden="true"></i>
-					</span>
-
-					<span class="post-mobile-score-{{p.id}} score{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
-
-					<span tabindex="0" class="arrow-{{p.id}}-mobile-down arrow-mobile-down mx-0 pl-1 my-0" onclick="location.href='/login';">
-						<i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
-					</span>
-				</li>
-				{% endif %}
-			{% endif %}
-		</ul>
-	</div>
-</div>
-
-{% if v %}
-	<div class="modal fade d-md-none" id="actionsModal-{{p.id}}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header p-3">
-					<h5 class="col modal-title text-center h6">More options</h5>
-					<button class="close position-absolute py-3" style="right: 1rem"data-bs-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true"><i class="fas fa-times-circle text-gray-500"></i></span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<ul class="list-group post-actions">
-						{% include "post_actions_mobile.html" %}
-					</ul>
-				</div>
 			</div>
-		</div>
+		{% elif p.is_video %}
+			<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-4">
+				<video id="video2-{{p.id}}" controls preload="none" class="vid">
+					<source src="{{p.realurl(v)}}" type="video/mp4">
+				</video>
+			</div>
+		{% elif p.is_youtube %}
+			<div id="video-{{p.id}}" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-3 mb-4 youtube_embed">
+				{{p.embed_url | safe}}
+			</div>
+		{% endif %}
+	{% endif %}
+
+</div>
+{% else %}
+
+	{% if request.path.endswith('/admin/queue') %}
+
+	<div class="row no-gutters">	
+		<div class="col">			
+			<div class="text-center py-7">
+				<div class="h4 p-2">This queue is empty. (That's a good thing.)</div>
+			</div>			
+		</div>	
 	</div>
-{% endif %}
-
-<script>
-	{% if not v or v.highlightcomments %}
-		showNewCommentCounts({{p.id}}, {{p.comment_count}})
-	{% endif %}
-</script>
 
 
-{% if v and v.admin_level > 1 %}
-	{% include "post_admin_actions_mobile.html" %}
-{% endif %}
+	{% elif u %}
+		{% if v and v.id == u.id %}
+		<div class="row no-gutters">	
+			<div class="col">			
+				<div class="text-center px-3 my-3">
+					<span class="fa-stack fa-2x text-muted mb-4">
+						<i class="fas fa-square text-gray-500 opacity-25 fa-stack-2x"></i>
+						<i class="fas text-gray-500 fa-ghost fa-stack-1x text-lg"></i>
+					</span>
+					<h2 class="h5">You haven't {% if "saved" in request.full_path %}saved{% else %}made{% endif %} a post yet</h2>
+					<p class="text-muted mb-md-5">Your {% if "saved" in request.full_path %}saved posts{% else %}posting history{% endif %} will show here.</p>
+					{% if "saved" not in request.full_path %}<a href="{% if sub %}/h/{{sub.name}}{% endif %}/submit" class="btn btn-primary">Create a post</a>{% endif %}
+				</div>			
+			</div>	
+		</div>
 
 
+		{% else %}
+		<div class="row no-gutters">	
+			<div class="col">			
+				<div class="text-center px-3 my-3">
+					<span class="fa-stack fa-2x text-muted mb-4">
+						<i class="fas fa-square text-gray-500 opacity-25 fa-stack-2x"></i>
+						<i class="fas text-gray-500 fa-scroll-old fa-stack-1x text-lg"></i>
+					</span>
+					<h2 class="h5">@{{u.username}} hasn't made a post yet</h2>
+					<p class="text-muted">Their posting history will show here.</p>
+					<pre>
+					</pre>
+				</div>			
+			</div>	
+		</div>
+		{% endif %}
 
-
-
-
-</div>
-
-{% if not p.club or v and (v.paid_dues or v.id == p.author_id) %}
-	{% if p.realbody(v) %}
-		<div class="d-none card rounded border pt-3 pb-2 my-2" id="post-text-{{p.id}}">
-			{{p.realbody(v) | safe}}
+	{% else %}
+		<div class="row no-gutters">	
+			<div class="col">			
+				<div class="text-center px-3 my-3">
+					<span class="fa-stack fa-2x text-muted mb-4">
+						<i class="fas fa-square text-gray-500 opacity-25 fa-stack-2x"></i>
+						<i class="fas text-gray-500 fa-ghost fa-stack-1x text-lg"></i>
+					</span>
+					{% if request.path.startswith('/search') and error %}
+						<h2 class="h5">{{error}}</h2>
+					{% endif %}
+				</div>			
+			</div>	
 		</div>
 	{% endif %}
-
-	{% if p.is_image and not p.over_18 and ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}
-		<div style="text-align: center" class="mt-3 mb-4">
-			<a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
-				<img loading="lazy" data-src="{{p.realurl(v)}}" src="/assets/images/loading.webp" class="img-fluid" style="max-height:20rem" alt="Unable to load image">
-			</a>
-		</div>
-	{% elif p.is_video %}
-		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-4">
-			<video id="video2-{{p.id}}" controls preload="none" class="vid">
-				<source src="{{p.realurl(v)}}" type="video/mp4">
-			</video>
-		</div>
-	{% elif p.is_youtube %}
-		<div id="video-{{p.id}}" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-3 mb-4 youtube_embed">
-			{{p.embed_url | safe}}
-		</div>
-	{% endif %}
-{% endif %}
-
-{% else %}
-
-{% if request.path.endswith('/admin/queue') %}
-
-<div class="row no-gutters">	
-	<div class="col">			
-		<div class="text-center py-7">
-			<div class="h4 p-2">This queue is empty. (That's a good thing.)</div>
-		</div>			
-	</div>	
-</div>
-
-
-{% elif u %}
-{% if v and v.id == u.id %}
-<div class="row no-gutters">	
-	<div class="col">			
-		<div class="text-center px-3 my-3">
-			<span class="fa-stack fa-2x text-muted mb-4">
-				<i class="fas fa-square text-gray-500 opacity-25 fa-stack-2x"></i>
-				<i class="fas text-gray-500 fa-ghost fa-stack-1x text-lg"></i>
-			</span>
-			<h2 class="h5">You haven't {% if "saved" in request.full_path %}saved{% else %}made{% endif %} a post yet</h2>
-			<p class="text-muted mb-md-5">Your {% if "saved" in request.full_path %}saved posts{% else %}posting history{% endif %} will show here.</p>
-			{% if "saved" not in request.full_path %}<a href="{% if sub %}/h/{{sub.name}}{% endif %}/submit" class="btn btn-primary">Create a post</a>{% endif %}
-		</div>			
-	</div>	
-</div>
-
-
-{% else %}
-<div class="row no-gutters">	
-	<div class="col">			
-		<div class="text-center px-3 my-3">
-			<span class="fa-stack fa-2x text-muted mb-4">
-				<i class="fas fa-square text-gray-500 opacity-25 fa-stack-2x"></i>
-				<i class="fas text-gray-500 fa-scroll-old fa-stack-1x text-lg"></i>
-			</span>
-			<h2 class="h5">@{{u.username}} hasn't made a post yet</h2>
-			<p class="text-muted">Their posting history will show here.</p>
-			<pre>
-			</pre>
-		</div>			
-	</div>	
-</div>
-{% endif %}
-
-{% else %}
-<div class="row no-gutters">	
-	<div class="col">			
-		<div class="text-center px-3 my-3">
-			<span class="fa-stack fa-2x text-muted mb-4">
-				<i class="fas fa-square text-gray-500 opacity-25 fa-stack-2x"></i>
-				<i class="fas text-gray-500 fa-ghost fa-stack-1x text-lg"></i>
-			</span>
-			{% if request.path.startswith('/search') and error %}
-				<h2 class="h5">{{error}}</h2>
-			{% endif %}
-		</div>			
-	</div>	
-</div>
-
-
-{% endif %}
-
 {% endfor %}
 
 {% if v %}
@@ -470,5 +418,5 @@
 {% include "expanded_image_modal.html" %}
 
 <script src="/assets/js/clipboard.js?v=240"></script>
-<script src="/assets/js/comments+submission_listing.js?v=258"></script>
+<script src="/assets/js/comments+submission_listing.js?v=259"></script>
 <script src="/assets/js/submission_listing.js?v=240"></script>

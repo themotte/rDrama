@@ -133,7 +133,7 @@ function send_note() {
 
 document.addEventListener("click", function(){
 	active = document.activeElement.getAttributeNode("class");
-	if (active && active.nodeValue == "user-name text-decoration-none"){
+	if (active && active.nodeValue == "user-name"){
 		pops = document.getElementsByClassName('popover')
 		if (pops.length > 1) pops[0].remove()
 	}
