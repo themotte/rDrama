@@ -6,6 +6,7 @@ from files.helpers.lazy import lazy
 from os import environ
 from copy import deepcopy
 from files.helpers.const import *
+import logging
 
 class ModAction(Base):
 	__tablename__ = "modactions"
@@ -81,11 +82,18 @@ class ModAction(Base):
 	def note(self, x):
 		self._note=x
 
+	def lookup_action_type(self):
+		if self.kind in ACTIONTYPES:
+			return ACTIONTYPES[self.kind]
+		else:
+			logging.warning(f'Unfamiliar ACTIONTYPE {self.kind}')
+			return ACTIONTYPES["fallback"]
+
 	@property
 	@lazy
 	def string(self):
 
-		output =  ACTIONTYPES[self.kind]["str"].format(self=self, cc=CC_TITLE)
+		output = self.lookup_action_type()["str"].format(self=self, cc=CC_TITLE)
 
 		if self.note: output += f" <i>({self.note})</i>"
 
@@ -103,12 +111,12 @@ class ModAction(Base):
 	@property
 	@lazy
 	def icon(self):
-		return ACTIONTYPES[self.kind]['icon']
+		return self.lookup_action_type()['icon']
 
 	@property
 	@lazy
 	def color(self):
-		return ACTIONTYPES[self.kind]['color']
+		return self.lookup_action_type()['color']
 
 	@property
 	@lazy
@@ -176,27 +184,32 @@ ACTIONTYPES = {
 		"icon": 'fa-flag', 
 		"color": 'bg-danger'
 	},
-	'disable_Bots': {
+	'disabled_Bots': {
 		"str": 'disabled Bots', 
 		"icon": 'fa-robot', 
 		"color": 'bg-danger'
 	},
-	'disable_Fart mode': {
+	'disabled_Fart_mode': {
 		"str": 'disabled fart mode', 
 		"icon": 'fa-gas-pump-slash', 
 		"color": 'bg-danger'
 	},
-	'disable_Read-only mode': {
+	'disabled_FilterNewPosts': {
+		"str": 'disabled filter new posts', 
+		"icon": 'fa-filter', 
+		"color": 'bg-danger'
+	},
+	'disabled_Read-only_mode': {
 		"str": 'disabled readonly mode', 
 		"icon": 'fa-book', 
 		"color": 'bg-danger'
 	},
-	'disable_Signups': {
+	'disabled_Signups': {
 		"str": 'disabled Signups', 
 		"icon": 'fa-users', 
 		"color": 'bg-danger'
 	},
-	'disable_under_attack': {
+	'disabled_under_attack': {
 		"str": 'disabled under attack mode', 
 		"icon": 'fa-shield', 
 		"color": 'bg-muted'
@@ -226,27 +239,32 @@ ACTIONTYPES = {
 		"icon": 'fa-edit', 
 		"color": 'bg-primary'
 	},
-	'enable_Bots': {
+	'enabled_Bots': {
 		"str": 'enabled Bots', 
 		"icon": 'fa-robot', 
 		"color": 'bg-success'
 	},
-	'enable_Fart mode': {
+	'enabled_Fart_mode': {
 		"str": 'enabled fart mode', 
 		"icon": 'fa-gas-pump', 
 		"color": 'bg-success'
 	},
-	'enable_Read-only mode': {
+	'enabled_FilterNewPosts': {
+		"str": 'enabled filter new posts', 
+		"icon": 'fa-filter', 
+		"color": 'bg-success'
+	},
+	'enabled_Read-only_mode': {
 		"str": 'enabled readonly mode', 
 		"icon": 'fa-book', 
 		"color": 'bg-success'
 	},
-	'enable_Signups': {
+	'enabled_Signups': {
 		"str": 'enabled Signups', 
 		"icon": 'fa-users', 
 		"color": 'bg-success'
 	},
-	'enable_under_attack': {
+	'enabled_under_attack': {
 		"str": 'enabled under attack mode', 
 		"icon": 'fa-shield', 
 		"color": 'bg-success'
@@ -410,6 +428,12 @@ ACTIONTYPES = {
 		"str": 'unshadowbanned {self.target_link}', 
 		"icon": 'fa-eye', 
 		"color": 'bg-success'
+	},
+
+	'fallback': {
+		"str": 'unfamiliar action type, please report', 
+		"icon": 'fa-robot', 
+		"color": 'bg-muted'
 	}
 }
 
