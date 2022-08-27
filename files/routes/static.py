@@ -9,6 +9,7 @@ import calendar
 import matplotlib.pyplot as plt
 from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
 from files.classes.badges import BadgeDef
+import logging
 
 @app.get('/logged_out/')
 @app.get('/logged_out/<path:old>')
@@ -224,8 +225,13 @@ def log(v):
 
 	kind = request.values.get("kind")
 
-	if v and v.admin_level > 1: types = ACTIONTYPES
-	else: types = ACTIONTYPES2
+	if kind not in ACTIONTYPES:
+		logging.warning(f'Unfamiliar ACTIONTYPE {kind}')
+
+	if v and v.admin_level > 1:
+		types = ACTIONTYPES
+	else:
+		types = ACTIONTYPES2
 
 	if kind not in types: kind = None
 
