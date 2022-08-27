@@ -6,14 +6,14 @@
 {% block content %}
 {% if v %}
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/assets/css/main.css?v=253">
+	<link rel="stylesheet" href="/assets/css/main.css?v=254">
 	<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=59">
 	{% if v.css %}
 		<link rel="stylesheet" href="/@{{v.username}}/css">
 	{% endif %}
 {% else %}
 	<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-	<link rel="stylesheet" href="/assets/css/main.css?v=253">
+	<link rel="stylesheet" href="/assets/css/main.css?v=254">
 	<link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=58">
 {% endif %}
 
