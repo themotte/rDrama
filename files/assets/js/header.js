@@ -63,8 +63,16 @@ function bs_trigger(e) {
 	})
 }
 
-bs_trigger(document)
+var bsTriggerOnReady = function() {
+	bs_trigger(document);
+}
 
+if (document.readyState === "complete" || 
+		(document.readyState !== "loading" && !document.documentElement.doScroll)) {
+	bsTriggerOnReady();
+} else {
+	document.addEventListener("DOMContentLoaded", bsTriggerOnReady);
+}
 
 function expandDesktopImage(image) {
 	document.getElementById("desktop-expanded-image").src = image.replace("200w_d.webp", "giphy.webp");
