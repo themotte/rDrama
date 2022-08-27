@@ -372,3 +372,15 @@ a.visited,
 .comment-section div[id^="form-preview-"] p.preview-msg, div[id^="reply-edit-"] p.preview-msg {
   color: gray;
 }
+
+.tooltip {
+	color: var(--dark);
+	background-color: var(--light);
+	border: 1px solid var(--primary-light1);
+	border-radius: 0.5rem;
+}
+
+.tooltip-inner {
+	color: var(--dark);
+	background-color: var(--light);
+}
