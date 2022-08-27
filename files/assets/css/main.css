@@ -3392,7 +3392,7 @@ small, .small {
 .post-author .user-name {
 	color: var(--primary-muted);
 }
-.post-traffic-info {
+.post-traffic-info, .post-traffic-info a {
 	color: var(--dark);
 }
 .post-actions {

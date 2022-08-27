@@ -162,7 +162,7 @@
 
 				<div class="post-info text-left">
 					<div class="post-author">
-						<span class="post-traffic-info d-none d-md-inline-block">{{p.comment_count}} comments - {{p.views}} thread views</span>
+						<span class="post-traffic-info d-none d-md-inline-block"><a href="{{p.permalink}}">{{p.comment_count}} comments</a> - {{p.views}} thread views</span>
 
 						{% if p.bannedfor %}
 							<a role="button"><i class="fas fa-hammer-crash text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this post{% if p.author.banned_by %} by @{{p.author.banned_by.username}}{% endif %}"></i></a>
