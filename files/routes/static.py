@@ -225,9 +225,6 @@ def log(v):
 
 	kind = request.values.get("kind")
 
-	if kind not in ACTIONTYPES:
-		logging.warning(f'Unfamiliar ACTIONTYPE {kind}')
-
 	if v and v.admin_level > 1:
 		types = ACTIONTYPES
 	else:
