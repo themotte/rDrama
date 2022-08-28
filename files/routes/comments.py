@@ -170,7 +170,6 @@ def api_comment(v):
 
 	if parent_post.club and not (v and (v.paid_dues or v.id == parent_post.author_id)): abort(403)
 
-	rts = False
 	if parent_fullname.startswith("t2_"):
 		parent = parent_post
 		parent_comment_id = None
@@ -179,7 +178,6 @@ def api_comment(v):
 		parent = get_comment(parent_fullname.split("_")[1], v=v)
 		parent_comment_id = parent.id
 		level = parent.level + 1
-		if parent.author_id == v.id: rts = True
 	else: abort(400)
 
 	body = request.values.get("body", "").strip()[:10000]
@@ -394,7 +392,7 @@ def api_comment(v):
 		answer = random.choice(WORDLE_LIST)
 		c.wordle_result = f'_active_{answer}'
 
-	if not c.slots_result and not c.blackjack_result and not c.wordle_result and not rts:
+	if not c.slots_result and not c.blackjack_result and not c.wordle_result:
 		parent_post.comment_count += 1
 		g.db.add(parent_post)
 
