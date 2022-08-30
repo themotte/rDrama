@@ -9,6 +9,7 @@ from sqlalchemy.orm import relationship, deferred
 from files.__main__ import Base
 from files.helpers.const import *
 from files.helpers.lazy import lazy
+from files.helpers.assetcache import assetcache_path
 from .flags import Flag
 from .comment import Comment
 from flask import g
@@ -266,13 +267,18 @@ class Submission(Base):
 	@property
 	@lazy
 	def thumb_url(self):
-		if self.over_18: return f"{SITE_FULL}/assets/images/nsfw.webp?v=1"
-		elif not self.url: return f"{SITE_FULL}/assets/images/{SITE_ID}/default_text.webp?v=1"
+		if self.over_18:
+			return SITE_FULL + assetcache_path('images/nsfw.webp')
+		elif not self.url:
+			return SITE_FULL + assetcache_path(f'images/{SITE_ID}/default_text.webp')
 		elif self.thumburl: 
-			if self.thumburl.startswith('/'): return SITE_FULL + self.thumburl
+			if self.thumburl.startswith('/'):
+				return SITE_FULL + self.thumburl
 			return self.thumburl
-		elif self.is_youtube or self.is_video: return f"{SITE_FULL}/assets/images/default_thumb_yt.webp?v=1"
-		else: return f"{SITE_FULL}/assets/images/default_thumb_link.webp?v=1"
+		elif self.is_youtube or self.is_video:
+			return SITE_FULL + assetcache_path('images/default_thumb_yt.webp')
+		else:
+			return SITE_FULL + assetcache_path('images/default_thumb_link.webp')
 
 	@property
 	@lazy

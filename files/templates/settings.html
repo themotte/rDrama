@@ -5,20 +5,20 @@
 	<meta name="description" content="{{config('DESCRIPTION')}}">
 	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
 
-	<script src="/assets/js/bootstrap.js?v=245"></script>
+	<script src="{{ 'js/bootstrap.js' | asset }}"></script>
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 	<meta name="author" content="">
 
-	<link rel="icon" type="image/png" href="/assets/images/{{SITE_ID}}/icon.webp?v=1015">
+	<link rel="icon" type="image/png" href="{{ ('images/'~SITE_ID~'/icon.webp') | asset }}">
 
 	<title>{% block pagetitle %}Settings - {{SITE_TITLE}}{% endblock %}</title>
 		<meta property="og:type" content="article">
 		<meta property="og:title" content="{{SITE_TITLE}}">
 		<meta property="og:site_name" content="{{request.host}}">
-		<meta property="og:image" content="/assets/images/{{SITE_ID}}/site_preview.webp?v=1015">
+		<meta property="og:image" content="{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}">
 		<meta property="og:url" content="{{request.host}}">
 		<meta property="og:description" name="description" content="{{config('DESCRIPTION')}}">
 		<meta property="og:author" name="author" content="{{SITE_FULL}}">
@@ -29,13 +29,13 @@
 		<meta name="twitter:title" content="{{SITE_TITLE}}">
 		<meta name="twitter:creator" content="{{SITE_FULL}}">
 		<meta name="twitter:description" content="{{config('DESCRIPTION')}}">
-		<meta name="twitter:image" content="/assets/images/{{SITE_ID}}/site_preview.webp?v=1015">
+		<meta name="twitter:image" content="{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}">
 		<meta name="twitter:url" content="{{request.host}}">
 
 
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/assets/css/main.css?v=254">
-	<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=59">
+	<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
+	<link rel="stylesheet" href="{{ ('css/'~v.theme~'.css') | asset }}">
 	{% if v.css and not request.path.startswith('/settings/css') %}
 		<link rel="stylesheet" href="/@{{v.username}}/css">
 	{% endif %}
@@ -241,7 +241,7 @@
 
 {% block onload %}{% endblock %}
 
-<script src="/assets/js/clipboard.js?v=240"></script>
+<script src="{{ 'js/clipboard.js' | asset }}"></script>
 
 </body>
 
