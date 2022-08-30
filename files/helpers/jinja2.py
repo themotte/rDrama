@@ -3,6 +3,7 @@ from .get import *
 from os import listdir, environ
 from .const import * 
 import time
+from files.helpers.assetcache import assetcache_get
 
 @app.template_filter("post_embed")
 def post_embed(id, v):
@@ -46,6 +47,15 @@ def timestamp(timestamp):
 		years = int(months / 12)
 		return f"{years}yr ago"
 
+@app.template_filter("asset")
+def template_asset(asset_path):
+	outpath = '/assets/' + asset_path
+
+	cachehash = assetcache_get(asset_path)
+	if cachehash:
+		outpath += '?v=' + cachehash
+
+	return outpath
 
 @app.context_processor
 def inject_constants():
