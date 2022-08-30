@@ -91,8 +91,8 @@ def is_not_permabanned(f):
 		
 		check_ban_evade(v)
 
-		if v.is_banned and v.unban_utc == 0:
-			return {"error": "Interal server error"}, 500
+		if v.is_suspended_permanently:
+			return {"error": "Forbidden: you are permabanned."}, 403
 
 		g.v = v
 		return make_response(f(*args, v=v, **kwargs))

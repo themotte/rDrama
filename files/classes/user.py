@@ -617,6 +617,9 @@ class User(Base):
 	def is_suspended(self):
 		return (self.is_banned and (self.unban_utc == 0 or self.unban_utc > time.time()))
 
+	@property
+	def is_suspended_permanently(self):
+		return (self.is_banned and self.unban_utc == 0)
 
 	@property
 	@lazy

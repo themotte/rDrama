@@ -562,8 +562,11 @@ def reportbugs(v):
 
 @app.post("/@<username>/message")
 @limiter.limit("1/second;10/minute;20/hour;50/day")
-@is_not_permabanned
+@auth_required
 def message2(v, username):
+	if v.is_suspended_permanently:
+		return {"error": "You have been permabanned and cannot send messages; " + \
+			"contact modmail if you think this decision was incorrect."}, 403
 
 	user = get_user(username, v=v)
 	if hasattr(user, 'is_blocking') and user.is_blocking: return {"error": "You're blocking this user."}, 403
