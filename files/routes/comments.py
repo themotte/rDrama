@@ -11,6 +11,7 @@ from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
 from files.helpers.sanitize import filter_emojis_only
+from files.helpers.assetcache import assetcache_path
 import requests
 from shutil import copyfile
 from json import loads
@@ -38,7 +39,7 @@ def pusher_thread(interests, c, username):
 					'title': f'New reply by @{username}',
 					'body': notifbody,
 					'deep_link': f'{SITE_FULL}/comment/{c.id}?context=8&read=true#context',
-					'icon': f'{SITE_FULL}/assets/images/{SITE_ID}/icon.webp?v=1015',
+					'icon': SITE_FULL + assetcache_path(f'images/{SITE_ID}/icon.webp'),
 				}
 			},
 			'fcm': {

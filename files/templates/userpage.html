@@ -299,9 +299,9 @@
 					<div>
 						{% for b in u.badges %}
 							{% if b.url %}
-								<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img alt="{{b.name}}" width=55 height=60 loading="lazy" src="{{b.path}}?v=1016" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{b.text}}"></a>
+								<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img alt="{{b.name}}" width=55 height=60 loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{b.text}}"></a>
 							{% else %}
-								<img alt="{{b.name}}" width=55 height=60 loading="lazy" src="{{b.path}}?v=1016" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{b.text}}">
+								<img alt="{{b.name}}" width=55 height=60 loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{b.text}}">
 							{% endif %}
 						{% endfor %}
 					</div>
@@ -420,9 +420,9 @@
 				<div class="mb-3">
 					{% for b in u.badges %}
 						{% if b.url %}
-							<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img alt="{{b.name}}" width=29.33 height=32 loading="lazy" src="{{b.path}}?v=1016" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{b.text}}"></a>
+							<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img alt="{{b.name}}" width=29.33 height=32 loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{b.text}}"></a>
 						{% else %}
-							<img alt="{{b.name}}" width=29.33 height=32 loading="lazy" src="{{b.path}}?v=1016" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{b.text}}">
+							<img alt="{{b.name}}" width=29.33 height=32 loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{b.text}}">
 						{% endif %}
 					{% endfor %}
 				</div>
@@ -667,11 +667,11 @@
 
 {% if v %}
 <div id='tax' class="d-none">{% if v.patron or u.patron or v.alts_patron or u.alts_patron %}0{% else %}0.03{% endif %}</div>
-<script src="/assets/js/userpage_v.js?v=244"></script>
+<script src="{{ 'js/userpage_v.js' | asset }}"></script>
 <div id="username" class="d-none">{{u.username}}</div>
 {% endif %}
 
-<script src="/assets/js/userpage.js?v=241"></script>
+<script src="{{ 'js/userpage.js' | asset }}"></script>
 
 {% endblock %}
 
@@ -697,9 +697,9 @@
 </nav>
 {% endif %}
 
-<script src="/assets/js/vendor/purify.min.js?v=251"></script>
-<script src="/assets/js/vendor/marked.min.js?v=252"></script>
-<script src="/assets/js/marked.custom.js?v=251"></script>
+<script src="{{ 'js/vendor/purify.min.js' | asset }}"></script>
+<script src="{{ 'js/vendor/marked.min.js' | asset }}"></script>
+<script src="{{ 'js/marked.custom.js' | asset }}"></script>
 
 {% endblock %}
 

@@ -6,6 +6,7 @@ from files.classes.views import ViewerRelationship
 from files.helpers.alerts import *
 from files.helpers.sanitize import *
 from files.helpers.const import *
+from files.helpers.assetcache import assetcache_path
 from files.mail import *
 from flask import *
 from files.__main__ import app, limiter, db_session
@@ -26,7 +27,7 @@ def pusher_thread2(interests, notifbody, username):
 					'title': f'New message from @{username}',
 					'body': notifbody,
 					'deep_link': f'{SITE_FULL}/notifications?messages=true',
-					'icon': f'{SITE_FULL}/assets/images/{SITE_ID}/icon.webp?v=1015',
+					'icon': SITE_FULL + assetcache_path(f'images/{SITE_ID}/icon.webp'),
 				}
 			},
 			'fcm': {
@@ -707,7 +708,7 @@ def messagereply(v):
 							'title': f'New message from @{v.username}',
 							'body': notifbody,
 							'deep_link': f'{SITE_FULL}/notifications?messages=true',
-							'icon': f'{SITE_FULL}/assets/images/{SITE_ID}/icon.webp"a=1010',
+							'icon': SITE_FULL + assetcache_path(f'images/{SITE_ID}/icon.webp'),
 						}
 					},
 					'fcm': {

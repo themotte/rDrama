@@ -19,6 +19,7 @@ from .exiles import *
 from .sub_block import *
 from files.__main__ import app, Base, cache
 from files.helpers.security import *
+from files.helpers.assetcache import assetcache_path
 import random
 from datetime import datetime
 from os import environ, remove, path
@@ -528,16 +529,18 @@ class User(Base):
 	@property
 	@lazy
 	def banner_url(self):
-		if self.bannerurl: return self.bannerurl
-		else: return f"/assets/images/{SITE_ID}/site_preview.webp?v=1015"
+		if self.bannerurl:
+			return self.bannerurl
+		return assetcache_path(f'images/{SITE_ID}/site_preview.webp')
 
 	@property
 	@lazy
 	def profile_url(self):
 		if self.profileurl:
-			if self.profileurl.startswith('/'): return SITE_FULL + self.profileurl
+			if self.profileurl.startswith('/'):
+				return SITE_FULL + self.profileurl
 			return self.profileurl
-		return f"{SITE_FULL}/assets/images/default-profile-pic.webp?v=1008"
+		return assetcache_path('images/default-profile-pic.webp')
 
 	@lazy
 	def json_popover(self, v):

@@ -9,13 +9,13 @@
 
 	<meta name="author" content="">
 
-	<link id="favicon" rel="icon" type="image/png" href="/assets/images/{{SITE_ID}}/icon.webp?v=1015">
+	<link id="favicon" rel="icon" type="image/png" href="{{ ('images/'~SITE_ID~'/icon.webp') | asset }}">
 
 	<title>Chat</title>
 
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/assets/css/main.css?v=254">
-	<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=59">
+	<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
+	<link rel="stylesheet" href="{{ ('css/'~v.theme~'.css') | asset }}">
 	{% if v.css %}
 		<link rel="stylesheet" href="/@{{v.username}}/css">
 	{% endif %}
@@ -101,7 +101,7 @@
 </head>
 
 <body>
-	<script src="/assets/js/bootstrap.js?v=249"></script>
+	<script src="{{ 'js/bootstrap.js' | asset }}"></script>
 
 	{% include "header.html" %}
 	
@@ -189,7 +189,7 @@
 
 <script src="/chat.js?v=16"></script>
 
-<script src="/assets/js/lozad.js?v=242"></script>
-<script src="/assets/js/lite-youtube.js?v=240"></script>
+<script src="{{ 'js/lozad.js' | asset }}"></script>
+<script src="{{ 'js/lite-youtube.js' | asset }}"></script>
 
 </body>

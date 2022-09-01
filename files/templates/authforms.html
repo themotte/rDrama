@@ -15,15 +15,15 @@
 
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=254">
-			<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=59">
+			<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
+			<link rel="stylesheet" href="{{ ('css/'~v.theme~'.css') | asset }}">
 			{% if v.css %}
 				<link rel="stylesheet" href="/@{{v.username}}/css">
 			{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=254">
-			<link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=58">
+			<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
+			<link rel="stylesheet" href="{{ ('css/'~config('DEFAULT_THEME')~'.css') | asset }}">
 		{% endif %}
 
 </head>
@@ -94,7 +94,7 @@
 
 										<div class="splash-overlay"></div>
 
-										<img alt="cover" loading="lazy" class="splash-img" src="/assets/images/{{SITE_ID}}/cover.webp?v=1014"></img>
+										<img alt="cover" loading="lazy" class="splash-img" src="{{ ('images/'~SITE_ID~'/cover.webp') | asset }}"></img>
 								</div>
 
 						</div>

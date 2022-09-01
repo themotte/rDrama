@@ -1,11 +1,11 @@
 {% set cc='COUNTRY CLUB' %}
 
 {% if not v or v.highlightcomments %}
-	<script src="/assets/js/new_comments_count.js?v=242"></script>
+	<script src="{{ 'js/new_comments_count.js' | asset }}"></script>
 {% endif %}
 
 {% if v and v.admin_level > 2 %}
-	<script src="/assets/js/filter_actions.js?v=8"></script>
+	<script src="{{ 'js/filter_actions.js' | asset }}"></script>
 {% endif %}
 
 <div style="display:none" id="popover">
@@ -417,6 +417,6 @@
 {% endif %}
 {% include "expanded_image_modal.html" %}
 
-<script src="/assets/js/clipboard.js?v=240"></script>
-<script src="/assets/js/comments+submission_listing.js?v=259"></script>
-<script src="/assets/js/submission_listing.js?v=240"></script>
+<script src="{{ 'js/clipboard.js' | asset }}"></script>
+<script src="{{ 'js/comments+submission_listing.js' | asset }}"></script>
+<script src="{{ 'js/submission_listing.js' | asset }}"></script>

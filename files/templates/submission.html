@@ -43,7 +43,7 @@
 <meta property="og:description" name="description" content="{{comment_info.plainbody(v)}}">
 <meta property="og:author" name="author" content="{{'@'+comment_info.author_name}}">
 <meta property="og:title" content="{{'@'+comment_info.author_name}} comments on {{p.plaintitle(v)}} - {{SITE_TITLE}}">
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_ID}}/assets/images/{{SITE_ID}}/site_preview.webp?v=1015{% endif %}">
+<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% endif %}">
 {% if p.is_video %}
 	<meta property="og:video" content="{{p.realurl(v)}}">
 {% endif %}
@@ -55,7 +55,7 @@
 <meta name="twitter:title" content="{{'@'+comment_info.author_name}} comments on {{p.plaintitle(v)}} - {{SITE_TITLE}}">
 <meta name="twitter:creator" content="{{'@'+comment_info.author_name}}">
 <meta name="twitter:description" content="{{comment_info.plainbody(v)}}">
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_ID}}/assets/images/{{SITE_ID}}/site_preview.webp?v=1015{% endif %}">
+<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% endif %}">
 <meta name="twitter:url" content="{{p.permalink}}">
 
 {% else %}
@@ -68,7 +68,7 @@
 <meta property="og:description" name="description" content="{{p.plainbody(v)}}">
 {% if p.author %}<meta property="og:author" name="author" content="{{'@'+p.author_name}}">{% endif %}
 <meta property="og:title" content="{{p.plaintitle(v)}} - {{SITE_TITLE}}">
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_ID}}/assets/images/{{SITE_ID}}/site_preview.webp?v=1015{% endif %}">
+<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% endif %}">
 {% if p.url and p.is_video %}
 <meta property="og:video" content="{{p.realurl(v)}}">
 {% endif %}
@@ -80,7 +80,7 @@
 <meta name="twitter:title" content="{{p.plaintitle(v)}} - {{SITE_TITLE}}">
 {% if p.author %}<meta name="twitter:creator" content="{{'@'+p.author_name}}">{% endif %}
 <meta name="twitter:description" content="{{p.plainbody(v)}}">
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{SITE_ID}}/assets/images/{{SITE_ID}}/site_preview.webp?v=1015{% endif %}">
+<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% endif %}">
 <meta name="twitter:url" content="{{p.permalink}}">
 
 {% endif %}
@@ -246,9 +246,9 @@
 							{% if p.domain == "twitter.com" %}
 								{{p.embed_url | safe}}
 								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
-									<script src="/assets/js/twitterlight.js?v=243"></script>
+									<script src="{{ 'js/twitterlight.js' | asset }}"></script>
 								{% else %}
-									<script src="/assets/js/twitter.js?v=243"></script>
+									<script src="{{ 'js/twitter.js' | asset }}"></script>
 								{% endif %}
 							{% elif p.domain in ['youtu.be','youtube.com'] and p.embed_url and p.embed_url.startswith('<lite-youtube') %}
 								{{p.embed_url | safe}}
@@ -595,28 +595,28 @@
 {% endif %}
 
 {% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
-	<script src="/assets/js/togglePostEdit.js?v=240"></script>
+	<script src="{{ 'js/togglePostEdit.js' | asset }}"></script>
 {% endif %}
 
 {% if not v or v.highlightcomments %}
-	<script src="/assets/js/new_comments_count.js?v=242"></script>
+	<script src="{{ 'js/new_comments_count.js' | asset }}"></script>
 {% endif %}
 
-<script src="/assets/js/clipboard.js?v=240"></script>
+<script src="{{ 'js/clipboard.js' | asset }}"></script>
 
 {% if not p.replies %}
 	{% include "comments.html" %}
 {% endif %}
 
 {% if p.award_count("shit") %}
-	<script src="/assets/js/critters.js?v=240"></script>
-	<script src="/assets/js/bugs.js?v=241"></script>
+	<script src="{{ 'js/critters.js' | asset }}"></script>
+	<script src="{{ 'js/bugs.js' | asset }}"></script>
 {% endif %}
 
 
 {% if p.award_count("fireflies") %}
-	<script src="/assets/js/critters.js?v=240"></script>
-	<script src="/assets/js/fireflies.js?v=241"></script>
+	<script src="{{ 'js/critters.js' | asset }}"></script>
+	<script src="{{ 'js/fireflies.js' | asset }}"></script>
 {% endif %}
 
 

@@ -4,6 +4,7 @@ from files.__main__ import Base, app
 from os import environ
 from files.helpers.lazy import lazy
 from files.helpers.const import *
+from files.helpers.assetcache import assetcache_path
 from datetime import datetime
 from json import loads
 
@@ -61,7 +62,7 @@ class Badge(Base):
 	@property
 	@lazy
 	def path(self):
-		return f"/assets/images/badges/{self.badge_id}.webp"
+		return assetcache_path(f'images/badges/{self.badge_id}.webp')
 
 	@property
 	@lazy

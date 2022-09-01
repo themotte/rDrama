@@ -1,6 +1,6 @@
 {% extends "default.html" %}
 {% block content %}
-<script src="/assets/js/sort_table.js?v=242"></script>
+<script src="{{ 'js/sort_table.js' | asset }}"></script>
 <pre>
 
 
@@ -27,7 +27,7 @@
 	<tr>
 		<td>{{loop.index}}</td>
 		<td>{{badge.name}}</td>
-		<td><img alt="{{badge.name}}" loading="lazy" src="/assets/images/badges/{{badge.id}}.webp?v=1016" width=45.83 height=50>
+		<td><img alt="{{badge.name}}" loading="lazy" src="{{ ('images/badges/'~badge.id~'.webp') | asset }}" width=45.83 height=50>
 		<td>{{badge.description}}</td>
 		{%- set ct = counts[badge.id] if badge.id in counts else (0, 0) %}
 		<td class="badges-rarity-qty">{{ ct[0] }}</td>

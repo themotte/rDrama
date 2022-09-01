@@ -5,7 +5,7 @@
 	<meta name="description" content="{{config('DESCRIPTION')}}">
 		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
 
-		<script src="/assets/js/bootstrap.js?v=245"></script>
+		<script src="{{ 'js/bootstrap.js' | asset }}"></script>
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -14,7 +14,7 @@
 		<meta property="og:type" content="article">
 		<meta property="og:title" content="{{SITE_TITLE}}">
 		<meta property="og:site_name" content="{{request.host}}">
-		<meta property="og:image" content="/assets/images/{{SITE_ID}}/site_preview.webp?v=1015">
+		<meta property="og:image" content="{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}">
 		<meta property="og:url" content="{{request.host}}">
 		<meta property="og:description" name="description" content="{{config('DESCRIPTION')}}">
 		<meta property="og:author" name="author" content="{{SITE_FULL}}">
@@ -25,14 +25,14 @@
 		<meta name="twitter:title" content="{{SITE_TITLE}}">
 		<meta name="twitter:creator" content="{{SITE_FULL}}">
 		<meta name="twitter:description" content="{{config('DESCRIPTION')}}">
-		<meta name="twitter:image" content="/assets/images/{{SITE_ID}}/site_preview.webp?v=1015">
+		<meta name="twitter:image" content="{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}">
 		<meta name="twitter:url" content="{{request.host}}">
 
 		<title>{% if ref_user %}{{ref_user.username}} invites you to {{SITE_TITLE}}{% else %}Sign up - {{SITE_TITLE}}{% endif %}</title>
 
 		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=254">
-		<link rel="stylesheet" href="/assets/css/{{config('DEFAULT_THEME')}}.css?v=58">
+		<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
+		<link rel="stylesheet" href="{{ ('css/'~config('DEFAULT_THEME')~'.css') | asset }}">
 
 </head>
 
@@ -140,7 +140,7 @@
 
 								<div class="splash-overlay"></div>
 
-								<img alt="cover" loading="lazy" class="splash-img" src="/assets/images/{{SITE_ID}}/cover.webp?v=1014"></img>
+								<img alt="cover" loading="lazy" class="splash-img" src="{{ ('images/'~SITE_ID~'/cover.webp') | asset }}"></img>
 						</div>
 
 				</div>
@@ -148,10 +148,10 @@
 		</div>
 </div>
 
-<script src="/assets/js/signup.js?v=240"></script>
+<script src="{{ 'js/signup.js' | asset }}"></script>
 
 {% if hcaptcha %}
-	<script src="/assets/js/hcaptcha.js?v=240"></script>
+	<script src="{{ 'js/hcaptcha.js' | asset }}"></script>
 {% endif %}
 
 </body>
