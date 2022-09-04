@@ -121,6 +121,13 @@ a  { color: var(--primary); }
 	border-color: transparent !important;
 }
 
+.page-item .page-link {
+	background-color: var(--light);
+}
+.page-item.disabled .page-link {
+	color: var(--white);
+}
+
 .btn-lg {
 	border-color: transparent !important;
 }
@@ -134,8 +141,11 @@ pre {
 }
 
 blockquote {
-	color: var(--gray-400);
+	border-left: 2px solid var(--primary-muted);
+	color: var(--dark);
+	background-color: unset;
 }
+
 #account-menu {
 	left: -6px;
 }
@@ -163,7 +173,7 @@ div.deleted.banned {
 	padding: 10px;
 }
 .comment-anchor:target, .unread {
-	background: #00000055 !important;
+	background: #2280B310 !important;
 }
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card {
 	border: none;
