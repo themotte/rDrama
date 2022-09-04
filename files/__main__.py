@@ -6,7 +6,6 @@ import secrets
 from flask import *
 from flask_caching import Cache
 from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 from flask_compress import Compress
 from flask_mail import Mail
 from sqlalchemy.ext.declarative import declarative_base
@@ -65,9 +64,13 @@ app.config['MULTIMEDIA_EMBEDDING_ENABLED'] = environ.get('MULTIMEDIA_EMBEDDING_E
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_responses=True, ssl_cert_reqs=None)
 
+def get_remote_addr():
+	with app.app_context():
+		return request.headers.get('X-Real-IP', default='127.0.0.1')
+
 limiter = Limiter(
 	app,
-	key_func=get_remote_address,
+	key_func=get_remote_addr,
 	default_limits=["3/second;30/minute;200/hour;1000/day"],
 	application_limits=["10/second;200/minute;5000/hour;10000/day"],
 	storage_uri=environ.get("REDIS_URL", "redis://localhost")
