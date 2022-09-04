@@ -47,7 +47,6 @@ class Comment(Base):
 	slots_result = Column(String)
 	blackjack_result = Column(String)
 	wordle_result = Column(String)
-	treasure_amount = Column(String)
 	filter_state = Column(String, nullable=False)
 
 	Index('comment_parent_index', parent_comment_id)

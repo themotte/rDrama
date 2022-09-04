@@ -224,15 +224,6 @@
 				<span class="time-edited" id="time-edit-{{c.id}}" onmouseover="timestamp('time-edit-{{c.id}}','{{c.edited_utc}}')"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
 				{% endif %}
 
-				{% if c.treasure_amount and c.treasure_amount != '0' %}
-				<img class="treasure" alt="treasure" src="{{ 'images/chest.webp' | asset }}" width="20" />
-					{% if '-' in c.treasure_amount %}
-					<em>A Mimic Ate {{c.treasure_amount.replace('-', '')}} Coins!</em>
-					{% else %}
-					<em>Found {{c.treasure_amount}} Coins!</em>
-					{% endif %}
-				{% endif %}
-
 				{% if c.slots_result %}
 				<em style="position: relative; top: 2px; margin-left: 0.5rem">{{c.slots_result}}</em>
 				{% endif %}

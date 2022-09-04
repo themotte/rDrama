@@ -4,7 +4,6 @@ from files.helpers.images import *
 from files.helpers.const import *
 from files.helpers.slots import *
 from files.helpers.blackjack import *
-from files.helpers.treasure import *
 from files.classes import *
 from files.routes.front import comment_idlist
 from pusher_push_notifications import PushNotifications
@@ -386,8 +385,6 @@ def api_comment(v):
 
 	if not c.slots_result and not c.blackjack_result and v.marseyawarded and parent_post.id not in ADMINISTRATORS and marseyaward_body_regex.search(body_html):
 		return {"error":"You can only type marseys!"}, 403
-
-	check_for_treasure(body, c)
 
 	if "!wordle" in body:
 		answer = random.choice(WORDLE_LIST)
