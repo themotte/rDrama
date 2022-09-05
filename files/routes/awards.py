@@ -14,6 +14,8 @@ from copy import deepcopy
 @app.get("/settings/shop")
 @admin_level_required(2)
 def shop(v):
+	abort(404) # disable entirely pending possible future use of coins
+
 	AWARDS = deepcopy(AWARDS2)
 
 	for val in AWARDS.values(): val["owned"] = 0
@@ -32,6 +34,8 @@ def shop(v):
 @app.post("/buy/<award>")
 @auth_required
 def buy(v, award):
+	abort(404) # disable entirely pending possible future use of coins
+
 	if award == 'benefactor' and not request.values.get("mb"):
 		return {"error": "You can only buy the Benefactor award with marseybux."}, 403
 
@@ -123,6 +127,8 @@ def buy(v, award):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def award_post(pid, v):
+	abort(404) # disable entirely pending possible future use of coins
+
 	if v.shadowbanned: return render_template('errors/500.html', err=True, v=v), 500
 	
 	kind = request.values.get("kind", "").strip()
@@ -350,6 +356,8 @@ def award_post(pid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def award_comment(cid, v):
+	abort(404) # disable entirely pending possible future use of coins
+
 	if v.shadowbanned: return render_template('errors/500.html', err=True, v=v), 500
 
 	kind = request.values.get("kind", "").strip()
@@ -573,6 +581,8 @@ def award_comment(cid, v):
 @app.get("/admin/awards")
 @admin_level_required(2)
 def admin_userawards_get(v):
+	abort(404) # disable entirely pending possible future use of coins
+
 	if v.admin_level != 3:
 		return render_template("admin/awards.html", awards=list(AWARDS3.values()), v=v)
 
@@ -582,6 +592,8 @@ def admin_userawards_get(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_userawards_post(v):
+	abort(404) # disable entirely pending possible future use of coins
+
 	try: u = request.values.get("username").strip()
 	except: abort(404)
 
