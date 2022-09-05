@@ -8,6 +8,7 @@ from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_compress import Compress
 from flask_mail import Mail
+import flask_profiler
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import *
@@ -24,6 +25,22 @@ app.jinja_env.cache = {}
 app.jinja_env.auto_reload = True
 faulthandler.enable()
 
+if environ.get("FLASK_PROFILER_ENDPOINT"):
+	app.config["flask_profiler"] = {
+		"enabled": True,
+		"storage": {
+			"engine": "sqlalchemy",
+		},
+		"basicAuth": {
+			"enabled": True,
+			"username": environ.get("FLASK_PROFILER_USERNAME"),
+			"password": environ.get("FLASK_PROFILER_PASSWORD"),
+		},
+		"endpointRoot": environ.get("FLASK_PROFILER_ENDPOINT"),
+	}
+
+	profiler = flask_profiler.Profiler()
+	profiler.init_app(app)
 
 app.config["SITE_ID"]=environ.get("SITE_ID").strip()
 app.config["SITE_TITLE"]=environ.get("SITE_TITLE").strip()
