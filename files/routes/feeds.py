@@ -3,15 +3,16 @@ from .front import frontlist
 from datetime import datetime
 from files.helpers.get import *
 from yattag import Doc
+from files.helpers.const import *
 from files.helpers.wrappers import *
 from files.helpers.jinja2 import *
 
 from files.__main__ import app
 
+@app.get('/rss')
+@app.get('/feed')
 @app.get('/rss/<sort>/<t>')
-@auth_required
-def feeds_user(v=None, sort='hot', t='all'):
-
+def feeds_front(sort='hot', t='all'):
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
@@ -21,34 +22,36 @@ def feeds_user(v=None, sort='hot', t='all'):
 		t=t,
 		v=None,
 		)
-	
 	posts = get_posts(ids)
 
-	domain = environ.get("DOMAIN").strip()
-
 	doc, tag, text = Doc().tagtext()
-
 	with tag("feed", ("xmlns:media","http://search.yahoo.com/mrss/"), xmlns="http://www.w3.org/2005/Atom",):
 		with tag("title", type="text"):
-			text(f"{sort} posts from {domain}")
+			text(f"{sort} posts from {SITE}")
 
-		doc.stag("link", href=SITE_FULL + request.full_path)
-		doc.stag("link", href=SITE_FULL)
+		with tag("id"):
+			text(SITE_FULL + request.full_path)
+		with tag("updated"):
+			text(datetime.now().isoformat()+"Z")
+		doc.stag("link", rel="self", type="application/atom+xml", href=SITE_FULL + request.full_path)
+		doc.stag("link", rel="alternate", type="text/html", href=SITE_FULL)
 
 		for post in posts:
 			with tag("entry", ("xml:base", SITE_FULL + request.full_path)):
-				with tag("title", type="text"):
+				with tag("title", type="html"):
 					text(post.realtitle(None))
 
 				with tag("id"):
-					text(post.fullname)
+					text(post.permalink)
 
-				if (post.edited_utc):
-					with tag("updated"):
-						text(datetime.utcfromtimestamp(post.edited_utc).isoformat())
+				with tag("updated"):
+					if (post.edited_utc):
+						text(datetime.utcfromtimestamp(post.edited_utc).isoformat()+"Z")
+					else:
+						text(datetime.utcfromtimestamp(post.created_utc).isoformat()+"Z")
 
 				with tag("published"):
-					text(datetime.utcfromtimestamp(post.created_utc).isoformat())
+					text(datetime.utcfromtimestamp(post.created_utc).isoformat()+"Z")
 				
 				with tag("author"):
 					with tag("name"):
@@ -64,6 +67,6 @@ def feeds_user(v=None, sort='hot', t='all'):
 
 				if len(post.body_html):
 					with tag("content", type="html"):
-						doc.cdata(f'''<img alt="{post.realtitle(None)}" loading="lazy" src={image_url}><br>{post.realbody(None)}''')
+						doc.cdata(f'''<img alt="{post.realtitle(None)}" loading="lazy" src="{image_url}"><br>{post.realbody(None)}''')
 
-	return Response( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+ doc.getvalue(), mimetype="application/xml")
+	return Response("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+ doc.getvalue(), mimetype="application/xml")
