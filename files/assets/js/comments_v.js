@@ -218,14 +218,12 @@ function comment_edit(id){
 function post_comment(fullname){
 	const previewPlaceholderHTML= '<p class="preview-msg">Comment preview</p>';
 	function reset_preview(element_id) {
-		try {
-			document.getElementById(element_id).innerHTML = previewPlaceholderHTML;
-		} catch (e) {
-			// We fail silently if the element doesnt exist
-			if (!e instanceof TypeError) {
-				throw(e);
-			}
+		const element = document.getElementById(element_id);
+		if (element) {
+			element.innerHTML = previewPlaceholderHTML;
+			return true;
 		}
+		return false;
 	}
 
 	const btn = document.getElementById('save-reply-to-'+fullname)
@@ -281,8 +279,13 @@ function post_comment(fullname){
 			// when called from top-level comment, clear top-level preview
 			reset_preview('form-preview-'+id);
 			// when called from comment reply, clear comment reply preview
-			reset_preview('reply-edit-'+id);
-
+			if(reset_preview('reply-edit-'+id)) {
+				// We are in a comment reply, need to find and hide the comment section
+				const replyArea = document.getElementById(`reply-to-${id}`);
+				if (replyArea) {
+					replyArea.classList.add('d-none');
+				}
+			}
 		}
 		else {
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
