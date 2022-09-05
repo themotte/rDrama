@@ -583,15 +583,6 @@ def message2(v, username):
 
 	g.db.flush()
 
-	if blackjack and any(i in c.body_html.lower() for i in blackjack.split()):
-		v.shadowbanned = 'AutoJanny'
-		g.db.add(v)
-		notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=CARP_ID).one_or_none()
-		if not notif:
-			notif = Notification(comment_id=c.id, user_id=CARP_ID)
-			g.db.add(notif)
-			g.db.flush()
-
 	c.top_comment_id = c.id
 
 	notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=user.id).one_or_none()
@@ -661,15 +652,6 @@ def messagereply(v):
 							)
 	g.db.add(c)
 	g.db.flush()
-
-	if blackjack and any(i in c.body_html.lower() for i in blackjack.split()):
-		v.shadowbanned = 'AutoJanny'
-		g.db.add(v)
-		notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=CARP_ID).one_or_none()
-		if not notif:
-			notif = Notification(comment_id=c.id, user_id=CARP_ID)
-			g.db.add(notif)
-			g.db.flush()
 
 	if user_id and user_id != v.id and user_id != 2:
 		notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=user_id).one_or_none()

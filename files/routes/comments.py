@@ -318,11 +318,6 @@ def api_comment(v):
 	g.db.add(c)
 	g.db.flush()
 
-	if blackjack and any(i in c.body.lower() for i in blackjack.split()):
-		v.shadowbanned = 'AutoJanny'
-		notif = Notification(comment_id=c.id, user_id=CARP_ID)
-		g.db.add(notif)
-
 	if c.level == 1: c.top_comment_id = c.id
 	else: c.top_comment_id = parent.top_comment_id
 
@@ -471,14 +466,6 @@ def edit_comment(cid, v):
 
 		c.body = body[:10000]
 		c.body_html = body_html
-
-		if blackjack and any(i in c.body.lower() for i in blackjack.split()):
-			v.shadowbanned = 'AutoJanny'
-			g.db.add(v)
-			notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=CARP_ID).one_or_none()
-			if not notif:
-				notif = Notification(comment_id=c.id, user_id=CARP_ID)
-				g.db.add(notif)
 
 		if int(time.time()) - c.created_utc > 60 * 3: c.edited_utc = int(time.time())
 
