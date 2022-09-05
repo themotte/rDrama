@@ -3,13 +3,19 @@ from .alerts import *
 from files.helpers.const import *
 from files.__main__ import db_session
 from random import randint
+import user_agents
+import time
 
 def get_logged_in_user():
-	if not (hasattr(g, 'db') and g.db): g.db = db_session()
+	if hasattr(g, 'v'):
+		return g.v
+
+	if not (hasattr(g, 'db') and g.db):
+		g.db = db_session()
 
 	v = None
 
-	token = request.headers.get("Authorization","").strip()
+	token = request.headers.get("Authorization", "").strip()
 	if token:
 		client = g.db.query(ClientAuth).filter(ClientAuth.access_token == token).one_or_none()
 		if client: 
@@ -19,7 +25,7 @@ def get_logged_in_user():
 		lo_user = session.get("lo_user")
 		if lo_user:
 			id = int(lo_user)
-			v = g.db.query(User).filter_by(id=id).one_or_none()
+			v = g.db.query(User).get(id)
 			if v:
 				nonce = session.get("login_nonce", 0)
 				if nonce < v.login_nonce or v.id != id: abort(401)
@@ -35,14 +41,40 @@ def get_logged_in_user():
 
 				v.client = None
 
-
-	if request.method.lower() != "get" and app.config['SETTINGS']['Read-only mode'] and not (v and v.admin_level):
+	if request.method.lower() != "get" \
+			and app.config['SETTINGS']['Read-only mode'] \
+			and not (v and v.admin_level):
 		abort(403)
 
-	if v and v.patron:
-		if request.content_length and request.content_length > 16 * 1024 * 1024: abort(413)
-	elif request.content_length and request.content_length > 8 * 1024 * 1024: abort(413)
+	if request.content_length and request.content_length > 8 * 1024 * 1024:
+		abort(413)
 
+	if not session.get("session_id"):
+		session.permanent = True
+		session["session_id"] = secrets.token_hex(49)
+
+	# Active User Counters
+	loggedin = cache.get(f'{SITE}_loggedin') or {}
+	loggedout = cache.get(f'{SITE}_loggedout') or {}
+
+	timestamp = int(time.time())
+	if v:
+		if session["session_id"] in loggedout:
+			del loggedout[session["session_id"]]
+		loggedin[v.id] = timestamp
+	else:
+		ua = str(user_agents.parse(g.agent))
+		if 'spider' not in ua.lower() and 'bot' not in ua.lower():
+			loggedout[session["session_id"]] = (timestamp, ua)
+
+	g.loggedin_counter = len([x for x in loggedin.values() \
+		if (timestamp - x) < LOGGEDIN_ACTIVE_TIME])
+	g.loggedout_counter = len([x for x in loggedout.values() \
+		if (timestamp - x[0]) < LOGGEDIN_ACTIVE_TIME])
+	cache.set(f'{SITE}_loggedin', loggedin)
+	cache.set(f'{SITE}_loggedout', loggedout)
+
+	g.v = v
 	return v
 
 def check_ban_evade(v):
@@ -53,12 +85,10 @@ def check_ban_evade(v):
 
 def auth_desired(f):
 	def wrapper(*args, **kwargs):
-
 		v = get_logged_in_user()
 
 		check_ban_evade(v)
 
-		g.v = v
 		return make_response(f(*args, v=v, **kwargs))
 
 	wrapper.__name__ = f.__name__
@@ -68,13 +98,11 @@ def auth_desired(f):
 def auth_required(f):
 
 	def wrapper(*args, **kwargs):
-
 		v = get_logged_in_user()
 		if not v: abort(401)
 
 		check_ban_evade(v)
 
-		g.v = v
 		return make_response(f(*args, v=v, **kwargs))
 
 	wrapper.__name__ = f.__name__
@@ -84,9 +112,7 @@ def auth_required(f):
 def is_not_permabanned(f):
 
 	def wrapper(*args, **kwargs):
-
 		v = get_logged_in_user()
-
 		if not v: abort(401)
 		
 		check_ban_evade(v)
@@ -94,7 +120,6 @@ def is_not_permabanned(f):
 		if v.is_suspended_permanently:
 			return {"error": "Forbidden: you are permabanned."}, 403
 
-		g.v = v
 		return make_response(f(*args, v=v, **kwargs))
 
 	wrapper.__name__ = f.__name__
@@ -106,14 +131,11 @@ def admin_level_required(x):
 	def wrapper_maker(f):
 
 		def wrapper(*args, **kwargs):
-
 			v = get_logged_in_user()
-
 			if not v: abort(401)
 
 			if v.admin_level < x: abort(403)
-			
-			g.v = v
+
 			return make_response(f(*args, v=v, **kwargs))
 
 		wrapper.__name__ = f.__name__
