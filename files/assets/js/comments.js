@@ -12,11 +12,6 @@ function collapse_comment(id, element) {
 	if (flags) flags.classList.add('d-none')
 };
 
-function poll_vote_no_v() {
-	document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
-	bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
-}
-
 function expandMarkdown(t,id) {
 	let ta = document.getElementById('markdown-'+id);
 	ta.classList.toggle('d-none');

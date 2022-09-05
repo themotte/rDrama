@@ -69,9 +69,6 @@ def api_vote_post(post_id, new, v):
 	except: abort(404)
 	post = get_post(post_id)
 
-	# verify that the post is allowed to be voted on
-	if post.author_id in {AUTOPOLLER_ID,AUTOBETTER_ID,AUTOCHOICE_ID}: return {"error": "forbidden."}, 403
-	
 	# get the old vote, if we have one
 	vote = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
 
@@ -142,9 +139,6 @@ def api_vote_comment(comment_id, new, v):
 	except: abort(404)
 	comment = get_comment(comment_id)
 
-	# verify that the comment is allowed to be voted on
-	if comment.author.id in {AUTOPOLLER_ID,AUTOBETTER_ID,AUTOCHOICE_ID}: return {"error": "forbidden."}, 403
-	
 	# get the old vote, if we have one
 	vote = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
 
@@ -193,100 +187,6 @@ def api_vote_comment(comment_id, new, v):
 	comment.upvotes = g.db.query(CommentVote.comment_id).filter_by(comment_id=comment.id, vote_type=1).count()
 	comment.downvotes = g.db.query(CommentVote.comment_id).filter_by(comment_id=comment.id, vote_type=-1).count()
 	comment.realupvotes = g.db.query(CommentVote.comment_id).filter_by(comment_id=comment.id, vote_type=1, real=True).count()
-	g.db.add(comment)
-	g.db.commit()
-	return "", 204
-
-
-@app.post("/vote/poll/<comment_id>")
-@is_not_permabanned
-def api_vote_poll(comment_id, v):
-	
-	vote = request.values.get("vote")
-	if vote == "true": new = 1
-	elif vote == "false": new = 0
-	else: abort(400)
-
-	comment_id = int(comment_id)
-	comment = get_comment(comment_id)
-
-	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
-
-	if existing and existing.vote_type == new: return "", 204
-
-	if existing:
-		if new == 1:
-			existing.vote_type = new
-			g.db.add(existing)
-		else: g.db.delete(existing)
-	elif new == 1:
-		vote = CommentVote(user_id=v.id, vote_type=new, comment_id=comment.id)
-		g.db.add(vote)
-
-	g.db.flush()
-	comment.upvotes = g.db.query(CommentVote.comment_id).filter_by(comment_id=comment.id, vote_type=1).count()
-	g.db.add(comment)
-	g.db.commit()
-	return "", 204
-
-
-@app.post("/bet/<comment_id>")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
-@is_not_permabanned
-def bet(comment_id, v):
-	
-	if v.coins < 200: return {"error": "You don't have 200 coins!"}
-
-	vote = request.values.get("vote")
-	comment_id = int(comment_id)
-	comment = get_comment(comment_id)
-	
-	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
-	if existing: return "", 204
-
-	vote = CommentVote(user_id=v.id, vote_type=1, comment_id=comment.id)
-	g.db.add(vote)
-
-	comment.upvotes += 1
-	g.db.add(comment)
-
-	v.coins -= 200
-	g.db.add(v)
-	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).one_or_none()
-	autobetter.coins += 200
-	g.db.add(autobetter)
-
-	g.db.commit()
-	return "", 204
-
-@app.post("/vote/choice/<comment_id>")
-@is_not_permabanned
-def api_vote_choice(comment_id, v):
-
-	comment_id = int(comment_id)
-	comment = get_comment(comment_id)
-
-	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
-
-	if existing and existing.vote_type == 1: return "", 204
-
-	if existing:
-		existing.vote_type = 1
-		g.db.add(existing)
-	else:
-		vote = CommentVote(user_id=v.id, vote_type=1, comment_id=comment.id)
-		g.db.add(vote)
-
-	if comment.parent_comment: parent = comment.parent_comment
-	else: parent = comment.post
-
-	for vote in parent.total_choice_voted(v):
-		vote.comment.upvotes = g.db.query(CommentVote.comment_id).filter_by(comment_id=vote.comment.id, vote_type=1).count() - 1
-		g.db.add(vote.comment)
-		g.db.delete(vote)
-
-	g.db.flush()
-	comment.upvotes = g.db.query(CommentVote.comment_id).filter_by(comment_id=comment.id, vote_type=1).count()
 	g.db.add(comment)
 	g.db.commit()
 	return "", 204

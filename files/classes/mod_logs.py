@@ -224,11 +224,6 @@ ACTIONTYPES = {
 		"icon": 'fa-crown', 
 		"color": 'bg-success'
 	},
-	'distribute': {
-		"str": 'distributed bet winnings to voters on {self.target_link}', 
-		"icon": 'fa-dollar-sign', 
-		"color": 'bg-success'
-	},
 	'dump_cache': {
 		"str": 'dumped cache', 
 		"icon": 'fa-trash-alt', 

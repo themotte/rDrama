@@ -123,8 +123,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
 		 
 		comments=comments.filter(
-			Comment.parent_submission == post.id,
-			Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID))
+			Comment.parent_submission == post.id
 		).join(
 			votes,
 			votes.c.comment_id == Comment.id,
@@ -340,7 +339,7 @@ def api_comment(v):
 			
 			for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
 			
-			if parent.author.id not in (v.id, BASEDBOT_ID, AUTOJANNY_ID, SNAPPY_ID, LONGPOSTBOT_ID, ZOZBOT_ID, AUTOPOLLER_ID, AUTOCHOICE_ID):
+			if parent.author.id not in (v.id, BASEDBOT_ID, AUTOJANNY_ID, SNAPPY_ID, LONGPOSTBOT_ID, ZOZBOT_ID):
 				notify_users.add(parent.author.id)
 
 			for x in notify_users:
