@@ -58,12 +58,13 @@
 				{% endif %}
 			{% endif %}
 			
-			{% if not err %}
-				<a class="mobile-nav-icon d-md-none" href="/random_user" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Random User"><i class="fas fa-user-circle align-middle text-gray-500 black"></i></a>
-				<a class="mobile-nav-icon d-md-none" href="/random_post" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Random Post"><i class="fas fa-random align-middle text-gray-500 black"></i></a>
-			{% if v and v.admin_level > 1 %}
+		{% if not err %}
+
+			{% if v and v.admin_level >= 2 %}
 				<a class="mobile-nav-icon d-md-none" href="/admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Admin Tools"><i class="fas fa-crown align-middle text-gray-500 black"></i></a>
 			{% endif %}
+				<a class="mobile-nav-icon d-md-none" href="/random_user" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Random User"><i class="fas fa-user-circle align-middle text-gray-500 black"></i></a>
+				<a class="mobile-nav-icon d-md-none" href="/random_post" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Random Post"><i class="fas fa-random align-middle text-gray-500 black"></i></a>
 
 			{% if v %}
 				<a class="mobile-nav-icon d-md-none" href="{% if sub %}/h/{{sub.name}}{% endif %}/submit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="New Post"><i class="fas fa-edit align-middle text-gray-500 black"></i></a>
@@ -79,22 +80,7 @@
 		<div class="collapse navbar-collapse" id="navbarResponsive">
 			<ul class="navbar-nav ml-auto d-none d-md-flex">
 
-				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-					<a class="nav-link" href="/random_user/" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Random User"><i class="fas fa-user-circle"></i></a>
-				</li>
-
-				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-					<a class="nav-link" href="/random_post/" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Random Post"><i class="fas fa-random"></i></a>
-				</li>
-
-				{% if v and v.admin_level > 1 %}
-				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-					<a class="nav-link" href="/admin/" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Admin Tools"><i class="fas fa-crown{% if v.has_report_queue %} text-success{% endif %}"></i></a>
-				</li>
-				{% endif %}
-
-				{% if v %}
-
+			{% if v %}
 				{% if v.notifications_count %}
 
 				<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
@@ -108,18 +94,33 @@
 				</li>
 
 				{% endif %}
+			{% endif %}
+
+			{% if v and v.admin_level >= 2 %}
+				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
+					<a class="nav-link" href="/admin/" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Admin Tools"><i class="fas fa-crown{% if v.has_report_queue %} text-success{% endif %}"></i></a>
+				</li>
+			{% endif %}
+
+				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
+					<a class="nav-link" href="/random_user/" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Random User"><i class="fas fa-user-circle"></i></a>
+				</li>
+
+				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
+					<a class="nav-link" href="/random_post/" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Random Post"><i class="fas fa-random"></i></a>
+				</li>
 
 				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
 					<a class="nav-link" href="/comments" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Comments"><i class="fas fa-comment-dots"></i></a>
 				</li>
 
-				{% if v and v.admin_level > 1 %}
+			{% if v and v.admin_level >= 2 %}
 				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
 					<a class="nav-link" href="/leaderboard" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Users"><i class="fas fa-trophy"></i></a>
 				</li>
-
-				{% endif %}
+			{% endif %}
 			
+			{% if v %}
 				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
 					<a class="nav-link" href="{% if sub %}/h/{{sub.name}}{% endif %}/submit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="New Post"><i class="fas fa-edit"></i></a>
 				</li>
@@ -136,37 +137,36 @@
 						</div>
 					</a>
 					<div id="account-menu" class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left border-0 shadow fade px-0">
-					<div class="px-2">
-						<a class="dropdown-item" href="{{v.url}}"><i class="fas fa-user-circle fa-fw mr-3"></i>My
-							profile</a>
-								<a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>Settings</a>
-							</div>
+						<div class="px-2">
+							<a class="dropdown-item" href="{{v.url}}"><i class="fas fa-user-circle fa-fw mr-3"></i>My Profile</a>
+							<a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>Settings</a>
+						</div>
 							<div class="px-2">
-								<button class="dropdown-item copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fas fa-user-friends fa-fw mr-3"></i>Invite friends</button>
+								<button class="dropdown-item copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fas fa-user-friends fa-fw mr-3"></i>Invite Friends</button>
 							</div>
 							<div class="px-2">
 								<a class="dropdown-item" href="/changelog"><i class="fas fa-clipboard fa-fw mr-3"></i>Changelog</a>
 
-								<a class="dropdown-item" rel="nofollow noopener noreferrer" href="https://github.com/themotte/rDrama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
+								<a class="dropdown-item" rel="nofollow noopener noreferrer" href="https://github.com/themotte/rDrama"><i class="fab fa-github fa-fw mr-3"></i>Source Code</a>
 
-								<a class="dropdown-item" href="/contact"><i class="fas fa-file-signature fa-fw mr-3"></i>Contact us</a>
+								<a class="dropdown-item" href="/contact"><i class="fas fa-file-signature fa-fw mr-3"></i>Contact Us</a>
 							</div>
 							<div class="px-2">
-								<a class="dropdown-item" role="button" href="/logout"><i class="fas fa-sign-out fa-fw mr-3"></i>Log out</a>
+								<a class="dropdown-item" role="button" href="/logout"><i class="fas fa-sign-out fa-fw mr-3"></i>Log Out</a>
 							</div>
 						</div>
 					</div>
 				</li>
-				{% else %}
+			{% else %}
 				<li class="nav-item d-flex align-items-center justify-content-center mx-1">
-				<a class="btn btn-primary" href="/contact">Contact us</a>
-			</li>
+					<a class="btn btn-primary" href="/contact">Contact Us</a>
+				</li>
 				<li class="nav-item d-flex align-items-center justify-content-center mx-1">
-				<a class="btn btn-primary" href="/login?redirect={{request.path | urlencode}}">Sign in</a>
-			</li>
-			<li class="nav-item d-flex align-items-center justify-content-center mx-1">
-				<a class="btn btn-primary" href="/signup">Sign up</a>
-			</li>
+					<a class="btn btn-primary" href="/login?redirect={{request.path | urlencode}}">Sign In</a>
+				</li>
+				<li class="nav-item d-flex align-items-center justify-content-center mx-1">
+					<a class="btn btn-primary" href="/signup">Sign Up</a>
+				</li>
 			{% endif %}
 		</ul>
 
@@ -190,26 +190,26 @@
 				</li>
 				{% if not g.webview %}
 					<li class="nav-item">
-						<a class="nav-link copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fas fa-user-friends fa-fw mr-3"></i>Invite friends</a>
+						<a class="nav-link copy-link" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}"><i class="fas fa-user-friends fa-fw mr-3"></i>Invite Friends</a>
 					</li>
 				{% endif %}
 				
-				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="https://github.com/themotte/rDrama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
+				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="https://github.com/themotte/rDrama"><i class="fab fa-github fa-fw mr-3"></i>Source Code</a>
 
-				<a class="nav-item nav-link" href="/contact"><i class="fas fa-file-signature fa-fw mr-3"></i>Contact us</a>
+				<a class="nav-item nav-link" href="/contact"><i class="fas fa-file-signature fa-fw mr-3"></i>Contact Us</a>
 
 				<li class="nav-item border-top border-bottom mt-2 pt-2">
-					<a class="nav-link" role="button" href="/logout"><i class="fas fa-sign-out fa-fw mr-3 text-danger"></i>Log out</a>
+					<a class="nav-link" role="button" href="/logout"><i class="fas fa-sign-out fa-fw mr-3 text-danger"></i>Log Out</a>
 				</li>
 			{% else %}
 				<li class="nav-item d-flex align-items-center justify-content-center pb-3">
-					<a class="btn btn-primary btn-block" href="/contact">Contact us</a>
+					<a class="btn btn-primary btn-block" href="/contact">Contact Us</a>
 				</li>
 				<li class="nav-item d-flex align-items-center justify-content-center pb-3">
-					<a class="btn btn-primary btn-block" href="/login?redirect={{request.path | urlencode}}">Sign in</a>
+					<a class="btn btn-primary btn-block" href="/login?redirect={{request.path | urlencode}}">Sign In</a>
 				</li>
 				<li class="nav-item d-flex align-items-center justify-content-center">
-					<a class="btn btn-primary btn-block" href="/signup">Sign up</a>
+					<a class="btn btn-primary btn-block" href="/signup">Sign Up</a>
 				</li>
 			{% endif %}
 			<li class="mt-3">
