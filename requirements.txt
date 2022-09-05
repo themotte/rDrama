@@ -21,6 +21,7 @@ qrcode
 redis
 requests
 SQLAlchemy
+user-agents
 psycopg2-binary
 pusher_push_notifications
 pyenchant

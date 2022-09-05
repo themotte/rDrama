@@ -88,25 +88,29 @@ mail = Mail(app)
 
 @app.before_request
 def before_request():
-	
 	with open('site_settings.json', 'r') as f:
 		app.config['SETTINGS'] = json.load(f)
 
-	if request.host != app.config["SERVER_NAME"]: return {"error":"Unauthorized host provided."}, 401
-	if request.headers.get("CF-Worker"): return {"error":"Cloudflare workers are not allowed to access this website."}, 401
+	if request.host != app.config["SERVER_NAME"]:
+		return {"error": "Unauthorized host provided."}, 401
 
-	if not app.config['SETTINGS']['Bots'] and request.headers.get("Authorization"): abort(503)
+	if not app.config['SETTINGS']['Bots'] and request.headers.get("Authorization"):
+		abort(503)
 
 	g.db = db_session()
 
-	ua = request.headers.get("User-Agent","").lower()
+	g.agent = request.headers.get("User-Agent")
+	if not g.agent:
+		return 'Please use a "User-Agent" header!', 403
 
-	if '; wv) ' in ua: g.webview = True
-	else: g.webview = False
-
-	if 'iphone' in ua or 'ipad' in ua or 'ipod' in ua or 'mac os' in ua or ' firefox/' in ua: g.inferior_browser = True
-	else: g.inferior_browser = False
-
+	ua = g.agent.lower()
+	g.webview = ('; wv) ' in ua)
+	g.inferior_browser = (
+		'iphone' in ua or
+		'ipad' in ua or
+		'ipod' in ua or
+		'mac os' in ua or
+		' firefox/' in ua)
 	g.timestamp = int(time.time())
 
 

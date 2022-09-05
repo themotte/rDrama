@@ -8,7 +8,13 @@
 {% block content %}
 <pre></pre>
 <pre></pre>
-<h3>&nbsp;Admin Tools</h3>
+<h3>Admin Tools</h3>
+
+<div class="mb-3">
+	<strong>Users Here Now:</strong> {{g.loggedin_counter + g.loggedout_counter}} &mdash; 
+	<a href="/admin/loggedin">{{g.loggedin_counter}} Logged-In</a> | 
+	<a href="/admin/loggedout">{{g.loggedout_counter}} Logged-Out</a>
+</div>
 
 <h4>Content</h4>
 <ul>

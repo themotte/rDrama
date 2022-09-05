@@ -1,0 +1,21 @@
+{% extends "settings2.html" %}
+
+{% block content %}
+<div class="overflow-x-auto"><table class="table table-striped mb-5">
+<thead class="bg-primary text-white">
+	<tr>
+		<th>#</th>
+		<th>Name</th>
+		<th>Truescore</th>
+	</tr>
+</thead>
+{% for user in users %}
+	<tr>
+		<td>{{loop.index}}</td>
+		<td><a style="color:#{{user.name_color}}" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.name_color}}"{% endif %}>{{user.username}}</span></a></td>
+		<td>{{user.truecoins}}</td>
+	</tr>
+{% endfor %}
+</table>
+
+{% endblock %}

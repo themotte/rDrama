@@ -1,0 +1,19 @@
+{% extends "settings2.html" %}
+
+{% block content %}
+<div class="overflow-x-auto"><table class="table table-striped mb-5">
+<thead class="bg-primary text-white">
+	<tr>
+		<th>#</th>
+		<th>Details</th>
+	</tr>
+</thead>
+{% for user in users %}
+	<tr>
+		<td>{{loop.index}}</td>
+		<td>{{user}}</td>
+	</tr>
+{% endfor %}
+</table>
+
+{% endblock %}
