@@ -206,14 +206,14 @@ class Comment(Base):
 			if x.author
 				and not x.author.shadowbanned
 				and (x.filter_state not in ('filtered', 'removed') or x.author_id == author_id)),
-			key=lambda x: x.realupvotes, reverse=True)
+			key=lambda x: x.created_utc, reverse=True)
 
 	@property
 	def replies_ignoring_shadowbans(self):
 		if self.replies2 != None: return self.replies2
 		if not self.parent_submission:
 			return sorted(self.child_comments, key=lambda x: x.created_utc)
-		return sorted(self.child_comments, key=lambda x: x.realupvotes, reverse=True)
+		return sorted(self.child_comments, key=lambda x: x.created_utc, reverse=True)
 
 	@property
 	def replies2(self):
