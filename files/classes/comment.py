@@ -44,9 +44,6 @@ class Comment(Base):
 	body = Column(String)
 	body_html = Column(String)
 	ban_reason = Column(String)
-	slots_result = Column(String)
-	blackjack_result = Column(String)
-	wordle_result = Column(String)
 	filter_state = Column(String, nullable=False)
 
 	Index('comment_parent_index', parent_comment_id)
@@ -396,7 +393,7 @@ class Comment(Base):
 
 		if self.is_banned: return True
 
-		if path.startswith('/post') and (self.slots_result or self.blackjack_result or self.wordle_result) and (not self.body or len(self.body_html) <= 100) and 9 > self.level > 1: return True
+		if path.startswith('/post') and (not self.body or len(self.body_html) <= 100) and 9 > self.level > 1: return True
 			
 		if v and v.filter_words and self.body and any(x in self.body for x in v.filter_words): return True
 		
@@ -408,92 +405,3 @@ class Comment(Base):
 	
 	@lazy
 	def active_flags(self, v): return len(self.flags(v))
-	
-	@lazy
-	def wordle_html(self, v):
-		if not self.wordle_result: return ''
-
-		split_wordle_result = self.wordle_result.split('_')
-		wordle_guesses = split_wordle_result[0]
-		wordle_status = split_wordle_result[1]
-		wordle_answer = split_wordle_result[2]
-
-		body = f"<span id='wordle-{self.id}' class='ml-2'><small>{wordle_guesses}</small>"
-
-		if wordle_status == 'active' and v and v.id == self.author_id:
-			body += f'''<input autocomplete="off" id="guess_box" type="text" name="guess" class="form-control" maxsize="4" style="width: 200px;display: initial"placeholder="5-letter guess"></input><button class="action-{self.id} btn btn-success small" style="text-transform: uppercase; padding: 2px"onclick="handle_action('wordle','{self.id}',document.getElementById('guess_box').value)">Guess</button>'''
-		elif wordle_status == 'won':
-			body += "<strong class='ml-2'>Correct!</strong>"
-		elif wordle_status == 'lost':
-			body += f"<strong class='ml-2'>Lost. The answer was: {wordle_answer}</strong>"
-		
-		body += '</span>'
-		return body
-
-	@lazy
-	def blackjack_html(self, v):
-		if not self.blackjack_result: return ''
-
-		split_result = self.blackjack_result.split('_')
-		blackjack_status = split_result[3]
-		player_hand = split_result[0].replace('X', '10')
-		dealer_hand = split_result[1].split('/')[0] if blackjack_status == 'active' else split_result[1]
-		dealer_hand = dealer_hand.replace('X', '10')
-		wager = int(split_result[4])
-		try: kind = split_result[5]
-		except: kind = "coins"
-		currency_kind = "Coins" if kind == "coins" else "Marseybucks"
-
-		try: is_insured = split_result[6]
-		except: is_insured = "0"
-
-		body = f"<span id='blackjack-{self.id}' class='ml-2'><em>{player_hand} vs. {dealer_hand}</em>"
-		
-		if blackjack_status == 'active' and v and v.id == self.author_id:
-			body += f'''
-			<button
-				class="action-{self.id} btn btn-success small"
-				style="text-transform: uppercase; padding: 2px"
-				onclick="handle_action('blackjack','{self.id}','hit')">
-					Hit
-			</button>
-			<button
-				class="action-{self.id} btn btn-danger small"
-				style="text-transform: uppercase; padding: 2px"
-				onclick="handle_action('blackjack','{self.id}','stay')">
-					Stay
-			</button>
-			<button
-				class="action-{self.id} btn btn-secondary small"
-				style="text-transform: uppercase; padding: 2px"
-				onclick="handle_action('blackjack','{self.id}','doubledown')">
-					Double Down
-			</button>
-			'''
-
-			if dealer_hand[0][0] == 'A' and not is_insured == "1":
-				body += f'''
-				<button
-					class="action-{self.id} btn btn-secondary small"
-					style="text-transform: uppercase; padding: 2px"
-					onclick="handle_action('blackjack','{self.id}','insurance')">
-						Insure
-				</button>
-				'''
-
-		elif blackjack_status == 'push':
-			body += f"<strong class='ml-2'>Pushed. Refunded {wager} {currency_kind}.</strong>"
-		elif blackjack_status == 'bust':
-			body += f"<strong class='ml-2'>Bust. Lost {wager} {currency_kind}.</strong>"
-		elif blackjack_status == 'lost':
-			body += f"<strong class='ml-2'>Lost {wager} {currency_kind}.</strong>"
-		elif blackjack_status == 'won':
-			body += f"<strong class='ml-2'>Won {wager} {currency_kind}.</strong>"
-		elif blackjack_status == 'blackjack':
-			body += f"<strong class='ml-2'>Blackjack! Won {floor(wager * 3/2)} {currency_kind}.</strong>"
-
-		if is_insured == "1":
-			body += f" <em class='text-success'>Insured.</em>"
-
-		body += '</span>'
-		return body

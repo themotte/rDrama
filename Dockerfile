@@ -2,7 +2,7 @@ FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && apt -y upgrade && apt install -y supervisor python3-pip libenchant1c2a ffmpeg
+RUN apt update && apt -y upgrade && apt install -y supervisor python3-pip ffmpeg
 
 COPY supervisord.conf /etc/supervisord.conf
 

@@ -2,8 +2,6 @@ from files.helpers.wrappers import *
 from files.helpers.alerts import *
 from files.helpers.images import *
 from files.helpers.const import *
-from files.helpers.slots import *
-from files.helpers.blackjack import *
 from files.classes import *
 from files.routes.front import comment_idlist
 from pusher_push_notifications import PushNotifications
@@ -15,16 +13,11 @@ import requests
 from shutil import copyfile
 from json import loads
 from collections import Counter
-from enchant import Dict
 import gevent
 from sys import stdout
 
-d = Dict("en_US")
-
 if PUSHER_ID != 'blahblahblah':
 	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
-
-WORDLE_COLOR_MAPPINGS = {-1: "🟥", 0: "🟨", 1: "🟩"}
 
 def pusher_thread(interests, c, username):
 	if len(c.body) > 500: notifbody = c.body[:500] + '...'
@@ -252,7 +245,7 @@ def api_comment(v):
 
 	body_html = sanitize(body, comment=True)
 
-	if parent_post.id not in ADMINISTRATORS and '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower():
+	if parent_post.id not in ADMINISTRATORS:
 		existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
 																	Comment.deleted_utc == 0,
 																	Comment.parent_comment_id == parent_comment_id,
@@ -266,7 +259,7 @@ def api_comment(v):
 
 	is_bot = bool(request.headers.get("Authorization"))
 
-	if '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower() and parent_post.id not in ADMINISTRATORS and not is_bot and not v.marseyawarded and len(body) > 10:
+	if parent_post.id not in ADMINISTRATORS and not is_bot and not v.marseyawarded and len(body) > 10:
 		now = int(time.time())
 		cutoff = now - 60 * 60 * 24
 
@@ -377,21 +370,11 @@ def api_comment(v):
 		c.upvotes += 3
 		g.db.add(c)
 
-	if not v.rehab:
-		check_for_slots_command(body, v, c)
-
-		check_for_blackjack_commands(body, v, c)
-
-	if not c.slots_result and not c.blackjack_result and v.marseyawarded and parent_post.id not in ADMINISTRATORS and marseyaward_body_regex.search(body_html):
+	if v.marseyawarded and parent_post.id not in ADMINISTRATORS and marseyaward_body_regex.search(body_html):
 		return {"error":"You can only type marseys!"}, 403
 
-	if "!wordle" in body:
-		answer = random.choice(WORDLE_LIST)
-		c.wordle_result = f'_active_{answer}'
-
-	if not c.slots_result and not c.blackjack_result and not c.wordle_result:
-		parent_post.comment_count += 1
-		g.db.add(parent_post)
+	parent_post.comment_count += 1
+	g.db.add(parent_post)
 
 	g.db.commit()
 
@@ -422,39 +405,40 @@ def edit_comment(cid, v):
 
 		body_html = sanitize(body, edit=True)
 
-		if '!slots' not in body.lower() and '!blackjack' not in body.lower() and '!wordle' not in body.lower():
-			now = int(time.time())
-			cutoff = now - 60 * 60 * 24
+		# Spam Checking
+		now = int(time.time())
+		cutoff = now - 60 * 60 * 24
 
-			similar_comments = g.db.query(Comment
-			).filter(
-				Comment.author_id == v.id,
-				Comment.body.op(
-					'<->')(body) < app.config["SPAM_SIMILARITY_THRESHOLD"],
-				Comment.created_utc > cutoff
-			).all()
+		similar_comments = g.db.query(Comment
+		).filter(
+			Comment.author_id == v.id,
+			Comment.body.op(
+				'<->')(body) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+			Comment.created_utc > cutoff
+		).all()
 
-			threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
-			if v.age >= (60 * 60 * 24 * 30):
-				threshold *= 4
-			elif v.age >= (60 * 60 * 24 * 7):
-				threshold *= 3
-			elif v.age >= (60 * 60 * 24):
-				threshold *= 2
+		threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
+		if v.age >= (60 * 60 * 24 * 30):
+			threshold *= 4
+		elif v.age >= (60 * 60 * 24 * 7):
+			threshold *= 3
+		elif v.age >= (60 * 60 * 24):
+			threshold *= 2
 
-			if len(similar_comments) > threshold:
-				text = "Your account has been banned for **1 day** for the following reason:\n\n> Too much spam!"
-				send_repeatable_notification(v.id, text)
+		if len(similar_comments) > threshold:
+			text = "Your account has been banned for **1 day** for the following reason:\n\n> Too much spam!"
+			send_repeatable_notification(v.id, text)
 
-				v.ban(reason="Spamming.",
-						days=1)
+			v.ban(reason="Spamming.",
+					days=1)
 
-				for comment in similar_comments:
-					comment.is_banned = True
-					comment.ban_reason = "AutoJanny"
-					g.db.add(comment)
+			for comment in similar_comments:
+				comment.is_banned = True
+				comment.ban_reason = "AutoJanny"
+				g.db.add(comment)
 
-				return {"error": "Too much spam!"}, 403
+			return {"error": "Too much spam!"}, 403
+		# End Spam Checking
 
 		if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 			files = request.files.getlist('file')[:4]
@@ -671,73 +655,3 @@ def unsave_comment(cid, v):
 		g.db.commit()
 
 	return {"message": "Comment unsaved!"}
-
-@app.post("/blackjack/<cid>")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
-def handle_blackjack_action(cid, v):
-	comment = get_comment(cid)
-	if 'active' in comment.blackjack_result:
-		try: action = request.values.get("thing").strip().lower()
-		except: abort(400)
-
-		if action == 'hit': player_hit(comment)
-		elif action == 'stay': player_stayed(comment)
-		elif action == 'doubledown': player_doubled_down(comment)
-		elif action == 'insurance': player_bought_insurance(comment)
-
-		g.db.add(comment)
-		g.db.add(v)
-		g.db.commit()
-	return {"response" : comment.blackjack_html(v)}
-
-
-def diff_words(answer, guess):
-	"""
-	Return a list of numbers corresponding to the char's relevance.
-	-1 means char is not in solution or the character appears too many times in the guess
-	0 means char is in solution but in the wrong spot
-	1 means char is in the correct spot
-	"""
-	diffs = [
-			1 if cs == cg else -1 for cs, cg in zip(answer, guess)
-		]
-	char_freq = Counter(
-		c_guess for c_guess, diff, in zip(answer, diffs) if diff == -1
-	)
-	for i, cg in enumerate(guess):
-		if diffs[i] == -1 and cg in char_freq and char_freq[cg] > 0:
-			char_freq[cg] -= 1
-			diffs[i] = 0
-	return diffs
-
-
-@app.post("/wordle/<cid>")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
-def handle_wordle_action(cid, v):
-
-	comment = get_comment(cid)
-
-	guesses, status, answer = comment.wordle_result.split("_")
-	count = len(guesses.split(" -> "))
-
-	try: guess = request.values.get("thing").strip().lower()
-	except: abort(400)
-
-	if len(guess) != 5 or not d.check(guess) and guess not in WORDLE_LIST:
-		return {"error": "Not a valid guess!"}, 400
-
-	if status == "active":
-		guesses += "".join(cg + WORDLE_COLOR_MAPPINGS[diff] for cg, diff in zip(guess, diff_words(answer, guess)))
-
-		if (guess == answer): status = "won"
-		elif (count == 6): status = "lost"
-		else: guesses += ' -> '
-
-		comment.wordle_result = f'{guesses}_{status}_{answer}'
-
-		g.db.add(comment)
-		g.db.commit()
-	
-	return {"response" : comment.wordle_html(v)}
