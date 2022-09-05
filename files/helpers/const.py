@@ -528,8 +528,6 @@ ADMINISTRATORS = (37696, 37697, 37749, 37833, 37838)
 
 proxies = {"http":"http://127.0.0.1:18080","https":"http://127.0.0.1:18080"}
 
-blackjack = environ.get("BLACKJACK", "").strip()
-
 approved_embed_hosts = [
 	'rdrama.net',
 	'pcmemes.net',

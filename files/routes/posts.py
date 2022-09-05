@@ -949,11 +949,6 @@ def submit_post(v, sub=None):
 	g.db.add(post)
 	g.db.flush()
 
-	if blackjack and any(i in f'{post.body} {post.title} {post.url}'.lower() for i in blackjack.split()):
-		v.shadowbanned = 'AutoJanny'
-		g.db.add(v)
-		send_repeatable_notification(CARP_ID, post.permalink)
-
 	vote = Vote(user_id=v.id,
 				vote_type=1,
 				submission_id=post.id
