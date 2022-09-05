@@ -66,9 +66,9 @@ body, .card, #main-content-row {
 	color: var(--black1);
 }
 
-.controversial {
+/*.controversial {
 	color: var(--red) !important;
-}
+}*/
 
 a {
 	color: var(--blue);
