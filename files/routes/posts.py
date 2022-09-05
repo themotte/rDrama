@@ -172,7 +172,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 				filter_clause = filter_clause | (Comment.author_id == v.id)
 			comments = comments.filter(filter_clause)
 
-		comments=comments.filter(Comment.parent_submission == post.id, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID))).join(
+		comments=comments.filter(Comment.parent_submission == post.id).join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
@@ -215,7 +215,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 	else:
 		pinned = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.is_pinned != None).all()
 
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)), Comment.level == 1, Comment.is_pinned == None)
+		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.level == 1, Comment.is_pinned == None)
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -298,7 +298,7 @@ def viewmore(v, pid, sort, offset):
 			votes.c.vote_type,
 			blocking.c.target_id,
 			blocked.c.target_id,
-		).filter(Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)), Comment.is_pinned == None, Comment.id.notin_(ids))
+		).filter(Comment.parent_submission == pid, Comment.is_pinned == None, Comment.id.notin_(ids))
 
 		if not (v and v.shadowbanned) and not (v and v.admin_level > 2):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
@@ -348,7 +348,7 @@ def viewmore(v, pid, sort, offset):
 		second = [c[0] for c in comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None, Comment.wordle_result != None), func.length(Comment.body_html) <= 100).all()]
 		comments = first + second
 	else:
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)), Comment.level == 1, Comment.is_pinned == None, Comment.id.notin_(ids))
+		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == pid, Comment.level == 1, Comment.is_pinned == None, Comment.id.notin_(ids))
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -893,22 +893,6 @@ def submit_post(v, sub=None):
 					)
 			g.db.add(ma)
 		return redirect("/notifications")
-
-	if v and v.admin_level > 2:
-		bet_options = []
-		for i in bet_regex.finditer(body):
-			bet_options.append(i.group(1))
-			body = body.replace(i.group(0), "")
-
-	options = []
-	for i in poll_regex.finditer(body):
-		options.append(i.group(1))
-		body = body.replace(i.group(0), "")
-
-	choices = []
-	for i in choice_regex.finditer(body):
-		choices.append(i.group(1))
-		body = body.replace(i.group(0), "")
 
 	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
 		files = request.files.getlist('file2')[:4]

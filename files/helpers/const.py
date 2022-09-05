@@ -493,10 +493,6 @@ valid_sub_regex = re.compile("^[a-zA-Z0-9_\-]{3,20}$", flags=re.A)
 
 query_regex = re.compile("(\w+):(\S+)", flags=re.A)
 
-poll_regex = re.compile("\s*\$\$([^\$\n]+)\$\$\s*", flags=re.A)
-bet_regex = re.compile("\s*\$\$\$([^\$\n]+)\$\$\$\s*", flags=re.A)
-choice_regex = re.compile("\s*&&([^\$\n]+)&&\s*", flags=re.A)
-
 title_regex = re.compile("[^\w ]", flags=re.A)
 
 based_regex = re.compile("based and (.{1,20}?)(-| )pilled", flags=re.I|re.A)

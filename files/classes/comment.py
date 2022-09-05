@@ -90,38 +90,6 @@ class Comment(Base):
 					flags.remove(flag)
 		return flags
 
-	@lazy
-	def poll_voted(self, v):
-		if v:
-			vote = g.db.query(CommentVote.vote_type).filter_by(user_id=v.id, comment_id=self.id).one_or_none()
-			if vote: return vote[0]
-		return None
-
-	@property
-	@lazy
-	def options(self):
-		li = [x for x in self.child_comments if x.author_id == AUTOPOLLER_ID]
-		return sorted(li, key=lambda x: x.id)
-
-
-	@property
-	@lazy
-	def choices(self):
-		li = [x for x in self.child_comments if x.author_id == AUTOCHOICE_ID]
-		return sorted(li, key=lambda x: x.id)
-
-
-	def total_poll_voted(self, v):
-		if v:
-			for option in self.options:
-				if option.poll_voted(v): return True
-		return False
-
-	def total_choice_voted(self, v):
-		if v:
-			return g.db.query(CommentVote).filter(CommentVote.user_id == v.id, CommentVote.comment_id.in_([x.id for x in self.choices])).all()
-		return False
-
 	@property
 	@lazy
 	def controversial(self):
@@ -240,8 +208,7 @@ class Comment(Base):
 		return sorted((x for x in self.child_comments
 			if x.author
 				and not x.author.shadowbanned
-				and (x.filter_state not in ('filtered', 'removed') or x.author_id == author_id)
-				and x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)),
+				and (x.filter_state not in ('filtered', 'removed') or x.author_id == author_id)),
 			key=lambda x: x.realupvotes, reverse=True)
 
 	@property
@@ -249,9 +216,7 @@ class Comment(Base):
 		if self.replies2 != None: return self.replies2
 		if not self.parent_submission:
 			return sorted(self.child_comments, key=lambda x: x.created_utc)
-		return sorted((x for x in self.child_comments
-			if x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID, AUTOCHOICE_ID)),
-			key=lambda x: x.realupvotes, reverse=True)
+		return sorted(self.child_comments, key=lambda x: x.realupvotes, reverse=True)
 
 	@property
 	def replies2(self):
@@ -402,27 +367,6 @@ class Comment(Base):
 						self.upvotes += amount
 						g.db.add(self)
 						g.db.commit()
-
-		for c in self.options:
-			body += f'<div class="custom-control"><input type="checkbox" class="custom-control-input" id="{c.id}" name="option"'
-			if c.poll_voted(v): body += " checked"
-			if v: body += f''' onchange="poll_vote('{c.id}', '{self.id}')"'''
-			else: body += f''' onchange="poll_vote_no_v('{c.id}', '{self.id}')"'''
-			body += f'''><label class="custom-control-label" for="{c.id}">{c.body_html}<span class="presult-{self.id}'''
-			if not self.total_poll_voted(v): body += ' d-none'	
-			body += f'"> - <a href="/votes?link=t3_{c.id}"><span id="poll-{c.id}">{c.upvotes}</span> votes</a></span></label></div>'
-
-		curr = self.total_choice_voted(v)
-		if curr: curr = " value=" + str(curr[0].comment_id)
-		else: curr = ''
-		body += f'<input class="d-none" id="current-{self.id}"{curr}>'
-
-		for c in self.choices:
-			body += f'''<div class="custom-control"><input name="choice-{self.id}" autocomplete="off" class="custom-control-input" type="radio" id="{c.id}" onchange="choice_vote('{c.id}','{self.id}')"'''
-			if c.poll_voted(v): body += " checked "
-			body += f'''><label class="custom-control-label" for="{c.id}">{c.body_html}<span class="presult-{self.id}'''
-			if not self.total_choice_voted(v): body += ' d-none'	
-			body += f'"> - <a href="/votes?link=t3_{c.id}"><span id="choice-{c.id}">{c.upvotes}</span> votes</a></span></label></div>'
 
 		if self.author.sig_html and (self.author_id == MOOSE_ID or (not self.ghost and not (v and v.sigs_disabled))):
 			body += f"<hr>{self.author.sig_html}"
