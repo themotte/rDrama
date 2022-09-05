@@ -4648,10 +4648,11 @@ img[pat][src^="/pp/"], img[pat][src$="/pic"] {
 	margin-bottom: 9.8px;
 	padding-bottom: 7px;
 }
-.controversial {
+
+/*.controversial {
 	color: #f27d0c !important;
 	font-weight: 800;
-}
+}*/
 
 code {
 	text-transform: none !important;
