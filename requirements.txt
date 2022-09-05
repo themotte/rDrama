@@ -24,7 +24,6 @@ SQLAlchemy
 user-agents
 psycopg2-binary
 pusher_push_notifications
-pyenchant
 youtube-dl
 yattag
 webptools

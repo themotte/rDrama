@@ -463,8 +463,6 @@ CF_KEY = environ.get("CF_KEY", "").strip()
 CF_ZONE = environ.get("CF_ZONE", "").strip()
 CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
 
-WORDLE_LIST = ('aaron')
-
 dues = int(environ.get("DUES").strip())
 
 christian_emojis = (':#marseyjesus:',':#marseyimmaculate:',':#marseymothermary:',':#marseyfatherjoseph:',':#gigachadorthodox:',':#marseyorthodox:',':#marseyorthodoxpat:')

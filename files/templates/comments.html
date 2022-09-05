@@ -219,18 +219,6 @@
 				{% if c.edited_utc %}
 				<span class="time-edited" id="time-edit-{{c.id}}" onmouseover="timestamp('time-edit-{{c.id}}','{{c.edited_utc}}')"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
 				{% endif %}
-
-				{% if c.slots_result %}
-				<em style="position: relative; top: 2px; margin-left: 0.5rem">{{c.slots_result}}</em>
-				{% endif %}
-
-				{% if c.blackjack_result %}
-					{{c.blackjack_html(v) | safe}}
-				{% endif %}
-
-				{% if c.wordle_result %}
-					{{c.wordle_html(v) | safe}}
-				{% endif %}
 			</div>
 			{% if v and c.filter_state == 'reported' and v.can_manage_reports() %}
 			<div id="flaggers-{{c.id}}" class="flaggers d-none">
