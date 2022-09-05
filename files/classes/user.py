@@ -550,7 +550,6 @@ class User(Base):
 				'profile_url': self.profile_url,
 				'bannerurl': self.banner_url,
 				'bio_html': self.bio_html_eager,
-				'coins': self.coins,
 				'post_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level > 2)) else self.post_count,
 				'comment_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level > 2)) else self.comment_count,
 				'badges': [x.path for x in self.badges],

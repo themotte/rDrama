@@ -25,7 +25,6 @@ function popclick(author) {
 		popover.getElementsByClassName('pop-bio')[0].innerHTML = author["bio_html"]
 		popover.getElementsByClassName('pop-postcount')[0].innerHTML = author["post_count"]
 		popover.getElementsByClassName('pop-commentcount')[0].innerHTML = author["comment_count"]
-		popover.getElementsByClassName('pop-coins')[0].innerHTML = author["coins"]
 		popover.getElementsByClassName('pop-viewmore')[0].href = author["url"]
 		popover.getElementsByClassName('pop-badges')[0].innerHTML = badges
 	; }, 1);

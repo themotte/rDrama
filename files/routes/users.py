@@ -353,17 +353,12 @@ def downvoting(v, username):
 	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Down', name2=f'Who @{username} downvotes')
 
 
-@app.get("/@<username>/coins")
-@auth_required
-def get_coins(v, username):
-	user = get_user(username)
-	if user != None: return {"coins": user.coins}, 200
-	else: return {"error": "invalid_user"}, 404
-
 @app.post("/@<username>/transfer_coins")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def transfer_coins(v, username):
+	abort(404) # disable entirely pending possible future use of coins
+
 	receiver = g.db.query(User).filter_by(username=username).one_or_none()
 
 	if receiver is None: return {"error": "That user doesn't exist."}, 404
@@ -398,6 +393,8 @@ def transfer_coins(v, username):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def transfer_bux(v, username):
+	abort(404) # disable entirely pending possible future use of coins
+
 	receiver = g.db.query(User).filter_by(username=username).one_or_none()
 
 	if not receiver: return {"error": "That user doesn't exist."}, 404
