@@ -174,10 +174,6 @@ def api_comment(v):
 
 	body = request.values.get("body", "").strip()[:10000]
 
-	if v.admin_level > 2 and parent_post.id == 37749 and level == 1:
-		with open(f"snappy_{SITE_ID}.txt", "a", encoding="utf-8") as f:
-			f.write('\n{[para]}\n' + body)
-
 	if parent_post.id not in ADMINISTRATORS:
 		if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
 			return {"error":"You have to type more than 280 characters!"}, 403

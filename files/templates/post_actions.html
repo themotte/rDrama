@@ -33,7 +33,7 @@
 		<a id="delete2-{{p.id}}" class="{% if p.deleted_utc %}d-none{% endif %} list-inline-item" role="button" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')"><i class="fas fa-trash-alt"></i>Delete</a>
 	{% endif %}
 
-	{% if v and v.admin_level > 2 and p.filter_state == 'filtered' %}
+	{% if v and v.admin_level > 1 and p.filter_state == 'filtered' %}
 		<a id="filter-approve" class="list-inline-item" role="button" onclick="filter_new_status({{p.id}}, 'normal')">Approve</a>
 		<a id="filter-remove" class="list-inline-item" role="button" onclick="filter_new_status({{p.id}}, 'removed')">Remove</a>
 	{% endif %}
