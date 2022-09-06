@@ -7,6 +7,7 @@ Flask-Limiter
 Flask-Mail
 Flask-Migrate
 Flask-Socketio
+flask_profiler
 gevent
 gevent-websocket
 greenlet
