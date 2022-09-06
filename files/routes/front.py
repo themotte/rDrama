@@ -526,19 +526,20 @@ def all_comments(v):
 
 @cache.memoize(timeout=86400)
 def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", gt=0, lt=0, site=None):
-
-	comments = g.db.query(Comment.id).filter(Comment.parent_submission != None)
+	comments = g.db.query(Comment.id) \
+		.join(Comment.post) \
+		.join(Comment.author) \
+		.filter(Comment.parent_submission != None)
 
 	if v.admin_level < 2:
-		private = [x[0] for x in g.db.query(Submission.id).filter(Submission.private == True).all()]
-
-		comments = comments.filter(Comment.author_id.notin_(v.userblocks), Comment.is_banned==False, Comment.deleted_utc == 0, Comment.parent_submission.notin_(private))
-
-
-	if not v.paid_dues:
-		club = [x[0] for x in g.db.query(Submission.id).filter(Submission.club == True).all()]
-		comments = comments.filter(Comment.parent_submission.notin_(club))
-
+		comments = comments.filter(
+			Comment.author_id.notin_(v.userblocks),
+			Comment.is_banned == False,
+			Comment.deleted_utc == 0,
+			Submission.private == False, # comment parent post not private
+			User.shadowbanned == None, # comment author not shadowbanned
+			Comment.filter_state.notin_(('filtered', 'removed')),
+		)
 
 	if gt: comments = comments.filter(Comment.created_utc > gt)
 	if lt: comments = comments.filter(Comment.created_utc < lt)
