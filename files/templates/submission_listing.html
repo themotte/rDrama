@@ -4,7 +4,7 @@
 	<script src="{{ 'js/new_comments_count.js' | asset }}"></script>
 {% endif %}
 
-{% if v and v.admin_level > 2 %}
+{% if v and v.admin_level > 1 %}
 	<script src="{{ 'js/filter_actions.js' | asset }}"></script>
 {% endif %}
 
@@ -219,7 +219,7 @@
 												class="mod"
 											{% endif %}>{{p.author_name}}</span>
 								</a>{% if p.author.customtitle %}<bdi style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
-								{% if v and v.admin_level > 2 %}
+								{% if v and v.admin_level > 1 %}
 									<span 
 										class="usernote-link" 
 										data-micromodal-trigger="modal-1" 
