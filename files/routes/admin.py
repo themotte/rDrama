@@ -22,6 +22,7 @@ month = datetime.now().strftime('%B')
 
 
 @app.get('/admin/merge/<id1>/<id2>')
+@limiter.exempt
 @admin_level_required(3)
 def merge(v, id1, id2):
 	if v.id != AEVANN_ID: abort(403)
@@ -82,6 +83,7 @@ def merge(v, id1, id2):
 
 
 @app.get('/admin/merge_all/<id>')
+@limiter.exempt
 @admin_level_required(3)
 def merge_all(v, id):
 	if v.id != AEVANN_ID: abort(403)
@@ -130,6 +132,7 @@ def merge_all(v, id):
 
 
 @app.post("/@<username>/make_admin")
+@limiter.exempt
 @admin_level_required(3)
 def make_admin(v, username):
 	user = get_user(username)
@@ -149,6 +152,7 @@ def make_admin(v, username):
 
 
 @app.post("/@<username>/remove_admin")
+@limiter.exempt
 @admin_level_required(3)
 def remove_admin(v, username):
 	user = get_user(username)
@@ -167,6 +171,7 @@ def remove_admin(v, username):
 	return {"message": "Admin removed!"}
 
 @app.post("/@<username>/delete_note/<id>")
+@limiter.exempt
 @admin_level_required(3)
 def delete_note(v,username,id):
 	g.db.query(UserNote).filter_by(id=id).delete()
@@ -177,6 +182,7 @@ def delete_note(v,username,id):
 	}), 200)
 
 @app.post("/@<username>/create_note")
+@limiter.exempt
 @admin_level_required(3)
 def create_note(v,username):
 
@@ -217,7 +223,7 @@ def create_note(v,username):
 	return result('Note saved',True,note.json())
 
 @app.post("/@<username>/revert_actions")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(3)
 def revert_actions(v, username):
 	user = get_user(username)
@@ -265,7 +271,7 @@ def revert_actions(v, username):
 	return {"message": "Admin actions reverted!"}
 
 @app.post("/@<username>/club_allow")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def club_allow(v, username):
 
@@ -293,7 +299,7 @@ def club_allow(v, username):
 	return {"message": f"@{username} has been allowed into the {CC_TITLE}!"}
 
 @app.post("/@<username>/club_ban")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def club_ban(v, username):
 
@@ -321,7 +327,7 @@ def club_ban(v, username):
 
 
 @app.post("/@<username>/make_meme_admin")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(3)
 def make_meme_admin(v, username):
 	user = get_user(username)
@@ -361,6 +367,7 @@ def remove_meme_admin(v, username):
 
 
 @app.get("/admin/shadowbanned")
+@limiter.exempt
 @auth_required
 def shadowbanned(v):
 	if not (v and v.admin_level > 1): abort(404)
@@ -368,6 +375,7 @@ def shadowbanned(v):
 	return render_template("shadowbanned.html", v=v, users=users)
 
 @app.get("/admin/filtered/posts")
+@limiter.exempt
 @admin_level_required(2)
 def filtered_submissions(v):
 	try: page = int(request.values.get('page', 1))
@@ -387,6 +395,7 @@ def filtered_submissions(v):
 	return render_template("admin/filtered_submissions.html", v=v, listing=posts, next_exists=next_exists, page=page, sort="new")
 
 @app.get("/admin/filtered/comments")
+@limiter.exempt
 @admin_level_required(2)
 def filtered_comments(v):
 	try: page = int(request.values.get('page', 1))
@@ -406,6 +415,7 @@ def filtered_comments(v):
 	return render_template("admin/filtered_comments.html", v=v, listing=comments, next_exists=next_exists, page=page, sort="new")
 
 @app.post("/admin/update_filter_status")
+@limiter.exempt
 @admin_level_required(2)
 def update_filter_status(v):
 	update_body = request.get_json()
@@ -429,6 +439,7 @@ def update_filter_status(v):
 		return { 'result': 'Item ID does not exist' }
 
 @app.get("/admin/image_posts")
+@limiter.exempt
 @admin_level_required(2)
 def image_posts_listing(v):
 
@@ -447,6 +458,7 @@ def image_posts_listing(v):
 
 
 @app.get("/admin/reported/posts")
+@limiter.exempt
 @admin_level_required(2)
 def reported_posts(v):
 	page = max(1, int(request.values.get("page", 1)))
@@ -466,6 +478,7 @@ def reported_posts(v):
 
 
 @app.get("/admin/reported/comments")
+@limiter.exempt
 @admin_level_required(2)
 def reported_comments(v):
 
@@ -495,6 +508,7 @@ def reported_comments(v):
 						   standalone=True)
 
 @app.get("/admin")
+@limiter.exempt
 @admin_level_required(2)
 def admin_home(v):
 	if CF_ZONE == 'blahblahblah': response = 'high'
@@ -505,6 +519,7 @@ def admin_home(v):
 
 
 @app.post("/admin/site_settings/<setting>")
+@limiter.exempt
 @admin_level_required(3)
 def change_settings(v, setting):
 	site_settings = app.config['SETTINGS']
@@ -556,6 +571,7 @@ def change_settings(v, setting):
 
 
 @app.post("/admin/purge_cache")
+@limiter.exempt
 @admin_level_required(3)
 def purge_cache(v):
 	cache.clear()
@@ -572,6 +588,7 @@ def purge_cache(v):
 
 
 @app.post("/admin/under_attack")
+@limiter.exempt
 @admin_level_required(3)
 def under_attack(v):
 	response = requests.get(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, timeout=5).json()['result']['value']
@@ -600,6 +617,7 @@ def under_attack(v):
 		return {"error": "Failed to enable under attack mode."}
 
 @app.get("/admin/badge_grant")
+@limiter.exempt
 @admin_level_required(2)
 def badge_grant_get(v):
 	badges = g.db.query(BadgeDef).order_by(BadgeDef.id).all()
@@ -607,7 +625,7 @@ def badge_grant_get(v):
 
 
 @app.post("/admin/badge_grant")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def badge_grant_post(v):
 	badges = g.db.query(BadgeDef).order_by(BadgeDef.id).all()
@@ -654,6 +672,7 @@ def badge_grant_post(v):
 
 
 @app.get("/admin/badge_remove")
+@limiter.exempt
 @admin_level_required(2)
 def badge_remove_get(v):
 	badges = g.db.query(BadgeDef).order_by(BadgeDef.id).all()
@@ -662,7 +681,7 @@ def badge_remove_get(v):
 
 
 @app.post("/admin/badge_remove")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def badge_remove_post(v):
 	badges = g.db.query(BadgeDef).order_by(BadgeDef.id).all()
@@ -694,6 +713,7 @@ def badge_remove_post(v):
 
 
 @app.get("/admin/users")
+@limiter.exempt
 @admin_level_required(2)
 def users_list(v):
 
@@ -718,6 +738,7 @@ def users_list(v):
 
 
 @app.get('/admin/loggedin')
+@limiter.exempt
 @admin_level_required(2)
 def loggedin_list(v):
 	ids = [x for x, val in cache.get(f'{SITE}_loggedin').items() \
@@ -728,6 +749,7 @@ def loggedin_list(v):
 
 
 @app.get('/admin/loggedout')
+@limiter.exempt
 @admin_level_required(2)
 def loggedout_list(v):
 	users = sorted([val[1] for x, val in cache.get(f'{SITE}_loggedout').items() \
@@ -736,6 +758,7 @@ def loggedout_list(v):
 
 
 @app.get("/admin/alt_votes")
+@limiter.exempt
 @admin_level_required(2)
 def alt_votes_get(v):
 
@@ -842,7 +865,7 @@ def alt_votes_get(v):
 
 
 @app.post("/admin/link_accounts")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def admin_link_accounts(v):
 
@@ -870,6 +893,7 @@ def admin_link_accounts(v):
 
 
 @app.get("/admin/removed/posts")
+@limiter.exempt
 @admin_level_required(2)
 def admin_removed(v):
 
@@ -897,6 +921,7 @@ def admin_removed(v):
 
 
 @app.get("/admin/removed/comments")
+@limiter.exempt
 @admin_level_required(2)
 def admin_removed_comments(v):
 
@@ -922,7 +947,7 @@ def admin_removed_comments(v):
 
 
 @app.post("/shadowban/<user_id>")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def shadowban(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
@@ -971,7 +996,7 @@ def shadowban(user_id, v):
 
 
 @app.post("/unshadowban/<user_id>")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def unshadowban(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
@@ -996,7 +1021,7 @@ def unshadowban(user_id, v):
 	return {"message": "User unshadowbanned!"}
 
 @app.post("/admin/verify/<user_id>")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(3)
 def verify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
@@ -1014,7 +1039,7 @@ def verify(user_id, v):
 	return {"message": "User verfied!"}
 
 @app.post("/admin/unverify/<user_id>")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(3)
 def unverify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
@@ -1033,7 +1058,7 @@ def unverify(user_id, v):
 
 
 @app.post("/admin/title_change/<user_id>")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def admin_title_change(user_id, v):
 
@@ -1069,7 +1094,7 @@ def admin_title_change(user_id, v):
 	return redirect(user.url)
 
 @app.post("/ban_user/<user_id>")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def ban_user(user_id, v):
 	
@@ -1160,7 +1185,7 @@ def ban_user(user_id, v):
 
 
 @app.post("/unban_user/<user_id>")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def unban_user(user_id, v):
 
@@ -1197,7 +1222,7 @@ def unban_user(user_id, v):
 
 
 @app.post("/ban_post/<post_id>")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def ban_post(post_id, v):
 
@@ -1235,7 +1260,7 @@ def ban_post(post_id, v):
 
 
 @app.post("/unban_post/<post_id>")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def unban_post(post_id, v):
 
@@ -1269,6 +1294,7 @@ def unban_post(post_id, v):
 
 
 @app.post("/distinguish/<post_id>")
+@limiter.exempt
 @admin_level_required(1)
 def api_distinguish_post(post_id, v):
 
@@ -1301,6 +1327,7 @@ def api_distinguish_post(post_id, v):
 
 
 @app.post("/sticky/<post_id>")
+@limiter.exempt
 @admin_level_required(2)
 def sticky_post(post_id, v):
 
@@ -1330,6 +1357,7 @@ def sticky_post(post_id, v):
 	return {"message": "Post pinned!"}
 
 @app.post("/unsticky/<post_id>")
+@limiter.exempt
 @admin_level_required(2)
 def unsticky_post(post_id, v):
 
@@ -1356,6 +1384,7 @@ def unsticky_post(post_id, v):
 	return {"message": "Post unpinned!"}
 
 @app.post("/sticky_comment/<cid>")
+@limiter.exempt
 @admin_level_required(2)
 def sticky_comment(cid, v):
 	
@@ -1381,6 +1410,7 @@ def sticky_comment(cid, v):
 	
 
 @app.post("/unsticky_comment/<cid>")
+@limiter.exempt
 @admin_level_required(2)
 def unsticky_comment(cid, v):
 	
@@ -1408,7 +1438,7 @@ def unsticky_comment(cid, v):
 
 
 @app.post("/ban_comment/<c_id>")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def api_ban_comment(c_id, v):
 
@@ -1431,7 +1461,7 @@ def api_ban_comment(c_id, v):
 
 
 @app.post("/unban_comment/<c_id>")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def api_unban_comment(c_id, v):
 
@@ -1458,6 +1488,7 @@ def api_unban_comment(c_id, v):
 
 
 @app.post("/distinguish_comment/<c_id>")
+@limiter.exempt
 @admin_level_required(1)
 def admin_distinguish_comment(c_id, v):
 	
@@ -1488,6 +1519,7 @@ def admin_distinguish_comment(c_id, v):
 	else: return {"message": "Comment undistinguished!"}
 
 @app.get("/admin/dump_cache")
+@limiter.exempt
 @admin_level_required(2)
 def admin_dump_cache(v):
 	cache.clear()
@@ -1502,6 +1534,7 @@ def admin_dump_cache(v):
 
 
 @app.get("/admin/banned_domains/")
+@limiter.exempt
 @admin_level_required(3)
 def admin_banned_domains(v):
 
@@ -1509,7 +1542,7 @@ def admin_banned_domains(v):
 	return render_template("admin/banned_domains.html", v=v, banned_domains=banned_domains)
 
 @app.post("/admin/banned_domains")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(3)
 def admin_toggle_ban_domain(v):
 
@@ -1544,7 +1577,7 @@ def admin_toggle_ban_domain(v):
 
 
 @app.post("/admin/nuke_user")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def admin_nuke_user(v):
 
@@ -1579,7 +1612,7 @@ def admin_nuke_user(v):
 
 
 @app.post("/admin/unnuke_user")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(2)
 def admin_nunuke_user(v):
 

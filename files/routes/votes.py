@@ -7,7 +7,7 @@ from files.__main__ import app, limiter, cache
 from os import environ
 
 @app.get("/votes")
-@limiter.limit("5/second;60/minute;200/hour;1000/day")
+@limiter.exempt
 @admin_level_required(3)
 def admin_vote_info_get(v):
 	link = request.values.get("link")
