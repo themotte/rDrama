@@ -32,3 +32,10 @@ CF_ZONE=blahblahblah
 DEBIAN_FRONTEND=noninteractive
 MENTION_LIMIT=100
 MULTIMEDIA_EMBEDDING_ENABLED=False
+
+# Profiling system; uncomment to enable
+# Stores and exposes sensitive data!
+# Do not recommend leaving it enabled long-term, or enabling it at all without changing all three values!
+#FLASK_PROFILER_ENDPOINT=flask-profiler
+#FLASK_PROFILER_USERNAME=admin
+#FLASK_PROFILER_PASSWORD=admin
