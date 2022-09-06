@@ -244,7 +244,7 @@
 					<div class="d-lg-flex border-bottom">
 
 						<div class="title w-lg-25">
-							<label for="slurreplacer">Disable +18 Warnings</label>
+							<label for="over18">Disable +18 Warnings</label>
 						</div>
 
 						<div class="body w-lg-100">
@@ -259,28 +259,6 @@
 						</div>
 
 					</div>
-
-
-
-					<div class="d-lg-flex border-bottom">
-
-						<div class="title w-lg-25">
-							<label for="slurreplacer">Slur Replacer</label>
-						</div>
-
-						<div class="body w-lg-100">
-
-							<div class="custom-control custom-switch">
-								<input autocomplete="off" type="checkbox" class="custom-control-input" id="slurreplacer" name="slurreplacer"{% if v.slurreplacer %} checked{% endif %} onchange="post_toast(this,'/settings/profile?slurreplacer='+document.getElementById('slurreplacer').checked);">
-								<label class="custom-control-label" for="slurreplacer"></label>
-							</div>
-
-							<span class="text-small-extra text-muted">Enable if you would like to automatically replace slurs.</span>
-
-						</div>
-
-					</div>
-
 
 					<div class="d-lg-flex border-bottom">
 

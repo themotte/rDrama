@@ -28,12 +28,6 @@ AJ_REPLACEMENTS = {
 	' TO ': " TOO ",
 }
 
-SLURS = {
-	}
-
-single_words = "|".join([slur.lower() for slur in SLURS.keys()])
-
-
 NOTIFICATIONS_ID = 1
 AUTOJANNY_ID = 2
 SNAPPY_ID = 3
