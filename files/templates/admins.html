@@ -6,25 +6,21 @@
 
 <script src="{{ 'js/sort_table.js' | asset }}"></script>
 
-<pre class="d-none d-md-inline-block"></pre>
-<h5 style="font-weight:bold;">Admins</h5>
-<pre></pre>
+<h5 class="font-weight-bold mt-3 mb-3">Admins</h5>
 <div class="overflow-x-auto">
 <table id="sortable_table" class="table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>
 		<th>#</th>
 		<th>Name</th>
-		<th role="button" onclick="sort_table(2)" style="text-align:right;">Truescore</th>
-		<th role="button" onclick="sort_table(3)" style="text-align:right;">Mod actions</th>
+		<th role="button" onclick="sort_table(2)" class="text-right">Mod Actions</th>
 	</tr>
 </thead>
 {% for user in admins %}
 	<tr>
 		<td>{{loop.index}}</td>
-		<td><a style="color:#{{user.namecolor}}" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a>{% if user.admin_level == 1 and v and v.admin_level > 1 %}<i class="fas fa-broom align-middle ml-2 color-white" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Meme Admin"></i>{% endif %}</td>
-		<td style="text-align:right;">{{user.truecoins}}</td>
-		<td style="text-align:right;"><a href="/log?admin={{user.username}}">{{user.modaction_num}}</a></td>
+		<td><a href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a>{% if user.admin_level == 1 and v and v.admin_level > 1 %}<i class="fas fa-broom align-middle ml-2 color-white" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Meme Admin"></i>{% endif %}</td>
+		<td class="text-right"><a href="/log?admin={{user.username}}">{{user.modaction_num}}</a></td>
 	</tr>
 {% endfor %}
 </table>
