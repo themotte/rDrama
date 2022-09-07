@@ -38,9 +38,9 @@
 		</div>
 		</div>
 	</div>
-{% endif %}
 
-{% include 'usernote.html' %}
+  {% include 'usernote.html' %}
+{% endif %}
 
 {% macro single_comment(c, level=1) %}
 
@@ -741,6 +741,16 @@
 
 {% endfor %}
 
+{% if offset %}
+	{% if p %}
+		{% set pid = p.id %}
+	{% endif %}
+	<div id="viewmore-{{offset}}">
+		<br>
+		<button id="viewbtn" class="btn btn-primary" onclick="viewmore({{pid}},'{{sort}}',{{offset}},{{ids}})">VIEW MORE COMMENTS</button>
+	</div>
+{% endif %}
+
 {% if not ajax %}
 	{% if v %}
 		{% include "gif_modal.html" %}
@@ -887,14 +897,6 @@
 			xhr.send(form)
 		}
 	</script>
-{% endif %}
-
-{% if offset %}
-	{% if p %}
-		{% set pid = p.id %}
-	{% endif %}
-	<br>
-	<div id="viewmore-{{offset}}"><button id="viewbtn" class="btn btn-primary" onclick="viewmore({{pid}},'{{sort}}',{{offset}},{{ids}})">VIEW MORE COMMENTS</a></div>
 {% endif %}
 
 </body>

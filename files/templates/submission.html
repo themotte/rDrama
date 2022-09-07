@@ -539,9 +539,11 @@
 			xhr.setRequestHeader('xhr', 'xhr');
 			xhr.onload=function(){
 				if (xhr.status==200) {
-					let e = document.getElementById(`viewmore-${offset}`);
-					e.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
-					bs_trigger(e)
+					const e = document.getElementById(`viewmore-${offset}`);
+					const html = xhr.response.replace(/data-src/g, "src").replace(/data-cfsrc/g, "src").replace(/style="display:none;visibility:hidden;"/g, "");
+					const fragment = document.createRange().createContextualFragment(html);
+					bs_trigger(fragment);
+					e.replaceWith(fragment);
 
 					comments = JSON.parse(localStorage.getItem("old-comment-counts")) || {}
 					lastCount = comments['{{p.id}}']
