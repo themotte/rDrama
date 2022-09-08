@@ -490,8 +490,6 @@ def random_user(v):
 @app.get("/comments")
 @auth_required
 def all_comments(v):
-
-
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
@@ -504,15 +502,7 @@ def all_comments(v):
 	try: lt=int(request.values.get("before", 0))
 	except: lt=0
 
-	idlist = comment_idlist(v=v,
-							page=page,
-							sort=sort,
-							t=t,
-							gt=gt,
-							lt=lt,
-							site=SITE
-							)
-
+	idlist = get_comments_idlist(v=v, page=page, sort=sort, t=t, gt=gt, lt=lt)
 	comments = get_comments(idlist, v=v)
 
 	next_exists = len(idlist) > 25
@@ -523,9 +513,7 @@ def all_comments(v):
 	return render_template("home_comments.html", v=v, sort=sort, t=t, page=page, comments=comments, standalone=True, next_exists=next_exists)
 
 
-
-@cache.memoize(timeout=86400)
-def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", gt=0, lt=0, site=None):
+def get_comments_idlist(page=1, v=None, sort="new", t="all", gt=0, lt=0):
 	comments = g.db.query(Comment.id) \
 		.join(Comment.post) \
 		.join(Comment.author) \

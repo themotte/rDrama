@@ -13,6 +13,7 @@ from files.classes import *
 from flask import *
 from files.__main__ import app, cache, limiter
 from .front import frontlist
+from files.routes.comments import comment_on_publish
 from files.helpers.discord import add_role
 from datetime import datetime
 import requests
@@ -426,13 +427,25 @@ def update_filter_status(v):
 		return { 'result': f'Status of {new_status} is not permitted' }
 
 	if post_id:
-		rows_updated = g.db.query(Submission).where(Submission.id == post_id).update({Submission.filter_state: new_status})
+		p = g.db.query(Submission).get(post_id)
+		old_status = p.filter_state
+		rows_updated = g.db.query(Submission).where(Submission.id == post_id) \
+							.update({Submission.filter_state: new_status})
 	elif comment_id:
-		rows_updated = g.db.query(Comment).where(Comment.id == comment_id).update({Comment.filter_state: new_status})
+		c = g.db.query(Comment).get(comment_id)
+		old_status = c.filter_state
+		rows_updated = g.db.query(Comment).where(Comment.id == comment_id) \
+							.update({Comment.filter_state: new_status})
 	else:
 		return { 'result': f'No valid item ID provided' }
 
 	if rows_updated == 1:
+		# If comment now visible, update state to reflect publication.
+		if (comment_id
+				and old_status in ['filtered', 'removed']
+				and new_status in ['normal', 'ignored']):
+			comment_on_publish(c)
+
 		g.db.commit()
 		return { 'result': 'Update successful' }
 	else:
