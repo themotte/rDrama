@@ -3,7 +3,6 @@ from files.helpers.alerts import *
 from files.helpers.images import *
 from files.helpers.const import *
 from files.classes import *
-from files.routes.front import comment_idlist
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
@@ -317,37 +316,14 @@ def api_comment(v):
 	if c.level == 1: c.top_comment_id = c.id
 	else: c.top_comment_id = parent.top_comment_id
 
-	if parent_post.id not in ADMINISTRATORS:
-		if not v.shadowbanned and not is_filtered:
-			notify_users = NOTIFY_USERS(body, v)
-			
-			for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
-			
-			if parent.author.id not in (v.id, BASEDBOT_ID, AUTOJANNY_ID, SNAPPY_ID, LONGPOSTBOT_ID, ZOZBOT_ID):
-				notify_users.add(parent.author.id)
-
-			for x in notify_users:
-				n = Notification(comment_id=c.id, user_id=x)
-				g.db.add(n)
-
-			if parent.author.id != v.id and PUSHER_ID != 'blahblahblah' and not v.shadowbanned:				
-				try: gevent.spawn(pusher_thread, f'{request.host}{parent.author.id}', c, c.author_name)
-				except: pass
-
-				
+	if not v.shadowbanned and not is_filtered:
+		comment_on_publish(c)
 
 	vote = CommentVote(user_id=v.id,
 						 comment_id=c.id,
 						 vote_type=1,
 						 )
-
 	g.db.add(vote)
-	
-
-	cache.delete_memoized(comment_idlist)
-
-	v.comment_count = g.db.query(Comment.id).filter(Comment.author_id == v.id, Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
-	g.db.add(v)
 
 	c.voted = 1
 	
@@ -364,14 +340,67 @@ def api_comment(v):
 	if v.marseyawarded and parent_post.id not in ADMINISTRATORS and marseyaward_body_regex.search(body_html):
 		return {"error":"You can only type marseys!"}, 403
 
-	parent_post.comment_count += 1
-	g.db.add(parent_post)
-
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
 	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True)}
 
+
+def comment_on_publish(comment):
+	"""
+	Run when comment becomes visible: immediately for non-filtered comments,
+	or on approval for previously filtered comments.
+	Should be used to update stateful counters, notifications, etc. that
+	reflect the comments users will actually see.
+	"""
+	# TODO: Get this out of the routes and into a model eventually...
+
+	# Shadowbanned users are invisible. This may lead to inconsistencies if
+	# a user comments while shadowed and is later unshadowed. (TODO?)
+	if comment.author.shadowbanned:
+		return
+
+	# Comment instances used for purposes other than actual comments (notifs,
+	# DMs) shouldn't be considered published.
+	if not comment.parent_submission:
+		return
+
+	# Generate notifs for: mentions, post subscribers, parent post/comment
+	to_notify = NOTIFY_USERS(comment.body, comment.author)
+
+	post_subscribers = g.db.query(Subscription.user_id).filter(
+			Subscription.submission_id == comment.parent_submission,
+			Subscription.user_id != comment.author_id,
+		).all()
+	to_notify.update([x[0] for x in post_subscribers])
+
+	parent = comment.parent
+	if parent and parent.author_id != comment.author_id:
+		to_notify.add(parent.author_id)
+
+	for uid in to_notify:
+		notif = Notification(comment_id=comment.id, user_id=uid)
+		g.db.add(notif)
+
+	# Comment counter for parent submission
+	comment.post.comment_count += 1
+	g.db.add(comment.post)
+
+	# Comment counter for author's profile
+	comment.author.comment_count = g.db.query(Comment).filter(
+			Comment.author_id == comment.author_id,
+			Comment.parent_submission != None,
+			Comment.is_banned == False,
+			Comment.deleted_utc == 0,
+		).count()
+	g.db.add(comment.author)
+
+	# Generate push notifications if enabled.
+	if PUSHER_ID != 'blahblahblah' and comment.author_id != parent.author_id:
+		try:
+			gevent.spawn(pusher_thread, f'{request.host}{parent.author.id}',
+				comment, comment.author_name)
+		except: pass
 
 
 @app.post("/edit_comment/<cid>")
@@ -467,13 +496,15 @@ def edit_comment(cid, v):
 
 		g.db.add(c)
 		
-		notify_users = NOTIFY_USERS(body, v)
-		
-		for x in notify_users:
-			notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=x).one_or_none()
-			if not notif:
-				n = Notification(comment_id=c.id, user_id=x)
-				g.db.add(n)
+		if c.filter_state != 'filtered':
+			notify_users = NOTIFY_USERS(body, v)
+
+			for x in notify_users:
+				notif = g.db.query(Notification) \
+					.filter_by(comment_id=c.id, user_id=x).one_or_none()
+				if not notif:
+					n = Notification(comment_id=c.id, user_id=x)
+					g.db.add(n)
 
 		g.db.commit()
 
@@ -494,9 +525,6 @@ def delete_comment(cid, v):
 		c.deleted_utc = int(time.time())
 
 		g.db.add(c)
-		
-		cache.delete_memoized(comment_idlist)
-
 		g.db.commit()
 
 	return {"message": "Comment deleted!"}
@@ -514,9 +542,6 @@ def undelete_comment(cid, v):
 		c.deleted_utc = 0
 
 		g.db.add(c)
-
-		cache.delete_memoized(comment_idlist)
-
 		g.db.commit()
 
 	return {"message": "Comment undeleted!"}
