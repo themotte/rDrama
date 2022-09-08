@@ -1,5 +1,30 @@
+var closedCommentsKey = null;
+var closedComments = [];
+
+function collapsedCommentStorageInit(pageKey) {
+	closedCommentsKey = `closedcomments_${pageKey}`;
+}
+
+function collapsedCommentStorageApply() {
+	if (!closedCommentsKey) {
+		return;
+	}
+
+	var closedCommentsValue = localStorage.getItem(closedCommentsKey);
+	if (closedCommentsValue === null) {
+		closedComments = [];
+	} else {
+		closedComments = JSON.parse(closedCommentsValue);
+	}
+
+	closedComments.forEach((commentId) => {
+		try {
+			document.getElementById(`comment-${commentId}`).classList.add("collapsed");
+		} catch (e) {}
+	})
+}
+
 function collapse_comment(id, element) {
-	console.log(element)
 	const closed = element.classList.toggle("collapsed")
 	const top = element.getBoundingClientRect().y
 
@@ -10,6 +35,15 @@ function collapse_comment(id, element) {
 
 	const flags = document.getElementById(`flaggers-${id}`)
 	if (flags) flags.classList.add('d-none')
+
+	if (closed && !closedComments.includes(id)) {
+		closedComments.push(id);
+	} else if (!closed && closedComments.includes(id)) {
+		closedComments.splice(closedComments.indexOf(id), 1);
+	}
+	if (closedCommentsKey) {
+		localStorage.setItem(closedCommentsKey, JSON.stringify(closedComments));
+	}
 };
 
 function expandMarkdown(t,id) {
