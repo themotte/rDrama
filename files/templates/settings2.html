@@ -85,11 +85,13 @@
 											<i class="fas fa-user-slash pr-2"></i>Permabanned Users
 										</a>
 									</li>
+									{% if v and v.admin_level >= 2 %}
 									<li class="nav-item">
 										<a class="nav-link{% if request.path.endswith('/blocks') %} active{% endif %}" href="/blocks">
 											<i class="fas fa-user-slash pr-2"></i>Blocks
 										</a>
 									</li>
+									{% endif %}
 									<li class="nav-item">
 										<a class="nav-link{% if request.path.endswith('/changelog') %} active{% endif %}" href="/changelog">
 											<i class="fas fa-clipboard pr-2"></i>Changelog
