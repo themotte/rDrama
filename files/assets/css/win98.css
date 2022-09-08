@@ -160,6 +160,10 @@ blockquote {
 	background: #ffffffaa !important;
 }
 
+.comment .comment-collapse-desktop {
+	border-left: 2px solid var(--primary);
+}
+
 #frontpage .post-title a:visited, .visited {
 	color: #5c5c5c !important;
 }

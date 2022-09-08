@@ -152,7 +152,7 @@
 	{% set isreply = False %}
 {% endif %}
 
-<div id="comment-{{c.id}}" class="anchor comment {% if standalone and level==1 %} mt-0{% endif %} {% if c.collapse_for_user(v,request.path) %}collapsed{% endif %}" style="{% if isreply %}padding-left:0!important;{% else %}border-left: 2px solid {% if c.ghost %}var(--primary){% else %}#{{c.author.namecolor}};{% endif %}{% endif %}">
+<div id="comment-{{c.id}}" class="anchor comment {% if standalone and level==1 %} mt-0{% endif %} {% if c.collapse_for_user(v,request.path) %}collapsed{% endif %}" style="{% if isreply %}padding-left:0!important;{% else %}border-left: 2px solid var(--primary){% endif %}">
 	{% if not isreply %}
 		<span class="comment-collapse-desktop d-none d-md-block" onclick="collapse_comment('{{c.id}}', this.parentElement)"></span>
 	{% endif %}
@@ -198,7 +198,7 @@
 					{% if not c.author %}
 						{{c.print()}}
 					{% endif %}
-					<a href="/@{{c.author_name}}" class="user-name" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
+					<a href="/@{{c.author_name}}" class="user-name" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-20 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
 					{% if v and v.admin_level > 1 %}
 					<span 
 						class="usernote-link" 
