@@ -109,6 +109,10 @@ blockquote {
 	color: var(--gray-500) !important   
 }
 
+.comment .comment-collapse-desktop {
+	border-left: 2px solid var(--primary);
+}
+
 .text-admin {
 	color: green
 }

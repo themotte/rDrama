@@ -34,6 +34,7 @@
   }
 
 :root {
+	--primary: #433434;
 	--dark: #3E2C18;
 	--secondary: #DDD2C4;
 	--white: #F1E7D0;
@@ -96,6 +97,10 @@ blockquote {
 
 .comment-anchor:target, .unread {
 	background: #ffffff88 !important;
+}
+
+.comment .comment-collapse-desktop {
+	border-left: 2px solid var(--primary);
 }
 
 #frontpage .post-title a:visited, .visited {

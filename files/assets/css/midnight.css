@@ -45,3 +45,7 @@ body, .navbar-light, .navbar-dark, .card, .modal-content, .comment-write textare
 #frontpage .post-title a:visited, .visited {
 	color: #6e6e6e !important;
 }
+
+.comment .comment-collapse-desktop {
+	border-left: 2px solid var(--black);
+}
