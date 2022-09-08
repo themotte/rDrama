@@ -861,6 +861,17 @@
 			}
 		{% endif %}
 
+		{% if p %}
+			collapsedCommentStorageInit('post_{{p.id}}');
+		{% elif request.path == '/notifications' or request.path.startswith('/@') %}
+			collapsedCommentStorageInit('{{request.path}}');
+		{% endif %}
+		if (document.readyState === "complete" || 
+				(document.readyState !== "loading" && !document.documentElement.doScroll)) {
+			collapsedCommentStorageApply();
+		} else {
+			document.addEventListener("DOMContentLoaded", collapsedCommentStorageApply);
+		}
 
 		function morecomments(cid) {
 			btn = document.getElementById(`btn-${cid}`);
