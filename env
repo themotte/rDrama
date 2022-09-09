@@ -32,6 +32,7 @@ CF_ZONE=blahblahblah
 DEBIAN_FRONTEND=noninteractive
 MENTION_LIMIT=100
 MULTIMEDIA_EMBEDDING_ENABLED=False
+RESULTS_PER_PAGE_COMMENTS=200
 
 # Profiling system; uncomment to enable
 # Stores and exposes sensitive data!
