@@ -3084,7 +3084,7 @@ small, .small {
 }
 .arrow-up::before {
 	cursor: pointer;
-	font-size: 1.3rem;
+	font-size: 1rem;
 	color: var(--muted);
 	font-family: "font awesome 5 pro" !important;
 	font-weight: 900;
@@ -3099,7 +3099,7 @@ small, .small {
 }
 .arrow-down::before {
 	cursor: pointer;
-	font-size: 1.3rem;
+	font-size: 1rem;
 	color: var(--muted);
 	font-family: "font awesome 5 pro" !important;
 	font-weight: 900;
@@ -3126,15 +3126,15 @@ small, .small {
 }
 .score {
 	color: var(--black);
-	font-size: 1.1rem;
+	font-size: 12px;
 }
 .score-up {
 	color: var(--primary) !important;
-	font-size: 1.1rem;
+	font-size: 12px;
 }
 .score-down {
 	color: #38B2AC !important;
-	font-size: 1.1rem;
+	font-size: 12px;
 }
 .box-shadow-bottom {
 	box-shadow: inset 0 -0.1px 0 var(--gray-400);
@@ -3323,6 +3323,9 @@ small, .small {
 	text-overflow: ellipsis;
 	vertical-align: middle;
 }
+.posts .card {
+	padding: 7px;
+}
 #frontpage .posts .card .card-footer, #userpage .posts .card .card-footer, #thread .card .card-footer, #search .posts .card .card-footer {
 	border: 0;
 	background-color: transparent;
@@ -3398,8 +3401,26 @@ small, .small {
 .post-actions {
 	position: relative;
 	color: var(--muted);
+	font-size: 12px;
 	font-weight: 600;
 	white-space: nowrap;
+}
+#search .post-info,
+#userpage .post-info,
+#frontpage .post-info {
+	display: flex;
+	flex-wrap: wrap;
+}
+#search .post-actions,
+#userpage .post-actions,
+#frontpage .post-actions {
+	margin-left:auto;
+}
+#search .post-actions .list-inline,
+#userpage .post-actions .list-inline,
+#frontpage .post-actions .list-inline {
+	align-items: center;
+	height:100%;
 }
 .post-actions .fa, .post-actions .fas, .post-actions .far {
 	margin-right: 0.5rem;
@@ -3564,11 +3585,11 @@ small, .small {
 .comment {
 	display: flex;
 	position: relative;
-	margin-top: 2rem;
+	margin-top: 0.25rem;
 	padding-left: 12px;
 }
 #notifications .comment, #userpage .comment {
-	margin-top: 0.5rem;
+	margin-top: 0.25rem;
 	margin-bottom: 1rem;
 }
 #notifications .comment:last-child, #userpage .comment:last-child {
@@ -3592,7 +3613,11 @@ small, .small {
 	color: var(--black);
 	overflow: hidden;
 	padding-right: 10px !important;
-	padding-top: 10px !important;
+	padding-top: 5px !important;
+	padding-bottom: 5px !important;
+}
+.comment .comment-body .comment-text p:last-child {
+	margin-bottom: 0;
 }
 .modal .comment-actions .list-group-item {
 	border: none;
@@ -3618,11 +3643,11 @@ small, .small {
 }
 .comment-actions {
 	font-weight: 600;
-	font-size: 12px;
+	font-size: 10px;
 	margin-bottom: 0;
 }
 .comment-actions .fa, .comment-actions .fas, .comment-actions .far {
-	font-size: 12px;
+	font-size: 10px;
 	margin-right: 0.25rem;
 	margin-left: 0.25rem;
 	color: var(--gray-100);
@@ -3643,7 +3668,7 @@ small, .small {
 	color: var(--black);
 }
 .comment-actions .fas.fa-ellipsis-h {
-	font-size: 1.25rem;
+	font-size: 1rem;
 	vertical-align: bottom;
 }
 .comment-actions .list-inline {
@@ -3653,7 +3678,7 @@ small, .small {
 	margin-right: 0.5rem;
 	box-shadow: none;
 	border: none;
-	font-size: 12px;
+	font-size: 10px;
 }
 .comment-actions .list-inline .list-inline-item .dropdown-item {
 	font-size: 12px;
@@ -4217,7 +4242,7 @@ pre .com, code .com {
 		padding-left: 12px;
 	}
 	.comment {
-		margin-top: 1.5rem;
+		margin-top: 0.25rem;
 	}
 	.comment.collapsed .user-info {
 		padding-top: 0.5rem;
@@ -4269,7 +4294,7 @@ pre .com, code .com {
 	}
 	.comment-actions {
 		font-weight: 400;
-		font-size: 1.2rem;
+		font-size: 1rem;
 	}
 	.user-name {
 		font-weight: 400;

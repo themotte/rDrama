@@ -170,30 +170,13 @@ div.deleted.banned {
 	background-color: var(--gray) !important;
 }
 .comment-body > .comment-anchor {
-	padding: 10px;
+	padding: 5px;
 }
 .comment-anchor:target, .unread {
 	background: #2280B310 !important;
 }
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card {
 	border: none;
-}
-#search .post-info,
-#userpage .post-info,
-#frontpage .post-info {
-	display: flex;
-	flex-wrap: wrap;
-}
-#search .post-actions,
-#userpage .post-actions,
-#frontpage .post-actions {
-	margin-left:auto;
-}
-#search .post-actions .list-inline,
-#userpage .post-actions .list-inline,
-#frontpage .post-actions .list-inline {
-	align-items: center;
-	height:100%;
 }
 #search .post-title a:hover,
 #userpage .post-title a:hover,

@@ -172,7 +172,7 @@ def remove_admin(v, username):
 
 @app.post("/@<username>/delete_note/<id>")
 @limiter.exempt
-@admin_level_required(3)
+@admin_level_required(2)
 def delete_note(v,username,id):
 	g.db.query(UserNote).filter_by(id=id).delete()
 	g.db.commit()
@@ -183,7 +183,7 @@ def delete_note(v,username,id):
 
 @app.post("/@<username>/create_note")
 @limiter.exempt
-@admin_level_required(3)
+@admin_level_required(2)
 def create_note(v,username):
 
 	def result(msg,succ,note):
