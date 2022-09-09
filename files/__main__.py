@@ -78,6 +78,7 @@ app.config['SETTINGS'] = {}
 app.config['SQLALCHEMY_DATABASE_URI'] = app.config['DATABASE_URL']
 app.config['MENTION_LIMIT'] = int(environ.get('MENTION_LIMIT', 100))
 app.config['MULTIMEDIA_EMBEDDING_ENABLED'] = environ.get('MULTIMEDIA_EMBEDDING_ENABLED', "false").lower() == "true"
+app.config['RESULTS_PER_PAGE_COMMENTS'] = int(environ.get('RESULTS_PER_PAGE_COMMENTS',50))
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_responses=True, ssl_cert_reqs=None)
 

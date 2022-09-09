@@ -230,7 +230,9 @@ def post_id(pid, anything=None, v=None, sub=None):
 	offset = 0
 	ids = set()
 
-	if post.comment_count > 60 and not request.headers.get("Authorization") and not request.values.get("all"):
+	limit = app.config['RESULTS_PER_PAGE_COMMENTS']
+
+	if post.comment_count > limit and not request.headers.get("Authorization") and not request.values.get("all"):
 		comments2 = []
 		count = 0
 		if post.created_utc > 1638672040:
@@ -238,13 +240,13 @@ def post_id(pid, anything=None, v=None, sub=None):
 				comments2.append(comment)
 				ids.add(comment.id)
 				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
-				if count > 50: break
+				if count > limit: break
 		else:
 			for comment in comments:
 				comments2.append(comment)
 				ids.add(comment.id)
 				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
-				if count > 10: break
+				if count > limit: break
 
 		if len(comments) == len(comments2): offset = 0
 		else: offset = 1
@@ -357,20 +359,22 @@ def viewmore(v, pid, sort, offset):
 		comments = comments.all()
 		comments = comments[offset:]
 
+	limit = app.config['RESULTS_PER_PAGE_COMMENTS']
 	comments2 = []
 	count = 0
+
 	if post.created_utc > 1638672040:
 		for comment in comments:
 			comments2.append(comment)
 			ids.add(comment.id)
 			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
-			if count > 50: break
+			if count > limit: break
 	else:
 		for comment in comments:
 			comments2.append(comment)
 			ids.add(comment.id)
 			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
-			if count > 10: break
+			if count > limit: break
 	
 	if len(comments) == len(comments2): offset = 0
 	else: offset += 1
