@@ -401,10 +401,8 @@ def badges(v):
 	return render_template("badges.html", v=v, badges=badges, counts=counts)
 
 @app.get("/blocks")
-@auth_required
+@admin_level_required(2)
 def blocks(v):
-
-
 	blocks=g.db.query(UserBlock).all()
 	users = []
 	targets = []
