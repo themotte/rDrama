@@ -201,8 +201,6 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 				if not (g.v and g.v.any_block_exists(u)) or g.v.admin_level > 1:
 					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''', 1)
 
-	sanitized = imgur_regex.sub(r'\1_d.webp?maxwidth=9999&fidelity=high', sanitized)
-
 	soup = BeautifulSoup(sanitized, 'lxml')
 
 	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:

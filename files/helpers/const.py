@@ -584,8 +584,6 @@ embed_fullmatch_regex = re.compile(f'https:\/\/([a-z0-9-]+\.)*({hosts})\/[\w:~,(
 
 video_sub_regex = re.compile(f'(<p>[^<]*)(https:\/\/([a-z0-9-]+\.)*({hosts})\/[\w:~,()\-.#&\/=?@%;+]*?\.(mp4|webm|mov))', flags=re.A)
 
-imgur_regex = re.compile('(https://i\.imgur\.com/([a-z0-9]+))\.(jpg|png|jpeg|webp)(?!<\/(code|pre|a)>)', flags=re.I|re.A)
-
 youtube_regex = re.compile('(<p>[^<]*)(https:\/\/youtube\.com\/watch\?v\=([a-z0-9-_]{5,20})[\w\-.#&/=\?@%+]*)', flags=re.I|re.A)
 
 yt_id_regex = re.compile('[a-z0-9-_]{5,20}', flags=re.I|re.A)
