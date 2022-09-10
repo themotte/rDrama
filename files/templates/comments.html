@@ -57,17 +57,21 @@
 {% if (c.is_banned or c.deleted_utc or c.is_blocking) and not (v and v.admin_level > 1) and not (v and v.id==c.author_id) %}
 
 <div id="comment-{{c.id}}" class="comment">
-		<span class="comment-collapse-desktop d-none d-md-block" onclick="collapse_comment('{{c.id}}', this.parentElement)"></span>
+		<div class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement)"></div>
+		<div class="comment-collapse-bar-click" onclick="collapse_comment('{{c.id}}', this.parentElement)">
+			<div class="comment-collapse-bar"></div>
+		</div>
 
+		<div class="comment-user-info">
+			{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
+			{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author_name}}{% endif %}
+		</div>
+		
 		<div class="comment-body">
 
 				<div id="comment-{{c.id}}-only" class="{% if c.award_count('glowie') %}glow{% endif %} comment-{{c.id}}-only">
 
-						<div class="user-info">
-							<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement.parentElement.parentElement)"></span>
-							{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
-							{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author_name}}{% endif %}
-						</div>
+						
 
 				</div>
 				
@@ -152,74 +156,78 @@
 	{% set isreply = False %}
 {% endif %}
 
-<div id="comment-{{c.id}}" class="anchor comment {% if standalone and level==1 %} mt-0{% endif %} {% if c.collapse_for_user(v,request.path) %}collapsed{% endif %}" style="{% if isreply %}padding-left:0!important;{% else %}border-left: 2px solid var(--primary){% endif %}">
+<div id="comment-{{c.id}}" class="anchor comment {% if standalone and level==1 %} mt-0{% endif %} {% if c.collapse_for_user(v,request.path) %}collapsed{% endif %}">
 	{% if not isreply %}
-		<span class="comment-collapse-desktop d-none d-md-block" onclick="collapse_comment('{{c.id}}', this.parentElement)"></span>
+		<div class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement)"></div>
+		<div class="comment-collapse-bar-click" onclick="collapse_comment('{{c.id}}', this.parentElement)">
+			<div class="comment-collapse-bar"></div>
+		</div>
 	{% endif %}
+	<div class="comment-user-info">
+
+		{% if c.ghost %}
+			👻
+		{% else %}
+
+			{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if c.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{c.author.verified}}"></i>
+			{% endif %}
+			{% if not c.author %}
+				{{c.print()}}
+			{% endif %}
+			<a href="/@{{c.author_name}}" class="user-name" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-20 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
+			{% if v and v.admin_level > 1 %}
+			<span 
+				class="usernote-link" 
+				data-micromodal-trigger="modal-1" 
+				onclick='fillnote( {{c.author.json_popover(v) | tojson}}, null, {{c.id}} )'>_U_</span>
+			{% endif %}
+			{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}
+		{% endif %}
+
+		{% for a in c.awards|reverse %}
+			<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
+		{% endfor %}
+
+		{% if c.post %}
+			{% set sub = c.post.sub %}
+			{% if sub and c.author.exiled_from(sub) %}
+				<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User has been exiled from /h/{{sub}}"></i></a>
+			{% endif %}
+		{% endif %}
+
+		{% if c.bannedfor %}
+			<a role="button"><i class="fas fa-hammer-crash text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}"></i></a>
+		{% endif %}
+		{% if v and c.filter_state == 'reported' and v.can_manage_reports() %}<a class="btn btn-primary" id="report-btn-{{c.id}}" style="padding:1px 5px; font-size:10px" role="button" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('d-none')">{{c.active_flags(v)}} Reports</a>{% endif %}
+		{% if c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
+		{% if v and v.admin_level > 1 and c.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{c.author.shadowbanned}}"></i>{% endif %}
+		{% if c.is_pinned %}
+			<i id='pinned-{{c.id}}'class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned by @{{c.is_pinned}}" {% if c.is_pinned_utc %}onmouseover="pinned_timestamp('pinned-{{c.id}}')" data-timestamp={{c.is_pinned_utc}} {% endif %}></i>
+		{% endif %}
+		{% if c.distinguish_level and not c.ghost %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{SITE_TITLE}} Admin, speaking officially"></i>{% endif %}
+		{% if c.is_op %}<i class="fas fa-microphone-stand text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="OP"></i>{% endif %}
+		{% if c.is_bot %}<i class="fas fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Bot"></i>{% endif %}
+		{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You're blocking this user, but you can see this comment because you're an admin"></i>{% endif %}
+		{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="This user is blocking you."></i>{% endif %}
+
+		{% if c.parent_comment_id and not standalone and level != 1 %}<a href="#comment-{{c.parent_comment_id}}-only" class="text-muted ml-2"><i class="fas fa-reply fa-sm fa-fw fa-flip-horizontal mr-1"></i>{{c.parent_comment.author_name}}</a>{% endif %}
+
+		{% if c.notif_utc %}
+			<span id="timestamp-{{c.id}}" onmouseover="timestamp('timestamp-{{c.id}}','{{c.notif_utc}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" class="time-stamp">&nbsp;{{c.age_string}}</span>
+		{% elif c.created_utc %}
+			<span id="timestamp-{{c.id}}" onmouseover="timestamp('timestamp-{{c.id}}','{{c.created_utc}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" class="time-stamp">&nbsp;{{c.age_string}}</span>
+		{% endif %}
+		
+		{% if c.edited_utc %}
+		<span class="time-edited" id="time-edit-{{c.id}}" onmouseover="timestamp('time-edit-{{c.id}}','{{c.edited_utc}}')"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
+		{% endif %}
+	</div>
+
 	<div class="comment-body">
 
 		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if c.unread %}unread{% endif %} {% if c.award_count('glowie') %}glow{% endif %} comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
 
-			<div class="user-info">
-				<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement.parentElement.parentElement.parentElement)"></span>
-
-				{% for a in c.awards|reverse %}
-					<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
-				{% endfor %}
-
-				{% if c.post %}
-					{% set sub = c.post.sub %}
-					{% if sub and c.author.exiled_from(sub) %}
-						<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User has been exiled from /h/{{sub}}"></i></a>
-					{% endif %}
-				{% endif %}
-
-				{% if c.bannedfor %}
-					<a role="button"><i class="fas fa-hammer-crash text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}"></i></a>
-				{% endif %}
-				{% if v and c.filter_state == 'reported' and v.can_manage_reports() %}<a class="btn btn-primary" id="report-btn-{{c.id}}" style="padding:1px 5px; font-size:10px" role="button" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('d-none')">{{c.active_flags(v)}} Reports</a>{% endif %}
-				{% if c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
-				{% if v and v.admin_level > 1 and c.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{c.author.shadowbanned}}"></i>{% endif %}
-				{% if c.is_pinned %}
-					<i id='pinned-{{c.id}}'class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned by @{{c.is_pinned}}" {% if c.is_pinned_utc %}onmouseover="pinned_timestamp('pinned-{{c.id}}')" data-timestamp={{c.is_pinned_utc}} {% endif %}></i>
-				{% endif %}
-				{% if c.distinguish_level and not c.ghost %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{SITE_TITLE}} Admin, speaking officially"></i>{% endif %}
-				{% if c.is_op %}<i class="fas fa-microphone-stand text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="OP"></i>{% endif %}
-				{% if c.is_bot %}<i class="fas fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Bot"></i>{% endif %}
-				{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You're blocking this user, but you can see this comment because you're an admin"></i>{% endif %}
-				{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="This user is blocking you."></i>{% endif %}
-
-				{% if c.ghost %}
-					👻
-				{% else %}
-
-					{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if c.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{c.author.verified}}"></i>
-					{% endif %}
-					{% if not c.author %}
-						{{c.print()}}
-					{% endif %}
-					<a href="/@{{c.author_name}}" class="user-name" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-20 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
-					{% if v and v.admin_level > 1 %}
-					<span 
-						class="usernote-link" 
-						data-micromodal-trigger="modal-1" 
-						onclick='fillnote( {{c.author.json_popover(v) | tojson}}, null, {{c.id}} )'>_U_</span>
-					{% endif %}
-					{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}
-				{% endif %}
-
-				{% if c.parent_comment_id and not standalone and level != 1 %}<a href="#comment-{{c.parent_comment_id}}-only" class="text-muted ml-2"><i class="fas fa-reply fa-sm fa-fw fa-flip-horizontal mr-1"></i>{{c.parent_comment.author_name}}</a>{% endif %}
-
-				{% if c.notif_utc %}
-					<span id="timestamp-{{c.id}}" onmouseover="timestamp('timestamp-{{c.id}}','{{c.notif_utc}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" class="time-stamp">&nbsp;{{c.age_string}}</span>
-				{% elif c.created_utc %}
-					<span id="timestamp-{{c.id}}" onmouseover="timestamp('timestamp-{{c.id}}','{{c.created_utc}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" class="time-stamp">&nbsp;{{c.age_string}}</span>
-				{% endif %}
-				
-				{% if c.edited_utc %}
-				<span class="time-edited" id="time-edit-{{c.id}}" onmouseover="timestamp('time-edit-{{c.id}}','{{c.edited_utc}}')"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
-				{% endif %}
-			</div>
+			
 			{% if v and c.filter_state == 'reported' and v.can_manage_reports() %}
 			<div id="flaggers-{{c.id}}" class="flaggers d-none">
 				<strong><i class="far fa-fw fa-flag"></i> Reports:</strong>
@@ -379,14 +387,14 @@
 					<ul class="d-none d-md-flex list-inline text-right text-md-left"><li>
 						{% if v and request.path.startswith('/@') and v.admin_level < 2%}
 							{% if voted==1 %}
-								<button class="btn caction py-0 m-0 px-3 nobackground arrow-up mx-0 comment-{{c.id}}-up active"></button>
+								<button class="btn caction p-0 m-0 pr-3 nobackground arrow-up mx-0 comment-{{c.id}}-up active"></button>
 							{% endif %}
 						{% elif v %}
 						
-							<button  tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '1')" class="comment-{{c.id}}-up btn caction py-0 m-0 px-3 nobackground arrow-up upvote-button mx-0 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
+							<button  tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '1')" class="comment-{{c.id}}-up btn caction p-0 m-0 pr-3 nobackground arrow-up upvote-button comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
 						
 						{% else %}
-							<button  tabindex="0" class="comment-{{c.id}}-up btn caction nobackground py-0 m-0 px-3 arrow-up" onclick="location.href='/login';"></button>
+							<button  tabindex="0" class="comment-{{c.id}}-up btn caction nobackground p-0 m-0 pr-3 arrow-up" onclick="location.href='/login';"></button>
 						
 						{% endif %}
 						
