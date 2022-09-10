@@ -1,4 +1,5 @@
 import functools
+import html
 import bleach
 from bs4 import BeautifulSoup
 from bleach.linkifier import LinkifyFilter, build_url_re
@@ -166,7 +167,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 	sanitized = strikethrough_regex.sub(r'<del>\1</del>', sanitized)
 
 	# remove left-to-right mark; remove zero width space; remove zero width no-break space; remove Cuneiform Numeric Sign Eight;
-	sanitized = sanitized.replace('‎','').replace('​','').replace("\ufeff", "").replace("𒐪","")
+	sanitized = unwanted_bytes_regex.sub('', sanitized)
 
 	if alert:
 		matches = { g.group(1):g for g in mention_regex2.finditer(sanitized) if g }
@@ -340,7 +341,9 @@ def allowed_attributes_emojis(tag, name, value):
 @with_sigalrm_timeout(1)
 def filter_emojis_only(title, edit=False, graceful=False):
 
-	title = title.replace('‎','').replace('​','').replace("\ufeff", "").replace("𒐪","").replace("\n", "").replace("\r", "").replace("\t", "").replace("&", "&amp;").replace('<','&lt;').replace('>','&gt;').replace('"', '&quot;').replace("'", "&#039;").strip()
+	title = unwanted_bytes_regex.sub('', title)
+	title = whitespace_regex.sub(' ', title)
+	title = html.escape(title, quote=True)
 
 	# title = render_emoji(title, emoji_regex3, edit)
 

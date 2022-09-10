@@ -396,9 +396,9 @@ class Submission(Base):
 	@lazy
 	def realtitle(self, v):
 		if self.title_html:
-            return self.title_html
+			return self.title_html
 		else:
-            return self.title
+			return self.title
 
 	@lazy
 	def plaintitle(self, v):
