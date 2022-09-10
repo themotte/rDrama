@@ -2620,7 +2620,6 @@ pre {
 	word-wrap: break-word;
 }
 #settings, #submit {
-	padding-top: 98px;
 	background-color: var(--gray-600);
 }
 #page {
@@ -4071,11 +4070,6 @@ pre .com, code .com {
 	border: 3px solid var(--primary);
 	border-radius: 0.35rem;
 }
-@media (max-width: 991.98px) {
-	body {
-		padding-top: 72px;
-}
-}
 
 @media (max-width: 767.98px) {
 	html {
@@ -4498,14 +4492,6 @@ textarea {
 }
 .container, .container-fluid {
 	padding-bottom: 50px;
-}
-.navbar {
-	padding: 0.2rem 0 0 0.2rem;
-}
-@media (min-width: 767.98px) {
-	.navbar {
-		padding: 0.5rem 1.5rem 0.4rem 0.5rem;
-}
 }
 blockquote {
 	border-left: 2px solid var(--primary);
