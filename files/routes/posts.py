@@ -283,6 +283,8 @@ def viewmore(v, pid, sort, offset):
 	try: ids = set(int(x) for x in request.values.get("ids").split(','))
 	except: abort(400)
 	
+	newest = g.db.query(Comment).filter(Comment.id.in_(ids)).order_by(Comment.created_utc.desc()).first()
+
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
@@ -328,7 +330,7 @@ def viewmore(v, pid, sort, offset):
 			comment.is_blocked = c[3] or 0
 			output.append(comment)
 		
-		comments = comments.filter(Comment.level == 1)
+		comments = comments.filter(Comment.level == 1).filter(Comment.created_utc < newest.created_utc)
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -356,7 +358,7 @@ def viewmore(v, pid, sort, offset):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		comments = comments.all()
+		comments = comments.filter(Comment.created_utc < newest.created_utc).all()
 		comments = comments[offset:]
 
 	limit = app.config['RESULTS_PER_PAGE_COMMENTS']
