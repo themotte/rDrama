@@ -17,17 +17,6 @@ else: SITE_FULL = 'https://' + SITE
 CC = "COUNTRY CLUB"
 CC_TITLE = CC.title()
 
-AJ_REPLACEMENTS = {
-	' your ': " you're ",
-	' to ': " too ", 
-
-	' Your ': " You're ",
-	' To ': " Too ",
-
-	' YOUR ': " YOU'RE ",
-	' TO ': " TOO ",
-}
-
 NOTIFICATIONS_ID = 1
 AUTOJANNY_ID = 2
 SNAPPY_ID = 3
@@ -407,14 +396,6 @@ for k, val in AWARDS.items():
 AWARDS3 = {}
 for k, val in AWARDS2.items():
 	if val['price'] == 300: AWARDS3[k] = val
-
-TROLLTITLES = [
-	"how will @{username} ever recover?",
-	"@{username} BTFO",
-	"[META] Getting really sick of @{username}’s shit",
-	"Pretty sure this is @{username}'s Reddit account",
-	"Hey jannies can you please ban @{username}",
-]
 
 NOTIFIED_USERS = {
 	'aevan': AEVANN_ID,

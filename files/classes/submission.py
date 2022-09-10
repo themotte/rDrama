@@ -395,22 +395,14 @@ class Submission(Base):
 
 	@lazy
 	def realtitle(self, v):
-		if self.club and not (v and (v.paid_dues or v.id == self.author_id)):
-			if v: return random.choice(TROLLTITLES).format(username=v.username)
-			else: return f'{CC} MEMBERS ONLY'
-		elif self.title_html: title = self.title_html
-		else: title = self.title
-
-		return title
+		if self.title_html:
+            return self.title_html
+		else:
+            return self.title
 
 	@lazy
 	def plaintitle(self, v):
-		if self.club and not (v and (v.paid_dues or v.id == self.author_id)):
-			if v: return random.choice(TROLLTITLES).format(username=v.username)
-			else: return f'{CC} MEMBERS ONLY'
-		else: title = self.title
-
-		return title
+		return self.title
 
 	@property
 	@lazy
