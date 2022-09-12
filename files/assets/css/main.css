@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 *, *::before, *::after {
 	box-sizing: border-box;
 }
@@ -8,12 +9,14 @@ html {
 	-webkit-text-size-adjust: 100%;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+html, body {
+	font-family: verdana, arial, helvetica, sans-serif;
+}
 article, aside, figcaption, figure, footer, header, main, nav, section {
 	display: block;
 }
 body {
 	margin: 0;
-	font-family: verdana, arial, helvetica, sans-serif;
 	font-size: 1rem;
 	font-weight: 400;
 	line-height: 1.5;
@@ -1769,7 +1772,6 @@ button.close {
 	z-index: 1070;
 	display: block;
 	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	font-style: normal;
 	font-weight: 400;
 	line-height: 1.5;
@@ -1817,7 +1819,6 @@ button.close {
 	z-index: 1060;
 	display: block;
 	max-width: 276px;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	font-style: normal;
 	font-weight: 400;
 	line-height: 1.5;
