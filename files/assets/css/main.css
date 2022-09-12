@@ -3192,7 +3192,7 @@ small, .small {
 	width: 28px;
 	height: 28px;
 }
-.profile-pic-20, .pp20 {
+.profile-pic-20, .pp20, img[src^="/uid/"], img[src^="/pp/"] {
 	margin-right: 0.25rem !important;
 	width: 20px;
 	height: 20px;
