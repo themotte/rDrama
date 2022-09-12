@@ -287,7 +287,7 @@ def front_all(v, sub=None, subdomain=None):
 
 
 @cache.memoize(timeout=86400)
-def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=0, lt=0, sub=None, site=None):
+def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=0, lt=0, sub=None, site=None):
 
 	posts = g.db.query(Submission)
 	
