@@ -340,11 +340,13 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 	if not (v and v.shadowbanned):
 		posts = posts.join(User, User.id == Submission.author_id).filter(User.shadowbanned == None)
 
-	num = 1
-
 	if sort == "hot":
 		ti = int(time.time()) + 3600
-		posts = posts.order_by(-1000000*(Submission.realupvotes + 1 + Submission.comment_count/num + (func.length(Submission.body_html)-func.length(func.replace(Submission.body_html,'</a>','')))/4)/(func.power(((ti - Submission.created_utc)/1000), 1.23)), Submission.created_utc.desc())
+		posts = posts.order_by(
+					-100000
+						* (Submission.realupvotes + 1 + Submission.comment_count / 10)
+						/ (func.power((ti - Submission.created_utc) / 1000, 1.23)),
+					Submission.created_utc.desc())
 	elif sort == "bump":
 		posts = posts.filter(Submission.comment_count > 1).order_by(Submission.bump_utc.desc(), Submission.created_utc.desc())
 	elif sort == "new":
