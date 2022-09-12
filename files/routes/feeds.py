@@ -12,7 +12,7 @@ from files.__main__ import app
 @app.get('/rss')
 @app.get('/feed')
 @app.get('/rss/<sort>/<t>')
-def feeds_front(sort='hot', t='all'):
+def feeds_front(sort='new', t='all'):
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
