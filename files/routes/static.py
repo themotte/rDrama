@@ -387,7 +387,7 @@ def robots_txt():
 	return f
 
 @app.get("/badges")
-@auth_required
+@admin_level_required(2)
 @cache.memoize(timeout=3600, make_name=make_name)
 def badges(v):
 	badges = g.db.query(BadgeDef).order_by(BadgeDef.id).all()
