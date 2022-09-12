@@ -165,10 +165,8 @@ def post_id(pid, anything=None, v=None, sub=None):
 		if not (v and v.shadowbanned) and not (v and v.admin_level > 2):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
 
-		if not v or v.admin_level < 2:
-			filter_clause = (Comment.filter_state != 'filtered') & (Comment.filter_state != 'removed')
-			if v:
-				filter_clause = filter_clause | (Comment.author_id == v.id)
+		if v.admin_level < 2:
+			filter_clause = ((Comment.filter_state != 'filtered') & (Comment.filter_state != 'removed')) | (Comment.author_id == v.id)
 			comments = comments.filter(filter_clause)
 
 		comments=comments.filter(Comment.parent_submission == post.id).join(
@@ -224,6 +222,9 @@ def post_id(pid, anything=None, v=None, sub=None):
 			comments = comments.order_by(Comment.realupvotes.desc())
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+
+		filter_clause = (Comment.filter_state != 'filtered') & (Comment.filter_state != 'removed')
+		comments = comments.filter(filter_clause)
 
 		comments = comments.all()
 
