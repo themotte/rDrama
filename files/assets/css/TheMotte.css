@@ -3,6 +3,7 @@
 
 :root {
 	--primary: #1a6187;
+	--primary-overlay: #1a618720;
 
 	--primary-dark1: #165476;
 	--primary-dark2: #134662;
@@ -169,9 +170,6 @@ div.deleted {
 div.deleted.banned {
 	background-color: var(--gray) !important;
 }
-.comment-body > .comment-anchor {
-	padding: 5px;
-}
 .comment-anchor:target, .unread {
 	background: #2280B310 !important;
 }
@@ -195,11 +193,14 @@ a.visited,
 #search .post-title a:visited {
 	color: var(--primary-dark1);
 }
-.comment .comment-collapse-desktop {
-	border-left: 2px solid var(--primary-dark1) !important;
+.comment .comment-collapse-bar {
+	border-right: 2px solid var(--primary-overlay);
 }
-.comment .comment-collapse-desktop:hover {
-	border-left: 2px solid var(--primary-light2) !important;
+.comment .comment-collapse-bar-click:hover .comment-collapse-bar {
+	border-right: 2px solid var(--primary-light2);
+}
+.comment.collapsed .comment-collapse-bar {
+	display: none;
 }
 
 .usernote-link {
