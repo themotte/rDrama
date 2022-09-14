@@ -4365,6 +4365,7 @@ div.deleted.banned {
 }
 .comment-collapse-bar-click {
 	width: 100%;
+	cursor: pointer;
 }
 .comment-collapse-bar {
 	width: 50%;
