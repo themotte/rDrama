@@ -4595,17 +4595,20 @@ video {
 }
 .comment .comment-collapse-icon::before {
 	font-family: "font awesome 5 pro" !important;
-	color: var(--primary);
+	color: var(--primary-overlay2);
 	display: inline-block;
 	cursor: pointer;
 	height: 100%;
-	content: "\f056";
+	content: "-";
 	font-size: 14px;
 	font-weight: 900;
 	border: none;
 }
+.comment .comment-collapse-icon:hover::before {
+	color: var(--primary);
+}
 .comment.collapsed .comment-collapse-icon::before {
-	content: "\f055";
+	content: "+";
 	color: var(--muted);
 }
 .comment.collapsed .comment-collapse-icon:hover::before {
