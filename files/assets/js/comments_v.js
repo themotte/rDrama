@@ -39,40 +39,64 @@ function post_toast3(t, url, button1, button2) {
 }
 
 function report_commentModal(id, author) {
-
 	document.getElementById("comment-author").textContent = author;
 
-	document.getElementById("reportCommentFormBefore").classList.remove('d-none');
-	document.getElementById("reportCommentFormAfter").classList.add('d-none');
+	const wholeFormBefore = document.getElementById('reportCommentFormBefore');
+	const wholeFormAfter = document.getElementById('reportCommentFormAfter');
+	const submitButton = document.getElementById("reportCommentButton")
+	const reasonField = document.getElementById("reason-comment")
 
-	btn = document.getElementById("reportCommentButton")
-	btn.innerHTML='Report comment';
-	btn.disabled = false;
-	btn.classList.remove('disabled');
+	//The HTML is reused if the user makes multiple reports without a reload, so clean up
+	//from any previous openings
+	wholeFormBefore.classList.remove('d-none');
+	wholeFormAfter.classList.add('d-none');
+	submitButton.disabled = true;
+	submitButton.classList.add('disabled');
+	submitButton.innerHTML = 'Report comment';
+	reasonField.value = ""
+	reasonField.disabled = true;
+	for (const radioButton of document.querySelectorAll('input[name="report-reason"]')) {
+		radioButton.checked = false;
+	}
 
-	reason = document.getElementById("reason-comment")
-	reason.value = ""
-	
-	btn.onclick = function() {
-		this.innerHTML='Reporting comment';
+	const otherButton = document.querySelector('input#other');
+	function handleRadioButtonChange() {
+		submitButton.disabled = false;
+		submitButton.classList.remove('disabled');
+		reasonField.disabled = !otherButton.checked;
+		if (!otherButton.checked) {
+			reasonField.value = "";
+		}
+	};
+	wholeFormBefore.addEventListener('change', handleRadioButtonChange);
+
+	submitButton.onclick = function() {
+		this.innerHTML = 'Reporting comment';
 		this.disabled = true;
 		this.classList.add('disabled');
+
 		const xhr = new XMLHttpRequest();
 		xhr.open("POST", '/report/comment/'+id);
 		xhr.setRequestHeader('xhr', 'xhr');
 		var form = new FormData()
 		form.append("formkey", formkey());
-		form.append("reason", reason.value);
+		let reasonValue;
+		if (otherButton.checked) {
+			reasonValue = reasonField.value;
+		} else {
+			reasonValue = document.querySelector('input[name="report-reason"]:checked').value;
+		}
+		form.append("reason", reasonValue);
 
 		xhr.onload=function() {
-			document.getElementById("reportCommentFormBefore").classList.add('d-none');
-			document.getElementById("reportCommentFormAfter").classList.remove('d-none');
+			wholeFormBefore.classList.add('d-none');
+			wholeFormAfter.classList.remove('d-none');
+			wholeFormBefore.removeEventListener('change', handleRadioButtonChange);
 		};
 
 		xhr.onerror=function(){alert(errortext)};
 		xhr.send(form);
 	}
-
 };
 
 function openReplyBox(id) {
