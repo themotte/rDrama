@@ -52,6 +52,11 @@ def sidebar(v):
 def rules(v):
 	return render_template('rules.html', v=v)
 
+@app.get('/support')
+@auth_desired
+def support(v):
+	return render_template('support.html', v=v)
+
 @app.get("/stats")
 @auth_required
 @cache.memoize(timeout=86400, make_name=make_name)
