@@ -2,22 +2,54 @@ import sys, subprocess, time
 
 def _execute(command,**kwargs):
     check = kwargs.get('check',False)
-    return subprocess.run(
+    on_stdout_line = kwargs.get('on_stdout_line', None)
+    on_stderr_line = kwargs.get('on_stderr_line', None)
+    with subprocess.Popen(
         command,
-        check = check,
         universal_newlines=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-    )
+    ) as proc:
+        stdout = None
+        if proc.stdout:
+            stdout = ''
+            for line in proc.stdout:
+                if on_stdout_line:
+                    on_stdout_line(line)
+                stdout += line
 
-def _docker(command):
+        stderr = None
+        if proc.stderr:
+            stderr = ''
+            for line in proc.stderr:
+                if on_stderr_line:
+                    on_stderr_line(line)
+                stderr += line
+
+        proc.wait()
+        if check and proc.returncode != 0:
+            raise subprocess.CalledProcessError(
+                    command,
+                    proc.returncode,
+                    stdout or None,
+                    stderr or None
+            )
+        else:
+            return subprocess.CompletedProcess(
+                    command,
+                    proc.returncode,
+                    stdout or None,
+                    stderr or None
+            )
+
+def _docker(command, **kwargs):
     return _execute([
         "docker-compose",
         "exec", '-T',
         "files",
         "bash", "-c", 
         ' && '.join(command)
-    ])
+    ], **kwargs)
 
 def _running():
     command = ['docker','container','inspect','-f','{{.State.Status}}','themotte']
@@ -46,8 +78,11 @@ def _operation(name, command):
 
     # run operation in docker container
     print(f"Running {name} . . .")
-    result = _docker(command)
-    print(result.stdout)
+    result = _docker(
+        command,
+        on_stdout_line=lambda line: print(line, end=''),
+        on_stderr=lambda line: print(line, end=''),
+    )
 
     if not running:
         print("Stopping containers...")
