@@ -295,14 +295,11 @@ def contact(v):
 @auth_required
 def submit_contact(v):
 	body = request.values.get("message")
-	email = request.values.get("email")
 	if not body: abort(400)
-	if not email: email = None
 
 	header  = "This message has been sent automatically to all admins via [/contact](/contact)\n"
-	email   = f"<strong>Email</strong>: {email}\n"
 	message = f"<strong>Message</strong>:\n{body}\n\n"
-	html    = sanitize(f"{header}\n{email}\n{message}")
+	html    = sanitize(f"{header}\n{message}")
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
