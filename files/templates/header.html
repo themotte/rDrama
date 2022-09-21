@@ -15,10 +15,10 @@
 			{% endif %}
 
 			<div class="flex-grow-1 d-fl d-none d-md-block {% if not v %}pad{% endif %}">
-				<form class="form-inline search flex-nowrap mx-0 mx-lg-auto" {% if err %}style="margin-right:40rem!important"{% endif %} action="{% if request.path.startswith('/search') %}{{request.path}}{% else %}/search/posts/{% endif %}" method="get">
-					<input autocomplete="off" class="form-control w-100" type="search" placeholder="Search" aria-label="Search" name="q" value="{{request.values.get('q', '')}}">
-					<span class="input-group-append">
-						<span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;">
+				<form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" {% if err %}style="margin-right:40rem!important"{% endif %} action="{% if request.path.startswith('/search') %}{{request.path}}{% else %}/search/posts/{% endif %}" method="get">
+					<input autocomplete="off" class="form-control w-100" placeholder="Search" aria-label="Search" name="q" value="{{request.values.get('q', '')}}">
+					<span class="input-group-append"> 
+						<span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem; cursor: pointer;" onclick="document.getElementById('searchform').submit()">
 							<i class="fa fa-search" aria-hidden="true"></i>
 						</span>
 					</span>
@@ -144,9 +144,9 @@
 		<ul style="overflow:auto" class="navbar-nav ml-auto d-flex d-md-none mt-3">
 			<li class="nav-item pb-3">
 				<form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search/posts/" method="get">
-					<input autocomplete="off" class="form-control form-control-sm w-100" type="search" placeholder="Search" aria-label="Search" name="q">
+					<input autocomplete="off" class="form-control form-control-sm w-100" placeholder="Search" aria-label="Search" name="q">
 					<span class="input-group-append">
-						<span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem"onclick="document.getElementById('searchform').submit()">
+						<span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem; cursor: pointer;" onclick="document.getElementById('searchform').submit()">
 							<i class="fa fa-search" aria-hidden="true"></i>
 						</span>
 					</span>
