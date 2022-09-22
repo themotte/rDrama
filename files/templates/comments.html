@@ -160,7 +160,8 @@
 	{% if not isreply %}
 		<div class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement)"></div>
 		<div class="comment-collapse-bar-click" onclick="collapse_comment('{{c.id}}', this.parentElement)">
-			<div class="comment-collapse-bar"></div>
+			{% set depth = level % 9 + 1 %}
+			<div class="comment-collapse-bar collapse-bar-{{depth}}"></div>
 		</div>
 	{% endif %}
 	<div class="comment-user-info">
@@ -547,7 +548,7 @@
 							<input autocomplete="off" id="file-upload-reply-{{c.fullname}}" type="file" multiple="multiple" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-reply-{{c.fullname}}','file-upload-reply-{{c.fullname}}')" hidden>
 						</label>
 					</div>
-					<a id="save-reply-to-{{c.fullname}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}')"role="button">Comment</a>
+					<a id="save-reply-to-{{c.fullname}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}', {{level}})"role="button">Comment</a>
 					<a role="button" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form fl-r commentmob">Cancel</a> 
 				</form>
 				<div id="reply-edit-{{c.id}}" class="preview mb-3 mt-5"><p class="preview-msg">Comment preview</p></div>
@@ -745,7 +746,12 @@
 
 {% for comment in comments %}
 
-	{{single_comment(comment)}}
+	{% if parent_level %}
+	{% set parent_level = parent_level | int %}
+	{{ single_comment(comment,level = parent_level + 1) }}
+	{% else %}
+	{{ single_comment(comment) }}
+	{% endif %}
 
 {% endfor %}
 

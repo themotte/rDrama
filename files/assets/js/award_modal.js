@@ -1,6 +1,13 @@
-document.getElementById('awardModal').addEventListener('show.bs.modal', function (event) {
-  document.getElementById("awardTarget").action = event.relatedTarget.dataset.url;
-});
+
+(function(){
+	let modal = document.getElementById('awardModal');
+	if (modal) {
+		modal.addEventListener('show.bs.modal', function (event) {
+			let target = document.getElementById("awardTarget");
+			target.action = event.relatedTarget.dataset.url;
+		});
+	}
+})();
 
 function pick(kind, canbuy1, canbuy2) {
 	let buy1 = document.getElementById('buy1')
