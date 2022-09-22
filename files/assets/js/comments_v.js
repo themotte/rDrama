@@ -215,7 +215,7 @@ function comment_edit(id){
 }
 
 
-function post_comment(fullname){
+function post_comment(fullname,id,level = 1){
 	const previewPlaceholderHTML= '<p class="preview-msg">Comment preview</p>';
 	function reset_preview(element_id) {
 		const element = document.getElementById(element_id);
@@ -236,6 +236,7 @@ function post_comment(fullname){
 
 	form.append('formkey', formkey());
 	form.append('parent_fullname', fullname);
+	form.append('parent_level', level);
 	form.append('submission', submissionEl.value);
 	form.append('body', bodyEl.value);
 

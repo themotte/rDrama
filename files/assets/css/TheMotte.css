@@ -36,6 +36,17 @@
 	--background-odd: #fafafa;
 }
 
+/* TODO: Update colors here for whatever depth */
+.collapse-bar-1 { border-color: var(--primary-overlay) !important; }
+.collapse-bar-2 { border-color: var(--primary-overlay) !important; }
+.collapse-bar-3 { border-color: var(--primary-overlay) !important; }
+.collapse-bar-4 { border-color: var(--primary-overlay) !important; }
+.collapse-bar-5 { border-color: var(--primary-overlay) !important; }
+.collapse-bar-6 { border-color: var(--primary-overlay) !important; }
+.collapse-bar-7 { border-color: var(--primary-overlay) !important; }
+.collapse-bar-8 { border-color: var(--primary-overlay) !important; }
+.collapse-bar-9 { border-color: var(--primary-overlay) !important; }
+
 * {
 	border-color: var(--primary);
 }

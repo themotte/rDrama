@@ -154,6 +154,7 @@ def api_comment(v):
 
 	parent_submission = request.values.get("submission").strip()
 	parent_fullname = request.values.get("parent_fullname").strip()
+	parent_level = int(request.values.get("parent_level").strip())
 
 	parent_post = get_post(parent_submission, v=v)
 	sub = parent_post.sub
@@ -343,7 +344,7 @@ def api_comment(v):
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
-	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True)}
+	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True, parent_level=parent_level)}
 
 
 def comment_on_publish(comment):
