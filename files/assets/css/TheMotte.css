@@ -36,17 +36,6 @@
 	--background-odd: #fafafa;
 }
 
-/* TODO: Update colors here for whatever depth */
-.collapse-bar-1 { border-color: var(--primary-overlay) !important; }
-.collapse-bar-2 { border-color: var(--primary-overlay) !important; }
-.collapse-bar-3 { border-color: var(--primary-overlay) !important; }
-.collapse-bar-4 { border-color: var(--primary-overlay) !important; }
-.collapse-bar-5 { border-color: var(--primary-overlay) !important; }
-.collapse-bar-6 { border-color: var(--primary-overlay) !important; }
-.collapse-bar-7 { border-color: var(--primary-overlay) !important; }
-.collapse-bar-8 { border-color: var(--primary-overlay) !important; }
-.collapse-bar-9 { border-color: var(--primary-overlay) !important; }
-
 * {
 	border-color: var(--primary);
 }
@@ -215,6 +204,14 @@ a.visited,
 .comment.collapsed .comment-collapse-bar {
 	display: none;
 }
+
+.comment .collapse-bar-1 { border-color: hsla(200, 70%, 30%, 0.2); }
+.comment .collapse-bar-2 { border-color: hsla(200, 10%, 50%, 0.2); }
+.comment .collapse-bar-3 { border-color: hsla(110, 70%, 30%, 0.2); }
+.comment .collapse-bar-4 { border-color: hsla(110, 10%, 50%, 0.2); }
+.comment .collapse-bar-5 { border-color: hsla( 20, 70%, 30%, 0.2); }
+.comment .collapse-bar-6 { border-color: hsla( 20, 10%, 50%, 0.2); }
+.comment .collapse-bar-7 { border-color: hsla(290, 70%, 30%, 0.2); }
 
 .usernote-link {
 	color: var(--primary);

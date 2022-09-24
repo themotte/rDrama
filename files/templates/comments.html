@@ -42,7 +42,9 @@
   {% include 'usernote.html' %}
 {% endif %}
 
-{% macro single_comment(c, level=1) %}
+{# "level" represents the nested level in this call; always starts at 1 #}
+{# this is distinct from "comment.level", which is the global depth of this comment #}
+{% macro single_comment(c, level) %}
 
 {% set ups=c.upvotes %}
 {% set downs=c.downvotes %}
@@ -160,8 +162,7 @@
 	{% if not isreply %}
 		<div class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement)"></div>
 		<div class="comment-collapse-bar-click" onclick="collapse_comment('{{c.id}}', this.parentElement)">
-			{% set depth = level % 9 + 1 %}
-			<div class="comment-collapse-bar collapse-bar-{{depth}}"></div>
+			<div class="comment-collapse-bar collapse-bar-{{c.level % 8 + 1}}"></div>
 		</div>
 	{% endif %}
 	<div class="comment-user-info">
@@ -748,10 +749,11 @@
 
 	{% if parent_level %}
 	{% set parent_level = parent_level | int %}
-	{{ single_comment(comment,level = parent_level + 1) }}
 	{% else %}
-	{{ single_comment(comment) }}
+	{% set parent_level = 0 %}
 	{% endif %}
+
+	{{ single_comment(comment, level = parent_level + 1) }}
 
 {% endfor %}
 
