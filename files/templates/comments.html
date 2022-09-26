@@ -162,7 +162,7 @@
 	{% if not isreply %}
 		<div class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement)"></div>
 		<div class="comment-collapse-bar-click" onclick="collapse_comment('{{c.id}}', this.parentElement)">
-			<div class="comment-collapse-bar collapse-bar-{{c.level % 8 + 1}}"></div>
+			<div class="comment-collapse-bar collapse-bar-{{(c.level + 6) % 8 + 1}}"></div>
 		</div>
 	{% endif %}
 	<div class="comment-user-info">
