@@ -3331,6 +3331,7 @@ small, .small {
 .post-body {
 	word-break: break-word;
 	overflow: hidden;
+	max-width: var(--text-width, 60em);
 }
 .modal-backdrop.show {
 	opacity: 1;
@@ -3639,6 +3640,7 @@ small, .small {
 	padding-right: 10px !important;
 	padding-top: 5px !important;
 	padding-bottom: 5px !important;
+	max-width: var(--text-width, 60em);
 }
 .comment .comment-body .comment-text p:last-child {
 	margin-bottom: 0;
