@@ -34,6 +34,8 @@
 	--black: #303030;
 	--background: #ffffff;
 	--background-odd: #fafafa;
+
+	--text-width: 60em;
 }
 
 * {
