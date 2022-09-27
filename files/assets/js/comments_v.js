@@ -44,7 +44,7 @@ function report_commentModal(id, author) {
 	const wholeFormBefore = document.getElementById('reportCommentFormBefore');
 	const wholeFormAfter = document.getElementById('reportCommentFormAfter');
 	const submitButton = document.getElementById("reportCommentButton")
-	const reasonField = document.getElementById("reason-comment")
+	const reasonField = document.getElementById("reason-field")
 
 	//The HTML is reused if the user makes multiple reports without a reload, so clean up
 	//from any previous openings
