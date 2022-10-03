@@ -203,7 +203,7 @@
 								{% endif %}
 								<a href="/@{{p.author_name}}" 
 									class="user-name" 
-
+									onclick='popclick({{p.author.json_popover(v) | tojson}}); return false'
 									data-bs-placement="bottom" 
 									data-bs-toggle="popover" 
 									data-bs-trigger="click" 
