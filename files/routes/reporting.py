@@ -25,11 +25,14 @@ def api_flag_post(pid, v):
 		)
 		g.db.add(ma)
 	else:
-		flag = Flag(post_id=post.id, user_id=v.id, reason=reason)
-		g.db.add(flag)
-		g.db.query(Submission) \
-			.where(Submission.id == post.id, Submission.filter_state != 'ignored') \
-			.update({Submission.filter_state: 'reported'})
+		# if it is filtered, we do nothing and report success to preserve the
+		# illusion that the post is normal
+		if post.filter_state != 'filtered':
+			flag = Flag(post_id=post.id, user_id=v.id, reason=reason)
+			g.db.add(flag)
+			g.db.query(Submission) \
+				.where(Submission.id == post.id, Submission.filter_state != 'ignored') \
+				.update({Submission.filter_state: 'reported'})
 
 	g.db.commit()
 
@@ -45,11 +48,14 @@ def api_flag_comment(cid, v):
 	reason = request.values.get("reason", "").strip()[:100]
 	reason = filter_emojis_only(reason)
 
-	flag = CommentFlag(comment_id=comment.id, user_id=v.id, reason=reason)
-	g.db.add(flag)
-	g.db.query(Comment) \
-			.where(Comment.id == comment.id, Comment.filter_state != 'ignored') \
-			.update({Comment.filter_state: 'reported'})
-	g.db.commit()
+	# if it is filtered, we do nothing and report success to preserve the
+	# illusion that the comment is normal
+	if comment.filter_state != 'filtered':
+		flag = CommentFlag(comment_id=comment.id, user_id=v.id, reason=reason)
+		g.db.add(flag)
+		g.db.query(Comment) \
+				.where(Comment.id == comment.id, Comment.filter_state != 'ignored') \
+				.update({Comment.filter_state: 'reported'})
+		g.db.commit()
 
 	return {"message": "Comment reported!"}
