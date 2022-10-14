@@ -32,8 +32,7 @@ def searchparse(text):
 
 
 @app.get("/search/posts")
-@auth_required
-def searchposts(v):
+def searchposts(v=None):
 
 	query = request.values.get("q", '').strip()
 
@@ -57,18 +56,19 @@ def searchposts(v):
 
 	posts = g.db.query(Submission.id)
 	
-	if not v.paid_dues: posts = posts.filter_by(club=False)
+	if not (v and v.paid_dues): posts = posts.filter_by(club=False)
 	
-	if v.admin_level < 2:
+	if v and v.admin_level < 2:
 		posts = posts.filter(Submission.deleted_utc == 0, Submission.is_banned == False, Submission.private == False, Submission.author_id.notin_(v.userblocks))
-
+	elif not v:
+		posts = posts.filter(Submission.deleted_utc == 0, Submission.is_banned == False, Submission.private == False)
 	
 
 	if 'author' in criteria:
 		posts = posts.filter(Submission.ghost == False)
 		author = get_user(criteria['author'])
 		if not author: return {"error": "User not found"}
-		if author.is_private and author.id != v.id and v.admin_level < 2 and not v.eye:
+		if author.is_private and (not v or (author.id != v.id and v.admin_level < 2 and not v.eye)):
 			if request.headers.get("Authorization"):
 				return {"error": f"@{author.username}'s profile is private; You can't use the 'author' syntax on them"}
 			return render_template("search.html",
@@ -174,8 +174,7 @@ def searchposts(v):
 						   )
 
 @app.get("/search/comments")
-@auth_required
-def searchcomments(v):
+def searchcomments(v=None):
 
 
 	query = request.values.get("q", '').strip()
@@ -194,7 +193,7 @@ def searchcomments(v):
 		comments = comments.filter(Comment.ghost == False)
 		author = get_user(criteria['author'])
 		if not author: return {"error": "User not found"}
-		if author.is_private and author.id != v.id and v.admin_level < 2 and not v.eye:
+		if author.is_private and (not v or (author.id != v.id and v.admin_level < 2 and not v.eye)):
 			if request.headers.get("Authorization"):
 				return {"error": f"@{author.username}'s profile is private; You can't use the 'author' syntax on them"}
 
@@ -227,13 +226,15 @@ def searchcomments(v):
 		comments = comments.filter(Comment.created_utc >= cutoff)
 
 
-	if v.admin_level < 2:
+	if v and v.admin_level < 2:
 		private = [x[0] for x in g.db.query(Submission.id).filter(Submission.private == True).all()]
-
 		comments = comments.filter(Comment.author_id.notin_(v.userblocks), Comment.is_banned==False, Comment.deleted_utc == 0, Comment.parent_submission.notin_(private))
+	elif not v:
+		private = [x[0] for x in g.db.query(Submission.id).filter(Submission.private == True).all()]
+		comments = comments.filter(Comment.is_banned==False, Comment.deleted_utc == 0, Comment.parent_submission.notin_(private))
 
 
-	if not v.paid_dues:
+	if not (v and v.paid_dues):
 		club = [x[0] for x in g.db.query(Submission.id).filter(Submission.club == True).all()]
 		comments = comments.filter(Comment.parent_submission.notin_(club))
 
@@ -265,8 +266,7 @@ def searchcomments(v):
 
 
 @app.get("/search/users")
-@auth_required
-def searchusers(v):
+def searchusers(v=None):
 
 	query = request.values.get("q", '').strip()
 
