@@ -1,14 +1,17 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && apt -y upgrade && apt install -y supervisor python3-pip ffmpeg
+# python3-cachecontrol is currently required due to a dependency error in ubuntu 22.04's python3-poetry package
+RUN apt update && apt -y upgrade && apt install -y supervisor python3-poetry ffmpeg python3-cachecontrol
 
 COPY supervisord.conf /etc/supervisord.conf
 
-COPY requirements.txt /etc/requirements.txt
-
-RUN pip3 install -r /etc/requirements.txt
+# we'll end up blowing away this directory via docker-compose 
+WORKDIR /service
+COPY pyproject.toml .
+COPY poetry.lock .
+RUN poetry config virtualenvs.create false && poetry install
 
 RUN mkdir /images && mkdir /songs
 
