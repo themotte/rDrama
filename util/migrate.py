@@ -10,7 +10,6 @@ def run_migrate(args):
         command = args[1]
 
     result = _operation(command,[
-        "cd service",
         "export FLASK_APP=files/cli:app",
         f"python3 -m flask db {command}",
     ])

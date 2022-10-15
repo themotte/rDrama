@@ -5,7 +5,6 @@ from common import _operation
 
 def run_test(args):
     result = _operation("tests",[
-        "cd service",
         "FLASK_APP=files/cli:app python3 -m flask db upgrade",
         "python3 -m pytest -s",
     ])
