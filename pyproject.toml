@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "rdrama"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+license = "AGPL"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+beautifulsoup4 = "*"
+bleach = "4.1.0"
+Flask = "*"
+Flask-Caching = "*"
+Flask-Compress = "*"
+Flask-Limiter = "*"
+Flask-Mail = "*"
+Flask-Migrate = "*"
+Flask-Socketio = "*"
+flask_profiler = "*"
+gevent = "*"
+gevent-websocket = "*"
+greenlet = "*"
+gunicorn = "*"
+lxml = "*"
+mistletoe = "*"
+matplotlib = "*"
+Pillow = "*"
+psutil = "*"
+pyotp = "*"
+qrcode = "*"
+redis = "*"
+requests = "*"
+SQLAlchemy = "*"
+user-agents = "*"
+psycopg2-binary = "*"
+pusher_push_notifications = "*"
+youtube-dl = "*"
+yattag = "*"
+webptools = "*"
+pytest = "*"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
