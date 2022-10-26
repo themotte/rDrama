@@ -3,6 +3,7 @@ import re
 from sqlalchemy import *
 from flask import *
 from files.__main__ import app
+from files.helpers.strings import clean_string
 
 
 valid_params=[
@@ -88,7 +89,7 @@ def searchposts(v=None):
 
 	if 'q' in criteria:
 		words=criteria['q'].split()
-		words = criteria['q'].replace('\\', '').replace('_', '\_').replace('%', '\%').strip().split()
+		words = criteria['q'].replace(r'\\', '').replace('_', r'\_').replace('%', r'\%').strip().split()
 		words=[Submission.title.ilike('%'+x+'%') for x in words]
 		posts=posts.filter(*words)
 		
@@ -97,7 +98,7 @@ def searchposts(v=None):
 	if 'domain' in criteria:
 		domain=criteria['domain']
 
-		domain = domain.replace('\\', '').replace('_', '\_').replace('%', '').strip()
+		domain = clean_string(domain)
 
 		posts=posts.filter(
 			or_(
@@ -202,7 +203,7 @@ def searchcomments(v=None):
 		else: comments = comments.filter(Comment.author_id == author.id)
 
 	if 'q' in criteria:
-		words = criteria['q'].replace('\\', '').replace('_', '\_').replace('%', '\%').strip().split()
+		words = criteria['q'].replace(r'\\', '').replace('_', r'\_').replace('%', r'\%').strip().split()
 
 		words = [Comment.body.ilike('%'+x+'%') for x in words]
 		comments = comments.filter(*words)
@@ -274,7 +275,7 @@ def searchusers(v=None):
 	sort = request.values.get("sort", "new").lower()
 	t = request.values.get('t', 'all').lower()
 	term=query.lstrip('@')
-	term = term.replace('\\','').replace('_','\_').replace('%','')
+	term = clean_string(term)
 	
 	users=g.db.query(User).filter(User.username.ilike(f'%{term}%'))
 	

@@ -334,7 +334,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 
 	if v and filter_words:
 		for word in filter_words:
-			word  = word.replace('\\', '').replace('_', '\_').replace('%', '\%').strip()
+			word  = word.replace(r'\\', '').replace('_', r'\_').replace('%', r'\%').strip()
 			posts=posts.filter(not_(Submission.title.ilike(f'%{word}%')))
 
 	if not (v and v.shadowbanned):
