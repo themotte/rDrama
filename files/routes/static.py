@@ -58,6 +58,7 @@ def support(v):
 	return render_template('support.html', v=v)
 
 @app.get("/stats")
+@auth_desired
 @cache.memoize(timeout=86400, make_name=make_name)
 def participation_stats(v=None):
 
@@ -113,12 +114,14 @@ def chart():
 
 
 @app.get("/weekly_chart")
+@auth_desired
 def weekly_chart():
 	file = cached_chart(kind="weekly", site=SITE)
 	f = send_file(file)
 	return f
 
 @app.get("/daily_chart")
+@auth_desired
 def daily_chart():
 	file = cached_chart(kind="daily", site=SITE)
 	f = send_file(file)
@@ -204,6 +207,7 @@ def patrons(v):
 
 @app.get("/admins")
 @app.get("/badmins")
+@auth_desired
 def admins(v=None):
 	if v and v.admin_level > 2:
 		admins = g.db.query(User).filter(User.admin_level>1).order_by(User.truecoins.desc()).all()
@@ -214,7 +218,7 @@ def admins(v=None):
 
 @app.get("/log")
 @app.get("/modlog")
-
+@auth_desired
 def log(v=None):
 
 	try: page = max(int(request.values.get("page", 1)), 1)
@@ -255,6 +259,7 @@ def log(v=None):
 	return render_template("log.html", v=v, admins=admins, types=types, admin=admin, type=kind, actions=actions, next_exists=next_exists, page=page)
 
 @app.get("/log/<id>")
+@auth_desired
 def log_item(id, v=None):
 
 	try: id = int(id)
@@ -273,12 +278,14 @@ def log_item(id, v=None):
 
 
 @app.get("/api")
+@auth_desired
 def api(v=None):
 	return render_template("api.html", v=v)
 
 @app.get("/contact")
 @app.get("/press")
 @app.get("/media")
+@auth_desired
 def contact(v=None):
 
 	return render_template("contact.html", v=v)
@@ -408,12 +415,14 @@ def blocks(v):
 	return render_template("blocks.html", v=v, users=users, targets=targets)
 
 @app.get("/banned")
+@auth_desired
 def banned(v=None):
 
 	users = [x for x in g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).all()]
 	return render_template("banned.html", v=v, users=users)
 
 @app.get("/formatting")
+@auth_desired
 def formatting(v=None):
 
 	return render_template("formatting.html", v=v)
