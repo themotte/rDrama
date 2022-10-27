@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from flask import render_template
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
-from files.__main__ import Base
+from files.__main__ import Base, app
 from files.helpers.const import *
 from files.helpers.lazy import lazy
 from files.helpers.assetcache import assetcache_path
@@ -83,6 +83,13 @@ class Submission(Base):
 
 	def __repr__(self):
 		return f"<Submission(id={self.id})>"
+
+	@property
+	@lazy
+	def should_hide_score(self):
+		submission_age_seconds = int(time.time()) - self.created_utc
+		submission_age_hours = submission_age_seconds / (60*60)
+		return submission_age_hours < app.config['SCORE_HIDING_TIME_HOURS']
 
 	@property
 	@lazy
