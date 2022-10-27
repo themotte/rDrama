@@ -1,9 +1,15 @@
 {% extends "default.html" %}
 
 
-{% set ups=p.upvotes %}
-{% set downs=p.downvotes %}
-{% set score=ups-downs %}
+{% if p.should_hide_score %}
+	{% set ups="?" %}
+	{% set downs="?" %}
+	{% set score="?" %}
+{% else %}
+	{% set ups=p.upvotes %}
+	{% set downs=p.downvotes %}
+	{% set score=p.score %}
+{% endif %}
 
 {% if v %}
 	{% set voted=p.voted if p.voted else 0 %}

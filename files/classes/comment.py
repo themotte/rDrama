@@ -5,7 +5,7 @@ from urllib.parse import urlencode, urlparse, parse_qs
 from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.__main__ import Base
+from files.__main__ import Base, app
 from files.classes.votes import CommentVote
 from files.helpers.const import *
 from files.helpers.lazy import lazy
@@ -75,6 +75,13 @@ class Comment(Base):
 
 	@property
 	@lazy
+	def should_hide_score(self):
+		comment_age_seconds = int(time.time()) - self.created_utc
+		comment_age_hours = comment_age_seconds / (60*60)
+		return comment_age_hours < app.config['SCORE_HIDING_TIME_HOURS']
+
+	@property
+	@lazy
 	def top_comment(self):
 		return g.db.query(Comment).filter_by(id=self.top_comment_id).one_or_none()
 
@@ -103,9 +110,12 @@ class Comment(Base):
 	def age_string(self):
 		notif_utc = self.__dict__.get("notif_utc")
 
-		if notif_utc: timestamp = notif_utc
-		elif self.created_utc: timestamp = self.created_utc
-		else: return None
+		if notif_utc: 
+			timestamp = notif_utc
+		elif self.created_utc: 
+			timestamp = self.created_utc
+		else: 
+			return None
 		
 		age = int(time.time()) - timestamp
 
