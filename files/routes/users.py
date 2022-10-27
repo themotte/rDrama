@@ -5,7 +5,7 @@ import math
 from files.classes.views import ViewerRelationship
 from files.helpers.alerts import *
 from files.helpers.sanitize import *
-from files.helpers.strings import clean_string
+from files.helpers.strings import sql_ilike_clean
 from files.helpers.const import *
 from files.helpers.assetcache import assetcache_path
 from files.mail import *
@@ -737,7 +737,7 @@ def api_is_available(name):
 	if len(name)<3 or len(name)>25:
 		return {name:False}
 		
-	name2 = clean_string(name)
+	name2 = sql_ilike_clean(name)
 
 	x= g.db.query(User).filter(
 		or_(

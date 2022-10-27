@@ -3,7 +3,7 @@ import re
 from sqlalchemy import *
 from flask import *
 from files.__main__ import app
-from files.helpers.strings import clean_string
+from files.helpers.strings import sql_ilike_clean
 
 
 valid_params=[
@@ -98,7 +98,7 @@ def searchposts(v=None):
 	if 'domain' in criteria:
 		domain=criteria['domain']
 
-		domain = clean_string(domain)
+		domain = sql_ilike_clean(domain)
 
 		posts=posts.filter(
 			or_(
@@ -275,7 +275,7 @@ def searchusers(v=None):
 	sort = request.values.get("sort", "new").lower()
 	t = request.values.get('t', 'all').lower()
 	term=query.lstrip('@')
-	term = clean_string(term)
+	term = sql_ilike_clean(term)
 	
 	users=g.db.query(User).filter(User.username.ilike(f'%{term}%'))
 	
