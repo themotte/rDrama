@@ -24,7 +24,7 @@
 	<p>Use this form to contact {{SITE_TITLE}} Admins.</p>
 	<form id="contactform" action="/send_admin" method="post" enctype="multipart/form-data">
 		{% if not v %}
-		<label class="mt-3">Your Email</label>
+		<label class="mt-3">Your Email (optional, but we won't be able to respond without it)</label>
 		<input autocomplete="off" class="form-control" name="email" value="">
 		{% endif %}
 		<label for="input-message" class="mt-3">Your message</label>
