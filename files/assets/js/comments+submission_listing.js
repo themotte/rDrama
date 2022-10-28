@@ -153,6 +153,11 @@ function vote(type, id, dir, vid) {
 	const downvotes = document.getElementsByClassName(type + '-' + id + '-down');
 	const scoretexts = document.getElementsByClassName(type + '-score-' + id);
 
+	// the score value might not be a number if scores are hidden
+	function is_int(str) {
+		return str.match(/-?\d+/) != null
+	}
+
 	for (let i=0; i<upvotes.length; i++) {
 		
 		const upvote = upvotes[i]
@@ -163,7 +168,7 @@ function vote(type, id, dir, vid) {
 		if (dir == "1") {
 			if (upvote.classList.contains('active')) {
 				upvote.classList.remove('active')
-				if (!isNaN(scoretext.textContent)) {
+				if (is_int(scoretext.textContent)) {
 					scoretext.textContent = score - 1
 				}
 				votedirection = "0"
@@ -171,13 +176,13 @@ function vote(type, id, dir, vid) {
 			} else if (downvote.classList.contains('active')) {
 				upvote.classList.add('active')
 				downvote.classList.remove('active')
-				if (!isNaN(scoretext.textContent)) {
+				if (is_int(scoretext.textContent)) {
 					scoretext.textContent = score + 2
 				}
 				votedirection = "1"
 			} else {
 				upvote.classList.add('active')
-				if (!isNaN(scoretext.textContent)) {
+				if (is_int(scoretext.textContent)) {
 					scoretext.textContent = score + 1
 				}
 				votedirection = "1"
@@ -201,7 +206,7 @@ function vote(type, id, dir, vid) {
 		else {
 			if (downvote.classList.contains('active')) {
 				downvote.classList.remove('active')
-				if (!isNaN(scoretext.textContent)) {
+				if (is_int(scoretext.textContent)) {
 					scoretext.textContent = score + 1
 				}
 				votedirection = "0"
@@ -209,13 +214,13 @@ function vote(type, id, dir, vid) {
 			} else if (upvote.classList.contains('active')) {
 				downvote.classList.add('active')
 				upvote.classList.remove('active')
-				if (!isNaN(scoretext.textContent)) {
+				if (is_int(scoretext.textContent)) {
 					scoretext.textContent = score - 2
 				}
 				votedirection = "-1"
 			} else {
 				downvote.classList.add('active')
-				if (!isNaN(scoretext.textContent)) {
+				if (is_int(scoretext.textContent)) {
 					scoretext.textContent = score - 1
 				}
 				votedirection = "-1"
