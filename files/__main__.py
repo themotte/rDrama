@@ -1,4 +1,5 @@
 
+from pathlib import Path
 import gevent.monkey
 gevent.monkey.patch_all()
 from os import environ, path
@@ -19,11 +20,16 @@ from sys import stdout, argv
 import faulthandler
 import json
 
+
 app = Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
 app.jinja_env.cache = {}
 app.jinja_env.auto_reload = True
 faulthandler.enable()
+
+if environ.get("SITE_ID") is None:
+	from dotenv import load_dotenv
+	load_dotenv(dotenv_path=Path("env"))
 
 if environ.get("FLASK_PROFILER_ENDPOINT"):
 	app.config["flask_profiler"] = {

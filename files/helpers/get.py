@@ -1,10 +1,11 @@
 from files.classes import *
+from files.helpers.strings import sql_ilike_clean
 from flask import g
 
 
 def get_id(username, v=None, graceful=False):
 	
-	username = username.replace('\\', '').replace('_', '\_').replace('%', '').strip()
+	username = sql_ilike_clean(username)
 
 	user = g.db.query(
 		User.id
@@ -30,7 +31,7 @@ def get_user(username, v=None, graceful=False):
 		if not graceful: abort(404)
 		else: return None
 
-	username = username.replace('\\', '').replace('_', '\_').replace('%', '').strip()
+	username = sql_ilike_clean(username)
 
 	user = g.db.query(
 		User
@@ -68,10 +69,7 @@ def get_users(usernames, v=None, graceful=False):
 		if not graceful: abort(404)
 		else: return []
 
-	def clean(n):
-		return n.replace('\\', '').replace('_', '\_').replace('%', '').strip()
-
-	usernames = [ clean(n) for n in usernames ]
+	usernames = [ sql_ilike_clean(n) for n in usernames ]
 
 	users = g.db.query(User).filter(
 		or_(

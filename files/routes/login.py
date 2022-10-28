@@ -2,6 +2,7 @@ from urllib.parse import urlencode
 from files.mail import *
 from files.__main__ import app, limiter
 from files.helpers.const import *
+from files.helpers.strings import sql_ilike_clean
 import requests
 
 @app.get("/login")
@@ -87,7 +88,7 @@ def login_post():
 	username = request.values.get("username")
 
 	if not username: abort(400)
-	username  = username.lstrip('@').replace('\\', '').replace('_', '\_').replace('%', '').strip()
+	username  = sql_ilike_clean(username.lstrip('@'))
 
 	if not username: abort(400)
 	if username.startswith('@'): username = username[1:]
@@ -192,7 +193,7 @@ def sign_up_get(v):
 	ref = request.values.get("ref")
 
 	if ref:
-		ref  = ref.replace('\\', '').replace('_', '\_').replace('%', '').strip()
+		ref  = sql_ilike_clean(ref)
 		ref_user = g.db.query(User).filter(User.username.ilike(ref)).one_or_none()
 
 	else:
@@ -390,8 +391,8 @@ def post_forgot():
 		return render_template("forgot_password.html", error="Invalid email.")
 
 
-	username  = username.lstrip('@').replace('\\', '').replace('_', '\_').replace('%', '').strip()
-	email  = email.replace('\\', '').replace('_', '\_').replace('%', '').strip()
+	username  = sql_ilike_clean(username.lstrip('@'))
+	email  = sql_ilike_clean(email)
 
 	user = g.db.query(User).filter(
 		User.username.ilike(username),

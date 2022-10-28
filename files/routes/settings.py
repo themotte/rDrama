@@ -9,6 +9,7 @@ import youtube_dl
 from .front import frontlist
 import os
 from files.helpers.sanitize import filter_emojis_only
+from files.helpers.strings import sql_ilike_clean
 from files.helpers.discord import add_role
 from shutil import copyfile
 import requests
@@ -687,7 +688,7 @@ def settings_name_change(v):
 						   v=v,
 						   error="This isn't a valid username.")
 
-	search_name = new_name.replace('\\', '').replace('_','\_').replace('%','')
+	search_name = sql_ilike_clean(new_name)
 
 	x= g.db.query(User).filter(
 		or_(

@@ -2,6 +2,7 @@ import time
 import gevent
 from files.helpers.wrappers import *
 from files.helpers.sanitize import *
+from files.helpers.strings import sql_ilike_clean
 from files.helpers.alerts import *
 from files.helpers.discord import send_discord_message, send_cringetopia_message
 from files.helpers.const import *
@@ -712,7 +713,7 @@ def api_is_repost():
 
 	if url.endswith('/'): url = url[:-1]
 
-	search_url = url.replace('%', '').replace('\\', '').replace('_', '\_').strip()
+	search_url = url.replace('%', '').replace(r'\\', '').replace('_', r'\_').strip()
 	repost = g.db.query(Submission).filter(
 		Submission.url.ilike(search_url),
 		Submission.deleted_utc == 0,
@@ -798,7 +799,7 @@ def submit_post(v, sub=None):
 
 		if url.endswith('/'): url = url[:-1]
 
-		search_url = url.replace('%', '').replace('\\', '').replace('_', '\_').strip()
+		search_url = sql_ilike_clean(url)
 		repost = g.db.query(Submission).filter(
 			Submission.url.ilike(search_url),
 			Submission.deleted_utc == 0,

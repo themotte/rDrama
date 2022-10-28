@@ -22,6 +22,7 @@ allowed_tags = ('b','blockquote','br','code','del','em','h1','h2','h3','h4','h5'
 if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
 	allowed_tags += ('img', 'lite-youtube', 'video', 'source',)
 
+
 def allowed_attributes(tag, name, value):
 
 	if name == 'style': return True
