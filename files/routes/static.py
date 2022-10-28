@@ -292,14 +292,19 @@ def contact(v=None):
 
 @app.post("/send_admin")
 @limiter.limit("1/second;2/minute;6/hour;10/day")
-@auth_required
-def submit_contact(v):
+@auth_desired
+def submit_contact(v=None):
 	body = request.values.get("message")
+	email = request.values.get("email")
 	if not body: abort(400)
 
 	header  = "This message has been sent automatically to all admins via [/contact](/contact)\n"
+	if not email:
+		email = ""
+	else:
+		email = f"<strong>Email</strong>: {email}\n"
 	message = f"<strong>Message</strong>:\n{body}\n\n"
-	html    = sanitize(f"{header}\n{message}")
+	html    = sanitize(f"{header}\n{email}{message}")
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
@@ -322,7 +327,7 @@ def submit_contact(v):
 			html += f"<p>{url}</p>"
 		else: return {"error": "Image/Video files only"}, 400
 
-	new_comment = Comment(author_id=v.id,
+	new_comment = Comment(author_id=v.id if v else NOTIFICATIONS_ID,
 						  parent_submission=None,
 						  level=1,
 						  body_html=html,
