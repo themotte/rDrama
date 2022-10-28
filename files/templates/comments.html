@@ -46,9 +46,16 @@
 {# this is distinct from "comment.level", which is the global depth of this comment #}
 {% macro single_comment(c, level) %}
 
-{% set ups=c.upvotes %}
-{% set downs=c.downvotes %}
-{% set score=ups-downs %}
+
+{% if c.should_hide_score %}
+	{% set ups="?" %}
+	{% set downs="?" %}
+	{% set score="?" %}
+{% else %}
+	{% set ups=c.upvotes %}
+	{% set downs=c.downvotes %}
+	{% set score=c.score %}
+{% endif %}
 
 {% if v and (v.shadowbanned or v.admin_level > 1) %}
 	{% set replies=c.replies_ignoring_shadowbans %}
@@ -107,8 +114,6 @@
 
 
 {% else %}
-
-{% set score=c.score %}
 
 {% if v %}
 	{% set voted=c.voted %}
@@ -301,7 +306,7 @@
 							
 							<label class="btn btn-secondary format m-0" for="file-edit-reply-{{c.id}}">
 								<div id="filename-edit-reply-{{c.id}}"><i class="far fa-image"></i></div>
-								<input autocomplete="off" id="file-edit-reply-{{c.id}}" type="file" multiple="multiple" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-edit-reply-{{c.id}}','file-edit-reply-{{c.id}}')" hidden>
+								<input autocomplete="off" id="file-edit-reply-{{c.id}}" type="file" multiple="multiple" name="file" accept="image\/*, video\/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-edit-reply-{{c.id}}','file-edit-reply-{{c.id}}')" hidden>
 							</label>
 						</div>
 						<a id="edit-btn-{{c.id}}" role="button" form="comment-edit-form-{{c.id}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
