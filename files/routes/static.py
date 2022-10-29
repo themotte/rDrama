@@ -244,6 +244,7 @@ def log(v=None):
 	if admin_id:
 		actions = actions.filter_by(user_id=admin_id)
 		kinds = set([x.kind for x in actions])
+		kinds.add(kind)
 		types2 = {}
 		for k,val in types.items():
 			if k in kinds: types2[k] = val
