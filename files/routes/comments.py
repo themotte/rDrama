@@ -159,6 +159,7 @@ def api_comment(v):
 	parent = None
 	parent_post = None
 	parent_comment_id = None
+	sub = None
 
 	if parent_fullname.startswith("t2_"):
 		parent = get_post(id, v=v)
@@ -170,6 +171,8 @@ def api_comment(v):
 	else: abort(400)
 	if not parent_post: abort(404) # don't allow sending comments to the ether
 	level = 1 if isinstance(parent, Submission) else parent.level + 1
+	sub = parent_post.sub
+	if sub and v.exiled_from(sub): return {"error": f"You're exiled from /h/{sub}"}, 403
 
 	body = request.values.get("body", "").strip()[:10000]
 
