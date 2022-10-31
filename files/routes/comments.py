@@ -152,25 +152,27 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 def api_comment(v):
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
 
-	parent_submission = request.values.get("submission").strip()
 	parent_fullname = request.values.get("parent_fullname").strip()
-	parent_level = int(request.values.get("parent_level").strip())
 
-	parent_post = get_post(parent_submission, v=v)
-	sub = parent_post.sub
-	if sub and v.exiled_from(sub): return {"error": f"You're exiled from /h/{sub}"}, 403
-
-	if parent_post.club and not (v and (v.paid_dues or v.id == parent_post.author_id)): abort(403)
+	if len(parent_fullname) < 3: abort(400)
+	id = parent_fullname[2:]
+	parent = None
+	parent_post = None
+	parent_comment_id = None
+	sub = None
 
 	if parent_fullname.startswith("t2_"):
-		parent = parent_post
-		parent_comment_id = None
-		level = 1
+		parent = get_post(id, v=v)
+		parent_post = parent
 	elif parent_fullname.startswith("t3_"):
-		parent = get_comment(parent_fullname.split("_")[1], v=v)
+		parent = get_comment(id, v=v)
+		parent_post = get_post(parent.parent_submission, v=v) if parent.parent_submission else None
 		parent_comment_id = parent.id
-		level = parent.level + 1
 	else: abort(400)
+	if not parent_post: abort(404) # don't allow sending comments to the ether
+	level = 1 if isinstance(parent, Submission) else parent.level + 1
+	sub = parent_post.sub
+	if sub and v.exiled_from(sub): return {"error": f"You're exiled from /h/{sub}"}, 403
 
 	body = request.values.get("body", "").strip()[:10000]
 
@@ -245,7 +247,7 @@ def api_comment(v):
 		existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
 																	Comment.deleted_utc == 0,
 																	Comment.parent_comment_id == parent_comment_id,
-																	Comment.parent_submission == parent_submission,
+																	Comment.parent_submission == parent_post.id,
 																	Comment.body_html == body_html
 																	).one_or_none()
 		if existing: return {"error": f"You already made that comment: /comment/{existing.id}"}, 409
@@ -298,7 +300,7 @@ def api_comment(v):
 	is_filtered = v.should_comments_be_filtered()
 
 	c = Comment(author_id=v.id,
-				parent_submission=parent_submission,
+				parent_submission=parent_post.id,
 				parent_comment_id=parent_comment_id,
 				level=level,
 				over_18=parent_post.over_18 or request.values.get("over_18")=="true",
@@ -344,7 +346,7 @@ def api_comment(v):
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
-	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True, parent_level=parent_level)}
+	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True, parent_level=level)}
 
 
 def comment_on_publish(comment):
