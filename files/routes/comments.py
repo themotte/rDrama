@@ -154,8 +154,8 @@ def api_comment(v):
 
 	parent_fullname = request.values.get("parent_fullname").strip()
 
-	if len(parent_fullname) < 3: abort(400)
-	id = parent_fullname[2:]
+	if len(parent_fullname) < 4: abort(400)
+	id = parent_fullname[3:]
 	parent = None
 	parent_post = None
 	parent_comment_id = None
