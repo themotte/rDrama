@@ -18,3 +18,4 @@ RUN mkdir /images && mkdir /songs
 EXPOSE 80/tcp
 
 CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
+
