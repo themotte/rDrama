@@ -1531,7 +1531,7 @@ def admin_distinguish_comment(c_id, v):
 	if comment.distinguish_level: return {"message": "Comment distinguished!"}
 	else: return {"message": "Comment undistinguished!"}
 
-@app.get("/admin/dump_cache")
+@app.post("/admin/dump_cache")
 @limiter.exempt
 @admin_level_required(2)
 def admin_dump_cache(v):
