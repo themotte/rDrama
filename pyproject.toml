@@ -6,7 +6,7 @@ authors = ["Your Name <you@example.com>"]
 license = "AGPL"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 beautifulsoup4 = "*"
 bleach = "4.1.0"
 Flask = "*"
