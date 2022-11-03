@@ -1,9 +1,8 @@
-FROM ubuntu:22.04
+FROM python:3.11
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-# python3-cachecontrol is currently required due to a dependency error in ubuntu 22.04's python3-poetry package
-RUN apt update && apt -y upgrade && apt install -y supervisor python3-poetry ffmpeg python3-cachecontrol
+RUN apt update && apt -y upgrade && apt install -y supervisor ffmpeg 
 
 COPY supervisord.conf /etc/supervisord.conf
 
@@ -11,6 +10,7 @@ COPY supervisord.conf /etc/supervisord.conf
 WORKDIR /service
 COPY pyproject.toml .
 COPY poetry.lock .
+RUN pip install 'poetry==1.2.2'
 RUN poetry config virtualenvs.create false && poetry install
 
 RUN mkdir /images && mkdir /songs
@@ -18,3 +18,4 @@ RUN mkdir /images && mkdir /songs
 EXPOSE 80/tcp
 
 CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
+
