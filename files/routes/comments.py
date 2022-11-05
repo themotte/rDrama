@@ -89,6 +89,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 	comment_info = comment
 	c = comment
 	while context and c.level > 1:
+		c.parent_comment.replies2 = [c]
 		c = c.parent_comment
 		context -= 1
 	top_comment = c
