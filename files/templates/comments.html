@@ -877,7 +877,7 @@
 			}
 		{% endif %}
 
-		{% if p %}
+		{% if p and not (request.values and ('context' in request.values)) %}
 			collapsedCommentStorageInit('post_{{p.id}}');
 		{% elif request.path == '/notifications' or request.path.startswith('/@') %}
 			collapsedCommentStorageInit('{{request.path}}');
