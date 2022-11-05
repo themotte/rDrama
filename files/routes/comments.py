@@ -52,12 +52,8 @@ def pusher_thread(interests, c, username):
 # @app.get("/h/<sub>/post/<pid>/<anything>/<cid>")
 @auth_desired
 def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
-
-	try: cid = int(cid)
-	except: abort(404)
-
 	comment = get_comment(cid, v=v)
-	
+
 	if v and request.values.get("read"):
 		notif = g.db.query(Notification).filter_by(comment_id=cid, user_id=v.id, read=False).one_or_none()
 		if notif:
@@ -74,10 +70,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
 		else: pid = 1
-	
-	try: pid = int(pid)
-	except: abort(404)
-	
+
 	post = get_post(pid, v=v)
 	
 	if post.over_18 and not (v and v.over_18) and not session.get('over_18', 0) >= int(time.time()):

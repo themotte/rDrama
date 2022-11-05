@@ -129,14 +129,6 @@ def submit_get(v, sub=None):
 # @app.get("/h/<sub>/post/<pid>/<anything>")
 @auth_desired
 def post_id(pid, anything=None, v=None, sub=None):
-
-	try: pid = int(pid)
-	except Exception as e: pass
-
-
-	try: pid = int(pid)
-	except: abort(404)
-
 	post = get_post(pid, v=v)
 
 	if post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
@@ -276,8 +268,6 @@ def post_id(pid, anything=None, v=None, sub=None):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def viewmore(v, pid, sort, offset):
-	try: pid = int(pid)
-	except: abort(400)
 	post = get_post(pid, v=v)
 	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
 

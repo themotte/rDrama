@@ -113,6 +113,10 @@ def get_account(id, v=None):
 
 
 def get_post(i, v=None, graceful=False):
+	try: i = int(i)
+	except:
+		if graceful: return None
+		else: abort(404)
 
 	if v:
 		vt = g.db.query(Vote).filter_by(
@@ -201,6 +205,10 @@ def get_posts(pids, v=None):
 	return sorted(output, key=lambda x: pids.index(x.id))
 
 def get_comment(i, v=None, graceful=False):
+	try: i = int(i)
+	except:
+		if graceful: return None
+		abort(404)
 
 	if v:
 

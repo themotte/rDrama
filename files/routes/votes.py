@@ -65,8 +65,6 @@ def api_vote_post(post_id, new, v):
 	new = int(new)
 
 	# get the post
-	try: post_id = int(post_id)
-	except: abort(404)
 	post = get_post(post_id)
 
 	# get the old vote, if we have one
@@ -135,8 +133,6 @@ def api_vote_comment(comment_id, new, v):
 	new = int(new)
 
 	# get the comment
-	try: comment_id = int(comment_id)
-	except: abort(404)
 	comment = get_comment(comment_id)
 
 	# get the old vote, if we have one

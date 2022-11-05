@@ -9,9 +9,6 @@ from .front import frontlist
 @app.post("/exile/post/<pid>")
 @is_not_permabanned
 def exile_post(v, pid):
-	try: pid = int(pid)
-	except: abort(400)
-
 	p = get_post(pid)
 	sub = p.sub
 	if not sub: abort(400)
@@ -37,9 +34,6 @@ def exile_post(v, pid):
 @app.post("/exile/comment/<cid>")
 @is_not_permabanned
 def exile_comment(v, cid):
-	try: cid = int(cid)
-	except: abort(400)
-
 	c = get_comment(cid)
 	sub = c.post.sub
 	if not sub: abort(400)
@@ -268,9 +262,6 @@ def create_sub2(v):
 @app.post("/kick/<pid>")
 @is_not_permabanned
 def kick(v, pid):
-	try: pid = int(pid)
-	except: abort(400)
-
 	post = get_post(pid)
 
 	if not post.sub: abort(403)
