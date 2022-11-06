@@ -323,16 +323,6 @@ def api_comment(v):
 	g.db.add(vote)
 
 	c.voted = 1
-	
-	if v.id == PIZZASHILL_ID:
-		for uid in PIZZA_VOTERS:
-			autovote = CommentVote(user_id=uid, comment_id=c.id, vote_type=1)
-			g.db.add(autovote)
-		v.coins += 3
-		v.truecoins += 3
-		g.db.add(v)
-		c.upvotes += 3
-		g.db.add(c)
 
 	if v.marseyawarded and parent_post.id not in ADMINISTRATORS and marseyaward_body_regex.search(body_html):
 		return {"error":"You can only type marseys!"}, 403

@@ -115,10 +115,6 @@ def buy(v, award):
 		g.db.add(award_object)
 
 	g.db.add(v)
-
-	if CARP_ID and v.id != CARP_ID and og_price >= 10000:
-		send_repeatable_notification(CARP_ID, f"@{v.username} has bought a `{award}` award!")
-
 	g.db.commit()
 
 	return {"message": "Award bought!"}
@@ -157,9 +153,6 @@ def award_post(pid, v):
 	note = request.values.get("note", "").strip()
 
 	author = post.author
-
-	if author.id in (PIZZASHILL_ID, DAD_ID) and v.id not in (PIZZASHILL_ID, DAD_ID):
-		return {"error": "This user is immune to awards."}, 403
 
 	if kind == "benefactor" and author.id == v.id:
 		return {"error": "You can't use this award on yourself."}, 400
@@ -386,9 +379,6 @@ def award_comment(cid, v):
 	note = request.values.get("note", "").strip()
 
 	author = c.author
-
-	if author.id in (PIZZASHILL_ID, DAD_ID) and v.id not in (PIZZASHILL_ID, DAD_ID):
-		return {"error": "This user is immune to awards."}, 403
 
 	if v.id != author.id:
 		if author.deflector and AWARDS[kind]['price'] > 300 and kind not in ('pin','unpin','benefactor'):

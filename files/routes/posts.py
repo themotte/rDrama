@@ -1007,17 +1007,6 @@ def submit_post(v, sub=None):
 
 	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
-
-	if v.id == PIZZASHILL_ID:
-		for uid in PIZZA_VOTERS:
-			autovote = Vote(user_id=uid, submission_id=post.id, vote_type=1)
-			g.db.add(autovote)
-		v.coins += 3
-		v.truecoins += 3
-		g.db.add(v)
-		post.upvotes += 3
-		g.db.add(post)
-
 	g.db.commit()
 
 	cache.delete_memoized(frontlist)

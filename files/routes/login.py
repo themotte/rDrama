@@ -31,7 +31,6 @@ def check_for_alts(current_id):
 			past_accs.remove(past_id)
 			continue
 
-		if past_id == MOM_ID or current_id == MOM_ID: break
 		if past_id == current_id: continue
 
 		li = [past_id, current_id]
@@ -144,7 +143,8 @@ def login_post():
 	session["session_id"] = token_hex(49)
 	session["lo_user"] = account.id
 	session["login_nonce"] = account.login_nonce
-	if account.id == AEVANN_ID: session["verified"] = time.time()
+	if account.id == OWNER_ID:
+		session["verified"] = time.time()
 
 	check_for_alts(account.id)
 

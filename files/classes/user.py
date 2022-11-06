@@ -202,7 +202,7 @@ class User(Base):
 
 	@lazy
 	def mod_date(self, sub):
-		if self.id == AEVANN_ID: return 1
+		if self.id == OWNER_ID: return 1
 		mod = g.db.query(Mod).filter_by(user_id=self.id, sub=sub).one_or_none()
 		if not mod: return None
 		return mod.created_utc
