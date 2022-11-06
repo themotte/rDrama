@@ -34,7 +34,7 @@ def searchparse(text):
 
 @app.get("/search/posts")
 @auth_desired
-def searchposts(v=None):
+def searchposts(v):
 
 	query = request.values.get("q", '').strip()
 
@@ -177,7 +177,7 @@ def searchposts(v=None):
 
 @app.get("/search/comments")
 @auth_desired
-def searchcomments(v=None):
+def searchcomments(v):
 
 
 	query = request.values.get("q", '').strip()
@@ -270,7 +270,7 @@ def searchcomments(v=None):
 
 @app.get("/search/users")
 @auth_desired
-def searchusers(v=None):
+def searchusers(v):
 
 	query = request.values.get("q", '').strip()
 

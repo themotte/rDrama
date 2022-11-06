@@ -60,7 +60,7 @@ def support(v):
 @app.get("/stats")
 @auth_desired
 @cache.memoize(timeout=86400, make_name=make_name)
-def participation_stats(v=None):
+def participation_stats(v):
 
 
 	day = int(time.time()) - 86400
@@ -115,14 +115,14 @@ def chart():
 
 @app.get("/weekly_chart")
 @auth_desired
-def weekly_chart():
+def weekly_chart(v):
 	file = cached_chart(kind="weekly", site=SITE)
 	f = send_file(file)
 	return f
 
 @app.get("/daily_chart")
 @auth_desired
-def daily_chart():
+def daily_chart(v):
 	file = cached_chart(kind="daily", site=SITE)
 	f = send_file(file)
 	return f
@@ -208,7 +208,7 @@ def patrons(v):
 @app.get("/admins")
 @app.get("/badmins")
 @auth_desired
-def admins(v=None):
+def admins(v):
 	if v and v.admin_level > 2:
 		admins = g.db.query(User).filter(User.admin_level>1).order_by(User.truecoins.desc()).all()
 		admins += g.db.query(User).filter(User.admin_level==1).order_by(User.truecoins.desc()).all()
@@ -219,7 +219,7 @@ def admins(v=None):
 @app.get("/log")
 @app.get("/modlog")
 @auth_desired
-def log(v=None):
+def log(v):
 
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
@@ -261,7 +261,7 @@ def log(v=None):
 
 @app.get("/log/<id>")
 @auth_desired
-def log_item(id, v=None):
+def log_item(v, id):
 
 	try: id = int(id)
 	except: abort(404)
@@ -280,21 +280,21 @@ def log_item(id, v=None):
 
 @app.get("/api")
 @auth_desired
-def api(v=None):
+def api(v):
 	return render_template("api.html", v=v)
 
 @app.get("/contact")
 @app.get("/press")
 @app.get("/media")
 @auth_desired
-def contact(v=None):
+def contact(v):
 
 	return render_template("contact.html", v=v)
 
 @app.post("/send_admin")
 @limiter.limit("1/second;2/minute;6/hour;10/day")
 @auth_desired
-def submit_contact(v=None):
+def submit_contact(v):
 	body = request.values.get("message")
 	email = request.values.get("email")
 	if not body: abort(400)
@@ -422,14 +422,14 @@ def blocks(v):
 
 @app.get("/banned")
 @auth_desired
-def banned(v=None):
+def banned(v):
 
 	users = [x for x in g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).all()]
 	return render_template("banned.html", v=v, users=users)
 
 @app.get("/formatting")
 @auth_desired
-def formatting(v=None):
+def formatting(v):
 
 	return render_template("formatting.html", v=v)
 
