@@ -61,7 +61,6 @@ def inject_constants():
 		"CC":CC,
 		"CC_TITLE":CC_TITLE,
 		"listdir":listdir,
-		"MOOSE_ID":MOOSE_ID,
 		"AEVANN_ID":AEVANN_ID,
 		"PIZZASHILL_ID":PIZZASHILL_ID,
 		"config":app.config.get,

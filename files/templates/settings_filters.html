@@ -219,28 +219,6 @@
 
 				<div class="settings-section rounded">
 
-
-					<div class="d-lg-flex border-bottom">
-
-						<div class="title w-lg-25">
-							<label for="sigs_disabled">Disable signatures</label>
-						</div>
-
-						<div class="body w-lg-100">
-
-							<div class="custom-control custom-switch">
-								<input autocomplete="off" type="checkbox" class="custom-control-input" id="sigs_disabled" name="sigs_disabled"{% if v.sigs_disabled %} checked{% endif %} onchange="post_toast(this,'/settings/profile?sigs_disabled='+document.getElementById('sigs_disabled').checked);">
-								<label class="custom-control-label" for="sigs_disabled"></label>
-							</div>
-
-							<span class="text-small-extra text-muted">Hide user signatures.</span>
-
-						</div>
-
-					</div>
-
-
-
 					<div class="d-lg-flex border-bottom">
 
 						<div class="title w-lg-25">
