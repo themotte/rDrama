@@ -26,7 +26,7 @@ month = datetime.now().strftime('%B')
 @limiter.exempt
 @admin_level_required(3)
 def merge(v, id1, id2):
-	if v.id != AEVANN_ID: abort(403)
+	if v.id != OWNER_ID: abort(403)
 
 	if time.time() - session.get('verified', 0) > 3:
 		session.pop("session_id", None)
@@ -87,7 +87,7 @@ def merge(v, id1, id2):
 @limiter.exempt
 @admin_level_required(3)
 def merge_all(v, id):
-	if v.id != AEVANN_ID: abort(403)
+	if v.id != OWNER_ID: abort(403)
 
 	if time.time() - session.get('verified', 0) > 3:
 		session.pop("session_id", None)
@@ -650,7 +650,7 @@ def badge_grant_post(v):
 	try: badge_id = int(request.values.get("badge_id"))
 	except: abort(400)
 
-	if badge_id in {16,17,94,95,96,97,98,109} and v.id != AEVANN_ID:
+	if badge_id in {16,17,94,95,96,97,98,109} and v.id != OWNER_ID:
 		abort(403)
 
 	if user.has_badge(badge_id):

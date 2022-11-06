@@ -61,8 +61,6 @@ def inject_constants():
 		"CC":CC,
 		"CC_TITLE":CC_TITLE,
 		"listdir":listdir,
-		"AEVANN_ID":AEVANN_ID,
-		"PIZZASHILL_ID":PIZZASHILL_ID,
 		"config":app.config.get,
 		"DEFAULT_COLOR":DEFAULT_COLOR,
 		"COLORS":COLORS,

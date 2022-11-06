@@ -27,23 +27,8 @@ AUTOBETTER_ID = 7
 AUTOCHOICE_ID = 8
 BASEDBOT_ID = 0
 
-A_ID = 0
-KIPPY_ID = 0
 GIFT_NOTIF_ID = 9
-PIZZASHILL_ID = 0
-PIZZA_VOTERS = ()
-IDIO_ID = 0
-CARP_ID = 0
-JOAN_ID = 0
-AEVANN_ID = 9
-HOMO_ID = 0
-SOREN_ID = 0
-Q_ID = 0
-LAWLZ_ID = 0
-LLM_ID = 0
-DAD_ID = 0
-MOM_ID = 0
-DONGER_ID = 0
+OWNER_ID = 9
 BUG_THREAD = 0
 WELCOME_MSG = f"Welcome to {SITE_TITLE}! Please read [the rules](/rules) first. Then [read some of our current conversations](/) and feel free to comment or post!\n\nWe encourage people to comment even if they aren't sure they fit in; as long as your comment follows [community rules](/rules), we are happy to have posters from all backgrounds, education levels, and specialties."
 ROLES={}
@@ -397,33 +382,10 @@ for k, val in AWARDS2.items():
 	if val['price'] == 300: AWARDS3[k] = val
 
 NOTIFIED_USERS = {
-	'aevan': AEVANN_ID,
-	'avean': AEVANN_ID,
-	'joan': JOAN_ID,
-	'pewkie': JOAN_ID,
-	'carp': CARP_ID,
-	'idio3': IDIO_ID,
-	'idio ': IDIO_ID,
-	'landlord_messiah': LLM_ID,
-	'landlordmessiah': LLM_ID,
-	' llm ': LLM_ID,
-	'landlet': LLM_ID,
-	'dong': DONGER_ID,
-	'kippy': KIPPY_ID,
-	'the_homocracy': HOMO_ID,
-	'soren': SOREN_ID,
+	# format: 'substring' ↦ User ID to notify
 }
 
 patron = 'Patron'
-
-REDDIT_NOTIFS = {
-	'idio3': IDIO_ID,
-	'aevann': AEVANN_ID,
-	'carpflo': CARP_ID,
-	'carpathianflorist': CARP_ID,
-	'carpathian florist': CARP_ID,
-	'the_homocracy': HOMO_ID
-}
 
 discounts = {
 	69: 0.02,
