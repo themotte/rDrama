@@ -192,7 +192,6 @@ def cached_chart(kind, site):
 
 
 @app.get("/patrons")
-@app.get("/paypigs")
 @admin_level_required(3)
 def patrons(v):
 	users = g.db.query(User).filter(User.patron > 0).order_by(User.patron.desc(), User.id).all()
@@ -200,7 +199,6 @@ def patrons(v):
 	return render_template("patrons.html", v=v, users=users)
 
 @app.get("/admins")
-@app.get("/badmins")
 @auth_desired
 def admins(v):
 	if v and v.admin_level > 2:
