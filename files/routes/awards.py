@@ -158,16 +158,9 @@ def award_post(pid, v):
 		return {"error": "You can't use this award on yourself."}, 400
 
 	if v.id != author.id:
-		if author.deflector and AWARDS[kind]['price'] > 300 and kind not in ('pin','unpin','benefactor'):
-			msg = f"@{v.username} has tried to give your [post]({post.shortlink}) the {AWARDS[kind]['title']} Award but it was deflected and applied to them :marseytroll:"
-			send_repeatable_notification(author.id, msg)
-			msg = f"@{author.username} is under the effect of a deflector award; your {AWARDS[kind]['title']} Award has been deflected back to you :marseytroll:"
-			send_repeatable_notification(v.id, msg)
-			author = v
-		else:
-			msg = f"@{v.username} has given your [post]({post.shortlink}) the {AWARDS[kind]['title']} Award!"
-			if note: msg += f"\n\n> {note}"
-			send_repeatable_notification(author.id, msg)
+		msg = f"@{v.username} has given your [post]({post.shortlink}) the {AWARDS[kind]['title']} Award!"
+		if note: msg += f"\n\n> {note}"
+		send_repeatable_notification(author.id, msg)
 
 	if kind == "ban":
 		link = f"[this post]({post.shortlink})"
@@ -212,99 +205,6 @@ def award_post(pid, v):
 			cache.delete_memoized(frontlist)
 		else: post.stickied_utc = t
 		g.db.add(post)
-	elif kind == "flairlock":
-		new_name = note[:100].replace("𒐪","")
-		if not new_name and author.flairchanged:
-			author.flairchanged += 86400
-		else:
-			author.customtitleplain = new_name
-			author.customtitle = filter_emojis_only(new_name)
-			if len(author.customtitle) > 1000: abort(403)
-			author.flairchanged = int(time.time()) + 86400
-			if not author.has_badge(96):
-				badge = Badge(user_id=author.id, badge_id=96)
-				g.db.add(badge)
-				g.db.flush()
-				send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "pause":
-		author.mute = True
-		if not author.has_badge(68):
-			new_badge = Badge(badge_id=68, user_id=author.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-	elif kind == "unpausable":
-		author.unmutable = True
-		if not author.has_badge(67):
-			new_badge = Badge(badge_id=67, user_id=author.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-	elif kind == "marsey":
-		if author.marseyawarded: author.marseyawarded += 86400
-		else: author.marseyawarded = int(time.time()) + 86400
-		if not author.has_badge(98):
-			badge = Badge(user_id=author.id, badge_id=98)
-			g.db.add(badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "pizzashill":
-		if author.bird:
-			return {"error": "This user is the under the effect of a conflicting award: Bird Site award."}, 404
-		if author.longpost: author.longpost += 86400
-		else: author.longpost = int(time.time()) + 86400
-		if not author.has_badge(97):
-			badge = Badge(user_id=author.id, badge_id=97)
-			g.db.add(badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "bird":
-		if author.longpost:
-			return {"error": "This user is the under the effect of a conflicting award: Pizzashill award."}, 404
-		if author.bird: author.bird += 86400
-		else: author.bird = int(time.time()) + 86400
-		if not author.has_badge(95):
-			badge = Badge(user_id=author.id, badge_id=95)
-			g.db.add(badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "eye":
-		author.eye = True
-		if not author.has_badge(83):
-			new_badge = Badge(badge_id=83, user_id=author.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-	elif kind == "alt":
-		author.alt = True
-		if not author.has_badge(84):
-			new_badge = Badge(badge_id=84, user_id=author.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-	elif kind == "unblockable":
-		author.unblockable = True
-		if not author.has_badge(87):
-			new_badge = Badge(badge_id=87, user_id=author.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-		for block in g.db.query(UserBlock).filter_by(target_id=author.id).all(): g.db.delete(block)
-	elif kind == "fish":
-		author.fish = True
-		if not author.has_badge(90):
-			new_badge = Badge(badge_id=90, user_id=author.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-	elif kind == "progressivestack":
-		if author.progressivestack: author.progressivestack += 21600
-		else: author.progressivestack = int(time.time()) + 21600
-		if not author.has_badge(94):
-			badge = Badge(user_id=author.id, badge_id=94)
-			g.db.add(badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "benefactor":
 		author.patron = 1
 		if author.patron_utc: author.patron_utc += 2629746
@@ -316,17 +216,6 @@ def award_post(pid, v):
 			g.db.add(badge)
 			g.db.flush()
 			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "rehab":
-		if author.rehab: author.rehab += 86400
-		else: author.rehab = int(time.time()) + 86400
-		if not author.has_badge(109):
-			badge = Badge(user_id=author.id, badge_id=109)
-			g.db.add(badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "deflector":
-		if author.deflector: author.deflector += 36000
-		else: author.deflector = int(time.time()) + 36000
 	elif kind == "beano":
 		if not author.has_badge(128):
 			badge = Badge(user_id=author.id, badge_id=128)
@@ -381,21 +270,12 @@ def award_comment(cid, v):
 	author = c.author
 
 	if v.id != author.id:
-		if author.deflector and AWARDS[kind]['price'] > 300 and kind not in ('pin','unpin','benefactor'):
-			msg = f"@{v.username} has tried to give your [comment]({c.shortlink}) the {AWARDS[kind]['title']} Award but it was deflected and applied to them :marseytroll:"
-			send_repeatable_notification(author.id, msg)
-			msg = f"@{author.username} is under the effect of a deflector award; your {AWARDS[kind]['title']} Award has been deflected back to you :marseytroll:"
-			send_repeatable_notification(v.id, msg)
-			author = v
-		else:
-			msg = f"@{v.username} has given your [comment]({c.shortlink}) the {AWARDS[kind]['title']} Award!"
-			if note: msg += f"\n\n> {note}"
-			send_repeatable_notification(author.id, msg)
+		msg = f"@{v.username} has given your [comment]({c.shortlink}) the {AWARDS[kind]['title']} Award!"
+		if note: msg += f"\n\n> {note}"
+		send_repeatable_notification(author.id, msg)
 
 	if kind == "benefactor" and author.id == v.id:
 		return {"error": "You can't use this award on yourself."}, 400
-
-	if author.deflector: author = v
 
 	if kind == "ban":
 		link = f"[this comment]({c.shortlink})"
@@ -437,99 +317,6 @@ def award_comment(cid, v):
 			c.is_pinned_utc = None
 		else: c.is_pinned_utc = t
 		g.db.add(c)
-	elif kind == "flairlock":
-		new_name = note[:100].replace("𒐪","")
-		if not new_name and author.flairchanged:
-			author.flairchanged += 86400
-		else:
-			author.customtitleplain = new_name
-			author.customtitle = filter_emojis_only(new_name)
-			if len(author.customtitle) > 1000: abort(403)
-			author.flairchanged = int(time.time()) + 86400
-			if not author.has_badge(96):
-				badge = Badge(user_id=author.id, badge_id=96)
-				g.db.add(badge)
-				g.db.flush()
-				send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "pause":
-		author.mute = True
-		if not author.has_badge(68):
-			new_badge = Badge(badge_id=68, user_id=author.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-	elif kind == "unpausable":
-		author.unmutable = True
-		if not author.has_badge(67):
-			new_badge = Badge(badge_id=67, user_id=author.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-	elif kind == "marsey":
-		if author.marseyawarded: author.marseyawarded += 86400
-		else: author.marseyawarded = int(time.time()) + 86400
-		if not author.has_badge(98):
-			badge = Badge(user_id=author.id, badge_id=98)
-			g.db.add(badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "pizzashill":
-		if author.bird:
-			return {"error": "This user is the under the effect of a conflicting award: Bird Site award."}, 404
-		if author.longpost: author.longpost += 86400
-		else: author.longpost = int(time.time()) + 86400
-		if not author.has_badge(97):
-			badge = Badge(user_id=author.id, badge_id=97)
-			g.db.add(badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "bird":
-		if author.longpost:
-			return {"error": "This user is the under the effect of a conflicting award: Pizzashill award."}, 404
-		if author.bird: author.bird += 86400
-		else: author.bird = int(time.time()) + 86400
-		if not author.has_badge(95):
-			badge = Badge(user_id=author.id, badge_id=95)
-			g.db.add(badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "eye":
-		author.eye = True
-		if not author.has_badge(83):
-			new_badge = Badge(badge_id=83, user_id=author.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-	elif kind == "alt":
-		author.alt = True
-		if not author.has_badge(84):
-			new_badge = Badge(badge_id=84, user_id=author.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-	elif kind == "unblockable":
-		author.unblockable = True
-		if not author.has_badge(87):
-			new_badge = Badge(badge_id=87, user_id=author.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-		for block in g.db.query(UserBlock).filter_by(target_id=author.id).all(): g.db.delete(block)
-	elif kind == "fish":
-		author.fish = True
-		if not author.has_badge(90):
-			new_badge = Badge(badge_id=90, user_id=author.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-	elif kind == "progressivestack":
-		if author.progressivestack: author.progressivestack += 21600
-		else: author.progressivestack = int(time.time()) + 21600
-		if not author.has_badge(94):
-			badge = Badge(user_id=author.id, badge_id=94)
-			g.db.add(badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "benefactor":
 		author.patron = 1
 		if author.patron_utc: author.patron_utc += 2629746
@@ -541,17 +328,6 @@ def award_comment(cid, v):
 			g.db.add(badge)
 			g.db.flush()
 			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "rehab":
-		if author.rehab: author.rehab += 86400
-		else: author.rehab = int(time.time()) + 86400
-		if not author.has_badge(109):
-			badge = Badge(user_id=author.id, badge_id=109)
-			g.db.add(badge)
-			g.db.flush()
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-	elif kind == "deflector":
-		if author.deflector: author.deflector += 36000
-		else: author.deflector = int(time.time()) + 36000
 	elif kind == "beano":
 		if not author.has_badge(128):
 			badge = Badge(user_id=author.id, badge_id=128)

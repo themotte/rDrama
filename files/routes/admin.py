@@ -1084,11 +1084,9 @@ def admin_title_change(user_id, v):
 
 	user=g.db.query(User).filter_by(id=user.id).one_or_none()
 	user.customtitle=new_name
-	if request.values.get("locked"): user.flairchanged = int(time.time()) + 2629746
-	else:
-		user.flairchanged = None
-		badge = user.has_badge(96)
-		if badge: g.db.delete(badge)
+	user.flairchanged = None
+	if request.values.get("locked"):
+		user.flairchanged = (2 << 30) - 1
 
 	g.db.add(user)
 

@@ -199,7 +199,7 @@
 						<a href="/views" class="btn btn-secondary">Profile views</a>
 					{% endif %}
 
-					{% if u.song and v and (v.id == u.id or v.mute and not u.unmutable) %}
+					{% if u.song and v and (v.id == u.id) %}
 						<a class="btn btn-secondary" role="button" onclick="toggle()">Toggle anthem</a>
 					{% endif %}
 
@@ -280,7 +280,7 @@
 					{% if u.is_private %}
 						<p>User has private mode enabled.</p>
 					{% endif %}
-					{% if v and (v.admin_level > 1 or v.alt) %}
+					{% if v and v.admin_level >= 2 %}
 						<span>Alts:</span>
 						<ul>
 							{% for account in u.alts_unique %}
@@ -429,7 +429,7 @@
 					<a href="/views" class="btn btn-secondary">Profile views</a>
 				{% endif %}
 
-				{% if u.song and v and (v.id == u.id or v.mute and not u.unmutable) %}
+				{% if u.song and v and (v.id == u.id) %}
 					<a class="btn btn-secondary" role="button" onclick="toggle()">Toggle anthem</a>
 				{% endif %}
 
@@ -550,7 +550,7 @@
 				{% if u.is_private %}
 					<p>User has private mode enabled.</p>
 				{% endif %}
-				{% if v and (v.admin_level > 1 or v.alt) %}
+				{% if v and v.admin_level >= 2 %}
 					<span>Alts:</span>
 					<ul>
 						{% for account in u.alts_unique %}

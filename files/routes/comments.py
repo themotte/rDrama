@@ -170,12 +170,6 @@ def api_comment(v):
 
 	body = request.values.get("body", "").strip()[:10000]
 
-	if parent_post.id not in ADMINISTRATORS:
-		if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
-			return {"error":"You have to type more than 280 characters!"}, 403
-		elif v.bird and len(body) > 140:
-			return {"error":"You have to type less than 140 characters!"}, 403
-
 	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
@@ -251,7 +245,7 @@ def api_comment(v):
 
 	is_bot = bool(request.headers.get("Authorization"))
 
-	if parent_post.id not in ADMINISTRATORS and not is_bot and not v.marseyawarded and len(body) > 10:
+	if parent_post.id not in ADMINISTRATORS and not is_bot and len(body) > 10:
 		now = int(time.time())
 		cutoff = now - 60 * 60 * 24
 
@@ -323,9 +317,6 @@ def api_comment(v):
 	g.db.add(vote)
 
 	c.voted = 1
-
-	if v.marseyawarded and parent_post.id not in ADMINISTRATORS and marseyaward_body_regex.search(body_html):
-		return {"error":"You can only type marseys!"}, 403
 
 	g.db.commit()
 
@@ -405,11 +396,6 @@ def edit_comment(cid, v):
 		return {"error":"You have to actually type something!"}, 400
 
 	if body != c.body or request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
-		if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
-			return {"error":"You have to type more than 280 characters!"}, 403
-		elif v.bird and len(body) > 140:
-			return {"error":"You have to type less than 140 characters!"}, 403
-
 		body_html = sanitize(body, edit=True)
 
 		# Spam Checking
@@ -472,9 +458,6 @@ def edit_comment(cid, v):
 			body_html = sanitize(body, edit=True)
 
 		if len(body_html) > 20000: abort(400)
-
-		if v.marseyawarded and marseyaward_body_regex.search(body_html):
-			return {"error":"You can only type marseys!"}, 403
 
 		c.body = body[:10000]
 		c.body_html = body_html

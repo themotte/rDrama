@@ -809,7 +809,7 @@ def u_username(username, v=None):
 		g.db.commit()
 
 		
-	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2 and not v.eye)):
+	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2)):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
 		return render_template("userpage_private.html", u=u, v=v)
 
@@ -887,7 +887,7 @@ def u_username_comments(username, v=None):
 												v=v)
 
 
-	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2 and not v.eye)):
+	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2)):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
 		return render_template("userpage_private.html", u=u, v=v)
 
@@ -1011,13 +1011,7 @@ def follow_user(username, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def unfollow_user(username, v):
-
 	target = get_user(username)
-
-	if target.fish:
-		send_notification(target.id, f"@{v.username} has tried to unfollow you and failed because of your fish award!")
-		g.db.commit()
-		return {"error": "You can't unfollow this user!"}
 
 	follow = g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).one_or_none()
 
