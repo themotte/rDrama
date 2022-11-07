@@ -29,12 +29,6 @@ def logged_out(old = ""):
 
 	return redirect(redirect_url)
 
-@app.get("/marseys")
-@auth_required
-def marseys(v):
-	marseys = g.db.query(Marsey).order_by(Marsey.count.desc())
-	return render_template("marseys.html", v=v, marseys=marseys)
-
 @app.get("/marsey_list")
 @cache.memoize(timeout=600, make_name=make_name)
 def marsey_list():
