@@ -449,12 +449,6 @@ def edit_post(pid, v):
 	body, err = guarded_value("body", 0, MAX_BODY_LENGTH)
 	if err: return err
 
-	if v.id == p.author_id:
-		if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
-			return {"error":"You have to type more than 280 characters!"}, 403
-		elif v.bird and len(body) > 140:
-			return {"error":"You have to type less than 140 characters!"}, 403
-
 	if title != p.title:
 		p.title = title
 		title_html = filter_emojis_only(title, edit=True)

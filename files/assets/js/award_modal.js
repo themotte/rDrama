@@ -21,14 +21,9 @@ function pick(kind, canbuy1, canbuy2) {
 	document.getElementById('kind').value=kind;
 	try {document.getElementsByClassName('picked')[0].classList.toggle('picked');} catch(e) {console.log(e)}
 	document.getElementById(kind).classList.toggle('picked')
-	if (kind == "flairlock") {
-		document.getElementById('notelabel').innerHTML = "New flair:";
-		document.getElementById('note').placeholder = "Insert new flair here, or leave empty to add 1 day to the duration of the current flair";
-	}
-	else {
-		document.getElementById('notelabel').innerHTML = "Note (optional):";
-		document.getElementById('note').placeholder = "Note to include in award notification";
-	}
+
+	document.getElementById('notelabel').innerHTML = "Note (optional):";
+	document.getElementById('note').placeholder = "Note to include in award notification";
 }
 
 function buy(mb) {
