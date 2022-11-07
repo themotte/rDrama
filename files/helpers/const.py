@@ -255,8 +255,6 @@ utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
 
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 
-ADMINISTRATORS = (37696, 37697, 37749, 37833, 37838)
-
 proxies = {"http":"http://127.0.0.1:18080","https":"http://127.0.0.1:18080"}
 
 approved_embed_hosts = [

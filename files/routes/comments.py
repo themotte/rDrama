@@ -179,35 +179,9 @@ def api_comment(v):
 				oldname = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(oldname)
 				image = process_image(oldname)
-				if image == "": return {"error":"Image upload failed"}
-				if v.admin_level > 2 and level == 1:
-					if parent_post.id == 37696:
-						pass
-						# filename = 'files/assets/images/rDrama/sidebar/' + str(len(listdir('files/assets/images/rDrama/sidebar'))+1) + '.webp'
-						# copyfile(oldname, filename)
-						# process_image(filename, 400)
-					elif parent_post.id == 37697:
-						pass
-						# filename = 'files/assets/images/rDrama/banners/' + str(len(listdir('files/assets/images/rDrama/banners'))+1) + '.webp'
-						# copyfile(oldname, filename)
-						# process_image(filename)
-					elif parent_post.id == 37833:
-						try:
-							badge_def = loads(body)
-							name = badge_def["name"]
+				if image == "":
+					return {"error":"Image upload failed"}
 
-							existing = g.db.query(BadgeDef).filter_by(name=name).one_or_none()
-							if existing: return {"error": "A badge with this name already exists!"}, 403
-
-							badge = BadgeDef(name=name, description=badge_def["description"])
-							g.db.add(badge)
-							g.db.flush()
-							filename = f'files/assets/images/badges/{badge.id}.webp'
-							copyfile(oldname, filename)
-							process_image(filename, 200)
-							requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/assets/images/badges/{badge.id}.webp"]}, timeout=5)
-						except Exception as e:
-							return {"error": str(e)}, 400
 				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
 					body += f"\n\n![]({image})"
 				else:
@@ -231,21 +205,23 @@ def api_comment(v):
 
 	body_html = sanitize(body, comment=True)
 
-	if parent_post.id not in ADMINISTRATORS:
-		existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
-																	Comment.deleted_utc == 0,
-																	Comment.parent_comment_id == parent_comment_id,
-																	Comment.parent_submission == parent_post.id,
-																	Comment.body_html == body_html
-																	).one_or_none()
-		if existing: return {"error": f"You already made that comment: /comment/{existing.id}"}, 409
+	existing = g.db.query(Comment.id).filter(
+		Comment.author_id == v.id,
+		Comment.deleted_utc == 0,
+		Comment.parent_comment_id == parent_comment_id,
+		Comment.parent_submission == parent_post.id,
+		Comment.body_html == body_html
+	).one_or_none()
+
+	if existing:
+		return {"error": f"You already made that comment: /comment/{existing.id}"}, 409
 
 	if parent.author.any_block_exists(v) and v.admin_level < 2:
 		return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
 
 	is_bot = bool(request.headers.get("Authorization"))
 
-	if parent_post.id not in ADMINISTRATORS and not is_bot and len(body) > 10:
+	if not is_bot and len(body) > 10:
 		now = int(time.time())
 		cutoff = now - 60 * 60 * 24
 
