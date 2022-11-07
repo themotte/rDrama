@@ -274,11 +274,6 @@ ACTIONTYPES = {
 		"icon": 'fa-user-crown', 
 		"color": 'bg-success'
 	},
-	'make_meme_admin': {
-		"str": 'made {self.target_link} meme admin', 
-		"icon": 'fa-user-crown', 
-		"color": 'bg-success'
-	},
 	'monthly': {
 		"str": 'distributed monthly marseybux', 
 		"icon": 'fa-sack-dollar', 
@@ -316,11 +311,6 @@ ACTIONTYPES = {
 	},
 	'remove_admin': {
 		"str": 'removed {self.target_link} as admin', 
-		"icon": 'fa-user-crown', 
-		"color": 'bg-danger'
-	},
-	'remove_meme_admin': {
-		"str": 'removed {self.target_link} as meme admin', 
 		"icon": 'fa-user-crown', 
 		"color": 'bg-danger'
 	},
