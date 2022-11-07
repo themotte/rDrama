@@ -189,11 +189,6 @@ ACTIONTYPES = {
 		"icon": 'fa-robot', 
 		"color": 'bg-danger'
 	},
-	'disabled_Fart_mode': {
-		"str": 'disabled fart mode', 
-		"icon": 'fa-gas-pump-slash', 
-		"color": 'bg-danger'
-	},
 	'disabled_FilterNewPosts': {
 		"str": 'disabled filter new posts', 
 		"icon": 'fa-filter', 
@@ -237,11 +232,6 @@ ACTIONTYPES = {
 	'enabled_Bots': {
 		"str": 'enabled Bots', 
 		"icon": 'fa-robot', 
-		"color": 'bg-success'
-	},
-	'enabled_Fart_mode': {
-		"str": 'enabled fart mode', 
-		"icon": 'fa-gas-pump', 
 		"color": 'bg-success'
 	},
 	'enabled_FilterNewPosts': {
@@ -424,7 +414,6 @@ ACTIONTYPES = {
 		"icon": 'fa-eye', 
 		"color": 'bg-success'
 	},
-
 	'fallback': {
 		"str": 'unfamiliar action type, please report', 
 		"icon": 'fa-robot', 
