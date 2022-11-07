@@ -64,5 +64,4 @@ def inject_constants():
 		"config":app.config.get,
 		"DEFAULT_COLOR":DEFAULT_COLOR,
 		"COLORS":COLORS,
-		"ADMINISTRATORS":ADMINISTRATORS
 	}
