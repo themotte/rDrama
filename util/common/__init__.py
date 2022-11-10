@@ -1,7 +1,7 @@
 import sys, subprocess, time
 
 def _execute(command,**kwargs):
-    check = kwargs.get('check',False)
+    check = kwargs.get('check', True)
     on_stdout_line = kwargs.get('on_stdout_line', None)
     on_stderr_line = kwargs.get('on_stderr_line', None)
     with subprocess.Popen(
@@ -51,29 +51,59 @@ def _docker(command, **kwargs):
         ' && '.join(command)
     ], **kwargs)
 
-def _running():
-    command = ['docker','container','inspect','-f','{{.State.Status}}','themotte']
-    result = _execute(command,check=False).stdout.strip()
-    return result == "running"
+def _status_single(server):
+    command = ['docker', 'container', 'inspect', '-f', '{{.State.Status}}', server]
+    result = _execute(command, check=False).stdout.strip()
+    print(f"{server}: {result}")
+    return result
+
+# this should really be yanked out of the docker-compose somehow
+_containers = ["themotte", "themotte_postgres", "themotte_redis"]
+
+def _all_running():
+    for container in _containers:
+        if _status_single(container) != "running":
+            return False
+
+    return True
+
+def _any_exited():
+    for container in _containers:
+        if _status_single(container) == "exited":
+            return True
+
+    return False
 
 def _start():
-    command = ['docker-compose','up','--build','-d']
-    result = _execute(command,check=True)
-    time.sleep(1)
+    command = [
+        'docker-compose',
+        '-f', 'docker-compose.yml',
+        '-f', 'docker-compose-operation.yml',
+        'up',
+        '--build',
+        '-d',
+    ]
+    result = _execute(command)
+
+    while not _all_running():
+        if _any_exited():
+            raise RuntimeError("Server exited prematurely")
+        time.sleep(1)
+
     return result
 
 def _stop():
     command = ['docker-compose','down']
-    result = _execute(command,check=True)
+    result = _execute(command)
     time.sleep(1)
     return result
 
 def _operation(name, command):
     # check if running and start if not
-    running = _running()
+    running = _all_running()
 
     if not running:
-        print("Starting containers...")
+        print("Starting containers . . .")
         _start()
 
     # run operation in docker container
@@ -85,7 +115,7 @@ def _operation(name, command):
     )
 
     if not running:
-        print("Stopping containers...")
+        print("Stopping containers . . .")
         _stop()
 
     return result
