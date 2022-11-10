@@ -19,6 +19,7 @@ RUN mkdir /images && mkdir /songs
 
 EXPOSE 80/tcp
 
+ENV FLASK_APP=files/cli:app
 CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
 
 

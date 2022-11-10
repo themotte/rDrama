@@ -1,6 +1,13 @@
-import sys, subprocess, time
+
+import pprint
+import subprocess
+import sys
+import time
 
 def _execute(command,**kwargs):
+    #print("Running:")
+    #pprint.pprint(command)
+
     check = kwargs.get('check', True)
     on_stdout_line = kwargs.get('on_stdout_line', None)
     on_stderr_line = kwargs.get('on_stderr_line', None)
@@ -47,14 +54,12 @@ def _docker(command, **kwargs):
         "docker-compose",
         "exec", '-T',
         "files",
-        "bash", "-c", 
-        ' && '.join(command)
-    ], **kwargs)
+    ] + command,
+    **kwargs)
 
 def _status_single(server):
     command = ['docker', 'container', 'inspect', '-f', '{{.State.Status}}', server]
     result = _execute(command, check=False).stdout.strip()
-    print(f"{server}: {result}")
     return result
 
 # this should really be yanked out of the docker-compose somehow
@@ -93,30 +98,38 @@ def _start():
     return result
 
 def _stop():
-    command = ['docker-compose','down']
+    # use "stop" instead of "down" to avoid killing all stored data
+    command = ['docker-compose','stop']
     result = _execute(command)
     time.sleep(1)
     return result
 
-def _operation(name, command):
-    # check if running and start if not
-    running = _all_running()
+def _operation(name, commands):
+    # restart to make sure they're in the right mode
+    print("Stopping containers . . .")
+    _stop()
 
-    if not running:
-        print("Starting containers . . .")
-        _start()
+    print("Starting containers in operation mode . . .")
+    _start()
 
-    # run operation in docker container
+    # prepend our upgrade, since right now we're always using it
+    commands = [[
+        "python3",
+        "-m", "flask",
+        "db", "upgrade"
+    ]] + commands
+
+    # run operations in docker container
     print(f"Running {name} . . .")
-    result = _docker(
-        command,
-        on_stdout_line=lambda line: print(line, end=''),
-        on_stderr=lambda line: print(line, end=''),
-    )
+    for command in commands:
+        result = _docker(
+            command,
+            on_stdout_line=lambda line: print(line, end=''),
+            on_stderr=lambda line: print(line, end=''),
+        )
 
-    if not running:
-        print("Stopping containers . . .")
-        _stop()
+    print("Stopping containers . . .")
+    _stop()
 
     return result
 

@@ -2,7 +2,8 @@
 
 import sys
 from common import error, run_help
-from migrate import run_migrate
+
+from command import run_command
 from test import run_test
 
 if __name__=='__main__':
@@ -15,8 +16,8 @@ if __name__=='__main__':
 
     if name == "test":
         run_test(args)
-    elif name == "migrate":
-        run_migrate(args)
+    elif name == "command":
+        run_command(args)
     elif name == "help":
         run_help()
     else:
