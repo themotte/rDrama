@@ -60,14 +60,14 @@ def _status_single(server):
 # this should really be yanked out of the docker-compose somehow
 _containers = ["themotte", "themotte_postgres", "themotte_redis"]
 
-def _running():
+def _all_running():
     for container in _containers:
         if _status_single(container) != "running":
             return False
 
     return True
 
-def _exited():
+def _any_exited():
     for container in _containers:
         if _status_single(container) == "exited":
             return True
@@ -85,8 +85,8 @@ def _start():
     ]
     result = _execute(command)
 
-    while not _running():
-        if _exited():
+    while not _all_running():
+        if _any_exited():
             raise RuntimeError("Server exited prematurely")
         time.sleep(1)
 
@@ -100,7 +100,7 @@ def _stop():
 
 def _operation(name, command):
     # check if running and start if not
-    running = _running()
+    running = _all_running()
 
     if not running:
         print("Starting containers . . .")
