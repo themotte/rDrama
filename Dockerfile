@@ -1,4 +1,6 @@
-FROM python:3.11
+###################################################################
+# Base/release container
+FROM python:3.11 AS release
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -19,3 +21,16 @@ EXPOSE 80/tcp
 
 CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
 
+
+###################################################################
+# Dev container
+FROM release AS dev
+# we don't actually do anything different yet
+
+
+###################################################################
+# Utility container for running commands (tests, most notably)
+FROM release AS operation
+
+# don't run the server itself, just start up the environment and assume we'll exec things from the outside
+CMD sleep infinity
