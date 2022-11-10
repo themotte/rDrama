@@ -1,0 +1,21 @@
+sudo: false
+language: python
+dist: xenial
+python:
+  - "3.7"
+  - "3.8"
+  - "3.9"
+matrix:
+  include:
+    - name: "PEP8"
+      python: 3.7
+      env: TOXENV=pep8
+install:
+  - pip install tox-travis codecov
+script:
+  - tox
+after_success:
+  - codecov
+branches:
+  only:
+  - master
