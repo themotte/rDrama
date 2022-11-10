@@ -189,11 +189,6 @@ ACTIONTYPES = {
 		"icon": 'fa-robot', 
 		"color": 'bg-danger'
 	},
-	'disabled_Fart_mode': {
-		"str": 'disabled fart mode', 
-		"icon": 'fa-gas-pump-slash', 
-		"color": 'bg-danger'
-	},
 	'disabled_FilterNewPosts': {
 		"str": 'disabled filter new posts', 
 		"icon": 'fa-filter', 
@@ -239,11 +234,6 @@ ACTIONTYPES = {
 		"icon": 'fa-robot', 
 		"color": 'bg-success'
 	},
-	'enabled_Fart_mode': {
-		"str": 'enabled fart mode', 
-		"icon": 'fa-gas-pump', 
-		"color": 'bg-success'
-	},
 	'enabled_FilterNewPosts': {
 		"str": 'enabled filter new posts', 
 		"icon": 'fa-filter', 
@@ -284,11 +274,6 @@ ACTIONTYPES = {
 		"icon": 'fa-user-crown', 
 		"color": 'bg-success'
 	},
-	'make_meme_admin': {
-		"str": 'made {self.target_link} meme admin', 
-		"icon": 'fa-user-crown', 
-		"color": 'bg-success'
-	},
 	'monthly': {
 		"str": 'distributed monthly marseybux', 
 		"icon": 'fa-sack-dollar', 
@@ -326,11 +311,6 @@ ACTIONTYPES = {
 	},
 	'remove_admin': {
 		"str": 'removed {self.target_link} as admin', 
-		"icon": 'fa-user-crown', 
-		"color": 'bg-danger'
-	},
-	'remove_meme_admin': {
-		"str": 'removed {self.target_link} as meme admin', 
 		"icon": 'fa-user-crown', 
 		"color": 'bg-danger'
 	},
@@ -424,7 +404,6 @@ ACTIONTYPES = {
 		"icon": 'fa-eye', 
 		"color": 'bg-success'
 	},
-
 	'fallback': {
 		"str": 'unfamiliar action type, please report', 
 		"icon": 'fa-robot', 

@@ -326,47 +326,6 @@ def club_ban(v, username):
 	g.db.commit()
 	return {"message": f"@{username} has been kicked from the {CC_TITLE}. Deserved."}
 
-
-@app.post("/@<username>/make_meme_admin")
-@limiter.exempt
-@admin_level_required(3)
-def make_meme_admin(v, username):
-	user = get_user(username)
-	if not user: abort(404)
-	user.admin_level = 1
-	g.db.add(user)
-
-	ma = ModAction(
-		kind="make_meme_admin",
-		user_id=v.id,
-		target_user_id=user.id
-	)
-	g.db.add(ma)
-
-	g.db.commit()
-	return {"message": "User has been made meme admin!"}
-
-
-@app.post("/@<username>/remove_meme_admin")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
-@admin_level_required(3)
-def remove_meme_admin(v, username):
-	user = get_user(username)
-	if not user: abort(404)
-	user.admin_level = 0
-	g.db.add(user)
-
-	ma = ModAction(
-		kind="remove_meme_admin",
-		user_id=v.id,
-		target_user_id=user.id
-	)
-	g.db.add(ma)
-
-	g.db.commit()
-	return {"message": "Meme admin removed!"}
-
-
 @app.get("/admin/shadowbanned")
 @limiter.exempt
 @auth_required

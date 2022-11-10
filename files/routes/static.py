@@ -29,12 +29,6 @@ def logged_out(old = ""):
 
 	return redirect(redirect_url)
 
-@app.get("/marseys")
-@auth_required
-def marseys(v):
-	marseys = g.db.query(Marsey).order_by(Marsey.count.desc())
-	return render_template("marseys.html", v=v, marseys=marseys)
-
 @app.get("/marsey_list")
 @cache.memoize(timeout=600, make_name=make_name)
 def marsey_list():
@@ -198,7 +192,6 @@ def cached_chart(kind, site):
 
 
 @app.get("/patrons")
-@app.get("/paypigs")
 @admin_level_required(3)
 def patrons(v):
 	users = g.db.query(User).filter(User.patron > 0).order_by(User.patron.desc(), User.id).all()
@@ -206,7 +199,6 @@ def patrons(v):
 	return render_template("patrons.html", v=v, users=users)
 
 @app.get("/admins")
-@app.get("/badmins")
 @auth_desired
 def admins(v):
 	if v and v.admin_level > 2:

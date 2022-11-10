@@ -106,14 +106,6 @@ AWARDS = {
         "color": "text-green",
         "price": 300
     },
-	"beano": {
-        "kind": "beano",
-        "title": "Beano",
-        "description": "Stops you from embarrassing yourself with your flatulence",
-        "icon": "fas fa-gas-pump-slash",
-        "color": "text-green",
-        "price": 1000
-    },
 	"pin": {
 		"kind": "pin",
 		"title": "1-Hour Pin",
