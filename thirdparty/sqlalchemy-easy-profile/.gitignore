@@ -1,0 +1,18 @@
+*.pyc
+
+# Packages
+*.egg-info
+.eggs
+build
+dist
+
+# IDE files
+.idea
+.vscode
+
+# Environment
+.venv*
+
+# Testing
+.tox
+.coverage
