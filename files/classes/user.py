@@ -57,12 +57,7 @@ class User(Base):
 	patron_utc = Column(Integer, default=0, nullable=False)
 	verified = Column(String)
 	verifiedcolor = Column(String)
-	marseyawarded = Column(Integer)
-	rehab = Column(Integer)
-	longpost = Column(Integer)
 	winnings = Column(Integer, default=0, nullable=False)
-	unblockable = Column(Boolean)
-	bird = Column(Integer)
 	email = deferred(Column(String))
 	css = deferred(Column(String))
 	profilecss = deferred(Column(String))
@@ -87,21 +82,11 @@ class User(Base):
 	newtabexternal = Column(Boolean, default=True, nullable=False)
 	reddit = Column(String, default='old.reddit.com', nullable=False)
 	nitter = Column(Boolean)
-	mute = Column(Boolean)
-	unmutable = Column(Boolean)
-	eye = Column(Boolean)
-	alt = Column(Boolean)
 	frontsize = Column(Integer, default=25, nullable=False)
 	controversial = Column(Boolean, default=False, nullable=False)
 	bio = deferred(Column(String))
 	bio_html = Column(String)
-	sig = deferred(Column(String))
-	sig_html = Column(String)
 	fp = Column(String)
-	sigs_disabled = Column(Boolean)
-	fish = Column(Boolean)
-	progressivestack = Column(Integer)
-	deflector = Column(Integer)
 	friends = deferred(Column(String))
 	friends_html = deferred(Column(String))
 	enemies = deferred(Column(String))
@@ -205,7 +190,7 @@ class User(Base):
 
 	@lazy
 	def mod_date(self, sub):
-		if self.id == AEVANN_ID: return 1
+		if self.id == OWNER_ID: return 1
 		mod = g.db.query(Mod).filter_by(user_id=self.id, sub=sub).one_or_none()
 		if not mod: return None
 		return mod.created_utc

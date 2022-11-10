@@ -147,7 +147,7 @@
 
 				<div class="post-meta text-left mb-md-2">
 					<h5 class="card-title post-title text-left mb-0 pb-0 pb-md-1">
-						<a id="{{p.id}}-title" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}" class="{% if voted and v.id == AEVANN_ID %}visited{% endif %}">
+						<a id="{{p.id}}-title" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} href="{{p.permalink}}">
 						{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
 						{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
 						{{p.realtitle(v) | safe}}

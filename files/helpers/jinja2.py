@@ -7,10 +7,6 @@ from files.helpers.assetcache import assetcache_path
 
 @app.template_filter("post_embed")
 def post_embed(id, v):
-
-	try: id = int(id)
-	except: return None
-	
 	p = get_post(id, v, graceful=True)
 	
 	if p: return render_template("submission_listing.html", listing=[p], v=v)
@@ -65,11 +61,7 @@ def inject_constants():
 		"CC":CC,
 		"CC_TITLE":CC_TITLE,
 		"listdir":listdir,
-		"MOOSE_ID":MOOSE_ID,
-		"AEVANN_ID":AEVANN_ID,
-		"PIZZASHILL_ID":PIZZASHILL_ID,
 		"config":app.config.get,
 		"DEFAULT_COLOR":DEFAULT_COLOR,
 		"COLORS":COLORS,
-		"ADMINISTRATORS":ADMINISTRATORS
 	}

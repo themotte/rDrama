@@ -78,10 +78,6 @@ def settings_profile_post(v):
 		updated = True
 		v.controversial = request.values.get("controversial") == 'true'
 
-	elif request.values.get("sigs_disabled", v.sigs_disabled) != v.sigs_disabled:
-		updated = True
-		v.sigs_disabled = request.values.get("sigs_disabled") == 'true'
-
 	elif request.values.get("over18", v.over_18) != v.over_18:
 		updated = True
 		v.over_18 = request.values.get("over18") == 'true'
@@ -101,13 +97,6 @@ def settings_profile_post(v):
 		g.db.commit()
 		return render_template("settings_profile.html", v=v, msg="Your bio has been updated.")
 
-	elif request.values.get("sig") == "":
-		v.sig = None
-		v.sig_html = None
-		g.db.add(v)
-		g.db.commit()
-		return render_template("settings_profile.html", v=v, msg="Your sig has been updated.")
-
 	elif request.values.get("friends") == "":
 		v.friends = None
 		v.friends_html = None
@@ -121,27 +110,6 @@ def settings_profile_post(v):
 		g.db.add(v)
 		g.db.commit()
 		return render_template("settings_profile.html", v=v, msg="Your enemies list has been updated.")
-
-	elif (v.patron or v.id == MOOSE_ID) and request.values.get("sig"):
-		sig = request.values.get("sig")[:200]
-
-		sig_html = sanitize(sig)
-
-		if len(sig_html) > 1000:
-			return render_template("settings_profile.html",
-								   v=v,
-								   error="Your sig is too long")
-
-		v.sig = sig[:200]
-		v.sig_html=sig_html
-		g.db.add(v)
-		g.db.commit()
-		return render_template("settings_profile.html",
-							   v=v,
-							   msg="Your sig has been updated.")
-
-
-
 
 	elif request.values.get("friends"):
 		friends = request.values.get("friends")[:500]
@@ -293,10 +261,6 @@ def settings_profile_post(v):
 
 		if house == "None": house = None 
 		v.house = house
-
-		if v.house == "Vampire":
-			send_repeatable_notification(DAD_ID, f"@{v.username} has joined House Vampire!")
-
 		updated = True
 
 	if updated:
@@ -593,11 +557,6 @@ def settings_block_user(v):
 	user = get_user(request.values.get("username"), graceful=True)
 
 	if not user: return {"error": "That user doesn't exist."}, 404
-	
-	if user.unblockable:
-		send_notification(user.id, f"@{v.username} has tried to block you and failed because of your unblockable status!")
-		g.db.commit()
-		return {"error": "This user is unblockable."}, 403
 
 	if user.id == v.id:
 		return {"error": "You can't block yourself."}, 409

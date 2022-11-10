@@ -27,24 +27,8 @@ AUTOBETTER_ID = 7
 AUTOCHOICE_ID = 8
 BASEDBOT_ID = 0
 
-A_ID = 0
-KIPPY_ID = 0
 GIFT_NOTIF_ID = 9
-PIZZASHILL_ID = 0
-PIZZA_VOTERS = ()
-IDIO_ID = 0
-CARP_ID = 0
-JOAN_ID = 0
-MOOSE_ID = 0
-AEVANN_ID = 9
-HOMO_ID = 0
-SOREN_ID = 0
-Q_ID = 0
-LAWLZ_ID = 0
-LLM_ID = 0
-DAD_ID = 0
-MOM_ID = 0
-DONGER_ID = 0
+OWNER_ID = 9
 BUG_THREAD = 0
 WELCOME_MSG = f"Welcome to {SITE_TITLE}! Please read [the rules](/rules) first. Then [read some of our current conversations](/) and feel free to comment or post!\n\nWe encourage people to comment even if they aren't sure they fit in; as long as your comment follows [community rules](/rules), we are happy to have posters from all backgrounds, education levels, and specialties."
 ROLES={}
@@ -58,110 +42,6 @@ COLORS = {'ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000
 LOGGEDIN_ACTIVE_TIME = 15 * 60
 
 AWARDS = {
-	"ghost": {
-		"kind": "ghost",
-		"title": "Ghost",
-		"description": "???",
-		"icon": "fas fa-ghost",
-		"color": "text-white",
-		"price": 3000
-	},
-	"nword": {
-		"kind": "nword",
-		"title": "Nword Pass",
-		"description": "???",
-		"icon": "fas fa-edit",
-		"color": "text-success",
-		"price": 10000
-	},
-	"snow": {
-		"kind": "snow",
-		"title": "Snow",
-		"description": "???",
-		"icon": "fas fa-snowflake",
-		"color": "text-blue-200",
-		"price": 300
-	},
-	"gingerbread": {
-		"kind": "gingerbread",
-		"title": "Gingerbread",
-		"description": "???",
-		"icon": "fas fa-gingerbread-man",
-		"color": "",
-		"price": 300
-	},
-	"lights": {
-		"kind": "lights",
-		"title": "Lights",
-		"description": "???",
-		"icon": "fas fa-lights-holiday",
-		"color": "",
-		"price": 300
-	},
-	"candycane": {
-		"kind": "candycane",
-		"title": "Candy Cane",
-		"description": "???",
-		"icon": "fas fa-candy-cane",
-		"color": "",
-		"price": 400
-	},
-	"fireplace": {
-		"kind": "fireplace",
-		"title": "Fireplace",
-		"description": "???",
-		"icon": "fas fa-fireplace",
-		"color": "",
-		"price": 600
-	},
-	"grinch": {
-		"kind": "grinch",
-		"title": "Grinch",
-		"description": "???",
-		"icon": "fas fa-angry",
-		"color": "text-green-500",
-		"price": 1000
-	},
-	"haunt": {
-		"kind": "haunt",
-		"title": "Haunt",
-		"description": "???",
-		"icon": "fas fa-book-dead",
-		"color": "text-warning",
-		"price": 500
-	},
-	"upsidedown": {
-		"kind": "upsidedown",
-		"title": "The Upside Down",
-		"description": "???",
-		"icon": "fas fa-lights-holiday",
-		"color": "",
-		"price": 400
-	},
-	"stab": {
-		"kind": "stab",
-		"title": "Stab",
-		"description": "???",
-		"icon": "fas fa-knife-kitchen",
-		"color": "text-danger",
-		"price": 300
-	},
-	"spiders": {
-		"kind": "spiders",
-		"title": "Spiders",
-		"description": "???",
-		"icon": "fas fa-spider",
-		"color": "text-black",
-		"price": 200
-	},
-	"fog": {
-		"kind": "fog",
-		"title": "Fog",
-		"description": "???",
-		"icon": "fas fa-smoke",
-		"color": "text-gray",
-		"price": 200
-	},
 	"lootbox": {
 		"kind": "lootbox",
 		"title": "Lootstocking",
@@ -226,22 +106,6 @@ AWARDS = {
         "color": "text-green",
         "price": 300
     },
-	"rehab": {
-		"kind": "rehab",
-		"title": "Rehab",
-		"description": "Prevents the user from gambling for 24 hours in a last ditch effort to save them from themself.",
-		"icon": "fas fa-dice-six",
-		"color": "text-black",
-		"price": 777
-	},
-	"progressivestack": {
-		"kind": "progressivestack",
-		"title": "Progressive Stack",
-		"description": "Makes votes on the recipient's posts and comments weigh double in the ranking algorithm for 6 hours.",
-		"icon": "fas fa-bullhorn",
-		"color": "text-danger",
-		"price": 1000
-	},
 	"pin": {
 		"kind": "pin",
 		"title": "1-Hour Pin",
@@ -257,46 +121,6 @@ AWARDS = {
 		"icon": "fas fa-thumbtack fa-rotate--45",
 		"color": "text-black",
 		"price": 1000
-	},
-	"flairlock": {
-		"kind": "flairlock",
-		"title": "1-Day Flairlock",
-		"description": "Sets a flair for the recipient and locks it for 24 hours.",
-		"icon": "fas fa-lock",
-		"color": "text-black",
-		"price": 1250
-	},
-	"pizzashill": {
-		"kind": "pizzashill",
-		"title": "Pizzashill",
-		"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
-		"icon": "fas fa-pizza-slice",
-		"color": "text-orange",
-		"price": 1500
-	},
-	"bird": {
-		"kind": "bird",
-		"title": "Bird Site",
-		"description": "Forces the recipient to make all posts/comments < 140 characters for 24 hours.",
-		"icon": "fab fa-twitter",
-		"color": "text-blue",
-		"price": 1500
-	},
-	"deflector": {
-		"kind": "deflector",
-		"title": "Deflector",
-		"description": "Causes most awards received for the next 10 hours to be deflected back at their giver.",
-		"icon": "fas fa-shield",
-		"color": "text-pink",
-		"price": 2750
-	},
-	"marsey": {
-		"kind": "marsey",
-		"title": "Marsey",
-		"description": "Makes the recipient unable to post/comment anything but marsey emojis for 24 hours.",
-		"icon": "fas fa-cat",
-		"color": "text-orange",
-		"price": 3000
 	},
 	"ban": {
 		"kind": "ban",
@@ -330,54 +154,6 @@ AWARDS = {
 		"color": "text-success",
 		"price": 10000
 	},
-	"eye": {
-		"kind": "eye",
-		"title": "All-Seeing Eye",
-		"description": "Gives the recipient the ability to view private profiles.",
-		"icon": "fas fa-eye",
-		"color": "text-silver",
-		"price": 10000
-	},
-	"unblockable": {
-		"kind": "unblockable",
-		"title": "Unblockable",
-		"description": "Makes the recipient unblockable and removes all blocks on them.",
-		"icon": "far fa-laugh-squint",
-		"color": "text-lightgreen",
-		"price": 10000
-	},
-	"fish": {
-		"kind": "fish",
-		"title": "Fish",
-		"description": "This user cannot be unfollowed",
-		"icon": "fas fa-fish",
-		"color": "text-lightblue",
-		"price": 20000
-	},
-	"pause": {
-		"kind": "pause",
-		"title": "Pause",
-		"description": "Gives the recipient the ability to pause profile anthems.",
-		"icon": "fas fa-volume-mute",
-		"color": "text-danger",
-		"price": 20000
-	},
-	"unpausable": {
-		"kind": "unpausable",
-		"title": "Unpausable",
-		"description": "Makes the profile anthem of the recipient unpausable.",
-		"icon": "fas fa-volume",
-		"color": "text-success",
-		"price": 40000
-	},
-	"alt": {
-		"kind": "alt",
-		"title": "Alt-Seeing Eye",
-		"description": "Gives the recipient the ability to view alts.",
-		"icon": "fas fa-eye",
-		"color": "text-gold",
-		"price": 50000
-	},
 }
 
 AWARDS2 = deepcopy(AWARDS)
@@ -390,33 +166,10 @@ for k, val in AWARDS2.items():
 	if val['price'] == 300: AWARDS3[k] = val
 
 NOTIFIED_USERS = {
-	'aevan': AEVANN_ID,
-	'avean': AEVANN_ID,
-	'joan': JOAN_ID,
-	'pewkie': JOAN_ID,
-	'carp': CARP_ID,
-	'idio3': IDIO_ID,
-	'idio ': IDIO_ID,
-	'landlord_messiah': LLM_ID,
-	'landlordmessiah': LLM_ID,
-	' llm ': LLM_ID,
-	'landlet': LLM_ID,
-	'dong': DONGER_ID,
-	'kippy': KIPPY_ID,
-	'the_homocracy': HOMO_ID,
-	'soren': SOREN_ID,
+	# format: 'substring' ↦ User ID to notify
 }
 
 patron = 'Patron'
-
-REDDIT_NOTIFS = {
-	'idio3': IDIO_ID,
-	'aevann': AEVANN_ID,
-	'carpflo': CARP_ID,
-	'carpathianflorist': CARP_ID,
-	'carpathian florist': CARP_ID,
-	'the_homocracy': HOMO_ID
-}
 
 discounts = {
 	69: 0.02,
@@ -445,10 +198,6 @@ mention_regex = re.compile('(^|\\s|<p>)@(([a-zA-Z0-9_\\-]){1,25})', flags=re.A)
 mention_regex2 = re.compile('<p>@(([a-zA-Z0-9_\\-]){1,25})', flags=re.A)
 
 valid_password_regex = re.compile("^.{8,100}$", flags=re.A)
-
-marseyaward_body_regex = re.compile(">[^<\\s+]|[^>\\s+]<", flags=re.A)
-
-marseyaward_title_regex = re.compile("( *<img[^>]+>)+", flags=re.A)
 
 marsey_regex = re.compile("[a-z0-9]{1,30}", flags=re.A)
 
@@ -497,8 +246,6 @@ utm_regex = re.compile('utm_[a-z]+=[a-z0-9_]+&', flags=re.A)
 utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
 
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
-
-ADMINISTRATORS = (37696, 37697, 37749, 37833, 37838)
 
 proxies = {"http":"http://127.0.0.1:18080","https":"http://127.0.0.1:18080"}
 

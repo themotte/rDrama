@@ -210,7 +210,6 @@ def front_all(v, sub=None, subdomain=None):
 	if v:
 		if v.hidevotedon: posts = [x for x in posts if not hasattr(x, 'voted') or not x.voted]
 
-	
 		if v.patron_utc and v.patron_utc < time.time():
 			v.patron = 0
 			v.patron_utc = 0
@@ -218,66 +217,11 @@ def front_all(v, sub=None, subdomain=None):
 			if v.discord_id: remove_role(v, "1")
 			g.db.add(v)
 			g.db.commit()
-
 		if v.unban_utc and v.unban_utc < time.time():
 			v.is_banned = 0
 			v.unban_utc = 0
 			v.ban_evade = 0
 			send_repeatable_notification(v.id, "You have been unbanned!")
-			g.db.add(v)
-			g.db.commit()
-
-		if v.flairchanged and v.flairchanged < time.time():
-			v.flairchanged = None
-			send_repeatable_notification(v.id, "Your flair lock has expired. You can now change your flair!")
-			g.db.add(v)
-			badge = v.has_badge(96)
-			if badge: g.db.delete(badge)
-			g.db.commit()
-
-		if v.marseyawarded and v.marseyawarded < time.time():
-			v.marseyawarded = None
-			send_repeatable_notification(v.id, "Your marsey award has expired!")
-			g.db.add(v)
-			badge = v.has_badge(98)
-			if badge: g.db.delete(badge)
-			g.db.commit()
-
-		if v.longpost and v.longpost < time.time():
-			v.longpost = None
-			send_repeatable_notification(v.id, "Your pizzashill award has expired!")
-			g.db.add(v)
-			badge = v.has_badge(97)
-			if badge: g.db.delete(badge)
-			g.db.commit()
-
-		if v.bird and v.bird < time.time():
-			v.bird = None
-			send_repeatable_notification(v.id, "Your bird site award has expired!")
-			g.db.add(v)
-			badge = v.has_badge(95)
-			if badge: g.db.delete(badge)
-			g.db.commit()
-
-		if v.progressivestack and v.progressivestack < time.time():
-			v.progressivestack = None
-			send_repeatable_notification(v.id, "Your progressive stack has expired!")
-			g.db.add(v)
-			badge = v.has_badge(94)
-			if badge: g.db.delete(badge)
-			g.db.commit()
-
-		if v.rehab and v.rehab < time.time():
-			v.rehab = None
-			send_repeatable_notification(v.id, "Your rehab has finished!")
-			g.db.add(v)
-			badge = v.has_badge(109)
-			if badge: g.db.delete(badge)
-			g.db.commit()
-
-		if v.deflector and v.deflector < time.time():
-			v.deflector = None
-			send_repeatable_notification(v.id, "Your deflector has expired!")
 			g.db.add(v)
 			g.db.commit()
 

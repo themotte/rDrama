@@ -799,7 +799,7 @@ def u_username(username, v=None):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"That username is reserved for: {u.reserved}"}
 		return render_template("userpage_reserved.html", u=u, v=v)
 
-	if v and v.id not in (u.id,DAD_ID) and (u.patron or u.admin_level > 1):
+	if v and v.id != u.id and (u.patron or u.admin_level > 1):
 		view = g.db.query(ViewerRelationship).filter_by(viewer_id=v.id, user_id=u.id).one_or_none()
 
 		if view: view.last_view_utc = int(time.time())
@@ -809,7 +809,7 @@ def u_username(username, v=None):
 		g.db.commit()
 
 		
-	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2 and not v.eye)):
+	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2)):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
 		return render_template("userpage_private.html", u=u, v=v)
 
@@ -887,7 +887,7 @@ def u_username_comments(username, v=None):
 												v=v)
 
 
-	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2 and not v.eye)):
+	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2)):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
 		return render_template("userpage_private.html", u=u, v=v)
 
@@ -1011,13 +1011,7 @@ def follow_user(username, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def unfollow_user(username, v):
-
 	target = get_user(username)
-
-	if target.fish:
-		send_notification(target.id, f"@{v.username} has tried to unfollow you and failed because of your fish award!")
-		g.db.commit()
-		return {"error": "You can't unfollow this user!"}
 
 	follow = g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).one_or_none()
 

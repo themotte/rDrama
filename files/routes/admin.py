@@ -26,7 +26,7 @@ month = datetime.now().strftime('%B')
 @limiter.exempt
 @admin_level_required(3)
 def merge(v, id1, id2):
-	if v.id != AEVANN_ID: abort(403)
+	if v.id != OWNER_ID: abort(403)
 
 	if time.time() - session.get('verified', 0) > 3:
 		session.pop("session_id", None)
@@ -87,7 +87,7 @@ def merge(v, id1, id2):
 @limiter.exempt
 @admin_level_required(3)
 def merge_all(v, id):
-	if v.id != AEVANN_ID: abort(403)
+	if v.id != OWNER_ID: abort(403)
 
 	if time.time() - session.get('verified', 0) > 3:
 		session.pop("session_id", None)
@@ -609,7 +609,7 @@ def badge_grant_post(v):
 	try: badge_id = int(request.values.get("badge_id"))
 	except: abort(400)
 
-	if badge_id in {16,17,94,95,96,97,98,109} and v.id != AEVANN_ID:
+	if badge_id in {16,17,94,95,96,97,98,109} and v.id != OWNER_ID:
 		abort(403)
 
 	if user.has_badge(badge_id):
@@ -1043,11 +1043,9 @@ def admin_title_change(user_id, v):
 
 	user=g.db.query(User).filter_by(id=user.id).one_or_none()
 	user.customtitle=new_name
-	if request.values.get("locked"): user.flairchanged = int(time.time()) + 2629746
-	else:
-		user.flairchanged = None
-		badge = user.has_badge(96)
-		if badge: g.db.delete(badge)
+	user.flairchanged = None
+	if request.values.get("locked"):
+		user.flairchanged = (2 << 30) - 1
 
 	g.db.add(user)
 

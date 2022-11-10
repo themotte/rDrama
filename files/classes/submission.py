@@ -377,9 +377,6 @@ class Submission(Base):
 					g.db.add(self)
 					g.db.commit()
 
-		if self.author.sig_html and (self.author_id == MOOSE_ID or (not self.ghost and not (v and v.sigs_disabled))):
-			body += f"<hr>{self.author.sig_html}"
-
 		return body
 
 	def plainbody(self, v):

@@ -19,7 +19,7 @@ def admin_vote_info_get(v):
 		else: abort(400)
 	except: abort(400)
 
-	if thing.ghost and v.id != AEVANN_ID: abort(403)
+	if thing.ghost and v.id != OWNER_ID: abort(403)
 
 	if not thing.author:
 		print(thing.id, flush=True)
@@ -65,8 +65,6 @@ def api_vote_post(post_id, new, v):
 	new = int(new)
 
 	# get the post
-	try: post_id = int(post_id)
-	except: abort(404)
 	post = get_post(post_id)
 
 	# get the old vote, if we have one
@@ -135,8 +133,6 @@ def api_vote_comment(comment_id, new, v):
 	new = int(new)
 
 	# get the comment
-	try: comment_id = int(comment_id)
-	except: abort(404)
 	comment = get_comment(comment_id)
 
 	# get the old vote, if we have one

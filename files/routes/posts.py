@@ -129,14 +129,6 @@ def submit_get(v, sub=None):
 # @app.get("/h/<sub>/post/<pid>/<anything>")
 @auth_desired
 def post_id(pid, anything=None, v=None, sub=None):
-
-	try: pid = int(pid)
-	except Exception as e: pass
-
-
-	try: pid = int(pid)
-	except: abort(404)
-
 	post = get_post(pid, v=v)
 
 	if post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
@@ -276,8 +268,6 @@ def post_id(pid, anything=None, v=None, sub=None):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def viewmore(v, pid, sort, offset):
-	try: pid = int(pid)
-	except: abort(400)
 	post = get_post(pid, v=v)
 	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
 
@@ -458,12 +448,6 @@ def edit_post(pid, v):
 
 	body, err = guarded_value("body", 0, MAX_BODY_LENGTH)
 	if err: return err
-
-	if v.id == p.author_id:
-		if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')):
-			return {"error":"You have to type more than 280 characters!"}, 403
-		elif v.bird and len(body) > 140:
-			return {"error":"You have to type less than 140 characters!"}, 403
 
 	if title != p.title:
 		p.title = title
@@ -1017,17 +1001,6 @@ def submit_post(v, sub=None):
 
 	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
-
-	if v.id == PIZZASHILL_ID:
-		for uid in PIZZA_VOTERS:
-			autovote = Vote(user_id=uid, submission_id=post.id, vote_type=1)
-			g.db.add(autovote)
-		v.coins += 3
-		v.truecoins += 3
-		g.db.add(v)
-		post.upvotes += 3
-		g.db.add(post)
-
 	g.db.commit()
 
 	cache.delete_memoized(frontlist)
