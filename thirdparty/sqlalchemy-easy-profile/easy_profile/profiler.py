@@ -5,6 +5,8 @@ from queue import Queue
 import re
 import sys
 import time
+import traceback
+import pprint
 
 from sqlalchemy import event
 from sqlalchemy.engine.base import Engine
@@ -32,7 +34,7 @@ def _get_object_name(obj):
 
 
 _DebugQuery = namedtuple(
-    "_DebugQuery", "statement,parameters,start_time,end_time"
+    "_DebugQuery", "statement,parameters,start_time,end_time,callstack"
 )
 
 
@@ -57,7 +59,7 @@ class SessionProfiler:
     _before = "before_cursor_execute"
     _after = "after_cursor_execute"
 
-    def __init__(self, engine=None):
+    def __init__(self, engine=None, stack_callback=None):
         if engine is None:
             self.engine = Engine
             self.db_name = "default"
@@ -69,6 +71,8 @@ class SessionProfiler:
         self.queries = None
 
         self._stats = None
+
+        self._stack_callback = stack_callback or self._stack_callback_default
 
     def __enter__(self):
         self.begin()
@@ -160,6 +164,9 @@ class SessionProfiler:
                 self._stats["duration"] += query.duration
                 duplicates = self._stats["duplicates"].get(query.statement, -1)
                 self._stats["duplicates"][query.statement] = duplicates + 1
+                if query.statement not in self._stats["callstacks"]:
+                    self._stats["callstacks"][query.statement] = Counter()
+                self._stats["callstacks"][query.statement].update({query.callstack: 1})
 
         return self._stats
 
@@ -174,6 +181,7 @@ class SessionProfiler:
         self._stats["duration"] = 0
         self._stats["call_stack"] = []
         self._stats["duplicates"] = Counter()
+        self._stats["callstacks"] = {}
 
     def _before_cursor_execute(self, conn, cursor, statement, parameters,
                                context, executemany):
@@ -182,5 +190,8 @@ class SessionProfiler:
     def _after_cursor_execute(self, conn, cursor, statement, parameters,
                               context, executemany):
         self.queries.put(DebugQuery(
-            statement, parameters, context._query_start_time, _timer()
+            statement, parameters, context._query_start_time, _timer(), self._stack_callback()
         ))
+
+    def _stack_callback_default(self):
+        return ''.join(traceback.format_stack())
