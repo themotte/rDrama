@@ -542,6 +542,16 @@ class User(Base):
 
 		return data
 
+	@lazy
+	def json_notes(self, v):
+		data = {'username': self.username,
+				'url': self.url,
+				'id': self.id,
+				'notes': [x.json() for x in self.notes]
+				}
+
+		return data
+
 	@property
 	@lazy
 	def json_raw(self):
