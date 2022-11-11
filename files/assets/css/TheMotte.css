@@ -217,13 +217,9 @@ a.visited,
 
 .usernote-link {
 	color: var(--primary);
-	text-decoration: none;
+	text-decoration: underline;
 	background-color: transparent;
 	cursor: pointer;
-}
-
-.usernote-link:hover {
-	text-decoration: underline;
 }
 
 .modal__overlay {
