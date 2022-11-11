@@ -1,4 +1,4 @@
-from collections import Counter, namedtuple, OrderedDict
+from collections import Counter, namedtuple, OrderedDict, defaultdict
 import functools
 import inspect
 from queue import Queue
@@ -164,8 +164,6 @@ class SessionProfiler:
                 self._stats["duration"] += query.duration
                 duplicates = self._stats["duplicates"].get(query.statement, -1)
                 self._stats["duplicates"][query.statement] = duplicates + 1
-                if query.statement not in self._stats["callstacks"]:
-                    self._stats["callstacks"][query.statement] = Counter()
                 self._stats["callstacks"][query.statement].update({query.callstack: 1})
 
         return self._stats
@@ -181,7 +179,7 @@ class SessionProfiler:
         self._stats["duration"] = 0
         self._stats["call_stack"] = []
         self._stats["duplicates"] = Counter()
-        self._stats["callstacks"] = {}
+        self._stats["callstacks"] = defaultdict(Counter)
 
     def _before_cursor_execute(self, conn, cursor, statement, parameters,
                                context, executemany):
@@ -194,4 +192,5 @@ class SessionProfiler:
         ))
 
     def _stack_callback_default(self):
+        pprint.pprint(traceback.format_stack())
         return ''.join(traceback.format_stack())
