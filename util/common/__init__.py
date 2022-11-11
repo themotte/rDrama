@@ -80,6 +80,8 @@ def _any_exited():
     return False
 
 def _start():
+    print("Starting containers in operation mode . . .")
+    print("  If this takes a while, it's probably building the container.")
     command = [
         'docker-compose',
         '-f', 'docker-compose.yml',
@@ -95,21 +97,22 @@ def _start():
             raise RuntimeError("Server exited prematurely")
         time.sleep(1)
 
+    print("  Containers started!")
+
     return result
 
 def _stop():
     # use "stop" instead of "down" to avoid killing all stored data
     command = ['docker-compose','stop']
+    print("Stopping containers . . .")
     result = _execute(command)
     time.sleep(1)
     return result
 
 def _operation(name, commands):
     # restart to make sure they're in the right mode
-    print("Stopping containers . . .")
     _stop()
 
-    print("Starting containers in operation mode . . .")
     _start()
 
     # prepend our upgrade, since right now we're always using it
@@ -128,7 +131,6 @@ def _operation(name, commands):
             on_stderr=lambda line: print(line, end=''),
         )
 
-    print("Stopping containers . . .")
     _stop()
 
     return result
