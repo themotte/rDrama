@@ -1,4 +1,5 @@
 import re
+import traceback
 
 from .profiler import SessionProfiler
 from .reporters import Reporter, StreamReporter
@@ -23,7 +24,8 @@ class EasyProfileMiddleware(object):
                  reporter=None,
                  exclude_path=None,
                  min_time=0,
-                 min_query_count=1):
+                 min_query_count=1,
+                 stack_callback=None):
 
         if reporter:
             if not isinstance(reporter, Reporter):
@@ -37,9 +39,10 @@ class EasyProfileMiddleware(object):
         self.exclude_path = exclude_path or []
         self.min_time = min_time
         self.min_query_count = min_query_count
+        self.stack_callback = stack_callback
 
     def __call__(self, environ, start_response):
-        profiler = SessionProfiler(self.engine)
+        profiler = SessionProfiler(self.engine, stack_callback=self.stack_callback)
         path = environ.get("PATH_INFO", "")
         if not self._ignore_request(path):
             method = environ.get("REQUEST_METHOD")
@@ -61,3 +64,4 @@ class EasyProfileMiddleware(object):
         if (stats["total"] >= self.min_query_count and
                 stats["duration"] >= self.min_time):
             self.reporter.report(path, stats)
+

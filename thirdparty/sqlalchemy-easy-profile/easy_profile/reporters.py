@@ -86,6 +86,8 @@ class StreamReporter(Reporter):
         summary = "Total queries: {0} in {1:.3}s".format(total, duration)
         output += self._info_line("\n{0}\n".format(summary), total)
 
+        callstacks = stats["callstacks"]
+
         # Display duplicated sql statements.
         #
         # Get top counters were value greater than 1 and write to
@@ -95,11 +97,12 @@ class StreamReporter(Reporter):
         for statement, count in most_common:
             if count < 1:
                 continue
+            callstack = callstacks[statement].most_common(1)
             # Wrap SQL statement and returning a list of wrapped lines
             statement = sqlparse.format(
                 statement, reindent=True, keyword_case="upper"
             )
-            text = "\nRepeated {0} times:\n{1}\n".format(count + 1, statement)
+            text = "\nRepeated {0} times:\n{1}\nMost common callstack {2} times:\n{3}\n".format(count + 1, statement, callstack[0][1], callstack[0][0])
             output += self._info_line(text, count)
 
         self._file.write(output)

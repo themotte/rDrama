@@ -26,7 +26,10 @@ CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
 ###################################################################
 # Dev container
 FROM release AS dev
-# we don't actually do anything different yet
+
+# Install our tweaked sqlalchemy-easy-profile
+COPY thirdparty/sqlalchemy-easy-profile sqlalchemy-easy-profile
+RUN cd sqlalchemy-easy-profile && python3 setup.py install
 
 
 ###################################################################
