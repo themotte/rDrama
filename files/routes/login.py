@@ -87,20 +87,16 @@ def login_post():
 	username = request.values.get("username")
 
 	if not username: abort(400)
-	username  = sql_ilike_clean(username.lstrip('@'))
-
-	if not username: abort(400)
 	if username.startswith('@'): username = username[1:]
 
 	if "@" in username:
-		try: account = g.db.query(User).filter(User.email.ilike(username)).one_or_none()
+		try: account = g.db.query(User).filter(User.email.ilike(sql_ilike_clean(username))).one_or_none()
 		except: return "Multiple users use this email!"
 	else: account = get_user(username, graceful=True)
 
 	if not account:
 		time.sleep(random.uniform(0, 2))
 		return render_template("login.html", failed=True)
-
 
 	if request.values.get("password"):
 
