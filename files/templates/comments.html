@@ -186,7 +186,7 @@
 			<span 
 				class="usernote-link" 
 				data-micromodal-trigger="modal-1" 
-				onclick='fillnote( {{c.author.json_popover(v) | tojson}}, null, {{c.id}} )'>_U_</span>
+				onclick='fillnote( {{c.author.json_notes(v) | tojson}}, null, {{c.id}} )'>_U_</span>
 			{% endif %}
 			{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}
 		{% endif %}
