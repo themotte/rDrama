@@ -14,4 +14,5 @@ from .votes import *
 from .feeds import *
 from .awards import *
 from .giphy import *
+from .volunteer import *
 # from .subs import *
