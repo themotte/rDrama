@@ -182,12 +182,6 @@ def award_post(pid, v):
 			author.is_banned = 0
 			author.ban_evade = 0
 			send_repeatable_notification(author.id, "You have been unbanned!")
-	elif kind == "grass":
-		author.is_banned = AUTOJANNY_ID
-		author.ban_reason = f"grass award used by @{v.username} on /post/{post.id}"
-		author.unban_utc = int(time.time()) + 30 * 86400
-		link = f"[this post]({post.shortlink})"
-		send_repeatable_notification(author.id, f"Your account has been banned permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass/snow/sand/ass to get unbanned!")
 	elif kind == "pin":
 		if post.stickied and post.stickied_utc:
 			post.stickied_utc += 3600
@@ -291,12 +285,6 @@ def award_comment(cid, v):
 			author.is_banned = 0
 			author.ban_evade = 0
 			send_repeatable_notification(author.id, "You have been unbanned!")
-	elif kind == "grass":
-		author.is_banned = AUTOJANNY_ID
-		author.ban_reason = f"grass award used by @{v.username} on /comment/{c.id}"
-		author.unban_utc = int(time.time()) + 30 * 86400
-		link = f"[this comment]({c.shortlink})"
-		send_repeatable_notification(author.id, f"Your account has been banned permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass/snow/sand/ass to get unbanned!")
 	elif kind == "pin":
 		if c.is_pinned and c.is_pinned_utc: c.is_pinned_utc += 3600
 		else:
