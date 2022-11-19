@@ -20,8 +20,9 @@ def volunteer_get_duty(u: Optional[User]) -> Optional[VolunteerDuty]:
         return None
     
     # check to make sure it's at least 20h since the last volunteer
-    if (u.volunteer_last_started_utc is not None) and (datetime.now() - u.volunteer_last_started_utc) < timedelta(hours = 20):
-        return None
+    if not app.config['DBG_VOLUNTEER_PERMISSIVE']:
+        if (u.volunteer_last_started_utc is not None) and (datetime.now() - u.volunteer_last_started_utc) < timedelta(hours = 20):
+            return None
     
     # TODO: clever code that figures out the most important duty available
     janitor = files.routes.volunteer_janitor.get_duty(u)
@@ -38,7 +39,7 @@ def volunteer(v: User):
     duty = volunteer_get_duty(v)
 
     if duty is not None:
-        duty.accept()
+        duty.accept(v)
         v.volunteer_last_started_utc = sqlalchemy.func.now()
         g.db.add(v)
         g.db.commit()
