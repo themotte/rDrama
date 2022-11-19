@@ -156,10 +156,6 @@ def downvoters_comments(v, username, uid):
 
 	return render_template("voted_comments.html", next_exists=next_exists, listing=listing, page=page, v=v, standalone=True)
 
-
-
-
-
 @app.get("/@<username>/upvoting/<uid>/posts")
 @admin_level_required(3)
 def upvoting_posts(v, username, uid):
@@ -242,18 +238,6 @@ def downvoting_comments(v, username, uid):
 	listing = get_comments(listing, v=v)
 
 	return render_template("voted_comments.html", next_exists=next_exists, listing=listing, page=page, v=v, standalone=True)
-
-
-
-
-
-@app.get("/grassed")
-@auth_required
-def grassed(v):
-	users = g.db.query(User).filter(User.ban_reason.like('grass award used by @%')).all()
-
-	return render_template("grassed.html", v=v, users=users)
-
 
 @app.get("/@<username>/upvoters")
 @admin_level_required(3)
