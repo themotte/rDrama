@@ -5,7 +5,18 @@
 {% block content %}
 
 <div>
-hello! welcome to the volunteering
+    hello! welcome to the volunteering
 </div>
+
+{% if duty == None %}
+<div>
+    there is no volunteering to do, but thanks
+</div>
+{% else %}
+<div>
+    {% from duty.embed_template() import display %}
+    {{ display(duty) }}
+</div>
+{% endif %}
 
 {% endblock %}
