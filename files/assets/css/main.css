@@ -5169,6 +5169,9 @@ div[id^="reply-edit-"] li > p:first-child {
 }
 
 
+/***********************
+  Volunteer Teaser 
+************************/
 
 .volunteer_teaser {
 	width: 100%;
@@ -5181,7 +5184,7 @@ div[id^="reply-edit-"] li > p:first-child {
 	grid-template-columns: 10rem auto;
 	grid-template-rows: auto;
 	grid-template-areas:
-		"volunteer_teaser_img volunteer_teaser_text"
+		"volunteer_teaser_img volunteer_text"
 }
 
 .volunteer_teaser_img {
@@ -5195,24 +5198,6 @@ div[id^="reply-edit-"] li > p:first-child {
 	object-fit: contain;
 }
 
-.volunteer_teaser_text {
-	grid-area: volunteer_teaser_text;
-	text-align: center;
-	margin: auto;
-	font-size: 1.5rem;
-
-	color: var(--black);
-}
-
-.volunteer_teaser_text .header {
-	font-size: 2.5rem;
-	font-weight: 600;
-}
-
-.volunteer_teaser_text .text {
-	font-size: 1.2rem;
-}
-
 .volunteer_teaser_wrapper:hover {
 	text-decoration: none;
 }
@@ -5222,13 +5207,66 @@ div[id^="reply-edit-"] li > p:first-child {
 	.volunteer_teaser {
 		grid-template-columns: 7rem auto;
 	}
+}
 
-	.volunteer_teaser_text .header {
+
+/***********************
+  Volunteer Submit 
+************************/
+
+.volunteer_submit {
+	margin: 2rem;
+}
+
+.volunteer_submit_img {
+	width: 24rem;
+	height: 24rem;
+	margin: auto;
+	padding: 2rem;
+}
+
+.volunteer_submit_img img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+
+	border: 1px solid black;
+}
+
+.volunteer_submit_wrapper:hover {
+	text-decoration: none;
+}
+
+
+/***********************
+  Volunteer General
+************************/
+
+
+.volunteer_text {
+	grid-area: volunteer_text;
+	text-align: center;
+	margin: auto;
+	font-size: 1.5rem;
+
+	color: var(--black);
+}
+
+.volunteer_text .header {
+	font-size: 2.5rem;
+	font-weight: 600;
+}
+
+.volunteer_text .text {
+	font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+	.volunteer_text .header {
 		font-size: 2rem;
-		font-weight: 600;
 	}
 	
-	.volunteer_teaser_text .text {
+	.volunteer_text .text {
 		font-size: 1rem;
 	}
 }
