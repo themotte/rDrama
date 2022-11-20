@@ -5167,3 +5167,68 @@ div[id^="form-preview-"] li > p:first-child,
 div[id^="reply-edit-"] li > p:first-child {
 	display: inline;
 }
+
+
+
+.volunteer_teaser {
+	width: 100%;
+	border: 0.3rem solid var(--primary);
+	border-radius: 1rem;
+	padding: 1rem;
+	background-color: var(--primary-background, white);
+
+	display: grid;
+	grid-template-columns: 10rem auto;
+	grid-template-rows: auto;
+	grid-template-areas:
+		"volunteer_teaser_img volunteer_teaser_text"
+}
+
+.volunteer_teaser_img {
+	grid-area: volunteer_teaser_img;
+	object-fit: contain;
+}
+
+.volunteer_teaser_img img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+.volunteer_teaser_text {
+	grid-area: volunteer_teaser_text;
+	text-align: center;
+	margin: auto;
+	font-size: 1.5rem;
+
+	color: var(--black);
+}
+
+.volunteer_teaser_text .header {
+	font-size: 2.5rem;
+	font-weight: 600;
+}
+
+.volunteer_teaser_text .text {
+	font-size: 1.2rem;
+}
+
+.volunteer_teaser_wrapper:hover {
+	text-decoration: none;
+}
+
+
+@media (max-width: 768px) {
+	.volunteer_teaser {
+		grid-template-columns: 7rem auto;
+	}
+
+	.volunteer_teaser_text .header {
+		font-size: 2rem;
+		font-weight: 600;
+	}
+	
+	.volunteer_teaser_text .text {
+		font-size: 1rem;
+	}
+}

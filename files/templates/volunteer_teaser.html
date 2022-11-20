@@ -1,5 +1,11 @@
 {% if volunteer_available_for(v) %}
-<div class="volunteer_teaser">
-hello come <a href="/volunteer">the voluntter</a>!
-</div>
+<a href="/volunteer" class="volunteer_teaser_wrapper">
+    <div class="volunteer_teaser">
+        <div class="volunteer_teaser_img"><img src="/assets/images/volunteer_teaser.webp" /></div>
+        <div class="volunteer_teaser_text">
+            <p class="header">The Motte Needs You!</p>
+            <p class="text">If you have five minutes to help out, please click here to provide your opinion on something.</p>
+        </div>
+    </div>
+</a>
 {% endif %}
