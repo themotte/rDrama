@@ -2,6 +2,7 @@ MASTER_KEY=blahblahblah
 DOMAIN=localhost
 SITE_ID=TheMotte
 SITE_TITLE=The Motte
+ENFORCE_PRODUCTION=False
 GIPHY_KEY=blahblahblah
 DISCORD_SERVER_ID=blahblahblah
 DISCORD_CLIENT_ID=blahblahblah
