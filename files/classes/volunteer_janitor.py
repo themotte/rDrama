@@ -20,7 +20,7 @@ class VolunteerJanitorRecord(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     comment_id = Column(Integer, ForeignKey("comments.id"), nullable=False)
-    edited_utc = Column(DateTime, default=0, nullable=False)
+    recorded_utc = Column(DateTime, default=0, nullable=False)
     result = Column(Enum(VolunteerJanitorResult), default=VolunteerJanitorResult.Pending, nullable=False)
 
     Index('volunteer_comment_index', user_id, comment_id)

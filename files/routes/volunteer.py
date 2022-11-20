@@ -4,12 +4,16 @@ from files.__main__ import app
 from files.classes.user import User
 import files.helpers.jinja2
 from files.helpers.wrappers import auth_required
-from flask import render_template, g
-import sqlalchemy
-from typing import Optional
-
 from files.routes.volunteer_common import VolunteerDuty
 import files.routes.volunteer_janitor
+from flask import render_template, g, request
+from os import environ
+import sqlalchemy
+from typing import Optional
+import pprint
+
+
+
 
 @files.helpers.jinja2.template_function
 def volunteer_available_for(u: Optional[User]) -> bool:
@@ -45,3 +49,18 @@ def volunteer(v: User):
         g.db.commit()
 
     return render_template("volunteer.html", v=v, duty=duty)
+
+@app.post("/volunteer_submit")
+@auth_required
+def volunteer_submit(v: User):
+    for k in request.values:
+        if not k.startswith("volunteer-"):
+            continue
+        k_processed = k.removeprefix("volunteer-")
+
+        if k_processed.startswith("janitor-"):
+            files.routes.volunteer_janitor.submitted(v, k_processed.removeprefix("janitor-"), request.values[k])
+        else:
+            raise ValueError("bad key, let's generate an error")
+
+    return render_template("volunteer_submit.html", v=v)

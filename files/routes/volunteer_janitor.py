@@ -20,7 +20,7 @@ class VolunteerDutyJanitor(VolunteerDuty):
             record = VolunteerJanitorRecord()
             record.user_id = v.id
             record.comment_id = item
-            record.edited_utc = sqlalchemy.func.now()
+            record.recorded_utc = sqlalchemy.func.now()
             record.result = VolunteerJanitorResult.Pending
             g.db.add(record)
         
@@ -28,6 +28,9 @@ class VolunteerDutyJanitor(VolunteerDuty):
 
     def embed_template(self) -> str:
         return "volunteer_janitor.html"
+    
+    def comments(self) -> list[Comment]:
+        return g.db.query(Comment).where(Comment.id.in_(self.choices))
 
 
 def get_duty(u: User) -> VolunteerDutyJanitor:
@@ -64,8 +67,9 @@ def get_duty(u: User) -> VolunteerDutyJanitor:
 
         # also, let's make sure it hasn't already been looked at by this user
         seen_records = g.db.query(VolunteerJanitorRecord) \
+            .where(VolunteerJanitorRecord.comment_id.in_(nonuser_reports)) \
             .where(VolunteerJanitorRecord.user_id == u.id) \
-            .with_entities(CommentFlag.comment_id)
+            .with_entities(VolunteerJanitorRecord.comment_id)
 
         final_reported = list({report.comment_id for report in nonuser_reports} - {record.comment_id for record in seen_records})
     else:
@@ -75,3 +79,12 @@ def get_duty(u: User) -> VolunteerDutyJanitor:
         return None
     
     return VolunteerDutyJanitor(random.sample(final_reported, k = min(3, len(final_reported))))
+
+def submitted(v: User, key: str, val: str) -> None:
+    record = VolunteerJanitorRecord()
+    record.user_id = v.id
+    record.comment_id = key
+    record.recorded_utc = sqlalchemy.func.now()
+    record.result = VolunteerJanitorResult(int(val))
+    g.db.add(record)
+    g.db.commit()
