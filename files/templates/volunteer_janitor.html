@@ -1,3 +1,24 @@
 {% macro display(duty) %}
-janny
+{% for c in duty.comments() %}
+    {% with comments=[c] %}
+        {% include "comments.html" %}
+    {% endwith %}
+    <input form="volunteer_submit" type="radio" id="vj1" name="volunteer-janitor-{{c.id}}" value="1" required="required" />
+    <label for="vj1">High-quality!</label>
+
+    <input form="volunteer_submit" type="radio" id="vj2" name="volunteer-janitor-{{c.id}}" value="2" required="required" />
+    <label for="vj2">Good</label>
+
+    <input form="volunteer_submit" type="radio" id="vj3" name="volunteer-janitor-{{c.id}}" value="3" required="required" />
+    <label for="vj3">Neutral</label>
+
+    <input form="volunteer_submit" type="radio" id="vj4" name="volunteer-janitor-{{c.id}}" value="4" required="required" />
+    <label for="vj4">Bad</label>
+
+    <input form="volunteer_submit" type="radio" id="vj5" name="volunteer-janitor-{{c.id}}" value="5" required="required" />
+    <label for="vj5">Deserves a warning</label>
+
+    <input form="volunteer_submit" type="radio" id="vj6" name="volunteer-janitor-{{c.id}}" value="6" required="required" />
+    <label for="vj6">Deserves a ban</label>
+{% endfor %}
 {% endmacro %}
