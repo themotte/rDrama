@@ -90,6 +90,5 @@ from files.helpers.lazy import *
 from files.helpers.security import *
 
 # Then the specific stuff we don't want stomped on
-from files.helpers.discord import remove_user
 from files.helpers.lazy import lazy
 from files.__main__ import Base, app, cache

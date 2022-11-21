@@ -1,6 +1,5 @@
 from files.helpers.wrappers import *
 from files.helpers.get import *
-from files.helpers.discord import *
 from files.__main__ import app, cache, limiter
 from files.classes.submission import Submission
 
@@ -214,7 +213,6 @@ def front_all(v, sub=None, subdomain=None):
 			v.patron = 0
 			v.patron_utc = 0
 			send_repeatable_notification(v.id, "Your paypig status has expired!")
-			if v.discord_id: remove_role(v, "1")
 			g.db.add(v)
 			g.db.commit()
 		if v.unban_utc and v.unban_utc < time.time():
