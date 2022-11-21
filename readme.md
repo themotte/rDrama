@@ -61,7 +61,6 @@ As an example, let's say we want to add a column `is\_flagged` to the `comments`
 ```sh
 ./util/command.py db revision --autogenerate --message="add is_flagged field to comments"
 ```
-from the flask server within the directory the flask app is being served from, with an env var of `FLASK\_APP="files/cli:app"`. If you are running flask using `docker-compose` as described above, this looks like
 
 This will create a migration in the `migrations/versions` directory with a name like `migrations/versions/2022\_05\_23\_05\_38\_40\_9c27db0b3918\_add\_is\_flagged\_field\_to\_comments.py` and content like
 ```python
