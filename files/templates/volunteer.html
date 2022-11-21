@@ -3,6 +3,7 @@
 {% block pagetitle %}Volunteer{% endblock %}
 
 {% block content %}
+<script src="{{ 'js/volunteer_exit.js' | asset }}"></script>
 
 {% if duty == None %}
 <a href="/" class="volunteer_unavailable_wrapper">
@@ -14,7 +15,7 @@
     </div>
 </a>
 {% else %}
-<form id="volunteer_submit" action="/volunteer_submit" method="post" enctype="multipart/form-data"></form>
+<form id="volunteer_submit" action="/volunteer_submit" method="post" enctype="multipart/form-data" onsubmit="onFormSubmit()"></form>
 <input form="volunteer_submit" type="hidden" name="formkey" value="{{v.formkey}}">
 <div class="volunteer">
     {% from duty.embed_template() import display with context %}
