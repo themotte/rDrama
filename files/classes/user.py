@@ -1,7 +1,6 @@
 from sqlalchemy.orm import deferred, aliased
 from secrets import token_hex
 import pyotp
-from files.helpers.discord import remove_user
 from files.helpers.images import *
 from files.helpers.const import *
 from .alts import Alt
@@ -33,7 +32,6 @@ class User(Base):
 	__tablename__ = "users"
 	__table_args__ = (
 		UniqueConstraint('bannerurl', name='one_banner'),
-		UniqueConstraint('discord_id', name='one_discord_account'),
 		UniqueConstraint('id', name='uid_unique'),
 		UniqueConstraint('original_username', name='users_original_username_key'),
 		UniqueConstraint('username', name='users_username_key'),
@@ -108,7 +106,6 @@ class User(Base):
 	defaulttime = Column(String, default=defaulttimefilter, nullable=False)
 	is_nofollow = Column(Boolean, default=False, nullable=False)
 	custom_filter_list = Column(String)
-	discord_id = Column(String)
 	ban_evade = Column(Integer, default=0, nullable=False)
 	original_username = deferred(Column(String))
 	referred_by = Column(Integer, ForeignKey("users.id"))
@@ -127,7 +124,6 @@ class User(Base):
 		postgresql_ops={'description':'gin_trgm_ops'}
 	)
 
-	Index('discord_id_idx', discord_id)
 	Index('fki_user_referrer_fkey', referred_by)
 	Index('user_banned_idx', is_banned)
 	Index('user_private_idx', is_private)
@@ -602,7 +598,6 @@ class User(Base):
 		if days:
 			self.unban_utc = int(time.time()) + (days * 86400)
 			g.db.add(self)
-		elif self.discord_id: remove_user(self)
 
 		self.is_banned = admin.id if admin else AUTOJANNY_ID
 		if reason: self.ban_reason = reason

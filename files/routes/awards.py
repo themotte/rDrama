@@ -3,7 +3,6 @@ from files.helpers.wrappers import *
 from files.helpers.alerts import *
 from files.helpers.get import *
 from files.helpers.const import *
-from files.helpers.discord import *
 from files.classes.award import *
 from .front import frontlist
 from flask import g, request
@@ -204,7 +203,6 @@ def award_post(pid, v):
 		if author.patron_utc: author.patron_utc += 2629746
 		else: author.patron_utc = int(time.time()) + 2629746
 		author.procoins += 2500
-		if author.discord_id: add_role(author, "1")
 		if not v.has_badge(103):
 			badge = Badge(user_id=v.id, badge_id=103)
 			g.db.add(badge)
@@ -304,7 +302,6 @@ def award_comment(cid, v):
 		if author.patron_utc: author.patron_utc += 2629746
 		else: author.patron_utc = int(time.time()) + 2629746
 		author.procoins += 2500
-		if author.discord_id: add_role(author, "1")
 		if not v.has_badge(103):
 			badge = Badge(user_id=v.id, badge_id=103)
 			g.db.add(badge)

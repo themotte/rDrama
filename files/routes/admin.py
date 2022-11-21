@@ -14,7 +14,6 @@ from flask import *
 from files.__main__ import app, cache, limiter
 from .front import frontlist
 from files.routes.comments import comment_on_publish
-from files.helpers.discord import add_role
 from datetime import datetime
 import requests
 from urllib.parse import quote, urlencode

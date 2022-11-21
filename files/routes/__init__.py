@@ -1,6 +1,5 @@
 from .admin import *
 from .comments import *
-from .discord import *
 from .errors import *
 from .reporting import *
 from .front import *

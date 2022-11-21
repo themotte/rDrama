@@ -4,7 +4,6 @@ from files.helpers.wrappers import *
 from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.alerts import *
-from files.helpers.discord import send_discord_message, send_cringetopia_message
 from files.helpers.const import *
 from files.classes import *
 from flask import *
@@ -106,7 +105,6 @@ def publish(pid, v):
 	cache.delete_memoized(User.userpagelisting)
 
 	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()):
-		send_discord_message(post.permalink)
 		cache.delete_memoized(changeloglist)
 
 	return redirect(post.permalink)
@@ -1007,7 +1005,6 @@ def submit_post(v, sub=None):
 	cache.delete_memoized(User.userpagelisting)
 
 	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()) and not post.private:
-		send_discord_message(post.permalink)
 		cache.delete_memoized(changeloglist)
 
 	if request.headers.get("Authorization"): return post.json
