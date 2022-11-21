@@ -34,6 +34,8 @@ class VolunteerDutyJanitor(VolunteerDuty):
 
 
 def get_duty(u: User) -> VolunteerDutyJanitor:
+    if not app.config['VOLUNTEER_JANITOR_ENABLE']:
+        return None
 
     # these could probably be combined into one query somehow
 

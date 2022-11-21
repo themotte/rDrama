@@ -129,6 +129,7 @@ app.config['SCORE_HIDING_TIME_HOURS'] = int(environ.get('SCORE_HIDING_TIME_HOURS
 app.config['ENABLE_SERVICES'] = bool_from_string(environ.get('ENABLE_SERVICES', False))
 
 app.config['DBG_VOLUNTEER_PERMISSIVE'] = bool(environ.get('DBG_VOLUNTEER_PERMISSIVE', False))
+app.config['VOLUNTEER_JANITOR_ENABLE'] = bool(environ.get('VOLUNTEER_JANITOR_ENABLE', False))
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_responses=True, ssl_cert_reqs=None)
 
