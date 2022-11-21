@@ -4458,7 +4458,7 @@ div.deleted.banned {
 	background-color: var(--background) !important;
 }
 .btn {
-	background-color: var(--background) !important;
+	background-color: var(--background);
 }
 .nobackground {
 	background: None !important;
@@ -5211,11 +5211,40 @@ div[id^="reply-edit-"] li > p:first-child {
 
 
 /***********************
+  Volunteer Unavailable
+************************/
+
+.volunteer_unavailable {
+	padding: 4rem;
+}
+
+.volunteer_unavailable_wrapper:hover {
+	text-decoration: none;
+}
+
+
+/***********************
+  Volunteer Work
+************************/
+
+.volunteer .submit {
+	width: 100%;
+	margin: 2rem auto 0rem auto;
+	text-align: center;
+}
+
+.volunteer .submit input {
+	font-size: 2rem;
+	background: var(--primary-background, white);
+}
+
+
+/***********************
   Volunteer Submit 
 ************************/
 
 .volunteer_submit {
-	margin: 2rem;
+	margin: 1.5rem;
 }
 
 .volunteer_submit_img {
@@ -5269,4 +5298,21 @@ div[id^="reply-edit-"] li > p:first-child {
 	.volunteer_text .text {
 		font-size: 1rem;
 	}
+}
+
+
+/***********************
+  Volunteer Janitor
+************************/
+
+.volunteer_janitor > div {
+	margin: 2rem 1rem;
+}
+
+.volunteer_janitor .volunteer_text .text {
+	text-align: left;
+}
+
+.volunteer_janitor .choices {
+	margin-top: 1rem;
 }
