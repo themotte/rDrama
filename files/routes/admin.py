@@ -502,7 +502,7 @@ def change_settings(v, setting):
 			site_settings[setting] = int(new_value)
 		else:
 			# 422ing for any other types for now, feel free to add some more types if needed
-			abort(422)
+			abort(422, "Not a valid config value type")
 	else:
 		site_settings[setting] = not site_settings[setting]
 		if site_settings[setting]: word = 'enabled'

@@ -12,6 +12,7 @@ from http.client import responses
 @app.errorhandler(404)
 @app.errorhandler(405)
 @app.errorhandler(413)
+@app.errorhandler(422)
 @app.errorhandler(429)
 def error(e):
 	title = responses.get(e.code, "Internal Server Error")
