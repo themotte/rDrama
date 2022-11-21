@@ -4,6 +4,7 @@ import gevent.monkey
 gevent.monkey.patch_all()
 from os import environ, path
 import secrets
+from files.helpers.strings import bool_from_string
 from flask import *
 from flask_caching import Cache
 from flask_limiter import Limiter
@@ -27,7 +28,7 @@ app.jinja_env.cache = {}
 app.jinja_env.auto_reload = True
 faulthandler.enable()
 
-if environ.get("ENFORCE_PRODUCTION", False) and app.config["DEBUG"]:
+if bool_from_string(environ.get("ENFORCE_PRODUCTION", "true")) and app.config["DEBUG"]:
 	raise ValueError("Debug mode is not allowed! If this is a dev environment, please set ENFORCE_PRODUCTION to false")
 
 if environ.get("SITE_ID") is None:
