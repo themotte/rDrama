@@ -321,4 +321,6 @@ procoins_li = (0,2500,5000,10000,25000,50000,125000,250000)
 
 linefeeds_regex = re.compile("([^\\n])\\n([^\\n])", flags=re.A)
 
+html_title_regex = re.compile("<title>(.{1,200})</title>", flags=re.I)
+
 def make_name(*args, **kwargs): return request.base_url
