@@ -1307,7 +1307,7 @@ def sticky_post(post_id, v):
 			if v.admin_level > 1:
 				post.stickied = v.username
 				post.stickied_utc = int(time.time()) + 3600
-			else: return {"error": "Can't exceed 3 pinned posts limit!"}, 403
+			else: abort(403, "Can't exceed 3 pinned posts limit!")
 		else: post.stickied = v.username
 		g.db.add(post)
 
@@ -1332,7 +1332,7 @@ def unsticky_post(post_id, v):
 
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 	if post and post.stickied:
-		if post.stickied.endswith('(pin award)'): return {"error": "Can't unpin award pins!"}, 403
+		if post.stickied.endswith('(pin award)'): abort(403, "Can't unpin award pins!")
 
 		post.stickied = None
 		post.stickied_utc = None
@@ -1386,7 +1386,7 @@ def unsticky_comment(cid, v):
 	comment = get_comment(cid, v=v)
 	
 	if comment.is_pinned:
-		if comment.is_pinned.endswith("(pin award)"): return {"error": "Can't unpin award pins!"}, 403
+		if comment.is_pinned.endswith("(pin award)"): abort(403, "Can't unpin award pins!")
 
 		comment.is_pinned = None
 		g.db.add(comment)

@@ -144,7 +144,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 @limiter.limit("1/second;20/minute;200/hour;1000/day")
 @auth_required
 def api_comment(v):
-	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
+	if v.is_suspended: abort(403, "You can't perform this action while banned.")
 
 	parent_fullname = request.values.get("parent_fullname").strip()
 
@@ -166,11 +166,11 @@ def api_comment(v):
 	if not parent_post: abort(404) # don't allow sending comments to the ether
 	level = 1 if isinstance(parent, Submission) else parent.level + 1
 	sub = parent_post.sub
-	if sub and v.exiled_from(sub): return {"error": f"You're exiled from /h/{sub}"}, 403
+	if sub and v.exiled_from(sub): abort(403, f"You're exiled from /h/{sub}")
 
 	body = request.values.get("body", "").strip()[:10000]
 
-	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
+	if not body and not request.files.get('file'): abort(400, "You need to actually write something!")
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		files = request.files.getlist('file')[:4]
@@ -195,13 +195,13 @@ def api_comment(v):
 					except:
 						error = req['error']
 						if error == 'File exceeds max duration': error += ' (60 seconds)'
-						return {"error": error}, 400
+						abort(400, error)
 				if url.endswith('.'): url += 'mp4'
 				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
 					body += f"\n\n{url}"
 				else:
 					body += f'\n\n<a href="{url}">{url}</a>'
-			else: return {"error": "Image/Video files only"}, 400
+			else: abort(400, "Image/Video files only")
 
 	body_html = sanitize(body, comment=True)
 
@@ -214,10 +214,10 @@ def api_comment(v):
 	).one_or_none()
 
 	if existing:
-		return {"error": f"You already made that comment: /comment/{existing.id}"}, 409
+		abort(409, f"You already made that comment: /comment/{existing.id}")
 
 	if parent.author.any_block_exists(v) and v.admin_level < 2:
-		return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
+		abort(403, "You can't reply to users who have blocked you, or users you have blocked.")
 
 	is_bot = bool(request.headers.get("Authorization"))
 
@@ -257,7 +257,7 @@ def api_comment(v):
 					)
 				g.db.add(ma)
 
-			return {"error": "Too much spam!"}, 403
+			abort(403, "Too much spam!")
 
 	if len(body_html) > 20000: abort(400)
 
@@ -369,7 +369,7 @@ def edit_comment(cid, v):
 	body = request.values.get("body", "").strip()[:10000]
 
 	if len(body) < 1 and not (request.files.get("file") and request.headers.get("cf-ipcountry") != "T1"):
-		return {"error":"You have to actually type something!"}, 400
+		abort(400, "You have to actually type something!")
 
 	if body != c.body or request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		body_html = sanitize(body, edit=True)
@@ -406,7 +406,7 @@ def edit_comment(cid, v):
 				comment.ban_reason = "AutoJanny"
 				g.db.add(comment)
 
-			return {"error": "Too much spam!"}, 403
+			abort(403, "Too much spam!")
 		# End Spam Checking
 
 		if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
@@ -426,10 +426,10 @@ def edit_comment(cid, v):
 						except:
 							error = req['error']
 							if error == 'File exceeds max duration': error += ' (60 seconds)'
-							return {"error": error}, 400
+							abort(400, error)
 					if url.endswith('.'): url += 'mp4'
 					body += f"\n\n{url}"
-				else: return {"error": "Image/Video files only"}, 400
+				else: abort(400, "Image/Video files only")
 
 			body_html = sanitize(body, edit=True)
 

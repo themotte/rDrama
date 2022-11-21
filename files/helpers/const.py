@@ -42,7 +42,37 @@ PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 DEFAULT_COLOR = environ.get("DEFAULT_COLOR", "fff").strip()
 COLORS = {'ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58','8cdbe6', DEFAULT_COLOR}
 
+ERROR_MESSAGES = {
+	400: "That request was bad and you should feel bad",
+	401: "You need an account for this. Please make one!",
+	403: "You don't have access to this page.",
+	404: "That page doesn't exist. If you got here from a link on the website, please report this issue. Thanks!",
+	405: "Something went wrong and it's probably my fault. If you can do it reliably, or it's causing problems for you, please report it!",
+	409: "There's a conflict between what you're trying to do and what you or someone else has done and because of that you can't do what you're trying to do.",
+	413: "Max file size is 8 MB",
+	429: "Are you hammering the site? Stop that, yo.",
+	500: "Something went wrong and it's probably my fault. If you can do it reliably, or it's causing problems for you, please report it!",
+}
+
 LOGGEDIN_ACTIVE_TIME = 15 * 60
+
+WERKZEUG_ERROR_DESCRIPTIONS = {
+	400: "The browser (or proxy) sent a request that this server could not understand.",
+	401: "The server could not verify that you are authorized to access the URL requested. You either supplied the wrong credentials (e.g. a bad password), or your browser doesn't understand how to supply the credentials required.",
+	403: "You don't have the permission to access the requested resource. It is either read-protected or not readable by the server.",
+	404: "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.",
+	405: "The method is not allowed for the requested URL.",
+	406: "The resource identified by the request is only capable of generating response entities which have content characteristics not acceptable according to the accept headers sent in the request.",
+	409: "A conflict happened while processing the request. The resource might have been modified while the request was being processed.",
+	410: "The requested URL is no longer available on this server and there is no forwarding address. If you followed a link from a foreign page, please contact the author of this page.",
+	413: "The data value transmitted exceeds the capacity limit.",
+	414: "The length of the requested URL exceeds the capacity limit for this server. The request cannot be processed.",
+	415: "The server does not support the media type transmitted in the request.",
+	417: "The server could not meet the requirements of the Expect header",
+	418: "This server is a teapot, not a coffee machine",
+	429: "This user has exceeded an allotted request count. Try again later.",
+	500: "The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.",
+}
 
 AWARDS = {
 	"lootbox": {

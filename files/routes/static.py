@@ -315,10 +315,10 @@ def submit_contact(v):
 				except:
 					error = req['error']
 					if error == 'File exceeds max duration': error += ' (60 seconds)'
-					return {"error": error}, 400
+					abort(400, error)
 			if url.endswith('.'): url += 'mp4'
 			html += f"<p>{url}</p>"
-		else: return {"error": "Image/Video files only"}, 400
+		else: abort(400, "Image/Video files only")
 
 	new_comment = Comment(author_id=v.id if v else NOTIFICATIONS_ID,
 						  parent_submission=None,

@@ -158,10 +158,10 @@ def before_request():
 		app.config['SETTINGS'] = json.load(f)
 
 	if request.host != app.config["SERVER_NAME"]:
-		return {"error": "Unauthorized host provided."}, 401
+		return {"error": "Unauthorized host provided."}, 403
 
 	if not app.config['SETTINGS']['Bots'] and request.headers.get("Authorization"):
-		abort(503)
+		abort(403, "Bots are currently not allowed")
 
 	g.db = db_session()
 

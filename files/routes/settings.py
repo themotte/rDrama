@@ -182,11 +182,11 @@ def settings_profile_post(v):
 					except:
 						error = req['error']
 						if error == 'File exceeds max duration': error += ' (60 seconds)'
-						return {"error": error}, 400
+						abort(400, error)
 				if url.endswith('.'): url += 'mp4'
 				bio += f"\n\n{url}"
 			else:
-				if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "Image/Video files only"}, 400
+				if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, "Image/Video files only")
 				return render_template("settings_profile.html", v=v, error="Image/Video files only."), 400
 		
 		bio_html = sanitize(bio)
@@ -266,7 +266,7 @@ def settings_profile_post(v):
 		return {"message": "Your settings have been updated."}
 
 	else:
-		return {"error": "You didn't change anything."}, 400
+		abort(400, "You didn't change anything.")
 
 
 @app.post("/settings/filters")
@@ -453,7 +453,7 @@ def settings_log_out_others(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_images_profile(v):
-	if request.headers.get("cf-ipcountry") == "T1": return {"error":"Image uploads are not allowed through TOR."}, 403
+	if request.headers.get("cf-ipcountry") == "T1": abort(403, "Image uploads are not allowed through TOR.")
 
 	file = request.files["profile"]
 
@@ -488,7 +488,7 @@ def settings_images_profile(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_images_banner(v):
-	if request.headers.get("cf-ipcountry") == "T1": return {"error":"Image uploads are not allowed through TOR."}, 403
+	if request.headers.get("cf-ipcountry") == "T1": abort(403, "Image uploads are not allowed through TOR.")
 
 	file = request.files["banner"]
 
@@ -552,16 +552,16 @@ def settings_block_user(v):
 
 	user = get_user(request.values.get("username"), graceful=True)
 
-	if not user: return {"error": "That user doesn't exist."}, 404
+	if not user: abort(404, "That user doesn't exist.")
 
 	if user.id == v.id:
-		return {"error": "You can't block yourself."}, 409
+		abort(409, "You can't block yourself.")
 
 	if v.is_blocking(user):
-		return {"error": f"You have already blocked @{user.username}."}, 409
+		abort(409, f"You have already blocked @{user.username}.")
 
 	if user.id == NOTIFICATIONS_ID:
-		return {"error": "You can't block this user."}, 409
+		abort(409, "You can't block this user.")
 
 	new_block = UserBlock(user_id=v.id,
 						  target_id=user.id,

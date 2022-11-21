@@ -347,15 +347,15 @@ def transfer_coins(v, username):
 
 	receiver = g.db.query(User).filter_by(username=username).one_or_none()
 
-	if receiver is None: return {"error": "That user doesn't exist."}, 404
+	if receiver is None: abort(404, "That user doesn't exist.")
 
 	if receiver.id != v.id:
 		amount = request.values.get("amount", "").strip()
 		amount = int(amount) if amount.isdigit() else None
 
-		if amount is None or amount <= 0: return {"error": "Invalid amount of coins."}, 400
-		if v.coins < amount: return {"error": "You don't have enough coins."}, 400
-		if amount < 100: return {"error": "You have to gift at least 100 coins."}, 400
+		if amount is None or amount <= 0: abort(400, "Invalid amount of coins.")
+		if v.coins < amount: abort(400, "You don't have enough coins.")
+		if amount < 100: abort(400, "You have to gift at least 100 coins.")
 
 		if not v.patron and not receiver.patron and not v.alts_patron and not receiver.alts_patron: tax = math.ceil(amount*0.03)
 		else: tax = 0
@@ -383,15 +383,15 @@ def transfer_bux(v, username):
 
 	receiver = g.db.query(User).filter_by(username=username).one_or_none()
 
-	if not receiver: return {"error": "That user doesn't exist."}, 404
+	if not receiver: abort(404, "That user doesn't exist.")
 
 	if receiver.id != v.id:
 		amount = request.values.get("amount", "").strip()
 		amount = int(amount) if amount.isdigit() else None
 
-		if not amount or amount < 0: return {"error": "Invalid amount of marseybux."}, 400
-		if v.procoins < amount: return {"error": "You don't have enough marseybux"}, 400
-		if amount < 100: return {"error": "You have to gift at least 100 marseybux."}, 400
+		if not amount or amount < 0: abort(400, "Invalid amount of marseybux.")
+		if v.procoins < amount: abort(400, "You don't have enough marseybux")
+		if amount < 100: abort(400, "You have to gift at least 100 marseybux.")
 
 		log_message = f"@{v.username} has transferred {amount} Marseybux to @{receiver.username}"
 		send_repeatable_notification(GIFT_NOTIF_ID, log_message)
@@ -541,10 +541,10 @@ def message2(v, username):
 			"contact modmail if you think this decision was incorrect."}, 403
 
 	user = get_user(username, v=v)
-	if hasattr(user, 'is_blocking') and user.is_blocking: return {"error": "You're blocking this user."}, 403
+	if hasattr(user, 'is_blocking') and user.is_blocking: abort(403, "You're blocking this user.")
 
 	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked:
-		return {"error": "This user is blocking you."}, 403
+		abort(403, "This user is blocking you.")
 
 	message = request.values.get("message", "").strip()[:10000].strip()
 
@@ -557,7 +557,7 @@ def message2(v, username):
 															Comment.body_html == body_html,
 															).one_or_none()
 
-	if existing: return {"error": "Message already exists."}, 403
+	if existing: abort(403, "Message already exists.")
 
 	c = Comment(author_id=v.id,
 						  parent_submission=None,
@@ -622,10 +622,10 @@ def messagereply(v):
 				except:
 					error = req['error']
 					if error == 'File exceeds max duration': error += ' (60 seconds)'
-					return {"error": error}, 400
+					abort(400, error)
 			if url.endswith('.'): url += 'mp4'
 			body_html += f"<p>{url}</p>"
-		else: return {"error": "Image/Video files only"}, 400
+		else: abort(400, "Image/Video files only")
 
 
 	c = Comment(author_id=v.id,
@@ -949,9 +949,9 @@ def u_username_info(username, v=None):
 	user=get_user(username, v=v)
 
 	if hasattr(user, 'is_blocking') and user.is_blocking:
-		return {"error": "You're blocking this user."}, 401
+		abort(401, "You're blocking this user.")
 	elif hasattr(user, 'is_blocked') and user.is_blocked:
-		return {"error": "This user is blocking you."}, 403
+		abort(403, "This user is blocking you.")
 
 	return user.json
 
@@ -962,9 +962,9 @@ def u_user_id_info(id, v=None):
 	user=get_account(id, v=v)
 
 	if hasattr(user, 'is_blocking') and user.is_blocking:
-		return {"error": "You're blocking this user."}, 401
+		abort(401, "You're blocking this user.")
 	elif hasattr(user, 'is_blocked') and user.is_blocked:
-		return {"error": "This user is blocking you."}, 403
+		abort(403, "This user is blocking you.")
 
 	return user.json
 
@@ -975,7 +975,7 @@ def follow_user(username, v):
 
 	target = get_user(username)
 
-	if target.id==v.id: return {"error": "You can't follow yourself!"}, 400
+	if target.id==v.id: abort(400, "You can't follow yourself!")
 
 	if g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).one_or_none(): return {"message": "User followed!"}
 

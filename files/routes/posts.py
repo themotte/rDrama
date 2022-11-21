@@ -130,7 +130,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 	post = get_post(pid, v=v)
 
 	if post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"Must be 18+ to view"}, 451
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(451, "Must be 18+ to view")
 		return render_template("errors/nsfw.html", v=v)
 
 	if v: defaultsortingcomments = v.defaultsortingcomments
@@ -472,19 +472,19 @@ def edit_post(pid, v):
 					except:
 						error = req['error']
 						if error == 'File exceeds max duration': error += ' (60 seconds)'
-						return {"error": error}, 400
+						abort(400, error)
 				if url.endswith('.'): url += 'mp4'
 				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
 					body += f"\n\n![]({url})"
 				else:
 					body += f'\n\n<a href="{url}">{url}</a>'
-			else: return {"error": "Image/Video files only"}, 400
+			else: abort(400, "Image/Video files only")
 
 	body_html = sanitize(body, edit=True)
 
 	p.body = body
 
-	if len(body_html) > 40000: return {"error":"Submission body_html too long! (max 40k characters)"}, 400
+	if len(body_html) > 40000: abort(400, "Submission body_html too long! (max 40k characters)")
 
 	p.body_html = body_html
 
@@ -711,7 +711,7 @@ def api_is_repost():
 def submit_post(v, sub=None):
 
 	def error(error):
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": error}, 403
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, error)
 	
 		SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
 		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body), 400
