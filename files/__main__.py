@@ -28,7 +28,7 @@ app.jinja_env.cache = {}
 app.jinja_env.auto_reload = True
 faulthandler.enable()
 
-if bool_from_string(environ.get("ENFORCE_PRODUCTION", "true")) and app.config["DEBUG"]:
+if bool_from_string(environ.get("ENFORCE_PRODUCTION", True)) and app.config["DEBUG"]:
 	raise ValueError("Debug mode is not allowed! If this is a dev environment, please set ENFORCE_PRODUCTION to false")
 
 if environ.get("SITE_ID") is None:
@@ -126,6 +126,7 @@ app.config['MENTION_LIMIT'] = int(environ.get('MENTION_LIMIT', 100))
 app.config['MULTIMEDIA_EMBEDDING_ENABLED'] = environ.get('MULTIMEDIA_EMBEDDING_ENABLED', "false").lower() == "true"
 app.config['RESULTS_PER_PAGE_COMMENTS'] = int(environ.get('RESULTS_PER_PAGE_COMMENTS',50))
 app.config['SCORE_HIDING_TIME_HOURS'] = int(environ.get('SCORE_HIDING_TIME_HOURS'))
+app.config['ENABLE_SERVICES'] = bool_from_string(environ.get('ENABLE_SERVICES', False))
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_responses=True, ssl_cert_reqs=None)
 
