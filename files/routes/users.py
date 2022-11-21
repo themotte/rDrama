@@ -71,7 +71,8 @@ def leaderboard_thread():
 	db.close()
 	stdout.flush()
 
-gevent.spawn(leaderboard_thread())
+if app.config["ENABLE_SERVICES"]:
+	gevent.spawn(leaderboard_thread())
 
 @app.get("/@<username>/upvoters/<uid>/posts")
 @admin_level_required(3)
