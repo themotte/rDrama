@@ -22,7 +22,7 @@ def error(e):
 	if request.headers.get("Authorization") or request.headers.get("xhr"): 
 		return {"code": e.code, "description": description, "details": details, "error": title}, e.code
 	
-	return render_template('errors/error.html', err=True, code=e.code, description=description, details=details), e.code
+	return render_template('errors/error.html', err=True, code=e.code, error=title, description=description, details=details), e.code
 
 @app.errorhandler(401)
 def error_401(e):

@@ -1,6 +1,6 @@
 {% extends "default.html" %}
 {% block title %}
-<title>{{code}} {{description}}</title>
+<title>{{code}} {{title}}</title>
 {% endblock %}
 {% block pagetype %}error-{{code}}{% endblock %}
 {% block content %}
@@ -8,7 +8,7 @@
 	<div class="col-10 col-md-5">
 		<div class="text-center px-3 my-8">
 			<h1>{{code}}</h1>
-			<h5>{{description}}</h5>
+			<h5>{{title}}</h5>
 			<p class="text-muted mb-5">{{description}}</p>
 			{% if details -%}
 				<blockquote class="error-details mb-5 py-2">{{details|safe}}</blockquote>
