@@ -1,37 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-	{% include "analytics.html" %}
-	
-	<meta name="description" content="{{config('DESCRIPTION')}}">
-		{% include "csp.html" %}
-
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-		<meta name="author" content="">
-
-		<title>{% block pagetitle %}{{SITE_TITLE}}{% endblock %}</title>
-
-
-		{% if v %}
-			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
-			<link rel="stylesheet" href="{{ ('css/'~v.theme~'.css') | asset }}">
-			{% if v.css %}
-				<link rel="stylesheet" href="/@{{v.username}}/css">
-			{% endif %}
-		{% else %}
-			<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-			<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
-			<link rel="stylesheet" href="{{ ('css/'~config('DEFAULT_THEME')~'.css') | asset }}">
-		{% endif %}
-
-</head>
-
-<body id="login">
-		
+{%- extends 'root.html' -%}
+{% block pagetype %}login{% endblock %}
+{% block body %}
 	<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top border-0">
 		<div class="container-fluid">
 				<button class="navbar-toggler d-none" role="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
@@ -39,23 +8,16 @@
 						<span class="navbar-toggler-icon"></span>
 				</button>
 		</div>
-</nav>
-
+	</nav>
 		<div class="container-fluid position-absolute h-100 p-0">
 				<div class="row no-gutters h-100">
-
 						<div class="col-12 col-md-6 my-auto p-3">
-
 								<div class="row justify-content-center">
-
 										<div class="col-10 col-md-7">
-
 										<div class="mb-5">
 												<a href="/" class="text-decoration-none"><span class="h3 text-primary">‎</span></a>
 										</div>
-
 										<h1 class="h2">{% block authtitle %}{% endblock %}</h1>
-
 										<p class="text-muted mb-md-5">{% block authtext %}{% endblock %}</p>
 
 			{% if error %}
@@ -80,30 +42,17 @@
 												</button>
 								</div>
 			{% endif %}
-
-												{% block content %}
-			{% endblock %}
-
+												{% block content %}{% endblock %}
 										</div>
-
 								</div>
-
 						</div>
-
 						<div class="col-12 col-md-6 d-none d-md-block">
-
 								<div class="splash-wrapper">
-
 										<div class="splash-overlay"></div>
-
-										<img alt="cover" loading="lazy" class="splash-img" src="{{ ('images/'~SITE_ID~'/cover.webp') | asset }}"></img>
+										<img alt="cover" loading="lazy" class="splash-img" src="{{ ('images/'~SITE_ID~'/cover.webp') | asset }}">
 								</div>
-
 						</div>
-
 				</div>
 		</div>
-
-</body>
-
-</html>
+		{% block scripts_lower %}{% endblock %}
+{% endblock %}

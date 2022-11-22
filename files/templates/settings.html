@@ -1,50 +1,7 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	{% include "analytics.html" %}
-
-	<meta name="description" content="{{config('DESCRIPTION')}}">
-	{% include "csp.html" %}
-
-	<script src="{{ 'js/bootstrap.js' | asset }}"></script>
-
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-	<meta name="author" content="">
-
-	<link rel="icon" type="image/png" href="{{ ('images/'~SITE_ID~'/icon.webp') | asset }}">
-
-	<title>{% block pagetitle %}Settings - {{SITE_TITLE}}{% endblock %}</title>
-		<meta property="og:type" content="article">
-		<meta property="og:title" content="{{SITE_TITLE}}">
-		<meta property="og:site_name" content="{{request.host}}">
-		<meta property="og:image" content="{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}">
-		<meta property="og:url" content="{{request.host}}">
-		<meta property="og:description" name="description" content="{{config('DESCRIPTION')}}">
-		<meta property="og:author" name="author" content="{{SITE_FULL}}">
-		<meta property="og:site_name" content="{{request.host}}">
-
-		<meta name="twitter:card" content="summary_large_image">
-		<meta name="twitter:site" content="{{SITE_FULL}}">
-		<meta name="twitter:title" content="{{SITE_TITLE}}">
-		<meta name="twitter:creator" content="{{SITE_FULL}}">
-		<meta name="twitter:description" content="{{config('DESCRIPTION')}}">
-		<meta name="twitter:image" content="{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}">
-		<meta name="twitter:url" content="{{request.host}}">
-
-
-	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
-	<link rel="stylesheet" href="{{ ('css/'~v.theme~'.css') | asset }}">
-	{% if v.css and not request.path.startswith('/settings/css') %}
-		<link rel="stylesheet" href="/@{{v.username}}/css">
-	{% endif %}
-</head>
-
-<body id="settings" {% if v and v.background %}style="overflow-x: hidden;background:url(/assets/images/backgrounds/{{v.background}}?v=3) center center fixed; background-color: var(--background){% if 'anime' not in v.background %};background-size: cover{% endif %}"{% endif %}>
-
+{%- extends 'root.html' -%}
+{% block pagetitle %}Settings{% endblock %}
+{% block body_attributes %}{% if v and v.background %}style="overflow-x: hidden;background:url(/assets/images/backgrounds/{{v.background}}?v=3) center center fixed; background-color: var(--background){% if 'anime' not in v.background %};background-size: cover{% endif %}"{% endif %}{% endblock %}
+{% block body %}
 	{% include "header.html" %}
 		<div class="container">
 
@@ -244,7 +201,4 @@
 {% block onload %}{% endblock %}
 
 <script src="{{ 'js/clipboard.js' | asset }}"></script>
-
-</body>
-
-</html>
+{% endblock %}

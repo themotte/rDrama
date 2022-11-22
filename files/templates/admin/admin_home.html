@@ -1,5 +1,8 @@
 {% extends "default.html" %}
-
+{% block template_config %}
+	{{super()}}
+	{% set root_scope.analytics = false %}
+{% endblock %}
 {% block title %}
 <title>{{SITE_TITLE}}</title>
 

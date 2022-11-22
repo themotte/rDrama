@@ -1,0 +1,161 @@
+{% macro javascript() %}	
+	<script src="{{ 'js/bootstrap.js' | asset }}"></script>
+	<script src="{{ 'js/micromodal.js' | asset }}"></script>
+	{% block fixedMobileBarJS %}{% endblock %}
+{% endmacro %}
+
+{% macro page_meta(title=none) %}
+	<link rel="alternate" type="application/rss+xml" title="The Motte RSS" href="/rss">
+	{% if 'post/' in request.path and p %}
+		{% set title = [p.plaintitle(v), ' - ', title] | join %}
+
+		{% if not v_forbid_deleted -%}
+			{% set image = p.thumb_url if p.has_thumb %}
+			{% set image = p.realurl(v) if p.is_image %}
+			{% set video = p.realurl(v) if p.is_video %}
+			{% set audio = p.realurl(v) if p.is_audio %}
+		{% endif %}
+
+		{% if comment_info and not comment_info.is_banned and not comment_info.deleted_utc %}
+			{% set p, title = comment_info, ['@', comment_info.author_name, ' comments on ',
+			'"', title, '"'] | join %}
+		{% endif %}
+
+		{% set author, description, a_author, published, modified, url =
+		'@'+p.author_name, p.plainbody(v), '@'+p.author_name,
+		p.created_datetime, p.edited_string, p.permalink %}
+
+	{% elif '@' in request.path and u %}
+		{% set author, a_author, published, url, title, image, section =
+			'@'+u.username,
+			'@'+u.username,
+			u.created_date,
+			u.url,
+			u.username + "'s profile",
+			u.banner_url,
+			u.username + "'s profile" %}
+
+		{% set description %}
+			{{u.coins}} coins - Joined {{u.created_date}} -
+			{%- if u.stored_subscriber_count >=1 and not u.is_private -%}
+				{{u.stored_subscriber_count}} Followers -
+			{%- endif -%}
+			{%- if not u.is_private -%}
+				{{0 if u.shadowbanned else u.post_count}}
+					Posts -
+				{{0 if u.shadowbanned else u.comment_count}}
+					Comments
+			{%- endif -%}
+			{% if u.bio %}
+				- {{u.bio}}
+			{% endif %}
+		{% endset %}
+	{% elif sub %}
+		{% set title, description =
+		'/h/'+sub.name, sub.sidebar if sub.sidebar %}
+	{% endif %}
+	<link rel="icon" type="image/webp" href="{{'images/'~SITE_ID~'/icon.webp' | asset_siteimg}}">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="thumbnail" content="{{'images/'~SITE_ID~'/site_preview.webp' | asset_siteimg}}">
+	<meta name="description" content="{{config('DESCRIPTION')}}">
+
+	<meta property="og:type" content="article">
+	<meta property="og:site_name" content="{{SITE}}">
+	<meta property="og:url" content="{{request.full_path}}">
+
+	<meta property="og:title" content="{{title}}">
+	<meta property="og:author" name="author" content="{{author | default(SITE_FULL, true)}}">
+	<meta property="og:description" name="description" content="{{description | default(SITE_TITLE + ' - ' + config('DESCRIPTION'))}}">
+
+	{% if not comment_info %}
+		<meta property="og:image" content="{{image | default('site_preview.webp' | asset_siteimg)}}">
+		{% if video %}<meta property="og:video" content="{{video}}">{% endif %}
+		{% if audio %}<meta property="og:audio" content="{{audio}}">{% endif %}
+		<meta name="twitter:image" content="{{image | default('site_preview.webp' | asset_siteimg)}}">
+	{% endif %}
+
+	<meta property="og:article:author" content="{{a_author}}">
+	<meta property="og:article:published_time" content="{{published}}">
+	<meta property="og:article:modified_time" content="{{modified}}">
+	<meta property="og:article:section" content="{{section}}">
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="{{SITE_FULL}}">
+
+	<meta name="twitter:title" content="{{title}}">
+	<meta name="twitter:creator" content="{{author | default(SITE_FULL)}}">
+	<meta name="twitter:description" content="{{description | default(SITE_TITLE + ' - ' + config('DESCRIPTION'))}}">
+	<meta name="twitter:url" content="{{url}}">
+{% endmacro %}
+
+{% macro stylesheets(include_user_css) %}
+	{% if v %}
+		<style>:root{--primary:#{{v.themecolor}}}</style>
+		<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
+		<link rel="stylesheet" href="{{ ('css/'~v.theme~'.css') | asset }}">
+		{% if v.css %}
+			<link rel="stylesheet" href="/@{{v.username}}/css">
+		{% endif %}
+	{% else %}
+		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
+		<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
+		<link rel="stylesheet" href="{{ ('css/'~config('DEFAULT_THEME')~'.css') | asset }}">
+	{% endif %}
+
+	{% if request.path == '/catalog' %}
+		<link rel="stylesheet" href="{{ 'css/catalog.css' | asset }}">
+	{% endif %}
+
+	{% if sub and sub.css and not request.path.endswith('settings') %}
+		<link rel="stylesheet" href="/h/{{sub.name}}/css" type="text/css">
+	{% endif %}
+
+	{% if v and v.themecolor == '30409f' %}
+	<style>
+		p a {
+			color: #2a96f3;
+		}
+	</style>
+	{% endif %}
+
+	{% if sub and sub.css and not request.path.endswith('settings') and not request.values.get('nocss') %}
+		<link rel="stylesheet" href="/h/{{sub}}/css" type="text/css">
+	{% endif %}
+
+	{% if 'chat' in request.path %}
+		{% if IS_LOCALHOST %}
+			<link rel="stylesheet" href="https://themotte.org/assets/css/chat_done.css">
+		{% else %}
+			<link rel="stylesheet" href="{{'css/chat_done.css' | asset}}">
+		{% endif %}
+	{% endif %}
+{% endmacro %}
+
+{% macro default_theme() %}
+	<style>:root{--primary:#{{DEFAULT_COLOR}}}</style>
+	<link rel="stylesheet" href="{{('css/'~DEFAULT_THEME~'.css') | asset}}">
+{% endmacro %}
+
+{% macro seo() %}
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-touch-fullscreen" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+
+	<link rel="apple-touch-icon" sizes="180x180" href="{{ ('images/'~SITE_ID~'/icon.webp') | asset }}">
+	<link rel="manifest" href="{{ ('manifest_'~SITE_ID~'.json') | asset }}">
+	<link rel="mask-icon" href="{{ ('images/'~SITE_ID~'/icon.webp') | asset }}">
+	<link rel="shortcut icon" href="{{ ('images/'~SITE_ID~'/icon.webp') | asset }}">
+	<meta name="apple-mobile-web-app-title" content="{{SITE_TITLE}}">
+	<meta name="application-name" content="{{SITE_TITLE}}">
+	<meta name="msapplication-TileColor" content="#{{config('DEFAULT_COLOR')}}">
+	<meta name="msapplication-config" content="{{ 'browserconfig.xml' | asset }}">
+	<meta name="theme-color" content="#{{config('DEFAULT_COLOR')}}">
+
+	{% for size in ('320x480', '640x960', '640x1136', '750x1334', '768x1004', '828x1792',
+					'1024x748', '1024x768', '1125x2436', '1242x2208', '1356x2048',
+					'1668x2224', '1792x828', '2048x1496', '2048x2732', '2208x1242',
+					'2224x1668', '2436x1125', '2668x1242', '2737x2048') %}
+			<link rel="apple-touch-startup-image" sizes="{{size}}" href="{{'images/'~SITE_ID~'/icon.webp' | asset_siteimg}}">
+	{% endfor %}
+{% endmacro %}

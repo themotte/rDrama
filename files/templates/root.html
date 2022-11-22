@@ -1,0 +1,31 @@
+{% set root_scope = namespace() %}
+{% block template_config %}
+	{% set root_scope.js = true %}
+    {% set root_scope.analytics = true %}
+	{% set root_scope.include_user_css = true %}
+	{% set root_scope.include_seo = true %}
+{% endblock %}
+{%- import 'util/macros.html' as macros with context -%}
+{%- import 'util/html_head.html' as html_head with context -%}
+{%- if request.path == '/' -%}
+	{%- set csp=CONTENT_SECURITY_POLICY_HOME -%}
+{%- endif -%}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	{% block head %}
+		<meta charset="utf-8">
+		{%- include "csp.html" -%}
+        {% if root_scope.analytics %}{% include "analytics.html" %}{% endif %}
+		{% block title %}<title>{% block pagetitle %}if you see this pls report it as a bug &lt;3{% endblock %} - {{SITE_NAME}}</title>{% endblock %}
+		{{html_head.page_meta(self.pagetitle() or none)}}
+		{{html_head.javascript() if root_scope.js}}
+		{{html_head.stylesheets(root_scope.include_user_css)}}
+		{{html_head.seo() if root_scope.include_seo}}
+		{% block head_final %}{% endblock %}
+	{% endblock %}
+	</head>
+	<body {% block body_attributes %}id="{%block pagetype %}{% endblock %}"{% endblock %}>		
+		{% block body required %}{% endblock %}
+	</body>
+</html>

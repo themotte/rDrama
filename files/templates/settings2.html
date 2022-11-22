@@ -1,59 +1,8 @@
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-	{% include "analytics.html" %}
-	
-	<meta name="description" content="{{config('DESCRIPTION')}}">
-	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
-
-	<script src="{{ 'js/bootstrap.js' | asset }}"></script>
-
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-	<meta name="author" content="">
-	<meta name="thumbnail" content="{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}">
-	<link rel="icon" type="image/png" href="{{ ('images/'~SITE_ID~'/icon.webp') | asset }}">
-
-	<meta property="og:type" content="article">
-	<meta property="og:title" content="{{SITE_TITLE}}">
-	<meta property="og:site_name" content="{{request.host}}">
-	<meta property="og:image" content="{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}">
-	<meta property="og:url" content="{{SITE_FULL}}{{request.full_path}}">
-	<meta property="og:description" name="description" content="{{config('DESCRIPTION')}}">
-	<meta property="og:author" name="author" content="{{SITE_FULL}}">
-	<meta property="og:site_name" content="{{request.host}}">
-
-	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:site" content="{{SITE_FULL}}">
-	<meta name="twitter:title" content="{{SITE_TITLE}}">
-	<meta name="twitter:creator" content="{{SITE_FULL}}">
-	<meta name="twitter:description" content="{{config('DESCRIPTION')}}">
-	<meta name="twitter:image" content="{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}">
-	<meta name="twitter:url" content="{{SITE_FULL}}{{request.full_path}}">
-
-
-
-	<title>{% block pagetitle %}{{SITE_TITLE}}{% endblock %}</title>
-
-	
-	{% if v %}
-		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
-		<link rel="stylesheet" href="{{ ('css/'~v.theme~'.css') | asset }}">
-	{% else %}
-		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-		<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
-		<link rel="stylesheet" href="{{ ('css/'~config('DEFAULT_THEME')~'.css') | asset }}">
-	{% endif %}
-</head>
-
-<body id="settings2" {% if v and v.background %}style="overflow-x: hidden;background:url(/assets/images/backgrounds/{{v.background}}?v=3) center center fixed; background-color: var(--background){% if 'anime' not in v.background %};background-size: cover{% endif %}"{% endif %}>
-
+{%- extends 'root.html' -%}
+{% block pagetitle %}{{SITE_TITLE}}{% endblock %}
+{% block body_attributes %}{% if v and v.background %}style="overflow-x: hidden;background:url(/assets/images/backgrounds/{{v.background}}?v=3) center center fixed; background-color: var(--background){% if 'anime' not in v.background %};background-size: cover{% endif %}"{% endif %}{% endblock %}
+{% block body %}
 {% include "header.html" %}
-
 {% block subNav %}
 
 {% set mod = (v and v.admin_level > 1) %}
@@ -145,10 +94,7 @@
 
 {% block content %}
 {% endblock %}
-
  </div>
-
- 
  <div class="toast clipboard" id="toast-clipboard-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body text-center">
 		<i class="fas fa-check-circle text-success mr-2"></i>Link copied to clipboard
@@ -172,27 +118,10 @@
 	</div>
 </div>
 
-{% block mobilenavbar %}
-	{% include "mobile_navigation_bar.html" %}
+{% block mobilenavbar %}{% include "mobile_navigation_bar.html" %}{% endblock %}
+{% block invitationModal %}{% endblock %}
+{% block exileModal %}{% endblock %}
+{% block approveModal %}{% endblock %}
+{% block errorToasts %}{% endblock %}
+{% block scripts %}{% endblock %}
 {% endblock %}
-
-{% block invitationModal %}
-{% endblock %}
-
-{% block exileModal %}
-{% endblock %}
-
-{% block approveModal %}
-{% endblock %}
-
-{% block errorToasts %}
-{% endblock %}
-
-
-
-{% block scripts %}
-{% endblock %}
-
-</body>
-
-</html>
