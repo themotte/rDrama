@@ -27,6 +27,7 @@ function post_toast3(t, url, button1, button2) {
 		} else {
 			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			if (data && data["details"]) document.getElementById('toast-post-error-text').innerText = data["details"];
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
 		setTimeout(() => {
@@ -148,6 +149,7 @@ function delete_commentModal(id) {
 			} else {
 				document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 				if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			if (data && data["details"]) document.getElementById('toast-post-error-text').innerText = data["details"];
 				bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 			}
 		};
@@ -185,6 +187,7 @@ function post_reply(id){
 		}
 		else {
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			if (data && data["details"]) document.getElementById('toast-post-error-text').innerText = data["details"];
 			else document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
@@ -227,6 +230,7 @@ function comment_edit(id){
 		}
 		else {
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			if (data && data["details"]) document.getElementById('toast-post-error-text').innerText = data["details"];
 			else document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
@@ -314,6 +318,7 @@ function post_comment(fullname,id,level = 1){
 		}
 		else {
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			if (data && data["details"]) document.getElementById('toast-post-error-text').innerText = data["details"];
 			else document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
@@ -396,6 +401,7 @@ function handle_action(type, cid, thing) {
 		}
 		else {
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			if (data && data["details"]) document.getElementById('toast-post-error-text').innerText = data["details"];
 			else document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}

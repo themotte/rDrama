@@ -169,7 +169,8 @@ function submitFormAjax(e) {
 				let data=JSON.parse(xhr.response);
 				var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error'));
 				myToast.show();
-				document.getElementById('toast-post-error-text').innerText = data["error"];
+				if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+				if (data && data["details"]) document.getElementById('toast-post-error-text').innerText = data["details"];
 			} catch(e) {
 				var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success'));
 				myToast.hide();
