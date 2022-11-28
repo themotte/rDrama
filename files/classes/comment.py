@@ -58,8 +58,13 @@ class Comment(Base):
 	senttouser = relationship("User", primaryjoin="User.id==Comment.sentto", viewonly=True)
 	parent_comment = relationship("Comment", remote_side=[id], viewonly=True)
 	child_comments = relationship("Comment", lazy="dynamic", remote_side=[parent_comment_id], viewonly=True)
-	awards = relationship("AwardRelationship", viewonly=True)
-	reports = relationship("CommentFlag", viewonly=True)
+	awards = relationship("AwardRelationship",
+		primaryjoin="AwardRelationship.comment_id == Comment.id",
+		viewonly=True)
+	reports = relationship("CommentFlag",
+		primaryjoin="CommentFlag.comment_id == Comment.id",
+		order_by="CommentFlag.created_utc",
+		viewonly=True)
 	notes = relationship("UserNote", back_populates="comment")
 	
 	def __init__(self, *args, **kwargs):
@@ -70,7 +75,6 @@ class Comment(Base):
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
-
 		return f"<Comment(id={self.id})>"
 
 	@property
@@ -87,7 +91,7 @@ class Comment(Base):
 
 	@lazy
 	def flags(self, v):
-		flags = g.db.query(CommentFlag).filter_by(comment_id=self.id).order_by(CommentFlag.created_utc).all()
+		flags = self.reports
 		if not (v and (v.shadowbanned or v.admin_level > 2)):
 			for flag in flags:
 				if flag.user.shadowbanned:

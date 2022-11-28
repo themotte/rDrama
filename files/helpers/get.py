@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import Iterable, List, Optional, Type, Union
 
 from flask import g
@@ -6,6 +7,7 @@ from sqlalchemy.orm import selectinload
 
 from files.classes import *
 from files.helpers.const import AUTOJANNY_ID
+from files.helpers.contentsorting import sort_comment_results
 from files.helpers.strings import sql_ilike_clean
 
 
@@ -274,6 +276,76 @@ def get_comments(
 			.all()
 
 	return sorted(output, key=lambda x: cids.index(x.id))
+
+
+# TODO: There is probably some way to unify this with get_comments. However, in
+#       the interim, it's a hot path and benefits from having tailored code.
+def get_comment_trees_eager(
+		top_comment_ids:Iterable[int],
+		sort:str="old",
+		v:Optional[User]=None) -> List[Comment]:
+
+	if v:
+		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
+		blocking = v.blocking.subquery()
+		blocked = v.blocked.subquery()
+
+		query = g.db.query(
+			Comment,
+			votes.c.vote_type,
+			blocking.c.target_id,
+			blocked.c.target_id,
+		).join(
+			votes, votes.c.comment_id==Comment.id, isouter=True
+		).join(
+			blocking,
+			blocking.c.target_id == Comment.author_id,
+			isouter=True
+		).join(
+			blocked,
+			blocked.c.user_id == Comment.author_id,
+			isouter=True
+		)
+	else:
+		query = g.db.query(Comment)
+
+	query = query.filter(Comment.top_comment_id.in_(top_comment_ids))
+	query = query.options(
+		selectinload(Comment.author).options(
+			selectinload(User.badges),
+			selectinload(User.notes),
+		),
+		selectinload(Comment.reports).options(
+			selectinload(CommentFlag.user),
+		),
+		selectinload(Comment.awards),
+	)
+	results = query.all()
+
+	if v:
+		comments = [c[0] for c in results]
+		for i in range(len(comments)):
+			comments[i].voted = results[i][1] or 0
+			comments[i].is_blocking = results[i][2] or 0
+			comments[i].is_blocked = results[i][3] or 0
+	else:
+		comments = results
+
+	comments_map = {}
+	comments_map_parent = defaultdict(lambda: list())
+	for c in comments:
+		c.replies2 = []
+		comments_map[c.id] = c
+		comments_map_parent[c.parent_comment_id].append(c)
+
+	for parent_id in comments_map_parent:
+		if parent_id is None: continue
+
+		comments_map_parent[parent_id] = sort_comment_results(
+			comments_map_parent[parent_id], sort)
+		comments_map[parent_id].replies2 = comments_map_parent[parent_id]
+
+	return [comments_map[tcid] for tcid in top_comment_ids]
 
 
 # TODO: This function was concisely inlined into posts.py in upstream.

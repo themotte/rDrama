@@ -231,11 +231,14 @@ def post_id(pid, anything=None, v=None, sub=None):
 			g.db.add(pin)
 			pinned.remove(pin)
 
-	post.replies = pinned + comments
+	top_comments = pinned + comments
+	top_comment_ids = [c.id for c in top_comments]
+	post.replies = get_comment_trees_eager(top_comment_ids, sort, v)
 
 	post.views += 1
 	g.db.add(post)
-	g.db.commit()
+	g.db.flush()
+
 	if request.headers.get("Authorization"): return post.json
 	else:
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"

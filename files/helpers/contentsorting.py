@@ -51,3 +51,37 @@ def sort_objects(objects, sort, cls):
 		return objects.order_by(cls.created_utc)
 	else: # default, or sort == 'new'
 		return objects.order_by(cls.created_utc.desc())
+
+
+# Presently designed around files.helpers.get.get_comment_trees_eager
+# Behavior should parallel that of sort_objects above. TODO: Unify someday?
+def sort_comment_results(comments, sort):
+	DESC = (2 << 30) - 1 # descending sorts, Y2038 problem, change before then
+	if sort == 'hot':
+		ti = int(time.time()) + 3600
+		key_func = lambda c: (
+			-100000
+				* (c.upvotes + 1)
+				/ (pow(((ti - c.created_utc) / 1000), 1.23)),
+			DESC - c.created_utc
+		)
+	elif sort == 'controversial':
+		key_func = lambda c: (
+			(c.upvotes + 1) / (c.downvotes + 1)
+				+ (c.downvotes + 1) / (c.upvotes + 1),
+			DESC - c.downvotes,
+			DESC - c.created_utc
+		)
+	elif sort == 'top':
+		key_func = lambda c: (c.downvotes - c.upvotes, DESC - c.created_utc)
+	elif sort == 'bottom':
+		key_func = lambda c: (c.upvotes - c.downvotes, DESC - c.created_utc)
+	elif sort == 'old':
+		key_func = lambda c: c.created_utc
+	else: # default, or sort == 'new'
+		key_func = lambda c: DESC - c.created_utc
+
+	key_func_pinned = lambda c: (
+		(c.is_pinned is None, c.is_pinned == '', c.is_pinned), # sort None last
+		key_func(c))
+	return sorted(comments, key=key_func_pinned)
