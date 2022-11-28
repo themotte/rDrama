@@ -1,3 +1,4 @@
+from secrets import token_hex
 from flask import abort, g, session, redirect, request
 
 from files.helpers.const import PERMS
@@ -12,4 +13,5 @@ def login_to_other_account(v):
     u = get_user(request.values.get('username'))
     session["lo_user"] = u.id
     session["login_nonce"] = u.login_nonce
+    session["session_id"] = token_hex(49)
     return redirect('/')
