@@ -2,6 +2,7 @@ from typing import Iterable, List, Optional, Type, Union
 
 from flask import g
 from sqlalchemy import and_, any_, or_
+from sqlalchemy.orm import selectinload
 
 from files.classes import *
 from files.helpers.const import AUTOJANNY_ID
@@ -148,7 +149,8 @@ def get_post(
 
 def get_posts(
 		pids:Iterable[int],
-		v:Optional[User]=None) -> List[Submission]:
+		v:Optional[User]=None,
+		eager:bool=False) -> List[Submission]:
 	if not pids: return []
 
 	if v:
@@ -176,6 +178,16 @@ def get_posts(
 		)
 	else:
 		query = g.db.query(Submission).filter(Submission.id.in_(pids))
+
+	if eager:
+		query = query.options(
+			selectinload(Submission.author).options(
+				selectinload(User.badges),
+				selectinload(User.notes),
+			),
+			selectinload(Submission.reports),
+			selectinload(Submission.awards),
+		)
 
 	results = query.all()
 

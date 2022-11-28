@@ -33,7 +33,9 @@ class Badge(Base):
 	Index('badges_badge_id_idx', badge_id)
 
 	user = relationship("User", viewonly=True)
-	badge = relationship("BadgeDef", primaryjoin="foreign(Badge.badge_id) == remote(BadgeDef.id)", viewonly=True)
+	badge = relationship("BadgeDef",
+		primaryjoin="foreign(Badge.badge_id) == remote(BadgeDef.id)",
+		lazy="joined", innerjoin=True, viewonly=True)
 
 	def __repr__(self):
 		return f"<Badge(user_id={self.user_id}, badge_id={self.badge_id})>"

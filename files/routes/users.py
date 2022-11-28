@@ -90,7 +90,7 @@ def upvoters_posts(v, username, uid):
 	next_exists = len(listing) > 25
 	listing = listing[:25]
 
-	listing = get_posts(listing, v=v)
+	listing = get_posts(listing, v=v, eager=True)
 
 	return render_template("voted_posts.html", next_exists=next_exists, listing=listing, page=page, v=v)
 
@@ -132,7 +132,7 @@ def downvoters_posts(v, username, uid):
 	next_exists = len(listing) > 25
 	listing = listing[:25]
 
-	listing = get_posts(listing, v=v)
+	listing = get_posts(listing, v=v, eager=True)
 
 	return render_template("voted_posts.html", next_exists=next_exists, listing=listing, page=page, v=v)
 
@@ -173,7 +173,7 @@ def upvoting_posts(v, username, uid):
 	next_exists = len(listing) > 25
 	listing = listing[:25]
 
-	listing = get_posts(listing, v=v)
+	listing = get_posts(listing, v=v, eager=True)
 
 	return render_template("voted_posts.html", next_exists=next_exists, listing=listing, page=page, v=v)
 
@@ -215,7 +215,7 @@ def downvoting_posts(v, username, uid):
 	next_exists = len(listing) > 25
 	listing = listing[:25]
 
-	listing = get_posts(listing, v=v)
+	listing = get_posts(listing, v=v, eager=True)
 
 	return render_template("voted_posts.html", next_exists=next_exists, listing=listing, page=page, v=v)
 
@@ -824,7 +824,7 @@ def u_username(username, v=None):
 			for p in sticky:
 				ids = [p.id] + ids
 
-	listing = get_posts(ids, v=v)
+	listing = get_posts(ids, v=v, eager=True)
 
 	if u.unban_utc:
 		if request.headers.get("Authorization"): {"data": [x.json for x in listing]}
@@ -1105,7 +1105,7 @@ def saved_posts(v, username):
 
 	ids=ids[:25]
 
-	listing = get_posts(ids, v=v)
+	listing = get_posts(ids, v=v, eager=True)
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
 	return render_template("userpage.html",
