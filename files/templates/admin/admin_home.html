@@ -3,10 +3,7 @@
 	{{super()}}
 	{% set root_scope.analytics = false %}
 {% endblock %}
-{% block title %}
-<title>{{SITE_TITLE}}</title>
-
-{% endblock %}
+{% block pagetitle %}{{SITE_TITLE}}{% endblock %}
 
 {% block content %}
 <pre></pre>

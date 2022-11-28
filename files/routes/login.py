@@ -261,7 +261,7 @@ def sign_up_post(v):
 		return redirect(f"/signup?{urlencode(args)}")
 
 	if now - int(form_timestamp) < 5:
-		return signup_error("There was a problem. Please try again."),
+		return signup_error("There was a problem. Please try again.")
 
 	if not hmac.compare_digest(correct_formkey, form_formkey):
 		return signup_error("There was a problem. Please try again.")

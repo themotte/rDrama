@@ -5,10 +5,7 @@
 {% block fixedMobileBarJS %}
 {% endblock %}
 
-{% block title %}
-<title><span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}}"{% endif %}>{{u.username}}</span></title>
-
-{% endblock %}
+{% block pagetitle %}<span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}}"{% endif %}>{{u.username}}</span>{% endblock %}
 
 {% block content %}
 

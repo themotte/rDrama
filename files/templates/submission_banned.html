@@ -9,9 +9,7 @@
 {% set adjust=0 %}
 {% endif %}
 
-{% block title %}
-<title>{{p.plaintitle(v)}}</title>
-{% if p.is_banned %}
+{% block pagetitle %}{{p.plaintitle(v)}}{% if p.is_banned %}
 
 {% else %}
 
