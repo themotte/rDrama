@@ -216,8 +216,7 @@ def api_comment(v):
 	if existing:
 		return {"error": f"You already made that comment: /comment/{existing.id}"}, 409
 
-	if parent.author.any_block_exists(v) and v.admin_level < 2:
-		return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
+	replying_to_blocked = parent.author.any_block_exists(v) and v.admin_level < 2
 
 	is_bot = bool(request.headers.get("Authorization"))
 
@@ -284,7 +283,7 @@ def api_comment(v):
 	else: c.top_comment_id = parent.top_comment_id
 
 	if not v.shadowbanned and not is_filtered:
-		comment_on_publish(c)
+		comment_on_publish(c, replying_to_blocked)
 
 	vote = CommentVote(user_id=v.id,
 						 comment_id=c.id,
@@ -297,10 +296,16 @@ def api_comment(v):
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
-	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True, parent_level=level)}
+	
+	if replying_to_blocked:
+		message = "This user has blocked you. You are still welcome to reply " \
+				  "but you will be held to a higher standard of civility than you would be otherwise"
+	else:
+		message = None
+	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True, parent_level=level), "message": message}
 
 
-def comment_on_publish(comment):
+def comment_on_publish(comment:Comment, replying_to_blocked:bool):
 	"""
 	Run when comment becomes visible: immediately for non-filtered comments,
 	or on approval for previously filtered comments.
@@ -329,7 +334,7 @@ def comment_on_publish(comment):
 	to_notify.update([x[0] for x in post_subscribers])
 
 	parent = comment.parent
-	if parent and parent.author_id != comment.author_id:
+	if not replying_to_blocked and parent and parent.author_id != comment.author_id:
 		to_notify.add(parent.author_id)
 
 	for uid in to_notify:

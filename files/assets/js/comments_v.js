@@ -311,8 +311,12 @@ function post_comment(fullname,id,level = 1){
 					replyArea.classList.add('d-none');
 				}
 			}
-		}
-		else {
+
+			if (data["message"]) {
+				document.getElementById("toast-post-success-text").innerText = data["message"];
+				bootstrap.Toast.getOrCreateInstance(document.getElementById("toast-post-success")).show();
+			}
+		} else {
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
 			else document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
