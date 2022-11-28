@@ -15,7 +15,6 @@ def post_embed(id, v):
 
 @app.template_filter("timestamp")
 def timestamp(timestamp):
-
 	age = int(time.time()) - timestamp
 
 	if age < 60:
@@ -46,6 +45,11 @@ def timestamp(timestamp):
 @app.template_filter("asset")
 def template_asset(asset_path):
 	return assetcache_path(asset_path)
+
+@app.template_filter("asset_siteimg")
+def template_asset_siteimg(asset_path):
+	# TODO: Add hashing for these using files.helpers.assetcache
+	return f'/i/{SITE_ID}/{asset_path}?v=3010'
 
 @app.context_processor
 def inject_constants():
