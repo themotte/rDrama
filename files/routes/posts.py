@@ -1139,21 +1139,32 @@ def api_pin_post(post_id, v):
 		else: return {"message": "Post unpinned!"}
 	return {"error": "Post not found!"}
 
-
 @app.get("/submit/title")
 @limiter.limit("6/minute")
 @auth_required
 def get_post_title(v):
-
+	POST_TITLE_TIMEOUT = 5
 	url = request.values.get("url")
-	if not url: abort(400)
+	if not url or '\\' in url: abort(400)
+	url = url.strip()
+	if not url.startswith('http'): abort(400)
 
-	try: x = requests.get(url, headers=titleheaders, timeout=5, proxies=proxies)
+	checking_url = url.lower().split('?')[0].split('%3F')[0]
+	if any((checking_url.endswith(f'.{x}') for x in NO_TITLE_EXTENSIONS)):
+		abort(400)
+
+	try:
+		x = gevent.with_timeout(POST_TITLE_TIMEOUT, requests.get, 
+			                    url, headers=titleheaders, timeout=POST_TITLE_TIMEOUT, 
+							    proxies=proxies)
 	except: abort(400)
+		
+	content_type = x.headers.get("Content-Type")
+	if not content_type or "text/html" not in content_type: abort(400)
 
-	soup = BeautifulSoup(x.content, 'lxml')
+	match = html_title_regex.search(x.text)
+	if match and match.lastindex >= 1:
+		title = html.unescape(match.group(1))
+	else: abort(400)
 
-	title = soup.find('title')
-	if not title: abort(400)
-
-	return {"url": url, "title": title.string}
+	return {"url": url, "title": title}

@@ -44,6 +44,12 @@ COLORS = {'ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000
 
 LOGGEDIN_ACTIVE_TIME = 15 * 60
 
+IMAGE_FORMATS = ['png','gif','jpg','jpeg','webp']
+VIDEO_FORMATS = ['mp4','webm','mov','avi','mkv','flv','m4v','3gp']
+AUDIO_FORMATS = ['mp3','wav','ogg','aac','m4a','flac']
+NO_TITLE_EXTENSIONS = IMAGE_FORMATS + VIDEO_FORMATS + AUDIO_FORMATS
+
+
 AWARDS = {
 	"lootbox": {
 		"kind": "lootbox",
@@ -250,7 +256,7 @@ utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
 
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 
-proxies = {"http":"http://127.0.0.1:18080","https":"http://127.0.0.1:18080"}
+proxies = {}
 
 approved_embed_hosts = [
 	'rdrama.net',
@@ -323,5 +329,7 @@ image_regex = re.compile("(^|\\s)(https:\\/\\/[\\w\\-.#&/=\\?@%;+]{5,250}(\\.png
 procoins_li = (0,2500,5000,10000,25000,50000,125000,250000)
 
 linefeeds_regex = re.compile("([^\\n])\\n([^\\n])", flags=re.A)
+
+html_title_regex = re.compile("<title>(.{1,200})</title>", flags=re.I)
 
 def make_name(*args, **kwargs): return request.base_url
