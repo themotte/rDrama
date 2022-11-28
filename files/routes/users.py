@@ -772,11 +772,7 @@ def visitors(v):
 @app.get("/@<username>")
 @auth_desired
 def u_username(username, v=None):
-
-
 	u = get_user(username, v=v)
-
-
 	if username != u.username:
 		return redirect(SITE_FULL + request.full_path.replace(username, u.username)[:-1])
 
@@ -802,12 +798,6 @@ def u_username(username, v=None):
 	if v and hasattr(u, 'is_blocking') and u.is_blocking:
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"You are blocking @{u.username}."}
 		return render_template("userpage_blocking.html", u=u, v=v)
-
-
-	if v and v.admin_level < 2 and hasattr(u, 'is_blocked') and u.is_blocked:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "This person is blocking you."}
-		return render_template("userpage_blocked.html", u=u, v=v)
-
 
 	sort = request.values.get("sort", "new")
 	t = request.values.get("t", "all")
@@ -858,11 +848,8 @@ def u_username(username, v=None):
 @app.get("/@<username>/comments")
 @auth_desired
 def u_username_comments(username, v=None):
-
 	user = get_user(username, v=v)
-
 	if username != user.username: return redirect(f'/@{user.username}/comments')
-
 	u = user
 
 	if u.reserved:
@@ -879,11 +866,6 @@ def u_username_comments(username, v=None):
 	if v and hasattr(u, 'is_blocking') and u.is_blocking:
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"You are blocking @{u.username}."}
 		return render_template("userpage_blocking.html", u=u, v=v)
-
-	if v and v.admin_level < 2 and hasattr(u, 'is_blocked') and u.is_blocked:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "This person is blocking you."}
-		return render_template("userpage_blocked.html", u=u, v=v)
-
 
 	try: page = max(int(request.values.get("page", "1")), 1)
 	except: page = 1
