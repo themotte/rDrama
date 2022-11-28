@@ -8,7 +8,6 @@ import requests
 @app.get("/login")
 @auth_desired
 def login_get(v):
-
 	redir = request.values.get("redirect")
 	if redir:
 		redir = redir.replace("/logged_out", "").strip()
@@ -18,7 +17,7 @@ def login_get(v):
 		if redir.startswith(f'{SITE_FULL}/'): return redirect(redir)
 		elif redir.startswith('/'): return redirect(f'{SITE_FULL}{redir}')
 
-	return render_template("login.html", failed=False, redirect=redir)
+	return render_template("login/login.html", failed=False, redirect=redir)
 
 
 def check_for_alts(current_id):
@@ -96,18 +95,18 @@ def login_post():
 
 	if not account:
 		time.sleep(random.uniform(0, 2))
-		return render_template("login.html", failed=True)
+		return render_template("login/login.html", failed=True), 401
 
 	if request.values.get("password"):
 
 		if not account.verifyPass(request.values.get("password")):
 			time.sleep(random.uniform(0, 2))
-			return render_template("login.html", failed=True)
+			return render_template("login/login.html", failed=True), 401
 
 		if account.mfa_secret:
 			now = int(time.time())
 			hash = generate_hash(f"{account.id}+{now}+2fachallenge")
-			return render_template("login_2fa.html",
+			return render_template("login/login_2fa.html",
 								   v=account,
 								   time=now,
 								   hash=hash,
@@ -125,12 +124,12 @@ def login_post():
 
 		if not account.validate_2fa(request.values.get("2fa_token", "").strip()):
 			hash = generate_hash(f"{account.id}+{time}+2fachallenge")
-			return render_template("login_2fa.html",
+			return render_template("login/login_2fa.html",
 								   v=account,
 								   time=now,
 								   hash=hash,
 								   failed=True,
-								   )
+								   ), 401
 
 	else:
 		abort(400)
@@ -196,7 +195,7 @@ def sign_up_get(v):
 		ref_user = None
 
 	if ref_user and (ref_user.id in session.get("history", [])):
-		return render_template("sign_up_failed_ref.html")
+		return render_template("login/sign_up_failed_ref.html"), 400
 
 	now = int(time.time())
 	token = token_hex(16)
@@ -210,14 +209,15 @@ def sign_up_get(v):
 					   ).hexdigest()
 
 	error = request.values.get("error")
+	code = 200 if not error else 400
 
-	return render_template("sign_up.html",
+	return render_template("login/sign_up.html",
 						   formkey=formkey,
 						   now=now,
 						   ref_user=ref_user,
 						   hcaptcha=app.config["HCAPTCHA_SITEKEY"],
 						   error=error
-						   )
+						   ), code
 
 
 @app.post("/signup")
@@ -248,9 +248,7 @@ def sign_up_post(v):
 	now = int(time.time())
 
 	username = request.values.get("username")
-	
 	if not username: abort(400)
-
 	username = username.strip()
 
 	def signup_error(error):
@@ -263,7 +261,7 @@ def sign_up_post(v):
 		return redirect(f"/signup?{urlencode(args)}")
 
 	if now - int(form_timestamp) < 5:
-		return signup_error("There was a problem. Please try again.")
+		return signup_error("There was a problem. Please try again."),
 
 	if not hmac.compare_digest(correct_formkey, form_formkey):
 		return signup_error("There was a problem. Please try again.")
@@ -371,20 +369,18 @@ def sign_up_post(v):
 
 @app.get("/forgot")
 def get_forgot():
-	return render_template("forgot_password.html")
-
+	return render_template("login/forgot_password.html")
 
 @app.post("/forgot")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 def post_forgot():
-
 	username = request.values.get("username")
 	if not username: abort(400)
 
 	email = request.values.get("email",'').strip().lower()
 
 	if not email_regex.fullmatch(email):
-		return render_template("forgot_password.html", error="Invalid email.")
+		return render_template("login/forgot_password.html", error="Invalid email."), 400
 
 
 	username  = sql_ilike_clean(username.lstrip('@'))
@@ -407,7 +403,7 @@ def post_forgot():
 				  )
 
 	return render_template("forgot_password.html",
-						   msg="If the username and email matches an account, you will be sent a password reset email. You have ten minutes to complete the password reset process.")
+						   msg="If the username and email matches an account, you will be sent a password reset email. You have ten minutes to complete the password reset process."), 202
 
 
 @app.get("/reset")
@@ -423,7 +419,7 @@ def get_reset():
 	if now - timestamp > 600:
 		return render_template("message.html", 
 			title="Password reset link expired",
-			error="That password reset link has expired.")
+			error="That password reset link has expired."), 410
 
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 	
@@ -437,7 +433,7 @@ def get_reset():
 
 	reset_token = generate_hash(f"{user.id}+{timestamp}+reset+{user.login_nonce}")
 
-	return render_template("reset_password.html",
+	return render_template("login/reset_password.html",
 						   v=user,
 						   token=reset_token,
 						   time=timestamp,
@@ -463,7 +459,7 @@ def post_reset(v):
 	if now - timestamp > 600:
 		return render_template("message.html",
 							   title="Password reset expired",
-							   error="That password reset form has expired.")
+							   error="That password reset form has expired."), 410
 
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
@@ -473,11 +469,11 @@ def post_reset(v):
 		abort(404)
 
 	if password != confirm_password:
-		return render_template("reset_password.html",
+		return render_template("login/reset_password.html",
 							   v=user,
 							   token=token,
 							   time=timestamp,
-							   error="Passwords didn't match.")
+							   error="Passwords didn't match."), 400
 
 	user.passhash = hash_password(password)
 	g.db.add(user)
@@ -491,11 +487,7 @@ def post_reset(v):
 @app.get("/lost_2fa")
 @auth_desired
 def lost_2fa(v):
-
-	return render_template(
-		"lost_2fa.html",
-		v=v
-		)
+	return render_template("login/lost_2fa.html", v=v)
 
 @app.post("/request_2fa_disable")
 @limiter.limit("1/second;6/minute;200/hour;1000/day")
@@ -506,19 +498,19 @@ def request_2fa_disable():
 	if not user or not user.email or not user.mfa_secret:
 		return render_template("message.html",
 						   title="Removal request received",
-						   message="If username, password, and email match, we will send you an email.")
+						   message="If username, password, and email match, we will send you an email."), 202
 
 
 	email=request.values.get("email").strip().lower()
 
 	if not email_regex.fullmatch(email):
-		return render_template("message.html", title="Invalid email.", error="Invalid email.")
+		return render_template("message.html", title="Invalid email.", error="Invalid email."), 400
 
 	password =request.values.get("password")
 	if not user.verifyPass(password):
 		return render_template("message.html",
 						   title="Removal request received",
-						   message="If username, password, and email match, we will send you an email.")
+						   message="If username, password, and email match, we will send you an email."), 202
 
 	valid=int(time.time())
 	token=generate_hash(f"{user.id}+{user.username}+disable2fa+{valid}+{user.mfa_secret}+{user.login_nonce}")
@@ -534,7 +526,7 @@ def request_2fa_disable():
 
 	return render_template("message.html",
 						   title="Removal request received",
-						   message="If username, password, and email match, we will send you an email.")
+						   message="If username, password, and email match, we will send you an email."), 202
 
 @app.get("/reset_2fa")
 def reset_2fa():
@@ -547,7 +539,7 @@ def reset_2fa():
 	if now > t+3600*24:
 		return render_template("message.html",
 						   title="Expired Link",
-						   error="That link has expired.")
+						   error="That link has expired."), 410
 
 	token=request.values.get("token")
 	uid=request.values.get("id")

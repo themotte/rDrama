@@ -1,5 +1,6 @@
 {%- extends 'root.html' %}
 {% block title %}<title>{{SITE_TITLE}}</title>{% endblock %}
+{% block pagetitle %}{{SITE_TITLE}}{% endblock %}
 {% block body_attributes %}{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" {% if v and v.background %}style="{% if path != '/formatting' %}overflow-x: hidden; {% endif %} background:url(/assets/images/backgrounds/{{v.background}}?v=3) center center fixed; background-color: var(--background);background-size: cover"{% endif %}{% endblock %}
 {% block body %}
 {% include "header.html" %}
