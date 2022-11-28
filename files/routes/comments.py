@@ -283,7 +283,7 @@ def api_comment(v):
 	else: c.top_comment_id = parent.top_comment_id
 
 	if not v.shadowbanned and not is_filtered:
-		comment_on_publish(c, replying_to_blocked)
+		comment_on_publish(c)
 
 	vote = CommentVote(user_id=v.id,
 						 comment_id=c.id,
