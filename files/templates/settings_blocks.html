@@ -1,15 +1,10 @@
 {% extends "settings.html" %}
 
 {% block pagetitle %}Block Settings - {{SITE_TITLE}}{% endblock %}
-
 {% block content %}
-
 <script src="{{ 'js/settings_blocks.js' | asset }}"></script>
-
 <div class="row">
-
 	<div class="col">
-
 		{% if error %}
 		<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
 			<i class="fas fa-exclamation-circle my-auto"></i>
@@ -21,18 +16,12 @@
 			</button>
 		</div>
 		{% endif %}
-
 	</div>
-
 </div>
 
-
 <div class="row">
-
 	<div class="col">
-
 		<div class="d-md-flex justify-content-between mb-3">
-
 			<div>
 				<h2 class="h5">Users you block</h2>
 				<p class="text-small text-muted mb-md-0">You have blocked the following users. They cannot reply to your content or notify you with a username mention.</p>
@@ -41,8 +30,6 @@
 				<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#blockmodal">Block user</button>
 			</div>
 		</div>
-
-
 
 	{% if v.blocking.first() %}
 	<div class="card mb-5">
@@ -120,5 +107,4 @@
 		<i class="fas fa-exclamation-circle text-danger mr-2"></i><span id="toast-error-message">Error. Please try again.</span>
 	</div>
 </div>
-
 {% endblock %}

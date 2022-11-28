@@ -1,10 +1,6 @@
 {% extends "default.html" %}
-
-
 {% block pagetype %}userpage{% endblock %}
-
 {% block title %}
-
 {% if u and u.profilecss and not request.values.get('nocss') %}
 	<link rel="stylesheet" href="/@{{u.username}}/profilecss">
 {% endif %}
@@ -30,7 +26,6 @@
 {% endblock %}
 
 {% block desktopUserBanner %}
-
 <div class="row d-none d-md-block">
 	<div class="col px-0">
 		<div class="jumbotron jumbotron-fluid jumbotron-guild d-none d-md-block" style="background-image: url({{u.banner_url}})">
@@ -681,6 +676,4 @@
 <script src="{{ 'js/marked.custom.js' | asset }}"></script>
 
 {% endblock %}
-
-{% block GIFpicker %}
-{% endblock %}
+{% block GIFpicker %}{% endblock %}

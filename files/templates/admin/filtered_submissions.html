@@ -1,5 +1,4 @@
 {% extends "userpage.html" %}
-
 {% block adminpanel %}{% endblock %}
 {% block pagetype %}userpage{% endblock %}
 {% block banner %}{% endblock %}
@@ -7,15 +6,9 @@
 {% block desktopBanner %}{% endblock %}
 {% block desktopUserBanner %}{% endblock %}
 {% block mobileUserBanner %}{% endblock %}
-
 {% block postNav %}{% endblock %}
-
-{% block fixedMobileBarJS %}
-{% endblock %}
-
+{% block fixedMobileBarJS %}{% endblock %}
 {% block pagetitle %}Filtered Posts{% endblock %}
-
-
 {% block content %}
 
 <ul class="nav post-nav py-2">
@@ -32,9 +25,7 @@
 </ul>
 
 <div class="row no-gutters">
-
 	<div class="col">
-
 	{% block listing %}
 		<div class="posts">
 			{% include "submission_listing.html" %}

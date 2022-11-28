@@ -444,8 +444,8 @@ def reported_posts(v):
 	sub_ids = [x.id for x in subs_just_ids]
 	next_exists = len(sub_ids) > 25
 	listings = get_posts(sub_ids[:25], v=v)
-	return render_template("admin/reported_posts.html",
-						   next_exists=next_exists, listing=listings, page=page, v=v)
+	return render_template("admin/admin_posts.html",
+						   next_exists=next_exists, listing=listings, page=page, v=v, title="Reported Posts")
 
 
 @app.get("/admin/reported/comments")
@@ -476,7 +476,8 @@ def reported_comments(v):
 						   listing=comments,
 						   page=page,
 						   v=v,
-						   standalone=True)
+						   standalone=True,
+						   title="Reported Comments")
 
 @app.get("/admin")
 @limiter.exempt
@@ -883,11 +884,12 @@ def admin_removed(v):
 
 	posts = get_posts(ids, v=v)
 
-	return render_template("admin/removed_posts.html",
+	return render_template("admin/admin_posts.html",
 						   v=v,
 						   listing=posts,
 						   page=page,
-						   next_exists=next_exists
+						   next_exists=next_exists,
+						   title="Removed Posts"
 						   )
 
 
@@ -909,11 +911,12 @@ def admin_removed_comments(v):
 
 	comments = get_comments(ids, v=v)
 
-	return render_template("admin/removed_comments.html",
+	return render_template("admin/admin_comments.html",
 						   v=v,
 						   listing=comments,
 						   page=page,
-						   next_exists=next_exists
+						   next_exists=next_exists,
+						   title="Removed Comments"
 						   )
 
 

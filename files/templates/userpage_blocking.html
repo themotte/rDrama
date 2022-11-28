@@ -1,14 +1,8 @@
 {% extends "default.html" %}
-
 {% block pagetype %}userpage{% endblock %}
-
-{% block fixedMobileBarJS %}
-{% endblock %}
-
+{% block fixedMobileBarJS %}{% endblock %}
 {% block pagetitle %}<span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}}"{% endif %}>{{u.username}}</span>{% endblock %}
-
 {% block content %}
-
 <div class="row no-gutters">
 	<div class="col-12">
 		<div class="text-center py-7 py-md-8">
@@ -22,6 +16,4 @@
 	</div>
 </div>
 {% endblock %}
-
-{% block pagenav %}
-{% endblock %}
+{% block pagenav %}{% endblock %}

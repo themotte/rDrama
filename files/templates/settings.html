@@ -33,17 +33,11 @@
 		{% endif %}
 
 		<div class="mt-3">
-
 			<h1 class="d-none d-md-block">Settings</h1>
-
 			<h2 class="h3 mt-5 d-md-none">Settings</h2>
-
 		</div>
-
-		
 		
 		<div class="flex-row bg-white box-shadow-bottom d-none d-sm-flex mt-3 mb-3 mb-sm-5">
-
 			<ul class="nav settings-nav">
 				<li class="nav-item">
 					<a class="nav-link{% if request.path=='/settings/profile' %} active{% endif %}" href="/settings/profile">Profile</a>
@@ -67,12 +61,8 @@
 					<a class="nav-link{% if request.path=='/settings/apps' %} active{% endif %}" href="/settings/apps">Apps</a>
 				</li>
 			</ul>
-
 		</div>
-
-		
 		<div class="flex-row bg-white box-shadow-bottom justify-content-center d-flex d-sm-none mt-3 mb-3 mb-sm-5">
-
 			<ul class="nav settings-nav">
 				<li class="nav-item">
 					<a class="nav-link{% if request.path=='/settings/profile' %} active{% endif %} navsettings" href="/settings/profile"><i class="fas fa-cog text-base mr-0"></i></a>
@@ -98,15 +88,13 @@
 			</ul>
 
 		</div>
-
-	{% block content %}
-	{% endblock %}
+	{% block content %}{% endblock %}
 	</div>
 </div>
 
  </div>
 
- {% if request.path == '/settings/security'  %}
+ {% if request.path == '/settings/security' %}
 		<div class="modal fade" id="2faModal" tabindex="-1" role="dialog" aria-labelledby="2faModalTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
@@ -174,7 +162,6 @@
 		</div>
 	</div>
 {% endif %}
-
  
 {% block clipboard %}
 <div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
@@ -183,7 +170,6 @@
 	</div>
 </div>
 {% endblock %}
-
 
 <div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body bg-success text-center text-white">
@@ -196,9 +182,6 @@
 	</div>
 </div>
 
-
-
 {% block onload %}{% endblock %}
-
 <script src="{{ 'js/clipboard.js' | asset }}"></script>
 {% endblock %}

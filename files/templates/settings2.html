@@ -92,8 +92,7 @@
 
 <div class="{% if request.path == '/banned' or request.path == '/blocks' %}container-fluid{% else %}container{% endif %} {% if request.path in ['/leaderboard', '/paypigs', '/patrons'] %}px-0{% elif request.path == '/changelog' %}px-2{% endif %}">
 
-{% block content %}
-{% endblock %}
+{% block content %}{% endblock %}
  </div>
  <div class="toast clipboard" id="toast-clipboard-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body text-center">
