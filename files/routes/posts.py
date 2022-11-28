@@ -39,20 +39,19 @@ MAX_TITLE_LENGTH = 500
 MAX_URL_LENGTH = 2048
 MAX_BODY_LENGTH = 20000
 
-# Get request value `val` and ensure it is within length constraints
-# : Returns an either tuple (good_value, error)
-# : TODO it may make sense to do more sanitisation here
-def guarded_value(val, min_len, max_len):
+
+def guarded_value(val, min_len, max_len) -> str:
+	'''
+	Get request value `val` and ensure it is within length constraints
+	Requires a request context and either aborts early or returns a good value
+	'''
 	raw = request.values.get(val, '').strip()
 	raw = raw.replace('\u200e', '')
 
-	if len(raw) < min_len:
-		return (None, ({"error": f"Minimum length for {val} is {min_len}"}, 403))
-
-	if len(raw) > max_len:
-		return (None, ({"error": f"Maximum length for {val} is {max_len}"}, 403))
-
-	return (raw, None)
+	if len(raw) < min_len: abort(400, f"Minimum length for {val} is {min_len}")
+	if len(raw) > max_len: abort(400, f"Maximum length for {val} is {max_len}")
+	# TODO: it may make sense to do more sanitisation here
+	return raw
 
 @app.post("/toggle_club/<pid>")
 @auth_required
@@ -443,11 +442,8 @@ def edit_post(pid, v):
 
 	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
 
-	title, err = guarded_value("title", 1, MAX_TITLE_LENGTH)
-	if err: return err
-
-	body, err = guarded_value("body", 0, MAX_BODY_LENGTH)
-	if err: return err
+	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
+	body = guarded_value("body", 0, MAX_BODY_LENGTH)
 
 	if title != p.title:
 		p.title = title
@@ -718,14 +714,9 @@ def submit_post(v, sub=None):
 		SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
 		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body), 400
 
-	title, err = guarded_value("title", 1, MAX_TITLE_LENGTH)
-	if err: return error(err[0]["error"])
-
-	url, err = guarded_value("url", 0, MAX_URL_LENGTH)
-	if err: return error(err[0]["error"])
-
-	body, err = guarded_value("body", 0, MAX_BODY_LENGTH)
-	if err: return error(err[0]["error"])
+	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
+	url = guarded_value("url", 0, MAX_URL_LENGTH)
+	body = guarded_value("body", 0, MAX_BODY_LENGTH)
 
 	sub = request.values.get("sub")
 	if sub: sub = sub.replace('/h/','').replace('s/','')
