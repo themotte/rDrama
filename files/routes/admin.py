@@ -589,11 +589,12 @@ def under_attack(v):
 		return {"error": "Failed to enable under attack mode."}
 
 @app.get("/admin/badge_grant")
+@app.get("/admin/badge_remove")
 @limiter.exempt
 @admin_level_required(2)
-def badge_grant_get(v):
+def badge_admin_get(v):
 	badges = g.db.query(BadgeDef).order_by(BadgeDef.id).all()
-	return render_template("admin/badge_grant.html", v=v, badge_types=badges)
+	return render_template("admin/badge_admin.html", v=v, badge_types=badges, grant='grant' in request.full_path)
 
 
 @app.post("/admin/badge_grant")
@@ -604,7 +605,7 @@ def badge_grant_post(v):
 
 	user = get_user(request.values.get("username").strip(), graceful=True)
 	if not user:
-		return render_template("admin/badge_grant.html", v=v, badge_types=badges, error="User not found.")
+		return render_template("admin/badge_admin.html", v=v, badge_types=badges, error="User not found.", grant=True)
 
 	try: badge_id = int(request.values.get("badge_id"))
 	except: abort(400)
@@ -613,7 +614,7 @@ def badge_grant_post(v):
 		abort(403)
 
 	if user.has_badge(badge_id):
-		return render_template("admin/badge_grant.html", v=v, badge_types=badges, error="User already has that badge.")
+		return render_template("admin/badge_admin.html", v=v, badge_types=badges, error="User already has that badge.", grant=True)
 	
 	new_badge = Badge(badge_id=badge_id, user_id=user.id)
 
@@ -637,20 +638,8 @@ def badge_grant_post(v):
 		_note=new_badge.name
 	)
 	g.db.add(ma)
-
 	g.db.commit()
-	return render_template("admin/badge_grant.html", v=v, badge_types=badges, msg="Badge granted!")
-
-
-
-@app.get("/admin/badge_remove")
-@limiter.exempt
-@admin_level_required(2)
-def badge_remove_get(v):
-	badges = g.db.query(BadgeDef).order_by(BadgeDef.id).all()
-
-	return render_template("admin/badge_remove.html", v=v, badge_types=badges)
-
+	return render_template("admin/badge_grant.html", v=v, badge_types=badges, msg="Badge granted!", grant=True)
 
 @app.post("/admin/badge_remove")
 @limiter.exempt
@@ -660,14 +649,14 @@ def badge_remove_post(v):
 
 	user = get_user(request.values.get("username").strip(), graceful=True)
 	if not user:
-		return render_template("admin/badge_remove.html", v=v, badge_types=badges, error="User not found.")
+		return render_template("admin/badge_remove.html", v=v, badge_types=badges, error="User not found.", grant=False)
 
 	try: badge_id = int(request.values.get("badge_id"))
 	except: abort(400)
 
 	badge = user.has_badge(badge_id)
 	if not badge:
-		return render_template("admin/badge_remove.html", v=v, badge_types=badges, error="User doesn't have that badge.")
+		return render_template("admin/badge_remove.html", v=v, badge_types=badges, error="User doesn't have that badge.", grant=False)
 
 	ma = ModAction(
 		kind="badge_remove",
@@ -676,12 +665,9 @@ def badge_remove_post(v):
 		_note=badge.name
 	)
 	g.db.add(ma)
-
 	g.db.delete(badge)
-
 	g.db.commit()
-
-	return render_template("admin/badge_remove.html", v=v, badge_types=badges, msg="Badge removed!")
+	return render_template("admin/badge_remove.html", v=v, badge_types=badges, msg="Badge removed!", grant=False)
 
 
 @app.get("/admin/users")

@@ -1,11 +1,9 @@
 {% extends "default.html" %}
-
-{% block pagetitle %}Badge Remove{% endblock %}
-
+{% set title="Badge Grant" if grant else "Badge Remove" %}
+{% set form_action="/admin/badge_grant" if grant else "Badge Remove" %}
+{% block pagetitle %}{{title}}{% endblock %}
 {% block pagetype %}message{% endblock %}
-
 {% block content %}
-
 		{% if error %}
 		<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
 			<i class="fas fa-exclamation-circle my-auto"></i>
@@ -28,15 +26,9 @@
 			</button>
 		</div>
 		{% endif %}
-
-<pre></pre>
-<pre></pre>
-<h5>Badge Remove</h5>
-
-<form action="/admin/badge_remove", method="post">
+<h5 class="mt-2">{{title}}</h5>
+<form action="{{form_action}}", method="post">
 <input type="hidden" name="formkey" value="{{v.formkey}}">
-
-
 <label for="input-username">Username</label><br>
 <input autocomplete="off" id="input-username" class="form-control" type="text" name="username" required>
 
@@ -64,17 +56,14 @@
 </tr>
 {% endfor %}
 </table>
-
+{% if grant %}
 <label for="input-url">URL</label><br>
 <input autocomplete="off" id="input-url" class="form-control" type="text" name="url" type="url" placeholder="Optional">
-
 <label for="input-description">Custom description</label><br>
 <input autocomplete="off" id="input-description" class="form-control" type="text" name="description" placeholder="Leave blank for badge default">
-
+{% endif %}
 <input autocomplete="off" class="btn btn-primary" type="submit">
-
 </form>
-
 <style>
 	@media (max-width: 767.98px) {
 		table {
@@ -83,5 +72,4 @@
 		}
 	}
 </style>
-
 {% endblock %}
