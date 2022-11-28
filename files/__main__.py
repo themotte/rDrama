@@ -170,6 +170,7 @@ def before_request():
 		return 'Please use a "User-Agent" header!', 403
 
 	ua = g.agent.lower()
+	g.debug = bool_from_string(app.config["DEBUG"])
 	g.webview = ('; wv) ' in ua)
 	g.inferior_browser = (
 		'iphone' in ua or

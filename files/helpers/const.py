@@ -49,6 +49,9 @@ VIDEO_FORMATS = ['mp4','webm','mov','avi','mkv','flv','m4v','3gp']
 AUDIO_FORMATS = ['mp3','wav','ogg','aac','m4a','flac']
 NO_TITLE_EXTENSIONS = IMAGE_FORMATS + VIDEO_FORMATS + AUDIO_FORMATS
 
+PERMS = {
+	"DEBUG_LOGIN_TO_OTHERS": 3,
+}
 
 AWARDS = {
 	"lootbox": {
