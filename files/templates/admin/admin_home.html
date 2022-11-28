@@ -113,6 +113,7 @@
 	<div class="login-to-others mt-3">
 		<h5>Login to another's account</h5>
 		<form action="/dev/sessions/" method="post">
+			<input type="hidden" name="formkey", value="{{v.formkey}}">
 			<label for="username">Username</label>
 			<input name="username" required>
 			<button type="submit" class="btn btn-primary">Login</button>
