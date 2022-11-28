@@ -540,7 +540,7 @@ def message2(v, username):
 		return {"error": "You have been permabanned and cannot send messages; " + \
 			"contact modmail if you think this decision was incorrect."}, 403
 
-	user = get_user(username, v=v)
+	user = get_user(username, v=v, include_blocks=True)
 	if hasattr(user, 'is_blocking') and user.is_blocking: return {"error": "You're blocking this user."}, 403
 
 	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked:
@@ -772,9 +772,7 @@ def visitors(v):
 @app.get("/@<username>")
 @auth_desired
 def u_username(username, v=None):
-
-
-	u = get_user(username, v=v)
+	u = get_user(username, v=v, include_blocks=True)
 
 
 	if username != u.username:
@@ -858,8 +856,7 @@ def u_username(username, v=None):
 @app.get("/@<username>/comments")
 @auth_desired
 def u_username_comments(username, v=None):
-
-	user = get_user(username, v=v)
+	user = get_user(username, v=v, include_blocks=True)
 
 	if username != user.username: return redirect(f'/@{user.username}/comments')
 
@@ -945,8 +942,7 @@ def u_username_comments(username, v=None):
 @app.get("/@<username>/info")
 @auth_required
 def u_username_info(username, v=None):
-
-	user=get_user(username, v=v)
+	user = get_user(username, v=v, include_blocks=True)
 
 	if hasattr(user, 'is_blocking') and user.is_blocking:
 		return {"error": "You're blocking this user."}, 401
@@ -958,8 +954,7 @@ def u_username_info(username, v=None):
 @app.get("/<id>/info")
 @auth_required
 def u_user_id_info(id, v=None):
-
-	user=get_account(id, v=v)
+	user = get_account(id, v=v, include_blocks=True)
 
 	if hasattr(user, 'is_blocking') and user.is_blocking:
 		return {"error": "You're blocking this user."}, 401

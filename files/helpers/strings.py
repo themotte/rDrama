@@ -1,8 +1,9 @@
-
 import typing
 
 # clean strings for searching
 def sql_ilike_clean(my_str):
+	if my_str is None:
+		return None
 	return my_str.replace(r'\\', '').replace('_', r'\_').replace('%', '').strip()
 
 # this will also just return a bool verbatim
