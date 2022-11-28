@@ -1164,7 +1164,7 @@ def get_post_title(v):
 
 	match = html_title_regex.search(x.text)
 	if match and match.lastindex >= 1:
-		title = match.group(1)
+		title = html.unescape(match.group(1))
 	else: abort(400)
 
 	return {"url": url, "title": title}
