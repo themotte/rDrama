@@ -1,24 +1,15 @@
 {% extends "settings.html" %}
-
 {% block pagetitle %}Profile Settings{% endblock %}
-
 {% block content %}
-
-
 <div class="row">
-
 	<div class="col col-lg-8">
-
 		<div class="settings">
-
 			<h2 class="h5" name="referral">Frontpage Size</h2>
-
 			<div class="settings-section rounded">
 				<div class="d-lg-flex border-bottom">
 					<div class="title w-lg-25">
 						<label for="frontsize">Frontpage Size</label>
 					</div>
-
 					<div class="body w-lg-100">
 						<p>Change how many posts appear on every page.</p>
 						<div class="input-group mb2">
@@ -28,17 +19,11 @@
 							{% endfor %}
 						</select>
 						</div>
-
 					</div>
-
 				</div>
 			</div>
-
-
 			<h2 class="h5" name="referral">Default Sorting and Time Filter</h2>
-
 			<div class="settings-section rounded">
-
 					<div class="d-lg-flex border-bottom">
 						<div class="title w-lg-25">
 							<label for="defaultsortingcomments">Default Sorting for Comments</label>
@@ -53,9 +38,7 @@
 								{% endfor %}
 							</select>
 							</div>
-
 						</div>
-
 					</div>
 
 					<div class="d-lg-flex border-bottom">
@@ -72,16 +55,12 @@
 								{% endfor %}
 							</select>
 							</div>
-
 						</div>
-
 				</div>
-
 					<div class="d-lg-flex border-bottom">
 						<div class="title w-lg-25">
 							<label for="defaulttime">Default Time Filter for Posts</label>
 						</div>
-
 						<div class="body w-lg-100">
 							<p>Change the default time filter for posts.</p>
 							<div class="input-group mb2">
@@ -91,96 +70,57 @@
 								{% endfor %}
 							</select>
 							</div>
-
 						</div>
-
 				</div>
-
 			</div>
-
 			<h2 class="h5">Tab Behaviour</h2>
-
 			<div class="settings-section rounded">
-
 				<div class="d-lg-flex border-bottom">
-
 					<div class="title w-lg-25">
 						<label for="newtab">Open Internal Links In New Tabs</label>
 					</div>
-
 					<div class="body w-lg-100">
-
 						<div class="custom-control custom-switch">
 							<input autocomplete="off" type="checkbox" class="custom-control-input" id="newtab" name="newtab"{% if v.newtab %} checked{% endif %} onchange="post_toast(this,'/settings/profile?newtab='+document.getElementById('newtab').checked);">
 							<label class="custom-control-label" for="newtab"></label>
 						</div>
-
 						<span class="text-small-extra text-muted">Enable if you would like to automatically open links to other pages in the site in new tabs.</span>
-
 					</div>
-
 				</div>
-
-
 				<div class="d-lg-flex border-bottom">
-
 					<div class="title w-lg-25">
 						<label for="newtabexternal">Open External Links In New Tabs</label>
 					</div>
-
 					<div class="body w-lg-100">
-
 						<div class="custom-control custom-switch">
 							<input autocomplete="off" type="checkbox" class="custom-control-input" id="newtabexternal" name="newtabexternal"{% if v.newtabexternal %} checked{% endif %} onchange="post_toast(this,'/settings/profile?newtabexternal='+document.getElementById('newtabexternal').checked);">
 							<label class="custom-control-label" for="newtabexternal"></label>
 						</div>
-
 						<span class="text-small-extra text-muted">Enable if you would like to automatically open links to other sites in new tabs.</span>
-
 					</div>
-
 				</div>
-
-
-
 			</div>
-
-
 			<h2 class="h5">Twitter Links</h2>
-
 			<div class="settings-section rounded">
-
 				<div class="d-lg-flex border-bottom">
-
 					<div class="title w-lg-25">
 						<label for="nitter">Use Nitter</label>
 					</div>
-
 					<div class="body w-lg-100">
-
 						<div class="custom-control custom-switch">
 							<input autocomplete="off" type="checkbox" class="custom-control-input" id="nitter" name="nitter"{% if v.nitter %} checked{% endif %} onchange="post_toast(this,'/settings/profile?nitter='+document.getElementById('nitter').checked);">
 							<label class="custom-control-label" for="nitter"></label>
 						</div>
-
 						<span class="text-small-extra text-muted">Enable if you would like to automatically convert twitter.com links to nitter.net links.</span>
-
 					</div>
-
 				</div>
-
 			</div>
-
-
 			<h2 class="h5">Reddit Links</h2>
-
 			<div class="settings-section rounded">
-
 				<div class="d-lg-flex border-bottom">
 					<div class="title w-lg-25">
 						<label for="reddit">Reddit Domain</label>
 					</div>
-
 					<div class="body w-lg-100">
 						<p>Change the domain you would like to view reddit posts in.</p>
 						<div class="input-group mb2">
@@ -190,79 +130,51 @@
 							{% endfor %}
 						</select>
 						</div>
-
 					</div>
-
 				</div>
-
 				<div class="d-lg-flex border-bottom">
-
 					<div class="title w-lg-25">
 						<label for="controversial">Sort by Controversial</label>
 					</div>
-
 					<div class="body w-lg-100">
-
 						<div class="custom-control custom-switch">
 							<input autocomplete="off" type="checkbox" class="custom-control-input" id="controversial" name="controversial"{% if v.controversial %} checked{% endif %} onchange="post_toast(this,'/settings/profile?controversial='+document.getElementById('controversial').checked);">
 							<label class="custom-control-label" for="controversial"></label>
 						</div>
-
 						<span class="text-small-extra text-muted">Enable if you would like to automatically sort reddit.com links by controversial.</span>
-
 					</div>
-
 				</div>
 			</div>
-
 			<h2 class="h5">Content Filters</h2>
-
 				<div class="settings-section rounded">
-
 					<div class="d-lg-flex border-bottom">
-
 						<div class="title w-lg-25">
 							<label for="over18">Disable +18 Warnings</label>
 						</div>
-
 						<div class="body w-lg-100">
-
 							<div class="custom-control custom-switch">
 								<input autocomplete="off" type="checkbox" class="custom-control-input" id="over18" name="over18"{% if v.over_18 %} checked{% endif %} onchange="post_toast(this,'/settings/profile?over18='+document.getElementById('over18').checked);">
 								<label class="custom-control-label" for="over18"></label>
 							</div>
-
 							<span class="text-small-extra text-muted">Enable if you would like to not get a warning before viewing +18 content.</span>
-
 						</div>
-
 					</div>
-
 					<div class="d-lg-flex border-bottom">
-
 						<div class="title w-lg-25">
 							<label for="hidevotedon">Hide Posts Voted On</label>
 						</div>
-
 						<div class="body w-lg-100">
-
 							<div class="custom-control custom-switch">
 								<input autocomplete="off" type="checkbox" class="custom-control-input" id="hidevotedon" name="hidevotedon"{% if v.hidevotedon %} checked{% endif %} onchange="post_toast(this,'/settings/profile?hidevotedon='+document.getElementById('hidevotedon').checked);">
 								<label class="custom-control-label" for="hidevotedon"></label>
 							</div>
-
 							<span class="text-small-extra text-muted">Enable if you would like to automatically hide posts you have voted on from your frontpage.</span>
-
 						</div>
-
 					</div>
-
 					<div class="d-lg-flex">
-
 						<div class="title w-lg-25">
 							<label for="filters-text">Custom Filters</label>
 						</div>
-
 						<div class="body w-lg-100">
 							<form id="custom-filter" action="/settings/filters" method="post">
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
@@ -277,23 +189,12 @@
 									<input autocomplete="off" class="btn btn-primary ml-auto" id="bioSave" type="submit" value="Save Changes">
 								</div>
 							</form>
-
-
 						</div>
-
 					</div>
-
-
 				</div>
-
 		</div>
-
 </div>
-
 </div>
-
 </div>
-
 </div>
-
 {% endblock %}

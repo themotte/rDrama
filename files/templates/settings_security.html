@@ -1,19 +1,10 @@
 {% extends "settings.html" %}
-
 {% block pagetitle %}Security Settings{% endblock %}
-
 {% block content %}
-
 <div class="row">
-
 <div class="col col-lg-8">
-
 	<div class="settings">
-
-
-
 		<h2 class="h5">Email</h2>
-
 		<p class="text-small text-muted">Change the email address used to sign in to your account.</p>
 		<div class="settings-section rounded">
 			<form	action="/settings/security" method="post">
@@ -51,212 +42,85 @@
 			</div>
 		</form>
 	</div>
-
-
-
 		<h2 class="h5">Password</h2>
-
 		<p class="text-small text-muted">Change your account password.</p>
-
 		<div class="settings-section rounded">
-
 			<form action="/settings/security" method="post">
-
 				<div class="body">
-
-
 					<div class="d-lg-flex">
-
 						<label for="old_password" class="mb-0 w-lg-25">Old Password</label>
-		
 						<input autocomplete="off" class="form-control mb-2 w-lg-100" id="old_password"
 						aria-describedby="old_password" type="password" name="old_password"
 						required>
-		
 					</div>
-		
 					<div class="d-lg-flex mt-5">
-
 						<label for="new_password" class="mb-0 w-lg-25">New Password</label>
-
-						<input autocomplete="off" class="form-control w-lg-100" id="new_password"
-						aria-describedby="new_password" type="password" name="new_password"
-						required>
-						<small id="passwordHelpChange"
-						class="form-text font-weight-bold text-muted d-none mt-1 w-lg-100">Minimum of 8
-						characters
-						required.</small>
-						<small id="passwordHelpChangeSuccess"
-						class="form-text font-weight-bold text-success d-none mt-1 w-lg-100">Your password
-						meets the
-						requirements.
-					</small>
-
+						<input autocomplete="off" class="form-control w-lg-100" id="new_password" aria-describedby="new_password" type="password" name="new_password" required>
+						<small id="passwordHelpChange" class="form-text font-weight-bold text-muted d-none mt-1 w-lg-100">Minimum of 8 characters required.</small>
+						<small id="passwordHelpChangeSuccess" class="form-text font-weight-bold text-success d-none mt-1 w-lg-100">Your password meets the requirements.</small>
 				</div>
-
 				<div class="d-lg-flex mt-4">
-
 					<label for="cnf_password" class="mb-0 w-lg-25">Confirm New Password</label>
-
-					<input autocomplete="off" class="form-control w-lg-100" id="cnf_password"
-					aria-describedby="cnf_password" type="password" name="cnf_password"
-					required>
-
-					<small id="passwordHelpCnf"
-					class="form-text font-weight-bold text-muted d-none mt-1 w-lg-100">Passwords do not
-					match.</small>
-					<small id="passwordHelpCnfSuccess"
-					class="form-text font-weight-bold text-success d-none mt-1 w-lg-100">Passwords match.
-				</small>
-
+					<input autocomplete="off" class="form-control w-lg-100" id="cnf_password" aria-describedby="cnf_password" type="password" name="cnf_password" required>
+					<small id="passwordHelpCnf" class="form-text font-weight-bold text-muted d-none mt-1 w-lg-100">Passwords do not match.</small>
+					<small id="passwordHelpCnfSuccess" class="form-text font-weight-bold text-success d-none mt-1 w-lg-100">Passwords match.</small>
 			</div>
-
 		</div>
-
 		<div class="footer">
-
 			<input type="hidden" name="formkey" value="{{v.formkey}}">
 			<input type="hidden" name="now" value="1563891643">
-
 			<div class="d-flex">
-
 				<input autocomplete="off" class="btn btn-primary ml-auto"
 				type="submit" value="Change Password">
-
 			</div>
-
 		</div>
-
 	</form>
-
 </div>
 
-
 <h2 class="h5">Two-Factor Authentication</h2>
-
 <p class="text-small text-muted">Change the two-factor settings for your account.</p>
-
 <div class="settings-section rounded">
-
 <div class="d-lg-flex">
-
 	<div class="title w-lg-25">
 		<label for="2faToggle">Use 2-step login</label>
 	</div>
-
 	<div class="body w-lg-100">
-
 		<div class="custom-control custom-switch">
-		<input autocomplete="off" type="checkbox" class="custom-control-input" id="2faToggle" name="2faToggle" {% if v.mfa_secret %}checked{% endif %}>
-		<label class="custom-control-label" for="2faToggle"></label>
+			<input autocomplete="off" type="checkbox" class="custom-control-input" id="2faToggle" name="2faToggle" {% if v.mfa_secret %}checked{% endif %}>
+			<label class="custom-control-label" for="2faToggle"></label>
 		</div>
-
 		<span class="text-small-extra text-muted">This requires entering a randomly-generated, 6-digit code and your password to login. See <a role="button">Google Authenticator</a> or <a role="button">Authy</a> for more details.</span>
-
 	</div>
-
 </div>
-
 </div>
 
 <h2 class="h5">Log Out Everywhere</h2>
-
 <p class="text-small text-muted">Log all other devices out of your {{SITE_TITLE}} account.</p>
-
 <div class="settings-section rounded">
-
-<form	action="/settings/log_out_all_others" method="post">
+<form action="/settings/log_out_all_others" method="post">
 <input type="hidden" name="formkey" value="{{v.formkey}}">
-
 <div class="body">
-
 	<div class="d-lg-flex">
-
 	<label for="forcelog-password" class="w-lg-25" id="email-password-label">Password</label>
-
 	<div class="w-lg-100">
-
 		<input autocomplete="off" type="password" class="form-control mb-2" id="forcelog-password" name="password" required>
-
 	</div>
-
 </div>
-
 <small id="emailpasswordRequired" class="form-text mt-1">This will also invalidate any existing recovery links associated with this account.</small>
-
 </div>
 
 <div class="footer">
-
 <div class="d-flex">
-
 	<input autocomplete="off" class="btn btn-primary ml-auto"
 	type="submit" value="Log out everywhere">
-
 </div>
-
 </div>
-
 </form>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccountModal" aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered" role="document">
-<div class="modal-content">
-<div class="modal-header">
-	<h5 class="modal-title">Delete your {{SITE_TITLE}} account</h5>
-	<button class="close" data-bs-dismiss="modal" aria-label="Close">
-		<span aria-hidden="true"><i class="far fa-times"></i></span>
-	</button>
-</div>
-<div class="" id="deleteFormContainer">
-	<form id="deleteAccountForm" method="post" action="/settings/delete_account">
-		<input type="hidden" name="formkey" value="{{v.formkey}}">
-		<div class="modal-body body">
-
-			<div class="d-lg-flex">
-
-				<label for="delete-password" class="w-lg-25" id="email-password-label">Password</label>
-
-				<div class="w-lg-100">
-
-						<input autocomplete="off" type="password" class="form-control mb-2" id="delete-password" name="password" required>
-
-				</div>
-
-			</div>
-
-			{% if v.mfa_secret %}
-			<div class="d-lg-flex mt-3">
-
-				<label for="delete-mfa" class="w-lg-25" id="email-password-label">Two-Factor Code</label>
-
-				<div class="w-lg-100">
-
-						<input autocomplete="off" type="text" class="form-control mb-2" id="delete-mfa" name="twofactor" required>
-
-				</div>
-
-			</div>
-			{% endif %}
-
-		</div>
-	</form>
 </div>
 </div>
-
+</div>
+</div>
+</div>
+</div>
 <script src="{{ 'js/settings_security.js' | asset }}"></script>
-
 {% endblock %}
