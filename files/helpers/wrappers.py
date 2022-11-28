@@ -40,7 +40,6 @@ def get_logged_in_user():
 						if json and type(json) is dict:
 							submitted_key = json.get('formkey')
 					if not v.validate_formkey(submitted_key):
-						session.pop("lo_user")
 						v = None
 			else:
 				session.pop("lo_user")
