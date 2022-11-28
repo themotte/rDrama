@@ -8,6 +8,7 @@ from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.const import *
 from files.helpers.assetcache import assetcache_path
+from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.mail import *
 from flask import *
 from files.__main__ import app, limiter, db_session
@@ -899,31 +900,8 @@ def u_username_comments(username, v=None):
 				(Comment.filter_state != 'filtered') & (Comment.filter_state != 'removed')
 				)
 
-	now = int(time.time())
-	if t == 'hour':
-		cutoff = now - 3600
-	elif t == 'day':
-		cutoff = now - 86400
-	elif t == 'week':
-		cutoff = now - 604800
-	elif t == 'month':
-		cutoff = now - 2592000
-	elif t == 'year':
-		cutoff = now - 31536000
-	else:
-		cutoff = 0
-	comments = comments.filter(Comment.created_utc >= cutoff)
-
-	if sort == "new":
-		comments = comments.order_by(Comment.created_utc.desc())
-	elif sort == "old":
-		comments = comments.order_by(Comment.created_utc)
-	elif sort == "controversial":
-		comments = comments.order_by((Comment.upvotes+1)/(Comment.downvotes+1) + (Comment.downvotes+1)/(Comment.upvotes+1), Comment.downvotes.desc())
-	elif sort == "top":
-		comments = comments.order_by(Comment.downvotes - Comment.upvotes)
-	elif sort == "bottom":
-		comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+	comments = apply_time_filter(comments, t, Comment)
+	comments = sort_objects(comments, sort, Comment)
 
 	comments = comments.offset(25 * (page - 1)).limit(26).all()
 	ids = [x.id for x in comments]

@@ -19,6 +19,7 @@ from .sub_block import *
 from files.__main__ import app, Base, cache
 from files.helpers.security import *
 from files.helpers.assetcache import assetcache_path
+from files.helpers.contentsorting import apply_time_filter, sort_objects
 import random
 from datetime import datetime
 from os import environ, remove, path
@@ -292,33 +293,8 @@ class User(Base):
 		if not (v and (v.admin_level > 1 or v.id == self.id)):
 			posts = posts.filter_by(deleted_utc=0, is_banned=False, private=False, ghost=False)
 
-		now = int(time.time())
-		if t == 'hour':
-			cutoff = now - 3600
-		elif t == 'day':
-			cutoff = now - 86400
-		elif t == 'week':
-			cutoff = now - 604800
-		elif t == 'month':
-			cutoff = now - 2592000
-		elif t == 'year':
-			cutoff = now - 31536000
-		else:
-			cutoff = 0
-		posts = posts.filter(Submission.created_utc >= cutoff)
-
-		if sort == "new":
-			posts = posts.order_by(Submission.created_utc.desc())
-		elif sort == "old":
-			posts = posts.order_by(Submission.created_utc)
-		elif sort == "controversial":
-			posts = posts.order_by((Submission.upvotes+1)/(Submission.downvotes+1) + (Submission.downvotes+1)/(Submission.upvotes+1), Submission.downvotes.desc())
-		elif sort == "top":
-			posts = posts.order_by(Submission.downvotes - Submission.upvotes)
-		elif sort == "bottom":
-			posts = posts.order_by(Submission.upvotes - Submission.downvotes)
-		elif sort == "comments":
-			posts = posts.order_by(Submission.comment_count.desc())
+		posts = apply_time_filter(posts, t, Submission)
+		posts = sort_objects(posts, sort, Submission)
 
 		posts = posts.offset(25 * (page - 1)).limit(26).all()
 

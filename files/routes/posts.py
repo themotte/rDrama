@@ -4,6 +4,7 @@ from files.helpers.wrappers import *
 from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.alerts import *
+from files.helpers.contentsorting import sort_objects
 from files.helpers.const import *
 from files.classes import *
 from flask import *
@@ -185,34 +186,13 @@ def post_id(pid, anything=None, v=None, sub=None):
 		pinned = [c[0] for c in comments.filter(Comment.is_pinned != None).all()]
 		
 		comments = comments.filter(Comment.level == 1, Comment.is_pinned == None)
-
-		if sort == "new":
-			comments = comments.order_by(Comment.created_utc.desc())
-		elif sort == "old":
-			comments = comments.order_by(Comment.created_utc)
-		elif sort == "controversial":
-			comments = comments.order_by((Comment.upvotes+1)/(Comment.downvotes+1) + (Comment.downvotes+1)/(Comment.upvotes+1), Comment.downvotes.desc())
-		elif sort == "top":
-			comments = comments.order_by(Comment.realupvotes.desc())
-		elif sort == "bottom":
-			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
-
+		comments = sort_objects(comments, sort, Comment)
 		comments = [c[0] for c in comments.all()]
 	else:
 		pinned = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.is_pinned != None).all()
 
 		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.level == 1, Comment.is_pinned == None)
-
-		if sort == "new":
-			comments = comments.order_by(Comment.created_utc.desc())
-		elif sort == "old":
-			comments = comments.order_by(Comment.created_utc)
-		elif sort == "controversial":
-			comments = comments.order_by((Comment.upvotes+1)/(Comment.downvotes+1) + (Comment.downvotes+1)/(Comment.upvotes+1), Comment.downvotes.desc())
-		elif sort == "top":
-			comments = comments.order_by(Comment.realupvotes.desc())
-		elif sort == "bottom":
-			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+		comments = sort_objects(comments, sort, Comment)
 
 		filter_clause = (Comment.filter_state != 'filtered') & (Comment.filter_state != 'removed')
 		comments = comments.filter(filter_clause)
@@ -325,15 +305,7 @@ def viewmore(v, pid, sort, offset):
 
 		if sort == "new":
 			comments = comments.filter(Comment.created_utc < newest.created_utc)
-			comments = comments.order_by(Comment.created_utc.desc())
-		elif sort == "old":
-			comments = comments.order_by(Comment.created_utc)
-		elif sort == "controversial":
-			comments = comments.order_by((Comment.upvotes+1)/(Comment.downvotes+1) + (Comment.downvotes+1)/(Comment.upvotes+1), Comment.downvotes.desc())
-		elif sort == "top":
-			comments = comments.order_by(Comment.realupvotes.desc())
-		elif sort == "bottom":
-			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+		comments = sort_objects(comments, sort, Comment)
 
 		comments = [c[0] for c in comments.all()]
 	else:
@@ -341,15 +313,7 @@ def viewmore(v, pid, sort, offset):
 
 		if sort == "new":
 			comments = comments.filter(Comment.created_utc < newest.created_utc)
-			comments = comments.order_by(Comment.created_utc.desc())
-		elif sort == "old":
-			comments = comments.order_by(Comment.created_utc)
-		elif sort == "controversial":
-			comments = comments.order_by((Comment.upvotes+1)/(Comment.downvotes+1) + (Comment.downvotes+1)/(Comment.upvotes+1), Comment.downvotes.desc())
-		elif sort == "top":
-			comments = comments.order_by(Comment.realupvotes.desc())
-		elif sort == "bottom":
-			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+		comments = sort_objects(comments, sort, Comment)
 
 		comments = comments.all()
 		comments = comments[offset:]

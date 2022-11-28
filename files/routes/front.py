@@ -2,6 +2,7 @@ from files.helpers.wrappers import *
 from files.helpers.get import *
 from files.__main__ import app, cache, limiter
 from files.classes.submission import Submission
+from files.helpers.contentsorting import apply_time_filter, sort_objects
 
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 
@@ -250,15 +251,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 	if lt: posts = posts.filter(Submission.created_utc < lt)
 
 	if not gt and not lt:
-		if t == 'all': cutoff = 0
-		else:
-			now = int(time.time())
-			if t == 'hour': cutoff = now - 3600
-			elif t == 'week': cutoff = now - 604800
-			elif t == 'month': cutoff = now - 2592000
-			elif t == 'year': cutoff = now - 31536000
-			else: cutoff = now - 86400
-			posts = posts.filter(Submission.created_utc >= cutoff)
+		posts = apply_time_filter(posts, t, Submission)
 
 	if (ccmode == "true"):
 		posts = posts.filter(Submission.club == True)
@@ -282,27 +275,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 	if not (v and v.shadowbanned):
 		posts = posts.join(User, User.id == Submission.author_id).filter(User.shadowbanned == None)
 
-	if sort == "hot":
-		ti = int(time.time()) + 3600
-		posts = posts.order_by(
-					-100000
-						* (Submission.realupvotes + 1 + Submission.comment_count / 10)
-						/ (func.power((ti - Submission.created_utc) / 1000, 1.23)),
-					Submission.created_utc.desc())
-	elif sort == "bump":
-		posts = posts.filter(Submission.comment_count > 1).order_by(Submission.bump_utc.desc(), Submission.created_utc.desc())
-	elif sort == "new":
-		posts = posts.order_by(Submission.created_utc.desc())
-	elif sort == "old":
-		posts = posts.order_by(Submission.created_utc)
-	elif sort == "controversial":
-		posts = posts.order_by((Submission.upvotes+1)/(Submission.downvotes+1) + (Submission.downvotes+1)/(Submission.upvotes+1), Submission.downvotes.desc(), Submission.created_utc.desc())
-	elif sort == "top":
-		posts = posts.order_by(Submission.downvotes - Submission.upvotes, Submission.created_utc.desc())
-	elif sort == "bottom":
-		posts = posts.order_by(Submission.upvotes - Submission.downvotes, Submission.created_utc.desc())
-	elif sort == "comments":
-		posts = posts.order_by(Submission.comment_count.desc(), Submission.created_utc.desc())
+	posts = sort_objects(posts, sort, Submission)
 
 	if v: size = v.frontsize or 0
 	else: size = 25
@@ -376,32 +349,8 @@ def changeloglist(v=None, sort="new", page=1, t="all", site=None):
 	posts = posts.filter(Submission.title.ilike('_changelog%'), Submission.author_id.in_(admins))
 
 	if t != 'all':
-		cutoff = 0
-		now = int(time.time())
-		if t == 'hour':
-			cutoff = now - 3600
-		elif t == 'day':
-			cutoff = now - 86400
-		elif t == 'week':
-			cutoff = now - 604800
-		elif t == 'month':
-			cutoff = now - 2592000
-		elif t == 'year':
-			cutoff = now - 31536000
-		posts = posts.filter(Submission.created_utc >= cutoff)
-
-	if sort == "new":
-		posts = posts.order_by(Submission.created_utc.desc())
-	elif sort == "old":
-		posts = posts.order_by(Submission.created_utc)
-	elif sort == "controversial":
-		posts = posts.order_by((Submission.upvotes+1)/(Submission.downvotes+1) + (Submission.downvotes+1)/(Submission.upvotes+1), Submission.downvotes.desc())
-	elif sort == "top":
-		posts = posts.order_by(Submission.downvotes - Submission.upvotes)
-	elif sort == "bottom":
-		posts = posts.order_by(Submission.upvotes - Submission.downvotes)
-	elif sort == "comments":
-		posts = posts.order_by(Submission.comment_count.desc())
+		posts = apply_time_filter(posts, t, Submission)
+	posts = sort_objects(posts, sort, Submission)
 
 	posts = posts.offset(25 * (page - 1)).limit(26).all()
 
@@ -477,31 +426,8 @@ def get_comments_idlist(page=1, v=None, sort="new", t="all", gt=0, lt=0):
 	if lt: comments = comments.filter(Comment.created_utc < lt)
 
 	if not gt and not lt:
-		now = int(time.time())
-		if t == 'hour':
-			cutoff = now - 3600
-		elif t == 'day':
-			cutoff = now - 86400
-		elif t == 'week':
-			cutoff = now - 604800
-		elif t == 'month':
-			cutoff = now - 2592000
-		elif t == 'year':
-			cutoff = now - 31536000
-		else:
-			cutoff = 0
-		comments = comments.filter(Comment.created_utc >= cutoff)
-
-	if sort == "new":
-		comments = comments.order_by(Comment.created_utc.desc())
-	elif sort == "old":
-		comments = comments.order_by(Comment.created_utc)
-	elif sort == "controversial":
-		comments = comments.order_by((Comment.upvotes+1)/(Comment.downvotes+1) + (Comment.downvotes+1)/(Comment.upvotes+1), Comment.downvotes.desc())
-	elif sort == "top":
-		comments = comments.order_by(Comment.downvotes - Comment.upvotes)
-	elif sort == "bottom":
-		comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+		comments = apply_time_filter(comments, t, Comment)
+	comments = sort_objects(comments, sort, Comment)
 
 	comments = comments.offset(25 * (page - 1)).limit(26).all()
 	return [x[0] for x in comments]
