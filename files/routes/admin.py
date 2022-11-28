@@ -351,7 +351,7 @@ def filtered_submissions(v):
 	next_exists = (len(post_ids) > 25)
 	posts = get_posts(post_ids[:25], v=v)
 
-	return render_template("admin/filtered_submissions.html", v=v, listing=posts, next_exists=next_exists, page=page, sort="new")
+	return render_template("admin/admin_submissions.html", v=v, listing=posts, next_exists=next_exists, page=page, sort="new", title="Filtered Posts")
 
 @app.get("/admin/filtered/comments")
 @limiter.exempt
@@ -371,7 +371,7 @@ def filtered_comments(v):
 	next_exists = (len(comment_ids) > 25)
 	comments = get_comments(comment_ids[:25], v=v)
 
-	return render_template("admin/filtered_comments.html", v=v, listing=comments, next_exists=next_exists, page=page, sort="new")
+	return render_template("admin/admin_comments.html", v=v, listing=comments, next_exists=next_exists, page=page, sort="new", title="Filtered Comments")
 
 @app.post("/admin/update_filter_status")
 @limiter.exempt

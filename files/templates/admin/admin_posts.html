@@ -10,14 +10,22 @@
 {% block pagetitle %}{{title or "Posts"}}{% endblock %}
 {% block content %}
 
+{% if 'removed' in request.path %}
+	{% set path_head = '/admin/removed'}
+{% elif 'reported' in request.path %}
+	{% set path_head = '/admin/reported'}
+{% elif 'filtered' in request.path %}
+	{% set path_head = '/admin/filtered'}
+{% endif %}
+
 <ul class="nav post-nav py-2">
 	<li class="nav-item">
-		<a class="nav-link {% if request.path=="/admin/removed/posts" %} active{% endif %}" href="/admin/removed/posts">
+		<a class="nav-link {% if request.path=="{{path_head}}/posts" %} active{% endif %}" href="{{path_head}}/posts">
 			<div>Posts</div>
 		</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link {% if request.path=="/admin/removed/comments" %} active{% endif %}" href="/admin/removed/comments">
+		<a class="nav-link {% if request.path=="{{path_head}}/comments" %} active{% endif %}" href="{{path_head}}/comments">
 			<div>Comments</div>
 		</a>
 	</li>
