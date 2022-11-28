@@ -1,0 +1,5 @@
+{%- macro plural(value, suffix='s') -%}
+	{%- if value != 1 -%}
+		{{suffix}}
+	{%- endif -%}
+{%- endmacro -%}
