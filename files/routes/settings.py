@@ -177,7 +177,7 @@ def settings_profile_post(v):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
 					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-					except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
+					except requests.Timeout: abort(500, "Video upload timed out, please try again!")
 					try: url = req['link']
 					except:
 						error = req['error']
@@ -240,7 +240,7 @@ def settings_profile_post(v):
 	if theme:
 		if theme in THEMES:
 			if theme == "transparent" and not v.background: 
-				return {"error": "You need to set a background to use the transparent theme!"}
+				abort(400, "You need to set a background to use the transparent theme!")
 			v.theme = theme
 			if theme == "win98": v.themecolor = "30409f"
 			updated = True

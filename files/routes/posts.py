@@ -4,6 +4,7 @@ from files.helpers.wrappers import *
 from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.alerts import *
+from files.helpers.discord import send_discord_message, send_cringetopia_message
 from files.helpers.const import *
 from files.classes import *
 from flask import *
@@ -105,6 +106,7 @@ def publish(pid, v):
 	cache.delete_memoized(User.userpagelisting)
 
 	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()):
+		send_discord_message(post.permalink)
 		cache.delete_memoized(changeloglist)
 
 	return redirect(post.permalink)
@@ -467,7 +469,7 @@ def edit_post(pid, v):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
 					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-					except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
+					except requests.Timeout: abort(500, "Video upload timed out, please try again!")
 					try: url = req['link']
 					except:
 						error = req['error']
@@ -711,7 +713,7 @@ def api_is_repost():
 def submit_post(v, sub=None):
 
 	def error(error):
-		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, error)
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, error)
 	
 		SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
 		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body), 400
@@ -1005,6 +1007,7 @@ def submit_post(v, sub=None):
 	cache.delete_memoized(User.userpagelisting)
 
 	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()) and not post.private:
+		send_discord_message(post.permalink)
 		cache.delete_memoized(changeloglist)
 
 	if request.headers.get("Authorization"): return post.json
@@ -1125,35 +1128,39 @@ def unsave_post(pid, v):
 @app.post("/pin/<post_id>")
 @auth_required
 def api_pin_post(post_id, v):
+	post = get_post(post_id)
+	if v.id != post.author_id: abort(403, "Only the post author's can do that!")
+	post.is_pinned = not post.is_pinned
+	g.db.add(post)
 
-	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
-	if post:
-		if v.id != post.author_id: return {"error": "Only the post author's can do that!"}
-		post.is_pinned = not post.is_pinned
-		g.db.add(post)
+	cache.delete_memoized(User.userpagelisting)
 
-		cache.delete_memoized(User.userpagelisting)
-
-		g.db.commit()
-		if post.is_pinned: return {"message": "Post pinned!"}
-		else: return {"message": "Post unpinned!"}
-	return {"error": "Post not found!"}
-
+	g.db.commit()
+	if post.is_pinned: return {"message": "Post pinned!"}
+	else: return {"message": "Post unpinned!"}
 
 @app.get("/submit/title")
 @limiter.limit("6/minute")
 @auth_required
 def get_post_title(v):
-
 	url = request.values.get("url")
-	if not url: abort(400)
+	if not url or '\\' in url: abort(400)
+	url = url.strip()
+	if not url.startswith('http'): abort(400)
+
+	checking_url = url.lower().split('?')[0].split('%3F')[0]
+	if any((checking_url.endswith(f'.{x}') for x in NO_TITLE_EXTENSIONS)):
+		abort(400)
 
 	try: x = requests.get(url, headers=titleheaders, timeout=5, proxies=proxies)
 	except: abort(400)
+		
+	content_type = x.headers.get("Content-Type")
+	if not content_type or "text/html" not in content_type: abort(400)
 
-	soup = BeautifulSoup(x.content, 'lxml')
+	match = html_title_regex.search(x.text)
+	if match and match.lastindex >= 1:
+		title = html.unescape(match.group(1))
+	else: abort(400)
 
-	title = soup.find('title')
-	if not title: abort(400)
-
-	return {"url": url, "title": title.string}
+	return {"url": url, "title": title}

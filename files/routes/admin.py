@@ -279,7 +279,8 @@ def club_allow(v, username):
 
 	if not u: abort(404)
 
-	if u.admin_level >= v.admin_level: return {"error": "noob"}
+	if u.admin_level >= v.admin_level: 
+		abort(403, "Can't target users with admin level higher than you")
 
 	u.club_allowed = True
 	g.db.add(u)
@@ -307,7 +308,8 @@ def club_ban(v, username):
 
 	if not u: abort(404)
 
-	if u.admin_level >= v.admin_level: return {"error": "noob"}
+	if u.admin_level >= v.admin_level:
+		abort(403, "Can't target users with admin level higher than you")
 
 	u.club_allowed = False
 
@@ -555,7 +557,7 @@ def purge_cache(v):
 	g.db.add(ma)
 
 	if response == "<Response [200]>": return {"message": "Cache purged!"}
-	return {"error": "Failed to purge cache."}
+	abort(500, "Failed to purge cache.")
 
 
 @app.post("/admin/under_attack")
@@ -574,7 +576,7 @@ def under_attack(v):
 
 		response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data='{"value":"medium"}', timeout=5))
 		if response == "<Response [200]>": return {"message": "Under attack mode disabled!"}
-		return {"error": "Failed to disable under attack mode."}
+		abort(500, "Failed to disable under attack mode.")
 	else:
 		ma = ModAction(
 			kind="enable_under_attack",
@@ -585,7 +587,7 @@ def under_attack(v):
 
 		response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data='{"value":"under_attack"}', timeout=5))
 		if response == "<Response [200]>": return {"message": "Under attack mode enabled!"}
-		return {"error": "Failed to enable under attack mode."}
+		abort(500, "Failed to enable under attack mode.")
 
 @app.get("/admin/badge_grant")
 @limiter.exempt

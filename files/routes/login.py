@@ -254,7 +254,6 @@ def sign_up_post(v):
 	username = username.strip()
 
 	def signup_error(error):
-
 		args = {"error": error}
 		if request.values.get("referred_by"):
 			user = g.db.query(User).filter_by(id=request.values.get("referred_by")).one_or_none()

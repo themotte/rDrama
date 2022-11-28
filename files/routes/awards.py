@@ -372,7 +372,7 @@ def admin_userawards_post(v):
 	for key, value in notify_awards.items():
 		note += f"{value} {AWARDS[key]['title']}, "
 
-	if len(note) > 256: return {"error": "You're giving too many awards at the same time!"}
+	if len(note) > 256: abort(400, "You're giving too many awards at the same time!")
 	
 	ma=ModAction(
 		kind="grant_awards",

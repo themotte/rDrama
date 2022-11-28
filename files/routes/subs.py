@@ -74,12 +74,6 @@ def unexile(v, sub, uid):
 	if request.headers.get("Authorization") or request.headers.get("xhr"): return {"message": "User unexiled successfully!"}
 	return redirect(f'/h/{sub}/exilees')
 
-
-
-
-
-
-
 @app.post("/h/<sub>/block")
 @auth_required
 def block_sub(v, sub):
@@ -87,7 +81,7 @@ def block_sub(v, sub):
 	if not sub: abort(404)
 	sub = sub.name
 
-	if v.mods(sub): return {"error": "You can't block subs you mod!"}
+	if v.mods(sub): abort(409, "You can't block subs you mod!")
 
 	existing = g.db.query(SubBlock).filter_by(user_id=v.id, sub=sub).one_or_none()
 

@@ -180,7 +180,7 @@ def api_comment(v):
 				file.save(oldname)
 				image = process_image(oldname)
 				if image == "":
-					return {"error":"Image upload failed"}
+					abort(500, "Image upload failed")
 
 				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
 					body += f"\n\n![]({image})"
@@ -190,7 +190,7 @@ def api_comment(v):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
 					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-					except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
+					except requests.Timeout: abort(500, "Video upload timed out, please try again!")
 					try: url = req['link']
 					except:
 						error = req['error']
@@ -421,7 +421,7 @@ def edit_comment(cid, v):
 					file.save("video.mp4")
 					with open("video.mp4", 'rb') as f:
 						try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-						except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
+						except requests.Timeout: abort(500, "Video upload timed out, please try again!")
 						try: url = req['link']
 						except:
 							error = req['error']
@@ -526,7 +526,7 @@ def unpin_comment(cid, v):
 		if v.id != comment.post.author_id: abort(403)
 
 		if not comment.is_pinned.endswith(" (OP)"): 
-			return {"error": "You can only unpin comments you have pinned!"}
+			abort(403, "You can only unpin comments you have pinned!")
 
 		comment.is_pinned = None
 		g.db.add(comment)

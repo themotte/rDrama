@@ -537,8 +537,8 @@ def reportbugs(v):
 @auth_required
 def message2(v, username):
 	if v.is_suspended_permanently:
-		return {"error": "You have been permabanned and cannot send messages; " + \
-			"contact modmail if you think this decision was incorrect."}, 403
+		abort(403, "You have been permabanned and cannot send messages; " + \
+			"contact modmail if you think this decision was incorrect.")
 
 	user = get_user(username, v=v)
 	if hasattr(user, 'is_blocking') and user.is_blocking: abort(403, "You're blocking this user.")
@@ -548,7 +548,7 @@ def message2(v, username):
 
 	message = request.values.get("message", "").strip()[:10000].strip()
 
-	if not message: return {"error": "Message is empty!"}
+	if not message: abort(400, "Message is empty!")
 
 	body_html = sanitize(message)
 
@@ -595,7 +595,7 @@ def messagereply(v):
 
 	message = request.values.get("body", "").strip()[:10000].strip()
 
-	if not message and not request.files.get("file"): return {"error": "Message is empty!"}
+	if not message and not request.files.get("file"): abort(400, "Message is empty!")
 
 	id = int(request.values.get("parent_id"))
 	parent = get_comment(id, v=v)
@@ -617,7 +617,7 @@ def messagereply(v):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
 				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-				except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
+				except requests.Timeout: abort(500, "Video upload timed out, please try again!")
 				try: url = req['link']
 				except:
 					error = req['error']
@@ -781,7 +781,7 @@ def u_username(username, v=None):
 		return redirect(SITE_FULL + request.full_path.replace(username, u.username)[:-1])
 
 	if u.reserved:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"That username is reserved for: {u.reserved}"}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"That username is reserved for: {u.reserved}")
 		return render_template("userpage_reserved.html", u=u, v=v)
 
 	if v and v.id != u.id and (u.patron or u.admin_level > 1):
@@ -795,17 +795,17 @@ def u_username(username, v=None):
 
 		
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2)):
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, "That userpage is private")
 		return render_template("userpage_private.html", u=u, v=v)
 
 	
 	if v and hasattr(u, 'is_blocking') and u.is_blocking:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"You are blocking @{u.username}."}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"You are blocking @{u.username}.")
 		return render_template("userpage_blocking.html", u=u, v=v)
 
 
 	if v and v.admin_level < 2 and hasattr(u, 'is_blocked') and u.is_blocked:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "This person is blocking you."}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, "This person is blocking you.")
 		return render_template("userpage_blocked.html", u=u, v=v)
 
 
@@ -866,22 +866,22 @@ def u_username_comments(username, v=None):
 	u = user
 
 	if u.reserved:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"That username is reserved for: {u.reserved}"}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"That username is reserved for: {u.reserved}")
 		return render_template("userpage_reserved.html",
 												u=u,
 												v=v)
 
 
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2)):
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, "That userpage is private")
 		return render_template("userpage_private.html", u=u, v=v)
 
 	if v and hasattr(u, 'is_blocking') and u.is_blocking:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"You are blocking @{u.username}."}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"You are blocking @{u.username}.")
 		return render_template("userpage_blocking.html", u=u, v=v)
 
 	if v and v.admin_level < 2 and hasattr(u, 'is_blocked') and u.is_blocked:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "This person is blocking you."}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, "This person is blocking you.")
 		return render_template("userpage_blocked.html", u=u, v=v)
 
 
