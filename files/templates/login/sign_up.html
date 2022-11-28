@@ -1,14 +1,29 @@
-{%- extends 'authforms.html' -%}
+{%- extends 'login/authforms.html' -%}
+{% block pagetitle -%}
+{{ref_user.username + " invites you to " + SITE_NAME if ref_user else "Sign Up"}}
+{%- endblock %}
+{% block pagetype %}login{% endblock %}
+
+{% block template_config %}
+	{% set root_scope.js = true %}
+	{% set root_scope.include_user_css = false %}
+	{% set root_scope.include_seo = false %}
+{% endblock %}
+
+{% set login_namespace = namespace() %}
+{% if ref_user %}
+	{% set login_namespace.authtitle = '@' + ref_user.username + ' has invited you!' %}
+	{% set login_namespace.authtext = 'Looks like someone wants you to join ' + SITE_NAME + '.' %}
+{% elif not site_settings['login_required'] %}
+	{% set login_namespace.authtitle = "Create your account." %}
+	{% set login_namespace.authtext = "No email address required." %}
+{% endif %}
+
+{% block authtitle %}{{login_namespace.authtitle}}{% endblock %}
+{% block authtext %}{{login_namespace.authtext}}{% endblock %}
+
 {% block content %}
 <div id="register-form" class="">
-	{% if ref_user %}
-	<h1 class="h2">@{{ref_user.username}} has invited you!</h1>
-	<p class="text-muted mb-md-2">Looks like someone wants you to join {{SITE_TITLE}}.</p>
-	{% else %}
-	<h1 class="h2">Create your account.</h1>
-	<p class="text-muted mb-md-2">No email address required.</p>
-	{% endif %}
-
 	<form action="/signup" method="post" class="mt-md-3" id="signup">
 		{% if error %}<span class="text-danger">{{error}}</span><br>{% endif %}
 
