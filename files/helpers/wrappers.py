@@ -23,27 +23,21 @@ def get_logged_in_user():
 			v.client = client
 	else:
 		lo_user = session.get("lo_user")
-		print(f"value of lo user: {lo_user}")
 		if lo_user:
 			id = int(lo_user)
 			v = g.db.query(User).get(id)
 			print(v)
 			if v:
 				nonce = session.get("login_nonce", 0)
-				print(f"nonce: required {v.login_nonce} vs actual {nonce}")
-				print(f"id: required {v.id} vs actual {id}")
 				if nonce < v.login_nonce or v.id != id: abort(401)
 
 				if request.method != "GET":
-					print("needs formkey")
 					submitted_key = request.values.get("formkey")
 					if not submitted_key and request.is_json:
 						json = request.get_json(silent=True)
 						if json and type(json) is dict:
 							submitted_key = json.get('formkey')
-					print(f"formkey?: {submitted_key or '-no key-'}")
 					if not submitted_key: abort(401)
-					print(f"is formkey valid {v.validate_formkey(submitted_key)}")
 					if not v.validate_formkey(submitted_key): abort(401)
 
 				v.client = None
