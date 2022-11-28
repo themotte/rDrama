@@ -216,7 +216,7 @@ def api_comment(v):
 	if existing:
 		return {"error": f"You already made that comment: /comment/{existing.id}"}, 409
 
-	replying_to_blocked = parent.author.any_block_exists(v) and v.admin_level < 2
+	replying_to_blocked = parent.author.is_blocking(v) and v.admin_level < 2
 
 	is_bot = bool(request.headers.get("Authorization"))
 
@@ -305,7 +305,7 @@ def api_comment(v):
 	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True, parent_level=level), "message": message}
 
 
-def comment_on_publish(comment:Comment, replying_to_blocked:bool):
+def comment_on_publish(comment:Comment):
 	"""
 	Run when comment becomes visible: immediately for non-filtered comments,
 	or on approval for previously filtered comments.
@@ -313,10 +313,11 @@ def comment_on_publish(comment:Comment, replying_to_blocked:bool):
 	reflect the comments users will actually see.
 	"""
 	# TODO: Get this out of the routes and into a model eventually...
+	author = comment.author
 
 	# Shadowbanned users are invisible. This may lead to inconsistencies if
 	# a user comments while shadowed and is later unshadowed. (TODO?)
-	if comment.author.shadowbanned:
+	if author.shadowbanned:
 		return
 
 	# Comment instances used for purposes other than actual comments (notifs,
@@ -334,7 +335,7 @@ def comment_on_publish(comment:Comment, replying_to_blocked:bool):
 	to_notify.update([x[0] for x in post_subscribers])
 
 	parent = comment.parent
-	if not replying_to_blocked and parent and parent.author_id != comment.author_id:
+	if parent and parent.author_id != comment.author_id and not parent.author.is_blocking(author):
 		to_notify.add(parent.author_id)
 
 	for uid in to_notify:
