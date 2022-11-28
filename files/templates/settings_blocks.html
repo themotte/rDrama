@@ -1,15 +1,10 @@
 {% extends "settings.html" %}
-
 {% block pagetitle %}Block Settings - {{SITE_TITLE}}{% endblock %}
-
 {% block content %}
 
 <script src="{{ 'js/settings_blocks.js' | asset }}"></script>
-
 <div class="row">
-
 	<div class="col">
-
 		{% if error %}
 		<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
 			<i class="fas fa-exclamation-circle my-auto"></i>
@@ -21,28 +16,19 @@
 			</button>
 		</div>
 		{% endif %}
-
 	</div>
-
 </div>
-
-
 <div class="row">
-
 	<div class="col">
-
 		<div class="d-md-flex justify-content-between mb-3">
-
 			<div>
 				<h2 class="h5">Users you block</h2>
-				<p class="text-small text-muted mb-md-0">You have blocked the following users. They cannot reply to your content or notify you with a username mention.</p>
+				<p class="text-small text-muted mb-md-0">You have blocked the following users. They cannot notify you with a username mention.</p>
 			</div>
 			<div class="mt-auto">
 				<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#blockmodal">Block user</button>
 			</div>
 		</div>
-
-
 
 	{% if v.blocking.first() %}
 	<div class="card mb-5">
@@ -61,9 +47,7 @@
 						<a href="{{block.target.permalink}}">
 							<img loading="lazy" src="{{block.target.profile_url}}" class="pp20 align-top mr-2">@{{block.target.username}}</a>
 					</td>
-
 					<td>{{block.created_date}}</td>
-
 						<td>
 							<div class="dropdown float-right dropdown-actions">
 								<a role="button" id="dropdownMoreLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="line-height: 0;">
@@ -87,9 +71,7 @@
 			<p class="font-weight-bold text-gray-500 mb-0">No blocked users</p>
 		</div>
 		{% endif %}
-
 	</div>
-
 </div>
 
 <div class="modal fade" id="blockmodal" tabindex="-1" role="dialog" aria-labelledby="blockmodal" aria-hidden="true">
@@ -120,5 +102,4 @@
 		<i class="fas fa-exclamation-circle text-danger mr-2"></i><span id="toast-error-message">Error. Please try again.</span>
 	</div>
 </div>
-
 {% endblock %}
