@@ -253,7 +253,7 @@ utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
 
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 
-proxies = {"http":"http://127.0.0.1:18080","https":"http://127.0.0.1:18080"}
+proxies = {}
 
 approved_embed_hosts = [
 	'rdrama.net',
