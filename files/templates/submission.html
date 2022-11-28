@@ -591,11 +591,11 @@
 </div>
 
 {% if v and v.id==p.author_id %}
-	{% include "delete_post_modal.html" %}
+	{% include "modals/delete_post_modal.html" %}
 {% endif %}
 
 {% if v %}
-	{% include "report_post_modal.html" %}
+	{% include "modals/report_post_modal.html" %}
 {% endif %}
 
 {% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
