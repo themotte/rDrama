@@ -1142,7 +1142,6 @@ def api_pin_post(post_id, v):
 		else: return {"message": "Post unpinned!"}
 	return {"error": "Post not found!"}
 
-
 @app.get("/submit/title")
 @limiter.limit("6/minute")
 @auth_required
@@ -1153,7 +1152,7 @@ def get_post_title(v):
 	if not url.startswith('http'): abort(400)
 
 	checking_url = url.lower().split('?')[0].split('%3F')[0]
-	if any((checking_url.endswith(f'.{x}') for x in extensions)):
+	if any((checking_url.endswith(f'.{x}') for x in NO_TITLE_EXTENSIONS)):
 		abort(400)
 
 	try: x = requests.get(url, headers=titleheaders, timeout=5, proxies=proxies)

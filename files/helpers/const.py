@@ -41,6 +41,12 @@ COLORS = {'ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000
 
 LOGGEDIN_ACTIVE_TIME = 15 * 60
 
+IMAGE_FORMATS = ['png','gif','jpg','jpeg','webp']
+VIDEO_FORMATS = ['mp4','webm','mov','avi','mkv','flv','m4v','3gp']
+AUDIO_FORMATS = ['mp3','wav','ogg','aac','m4a','flac']
+NO_TITLE_EXTENSIONS = IMAGE_FORMATS + VIDEO_FORMATS + AUDIO_FORMATS
+
+
 AWARDS = {
 	"lootbox": {
 		"kind": "lootbox",
