@@ -105,6 +105,7 @@
 
 	<button class="btn btn-primary mt-3" onclick="post_toast(this,'/admin/purge_cache');">PURGE CDN CACHE</button>
 	<button class="btn btn-primary mt-3" onclick="post_toast(this,'/admin/dump_cache');">DUMP INTERNAL CACHE</button>
+{% endif %}
 {% if g.debug %}
 <section id="admin-section-debug" class="admin-section">
 	<h4>Debug Options</h4>
@@ -118,7 +119,4 @@
 	</div>
 	{% endif %}
 </section>
-{% endblock %}
-{% endif %}
-
 {% endblock %}
