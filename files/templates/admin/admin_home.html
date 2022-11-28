@@ -107,14 +107,15 @@
 	<button class="btn btn-primary mt-3" onclick="post_toast(this,'/admin/dump_cache');">DUMP INTERNAL CACHE</button>
 {% endif %}
 {% if g.debug %}
-<section id="admin-section-debug" class="admin-section">
+<section id="admin-section-debug" class="admin-section mt-3">
 	<h4>Debug Options</h4>
 	{% if v.admin_level >= PERMS["DEBUG_LOGIN_TO_OTHERS"] %}
-	<div class="login-to-others">
+	<div class="login-to-others mt-3">
+		<h5>Login to another's account</h5>
 		<form action="/dev/sessions/" method="post">
 			<label for="username">Username</label>
 			<input name="username" required>
-			<button type="submit">Login</button>
+			<button type="submit" class="btn btn-primary">Login</button>
 		</form>
 	</div>
 	{% endif %}
