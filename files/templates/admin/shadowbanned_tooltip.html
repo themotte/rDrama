@@ -1,0 +1,1 @@
+{% if v and v.admin_level >= 2 and user.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title='Shadowbanned by @{{user.shadowbanned}}{% if user.ban_reason %} for "{{user.ban_reason}}"{% endif %}'></i>{% endif %}

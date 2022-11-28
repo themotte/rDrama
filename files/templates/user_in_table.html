@@ -1,0 +1,9 @@
+{%- include 'admin/shadowbanned_tooltip.html' -%}
+{% if user and (not user.shadowbanned or v.can_see_shadowbanned) %}
+<a data-sort-key="{{user.username.lower()}}" style="color:#{{user.name_color}};font-weight:bold" href="/@{{user.username}}">
+	<div class="profile-pic-20-wrapper mb-2">
+		<img loading="lazy" src="{{user.profile_url}}" class="pp20">
+	</div>
+	<span {% if user.patron %}class="patron" style="background-color:#{{user.name_color}}"{% endif %}>{{user.user_name}}</span>
+</a>
+{% endif %}

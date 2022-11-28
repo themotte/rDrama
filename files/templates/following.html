@@ -21,7 +21,7 @@
 {% for user in users %}
 	<tr>
 		<td>{{loop.index}}</td>
-		<td><a style="color:#{{user.namecolor}}" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
+		<td>{%- include "user_in_table.html" -%}</td>
 		{% if v.id == u.id %}
 		<td><div class="btn btn-danger" onclick="removeFollowing(event, '{{user.username}}')">Unfollow</div></td>
 		{% endif %}

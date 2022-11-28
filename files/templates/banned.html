@@ -13,7 +13,7 @@
 {% for user in users %}
 	<tr>
 		<td>{{loop.index}}</td>
-		<td><a style="color:#{{user.namecolor}}" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
+		<td>{%- include "user_in_table.html" -%}</td>
 		<td>{% if user.ban_reason %}{{user.ban_reason}}{% endif %}</td>
 		<td href="/@{{user.banned_by.username}}"><img loading="lazy" src="{{user.banned_by.profile_url}}" class="pp20"><span {% if user.banned_by.patron %}class="patron" style="background-color:#{{user.banned_by.namecolor}}"{% endif %}>{{user.banned_by.username}}</span></a></td>
 	</tr>

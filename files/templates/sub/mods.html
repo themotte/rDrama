@@ -18,7 +18,7 @@
 {% for user, mod in users %}
 	<tr>
 		<td>{{loop.index}}</td>
-		<td><a style="color:#{{user.namecolor}}" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
+		<td>{%- include "user_in_table.html" -%}</td>
 		<td>{{mod.created_datetime}}</td>
 		<td>
 			{% if v.id == user.id or v.mod_date(sub.name) and v.mod_date(sub.name) < mod.created_utc %}
