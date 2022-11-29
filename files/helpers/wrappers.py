@@ -26,7 +26,6 @@ def get_logged_in_user():
 		if lo_user:
 			id = int(lo_user)
 			v = g.db.query(User).get(id)
-			print(v)
 			if v:
 				nonce = session.get("login_nonce", 0)
 				if nonce < v.login_nonce or v.id != id: abort(401)
