@@ -1131,16 +1131,19 @@ def api_pin_post(post_id, v):
 @limiter.limit("6/minute")
 @auth_required
 def get_post_title(v):
+	POST_TITLE_TIMEOUT = 5
 	url = request.values.get("url")
 	if not url or '\\' in url: abort(400)
 	url = url.strip()
 	if not url.startswith('http'): abort(400)
-
-	checking_url = url.lower().split('?')[0].split('%3F')[0]
+  checking_url = url.lower().split('?')[0].split('%3F')[0]
 	if any((checking_url.endswith(f'.{x}') for x in NO_TITLE_EXTENSIONS)):
 		abort(400)
 
-	try: x = requests.get(url, headers=titleheaders, timeout=5, proxies=proxies)
+	try:
+		x = gevent.with_timeout(POST_TITLE_TIMEOUT, requests.get, 
+			                    url, headers=titleheaders, timeout=POST_TITLE_TIMEOUT, 
+							    proxies=proxies)
 	except: abort(400)
 		
 	content_type = x.headers.get("Content-Type")
