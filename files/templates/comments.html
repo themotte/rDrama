@@ -774,9 +774,9 @@
 
 {% if not ajax %}
 	{% if v %}
-		{% include "modals/gif_modal.html" %}
+		{% include "modals/gif.html" %}
 		{% if v.admin_level > 1 %}
-			{% include "modals/ban_modal.html" %}
+			{% include "modals/ban.html" %}
 		{% endif %}
 
 <div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalTitle" aria-hidden="true">
@@ -856,7 +856,7 @@
 		{% endif %}
 	{% endif %}
 
-	{% include "modals/expanded_image_modal.html" %}
+	{% include "modals/expanded_image.html" %}
 
 	<script src="{{ 'js/comments+submission_listing.js' | asset }}"></script>
 	<script src="{{ 'js/comments.js' | asset }}"></script>

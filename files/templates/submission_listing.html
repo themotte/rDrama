@@ -411,13 +411,13 @@
 {% endfor %}
 
 {% if v %}
-	{% include "modals/delete_post_modal.html" %}
-	{% include "modals/report_post_modal.html" %}
+	{% include "modals/delete_post.html" %}
+	{% include "modals/report_post.html" %}
 	{% if v.admin_level > 1 %}
-		{% include "modals/ban_modal.html" %}
+		{% include "modals/ban.html" %}
 	{% endif %}
 {% endif %}
-{% include "modals/expanded_image_modal.html" %}
+{% include "modals/expanded_image.html" %}
 
 <script src="{{ 'js/clipboard.js' | asset }}"></script>
 <script src="{{ 'js/comments+submission_listing.js' | asset }}"></script>
