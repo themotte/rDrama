@@ -28,7 +28,7 @@ app.jinja_env.cache = {}
 app.jinja_env.auto_reload = True
 faulthandler.enable()
 
-if bool_from_string(environ.get("ENFORCE_PRODUCTION", True)) and app.config["DEBUG"]:
+if bool_from_string(environ.get("ENFORCE_PRODUCTION", True)) and app.debug:
 	raise ValueError("Debug mode is not allowed! If this is a dev environment, please set ENFORCE_PRODUCTION to false")
 
 if environ.get("SITE_ID") is None:
@@ -170,7 +170,7 @@ def before_request():
 		return 'Please use a "User-Agent" header!', 403
 
 	ua = g.agent.lower()
-	g.debug = bool_from_string(app.config["DEBUG"])
+	g.debug = app.debug
 	g.webview = ('; wv) ' in ua)
 	g.inferior_browser = (
 		'iphone' in ua or
