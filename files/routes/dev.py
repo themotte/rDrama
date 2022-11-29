@@ -1,5 +1,5 @@
 from secrets import token_hex
-from flask import abort, g, session, redirect, request
+from flask import session, redirect, request
 
 from files.helpers.const import PERMS
 from files.helpers.get import get_user
