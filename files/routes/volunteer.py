@@ -23,8 +23,8 @@ def volunteer_get_duty(u: Optional[User]) -> Optional[VolunteerDuty]:
     if u is None:
         return None
     
-    # check to make sure it's at least 20h since the last volunteer
     if not app.config['DBG_VOLUNTEER_PERMISSIVE']:
+        # check to make sure it's at least 20h since the last volunteer
         if (u.volunteer_last_started_utc is not None) and (datetime.now() - u.volunteer_last_started_utc) < timedelta(hours = 20):
             return None
     
@@ -50,7 +50,7 @@ def volunteer(v: User):
 
     return render_template("volunteer.html", v=v, duty=duty)
 
-@app.post("/volunteer_submit")
+@app.post("/volunteer/submit")
 @auth_required
 def volunteer_submit(v: User):
     for k in request.values:
@@ -61,6 +61,6 @@ def volunteer_submit(v: User):
         if k_processed.startswith("janitor-"):
             files.routes.volunteer_janitor.submitted(v, k_processed.removeprefix("janitor-"), request.values[k])
         else:
-            raise ValueError("bad key, let's generate an error")
+            abort(400)
 
     return render_template("volunteer_submit.html", v=v)
