@@ -42,6 +42,7 @@ def get_duty(u: User) -> VolunteerDutyJanitor:
     # find reported comments not made by the current user
     reported_comments = g.db.query(Comment) \
         .where(Comment.filter_state == 'reported') \
+        .where(Comment.is_approved == None) \
         .where(Comment.author_id != u.id) \
         .with_entities(Comment.id)
 
@@ -49,6 +50,7 @@ def get_duty(u: User) -> VolunteerDutyJanitor:
     
     if not app.config['DBG_VOLUNTEER_PERMISSIVE']:
         # find distinguished children of those reported comments
+        # this is a ghastly query and should be fixed when we're doing some kind of cleanup and mod-action formalization
         distinguished_children = g.db.query(Comment) \
             .where(Comment.parent_comment_id.in_(reported_ids)) \
             .where(Comment.distinguish_level > 0) \
