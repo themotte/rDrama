@@ -108,6 +108,7 @@ function post_toast(t, url, reload, data) {
 		} else {
 			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			if (data && data["details"]) document.getElementById('toast-post-error-text').innerText = data["details"];
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
 		setTimeout(() => {

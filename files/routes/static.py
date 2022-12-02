@@ -310,15 +310,15 @@ def submit_contact(v):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
 				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-				except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
+				except requests.Timeout: abort(500, "Video upload timed out, please try again!")
 				try: url = req['link']
 				except:
 					error = req['error']
 					if error == 'File exceeds max duration': error += ' (60 seconds)'
-					return {"error": error}, 400
+					abort(400, error)
 			if url.endswith('.'): url += 'mp4'
 			html += f"<p>{url}</p>"
-		else: return {"error": "Image/Video files only"}, 400
+		else: abort(400, "Image/Video files only")
 
 	new_comment = Comment(author_id=v.id if v else NOTIFICATIONS_ID,
 						  parent_submission=None,
