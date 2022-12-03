@@ -94,7 +94,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get("DATABASE_URL", "postgresql://postgres@localhost:5432")
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
 app.config["SERVER_NAME"] = environ.get("DOMAIN").strip()
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 3153600
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 if app.debug else 3153600
 app.config["SESSION_COOKIE_NAME"] = "session_" + environ.get("SITE_ID").strip().lower()
 app.config["VERSION"] = "1.0.0"
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -128,6 +128,9 @@ app.config['RESULTS_PER_PAGE_COMMENTS'] = int(environ.get('RESULTS_PER_PAGE_COMM
 app.config['SCORE_HIDING_TIME_HOURS'] = int(environ.get('SCORE_HIDING_TIME_HOURS'))
 app.config['ENABLE_SERVICES'] = bool_from_string(environ.get('ENABLE_SERVICES', False))
 
+app.config['DBG_VOLUNTEER_PERMISSIVE'] = bool(environ.get('DBG_VOLUNTEER_PERMISSIVE', False))
+app.config['VOLUNTEER_JANITOR_ENABLE'] = bool(environ.get('VOLUNTEER_JANITOR_ENABLE', False))
+
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_responses=True, ssl_cert_reqs=None)
 
 def get_remote_addr():
@@ -158,10 +161,10 @@ def before_request():
 		app.config['SETTINGS'] = json.load(f)
 
 	if request.host != app.config["SERVER_NAME"]:
-		return {"error": "Unauthorized host provided."}, 401
+		return {"error": "Unauthorized host provided."}, 403
 
 	if not app.config['SETTINGS']['Bots'] and request.headers.get("Authorization"):
-		abort(503)
+		abort(403, "Bots are currently not allowed")
 
 	g.db = db_session()
 

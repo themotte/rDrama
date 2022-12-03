@@ -4458,7 +4458,7 @@ div.deleted.banned {
 	background-color: var(--background) !important;
 }
 .btn {
-	background-color: var(--background) !important;
+	background-color: var(--background);
 }
 .nobackground {
 	background: None !important;
@@ -5166,4 +5166,153 @@ th, td {
 div[id^="form-preview-"] li > p:first-child,
 div[id^="reply-edit-"] li > p:first-child {
 	display: inline;
+}
+
+
+/***********************
+  Volunteer Teaser 
+************************/
+
+.volunteer_teaser {
+	width: 100%;
+	border: 0.3rem solid var(--primary);
+	border-radius: 1rem;
+	padding: 1rem;
+	background-color: var(--primary-background, white);
+
+	display: grid;
+	grid-template-columns: 10rem auto;
+	grid-template-rows: auto;
+	grid-template-areas:
+		"volunteer_teaser_img volunteer_text"
+}
+
+.volunteer_teaser_img {
+	grid-area: volunteer_teaser_img;
+	object-fit: contain;
+}
+
+.volunteer_teaser_img img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+.volunteer_teaser_wrapper:hover {
+	text-decoration: none;
+}
+
+
+@media (max-width: 768px) {
+	.volunteer_teaser {
+		grid-template-columns: 7rem auto;
+	}
+}
+
+
+/***********************
+  Volunteer Unavailable
+************************/
+
+.volunteer_unavailable {
+	padding: 4rem;
+}
+
+.volunteer_unavailable_wrapper:hover {
+	text-decoration: none;
+}
+
+
+/***********************
+  Volunteer Work
+************************/
+
+.volunteer .submit {
+	width: 100%;
+	margin: 2rem auto 0rem auto;
+	text-align: center;
+}
+
+.volunteer .submit input {
+	font-size: 2rem;
+	background: var(--primary-background, white);
+}
+
+
+/***********************
+  Volunteer Submit 
+************************/
+
+.volunteer_submit {
+	margin: 1.5rem;
+}
+
+.volunteer_submit_img {
+	width: 24rem;
+	height: 24rem;
+	margin: auto;
+	padding: 2rem;
+}
+
+.volunteer_submit_img img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+
+	border: 1px solid black;
+}
+
+.volunteer_submit_wrapper:hover {
+	text-decoration: none;
+}
+
+
+/***********************
+  Volunteer General
+************************/
+
+
+.volunteer_text {
+	grid-area: volunteer_text;
+	text-align: center;
+	margin: auto;
+	font-size: 1.5rem;
+
+	color: var(--black);
+}
+
+.volunteer_text .header {
+	font-size: 2.5rem;
+	font-weight: 600;
+}
+
+.volunteer_text .text {
+	font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+	.volunteer_text .header {
+		font-size: 2rem;
+	}
+	
+	.volunteer_text .text {
+		font-size: 1rem;
+	}
+}
+
+
+/***********************
+  Volunteer Janitor
+************************/
+
+.volunteer_janitor > div {
+	margin: 2rem 1rem;
+}
+
+.volunteer_janitor .volunteer_text .text {
+	text-align: left;
+}
+
+.volunteer_janitor .choices {
+	margin-top: 1rem;
 }

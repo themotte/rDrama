@@ -118,7 +118,7 @@ def is_not_permabanned(f):
 		check_ban_evade(v)
 
 		if v.is_suspended_permanently:
-			return {"error": "Forbidden: you are permabanned."}, 403
+			abort(403, "You are permanently banned")
 
 		return make_response(f(*args, v=v, **kwargs))
 

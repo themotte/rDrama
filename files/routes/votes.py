@@ -60,7 +60,7 @@ def api_vote_post(post_id, new, v):
 	if request.headers.get("Authorization"): abort(403)
 
 	# make sure new is valid
-	if new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': return {"error": "forbidden."}, 403
+	if new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': abort(403, "forbidden.")
 	if new not in ["-1", "0", "1"]: abort(400)
 	new = int(new)
 
@@ -128,7 +128,7 @@ def api_vote_comment(comment_id, new, v):
 	if request.headers.get("Authorization"): abort(403)
 
 	# make sure new is valid
-	if new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': return {"error": "forbidden."}, 403
+	if new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': abort(403, "forbidden.")
 	if new not in ["-1", "0", "1"]: abort(400)
 	new = int(new)
 
