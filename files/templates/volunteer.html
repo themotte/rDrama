@@ -1,0 +1,29 @@
+{% extends "default.html" %}
+
+{% block pagetitle %}Volunteer{% endblock %}
+
+{% block content %}
+<script src="{{ 'js/volunteer.js' | asset }}"></script>
+
+{% if duty == None %}
+<a href="/" class="volunteer_unavailable_wrapper">
+    <div class="volunteer_unavailable">
+        <div class="volunteer_text">
+            <p class="header">There's nothing to do right now!</p>
+            <p class="text">Thanks for trying, though - if you clicked the banner, we probably ran out of things to do just as you clicked it. Head back to the main site!</p>
+        </div>
+    </div>
+</a>
+{% else %}
+<form id="volunteer_submit" action="/volunteer/submit" method="post" enctype="multipart/form-data" onsubmit="onFormSubmit()"></form>
+<input form="volunteer_submit" type="hidden" name="formkey" value="{{v.formkey}}">
+<div class="volunteer">
+    {% from duty.embed_template() import display with context %}
+    {{ display(duty) }}
+    <div class="submit">
+        <input form="volunteer_submit" autocomplete="off" class="btn btn-primary ml-auto" type="submit" value="Submit">
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

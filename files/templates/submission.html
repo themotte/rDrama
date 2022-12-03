@@ -520,6 +520,8 @@
 		</div>
 	{% endif %}
 
+	{% include "volunteer_teaser.html" %}
+
 	{% if p.replies %}
 	<div class="comment-section" id="replies-of-{{p.id}}">
 	{% with comments=p.replies %}

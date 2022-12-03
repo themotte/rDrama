@@ -67,3 +67,7 @@ def inject_constants():
 		"THEMES":THEMES,
 		"PERMS":PERMS,
 	}
+
+def template_function(func):
+	assert(func.__name__ not in app.jinja_env.globals)
+	app.jinja_env.globals[func.__name__] = func

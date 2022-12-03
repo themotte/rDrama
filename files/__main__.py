@@ -128,6 +128,9 @@ app.config['RESULTS_PER_PAGE_COMMENTS'] = int(environ.get('RESULTS_PER_PAGE_COMM
 app.config['SCORE_HIDING_TIME_HOURS'] = int(environ.get('SCORE_HIDING_TIME_HOURS'))
 app.config['ENABLE_SERVICES'] = bool_from_string(environ.get('ENABLE_SERVICES', False))
 
+app.config['DBG_VOLUNTEER_PERMISSIVE'] = bool(environ.get('DBG_VOLUNTEER_PERMISSIVE', False))
+app.config['VOLUNTEER_JANITOR_ENABLE'] = bool(environ.get('VOLUNTEER_JANITOR_ENABLE', False))
+
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_responses=True, ssl_cert_reqs=None)
 
 def get_remote_addr():
@@ -158,10 +161,10 @@ def before_request():
 		app.config['SETTINGS'] = json.load(f)
 
 	if request.host != app.config["SERVER_NAME"]:
-		return {"error": "Unauthorized host provided."}, 401
+		return {"error": "Unauthorized host provided."}, 403
 
 	if not app.config['SETTINGS']['Bots'] and request.headers.get("Authorization"):
-		abort(503)
+		abort(403, "Bots are currently not allowed")
 
 	g.db = db_session()
 
