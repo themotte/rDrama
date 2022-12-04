@@ -5,7 +5,6 @@ import time
 from files.__main__ import app
 from http.client import responses
 
-
 @app.errorhandler(400)
 @app.errorhandler(401)
 @app.errorhandler(403)
@@ -34,7 +33,10 @@ def error_401(e):
 
 @app.errorhandler(500)
 def error_500(e):
-	g.db.rollback()
+	if getattr(g, 'db', None):
+		g.db.rollback()
+	else:
+		app.logger.warning("Exception happened with no db initialized (perhaps early in request cycle?)")
 	return error(e)
 
 @app.post("/allow_nsfw")

@@ -142,7 +142,8 @@ limiter = Limiter(
 	key_func=get_remote_addr,
 	default_limits=["3/second;30/minute;200/hour;1000/day"],
 	application_limits=["10/second;200/minute;5000/hour;10000/day"],
-	storage_uri=environ.get("REDIS_URL", "redis://localhost")
+	storage_uri=environ.get("REDIS_URL", "redis://localhost"),
+	auto_check=False,
 )
 
 Base = declarative_base()
@@ -166,8 +167,6 @@ def before_request():
 	if not app.config['SETTINGS']['Bots'] and request.headers.get("Authorization"):
 		abort(403, "Bots are currently not allowed")
 
-	g.db = db_session()
-
 	g.agent = request.headers.get("User-Agent")
 	if not g.agent:
 		return 'Please use a "User-Agent" header!', 403
@@ -181,6 +180,10 @@ def before_request():
 		'mac os' in ua or
 		' firefox/' in ua)
 	g.timestamp = int(time.time())
+
+	limiter.check()
+
+	g.db = db_session()
 
 
 @app.teardown_appcontext
