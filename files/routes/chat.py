@@ -22,7 +22,7 @@ total = cache.get(f'{SITE}_total') or 0
 
 @app.get("/chat")
 @auth_required
-def chat( v):
+def chat(v):
 	return render_template("chat.html", v=v, messages=messages)
 
 
@@ -37,6 +37,7 @@ def chatjs():
 @limiter.limit("3/second;10/minute")
 @auth_required
 def speak(data, v):
+	limiter.check()
 	if v.is_banned: return '', 403
 
 	vname = v.username.lower()
