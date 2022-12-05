@@ -137,12 +137,16 @@ def get_remote_addr():
 	with app.app_context():
 		return request.headers.get('X-Real-IP', default='127.0.0.1')
 
+rate_limiter_enabled = not bool_from_string(environ.get('DBG_LIMITER_DISABLED', False))
+if not rate_limiter_enabled:
+	print("Rate limiter disabled in debug mode!")
 limiter = Limiter(
 	app,
 	key_func=get_remote_addr,
 	default_limits=["3/second;30/minute;200/hour;1000/day"],
 	application_limits=["10/second;200/minute;5000/hour;10000/day"],
-	storage_uri=environ.get("REDIS_URL", "redis://localhost")
+	storage_uri=environ.get("REDIS_URL", "redis://localhost"),
+	enabled=rate_limiter_enabled,
 )
 
 Base = declarative_base()

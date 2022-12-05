@@ -46,3 +46,6 @@ FROM release AS operation
 
 # don't run the server itself, just start up the environment and assume we'll exec things from the outside
 CMD sleep infinity
+
+# Turn off the rate limiter
+ENV DBG_LIMITER_DISABLED=true
