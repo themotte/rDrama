@@ -1,6 +1,6 @@
 ###################################################################
 # Base container
-FROM python:3.11 AS base
+FROM python:3.10 AS base
 
 ARG DEBIAN_FRONTEND=noninteractive
 
