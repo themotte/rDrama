@@ -1,5 +1,5 @@
 
-[![Build status](https://img.shields.io/github/workflow/status/TheMotte/rDrama/E2ETests/frost)](https://github.com/TheMotte/rDrama/actions?query=workflow%3AE2ETests+branch%3Afrost)
+[![Build status](https://img.shields.io/github/actions/workflow/status/TheMotte/rDrama/test.yml?branch=frost)](https://github.com/TheMotte/rDrama/actions?query=workflow%3AE2ETests+branch%3Afrost)
 
 This code runs https://www.themotte.org .
 
