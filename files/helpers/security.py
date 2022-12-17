@@ -13,7 +13,7 @@ def generate_hash(string):
 
 
 def validate_hash(string, hashstr):
-
+	if not string or not hashstr: return False
 	return hmac.compare_digest(hashstr, generate_hash(string))
 
 

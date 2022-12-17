@@ -128,8 +128,8 @@ app.config['RESULTS_PER_PAGE_COMMENTS'] = int(environ.get('RESULTS_PER_PAGE_COMM
 app.config['SCORE_HIDING_TIME_HOURS'] = int(environ.get('SCORE_HIDING_TIME_HOURS'))
 app.config['ENABLE_SERVICES'] = bool_from_string(environ.get('ENABLE_SERVICES', False))
 
-app.config['DBG_VOLUNTEER_PERMISSIVE'] = bool(environ.get('DBG_VOLUNTEER_PERMISSIVE', False))
-app.config['VOLUNTEER_JANITOR_ENABLE'] = bool(environ.get('VOLUNTEER_JANITOR_ENABLE', False))
+app.config['DBG_VOLUNTEER_PERMISSIVE'] = bool_from_string(environ.get('DBG_VOLUNTEER_PERMISSIVE', False))
+app.config['VOLUNTEER_JANITOR_ENABLE'] = bool_from_string(environ.get('VOLUNTEER_JANITOR_ENABLE', False))
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_responses=True, ssl_cert_reqs=None)
 
@@ -146,6 +146,7 @@ limiter = Limiter(
 	default_limits=["3/second;30/minute;200/hour;1000/day"],
 	application_limits=["10/second;200/minute;5000/hour;10000/day"],
 	storage_uri=environ.get("REDIS_URL", "redis://localhost"),
+	auto_check=False,
 	enabled=app.config['RATE_LIMITER_ENABLED'],
 )
 
@@ -170,8 +171,6 @@ def before_request():
 	if not app.config['SETTINGS']['Bots'] and request.headers.get("Authorization"):
 		abort(403, "Bots are currently not allowed")
 
-	g.db = db_session()
-
 	g.agent = request.headers.get("User-Agent")
 	if not g.agent:
 		return 'Please use a "User-Agent" header!', 403
@@ -185,6 +184,10 @@ def before_request():
 		'mac os' in ua or
 		' firefox/' in ua)
 	g.timestamp = int(time.time())
+
+	limiter.check()
+
+	g.db = db_session()
 
 
 @app.teardown_appcontext
