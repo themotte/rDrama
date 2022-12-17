@@ -144,7 +144,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 @limiter.limit("1/second;20/minute;200/hour;1000/day")
 @auth_required
 def api_comment(v):
-	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
+	if v.is_suspended: abort(403, "You can't perform this action while banned.")
 
 	parent_fullname = request.values.get("parent_fullname").strip()
 
@@ -166,11 +166,11 @@ def api_comment(v):
 	if not parent_post: abort(404) # don't allow sending comments to the ether
 	level = 1 if isinstance(parent, Submission) else parent.level + 1
 	sub = parent_post.sub
-	if sub and v.exiled_from(sub): return {"error": f"You're exiled from /h/{sub}"}, 403
+	if sub and v.exiled_from(sub): abort(403, f"You're exiled from /h/{sub}")
 
 	body = request.values.get("body", "").strip()[:10000]
 
-	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
+	if not body and not request.files.get('file'): abort(400, "You need to actually write something!")
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		files = request.files.getlist('file')[:4]
@@ -180,7 +180,7 @@ def api_comment(v):
 				file.save(oldname)
 				image = process_image(oldname)
 				if image == "":
-					return {"error":"Image upload failed"}
+					abort(500, "Image upload failed")
 
 				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
 					body += f"\n\n![]({image})"
@@ -190,18 +190,18 @@ def api_comment(v):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
 					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-					except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
+					except requests.Timeout: abort(500, "Video upload timed out, please try again!")
 					try: url = req['link']
 					except:
 						error = req['error']
 						if error == 'File exceeds max duration': error += ' (60 seconds)'
-						return {"error": error}, 400
+						abort(400, error)
 				if url.endswith('.'): url += 'mp4'
 				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
 					body += f"\n\n{url}"
 				else:
 					body += f'\n\n<a href="{url}">{url}</a>'
-			else: return {"error": "Image/Video files only"}, 400
+			else: abort(400, "Image/Video files only")
 
 	body_html = sanitize(body, comment=True)
 
@@ -214,10 +214,9 @@ def api_comment(v):
 	).one_or_none()
 
 	if existing:
-		return {"error": f"You already made that comment: /comment/{existing.id}"}, 409
+		abort(409, f"You already made that comment: /comment/{existing.id}")
 
-	if parent.author.any_block_exists(v) and v.admin_level < 2:
-		return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
+	replying_to_blocked = parent.author.is_blocking(v) and v.admin_level < 2
 
 	is_bot = bool(request.headers.get("Authorization"))
 
@@ -257,7 +256,7 @@ def api_comment(v):
 					)
 				g.db.add(ma)
 
-			return {"error": "Too much spam!"}, 403
+			abort(403, "Too much spam!")
 
 	if len(body_html) > 20000: abort(400)
 
@@ -297,10 +296,16 @@ def api_comment(v):
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
-	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True, parent_level=level)}
+	
+	if replying_to_blocked:
+		message = "This user has blocked you. You are still welcome to reply " \
+				  "but you will be held to a higher standard of civility than you would be otherwise"
+	else:
+		message = None
+	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True, parent_level=level), "message": message}
 
 
-def comment_on_publish(comment):
+def comment_on_publish(comment:Comment):
 	"""
 	Run when comment becomes visible: immediately for non-filtered comments,
 	or on approval for previously filtered comments.
@@ -308,10 +313,11 @@ def comment_on_publish(comment):
 	reflect the comments users will actually see.
 	"""
 	# TODO: Get this out of the routes and into a model eventually...
+	author = comment.author
 
 	# Shadowbanned users are invisible. This may lead to inconsistencies if
 	# a user comments while shadowed and is later unshadowed. (TODO?)
-	if comment.author.shadowbanned:
+	if author.shadowbanned:
 		return
 
 	# Comment instances used for purposes other than actual comments (notifs,
@@ -329,7 +335,7 @@ def comment_on_publish(comment):
 	to_notify.update([x[0] for x in post_subscribers])
 
 	parent = comment.parent
-	if parent and parent.author_id != comment.author_id:
+	if parent and parent.author_id != comment.author_id and not parent.author.is_blocking(author):
 		to_notify.add(parent.author_id)
 
 	for uid in to_notify:
@@ -369,7 +375,7 @@ def edit_comment(cid, v):
 	body = request.values.get("body", "").strip()[:10000]
 
 	if len(body) < 1 and not (request.files.get("file") and request.headers.get("cf-ipcountry") != "T1"):
-		return {"error":"You have to actually type something!"}, 400
+		abort(400, "You have to actually type something!")
 
 	if body != c.body or request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		body_html = sanitize(body, edit=True)
@@ -406,7 +412,7 @@ def edit_comment(cid, v):
 				comment.ban_reason = "AutoJanny"
 				g.db.add(comment)
 
-			return {"error": "Too much spam!"}, 403
+			abort(403, "Too much spam!")
 		# End Spam Checking
 
 		if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
@@ -421,15 +427,15 @@ def edit_comment(cid, v):
 					file.save("video.mp4")
 					with open("video.mp4", 'rb') as f:
 						try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-						except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
+						except requests.Timeout: abort(500, "Video upload timed out, please try again!")
 						try: url = req['link']
 						except:
 							error = req['error']
 							if error == 'File exceeds max duration': error += ' (60 seconds)'
-							return {"error": error}, 400
+							abort(400, error)
 					if url.endswith('.'): url += 'mp4'
 					body += f"\n\n{url}"
-				else: return {"error": "Image/Video files only"}, 400
+				else: abort(400, "Image/Video files only")
 
 			body_html = sanitize(body, edit=True)
 
@@ -526,7 +532,7 @@ def unpin_comment(cid, v):
 		if v.id != comment.post.author_id: abort(403)
 
 		if not comment.is_pinned.endswith(" (OP)"): 
-			return {"error": "You can only unpin comments you have pinned!"}
+			abort(403, "You can only unpin comments you have pinned!")
 
 		comment.is_pinned = None
 		g.db.add(comment)

@@ -36,10 +36,10 @@ def buy(v, award):
 	abort(404) # disable entirely pending possible future use of coins
 
 	if award == 'benefactor' and not request.values.get("mb"):
-		return {"error": "You can only buy the Benefactor award with marseybux."}, 403
+		abort(403, "You can only buy the Benefactor award with marseybux.")
 
 	if award == 'ghost' and v.admin_level < 2:
-		return {"error": "Only admins can buy that award."}, 403
+		abort(403, "Only admins can buy that award.")
 
 	AWARDS = deepcopy(AWARDS2)
 
@@ -49,11 +49,11 @@ def buy(v, award):
 	price = int(og_price * v.discount)
 
 	if request.values.get("mb"):
-		if v.procoins < price: return {"error": "Not enough marseybux."}, 400
-		if award == "grass": return {"error": "You can't buy the grass award with marseybux."}, 403
+		if v.procoins < price: abort(400, "Not enough marseybux.")
+		if award == "grass": abort(403, "You can't buy the grass award with marseybux.")
 		v.procoins -= price
 	else:
-		if v.coins < price: return {"error": "Not enough coins."}, 400
+		if v.coins < price: abort(400, "Not enough coins.")
 		v.coins -= price
 		v.coins_spent += price
 		if v.coins_spent >= 1000000 and not v.has_badge(73):
@@ -129,7 +129,7 @@ def award_post(pid, v):
 	kind = request.values.get("kind", "").strip()
 	
 	if kind not in AWARDS:
-		return {"error": "That award doesn't exist."}, 404
+		abort(404, "That award doesn't exist.")
 
 	post_award = g.db.query(AwardRelationship).filter(
 		AwardRelationship.kind == kind,
@@ -139,12 +139,12 @@ def award_post(pid, v):
 	).first()
 
 	if not post_award:
-		return {"error": "You don't have that award."}, 404
+		abort(404, "You don't have that award.")
 
 	post = g.db.query(Submission).filter_by(id=pid).one_or_none()
 
 	if not post:
-		return {"error": "That post doesn't exist."}, 404
+		abort(404, "That post doesn't exist.")
 
 	post_award.submission_id = post.id
 	g.db.add(post_award)
@@ -154,7 +154,7 @@ def award_post(pid, v):
 	author = post.author
 
 	if kind == "benefactor" and author.id == v.id:
-		return {"error": "You can't use this award on yourself."}, 400
+		abort(400, "You can't use this award on yourself.")
 
 	if v.id != author.id:
 		msg = f"@{v.username} has given your [post]({post.shortlink}) the {AWARDS[kind]['title']} Award!"
@@ -231,7 +231,7 @@ def award_comment(cid, v):
 	kind = request.values.get("kind", "").strip()
 
 	if kind not in AWARDS:
-		return {"error": "That award doesn't exist."}, 404
+		abort(404, "That award doesn't exist.")
 
 	comment_award = g.db.query(AwardRelationship).filter(
 		AwardRelationship.kind == kind,
@@ -241,12 +241,12 @@ def award_comment(cid, v):
 	).first()
 
 	if not comment_award:
-		return {"error": "You don't have that award."}, 404
+		abort(404, "You don't have that award.")
 
 	c = g.db.query(Comment).filter_by(id=cid).one_or_none()
 
 	if not c:
-		return {"error": "That comment doesn't exist."}, 404
+		abort(404, "That comment doesn't exist.")
 
 	comment_award.comment_id = c.id
 	g.db.add(comment_award)
@@ -261,7 +261,7 @@ def award_comment(cid, v):
 		send_repeatable_notification(author.id, msg)
 
 	if kind == "benefactor" and author.id == v.id:
-		return {"error": "You can't use this award on yourself."}, 400
+		abort(400, "You can't use this award on yourself.")
 
 	if kind == "ban":
 		link = f"[this comment]({c.shortlink})"
@@ -372,7 +372,7 @@ def admin_userawards_post(v):
 	for key, value in notify_awards.items():
 		note += f"{value} {AWARDS[key]['title']}, "
 
-	if len(note) > 256: return {"error": "You're giving too many awards at the same time!"}
+	if len(note) > 256: abort(400, "You're giving too many awards at the same time!")
 	
 	ma=ModAction(
 		kind="grant_awards",

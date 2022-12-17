@@ -82,6 +82,7 @@ from .userblock import UserBlock
 from .usernotes import UserTag, UserNote
 from .views import ViewerRelationship
 from .votes import Vote, CommentVote
+from .volunteer_janitor import VolunteerJanitorRecord
 
 # Then the import * from files.*
 from files.helpers.const import *

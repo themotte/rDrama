@@ -14,6 +14,7 @@
 	--primary-light2: #2F9CD7;
 
 	--primary-muted: #95a9b4;
+	--primary-background: hsl(200, 100%, 98%);
 
 	--dark: #686868;
 	--secondary: #c7c7c7;
@@ -107,7 +108,6 @@ a  { color: var(--primary); }
 
 .btn {
 	background: transparent;
-	border-color: var(--primary) !important;
 }
 
 .form-control:disabled, .form-control[readonly] {

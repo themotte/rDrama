@@ -27,19 +27,22 @@ def get_logged_in_user():
 			id = int(lo_user)
 			v = g.db.query(User).get(id)
 			if v:
+				v.client = None
 				nonce = session.get("login_nonce", 0)
-				if nonce < v.login_nonce or v.id != id: abort(401)
+				if nonce < v.login_nonce or v.id != id:
+					session.pop("lo_user")
+					v = None
 
-				if request.method != "GET":
+				if v and request.method != "GET":
 					submitted_key = request.values.get("formkey")
 					if not submitted_key and request.is_json:
 						json = request.get_json(silent=True)
 						if json and type(json) is dict:
 							submitted_key = json.get('formkey')
-					if not submitted_key: abort(401)
-					if not v.validate_formkey(submitted_key): abort(401)
-
-				v.client = None
+					if not v.validate_formkey(submitted_key):
+						v = None
+			else:
+				session.pop("lo_user")
 
 	if request.method.lower() != "get" \
 			and app.config['SETTINGS']['Read-only mode'] \
@@ -118,7 +121,7 @@ def is_not_permabanned(f):
 		check_ban_evade(v)
 
 		if v.is_suspended_permanently:
-			return {"error": "Forbidden: you are permabanned."}, 403
+			abort(403, "You are permanently banned")
 
 		return make_response(f(*args, v=v, **kwargs))
 

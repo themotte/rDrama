@@ -348,15 +348,15 @@ def transfer_coins(v, username):
 
 	receiver = g.db.query(User).filter_by(username=username).one_or_none()
 
-	if receiver is None: return {"error": "That user doesn't exist."}, 404
+	if receiver is None: abort(404, "That user doesn't exist.")
 
 	if receiver.id != v.id:
 		amount = request.values.get("amount", "").strip()
 		amount = int(amount) if amount.isdigit() else None
 
-		if amount is None or amount <= 0: return {"error": "Invalid amount of coins."}, 400
-		if v.coins < amount: return {"error": "You don't have enough coins."}, 400
-		if amount < 100: return {"error": "You have to gift at least 100 coins."}, 400
+		if amount is None or amount <= 0: abort(400, "Invalid amount of coins.")
+		if v.coins < amount: abort(400, "You don't have enough coins.")
+		if amount < 100: abort(400, "You have to gift at least 100 coins.")
 
 		if not v.patron and not receiver.patron and not v.alts_patron and not receiver.alts_patron: tax = math.ceil(amount*0.03)
 		else: tax = 0
@@ -384,15 +384,15 @@ def transfer_bux(v, username):
 
 	receiver = g.db.query(User).filter_by(username=username).one_or_none()
 
-	if not receiver: return {"error": "That user doesn't exist."}, 404
+	if not receiver: abort(404, "That user doesn't exist.")
 
 	if receiver.id != v.id:
 		amount = request.values.get("amount", "").strip()
 		amount = int(amount) if amount.isdigit() else None
 
-		if not amount or amount < 0: return {"error": "Invalid amount of marseybux."}, 400
-		if v.procoins < amount: return {"error": "You don't have enough marseybux"}, 400
-		if amount < 100: return {"error": "You have to gift at least 100 marseybux."}, 400
+		if not amount or amount < 0: abort(400, "Invalid amount of marseybux.")
+		if v.procoins < amount: abort(400, "You don't have enough marseybux")
+		if amount < 100: abort(400, "You have to gift at least 100 marseybux.")
 
 		log_message = f"@{v.username} has transferred {amount} Marseybux to @{receiver.username}"
 		send_repeatable_notification(GIFT_NOTIF_ID, log_message)
@@ -538,18 +538,18 @@ def reportbugs(v):
 @auth_required
 def message2(v, username):
 	if v.is_suspended_permanently:
-		return {"error": "You have been permabanned and cannot send messages; " + \
-			"contact modmail if you think this decision was incorrect."}, 403
+		abort(403, "You have been permabanned and cannot send messages; " + \
+			"contact modmail if you think this decision was incorrect.")
 
 	user = get_user(username, v=v, include_blocks=True)
-	if hasattr(user, 'is_blocking') and user.is_blocking: return {"error": "You're blocking this user."}, 403
+	if hasattr(user, 'is_blocking') and user.is_blocking: abort(403, "You're blocking this user.")
 
 	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked:
-		return {"error": "This user is blocking you."}, 403
+		abort(403, "This user is blocking you.")
 
 	message = request.values.get("message", "").strip()[:10000].strip()
 
-	if not message: return {"error": "Message is empty!"}
+	if not message: abort(400, "Message is empty!")
 
 	body_html = sanitize(message)
 
@@ -558,7 +558,7 @@ def message2(v, username):
 															Comment.body_html == body_html,
 															).one_or_none()
 
-	if existing: return {"error": "Message already exists."}, 403
+	if existing: abort(403, "Message already exists.")
 
 	c = Comment(author_id=v.id,
 						  parent_submission=None,
@@ -596,7 +596,7 @@ def messagereply(v):
 
 	message = request.values.get("body", "").strip()[:10000].strip()
 
-	if not message and not request.files.get("file"): return {"error": "Message is empty!"}
+	if not message and not request.files.get("file"): abort(400, "Message is empty!")
 
 	id = int(request.values.get("parent_id"))
 	parent = get_comment(id, v=v)
@@ -618,15 +618,15 @@ def messagereply(v):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
 				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-				except requests.Timeout: return {"error": "Video upload timed out, please try again!"}
+				except requests.Timeout: abort(500, "Video upload timed out, please try again!")
 				try: url = req['link']
 				except:
 					error = req['error']
 					if error == 'File exceeds max duration': error += ' (60 seconds)'
-					return {"error": error}, 400
+					abort(400, error)
 			if url.endswith('.'): url += 'mp4'
 			body_html += f"<p>{url}</p>"
-		else: return {"error": "Image/Video files only"}, 400
+		else: abort(400, "Image/Video files only")
 
 
 	c = Comment(author_id=v.id,
@@ -775,12 +775,11 @@ def visitors(v):
 def u_username(username, v=None):
 	u = get_user(username, v=v, include_blocks=True)
 
-
 	if username != u.username:
 		return redirect(SITE_FULL + request.full_path.replace(username, u.username)[:-1])
 
 	if u.reserved:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"That username is reserved for: {u.reserved}"}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"That username is reserved for: {u.reserved}")
 		return render_template("userpage_reserved.html", u=u, v=v)
 
 	if v and v.id != u.id and (u.patron or u.admin_level > 1):
@@ -794,19 +793,13 @@ def u_username(username, v=None):
 
 		
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2)):
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, "That userpage is private")
 		return render_template("userpage_private.html", u=u, v=v)
 
 	
 	if v and hasattr(u, 'is_blocking') and u.is_blocking:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"You are blocking @{u.username}."}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"You are blocking @{u.username}.")
 		return render_template("userpage_blocking.html", u=u, v=v)
-
-
-	if v and v.admin_level < 2 and hasattr(u, 'is_blocked') and u.is_blocked:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "This person is blocking you."}
-		return render_template("userpage_blocked.html", u=u, v=v)
-
 
 	sort = request.values.get("sort", "new")
 	t = request.values.get("t", "all")
@@ -860,28 +853,22 @@ def u_username_comments(username, v=None):
 	user = get_user(username, v=v, include_blocks=True)
 
 	if username != user.username: return redirect(f'/@{user.username}/comments')
-
 	u = user
 
 	if u.reserved:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"That username is reserved for: {u.reserved}"}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"That username is reserved for: {u.reserved}")
 		return render_template("userpage_reserved.html",
 												u=u,
 												v=v)
 
 
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2)):
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, "That userpage is private")
 		return render_template("userpage_private.html", u=u, v=v)
 
 	if v and hasattr(u, 'is_blocking') and u.is_blocking:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"You are blocking @{u.username}."}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"You are blocking @{u.username}.")
 		return render_template("userpage_blocking.html", u=u, v=v)
-
-	if v and v.admin_level < 2 and hasattr(u, 'is_blocked') and u.is_blocked:
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "This person is blocking you."}
-		return render_template("userpage_blocked.html", u=u, v=v)
-
 
 	try: page = max(int(request.values.get("page", "1")), 1)
 	except: page = 1
@@ -923,9 +910,9 @@ def u_username_info(username, v=None):
 	user = get_user(username, v=v, include_blocks=True)
 
 	if hasattr(user, 'is_blocking') and user.is_blocking:
-		return {"error": "You're blocking this user."}, 401
+		abort(401, "You're blocking this user.")
 	elif hasattr(user, 'is_blocked') and user.is_blocked:
-		return {"error": "This user is blocking you."}, 403
+		abort(403, "This user is blocking you.")
 
 	return user.json
 
@@ -935,9 +922,9 @@ def u_user_id_info(id, v=None):
 	user = get_account(id, v=v, include_blocks=True)
 
 	if hasattr(user, 'is_blocking') and user.is_blocking:
-		return {"error": "You're blocking this user."}, 401
+		abort(401, "You're blocking this user.")
 	elif hasattr(user, 'is_blocked') and user.is_blocked:
-		return {"error": "This user is blocking you."}, 403
+		abort(403, "This user is blocking you.")
 
 	return user.json
 
@@ -948,7 +935,7 @@ def follow_user(username, v):
 
 	target = get_user(username)
 
-	if target.id==v.id: return {"error": "You can't follow yourself!"}, 400
+	if target.id==v.id: abort(400, "You can't follow yourself!")
 
 	if g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).one_or_none(): return {"message": "User followed!"}
 

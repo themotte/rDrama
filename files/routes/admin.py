@@ -279,7 +279,8 @@ def club_allow(v, username):
 
 	if not u: abort(404)
 
-	if u.admin_level >= v.admin_level: return {"error": "noob"}
+	if u.admin_level >= v.admin_level: 
+		abort(403, "Can't target users with admin level higher than you")
 
 	u.club_allowed = True
 	g.db.add(u)
@@ -307,7 +308,8 @@ def club_ban(v, username):
 
 	if not u: abort(404)
 
-	if u.admin_level >= v.admin_level: return {"error": "noob"}
+	if u.admin_level >= v.admin_level:
+		abort(403, "Can't target users with admin level higher than you")
 
 	u.club_allowed = False
 
@@ -502,7 +504,7 @@ def change_settings(v, setting):
 			site_settings[setting] = int(new_value)
 		else:
 			# 422ing for any other types for now, feel free to add some more types if needed
-			abort(422)
+			abort(422, "Not a valid config value type")
 	else:
 		site_settings[setting] = not site_settings[setting]
 		if site_settings[setting]: word = 'enabled'
@@ -555,7 +557,7 @@ def purge_cache(v):
 	g.db.add(ma)
 
 	if response == "<Response [200]>": return {"message": "Cache purged!"}
-	return {"error": "Failed to purge cache."}
+	abort(500, "Failed to purge cache.")
 
 
 @app.post("/admin/under_attack")
@@ -574,7 +576,7 @@ def under_attack(v):
 
 		response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data='{"value":"medium"}', timeout=5))
 		if response == "<Response [200]>": return {"message": "Under attack mode disabled!"}
-		return {"error": "Failed to disable under attack mode."}
+		abort(500, "Failed to disable under attack mode.")
 	else:
 		ma = ModAction(
 			kind="enable_under_attack",
@@ -585,7 +587,7 @@ def under_attack(v):
 
 		response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data='{"value":"under_attack"}', timeout=5))
 		if response == "<Response [200]>": return {"message": "Under attack mode enabled!"}
-		return {"error": "Failed to enable under attack mode."}
+		abort(500, "Failed to enable under attack mode.")
 
 @app.get("/admin/badge_grant")
 @limiter.exempt
@@ -1307,7 +1309,7 @@ def sticky_post(post_id, v):
 			if v.admin_level > 1:
 				post.stickied = v.username
 				post.stickied_utc = int(time.time()) + 3600
-			else: return {"error": "Can't exceed 3 pinned posts limit!"}, 403
+			else: abort(403, "Can't exceed 3 pinned posts limit!")
 		else: post.stickied = v.username
 		g.db.add(post)
 
@@ -1332,7 +1334,7 @@ def unsticky_post(post_id, v):
 
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 	if post and post.stickied:
-		if post.stickied.endswith('(pin award)'): return {"error": "Can't unpin award pins!"}, 403
+		if post.stickied.endswith('(pin award)'): abort(403, "Can't unpin award pins!")
 
 		post.stickied = None
 		post.stickied_utc = None
@@ -1386,7 +1388,7 @@ def unsticky_comment(cid, v):
 	comment = get_comment(cid, v=v)
 	
 	if comment.is_pinned:
-		if comment.is_pinned.endswith("(pin award)"): return {"error": "Can't unpin award pins!"}, 403
+		if comment.is_pinned.endswith("(pin award)"): abort(403, "Can't unpin award pins!")
 
 		comment.is_pinned = None
 		g.db.add(comment)

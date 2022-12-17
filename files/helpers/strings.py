@@ -14,4 +14,4 @@ def bool_from_string(input: typing.Union[str, bool]) -> bool:
 		return True
 	if input.lower() in ("no", "false", "f", "off", "0"):
 		return False
-	raise ValueError()
+	raise ValueError(f"'{input}' is neither a bool nor a recognized string")

@@ -111,6 +111,7 @@ class User(Base):
 	original_username = deferred(Column(String))
 	referred_by = Column(Integer, ForeignKey("users.id"))
 	subs_created = Column(Integer, default=0, nullable=False)
+	volunteer_last_started_utc = Column(DateTime, nullable=True)
 
 	Index(
 		'users_original_username_trgm_idx',
@@ -341,7 +342,7 @@ class User(Base):
 		return generate_hash(msg)
 
 	def validate_formkey(self, formkey):
-
+		if not formkey: return False
 		return validate_hash(f"{session['session_id']}+{self.id}+{self.login_nonce}", formkey)
 
 	@property
@@ -602,11 +603,18 @@ class User(Base):
 	def subscribed_idlist(self, page=1):
 		posts = g.db.query(Subscription.submission_id).filter_by(user_id=self.id).all()
 		return [x[0] for x in posts]
+	
+	@property
+	@lazy
+	def all_userblocks(self):
+		''' User blocks by and targeting this user '''
+		return [x[0] for x in g.db.query(UserBlock.target_id).filter(or_(UserBlock.user_id == self.id, UserBlock.target_id == self.id)).all()]
 
 	@property
 	@lazy
 	def userblocks(self):
-		return [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=self.id).all()] + [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=self.id).all()]
+		''' User blocks by this user '''
+		return [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=self.id).all()]
 
 	@lazy
 	def saved_idlist(self, page=1):
