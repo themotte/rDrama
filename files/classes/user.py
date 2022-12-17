@@ -366,7 +366,7 @@ class User(Base):
 		return generate_hash(msg)
 
 	def validate_formkey(self, formkey):
-
+		if not formkey: return False
 		return validate_hash(f"{session['session_id']}+{self.id}+{self.login_nonce}", formkey)
 
 	@property
