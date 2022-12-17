@@ -9,7 +9,7 @@ def test_rules(accounts):
 
 
 def test_post_and_comment(accounts):
-	client = accounts.account()
+	client = accounts.client_for_account()
 
 	# get our formkey
 	submit_get_response = client.get("/submit")

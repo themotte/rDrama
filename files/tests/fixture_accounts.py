@@ -3,15 +3,13 @@ from . import util
 
 from bs4 import BeautifulSoup
 from files.__main__ import app
+from functools import lru_cache
 import pytest
 from time import time, sleep
 
 class AccountsFixture:
-	accounts = {}
-
-	def account(self, name = "default"):
-		if name in self.accounts:
-			return self.accounts[name]
+	@lru_cache(maxsize=None)
+	def client_for_account(self, name = "default"):
 
 		client = app.test_client()
 
@@ -23,8 +21,6 @@ class AccountsFixture:
 
 		username = f"test-{name}-{str(round(time()))}"
 		print(f"Signing up as {username}")
-
-		sleep(5) # too-fast submissions are rejected (bot check?)
 		
 		signup_post_response = client.post("/signup", data={
 			"username": username,
@@ -36,8 +32,6 @@ class AccountsFixture:
 		})
 		assert signup_post_response.status_code == 302
 		assert "error" not in signup_post_response.location
-
-		self.accounts[name] = client
 
 		return client
 	
