@@ -627,11 +627,18 @@ class User(Base):
 	def subscribed_idlist(self, page=1):
 		posts = g.db.query(Subscription.submission_id).filter_by(user_id=self.id).all()
 		return [x[0] for x in posts]
+	
+	@property
+	@lazy
+	def all_userblocks(self):
+		''' User blocks by and targeting this user '''
+		return [x[0] for x in g.db.query(UserBlock.target_id).filter(or_(UserBlock.user_id == self.id, UserBlock.target_id == self.id)).all()]
 
 	@property
 	@lazy
 	def userblocks(self):
-		return [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=self.id).all()] + [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=self.id).all()]
+		''' User blocks by this user '''
+		return [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=self.id).all()]
 
 	@lazy
 	def saved_idlist(self, page=1):
