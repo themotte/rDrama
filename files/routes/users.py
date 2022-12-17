@@ -8,6 +8,7 @@ from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.const import *
 from files.helpers.assetcache import assetcache_path
+from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.mail import *
 from flask import *
 from files.__main__ import app, limiter, db_session
@@ -90,7 +91,7 @@ def upvoters_posts(v, username, uid):
 	next_exists = len(listing) > 25
 	listing = listing[:25]
 
-	listing = get_posts(listing, v=v)
+	listing = get_posts(listing, v=v, eager=True)
 
 	return render_template("voted_posts.html", next_exists=next_exists, listing=listing, page=page, v=v)
 
@@ -132,7 +133,7 @@ def downvoters_posts(v, username, uid):
 	next_exists = len(listing) > 25
 	listing = listing[:25]
 
-	listing = get_posts(listing, v=v)
+	listing = get_posts(listing, v=v, eager=True)
 
 	return render_template("voted_posts.html", next_exists=next_exists, listing=listing, page=page, v=v)
 
@@ -173,7 +174,7 @@ def upvoting_posts(v, username, uid):
 	next_exists = len(listing) > 25
 	listing = listing[:25]
 
-	listing = get_posts(listing, v=v)
+	listing = get_posts(listing, v=v, eager=True)
 
 	return render_template("voted_posts.html", next_exists=next_exists, listing=listing, page=page, v=v)
 
@@ -215,7 +216,7 @@ def downvoting_posts(v, username, uid):
 	next_exists = len(listing) > 25
 	listing = listing[:25]
 
-	listing = get_posts(listing, v=v)
+	listing = get_posts(listing, v=v, eager=True)
 
 	return render_template("voted_posts.html", next_exists=next_exists, listing=listing, page=page, v=v)
 
@@ -540,7 +541,7 @@ def message2(v, username):
 		abort(403, "You have been permabanned and cannot send messages; " + \
 			"contact modmail if you think this decision was incorrect.")
 
-	user = get_user(username, v=v)
+	user = get_user(username, v=v, include_blocks=True)
 	if hasattr(user, 'is_blocking') and user.is_blocking: abort(403, "You're blocking this user.")
 
 	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked:
@@ -772,7 +773,8 @@ def visitors(v):
 @app.get("/@<username>")
 @auth_desired
 def u_username(username, v=None):
-	u = get_user(username, v=v)
+	u = get_user(username, v=v, include_blocks=True)
+
 	if username != u.username:
 		return redirect(SITE_FULL + request.full_path.replace(username, u.username)[:-1])
 
@@ -816,7 +818,7 @@ def u_username(username, v=None):
 			for p in sticky:
 				ids = [p.id] + ids
 
-	listing = get_posts(ids, v=v)
+	listing = get_posts(ids, v=v, eager=True)
 
 	if u.unban_utc:
 		if request.headers.get("Authorization"): {"data": [x.json for x in listing]}
@@ -848,7 +850,8 @@ def u_username(username, v=None):
 @app.get("/@<username>/comments")
 @auth_desired
 def u_username_comments(username, v=None):
-	user = get_user(username, v=v)
+	user = get_user(username, v=v, include_blocks=True)
+
 	if username != user.username: return redirect(f'/@{user.username}/comments')
 	u = user
 
@@ -884,31 +887,8 @@ def u_username_comments(username, v=None):
 				(Comment.filter_state != 'filtered') & (Comment.filter_state != 'removed')
 				)
 
-	now = int(time.time())
-	if t == 'hour':
-		cutoff = now - 3600
-	elif t == 'day':
-		cutoff = now - 86400
-	elif t == 'week':
-		cutoff = now - 604800
-	elif t == 'month':
-		cutoff = now - 2592000
-	elif t == 'year':
-		cutoff = now - 31536000
-	else:
-		cutoff = 0
-	comments = comments.filter(Comment.created_utc >= cutoff)
-
-	if sort == "new":
-		comments = comments.order_by(Comment.created_utc.desc())
-	elif sort == "old":
-		comments = comments.order_by(Comment.created_utc)
-	elif sort == "controversial":
-		comments = comments.order_by((Comment.upvotes+1)/(Comment.downvotes+1) + (Comment.downvotes+1)/(Comment.upvotes+1), Comment.downvotes.desc())
-	elif sort == "top":
-		comments = comments.order_by(Comment.downvotes - Comment.upvotes)
-	elif sort == "bottom":
-		comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+	comments = apply_time_filter(comments, t, Comment)
+	comments = sort_objects(comments, sort, Comment)
 
 	comments = comments.offset(25 * (page - 1)).limit(26).all()
 	ids = [x.id for x in comments]
@@ -927,8 +907,7 @@ def u_username_comments(username, v=None):
 @app.get("/@<username>/info")
 @auth_required
 def u_username_info(username, v=None):
-
-	user=get_user(username, v=v)
+	user = get_user(username, v=v, include_blocks=True)
 
 	if hasattr(user, 'is_blocking') and user.is_blocking:
 		abort(401, "You're blocking this user.")
@@ -940,8 +919,7 @@ def u_username_info(username, v=None):
 @app.get("/<id>/info")
 @auth_required
 def u_user_id_info(id, v=None):
-
-	user=get_account(id, v=v)
+	user = get_account(id, v=v, include_blocks=True)
 
 	if hasattr(user, 'is_blocking') and user.is_blocking:
 		abort(401, "You're blocking this user.")
@@ -1092,7 +1070,7 @@ def saved_posts(v, username):
 
 	ids=ids[:25]
 
-	listing = get_posts(ids, v=v)
+	listing = get_posts(ids, v=v, eager=True)
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
 	return render_template("userpage.html",

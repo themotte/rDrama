@@ -3,6 +3,7 @@ import re
 from sqlalchemy import *
 from flask import *
 from files.__main__ import app
+from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.strings import sql_ilike_clean
 
 
@@ -13,8 +14,6 @@ valid_params=[
 ]
 
 def searchparse(text):
-
-
 	criteria = {x[0]:x[1] for x in query_regex.findall(text)}
 
 	for x in criteria:
@@ -29,13 +28,9 @@ def searchparse(text):
 	return criteria
 
 
-
-
-
 @app.get("/search/posts")
 @auth_desired
 def searchposts(v):
-
 	query = request.values.get("q", '').strip()
 
 	page = max(1, int(request.values.get("page", 1)))
@@ -44,17 +39,6 @@ def searchposts(v):
 	t = request.values.get('t', 'all').lower()
 
 	criteria=searchparse(query)
-
-
-
-
-
-
-
-
-
-
-
 
 	posts = g.db.query(Submission.id)
 	
@@ -117,35 +101,9 @@ def searchposts(v):
 				)
 			)
 
-
 	if t:
-		now = int(time.time())
-		if t == 'hour':
-			cutoff = now - 3600
-		elif t == 'day':
-			cutoff = now - 86400
-		elif t == 'week':
-			cutoff = now - 604800
-		elif t == 'month':
-			cutoff = now - 2592000
-		elif t == 'year':
-			cutoff = now - 31536000
-		else:
-			cutoff = 0
-		posts = posts.filter(Submission.created_utc >= cutoff)
-
-	if sort == "new":
-		posts = posts.order_by(Submission.created_utc.desc())
-	elif sort == "old":
-		posts = posts.order_by(Submission.created_utc)
-	elif sort == "controversial":
-		posts = posts.order_by((Submission.upvotes+1)/(Submission.downvotes+1) + (Submission.downvotes+1)/(Submission.upvotes+1), Submission.downvotes.desc())
-	elif sort == "top":
-		posts = posts.order_by(Submission.downvotes - Submission.upvotes)
-	elif sort == "bottom":
-		posts = posts.order_by(Submission.upvotes - Submission.downvotes)
-	elif sort == "comments":
-		posts = posts.order_by(Submission.comment_count.desc())
+		posts = apply_time_filter(posts, t, Submission)
+	posts = sort_objects(posts, sort, Submission)
 
 	total = posts.count()
 
@@ -154,12 +112,10 @@ def searchposts(v):
 	ids = [x[0] for x in posts]
 
 
-
-
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
 
-	posts = get_posts(ids, v=v)
+	posts = get_posts(ids, v=v, eager=True)
 
 	if request.headers.get("Authorization"): return {"total":total, "data":[x.json for x in posts]}
 
@@ -174,11 +130,10 @@ def searchposts(v):
 						   next_exists=next_exists
 						   )
 
+
 @app.get("/search/comments")
 @auth_desired
 def searchcomments(v):
-
-
 	query = request.values.get("q", '').strip()
 
 	try: page = max(1, int(request.values.get("page", 1)))
@@ -211,21 +166,7 @@ def searchcomments(v):
 	if 'over18' in criteria: comments = comments.filter(Comment.over_18 == True)
 
 	if t:
-		now = int(time.time())
-		if t == 'hour':
-			cutoff = now - 3600
-		elif t == 'day':
-			cutoff = now - 86400
-		elif t == 'week':
-			cutoff = now - 604800
-		elif t == 'month':
-			cutoff = now - 2592000
-		elif t == 'year':
-			cutoff = now - 31536000
-		else:
-			cutoff = 0
-		comments = comments.filter(Comment.created_utc >= cutoff)
-
+		comments = apply_time_filter(comments, t, Comment)
 
 	if v and v.admin_level < 2:
 		private = [x[0] for x in g.db.query(Submission.id).filter(Submission.private == True).all()]
@@ -239,17 +180,7 @@ def searchcomments(v):
 		club = [x[0] for x in g.db.query(Submission.id).filter(Submission.club == True).all()]
 		comments = comments.filter(Comment.parent_submission.notin_(club))
 
-
-	if sort == "new":
-		comments = comments.order_by(Comment.created_utc.desc())
-	elif sort == "old":
-		comments = comments.order_by(Comment.created_utc)
-	elif sort == "controversial":
-		comments = comments.order_by((Comment.upvotes+1)/(Comment.downvotes+1) + (Comment.downvotes+1)/(Comment.upvotes+1), Comment.downvotes.desc())
-	elif sort == "top":
-		comments = comments.order_by(Comment.downvotes - Comment.upvotes)
-	elif sort == "bottom":
-		comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+	comments = sort_objects(comments, sort, Comment)
 
 	total = comments.count()
 
@@ -269,7 +200,6 @@ def searchcomments(v):
 @app.get("/search/users")
 @auth_desired
 def searchusers(v):
-
 	query = request.values.get("q", '').strip()
 
 	page = max(1, int(request.values.get("page", 1)))

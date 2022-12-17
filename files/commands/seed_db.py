@@ -130,8 +130,12 @@ def seed_db():
 		db.session.add(comment)
 		comments.append(comment)
 
-	db.session.commit()
 	db.session.flush()
+	for c in comments:
+		c.top_comment_id = c.id
+		db.session.add(c)
+
+	db.session.commit()
 
 	print(f"Creating {NUM_REPLY_COMMENTS} reply comments")
 	for i in range(NUM_REPLY_COMMENTS):
@@ -143,6 +147,7 @@ def seed_db():
 			author_id=user.id,
 			parent_submission=str(parent.post.id),
 			parent_comment_id=parent.id,
+			top_comment_id=parent.top_comment_id,
 			level=parent.level + 1,
 			over_18=False,
 			is_bot=False,
@@ -155,7 +160,6 @@ def seed_db():
 		comments.append(comment)
 
 	db.session.commit()
-	db.session.flush()
 
 	print("Updating comment counts for all posts")
 	for post in posts:
