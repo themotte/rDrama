@@ -236,7 +236,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 
 	post.views += 1
 	g.db.add(post)
-	g.db.flush()
+	g.db.commit()
 
 	if request.headers.get("Authorization"): return post.json
 	else:
