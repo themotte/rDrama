@@ -1,5 +1,6 @@
 
 from bs4 import BeautifulSoup
+import json
 import random
 import re
 import string
@@ -33,4 +34,21 @@ class ItemData:
         result.id = match.group(1)  	# this really should get yanked out of the JS, not the URL
         result.id_full = f"t2_{result.id}"
         result.url = url
+        return result
+
+    @staticmethod
+    def from_json(text):
+        data = json.loads(text)
+
+        soup = BeautifulSoup(data["comment"], 'html.parser')
+        divid = soup.find("div")["id"]
+
+        match = re.search(r'comment-(\d+)', divid)
+        if match is None:
+            return None
+        
+        result = ItemData()
+        result.id = match.group(1)  	# this really should get yanked out of the JS, not the HTML
+        result.id_full = f"t3_{result.id}"
+        result.url = f"/comment/{result.id}"
         return result

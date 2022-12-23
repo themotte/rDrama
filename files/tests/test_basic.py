@@ -52,3 +52,22 @@ def test_post_and_comment(accounts):
 	post_response = client.get(post.url)
 	assert post_response.status_code == 200
 	assert comment_body in post_response.text
+
+	# yank the ID out again
+	comment = util.ItemData.from_json(submit_comment_response.text)
+
+	# post a comment grandchild!
+	grandcomment_body = util.generate_text()
+	submit_grandcomment_response = client.post("/comment", data={
+		"parent_fullname": comment.id_full,
+		"parent_level": 1,
+		"submission": comment.id,
+		"body": grandcomment_body,
+		"formkey": util.formkey_from(submit_post_response.text),
+	})
+	assert submit_grandcomment_response.status_code == 200
+
+	# verify it actually got posted
+	post_response = client.get(post.url)
+	assert post_response.status_code == 200
+	assert grandcomment_body in post_response.text
