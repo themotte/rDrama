@@ -13,7 +13,7 @@ from files.helpers.assetcache import assetcache_path
 from .flags import Flag
 from .comment import Comment
 from flask import g
-from .sub import *
+from .sub import Sub
 from .votes import CommentVote
 
 class Submission(Base):
