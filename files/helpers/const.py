@@ -10,9 +10,8 @@ from flask import request
 SITE = environ.get("DOMAIN", '').strip()
 SITE_ID = environ.get("SITE_ID", '').strip()
 SITE_TITLE = environ.get("SITE_TITLE", '').strip()
-if "localhost" in SITE: SITE_FULL = 'http://' + SITE
-else: SITE_FULL = 'https://' + SITE
-
+SCHEME = environ.get('SCHEME', 'http' if 'localhost' in SITE else 'https')
+SITE_FULL = SCHEME + '://' + SITE
 
 CC = "COUNTRY CLUB"
 CC_TITLE = CC.title()
