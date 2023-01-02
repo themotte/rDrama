@@ -44,7 +44,7 @@ class AccountsFixture:
 		return client, user
 
 	def client_for_account(self, name = "default"):
-		client, user = client_and_user_for_account(name)
+		client, user = self.client_and_user_for_account(name)
 		return client
 	
 	def logged_off(self):
