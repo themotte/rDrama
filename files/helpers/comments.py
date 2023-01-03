@@ -8,10 +8,17 @@ def update_stateful_counters(comment, delta):
 	When a comment changes publish status, we need to update all affected stateful
 	comment counters (e.g. author comment count, post comment count)
 	"""
+	update_post_comment_count(comment, delta)
+	update_author_comment_count(comment, delta)
+	update_ancestor_descendant_counts(comment, delta)
+
+def update_post_comment_count(comment, delta):
 	author = comment.author
 	comment.post.comment_count += delta
 	g.db.add(comment.post)
 
+def update_author_comment_count(comment, delta):
+	author = comment.author
 	comment.author.comment_count = g.db.query(Comment).filter(
 		Comment.author_id == comment.author_id,
 		Comment.parent_submission != None,
@@ -19,6 +26,14 @@ def update_stateful_counters(comment, delta):
 		Comment.deleted_utc == 0,
 	).count()
 	g.db.add(comment.author)
+
+def update_ancestor_descendant_counts(comment, delta):
+	parent = comment.parent_comment_writable
+	if parent is None:
+		return
+	parent.descendant_count += delta
+	g.db.add(parent)
+	update_ancestor_descendant_counts(parent, delta)
 
 def comment_on_publish(comment:Comment):
 	"""

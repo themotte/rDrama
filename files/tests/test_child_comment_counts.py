@@ -3,7 +3,7 @@ from . import fixture_submissions
 from . import fixture_comments
 from . import util
 from files.__main__ import db_session
-from files.classes import Submission
+from files.classes import Submission, Comment
 import json
 
 
@@ -84,3 +84,49 @@ def test_submission_comment_count(accounts, submissions, comments):
 	})
 
 	assert 0 == post.comment_count
+
+@util.no_rate_limit
+def test_comment_descendant_count(accounts, submissions, comments):
+	"""
+		Here is a contentious top-level comment
+			You're wrong, this isn't contentious
+				no u
+			Good poast
+	"""
+	db = db_session()
+	alice_client, alice = accounts.client_and_user_for_account('Alice')
+
+	post = submissions.submission_for_client(alice_client, {
+		'title': 'Discussion',
+		'body': 'Discuss stuff',
+	})
+	post_id = post.id
+
+	root = comments.comment_for_client(alice_client, post.id, {
+		'body': 'Here is a contentious top-level comment',
+	})
+
+	assert 0 == db.query(Comment).filter_by(id=root.id).first().descendant_count
+
+	reply1 = comments.comment_for_client(alice_client, post.id, {
+		'body': 'You\'re wrong, this isn\'t contentious',
+		'parent_fullname': f't3_{root.id}',
+		'parent_level': root.level,
+	})
+
+	rereply1 = comments.comment_for_client(alice_client, post.id, {
+		'body': 'no u',
+		'parent_fullname': f't3_{reply1.id}',
+		'parent_level': reply1.level,
+	})
+
+	reply2 = comments.comment_for_client(alice_client, post.id, {
+		'body': 'Good poast',
+		'parent_fullname': f't3_{root.id}',
+		'parent_level': root.level,
+	})
+
+	assert 3 == db.query(Comment).filter_by(id=root.id).first().descendant_count
+	assert 1 == db.query(Comment).filter_by(id=reply1.id).first().descendant_count
+	assert 0 == db.query(Comment).filter_by(id=reply2.id).first().descendant_count
+	assert 0 == db.query(Comment).filter_by(id=rereply1.id).first().descendant_count
