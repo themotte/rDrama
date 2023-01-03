@@ -83,4 +83,4 @@ def test_submission_comment_count(accounts, submissions, comments):
 		'guest': (logged_off_client, False),
 	})
 
-	assert True
+	assert 0 == post.comment_count
