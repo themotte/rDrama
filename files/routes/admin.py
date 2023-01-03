@@ -13,7 +13,7 @@ from files.classes import *
 from flask import *
 from files.__main__ import app, cache, limiter
 from .front import frontlist
-from files.helpers.comments import comment_on_publish
+from files.helpers.comments import comment_on_publish, comment_on_unpublish
 from datetime import datetime
 import requests
 from urllib.parse import quote, urlencode
@@ -405,6 +405,11 @@ def update_filter_status(v):
 				and old_status in ['filtered', 'removed']
 				and new_status in ['normal', 'ignored']):
 			comment_on_publish(c)
+
+		if (comment_id
+				and old_status in ['normal', 'ignored']
+				and new_status in ['filtered', 'removed']):
+			comment_on_unpublish(c)
 
 		g.db.commit()
 		return { 'result': 'Update successful' }
