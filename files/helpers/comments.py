@@ -3,6 +3,23 @@ from files.helpers.alerts import NOTIFY_USERS
 from files.helpers.const import PUSHER_ID
 from flask import g
 
+def update_stateful_counters(comment, delta):
+	"""
+	When a comment changes publish status, we need to update all affected stateful
+	comment counters (e.g. author comment count, post comment count)
+	"""
+	author = comment.author
+	comment.post.comment_count += delta
+	g.db.add(comment.post)
+
+	comment.author.comment_count = g.db.query(Comment).filter(
+		Comment.author_id == comment.author_id,
+		Comment.parent_submission != None,
+		Comment.is_banned == False,
+		Comment.deleted_utc == 0,
+	).count()
+	g.db.add(comment.author)
+
 def comment_on_publish(comment:Comment):
 	"""
 	Run when comment becomes visible: immediately for non-filtered comments,
@@ -40,18 +57,7 @@ def comment_on_publish(comment:Comment):
 		notif = Notification(comment_id=comment.id, user_id=uid)
 		g.db.add(notif)
 
-	# Comment counter for parent submission
-	comment.post.comment_count += 1
-	g.db.add(comment.post)
-
-	# Comment counter for author's profile
-	comment.author.comment_count = g.db.query(Comment).filter(
-			Comment.author_id == comment.author_id,
-			Comment.parent_submission != None,
-			Comment.is_banned == False,
-			Comment.deleted_utc == 0,
-		).count()
-	g.db.add(comment.author)
+	update_stateful_counters(comment, +1)
 
 	# Generate push notifications if enabled.
 	if PUSHER_ID != 'blahblahblah' and comment.author_id != parent.author_id:
@@ -67,17 +73,4 @@ def comment_on_unpublish(comment:Comment):
 	Should be used to update stateful counters, notifications, etc. that
 	reflect the comments users will actually see.
 	"""
-	author = comment.author
-
-	# Comment counter for parent submission
-	comment.post.comment_count -= 1
-	g.db.add(comment.post)
-
-	# Comment counter for author's profile
-	comment.author.comment_count = g.db.query(Comment).filter(
-			Comment.author_id == comment.author_id,
-			Comment.parent_submission != None,
-			Comment.is_banned == False,
-			Comment.deleted_utc == 0,
-		).count()
-	g.db.add(comment.author)
+	update_stateful_counters(comment, -1)
