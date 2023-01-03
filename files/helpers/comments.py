@@ -67,3 +67,17 @@ def comment_on_unpublish(comment:Comment):
 	Should be used to update stateful counters, notifications, etc. that
 	reflect the comments users will actually see.
 	"""
+	author = comment.author
+
+	# Comment counter for parent submission
+	comment.post.comment_count -= 1
+	g.db.add(comment.post)
+
+	# Comment counter for author's profile
+	comment.author.comment_count = g.db.query(Comment).filter(
+			Comment.author_id == comment.author_id,
+			Comment.parent_submission != None,
+			Comment.is_banned == False,
+			Comment.deleted_utc == 0,
+		).count()
+	g.db.add(comment.author)
