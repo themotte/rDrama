@@ -14,10 +14,10 @@ class SubmissionsFixture:
 		post_title = data.get('title', util.generate_text())
 		post_body = data.get('body', util.generate_text())
 		submit_post_response = client.post("/submit", data={
-			**data,
 			"title": post_title,
 			"body": post_body,
 			"formkey": util.formkey_from(submit_get_response.text),
+			**data,
 		})
 		assert submit_post_response.status_code == 200
 		assert post_title in submit_post_response.text

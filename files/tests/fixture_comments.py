@@ -15,12 +15,12 @@ class CommentsFixture:
 		assert submit_get_response.status_code == 200
 		comment_body = data.get('body', util.generate_text())
 		submit_comment_response = client.post("/comment", data={
-			**data,
 			"parent_fullname": f't2_{post_id}',
 			'parent_level': 1,
 			'submission': post_id,
 			"body": comment_body,
 			"formkey": util.formkey_from(submit_get_response.text),
+			**data,
 		})
 		assert submit_comment_response.status_code == 200
 		submit_comment_data = json.loads(submit_comment_response.text)
