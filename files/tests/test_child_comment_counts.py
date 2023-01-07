@@ -130,3 +130,32 @@ def test_comment_descendant_count(accounts, submissions, comments):
 	assert 1 == db.query(Comment).filter_by(id=reply1.id).first().descendant_count
 	assert 0 == db.query(Comment).filter_by(id=reply2.id).first().descendant_count
 	assert 0 == db.query(Comment).filter_by(id=rereply1.id).first().descendant_count
+
+@util.no_rate_limit
+def test_more_button_label_in_deep_thrreads(accounts, submissions, comments):
+	db = db_session()
+	alice_client, alice = accounts.client_and_user_for_account('Alice')
+
+	post = submissions.submission_for_client(alice_client, {
+		'title': 'Counting thread',
+		'body': 'Count to 25',
+	})
+	post_id = post.id
+
+	c = comments.comment_for_client(alice_client, post.id, {
+		'body': '1',
+	})
+	for i in range(1, 25 + 1):
+		c = comments.comment_for_client(alice_client, post.id, {
+			'body': str(i),
+			'parent_fullname': f't3_{c.id}',
+			'parent_level': c.level,
+		})
+		if i % 5 == 0:
+			# only look every 5 posts to make this test not _too_ unbearably slow
+			view_post_response = alice_client.get(f'/post/{post.id}')
+			assert 200 == view_post_response.status_code
+			if i <= 8:
+				assert f'More comments ({i - 8})' not in view_post_response.text
+			else:
+				assert f'More comments ({i - 8})' in view_post_response.text
