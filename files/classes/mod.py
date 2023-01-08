@@ -1,5 +1,4 @@
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
 from files.classes.base import Base
 from files.helpers.lazy import *
 import time

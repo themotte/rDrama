@@ -1,6 +1,4 @@
 import time
-from os import remove
-from PIL import Image as IMAGE
 
 from files.helpers.wrappers import *
 from files.helpers.alerts import *

@@ -6,7 +6,6 @@ from files.helpers.const import *
 from files.classes.award import *
 from .front import frontlist
 from flask import g, request
-from files.helpers.sanitize import filter_emojis_only
 from copy import deepcopy
 
 @app.get("/shop")

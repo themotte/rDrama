@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 from files.classes.base import Base
 import time
 from files.helpers.lazy import lazy
-from os import environ
 from copy import deepcopy
 from files.helpers.const import *
 import logging

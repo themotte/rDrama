@@ -6,12 +6,8 @@ from files.classes import *
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
-from files.helpers.sanitize import filter_emojis_only
 from files.helpers.assetcache import assetcache_path
 import requests
-from shutil import copyfile
-from json import loads
-from collections import Counter
 import gevent
 from sys import stdout
 

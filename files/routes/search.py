@@ -1,5 +1,4 @@
 from files.helpers.wrappers import *
-import re
 from sqlalchemy import *
 from flask import *
 from files.__main__ import app

@@ -1,5 +1,3 @@
-from os import environ
-import re
 import time
 from urllib.parse import urlencode, urlparse, parse_qs
 from flask import *
@@ -7,13 +5,9 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.classes.base import Base
 from files.__main__ import app
-from files.classes.votes import CommentVote
 from files.helpers.const import *
 from files.helpers.lazy import lazy
-from .flags import CommentFlag
 from random import randint
-from .votes import CommentVote
-from math import floor
 
 class Comment(Base):
 

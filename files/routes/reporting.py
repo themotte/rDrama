@@ -2,7 +2,6 @@ from files.helpers.wrappers import *
 from files.helpers.get import *
 from flask import g
 from files.__main__ import app, limiter
-from os import path
 from files.helpers.sanitize import filter_emojis_only
 
 @app.post("/report/post/<pid>")

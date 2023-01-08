@@ -1,5 +1,4 @@
 from PIL import Image, ImageOps
-from PIL.ImageSequence import Iterator
 from webptools import gifwebp
 import subprocess
 

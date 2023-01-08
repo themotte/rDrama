@@ -1,9 +1,6 @@
-from os import environ
 import random
-import re
 import time
 from urllib.parse import urlparse
-from flask import render_template
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
 from files.classes.base import Base
@@ -12,10 +9,7 @@ from files.helpers.const import *
 from files.helpers.lazy import lazy
 from files.helpers.assetcache import assetcache_path
 from .flags import Flag
-from .comment import Comment
 from flask import g
-from .sub import *
-from .votes import CommentVote
 
 class Submission(Base):
 	__tablename__ = "submissions"

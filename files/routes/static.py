@@ -1,15 +1,12 @@
 from files.mail import *
-from files.__main__ import app, limiter, mail
+from files.__main__ import app, limiter
 from files.helpers.alerts import *
 from files.helpers.const import *
-from files.classes.award import AWARDS
 from sqlalchemy import func
-from os import path
 import calendar
 import matplotlib.pyplot as plt
 from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
 from files.classes.badges import BadgeDef
-import logging
 
 @app.get('/logged_out/')
 @app.get('/logged_out/<path:old>')

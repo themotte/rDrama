@@ -1,5 +1,4 @@
 from sqlalchemy.orm import deferred, aliased
-from secrets import token_hex
 import pyotp
 from files.helpers.images import *
 from files.helpers.const import *
@@ -20,9 +19,8 @@ from files.__main__ import app, Base, cache
 from files.helpers.security import *
 from files.helpers.assetcache import assetcache_path
 from files.helpers.contentsorting import apply_time_filter, sort_objects
-import random
 from datetime import datetime
-from os import environ, remove, path
+from os import environ
 
 
 defaulttheme = "TheMotte"

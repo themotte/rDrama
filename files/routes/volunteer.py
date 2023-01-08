@@ -7,12 +7,8 @@ from files.helpers.wrappers import auth_required
 from files.routes.volunteer_common import VolunteerDuty
 import files.routes.volunteer_janitor
 from flask import render_template, g, request
-from os import environ
 import sqlalchemy
 from typing import Optional
-import pprint
-
-
 
 
 @files.helpers.jinja2.template_function

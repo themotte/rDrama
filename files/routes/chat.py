@@ -2,11 +2,9 @@ import time
 from files.helpers.wrappers import auth_required
 from files.helpers.sanitize import sanitize
 from files.helpers.const import *
-from datetime import datetime
 from flask_socketio import SocketIO, emit
 from files.__main__ import app, limiter, cache
 from flask import render_template, make_response, send_from_directory
-import sys
 import atexit
 
 if SITE == 'localhost':

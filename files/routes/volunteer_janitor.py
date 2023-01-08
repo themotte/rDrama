@@ -6,7 +6,6 @@ from files.classes.user import User
 from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
 from files.routes.volunteer_common import VolunteerDuty
 from flask import g
-import pprint
 import random
 import sqlalchemy
 

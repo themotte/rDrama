@@ -2,7 +2,6 @@ from .get import *
 from .alerts import *
 from files.helpers.const import *
 from files.__main__ import app, cache, db_session
-from random import randint
 import user_agents
 import time
 
