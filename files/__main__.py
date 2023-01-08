@@ -10,7 +10,6 @@ from flask_limiter import Limiter
 from flask_compress import Compress
 from flask_mail import Mail
 import flask_profiler
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import *
 import gevent
