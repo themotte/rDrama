@@ -5,7 +5,7 @@ from urllib.parse import quote
 from files.helpers.alerts import send_notification
 
 from files.helpers.security import *
-from files.helpers.wrappers import *
+from files.helpers.wrappers import auth_required
 from files.helpers.const import *
 from files.classes import Badge, User
 from files.__main__ import app, mail, limiter

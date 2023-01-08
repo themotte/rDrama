@@ -9,5 +9,5 @@ of development. Feel free to remove.
 
 '''
 
-from flask import (abort, jsonify, make_response, redirect, render_template, request, 
-                   Response, session, send_file, send_from_directory)
+from flask import (abort, g, jsonify, make_response, redirect, render_template, 
+                   request, Response, session, send_file, send_from_directory)
