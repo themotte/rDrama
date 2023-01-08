@@ -1,15 +1,22 @@
 import functools
 import html
+import re
+import signal
+
+from os import path
+from random import random, choice
+from urllib.parse import parse_qs, urlparse
+
 import bleach
 from bs4 import BeautifulSoup
 from bleach.linkifier import LinkifyFilter, build_url_re
-from functools import partial
-from .get import *
-from os import path
-import re
+from flask import abort, g
 from mistletoe import markdown
-from random import random, choice
-import signal
+
+from files.classes.domains import BannedDomain
+from files.classes.marsey import Marsey
+from files.helpers.const import *
+from files.helpers.get import get_user, get_users
 from files.__main__ import app
 
 TLDS = ('ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar','arpa','as','asia','at','au','aw','ax','az','ba','bb','bd','be','bf','bg','bh','bi','biz','bj','bm','bn','bo','br','bs','bt','bv','bw','by','bz','ca','cafe','cat','cc','cd','cf','cg','ch','ci','ck','cl','club','cm','cn','co','com','coop','cr','cu','cv','cx','cy','cz','de','dj','dk','dm','do','dz','ec','edu','ee','eg','er','es','et','eu','fi','fj','fk','fm','fo','fr','ga','gb','gd','ge','gf','gg','gh','gi','gl','gm','gn','gov','gp','gq','gr','gs','gt','gu','gw','gy','hk','hm','hn','hr','ht','hu','id','ie','il','im','in','info','int','io','iq','ir','is','it','je','jm','jo','jobs','jp','ke','kg','kh','ki','km','kn','kp','kr','kw','ky','kz','la','lb','lc','li','lk','lr','ls','lt','lu','lv','ly','ma','mc','md','me','mg','mh','mil','mk','ml','mm','mn','mo','mobi','mp','mq','mr','ms','mt','mu','museum','mv','mw','mx','my','mz','na','name','nc','ne','net','nf','ng','ni','nl','no','np','nr','nu','nz','om','org','pa','pe','pf','pg','ph','pk','pl','pm','pn','post','pr','pro','ps','pt','pw','py','qa','re','ro','rs','ru','rw','sa','sb','sc','sd','se','sg','sh','si','sj','sk','sl','sm','sn','so','social','sr','ss','st','su','sv','sx','sy','sz','tc','td','tel','tf','tg','th','tj','tk','tl','tm','tn','to','tp','tr','travel','tt','tv','tw','tz','ua','ug','uk','us','uy','uz','va','vc','ve','vg','vi','vn','vu','wf','win','ws','xn','xxx','xyz','ye','yt','yu','za','zm','zw', 'moe')
@@ -188,10 +195,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 		if len(users) > app.config['MENTION_LIMIT']:
 			signal.alarm(0)
-			abort(
-				make_response(
-					jsonify(
-						error=f'Mentioned {len(users)} users but limit is {app.config["MENTION_LIMIT"]}'), 400))
+			abort(400, f'Mentioned {len(users)} users but limit is {app.config["MENTION_LIMIT"]}')
 
 		for u in users:
 			if not u: continue
@@ -217,7 +221,6 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 
 	sanitized = str(soup)
-
 	sanitized = spoiler_regex.sub(r'<spoiler>\1</spoiler>', sanitized)
 
 	marseys_used = set()
@@ -278,30 +281,19 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 	sanitized = sanitized.replace('&amp;','&')
 	sanitized = utm_regex.sub('', sanitized)
 	sanitized = utm_regex2.sub('', sanitized)
-
-
 	sanitized = sanitized.replace('<html><body>','').replace('</body></html>','')
-
-
-
 	sanitized = bleach.Cleaner(tags=allowed_tags,
 								attributes=allowed_attributes,
 								protocols=['http', 'https'],
 								styles=['color', 'background-color', 'font-weight', 'text-align'],
-								filters=[partial(LinkifyFilter, skip_tags=["pre"], parse_email=False, callbacks=[callback], url_re=url_re)],
+								filters=[functools.partial(LinkifyFilter, skip_tags=["pre"], parse_email=False, callbacks=[callback], url_re=url_re)],
 								strip=True,
 								).clean(sanitized)
 
-
-
 	soup = BeautifulSoup(sanitized, 'lxml')
-
 	links = soup.find_all("a")
-
 	domain_list = set()
-
 	for link in links:
-
 		href = link.get("href")
 		if not href: continue
 
@@ -318,9 +310,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 				domain_list.add(new_domain)
 
 	bans = g.db.query(BannedDomain.domain).filter(BannedDomain.domain.in_(list(domain_list))).all()
-
 	if bans: abort(403, description=f"Remove the banned domains {bans} and try again!")
-
 	return sanitized
 
 
