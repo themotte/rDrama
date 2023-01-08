@@ -1,4 +1,4 @@
-from operator import or_
+from operator import and_, or_
 import time
 
 import pyotp

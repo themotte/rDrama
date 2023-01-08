@@ -1,6 +1,8 @@
-from files.helpers.wrappers import *
+from files.classes.flags import CommentFlag, Flag
+from files.classes.mod_logs import ModAction
+from files.helpers.wrappers import auth_required
 from files.helpers.get import *
-from flask import g
+from flask import g, request
 from files.__main__ import app, limiter
 from files.helpers.sanitize import filter_emojis_only
 

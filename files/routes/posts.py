@@ -2,6 +2,9 @@ import time
 import gevent
 
 from urllib.parse import ParseResult, parse_qs, urlunparse, urlparse, urlencode, unquote
+from files.classes.sub import Sub
+from files.classes.votes import CommentVote, Vote
+from files.helpers.get import get_account, get_comment_trees_eager, get_domain, get_post
 from files.helpers.images import process_image
 
 
@@ -266,9 +269,7 @@ def viewmore(v, pid, sort, offset):
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
-
 		blocking = v.blocking.subquery()
-
 		blocked = v.blocked.subquery()
 
 		comments = g.db.query(

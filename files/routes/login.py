@@ -1,6 +1,10 @@
+import random
 import secrets
 
 from urllib.parse import urlencode
+from files.classes.alts import Alt
+from files.helpers.alerts import send_notification
+from files.helpers.get import get_account, get_user
 from files.mail import *
 from files.__main__ import app, limiter
 from files.helpers.const import *

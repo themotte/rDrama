@@ -1,3 +1,7 @@
+from files.classes.comment import Comment
+from files.classes.submission import Submission
+
+from files.helpers.get import get_comments, get_posts, get_user
 from files.helpers.wrappers import *
 from sqlalchemy import *
 from flask import *
