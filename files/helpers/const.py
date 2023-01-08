@@ -1,8 +1,6 @@
 from os import environ
 import re
 from copy import deepcopy
-from files.__main__ import db_session
-from files.classes.marsey import Marsey
 from flask import request
 
 SITE = environ.get("DOMAIN", '').strip()
@@ -14,6 +12,8 @@ else: SITE_FULL = 'https://' + SITE
 
 CC = "COUNTRY CLUB"
 CC_TITLE = CC.title()
+
+ENABLE_EMOJI = False
 
 NOTIFICATIONS_ID = 1
 AUTOJANNY_ID = 2
@@ -222,12 +222,22 @@ CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/
 
 dues = int(environ.get("DUES").strip())
 
-christian_emojis = (':#marseyjesus:',':#marseyimmaculate:',':#marseymothermary:',':#marseyfatherjoseph:',':#gigachadorthodox:',':#marseyorthodox:',':#marseyorthodoxpat:')
 
-db = db_session()
-marseys_const = [x[0] for x in db.query(Marsey.name).filter(Marsey.name!='chudsey').all()]
-marseys_const2 = marseys_const + ['chudsey','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','exclamationpoint','period','questionmark']
-db.close()
+# I know it looks horrible. It's currently a kludge for testing.
+
+if ENABLE_EMOJI:
+	from files.__main__ import db_session
+	from files.classes.marsey import Marsey
+	christian_emojis = (':#marseyjesus:',':#marseyimmaculate:',':#marseymothermary:',':#marseyfatherjoseph:',':#gigachadorthodox:',':#marseyorthodox:',':#marseyorthodoxpat:')
+
+	db = db_session()
+	marseys_const = [x[0] for x in db.query(Marsey.name).filter(Marsey.name!='chudsey').all()]
+	marseys_const2 = marseys_const + ['chudsey','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','exclamationpoint','period','questionmark']
+	db.close()
+else:
+	christian_emojis = ()
+	marseys_const = []
+	marseys_const2 = []
 
 valid_username_chars = 'a-zA-Z0-9_\\-'
 valid_username_regex = re.compile("^[a-zA-Z0-9_\\-]{3,25}$", flags=re.A)
