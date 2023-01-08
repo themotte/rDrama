@@ -2,9 +2,6 @@ import time
 
 from sqlalchemy.sql import func
 
-from files.helpers.const import *
-
-
 def apply_time_filter(objects, t, cls):
 	now = int(time.time())
 	if t == 'hour':
