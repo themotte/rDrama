@@ -1,9 +1,7 @@
-from os import environ, listdir
+from os import environ
 import re
 from copy import deepcopy
-from json import loads
 from files.__main__ import db_session
-from files.classes.sub import Sub
 from files.classes.marsey import Marsey
 from flask import request
 
