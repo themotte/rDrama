@@ -1,3 +1,5 @@
+import secrets
+
 from urllib.parse import urlencode
 from files.mail import *
 from files.__main__ import app, limiter
@@ -136,7 +138,7 @@ def login_post():
 		abort(400)
 
 	session.permanent = True
-	session["session_id"] = token_hex(49)
+	session["session_id"] = secrets.token_hex(49)
 	session["lo_user"] = account.id
 	session["login_nonce"] = account.login_nonce
 	if account.id == OWNER_ID:
@@ -199,7 +201,7 @@ def sign_up_get(v):
 		return render_template("sign_up_failed_ref.html")
 
 	now = int(time.time())
-	token = token_hex(16)
+	token = secrets.token_hex(16)
 	session["signup_token"] = token
 
 	formkey_hashstr = str(now) + token + agent
@@ -361,7 +363,7 @@ def sign_up_post(v):
 	send_notification(new_user.id, WELCOME_MSG)
 
 	session.permanent = True
-	session["session_id"] = token_hex(49)
+	session["session_id"] = secrets.token_hex(49)
 	session["lo_user"] = new_user.id
 
 	g.db.commit()

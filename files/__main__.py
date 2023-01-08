@@ -3,7 +3,6 @@ from pathlib import Path
 import gevent.monkey
 gevent.monkey.patch_all()
 from os import environ, path
-import secrets
 from files.helpers.strings import bool_from_string
 from flask import *
 from flask_caching import Cache
