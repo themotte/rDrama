@@ -18,6 +18,7 @@ from files.classes.submission import Submission
 from files.classes.user import User
 from files.classes.votes import CommentVote, Vote
 from files.helpers.alerts import *
+from files.helpers.config.environment import IMGUR_KEY, MULTIMEDIA_EMBEDDING_ENABLED, SITE, SITE_ID, YOUTUBE_KEY
 from files.helpers.const import *
 from files.helpers.contentsorting import sort_objects
 from files.helpers.get import (get_account, get_comment_trees_eager,
@@ -852,7 +853,7 @@ def submit_post(v, sub=None):
 				name = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(name)
 				image = process_image(name)
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+				if MULTIMEDIA_EMBEDDING_ENABLED:
 					body += f"\n\n![]({image})"
 				else:
 					body += f'\n\n<a href="{image}">{image}</a>'
@@ -867,7 +868,7 @@ def submit_post(v, sub=None):
 						if err == 'File exceeds max duration': err += ' (60 seconds)'
 						return error(err)
 				if url.endswith('.'): url += 'mp4'
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+				if MULTIMEDIA_EMBEDDING_ENABLED:
 					body += f"\n\n![]({url})"
 				else:
 					body += f'\n\n<a href="{url}">{url}</a>'

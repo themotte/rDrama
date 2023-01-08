@@ -6,9 +6,9 @@ from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
-from files.__main__ import app
 from files.classes.base import Base
 from files.helpers.config.regex import controversial_regex
+from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS, SITE_FULL
 from files.helpers.const import *
 from files.helpers.lazy import lazy
 
@@ -81,7 +81,7 @@ class Comment(Base):
 	def should_hide_score(self):
 		comment_age_seconds = int(time.time()) - self.created_utc
 		comment_age_hours = comment_age_seconds / (60*60)
-		return comment_age_hours < app.config['SCORE_HIDING_TIME_HOURS']
+		return comment_age_hours < SCORE_HIDING_TIME_HOURS
 
 	@property
 	@lazy

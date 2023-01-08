@@ -7,9 +7,10 @@ from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql.schema import Column, FetchedValue, ForeignKey, Index
 from sqlalchemy.sql.sqltypes import Boolean, Integer, String
 
-from files.__main__ import app
 from files.classes.base import Base
 from files.helpers.assetcache import assetcache_path
+from files.helpers.config.environment import (SCORE_HIDING_TIME_HOURS, SITE,
+                                              SITE_FULL, SITE_ID)
 from files.helpers.config.regex import title_regex
 from files.helpers.const import *
 from files.helpers.lazy import lazy
@@ -90,7 +91,7 @@ class Submission(Base):
 	def should_hide_score(self):
 		submission_age_seconds = int(time.time()) - self.created_utc
 		submission_age_hours = submission_age_seconds / (60*60)
-		return submission_age_hours < app.config['SCORE_HIDING_TIME_HOURS']
+		return submission_age_hours < SCORE_HIDING_TIME_HOURS
 
 	@property
 	@lazy

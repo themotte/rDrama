@@ -1,4 +1,5 @@
 import hmac
+from os import environ
 import random
 import secrets
 import time
@@ -11,6 +12,7 @@ from files.classes.alts import Alt
 from files.classes.badges import Badge
 from files.classes.user import User
 from files.helpers.alerts import send_notification
+from files.helpers.config.environment import SECRET_KEY, SITE_FULL, WELCOME_MSG
 from files.helpers.config.regex import (email_regex, valid_password_regex,
                                         valid_username_regex)
 from files.helpers.const import *
@@ -221,7 +223,7 @@ def sign_up_get(v):
 
 	formkey_hashstr = str(now) + token + agent
 
-	formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
+	formkey = hmac.new(key=bytes(SECRET_KEY, "utf-16"),
 					   msg=bytes(formkey_hashstr, "utf-16"),
 					   digestmod='md5'
 					   ).hexdigest()

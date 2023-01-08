@@ -18,6 +18,7 @@ from files.classes.submission import Submission
 from files.classes.user import User
 from files.classes.usernotes import UserNote, UserTag
 from files.helpers.alerts import *
+from files.helpers.config.environment import CF_HEADERS, CF_ZONE, SITE
 from files.helpers.const import *
 from files.helpers.get import *
 from files.helpers.sanitize import *

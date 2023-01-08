@@ -25,6 +25,7 @@ from files.classes.views import ViewerRelationship
 from files.classes.votes import CommentVote, Vote
 from files.helpers.alerts import *
 from files.helpers.assetcache import assetcache_path
+from files.helpers.config.environment import ENABLE_SERVICES, IMGUR_KEY, PUSHER_ID, PUSHER_KEY, SITE, SITE_ID
 from files.helpers.const import *
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.get import get_account, get_comment, get_comments, get_posts
@@ -90,7 +91,7 @@ def leaderboard_thread():
 	db.close()
 	stdout.flush()
 
-if app.config["ENABLE_SERVICES"]:
+if ENABLE_SERVICES:
 	gevent.spawn(leaderboard_thread())
 
 @app.get("/@<username>/upvoters/<uid>/posts")

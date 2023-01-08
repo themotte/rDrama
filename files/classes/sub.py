@@ -1,17 +1,12 @@
-from os import environ
-
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import Column, Index
 from sqlalchemy.sql.sqltypes import String
 
 from files.classes.base import Base
+from files.helpers.config.environment import SITE_FULL
 from files.helpers.lazy import lazy
 
 from .sub_block import *
-
-SITE = environ.get("DOMAIN", '').strip()
-if SITE == "localhost": SITE_FULL = 'http://' + SITE
-else: SITE_FULL = 'https://' + SITE
 
 class Sub(Base):
 

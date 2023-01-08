@@ -15,6 +15,7 @@ from files.__main__ import app, cache, limiter
 from files.classes.user import User
 from files.classes.userblock import UserBlock
 from files.helpers.alerts import *
+from files.helpers.config.environment import IMGUR_KEY, YOUTUBE_KEY
 from files.helpers.const import *
 from files.helpers.images import process_image
 from files.helpers.sanitize import *

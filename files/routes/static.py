@@ -18,6 +18,7 @@ from files.classes.userblock import UserBlock
 from files.classes.votes import CommentVote, Vote
 from files.helpers.alerts import *
 from files.helpers.cache import make_cache_key
+from files.helpers.config.environment import IMGUR_KEY, SITE
 from files.helpers.const import *
 from files.helpers.get import get_account, get_id
 from files.helpers.images import process_image

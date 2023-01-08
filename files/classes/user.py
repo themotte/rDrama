@@ -27,6 +27,7 @@ from files.classes.submission import Submission
 from files.classes.subscriptions import Subscription
 from files.classes.userblock import UserBlock
 from files.helpers.assetcache import assetcache_path
+from files.helpers.config.environment import *
 from files.helpers.const import *
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.images import *
