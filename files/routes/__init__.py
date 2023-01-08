@@ -1,3 +1,7 @@
+# import jinja2 helper then...
+from files.helpers.jinja2 import *
+
+# import routes :)
 from .admin import *
 from .comments import *
 from .errors import *
