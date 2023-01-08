@@ -57,6 +57,9 @@ from sqlalchemy.orm import relationship, deferred
 from urllib.parse import urlencode, urlparse, parse_qs
 from urllib.parse import urlparse
 
+# Then import our declarative base
+from .base import Base
+
 # It is now safe to define the models
 from .alts import Alt
 from .award import AwardRelationship
@@ -91,4 +94,4 @@ from files.helpers.security import *
 
 # Then the specific stuff we don't want stomped on
 from files.helpers.lazy import lazy
-from files.__main__ import Base, app, cache
+from files.__main__ import app, cache
