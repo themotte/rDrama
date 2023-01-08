@@ -31,7 +31,7 @@ from files.__main__ import app, cache
 from datetime import datetime
 from os import environ
 
-from sqlalchemy import Column, ForeignKey, Index, UniqueConstraint
+from sqlalchemy.schema import Column, ForeignKey, Index, UniqueConstraint
 from sqlalchemy.orm import aliased, deferred, relationship
 from sqlalchemy.sql.sqltypes import Boolean, DateTime, Integer, String
 

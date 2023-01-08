@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Index
+from sqlalchemy.schema import Column, Index
 from sqlalchemy.sql.sqltypes import String
 from files.classes.base import Base
 
