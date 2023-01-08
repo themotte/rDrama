@@ -9,6 +9,7 @@ from files.mail import *
 from files.__main__ import app, limiter
 from files.helpers.const import *
 from files.helpers.strings import sql_ilike_clean
+from files.routes.importstar import *
 import requests
 
 @app.get("/login")

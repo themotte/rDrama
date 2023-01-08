@@ -4,15 +4,18 @@ import qrcode
 import io
 import time
 import math
+import os
 
 import requests
 import pyotp
 
 from files.classes.alts import Alt
+from files.classes.badges import Badge
 from files.classes.comment import Comment
 from files.classes.follows import Follow
 from files.classes.submission import Submission
 from files.classes.subscriptions import Subscription
+from files.classes.user import User
 from files.classes.views import ViewerRelationship
 from files.classes.votes import CommentVote, Vote
 from files.helpers.alerts import *
@@ -23,9 +26,9 @@ from files.helpers.strings import sql_ilike_clean
 from files.helpers.const import *
 from files.helpers.assetcache import assetcache_path
 from files.helpers.contentsorting import apply_time_filter, sort_objects
-from files.mail import *
+from files.helpers.wrappers import admin_level_required, auth_desired, auth_required, is_not_permabanned
 from files.routes.importstar import *
-from files.__main__ import app, limiter, db_session
+from files.__main__ import app, cache, limiter, db_session
 from pusher_push_notifications import PushNotifications
 from collections import Counter
 import gevent
