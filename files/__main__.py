@@ -1,23 +1,29 @@
-
-from pathlib import Path
 import gevent.monkey
 gevent.monkey.patch_all()
-from os import environ, path
-from files.helpers.strings import bool_from_string
+
+# ^ special case: in general imports should go
+# stdlib - externals - internals, but gevent does monkey patching for stdlib 
+# functions so we want to monkey patch before importing other things
+
+import faulthandler
+
+from pathlib import Path
+from os import environ
+from sys import argv
+
 import flask
 import flask_caching
 import flask_limiter
 import flask_compress
 import flask_mail
 import flask_profiler
-from sqlalchemy.orm import sessionmaker, scoped_session
-from sqlalchemy import *
 import gevent
 import redis
-import time
-from sys import stdout, argv
-import faulthandler
-import json
+
+from sqlalchemy.engine import create_engine
+from sqlalchemy.orm import sessionmaker, scoped_session
+
+from files.helpers.strings import bool_from_string
 
 
 app = flask.Flask(__name__, template_folder='templates')
@@ -156,48 +162,7 @@ cache = flask_caching.Cache(app)
 flask_compress.Compress(app)
 mail = flask_mail.Mail(app)
 
-@app.before_request
-def before_request():
-	with open('site_settings.json', 'r') as f:
-		app.config['SETTINGS'] = json.load(f)
-
-	if request.host != app.config["SERVER_NAME"]:
-		return {"error": "Unauthorized host provided."}, 403
-
-	if not app.config['SETTINGS']['Bots'] and request.headers.get("Authorization"):
-		abort(403, "Bots are currently not allowed")
-
-	g.agent = request.headers.get("User-Agent")
-	if not g.agent:
-		return 'Please use a "User-Agent" header!', 403
-
-	ua = g.agent.lower()
-	g.debug = app.debug
-	g.webview = ('; wv) ' in ua)
-	g.inferior_browser = (
-		'iphone' in ua or
-		'ipad' in ua or
-		'ipod' in ua or
-		'mac os' in ua or
-		' firefox/' in ua)
-	g.timestamp = int(time.time())
-
-	limiter.check()
-
-	g.db = db_session()
-
-
-@app.teardown_appcontext
-def teardown_request(error):
-	if hasattr(g, 'db') and g.db:
-		g.db.close()
-	stdout.flush()
-
-@app.after_request
-def after_request(response):
-	response.headers.add("Strict-Transport-Security", "max-age=31536000")
-	response.headers.add("X-Frame-Options", "deny")
-	return response
+from files.routes.allroutes import *
 
 if "load_chat" in argv:
 	from files.routes.chat import *
