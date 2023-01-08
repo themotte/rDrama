@@ -1,5 +1,6 @@
-from sqlalchemy import *
+from sqlalchemy import Column, ForeignKey, Index, UniqueConstraint
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.sqltypes import Integer, String
 from files.classes.base import Base
 from os import environ
 from files.helpers.lazy import lazy

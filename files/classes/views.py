@@ -1,5 +1,6 @@
-from sqlalchemy import *
+from sqlalchemy import Column, ForeignKey, Index
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.sqltypes import Integer
 from files.classes.base import Base
 from files.helpers.lazy import *
 import time
@@ -26,13 +27,11 @@ class ViewerRelationship(Base):
 	@property
 	@lazy
 	def last_view_since(self):
-
 		return int(time.time()) - self.last_view_utc
 
 	@property
 	@lazy
 	def last_view_string(self):
-
 		age = self.last_view_since
 
 		if age < 60:

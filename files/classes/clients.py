@@ -1,6 +1,7 @@
 from flask import *
-from sqlalchemy import *
+from sqlalchemy import Column, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.sqltypes import Integer, String
 from .submission import Submission
 from .comment import Comment
 from files.classes.base import Base

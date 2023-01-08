@@ -1,5 +1,6 @@
-from sqlalchemy import *
+from sqlalchemy import Column, Index
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.sqltypes import String
 from files.classes.base import Base
 from files.helpers.lazy import lazy
 from os import environ

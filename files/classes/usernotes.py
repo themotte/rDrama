@@ -1,7 +1,8 @@
 import time
 from flask import *
-from sqlalchemy import *
+from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.sqltypes import Integer, String
 from files.classes.base import Base
 from files.helpers.const import *
 from enum import Enum

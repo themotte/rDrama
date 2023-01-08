@@ -1,7 +1,9 @@
 import random
 import time
 from urllib.parse import urlparse
-from sqlalchemy import *
+from sqlalchemy import Column, ForeignKey, Index
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.sqltypes import Boolean, Integer, String
 from sqlalchemy.orm import relationship, deferred
 from files.classes.base import Base
 from files.__main__ import app

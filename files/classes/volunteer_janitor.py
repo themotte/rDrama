@@ -1,8 +1,9 @@
 
 import enum
 from files.classes.base import Base
-from sqlalchemy import *
+from sqlalchemy import Column, ForeignKey, Index
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.sqltypes import DateTime, Enum, Integer
 
 class VolunteerJanitorResult(enum.Enum):
     Pending = 0

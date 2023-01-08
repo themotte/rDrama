@@ -1,6 +1,7 @@
 from flask import *
-from sqlalchemy import *
+from sqlalchemy import Column, ForeignKey, Index
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.sqltypes import Boolean, Integer
 from files.classes.base import Base
 from files.helpers.lazy import lazy
 import time
