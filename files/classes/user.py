@@ -2,6 +2,7 @@ from sqlalchemy.orm import deferred, aliased
 import pyotp
 from files.helpers.images import *
 from files.helpers.const import *
+from files.classes.base import Base
 from .alts import Alt
 from .saves import *
 from .notifications import Notification
@@ -15,7 +16,7 @@ from .mod_logs import *
 from .mod import *
 from .exiles import *
 from .sub_block import *
-from files.__main__ import app, Base, cache
+from files.__main__ import app, cache
 from files.helpers.security import *
 from files.helpers.assetcache import assetcache_path
 from files.helpers.contentsorting import apply_time_filter, sort_objects
