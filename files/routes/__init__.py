@@ -1,3 +1,5 @@
+from files.__main__ import app
+
 from .admin import *
 from .comments import *
 from .errors import *
@@ -15,4 +17,6 @@ from .feeds import *
 from .awards import *
 from .giphy import *
 from .volunteer import *
+if app.debug:
+	from .dev import *
 # from .subs import *
