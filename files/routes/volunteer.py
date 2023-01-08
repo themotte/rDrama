@@ -6,7 +6,7 @@ import files.helpers.jinja2
 from files.helpers.wrappers import auth_required
 from files.routes.volunteer_common import VolunteerDuty
 import files.routes.volunteer_janitor
-from flask import render_template, g, request
+from flask import abort, render_template, g, request
 from os import environ
 import sqlalchemy
 from typing import Optional
