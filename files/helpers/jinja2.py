@@ -1,9 +1,14 @@
-from files.__main__ import app
-from .get import *
-from os import listdir, environ
-from .const import * 
 import time
+
+from os import listdir, environ
+
+from flask import render_template
+
+from files.__main__ import app
 from files.helpers.assetcache import assetcache_path
+from files.helpers.const import *
+from files.helpers.get import get_post
+
 
 @app.template_filter("post_embed")
 def post_embed(id, v):
@@ -11,7 +16,6 @@ def post_embed(id, v):
 	
 	if p: return render_template("submission_listing.html", listing=[p], v=v)
 	return ''
-
 
 @app.template_filter("timestamp")
 def timestamp(timestamp):
