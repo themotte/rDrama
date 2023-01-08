@@ -1,6 +1,7 @@
 from files.mail import *
 from files.__main__ import app, limiter
 from files.helpers.alerts import *
+from files.helpers.cache import make_cache_key
 from files.helpers.const import *
 from sqlalchemy import func
 import calendar
@@ -27,7 +28,7 @@ def logged_out(old = ""):
 	return redirect(redirect_url)
 
 @app.get("/marsey_list")
-@cache.memoize(timeout=600, make_name=make_name)
+@cache.memoize(timeout=600, make_name=make_cache_key)
 def marsey_list():
 	marseys = [f"{x.name} : {x.tags}" for x in g.db.query(Marsey).order_by(Marsey.count.desc())]
 
@@ -50,7 +51,7 @@ def support(v):
 
 @app.get("/stats")
 @auth_desired
-@cache.memoize(timeout=86400, make_name=make_name)
+@cache.memoize(timeout=86400, make_name=make_cache_key)
 def participation_stats(v):
 
 
@@ -385,7 +386,7 @@ def robots_txt():
 
 @app.get("/badges")
 @admin_level_required(2)
-@cache.memoize(timeout=3600, make_name=make_name)
+@cache.memoize(timeout=3600, make_name=make_cache_key)
 def badges(v):
 	badges = g.db.query(BadgeDef).order_by(BadgeDef.id).all()
 	counts_raw = g.db.query(Badge.badge_id, func.count()).group_by(Badge.badge_id).all()
