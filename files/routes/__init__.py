@@ -1,3 +1,6 @@
+# import our app then...
+from files.__main__ import app
+
 # import jinja2 helper then...
 from files.helpers.jinja2 import *
 
