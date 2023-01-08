@@ -1,18 +1,24 @@
 import time
 import gevent
+
+from urllib.parse import ParseResult, parse_qs, urlunparse, urlparse, urlencode, unquote
+from files.helpers.images import process_image
+
+
 from files.helpers.wrappers import *
 from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.alerts import *
 from files.helpers.contentsorting import sort_objects
 from files.helpers.const import *
-from files.classes import *
+from files.classes.submission import Submission
+from files.classes.mod_logs import ModAction
+from files.classes.saves import SaveRelationship
 from flask import *
 from io import BytesIO
 from files.__main__ import app, limiter, cache, db_session
 from PIL import Image as PILimage
 from .front import frontlist, changeloglist
-from urllib.parse import ParseResult, urlunparse, urlparse, quote, unquote
 from os import path
 import requests
 from shutil import copyfile

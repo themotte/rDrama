@@ -1,4 +1,4 @@
-from files.classes import *
+from files.classes import Comment, Notification
 from flask import g
 from .sanitize import *
 from .const import *

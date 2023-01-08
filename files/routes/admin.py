@@ -7,7 +7,17 @@ from files.helpers.security import *
 from files.helpers.get import *
 from files.helpers.images import *
 from files.helpers.const import *
-from files.classes import *
+
+from files.classes.award import AwardRelationship
+from files.classes.badges import Badge, BadgeDef
+from files.classes.comment import Comment
+from files.classes.domains import BannedDomain
+from files.classes.exiles import Exile
+from files.classes.mod import Mod
+from files.classes.mod_logs import ModAction
+from files.classes.submission import Submission
+from files.classes.user import User
+
 from flask import *
 from files.__main__ import app, cache, limiter
 from .front import frontlist

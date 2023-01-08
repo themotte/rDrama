@@ -2,7 +2,8 @@ from files.helpers.wrappers import *
 from files.helpers.alerts import *
 from files.helpers.get import *
 from files.helpers.const import *
-from files.classes import *
+from files.classes.clients import ClientAuth, OauthApp
+from files.classes.mod_logs import ModAction
 from flask import *
 from files.__main__ import app, limiter
 import sqlalchemy.exc

@@ -2,7 +2,10 @@ from files.helpers.wrappers import *
 from files.helpers.alerts import *
 from files.helpers.images import *
 from files.helpers.const import *
-from files.classes import *
+from files.classes.comment import Comment
+from files.classes.votes import CommentVote
+from files.classes.submission import Submission
+from files.classes.saves import CommentSaveRelationship
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter

@@ -1,10 +1,13 @@
-from files.__main__ import app, limiter, mail
+from flask import g, redirect, render_template
+
+from files.__main__ import app, cache, limiter
 from files.helpers.alerts import *
 from files.helpers.wrappers import *
-from files.classes import *
+from files.classes.exiles import Exile
+from files.classes.sub import Sub
+from files.classes.mod import Mod
+from files.classes.sub_block import SubBlock
 from .front import frontlist
-
-
 
 @app.post("/exile/post/<pid>")
 @is_not_permabanned
