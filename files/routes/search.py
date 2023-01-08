@@ -72,8 +72,7 @@ def searchposts(v):
 		else: posts = posts.filter(Submission.author_id == author.id)
 
 	if 'q' in criteria:
-		words=criteria['q'].split()
-		words = criteria['q'].replace(r'\\', '').replace('_', r'\_').replace('%', r'\%').strip().split()
+		words = sql_ilike_clean(criteria['q']).split()
 		words=[Submission.title.ilike('%'+x+'%') for x in words]
 		posts=posts.filter(*words)
 		
@@ -158,7 +157,7 @@ def searchcomments(v):
 		else: comments = comments.filter(Comment.author_id == author.id)
 
 	if 'q' in criteria:
-		words = criteria['q'].replace(r'\\', '').replace('_', r'\_').replace('%', r'\%').strip().split()
+		words = sql_ilike_clean(criteria['q']).split()
 
 		words = [Comment.body.ilike('%'+x+'%') for x in words]
 		comments = comments.filter(*words)

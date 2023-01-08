@@ -2,10 +2,10 @@ import time
 import gevent
 from files.helpers.wrappers import *
 from files.helpers.sanitize import *
-from files.helpers.strings import sql_ilike_clean
 from files.helpers.alerts import *
 from files.helpers.contentsorting import sort_objects
 from files.helpers.const import *
+from files.helpers.strings import sql_ilike_clean
 from files.classes import *
 from flask import *
 from io import BytesIO
@@ -658,7 +658,7 @@ def api_is_repost():
 
 	if url.endswith('/'): url = url[:-1]
 
-	search_url = url.replace('%', '').replace(r'\\', '').replace('_', r'\_').strip()
+	search_url = sql_ilike_clean(url)
 	repost = g.db.query(Submission).filter(
 		Submission.url.ilike(search_url),
 		Submission.deleted_utc == 0,
@@ -735,13 +735,12 @@ def submit_post(v, sub=None):
 								query=urlencode(filtered, doseq=True),
 								fragment=parsed_url.fragment)
 		
-		url = urlunparse(new_url)
+		search_url = urlunparse(new_url)
 
-		if url.endswith('/'): url = url[:-1]
+		if search_url.endswith('/'): url = url[:-1]
 
-		search_url = sql_ilike_clean(url)
 		repost = g.db.query(Submission).filter(
-			Submission.url.ilike(search_url),
+			func.lower(Submission.url) == search_url.lower(),
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False
 		).first()

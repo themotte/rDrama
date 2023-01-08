@@ -2,24 +2,22 @@ from collections import defaultdict
 from typing import Iterable, List, Optional, Type, Union
 
 from flask import g
-from sqlalchemy import and_, any_, or_
+from sqlalchemy import and_, or_, func
 from sqlalchemy.orm import selectinload
 
 from files.classes import *
 from files.helpers.const import AUTOJANNY_ID
 from files.helpers.contentsorting import sort_comment_results
-from files.helpers.strings import sql_ilike_clean
 
 
 def get_id(
 		username:str,
 		graceful:bool=False) -> Optional[int]:
-	username = sql_ilike_clean(username)
 
 	user = g.db.query(User.id).filter(
 		or_(
-			User.username.ilike(username),
-			User.original_username.ilike(username)
+			func.lower(User.username) == username.lower(),
+			func.lower(User.original_username) == username.lower()
 			)
 		).one_or_none()
 
@@ -35,15 +33,14 @@ def get_user(
 		v:Optional[User]=None,
 		graceful:bool=False,
 		include_blocks:bool=False) -> Optional[User]:
-	username = sql_ilike_clean(username)
 	if not username:
 		if graceful: return None
 		abort(404)
 
 	user = g.db.query(User).filter(
 		or_(
-			User.username.ilike(username),
-			User.original_username.ilike(username)
+			func.lower(User.username) == username.lower(),
+			func.lower(User.original_username) == username.lower()
 			)
 		).one_or_none()
 
@@ -61,14 +58,13 @@ def get_users(
 		usernames:Iterable[str],
 		graceful:bool=False) -> List[User]:
 	if not usernames: return []
-	usernames = [ sql_ilike_clean(n) for n in usernames ]
 	if not any(usernames):
 		if graceful and len(usernames) == 0: return []
 		abort(404)
 	users = g.db.query(User).filter(
 		or_(
-			User.username == any_(usernames),
-			User.original_username == any_(usernames)
+			func.lower(User.username).in_([name.lower() for name in usernames]),
+			func.lower(User.original_username).in_([name.lower() for name in usernames])
 			)
 		).all()
 
