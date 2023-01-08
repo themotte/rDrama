@@ -4,11 +4,11 @@ import gevent.monkey
 gevent.monkey.patch_all()
 from os import environ, path
 from files.helpers.strings import bool_from_string
-from flask import *
-from flask_caching import Cache
-from flask_limiter import Limiter
-from flask_compress import Compress
-from flask_mail import Mail
+import flask
+import flask_caching
+import flask_limiter
+import flask_compress
+import flask_mail
 import flask_profiler
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import *
@@ -20,7 +20,7 @@ import faulthandler
 import json
 
 
-app = Flask(__name__, template_folder='templates')
+app = flask.Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
 app.jinja_env.cache = {}
 app.jinja_env.auto_reload = True
@@ -138,7 +138,7 @@ def get_remote_addr():
 app.config['RATE_LIMITER_ENABLED'] = not bool_from_string(environ.get('DBG_LIMITER_DISABLED', False))
 if not app.config['RATE_LIMITER_ENABLED']:
 	print("Rate limiter disabled in debug mode!")
-limiter = Limiter(
+limiter = flask_limiter.Limiter(
 	app,
 	key_func=get_remote_addr,
 	default_limits=["3/second;30/minute;200/hour;1000/day"],
@@ -152,9 +152,9 @@ engine = create_engine(app.config['DATABASE_URL'])
 
 db_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
 
-cache = Cache(app)
-Compress(app)
-mail = Mail(app)
+cache = flask_caching.Cache(app)
+flask_compress.Compress(app)
+mail = flask_mail.Mail(app)
 
 @app.before_request
 def before_request():
