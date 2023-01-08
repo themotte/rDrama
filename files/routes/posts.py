@@ -15,6 +15,7 @@ from files.classes.mod_logs import ModAction
 from files.classes.saves import SaveRelationship
 from files.classes.sub import Sub
 from files.classes.submission import Submission
+from files.classes.user import User
 from files.classes.votes import CommentVote, Vote
 from files.helpers.alerts import *
 from files.helpers.const import *
@@ -24,7 +25,7 @@ from files.helpers.get import (get_account, get_comment_trees_eager,
 from files.helpers.images import process_image
 from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
-from files.helpers.wrappers import *
+from files.helpers.wrappers import auth_desired, auth_required
 from files.routes.importstar import *
 
 from .front import changeloglist, frontlist

@@ -1,3 +1,4 @@
+import time
 from sys import stdout
 
 import gevent
@@ -10,13 +11,14 @@ from files.classes.mod_logs import ModAction
 from files.classes.saves import CommentSaveRelationship
 from files.classes.submission import Submission
 from files.classes.subscriptions import Subscription
+from files.classes.user import User
 from files.classes.votes import CommentVote
 from files.helpers.alerts import *
 from files.helpers.assetcache import assetcache_path
 from files.helpers.const import *
 from files.helpers.get import get_comment, get_post
 from files.helpers.images import *
-from files.helpers.wrappers import *
+from files.helpers.wrappers import auth_desired, auth_required
 from files.routes.importstar import *
 
 if PUSHER_ID != 'blahblahblah':

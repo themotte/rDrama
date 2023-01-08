@@ -7,7 +7,7 @@ from flask import abort, g, make_response, request, session
 from files.__main__ import app, cache, db_session
 from files.classes.clients import ClientAuth
 from files.classes.user import User
-from files.helpers.const import *
+from files.helpers.const import LOGGEDIN_ACTIVE_TIME
 
 
 def get_logged_in_user():
