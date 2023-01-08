@@ -1,5 +1,5 @@
 from sqlalchemy import *
-from files.__main__ import Base
+from files.classes.base import Base
 
 class Marsey(Base):
 	__tablename__ = "marseys"

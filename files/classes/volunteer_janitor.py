@@ -1,6 +1,6 @@
 
 import enum
-from files.__main__ import Base
+from files.classes.base import Base
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 

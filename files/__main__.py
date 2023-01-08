@@ -150,8 +150,6 @@ limiter = Limiter(
 	enabled=app.config['RATE_LIMITER_ENABLED'],
 )
 
-Base = declarative_base()
-
 engine = create_engine(app.config['DATABASE_URL'])
 
 db_session = scoped_session(sessionmaker(bind=engine, autoflush=False))

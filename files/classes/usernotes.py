@@ -2,7 +2,7 @@ import time
 from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.__main__ import Base
+from files.classes.base import Base
 from files.helpers.const import *
 from enum import Enum
 from sqlalchemy import Enum as EnumType

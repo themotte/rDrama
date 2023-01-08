@@ -1,6 +1,7 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.__main__ import Base, app
+from files.classes.base import Base
+from files.__main__ import app
 from os import environ
 from files.helpers.lazy import lazy
 from files.helpers.const import *

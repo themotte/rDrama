@@ -3,7 +3,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from .submission import Submission
 from .comment import Comment
-from files.__main__ import Base
+from files.classes.base import Base
 from files.helpers.lazy import lazy
 from files.helpers.const import *
 import time
