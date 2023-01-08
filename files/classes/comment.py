@@ -8,6 +8,7 @@ from sqlalchemy.orm import relationship
 
 from files.__main__ import app
 from files.classes.base import Base
+from files.helpers.config.regex import controversial_regex
 from files.helpers.const import *
 from files.helpers.lazy import lazy
 

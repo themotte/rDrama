@@ -10,6 +10,7 @@ from sqlalchemy.sql.sqltypes import Boolean, Integer, String
 from files.__main__ import app
 from files.classes.base import Base
 from files.helpers.assetcache import assetcache_path
+from files.helpers.config.regex import title_regex
 from files.helpers.const import *
 from files.helpers.lazy import lazy
 

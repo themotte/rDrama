@@ -11,6 +11,8 @@ from files.classes.alts import Alt
 from files.classes.badges import Badge
 from files.classes.user import User
 from files.helpers.alerts import send_notification
+from files.helpers.config.regex import (email_regex, valid_password_regex,
+                                        valid_username_regex)
 from files.helpers.const import *
 from files.helpers.get import get_account, get_user
 from files.helpers.security import generate_hash, hash_password, validate_hash

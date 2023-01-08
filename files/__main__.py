@@ -22,6 +22,7 @@ import redis
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+from files.helpers.config.stateful import const_initialize
 from files.helpers.strings import bool_from_string
 
 app = flask.Flask(__name__, template_folder='templates')
@@ -155,6 +156,7 @@ limiter = flask_limiter.Limiter(
 engine = create_engine(app.config['DATABASE_URL'])
 
 db_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
+const_initialize(db_session)
 
 cache = flask_caching.Cache(app)
 flask_compress.Compress(app)
