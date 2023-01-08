@@ -1,4 +1,4 @@
-from sqlalchemy.schema import Column, ForeignKey, Index, UniqueConstraint
+from sqlalchemy.sql.schema import Column, ForeignKey, Index, UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import Integer, String
 from files.classes.base import Base

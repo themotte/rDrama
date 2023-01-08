@@ -1,4 +1,4 @@
-from sqlalchemy.schema import Column, ForeignKey, Index
+from sqlalchemy.sql.schema import Column, ForeignKey, Index
 from sqlalchemy.sql.sqltypes import Integer, String
 from files.classes.base import Base
 from files.helpers.lazy import *

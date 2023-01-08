@@ -2,7 +2,7 @@ import random
 import time
 from urllib.parse import urlparse
 from sqlalchemy.orm import relationship
-from sqlalchemy.schema import Column, FetchedValue, ForeignKey, Index
+from sqlalchemy.sql.schema import Column, FetchedValue, ForeignKey, Index
 from sqlalchemy.sql.sqltypes import Boolean, Integer, String
 from sqlalchemy.orm import relationship, deferred
 from files.classes.base import Base

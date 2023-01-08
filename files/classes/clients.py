@@ -1,5 +1,5 @@
 from flask import *
-from sqlalchemy.schema import Column, ForeignKey, UniqueConstraint
+from sqlalchemy.sql.schema import Column, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import Integer, String
 from .submission import Submission
