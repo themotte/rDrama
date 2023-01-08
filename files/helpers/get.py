@@ -1,11 +1,17 @@
 from collections import defaultdict
 from typing import Iterable, List, Optional, Type, Union
 
-from flask import g
+from flask import abort, g
 from sqlalchemy import and_, any_, or_
 from sqlalchemy.orm import selectinload
 
-from files.classes import *
+from files.classes.comment import Comment
+from files.classes.domains import BannedDomain
+from files.classes.flags import CommentFlag
+from files.classes.submission import Submission
+from files.classes.user import User
+from files.classes.userblock import UserBlock
+from files.classes.votes import Vote, CommentVote
 from files.helpers.const import AUTOJANNY_ID
 from files.helpers.contentsorting import sort_comment_results
 from files.helpers.strings import sql_ilike_clean
