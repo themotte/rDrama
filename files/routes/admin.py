@@ -1,3 +1,4 @@
+import json
 import time
 
 from files.helpers.wrappers import *
@@ -20,7 +21,7 @@ from files.classes.submission import Submission
 from files.classes.user import User
 from files.classes.usernotes import UserNote, UserTag
 
-from flask import *
+from files.routes.importstar import *
 from files.__main__ import app, cache, limiter
 from .front import frontlist
 from files.routes.comments import comment_on_publish

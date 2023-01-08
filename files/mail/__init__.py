@@ -1,6 +1,6 @@
 from os import environ
 import time
-from flask import *
+from files.routes.importstar import *
 from urllib.parse import quote
 from files.helpers.alerts import send_notification
 

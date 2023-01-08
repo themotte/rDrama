@@ -24,7 +24,7 @@ from files.helpers.const import *
 from files.helpers.assetcache import assetcache_path
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.mail import *
-from flask import *
+from files.routes.importstar import *
 from files.__main__ import app, limiter, db_session
 from pusher_push_notifications import PushNotifications
 from collections import Counter

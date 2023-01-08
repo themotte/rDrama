@@ -10,7 +10,7 @@ from files.classes.submission import Submission
 from files.classes.mod_logs import ModAction
 from files.classes.saves import CommentSaveRelationship
 from pusher_push_notifications import PushNotifications
-from flask import *
+from files.routes.importstar import *
 from files.__main__ import app, limiter
 from files.helpers.assetcache import assetcache_path
 import requests

@@ -1,7 +1,7 @@
-from flask import *
+from flask import request, jsonify
 from os import environ
 import requests
-from files.helpers.wrappers import *
+from files.helpers.wrappers import auth_required
 
 from files.__main__ import app
 
@@ -11,7 +11,7 @@ GIPHY_KEY = environ.get('GIPHY_KEY').rstrip()
 @app.get("/giphy")
 @app.get("/giphy<path>")
 @auth_required
-def giphy(v=None, path=None):
+def giphy(v, path=None):
 
 	searchTerm = request.values.get("searchTerm", "").strip()
 	limit = int(request.values.get("limit", 48))

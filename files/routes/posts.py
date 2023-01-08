@@ -17,7 +17,7 @@ from files.helpers.const import *
 from files.classes.submission import Submission
 from files.classes.mod_logs import ModAction
 from files.classes.saves import SaveRelationship
-from flask import *
+from files.routes.importstar import *
 from io import BytesIO
 from files.__main__ import app, limiter, cache, db_session
 from PIL import Image as PILimage

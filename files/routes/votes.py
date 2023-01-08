@@ -4,7 +4,7 @@ from files.helpers.const import *
 from files.classes.comment import Comment
 from files.classes.submission import Submission
 from files.classes.votes import CommentVote, Vote
-from flask import *
+from files.routes.importstar import *
 from files.__main__ import app, limiter, cache
 from os import environ
 
