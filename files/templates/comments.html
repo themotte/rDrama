@@ -253,32 +253,6 @@
 			{% if c.is_banned and c.ban_reason %}
 				<div id="comment-banned-warning" class="comment-text text-removed mb-0">removed by @{{c.ban_reason}}</div>
 			{% endif %}
-			
-			{% if c.award_count("tilt") %}
-				<style>
-					@keyframes c{{c.id}}-tilt {
-						0% {transform: rotate(0deg);}
-						25% {transform: rotate({{c.award_count("tilt")}}deg);}
-						75% {transform: rotate(-{{c.award_count("tilt")}}deg);}
-						100% {transform: rotate(0deg);}
-					}
-					@media (max-width: 720px) {
-						@keyframes c{{c.id}}-tilt {
-							0% {transform: rotate(0deg);}
-							25% {transform: rotate({{c.award_count("tilt")/4}}deg);}
-							75% {transform: rotate(-{{c.award_count("tilt")/4}}deg);}
-							100% {transform: rotate(0deg);}
-						}					
-					}
-					.comment-{{c.id}}-only {
-						animation-name: c{{c.id}}-tilt !important;
-						animation-duration: 30s !important;
-						animation-iteration-count: infinite !important;
-						animation-direction: alternate !important;
-						animation-timing-function: linear !important;
-					}
-				</style>
-			{% endif %}
 
 			<div id="comment-text-{{c.id}}" class="comment-text mb-0">
 				{{c.realbody(v) | safe}}
