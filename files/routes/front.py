@@ -1,8 +1,8 @@
-from operator import not_
 import secrets
 
 from flask import redirect, render_template
 from sqlalchemy import func
+from sqlalchemy.sql.elements import not_
 
 from files.classes.comment import Comment
 from files.classes.notifications import Notification
