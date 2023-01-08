@@ -1,12 +1,13 @@
 import time
-
 from http.client import responses
 from urllib.parse import quote, urlencode
 
-from flask import g, redirect, request, render_template, session
+from flask import g, redirect, render_template, request, session
 
 from files.__main__ import app
-from files.helpers.const import ERROR_MESSAGES, WERKZEUG_ERROR_DESCRIPTIONS, SITE_FULL
+from files.helpers.const import (ERROR_MESSAGES, SITE_FULL,
+                                 WERKZEUG_ERROR_DESCRIPTIONS)
+
 
 @app.errorhandler(400)
 @app.errorhandler(401)

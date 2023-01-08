@@ -1,6 +1,8 @@
+import subprocess
+
 from PIL import Image, ImageOps
 from webptools import gifwebp
-import subprocess
+
 
 def process_image(filename=None, resize=0):
 	

@@ -1,12 +1,16 @@
-from files.__main__ import app, limiter
-from files.helpers.wrappers import *
-from files.helpers.alerts import *
-from files.helpers.get import *
-from files.helpers.const import *
-from files.classes.award import *
-from .front import frontlist
-from flask import g, request
 from copy import deepcopy
+
+from flask import g, request
+
+from files.__main__ import app, limiter
+from files.classes.award import *
+from files.helpers.alerts import *
+from files.helpers.const import *
+from files.helpers.get import *
+from files.helpers.wrappers import *
+
+from .front import frontlist
+
 
 @app.get("/shop")
 @app.get("/settings/shop")

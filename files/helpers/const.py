@@ -1,6 +1,6 @@
-from os import environ
 import re
 from copy import deepcopy
+from os import environ
 
 SITE = environ.get("DOMAIN", '').strip()
 SITE_ID = environ.get("SITE_ID", '').strip()

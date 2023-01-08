@@ -1,10 +1,12 @@
 import hashlib
 import math
+
 import sqlalchemy
-from werkzeug.security import generate_password_hash
-from files.__main__ import app
-from files.classes import User, Submission, Comment, Vote, CommentVote
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash
+
+from files.__main__ import app
+from files.classes import Comment, CommentVote, Submission, User, Vote
 
 db = SQLAlchemy(app)
 

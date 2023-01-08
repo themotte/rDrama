@@ -1,9 +1,12 @@
-from sqlalchemy.sql.schema import Column, Index
+from os import environ
+
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.schema import Column, Index
 from sqlalchemy.sql.sqltypes import String
+
 from files.classes.base import Base
 from files.helpers.lazy import lazy
-from os import environ
+
 from .sub_block import *
 
 SITE = environ.get("DOMAIN", '').strip()

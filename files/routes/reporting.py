@@ -1,10 +1,12 @@
+from flask import g, request
+
+from files.__main__ import app, limiter
 from files.classes.flags import CommentFlag, Flag
 from files.classes.mod_logs import ModAction
-from files.helpers.wrappers import auth_required
 from files.helpers.get import *
-from flask import g, request
-from files.__main__ import app, limiter
 from files.helpers.sanitize import filter_emojis_only
+from files.helpers.wrappers import auth_required
+
 
 @app.post("/report/post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")

@@ -1,13 +1,16 @@
 import time
-from urllib.parse import urlencode, urlparse, parse_qs
+from random import randint
+from urllib.parse import parse_qs, urlencode, urlparse
+
 from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.classes.base import Base
+
 from files.__main__ import app
+from files.classes.base import Base
 from files.helpers.const import *
 from files.helpers.lazy import lazy
-from random import randint
+
 
 class Comment(Base):
 

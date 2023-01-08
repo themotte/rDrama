@@ -1,9 +1,10 @@
-from flask import request, jsonify
 from os import environ
+
 import requests
-from files.helpers.wrappers import auth_required
+from flask import jsonify, request
 
 from files.__main__ import app
+from files.helpers.wrappers import auth_required
 
 GIPHY_KEY = environ.get('GIPHY_KEY').rstrip()
 

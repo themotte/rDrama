@@ -1,6 +1,8 @@
 from sqlalchemy.sql.schema import Column, Index
 from sqlalchemy.sql.sqltypes import String
+
 from files.classes.base import Base
+
 
 class BannedDomain(Base):
 

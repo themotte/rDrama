@@ -1,12 +1,15 @@
 import time
+from enum import Enum
+
 from flask import *
-from sqlalchemy.sql.schema import Column, ForeignKey
+from sqlalchemy import Enum as EnumType
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.schema import Column, ForeignKey
 from sqlalchemy.sql.sqltypes import Integer, String
+
 from files.classes.base import Base
 from files.helpers.const import *
-from enum import Enum
-from sqlalchemy import Enum as EnumType
+
 
 class UserTag(Enum):
     Quality = 0

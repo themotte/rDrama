@@ -1,14 +1,16 @@
 
 from datetime import datetime, timedelta
+from typing import Optional
+
+import sqlalchemy
+from flask import abort, g, render_template, request
+
+import files.helpers.jinja2
+import files.routes.volunteer_janitor
 from files.__main__ import app
 from files.classes.user import User
-import files.helpers.jinja2
 from files.helpers.wrappers import auth_required
 from files.routes.volunteer_common import VolunteerDuty
-import files.routes.volunteer_janitor
-from flask import abort, render_template, g, request
-import sqlalchemy
-from typing import Optional
 
 
 @files.helpers.jinja2.template_function

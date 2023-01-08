@@ -1,9 +1,12 @@
-from sqlalchemy.sql.schema import Column, ForeignKey, Index
+import time
+
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.schema import Column, ForeignKey, Index
 from sqlalchemy.sql.sqltypes import Integer
+
 from files.classes.base import Base
 from files.helpers.lazy import *
-import time
+
 
 class ViewerRelationship(Base):
 

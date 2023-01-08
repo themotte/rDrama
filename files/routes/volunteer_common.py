@@ -1,6 +1,7 @@
 
 from abc import ABC, abstractmethod
 
+
 class VolunteerDuty(ABC):
 
     @abstractmethod

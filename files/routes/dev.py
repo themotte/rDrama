@@ -1,10 +1,11 @@
 import secrets
-from flask import session, redirect, request
 
+from flask import redirect, request, session
+
+from files.__main__ import app
 from files.helpers.const import PERMS
 from files.helpers.get import get_user
 from files.helpers.wrappers import admin_level_required
-from files.__main__ import app
 
 if not app.debug:
 	raise ImportError("Importing dev routes is not allowed outside of debug mode!")

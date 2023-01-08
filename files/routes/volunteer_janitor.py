@@ -1,13 +1,17 @@
 
+import random
+
+import sqlalchemy
+from flask import g
+
 from files.__main__ import app
 from files.classes.comment import Comment
 from files.classes.flags import CommentFlag
 from files.classes.user import User
-from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
+from files.classes.volunteer_janitor import (VolunteerJanitorRecord,
+                                             VolunteerJanitorResult)
 from files.routes.volunteer_common import VolunteerDuty
-from flask import g
-import random
-import sqlalchemy
+
 
 class VolunteerDutyJanitor(VolunteerDuty):
 

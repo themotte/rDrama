@@ -1,40 +1,37 @@
-from operator import and_, or_
 import time
+from datetime import datetime
+from operator import and_, or_
+from os import environ
 
 import pyotp
-
 from flask import g, session
+from sqlalchemy.orm import aliased, deferred, relationship
+from sqlalchemy.sql.schema import Column, ForeignKey, Index, UniqueConstraint
+from sqlalchemy.sql.sqltypes import Boolean, DateTime, Integer, String
 
-from files.classes.base import Base
+from files.__main__ import app, cache
 from files.classes.alts import Alt
-from files.classes.comment import Comment
-from files.classes.submission import Submission
-from files.classes.clients import OauthApp
-from files.classes.saves import SaveRelationship, CommentSaveRelationship
-from files.classes.notifications import Notification
 from files.classes.award import AwardRelationship
+from files.classes.badges import Badge
+from files.classes.base import Base
+from files.classes.clients import OauthApp
+from files.classes.comment import Comment
+from files.classes.exiles import Exile
 from files.classes.follows import Follow
+from files.classes.mod import Mod
+from files.classes.mod_logs import ModAction
+from files.classes.notifications import Notification
+from files.classes.saves import CommentSaveRelationship, SaveRelationship
+from files.classes.sub_block import SubBlock
+from files.classes.submission import Submission
 from files.classes.subscriptions import Subscription
 from files.classes.userblock import UserBlock
-from files.classes.badges import Badge
-from files.classes.mod_logs import ModAction
-from files.classes.mod import Mod
-from files.classes.exiles import Exile
-from files.classes.sub_block import SubBlock
 from files.helpers.assetcache import assetcache_path
 from files.helpers.const import *
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.images import *
 from files.helpers.lazy import lazy
 from files.helpers.security import *
-from files.__main__ import app, cache
-from datetime import datetime
-from os import environ
-
-from sqlalchemy.sql.schema import Column, ForeignKey, Index, UniqueConstraint
-from sqlalchemy.orm import aliased, deferred, relationship
-from sqlalchemy.sql.sqltypes import Boolean, DateTime, Integer, String
-
 
 defaulttheme = "TheMotte"
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()

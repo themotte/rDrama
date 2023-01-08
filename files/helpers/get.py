@@ -11,7 +11,7 @@ from files.classes.flags import CommentFlag
 from files.classes.submission import Submission
 from files.classes.user import User
 from files.classes.userblock import UserBlock
-from files.classes.votes import Vote, CommentVote
+from files.classes.votes import CommentVote, Vote
 from files.helpers.const import AUTOJANNY_ID
 from files.helpers.contentsorting import sort_comment_results
 from files.helpers.strings import sql_ilike_clean

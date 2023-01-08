@@ -1,6 +1,5 @@
 import time
-
-from os import listdir, environ
+from os import environ, listdir
 
 from flask import render_template
 

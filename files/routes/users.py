@@ -1,14 +1,19 @@
-from sqlalchemy import func
-from operator import or_
-import qrcode
 import io
-import time
 import math
 import os
+import time
+from collections import Counter
+from operator import or_
+from sys import stdout
 
-import requests
+import gevent
 import pyotp
+import qrcode
+import requests
+from pusher_push_notifications import PushNotifications
+from sqlalchemy import func
 
+from files.__main__ import app, cache, db_session, limiter
 from files.classes.alts import Alt
 from files.classes.badges import Badge
 from files.classes.comment import Comment
@@ -19,20 +24,16 @@ from files.classes.user import User
 from files.classes.views import ViewerRelationship
 from files.classes.votes import CommentVote, Vote
 from files.helpers.alerts import *
+from files.helpers.assetcache import assetcache_path
+from files.helpers.const import *
+from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.get import get_account, get_comment, get_comments, get_posts
 from files.helpers.images import process_image
 from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
-from files.helpers.const import *
-from files.helpers.assetcache import assetcache_path
-from files.helpers.contentsorting import apply_time_filter, sort_objects
-from files.helpers.wrappers import admin_level_required, auth_desired, auth_required, is_not_permabanned
+from files.helpers.wrappers import (admin_level_required, auth_desired,
+                                    auth_required, is_not_permabanned)
 from files.routes.importstar import *
-from files.__main__ import app, cache, limiter, db_session
-from pusher_push_notifications import PushNotifications
-from collections import Counter
-import gevent
-from sys import stdout
 
 if PUSHER_ID != 'blahblahblah':
 	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
@@ -1012,8 +1013,9 @@ def remove_follow(username, v):
 
 	return {"message": "Follower removed!"}
 
-from urllib.parse import urlparse
 import re
+from urllib.parse import urlparse
+
 
 @app.get("/pp/<id>")
 @app.get("/uid/<id>/pic")

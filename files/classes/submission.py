@@ -1,17 +1,20 @@
 import random
 import time
 from urllib.parse import urlparse
-from sqlalchemy.orm import relationship
+
+from flask import g
+from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql.schema import Column, FetchedValue, ForeignKey, Index
 from sqlalchemy.sql.sqltypes import Boolean, Integer, String
-from sqlalchemy.orm import relationship, deferred
-from files.classes.base import Base
+
 from files.__main__ import app
+from files.classes.base import Base
+from files.helpers.assetcache import assetcache_path
 from files.helpers.const import *
 from files.helpers.lazy import lazy
-from files.helpers.assetcache import assetcache_path
+
 from .flags import Flag
-from flask import g
+
 
 class Submission(Base):
 	__tablename__ = "submissions"

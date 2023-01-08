@@ -1,13 +1,14 @@
 import secrets
+import time
 
+import user_agents
 from flask import abort, g, make_response, request, session
 
+from files.__main__ import app, cache, db_session
 from files.classes.clients import ClientAuth
 from files.classes.user import User
 from files.helpers.const import *
-from files.__main__ import app, cache, db_session
-import user_agents
-import time
+
 
 def get_logged_in_user():
 	if hasattr(g, 'v'):

@@ -10,6 +10,7 @@ from flask import abort, g, request
 
 from files.__main__ import app, db_session, limiter
 
+
 @app.before_request
 def before_request():
 	with open('site_settings.json', 'r') as f:

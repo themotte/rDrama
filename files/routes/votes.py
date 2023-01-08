@@ -1,12 +1,14 @@
-from files.helpers.wrappers import *
-from files.helpers.get import *
-from files.helpers.const import *
+from os import environ
+
+from files.__main__ import app, cache, limiter
 from files.classes.comment import Comment
 from files.classes.submission import Submission
 from files.classes.votes import CommentVote, Vote
+from files.helpers.const import *
+from files.helpers.get import *
+from files.helpers.wrappers import *
 from files.routes.importstar import *
-from files.__main__ import app, limiter, cache
-from os import environ
+
 
 @app.get("/votes")
 @limiter.exempt

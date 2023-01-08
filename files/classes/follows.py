@@ -1,8 +1,11 @@
-from sqlalchemy.sql.schema import Column, ForeignKey, Index
-from sqlalchemy.orm import relationship
-from sqlalchemy.sql.sqltypes import Integer
-from files.classes.base import Base
 import time
+
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.schema import Column, ForeignKey, Index
+from sqlalchemy.sql.sqltypes import Integer
+
+from files.classes.base import Base
+
 
 class Follow(Base):
 	__tablename__ = "follows"

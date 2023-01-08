@@ -1,12 +1,14 @@
-from files.helpers.wrappers import *
-from files.helpers.alerts import *
-from files.helpers.get import *
-from files.helpers.const import *
+import sqlalchemy.exc
+
+from files.__main__ import app, limiter
 from files.classes.clients import ClientAuth, OauthApp
 from files.classes.mod_logs import ModAction
+from files.helpers.alerts import *
+from files.helpers.const import *
+from files.helpers.get import *
+from files.helpers.wrappers import *
 from files.routes.importstar import *
-from files.__main__ import app, limiter
-import sqlalchemy.exc
+
 
 @app.get("/authorize")
 @auth_required

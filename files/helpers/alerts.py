@@ -1,7 +1,10 @@
-from files.classes import Comment, Notification
 from flask import g
-from .sanitize import *
+
+from files.classes import Comment, Notification
+
 from .const import *
+from .sanitize import *
+
 
 def create_comment(text_html, autojanny=False):
 	if autojanny: author_id = AUTOJANNY_ID

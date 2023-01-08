@@ -1,13 +1,17 @@
-from flask import *
-from sqlalchemy.sql.schema import Column, ForeignKey, UniqueConstraint
-from sqlalchemy.orm import relationship
-from sqlalchemy.sql.sqltypes import Integer, String
-from .submission import Submission
-from .comment import Comment
-from files.classes.base import Base
-from files.helpers.lazy import lazy
-from files.helpers.const import *
 import time
+
+from flask import *
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.schema import Column, ForeignKey, UniqueConstraint
+from sqlalchemy.sql.sqltypes import Integer, String
+
+from files.classes.base import Base
+from files.helpers.const import *
+from files.helpers.lazy import lazy
+
+from .comment import Comment
+from .submission import Submission
+
 
 class OauthApp(Base):
 

@@ -1,15 +1,16 @@
-from os import environ
 import time
-from files.routes.importstar import *
+from os import environ
 from urllib.parse import quote
-from files.helpers.alerts import send_notification
 
+from flask_mail import Message
+
+from files.__main__ import app, limiter, mail
+from files.classes import Badge, User
+from files.helpers.alerts import send_notification
+from files.helpers.const import SITE, email_regex
 from files.helpers.security import generate_hash, validate_hash
 from files.helpers.wrappers import auth_required
-from files.helpers.const import email_regex, SITE
-from files.classes import Badge, User
-from files.__main__ import app, mail, limiter
-from flask_mail import Message
+from files.routes.importstar import *
 
 SITE_ID = environ.get("SITE_ID").strip()
 SITE_TITLE = environ.get("SITE_TITLE").strip()

@@ -2,23 +2,23 @@ import hmac
 import random
 import secrets
 import time
-
 from urllib.parse import urlencode
 
+import requests
+
+from files.__main__ import app, limiter
 from files.classes.alts import Alt
 from files.classes.badges import Badge
 from files.classes.user import User
-
 from files.helpers.alerts import send_notification
-from files.helpers.get import get_account, get_user
-from files.mail import send_mail, send_verification_email
-from files.__main__ import app, limiter
 from files.helpers.const import *
+from files.helpers.get import get_account, get_user
+from files.helpers.security import generate_hash, hash_password, validate_hash
 from files.helpers.strings import sql_ilike_clean
-from files.helpers.security import generate_hash, validate_hash, hash_password
-from files.routes.importstar import *
 from files.helpers.wrappers import auth_desired, auth_required
-import requests
+from files.mail import send_mail, send_verification_email
+from files.routes.importstar import *
+
 
 @app.get("/login")
 @auth_desired

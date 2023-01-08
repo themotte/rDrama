@@ -1,4 +1,5 @@
 import gevent.monkey
+
 gevent.monkey.patch_all()
 
 # ^ special case: in general imports should go
@@ -6,25 +7,22 @@ gevent.monkey.patch_all()
 # functions so we want to monkey patch before importing other things
 
 import faulthandler
-
-from pathlib import Path
 from os import environ
+from pathlib import Path
 from sys import argv
 
 import flask
 import flask_caching
-import flask_limiter
 import flask_compress
+import flask_limiter
 import flask_mail
 import flask_profiler
 import gevent
 import redis
-
 from sqlalchemy.engine import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 from files.helpers.strings import bool_from_string
-
 
 app = flask.Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
@@ -57,11 +55,11 @@ if environ.get("FLASK_PROFILER_ENDPOINT"):
 	profiler.init_app(app)
 
 try:
-	from easy_profile import EasyProfileMiddleware
-	from jinja2.utils import internal_code
-
 	import inspect as inspectlib
 	import linecache
+
+	from easy_profile import EasyProfileMiddleware
+	from jinja2.utils import internal_code
 	
 	def jinja_unmangle_stacktrace():
 		rewritten_frames = []
