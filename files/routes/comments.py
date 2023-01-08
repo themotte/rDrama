@@ -17,7 +17,7 @@ from files.helpers.alerts import *
 from files.helpers.assetcache import assetcache_path
 from files.helpers.const import *
 from files.helpers.get import get_comment, get_post
-from files.helpers.images import *
+from files.helpers.images import process_image
 from files.helpers.wrappers import auth_desired, auth_required
 from files.routes.importstar import *
 

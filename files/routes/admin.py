@@ -20,7 +20,6 @@ from files.classes.usernotes import UserNote, UserTag
 from files.helpers.alerts import *
 from files.helpers.const import *
 from files.helpers.get import *
-from files.helpers.images import *
 from files.helpers.sanitize import *
 from files.helpers.security import *
 from files.helpers.wrappers import auth_required, admin_level_required
