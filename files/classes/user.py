@@ -11,7 +11,7 @@ from sqlalchemy.orm import aliased, deferred, relationship
 from sqlalchemy.sql.schema import Column, ForeignKey, Index, UniqueConstraint
 from sqlalchemy.sql.sqltypes import Boolean, DateTime, Integer, String
 
-from files.__main__ import cache
+#from files.__main__ import cache
 from files.classes.alts import Alt
 from files.classes.award import AwardRelationship
 from files.classes.badges import Badge
@@ -295,7 +295,7 @@ class User(Base):
 			if u.patron: return True
 		return False
 
-	@cache.memoize(timeout=86400)
+	#@cache.memoize(timeout=86400)
 	def userpagelisting(self, site=None, v=None, page=1, sort="new", t="all"):
 
 		if self.shadowbanned and not (v and (v.admin_level > 1 or v.id == self.id)): return []

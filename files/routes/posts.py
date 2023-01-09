@@ -114,7 +114,7 @@ def publish(pid, v):
 	g.db.commit()
 
 	cache.delete_memoized(frontlist)
-	cache.delete_memoized(User.userpagelisting)
+	#cache.delete_memoized(User.userpagelisting)
 
 	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()):
 		cache.delete_memoized(changeloglist)
@@ -970,7 +970,7 @@ def submit_post(v, sub=None):
 	g.db.commit()
 
 	cache.delete_memoized(frontlist)
-	cache.delete_memoized(User.userpagelisting)
+	#cache.delete_memoized(User.userpagelisting)
 
 	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()) and not post.private:
 		cache.delete_memoized(changeloglist)
@@ -1098,7 +1098,7 @@ def api_pin_post(post_id, v):
 	post.is_pinned = not post.is_pinned
 	g.db.add(post)
 
-	cache.delete_memoized(User.userpagelisting)
+	#cache.delete_memoized(User.userpagelisting)
 
 	g.db.commit()
 	if post.is_pinned: return {"message": "Post pinned!"}
