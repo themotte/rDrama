@@ -23,7 +23,7 @@ from files.helpers.const import *
 from files.helpers.get import *
 from files.helpers.sanitize import *
 from files.helpers.security import *
-from files.helpers.wrappers import auth_required, admin_level_required
+from files.helpers.wrappers import admin_level_required, auth_required
 from files.routes.comments import comment_on_publish
 from files.routes.importstar import *
 

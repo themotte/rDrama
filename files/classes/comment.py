@@ -3,12 +3,13 @@ from random import randint
 from urllib.parse import parse_qs, urlencode, urlparse
 
 from flask import g
-from sqlalchemy import *
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.schema import Column, ForeignKey, Index
+from sqlalchemy.sql.sqltypes import Boolean, Integer, String
 
 from files.classes.base import Base
-from files.helpers.config.regex import controversial_regex
 from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS, SITE_FULL
+from files.helpers.config.regex import controversial_regex
 from files.helpers.const import *
 from files.helpers.lazy import lazy
 

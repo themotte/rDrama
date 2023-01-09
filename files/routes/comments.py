@@ -15,7 +15,11 @@ from files.classes.user import User
 from files.classes.votes import CommentVote
 from files.helpers.alerts import *
 from files.helpers.assetcache import assetcache_path
-from files.helpers.config.environment import (COMMENT_SPAM_COUNT_THRESHOLD, COMMENT_SPAM_SIMILAR_THRESHOLD, IMGUR_KEY, MULTIMEDIA_EMBEDDING_ENABLED, PUSHER_ID, PUSHER_KEY,
+from files.helpers.config.environment import (COMMENT_SPAM_COUNT_THRESHOLD,
+                                              COMMENT_SPAM_SIMILAR_THRESHOLD,
+                                              IMGUR_KEY,
+                                              MULTIMEDIA_EMBEDDING_ENABLED,
+                                              PUSHER_ID, PUSHER_KEY, SITE_FULL,
                                               SITE_ID)
 from files.helpers.const import *
 from files.helpers.get import get_comment, get_post

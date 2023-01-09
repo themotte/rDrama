@@ -1,9 +1,10 @@
 from flask import g
 
 from files.classes import Comment, Notification
-
-from .const import *
-from .sanitize import *
+from files.helpers.config.regex import *
+from files.helpers.const import *
+from files.helpers.get import get_user
+from files.helpers.sanitize import sanitize
 
 
 def create_comment(text_html, autojanny=False):

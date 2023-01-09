@@ -11,6 +11,7 @@ from files.__main__ import app, cache, limiter
 from files.classes.award import AwardRelationship
 from files.classes.badges import Badge, BadgeDef
 from files.classes.comment import Comment
+from files.classes.marsey import Marsey
 from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2, ModAction
 from files.classes.submission import Submission
 from files.classes.user import User

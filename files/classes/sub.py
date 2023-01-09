@@ -6,7 +6,6 @@ from files.classes.base import Base
 from files.helpers.config.environment import SITE_FULL
 from files.helpers.lazy import lazy
 
-from .sub_block import *
 
 class Sub(Base):
 
