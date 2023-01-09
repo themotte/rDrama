@@ -164,8 +164,6 @@ cache = flask_caching.Cache(app)
 flask_compress.Compress(app)
 mail = flask_mail.Mail(app)
 
-from files.routes.allroutes import *
-
 if "load_chat" in argv:
 	from files.routes.chat import *
 else:
