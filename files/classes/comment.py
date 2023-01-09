@@ -2,7 +2,7 @@ import time
 from random import randint
 from urllib.parse import parse_qs, urlencode, urlparse
 
-from flask import *
+from flask import g
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 

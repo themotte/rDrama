@@ -1,6 +1,6 @@
 import time
 
-from flask import *
+from flask import g
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import Column, ForeignKey, UniqueConstraint
 from sqlalchemy.sql.sqltypes import Integer, String
@@ -48,25 +48,17 @@ class OauthApp(Base):
 
 	@lazy
 	def idlist(self, page=1):
-
 		posts = g.db.query(Submission.id).filter_by(app_id=self.id)
-		
-		posts=posts.order_by(Submission.created_utc.desc())
-
-		posts=posts.offset(100*(page-1)).limit(101)
-
+		posts = posts.order_by(Submission.created_utc.desc())
+		posts  =posts.offset(100*(page-1)).limit(101)
 		return [x[0] for x in posts.all()]
 
 	@lazy
 	def comments_idlist(self, page=1):
-
-		posts = g.db.query(Comment.id).filter_by(app_id=self.id)
-		
-		posts=posts.order_by(Comment.created_utc.desc())
-
-		posts=posts.offset(100*(page-1)).limit(101)
-
-		return [x[0] for x in posts.all()]
+		comments = g.db.query(Comment.id).filter_by(app_id=self.id)
+		comments = comments.order_by(Comment.created_utc.desc())
+		comments = comments.offset(100*(page-1)).limit(101)
+		return [x[0] for x in comments.all()]
 
 
 

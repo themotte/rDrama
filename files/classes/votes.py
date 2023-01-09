@@ -1,6 +1,5 @@
 import time
 
-from flask import *
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import Column, ForeignKey, Index
 from sqlalchemy.sql.sqltypes import Boolean, Integer

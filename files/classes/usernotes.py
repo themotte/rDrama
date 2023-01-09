@@ -1,7 +1,6 @@
 import time
 from enum import Enum
 
-from flask import *
 from sqlalchemy import Enum as EnumType
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import Column, ForeignKey
