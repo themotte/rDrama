@@ -6,7 +6,7 @@ from flask_socketio import SocketIO, emit
 
 from files.__main__ import app, cache, limiter
 from files.helpers.config.regex import mute_regex
-from files.helpers.const import SITE, SITE_FULL
+from files.helpers.config.environment import SITE, SITE_FULL
 from files.helpers.sanitize import sanitize
 from files.helpers.wrappers import auth_required
 

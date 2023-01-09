@@ -11,7 +11,8 @@ from files.classes.notifications import Notification
 from files.classes.sub import Sub
 from files.classes.submission import Submission
 from files.helpers.alerts import send_repeatable_notification
-from files.helpers.const import NOTIFICATIONS_ID, SITE
+from files.helpers.config.environment import SITE
+from files.helpers.const import NOTIFICATIONS_ID
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.get import *
 from files.helpers.wrappers import auth_desired, auth_required

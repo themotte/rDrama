@@ -7,7 +7,8 @@ from flask_mail import Message
 from files.__main__ import app, limiter, mail
 from files.classes import Badge, User
 from files.helpers.alerts import send_notification
-from files.helpers.const import SITE, email_regex
+from files.helpers.config.environment import SITE
+from files.helpers.config.regex import email_regex
 from files.helpers.security import generate_hash, validate_hash
 from files.helpers.wrappers import auth_required
 from files.routes.importstar import *
