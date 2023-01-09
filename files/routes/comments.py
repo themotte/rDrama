@@ -268,7 +268,7 @@ def api_comment(v):
 
 	if len(body_html) > 20000: abort(400)
 
-	is_filtered = v.should_comments_be_filtered()
+	is_filtered = v.should_comments_be_filtered(app.config)
 
 	c = Comment(author_id=v.id,
 				parent_submission=parent_post.id,

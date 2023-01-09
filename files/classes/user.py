@@ -3,13 +3,15 @@ from datetime import datetime
 from operator import and_, or_
 from os import environ
 
+import flask.config
+
 import pyotp
 from flask import g, session
 from sqlalchemy.orm import aliased, deferred, relationship
 from sqlalchemy.sql.schema import Column, ForeignKey, Index, UniqueConstraint
 from sqlalchemy.sql.sqltypes import Boolean, DateTime, Integer, String
 
-from files.__main__ import app, cache
+from files.__main__ import cache
 from files.classes.alts import Alt
 from files.classes.award import AwardRelationship
 from files.classes.badges import Badge
@@ -168,10 +170,10 @@ class User(Base):
 	def can_manage_reports(self):
 		return self.admin_level > 1
 
-	def should_comments_be_filtered(self):
+	def should_comments_be_filtered(self, config: flask.config.Config):
 		if self.admin_level > 0:
 			return False
-		site_settings = app.config['SETTINGS']
+		site_settings = config['SETTINGS']
 		minComments = site_settings.get('FilterCommentsMinComments', 0)
 		minKarma = site_settings.get('FilterCommentsMinKarma', 0)
 		minAge = site_settings.get('FilterCommentsMinAgeDays', 0)
