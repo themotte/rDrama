@@ -4,7 +4,6 @@ import random
 import sqlalchemy
 from flask import g
 
-from files.__main__ import app
 from files.classes.comment import Comment
 from files.classes.flags import CommentFlag
 from files.classes.user import User
