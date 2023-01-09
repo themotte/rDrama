@@ -18,7 +18,7 @@ from files.classes.submission import Submission
 from files.classes.user import User
 from files.classes.votes import CommentVote, Vote
 from files.helpers.alerts import *
-from files.helpers.config.environment import IMGUR_KEY, MULTIMEDIA_EMBEDDING_ENABLED, SITE, SITE_ID, YOUTUBE_KEY
+from files.helpers.config.environment import *
 from files.helpers.const import *
 from files.helpers.contentsorting import sort_objects
 from files.helpers.get import (get_account, get_comment_trees_eager,
@@ -213,7 +213,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 	offset = 0
 	ids = set()
 
-	limit = app.config['RESULTS_PER_PAGE_COMMENTS']
+	limit = RESULTS_PER_PAGE_COMMENTS
 
 	if post.comment_count > limit and not request.headers.get("Authorization") and not request.values.get("all"):
 		comments2 = []
@@ -330,7 +330,7 @@ def viewmore(v, pid, sort, offset):
 		comments = comments.all()
 		comments = comments[offset:]
 
-	limit = app.config['RESULTS_PER_PAGE_COMMENTS']
+	limit = RESULTS_PER_PAGE_COMMENTS
 	comments2 = []
 	count = 0
 
@@ -432,7 +432,7 @@ def edit_post(pid, v):
 				name = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(name)
 				url = process_image(name)
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+				if MULTIMEDIA_EMBEDDING_ENABLED:
 					body += f"\n\n![]({url})"
 				else:
 					body += f'\n\n<a href="{url}">{url}</a>'
@@ -447,7 +447,7 @@ def edit_post(pid, v):
 						if error == 'File exceeds max duration': error += ' (60 seconds)'
 						abort(400, error)
 				if url.endswith('.'): url += 'mp4'
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+				if MULTIMEDIA_EMBEDDING_ENABLED:
 					body += f"\n\n![]({url})"
 				else:
 					body += f'\n\n<a href="{url}">{url}</a>'
@@ -808,19 +808,19 @@ def submit_post(v, sub=None):
 
 	similar_posts = g.db.query(Submission).filter(
 					Submission.author_id == v.id,
-					Submission.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+					Submission.title.op('<->')(title) < SPAM_SIMILARITY_THRESHOLD,
 					Submission.created_utc > cutoff
 	).all()
 
 	if url:
 		similar_urls = g.db.query(Submission).filter(
 					Submission.author_id == v.id,
-					Submission.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
+					Submission.url.op('<->')(url) < SPAM_URL_SIMILARITY_THRESHOLD,
 					Submission.created_utc > cutoff
 		).all()
 	else: similar_urls = []
 
-	threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
+	threshold = SPAM_SIMILAR_COUNT_THRESHOLD
 	if v.age >= (60 * 60 * 24 * 7): threshold *= 3
 	elif v.age >= (60 * 60 * 24): threshold *= 2
 

@@ -9,6 +9,7 @@ import files.helpers.jinja2
 import files.routes.volunteer_janitor
 from files.__main__ import app
 from files.classes.user import User
+from files.helpers.config.environment import DBG_VOLUNTEER_PERMISSIVE
 from files.helpers.wrappers import auth_required
 from files.routes.volunteer_common import VolunteerDuty
 
@@ -21,7 +22,7 @@ def volunteer_get_duty(u: Optional[User]) -> Optional[VolunteerDuty]:
     if u is None:
         return None
     
-    if not app.config['DBG_VOLUNTEER_PERMISSIVE']:
+    if not DBG_VOLUNTEER_PERMISSIVE:
         # check to make sure it's at least 20h since the last volunteer
         if (u.volunteer_last_started_utc is not None) and (datetime.now() - u.volunteer_last_started_utc) < timedelta(hours = 20):
             return None

@@ -1,5 +1,4 @@
 import time
-from os import environ
 from urllib.parse import quote
 
 from flask_mail import Message
@@ -7,14 +6,11 @@ from flask_mail import Message
 from files.__main__ import app, limiter, mail
 from files.classes import Badge, User
 from files.helpers.alerts import send_notification
-from files.helpers.config.environment import SITE
+from files.helpers.config.environment import SITE, SITE_ID, SITE_TITLE
 from files.helpers.config.regex import email_regex
 from files.helpers.security import generate_hash, validate_hash
 from files.helpers.wrappers import auth_required
 from files.routes.importstar import *
-
-SITE_ID = environ.get("SITE_ID").strip()
-SITE_TITLE = environ.get("SITE_TITLE").strip()
 
 def send_mail(to_address, subject, html):
 	msg = Message(html=html, subject=subject, sender=f"{SITE_ID}@{SITE}", recipients=[to_address])

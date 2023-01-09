@@ -10,6 +10,8 @@ from files.classes.flags import CommentFlag
 from files.classes.user import User
 from files.classes.volunteer_janitor import (VolunteerJanitorRecord,
                                              VolunteerJanitorResult)
+from files.helpers.config.environment import (DBG_VOLUNTEER_PERMISSIVE,
+                                              VOLUNTEER_JANITOR_ENABLE)
 from files.routes.volunteer_common import VolunteerDuty
 
 
@@ -37,7 +39,7 @@ class VolunteerDutyJanitor(VolunteerDuty):
 
 
 def get_duty(u: User) -> VolunteerDutyJanitor:
-    if not app.config['VOLUNTEER_JANITOR_ENABLE']:
+    if not VOLUNTEER_JANITOR_ENABLE:
         return None
 
     # these could probably be combined into one query somehow
@@ -52,7 +54,7 @@ def get_duty(u: User) -> VolunteerDutyJanitor:
 
     reported_ids = [reported.id for reported in reported_comments]
     
-    if not app.config['DBG_VOLUNTEER_PERMISSIVE']:
+    if not DBG_VOLUNTEER_PERMISSIVE:
         # find distinguished children of those reported comments
         # this is a ghastly query and should be fixed when we're doing some kind of cleanup and mod-action formalization
         distinguished_children = g.db.query(Comment) \

@@ -25,7 +25,7 @@ from files.classes.views import ViewerRelationship
 from files.classes.votes import CommentVote, Vote
 from files.helpers.alerts import *
 from files.helpers.assetcache import assetcache_path
-from files.helpers.config.environment import ENABLE_SERVICES, IMGUR_KEY, PUSHER_ID, PUSHER_KEY, SITE, SITE_ID
+from files.helpers.config.environment import *
 from files.helpers.const import *
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.get import get_account, get_comment, get_comments, get_posts
@@ -719,7 +719,7 @@ def mfa_qr(secret, v):
 	qr = qrcode.QRCode(
 		error_correction=qrcode.constants.ERROR_CORRECT_L
 	)
-	qr.add_data(x.provisioning_uri(v.username, issuer_name=app.config["SITE_TITLE"]))
+	qr.add_data(x.provisioning_uri(v.username, issuer_name=SITE_TITLE))
 	img = qr.make_image(fill_color="#000000", back_color="white")
 
 	mem = io.BytesIO()

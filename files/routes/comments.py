@@ -15,7 +15,7 @@ from files.classes.user import User
 from files.classes.votes import CommentVote
 from files.helpers.alerts import *
 from files.helpers.assetcache import assetcache_path
-from files.helpers.config.environment import (IMGUR_KEY, PUSHER_ID, PUSHER_KEY,
+from files.helpers.config.environment import (COMMENT_SPAM_COUNT_THRESHOLD, COMMENT_SPAM_SIMILAR_THRESHOLD, IMGUR_KEY, MULTIMEDIA_EMBEDDING_ENABLED, PUSHER_ID, PUSHER_KEY,
                                               SITE_ID)
 from files.helpers.const import *
 from files.helpers.get import get_comment, get_post
@@ -190,7 +190,7 @@ def api_comment(v):
 				if image == "":
 					abort(500, "Image upload failed")
 
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+				if MULTIMEDIA_EMBEDDING_ENABLED:
 					body += f"\n\n![]({image})"
 				else:
 					body += f'\n\n<a href="{image}">{image}</a>'
@@ -205,7 +205,7 @@ def api_comment(v):
 						if error == 'File exceeds max duration': error += ' (60 seconds)'
 						abort(400, error)
 				if url.endswith('.'): url += 'mp4'
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+				if MULTIMEDIA_EMBEDDING_ENABLED:
 					body += f"\n\n{url}"
 				else:
 					body += f'\n\n<a href="{url}">{url}</a>'
@@ -235,11 +235,11 @@ def api_comment(v):
 		similar_comments = g.db.query(Comment).filter(
 			Comment.author_id == v.id,
 			Comment.body.op(
-				'<->')(body) < app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"],
+				'<->')(body) < COMMENT_SPAM_SIMILAR_THRESHOLD,
 			Comment.created_utc > cutoff
 		).all()
 
-		threshold = app.config["COMMENT_SPAM_COUNT_THRESHOLD"]
+		threshold = COMMENT_SPAM_COUNT_THRESHOLD
 		if v.age >= (60 * 60 * 24 * 7):
 			threshold *= 3
 		elif v.age >= (60 * 60 * 24):

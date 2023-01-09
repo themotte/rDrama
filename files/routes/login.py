@@ -12,7 +12,7 @@ from files.classes.alts import Alt
 from files.classes.badges import Badge
 from files.classes.user import User
 from files.helpers.alerts import send_notification
-from files.helpers.config.environment import SECRET_KEY, SITE_FULL, WELCOME_MSG
+from files.helpers.config.environment import RATE_LIMITER_ENABLED, SECRET_KEY, SITE_FULL, WELCOME_MSG
 from files.helpers.config.regex import (email_regex, valid_password_regex,
                                         valid_username_regex)
 from files.helpers.const import *
@@ -280,7 +280,7 @@ def sign_up_post(v):
 
 		return redirect(f"/signup?{urlencode(args)}")
 
-	if app.config['RATE_LIMITER_ENABLED']:
+	if RATE_LIMITER_ENABLED:
 		if now - int(form_timestamp) < 5:
 			return signup_error("There was a problem. Please try again.")
 
