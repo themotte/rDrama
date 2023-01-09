@@ -4,48 +4,13 @@ from files.helpers.images import *
 from files.helpers.const import *
 from files.helpers.comments import comment_on_publish
 from files.classes import *
-from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
 from files.helpers.sanitize import filter_emojis_only
-from files.helpers.assetcache import assetcache_path
 import requests
 from shutil import copyfile
 from json import loads
 from collections import Counter
-import gevent
-from sys import stdout
-
-if PUSHER_ID != 'blahblahblah':
-	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
-
-def pusher_thread(interests, c, username):
-	if len(c.body) > 500: notifbody = c.body[:500] + '...'
-	else: notifbody = c.body
-
-	beams_client.publish_to_interests(
-		interests=[interests],
-		publish_body={
-			'web': {
-				'notification': {
-					'title': f'New reply by @{username}',
-					'body': notifbody,
-					'deep_link': f'{SITE_FULL}/comment/{c.id}?context=8&read=true#context',
-					'icon': SITE_FULL + assetcache_path(f'images/{SITE_ID}/icon.webp'),
-				}
-			},
-			'fcm': {
-				'notification': {
-					'title': f'New reply by @{username}',
-					'body': notifbody,
-				},
-				'data': {
-					'url': f'/comment/{c.id}?context=8&read=true#context',
-				}
-			}
-		},
-	)
-	stdout.flush()
 
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")

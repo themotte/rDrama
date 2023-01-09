@@ -1,7 +1,43 @@
+from pusher_push_notifications import PushNotifications
 from files.classes import Comment, Notification, Subscription
 from files.helpers.alerts import NOTIFY_USERS
-from files.helpers.const import PUSHER_ID
+from files.helpers.const import PUSHER_ID, PUSHER_KEY, SITE_ID, SITE_FULL
+from files.helpers.assetcache import assetcache_path
 from flask import g
+from sys import stdout
+import gevent
+
+if PUSHER_ID != 'blahblahblah':
+	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
+
+def pusher_thread(interests, c, username):
+	if len(c.body) > 500: notifbody = c.body[:500] + '...'
+	else: notifbody = c.body
+
+	beams_client.publish_to_interests(
+		interests=[interests],
+		publish_body={
+			'web': {
+				'notification': {
+					'title': f'New reply by @{username}',
+					'body': notifbody,
+					'deep_link': f'{SITE_FULL}/comment/{c.id}?context=8&read=true#context',
+					'icon': SITE_FULL + assetcache_path(f'images/{SITE_ID}/icon.webp'),
+				}
+			},
+			'fcm': {
+				'notification': {
+					'title': f'New reply by @{username}',
+					'body': notifbody,
+				},
+				'data': {
+					'url': f'/comment/{c.id}?context=8&read=true#context',
+				}
+			}
+		},
+	)
+	stdout.flush()
+
 
 def update_stateful_counters(comment, delta):
 	"""
