@@ -336,7 +336,7 @@ def admin_userawards_post(v):
 	try: u = request.values.get("username").strip()
 	except: abort(404)
 
-	whitelist = ("shit", "fireflies", "train", "scooter", "wholesome", "tilt", "glowie")
+	whitelist = ("shit", "fireflies", "train", "scooter", "wholesome", "glowie")
 
 	u = get_user(u, graceful=False, v=v)
 

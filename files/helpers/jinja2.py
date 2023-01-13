@@ -65,6 +65,7 @@ def inject_constants():
 		"DEFAULT_COLOR":DEFAULT_COLOR,
 		"COLORS":COLORS,
 		"THEMES":THEMES,
+		"PERMS":PERMS,
 	}
 
 def template_function(func):

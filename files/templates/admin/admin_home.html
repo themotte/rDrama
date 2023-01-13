@@ -59,7 +59,7 @@
 	<li><a href="/daily_chart">Daily Stat Chart</a></li>
 </ul>
 
-{% if v.admin_level > 2 %}
+{% if v.admin_level >= 3 %}
 	<pre></pre>
 	<div class="custom-control custom-switch">
 		<input autocomplete="off" type="checkbox" class="custom-control-input" id="signups" {% if site_settings['Signups'] %}checked{% endif %} onchange="post_toast(this,'/admin/site_settings/Signups');">
@@ -106,5 +106,20 @@
 	<button class="btn btn-primary mt-3" onclick="post_toast(this,'/admin/purge_cache');">PURGE CDN CACHE</button>
 	<button class="btn btn-primary mt-3" onclick="post_toast(this,'/admin/dump_cache');">DUMP INTERNAL CACHE</button>
 {% endif %}
-
+{% if g.debug %}
+<section id="admin-section-debug" class="admin-section mt-3">
+	<h4>Debug Options</h4>
+	{% if v.admin_level >= PERMS["DEBUG_LOGIN_TO_OTHERS"] %}
+	<div class="login-to-others mt-3">
+		<h5>Login to another's account</h5>
+		<form action="/dev/sessions/" method="post">
+			<input type="hidden" name="formkey", value="{{v.formkey}}">
+			<label for="username">Username</label>
+			<input name="username" required>
+			<button type="submit" class="btn btn-primary">Login</button>
+		</form>
+	</div>
+	{% endif %}
+</section>
+{% endif %}
 {% endblock %}
