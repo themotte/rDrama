@@ -4,8 +4,12 @@ from files.helpers.alerts import NOTIFY_USERS
 from files.helpers.const import PUSHER_ID, PUSHER_KEY, SITE_ID, SITE_FULL
 from files.helpers.assetcache import assetcache_path
 from flask import g
+from sqlalchemy import select, update
+from sqlalchemy.sql.expression import func, text, alias
+from sqlalchemy.orm import aliased
 from sys import stdout
 import gevent
+import typing
 
 if PUSHER_ID != 'blahblahblah':
 	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
@@ -71,6 +75,93 @@ def update_ancestor_descendant_counts(comment, delta):
 	g.db.add(parent)
 	update_ancestor_descendant_counts(parent, delta)
 
+def bulk_recompute_descendant_counts(predicate = None):
+	"""
+	Recomputes the descendant_count of a large number of comments.
+
+	The descendant_count of a comment is equal to the number of direct visible child comments
+	plus the sum of the descendant_count of those visible child comments.
+
+	:param Callable predicate: If set, only update comments matching this predicate
+
+	So for example
+
+		>>> bulk_update_descendant_counts()
+
+	will update all comments, while
+
+		>>> bulk_update_descendant_counts(lambda q: q.where(Comment.parent_submission == 32)
+
+	will only update the descendant counts of comments where parent_submission=32
+
+	Internally, how this works is
+		1. Find the maximum level of comments matching the predicate
+		2. Starting from that level and going down, for each level update the descendant_counts
+
+	Since the comments at the max level will always have 0 children, this means that we will perform
+	`level` updates to update all comments.
+
+	The update query looks like
+
+		UPDATE comments
+		SET descendant_count=descendant_counts.descendant_count
+		FROM (
+			SELECT
+				parent_comments.id AS id,
+				coalesce(sum(child_comments.descendant_count + 1), 0) AS descendant_count
+			FROM comments AS parent_comments
+				LEFT OUTER JOIN comments AS child_comments ON parent_comments.id = child_comments.parent_comment_id
+			GROUP BY parent_comments.id
+		) AS descendant_counts
+		WHERE comments.id = descendant_counts.id
+			AND comments.level = :level_1
+			<predicate goes here>
+	"""
+	max_level_query = g.db.query(func.max(Comment.level))
+	if predicate:
+		max_level_query = predicate(max_level_query)
+
+	max_level = max_level_query.scalar()
+
+	if max_level is None:
+		max_level = 0
+
+	for level in range(max_level, 0, -1):
+		parent_comments = alias(Comment, name="parent_comments")
+		child_comments = alias(Comment, name="child_comments")
+		descendant_counts = aliased(
+			Comment,
+			(
+				select(parent_comments)
+				.join(
+					child_comments,
+					parent_comments.corresponding_column(Comment.id) == child_comments.corresponding_column(Comment.parent_comment_id),
+					True
+				)
+				.group_by(parent_comments.corresponding_column(Comment.id))
+				.with_only_columns([
+					parent_comments.corresponding_column(Comment.id),
+					func.coalesce(
+						func.sum(child_comments.corresponding_column(Comment.descendant_count) + text(str(1))),
+						text(str(0))
+					).label('descendant_count')
+				])
+				.subquery(name='descendant_counts')
+			),
+			adapt_on_names=True
+		)
+		update_statement = (
+			update(Comment)
+			.values(descendant_count=descendant_counts.descendant_count)
+			.execution_options(synchronize_session=False)
+			.where(Comment.id == descendant_counts.id)
+			.where(Comment.level == level)
+		)
+		if predicate:
+			update_statement = predicate(update_statement)
+		g.db.execute(update_statement)
+	g.db.commit()
+
 def comment_on_publish(comment:Comment):
 	"""
 	Run when comment becomes visible: immediately for non-filtered comments,
@@ -78,7 +169,6 @@ def comment_on_publish(comment:Comment):
 	Should be used to update stateful counters, notifications, etc. that
 	reflect the comments users will actually see.
 	"""
-	# TODO: Get this out of the routes and into a model eventually...
 	author = comment.author
 
 	# Shadowbanned users are invisible. This may lead to inconsistencies if
