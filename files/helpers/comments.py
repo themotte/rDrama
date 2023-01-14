@@ -75,14 +75,15 @@ def update_ancestor_descendant_counts(comment, delta):
 	g.db.add(parent)
 	update_ancestor_descendant_counts(parent, delta)
 
-def bulk_recompute_descendant_counts(predicate = None):
+def bulk_recompute_descendant_counts(predicate = None, db=None):
 	"""
 	Recomputes the descendant_count of a large number of comments.
 
 	The descendant_count of a comment is equal to the number of direct visible child comments
 	plus the sum of the descendant_count of those visible child comments.
 
-	:param Callable predicate: If set, only update comments matching this predicate
+	:param predicate: If set, only update comments matching this predicate
+	:param db: If set, use this instead of g.db
 
 	So for example
 
@@ -117,7 +118,8 @@ def bulk_recompute_descendant_counts(predicate = None):
 			AND comments.level = :level_1
 			<predicate goes here>
 	"""
-	max_level_query = g.db.query(func.max(Comment.level))
+	db = db if db is not None else g.db
+	max_level_query = db.query(func.max(Comment.level))
 	if predicate:
 		max_level_query = predicate(max_level_query)
 
@@ -159,8 +161,8 @@ def bulk_recompute_descendant_counts(predicate = None):
 		)
 		if predicate:
 			update_statement = predicate(update_statement)
-		g.db.execute(update_statement)
-	g.db.commit()
+		db.execute(update_statement)
+	db.commit()
 
 def comment_on_publish(comment:Comment):
 	"""

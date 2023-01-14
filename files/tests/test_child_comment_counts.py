@@ -4,9 +4,10 @@ from . import fixture_comments
 from . import util
 from flask import g
 from files.__main__ import app, db_session
-from files.classes import Submission, Comment
+from files.classes import Submission, Comment, User
 from files.helpers.comments import bulk_recompute_descendant_counts
 import json
+import random
 
 
 def assert_comment_visibility(post, comment_body, clients):
@@ -171,8 +172,20 @@ def test_bulk_update_descendant_count_quick(accounts, submissions, comments):
 	4. Delete the comments/posts
 	"""
 	with app.app_context():
-		g.db = db_session()
-		alice_client, alice = accounts.client_and_user_for_account('Alice')
+		db = db_session()
+
+		lastname = ''.join(random.choice('aio') + random.choice('bfkmprst') for i in range(3))
+		alice = User(**{
+			"username": f"alice_{lastname}",
+			"original_username": f"alice_{lastname}",
+			"admin_level": 0,
+			"password":"themotteuser",
+			"email":None,
+			"ban_evade":0,
+			"profileurl":"/e/feather.webp"
+		})
+		db.add(alice)
+		db.commit()
 		posts = []
 		for i in range(2):
 			post = Submission(**{
@@ -192,8 +205,8 @@ def test_bulk_update_descendant_count_quick(accounts, submissions, comments):
 				'ghost': False,
 				'filter_state': 'normal'
 			})
-			g.db.add(post)
-			g.db.commit()
+			db.add(post)
+			db.commit()
 			posts.append(post)
 			parent_comment = None
 			top_comment = None
@@ -214,15 +227,18 @@ def test_bulk_update_descendant_count_quick(accounts, submissions, comments):
 				if parent_comment is None:
 					top_comment = comment
 				parent_comment = comment
-				g.db.add(comment)
-				g.db.commit()
+				db.add(comment)
+				db.commit()
 		sorted_comments_0 = sorted(posts[0].comments, key=lambda c: c.id)
 		sorted_comments_1 = sorted(posts[1].comments, key=lambda c: c.id)
 		assert [i+1 for i in range(20)] == [c.level for c in sorted_comments_0]
 		assert [i+1 for i in range(20)] == [c.level for c in sorted_comments_1]
 		assert [0 for i in range(20)] == [c.descendant_count for c in sorted_comments_0]
 		assert [0 for i in range(20)] == [c.descendant_count for c in sorted_comments_1]
-		bulk_recompute_descendant_counts(lambda q: q.where(Comment.parent_submission == posts[0].id))
+		bulk_recompute_descendant_counts(
+			lambda q: q.where(Comment.parent_submission == posts[0].id),
+			db
+		)
 		sorted_comments_0 = sorted(posts[0].comments, key=lambda c: c.id)
 		sorted_comments_1 = sorted(posts[1].comments, key=lambda c: c.id)
 		assert [i+1 for i in range(20)] == [c.level for c in sorted_comments_0]
@@ -231,6 +247,6 @@ def test_bulk_update_descendant_count_quick(accounts, submissions, comments):
 		assert [0 for i in range(20)] == [c.descendant_count for c in sorted_comments_1]
 		for post in posts:
 			for comment in post.comments:
-				g.db.delete(comment)
-			g.db.delete(post)
-		g.db.commit()
+				db.delete(comment)
+			db.delete(post)
+		db.commit()
