@@ -2,49 +2,15 @@ from files.helpers.wrappers import *
 from files.helpers.alerts import *
 from files.helpers.images import *
 from files.helpers.const import *
+from files.helpers.comments import comment_on_publish
 from files.classes import *
-from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
 from files.helpers.sanitize import filter_emojis_only
-from files.helpers.assetcache import assetcache_path
 import requests
 from shutil import copyfile
 from json import loads
 from collections import Counter
-import gevent
-from sys import stdout
-
-if PUSHER_ID != 'blahblahblah':
-	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
-
-def pusher_thread(interests, c, username):
-	if len(c.body) > 500: notifbody = c.body[:500] + '...'
-	else: notifbody = c.body
-
-	beams_client.publish_to_interests(
-		interests=[interests],
-		publish_body={
-			'web': {
-				'notification': {
-					'title': f'New reply by @{username}',
-					'body': notifbody,
-					'deep_link': f'{SITE_FULL}/comment/{c.id}?context=8&read=true#context',
-					'icon': SITE_FULL + assetcache_path(f'images/{SITE_ID}/icon.webp'),
-				}
-			},
-			'fcm': {
-				'notification': {
-					'title': f'New reply by @{username}',
-					'body': notifbody,
-				},
-				'data': {
-					'url': f'/comment/{c.id}?context=8&read=true#context',
-				}
-			}
-		},
-	)
-	stdout.flush()
 
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
@@ -303,65 +269,6 @@ def api_comment(v):
 	else:
 		message = None
 	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True, parent_level=level), "message": message}
-
-
-def comment_on_publish(comment:Comment):
-	"""
-	Run when comment becomes visible: immediately for non-filtered comments,
-	or on approval for previously filtered comments.
-	Should be used to update stateful counters, notifications, etc. that
-	reflect the comments users will actually see.
-	"""
-	# TODO: Get this out of the routes and into a model eventually...
-	author = comment.author
-
-	# Shadowbanned users are invisible. This may lead to inconsistencies if
-	# a user comments while shadowed and is later unshadowed. (TODO?)
-	if author.shadowbanned:
-		return
-
-	# Comment instances used for purposes other than actual comments (notifs,
-	# DMs) shouldn't be considered published.
-	if not comment.parent_submission:
-		return
-
-	# Generate notifs for: mentions, post subscribers, parent post/comment
-	to_notify = NOTIFY_USERS(comment.body, comment.author)
-
-	post_subscribers = g.db.query(Subscription.user_id).filter(
-			Subscription.submission_id == comment.parent_submission,
-			Subscription.user_id != comment.author_id,
-		).all()
-	to_notify.update([x[0] for x in post_subscribers])
-
-	parent = comment.parent
-	if parent and parent.author_id != comment.author_id and not parent.author.is_blocking(author):
-		to_notify.add(parent.author_id)
-
-	for uid in to_notify:
-		notif = Notification(comment_id=comment.id, user_id=uid)
-		g.db.add(notif)
-
-	# Comment counter for parent submission
-	comment.post.comment_count += 1
-	g.db.add(comment.post)
-
-	# Comment counter for author's profile
-	comment.author.comment_count = g.db.query(Comment).filter(
-			Comment.author_id == comment.author_id,
-			Comment.parent_submission != None,
-			Comment.is_banned == False,
-			Comment.deleted_utc == 0,
-		).count()
-	g.db.add(comment.author)
-
-	# Generate push notifications if enabled.
-	if PUSHER_ID != 'blahblahblah' and comment.author_id != parent.author_id:
-		try:
-			gevent.spawn(pusher_thread, f'{request.host}{parent.author.id}',
-				comment, comment.author_name)
-		except: pass
-
 
 @app.post("/edit_comment/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
