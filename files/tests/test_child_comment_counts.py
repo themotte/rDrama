@@ -2,8 +2,10 @@ from . import fixture_accounts
 from . import fixture_submissions
 from . import fixture_comments
 from . import util
-from files.__main__ import db_session
+from flask import g
+from files.__main__ import app, db_session
 from files.classes import Submission, Comment
+from files.helpers.comments import bulk_recompute_descendant_counts
 import json
 
 
@@ -132,7 +134,7 @@ def test_comment_descendant_count(accounts, submissions, comments):
 	assert 0 == db.query(Comment).filter_by(id=rereply1.id).first().descendant_count
 
 @util.no_rate_limit
-def test_more_button_label_in_deep_thrreads(accounts, submissions, comments):
+def test_more_button_label_in_deep_threads(accounts, submissions, comments):
 	db = db_session()
 	alice_client, alice = accounts.client_and_user_for_account('Alice')
 
@@ -159,3 +161,76 @@ def test_more_button_label_in_deep_thrreads(accounts, submissions, comments):
 				assert f'More comments ({i - 8})' not in view_post_response.text
 			else:
 				assert f'More comments ({i - 8})' in view_post_response.text
+
+@util.no_rate_limit
+def test_bulk_update_descendant_count_quick(accounts, submissions, comments):
+	"""
+	1. Add two thin/non-robust posts with 20 nested comments each. Do not properly set descendant_count
+	2. Do the descendant_count bulk update thing
+	3. Ensure that the descendant_counts are correct
+	4. Delete the comments/posts
+	"""
+	with app.app_context():
+		g.db = db_session()
+		alice_client, alice = accounts.client_and_user_for_account('Alice')
+		posts = []
+		for i in range(2):
+			post = Submission(**{
+				'private': False,
+				'club': None,
+				'author_id': alice.id,
+				'over_18': False,
+				'app_id': None,
+				'is_bot': False,
+				'url': None,
+				'body': f'This is a post by {alice.username}',
+				'body_html': f'This is a post by {alice.username}',
+				'embed_url': None,
+				'title': f'Clever unique post title number {i}',
+				'title_html': f'Clever unique post title number {i}',
+				'sub': None,
+				'ghost': False,
+				'filter_state': 'normal'
+			})
+			g.db.add(post)
+			g.db.commit()
+			posts.append(post)
+			parent_comment = None
+			top_comment = None
+			for j in range(20):
+				comment = Comment(**{
+					'author_id': alice.id,
+					'parent_submission': str(post.id),
+					'parent_comment_id': parent_comment.id if parent_comment else None,
+					'top_comment_id': top_comment.id if top_comment else None,
+					'level': parent_comment.level + 1 if parent_comment else 1,
+					'over_18': False,
+					'is_bot': False,
+					'app_id': None,
+					'body_html': f'reply {i} {j}',
+					'body': f'reply {i} {j}',
+					'ghost': False
+				})
+				if parent_comment is None:
+					top_comment = comment
+				parent_comment = comment
+				g.db.add(comment)
+				g.db.commit()
+		sorted_comments_0 = sorted(posts[0].comments, key=lambda c: c.id)
+		sorted_comments_1 = sorted(posts[1].comments, key=lambda c: c.id)
+		assert [i+1 for i in range(20)] == [c.level for c in sorted_comments_0]
+		assert [i+1 for i in range(20)] == [c.level for c in sorted_comments_1]
+		assert [0 for i in range(20)] == [c.descendant_count for c in sorted_comments_0]
+		assert [0 for i in range(20)] == [c.descendant_count for c in sorted_comments_1]
+		bulk_recompute_descendant_counts(lambda q: q.where(Comment.parent_submission == posts[0].id))
+		sorted_comments_0 = sorted(posts[0].comments, key=lambda c: c.id)
+		sorted_comments_1 = sorted(posts[1].comments, key=lambda c: c.id)
+		assert [i+1 for i in range(20)] == [c.level for c in sorted_comments_0]
+		assert [i+1 for i in range(20)] == [c.level for c in sorted_comments_1]
+		assert [20-i-1 for i in range(20)] == [c.descendant_count for c in sorted_comments_0]
+		assert [0 for i in range(20)] == [c.descendant_count for c in sorted_comments_1]
+		for post in posts:
+			for comment in post.comments:
+				g.db.delete(comment)
+			g.db.delete(post)
+		g.db.commit()
