@@ -1,30 +1,3 @@
-################################################################
-#   WARNING! THIS FILE HAS A PERHAPS SLIGHTLY EVIL PRESENCE!   #
-################################################################
-# Previously, this file had a series of                        #
-#     from .alts import *                                      #
-#     from .award import *                                     #
-#     from .badges import *                                    #
-# and so on in that fashion. That means that anywhere that     #
-#     from files.classes import *                              #
-# (and there were a lot of places like that) got anything      #
-# was imported for any model imported. So if you, for example, #
-# removed                                                      #
-#     from secrets import token_hex                            #
-# from files/classes/user.py, the registration page would      #
-# break because files/routes/login.py did                      #
-#     from files.classes import *                              #
-# in order to get the token_hex function rather than           #
-# importing it with something like                             #
-#     from secrets import token_hex                            #
-#                                                              #
-# This is being fixed now. Most things will probably not be    #
-# importing the same things they were and we are much          #
-# preferring explicit imports over implicit ones in order to   #
-# get rid of import loops.                                     #
-#                                                              #
-################################################################
-
 # First import our declarative base
 from .base import Base
 
