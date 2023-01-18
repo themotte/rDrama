@@ -642,12 +642,10 @@ def settings_name_change(v):
 						   v=v,
 						   error="This isn't a valid username.")
 
-	search_name = sql_ilike_clean(new_name)
-
-	x= g.db.query(User).filter(
+	x = g.db.query(User).filter(
 		or_(
-			User.username.ilike(search_name),
-			User.original_username.ilike(search_name)
+			func.lower(User.username) == new_name.lower(),
+			func.lower(User.original_username) == new_name.lower()
 			)
 		).one_or_none()
 

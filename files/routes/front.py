@@ -15,6 +15,7 @@ from files.helpers.config.environment import SITE
 from files.helpers.const import NOTIFICATIONS_ID
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.get import *
+from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import auth_desired, auth_required
 from files.routes.importstar import *
 
@@ -283,7 +284,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 
 	if v and filter_words:
 		for word in filter_words:
-			word  = word.replace(r'\\', '').replace('_', r'\_').replace('%', r'\%').strip()
+			word  = sql_ilike_clean(word).strip()
 			posts=posts.filter(not_(Submission.title.ilike(f'%{word}%')))
 
 	if not (v and v.shadowbanned):

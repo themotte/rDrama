@@ -41,6 +41,7 @@ class Comment(Base):
 	upvotes = Column(Integer, default=1, nullable=False)
 	downvotes = Column(Integer, default=0, nullable=False)
 	realupvotes = Column(Integer, default=1, nullable=False)
+	descendant_count = Column(Integer, default=0, nullable=False)
 	body = Column(String)
 	body_html = Column(String)
 	ban_reason = Column(String)
@@ -57,6 +58,7 @@ class Comment(Base):
 	author = relationship("User", primaryjoin="User.id==Comment.author_id")
 	senttouser = relationship("User", primaryjoin="User.id==Comment.sentto", viewonly=True)
 	parent_comment = relationship("Comment", remote_side=[id], viewonly=True)
+	parent_comment_writable = relationship("Comment", remote_side=[id])
 	child_comments = relationship("Comment", lazy="dynamic", remote_side=[parent_comment_id], viewonly=True)
 	awards = relationship("AwardRelationship",
 		primaryjoin="AwardRelationship.comment_id == Comment.id",

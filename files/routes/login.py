@@ -7,6 +7,8 @@ from urllib.parse import urlencode
 
 import requests
 
+from sqlalchemy import func
+
 from files.__main__ import app, limiter
 from files.classes.alts import Alt
 from files.classes.badges import Badge
@@ -109,7 +111,7 @@ def login_post():
 	if username.startswith('@'): username = username[1:]
 
 	if "@" in username:
-		try: account = g.db.query(User).filter(User.email.ilike(sql_ilike_clean(username))).one_or_none()
+		try: account = g.db.query(User).filter(func.lower(User.email) == username.lower()).one_or_none()
 		except: return "Multiple users use this email!"
 	else: account = get_user(username, graceful=True)
 
@@ -208,8 +210,7 @@ def sign_up_get(v):
 	ref = request.values.get("ref")
 
 	if ref:
-		ref  = sql_ilike_clean(ref)
-		ref_user = g.db.query(User).filter(User.username.ilike(ref)).one_or_none()
+		ref_user = g.db.query(User).filter(func.lower(User.username) == ref.lower()).one_or_none()
 
 	else:
 		ref_user = None
@@ -405,13 +406,11 @@ def post_forgot():
 	if not email_regex.fullmatch(email):
 		return render_template("forgot_password.html", error="Invalid email.")
 
-
-	username  = sql_ilike_clean(username.lstrip('@'))
-	email  = sql_ilike_clean(email)
+	username  = username.lstrip('@')
 
 	user = g.db.query(User).filter(
-		User.username.ilike(username),
-		User.email.ilike(email)).one_or_none()
+		func.lower(User.username) == username.lower(),
+		func.lower(User.email) == email.lower()).one_or_none()
 
 	if user:
 		now = int(time.time())

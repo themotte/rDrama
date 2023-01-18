@@ -1,9 +1,9 @@
-
 import random
 
 import sqlalchemy
 from flask import g
 
+from typing import Optional
 from files.classes.comment import Comment
 from files.classes.flags import CommentFlag
 from files.classes.user import User
@@ -37,7 +37,7 @@ class VolunteerDutyJanitor(VolunteerDuty):
         return g.db.query(Comment).where(Comment.id.in_(self.choices))
 
 
-def get_duty(u: User) -> VolunteerDutyJanitor:
+def get_duty(u: User) -> Optional[VolunteerDutyJanitor]:
     if not VOLUNTEER_JANITOR_ENABLE:
         return None
 

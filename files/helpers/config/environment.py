@@ -5,6 +5,7 @@ from files.helpers.strings import bool_from_string
 SITE = environ.get("DOMAIN", '').strip()
 SITE_ID = environ.get("SITE_ID").strip()
 SITE_TITLE = environ.get("SITE_TITLE").strip()
+SCHEME = environ.get('SCHEME', 'http' if 'localhost' in SITE else 'https')
 
 if "localhost" in SITE: 
 	SITE_FULL = 'http://' + SITE

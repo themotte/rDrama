@@ -18,6 +18,7 @@ from files.classes.submission import Submission
 from files.classes.user import User
 from files.classes.usernotes import UserNote, UserTag
 from files.helpers.alerts import *
+from files.helpers.comments import comment_on_unpublish
 from files.helpers.config.environment import CF_HEADERS, CF_ZONE, SITE
 from files.helpers.const import *
 from files.helpers.get import *
@@ -416,6 +417,11 @@ def update_filter_status(v):
 				and old_status in ['filtered', 'removed']
 				and new_status in ['normal', 'ignored']):
 			comment_on_publish(c)
+
+		if (comment_id
+				and old_status in ['normal', 'ignored']
+				and new_status in ['filtered', 'removed']):
+			comment_on_unpublish(c)
 
 		g.db.commit()
 		return { 'result': 'Update successful' }

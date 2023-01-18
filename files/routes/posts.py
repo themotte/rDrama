@@ -9,6 +9,7 @@ from urllib.parse import (ParseResult, parse_qs, unquote, urlencode, urlparse,
 import gevent
 import requests
 from PIL import Image as PILimage
+from sqlalchemy import func
 
 from files.__main__ import app, cache, db_session, limiter
 from files.classes.mod_logs import ModAction
@@ -668,7 +669,7 @@ def api_is_repost():
 
 	if url.endswith('/'): url = url[:-1]
 
-	search_url = url.replace('%', '').replace(r'\\', '').replace('_', r'\_').strip()
+	search_url = sql_ilike_clean(url)
 	repost = g.db.query(Submission).filter(
 		Submission.url.ilike(search_url),
 		Submission.deleted_utc == 0,
@@ -745,13 +746,12 @@ def submit_post(v, sub=None):
 								query=urlencode(filtered, doseq=True),
 								fragment=parsed_url.fragment)
 		
-		url = urlunparse(new_url)
+		search_url = urlunparse(new_url)
 
-		if url.endswith('/'): url = url[:-1]
+		if search_url.endswith('/'): url = url[:-1]
 
-		search_url = sql_ilike_clean(url)
 		repost = g.db.query(Submission).filter(
-			Submission.url.ilike(search_url),
+			func.lower(Submission.url) == search_url.lower(),
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False
 		).first()
