@@ -79,121 +79,16 @@ PERMS = {
 	"DEBUG_LOGIN_TO_OTHERS": 3,
 }
 
-AWARDS = {
-	"lootbox": {
-		"kind": "lootbox",
-		"title": "Lootstocking",
-		"description": "???",
-		"icon": "fas fa-stocking",
-		"color": "text-danger",
-		"price": 1000
-	},
-	"shit": {
-		"kind": "shit",
-		"title": "Shit",
-		"description": "Makes flies swarm the post.",
-		"icon": "fas fa-poop",
-		"color": "text-black-50",
-		"price": 300
-	},
-	"fireflies": {
-		"kind": "fireflies",
-		"title": "Fireflies",
-		"description": "Makes fireflies swarm the post.",
-		"icon": "fas fa-sparkles",
-		"color": "text-warning",
-		"price": 300
-	},
-	"train": {
-		"kind": "train",
-		"title": "Train",
-		"description": "Summons a train on the post.",
-		"icon": "fas fa-train",
-		"color": "text-pink",
-		"price": 300
-	},
-	"scooter": {
-		"kind": "scooter",
-		"title": "Scooter",
-		"description": "Summons a scooter on the post.",
-		"icon": "fas fa-flag-usa",
-		"color": "text-muted",
-		"price": 300
-	},
-	"wholesome": {
-		"kind": "wholesome",
-		"title": "Wholesome",
-		"description": "Summons a wholesome marsey on the post.",
-		"icon": "fas fa-smile-beam",
-		"color": "text-yellow",
-		"price": 300
-	},
-	"glowie": {
-        "kind": "glowie",
-        "title": "Glowie",
-        "description": "Indicates that the recipient can be seen when driving. Just run them over.",
-        "icon": "fas fa-user-secret",
-        "color": "text-green",
-        "price": 300
-    },
-	"pin": {
-		"kind": "pin",
-		"title": "1-Hour Pin",
-		"description": "Pins the post/comment.",
-		"icon": "fas fa-thumbtack fa-rotate--45",
-		"color": "text-warning",
-		"price": 1000
-	},
-	"unpin": {
-		"kind": "unpin",
-		"title": "1-Hour Unpin",
-		"description": "Removes 1 hour from the pin duration of the post/comment.",
-		"icon": "fas fa-thumbtack fa-rotate--45",
-		"color": "text-black",
-		"price": 1000
-	},
-	"ban": {
-		"kind": "ban",
-		"title": "1-Day Ban",
-		"description": "Bans the recipient for a day.",
-		"icon": "fas fa-gavel",
-		"color": "text-danger",
-		"price": 3000
-	},
-	"unban": {
-		"kind": "unban",
-		"title": "1-Day Unban",
-		"description": "Removes 1 day from the ban duration of the recipient.",
-		"icon": "fas fa-gavel",
-		"color": "text-success",
-		"price": 3500
-	},
-	"benefactor": {
-		"kind": "benefactor",
-		"title": "Benefactor",
-		"description": "Grants one month of paypig status and 2500 marseybux to the recipient. Cannot be used on yourself.",
-		"icon": "fas fa-gift",
-		"color": "text-blue",
-		"price": 4000
-	},
-	"grass": {
-		"kind": "grass",
-		"title": "Grass",
-		"description": "Doesn't do anything",
-		"icon": "fas fa-seedling",
-		"color": "text-success",
-		"price": 10000
-	},
-}
+AWARDS = {}
 
-AWARDS2 = deepcopy(AWARDS)
+AWARDS_ENABLED = deepcopy(AWARDS)
 for k, val in AWARDS.items():
-	if val['description'] == '???': AWARDS2.pop(k)
+	if val['description'] == '???': AWARDS_ENABLED.pop(k)
 
 
-AWARDS3 = {}
-for k, val in AWARDS2.items():
-	if val['price'] == 300: AWARDS3[k] = val
+AWARDS_JL2_PRINTABLE = {}
+for k, val in AWARDS_ENABLED.items():
+	if val['price'] == 300: AWARDS_JL2_PRINTABLE[k] = val
 
 NOTIFIED_USERS = {
 	# format: 'substring' ↦ User ID to notify
