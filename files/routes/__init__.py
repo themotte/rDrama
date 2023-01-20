@@ -15,7 +15,6 @@ from .users import *
 from .votes import *
 from .feeds import *
 from .awards import *
-from .giphy import *
 from .volunteer import *
 if app.debug:
 	from .dev import *
