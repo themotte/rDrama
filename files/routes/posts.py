@@ -618,7 +618,6 @@ def thumbnail_thread(pid):
 
 @app.post("/is_repost")
 def api_is_repost():
-
 	url = request.values.get('url')
 	if not url: abort(400)
 
