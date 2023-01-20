@@ -15,7 +15,7 @@ from copy import deepcopy
 def shop(v):
 	abort(404) # disable entirely pending possible future use of coins
 
-	AWARDS = deepcopy(AWARDS2)
+	AWARDS = deepcopy(AWARDS_ENABLED)
 
 	for val in AWARDS.values(): val["owned"] = 0
 
@@ -41,7 +41,7 @@ def buy(v, award):
 	if award == 'ghost' and v.admin_level < 2:
 		abort(403, "Only admins can buy that award.")
 
-	AWARDS = deepcopy(AWARDS2)
+	AWARDS = deepcopy(AWARDS_ENABLED)
 
 	if award not in AWARDS: abort(400)
 	og_price = AWARDS[award]["price"]
@@ -50,7 +50,6 @@ def buy(v, award):
 
 	if request.values.get("mb"):
 		if v.procoins < price: abort(400, "Not enough marseybux.")
-		if award == "grass": abort(403, "You can't buy the grass award with marseybux.")
 		v.procoins -= price
 	else:
 		if v.coins < price: abort(400, "Not enough coins.")
@@ -85,33 +84,8 @@ def buy(v, award):
 		g.db.add(v)
 
 
-	if award == "lootbox":
-		send_repeatable_notification(995, f"@{v.username} bought a lootbox!")
-		for i in [1,2,3,4,5]:
-			award = random.choice(["snow", "gingerbread", "lights", "candycane", "fireplace"])
-			award = AwardRelationship(user_id=v.id, kind=award)
-			g.db.add(award)
-			g.db.flush()
-		v.lootboxes_bought += 1
-		if v.lootboxes_bought == 10 and not v.has_badge(76):
-			new_badge = Badge(badge_id=76, user_id=v.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-		elif v.lootboxes_bought == 50 and not v.has_badge(77):
-			new_badge = Badge(badge_id=77, user_id=v.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-		elif v.lootboxes_bought == 150 and not v.has_badge(78):
-			new_badge = Badge(badge_id=78, user_id=v.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-
-	else:
-		award_object = AwardRelationship(user_id=v.id, kind=award)
-		g.db.add(award_object)
+	award_object = AwardRelationship(user_id=v.id, kind=award)
+	g.db.add(award_object)
 
 	g.db.add(v)
 	g.db.commit()
@@ -160,54 +134,6 @@ def award_post(pid, v):
 		msg = f"@{v.username} has given your [post]({post.shortlink}) the {AWARDS[kind]['title']} Award!"
 		if note: msg += f"\n\n> {note}"
 		send_repeatable_notification(author.id, msg)
-
-	if kind == "ban":
-		link = f"[this post]({post.shortlink})"
-
-		if not author.is_suspended:
-			author.ban(reason=f"1-Day ban award used by @{v.username} on /post/{post.id}", days=1)
-			send_repeatable_notification(author.id, f"Your account has been banned for **a day** for {link}. It sucked and you should feel bad.")
-		elif author.unban_utc:
-			author.unban_utc += 86400
-			send_repeatable_notification(author.id, f"Your account has been banned for **yet another day** for {link}. Seriously man?")
-	elif kind == "unban":
-		if not author.is_suspended or not author.unban_utc or time.time() > author.unban_utc: abort(403)
-
-		if author.unban_utc - time.time() > 86400:
-			author.unban_utc -= 86400
-			send_repeatable_notification(author.id, "Your ban duration has been reduced by 1 day!")
-		else:
-			author.unban_utc = 0
-			author.is_banned = 0
-			author.ban_evade = 0
-			send_repeatable_notification(author.id, "You have been unbanned!")
-	elif kind == "pin":
-		if post.stickied and post.stickied_utc:
-			post.stickied_utc += 3600
-		else:
-			post.stickied = f'{v.username} (pin award)'
-			post.stickied_utc = int(time.time()) + 3600
-		g.db.add(post)
-		cache.delete_memoized(frontlist)
-	elif kind == "unpin":
-		if not post.stickied_utc: abort(403)
-		t = post.stickied_utc - 3600
-		if time.time() > t:
-			post.stickied = None
-			post.stickied_utc = None
-			cache.delete_memoized(frontlist)
-		else: post.stickied_utc = t
-		g.db.add(post)
-	elif kind == "benefactor":
-		author.patron = 1
-		if author.patron_utc: author.patron_utc += 2629746
-		else: author.patron_utc = int(time.time()) + 2629746
-		author.procoins += 2500
-		if not v.has_badge(103):
-			badge = Badge(user_id=v.id, badge_id=103)
-			g.db.add(badge)
-			g.db.flush()
-			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 
 	if author.received_award_count: author.received_award_count += 1
 	else: author.received_award_count = 1
@@ -260,54 +186,6 @@ def award_comment(cid, v):
 		if note: msg += f"\n\n> {note}"
 		send_repeatable_notification(author.id, msg)
 
-	if kind == "benefactor" and author.id == v.id:
-		abort(400, "You can't use this award on yourself.")
-
-	if kind == "ban":
-		link = f"[this comment]({c.shortlink})"
-
-		if not author.is_suspended:
-			author.ban(reason=f"1-Day ban award used by @{v.username} on /comment/{c.id}", days=1)
-			send_repeatable_notification(author.id, f"Your account has been banned for **a day** for {link}. It sucked and you should feel bad.")
-		elif author.unban_utc:
-			author.unban_utc += 86400
-			send_repeatable_notification(author.id, f"Your account has been banned for **yet another day** for {link}. Seriously man?")
-	elif kind == "unban":
-		if not author.is_suspended or not author.unban_utc or time.time() > author.unban_utc: abort(403)
-
-		if author.unban_utc - time.time() > 86400:
-			author.unban_utc -= 86400
-			send_repeatable_notification(author.id, "Your ban duration has been reduced by 1 day!")
-		else:
-			author.unban_utc = 0
-			author.is_banned = 0
-			author.ban_evade = 0
-			send_repeatable_notification(author.id, "You have been unbanned!")
-	elif kind == "pin":
-		if c.is_pinned and c.is_pinned_utc: c.is_pinned_utc += 3600
-		else:
-			c.is_pinned = f'{v.username} (pin award)'
-			c.is_pinned_utc = int(time.time()) + 3600
-		g.db.add(c)
-	elif kind == "unpin":
-		if not c.is_pinned_utc: abort(403)
-		t = c.is_pinned_utc - 3600
-		if time.time() > t:
-			c.is_pinned = None
-			c.is_pinned_utc = None
-		else: c.is_pinned_utc = t
-		g.db.add(c)
-	elif kind == "benefactor":
-		author.patron = 1
-		if author.patron_utc: author.patron_utc += 2629746
-		else: author.patron_utc = int(time.time()) + 2629746
-		author.procoins += 2500
-		if not v.has_badge(103):
-			badge = Badge(user_id=v.id, badge_id=103)
-			g.db.add(badge)
-			g.db.flush()
-			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
-
 	if author.received_award_count: author.received_award_count += 1
 	else: author.received_award_count = 1
 	g.db.add(author)
@@ -323,7 +201,7 @@ def admin_userawards_get(v):
 	abort(404) # disable entirely pending possible future use of coins
 
 	if v.admin_level != 3:
-		return render_template("admin/awards.html", awards=list(AWARDS3.values()), v=v)
+		return render_template("admin/awards.html", awards=list(AWARDS_JL2_PRINTABLE.values()), v=v)
 
 	return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v) 
 
@@ -335,22 +213,15 @@ def admin_userawards_post(v):
 
 	try: u = request.values.get("username").strip()
 	except: abort(404)
-
-	whitelist = ("shit", "fireflies", "train", "scooter", "wholesome", "glowie")
-
+	whitelist = ()
 	u = get_user(u, graceful=False, v=v)
-
 	notify_awards = {}
 
 	for key, value in request.values.items():
 		if key not in AWARDS: continue
-
 		if v.admin_level < 3 and key not in whitelist: continue
-
 		if value:
-			
 			if int(value) > 10: abort(403)
-
 			if int(value): notify_awards[key] = int(value)
 
 			for x in range(int(value)):
@@ -358,7 +229,6 @@ def admin_userawards_post(v):
 					user_id=u.id,
 					kind=key
 				)
-
 				g.db.add(award)
 
 	if v.id != u.id:
@@ -384,5 +254,9 @@ def admin_userawards_post(v):
 
 	g.db.commit()
 
-	if v.admin_level != 3: return render_template("admin/awards.html", awards=list(AWARDS3.values()), v=v)
-	return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v) 
+	if v.admin_level < 3:
+		awards: dict = AWARDS_JL2_PRINTABLE
+	else:
+		awards: dict = AWARDS
+
+	return render_template("admin/awards.html", awards=awards, v=v) 
