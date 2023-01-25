@@ -1,6 +1,6 @@
-function autoExpand (field) {
-	xpos=window.scrollX;
-	ypos=window.scrollY;
+function autoExpand(field) {
+	xpos = window.scrollX;
+	ypos = window.scrollY;
 
 	field.style.height = 'inherit';
 
@@ -13,6 +13,7 @@ function autoExpand (field) {
 	+ parseInt(computed.getPropertyValue('border-bottom-width'), 10);
 
 	field.style.height = height + 'px';
+	if (Math.abs(window.scrollX - xpos) < 1 && Math.abs(window.scrollY - ypos) < 1) return;
 
 	window.scrollTo(xpos,ypos);
 };
