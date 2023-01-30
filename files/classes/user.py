@@ -10,6 +10,7 @@ from flask import g, session
 from sqlalchemy.orm import aliased, deferred, relationship
 from sqlalchemy.sql.schema import Column, ForeignKey, Index, UniqueConstraint
 from sqlalchemy.sql.sqltypes import Boolean, DateTime, Integer, String
+from werkzeug.security import check_password_hash
 
 #from files.__main__ import cache
 from files.classes.alts import Alt
@@ -34,7 +35,7 @@ from files.helpers.const import *
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.images import *
 from files.helpers.lazy import lazy
-from files.helpers.security import *
+from files.helpers.security import generate_hash, hash_password, validate_hash
 
 defaulttheme = "TheMotte"
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
@@ -337,11 +338,10 @@ class User(Base):
 	def has_badge(self, badge_id):
 		return g.db.query(Badge).filter_by(user_id=self.id, badge_id=badge_id).one_or_none()
 
-	def hash_password(self, password):
-		return generate_password_hash(
-			password, method='pbkdf2:sha512', salt_length=8)
+	def hash_password(self, password:str):
+		return hash_password(password)
 
-	def verifyPass(self, password):
+	def verifyPass(self, password:str):
 		return check_password_hash(self.passhash, password)
 
 	@property
