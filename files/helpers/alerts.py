@@ -69,7 +69,6 @@ def notif_comment2(p):
 	if existing: return existing[0]
 	else:
 		text = f"@{p.author.username} has mentioned you: [{p.title}](/post/{p.id})"
-		if p.sub: text += f" in <a href='/h/{p.sub}'>/h/{p.sub}"
 		text_html = sanitize(text, alert=True)
 		return create_comment(text_html)
 

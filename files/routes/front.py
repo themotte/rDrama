@@ -160,15 +160,9 @@ def notifications(v):
 
 @app.get("/")
 @app.get("/catalog")
-# @app.get("/h/<sub>")
-# @app.get("/s/<sub>")
 @limiter.limit("3/second;30/minute;1000/hour;5000/day")
 @auth_desired
-def front_all(v, sub=None, subdomain=None):
-	if sub: sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
-	
-	if (request.path.startswith('/h/') or request.path.startswith('/s/')) and not sub: abort(404)
-
+def front_all(v, subdomain=None):
 	if g.webview and not session.get("session_id"):
 		session["session_id"] = secrets.token_hex(49)
 
@@ -202,7 +196,6 @@ def front_all(v, sub=None, subdomain=None):
 					filter_words=v.filter_words if v else [],
 					gt=gt,
 					lt=lt,
-					sub=sub,
 					site=SITE
 					)
 
@@ -226,12 +219,12 @@ def front_all(v, sub=None, subdomain=None):
 			g.db.commit()
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
-	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode, sub=sub, home=True)
+	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode, home=True)
 
 
 
 @cache.memoize(timeout=86400)
-def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=0, lt=0, sub=None, site=None):
+def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=0, lt=0, site=None):
 
 	posts = g.db.query(Submission)
 	
@@ -244,9 +237,6 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 		if v:
 			filter_clause = filter_clause | (Submission.author_id == v.id)
 		posts = posts.filter(filter_clause)
-
-	if sub: posts = posts.filter_by(sub=sub.name)
-	elif v: posts = posts.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
 	if lt: posts = posts.filter(Submission.created_utc < lt)
@@ -289,9 +279,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 
 	if page == 1 and ccmode == "false" and not gt and not lt:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
-		if sub: pins = pins.filter_by(sub=sub.name)
-		elif v:
-			pins = pins.filter(or_(Submission.sub == None, Submission.sub.notin_(v.all_blocks)))
+		if v:
 			if v.admin_level < 2:
 				pins = pins.filter(Submission.author_id.notin_(v.userblocks))
 

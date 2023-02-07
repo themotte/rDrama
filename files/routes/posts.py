@@ -91,7 +91,6 @@ def publish(pid, v):
 
 		if v.followers:
 			text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
-			if post.sub: text += f" in <a href='/h/{post.sub}'>/h/{post.sub}"
 
 			cid = notif_comment(text, autojanny=True)
 			for follow in v.followers:
@@ -110,23 +109,14 @@ def publish(pid, v):
 	return redirect(post.permalink)
 
 @app.get("/submit")
-# @app.get("/h/<sub>/submit")
 @auth_required
-def submit_get(v, sub=None):
-	if sub: sub = g.db.query(Sub.name).filter_by(name=sub.strip().lower()).one_or_none()
-	
-	if request.path.startswith('/h/') and not sub: abort(404)
-
-	SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
-
-	return render_template("submit.html", SUBS=SUBS, v=v, sub=sub)
+def submit_get(v):
+	return render_template("submit.html", v=v)
 
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
-# @app.get("/h/<sub>/post/<pid>")
-# @app.get("/h/<sub>/post/<pid>/<anything>")
 @auth_desired
-def post_id(pid, anything=None, v=None, sub=None):
+def post_id(pid, anything=None, v=None):
 	post = get_post(pid, v=v)
 
 	if post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
@@ -141,9 +131,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
-
 		blocking = v.blocking.subquery()
-
 		blocked = v.blocked.subquery()
 
 		comments = g.db.query(
@@ -242,7 +230,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 	else:
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
-		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset, sub=post.subr)
+		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset)
 
 @app.get("/viewmore/<pid>/<sort>/<offset>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -667,31 +655,17 @@ def api_is_repost():
 	else: return {'permalink': ''}
 
 @app.post("/submit")
-# @app.post("/h/<sub>/submit")
 @limiter.limit("1/second;2/minute;10/hour;50/day")
 @auth_required
-def submit_post(v, sub=None):
+def submit_post(v):
 
 	def error(error):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, error)
-	
-		SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
-		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body), 400
+		return render_template("submit.html", v=v, error=error, title=title, url=url, body=body), 400
 
 	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
 	url = guarded_value("url", 0, MAX_URL_LENGTH)
 	body = guarded_value("body", 0, MAX_BODY_LENGTH)
-
-	sub = request.values.get("sub")
-	if sub: sub = sub.replace('/h/','').replace('s/','')
-
-	if sub and sub != 'none':
-		sname = sub.strip().lower()
-		sub = g.db.query(Sub.name).filter_by(name=sname).one_or_none()
-		if not sub: return error(f"/h/{sname} not found!")
-		sub = sub[0]
-		if v.exiled_from(sub): return error(f"You're exiled from /h/{sub}")
-	else: sub = None
 
 	if v.is_suspended: return error("You can't perform this action while banned.")
 	
@@ -890,7 +864,6 @@ def submit_post(v, sub=None):
 		embed_url=embed,
 		title=title,
 		title_html=title_html,
-		sub=sub,
 		ghost=False,
 		filter_state='filtered' if v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts'] else 'normal'
 	)
@@ -945,7 +918,6 @@ def submit_post(v, sub=None):
 
 		if (request.values.get('followers') or is_bot) and v.followers:
 			text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
-			if post.sub: text += f" in <a href='/h/{post.sub}'>/h/{post.sub}"
 
 			cid = notif_comment(text, autojanny=True)
 			for follow in v.followers:
@@ -968,7 +940,7 @@ def submit_post(v, sub=None):
 		post.voted = 1
 		if 'megathread' in post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
-		return render_template('submission.html', v=v, p=post, sort=sort, render_replies=True, offset=0, success=True, sub=post.subr)
+		return render_template('submission.html', v=v, p=post, sort=sort, render_replies=True, offset=0, success=True)
 
 
 @app.post("/delete_post/<pid>")

@@ -99,7 +99,6 @@ def seed_db():
 			embed_url=None,
 			title=f'Clever unique post title number {i}',
 			title_html=f'Clever unique post title number {i}',
-			sub=None,
 			ghost=False,
 			filter_state='normal'
 		)

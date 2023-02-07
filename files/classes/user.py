@@ -13,9 +13,6 @@ from .userblock import *
 from .badges import *
 from .clients import *
 from .mod_logs import *
-from .mod import *
-from .exiles import *
-from .sub_block import *
 from files.__main__ import app, Base, cache
 from files.helpers.security import *
 from files.helpers.assetcache import assetcache_path
@@ -168,30 +165,6 @@ class User(Base):
 		minAge = site_settings.get('FilterCommentsMinAgeDays', 0)
 		accountAgeDays = (datetime.now() - datetime.fromtimestamp(self.created_utc)).days
 		return self.comment_count < minComments or accountAgeDays < minAge or self.truecoins < minKarma
-
-	@lazy
-	def mods(self, sub):
-		return self.admin_level == 3 or bool(g.db.query(Mod.user_id).filter_by(user_id=self.id, sub=sub).one_or_none())
-
-	@lazy
-	def exiled_from(self, sub):
-		return self.admin_level < 2 and bool(g.db.query(Exile.user_id).filter_by(user_id=self.id, sub=sub).one_or_none())
-
-	@property
-	@lazy
-	def all_blocks(self):
-		return [x[0] for x in g.db.query(SubBlock.sub).filter_by(user_id=self.id).all()]
-
-	@lazy
-	def blocks(self, sub):
-		return g.db.query(SubBlock).filter_by(user_id=self.id, sub=sub).one_or_none()
-
-	@lazy
-	def mod_date(self, sub):
-		if self.id == OWNER_ID: return 1
-		mod = g.db.query(Mod).filter_by(user_id=self.id, sub=sub).one_or_none()
-		if not mod: return None
-		return mod.created_utc
 
 	@property
 	@lazy
@@ -473,12 +446,6 @@ class User(Base):
 			output.append(user)
 
 		return output
-
-	@property
-	@lazy
-	def moderated_subs(self):
-		modded_subs = g.db.query(Mod.sub).filter_by(user_id=self.id).all()
-		return modded_subs
 
 	def has_follower(self, user):
 

@@ -201,7 +201,6 @@ def test_bulk_update_descendant_count_quick(accounts, submissions, comments):
 				'embed_url': None,
 				'title': f'Clever unique post title number {i}',
 				'title_html': f'Clever unique post title number {i}',
-				'sub': None,
 				'ghost': False,
 				'filter_state': 'normal'
 			})

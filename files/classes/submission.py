@@ -13,7 +13,6 @@ from files.helpers.assetcache import assetcache_path
 from .flags import Flag
 from .comment import Comment
 from flask import g
-from .sub import Sub
 from .votes import CommentVote
 
 class Submission(Base):
@@ -32,7 +31,6 @@ class Submission(Base):
 	distinguish_level = Column(Integer, default=0, nullable=False)
 	stickied = Column(String)
 	stickied_utc = Column(Integer)
-	sub = Column(String, ForeignKey("subs.name"))
 	is_pinned = Column(Boolean, default=False, nullable=False)
 	private = Column(Boolean, default=False, nullable=False)
 	club = Column(Boolean, default=False, nullable=False)
@@ -72,7 +70,6 @@ class Submission(Base):
 	awards = relationship("AwardRelationship", viewonly=True)
 	reports = relationship("Flag", viewonly=True)
 	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
-	subr = relationship("Sub", primaryjoin="foreign(Submission.sub)==remote(Sub.name)", viewonly=True)
 	notes = relationship("UserNote", back_populates="post")
 
 	bump_utc = deferred(Column(Integer, server_default=FetchedValue()))
@@ -199,8 +196,6 @@ class Submission(Base):
 	@lazy
 	def shortlink(self):
 		link = f"/post/{self.id}"
-		if self.sub: link = f"/h/{self.sub}{link}"
-
 		if self.club: return link + '/-'
 
 		output = title_regex.sub('', self.title.lower())
