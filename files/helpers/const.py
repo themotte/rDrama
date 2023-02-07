@@ -55,7 +55,7 @@ ERROR_MESSAGES = {
 }
 
 LOGGEDIN_ACTIVE_TIME = 15 * 60
-RENDER_DEPTH_LIMIT = 10
+RENDER_DEPTH_LIMIT = 8
 '''
 The maximum depth at which a comment tree is rendered
 '''
