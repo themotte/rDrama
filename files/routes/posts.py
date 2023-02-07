@@ -238,6 +238,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 	g.db.expire_on_commit = False
 	g.db.add(post)
 	g.db.commit()
+	g.db.expire_on_commit = True
 
 	if request.headers.get("Authorization"): return post.json
 	else:
