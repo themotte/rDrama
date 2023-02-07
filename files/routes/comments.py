@@ -12,12 +12,12 @@ from shutil import copyfile
 from json import loads
 from collections import Counter
 
-@app.get("/comment/<cid>")
-@app.get("/post/<pid>/<anything>/<cid>")
+@app.get("/comment/<int:cid>")
+@app.get("/post/<int:pid>/<anything>/<int:cid>")
 # @app.get("/h/<sub>/comment/<cid>")
 # @app.get("/h/<sub>/post/<pid>/<anything>/<cid>")
 @auth_desired
-def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
+def post_pid_comment_cid(cid, pid: Optional[int]=None, anything=None, v: Optional[User]=None, sub=None):
 	comment = get_comment(cid, v=v)
 
 	if v and request.values.get("read"):
@@ -109,7 +109,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 @app.post("/comment")
 @limiter.limit("1/second;20/minute;200/hour;1000/day")
 @auth_required
-def api_comment(v):
+def api_comment(v: User):
 	if v.is_suspended: abort(403, "You can't perform this action while banned.")
 
 	parent_fullname = request.values.get("parent_fullname").strip()
@@ -273,7 +273,7 @@ def api_comment(v):
 @app.post("/edit_comment/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def edit_comment(cid, v):
+def edit_comment(cid: int, v: User):
 
 	c = get_comment(cid, v=v)
 
@@ -373,7 +373,7 @@ def edit_comment(cid, v):
 @app.post("/delete/comment/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def delete_comment(cid, v):
+def delete_comment(cid: int, v: User):
 
 	c = get_comment(cid, v=v)
 
@@ -391,7 +391,7 @@ def delete_comment(cid, v):
 @app.post("/undelete/comment/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def undelete_comment(cid, v):
+def undelete_comment(cid: int, v: User):
 
 	c = get_comment(cid, v=v)
 
@@ -408,7 +408,7 @@ def undelete_comment(cid, v):
 
 @app.post("/pin_comment/<cid>")
 @auth_required
-def pin_comment(cid, v):
+def pin_comment(cid: int, v: User):
 	
 	comment = get_comment(cid, v=v)
 	
@@ -429,9 +429,9 @@ def pin_comment(cid, v):
 	return {"message": "Comment pinned!"}
 	
 
-@app.post("/unpin_comment/<cid>")
+@app.post("/unpin_comment/<int:cid>")
 @auth_required
-def unpin_comment(cid, v):
+def unpin_comment(cid: int, v: User):
 	
 	comment = get_comment(cid, v=v)
 	
@@ -453,7 +453,7 @@ def unpin_comment(cid, v):
 
 @app.post("/mod_pin/<cid>")
 @auth_required
-def mod_pin(cid, v):
+def mod_pin(cid: int, v: User):
 	
 	comment = get_comment(cid, v=v)
 	
@@ -474,7 +474,7 @@ def mod_pin(cid, v):
 
 @app.post("/unmod_pin/<cid>")
 @auth_required
-def mod_unpin(cid, v):
+def mod_unpin(cid: int, v: User):
 	
 	comment = get_comment(cid, v=v)
 	
@@ -494,7 +494,7 @@ def mod_unpin(cid, v):
 @app.post("/save_comment/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def save_comment(cid, v):
+def save_comment(cid: int, v: User):
 
 	comment=get_comment(cid)
 
@@ -511,7 +511,7 @@ def save_comment(cid, v):
 @app.post("/unsave_comment/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def unsave_comment(cid, v):
+def unsave_comment(cid: int, v: User):
 
 	comment=get_comment(cid)
 

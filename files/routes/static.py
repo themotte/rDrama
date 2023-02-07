@@ -38,17 +38,17 @@ def marsey_list():
 
 @app.get('/sidebar')
 @auth_desired
-def sidebar(v):
+def sidebar(v: Optional[User]):
 	return render_template('sidebar.html', v=v)
 
 @app.get('/rules')
 @auth_desired
-def rules(v):
+def rules(v: Optional[User]):
 	return render_template('rules.html', v=v)
 
 @app.get('/support')
 @auth_desired
-def support(v):
+def support(v: Optional[User]):
 	return render_template('support.html', v=v)
 
 @app.get("/stats")
@@ -109,14 +109,14 @@ def chart():
 
 @app.get("/weekly_chart")
 @auth_desired
-def weekly_chart(v):
+def weekly_chart(v: Optional[User]):
 	file = cached_chart(kind="weekly", site=SITE)
 	f = send_file(file)
 	return f
 
 @app.get("/daily_chart")
 @auth_desired
-def daily_chart(v):
+def daily_chart(v: Optional[User]):
 	file = cached_chart(kind="daily", site=SITE)
 	f = send_file(file)
 	return f
@@ -200,7 +200,7 @@ def patrons(v):
 
 @app.get("/admins")
 @auth_desired
-def admins(v):
+def admins(v: Optional[User]):
 	if v and v.admin_level > 2:
 		admins = g.db.query(User).filter(User.admin_level>1).order_by(User.truecoins.desc()).all()
 		admins += g.db.query(User).filter(User.admin_level==1).order_by(User.truecoins.desc()).all()
@@ -211,7 +211,7 @@ def admins(v):
 @app.get("/log")
 @app.get("/modlog")
 @auth_desired
-def log(v):
+def log(v: Optional[User]):
 
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
@@ -253,7 +253,7 @@ def log(v):
 
 @app.get("/log/<id>")
 @auth_desired
-def log_item(v, id):
+def log_item(v: Optional[User], id):
 
 	try: id = int(id)
 	except: abort(404)
@@ -272,21 +272,21 @@ def log_item(v, id):
 
 @app.get("/api")
 @auth_desired
-def api(v):
+def api(v: Optional[User]):
 	return render_template("api.html", v=v)
 
 @app.get("/contact")
 @app.get("/press")
 @app.get("/media")
 @auth_desired
-def contact(v):
+def contact(v: Optional[User]):
 
 	return render_template("contact.html", v=v)
 
 @app.post("/send_admin")
 @limiter.limit("1/second;2/minute;6/hour;10/day")
 @auth_desired
-def submit_contact(v):
+def submit_contact(v: Optional[User]):
 	body = request.values.get("message")
 	email = request.values.get("email")
 	if not body: abort(400)
@@ -414,14 +414,14 @@ def blocks(v):
 
 @app.get("/banned")
 @auth_desired
-def banned(v):
+def banned(v: Optional[User]):
 
 	users = [x for x in g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).all()]
 	return render_template("banned.html", v=v, users=users)
 
 @app.get("/formatting")
 @auth_desired
-def formatting(v):
+def formatting(v: Optional[User]):
 
 	return render_template("formatting.html", v=v)
 
@@ -431,7 +431,7 @@ def serviceworker():
 
 @app.get("/settings/security")
 @auth_required
-def settings_security(v):
+def settings_security(v: User):
 
 	return render_template("settings_security.html",
 						   v=v,

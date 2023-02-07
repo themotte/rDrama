@@ -43,7 +43,7 @@ def send_verification_email(user, email=None):
 @app.post("/verify_email")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def api_verify_email(v):
+def api_verify_email(v: User):
 
 	send_verification_email(v)
 
@@ -52,7 +52,7 @@ def api_verify_email(v):
 
 @app.get("/activate")
 @auth_required
-def activate(v):
+def activate(v: User):
 
 	email = request.values.get("email", "").strip().lower()
 

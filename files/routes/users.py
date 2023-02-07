@@ -512,7 +512,7 @@ def song(song):
 @app.post("/subscribe/<post_id>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def subscribe(v, post_id):
+def subscribe(v: User, post_id):
 	new_sub = Subscription(user_id=v.id, submission_id=post_id)
 	g.db.add(new_sub)
 	g.db.commit()
@@ -521,7 +521,7 @@ def subscribe(v, post_id):
 @app.post("/unsubscribe/<post_id>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def unsubscribe(v, post_id):
+def unsubscribe(v: User, post_id):
 	sub=g.db.query(Subscription).filter_by(user_id=v.id, submission_id=post_id).one_or_none()
 	if sub:
 		g.db.delete(sub)
@@ -530,13 +530,13 @@ def unsubscribe(v, post_id):
 
 @app.get("/report_bugs")
 @auth_required
-def reportbugs(v):
+def reportbugs(v: User):
 	return redirect(f'/post/{BUG_THREAD}')
 
 @app.post("/@<username>/message")
 @limiter.limit("1/second;10/minute;20/hour;50/day")
 @auth_required
-def message2(v, username):
+def message2(v: User, username):
 	if v.is_suspended_permanently:
 		abort(403, "You have been permabanned and cannot send messages; " + \
 			"contact modmail if you think this decision was incorrect.")
@@ -592,7 +592,7 @@ def message2(v, username):
 @app.post("/reply")
 @limiter.limit("1/second;6/minute;50/hour;200/day")
 @auth_required
-def messagereply(v):
+def messagereply(v: User):
 
 	message = request.values.get("body", "").strip()[:10000].strip()
 
@@ -695,7 +695,7 @@ def messagereply(v):
 
 @app.get("/2faqr/<secret>")
 @auth_required
-def mfa_qr(secret, v):
+def mfa_qr(secret, v: User):
 	x = pyotp.TOTP(secret)
 	qr = qrcode.QRCode(
 		error_correction=qrcode.constants.ERROR_CORRECT_L
@@ -739,32 +739,32 @@ def api_is_available(name):
 
 @app.get("/id/<id>")
 @auth_desired
-def user_id(v, id):
+def user_id(v: Optional[User], id):
 	user = get_account(id)
 	return redirect(user.url)
 		
 @app.get("/u/<username>")
 @auth_desired
-def redditor_moment_redirect(v, username):
+def redditor_moment_redirect(v: Optional[User], username):
 	return redirect(f"/@{username}")
 
 @app.get("/@<username>/followers")
 @auth_desired
-def followers(v, username):
+def followers(v: Optional[User], username):
 	u = get_user(username, v=v)
 	users = g.db.query(User).join(Follow, Follow.target_id == u.id).filter(Follow.user_id == User.id).order_by(Follow.created_utc).all()
 	return render_template("followers.html", v=v, u=u, users=users)
 
 @app.get("/@<username>/following")
 @auth_desired
-def following(v, username):
+def following(v: Optional[User], username):
 	u = get_user(username, v=v)
 	users = g.db.query(User).join(Follow, Follow.user_id == u.id).filter(Follow.target_id == User.id).order_by(Follow.created_utc).all()
 	return render_template("following.html", v=v, u=u, users=users)
 
 @app.get("/views")
 @auth_required
-def visitors(v):
+def visitors(v: User):
 	if v.admin_level < 2 and not v.patron: return render_template("errors/patron.html", v=v)
 	viewers=sorted(v.viewers, key = lambda x: x.last_view_utc, reverse=True)
 	return render_template("viewers.html", v=v, viewers=viewers)
@@ -772,7 +772,7 @@ def visitors(v):
 
 @app.get("/@<username>")
 @auth_desired
-def u_username(username, v=None):
+def u_username(username, v: Optional[User]=None):
 	u = get_user(username, v=v, include_blocks=True)
 
 	if username != u.username:
@@ -849,7 +849,7 @@ def u_username(username, v=None):
 
 @app.get("/@<username>/comments")
 @auth_desired
-def u_username_comments(username, v=None):
+def u_username_comments(username, v: Optional[User]=None):
 	user = get_user(username, v=v, include_blocks=True)
 
 	if username != user.username: return redirect(f'/@{user.username}/comments')
@@ -906,7 +906,7 @@ def u_username_comments(username, v=None):
 
 @app.get("/@<username>/info")
 @auth_required
-def u_username_info(username, v=None):
+def u_username_info(username, v: User=None):
 	user = get_user(username, v=v, include_blocks=True)
 
 	if hasattr(user, 'is_blocking') and user.is_blocking:
@@ -918,7 +918,7 @@ def u_username_info(username, v=None):
 
 @app.get("/<id>/info")
 @auth_required
-def u_user_id_info(id, v=None):
+def u_user_id_info(id, v: User):
 	user = get_account(id, v=v, include_blocks=True)
 
 	if hasattr(user, 'is_blocking') and user.is_blocking:
@@ -931,7 +931,7 @@ def u_user_id_info(id, v=None):
 @app.post("/follow/<username>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def follow_user(username, v):
+def follow_user(username, v: User):
 
 	target = get_user(username)
 
@@ -955,7 +955,7 @@ def follow_user(username, v):
 @app.post("/unfollow/<username>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def unfollow_user(username, v):
+def unfollow_user(username, v: User):
 	target = get_user(username)
 
 	follow = g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).one_or_none()
@@ -976,7 +976,7 @@ def unfollow_user(username, v):
 @app.post("/remove_follow/<username>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def remove_follow(username, v):
+def remove_follow(username, v: User):
 	target = get_user(username)
 
 	follow = g.db.query(Follow).filter_by(user_id=target.id, target_id=v.id).one_or_none()
@@ -1003,7 +1003,7 @@ import re
 @app.get("/uid/<id>/pic/profile")
 @limiter.exempt
 @auth_desired
-def user_profile_uid(v, id):
+def user_profile_uid(v: Optional[User], id):
 	try: id = int(id)
 	except:
 		try: id = int(id, 36)
@@ -1034,7 +1034,7 @@ def user_profile_uid(v, id):
 @app.get("/@<username>/pic")
 @limiter.exempt
 @auth_required
-def user_profile_name(v, username):
+def user_profile_name(v: User, username):
 
 	name = f"/@{username}/pic"
 	path = cache.get(name)
@@ -1060,7 +1060,7 @@ def user_profile_name(v, username):
 
 @app.get("/@<username>/saved/posts")
 @auth_required
-def saved_posts(v, username):
+def saved_posts(v: User, username):
 
 	page=int(request.values.get("page",1))
 
@@ -1084,7 +1084,7 @@ def saved_posts(v, username):
 
 @app.get("/@<username>/saved/comments")
 @auth_required
-def saved_comments(v, username):
+def saved_comments(v: User, username):
 
 	page=int(request.values.get("page",1))
 
@@ -1109,7 +1109,7 @@ def saved_comments(v, username):
 
 @app.post("/fp/<fp>")
 @auth_required
-def fp(v, fp):
+def fp(v: User, fp):
 	v.fp = fp
 	users = g.db.query(User).filter(User.fp == fp, User.id != v.id).all()
 	if users: print(f'{v.username}: fp {v.fp}')

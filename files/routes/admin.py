@@ -219,7 +219,7 @@ def club_ban(v, username):
 @app.get("/admin/shadowbanned")
 @limiter.exempt
 @auth_required
-def shadowbanned(v):
+def shadowbanned(v: User):
 	if not (v and v.admin_level > 1): abort(404)
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).order_by(User.shadowbanned).all()]
 	return render_template("shadowbanned.html", v=v, users=users)

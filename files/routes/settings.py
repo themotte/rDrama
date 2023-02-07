@@ -26,7 +26,7 @@ tiers={
 @app.post("/settings/removebackground")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def removebackground(v):
+def removebackground(v: User):
 	v.background = None
 	g.db.add(v)
 	g.db.commit()
@@ -35,7 +35,7 @@ def removebackground(v):
 @app.post("/settings/profile")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def settings_profile_post(v):
+def settings_profile_post(v: User):
 	updated = False
 
 	if request.values.get("background", v.background) != v.background:
@@ -271,7 +271,7 @@ def settings_profile_post(v):
 
 @app.post("/settings/filters")
 @auth_required
-def filters(v):
+def filters(v: User):
 	filters=request.values.get("filters")[:1000].strip()
 
 	if filters == v.custom_filter_list:
@@ -284,7 +284,7 @@ def filters(v):
 
 @app.post("/changelogsub")
 @auth_required
-def changelogsub(v):
+def changelogsub(v: User):
 	v.changelogsub = not v.changelogsub
 	g.db.add(v)
 
@@ -297,7 +297,7 @@ def changelogsub(v):
 @app.post("/settings/namecolor")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def namecolor(v):
+def namecolor(v: User):
 
 	color = str(request.values.get("color", "")).strip()
 	if color.startswith('#'): color = color[1:]
@@ -310,7 +310,7 @@ def namecolor(v):
 @app.post("/settings/themecolor")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def themecolor(v):
+def themecolor(v: User):
 
 	themecolor = str(request.values.get("themecolor", "")).strip()
 	if themecolor.startswith('#'): themecolor = themecolor[1:]
@@ -323,7 +323,7 @@ def themecolor(v):
 @app.post("/settings/titlecolor")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def titlecolor(v):
+def titlecolor(v: User):
 
 	titlecolor = str(request.values.get("titlecolor", "")).strip()
 	if titlecolor.startswith('#'): titlecolor = titlecolor[1:]
@@ -336,7 +336,7 @@ def titlecolor(v):
 @app.post("/settings/verifiedcolor")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def verifiedcolor(v):
+def verifiedcolor(v: User):
 	verifiedcolor = str(request.values.get("verifiedcolor", "")).strip()
 	if verifiedcolor.startswith('#'): verifiedcolor = verifiedcolor[1:]
 	if len(verifiedcolor) != 6: return render_template("settings_profile.html", v=v, error="Invalid color code")
@@ -348,7 +348,7 @@ def verifiedcolor(v):
 @app.post("/settings/security")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def settings_security_post(v):
+def settings_security_post(v: User):
 	if request.values.get("new_password"):
 		if request.values.get("new_password") != request.values.get("cnf_password"):
 			return render_template("settings_security.html", v=v, error="Passwords do not match.")
@@ -431,7 +431,7 @@ def settings_security_post(v):
 @app.post("/settings/log_out_all_others")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def settings_log_out_others(v):
+def settings_log_out_others(v: User):
 
 	submitted_password = request.values.get("password", "").strip()
 
@@ -452,7 +452,7 @@ def settings_log_out_others(v):
 @app.post("/settings/images/profile")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def settings_images_profile(v):
+def settings_images_profile(v: User):
 	if request.headers.get("cf-ipcountry") == "T1": abort(403, "Image uploads are not allowed through TOR.")
 
 	file = request.files["profile"]
@@ -487,7 +487,7 @@ def settings_images_profile(v):
 @app.post("/settings/images/banner")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def settings_images_banner(v):
+def settings_images_banner(v: User):
 	if request.headers.get("cf-ipcountry") == "T1": abort(403, "Image uploads are not allowed through TOR.")
 
 	file = request.files["banner"]
@@ -509,20 +509,20 @@ def settings_images_banner(v):
 
 @app.get("/settings/blocks")
 @auth_required
-def settings_blockedpage(v):
+def settings_blockedpage(v: User):
 
 	return render_template("settings_blocks.html", v=v)
 
 @app.get("/settings/css")
 @auth_required
-def settings_css_get(v):
+def settings_css_get(v: User):
 
 	return render_template("settings_css.html", v=v)
 
 @app.post("/settings/css")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def settings_css(v):
+def settings_css(v: User):
 	css = request.values.get("css").strip().replace('\\', '').strip()[:4000]
 	v.css = css
 	g.db.add(v)
@@ -532,13 +532,13 @@ def settings_css(v):
 
 @app.get("/settings/profilecss")
 @auth_required
-def settings_profilecss_get(v):
+def settings_profilecss_get(v: User):
 	return render_template("settings_profilecss.html", v=v)
 
 @app.post("/settings/profilecss")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def settings_profilecss(v):
+def settings_profilecss(v: User):
 	profilecss = request.values.get("profilecss").strip().replace('\\', '').strip()[:4000]
 	v.profilecss = profilecss
 	g.db.add(v)
@@ -548,7 +548,7 @@ def settings_profilecss(v):
 @app.post("/settings/block")
 @limiter.limit("1/second;10/day")
 @auth_required
-def settings_block_user(v):
+def settings_block_user(v: User):
 	user = get_user(request.values.get("username"), graceful=True)
 
 	if not user: abort(404, "That user doesn't exist.")
@@ -575,7 +575,7 @@ def settings_block_user(v):
 @app.post("/settings/unblock")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def settings_unblock_user(v):
+def settings_unblock_user(v: User):
 	user = get_user(request.values.get("username"))
 	x = v.is_blocking(user)
 	if not x: abort(409)
@@ -588,12 +588,12 @@ def settings_unblock_user(v):
 
 @app.get("/settings/apps")
 @auth_required
-def settings_apps(v):
+def settings_apps(v: User):
 	return render_template("settings_apps.html", v=v)
 
 @app.get("/settings/content")
 @auth_required
-def settings_content_get(v):
+def settings_content_get(v: User):
 	return render_template("settings_filters.html", v=v)
 
 @app.post("/settings/name_change")
@@ -637,7 +637,7 @@ def settings_name_change(v):
 @app.post("/settings/song_change")
 @limiter.limit("2/second;10/day")
 @auth_required
-def settings_song_change(v):
+def settings_song_change(v: User):
 	song=request.values.get("song").strip()
 
 	if song == "" and v.song:
@@ -716,7 +716,7 @@ def settings_song_change(v):
 @app.post("/settings/title_change")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def settings_title_change(v):
+def settings_title_change(v: User):
 
 	if v.flairchanged: abort(403)
 	
@@ -737,13 +737,13 @@ def settings_title_change(v):
 
 @app.get("/settings")
 @auth_required
-def settings(v):
+def settings(v: User):
 	return redirect("/settings/profile")
 
 
 @app.get("/settings/profile")
 @auth_required
-def settings_profile(v):
+def settings_profile(v: User):
 	if v.flairchanged: ti = datetime.utcfromtimestamp(v.flairchanged).strftime('%Y-%m-%d %H:%M:%S')
 	else: ti = ''
 	return render_template("settings_profile.html", v=v, ti=ti)

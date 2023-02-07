@@ -55,7 +55,7 @@ def guarded_value(val, min_len, max_len) -> str:
 
 @app.post("/toggle_club/<pid>")
 @auth_required
-def toggle_club(pid, v):
+def toggle_club(pid: int, v: User):
 
 	post = get_post(pid)
 	if post.author_id != v.id and v.admin_level < 2: abort(403)
@@ -72,7 +72,7 @@ def toggle_club(pid, v):
 @app.post("/publish/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def publish(pid, v):
+def publish(pid: int, v: User):
 	post = get_post(pid)
 	if not post.private: return {"message": "Post published!"}
 
@@ -112,7 +112,7 @@ def publish(pid, v):
 @app.get("/submit")
 # @app.get("/h/<sub>/submit")
 @auth_required
-def submit_get(v, sub=None):
+def submit_get(v: User, sub=None):
 	if sub: sub = g.db.query(Sub.name).filter_by(name=sub.strip().lower()).one_or_none()
 	
 	if request.path.startswith('/h/') and not sub: abort(404)
@@ -121,12 +121,12 @@ def submit_get(v, sub=None):
 
 	return render_template("submit.html", SUBS=SUBS, v=v, sub=sub)
 
-@app.get("/post/<pid>")
-@app.get("/post/<pid>/<anything>")
+@app.get("/post/<int:pid>")
+@app.get("/post/<int:pid>/<anything>")
 # @app.get("/h/<sub>/post/<pid>")
 # @app.get("/h/<sub>/post/<pid>/<anything>")
 @auth_desired
-def post_id(pid, anything=None, v=None, sub=None):
+def post_id(pid:int, anything=None, v: Optional[User]=None, sub=None):
 	post = get_post(pid, v=v)
 
 	if post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
@@ -242,7 +242,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 @app.get("/viewmore/<pid>/<sort>/<offset>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
-def viewmore(v, pid, sort, offset):
+def viewmore(v: Optional[User], pid, sort, offset):
 	post = get_post(pid, v=v)
 	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
 
@@ -335,7 +335,7 @@ def viewmore(v, pid, sort, offset):
 @app.get("/morecomments/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
-def morecomments(v, cid):
+def morecomments(v: Optional[User], cid):
 	try: cid = int(cid)
 	except: abort(400)
 
@@ -390,7 +390,7 @@ def morecomments(v, cid):
 @app.post("/edit_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def edit_post(pid, v):
+def edit_post(pid: int, v: User):
 	p = get_post(pid)
 
 	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
@@ -658,7 +658,7 @@ def api_is_repost():
 # @app.post("/h/<sub>/submit")
 @limiter.limit("1/second;2/minute;10/hour;50/day")
 @auth_required
-def submit_post(v, sub=None):
+def submit_post(v: User, sub=None):
 
 	def error(error):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, error)
@@ -962,7 +962,7 @@ def submit_post(v, sub=None):
 @app.post("/delete_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def delete_post_pid(pid, v):
+def delete_post_pid(pid: int, v: User):
 
 	post = get_post(pid)
 	if post.author_id != v.id:
@@ -983,7 +983,7 @@ def delete_post_pid(pid, v):
 @app.post("/undelete_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def undelete_post_pid(pid, v):
+def undelete_post_pid(pid: int, v: User):
 	post = get_post(pid)
 	if post.author_id != v.id: abort(403)
 	post.deleted_utc =0
@@ -998,7 +998,7 @@ def undelete_post_pid(pid, v):
 
 @app.post("/toggle_comment_nsfw/<cid>")
 @auth_required
-def toggle_comment_nsfw(cid, v):
+def toggle_comment_nsfw(cid: int, v: User):
 
 	comment = g.db.query(Comment).filter_by(id=cid).one_or_none()
 	if comment.author_id != v.id and not v.admin_level > 1: abort(403)
@@ -1012,7 +1012,7 @@ def toggle_comment_nsfw(cid, v):
 	
 @app.post("/toggle_post_nsfw/<pid>")
 @auth_required
-def toggle_post_nsfw(pid, v):
+def toggle_post_nsfw(pid: int, v: User):
 
 	post = get_post(pid)
 
@@ -1038,7 +1038,7 @@ def toggle_post_nsfw(pid, v):
 @app.post("/save_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def save_post(pid, v):
+def save_post(pid: int, v: User):
 
 	post=get_post(pid)
 
@@ -1054,7 +1054,7 @@ def save_post(pid, v):
 @app.post("/unsave_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def unsave_post(pid, v):
+def unsave_post(pid: int, v: User):
 
 	post=get_post(pid)
 
@@ -1068,7 +1068,7 @@ def unsave_post(pid, v):
 
 @app.post("/pin/<post_id>")
 @auth_required
-def api_pin_post(post_id, v):
+def api_pin_post(post_id, v: User):
 	post = get_post(post_id)
 	if v.id != post.author_id: abort(403, "Only the post author's can do that!")
 	post.is_pinned = not post.is_pinned
@@ -1083,7 +1083,7 @@ def api_pin_post(post_id, v):
 @app.get("/submit/title")
 @limiter.limit("6/minute")
 @auth_required
-def get_post_title(v):
+def get_post_title(v: User):
 	POST_TITLE_TIMEOUT = 5
 	url = request.values.get("url")
 	if not url or '\\' in url: abort(400)

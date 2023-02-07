@@ -32,7 +32,7 @@ def shop(v):
 
 @app.post("/buy/<award>")
 @auth_required
-def buy(v, award):
+def buy(v: User, award):
 	abort(404) # disable entirely pending possible future use of coins
 
 	if award == 'benefactor' and not request.values.get("mb"):

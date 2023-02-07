@@ -9,7 +9,7 @@ defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 
 @app.post("/clear")
 @auth_required
-def clear(v):
+def clear(v: User):
 	notifs = g.db.query(Notification).join(Comment, Notification.comment_id == Comment.id).filter(Notification.read == False, Notification.user_id == v.id).all()
 	for n in notifs:
 		n.read = True
@@ -19,7 +19,7 @@ def clear(v):
 
 @app.get("/unread")
 @auth_required
-def unread(v):
+def unread(v: User):
 	listing = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(
 		Notification.read == False,
 		Notification.user_id == v.id,
@@ -38,7 +38,7 @@ def unread(v):
 
 @app.get("/notifications")
 @auth_required
-def notifications(v):
+def notifications(v: User):
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
@@ -164,7 +164,7 @@ def notifications(v):
 # @app.get("/s/<sub>")
 @limiter.limit("3/second;30/minute;1000/hour;5000/day")
 @auth_desired
-def front_all(v, sub=None, subdomain=None):
+def front_all(v: Optional[User], sub=None, subdomain=None):
 	if sub: sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	
 	if (request.path.startswith('/h/') or request.path.startswith('/s/')) and not sub: abort(404)
@@ -315,7 +315,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 
 @app.get("/changelog")
 @auth_required
-def changelog(v):
+def changelog(v: User):
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
@@ -360,7 +360,7 @@ def changeloglist(v=None, sort="new", page=1, t="all", site=None):
 
 @app.get("/random_post")
 @auth_desired
-def random_post(v):
+def random_post(v: Optional[User]):
 
 	p = g.db.query(Submission.id).filter(Submission.deleted_utc == 0, Submission.is_banned == False, Submission.private == False).order_by(func.random()).first()
 
@@ -372,7 +372,7 @@ def random_post(v):
 
 @app.get("/random_user")
 @auth_desired
-def random_user(v):
+def random_user(v: Optional[User]):
 	u = g.db.query(User.username).order_by(func.random()).first()
 	
 	if u: u = u[0]
@@ -383,7 +383,7 @@ def random_user(v):
 
 @app.get("/comments")
 @auth_required
-def all_comments(v):
+def all_comments(v: User):
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 

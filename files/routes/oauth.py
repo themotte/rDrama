@@ -9,7 +9,7 @@ import sqlalchemy.exc
 
 @app.get("/authorize")
 @auth_required
-def authorize_prompt(v):
+def authorize_prompt(v: User):
 	client_id = request.values.get("client_id")
 	application = g.db.query(OauthApp).filter_by(client_id=client_id).one_or_none()
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
@@ -19,7 +19,7 @@ def authorize_prompt(v):
 @app.post("/authorize")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def authorize(v):
+def authorize(v: User):
 
 	client_id = request.values.get("client_id")
 	application = g.db.query(OauthApp).filter_by(client_id=client_id).one_or_none()
@@ -82,7 +82,7 @@ def request_api_keys(v):
 @app.post("/delete_app/<aid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def delete_oauth_app(v, aid):
+def delete_oauth_app(v: User, aid):
 
 	aid = int(aid)
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
@@ -265,7 +265,7 @@ def admin_apps_list(v):
 @app.post("/oauth/reroll/<aid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def reroll_oauth_tokens(aid, v):
+def reroll_oauth_tokens(aid, v: User):
 
 	aid = aid
 

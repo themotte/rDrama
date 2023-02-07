@@ -22,7 +22,7 @@ total = cache.get(f'{SITE}_total') or 0
 
 @app.get("/chat")
 @auth_required
-def chat(v):
+def chat(v: User):
 	return render_template("chat.html", v=v, messages=messages)
 
 
@@ -36,7 +36,7 @@ def chatjs():
 @socketio.on('speak')
 @limiter.limit("3/second;10/minute")
 @auth_required
-def speak(data, v):
+def speak(data, v: User):
 	limiter.check()
 	if v.is_banned: return '', 403
 
@@ -80,7 +80,7 @@ def speak(data, v):
 
 @socketio.on('connect')
 @auth_required
-def connect(v):
+def connect(v: User):
 	if v.username not in online:
 		online.append(v.username)
 		emit("online", online, broadcast=True)
@@ -90,7 +90,7 @@ def connect(v):
 
 @socketio.on('disconnect')
 @auth_required
-def disconnect(v):
+def disconnect(v: User):
 	if v.username in online:
 		online.remove(v.username)
 		emit("online", online, broadcast=True)
@@ -101,7 +101,7 @@ def disconnect(v):
 
 @socketio.on('typing')
 @auth_required
-def typing_indicator(data, v):
+def typing_indicator(data, v: User):
 
 	if data and v.username not in typing: typing.append(v.username)
 	elif not data and v.username in typing: typing.remove(v.username)

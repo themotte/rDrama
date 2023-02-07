@@ -76,7 +76,7 @@ def unexile(v, sub, uid):
 
 @app.post("/h/<sub>/block")
 @auth_required
-def block_sub(v, sub):
+def block_sub(v: User, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	if not sub: abort(404)
 	sub = sub.name
@@ -96,7 +96,7 @@ def block_sub(v, sub):
 
 @app.post("/h/<sub>/unblock")
 @auth_required
-def unblock_sub(v, sub):
+def unblock_sub(v: User, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	if not sub: abort(404)
 	sub = sub.name
@@ -112,7 +112,7 @@ def unblock_sub(v, sub):
 
 @app.get("/h/<sub>/mods")
 @auth_required
-def mods(v, sub):
+def mods(v: User, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	if not sub: abort(404)
 
@@ -123,7 +123,7 @@ def mods(v, sub):
 
 @app.get("/h/<sub>/exilees")
 @auth_required
-def exilees(v, sub):
+def exilees(v: User, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	if not sub: abort(404)
 
@@ -134,7 +134,7 @@ def exilees(v, sub):
 
 @app.get("/h/<sub>/blockers")
 @auth_required
-def blockers(v, sub):
+def blockers(v: User, sub):
 	sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
 	if not sub: abort(404)
 
@@ -382,6 +382,6 @@ def sub_sidebar(v, sub):
 
 @app.get("/holes")
 @auth_desired
-def subs(v):
+def subs(v: Optional[User]):
 	subs = g.db.query(Sub, func.count(Submission.sub)).outerjoin(Submission, Sub.name == Submission.sub).group_by(Sub.name).order_by(func.count(Submission.sub).desc()).all()
 	return render_template('sub/subs.html', v=v, subs=subs)

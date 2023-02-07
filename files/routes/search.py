@@ -30,7 +30,7 @@ def searchparse(text):
 
 @app.get("/search/posts")
 @auth_desired
-def searchposts(v):
+def searchposts(v: Optional[User]):
 	query = request.values.get("q", '').strip()
 
 	page = max(1, int(request.values.get("page", 1)))
@@ -132,7 +132,7 @@ def searchposts(v):
 
 @app.get("/search/comments")
 @auth_desired
-def searchcomments(v):
+def searchcomments(v: Optional[User]):
 	query = request.values.get("q", '').strip()
 
 	try: page = max(1, int(request.values.get("page", 1)))
@@ -198,7 +198,7 @@ def searchcomments(v):
 
 @app.get("/search/users")
 @auth_desired
-def searchusers(v):
+def searchusers(v: Optional[User]):
 	query = request.values.get("q", '').strip()
 
 	page = max(1, int(request.values.get("page", 1)))

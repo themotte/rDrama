@@ -6,7 +6,7 @@ import requests
 
 @app.get("/login")
 @auth_desired
-def login_get(v):
+def login_get(v: Optional[User]):
 
 	redir = request.values.get("redirect")
 	if redir:
@@ -158,7 +158,7 @@ def login_post():
 @app.get("/me")
 @app.get("/@me")
 @auth_required
-def me(v):
+def me(v: User):
 	if request.headers.get("Authorization"): return v.json
 	else: return redirect(v.url)
 
@@ -166,7 +166,7 @@ def me(v):
 @app.get("/logout")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
-def logout(v):
+def logout(v: User):
 
 	session.pop("session_id", None)
 	session.pop("lo_user", None)
@@ -176,7 +176,7 @@ def logout(v):
 
 @app.get("/signup")
 @auth_desired
-def sign_up_get(v):
+def sign_up_get(v: Optional[User]):
 	if not app.config['SETTINGS']['Signups']:
 		abort(403, "New account registration is currently closed. Please come back later.")
 
@@ -221,7 +221,7 @@ def sign_up_get(v):
 @app.post("/signup")
 @limiter.limit("10/day")
 @auth_desired
-def sign_up_post(v):
+def sign_up_post(v: Optional[User]):
 	if not app.config['SETTINGS']['Signups']:
 		abort(403, "New account registration is currently closed. Please come back later.")
 
@@ -443,7 +443,7 @@ def get_reset():
 @app.post("/reset")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
-def post_reset(v):
+def post_reset(v: Optional[User]):
 	if v: return redirect('/')
 
 	user_id = request.values.get("user_id")
@@ -486,7 +486,7 @@ def post_reset(v):
 
 @app.get("/lost_2fa")
 @auth_desired
-def lost_2fa(v):
+def lost_2fa(v: Optional[User]):
 
 	return render_template(
 		"lost_2fa.html",
