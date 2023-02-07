@@ -4,6 +4,7 @@ import sqlalchemy
 from werkzeug.security import generate_password_hash
 from files.__main__ import app
 from files.classes import User, Submission, Comment, Vote, CommentVote
+from files.helpers.comments import bulk_recompute_descendant_counts
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy(app)
@@ -261,6 +262,9 @@ def seed_db():
 		comment.downvotes = comment_downvote_counts.get(comment.id, 0)
 		comment.realupvotes = comment.upvotes - comment.downvotes
 		db.session.add(comment)
+
+	print("Computing comment descendant_count")
+	bulk_recompute_descendant_counts(db=db.session)
 
 	db.session.commit()
 	db.session.flush()

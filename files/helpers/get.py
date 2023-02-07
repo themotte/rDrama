@@ -1,9 +1,9 @@
 from collections import defaultdict
-from typing import Iterable, List, Optional, Type, Union
+from typing import Callable, Iterable, List, Optional, Type, Union
 
 from flask import g
 from sqlalchemy import and_, or_, func
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import Query, selectinload
 
 from files.classes import *
 from files.helpers.const import AUTOJANNY_ID
@@ -277,9 +277,9 @@ def get_comments(
 # TODO: There is probably some way to unify this with get_comments. However, in
 #       the interim, it's a hot path and benefits from having tailored code.
 def get_comment_trees_eager(
-		top_comment_ids:Iterable[int],
-		sort:str="old",
-		v:Optional[User]=None) -> List[Comment]:
+		query_filter_callable: Callable[[Query], Query],
+		sort: str="old",
+		v: Optional[User]=None) -> List[Comment]:
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -305,7 +305,7 @@ def get_comment_trees_eager(
 	else:
 		query = g.db.query(Comment)
 
-	query = query.filter(Comment.top_comment_id.in_(top_comment_ids))
+	query = query_filter_callable(query)
 	query = query.options(
 		selectinload(Comment.author).options(
 			selectinload(User.badges),
@@ -335,13 +335,12 @@ def get_comment_trees_eager(
 		comments_map_parent[c.parent_comment_id].append(c)
 
 	for parent_id in comments_map_parent:
-		if parent_id is None: continue
-
 		comments_map_parent[parent_id] = sort_comment_results(
 			comments_map_parent[parent_id], sort)
-		comments_map[parent_id].replies2 = comments_map_parent[parent_id]
+		if parent_id in comments_map:
+			comments_map[parent_id].replies2 = comments_map_parent[parent_id]
 
-	return [comments_map[tcid] for tcid in top_comment_ids]
+	return comments, comments_map_parent
 
 
 # TODO: This function was concisely inlined into posts.py in upstream.
