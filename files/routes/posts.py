@@ -235,8 +235,10 @@ def post_id(pid, anything=None, v=None, sub=None):
 	post.replies = get_comment_trees_eager(top_comment_ids, sort, v)
 
 	post.views += 1
+	g.db.expire_on_commit = False
 	g.db.add(post)
 	g.db.commit()
+	g.db.expire_on_commit = True
 
 	if request.headers.get("Authorization"): return post.json
 	else:
