@@ -55,6 +55,10 @@ ERROR_MESSAGES = {
 }
 
 LOGGEDIN_ACTIVE_TIME = 15 * 60
+RENDER_DEPTH_LIMIT = 10
+'''
+The maximum depth at which a comment tree is rendered
+'''
 
 WERKZEUG_ERROR_DESCRIPTIONS = {
 	400: "The browser (or proxy) sent a request that this server could not understand.",

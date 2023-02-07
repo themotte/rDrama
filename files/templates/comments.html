@@ -72,20 +72,15 @@
 		</div>
 
 		<div class="comment-user-info">
-			{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
+			{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span>{% endif %}
 			{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author_name}}{% endif %}
 		</div>
 		
 		<div class="comment-body">
-
-				<div id="comment-{{c.id}}-only" class="{% if c.award_count('glowie') %}glow{% endif %} comment-{{c.id}}-only">
-
-						
-
-				</div>
+				<div id="comment-{{c.id}}-only" class="{% if c.award_count('glowie') %}glow{% endif %} comment-{{c.id}}-only"></div>
 				
 	{% if render_replies %} 
-		{% if level<9 %}
+		{% if level <= RENDER_DEPTH_LIMIT %}
 			<div id="replies-of-{{c.id}}" class="">
 				{% set standalone=False %}
 				{% for reply in replies %}
@@ -540,7 +535,7 @@
 
 
 	{% if render_replies %} 
-		{% if level<9 or request.path == '/notifications' %}
+		{% if level <= RENDER_DEPTH_LIMIT or request.path == '/notifications' %}
 			<div id="replies-of-{{c.id}}">
 				{% for reply in replies %}
 					{{single_comment(reply, level=level+1)}}
@@ -710,15 +705,6 @@
 		</div>
 	</div>
 {% endif %}
-
-
-
-
-
-
-
-
-
 
 </div>
 
