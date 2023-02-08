@@ -175,7 +175,6 @@
 		{% if c.ghost %}
 			👻
 		{% else %}
-
 			{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if c.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{c.author.verified}}"></i>
 			{% endif %}
 			{% if not c.author %}
@@ -190,7 +189,9 @@
 				data-micromodal-trigger="modal-1" 
 				onclick='fillnote( {{c.author.json_notes(v) | tojson}}, null, {{c.id}} )'>U</span>
 			{% endif %}
-			{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}
+			{% if c.author.customtitle and not should_hide_username -%}
+				&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>
+			{%- endif %}
 		{% endif %}
 
 		{% for a in c.awards|reverse %}
