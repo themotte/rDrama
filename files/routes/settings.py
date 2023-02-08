@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 from files.helpers.alerts import *
 from files.helpers.sanitize import *
 from files.helpers.const import *
