@@ -376,7 +376,7 @@ class User(Base):
 	@property
 	@lazy
 	def received_awards(self):
-
+		if not FEATURES['AWARDS']: return []
 		awards = {}
 
 		posts_idlist = [x[0] for x in g.db.query(Submission.id).filter_by(author_id=self.id).all()]

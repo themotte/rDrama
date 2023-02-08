@@ -336,6 +336,7 @@ class Submission(Base):
 		return data
 
 	def award_count(self, kind):
+		if not FEATURES['AWARDS']: return 0
 		return len([x for x in self.awards if x.kind == kind])
 
 	@lazy
