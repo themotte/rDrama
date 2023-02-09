@@ -14,7 +14,7 @@
 			</button>
 		</div>
 	{% endif %}
-
+	<section id="contact">
 	<h1 class="article-title">Contact {{SITE_TITLE}} Admins</h1>
 
 	<p>Use this form to contact {{SITE_TITLE}} Admins.</p>
@@ -35,5 +35,11 @@
 		{% endif %}
 		<input type="submit" value="Submit" class="btn btn-primary mt-3">
 	</form>
-	<p>If you can see this line, we haven't been contacted by any law enforcement or governmental organizations in 2022 yet.</p>
+	</section>
+	<section id="canary">
+		<p>If you can see this line, we haven't been contacted by any law enforcement or governmental organizations in 2022 yet.</p>
+	</section>
+	{% if hcaptcha %}
+		<script src="{{ 'js/hcaptcha.js' | asset }}"></script>
+	{% endif %}
 {% endblock %}
