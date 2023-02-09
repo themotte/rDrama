@@ -160,9 +160,9 @@ def test_more_button_label_in_deep_threads(accounts, submissions, comments):
 			view_post_response = alice_client.get(f'/post/{post.id}')
 			assert 200 == view_post_response.status_code
 			if i <= RENDER_DEPTH_LIMIT - 1:
-				assert f'More comments ({i - RENDER_DEPTH_LIMIT - 1})' not in view_post_response.text
+				assert f'More comments ({i - RENDER_DEPTH_LIMIT + 1})' not in view_post_response.text
 			else:
-				assert f'More comments ({i - RENDER_DEPTH_LIMIT - 1})' in view_post_response.text
+				assert f'More comments ({i - RENDER_DEPTH_LIMIT + 1})' in view_post_response.text
 
 @util.no_rate_limit
 def test_bulk_update_descendant_count_quick(accounts, submissions, comments):
