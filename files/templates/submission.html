@@ -137,7 +137,7 @@
 	<div id="post-root" class="col-12">
 
 		<div class="card border-0 mt-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-			<div id="post-{{p.id}}" class="{% if p.award_count('glowie') %}glow{% endif %} {% if p.deleted_utc %}deleted {% endif %}d-flex flex-row-reverse flex-nowrap justify-content-end">
+			<div id="post-{{p.id}}" class="{% if p.deleted_utc %}deleted {% endif %}d-flex flex-row-reverse flex-nowrap justify-content-end">
 
 				<div id="post-content" class="{% if p.deleted_utc %}deleted {% endif %}card-block w-100 my-md-auto">
 
@@ -613,18 +613,6 @@
 {% if not p.replies %}
 	{% include "comments.html" %}
 {% endif %}
-
-{% if p.award_count("shit") %}
-	<script src="{{ 'js/critters.js' | asset }}"></script>
-	<script src="{{ 'js/bugs.js' | asset }}"></script>
-{% endif %}
-
-
-{% if p.award_count("fireflies") %}
-	<script src="{{ 'js/critters.js' | asset }}"></script>
-	<script src="{{ 'js/fireflies.js' | asset }}"></script>
-{% endif %}
-
 
 <script>
 	(() => {
