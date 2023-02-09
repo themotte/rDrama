@@ -19,6 +19,7 @@ from files.classes.userblock import UserBlock
 from files.classes.votes import CommentVote, Vote
 from files.helpers.alerts import *
 from files.helpers.cache import make_cache_key
+from files.helpers.captcha import validate_captcha
 from files.helpers.config.environment import IMGUR_KEY, SITE
 from files.helpers.const import *
 from files.helpers.get import get_account, get_id
@@ -298,13 +299,17 @@ def api(v):
 @app.get("/media")
 @auth_desired
 def contact(v):
-
-	return render_template("contact.html", v=v)
+	return render_template("contact.html", v=v,
+			               hcaptcha=app.config.get("HCAPTCHA_SITEKEY", ""))
 
 @app.post("/send_admin")
 @limiter.limit("1/second;2/minute;6/hour;10/day")
 @auth_desired
-def submit_contact(v):
+def submit_contact(v: Optional[User]):
+	if not v and not validate_captcha(app.config.get("HCAPTCHA_SECRET", ""),
+	                                  app.config.get("HCAPTCHA_SITEKEY", ""),
+	                                  request.values.get("h-captcha-response", "")):
+		abort(403, "CAPTCHA provided was not correct. Please try it again")
 	body = request.values.get("message")
 	email = request.values.get("email")
 	if not body: abort(400)

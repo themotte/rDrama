@@ -17,6 +17,7 @@ from files.helpers.alerts import send_notification
 from files.helpers.config.environment import RATE_LIMITER_ENABLED, SECRET_KEY, SITE_FULL, WELCOME_MSG
 from files.helpers.config.regex import (email_regex, valid_password_regex,
                                         valid_username_regex)
+from files.helpers.captcha import validate_captcha
 from files.helpers.const import *
 from files.helpers.get import get_account, get_user
 from files.helpers.security import generate_hash, hash_password, validate_hash
@@ -25,11 +26,9 @@ from files.helpers.wrappers import auth_desired, auth_required
 from files.mail import send_mail, send_verification_email
 from files.routes.importstar import *
 
-
 @app.get("/login")
 @auth_desired
 def login_get(v):
-
 	redir = request.values.get("redirect")
 	if redir:
 		redir = redir.replace("/logged_out", "").strip()
@@ -311,21 +310,11 @@ def sign_up_post(v):
 
 	if existing_account:
 		return signup_error("An account with that username already exists.")
-
-	if app.config.get("HCAPTCHA_SITEKEY"):
-		token = request.values.get("h-captcha-response")
-		if not token:
-			return signup_error("Unable to verify captcha [1].")
-
-		data = {"secret": app.config["HCAPTCHA_SECRET"],
-				"response": token,
-				"sitekey": app.config["HCAPTCHA_SITEKEY"]}
-		url = "https://hcaptcha.com/siteverify"
-
-		x = requests.post(url, data=data, timeout=5)
-
-		if not x.json()["success"]:
-			return signup_error("Unable to verify captcha [2].")
+	
+	if not validate_captcha(app.config.get("HCAPTCHA_SECRET", ""), 
+	                        app.config.get("HCAPTCHA_SITEKEY", ""), 
+	                        request.values.get("h-captcha-response", "")):
+		return signup_error("Unable to verify CAPTCHA")
 
 	session.pop("signup_token")
 
