@@ -5031,6 +5031,9 @@ a.emojitab {
 	padding: 2px 5px;
 	font-weight: 700;
 }
+.sidebar {
+	max-width: 300px;
+}
 li > .sidebar {
 	display: block !important;
 	max-width: 100% !important;

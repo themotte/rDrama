@@ -565,7 +565,6 @@ def settings_profilecss(v):
 @limiter.limit("1/second;10/day")
 @auth_required
 def settings_block_user(v):
-
 	user = get_user(request.values.get("username"), graceful=True)
 
 	if not user: abort(404, "That user doesn't exist.")
@@ -583,11 +582,7 @@ def settings_block_user(v):
 						  target_id=user.id,
 						  )
 	g.db.add(new_block)
-
-	send_notification(user.id, f"@{v.username} has blocked you!")
-
 	cache.delete_memoized(frontlist)
-
 	g.db.commit()
 
 	return {"message": f"@{user.username} blocked."}
@@ -597,19 +592,11 @@ def settings_block_user(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_unblock_user(v):
-
 	user = get_user(request.values.get("username"))
-
 	x = v.is_blocking(user)
-	
 	if not x: abort(409)
-
 	g.db.delete(x)
-
-	send_notification(user.id, f"@{v.username} has unblocked you!")
-
 	cache.delete_memoized(frontlist)
-
 	g.db.commit()
 
 	return {"message": f"@{user.username} unblocked."}

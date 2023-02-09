@@ -220,3 +220,16 @@ def comment_on_unpublish(comment:Comment):
 	reflect the comments users will actually see.
 	"""
 	update_stateful_counters(comment, -1)
+
+
+def comment_filter_moderated(q: Query, v: Optional[User]) -> Query:
+	if not (v and v.shadowbanned) and not (v and v.admin_level > 2):
+		q = q.join(User, User.id == Comment.author_id) \
+		     .filter(User.shadowbanned == None)
+	if not v or v.admin_level < 2:
+		q = q.filter(
+			((Comment.filter_state != 'filtered')
+				& (Comment.filter_state != 'removed'))
+			| (Comment.author_id == ((v and v.id) or 0))
+		)
+	return q

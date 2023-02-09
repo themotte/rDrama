@@ -6,7 +6,7 @@ authors = ["Your Name <you@example.com>"]
 license = "AGPL"
 
 [tool.poetry.dependencies]
-python = "^3.10"    # updating to 3.11 causes instability; see https://github.com/themotte/rDrama/issues/446
+python = "~3.10"    # updating to 3.11 causes instability; see https://github.com/themotte/rDrama/issues/446
 beautifulsoup4 = "*"
 bleach = "4.1.0"
 Flask = "*"
@@ -30,7 +30,7 @@ pyotp = "*"
 qrcode = "*"
 redis = "*"
 requests = "*"
-SQLAlchemy = "*"
+SQLAlchemy = "^1.4.43"
 user-agents = "*"
 psycopg2-binary = "*"
 pusher_push_notifications = "*"

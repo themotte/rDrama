@@ -10,6 +10,7 @@ import gevent
 import requests
 from PIL import Image as PILimage
 from sqlalchemy import func
+from sqlalchemy.orm import Query
 
 from files.__main__ import app, cache, db_session, limiter
 from files.classes.mod_logs import ModAction
@@ -21,6 +22,7 @@ from files.classes.votes import CommentVote, Vote
 from files.helpers.alerts import *
 from files.helpers.config.environment import *
 from files.helpers.const import *
+from files.helpers.comments import comment_filter_moderated
 from files.helpers.contentsorting import sort_objects
 from files.helpers.get import (get_account, get_comment_trees_eager,
                                get_domain, get_post)
@@ -152,104 +154,39 @@ def post_id(pid, anything=None, v=None, sub=None):
 
 	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
 
-	if v:
-		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
-
-		blocking = v.blocking.subquery()
-
-		blocked = v.blocked.subquery()
-
-		comments = g.db.query(
-			Comment,
-			votes.c.vote_type,
-			blocking.c.target_id,
-			blocked.c.target_id,
-		)
-		
-		if not (v and v.shadowbanned) and not (v and v.admin_level > 2):
-			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
-
-		if v.admin_level < 2:
-			filter_clause = ((Comment.filter_state != 'filtered') & (Comment.filter_state != 'removed')) | (Comment.author_id == v.id)
-			comments = comments.filter(filter_clause)
-
-		comments=comments.filter(Comment.parent_submission == post.id).join(
-			votes,
-			votes.c.comment_id == Comment.id,
-			isouter=True
-		).join(
-			blocking,
-			blocking.c.target_id == Comment.author_id,
-			isouter=True
-		).join(
-			blocked,
-			blocked.c.user_id == Comment.author_id,
-			isouter=True
-		)
-
-		output = []
-		for c in comments.all():
-			comment = c[0]
-			comment.voted = c[1] or 0
-			comment.is_blocking = c[2] or 0
-			comment.is_blocked = c[3] or 0
-			output.append(comment)
-		
-		pinned = [c[0] for c in comments.filter(Comment.is_pinned != None).all()]
-		
-		comments = comments.filter(Comment.level == 1, Comment.is_pinned == None)
-		comments = sort_objects(comments, sort, Comment)
-		comments = [c[0] for c in comments.all()]
-	else:
-		pinned = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.is_pinned != None).all()
-
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.level == 1, Comment.is_pinned == None)
-		comments = sort_objects(comments, sort, Comment)
-
-		filter_clause = (Comment.filter_state != 'filtered') & (Comment.filter_state != 'removed')
-		comments = comments.filter(filter_clause)
-
-		comments = comments.all()
-
+	limit = app.config['RESULTS_PER_PAGE_COMMENTS']
 	offset = 0
-	ids = set()
 
-	limit = RESULTS_PER_PAGE_COMMENTS
+	top_comments = g.db.query(Comment.id, Comment.descendant_count).filter(
+		Comment.parent_submission == post.id,
+		Comment.level == 1,
+	).order_by(Comment.is_pinned.desc().nulls_last())
+	top_comments = comment_filter_moderated(top_comments, v)
+	top_comments = sort_objects(top_comments, sort, Comment)
 
-	if post.comment_count > limit and not request.headers.get("Authorization") and not request.values.get("all"):
-		comments2 = []
-		count = 0
-		if post.created_utc > 1638672040:
-			for comment in comments:
-				comments2.append(comment)
-				ids.add(comment.id)
-				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
-				if count > limit: break
-		else:
-			for comment in comments:
-				comments2.append(comment)
-				ids.add(comment.id)
-				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
-				if count > limit: break
+	pg_top_comment_ids = []
+	pg_comment_qty = 0
+	for tc_id, tc_children_qty in top_comments.all():
+		if pg_comment_qty >= limit:
+			offset = 1
+			break
+		pg_comment_qty += tc_children_qty + 1
+		pg_top_comment_ids.append(tc_id)
 
-		if len(comments) == len(comments2): offset = 0
-		else: offset = 1
-		comments = comments2
+	def comment_tree_filter(q: Query) -> Query:
+		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
+		q = comment_filter_moderated(q, v)
+		return q
 
-	for pin in pinned:
-		if pin.is_pinned_utc and int(time.time()) > pin.is_pinned_utc:
-			pin.is_pinned = None
-			pin.is_pinned_utc = None
-			g.db.add(pin)
-			pinned.remove(pin)
-
-	top_comments = pinned + comments
-	top_comment_ids = [c.id for c in top_comments]
-	post.replies = get_comment_trees_eager(top_comment_ids, sort, v)
+	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
+	post.replies = comment_tree[None] # parent=None -> top-level comments
+	ids = {c.id for c in post.replies}
 
 	post.views += 1
+	g.db.expire_on_commit = False
 	g.db.add(post)
 	g.db.commit()
+	g.db.expire_on_commit = True
 
 	if request.headers.get("Authorization"): return post.json
 	else:
@@ -264,93 +201,52 @@ def viewmore(v, pid, sort, offset):
 	post = get_post(pid, v=v)
 	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
 
-	offset = int(offset)
+	offset_prev = int(offset)
 	try: ids = set(int(x) for x in request.values.get("ids").split(','))
 	except: abort(400)
 	
+	limit = app.config['RESULTS_PER_PAGE_COMMENTS']
+	offset = 0
+
+	# TODO: Unify with common post_id logic
+	top_comments = g.db.query(Comment.id, Comment.descendant_count).filter(
+		Comment.parent_submission == post.id,
+		Comment.level == 1,
+		Comment.id.notin_(ids),
+		Comment.is_pinned == None,
+	).order_by(Comment.is_pinned.desc().nulls_last())
+
 	if sort == "new":
-		newest = g.db.query(Comment).filter(Comment.id.in_(ids)).order_by(Comment.created_utc.desc()).first()
+		newest_created_utc = g.db.query(Comment.created_utc).filter(
+			Comment.id.in_(ids),
+			Comment.is_pinned == None,
+		).order_by(Comment.created_utc.desc()).limit(1).scalar()
 
-	if v:
-		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
-		blocking = v.blocking.subquery()
-		blocked = v.blocked.subquery()
+		# Needs to be <=, not just <, to support seed_db data which has many identical
+		# created_utc values. Shouldn't cause duplication in real data because of the
+		# `NOT IN :ids` in top_comments.
+		top_comments = top_comments.filter(Comment.created_utc <= newest_created_utc)
 
-		comments = g.db.query(
-			Comment,
-			votes.c.vote_type,
-			blocking.c.target_id,
-			blocked.c.target_id,
-		).filter(Comment.parent_submission == pid, Comment.is_pinned == None, Comment.id.notin_(ids))
+	top_comments = comment_filter_moderated(top_comments, v)
+	top_comments = sort_objects(top_comments, sort, Comment)
 
-		if not (v and v.shadowbanned) and not (v and v.admin_level > 2):
-			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
+	pg_top_comment_ids = []
+	pg_comment_qty = 0
+	for tc_id, tc_children_qty in top_comments.all():
+		if pg_comment_qty >= limit:
+			offset = offset_prev + 1
+			break
+		pg_comment_qty += tc_children_qty + 1
+		pg_top_comment_ids.append(tc_id)
 
-		if not v or v.admin_level < 2:
-			filter_clause = (Comment.filter_state != 'filtered') & (Comment.filter_state != 'removed')
-			if v:
-				filter_clause = filter_clause | (Comment.author_id == v.id)
-			comments = comments.filter(filter_clause)
+	def comment_tree_filter(q: Query) -> Query:
+		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
+		q = comment_filter_moderated(q, v)
+		return q
 
-		comments=comments.join(
-			votes,
-			votes.c.comment_id == Comment.id,
-			isouter=True
-		).join(
-			blocking,
-			blocking.c.target_id == Comment.author_id,
-			isouter=True
-		).join(
-			blocked,
-			blocked.c.user_id == Comment.author_id,
-			isouter=True
-		)
-
-		output = []
-		for c in comments.all():
-			comment = c[0]
-			comment.voted = c[1] or 0
-			comment.is_blocking = c[2] or 0
-			comment.is_blocked = c[3] or 0
-			output.append(comment)
-		
-		comments = comments.filter(Comment.level == 1)
-
-		if sort == "new":
-			comments = comments.filter(Comment.created_utc < newest.created_utc)
-		comments = sort_objects(comments, sort, Comment)
-
-		comments = [c[0] for c in comments.all()]
-	else:
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == pid, Comment.level == 1, Comment.is_pinned == None, Comment.id.notin_(ids))
-
-		if sort == "new":
-			comments = comments.filter(Comment.created_utc < newest.created_utc)
-		comments = sort_objects(comments, sort, Comment)
-
-		comments = comments.all()
-		comments = comments[offset:]
-
-	limit = RESULTS_PER_PAGE_COMMENTS
-	comments2 = []
-	count = 0
-
-	if post.created_utc > 1638672040:
-		for comment in comments:
-			comments2.append(comment)
-			ids.add(comment.id)
-			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
-			if count > limit: break
-	else:
-		for comment in comments:
-			comments2.append(comment)
-			ids.add(comment.id)
-			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
-			if count > limit: break
-	
-	if len(comments) == len(comments2): offset = 0
-	else: offset += 1
-	comments = comments2
+	_, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
+	comments = comment_tree[None] # parent=None -> top-level comments
+	ids |= {c.id for c in comments}
 
 	return render_template("comments.html", v=v, comments=comments, p=post, ids=list(ids), render_replies=True, pid=pid, sort=sort, offset=offset, ajax=True)
 
@@ -629,7 +525,6 @@ def thumbnail_thread(pid):
 
 @app.post("/is_repost")
 def api_is_repost():
-
 	url = request.values.get('url')
 	if not url: abort(400)
 

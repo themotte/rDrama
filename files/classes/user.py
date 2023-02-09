@@ -236,13 +236,9 @@ class User(Base):
 	@property
 	@lazy
 	def user_awards(self):
-
-		return_value = list(AWARDS2.values())
-
+		return_value = list(AWARDS_ENABLED.values())
 		user_awards = g.db.query(AwardRelationship).filter_by(user_id=self.id)
-
 		for val in return_value: val['owned'] = user_awards.filter_by(kind=val['kind'], submission_id=None, comment_id=None).count()
-
 		return return_value
 
 	@property
@@ -608,7 +604,7 @@ class User(Base):
 	@property
 	@lazy
 	def created_datetime(self):
-		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))
+		return time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc))
 
 	@lazy
 	def subscribed_idlist(self, page=1):

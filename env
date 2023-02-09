@@ -31,6 +31,7 @@ MENTION_LIMIT=100
 MULTIMEDIA_EMBEDDING_ENABLED=False
 RESULTS_PER_PAGE_COMMENTS=200
 SCORE_HIDING_TIME_HOURS=24
+SQLALCHEMY_WARN_20=0
 
 # Profiling system; uncomment to enable
 # Stores and exposes sensitive data!
