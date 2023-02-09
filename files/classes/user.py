@@ -33,7 +33,6 @@ from files.helpers.assetcache import assetcache_path
 from files.helpers.config.environment import *
 from files.helpers.const import *
 from files.helpers.contentsorting import apply_time_filter, sort_objects
-from files.helpers.images import *
 from files.helpers.lazy import lazy
 from files.helpers.security import generate_hash, hash_password, validate_hash
 
