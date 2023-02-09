@@ -1,5 +1,5 @@
-import typing
 from sys import stdout
+from typing import Optional
 
 import gevent
 from flask import g
