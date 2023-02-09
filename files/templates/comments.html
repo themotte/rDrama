@@ -152,7 +152,7 @@
 </div>
 {% endif %}
 
-{% if c.parent_comment and c.parent_comment.sentto %}
+{% if not standalone and c.parent_comment and c.parent_comment.sentto %}
 	{% set isreply = True %}
 {% else %}
 	{% set isreply = False %}
