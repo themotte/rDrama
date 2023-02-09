@@ -259,7 +259,7 @@ def morecomments(v, cid):
 			votes.c.vote_type,
 			blocking.c.target_id,
 			blocked.c.target_id,
-		).filter(Comment.top_comment_id == tcid, Comment.level > 9).join(
+		).filter(Comment.top_comment_id == tcid, Comment.level > RENDER_DEPTH_LIMIT).join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True

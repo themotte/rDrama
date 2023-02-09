@@ -80,7 +80,7 @@
 				<div id="comment-{{c.id}}-only" class="{% if c.award_count('glowie') %}glow{% endif %} comment-{{c.id}}-only"></div>
 				
 	{% if render_replies %} 
-		{% if level <= RENDER_DEPTH_LIMIT %}
+		{% if level <= RENDER_DEPTH_LIMIT - 1 %}
 			<div id="replies-of-{{c.id}}" class="">
 				{% set standalone=False %}
 				{% for reply in replies %}
@@ -536,7 +536,7 @@
 
 
 	{% if render_replies %} 
-		{% if level <= RENDER_DEPTH_LIMIT or request.path == '/notifications' %}
+		{% if level <= RENDER_DEPTH_LIMIT - 1 or request.path == '/notifications' %}
 			<div id="replies-of-{{c.id}}">
 				{% for reply in replies %}
 					{{single_comment(reply, level=level+1)}}
