@@ -1,6 +1,7 @@
 import calendar
 import time
 from operator import or_
+from typing import Optional
 
 import matplotlib.pyplot as plt
 import pyotp
