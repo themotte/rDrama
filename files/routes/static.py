@@ -33,6 +33,7 @@ from files.routes.importstar import *
 def logged_out(old = ""):
 	# Remove trailing question mark from request.full_path which flask adds if there are no query parameters
 	redirect_url = request.full_path.replace("/logged_out", "", 1)
+	if not SITE in redirect_url: redirect('/')
 	if redirect_url.endswith("?"):
 		redirect_url = redirect_url[:-1]
 
