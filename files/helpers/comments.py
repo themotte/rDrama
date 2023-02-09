@@ -5,7 +5,7 @@ import gevent
 from flask import g
 from pusher_push_notifications import PushNotifications
 from sqlalchemy import select, update
-from sqlalchemy.orm import aliased
+from sqlalchemy.orm import aliased, Query
 from sqlalchemy.sql.expression import alias, func, text
 
 from files.classes import Comment, Notification, Subscription
