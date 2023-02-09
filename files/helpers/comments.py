@@ -2,13 +2,13 @@ from sys import stdout
 from typing import Optional
 
 import gevent
-from flask import g
+from flask import g, request
 from pusher_push_notifications import PushNotifications
 from sqlalchemy import select, update
 from sqlalchemy.orm import aliased, Query
 from sqlalchemy.sql.expression import alias, func, text
 
-from files.classes import Comment, Notification, Subscription
+from files.classes import Comment, Notification, Subscription, User
 from files.helpers.alerts import NOTIFY_USERS
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.environment import (PUSHER_ID, PUSHER_KEY, SITE_FULL,
