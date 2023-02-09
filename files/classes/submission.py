@@ -381,21 +381,12 @@ class Submission(Base):
 
 	def plainbody(self, v):
 		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{CC} ONLY</p>"
-
 		body = self.body
-
 		if not body: return ""
-
 		if v:
 			body = body.replace("old.reddit.com", v.reddit)
-
 			if v.nitter and '/i/' not in body and '/retweets' not in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
-
 		return body
-
-	def print(self):
-		print(f'post: {self.id}, author: {self.author_id}', flush=True)
-		return ''
 
 	@lazy
 	def realtitle(self, v):
