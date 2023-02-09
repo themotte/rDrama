@@ -5,8 +5,7 @@ from yattag import Doc
 
 from files.__main__ import app
 from files.helpers.config.environment import SITE_FULL, SITE_TITLE
-from files.helpers.const import *
-from files.helpers.get import *
+from files.helpers.get import get_posts
 
 from .front import frontlist
 

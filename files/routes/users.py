@@ -18,19 +18,20 @@ from files.classes.alts import Alt
 from files.classes.badges import Badge
 from files.classes.comment import Comment
 from files.classes.follows import Follow
+from files.classes.notifications import Notification
 from files.classes.submission import Submission
 from files.classes.subscriptions import Subscription
 from files.classes.user import User
 from files.classes.views import ViewerRelationship
 from files.classes.votes import CommentVote, Vote
-from files.helpers.alerts import *
+from files.helpers.alerts import send_notification, send_repeatable_notification
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.environment import *
 from files.helpers.const import *
 from files.helpers.contentsorting import apply_time_filter, sort_objects
-from files.helpers.get import get_account, get_comment, get_comments, get_posts
+from files.helpers.get import get_account, get_comment, get_comments, get_posts, get_user
 from files.helpers.images import process_image
-from files.helpers.sanitize import *
+from files.helpers.sanitize import sanitize
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import (admin_level_required, auth_desired,
                                     auth_required, is_not_permabanned)
@@ -1105,17 +1106,11 @@ def saved_posts(v, username):
 @app.get("/@<username>/saved/comments")
 @auth_required
 def saved_comments(v, username):
-
 	page=int(request.values.get("page",1))
-
 	ids=v.saved_comment_idlist(page=page)
-
 	next_exists=len(ids) > 25
-
 	ids=ids[:25]
-
 	listing = get_comments(ids, v=v)
-
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
 	return render_template("userpage_comments.html",

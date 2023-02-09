@@ -5,7 +5,7 @@ from files.classes.comment import Comment
 from files.classes.submission import Submission
 from files.classes.votes import CommentVote, Vote
 from files.helpers.const import *
-from files.helpers.get import *
+from files.helpers.get import get_post, get_comment
 from files.helpers.wrappers import admin_level_required, is_not_permabanned
 from files.routes.importstar import *
 

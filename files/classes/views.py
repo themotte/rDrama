@@ -5,7 +5,7 @@ from sqlalchemy.sql.schema import Column, ForeignKey, Index
 from sqlalchemy.sql.sqltypes import Integer
 
 from files.classes.base import Base
-from files.helpers.lazy import *
+from files.helpers.lazy import lazy
 
 
 class ViewerRelationship(Base):
