@@ -44,4 +44,6 @@
 	</div>	
 </div>
 
+{% if FEATURES['AWARDS'] %}
 <script src="{{ 'js/award_modal.js' | asset }}" data-cfasync="false"></script>
+{% endif %}

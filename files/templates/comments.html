@@ -187,9 +187,11 @@
 			{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}
 		{% endif %}
 
-		{% for a in c.awards|reverse %}
-			<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
-		{% endfor %}
+		{% if FEATURES['AWARDS'] %}
+			{% for a in c.awards|reverse %}
+				<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
+			{% endfor %}
+		{% endif %}
 
 		{% if c.post %}
 			{% set sub = c.post.sub %}
@@ -814,7 +816,9 @@
 		<script src="{{ 'js/vendor/marked.min.js' | asset }}"></script>
 		<script src="{{ 'js/marked.custom.js' | asset }}"></script>
 		<script src="{{ 'js/comments_v.js' | asset }}"></script>
-		<script src="{{ 'js/award_modal.js' | asset }}"></script>
+		{% if FEATURES['AWARDS'] %}
+			<script src="{{ 'js/award_modal.js' | asset }}"></script>
+		{% endif %}
 	{% endif %}
 
 	<script src="{{ 'js/clipboard.js' | asset }}"></script>
