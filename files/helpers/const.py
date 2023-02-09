@@ -85,14 +85,18 @@ PERMS = {
 
 AWARDS = {}
 
-AWARDS_ENABLED = deepcopy(AWARDS)
-for k, val in AWARDS.items():
-	if val['description'] == '???': AWARDS_ENABLED.pop(k)
+if FEATURES['AWARDS']:
+	AWARDS_ENABLED = deepcopy(AWARDS)
+	for k, val in AWARDS.items():
+		if val['description'] == '???': AWARDS_ENABLED.pop(k)
 
+	AWARDS_JL2_PRINTABLE = {}
+	for k, val in AWARDS_ENABLED.items():
+		if val['price'] == 300: AWARDS_JL2_PRINTABLE[k] = val
+else:
+	AWARDS_ENABLED = {}
+	AWARDS_JL2_PRINTABLE = {}
 
-AWARDS_JL2_PRINTABLE = {}
-for k, val in AWARDS_ENABLED.items():
-	if val['price'] == 300: AWARDS_JL2_PRINTABLE[k] = val
 
 NOTIFIED_USERS = {
 	# format: 'substring' ↦ User ID to notify
