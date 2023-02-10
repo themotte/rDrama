@@ -345,8 +345,8 @@ class Submission(Base):
 			url = self.url.replace("old.reddit.com", v.reddit)
 
 			if '/comments/' in url and "sort=" not in url:
-				if "?" in url: url += "&context=9" 
-				else: url += "?context=8"
+				if "?" in url: url += f"&context={RENDER_DEPTH_LIMIT}" 
+				else: url += f"?context={RENDER_DEPTH_LIMIT - 1}"
 				if v.controversial: url += "&sort=controversial"
 			return url
 		elif self.url:
