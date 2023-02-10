@@ -190,10 +190,6 @@
 						<a href="/views" class="btn btn-secondary">Profile views</a>
 					{% endif %}
 
-					{% if u.song and v and (v.id == u.id) %}
-						<a class="btn btn-secondary" role="button" onclick="toggle()">Toggle anthem</a>
-					{% endif %}
-
 					{% if v and v.id != u.id and v.admin_level > 1 %}
 						<br><br>
 						<div class="body d-lg-flex border-bottom">
@@ -416,10 +412,6 @@
 					<a href="/views" class="btn btn-secondary">Profile views</a>
 				{% endif %}
 
-				{% if u.song and v and (v.id == u.id) %}
-					<a class="btn btn-secondary" role="button" onclick="toggle()">Toggle anthem</a>
-				{% endif %}
-
 				{% if v and v.id != u.id %}
 					<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" role="button" onclick="post_toast2(this,'/unfollow/{{u.username}}','button-unsub2','button-sub2')">Unfollow</a>
 
@@ -636,21 +628,11 @@
 
 </div>
 
-{% if u.song %}
-	{% if v and v.id == u.id %}
-		<div id="v_username" class="d-none">{{v.username}}</div>
-	{% else %}
-		<div id="u_username" class="d-none">{{u.username}}</div>
-	{% endif %}
-{% endif %}
-
 {% if v %}
 <div id='tax' class="d-none">{% if v.patron or u.patron or v.alts_patron or u.alts_patron %}0{% else %}0.03{% endif %}</div>
 <script src="{{ 'js/userpage_v.js' | asset }}"></script>
 <div id="username" class="d-none">{{u.username}}</div>
 {% endif %}
-
-<script src="{{ 'js/userpage.js' | asset }}"></script>
 
 {% endblock %}
 

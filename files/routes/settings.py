@@ -1,10 +1,8 @@
-from __future__ import unicode_literals
 from files.helpers.alerts import *
 from files.helpers.sanitize import *
 from files.helpers.const import *
 from files.mail import *
 from files.__main__ import app, cache, limiter
-import youtube_dl
 from .front import frontlist
 import os
 from files.helpers.sanitize import filter_emojis_only
@@ -630,85 +628,6 @@ def settings_name_change(v):
 	v.username=new_name
 	v.name_changed_utc=int(time.time())
 	g.db.add(v)
-	g.db.commit()
-
-	return redirect("/settings/profile")
-
-@app.post("/settings/song_change")
-@limiter.limit("2/second;10/day")
-@auth_required
-def settings_song_change(v):
-	song=request.values.get("song").strip()
-
-	if song == "" and v.song:
-		if path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
-			os.remove(f"/songs/{v.song}.mp3")
-		v.song = None
-		g.db.add(v)
-		g.db.commit()
-		return redirect("/settings/profile")
-
-	song = song.replace("https://music.youtube.com", "https://youtube.com")
-	if song.startswith(("https://www.youtube.com/watch?v=", "https://youtube.com/watch?v=", "https://m.youtube.com/watch?v=")):
-		id = song.split("v=")[1]
-	elif song.startswith("https://youtu.be/"):
-		id = song.split("https://youtu.be/")[1]
-	else:
-		return render_template("settings_profile.html", v=v, error="Not a youtube link.")
-
-	if "?" in id: id = id.split("?")[0]
-	if "&" in id: id = id.split("&")[0]
-
-	if path.isfile(f'/songs/{id}.mp3'): 
-		v.song = id
-		g.db.add(v)
-		g.db.commit()
-		return redirect("/settings/profile")
-		
-	
-	req = requests.get(f"https://www.googleapis.com/youtube/v3/videos?id={id}&key={YOUTUBE_KEY}&part=contentDetails", timeout=5).json()
-	duration = req['items'][0]['contentDetails']['duration']
-	if duration == 'P0D':
-		return render_template("settings_profile.html", v=v, error="Can't use a live youtube video!")
-
-	if "H" in duration:
-		return render_template("settings_profile.html", v=v, error="Duration of the video must not exceed 15 minutes.")
-
-	if "M" in duration:
-		duration = int(duration.split("PT")[1].split("M")[0])
-		if duration > 15: 
-			return render_template("settings_profile.html", v=v, error="Duration of the video must not exceed 15 minutes.")
-
-
-	if v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
-		os.remove(f"/songs/{v.song}.mp3")
-
-	ydl_opts = {
-		'outtmpl': '/songs/%(title)s.%(ext)s',
-		'format': 'bestaudio/best',
-		'postprocessors': [{
-			'key': 'FFmpegExtractAudio',
-			'preferredcodec': 'mp3',
-			'preferredquality': '192',
-		}],
-	}
-
-	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-		try: ydl.download([f"https://youtube.com/watch?v={id}"])
-		except Exception as e:
-			print(e)
-			return render_template("settings_profile.html",
-						   v=v,
-						   error="Age-restricted videos aren't allowed.")
-
-	files = os.listdir("/songs/")
-	paths = [path.join("/songs/", basename) for basename in files]
-	songfile = max(paths, key=path.getctime)
-	os.rename(songfile, f"/songs/{id}.mp3")
-
-	v.song = id
-	g.db.add(v)
-
 	g.db.commit()
 
 	return redirect("/settings/profile")
