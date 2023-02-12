@@ -495,20 +495,6 @@ def get_profilecss(username):
 	resp.headers.add("Content-Type", "text/css")
 	return resp
 
-@app.get("/@<username>/song")
-def usersong(username):
-	user = get_user(username)
-	if user.song: return redirect(f"/song/{user.song}.mp3")
-	else: abort(404)
-
-@app.get("/song/<song>")
-@app.get("/static/song/<song>")
-def song(song):
-	resp = make_response(send_from_directory('/songs', song))
-	resp.headers.remove("Cache-Control")
-	resp.headers.add("Cache-Control", "public, max-age=3153600")
-	return resp
-
 @app.post("/subscribe/<post_id>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required

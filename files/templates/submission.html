@@ -172,15 +172,9 @@
 						{% if v and p.filter_state == 'reported' and v.can_manage_reports() %}
 							<a class="btn btn-primary" id="submission-report-button" role="button" style="padding:1px 5px; font-size:10px"onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags(v)}} Reports</a>
 						{% endif %}
-						
-						{% if not p.author %}
-							{{p.print()}}
-						{% endif %}
-
 						{% if p.ghost %}
 							👻
 						{% else %}
-
 							{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if p.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}var(--primary){% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{p.author.verified}}"></i>
 							{% endif %}
 

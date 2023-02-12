@@ -85,6 +85,7 @@ def inject_constants():
 		"THEMES":THEMES,
 		"PERMS":PERMS,
 		"FEATURES":FEATURES,
+		"RENDER_DEPTH_LIMIT":RENDER_DEPTH_LIMIT,
 	}
 
 

@@ -198,15 +198,9 @@
 
 						<span>
 							<span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('timestamp-{{p.id}}','{{p.created_utc}}')" id="timestamp-{{p.id}}">{{p.age_string}} by </span>
-
-							{% if not p.author %}
-								{{p.print()}}
-							{% endif %}
-
 							{% if p.ghost %}
 								👻
 							{% else %}
-
 								{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if p.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{p.author.verified}}"></i>
 								{% endif %}
 								<a href="/@{{p.author_name}}" 

@@ -72,14 +72,14 @@
 		</div>
 
 		<div class="comment-user-info">
-			{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
+			{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span>{% endif %}
 			{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author_name}}{% endif %}
 		</div>
 		
 		<div class="comment-body">
 				<div id="comment-{{c.id}}-only" class="comment-{{c.id}}-only"></div>
 	{% if render_replies %} 
-		{% if level<9 %}
+		{% if level <= RENDER_DEPTH_LIMIT - 1 %}
 			<div id="replies-of-{{c.id}}" class="">
 				{% set standalone=False %}
 				{% for reply in replies %}
@@ -151,7 +151,7 @@
 </div>
 {% endif %}
 
-{% if c.parent_comment and c.parent_comment.sentto %}
+{% if not standalone and c.parent_comment and c.parent_comment.sentto %}
 	{% set isreply = True %}
 {% else %}
 	{% set isreply = False %}
@@ -169,11 +169,7 @@
 		{% if c.ghost %}
 			👻
 		{% else %}
-
 			{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if c.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{c.author.verified}}"></i>
-			{% endif %}
-			{% if not c.author %}
-				{{c.print()}}
 			{% endif %}
 			{% if not should_hide_username %}
 				<a href="/@{{c.author_name}}" class="user-name" onclick='popclick({{c.author.json_popover(v) | tojson}}); return false' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-20 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
@@ -184,7 +180,9 @@
 				data-micromodal-trigger="modal-1" 
 				onclick='fillnote( {{c.author.json_notes(v) | tojson}}, null, {{c.id}} )'>U</span>
 			{% endif %}
-			{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}
+			{% if c.author.customtitle and not should_hide_username -%}
+				&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>
+			{%- endif %}
 		{% endif %}
 
 		{% if FEATURES['AWARDS'] %}
@@ -536,7 +534,7 @@
 
 
 	{% if render_replies %} 
-		{% if level<9 or request.path == '/notifications' %}
+		{% if level <= RENDER_DEPTH_LIMIT - 1 or request.path == '/notifications' %}
 			<div id="replies-of-{{c.id}}">
 				{% for reply in replies %}
 					{{single_comment(reply, level=level+1)}}
@@ -706,15 +704,6 @@
 		</div>
 	</div>
 {% endif %}
-
-
-
-
-
-
-
-
-
 
 </div>
 
