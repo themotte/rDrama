@@ -2,7 +2,6 @@ version: '2.3'
 
 services:
   files:
-    container_name: "themotte"
     build:
       context: .
       target: dev
@@ -23,13 +22,11 @@ services:
       - postgres
 
   redis:
-    container_name: "themotte_redis"
     image: redis
     ports:
       - "6379:6379"
 
   postgres:
-    container_name: "themotte_postgres"
     image: postgres:12.3
     # command: ["postgres", "-c", "log_statement=all"]
     # uncomment this if u wanna output all SQL queries to the console

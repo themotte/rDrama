@@ -2,6 +2,5 @@ version: '2.3'
 
 services:
   files:
-    container_name: "themotte"
     build:
       target: operation

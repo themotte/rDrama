@@ -1,4 +1,5 @@
 
+import functools
 import pprint
 import subprocess
 import sys
@@ -57,27 +58,15 @@ def _docker(command, **kwargs):
     ] + command,
     **kwargs)
 
-def _status_single(server):
-    command = ['docker', 'container', 'inspect', '-f', '{{.State.Status}}', server]
-    result = _execute(command, check=False).stdout.strip()
-    return result
-
-# this should really be yanked out of the docker-compose somehow
-_containers = ["themotte", "themotte_postgres", "themotte_redis"]
-
-def _all_running():
-    for container in _containers:
-        if _status_single(container) != "running":
-            return False
-
-    return True
-
 def _any_exited():
-    for container in _containers:
-        if _status_single(container) == "exited":
-            return True
-
-    return False
+    result = _execute([
+            'docker-compose',
+            'ps',
+            '--status', 'exited',
+            '-q',
+        ]).stdout
+    
+    return not (result is None or result.trim() == '')
 
 def _start():
     print("Starting containers in operation mode . . .")
@@ -89,13 +78,12 @@ def _start():
         'up',
         '--build',
         '-d',
+        '--wait',
     ]
     result = _execute(command)
 
-    while not _all_running():
-        if _any_exited():
-            raise RuntimeError("Server exited prematurely")
-        time.sleep(1)
+    if _any_exited():
+        raise RuntimeError("Server exited prematurely")
 
     print("  Containers started!")
 
