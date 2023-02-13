@@ -1225,9 +1225,8 @@ def sticky_post(post_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def unsticky_post(post_id, v):
-
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
-	if post and post.stickied:
+	if FEATURES['AWARDS'] and post and post.stickied:
 		if post.stickied.endswith('(pin award)'): abort(403, "Can't unpin award pins!")
 
 		post.stickied = None
@@ -1252,7 +1251,6 @@ def unsticky_post(post_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def sticky_comment(cid, v):
-	
 	comment = get_comment(cid, v=v)
 
 	if not comment.is_pinned:
@@ -1278,10 +1276,9 @@ def sticky_comment(cid, v):
 @limiter.exempt
 @admin_level_required(2)
 def unsticky_comment(cid, v):
-	
 	comment = get_comment(cid, v=v)
 	
-	if comment.is_pinned:
+	if FEATURES['AWARDS'] and comment.is_pinned:
 		if comment.is_pinned.endswith("(pin award)"): abort(403, "Can't unpin award pins!")
 
 		comment.is_pinned = None

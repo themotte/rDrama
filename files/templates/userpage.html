@@ -130,7 +130,7 @@
 					{{u.enemies_html | safe}}
 				{% endif %}
 
-				{% if u.received_awards %}
+				{% if FEATURES['AWARDS'] and u.received_awards %}
 				<div class="text-white rounded p-2 mb-3" style="background-color: rgba(50, 50, 50, 0.6); width: 30%;">
 					<p class="text-uppercase my-0" style="font-weight: bold; font-size: 12px;">Awards received</p>
 					{% for a in u.received_awards %}
@@ -375,7 +375,7 @@
 					{{u.enemies_html | safe}}
 				{% endif %}
 
-				{% if u.received_awards %}
+				{% if FEATURES['AWARDS'] and u.received_awards %}
 				<div class="text-white rounded p-2 my-3 text-center" style="background-color: rgba(50, 50, 50, 0.6);">
 					<p class="text-uppercase my-0" style="font-weight: bold; font-size: 12px;">Awards received</p>
 					{% for a in u.received_awards %}

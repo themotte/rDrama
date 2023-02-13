@@ -79,20 +79,28 @@ VIDEO_FORMATS = ['mp4','webm','mov','avi','mkv','flv','m4v','3gp']
 AUDIO_FORMATS = ['mp3','wav','ogg','aac','m4a','flac']
 NO_TITLE_EXTENSIONS = IMAGE_FORMATS + VIDEO_FORMATS + AUDIO_FORMATS
 
+FEATURES = {
+	"AWARDS": False,
+}
+
 PERMS = {
 	"DEBUG_LOGIN_TO_OTHERS": 3,
 }
 
 AWARDS = {}
 
-AWARDS_ENABLED = deepcopy(AWARDS)
-for k, val in AWARDS.items():
-	if val['description'] == '???': AWARDS_ENABLED.pop(k)
+if FEATURES['AWARDS']:
+	AWARDS_ENABLED = deepcopy(AWARDS)
+	for k, val in AWARDS.items():
+		if val['description'] == '???': AWARDS_ENABLED.pop(k)
 
+	AWARDS_JL2_PRINTABLE = {}
+	for k, val in AWARDS_ENABLED.items():
+		if val['price'] == 300: AWARDS_JL2_PRINTABLE[k] = val
+else:
+	AWARDS_ENABLED = {}
+	AWARDS_JL2_PRINTABLE = {}
 
-AWARDS_JL2_PRINTABLE = {}
-for k, val in AWARDS_ENABLED.items():
-	if val['price'] == 300: AWARDS_JL2_PRINTABLE[k] = val
 
 NOTIFIED_USERS = {
 	# format: 'substring' ↦ User ID to notify
