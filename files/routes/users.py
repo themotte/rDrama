@@ -988,7 +988,6 @@ import re
 @app.get("/uid/<id>/pic")
 @app.get("/uid/<id>/pic/profile")
 @limiter.exempt
-@auth_desired
 def user_profile_uid(v, id):
 	try: id = int(id)
 	except:
