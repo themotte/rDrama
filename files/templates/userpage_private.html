@@ -15,20 +15,9 @@
 	</div>
 </div>
 
-{% if u.song %}
-	{% if v and v.id == u.id %}
-		<div id="v_username" class="d-none">{{v.username}}</div>
-	{% else %}
-		<div id="u_username" class="d-none">{{u.username}}</div>
-	{% endif %}
-{% endif %}
-
 {% endblock %}
 
 {% block pagenav %}
-{% if u.song %}
-<div id="uid" class="d-none">{{u.id}}</div>
-{% endif %}
 
 {% if v %}
 <div id='tax' class="d-none">{% if v.patron or u.patron %}0{% else %}0.03{% endif %}</div>
@@ -36,5 +25,4 @@
 <div id="username" class="d-none">{{u.username}}</div>
 {% endif %}
 
-<script src="{{ 'js/userpage.js' | asset }}"></script>
 {% endblock %}

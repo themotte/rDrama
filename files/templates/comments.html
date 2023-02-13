@@ -47,7 +47,7 @@
 {% macro single_comment(c, level) %}
 
 
-{% if c.should_hide_score %}
+{% if should_hide_score or c.should_hide_score %}
 	{% set ups="" %}
 	{% set downs="" %}
 	{% set score="" %}
@@ -72,20 +72,14 @@
 		</div>
 
 		<div class="comment-user-info">
-			{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
+			{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span>{% endif %}
 			{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author_name}}{% endif %}
 		</div>
 		
 		<div class="comment-body">
-
-				<div id="comment-{{c.id}}-only" class="{% if c.award_count('glowie') %}glow{% endif %} comment-{{c.id}}-only">
-
-						
-
-				</div>
-				
+				<div id="comment-{{c.id}}-only" class="comment-{{c.id}}-only"></div>
 	{% if render_replies %} 
-		{% if level<9 %}
+		{% if level <= RENDER_DEPTH_LIMIT - 1 %}
 			<div id="replies-of-{{c.id}}" class="">
 				{% set standalone=False %}
 				{% for reply in replies %}
@@ -104,7 +98,7 @@
 			</div>
 		{% elif replies %}
 			<div id="morecomment-{{c.id}}" class="mt-2 more-comments">
-				<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments</button>
+				<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments ({{c.descendant_count}})</button>
 				<a class="d-md-none" href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
@@ -157,7 +151,7 @@
 </div>
 {% endif %}
 
-{% if c.parent_comment and c.parent_comment.sentto %}
+{% if not standalone and c.parent_comment and c.parent_comment.sentto %}
 	{% set isreply = True %}
 {% else %}
 	{% set isreply = False %}
@@ -175,25 +169,27 @@
 		{% if c.ghost %}
 			👻
 		{% else %}
-
 			{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if c.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{c.author.verified}}"></i>
 			{% endif %}
-			{% if not c.author %}
-				{{c.print()}}
+			{% if not should_hide_username %}
+				<a href="/@{{c.author_name}}" class="user-name" onclick='popclick({{c.author.json_popover(v) | tojson}}); return false' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-20 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
 			{% endif %}
-			<a href="/@{{c.author_name}}" class="user-name" onclick='popclick({{c.author.json_popover(v) | tojson}}); return false' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-20 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
 			{% if v and v.admin_level > 1 %}
 			<span 
 				class="usernote-link" 
 				data-micromodal-trigger="modal-1" 
 				onclick='fillnote( {{c.author.json_notes(v) | tojson}}, null, {{c.id}} )'>U</span>
 			{% endif %}
-			{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}
+			{% if c.author.customtitle and not should_hide_username -%}
+				&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>
+			{%- endif %}
 		{% endif %}
 
-		{% for a in c.awards|reverse %}
-			<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
-		{% endfor %}
+		{% if FEATURES['AWARDS'] %}
+			{% for a in c.awards|reverse %}
+				<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
+			{% endfor %}
+		{% endif %}
 
 		{% if c.post %}
 			{% set sub = c.post.sub %}
@@ -232,7 +228,7 @@
 
 	<div class="comment-body">
 
-		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if c.unread %}unread{% endif %} {% if c.award_count('glowie') %}glow{% endif %} comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
+		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if c.unread %}unread{% endif %} comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
 
 			
 			{% if v and c.filter_state == 'reported' and v.can_manage_reports() %}
@@ -252,32 +248,6 @@
 
 			{% if c.is_banned and c.ban_reason %}
 				<div id="comment-banned-warning" class="comment-text text-removed mb-0">removed by @{{c.ban_reason}}</div>
-			{% endif %}
-			
-			{% if c.award_count("tilt") %}
-				<style>
-					@keyframes c{{c.id}}-tilt {
-						0% {transform: rotate(0deg);}
-						25% {transform: rotate({{c.award_count("tilt")}}deg);}
-						75% {transform: rotate(-{{c.award_count("tilt")}}deg);}
-						100% {transform: rotate(0deg);}
-					}
-					@media (max-width: 720px) {
-						@keyframes c{{c.id}}-tilt {
-							0% {transform: rotate(0deg);}
-							25% {transform: rotate({{c.award_count("tilt")/4}}deg);}
-							75% {transform: rotate(-{{c.award_count("tilt")/4}}deg);}
-							100% {transform: rotate(0deg);}
-						}					
-					}
-					.comment-{{c.id}}-only {
-						animation-name: c{{c.id}}-tilt !important;
-						animation-duration: 30s !important;
-						animation-iteration-count: infinite !important;
-						animation-direction: alternate !important;
-						animation-timing-function: linear !important;
-					}
-				</style>
 			{% endif %}
 
 			<div id="comment-text-{{c.id}}" class="comment-text mb-0">
@@ -564,7 +534,7 @@
 
 
 	{% if render_replies %} 
-		{% if level<9 or request.path == '/notifications' %}
+		{% if level <= RENDER_DEPTH_LIMIT - 1 or request.path == '/notifications' %}
 			<div id="replies-of-{{c.id}}">
 				{% for reply in replies %}
 					{{single_comment(reply, level=level+1)}}
@@ -572,7 +542,7 @@
 			</div>
 		{% elif replies %}
 			<div id="morecomments-{{c.id}}" class="mt-2 more-comments">
-				<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments</button>
+				<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments ({{c.descendant_count}})</button>
 				<a class="d-md-none" href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
@@ -735,15 +705,6 @@
 	</div>
 {% endif %}
 
-
-
-
-
-
-
-
-
-
 </div>
 
 {% endif %}
@@ -844,7 +805,9 @@
 		<script src="{{ 'js/vendor/marked.min.js' | asset }}"></script>
 		<script src="{{ 'js/marked.custom.js' | asset }}"></script>
 		<script src="{{ 'js/comments_v.js' | asset }}"></script>
-		<script src="{{ 'js/award_modal.js' | asset }}"></script>
+		{% if FEATURES['AWARDS'] %}
+			<script src="{{ 'js/award_modal.js' | asset }}"></script>
+		{% endif %}
 	{% endif %}
 
 	<script src="{{ 'js/clipboard.js' | asset }}"></script>

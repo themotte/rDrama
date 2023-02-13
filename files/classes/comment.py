@@ -41,6 +41,7 @@ class Comment(Base):
 	upvotes = Column(Integer, default=1, nullable=False)
 	downvotes = Column(Integer, default=0, nullable=False)
 	realupvotes = Column(Integer, default=1, nullable=False)
+	descendant_count = Column(Integer, default=0, nullable=False)
 	body = Column(String)
 	body_html = Column(String)
 	ban_reason = Column(String)
@@ -57,6 +58,7 @@ class Comment(Base):
 	author = relationship("User", primaryjoin="User.id==Comment.author_id")
 	senttouser = relationship("User", primaryjoin="User.id==Comment.sentto", viewonly=True)
 	parent_comment = relationship("Comment", remote_side=[id], viewonly=True)
+	parent_comment_writable = relationship("Comment", remote_side=[id])
 	child_comments = relationship("Comment", lazy="dynamic", remote_side=[parent_comment_id], viewonly=True)
 	awards = relationship("AwardRelationship",
 		primaryjoin="AwardRelationship.comment_id == Comment.id",
@@ -107,7 +109,7 @@ class Comment(Base):
 	@property
 	@lazy
 	def created_datetime(self):
-		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))
+		return time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc))
 
 	@property
 	@lazy
@@ -293,6 +295,7 @@ class Comment(Base):
 		return data
 
 	def award_count(self, kind):
+		if not FEATURES['AWARDS']: return 0
 		return len([x for x in self.awards if x.kind == kind])
 
 	@property
@@ -383,16 +386,9 @@ class Comment(Base):
 
 	def plainbody(self, v):
 		if self.post and self.post.club and not (v and (v.paid_dues or v.id in [self.author_id, self.post.author_id])): return f"<p>{CC} ONLY</p>"
-
 		body = self.body
-
 		if not body: return ""
-
 		return body
-
-	def print(self):
-		print(f'post: {self.id}, comment: {self.author_id}', flush=True)
-		return ''
 
 	@lazy
 	def collapse_for_user(self, v, path):

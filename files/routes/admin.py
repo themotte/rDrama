@@ -13,123 +13,12 @@ from files.classes import *
 from flask import *
 from files.__main__ import app, cache, limiter
 from .front import frontlist
-from files.routes.comments import comment_on_publish
+from files.helpers.comments import comment_on_publish, comment_on_unpublish
 from datetime import datetime
 import requests
 from urllib.parse import quote, urlencode
 
 month = datetime.now().strftime('%B')
-
-
-@app.get('/admin/merge/<id1>/<id2>')
-@limiter.exempt
-@admin_level_required(3)
-def merge(v, id1, id2):
-	if v.id != OWNER_ID: abort(403)
-
-	if time.time() - session.get('verified', 0) > 3:
-		session.pop("session_id", None)
-		session.pop("lo_user", None)
-		path = request.path
-		qs = urlencode(dict(request.values))
-		argval = quote(f"{path}?{qs}", safe='')
-		return redirect(f"/login?redirect={argval}")
-
-	user1 = get_account(id1)
-	user2 = get_account(id2)
-
-	awards = g.db.query(AwardRelationship).filter_by(user_id=user2.id)
-	comments = g.db.query(Comment).filter_by(author_id=user2.id)
-	submissions = g.db.query(Submission).filter_by(author_id=user2.id)
-	badges = g.db.query(Badge).filter_by(user_id=user2.id)
-	mods = g.db.query(Mod).filter_by(user_id=user2.id)
-	exiles = g.db.query(Exile).filter_by(user_id=user2.id)
-
-	for award in awards:
-		award.user_id = user1.id
-		g.db.add(award)
-	for comment in comments:
-		comment.author_id = user1.id
-		g.db.add(comment)
-	for submission in submissions:
-		submission.author_id = user1.id
-		g.db.add(submission)
-	for badge in badges:
-		if not user1.has_badge(badge.badge_id):
-			badge.user_id = user1.id
-			g.db.add(badge)
-			g.db.flush()
-	for mod in mods:
-		if not user1.mods(mod.sub):
-			mod.user_id = user1.id
-			g.db.add(mod)
-			g.db.flush()
-	for exile in exiles:
-		if not user1.exiled_from(exile.sub):
-			exile.user_id = user1.id
-			g.db.add(exile)
-			g.db.flush()
-
-	for kind in ('comment_count', 'post_count', 'winnings', 'received_award_count', 'coins_spent', 'lootboxes_bought', 'coins', 'truecoins', 'procoins', 'subs_created'):
-		amount = getattr(user1, kind) + getattr(user2, kind)
-		setattr(user1, kind, amount)
-		setattr(user2, kind, 0)
-
-	g.db.add(user1)
-	g.db.add(user2)
-	g.db.commit()
-	cache.clear()
-	return redirect(user1.url)
-
-
-@app.get('/admin/merge_all/<id>')
-@limiter.exempt
-@admin_level_required(3)
-def merge_all(v, id):
-	if v.id != OWNER_ID: abort(403)
-
-	if time.time() - session.get('verified', 0) > 3:
-		session.pop("session_id", None)
-		session.pop("lo_user", None)
-		path = request.path
-		qs = urlencode(dict(request.values))
-		argval = quote(f"{path}?{qs}", safe='')
-		return redirect(f"/login?redirect={argval}")
-
-	user = get_account(id)
-
-	alt_ids = [x.id for x in user.alts_unique]
-
-	things = g.db.query(AwardRelationship).filter(AwardRelationship.user_id.in_(alt_ids)).all() + g.db.query(Mod).filter(Mod.user_id.in_(alt_ids)).all() + g.db.query(Exile).filter(Exile.user_id.in_(alt_ids)).all()
-	for thing in things:
-		thing.user_id = user.id
-		g.db.add(thing)
-
-	things = g.db.query(Submission).filter(Submission.author_id.in_(alt_ids)).all() + g.db.query(Comment).filter(Comment.author_id.in_(alt_ids)).all()
-	for thing in things:
-		thing.author_id = user.id
-		g.db.add(thing)
-
-
-	badges = g.db.query(Badge).filter(Badge.user_id.in_(alt_ids)).all()
-	for badge in badges:
-		if not user.has_badge(badge.badge_id):
-			badge.user_id = user.id
-			g.db.add(badge)
-			g.db.flush()
-
-	for alt in user.alts_unique:
-		for kind in ('comment_count', 'post_count', 'winnings', 'received_award_count', 'coins_spent', 'lootboxes_bought', 'coins', 'truecoins', 'procoins', 'subs_created'):
-			amount = getattr(user, kind) + getattr(alt, kind)
-			setattr(user, kind, amount)
-			setattr(alt, kind, 0)
-		g.db.add(alt)
-
-	g.db.add(user)
-	g.db.commit()
-	cache.clear()
-	return redirect(user.url)
-
 
 @app.post("/@<username>/make_admin")
 @limiter.exempt
@@ -405,6 +294,11 @@ def update_filter_status(v):
 				and old_status in ['filtered', 'removed']
 				and new_status in ['normal', 'ignored']):
 			comment_on_publish(c)
+
+		if (comment_id
+				and old_status in ['normal', 'ignored']
+				and new_status in ['filtered', 'removed']):
+			comment_on_unpublish(c)
 
 		g.db.commit()
 		return { 'result': 'Update successful' }
@@ -1331,9 +1225,8 @@ def sticky_post(post_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def unsticky_post(post_id, v):
-
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
-	if post and post.stickied:
+	if FEATURES['AWARDS'] and post and post.stickied:
 		if post.stickied.endswith('(pin award)'): abort(403, "Can't unpin award pins!")
 
 		post.stickied = None
@@ -1358,7 +1251,6 @@ def unsticky_post(post_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def sticky_comment(cid, v):
-	
 	comment = get_comment(cid, v=v)
 
 	if not comment.is_pinned:
@@ -1384,10 +1276,9 @@ def sticky_comment(cid, v):
 @limiter.exempt
 @admin_level_required(2)
 def unsticky_comment(cid, v):
-	
 	comment = get_comment(cid, v=v)
 	
-	if comment.is_pinned:
+	if FEATURES['AWARDS'] and comment.is_pinned:
 		if comment.is_pinned.endswith("(pin award)"): abort(403, "Can't unpin award pins!")
 
 		comment.is_pinned = None

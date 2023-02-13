@@ -1,5 +1,6 @@
 
 from bs4 import BeautifulSoup
+import functools
 import json
 import random
 import re
@@ -13,6 +14,25 @@ def formkey_from(text):
 # not cryptographically secure, deal with it
 def generate_text():
     return ''.join(random.choices(string.ascii_lowercase, k=40))
+
+# Annotation to put around tests that don't care about rate limits
+def no_rate_limit(test_function):
+	@functools.wraps(test_function)
+	def wrapped(*args, **kwargs):
+		from files.__main__ import app, limiter
+		was_enabled = limiter.enabled
+		app.config['RATE_LIMITER_ENABLED'] = False
+		limiter.enabled = False
+		try:
+			result = test_function(*args, **kwargs)
+			app.config['RATE_LIMITER_ENABLED'] = was_enabled
+			limiter.enabled = was_enabled
+			return result
+		except Exception as e:
+			app.config['RATE_LIMITER_ENABLED'] = was_enabled
+			limiter.enabled = was_enabled
+			raise e
+	return wrapped
 
 # this is meant to be a utility class that stores post and comment references so you can use them in other calls
 # it's pretty barebones and will probably be fleshed out

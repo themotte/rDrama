@@ -7,7 +7,7 @@ def test_rules(accounts):
 	assert response.status_code == 200
 	assert response.text.startswith("<!DOCTYPE html>")
 
-
+@util.no_rate_limit
 def test_post_and_comment(accounts):
 	client = accounts.client_for_account()
 

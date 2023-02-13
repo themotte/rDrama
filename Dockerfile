@@ -4,7 +4,7 @@ FROM python:3.10 AS base
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && apt -y upgrade && apt install -y supervisor ffmpeg 
+RUN apt update && apt -y upgrade && apt install -y supervisor
 
 # we'll end up blowing away this directory via docker-compose
 WORKDIR /service
@@ -13,7 +13,7 @@ COPY poetry.lock .
 RUN pip install 'poetry==1.2.2'
 RUN poetry config virtualenvs.create false && poetry install
 
-RUN mkdir /images && mkdir /songs
+RUN mkdir /images
 
 EXPOSE 80/tcp
 

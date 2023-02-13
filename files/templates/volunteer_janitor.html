@@ -14,6 +14,8 @@
         <div>
             <div class="comment">
                 {% with comments=[c] %}
+                    {% set should_hide_username = true %}
+                    {% set should_hide_score = true %}
                     {% include "comments.html" %}
                 {% endwith %}
             </div>

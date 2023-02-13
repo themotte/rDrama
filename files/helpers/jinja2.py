@@ -1,9 +1,25 @@
+from os import listdir, environ
+import random
+import time
+
+from jinja2 import pass_context
+
 from files.__main__ import app
 from .get import *
-from os import listdir, environ
 from .const import * 
-import time
 from files.helpers.assetcache import assetcache_path
+
+
+@app.template_filter("shuffle")
+@pass_context
+def template_shuffle(ctx, l: list) -> list:
+	# Uses @pass_context while ignoring `ctx` to prevent Jinja from
+	# caching the result of the filter
+
+	# stdlib recommended idiom for shuffling out-of-place
+	# as opposed to random.shuffle for in-place shuffling
+	return random.sample(l, k=len(l))
+
 
 @app.template_filter("post_embed")
 def post_embed(id, v):
@@ -43,9 +59,11 @@ def timestamp(timestamp):
 		years = int(months / 12)
 		return f"{years}yr ago"
 
+
 @app.template_filter("asset")
 def template_asset(asset_path):
 	return assetcache_path(asset_path)
+
 
 @app.context_processor
 def inject_constants():
@@ -66,7 +84,10 @@ def inject_constants():
 		"COLORS":COLORS,
 		"THEMES":THEMES,
 		"PERMS":PERMS,
+		"FEATURES":FEATURES,
+		"RENDER_DEPTH_LIMIT":RENDER_DEPTH_LIMIT,
 	}
+
 
 def template_function(func):
 	assert(func.__name__ not in app.jinja_env.globals)

@@ -11,8 +11,10 @@ from typing import Final
 SITE = environ.get("DOMAIN", '').strip()
 SITE_ID = environ.get("SITE_ID", '').strip()
 SITE_TITLE = environ.get("SITE_TITLE", '').strip()
-if "localhost" in SITE: SITE_FULL = 'http://' + SITE
-else: SITE_FULL = 'https://' + SITE
+
+SCHEME = environ.get('SCHEME', 'http' if 'localhost' in SITE else 'https')
+SITE_FULL = SCHEME + '://' + SITE
+
 DATABASE_URL: Final[str] = environ.get("DATABASE_URL", "postgresql://postgres@localhost:5432")
 
 CC = "COUNTRY CLUB"
@@ -57,6 +59,10 @@ ERROR_MESSAGES = {
 }
 
 LOGGEDIN_ACTIVE_TIME = 15 * 60
+RENDER_DEPTH_LIMIT = 9
+'''
+The maximum depth at which a comment tree is rendered
+'''
 
 WERKZEUG_ERROR_DESCRIPTIONS = {
 	400: "The browser (or proxy) sent a request that this server could not understand.",
@@ -77,133 +83,28 @@ VIDEO_FORMATS = ['mp4','webm','mov','avi','mkv','flv','m4v','3gp']
 AUDIO_FORMATS = ['mp3','wav','ogg','aac','m4a','flac']
 NO_TITLE_EXTENSIONS = IMAGE_FORMATS + VIDEO_FORMATS + AUDIO_FORMATS
 
+FEATURES = {
+	"AWARDS": False,
+}
+
 PERMS = {
 	"DEBUG_LOGIN_TO_OTHERS": 3,
 }
 
-AWARDS = {
-	"lootbox": {
-		"kind": "lootbox",
-		"title": "Lootstocking",
-		"description": "???",
-		"icon": "fas fa-stocking",
-		"color": "text-danger",
-		"price": 1000
-	},
-	"shit": {
-		"kind": "shit",
-		"title": "Shit",
-		"description": "Makes flies swarm the post.",
-		"icon": "fas fa-poop",
-		"color": "text-black-50",
-		"price": 300
-	},
-	"fireflies": {
-		"kind": "fireflies",
-		"title": "Fireflies",
-		"description": "Makes fireflies swarm the post.",
-		"icon": "fas fa-sparkles",
-		"color": "text-warning",
-		"price": 300
-	},
-	"train": {
-		"kind": "train",
-		"title": "Train",
-		"description": "Summons a train on the post.",
-		"icon": "fas fa-train",
-		"color": "text-pink",
-		"price": 300
-	},
-	"scooter": {
-		"kind": "scooter",
-		"title": "Scooter",
-		"description": "Summons a scooter on the post.",
-		"icon": "fas fa-flag-usa",
-		"color": "text-muted",
-		"price": 300
-	},
-	"wholesome": {
-		"kind": "wholesome",
-		"title": "Wholesome",
-		"description": "Summons a wholesome marsey on the post.",
-		"icon": "fas fa-smile-beam",
-		"color": "text-yellow",
-		"price": 300
-	},
-	"tilt": {
-		"kind": "tilt",
-		"title": "Tilt",
-		"description": "Tilts the post or comment",
-		"icon": "fas fa-car-tilt",
-		"color": "text-blue",
-		"price": 300
-	},
-	"glowie": {
-        "kind": "glowie",
-        "title": "Glowie",
-        "description": "Indicates that the recipient can be seen when driving. Just run them over.",
-        "icon": "fas fa-user-secret",
-        "color": "text-green",
-        "price": 300
-    },
-	"pin": {
-		"kind": "pin",
-		"title": "1-Hour Pin",
-		"description": "Pins the post/comment.",
-		"icon": "fas fa-thumbtack fa-rotate--45",
-		"color": "text-warning",
-		"price": 1000
-	},
-	"unpin": {
-		"kind": "unpin",
-		"title": "1-Hour Unpin",
-		"description": "Removes 1 hour from the pin duration of the post/comment.",
-		"icon": "fas fa-thumbtack fa-rotate--45",
-		"color": "text-black",
-		"price": 1000
-	},
-	"ban": {
-		"kind": "ban",
-		"title": "1-Day Ban",
-		"description": "Bans the recipient for a day.",
-		"icon": "fas fa-gavel",
-		"color": "text-danger",
-		"price": 3000
-	},
-	"unban": {
-		"kind": "unban",
-		"title": "1-Day Unban",
-		"description": "Removes 1 day from the ban duration of the recipient.",
-		"icon": "fas fa-gavel",
-		"color": "text-success",
-		"price": 3500
-	},
-	"benefactor": {
-		"kind": "benefactor",
-		"title": "Benefactor",
-		"description": "Grants one month of paypig status and 2500 marseybux to the recipient. Cannot be used on yourself.",
-		"icon": "fas fa-gift",
-		"color": "text-blue",
-		"price": 4000
-	},
-	"grass": {
-		"kind": "grass",
-		"title": "Grass",
-		"description": "Doesn't do anything",
-		"icon": "fas fa-seedling",
-		"color": "text-success",
-		"price": 10000
-	},
-}
+AWARDS = {}
 
-AWARDS2 = deepcopy(AWARDS)
-for k, val in AWARDS.items():
-	if val['description'] == '???': AWARDS2.pop(k)
+if FEATURES['AWARDS']:
+	AWARDS_ENABLED = deepcopy(AWARDS)
+	for k, val in AWARDS.items():
+		if val['description'] == '???': AWARDS_ENABLED.pop(k)
 
+	AWARDS_JL2_PRINTABLE = {}
+	for k, val in AWARDS_ENABLED.items():
+		if val['price'] == 300: AWARDS_JL2_PRINTABLE[k] = val
+else:
+	AWARDS_ENABLED = {}
+	AWARDS_JL2_PRINTABLE = {}
 
-AWARDS3 = {}
-for k, val in AWARDS2.items():
-	if val['price'] == 300: AWARDS3[k] = val
 
 NOTIFIED_USERS = {
 	# format: 'substring' ↦ User ID to notify

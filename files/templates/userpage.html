@@ -130,7 +130,7 @@
 					{{u.enemies_html | safe}}
 				{% endif %}
 
-				{% if u.received_awards %}
+				{% if FEATURES['AWARDS'] and u.received_awards %}
 				<div class="text-white rounded p-2 mb-3" style="background-color: rgba(50, 50, 50, 0.6); width: 30%;">
 					<p class="text-uppercase my-0" style="font-weight: bold; font-size: 12px;">Awards received</p>
 					{% for a in u.received_awards %}
@@ -188,10 +188,6 @@
 					{% elif v and v.id == u.id %}
 						<a href="/settings/profile" class="btn btn-secondary">Edit profile</a>
 						<a href="/views" class="btn btn-secondary">Profile views</a>
-					{% endif %}
-
-					{% if u.song and v and (v.id == u.id) %}
-						<a class="btn btn-secondary" role="button" onclick="toggle()">Toggle anthem</a>
 					{% endif %}
 
 					{% if v and v.id != u.id and v.admin_level > 1 %}
@@ -379,7 +375,7 @@
 					{{u.enemies_html | safe}}
 				{% endif %}
 
-				{% if u.received_awards %}
+				{% if FEATURES['AWARDS'] and u.received_awards %}
 				<div class="text-white rounded p-2 my-3 text-center" style="background-color: rgba(50, 50, 50, 0.6);">
 					<p class="text-uppercase my-0" style="font-weight: bold; font-size: 12px;">Awards received</p>
 					{% for a in u.received_awards %}
@@ -414,10 +410,6 @@
 				{% if v and v.id == u.id %}
 					<a href="/settings/profile" class="btn btn-secondary ">Edit profile</a>
 					<a href="/views" class="btn btn-secondary">Profile views</a>
-				{% endif %}
-
-				{% if u.song and v and (v.id == u.id) %}
-					<a class="btn btn-secondary" role="button" onclick="toggle()">Toggle anthem</a>
 				{% endif %}
 
 				{% if v and v.id != u.id %}
@@ -636,21 +628,11 @@
 
 </div>
 
-{% if u.song %}
-	{% if v and v.id == u.id %}
-		<div id="v_username" class="d-none">{{v.username}}</div>
-	{% else %}
-		<div id="u_username" class="d-none">{{u.username}}</div>
-	{% endif %}
-{% endif %}
-
 {% if v %}
 <div id='tax' class="d-none">{% if v.patron or u.patron or v.alts_patron or u.alts_patron %}0{% else %}0.03{% endif %}</div>
 <script src="{{ 'js/userpage_v.js' | asset }}"></script>
 <div id="username" class="d-none">{{u.username}}</div>
 {% endif %}
-
-<script src="{{ 'js/userpage.js' | asset }}"></script>
 
 {% endblock %}
 

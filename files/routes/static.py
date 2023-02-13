@@ -2,6 +2,7 @@ from files.mail import *
 from files.__main__ import app, limiter, mail
 from files.helpers.alerts import *
 from files.helpers.const import *
+from files.helpers.captcha import validate_captcha
 from files.classes.award import AWARDS
 from sqlalchemy import func
 from os import path
@@ -280,13 +281,17 @@ def api(v):
 @app.get("/media")
 @auth_desired
 def contact(v):
-
-	return render_template("contact.html", v=v)
+	return render_template("contact.html", v=v,
+			               hcaptcha=app.config.get("HCAPTCHA_SITEKEY", ""))
 
 @app.post("/send_admin")
 @limiter.limit("1/second;2/minute;6/hour;10/day")
 @auth_desired
-def submit_contact(v):
+def submit_contact(v: Optional[User]):
+	if not v and not validate_captcha(app.config.get("HCAPTCHA_SECRET", ""),
+	                                  app.config.get("HCAPTCHA_SITEKEY", ""),
+	                                  request.values.get("h-captcha-response", "")):
+		abort(403, "CAPTCHA provided was not correct. Please try it again")
 	body = request.values.get("message")
 	email = request.values.get("email")
 	if not body: abort(400)

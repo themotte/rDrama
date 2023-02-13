@@ -98,7 +98,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 if app.debug else 3153600
 app.config["SESSION_COOKIE_NAME"] = "session_" + environ.get("SITE_ID").strip().lower()
 app.config["VERSION"] = "1.0.0"
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config["SESSION_COOKIE_SECURE"] = "localhost" not in environ.get("DOMAIN")
+app.config["SESSION_COOKIE_SECURE"] = bool(environ.get('SESSION_COOKIE_SECURE', "localhost" not in environ.get("DOMAIN")))
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 365
 app.config["DEFAULT_COLOR"] = environ.get("DEFAULT_COLOR", "ffffff").strip()
@@ -141,8 +141,8 @@ app.config['RATE_LIMITER_ENABLED'] = not bool_from_string(environ.get('DBG_LIMIT
 if not app.config['RATE_LIMITER_ENABLED']:
 	print("Rate limiter disabled in debug mode!")
 limiter = Limiter(
-	app,
 	key_func=get_remote_addr,
+	app=app,
 	default_limits=["3/second;30/minute;200/hour;1000/day"],
 	application_limits=["10/second;200/minute;5000/hour;10000/day"],
 	storage_uri=environ.get("REDIS_URL", "redis://localhost"),
