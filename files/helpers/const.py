@@ -6,13 +6,14 @@ from files.__main__ import db_session
 from files.classes.sub import Sub
 from files.classes.marsey import Marsey
 from flask import request
+from typing import Final
 
 SITE = environ.get("DOMAIN", '').strip()
 SITE_ID = environ.get("SITE_ID", '').strip()
 SITE_TITLE = environ.get("SITE_TITLE", '').strip()
 if "localhost" in SITE: SITE_FULL = 'http://' + SITE
 else: SITE_FULL = 'https://' + SITE
-
+DATABASE_URL: Final[str] = environ.get("DATABASE_URL", "postgresql://postgres@localhost:5432")
 
 CC = "COUNTRY CLUB"
 CC_TITLE = CC.title()
