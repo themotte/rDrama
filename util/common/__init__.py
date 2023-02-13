@@ -66,7 +66,7 @@ def _any_exited():
             '-q',
         ]).stdout
     
-    return not (result is None or result.trim() == '')
+    return not (result is None or result.strip() == '')
 
 def _start():
     print("Starting containers in operation mode . . .")
