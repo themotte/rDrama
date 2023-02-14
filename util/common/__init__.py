@@ -58,15 +58,27 @@ def _docker(command, **kwargs):
     ] + command,
     **kwargs)
 
-def _any_exited():
+def _verify_none_exited():
     result = _execute([
             'docker-compose',
             'ps',
             '--status', 'exited',
+            '-a',
             '-q',
         ]).stdout
     
-    return not (result is None or result.strip() == '')
+    if result is not None and result.strip() != '':
+        # failure! print all the diagnostics we can, first
+        print(result)
+
+        print(_execute([
+            'docker-compose',
+            'ps',
+            '-a',
+        ]).stdout)
+        
+        raise RuntimeError("Server exited prematurely")
+    
 
 def _start():
     print("Starting containers in operation mode . . .")
@@ -82,8 +94,7 @@ def _start():
     ]
     result = _execute(command)
 
-    if _any_exited():
-        raise RuntimeError("Server exited prematurely")
+    _verify_none_exited()
 
     print("  Containers started!")
 
