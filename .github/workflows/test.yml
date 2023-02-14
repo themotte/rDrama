@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   analyze:
-    runs-on: ubuntu-22.04 # needed for a newer docker-compose version
+    runs-on: ubuntu-20.04
 
     steps:
     - name: Checkout repository
