@@ -36,6 +36,11 @@ def _execute(command,**kwargs):
 
         proc.wait()
         if check and proc.returncode != 0:
+            print("STDOUT:")
+            print(stdout)
+            print("STDERR (not interlaced properly, sorry):")
+            print(stderr)
+            
             raise subprocess.CalledProcessError(
                     command,
                     proc.returncode,
