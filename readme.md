@@ -94,6 +94,6 @@ def downgrade():
 docker-compose up --build
 ```
 
-## So what's up with schema.sql, can I just change that?
+## So what's up with original-schema.sql, can I just change that?
 
 No, please do not do that. Instead, please make a migration as described above.

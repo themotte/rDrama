@@ -1,13 +1,13 @@
 version: '2.3'
 
 services:
-  files:
+  site:
     build:
       context: .
       target: dev
     volumes:
       - "./:/service"
-    env_file: env
+    env_file: bootstrap/site_env
     environment:
       - DATABASE_URL=postgresql://postgres@postgres:5432
       - REDIS_URL=redis://redis
@@ -31,8 +31,8 @@ services:
     # command: ["postgres", "-c", "log_statement=all"]
     # uncomment this if u wanna output all SQL queries to the console
     volumes:
-      - "./schema.sql:/docker-entrypoint-initdb.d/00-schema.sql"
-      - "./seed-db.sql:/docker-entrypoint-initdb.d/10-seed-db.sql"
+      - "./bootstrap/original-schema.sql:/docker-entrypoint-initdb.d/00-schema.sql"
+      - "./bootstrap/original-seed-db.sql:/docker-entrypoint-initdb.d/10-seed-db.sql"
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:

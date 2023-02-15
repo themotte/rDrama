@@ -54,7 +54,7 @@ def _docker(command, **kwargs):
     return _execute([
         "docker-compose",
         "exec", '-T',
-        "files",
+        "site",
     ] + command,
     **kwargs)
 
