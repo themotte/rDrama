@@ -71,6 +71,27 @@ def _start():
     ]
     result = _execute(command)
 
+    # alright this seems sketchy, bear with me
+
+    # previous versions of this code used the '--wait' command-line flag
+    # the problem with --wait is that it waits for the container to be healthy and working
+    # "but wait, isn't that what we want?"
+    # ah, but see, if the container will *never* be healthy and working - say, if there's a flaw causing it to fail on startup - it just waits forever
+    # so that's not actually useful
+
+    # previous versions of this code also had a check to see if the containers started up properly
+    # but this is surprisingly annoying to do if we don't know the containers' names
+    # docker-compose *can* do it, but you either have to use very new features that aren't supported on Ubuntu 22.04, or you have to go through a bunch of parsing pain
+    # and it kind of doesn't seem necessary
+
+    # see, docker-compose in this form *will* wait until it's *attempted* to start each container.
+    # so at this point in execution, either the containers are running, or they're crashed
+    # if they're running, hey, problem solved, we're good
+    # if they're crashed, y'know what, problem still solved! because our next command will fail
+
+    # maybe there's still a race condition? I dunno! Keep an eye on this.
+    # If there is a race condition then you're stuck doing something gnarly with `docker-compose ps`. Good luck!
+
     print("  Containers started!")
 
     return result
