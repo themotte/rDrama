@@ -1,4 +1,5 @@
 {% extends "home.html" %}
+{%- import 'component/sorting_time.html' as sorting_time with context -%}
 
 {% block pagetype %}search{% endblock %}
 
@@ -30,25 +31,8 @@
 				</div>
 			</div>
 
-			<div class="dropdown dropdown-actions">
-				<button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
-					{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
-					{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
-					{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
-					{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
-					{% if sort=="comments" %}<i class="fas fa-comments mr-1"></i>{% endif %}
-					{{sort | capitalize}}
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton2" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-					{% if sort != "top" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=top&t={{t}}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
-					{% if sort != "bottom" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=bottom&t={{t}}"><i class="fas fa-arrow-alt-circle-down mr-2"></i>Bottom</a>{% endif %}
-					{% if sort != "new" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=new&t={{t}}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-					{% if sort != "old" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=old&t={{t}}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
-					{% if sort != "controversial" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=controversial&t={{t}}"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
-					{% if sort != "comments" and "/posts/" in request.path %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=comments&t={{t}}"><i class="fas fa-comments mr-2"></i>Comments</a>{% endif %}
-				</div>
-			</div>
+			{% set query_text = 'q=' . query | urlencode %}
+			{{sorting_time.sort_dropdown(false, query_text)}}
 		</div>
 	{% endif %}
 {% endblock %}
@@ -56,11 +40,8 @@
 {% block content %}
 
 <div class="row no-gutters my-md-3">
-
 	<div class="col">
-
 		<div class="card search-results">
-
 			<div class="card-header bg-white d-none">
 				<ul class="list-inline no-bullets mb-0">
 					<li class="list-inline-item active mr-4"><i class="fas fa-align-left text-gray-400"></i></li>
@@ -73,19 +54,16 @@
 					<br>
 					<div class="text-muted text-small mb-1">Showing {% block listinglength %}{{listing | length}}{% endblock %} of {{total}} result{{'s' if total != 1 else ''}} for</div>
 					<h1 class="h4 mb-0">{{query}}</h1>
-
 				</div>
 			</div>
 		</div>
 	</div>
-
 </div>
-
 
 {% if not '/users/' in request.path %}
 
 <div class="flex-row tab-bar d-none">
-
+	{# TODO: Constantify sorts #}
 	<ul class="nav post-nav mr-auto">
 		<li class="nav-item">
 			<a class="nav-link{% if sort=='top' %} active{% endif %}" href="?sort=top&q={{query | urlencode}}&t={{t}}"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
@@ -121,10 +99,10 @@
 						<a class="nav-link{% if '/posts/' in request.path %} active{% endif %}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Posts</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link{% if  '/comments/' in request.path %} active{% endif %}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Comments</a>
+						<a class="nav-link{% if '/comments/' in request.path %} active{% endif %}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Comments</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link{% if  '/users/' in request.path %} active{% endif %}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Users</a>
+						<a class="nav-link{% if '/users/' in request.path %} active{% endif %}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Users</a>
 					</li>
 				</ul>
 			</div>
@@ -132,15 +110,11 @@
 	</div>
 
 	<div class="row no-gutters">
-
 		<div class="col-12">
-
 			<div class="posts" id="posts">
-
 				{% block listing_template %}
 					{% include "submission_listing.html" %}
 				{% endblock %}
-
 			</div>
 		</div>
 	</div>
@@ -150,14 +124,11 @@
 		<nav aria-label="Page navigation">
 			<ul class="pagination pagination-sm mb-0">
 				<li class="page-item{% if page==1 %} disabled{% endif %}">
-
 					<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page-1}}" tabindex="-1"{% if page==1 %} aria-disabled="true"{% endif %}>Back</a></small>
 				</li>
 				<li class="page-item{% if not next_exists %} disabled{% endif %}">
 					<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page+1}}">Next</a></small>
-
 				</li>
 			</ul>
 		</nav>
-
 	{% endblock %}

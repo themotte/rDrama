@@ -1,0 +1,12 @@
+{%- macro sort_dropdown(is_comment, extra_query) -%}
+<div class="dropdown dropdown-actions">
+	<button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<i class="fas {{SORTS_POSTS[sort]}} mr-1"></i> {{sort|capitalize}}
+	</button>
+	{% for possible_sort in (SORTS_ALL if is_comment else SORTS_POSTS) %}
+		{%- if sort != possible_sort -%}
+			<a class="dropdown-item" href="?{{extra_query . '&' if extra_query else ''}}sort={{possible_sort}}&t={{t}}"><i class="fas {{SORTS_POSTS[possible_sort]}} mr-1"></i> {{possible_sort | capitalize}}</a>
+		{%- endif -%}
+	{% endfor %}
+</div>
+{%- endmacro -%}

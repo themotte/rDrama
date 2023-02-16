@@ -34,6 +34,19 @@ ROLES={}
 
 THEMES = {"TheMotte", "dramblr", "reddit", "transparent", "win98", "dark", 
 			"light", "coffee", "tron", "4chan", "midnight"}
+SORTS_COMMON = {
+	"top": 'fa-arrow-alt-circle-up', 
+	"bottom": 'fa-arrow-alt-circle-down', 
+	"new": 'fa-sparkles', 
+	"old": 'fa-book', 
+	"controversial": 'fa-bullhorn',
+	"comments": 'fa-comments'
+}
+SORTS_POSTS = {
+	"hot": "fa-fire",
+	"bump": "fa-arrow-up"
+}
+SORTS_POSTS.update(SORTS_COMMON)
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 PUSHER_ID = environ.get("PUSHER_ID", "").strip()
