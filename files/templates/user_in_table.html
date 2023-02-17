@@ -9,9 +9,9 @@
 
 {% if user %}
 <a data-sort-key="{{user.username.lower()}}" href="/@{{user.username}}">
-	<div class="profile-pic-20-wrapper">
+	<span class="profile-pic-20-wrapper">
 		<img loading="lazy" src="{{user.profile_url}}" class="pp20">
-	</div>
+    </span>
 	{{username_display(user)}}
 </a>
 {% endif %}
