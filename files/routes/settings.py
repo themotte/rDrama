@@ -215,7 +215,7 @@ def settings_profile_post(v):
 
 	defaultsortingcomments = request.values.get("defaultsortingcomments")
 	if defaultsortingcomments:
-		if defaultsortingcomments in SORTS_ALL:
+		if defaultsortingcomments in SORTS_COMMON:
 			v.defaultsortingcomments = defaultsortingcomments
 			updated = True
 		else: abort(400)
