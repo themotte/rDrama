@@ -650,3 +650,9 @@ class User(Base):
 		l = [i.strip() for i in self.custom_filter_list.split('\n')] if self.custom_filter_list else []
 		l = [i for i in l if i]
 		return l
+	
+	# Permissions
+
+	@property
+	def can_see_shadowbanned(self):
+		return self.admin_level >= PERMS['USER_SHADOWBAN'] or self.shadowbanned
