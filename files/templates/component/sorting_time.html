@@ -5,7 +5,7 @@
 	</button>
 	{% for possible_sort in (SORTS_ALL if is_comment else SORTS_POSTS) %}
 		{%- if sort != possible_sort -%}
-			<a class="dropdown-item" href="?{{extra_query . '&' if extra_query else ''}}sort={{possible_sort}}&t={{t}}"><i class="fas {{SORTS_POSTS[possible_sort]}} mr-1"></i> {{possible_sort | capitalize}}</a>
+			<a class="dropdown-item" href="?{{extra_query ~ '&' if extra_query else ''}}sort={{possible_sort}}&t={{t}}"><i class="fas {{SORTS_POSTS[possible_sort]}} mr-1"></i> {{possible_sort | capitalize}}</a>
 		{%- endif -%}
 	{% endfor %}
 </div>
