@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Optional
 
 from sqlalchemy import Column, func
-from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import scoped_session, Query
 
 from files.helpers.const import LEADERBOARD_LIMIT
@@ -11,14 +10,6 @@ from files.classes.badges import Badge
 from files.classes.marsey import Marsey
 from files.classes.user import User
 from files.classes.userblock import UserBlock
-
-_LeaderboardValue = Union[int, Column]
-_LeaderboardProperty = Optional[Union[property, Column]]
-_LeaderboardReturn = tuple[list[User], Optional[int], Optional[int]]
-_LeaderboardCallable = Callable[[_LeaderboardProperty, User, scoped_session, Optional[Query], int], _LeaderboardReturn]
-
-
-
 
 @dataclass(frozen=True, slots=True)
 class LeaderboardMeta:
