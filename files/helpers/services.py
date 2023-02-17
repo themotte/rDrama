@@ -48,9 +48,9 @@ def leaderboard_thread():
 	global lb_downvotes_received, lb_upvotes_given
 
 	db:scoped_session = db_session() # type: ignore
-	
-	lb_downvotes_received:Leaderboard = ReceivedDownvotesLeaderboard(_lb_received_downvotes_meta, db)
-	lb_upvotes_given:Leaderboard = GivenUpvotesLeaderboard(_lb_given_upvotes_meta, db)
+
+	lb_downvotes_received = ReceivedDownvotesLeaderboard(_lb_received_downvotes_meta, db)
+	lb_upvotes_given = GivenUpvotesLeaderboard(_lb_given_upvotes_meta, db)
 
 	db.close()
 	sys.stdout.flush()
