@@ -1,5 +1,5 @@
 {% extends "home.html" %}
-{%- import 'component/sorting_time.html' as sorting_time with context -%}
+{%- import 'component/sorting_time.html' as sorting_time -%}
 
 {% block pagetype %}search{% endblock %}
 
@@ -32,7 +32,7 @@
 			</div>
 
 			{% set query_text = 'q=' ~ query | urlencode %}
-			{{sorting_time.sort_dropdown(false, query_text)}}
+			{{sorting_time.sort_dropdown(sort, t, SORTS_POSTS, query_text)}}
 		</div>
 	{% endif %}
 {% endblock %}

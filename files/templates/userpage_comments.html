@@ -1,5 +1,5 @@
 {% extends "userpage.html" %}
-{%- import 'component/sorting_time.html' as sorting_time with context -%}
+{%- import 'component/sorting_time.html' as sorting_time -%}
 
 {% block content %}
 
@@ -53,7 +53,7 @@
 			</div>
 
 			<div class="text-small font-weight-bold ml-3 mr-2">‎</div>
-			{{sorting_time.sort_dropdown(true)}}
+			{{sorting_time.sort_dropdown(sort, t, SORTS_COMMENTS)}}
 		</div>
 	</div>
 {% endif %}

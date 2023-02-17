@@ -1,4 +1,4 @@
-{%- macro sort_dropdown(is_comment, extra_query) -%}
+{%- macro sort_dropdown(sort, t, all_sorts, extra_query='') -%}
 {% set all_sorts = SORTS_COMMENTS if is_comment else SORTS_POSTS %}
 <div class="dropdown dropdown-actions">
 	<button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

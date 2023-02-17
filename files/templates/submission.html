@@ -1,5 +1,5 @@
 {% extends "default.html" %}
-{%- import 'component/sorting_time.html' as sorting_time with context -%}
+{%- import 'component/sorting_time.html' as sorting_time -%}
 
 {% if p.should_hide_score %}
 	{% set ups="" %}
@@ -447,7 +447,7 @@
 <div class="row border-md-0 comment-section pb-3">
 	<div class="col border-top">
 		<div class="comments-count py-3">
-			{{sorting_time.sort_dropdown(true)}}
+			{{sorting_time.sort_dropdown(sort, t, SORTS_COMMENTS)}}
 			{% if comment_info and p.comment_count >= 2%}
 			<pre></pre>
 			<div class="total"><a href="{{p.permalink}}">View entire discussion</a></div>

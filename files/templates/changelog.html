@@ -1,5 +1,5 @@
 {% extends "settings2.html" %}
-{%- import 'component/sorting_time.html' as sorting_time with context -%}
+{%- import 'component/sorting_time.html' as sorting_time -%}
 
 {% block pagetitle %}Changelog{% endblock %}
 
@@ -36,7 +36,7 @@
 				</div>
 
 				<div class="text-small font-weight-bold ml-3 mr-2">‎</div>
-				{{sorting_time.sort_dropdown(false)}}
+				{{sorting_time.sort_dropdown(sort, t, SORTS_POSTS)}}
 			</div>
 			{% endblock %}
 		</div>

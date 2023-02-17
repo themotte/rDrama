@@ -1,5 +1,5 @@
 {% extends "default.html" %}
-{%- import 'component/sorting_time.html' as sorting_time with context -%}
+{%- import 'component/sorting_time.html' as sorting_time -%}
 {% block desktopBanner %}
 
 {% if v and environ.get("FP") %}
@@ -74,7 +74,7 @@
 					</div>
 				</div>
 				{% set ccmode_text = 'ccmode=' . ccmode %}
-				{{sorting_time.sort_dropdown(false, ccmode_text)}}
+				{{sorting_time.sort_dropdown(sort, t, SORTS_POSTS, ccmode_text)}}
 			</div>
 			{% endblock %}
 		</div>
