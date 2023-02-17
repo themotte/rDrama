@@ -65,7 +65,7 @@ def sort_objects(objects: Query, sort: str, cls):
 
 # Presently designed around files.helpers.get.get_comment_trees_eager
 # Behavior should parallel that of sort_objects above. TODO: Unify someday?
-def sort_comment_results(comments: Iterable[Comment], sort:str, **kwargs):
+def sort_comment_results(comments: Iterable[Comment], sort:str, *, pins:bool=False):
 	"""
 	Sorts comments results from `files.helpers.get.get_comments_trees_eager`
 	:param comments: Comments to sort
@@ -98,8 +98,7 @@ def sort_comment_results(comments: Iterable[Comment], sort:str, **kwargs):
 	else: # default, or sort == 'new'
 		key_func = lambda c: -c.created_utc
 
-	if kwargs.get('pins', True):
-		key_func = lambda c: (
+	key_func_pinned = lambda c: (
 		(c.is_pinned is None, c.is_pinned == '', c.is_pinned), # sort None last
 		key_func(c))
-	return sorted(comments, key=key_func)
+	return sorted(comments, key=key_func_pinned if pins else key_func)

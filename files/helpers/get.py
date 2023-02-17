@@ -279,7 +279,7 @@ def get_comments(
 def get_comment_trees_eager(
 		query_filter_callable: Callable[[Query], Query],
 		sort: str="old",
-		v: Optional[User]=None) -> List[Comment]:
+		v: Optional[User]=None) -> tuple[list[Comment], defaultdict[Comment, list[Comment]]]:
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -336,7 +336,7 @@ def get_comment_trees_eager(
 
 	for parent_id in comments_map_parent:
 		comments_map_parent[parent_id] = sort_comment_results(
-			comments_map_parent[parent_id], sort)
+			comments_map_parent[parent_id], sort, pins=True)
 		if parent_id in comments_map:
 			comments_map[parent_id].replies2 = comments_map_parent[parent_id]
 
