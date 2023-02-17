@@ -329,7 +329,7 @@ def submit_contact(v: Optional[User]):
 						  parent_submission=None,
 						  level=1,
 						  body_html=html,
-						  sentto=2
+						  sentto=MODMAIL_ID,
 						  )
 	g.db.add(new_comment)
 	g.db.flush()

@@ -61,7 +61,7 @@ def request_api_keys(v):
 						  parent_submission=None,
 						  level=1,
 						  body_html=body_html,
-						  sentto=2,
+						  sentto=MODMAIL_ID,
 						  distinguish_level=6
 						  )
 	g.db.add(new_comment)
