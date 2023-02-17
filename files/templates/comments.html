@@ -140,10 +140,6 @@
 		{% else %}
 			<span class="font-weight-bold"><a href="{{c.post.permalink}}">{{c.post.realtitle(v) | safe}}</a></span>
 		{% endif %}
-
-		{% if c.post.sub %}
-			<span class="ml-1"> in <a href="/h/{{c.post.sub}}" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>/h/{{c.post.sub}}</a></span>
-		{% endif %}
 	{% elif c.author_id==NOTIFICATIONS_ID or c.author_id==AUTOJANNY_ID %}
 	<span class="font-weight-bold">Notification</span>
 	{% else %}
@@ -194,13 +190,6 @@
 		{% for a in c.awards|reverse %}
 			<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
 		{% endfor %}
-
-		{% if c.post %}
-			{% set sub = c.post.sub %}
-			{% if sub and c.author.exiled_from(sub) %}
-				<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User has been exiled from /h/{{sub}}"></i></a>
-			{% endif %}
-		{% endif %}
 
 		{% if c.bannedfor %}
 			<a role="button"><i class="fas fa-hammer-crash text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}"></i></a>
@@ -355,15 +344,6 @@
 								</ul>
 							</div>
 						</div>
-					
-
-
-
-
-
-
-
-
 
 					<ul class="d-none d-md-flex list-inline text-right text-md-left"><li>
 						{% if v and request.path.startswith('/@') and v.admin_level < 2%}
@@ -371,12 +351,9 @@
 								<button class="btn caction p-0 m-0 pr-3 nobackground arrow-up mx-0 comment-{{c.id}}-up active"></button>
 							{% endif %}
 						{% elif v %}
-						
-							<button  tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '1')" class="comment-{{c.id}}-up btn caction p-0 m-0 pr-3 nobackground arrow-up upvote-button comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
-						
+							<button tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '1')" class="comment-{{c.id}}-up btn caction p-0 m-0 pr-3 nobackground arrow-up upvote-button comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
 						{% else %}
-							<button  tabindex="0" class="comment-{{c.id}}-up btn caction nobackground p-0 m-0 pr-3 arrow-up" onclick="location.href='/login';"></button>
-						
+							<button tabindex="0" class="comment-{{c.id}}-up btn caction nobackground p-0 m-0 pr-3 arrow-up" onclick="location.href='/login';"></button>
 						{% endif %}
 						
 						<button class="btn caction nobackground p-0 m-0">
@@ -389,11 +366,8 @@
 							{% endif %}
 						{% elif v %}
 							<button {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '-1')" class="comment-{{c.id}}-down btn caction py-0 m-0 px-3 nobackground arrow-down downvote-button comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}"></button>
-						
 						{% else %}
-						
 							<button {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" class="comment-{{c.id}}-down btn caction py-0 m-0 px-3 nobackground arrow-down" onclick="location.href='/login';"></button>
-						
 						{% endif %}
 						
 						{% if v and v.admin_level >= 2 %}<a href="/votes?link={{c.fullname}}" class="btn caction nobackground px-1 text-muted"><i class="fas fa-arrows-v"></i>Votes</a>{% endif %}
@@ -444,23 +418,19 @@
 {% endif %}
 
 {% if c.post %}
-{% set url = "" %}
+{% set sticky_url = "" %}
 
-{% if v.admin_level > 1%}
-	{% set url = "sticky_comment" %}
+{% if v.admin_level > 1 %}
+	{% set sticky_url = "sticky_comment" %}
 {% elif v.id == c.post.author_id %}
-	{% set url = "pin_comment" %}
-{% elif c.post.sub and v.mods(c.post.sub) %}
-	{% set url = "mod_pin" %}
+	{% set sticky_url = "pin_comment" %}
 {% endif %}
 
-{% if url != "" %}
+{% if sticky_url != "" %}
 	<button id="unpin-{{c.id}}" class="dropdown-item list-inline-item {% if c.is_pinned %}d-md-block{% endif %} text-muted d-none text-info"  data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3(this,'/un{{url}}/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Unpin</button>
-		
 	<button id="pin-{{c.id}}" class="dropdown-item list-inline-item {% if not c.is_pinned %}d-md-block{% endif %} text-muted d-none text-info" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3(this,'/{{url}}/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Pin</button>
 {% endif %}
 {% endif %}
-
 
 {% if v.admin_level > 1 %}
 {% if "/reported/" in request.path %}
@@ -470,14 +440,6 @@
 	<button id="approve-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.is_banned %}d-md-block{% endif %} text-success" onclick="approveComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
 	<button id="remove-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.is_banned %}d-md-block{% endif %} text-danger" onclick="removeComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
 {% endif %}
-{% endif %}
-
-{% if c.post %}
-	{% set sub = c.post.sub %}
-	{% if sub and v.mods(sub) and not c.author.mods(sub) %}
-		<button id="exile-{{c.id}}" class="d-none {% if not c.author.exiled_from(sub) %}d-md-block{% endif %} dropdown-item list-inline-item text-danger" onclick="post_toast2(this,'/exile/comment/{{c.id}}','exile-{{c.id}}','unexile-{{c.id}}')"><i class="fas fa-campfire text-danger fa-fw"></i>Exile user</button>
-		<button id="unexile-{{c.id}}" class="d-none {% if c.author.exiled_from(sub) %}d-md-block{% endif %} dropdown-item list-inline-item text-success" onclick="post_toast2(this,'/h/{{sub}}/unexile/{{c.author_id}}','exile-{{c.id}}','unexile-{{c.id}}')"><i class="fas fa-campfire text-success fa-fw"></i>Unexile user</button>
-	{% endif %}
 {% endif %}
 
 {% if c.parent_submission and (c.author_id==v.id or v.admin_level > 1) %}
@@ -636,18 +598,6 @@
 							{% if c.post and v.id == c.post.author_id %}
 								<a id="pin2-{{c.id}}" class="list-group-item {% if c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2(this,'/pin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info mr-2"></i>Pin</a>
 								<a id="unpin2-{{c.id}}" class="list-group-item {% if not c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2(this,'/unpin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info mr-2"></i>Unpin</a>
-							{% elif c.post.sub and v.mods(c.post.sub) %}
-								<a id="pin2-{{c.id}}" class="list-group-item {% if c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2(this,'/mod_pin/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info mr-2"></i>Pin</a>
-								<a id="unpin2-{{c.id}}" class="list-group-item {% if not c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2(this,'/mod_unpin/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info mr-2"></i>Unpin</a>
-							{% endif %}
-						{% endif %}
-
-						{% if c.post %}
-							{% set sub = c.post.sub %}
-							{% if sub and v.mods(sub) and not c.author.mods(sub) %}
-								<a data-bs-dismiss="modal" id="exile2-{{c.id}}" class="{% if c.author.exiled_from(sub) %}d-none{% endif %} list-group-item text-danger" onclick="post_toast2(this,'/exile/comment/{{c.id}}','exile2-{{c.id}}','unexile2-{{c.id}}')"><i class="fas fa-campfire text-danger mr-2"></i>Exile user</a>
-								<a data-bs-dismiss="modal" id="unexile2-{{c.id}}" class="{% if not c.author.exiled_from(sub) %}d-none{% endif %} list-group-item text-success" onclick="post_toast2(this,'/h/{{sub}}/unexile/{{c.author_id}}','exile2-{{c.id}}','unexile2-{{c.id}}')"><i class="fas fa-campfire text-success mr-2"></i>Unexile user</a>
-							{% endif %}
 						{% endif %}
 					{% endif %}
 				</ul>
@@ -655,11 +605,6 @@
 		</div>
 	</div>
 </div>
-
-
-
-
-
 
 {% if v and v.admin_level > 1 %}
 	<div class="modal fade d-md-none" id="adminModal-{{c.id}}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
@@ -708,32 +653,17 @@
 		</div>
 	</div>
 {% endif %}
-
-
-
-
-
-
-
-
-
-
 </div>
-
 {% endif %}
-
 {% endmacro %}
 
 {% for comment in comments %}
-
 	{% if parent_level %}
 	{% set parent_level = parent_level | int %}
 	{% else %}
 	{% set parent_level = 0 %}
 	{% endif %}
-
 	{{ single_comment(comment, level = parent_level + 1) }}
-
 {% endfor %}
 
 {% if offset %}

@@ -142,14 +142,6 @@
 				<div id="post-content" class="{% if p.deleted_utc %}deleted {% endif %}card-block w-100 my-md-auto">
 
 					<div class="post-meta text-left mb-2">
-						{% if p.sub %}
-							<a href='/h/{{p.sub}}'>/h/{{p.sub}}</a>&nbsp;&nbsp;
-						{% endif %}
-
-						{% if p.sub and p.author.exiled_from(p.sub) %}
-							<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User has been exiled from /h/{{p.sub}}"></i></a>
-						{% endif %}
-				
 						{% if p.bannedfor %}
 							<a role="button"><i class="fas fa-hammer-crash text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this post{% if p.author.banned_by %} by @{{p.author.banned_by.username}}{% endif %}"></i></a>
 						{% endif %}	
