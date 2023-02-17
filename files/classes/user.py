@@ -107,7 +107,6 @@ class User(Base):
 	ban_evade = Column(Integer, default=0, nullable=False)
 	original_username = deferred(Column(String))
 	referred_by = Column(Integer, ForeignKey("users.id"))
-	subs_created = Column(Integer, default=0, nullable=False)
 	volunteer_last_started_utc = Column(DateTime, nullable=True)
 
 	Index(
