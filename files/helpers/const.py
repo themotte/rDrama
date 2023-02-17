@@ -47,6 +47,7 @@ SORTS_POSTS = {
 	"bump": "fa-arrow-up"
 }
 SORTS_POSTS.update(SORTS_COMMON)
+SORTS_COMMENTS = SORTS_COMMON
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 PUSHER_ID = environ.get("PUSHER_ID", "").strip()

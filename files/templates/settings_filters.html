@@ -37,7 +37,7 @@
 							<p>Change the default sorting for comments.</p>
 							<div class="input-group mb2">
 								<select autocomplete="off" id='defaultsortingcomments' class="form-control" form="profile-settings" name="defaultsortingcomments" onchange="post_toast(this,'/settings/profile?defaultsortingcomments='+document.getElementById('defaultsortingcomments').value)">
-								{% for entry in SORTS_COMMON %}
+								{% for entry in SORTS_COMMENTS %}
 									<option value="{{entry}}"{{' selected' if v.defaultsortingcomments==entry}}>{{entry}}</option>
 								{% endfor %}
 							</select>
