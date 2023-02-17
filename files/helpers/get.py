@@ -3,7 +3,7 @@ from typing import Callable, Iterable, List, Optional, Type, Union
 
 from flask import g
 from sqlalchemy import and_, or_, func
-from sqlalchemy.orm import Query, selectinload
+from sqlalchemy.orm import Query, scoped_session, selectinload
 
 from files.classes import *
 from files.helpers.const import AUTOJANNY_ID
@@ -95,7 +95,11 @@ def get_account(
 
 	return user
 
-def get_accounts_dict(ids:Union[Iterable[str], Iterable[int]], v:Optional[User]=None, graceful=False, include_shadowbanned=True) -> Optional[dict[int, User]]:
+def get_accounts_dict(ids:Union[Iterable[str], Iterable[int]], 
+		      			v:Optional[User]=None, graceful=False, 
+						include_shadowbanned=True, 
+						db:Optional[scoped_session]=None) -> Optional[dict[int, User]]:
+	if not db: db = g.db
 	if not ids: return {}
 	try: 
 		ids = set([int(id) for id in ids])
@@ -103,7 +107,7 @@ def get_accounts_dict(ids:Union[Iterable[str], Iterable[int]], v:Optional[User]=
 		if graceful: return None
 		abort(404)
 
-	users = g.db.query(User).filter(User.id.in_(ids))
+	users = db.query(User).filter(User.id.in_(ids))
 	if not (include_shadowbanned or (v and v.can_see_shadowbanned)):
 		users = users.filter(User.shadowbanned == None)
 	users = users.all()
