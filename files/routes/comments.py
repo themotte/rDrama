@@ -134,7 +134,7 @@ def api_comment(v):
 	sub = parent_post.sub
 	if sub and v.exiled_from(sub): abort(403, f"You're exiled from /h/{sub}")
 
-	body = request.values.get("body", "").strip()[:10000]
+	body = request.values.get("body", "").strip()[:COMMENT_BODY_LENGTH_MAXIMUM]
 
 	if not body and not request.files.get('file'): abort(400, "You need to actually write something!")
 
@@ -272,12 +272,10 @@ def api_comment(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def edit_comment(cid, v):
-
 	c = get_comment(cid, v=v)
+	if v.id != c.author_id: abort(403)
 
-	if c.author_id != v.id: abort(403)
-
-	body = request.values.get("body", "").strip()[:10000]
+	body = request.values.get("body", "").strip()[:COMMENT_BODY_LENGTH_MAXIMUM]
 
 	if len(body) < 1 and not (request.files.get("file") and request.headers.get("cf-ipcountry") != "T1"):
 		abort(400, "You have to actually type something!")
