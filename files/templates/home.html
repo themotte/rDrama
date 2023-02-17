@@ -73,7 +73,7 @@
 						{% if t != "all" %}<a class="dropdown-item" href="?sort={{sort}}&t=all&ccmode={{ccmode}}"><i class="fas fa-infinity mr-2 "></i>All</a>{% endif %}
 					</div>
 				</div>
-				{% set ccmode_text = 'ccmode=' . ccmode %}
+				{% set ccmode_text = 'ccmode=' ~ ccmode %}
 				{{sorting_time.sort_dropdown(sort, t, SORTS_POSTS, ccmode_text)}}
 			</div>
 			{% endblock %}
