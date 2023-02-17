@@ -3,7 +3,7 @@ import io
 import time
 import math
 
-from files.classes.leaderboard import Leaderboard
+from files.classes.leaderboard import SimpleLeaderboard, BadgeMarseyLeaderboard, UserBlockLeaderboard, LeaderboardMeta
 from files.classes.views import ViewerRelationship
 from files.helpers.alerts import *
 from files.helpers.sanitize import *
@@ -363,20 +363,18 @@ def leaderboard(v:User):
 	if not v.can_see_shadowbanned:
 		users = users.filter(User.shadowbanned == None)
 
-	coins = Leaderboard("Coins", "coins", "coins", "Coins", None, Leaderboard.get_simple_lb, User.coins, v, None, g.db, users)
-	subscribers = Leaderboard("Followers", "followers", "followers", "Followers", "followers", Leaderboard.get_simple_lb, User.stored_subscriber_count, v, None, g.db, users)
-	posts = Leaderboard("Posts", "post count", "posts", "Posts", "", Leaderboard.get_simple_lb, User.post_count, v, None, g.db, users)
-	comments = Leaderboard("Comments", "comment count", "comments", "Comments", "comments", Leaderboard.get_simple_lb, User.comment_count, v, None, g.db, users)
-	received_awards = Leaderboard("Awards", "received awards", "awards", "Awards", None, Leaderboard.get_simple_lb, User.received_award_count, v, None, g.db, users)
-	coins_spent = Leaderboard("Spent in shop", "coins spent in shop", "spent", "Coins", None, Leaderboard.get_simple_lb, User.coins_spent, v, None, g.db, users)
-	truescore = Leaderboard("Truescore", "truescore", "truescore", "Truescore", None, Leaderboard.get_simple_lb, User.truecoins, v, None, g.db, users)
+	coins = SimpleLeaderboard(v, LeaderboardMeta("Coins", "coins", "coins", "Coins", None), g.db, users, User.coins)
+	subscribers = SimpleLeaderboard(v, LeaderboardMeta("Followers", "followers", "followers", "Followers", "followers"), g.db, users, User.stored_subscriber_count)
+	posts = SimpleLeaderboard(v, LeaderboardMeta("Posts", "post count", "posts", "Posts", ""), g.db, users, User.post_count)
+	comments = SimpleLeaderboard(v, LeaderboardMeta("Comments", "comment count", "comments", "Comments", "comments"), g.db, users, User.comment_count)
+	received_awards = SimpleLeaderboard(v, LeaderboardMeta("Awards", "received awards", "awards", "Awards", None), g.db, users, User.received_award_count)
+	coins_spent = SimpleLeaderboard(v, LeaderboardMeta("Spent in shop", "coins spent in shop", "spent", "Coins", None), g.db, users, User.coins_spent)
+	truescore = SimpleLeaderboard(v, LeaderboardMeta("Truescore", "truescore", "truescore", "Truescore", None), g.db, users, User.truecoins)
+	badges = BadgeMarseyLeaderboard(v, LeaderboardMeta("Badges", "badges", "badges", "Badges", None), g.db, Badge.user_id)
+	blocks = UserBlockLeaderboard(v, LeaderboardMeta("Blocked", "most blocked", "blocked", "Blocked By", "blockers"), g.db, UserBlock.target_id)
 
-	badges = Leaderboard("Badges", "badges", "badges", "Badges", None, Leaderboard.get_badge_marsey_lb, Badge.user_id, v, None, g.db, None)
-
-	blocks = Leaderboard("Blocked", "most blocked", "blocked", "Blocked By", "blockers", Leaderboard.get_blockers_lb, UserBlock.target_id, v, None, g.db, None)
-
-	received_downvotes_lb = ...
-	given_upvotes_lb = ...
+	received_downvotes_lb = None
+	given_upvotes_lb = None
 
 	try:
 		pos9 = [x[0].id for x in lb_received_downvotes].index(v.id)
