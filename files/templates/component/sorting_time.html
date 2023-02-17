@@ -6,7 +6,7 @@
 	<div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translateY(31px);">
 	{% for possible_sort in all_sorts %}
 		{%- if sort != possible_sort -%}
-			<a class="dropdown-item" href="?{{extra_query ~ '&' if extra_query else ''}}sort={{possible_sort}}&t={{t}}"><i class="fas {{all_sorts[possible_sort]}} mr-1"></i> {{possible_sort | capitalize}}</a>
+			<a class="dropdown-item" href="?{{extra_query ~ '&' if extra_query else ''}}sort={{possible_sort}}{% if t %}&t={{t}}{% endif %}"><i class="fas {{all_sorts[possible_sort]}} mr-1"></i> {{possible_sort | capitalize}}</a>
 		{%- endif -%}
 	{% endfor %}
 	</div>
