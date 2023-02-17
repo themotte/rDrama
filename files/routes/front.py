@@ -406,7 +406,7 @@ def all_comments(v):
 		return q
 
 	comments, _ = get_comment_trees_eager(comment_tree_filter, sort=sort, v=v)
-	comments = sort_comment_results(comments, sort=sort)
+	comments = sort_comment_results(comments, sort=sort, pins=False)
 
 	if request.headers.get("Authorization"):
 		return {"data": [x.json for x in comments]}

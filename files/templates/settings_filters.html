@@ -1,24 +1,15 @@
 {% extends "settings.html" %}
-
 {% block pagetitle %}Profile Settings - {{SITE_TITLE}}{% endblock %}
-
 {% block content %}
-
-
 <div class="row">
-
 	<div class="col col-lg-8">
-
 		<div class="settings">
-
 			<h2 class="h5" name="referral">Frontpage Size</h2>
-
 			<div class="settings-section rounded">
 				<div class="d-lg-flex border-bottom">
 					<div class="title w-lg-25">
 						<label for="frontsize">Frontpage Size</label>
 					</div>
-
 					<div class="body w-lg-100">
 						<p>Change how many posts appear on every page.</p>
 						<div class="input-group mb2">
@@ -28,9 +19,7 @@
 							{% endfor %}
 						</select>
 						</div>
-
 					</div>
-
 				</div>
 			</div>
 
@@ -48,14 +37,12 @@
 							<p>Change the default sorting for comments.</p>
 							<div class="input-group mb2">
 								<select autocomplete="off" id='defaultsortingcomments' class="form-control" form="profile-settings" name="defaultsortingcomments" onchange="post_toast(this,'/settings/profile?defaultsortingcomments='+document.getElementById('defaultsortingcomments').value)">
-								{% for entry in ["new", "old", "top", "bottom", "controversial"] %}
+								{% for entry in SORTS_COMMENTS %}
 									<option value="{{entry}}"{{' selected' if v.defaultsortingcomments==entry}}>{{entry}}</option>
 								{% endfor %}
 							</select>
 							</div>
-
 						</div>
-
 					</div>
 
 					<div class="d-lg-flex border-bottom">
@@ -67,21 +54,17 @@
 							<p>Change the default sorting for posts.</p>
 							<div class="input-group mb2">
 								<select autocomplete="off" id='defaultsorting' class="form-control" form="profile-settings" name="defaultsorting" onchange="post_toast(this,'/settings/profile?defaultsorting='+document.getElementById('defaultsorting').value)">
-								{% for entry in ["hot", "bump", "new", "old", "top", "bottom", "controversial", "comments"] %}
+								{% for entry in SORTS_POSTS %}
 								<option value="{{entry}}"{{' selected' if v.defaultsorting==entry}}>{{entry}}</option>
 								{% endfor %}
 							</select>
 							</div>
-
 						</div>
-
 				</div>
-
 					<div class="d-lg-flex border-bottom">
 						<div class="title w-lg-25">
 							<label for="defaulttime">Default Time Filter for Posts</label>
 						</div>
-
 						<div class="body w-lg-100">
 							<p>Change the default time filter for posts.</p>
 							<div class="input-group mb2">
@@ -91,34 +74,24 @@
 								{% endfor %}
 							</select>
 							</div>
-
 						</div>
-
 				</div>
-
 			</div>
 
 			<h2 class="h5">Tab Behaviour</h2>
 
 			<div class="settings-section rounded">
-
 				<div class="d-lg-flex border-bottom">
-
 					<div class="title w-lg-25">
 						<label for="newtab">Open Internal Links In New Tabs</label>
 					</div>
-
 					<div class="body w-lg-100">
-
 						<div class="custom-control custom-switch">
 							<input autocomplete="off" type="checkbox" class="custom-control-input" id="newtab" name="newtab"{% if v.newtab %} checked{% endif %} onchange="post_toast(this,'/settings/profile?newtab='+document.getElementById('newtab').checked);">
 							<label class="custom-control-label" for="newtab"></label>
 						</div>
-
 						<span class="text-small-extra text-muted">Enable if you would like to automatically open links to other pages in the site in new tabs.</span>
-
 					</div>
-
 				</div>
 
 
@@ -136,51 +109,34 @@
 						</div>
 
 						<span class="text-small-extra text-muted">Enable if you would like to automatically open links to other sites in new tabs.</span>
-
 					</div>
-
 				</div>
-
-
-
 			</div>
 
 
 			<h2 class="h5">Twitter Links</h2>
-
 			<div class="settings-section rounded">
-
 				<div class="d-lg-flex border-bottom">
-
 					<div class="title w-lg-25">
 						<label for="nitter">Use Nitter</label>
 					</div>
 
 					<div class="body w-lg-100">
-
 						<div class="custom-control custom-switch">
 							<input autocomplete="off" type="checkbox" class="custom-control-input" id="nitter" name="nitter"{% if v.nitter %} checked{% endif %} onchange="post_toast(this,'/settings/profile?nitter='+document.getElementById('nitter').checked);">
 							<label class="custom-control-label" for="nitter"></label>
 						</div>
-
 						<span class="text-small-extra text-muted">Enable if you would like to automatically convert twitter.com links to nitter.net links.</span>
-
 					</div>
-
 				</div>
-
 			</div>
 
-
 			<h2 class="h5">Reddit Links</h2>
-
 			<div class="settings-section rounded">
-
 				<div class="d-lg-flex border-bottom">
 					<div class="title w-lg-25">
 						<label for="reddit">Reddit Domain</label>
 					</div>
-
 					<div class="body w-lg-100">
 						<p>Change the domain you would like to view reddit posts in.</p>
 						<div class="input-group mb2">
@@ -190,28 +146,21 @@
 							{% endfor %}
 						</select>
 						</div>
-
 					</div>
-
 				</div>
 
 				<div class="d-lg-flex border-bottom">
-
 					<div class="title w-lg-25">
 						<label for="controversial">Sort by Controversial</label>
 					</div>
-
 					<div class="body w-lg-100">
 
 						<div class="custom-control custom-switch">
 							<input autocomplete="off" type="checkbox" class="custom-control-input" id="controversial" name="controversial"{% if v.controversial %} checked{% endif %} onchange="post_toast(this,'/settings/profile?controversial='+document.getElementById('controversial').checked);">
 							<label class="custom-control-label" for="controversial"></label>
 						</div>
-
 						<span class="text-small-extra text-muted">Enable if you would like to automatically sort reddit.com links by controversial.</span>
-
 					</div>
-
 				</div>
 			</div>
 

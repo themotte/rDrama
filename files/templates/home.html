@@ -1,5 +1,5 @@
 {% extends "default.html" %}
-
+{%- import 'component/sorting_time.html' as sorting_time -%}
 {% block desktopBanner %}
 
 {% if v and environ.get("FP") %}
@@ -73,30 +73,8 @@
 						{% if t != "all" %}<a class="dropdown-item" href="?sort={{sort}}&t=all&ccmode={{ccmode}}"><i class="fas fa-infinity mr-2 "></i>All</a>{% endif %}
 					</div>
 				</div>
-
-				<div class="dropdown dropdown-actions ml-2">
-					<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						{% if sort=="hot" %}<i class="fas fa-fire mr-2 "></i>{% endif %}
-						{% if sort=="bump" %}<i class="fas fa-arrow-up mr-2 "></i>{% endif %}
-						{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-2 "></i>{% endif %}
-						{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-2 "></i>{% endif %}
-						{% if sort=="new" %}<i class="fas fa-sparkles mr-2 "></i>{% endif %}
-						{% if sort=="old" %}<i class="fas fa-book mr-2 "></i>{% endif %}
-						{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-2 "></i>{% endif %}
-						{% if sort=="comments" %}<i class="fas fa-comments mr-2 "></i>{% endif %}
-						{{sort | capitalize}}
-					</button>
-					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton2" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-						{% if sort != "hot" %}<a class="dropdown-item" href="?sort=hot&t={{t}}&ccmode={{ccmode}}"><i class="fas fa-fire mr-2 "></i>Hot</a>{% endif %}
-						{% if sort != "bump" %}<a class="dropdown-item" href="?sort=bump&t={{t}}&ccmode={{ccmode}}"><i class="fas fa-arrow-up mr-2 "></i>Bump</a>{% endif %}
-						{% if sort != "top" %}<a class="dropdown-item" href="?sort=top&t={{t}}&ccmode={{ccmode}}"><i class="fas fa-arrow-alt-circle-up mr-2 "></i>Top</a>{% endif %}
-						{% if sort != "bottom" %}<a class="dropdown-item" href="?sort=bottom&t={{t}}&ccmode={{ccmode}}"><i class="fas fa-arrow-alt-circle-down mr-2 "></i>Bottom</a>{% endif %}
-						{% if sort != "new" %}<a class="dropdown-item" href="?sort=new&t={{t}}&ccmode={{ccmode}}"><i class="fas fa-sparkles mr-2 "></i>New</a>{% endif %}
-						{% if sort != "old" %}<a class="dropdown-item" href="?sort=old&t={{t}}&ccmode={{ccmode}}"><i class="fas fa-book mr-2 "></i>Old</a>{% endif %}
-						{% if sort != "controversial" %}<a class="dropdown-item" href="?sort=controversial&t={{t}}&ccmode={{ccmode}}"><i class="fas fa-bullhorn mr-2 "></i>Controversial</a>{% endif %}
-						{% if sort != "comments" %}<a class="dropdown-item" href="?sort=comments&t={{t}}&ccmode={{ccmode}}"><i class="fas fa-comments mr-2 "></i>Comments</a>{% endif %}
-					</div>
-				</div>
+				{% set ccmode_text = 'ccmode=' ~ ccmode %}
+				{{sorting_time.sort_dropdown(sort, t, SORTS_POSTS, ccmode_text)}}
 			</div>
 			{% endblock %}
 		</div>
@@ -104,21 +82,14 @@
 </div>
 
 {% endblock %}
-
 {% block content %}
-
 <div class="row no-gutters {% if listing %}mt-md-3{% elif not listing %}my-md-3{% endif %}">
-
 	<div class="col-12">
-
 		<div class="posts" id="posts">
-
 			{% include "submission_listing.html" %}
-
 		</div>
 	</div>
 </div>
-
 {% endblock %}
 
 {% block pagenav %}

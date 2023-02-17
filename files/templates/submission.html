@@ -1,5 +1,5 @@
 {% extends "default.html" %}
-
+{%- import 'component/sorting_time.html' as sorting_time -%}
 
 {% if p.should_hide_score %}
 	{% set ups="" %}
@@ -235,7 +235,6 @@
 							{% endif %}
 						{% endif %}
 
-
 						{% if p.embed_url %}
 							{% if p.domain == "twitter.com" %}
 								{{p.embed_url | safe}}
@@ -248,8 +247,6 @@
 								{{p.embed_url | safe}}
 							{% endif %}
 						{% endif %}
-
-						
 						<div id="post-text">
 							{% if p.is_image %}
 								<div class="row no-gutters">
@@ -344,16 +341,11 @@
 						{% include 'post_actions.html' %}
 					</ul>
 						</div>
-
 						</div>
-
 					</div>
-					
 					{% if v %}
-
 					<div id="voting" class="voting d-none d-md-block mb-auto">
-						<div  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1')" class="post-{{p.id}}-up mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
-
+						<div tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1')" class="post-{{p.id}}-up mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
 						<span  class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}" data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}">{{score}}</span>
 						<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1')" class="post-{{p.id}}-down text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
 					</div>
@@ -366,16 +358,9 @@
 						<span  class="post-{{p.id}}-score-none score text-muted{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 						<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1')" class="post-{{p.id}}-down arrow-down mx-auto" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></div>
 					</div>
-
 					{% endif %}
-
 				</div>
-
-
-
-
 			</div>
-
 		</div>
 
 		{% if not p.is_image and not p.is_video %}
@@ -389,10 +374,8 @@
 
  <div class="row mb-3 d-md-none">
 	<div class="col-12">
-
 		<div class="post-actions">
 			<ul class="list-inline text-right d-flex">
-
 				<li class="list-inline-item mr-auto">
 					<a href="{{p.permalink}}">
 						<i class="fas fa-comment-dots"></i>{{p.comment_count}}
@@ -435,9 +418,7 @@
 				</li>
 			</ul>
 		</div>
-
 	</div>
-
 </div>
 
 {% if v and v.id != p.author_id and p.body %}
@@ -447,27 +428,12 @@
 <div class="row border-md-0 comment-section pb-3">
 	<div class="col border-top">
 		<div class="comments-count py-3">
-			<div class="dropdown dropdown-actions">
-				<button class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
-					{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
-					{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
-					{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
-					{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
-					{{sort | capitalize}}
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-					{% if sort != "top" %}<a class="dropdown-item" href="?sort=top"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
-					{% if sort != "bottom" %}<a class="dropdown-item" href="?sort=bottom"><i class="fas fa-arrow-alt-circle-down mr-2"></i>Bottom</a>{% endif %}
-					{% if sort != "new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-					{% if sort != "old" %}<a class="dropdown-item" href="?sort=old"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
-					{% if sort != "controversial" %}<a class="dropdown-item" href="?sort=controversial"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
-				</div>
-				{% if comment_info and p.comment_count >= 2%}
-					<pre></pre>
-					<div class="total"><a href="{{p.permalink}}">View entire discussion</a></div>
-				{% endif %}
+			{{sorting_time.sort_dropdown(sort, none, SORTS_COMMENTS)}}
+			{% if comment_info and p.comment_count >= 2 %}
+			<div class="total mt-3">
+				<a href="{{p.permalink}}">View entire discussion</a>
 			</div>
+			{% endif %}
 		</div>
 
 	{% if v %}
