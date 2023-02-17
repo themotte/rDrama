@@ -175,7 +175,7 @@ class RawSqlLeaderboard(Leaderboard):
 		self._calculate(query)
 
 	def _calculate(self, query:str):
-		self.result = {result[0]:result for result in self.db.execute(query)}
+		self.result = {result[0]:result for result in self.db.execute(query).all()}
 		users = get_accounts_dict(self.result.keys(), db=self.db)
 		if users is None:
 			raise Exception("Some users don't exist when they should (was a user deleted?)")
