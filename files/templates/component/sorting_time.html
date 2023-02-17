@@ -1,10 +1,10 @@
 {%- macro sort_dropdown(sort, t, all_sorts, extra_query='') -%}
 {% set all_sorts = SORTS_COMMENTS if is_comment else SORTS_POSTS %}
 <div class="dropdown dropdown-actions">
-	<button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	<button class="btn btn-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		<i class="fas {{all_sorts[sort]}} mr-1"></i> {{sort|capitalize}}
 	</button>
-	<div class="dropdown-menu smol-fp" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px;">
+	<div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px;">
 	{% for possible_sort in all_sorts %}
 		{%- if sort != possible_sort -%}
 			<a class="dropdown-item" href="?{{extra_query ~ '&' if extra_query else ''}}sort={{possible_sort}}&t={{t}}"><i class="fas {{all_sorts[possible_sort]}} mr-1"></i> {{possible_sort | capitalize}}</a>
