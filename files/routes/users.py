@@ -359,7 +359,7 @@ def transfer_bux(v, username):
 @app.get("/leaderboard")
 @admin_level_required(2)
 def leaderboard(v:User):
-	users:Query[User] = g.db.query(User)
+	users:Query = g.db.query(User)
 	if not v.can_see_shadowbanned:
 		users = users.filter(User.shadowbanned == None)
 

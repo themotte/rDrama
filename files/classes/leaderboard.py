@@ -13,8 +13,7 @@ from files.classes.userblock import UserBlock
 _LeaderboardValue = Union[int, Column]
 _LeaderboardProperty = Optional[Union[Column, property]]
 _LeaderboardReturn = tuple[list[User], Optional[int], Optional[int]]
-_LeaderboardCallable = Callable[[_LeaderboardProperty, User, scoped_session, Optional[Query[User]], int], _LeaderboardReturn]
-#_LeaderboardCallable = (cls, lb_criteria, v:User, db:scoped_session, users:Optional[Query[User]], limit)
+_LeaderboardCallable = Callable[[_LeaderboardProperty, User, scoped_session, Optional[Query], int], _LeaderboardReturn]
 
 class Leaderboard:
 	"""
@@ -34,7 +33,7 @@ class Leaderboard:
 	      		table_column_name:str, user_relative_url:Optional[str], 
 				query_function:_LeaderboardCallable, criteria: _LeaderboardProperty, # Leaderboard.get_simple_lb, User.truecoins, v, lambda u:u.truecoins, g.db, users)
 				v:User, value_func:Optional[Callable[[User], _LeaderboardValue]], 
-				db:scoped_session, users:Optional[Query[User]], limit=LEADERBOARD_LIMIT, **kwargs):
+				db:scoped_session, users:Optional[Query], limit=LEADERBOARD_LIMIT, **kwargs):
 		self.header_name = header_name
 		self.table_header_name = table_header_name
 		self.html_id = html_id
@@ -59,7 +58,7 @@ class Leaderboard:
 			self.value_func = lambda u: u[1] or 0
 
 	@classmethod
-	def get_simple_lb(cls, order_by, v:User, db:scoped_session, users:Optional[Query[User]], limit:int):
+	def get_simple_lb(cls, order_by, v:User, db:scoped_session, users:Optional[Query], limit:int):
 		leaderboard = users.order_by(order_by.desc()).limit(limit).all()
 		position:Optional[int] = None
 		if v not in leaderboard:
@@ -76,7 +75,7 @@ class Leaderboard:
 		return func.rank().over(order_by=func.count(criteria).desc()).label("rank")
 
 	@classmethod
-	def get_badge_marsey_lb(cls, lb_criteria, v:User, db:scoped_session, users:Optional[Query[User]], limit):
+	def get_badge_marsey_lb(cls, lb_criteria, v:User, db:scoped_session, users:Optional[Query], limit):
 		sq = db.query(lb_criteria, cls.count_and_label(lb_criteria), cls.rank_filtered_rank_label_by_desc(lb_criteria)).group_by(lb_criteria).subquery()
 		sq_criteria = None
 		if lb_criteria == Badge.user_id:
@@ -94,7 +93,7 @@ class Leaderboard:
 		return (leaderboard, position[0], position[1])
 	
 	@classmethod
-	def get_blockers_lb(cls, lb_criteria, v:User, db:scoped_session, users:Optional[Query[User]], limit):
+	def get_blockers_lb(cls, lb_criteria, v:User, db:scoped_session, users:Optional[Query], limit):
 		if lb_criteria != UserBlock.target_id:
 			raise ValueError("This leaderboard function only supports UserBlock.target_id")
 		sq = db.query(lb_criteria, cls.count_and_label(lb_criteria)).group_by(lb_criteria).subquery()
