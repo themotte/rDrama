@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Final, Optional
 
 from sqlalchemy import Column, func
 from sqlalchemy.orm import scoped_session, Query
@@ -10,6 +10,7 @@ from files.classes.badges import Badge
 from files.classes.marsey import Marsey
 from files.classes.user import User
 from files.classes.userblock import UserBlock
+from files.helpers.get import get_accounts_dict
 
 @dataclass(frozen=True, slots=True)
 class LeaderboardMeta:
@@ -20,9 +21,9 @@ class LeaderboardMeta:
 	user_relative_url:Optional[str]
 	limit:int=LEADERBOARD_LIMIT
 
-class Leaderboard2:
-	def __init__(self, v:User, meta:LeaderboardMeta) -> None:
-		self.v:User = v
+class Leaderboard:
+	def __init__(self, v:Optional[User], meta:LeaderboardMeta) -> None:
+		self.v:Optional[User] = v
 		self.meta:LeaderboardMeta = meta
 
 	@property
@@ -34,7 +35,7 @@ class Leaderboard2:
 		raise NotImplementedError()
 	
 	@property
-	def v_value(self) -> int:
+	def v_value(self) -> Optional[int]:
 		raise NotImplementedError()
 	
 	@property
@@ -49,7 +50,7 @@ class Leaderboard2:
 	def value_func(self) -> Callable[[User], int]:
 		raise NotImplementedError()
 
-class SimpleLeaderboard(Leaderboard2):
+class SimpleLeaderboard(Leaderboard):
 	def __init__(self, v:User, meta:LeaderboardMeta, db:scoped_session, users_query:Query, column:Column):
 		super().__init__(v, meta)
 		self.db:scoped_session = db
@@ -81,7 +82,7 @@ class SimpleLeaderboard(Leaderboard2):
 	def value_func(self) -> Callable[[User], int]:
 		return lambda u:getattr(u, self.column.name)
 	
-class _CountedAndRankedLeaderboard(Leaderboard2):
+class _CountedAndRankedLeaderboard(Leaderboard):
 	@classmethod
 	def count_and_label(cls, criteria):
 		return func.count(criteria).label("count")
@@ -166,3 +167,86 @@ class UserBlockLeaderboard(_CountedAndRankedLeaderboard):
 	@property
 	def v_value(self) -> int:
 		return self._v_value
+
+class RawSqlLeaderboard(Leaderboard):
+	def __init__(self, meta:LeaderboardMeta, db:scoped_session, query:str) -> None: # should be LiteralString on py3.11+
+		super().__init__(None, meta)
+		self.db = db
+		self._calculate(query)
+
+	def _calculate(self, query:str):
+		self.result = {result[0]:result for result in self.db.execute(query)}
+		users = get_accounts_dict(row[0] for row in self.result)
+		if not users:
+			raise Exception("Some users don't exist when they should (was a user deleted?)")
+		for user in users: # I know.
+			self.result[user].append(users[user])
+
+	@property
+	def all_users(self) -> list[User]:
+		return [result[2] for result in self.result.values()]
+
+	@property
+	def v_position(self) -> Optional[int]:
+		return None
+	
+	@property
+	def v_value(self) -> Optional[int]:
+		return None
+	
+	@property
+	def v_appears_in_ranking(self) -> bool:
+		return True # we set this to True here to try and not grab the data
+	
+	@property
+	def user_func(self) -> Callable[[Any], User]:
+		return lambda u:u
+	
+	@property
+	def value_func(self) -> Callable[[User], int]:
+		return lambda u:self.result[u.id][1]
+
+class ReceivedDownvotesLeaderboard(RawSqlLeaderboard):
+	_query: Final[str] = """
+	WITH cv_for_user AS (
+    SELECT
+        comments.author_id AS target_id,
+        COUNT(*)
+    FROM commentvotes cv
+        JOIN comments ON comments.id = cv.comment_id
+    WHERE vote_type = -1
+    GROUP BY comments.author_id
+), sv_for_user AS (
+    SELECT
+        submissions.author_id AS target_id,
+        COUNT(*)
+    FROM votes sv
+        JOIN submissions ON submissions.id = sv.submission_id
+    WHERE vote_type = -1
+    GROUP BY submissions.author_id
+)
+SELECT 
+    COALESCE(cvfu.target_id, svfu.target_id) AS target_id,
+    (COALESCE(cvfu.count, 0) + COALESCE(svfu.count, 0)) AS count
+FROM cv_for_user cvfu
+    FULL OUTER JOIN sv_for_user svfu
+    ON cvfu.target_id = svfu.target_id
+ORDER BY count DESC LIMIT 25
+	"""
+
+	def __init__(self, meta:LeaderboardMeta, db:scoped_session) -> None:
+		super().__init__(meta, db, self._query)
+
+class GivenUpvotesLeaderboard(RawSqlLeaderboard):
+	_query: Final[str] = """
+	SELECT 
+    COALESCE(cvbu.user_id, svbu.user_id) AS user_id,
+    (COALESCE(cvbu.count, 0) + COALESCE(svbu.count, 0)) AS count
+FROM (SELECT user_id, COUNT(*) FROM votes WHERE vote_type = 1 GROUP BY user_id) AS svbu
+FULL OUTER JOIN (SELECT user_id, COUNT(*) FROM commentvotes WHERE vote_type = 1 GROUP BY user_id) AS cvbu
+    ON cvbu.user_id = svbu.user_id
+ORDER BY count DESC LIMIT 25
+	"""
+
+	def __init__(self, meta:LeaderboardMeta, db:scoped_session) -> None:
+		super().__init__(meta, db, self._query)

@@ -373,22 +373,11 @@ def leaderboard(v:User):
 	badges = BadgeMarseyLeaderboard(v, LeaderboardMeta("Badges", "badges", "badges", "Badges", None), g.db, Badge.user_id)
 	blocks = UserBlockLeaderboard(v, LeaderboardMeta("Blocked", "most blocked", "blocked", "Blocked By", "blockers"), g.db, UserBlock.target_id)
 
-	received_downvotes_lb = None
-	given_upvotes_lb = None
+	# note: lb_downvotes_received and lb_upvotes_given are global variables
+	# that are populated by leaderboard_thread() in files.helpers.services
+	leaderboards = [coins, coins_spent, truescore, subscribers, posts, comments, received_awards, badges, blocks, lb_downvotes_received, lb_upvotes_given]
 
-	try:
-		pos9 = [x[0].id for x in lb_received_downvotes].index(v.id)
-		pos9 = (pos9+1, lb_received_downvotes[pos9][1])
-	except: pos9 = (len(lb_received_downvotes)+1, 0)
-
-	try:
-		pos13 = [x[0].id for x in lb_given_upvotes].index(v.id)
-		pos13 = (pos13+1, lb_given_upvotes[pos13][1])
-	except: pos13 = (len(lb_given_upvotes)+1, 0)
-
-	leaderboards = [coins, coins_spent, truescore, subscribers, posts, comments, received_awards, badges, blocks]
-
-	return render_template("leaderboard.html", v=v, leaderboards=leaderboards, users9=lb_received_downvotes, pos9=pos9, users13=lb_given_upvotes, pos13=pos13)
+	return render_template("leaderboard.html", v=v, leaderboards=leaderboards)
 
 @app.get("/@<username>/css")
 def get_css(username):

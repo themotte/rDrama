@@ -95,6 +95,20 @@ def get_account(
 
 	return user
 
+def get_accounts_dict(ids:Union[Iterable[str], Iterable[int]], v:Optional[User]=None, graceful=False, include_shadowbanned=True) -> Optional[dict[int, User]]:
+	if not ids: return {}
+	try: 
+		ids = set([int(id) for id in ids])
+	except:
+		if graceful: return None
+		abort(404)
+
+	users = g.db.query(User).filter(User.id.in_(ids))
+	if not (include_shadowbanned or (v and v.can_see_shadowbanned)):
+		users = users.filter(User.shadowbanned == None)
+	users = users.all()
+	if len(users) != len(ids) and not graceful: abort(404)
+	return {u.id:u for u in users}
 
 def get_post(
 		i:Union[str,int],
