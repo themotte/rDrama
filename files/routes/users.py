@@ -528,6 +528,10 @@ def message2(v, username):
 			"contact modmail if you think this decision was incorrect.")
 
 	user = get_user(username, v=v, include_blocks=True)
+
+	if user.id == MODMAIL_ID:
+		abort(403, "Please use modmail to contact the admins")
+
 	if hasattr(user, 'is_blocking') and user.is_blocking: abort(403, "You're blocking this user.")
 
 	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked:
@@ -536,7 +540,6 @@ def message2(v, username):
 	message = request.values.get("message", "").strip()[:10000].strip()
 
 	if not message: abort(400, "Message is empty!")
-
 	body_html = sanitize(message)
 
 	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
@@ -553,7 +556,6 @@ def message2(v, username):
 						  body_html=body_html
 						  )
 	g.db.add(c)
-
 	g.db.flush()
 
 	c.top_comment_id = c.id
@@ -588,12 +590,12 @@ def messagereply(v):
 	parent = get_comment(id, v=v)
 	user_id = parent.author.id
 
-	if parent.sentto == 2: user_id = None
+	if parent.sentto == MODMAIL_ID: user_id = None
 	elif v.id == user_id: user_id = parent.sentto
 
 	body_html = sanitize(message)
 
-	if parent.sentto == 2 and request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
+	if parent.sentto == MODMAIL_ID and request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if file.content_type.startswith('image/'):
 			name = f'/images/{time.time()}'.replace('.','') + '.webp'
