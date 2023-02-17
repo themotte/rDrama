@@ -224,8 +224,6 @@ def api_comment(v):
 
 			abort(403, "Too much spam!")
 
-	if len(body_html) > 20000: abort(400)
-
 	is_filtered = v.should_comments_be_filtered()
 
 	c = Comment(author_id=v.id,
@@ -236,7 +234,7 @@ def api_comment(v):
 				is_bot=is_bot,
 				app_id=v.client.application.id if v.client else None,
 				body_html=body_html,
-				body=body[:10000],
+				body=body[:COMMENT_BODY_LENGTH_MAXIMUM],
 				ghost=parent_post.ghost,
 				filter_state='filtered' if is_filtered else 'normal'
 				)
@@ -346,9 +344,7 @@ def edit_comment(cid, v):
 
 			body_html = sanitize(body, edit=True)
 
-		if len(body_html) > 20000: abort(400)
-
-		c.body = body[:10000]
+		c.body = body[:COMMENT_BODY_LENGTH_MAXIMUM]
 		c.body_html = body_html
 
 		if int(time.time()) - c.created_utc > 60 * 3: c.edited_utc = int(time.time())

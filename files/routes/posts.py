@@ -39,7 +39,7 @@ titleheaders = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWe
 
 MAX_TITLE_LENGTH = 500
 MAX_URL_LENGTH = 2048
-MAX_BODY_LENGTH = 20000
+MAX_BODY_LENGTH = SUBMISSION_BODY_LENGTH_MAXIMUM
 
 
 def guarded_value(val, min_len, max_len) -> str:

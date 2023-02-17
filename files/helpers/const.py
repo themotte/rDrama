@@ -2,6 +2,7 @@ from os import environ, listdir
 import re
 from copy import deepcopy
 from json import loads
+from typing import Final
 from files.__main__ import db_session
 from files.classes.sub import Sub
 from files.classes.marsey import Marsey
@@ -40,6 +41,10 @@ PUSHER_ID = environ.get("PUSHER_ID", "").strip()
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 DEFAULT_COLOR = environ.get("DEFAULT_COLOR", "fff").strip()
 COLORS = {'ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58','8cdbe6', DEFAULT_COLOR}
+
+SUBMISSION_BODY_LENGTH_MAXIMUM: Final[int] = 20000
+COMMENT_BODY_LENGTH_MAXIMUM: Final[int] = 10000
+MESSAGE_BODY_LENGTH_MAXIMUM: Final[int] = 10000
 
 ERROR_MESSAGES = {
 	400: "That request was bad and you should feel bad",
