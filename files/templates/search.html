@@ -30,15 +30,12 @@
 					{% if t != "all" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=all"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
 				</div>
 			</div>
-
 			{% set query_text = 'q=' ~ query | urlencode %}
 			{{sorting_time.sort_dropdown(sort, t, SORTS_POSTS, query_text)}}
 		</div>
 	{% endif %}
 {% endblock %}
-
 {% block content %}
-
 <div class="row no-gutters my-md-3">
 	<div class="col">
 		<div class="card search-results">
@@ -59,46 +56,42 @@
 		</div>
 	</div>
 </div>
-
-{% if not '/users/' in request.path %}
-	<div class="row no-gutters">
-		<div class="col">
-			<div class="flex-row box-shadow-bottom d-flex justify-content-center justify-content-md-between align-items-center">
-				<ul class="nav settings-nav">
-					<li class="nav-item">
-						<a class="nav-link{% if '/posts/' in request.path %} active{% endif %}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Posts</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link{% if '/comments/' in request.path %} active{% endif %}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Comments</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link{% if '/users/' in request.path %} active{% endif %}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Users</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-	<div class="row no-gutters">
-		<div class="col-12">
-			<div class="posts" id="posts">
-				{% block listing_template %}
-					{% include "submission_listing.html" %}
-				{% endblock %}
-			</div>
-		</div>
-	</div>
-{% endif %}
-{% endblock %}
-
-	{% block pagenav %}
-		<nav aria-label="Page navigation">
-			<ul class="pagination pagination-sm mb-0">
-				<li class="page-item{% if page==1 %} disabled{% endif %}">
-					<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page-1}}" tabindex="-1"{% if page==1 %} aria-disabled="true"{% endif %}>Back</a></small>
+<div class="row no-gutters">
+	<div class="col">
+		<div class="flex-row box-shadow-bottom d-flex justify-content-center justify-content-md-between align-items-center">
+			<ul class="nav settings-nav">
+				<li class="nav-item">
+					<a class="nav-link{% if '/posts/' in request.path %} active{% endif %}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Posts</a>
 				</li>
-				<li class="page-item{% if not next_exists %} disabled{% endif %}">
-					<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page+1}}">Next</a></small>
+				<li class="nav-item">
+					<a class="nav-link{% if '/comments/' in request.path %} active{% endif %}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Comments</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link{% if '/users/' in request.path %} active{% endif %}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Users</a>
 				</li>
 			</ul>
-		</nav>
-	{% endblock %}
+		</div>
+	</div>
+</div>
+<div class="row no-gutters">
+	<div class="col-12">
+		<div class="posts" id="posts">
+			{% block listing_template %}
+				{% include "submission_listing.html" %}
+			{% endblock %}
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block pagenav %}
+<nav aria-label="Page navigation">
+	<ul class="pagination pagination-sm mb-0">
+		<li class="page-item{% if page==1 %} disabled{% endif %}">
+			<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page-1}}" tabindex="-1"{% if page==1 %} aria-disabled="true"{% endif %}>Back</a></small>
+		</li>
+		<li class="page-item{% if not next_exists %} disabled{% endif %}">
+			<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page+1}}">Next</a></small>
+		</li>
+	</ul>
+</nav>
+{% endblock %}
