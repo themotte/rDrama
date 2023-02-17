@@ -57,7 +57,7 @@ def sort_objects(objects: Query, sort: str, cls):
 		ordered = objects.order_by(cls.upvotes - cls.downvotes)
 	elif sort == 'old':
 		return objects.order_by(cls.created_utc)
-	else:
+	else: # default, or sort == 'new'
 		ordered = objects
 	ordered = ordered.order_by(cls.created_utc.desc())
 	return ordered
