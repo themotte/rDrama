@@ -4,8 +4,8 @@ import gevent
 from pusher_push_notifications import PushNotifications
 from sqlalchemy.orm import scoped_session
 
-from files.classes.leaderboard import (Leaderboard, LeaderboardMeta, 
-                                       ReceivedDownvotesLeaderboard, GivenUpvotesLeaderboard)
+from files.classes.leaderboard import (LeaderboardMeta, ReceivedDownvotesLeaderboard, 
+				       					GivenUpvotesLeaderboard)
 from files.helpers.assetcache import assetcache_path
 from files.helpers.const import PUSHER_ID, PUSHER_KEY, SITE_FULL, SITE_ID
 from files.__main__ import app, db_session
