@@ -52,7 +52,7 @@ class Leaderboard2:
 	
 	@property
 	def user_func(self) -> Callable[[Any], User]:
-		raise NotImplementedError()
+		return lambda u:u
 	
 	@property
 	def value_func(self) -> Callable[[User], int]:
@@ -85,10 +85,6 @@ class SimpleLeaderboard(Leaderboard2):
 	@property
 	def v_value(self) -> int:
 		return self._v_value
-	
-	@property
-	def user_func(self) -> Callable[[Any], User]:
-		return lambda u:u
 	
 	@property
 	def value_func(self) -> Callable[[User], int]:
@@ -141,7 +137,7 @@ class BadgeMarseyLeaderboard(_CountedAndRankedLeaderboard):
 	@property
 	def v_value(self) -> int:
 		return self._v_value
-	
+
 	@property
 	def value_func(self) -> Callable[[User], int]:
 		return lambda u:self._all_users[u]
