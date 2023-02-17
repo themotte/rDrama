@@ -163,7 +163,7 @@ class UserBlockLeaderboard(_CountedAndRankedLeaderboard):
 		position = self.db.query(sq.c.rank, sq.c.count).join(User, User.id == sq.c.target_id).filter(sq.c.target_id == self.v.id).limit(1).one_or_none()
 		if not position: position = (leaderboard.count() + 1, 0)
 		leaderboard = leaderboard.limit(self.meta.limit).all()
-		self._all_users = {k:v for k, v in leaderboard.limit(self.meta.limit).all()}
+		self._all_users = {k:v for k, v in leaderboard}
 		self._v_position = position[0]
 		self._v_value = position[1]
 		return (leaderboard, position[0], position[1])
