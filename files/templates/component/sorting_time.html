@@ -3,7 +3,7 @@
 	<button class="btn btn-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		<i class="fas {{all_sorts[sort]}} mr-1"></i> {{sort|capitalize}}
 	</button>
-	<div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px;">
+	<div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translateY(31px);">
 	{% for possible_sort in all_sorts %}
 		{%- if sort != possible_sort -%}
 			<a class="dropdown-item" href="?{{extra_query ~ '&' if extra_query else ''}}sort={{possible_sort}}&t={{t}}"><i class="fas {{all_sorts[possible_sort]}} mr-1"></i> {{possible_sort | capitalize}}</a>
