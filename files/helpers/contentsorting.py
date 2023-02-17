@@ -1,14 +1,16 @@
 import time
 from collections.abc import Iterable
-from typing import Union
+from typing import Any, TYPE_CHECKING
 
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Query
 
-from files.classes.comment import Comment
-from files.classes.submission import Submission
 from files.helpers.const import *
 
+if TYPE_CHECKING:
+	from files.classes.comment import Comment
+else:
+	Comment = Any
 
 
 def apply_time_filter(objects, t, cls):
@@ -28,19 +30,19 @@ def apply_time_filter(objects, t, cls):
 	return objects.filter(cls.created_utc >= cutoff)
 
 
-def sort_objects(objects: Query, sort: str, cls: type[Union[Comment, Submission]]):
+def sort_objects(objects: Query, sort: str, cls):
 	if sort == 'hot':
 		ti = int(time.time()) + 3600
 		ordered = objects.order_by(
 			-100000
 				* (cls.upvotes + 1)
 				/ (func.power((ti - cls.created_utc) / 1000, 1.23)))
-	elif sort == 'bump' and cls is Submission:
+	elif sort == 'bump' and cls.__name__ == 'Submission':
 		ordered = objects.filter(cls.comment_count > 1).order_by(cls.bump_utc.desc())
 	elif sort == 'comments':
-		if cls is Submission:
+		if cls.__name__ == 'Submission': # we're checking the stringified name due to a gnarly import cycle
 			ordered = objects.order_by(cls.comment_count.desc())
-		elif cls is Comment:
+		elif cls.__name__ == 'Comment':
 			ordered = objects.order_by(cls.descendant_count.desc())
 		else:
 			ordered = objects
@@ -63,7 +65,13 @@ def sort_objects(objects: Query, sort: str, cls: type[Union[Comment, Submission]
 
 # Presently designed around files.helpers.get.get_comment_trees_eager
 # Behavior should parallel that of sort_objects above. TODO: Unify someday?
-def sort_comment_results(comments: Iterable[Comment], sort:str):
+def sort_comment_results(comments: Iterable[Comment], sort:str, **kwargs):
+	"""
+	Sorts comments results from `files.helpers.get.get_comments_trees_eager`
+	:param comments: Comments to sort
+	:param sort: The sort to use
+	:param pins: Whether to sort pinned comments. Defaults to `True`
+	"""
 	if sort == 'hot':
 		ti = int(time.time()) + 3600
 		key_func = lambda c: (
@@ -90,7 +98,8 @@ def sort_comment_results(comments: Iterable[Comment], sort:str):
 	else: # default, or sort == 'new'
 		key_func = lambda c: -c.created_utc
 
-	key_func_pinned = lambda c: (
+	if kwargs.get('pins', True):
+		key_func = lambda c: (
 		(c.is_pinned is None, c.is_pinned == '', c.is_pinned), # sort None last
 		key_func(c))
-	return sorted(comments, key=key_func_pinned)
+	return sorted(comments, key=key_func)
