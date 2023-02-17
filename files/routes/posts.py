@@ -340,9 +340,6 @@ def edit_post(pid, v):
 	body_html = sanitize(body, edit=True)
 
 	p.body = body
-
-	if len(body_html) > 40000: abort(400, "Submission body_html too long! (max 40k characters)")
-
 	p.body_html = body_html
 
 	if not p.private and not p.ghost:
@@ -758,8 +755,6 @@ def submit_post(v, sub=None):
 				return error("Image/Video files only.")
 
 	body_html = sanitize(body)
-
-	if len(body_html) > 40000: return error("Submission body_html too long! (max 40k characters)")
 
 	club = bool(request.values.get("club",""))
 	
