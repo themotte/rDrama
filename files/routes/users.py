@@ -4,6 +4,7 @@ import time
 import math
 from files.classes.views import ViewerRelationship
 from files.helpers.alerts import *
+from files.helpers.media import process_image
 from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.const import *
@@ -602,19 +603,7 @@ def messagereply(v):
 			file.save(name)
 			url = process_image(name)
 			body_html += f'<img data-bs-target="#expandImageModal" data-bs-toggle="modal" onclick="expandDesktopImage(this.src)" class="img" src="{url}" loading="lazy">'
-		elif file.content_type.startswith('video/'):
-			file.save("video.mp4")
-			with open("video.mp4", 'rb') as f:
-				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-				except requests.Timeout: abort(500, "Video upload timed out, please try again!")
-				try: url = req['link']
-				except:
-					error = req['error']
-					if error == 'File exceeds max duration': error += ' (60 seconds)'
-					abort(400, error)
-			if url.endswith('.'): url += 'mp4'
-			body_html += f"<p>{url}</p>"
-		else: abort(400, "Image/Video files only")
+		else: abort(400, "Image files only")
 
 
 	c = Comment(author_id=v.id,
