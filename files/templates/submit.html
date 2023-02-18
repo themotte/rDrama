@@ -72,7 +72,7 @@
 													<img loading="lazy" id="image-preview" style="max-width:50%">
 													<label class="btn btn-secondary m-0" for="file-upload">
 														<div id="filename-show">Select File</div>
-														<input autocomplete="off" id="file-upload" type="file" name="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*, video/*" hidden>
+														<input autocomplete="off" id="file-upload" type="file" name="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*" hidden>
 													</label>
 													<small class="form-text text-muted">Optional if you have text.</small>
 													<small class="form-text text-muted">You can upload images or videos up to 60 seconds.</small>
@@ -110,7 +110,7 @@
 																
 												<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-submit">
 													<div id="filename-show-submit"><i class="far fa-image"></i></div>
-													<input autocomplete="off" id="file-upload-submit" multiple="multiple" type="file" name="file2" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-submit','file-upload-submit');checkForRequired()" hidden>
+													<input autocomplete="off" id="file-upload-submit" multiple="multiple" type="file" name="file2" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-submit','file-upload-submit');checkForRequired()" hidden>
 												</label>		
 
 												<div id="preview" class="preview my-3"></div>

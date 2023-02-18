@@ -1,10 +1,10 @@
-from PIL import Image, ImageOps
-from PIL.ImageSequence import Iterator
-from webptools import gifwebp
 import subprocess
 
+from flask import Request
+from PIL import Image, ImageOps
+from webptools import gifwebp
+
 def process_image(filename=None, resize=0):
-	
 	i = Image.open(filename)
 
 	if resize and i.width > resize:
