@@ -33,8 +33,8 @@ BUG_THREAD = 0
 WELCOME_MSG = f"Welcome to {SITE_TITLE}! Please read [the rules](/rules) first. Then [read some of our current conversations](/) and feel free to comment or post!\n\nWe encourage people to comment even if they aren't sure they fit in; as long as your comment follows [community rules](/rules), we are happy to have posters from all backgrounds, education levels, and specialties."
 ROLES={}
 
-THEMES = {"TheMotte", "dramblr", "reddit", "transparent", "win98", "dark", 
-			"light", "coffee", "tron", "4chan", "midnight"}
+THEMES = ["TheMotte", "dramblr", "reddit", "win98", "dark", 
+			"light", "coffee", "tron", "4chan", "midnight"]
 SORTS_COMMON = {
 	"top": 'fa-arrow-alt-circle-up', 
 	"bottom": 'fa-arrow-alt-circle-down', 
