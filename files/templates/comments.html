@@ -45,7 +45,7 @@
 {# "level" represents the nested level in this call; always starts at 1 #}
 {# this is distinct from "comment.level", which is the global depth of this comment #}
 {% macro single_comment(c, level) %}
-
+{% set invisible_to_current_user = (c.is_banned or c.deleted_utc or c.is_blocking) and not (v and v.admin_level > 1) and not (v and v.id==c.author_id) %}
 
 {% if should_hide_score or c.should_hide_score %}
 	{% set ups="" %}
@@ -63,8 +63,8 @@
 	{% set replies=c.replies(v) %}
 {% endif %}
 
-{% if (c.is_banned or c.deleted_utc or c.is_blocking) and not (v and v.admin_level > 1) and not (v and v.id==c.author_id) %}
-
+{% if invisible_to_current_user %}
+{% if c.descendant_count %}
 <div id="comment-{{c.id}}" class="comment">
 		<div class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement)"></div>
 		<div class="comment-collapse-bar-click" onclick="collapse_comment('{{c.id}}', this.parentElement)">
@@ -104,6 +104,7 @@
 		{% endif %}
 	{% endif %}
 </div>
+{% endif %}
 </div>
 
 
