@@ -194,12 +194,9 @@ class Comment(Base):
 	@property
 	@lazy
 	def parent(self):
-
 		if not self.parent_submission: return None
-
 		if self.level == 1: return self.post
-
-		else: return g.db.query(Comment).get(self.parent_comment_id)
+		else: return g.db.get(Comment, self.parent_comment_id)
 
 	@property
 	@lazy
