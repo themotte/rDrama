@@ -303,10 +303,10 @@ def edit_post(pid, v):
 	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
 
 	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
-	title = sanitize_raw(title, False, MAX_TITLE_LENGTH)
+	title = sanitize_raw(title, allow_newlines=False, length_limit=MAX_TITLE_LENGTH)
 
 	body = guarded_value("body", 0, MAX_BODY_LENGTH)
-	body = sanitize_raw(body, True, MAX_BODY_LENGTH)
+	body = sanitize_raw(body, allow_newlines=True, length_limit=MAX_BODY_LENGTH)
 
 	if title != p.title:
 		p.title = title
@@ -564,12 +564,12 @@ def submit_post(v, sub=None):
 	if v.is_suspended: return error("You can't perform this action while banned.")
 
 	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
-	title = sanitize_raw(title, False, MAX_TITLE_LENGTH)
+	title = sanitize_raw(title, allow_newlines=False, length_limit=MAX_TITLE_LENGTH)
 
 	url = guarded_value("url", 0, MAX_URL_LENGTH)
 	
 	body = guarded_value("body", 0, MAX_BODY_LENGTH)
-	body = sanitize_raw(body, True, MAX_BODY_LENGTH)
+	body = sanitize_raw(body, allow_newlines=True, length_limit=MAX_BODY_LENGTH)
 
 	sub = request.values.get("sub")
 	if sub: sub = sub.replace('/h/','').replace('s/','')
