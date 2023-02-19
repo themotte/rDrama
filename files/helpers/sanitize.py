@@ -158,6 +158,24 @@ def with_gevent_timeout(timeout: int):
 		return wrapped
 	return inner
 
+REMOVED_CHARACTERS = ['\u200e', '\u200b', '\ufeff']
+"""
+Characters which are removed from content
+"""
+
+def sanitize_raw(sanitized:Optional[str], allow_newlines:bool, length_limit:Optional[int]) -> str:
+	if not sanitized: return ""
+	for char in REMOVED_CHARACTERS:
+		sanitized = sanitized.replace(char, '')
+	if allow_newlines:
+		sanitized = sanitized.replace("\r\n", "\n")
+	else:
+		sanitized = sanitized.replace("\r","").replace("\n", "")
+	sanitized = sanitized.strip()
+	if length_limit is not None:
+		sanitized = sanitized[:length_limit]
+	return sanitized
+
 @with_gevent_timeout(2)
 def sanitize(sanitized, alert=False, comment=False, edit=False):
 	# double newlines, eg. hello\nworld becomes hello\n\nworld, which later becomes <p>hello</p><p>world</p>

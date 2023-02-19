@@ -112,7 +112,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 def api_comment(v):
 	if v.is_suspended: abort(403, "You can't perform this action while banned.")
 
-	parent_fullname = request.values.get("parent_fullname").strip()
+	parent_fullname = request.values.get("parent_fullname", "").strip()
 
 	if len(parent_fullname) < 4: abort(400)
 	id = parent_fullname[3:]
@@ -134,9 +134,9 @@ def api_comment(v):
 	sub = parent_post.sub
 	if sub and v.exiled_from(sub): abort(403, f"You're exiled from /h/{sub}")
 
-	body = request.values.get("body", "").strip()[:10000]
-
-	if not body and not request.files.get('file'): abort(400, "You need to actually write something!")
+	body = sanitize_raw(request.values.get("body"), True, 10000)
+	if not body and not request.files.get('file'): 
+		abort(400, "You need to actually write something!")
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		files = request.files.getlist('file')[:4]
@@ -259,12 +259,9 @@ def api_comment(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def edit_comment(cid, v):
-
 	c = get_comment(cid, v=v)
-
 	if c.author_id != v.id: abort(403)
-
-	body = request.values.get("body", "").strip()[:10000]
+	body = sanitize_raw(request.values.get("body"), True, 10000)
 
 	if len(body) < 1 and not (request.files.get("file") and request.headers.get("cf-ipcountry") != "T1"):
 		abort(400, "You have to actually type something!")

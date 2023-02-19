@@ -303,7 +303,10 @@ def edit_post(pid, v):
 	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
 
 	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
+	title = sanitize_raw(title, False, MAX_TITLE_LENGTH)
+
 	body = guarded_value("body", 0, MAX_BODY_LENGTH)
+	body = sanitize_raw(body, True, MAX_BODY_LENGTH)
 
 	if title != p.title:
 		p.title = title
@@ -558,9 +561,15 @@ def submit_post(v, sub=None):
 		SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
 		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body), 400
 
+	if v.is_suspended: return error("You can't perform this action while banned.")
+
 	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
+	title = sanitize_raw(title, False, MAX_TITLE_LENGTH)
+
 	url = guarded_value("url", 0, MAX_URL_LENGTH)
+	
 	body = guarded_value("body", 0, MAX_BODY_LENGTH)
+	body = sanitize_raw(body, True, MAX_BODY_LENGTH)
 
 	sub = request.values.get("sub")
 	if sub: sub = sub.replace('/h/','').replace('s/','')
@@ -572,8 +581,6 @@ def submit_post(v, sub=None):
 		sub = sub[0]
 		if v.exiled_from(sub): return error(f"You're exiled from /h/{sub}")
 	else: sub = None
-
-	if v.is_suspended: return error("You can't perform this action while banned.")
 	
 	title_html = filter_emojis_only(title, graceful=True)
 
