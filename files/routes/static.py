@@ -110,15 +110,13 @@ def chart():
 
 
 @app.get("/weekly_chart")
-@auth_desired
-def weekly_chart(v):
+def weekly_chart():
 	file = cached_chart(kind="weekly", site=SITE)
 	f = send_file(file)
 	return f
 
 @app.get("/daily_chart")
-@auth_desired
-def daily_chart(v):
+def daily_chart():
 	file = cached_chart(kind="daily", site=SITE)
 	f = send_file(file)
 	return f
