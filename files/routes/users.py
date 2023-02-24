@@ -516,8 +516,7 @@ def unsubscribe(v, post_id):
 	return {"message": "Post unsubscribed!"}
 
 @app.get("/report_bugs")
-@auth_required
-def reportbugs(v):
+def reportbugs():
 	return redirect(f'/post/{BUG_THREAD}')
 
 @app.post("/@<username>/message")
@@ -714,15 +713,13 @@ def api_is_available(name):
 	else:
 		return {name: True}
 
-@app.get("/id/<id>")
-@auth_desired
-def user_id(v, id):
+@app.get("/id/<int:id>")
+def user_id(id:int):
 	user = get_account(id)
 	return redirect(user.url)
 		
 @app.get("/u/<username>")
-@auth_desired
-def redditor_moment_redirect(v, username):
+def redditor_moment_redirect(username:str):
 	return redirect(f"/@{username}")
 
 @app.get("/@<username>/followers")
@@ -1009,8 +1006,7 @@ def user_profile_uid(v, id):
 
 @app.get("/@<username>/pic")
 @limiter.exempt
-@auth_required
-def user_profile_name(v, username):
+def user_profile_name(username:str):
 
 	name = f"/@{username}/pic"
 	path = cache.get(name)

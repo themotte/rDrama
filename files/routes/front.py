@@ -363,9 +363,7 @@ def changeloglist(v=None, sort="new", page=1, t="all", site=None):
 
 
 @app.get("/random_post")
-@auth_desired
-def random_post(v):
-
+def random_post():
 	p = g.db.query(Submission.id).filter(Submission.deleted_utc == 0, Submission.is_banned == False, Submission.private == False).order_by(func.random()).first()
 
 	if p: p = p[0]
@@ -375,8 +373,7 @@ def random_post(v):
 
 
 @app.get("/random_user")
-@auth_desired
-def random_user(v):
+def random_user():
 	u = g.db.query(User.username).order_by(func.random()).first()
 	
 	if u: u = u[0]
