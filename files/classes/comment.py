@@ -1,21 +1,26 @@
-from os import environ
 import re
 import time
+from math import floor
+from os import environ
+from random import randint
+from typing import TYPE_CHECKING
 from urllib.parse import urlencode, urlparse, parse_qs
+
 from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
+
 from files.__main__ import Base, app
 from files.classes.votes import CommentVote
 from files.helpers.const import *
 from files.helpers.lazy import lazy
 from .flags import CommentFlag
-from random import randint
 from .votes import CommentVote
-from math import floor
+
+if TYPE_CHECKING:
+	from files.classes.user import User
 
 class Comment(Base):
-
 	__tablename__ = "comments"
 
 	id = Column(Integer, primary_key=True)
@@ -399,3 +404,38 @@ class Comment(Base):
 	
 	@lazy
 	def active_flags(self, v): return len(self.flags(v))
+
+	@property
+	@lazy
+	def is_moderated(self) -> bool:
+		return bool(self.is_banned or self.filter_state in ('filtered', 'removed'))
+
+	@lazy
+	def show_descendants(self, v:"User") -> bool:
+		if v.id == self.author_id: return True
+		moderated:bool = self.is_moderated and bool(v.admin_level < PERMS['POST_COMMENT_MODERATION'])
+		shadowbanned:bool = self.author.shadowbanned and bool(v.admin_level < PERMS['USER_SHADOWBAN'])
+		if not moderated and not shadowbanned: return True
+		return bool(self.descendant_count)
+
+	@lazy
+	def visibility_state(self, v:"User") -> tuple[bool, str]:
+		'''
+		Returns a tuple of whether this content is visible and a publicly 
+		visible message to accompany it. The visibility state machine is
+		a slight mess but... this should at least unify the state checks.
+		'''
+		if v.id == self.author_id:
+			return True, "This shouldn't be here, please report it!"
+		if self.is_banned and v.admin_level < PERMS['POST_COMMENT_MODERATION']:
+			return False, f'Removed by @{self.ban_reason}'
+		if self.filter_state == 'removed' and v.admin_level < PERMS['POST_COMMENT_MODERATION']:
+			return False, 'Removed'
+		if self.filter_state == 'filtered' and v.admin_level < PERMS['POST_COMMENT_MODERATION']:
+			return False, 'Filtered, please go kick a mod in the ass to fix this'
+		if self.deleted_utc or (self.author.shadowbanned and v.admin_level < PERMS['USER_SHADOWBAN']):
+			return False, 'Deleted by author'
+		if getattr(self, 'is_blocking', False):
+			return False, f'You are blocking @{self.author_name}'
+		return True, "This shouldn't be here, please report it!"
+		
