@@ -1,12 +1,13 @@
-from os import environ, listdir
 import re
 from copy import deepcopy
-from json import loads
+from os import environ
 from typing import Final
+
+from flask import request
+
 from files.__main__ import db_session
 from files.classes.sub import Sub
 from files.classes.marsey import Marsey
-from flask import request
 
 SITE = environ.get("DOMAIN", '').strip()
 SITE_ID = environ.get("SITE_ID", '').strip()
@@ -19,6 +20,7 @@ CC_TITLE = CC.title()
 
 NOTIFICATIONS_ID = 1
 AUTOJANNY_ID = 2
+MODMAIL_ID = 2
 SNAPPY_ID = 3
 LONGPOSTBOT_ID = 4
 ZOZBOT_ID = 5
@@ -33,10 +35,25 @@ BUG_THREAD = 0
 WELCOME_MSG = f"Welcome to {SITE_TITLE}! Please read [the rules](/rules) first. Then [read some of our current conversations](/) and feel free to comment or post!\n\nWe encourage people to comment even if they aren't sure they fit in; as long as your comment follows [community rules](/rules), we are happy to have posters from all backgrounds, education levels, and specialties."
 ROLES={}
 
+LEADERBOARD_LIMIT: Final[int] = 25
+
 THEMES = {"TheMotte", "dramblr", "reddit", "transparent", "win98", "dark", 
 			"light", "coffee", "tron", "4chan", "midnight"}
+SORTS_COMMON = {
+	"top": 'fa-arrow-alt-circle-up', 
+	"bottom": 'fa-arrow-alt-circle-down', 
+	"new": 'fa-sparkles', 
+	"old": 'fa-book', 
+	"controversial": 'fa-bullhorn',
+	"comments": 'fa-comments'
+}
+SORTS_POSTS = {
+	"hot": "fa-fire",
+	"bump": "fa-arrow-up"
+}
+SORTS_POSTS.update(SORTS_COMMON)
+SORTS_COMMENTS = SORTS_COMMON
 
-IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 PUSHER_ID = environ.get("PUSHER_ID", "").strip()
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 DEFAULT_COLOR = environ.get("DEFAULT_COLOR", "fff").strip()
@@ -90,6 +107,7 @@ FEATURES = {
 
 PERMS = {
 	"DEBUG_LOGIN_TO_OTHERS": 3,
+	"USER_SHADOWBAN": 2,
 }
 
 AWARDS = {}

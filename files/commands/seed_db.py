@@ -1,7 +1,11 @@
 import hashlib
 import math
+from typing import Optional
 import sqlalchemy
+from sqlalchemy.orm import scoped_session
+
 from werkzeug.security import generate_password_hash
+
 from files.__main__ import app, db_session
 from files.classes import User, Submission, Comment, Vote, CommentVote
 from files.helpers.comments import bulk_recompute_descendant_counts
@@ -19,7 +23,7 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 	COMMENT_UPVOTE_PROB   = 0.0008
 	COMMENT_DOWNVOTE_PROB = 0.0003
 
-	db = db_session()
+	db: scoped_session = db_session()
 
 	def detrand():
 		detrand.randstate = bytes(hashlib.sha256(detrand.randstate).hexdigest(), 'utf-8')
@@ -55,7 +59,7 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 			)
 
 	print(f"Creating {num_users} users")
-	users_by_id = {user_id: None for user_id in range(10, 10 + num_users)}
+	users_by_id: dict[int, Optional[User]] = {user_id: None for user_id in range(10, 10 + num_users)}
 	for user_id, user in users_by_id.items():
 		user = db.query(User).filter(User.id == user_id).first()
 		if user is None:
@@ -106,7 +110,6 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 		posts.append(post)
 
 	db.commit()
-	db.flush()
 
 	print(f"Creating {num_toplevel_comments} top-level comments")
 	comments = []
@@ -218,7 +221,6 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 				db.add(vote)
 
 	db.commit()
-	db.flush()
 
 	post_upvote_counts = dict(
 		db
@@ -265,4 +267,3 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 	bulk_recompute_descendant_counts(db=db)
 
 	db.commit()
-	db.flush()

@@ -1,4 +1,5 @@
 from files.helpers.alerts import *
+from files.helpers.media import process_image
 from files.helpers.sanitize import *
 from files.helpers.const import *
 from files.mail import *
@@ -171,21 +172,9 @@ def settings_profile_post(v):
 				file.save(name)
 				url = process_image(name)
 				bio += f"\n\n![]({url})"
-			elif file.content_type.startswith('video/'):
-				file.save("video.mp4")
-				with open("video.mp4", 'rb') as f:
-					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-					except requests.Timeout: abort(500, "Video upload timed out, please try again!")
-					try: url = req['link']
-					except:
-						error = req['error']
-						if error == 'File exceeds max duration': error += ' (60 seconds)'
-						abort(400, error)
-				if url.endswith('.'): url += 'mp4'
-				bio += f"\n\n{url}"
 			else:
-				if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, "Image/Video files only")
-				return render_template("settings_profile.html", v=v, error="Image/Video files only."), 400
+				if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, "Image files only")
+				return render_template("settings_profile.html", v=v, error="Image files only"), 400
 		
 		bio_html = sanitize(bio)
 
@@ -215,14 +204,14 @@ def settings_profile_post(v):
 
 	defaultsortingcomments = request.values.get("defaultsortingcomments")
 	if defaultsortingcomments:
-		if defaultsortingcomments in {"new", "old", "controversial", "top", "bottom"}:
+		if defaultsortingcomments in SORTS_COMMENTS:
 			v.defaultsortingcomments = defaultsortingcomments
 			updated = True
 		else: abort(400)
 
 	defaultsorting = request.values.get("defaultsorting")
 	if defaultsorting:
-		if defaultsorting in {"hot", "bump", "new", "old", "comments", "controversial", "top", "bottom"}:
+		if defaultsorting in SORTS_POSTS:
 			v.defaultsorting = defaultsorting
 			updated = True
 		else: abort(400)

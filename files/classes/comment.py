@@ -194,12 +194,9 @@ class Comment(Base):
 	@property
 	@lazy
 	def parent(self):
-
 		if not self.parent_submission: return None
-
 		if self.level == 1: return self.post
-
-		else: return g.db.query(Comment).get(self.parent_comment_id)
+		else: return g.db.get(Comment, self.parent_comment_id)
 
 	@property
 	@lazy
@@ -302,7 +299,7 @@ class Comment(Base):
 	@lazy
 	def json_core(self):
 		if self.is_banned:
-			data= {'is_banned': True,
+			data = {'is_banned': True,
 					'ban_reason': self.ban_reason,
 					'id': self.id,
 					'post': self.post.id if self.post else 0,
@@ -310,38 +307,27 @@ class Comment(Base):
 					'parent': self.parent_fullname
 					}
 		elif self.deleted_utc:
-			data= {'deleted_utc': self.deleted_utc,
+			data = {'deleted_utc': self.deleted_utc,
 					'id': self.id,
 					'post': self.post.id if self.post else 0,
 					'level': self.level,
 					'parent': self.parent_fullname
 					}
 		else:
+			data = self.json_raw
+			if self.level >= 2: data['parent_comment_id']= self.parent_comment_id
 
-			data=self.json_raw
-
-			if self.level>=2: data['parent_comment_id']= self.parent_comment_id
-
-		data['replies']=[x.json_core for x in self.replies(None)]
+		data['replies'] = [x.json_core for x in self.replies(None)]
 
 		return data
 
 	@property
 	@lazy
 	def json(self):
-	
-		data=self.json_core
-
-		if self.deleted_utc or self.is_banned:
-			return data
-
-		data["author"]='👻' if self.ghost else self.author.json_core
-		data["post"]=self.post.json_core if self.post else ''
-
-		if self.level >= 2:
-			data["parent"]=self.parent.json_core
-
-
+		data = self.json_core
+		if self.deleted_utc or self.is_banned: return data
+		data["author"] = '👻' if self.ghost else self.author.json_core
+		data["post"] = self.post.json_core if self.post else ''
 		return data
 
 	def realbody(self, v):

@@ -1,6 +1,6 @@
 from files.helpers.wrappers import *
 from files.helpers.alerts import *
-from files.helpers.images import *
+from files.helpers.media import process_image
 from files.helpers.const import *
 from files.helpers.comments import comment_on_publish
 from files.classes import *
@@ -112,7 +112,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 def api_comment(v):
 	if v.is_suspended: abort(403, "You can't perform this action while banned.")
 
-	parent_fullname = request.values.get("parent_fullname").strip()
+	parent_fullname = request.values.get("parent_fullname", "").strip()
 
 	if len(parent_fullname) < 4: abort(400)
 	id = parent_fullname[3:]
@@ -134,9 +134,9 @@ def api_comment(v):
 	sub = parent_post.sub
 	if sub and v.exiled_from(sub): abort(403, f"You're exiled from /h/{sub}")
 
-	body = request.values.get("body", "").strip()[:COMMENT_BODY_LENGTH_MAXIMUM]
-
-	if not body and not request.files.get('file'): abort(400, "You need to actually write something!")
+	body = sanitize_raw(request.values.get("body"), allow_newlines=True, length_limit=COMMENT_BODY_LENGTH_MAXIMUM)
+	if not body and not request.files.get('file'): 
+		abort(400, "You need to actually write something!")
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		files = request.files.getlist('file')[:4]
@@ -152,22 +152,7 @@ def api_comment(v):
 					body += f"\n\n![]({image})"
 				else:
 					body += f'\n\n<a href="{image}">{image}</a>'
-			elif file.content_type.startswith('video/'):
-				file.save("video.mp4")
-				with open("video.mp4", 'rb') as f:
-					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-					except requests.Timeout: abort(500, "Video upload timed out, please try again!")
-					try: url = req['link']
-					except:
-						error = req['error']
-						if error == 'File exceeds max duration': error += ' (60 seconds)'
-						abort(400, error)
-				if url.endswith('.'): url += 'mp4'
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
-					body += f"\n\n{url}"
-				else:
-					body += f'\n\n<a href="{url}">{url}</a>'
-			else: abort(400, "Image/Video files only")
+			else: abort(400, "Image files only")
 
 	body_html = sanitize(body, comment=True)
 
@@ -273,9 +258,8 @@ def api_comment(v):
 @auth_required
 def edit_comment(cid, v):
 	c = get_comment(cid, v=v)
-	if v.id != c.author_id: abort(403)
-
-	body = request.values.get("body", "").strip()[:COMMENT_BODY_LENGTH_MAXIMUM]
+	if c.author_id != v.id: abort(403)
+	body = sanitize_raw(request.values.get("body"), allow_newlines=True, length_limit=COMMENT_BODY_LENGTH_MAXIMUM)
 
 	if len(body) < 1 and not (request.files.get("file") and request.headers.get("cf-ipcountry") != "T1"):
 		abort(400, "You have to actually type something!")
@@ -326,19 +310,7 @@ def edit_comment(cid, v):
 					file.save(name)
 					url = process_image(name)
 					body += f"\n\n![]({url})"
-				elif file.content_type.startswith('video/'):
-					file.save("video.mp4")
-					with open("video.mp4", 'rb') as f:
-						try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-						except requests.Timeout: abort(500, "Video upload timed out, please try again!")
-						try: url = req['link']
-						except:
-							error = req['error']
-							if error == 'File exceeds max duration': error += ' (60 seconds)'
-							abort(400, error)
-					if url.endswith('.'): url += 'mp4'
-					body += f"\n\n{url}"
-				else: abort(400, "Image/Video files only")
+				else: abort(400, "Image files only")
 
 			body_html = sanitize(body, edit=True)
 

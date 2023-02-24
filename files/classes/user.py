@@ -1,7 +1,7 @@
 from sqlalchemy.orm import deferred, aliased
 from secrets import token_hex
 import pyotp
-from files.helpers.images import *
+from files.helpers.media import *
 from files.helpers.const import *
 from .alts import Alt
 from .saves import *
@@ -650,3 +650,9 @@ class User(Base):
 		l = [i.strip() for i in self.custom_filter_list.split('\n')] if self.custom_filter_list else []
 		l = [i for i in l if i]
 		return l
+	
+	# Permissions
+
+	@property
+	def can_see_shadowbanned(self):
+		return self.admin_level >= PERMS['USER_SHADOWBAN'] or self.shadowbanned

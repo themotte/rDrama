@@ -2,8 +2,11 @@ import qrcode
 import io
 import time
 import math
+
+from files.classes.leaderboard import SimpleLeaderboard, BadgeMarseyLeaderboard, UserBlockLeaderboard, LeaderboardMeta
 from files.classes.views import ViewerRelationship
 from files.helpers.alerts import *
+from files.helpers.media import process_image
 from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.const import *
@@ -11,69 +14,14 @@ from files.helpers.assetcache import assetcache_path
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.mail import *
 from flask import *
-from files.__main__ import app, limiter, db_session
-from pusher_push_notifications import PushNotifications
+from files.__main__ import app, limiter
 from collections import Counter
 import gevent
-from sys import stdout
 
-if PUSHER_ID != 'blahblahblah':
-	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
-
-def pusher_thread2(interests, notifbody, username):
-	beams_client.publish_to_interests(
-		interests=[interests],
-		publish_body={
-			'web': {
-				'notification': {
-					'title': f'New message from @{username}',
-					'body': notifbody,
-					'deep_link': f'{SITE_FULL}/notifications?messages=true',
-					'icon': SITE_FULL + assetcache_path(f'images/{SITE_ID}/icon.webp'),
-				}
-			},
-			'fcm': {
-				'notification': {
-					'title': f'New message from @{username}',
-					'body': notifbody,
-				},
-				'data': {
-					'url': '/notifications?messages=true',
-				}
-			}
-		},
-	)
-	stdout.flush()
-
-def leaderboard_thread():
-	global users9, users9_25, users13, users13_25
-
-	db = db_session()
-
-	votes1 = db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
-	votes2 = db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
-	votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
-	users8 = db.query(User).filter(User.id.in_(votes3.keys())).all()
-	users9 = []
-	for user in users8: users9.append((user, votes3[user.id]))
-	users9 = sorted(users9, key=lambda x: x[1], reverse=True)
-	users9_25 = users9[:25]
-
-	votes1 = db.query(Vote.user_id, func.count(Vote.user_id)).filter(Vote.vote_type==1).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
-	votes2 = db.query(CommentVote.user_id, func.count(CommentVote.user_id)).filter(CommentVote.vote_type==1).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
-	votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
-	users14 = db.query(User).filter(User.id.in_(votes3.keys())).all()
-	users13 = []
-	for user in users14:
-		users13.append((user, votes3[user.id]-user.post_count-user.comment_count))
-	users13 = sorted(users13, key=lambda x: x[1], reverse=True)
-	users13_25 = users13[:25]
-
-	db.close()
-	stdout.flush()
-
-if app.config["ENABLE_SERVICES"]:
-	gevent.spawn(leaderboard_thread())
+# warning: do not move currently. these have import-time side effects but 
+# until this is refactored to be not completely awful, there's not really
+# a better option.
+from files.helpers.services import * 
 
 @app.get("/@<username>/upvoters/<uid>/posts")
 @admin_level_required(3)
@@ -411,73 +359,26 @@ def transfer_bux(v, username):
 
 @app.get("/leaderboard")
 @admin_level_required(2)
-def leaderboard(v):
+def leaderboard(v:User):
+	users:Query = g.db.query(User)
+	if not v.can_see_shadowbanned:
+		users = users.filter(User.shadowbanned == None)
 
-	users = g.db.query(User)
+	coins = SimpleLeaderboard(v, LeaderboardMeta("Coins", "coins", "coins", "Coins", None), g.db, users, User.coins)
+	subscribers = SimpleLeaderboard(v, LeaderboardMeta("Followers", "followers", "followers", "Followers", "followers"), g.db, users, User.stored_subscriber_count)
+	posts = SimpleLeaderboard(v, LeaderboardMeta("Posts", "post count", "posts", "Posts", ""), g.db, users, User.post_count)
+	comments = SimpleLeaderboard(v, LeaderboardMeta("Comments", "comment count", "comments", "Comments", "comments"), g.db, users, User.comment_count)
+	received_awards = SimpleLeaderboard(v, LeaderboardMeta("Awards", "received awards", "awards", "Awards", None), g.db, users, User.received_award_count)
+	coins_spent = SimpleLeaderboard(v, LeaderboardMeta("Spent in shop", "coins spent in shop", "spent", "Coins", None), g.db, users, User.coins_spent)
+	truescore = SimpleLeaderboard(v, LeaderboardMeta("Truescore", "truescore", "truescore", "Truescore", None), g.db, users, User.truecoins)
+	badges = BadgeMarseyLeaderboard(v, LeaderboardMeta("Badges", "badges", "badges", "Badges", None), g.db, Badge.user_id)
+	blocks = UserBlockLeaderboard(v, LeaderboardMeta("Blocked", "most blocked", "blocked", "Blocked By", "blockers"), g.db, UserBlock.target_id)
 
-	users1 = users.order_by(User.coins.desc()).limit(25).all()
-	sq = g.db.query(User.id, func.rank().over(order_by=User.coins.desc()).label("rank")).subquery()
-	pos1 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
+	# note: lb_downvotes_received and lb_upvotes_given are global variables
+	# that are populated by leaderboard_thread() in files.helpers.services
+	leaderboards = [coins, coins_spent, truescore, subscribers, posts, comments, received_awards, badges, blocks, lb_downvotes_received, lb_upvotes_given]
 
-	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(25).all()
-	sq = g.db.query(User.id, func.rank().over(order_by=User.stored_subscriber_count.desc()).label("rank")).subquery()
-	pos2 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
-
-	users3 = users.order_by(User.post_count.desc()).limit(25).all()
-	sq = g.db.query(User.id, func.rank().over(order_by=User.post_count.desc()).label("rank")).subquery()
-	pos3 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
-
-	users4 = users.order_by(User.comment_count.desc()).limit(25).all()
-	sq = g.db.query(User.id, func.rank().over(order_by=User.comment_count.desc()).label("rank")).subquery()
-	pos4 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
-
-	users5 = users.order_by(User.received_award_count.desc()).limit(25).all()
-	sq = g.db.query(User.id, func.rank().over(order_by=User.received_award_count.desc()).label("rank")).subquery()
-	pos5 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
-
-	users6 = None
-	pos6 = None
-
-	users7 = users.order_by(User.coins_spent.desc()).limit(25).all()
-	sq = g.db.query(User.id, func.rank().over(order_by=User.coins_spent.desc()).label("rank")).subquery()
-	pos7 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
-
-	try:
-		pos9 = [x[0].id for x in users9].index(v.id)
-		pos9 = (pos9+1, users9[pos9][1])
-	except: pos9 = (len(users9)+1, 0)
-
-	users10 = users.order_by(User.truecoins.desc()).limit(25).all()
-	sq = g.db.query(User.id, func.rank().over(order_by=User.truecoins.desc()).label("rank")).subquery()
-	pos10 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
-
-	sq = g.db.query(Badge.user_id, func.count(Badge.user_id).label("count"), func.rank().over(order_by=func.count(Badge.user_id).desc()).label("rank")).group_by(Badge.user_id).subquery()
-	users11 = g.db.query(User, sq.c.count).join(sq, User.id==sq.c.user_id).order_by(sq.c.count.desc())
-	pos11 = g.db.query(User.id, sq.c.rank, sq.c.count).join(sq, User.id==sq.c.user_id).filter(User.id == v.id).one_or_none()
-	if pos11: pos11 = (pos11[1],pos11[2])
-	else: pos11 = (users11.count()+1, 0)
-	users11 = users11.limit(25).all()
-
-	if pos11[1] < 25 and v not in (x[0] for x in users11):
-		pos11 = (26, pos11[1])
-
-	users12 = None
-	pos12 = None
-
-	try:
-		pos13 = [x[0].id for x in users13].index(v.id)
-		pos13 = (pos13+1, users13[pos13][1])
-	except: pos13 = (len(users13)+1, 0)
-
-	users14 = users.order_by(User.winnings.desc()).limit(25).all()
-	sq = g.db.query(User.id, func.rank().over(order_by=User.winnings.desc()).label("rank")).subquery()
-	pos14 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
-
-	users15 = users.order_by(User.winnings).limit(25).all()
-	sq = g.db.query(User.id, func.rank().over(order_by=User.winnings).label("rank")).subquery()
-	pos15 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
-
-	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=users9_25, pos9=pos9, users10=users10, pos10=pos10, users11=users11, pos11=pos11, users12=users12, pos12=pos12, users13=users13_25, pos13=pos13, users14=users14, pos14=pos14, users15=users15, pos15=pos15)
+	return render_template("leaderboard.html", v=v, leaderboards=leaderboards)
 
 @app.get("/@<username>/css")
 def get_css(username):
@@ -515,8 +416,7 @@ def unsubscribe(v, post_id):
 	return {"message": "Post unsubscribed!"}
 
 @app.get("/report_bugs")
-@auth_required
-def reportbugs(v):
+def reportbugs():
 	return redirect(f'/post/{BUG_THREAD}')
 
 @app.post("/@<username>/message")
@@ -528,6 +428,10 @@ def message2(v, username):
 			"contact modmail if you think this decision was incorrect.")
 
 	user = get_user(username, v=v, include_blocks=True)
+
+	if user.id == MODMAIL_ID:
+		abort(403, "Please use modmail to contact the admins")
+
 	if hasattr(user, 'is_blocking') and user.is_blocking: abort(403, "You're blocking this user.")
 
 	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked:
@@ -536,7 +440,6 @@ def message2(v, username):
 	message = request.values.get("message", "").strip()[:MESSAGE_BODY_LENGTH_MAXIMUM].strip()
 
 	if not message: abort(400, "Message is empty!")
-
 	body_html = sanitize(message)
 
 	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
@@ -553,7 +456,6 @@ def message2(v, username):
 						  body_html=body_html
 						  )
 	g.db.add(c)
-
 	g.db.flush()
 
 	c.top_comment_id = c.id
@@ -588,31 +490,19 @@ def messagereply(v):
 	parent = get_comment(id, v=v)
 	user_id = parent.author.id
 
-	if parent.sentto == 2: user_id = None
+	if parent.sentto == MODMAIL_ID: user_id = None
 	elif v.id == user_id: user_id = parent.sentto
 
 	body_html = sanitize(message)
 
-	if parent.sentto == 2 and request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
+	if parent.sentto == MODMAIL_ID and request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if file.content_type.startswith('image/'):
 			name = f'/images/{time.time()}'.replace('.','') + '.webp'
 			file.save(name)
 			url = process_image(name)
 			body_html += f'<img data-bs-target="#expandImageModal" data-bs-toggle="modal" onclick="expandDesktopImage(this.src)" class="img" src="{url}" loading="lazy">'
-		elif file.content_type.startswith('video/'):
-			file.save("video.mp4")
-			with open("video.mp4", 'rb') as f:
-				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-				except requests.Timeout: abort(500, "Video upload timed out, please try again!")
-				try: url = req['link']
-				except:
-					error = req['error']
-					if error == 'File exceeds max duration': error += ' (60 seconds)'
-					abort(400, error)
-			if url.endswith('.'): url += 'mp4'
-			body_html += f"<p>{url}</p>"
-		else: abort(400, "Image/Video files only")
+		else: abort(400, "Image files only")
 
 
 	c = Comment(author_id=v.id,
@@ -664,7 +554,7 @@ def messagereply(v):
 			)
 
 
-	if c.top_comment.sentto == 2:
+	if c.top_comment.sentto == MODMAIL_ID:
 		admins = g.db.query(User).filter(User.admin_level > 2, User.id != v.id).all()
 		for admin in admins:
 			notif = Notification(comment_id=c.id, user_id=admin.id)
@@ -723,15 +613,13 @@ def api_is_available(name):
 	else:
 		return {name: True}
 
-@app.get("/id/<id>")
-@auth_desired
-def user_id(v, id):
+@app.get("/id/<int:id>")
+def user_id(id:int):
 	user = get_account(id)
 	return redirect(user.url)
 		
 @app.get("/u/<username>")
-@auth_desired
-def redditor_moment_redirect(v, username):
+def redditor_moment_redirect(username:str):
 	return redirect(f"/@{username}")
 
 @app.get("/@<username>/followers")
@@ -1018,8 +906,7 @@ def user_profile_uid(v, id):
 
 @app.get("/@<username>/pic")
 @limiter.exempt
-@auth_required
-def user_profile_name(v, username):
+def user_profile_name(username:str):
 
 	name = f"/@{username}/pic"
 	path = cache.get(name)

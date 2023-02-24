@@ -51,7 +51,7 @@ def notifications(v):
 	posts = request.values.get('posts')
 	reddit = request.values.get('reddit')
 	if modmail and v.admin_level > 1:
-		comments = g.db.query(Comment).filter(Comment.sentto==2).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
+		comments = g.db.query(Comment).filter(Comment.sentto == MODMAIL_ID).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
 		listing = comments[:25]
 	elif messages:
@@ -363,9 +363,7 @@ def changeloglist(v=None, sort="new", page=1, t="all", site=None):
 
 
 @app.get("/random_post")
-@auth_desired
-def random_post(v):
-
+def random_post():
 	p = g.db.query(Submission.id).filter(Submission.deleted_utc == 0, Submission.is_banned == False, Submission.private == False).order_by(func.random()).first()
 
 	if p: p = p[0]
@@ -375,8 +373,7 @@ def random_post(v):
 
 
 @app.get("/random_user")
-@auth_desired
-def random_user(v):
+def random_user():
 	u = g.db.query(User.username).order_by(func.random()).first()
 	
 	if u: u = u[0]
@@ -406,7 +403,7 @@ def all_comments(v):
 		return q
 
 	comments, _ = get_comment_trees_eager(comment_tree_filter, sort=sort, v=v)
-	comments = sort_comment_results(comments, sort=sort)
+	comments = sort_comment_results(comments, sort=sort, pins=False)
 
 	if request.headers.get("Authorization"):
 		return {"data": [x.json for x in comments]}
