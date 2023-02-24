@@ -20,7 +20,7 @@
 			<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
 			<link rel="stylesheet" href="{{ ('css/'~v.theme~'.css') | asset }}">
 			{% if v.css %}
-				<link rel="stylesheet" href="/@{{v.username}}/css">
+				<style>{{v.css | safe}}</style>
 			{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
