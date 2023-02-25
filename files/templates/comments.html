@@ -409,7 +409,6 @@
 {% endif %}
 {% endif %}
 
-{% if c.post %}
 {% if c.parent_submission and (c.author_id==v.id or v.admin_level > 1) %}
 <button id="unmark-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.over_18 %}d-md-block{% endif %} text-danger" onclick="post_toast3(this,'/toggle_comment_nsfw/{{c.id}}','mark-{{c.id}}','unmark-{{c.id}}')"><i class="fas fa-eye-evil text-danger fa-fw"></i>Unmark +18</button>
 <button id="mark-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.over_18 %}d-md-block{% endif %} text-danger" onclick="post_toast3(this,'/toggle_comment_nsfw/{{c.id}}','mark-{{c.id}}','unmark-{{c.id}}')"><i class="fas fa-eye-evil text-danger fa-fw"></i>Mark +18</button>
