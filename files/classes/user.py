@@ -1,6 +1,7 @@
 from sqlalchemy.orm import deferred, aliased
 from secrets import token_hex
 import pyotp
+from files.classes.base import Base
 from files.helpers.media import *
 from files.helpers.const import *
 from .alts import Alt

@@ -7,7 +7,8 @@ from urllib.parse import urlparse
 from flask import render_template
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
-from files.__main__ import Base, app
+from files.classes.base import Base
+from files.__main__ import app
 from files.helpers.const import *
 from files.helpers.content import moderated_body
 from files.helpers.lazy import lazy
