@@ -145,11 +145,7 @@
 </div>
 {% endif %}
 
-{% if not standalone and c.parent_comment and c.parent_comment.sentto %}
-	{% set isreply = True %}
-{% else %}
-	{% set isreply = False %}
-{% endif %}
+{% set isreply = not standalone and c.parent_comment and c.parent_comment.sentto %}
 
 <div id="comment-{{c.id}}" class="anchor comment {% if standalone and level==1 %} mt-0{% endif %} {% if c.collapse_for_user(v,request.path) %}collapsed{% endif %}">
 	{% if not isreply %}
@@ -159,7 +155,6 @@
 		</div>
 	{% endif %}
 	<div class="comment-user-info">
-
 		{% if c.ghost %}
 			👻
 		{% else %}
@@ -211,9 +206,8 @@
 		<span class="time-edited" id="time-edit-{{c.id}}" onmouseover="timestamp('time-edit-{{c.id}}','{{c.edited_utc}}')"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
 		{% endif %}
 	</div>
-
 	<div class="comment-body">
-		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if c.unread %}unread{% endif %} comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
+		<div id="{% if comment_info and comment_info.id == c.id %}context{% else %}comment-{{c.id}}-only{% endif %}" class="{% if c.unread %}unread{% endif %} comment-{{c.id}}-only comment-anchor{% if comment_info and comment_info.id == c.id %} context{% endif %}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
 			{% if v and c.filter_state == 'reported' and v.can_manage_reports() %}
 			<div id="flaggers-{{c.id}}" class="flaggers d-none">
 				<strong><i class="far fa-fw fa-flag"></i> Reports:</strong>
@@ -295,8 +289,7 @@
 										{% if voted==1 %}
 											<span class="mr-2 arrow-up comment-{{c.id}}-up active"></span>
 										{% endif %}
-								
-										<span  class="comment-mobile-score-{{c.id}} score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+										<span class="comment-mobile-score-{{c.id}} score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 								
 										{% if voted==-1 %}
 											<span class="ml-2 my-0 arrow-down comment-{{c.id}}-down active"></span>
@@ -304,15 +297,10 @@
 									</li>
 								{% elif v %}
 									<li id="voting-{{c.id}}-mobile" class="voting list-inline-item d-md-none">
-								
-										<span  tabindex="0" role="button" onclick="vote('comment-mobile', '{{c.id}}', '1')" class="comment-mobile-{{c.id}}-up mx-0 pr-1 arrow-up upvote-button comment-{{c.id}}-up {% if voted==1 %}active{% endif %}">
-										</span>
-								
-										<span  class="comment-mobile-score-{{c.id}} score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
-								
+										<span tabindex="0" role="button" onclick="vote('comment-mobile', '{{c.id}}', '1')" class="comment-mobile-{{c.id}}-up mx-0 pr-1 arrow-up upvote-button comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></span>
+										<span class="comment-mobile-score-{{c.id}} score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 										<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('comment-mobile', '{{c.id}}', '-1')" class="comment-mobile-{{c.id}}-down mx-0 pl-1 my-0 arrow-down downvote-button comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}">
 										</span>
-								
 									</li>
 								{% else %}
 									<li id="voting-{{c.id}}-mobile" class="voting list-inline-item d-md-none">
@@ -364,20 +352,15 @@
 
 						{% if v %}
 							<button class="btn caction py-0 nobackground px-1 text-muted" role="button" onclick="openReplyBox('reply-to-{{c.id}}')"><i class="fas fa-reply" aria-hidden="true"></i>Reply</button>
-
 							<button class="btn caction py-0 nobackground px-1 text-muted" data-bs-toggle="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author_name}}',)"><i class="fas fa-flag fa-fw"></i>Report</button>
-
 							<button id="unsave-{{c.id}}" class="btn caction py-0 nobackground px-1 {% if c.id in v.saved_comment_idlist() %}d-md-inline-block{% endif %} text-muted d-none" role="button" onclick="post_toast3(this,'/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Unsave</button>
-							
 							<button id="save-{{c.id}}" class="btn caction py-0 nobackground px-1 {% if c.id not in v.saved_comment_idlist() %}d-md-inline-block{% endif %} text-muted d-none" role="button" onclick="post_toast3(this,'/save_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Save</button>
 						{% endif %}
 
 						{% if c.parent_submission %}
 							{% if v and c.author_id == v.id %}
 								<button class="btn caction py-0 nobackground px-1 text-muted" onclick="toggleEdit('{{c.id}}')"><i class="fas fa-edit fa-fw"></i>Edit</button>
-								
 								<button id="undelete-{{c.id}}" class="btn caction py-0 nobackground px-1 text-muted {% if not c.deleted_utc %}d-none{% endif %}" onclick="post_toast2(this,'/undelete/comment/{{c.id}}','delete-{{c.id}}','undelete-{{c.id}}');document.getElementById('comment-{{c.id}}').classList.remove('deleted')"><i class="fas fa-trash-alt fa-fw"></i>Undelete</button>
-
 								<button id="delete-{{c.id}}" class="btn caction py-0 nobackground px-1 text-muted {% if c.deleted_utc %}d-none{% endif %}" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Delete</button>
 							{% elif v and c.body %}
 								<button class="btn caction py-0 nobackground px-1 text-muted" onclick="expandMarkdown(this,'{{c.id}}')"><i class="fas text-expand-icon-{{c.id}} fa-expand-alt"></i><span>View source</span></button>
@@ -399,22 +382,23 @@
 
 {% if v.id != c.author_id and not c.ghost %}
 	<a id="unblock-{{c.id}}" class="dropdown-item text-success list-inline-item {% if not c.is_blocking %}d-none{% endif %}" role="button" onclick="post_toast2(this,'/settings/unblock?username={{c.author_name}}','block-{{c.id}}','unblock-{{c.id}}')"><i class="fas fa-eye text-success"></i>Unblock user</a>
-
 	<a id="block-{{c.id}}" class="dropdown-item list-inline-item text-danger {% if c.is_blocking %}d-none{% endif %}" role="button" onclick="post_toast2(this,'/settings/block?username={{c.author_name}}','block-{{c.id}}','unblock-{{c.id}}')"><i class="fas fa-eye-slash text-danger"></i>Block user</a>
+{% endif %}
 {% endif %}
 
 {% if c.post %}
-{% set sticky_url = "" %}
+	{% set sticky_url = "" %}
 
-{% if v.admin_level > 1 %}
-	{% set sticky_url = "sticky_comment" %}
-{% elif v.id == c.post.author_id %}
-	{% set sticky_url = "pin_comment" %}
-{% endif %}
+	{% if v.admin_level > 1 %}
+		{% set sticky_url = "sticky_comment" %}
+	{% elif v.id == c.post.author_id %}
+		{% set sticky_url = "pin_comment" %}
+	{% endif %}
 
-{% if sticky_url != "" %}
-	<button id="unpin-{{c.id}}" class="dropdown-item list-inline-item {% if c.is_pinned %}d-md-block{% endif %} text-muted d-none text-info"  data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3(this,'/un{{sticky_url}}/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Unpin</button>
-	<button id="pin-{{c.id}}" class="dropdown-item list-inline-item {% if not c.is_pinned %}d-md-block{% endif %} text-muted d-none text-info" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3(this,'/{{sticky_url}}/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Pin</button>
+	{%- if sticky_url != "" -%}
+		<button id="unpin-{{c.id}}" class="dropdown-item list-inline-item {% if c.is_pinned %}d-md-block{% endif %} text-muted d-none text-info"  data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3(this,'/un{{sticky_url}}/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Unpin</button>
+		<button id="pin-{{c.id}}" class="dropdown-item list-inline-item {% if not c.is_pinned %}d-md-block{% endif %} text-muted d-none text-info" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3(this,'/{{sticky_url}}/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Pin</button>
+	{%- endif -%}
 {% endif %}
 
 {% if v.admin_level > 1 %}
@@ -583,6 +567,7 @@
 							{% if c.post and v.id == c.post.author_id %}
 								<a id="pin2-{{c.id}}" class="list-group-item {% if c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2(this,'/pin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info mr-2"></i>Pin</a>
 								<a id="unpin2-{{c.id}}" class="list-group-item {% if not c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2(this,'/unpin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info mr-2"></i>Unpin</a>
+							{% endif %}
 						{% endif %}
 					{% endif %}
 				</ul>
