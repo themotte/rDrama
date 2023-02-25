@@ -872,11 +872,11 @@ def remove_follow(username, v):
 from urllib.parse import urlparse
 import re
 
-@app.get("/pp/<id>")
-@app.get("/uid/<id>/pic")
-@app.get("/uid/<id>/pic/profile")
+@app.get("/pp/<int:id>")
+@app.get("/uid/<int:id>/pic")
+@app.get("/uid/<int:id>/pic/profile")
 @limiter.exempt
-def user_profile_uid(v, id):
+def user_profile_uid(id:int):
 	try: id = int(id)
 	except:
 		try: id = int(id, 36)
