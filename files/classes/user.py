@@ -17,7 +17,7 @@ from .mod_logs import *
 from .mod import *
 from .exiles import *
 from .sub_block import *
-from files.__main__ import app, Base, cache
+from files.__main__ import app, cache
 from files.helpers.security import *
 from files.helpers.assetcache import assetcache_path
 from files.helpers.contentsorting import apply_time_filter, sort_objects
