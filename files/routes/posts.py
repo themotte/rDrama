@@ -40,7 +40,7 @@ titleheaders = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWe
 
 MAX_TITLE_LENGTH = 500
 MAX_URL_LENGTH = 2048
-MAX_BODY_LENGTH = 20000
+MAX_BODY_LENGTH = SUBMISSION_BODY_LENGTH_MAXIMUM
 
 
 def guarded_value(val, min_len, max_len) -> str:
@@ -303,7 +303,10 @@ def edit_post(pid, v):
 	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
 
 	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
+	title = sanitize_raw(title, allow_newlines=False, length_limit=MAX_TITLE_LENGTH)
+
 	body = guarded_value("body", 0, MAX_BODY_LENGTH)
+	body = sanitize_raw(body, allow_newlines=True, length_limit=MAX_BODY_LENGTH)
 
 	if title != p.title:
 		p.title = title
@@ -326,9 +329,6 @@ def edit_post(pid, v):
 	body_html = sanitize(body, edit=True)
 
 	p.body = body
-
-	if len(body_html) > 40000: abort(400, "Submission body_html too long! (max 40k characters)")
-
 	p.body_html = body_html
 
 	if not p.private and not p.ghost:
@@ -558,9 +558,15 @@ def submit_post(v, sub=None):
 		SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
 		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body), 400
 
+	if v.is_suspended: return error("You can't perform this action while banned.")
+
 	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
+	title = sanitize_raw(title, allow_newlines=False, length_limit=MAX_TITLE_LENGTH)
+
 	url = guarded_value("url", 0, MAX_URL_LENGTH)
+	
 	body = guarded_value("body", 0, MAX_BODY_LENGTH)
+	body = sanitize_raw(body, allow_newlines=True, length_limit=MAX_BODY_LENGTH)
 
 	sub = request.values.get("sub")
 	if sub: sub = sub.replace('/h/','').replace('s/','')
@@ -572,8 +578,6 @@ def submit_post(v, sub=None):
 		sub = sub[0]
 		if v.exiled_from(sub): return error(f"You're exiled from /h/{sub}")
 	else: sub = None
-
-	if v.is_suspended: return error("You can't perform this action while banned.")
 	
 	title_html = filter_emojis_only(title, graceful=True)
 
@@ -729,8 +733,6 @@ def submit_post(v, sub=None):
 				return error("Image files only")
 
 	body_html = sanitize(body)
-
-	if len(body_html) > 40000: return error("Submission body_html too long! (max 40k characters)")
 
 	club = bool(request.values.get("club",""))
 	

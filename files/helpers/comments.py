@@ -141,13 +141,13 @@ def bulk_recompute_descendant_counts(predicate = None, db=None):
 					True
 				)
 				.group_by(parent_comments.corresponding_column(Comment.id))
-				.with_only_columns([
+				.with_only_columns(
 					parent_comments.corresponding_column(Comment.id),
 					func.coalesce(
 						func.sum(child_comments.corresponding_column(Comment.descendant_count) + text(str(1))),
 						text(str(0))
 					).label('descendant_count')
-				])
+				)
 				.subquery(name='descendant_counts')
 			),
 			adapt_on_names=True

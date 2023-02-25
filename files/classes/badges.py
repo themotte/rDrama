@@ -19,7 +19,7 @@ class BadgeDef(Base):
 	description = Column(String)
 
 	def __repr__(self):
-		return f"<BadgeDef(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 class Badge(Base):
 
@@ -38,7 +38,7 @@ class Badge(Base):
 		lazy="joined", innerjoin=True, viewonly=True)
 
 	def __repr__(self):
-		return f"<Badge(user_id={self.user_id}, badge_id={self.badge_id})>"
+		return f"<{self.__class__.__name__}(user_id={self.user_id}, badge_id={self.badge_id})>"
 
 	@property
 	@lazy

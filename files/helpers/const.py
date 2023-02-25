@@ -1,11 +1,13 @@
-from os import environ, listdir
 import re
 from copy import deepcopy
-from json import loads
+from os import environ
+from typing import Final
+
+from flask import request
+
 from files.__main__ import db_session
 from files.classes.sub import Sub
 from files.classes.marsey import Marsey
-from flask import request
 
 SITE = environ.get("DOMAIN", '').strip()
 SITE_ID = environ.get("SITE_ID", '').strip()
@@ -33,6 +35,8 @@ BUG_THREAD = 0
 WELCOME_MSG = f"Welcome to {SITE_TITLE}! Please read [the rules](/rules) first. Then [read some of our current conversations](/) and feel free to comment or post!\n\nWe encourage people to comment even if they aren't sure they fit in; as long as your comment follows [community rules](/rules), we are happy to have posters from all backgrounds, education levels, and specialties."
 ROLES={}
 
+LEADERBOARD_LIMIT: Final[int] = 25
+
 THEMES = ["TheMotte", "dramblr", "reddit", "win98", "dark", 
 			"light", "coffee", "tron", "4chan", "midnight"]
 SORTS_COMMON = {
@@ -54,6 +58,11 @@ PUSHER_ID = environ.get("PUSHER_ID", "").strip()
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 DEFAULT_COLOR = environ.get("DEFAULT_COLOR", "fff").strip()
 COLORS = {'ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58','8cdbe6', DEFAULT_COLOR}
+
+SUBMISSION_BODY_LENGTH_MAXIMUM: Final[int] = 20000
+COMMENT_BODY_LENGTH_MAXIMUM: Final[int] = 10000
+MESSAGE_BODY_LENGTH_MAXIMUM: Final[int] = 10000
+CSS_LENGTH_MAXIMUM: Final[int] = 4000
 
 ERROR_MESSAGES = {
 	400: "That request was bad and you should feel bad",
@@ -99,6 +108,7 @@ FEATURES = {
 
 PERMS = {
 	"DEBUG_LOGIN_TO_OTHERS": 3,
+	"USER_SHADOWBAN": 2,
 }
 
 AWARDS = {}

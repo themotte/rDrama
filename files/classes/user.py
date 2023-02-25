@@ -56,8 +56,8 @@ class User(Base):
 	verifiedcolor = Column(String)
 	winnings = Column(Integer, default=0, nullable=False)
 	email = deferred(Column(String))
-	css = deferred(Column(String))
-	profilecss = deferred(Column(String))
+	css = deferred(Column(String(CSS_LENGTH_MAXIMUM)))
+	profilecss = deferred(Column(String(CSS_LENGTH_MAXIMUM)))
 	passhash = deferred(Column(String, nullable=False))
 	post_count = Column(Integer, default=0, nullable=False)
 	comment_count = Column(Integer, default=0, nullable=False)
@@ -346,7 +346,7 @@ class User(Base):
 		return f"/@{self.username}"
 
 	def __repr__(self):
-		return f"<User(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
 	@lazy
@@ -649,3 +649,9 @@ class User(Base):
 		l = [i.strip() for i in self.custom_filter_list.split('\n')] if self.custom_filter_list else []
 		l = [i for i in l if i]
 		return l
+	
+	# Permissions
+
+	@property
+	def can_see_shadowbanned(self):
+		return self.admin_level >= PERMS['USER_SHADOWBAN'] or self.shadowbanned
