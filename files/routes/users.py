@@ -877,11 +877,6 @@ import re
 @app.get("/uid/<int:id>/pic/profile")
 @limiter.exempt
 def user_profile_uid(id:int):
-	try: id = int(id)
-	except:
-		try: id = int(id, 36)
-		except: abort(404)
-
 	name = f"/pp/{id}"
 	path = cache.get(name)
 	tout = 5 * 60 # 5 min
