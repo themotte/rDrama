@@ -55,34 +55,6 @@ def buy(v, award):
 		if v.coins < price: abort(400, "Not enough coins.")
 		v.coins -= price
 		v.coins_spent += price
-		if v.coins_spent >= 1000000 and not v.has_badge(73):
-			new_badge = Badge(badge_id=73, user_id=v.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-		elif v.coins_spent >= 500000 and not v.has_badge(72):
-			new_badge = Badge(badge_id=72, user_id=v.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-		elif v.coins_spent >= 250000 and not v.has_badge(71):
-			
-			new_badge = Badge(badge_id=71, user_id=v.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-		elif v.coins_spent >= 100000 and not v.has_badge(70):
-			new_badge = Badge(badge_id=70, user_id=v.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-		elif v.coins_spent >= 10000 and not v.has_badge(69):
-			new_badge = Badge(badge_id=69, user_id=v.id)
-			g.db.add(new_badge)
-			g.db.flush()
-			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-		g.db.add(v)
-
 
 	award_object = AwardRelationship(user_id=v.id, kind=award)
 	g.db.add(award_object)

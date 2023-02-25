@@ -67,8 +67,6 @@ class User(Base):
 	created_utc = Column(Integer, nullable=False)
 	admin_level = Column(Integer, default=0, nullable=False)
 	coins_spent = Column(Integer, default=0, nullable=False)
-	lootboxes_bought = Column(Integer, default=0, nullable=False)
-	agendaposter = Column(Integer, default=0, nullable=False)
 	changelogsub = Column(Boolean, default=False, nullable=False)
 	is_activated = Column(Boolean, default=False, nullable=False)
 	shadowbanned = Column(String)
