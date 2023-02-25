@@ -105,6 +105,8 @@
 	{% endif %}
 </div>
 </div>
+
+
 {% else %}
 
 {% if v %}
@@ -163,7 +165,8 @@
 		{% if c.ghost %}
 			👻
 		{% else %}
-			{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if c.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{c.author.verified}}"></i>{% endif %}
+			{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if c.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{c.author.verified}}"></i>
+			{% endif %}
 			{% if not should_hide_username %}
 				<a href="/@{{c.author_name}}" class="user-name" onclick='popclick({{c.author.json_popover(v) | tojson}}); return false' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-20 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
 			{% endif %}
@@ -213,7 +216,10 @@
 	</div>
 
 	<div class="comment-body">
+
 		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if c.unread %}unread{% endif %} comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
+
+			
 			{% if v and c.filter_state == 'reported' and v.can_manage_reports() %}
 			<div id="flaggers-{{c.id}}" class="flaggers d-none">
 				<strong><i class="far fa-fw fa-flag"></i> Reports:</strong>
@@ -237,6 +243,7 @@
 				{{c.realbody(v) | safe}}
 			</div>
 			{% if c.parent_submission %}
+
 				{% if v and v.id==c.author_id %}
 				<div id="comment-edit-{{c.id}}" class="d-none comment-write collapsed child">
 					<form id="comment-edit-form-{{c.id}}" action="/edit_comment/{{c.id}}" method="post" enctype="multipart/form-data"> 
@@ -269,6 +276,9 @@
 				</div>
 				{% endif %}
 				<div id="comment-{{c.id}}-actions" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+
+
+
 					<div class="d-md-none mt-2">
 						<div class="post-actions">
 							<ul class="list-inline text-right d-flex">
@@ -415,6 +425,7 @@
 {% if sticky_url != "" %}
 	<button id="unpin-{{c.id}}" class="dropdown-item list-inline-item {% if c.is_pinned %}d-md-block{% endif %} text-muted d-none text-info"  data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3(this,'/un{{sticky_url}}/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Unpin</button>
 	<button id="pin-{{c.id}}" class="dropdown-item list-inline-item {% if not c.is_pinned %}d-md-block{% endif %} text-muted d-none text-info" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3(this,'/{{sticky_url}}/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Pin</button>
+{% endif %}
 {% endif %}
 
 {% if v.admin_level > 1 %}
