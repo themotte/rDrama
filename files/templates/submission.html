@@ -283,7 +283,7 @@
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<input type="hidden" name="current_page" value="{{request.path}}">
 									<input type="text" autocomplete="off" maxlength="500" name="title" class="comment-box form-control rounded" required placeholder="title" value="{{p.title}}"\>
-									<textarea autocomplete="off" name="body" maxlength="20000" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10" data-id="{{p.id}}">{{p.body}}</textarea> 
+									<textarea autocomplete="off" name="body" maxlength="{{SUBMISSION_BODY_LENGTH_MAXIMUM}}" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10" data-id="{{p.id}}">{{p.body}}</textarea> 
 									
 									<div class="text-small font-weight-bold mt-1" id="charcount-post-edit" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
@@ -442,7 +442,7 @@
 				<input type="hidden" name="formkey" value="{{v.formkey}}">
 				<input type="hidden" name="parent_fullname" value="t2_{{p.id}}">
 				<input autocomplete="off" id="reply-form-submission-{{p.fullname}}" type="hidden" name="submission" value="{{p.id}}">
-				<textarea required autocomplete="off" minlength="1" maxlength="10000" oninput="markdown('reply-form-body-{{p.fullname}}', 'form-preview-{{p.id}}');charLimit('reply-form-body-{{p.fullname}}','charcount-reply')" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
+				<textarea required autocomplete="off" minlength="1" maxlength="{{COMMENT_BODY_LENGTH_MAXIMUM}}" oninput="markdown('reply-form-body-{{p.fullname}}', 'form-preview-{{p.id}}');charLimit('reply-form-body-{{p.fullname}}','charcount-reply')" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
 
 				<div class="text-small font-weight-bold mt-1" id="charcount-reply" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
@@ -465,7 +465,7 @@
 		</div>
 	{% else %}
 		<div class="comment-write mb-3">
-			<textarea autocomplete="off" maxlength="10000" class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
+			<textarea autocomplete="off" maxlength="{{COMMENT_BODY_LENGTH_MAXIMUM}}" class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
 		</div>
 	
 		<div class="card border-0 mt-4">
