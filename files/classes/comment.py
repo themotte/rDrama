@@ -77,7 +77,7 @@ class Comment(Base):
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
-		return f"<Comment(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
 	@lazy

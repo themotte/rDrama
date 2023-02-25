@@ -42,7 +42,7 @@ class UserNote(Base):
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
-		return f"<UserNote(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	def json(self):
 		reference = None
