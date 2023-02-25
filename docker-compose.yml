@@ -1,14 +1,13 @@
 version: '2.3'
 
 services:
-  files:
-    container_name: "themotte"
+  site:
     build:
       context: .
       target: dev
     volumes:
       - "./:/service"
-    env_file: env
+    env_file: bootstrap/site_env
     environment:
       - DATABASE_URL=postgresql://postgres@postgres:5432
       - REDIS_URL=redis://redis
@@ -23,19 +22,17 @@ services:
       - postgres
 
   redis:
-    container_name: "themotte_redis"
     image: redis
     ports:
       - "6379:6379"
 
   postgres:
-    container_name: "themotte_postgres"
     image: postgres:12.3
     # command: ["postgres", "-c", "log_statement=all"]
     # uncomment this if u wanna output all SQL queries to the console
     volumes:
-      - "./schema.sql:/docker-entrypoint-initdb.d/00-schema.sql"
-      - "./seed-db.sql:/docker-entrypoint-initdb.d/10-seed-db.sql"
+      - "./bootstrap/original-schema.sql:/docker-entrypoint-initdb.d/00-schema.sql"
+      - "./bootstrap/original-seed-db.sql:/docker-entrypoint-initdb.d/10-seed-db.sql"
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:

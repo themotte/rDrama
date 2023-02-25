@@ -1,15 +1,15 @@
 from pusher_push_notifications import PushNotifications
-from files.classes import Comment, Notification, Subscription
+from files.classes import Comment, Notification, Subscription, User
 from files.helpers.alerts import NOTIFY_USERS
 from files.helpers.const import PUSHER_ID, PUSHER_KEY, SITE_ID, SITE_FULL
 from files.helpers.assetcache import assetcache_path
 from flask import g
 from sqlalchemy import select, update
 from sqlalchemy.sql.expression import func, text, alias
-from sqlalchemy.orm import aliased
+from sqlalchemy.orm import Query, aliased
 from sys import stdout
 import gevent
-import typing
+from typing import Optional
 
 if PUSHER_ID != 'blahblahblah':
 	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
@@ -141,13 +141,13 @@ def bulk_recompute_descendant_counts(predicate = None, db=None):
 					True
 				)
 				.group_by(parent_comments.corresponding_column(Comment.id))
-				.with_only_columns([
+				.with_only_columns(
 					parent_comments.corresponding_column(Comment.id),
 					func.coalesce(
 						func.sum(child_comments.corresponding_column(Comment.descendant_count) + text(str(1))),
 						text(str(0))
 					).label('descendant_count')
-				])
+				)
 				.subquery(name='descendant_counts')
 			),
 			adapt_on_names=True
@@ -217,3 +217,16 @@ def comment_on_unpublish(comment:Comment):
 	reflect the comments users will actually see.
 	"""
 	update_stateful_counters(comment, -1)
+
+
+def comment_filter_moderated(q: Query, v: Optional[User]) -> Query:
+	if not (v and v.shadowbanned) and not (v and v.admin_level > 2):
+		q = q.join(User, User.id == Comment.author_id) \
+		     .filter(User.shadowbanned == None)
+	if not v or v.admin_level < 2:
+		q = q.filter(
+			((Comment.filter_state != 'filtered')
+				& (Comment.filter_state != 'removed'))
+			| (Comment.author_id == ((v and v.id) or 0))
+		)
+	return q

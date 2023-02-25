@@ -1,26 +1,29 @@
 import hashlib
 import math
+from typing import Optional
 import sqlalchemy
-from werkzeug.security import generate_password_hash
-from files.__main__ import app
-from files.classes import User, Submission, Comment, Vote, CommentVote
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import scoped_session
 
-db = SQLAlchemy(app)
+from werkzeug.security import generate_password_hash
+
+from files.__main__ import app, db_session
+from files.classes import User, Submission, Comment, Vote, CommentVote
+from files.helpers.comments import bulk_recompute_descendant_counts
 
 @app.cli.command('seed_db')
 def seed_db():
+	seed_db_worker()
+
+def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000, num_reply_comments = 400):
 	"""
 	Seed the database with some example data.
 	"""
-	NUM_USERS             = 900;
-	NUM_POSTS             = 40;
-	NUM_TOPLEVEL_COMMENTS = 1000
-	NUM_REPLY_COMMENTS    = 4000
 	POST_UPVOTE_PROB      = 0.020
 	POST_DOWNVOTE_PROB    = 0.005
 	COMMENT_UPVOTE_PROB   = 0.0008
 	COMMENT_DOWNVOTE_PROB = 0.0003
+
+	db: scoped_session = db_session()
 
 	def detrand():
 		detrand.randstate = bytes(hashlib.sha256(detrand.randstate).hexdigest(), 'utf-8')
@@ -28,11 +31,11 @@ def seed_db():
 
 	detrand.randstate = bytes(hashlib.sha256(b'init').hexdigest(), 'utf-8')
 
-	users = db.session.query(User).where(User.id >= 10).all()
-	posts = db.session.query(Submission).all()
-	comments = db.session.query(Comment).all()
+	users = db.query(User).where(User.id >= 10).all()
+	posts = db.query(Submission).all()
+	comments = db.query(Comment).all()
 
-	admin = db.session.query(User).filter(User.id == 9).first()
+	admin = db.query(User).filter(User.id == 9).first()
 	if admin is None:
 		admin = User(**{
 			"username": "admin",
@@ -43,7 +46,7 @@ def seed_db():
 			"ban_evade":0,
 			"profileurl":"/e/feather.webp"
 		})
-		db.session.add(admin)
+		db.add(admin)
 
 	class UserWithFastPasswordHash(User):
 		def hash_password(self, password):
@@ -55,10 +58,10 @@ def seed_db():
 					salt_length=8
 			)
 
-	print(f"Creating {NUM_USERS} users")
-	users_by_id = {user_id: None for user_id in range(10, 10 + NUM_USERS)}
+	print(f"Creating {num_users} users")
+	users_by_id: dict[int, Optional[User]] = {user_id: None for user_id in range(10, 10 + num_users)}
 	for user_id, user in users_by_id.items():
-		user = db.session.query(User).filter(User.id == user_id).first()
+		user = db.query(User).filter(User.id == user_id).first()
 		if user is None:
 			user = UserWithFastPasswordHash(**{
 				"username": f"user{user_id:03d}",
@@ -69,22 +72,22 @@ def seed_db():
 				"ban_evade":0,
 				"profileurl":"/e/feather.webp"
 			})
-			db.session.add(user)
+			db.add(user)
 		users_by_id[user_id] = user
 
-	db.session.commit()
-	db.session.flush()
+	db.commit()
+	db.flush()
 
 	users = list(users_by_id.values())
 
-	db.session.commit()
-	db.session.flush()
+	db.commit()
+	db.flush()
 
 	posts = []
 
-	print(f"Creating {NUM_POSTS} posts")
+	print(f"Creating {num_posts} posts")
 # 40 top-level posts
-	for i in range(NUM_POSTS):
+	for i in range(num_posts):
 		user = users[int(len(users) * detrand())]
 		post = Submission(
 			private=False,
@@ -102,16 +105,15 @@ def seed_db():
 			ghost=False,
 			filter_state='normal'
 		)
-		db.session.add(post)
+		db.add(post)
 		posts.append(post)
 
-	db.session.commit()
-	db.session.flush()
+	db.commit()
 
-	print(f"Creating {NUM_TOPLEVEL_COMMENTS} top-level comments")
+	print(f"Creating {num_toplevel_comments} top-level comments")
 	comments = []
 # 2k top-level comments, distributed by power-law
-	for i in range(NUM_TOPLEVEL_COMMENTS):
+	for i in range(num_toplevel_comments):
 		user = users[int(len(users) * detrand())]
 		parent = posts[int(-math.log(detrand()) / math.log(1.4))]
 		comment = Comment(
@@ -126,22 +128,22 @@ def seed_db():
 			body=f'toplevel {i}',
 			ghost=False
 		)
-		db.session.add(comment)
+		db.add(comment)
 		comments.append(comment)
 
-	db.session.flush()
+	db.flush()
 	for c in comments:
 		c.top_comment_id = c.id
-		db.session.add(c)
+		db.add(c)
 
-	db.session.commit()
+	db.commit()
 
-	print(f"Creating {NUM_REPLY_COMMENTS} reply comments")
-	for i in range(NUM_REPLY_COMMENTS):
+	print(f"Creating {num_reply_comments} reply comments")
+	for i in range(num_reply_comments):
 		user = users[int(len(users) * detrand())]
 		parent = comments[int(len(comments) * detrand())]
 		if parent.id is None:
-			db.session.commit()
+			db.commit()
 		comment = Comment(
 			author_id=user.id,
 			parent_submission=str(parent.post.id),
@@ -155,18 +157,18 @@ def seed_db():
 			body=f'reply {i}',
 			ghost=False
 		)
-		db.session.add(comment)
+		db.add(comment)
 		comments.append(comment)
 
-	db.session.commit()
+	db.commit()
 
 	print("Updating comment counts for all posts")
 	for post in posts:
 		post.comment_count = len(post.comments)
-		db.session.merge(post)
+		db.merge(post)
 
 	print("Adding upvotes and downvotes to posts")
-	postvotes = db.session.query(Vote).all()
+	postvotes = db.query(Vote).all()
 	postvotes_pk_set = set((v.submission_id, v.user_id) for v in postvotes)
 
 	for user in users:
@@ -189,10 +191,10 @@ def seed_db():
 					app_id=None,
 					real=True
 				)
-				db.session.add(vote)
+				db.add(vote)
 
 	print("Adding upvotes and downvotes to comments")
-	commentvotes = db.session.query(CommentVote).all()
+	commentvotes = db.query(CommentVote).all()
 	commentvotes_pk_set = set((v.comment_id, v.user_id) for v in commentvotes)
 
 	for user in users:
@@ -215,34 +217,33 @@ def seed_db():
 					app_id=None,
 					real=True
 				)
-				db.session.add(vote)
+				db.add(vote)
 
-	db.session.commit()
-	db.session.flush()
+	db.commit()
 
 	post_upvote_counts = dict(
-		db.session
+		db
 			.query(Vote.submission_id, sqlalchemy.func.count(1))
 			.filter(Vote.vote_type == +1)
 			.group_by(Vote.submission_id)
 			.all()
 	)
 	post_downvote_counts = dict(
-		db.session
+		db
 			.query(Vote.submission_id, sqlalchemy.func.count(1))
 			.filter(Vote.vote_type == -1)
 			.group_by(Vote.submission_id)
 			.all()
 	)
 	comment_upvote_counts = dict(
-		db.session
+		db
 			.query(CommentVote.comment_id, sqlalchemy.func.count(1))
 			.filter(CommentVote.vote_type == +1)
 			.group_by(CommentVote.comment_id)
 			.all()
 	)
 	comment_downvote_counts = dict(
-		db.session
+		db
 			.query(CommentVote.comment_id, sqlalchemy.func.count(1))
 			.filter(CommentVote.vote_type == -1)
 			.group_by(CommentVote.comment_id)
@@ -253,13 +254,15 @@ def seed_db():
 		post.upvotes = post_upvote_counts.get(post.id, 0)
 		post.downvotes = post_downvote_counts.get(post.id, 0)
 		post.realupvotes = post.upvotes - post.downvotes
-		db.session.add(post)
+		db.add(post)
 
 	for comment in comments:
 		comment.upvotes = comment_upvote_counts.get(comment.id, 0)
 		comment.downvotes = comment_downvote_counts.get(comment.id, 0)
 		comment.realupvotes = comment.upvotes - comment.downvotes
-		db.session.add(comment)
+		db.add(comment)
 
-	db.session.commit()
-	db.session.flush()
+	print("Computing comment descendant_count")
+	bulk_recompute_descendant_counts(db=db)
+
+	db.commit()

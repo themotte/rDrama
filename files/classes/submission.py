@@ -106,12 +106,12 @@ class Submission(Base):
 	@property
 	@lazy
 	def created_datetime(self):
-		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))
+		return time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc))
 
 	@property
 	@lazy
 	def created_datetime(self):
-		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))
+		return time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc))
 
 	@property
 	@lazy
@@ -178,7 +178,7 @@ class Submission(Base):
 	@property
 	@lazy
 	def edited_datetime(self):
-		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.edited_utc)))
+		return time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.edited_utc))
 
 
 	@property
@@ -331,6 +331,7 @@ class Submission(Base):
 		return data
 
 	def award_count(self, kind):
+		if not FEATURES['AWARDS']: return 0
 		return len([x for x in self.awards if x.kind == kind])
 
 	@lazy
@@ -340,8 +341,8 @@ class Submission(Base):
 			url = self.url.replace("old.reddit.com", v.reddit)
 
 			if '/comments/' in url and "sort=" not in url:
-				if "?" in url: url += "&context=9" 
-				else: url += "?context=8"
+				if "?" in url: url += f"&context={RENDER_DEPTH_LIMIT}" 
+				else: url += f"?context={RENDER_DEPTH_LIMIT - 1}"
 				if v.controversial: url += "&sort=controversial"
 			return url
 		elif self.url:
@@ -376,21 +377,12 @@ class Submission(Base):
 
 	def plainbody(self, v):
 		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{CC} ONLY</p>"
-
 		body = self.body
-
 		if not body: return ""
-
 		if v:
 			body = body.replace("old.reddit.com", v.reddit)
-
 			if v.nitter and '/i/' not in body and '/retweets' not in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
-
 		return body
-
-	def print(self):
-		print(f'post: {self.id}, author: {self.author_id}', flush=True)
-		return ''
 
 	@lazy
 	def realtitle(self, v):

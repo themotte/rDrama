@@ -25,7 +25,7 @@ def get_logged_in_user():
 		lo_user = session.get("lo_user")
 		if lo_user:
 			id = int(lo_user)
-			v = g.db.query(User).get(id)
+			v = g.db.get(User, id)
 			if v:
 				v.client = None
 				nonce = session.get("login_nonce", 0)

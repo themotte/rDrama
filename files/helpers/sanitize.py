@@ -10,21 +10,43 @@ import re
 from mistletoe import markdown
 from json import loads, dump
 from random import random, choice
-import signal
+import gevent
 import time
 import requests
 from files.__main__ import app
 
-TLDS = ('ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar','arpa','as','asia','at','au','aw','ax','az','ba','bb','bd','be','bf','bg','bh','bi','biz','bj','bm','bn','bo','br','bs','bt','bv','bw','by','bz','ca','cafe','cat','cc','cd','cf','cg','ch','ci','ck','cl','club','cm','cn','co','com','coop','cr','cu','cv','cx','cy','cz','de','dj','dk','dm','do','dz','ec','edu','ee','eg','er','es','et','eu','fi','fj','fk','fm','fo','fr','ga','gb','gd','ge','gf','gg','gh','gi','gl','gm','gn','gov','gp','gq','gr','gs','gt','gu','gw','gy','hk','hm','hn','hr','ht','hu','id','ie','il','im','in','info','int','io','iq','ir','is','it','je','jm','jo','jobs','jp','ke','kg','kh','ki','km','kn','kp','kr','kw','ky','kz','la','lb','lc','li','lk','lr','ls','lt','lu','lv','ly','ma','mc','md','me','mg','mh','mil','mk','ml','mm','mn','mo','mobi','mp','mq','mr','ms','mt','mu','museum','mv','mw','mx','my','mz','na','name','nc','ne','net','nf','ng','ni','nl','no','np','nr','nu','nz','om','org','pa','pe','pf','pg','ph','pk','pl','pm','pn','post','pr','pro','ps','pt','pw','py','qa','re','ro','rs','ru','rw','sa','sb','sc','sd','se','sg','sh','si','sj','sk','sl','sm','sn','so','social','sr','ss','st','su','sv','sx','sy','sz','tc','td','tel','tf','tg','th','tj','tk','tl','tm','tn','to','tp','tr','travel','tt','tv','tw','tz','ua','ug','uk','us','uy','uz','va','vc','ve','vg','vi','vn','vu','wf','win','ws','xn','xxx','xyz','ye','yt','yu','za','zm','zw', 'moe')
+TLDS = ('ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar',
+	'arpa','as','asia','at','au','aw','ax','az','ba','bb','bd','be','bf','bg',
+	'bh','bi','biz','bj','bm','bn','bo','br','bs','bt','bv','bw','by','bz',
+	'ca','cafe','cat','cc','cd','cf','cg','ch','ci','ck','cl','club','cm',
+	'cn','co','com','coop','cr','cu','cv','cx','cy','cz','de','dj','dk','dm',
+	'do','dz','ec','edu','ee','eg','er','es','et','eu','fi','fj','fk','fm',
+	'fo','fr','ga','gb','gd','ge','gf','gg','gh','gi','gl','gm','gn','gov',
+	'gp','gq','gr','gs','gt','gu','gw','gy','hk','hm','hn','hr','ht','hu',
+	'id','ie','il','im','in','info','int','io','iq','ir','is','it','je','jm',
+	'jo','jobs','jp','ke','kg','kh','ki','km','kn','kp','kr','kw','ky','kz',
+	'la','lb','lc','li','lk','lr','ls','lt','lu','lv','ly','ma','mc','md','me',
+	'mg','mh','mil','mk','ml','mm','mn','mo','mobi','mp','mq','mr','ms','mt',
+	'mu','museum','mv','mw','mx','my','mz','na','name','nc','ne','net','nf',
+	'ng','ni','nl','no','np','nr','nu','nz','om','org','pa','pe','pf','pg',
+	'ph','pk','pl','pm','pn','post','pr','pro','ps','pt','pw','py','qa','re',
+	'ro','rs','ru','rw','sa','sb','sc','sd','se','sg','sh','si','sj','sk',
+	'sl','sm','sn','so','social','sr','ss','st','su','sv','sx','sy','sz',
+	'tc','td','tel','tf','tg','th','tj','tk','tl','tm','tn','to','tp','tr',
+	'travel','tt','tv','tw','tz','ua','ug','uk','us','uy','uz','va','vc','ve',
+	'vg','vi','vn','vu','wf','win','ws','xn','xxx','xyz','ye','yt','yu','za',
+	'zm','zw', 'moe')
 
-allowed_tags = ('b','blockquote','br','code','del','em','h1','h2','h3','h4','h5','h6','hr','i','li','ol','p','pre','strong','sub','sup','table','tbody','th','thead','td','tr','ul','a','span','ruby','rp','rt','spoiler',)
+allowed_tags = ('b','blockquote','br','code','del','em','h1','h2','h3','h4',
+		'h5','h6','hr','i','li','ol','p','pre','strong','sub','sup','table',
+		'tbody','th','thead','td','tr','ul','a','span','ruby','rp','rt',
+		'spoiler',)
 
 if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
 	allowed_tags += ('img', 'lite-youtube', 'video', 'source',)
 
 
 def allowed_attributes(tag, name, value):
-
 	if name == 'style': return True
 
 	if tag == 'a':
@@ -123,31 +145,39 @@ def render_emoji(html, regexp, edit, marseys_used=set(), b=False):
 	return html
 
 
-def with_sigalrm_timeout(timeout: int):
-	'Use SIGALRM to raise an exception if the function executes for longer than timeout seconds'
-
-	# while trying to test this using time.sleep I discovered that gunicorn does in fact do some
-	# async so if we timeout on that (or on a db op) then the process is crashed without returning
-	# a proper 500 error. Oh well.
-	def sig_handler(signum, frame):
-		print("Timeout!", flush=True)
-		raise Exception("Timeout")
-
+def with_gevent_timeout(timeout: int):
+	'''
+	Use gevent to raise an exception if the function executes for longer than timeout seconds
+	Using gevent instead of a signal based approach allows for proper async and avoids some
+	worker crashes
+	'''
 	def inner(func):
-		@functools.wraps(inner)
+		@functools.wraps(func)
 		def wrapped(*args, **kwargs):
-			signal.signal(signal.SIGALRM, sig_handler)
-			signal.alarm(timeout)
-			try:
-				return func(*args, **kwargs)
-			finally:
-				signal.alarm(0)
+			return gevent.with_timeout(timeout, func, *args, **kwargs)
 		return wrapped
 	return inner
 
-@with_sigalrm_timeout(2)
-def sanitize(sanitized, alert=False, comment=False, edit=False):
+REMOVED_CHARACTERS = ['\u200e', '\u200b', '\ufeff']
+"""
+Characters which are removed from content
+"""
 
+def sanitize_raw(sanitized:Optional[str], allow_newlines:bool, length_limit:Optional[int]) -> str:
+	if not sanitized: return ""
+	for char in REMOVED_CHARACTERS:
+		sanitized = sanitized.replace(char, '')
+	if allow_newlines:
+		sanitized = sanitized.replace("\r\n", "\n")
+	else:
+		sanitized = sanitized.replace("\r","").replace("\n", "")
+	sanitized = sanitized.strip()
+	if length_limit is not None:
+		sanitized = sanitized[:length_limit]
+	return sanitized
+
+@with_gevent_timeout(2)
+def sanitize(sanitized, alert=False, comment=False, edit=False):
 	# double newlines, eg. hello\nworld becomes hello\n\nworld, which later becomes <p>hello</p><p>world</p>
 	sanitized = linefeeds_regex.sub(r'\1\n\n\2', sanitized)
 
@@ -186,15 +216,11 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 		sanitized = sub_regex.sub(r'\1<a href="/\2">/\2</a>', sanitized)
 
 		matches = [ m for m in mention_regex.finditer(sanitized) if m ]
-		names = set( m.group(2) for m in matches )
+		names = set(m.group(2) for m in matches)
 		users = get_users(names,graceful=True)
 
 		if len(users) > app.config['MENTION_LIMIT']:
-			signal.alarm(0)
-			abort(
-				make_response(
-					jsonify(
-						error=f'Mentioned {len(users)} users but limit is {app.config["MENTION_LIMIT"]}'), 400))
+			abort(400, f'Mentioned {len(users)} users but limit is {app.config["MENTION_LIMIT"]}')
 
 		for u in users:
 			if not u: continue
@@ -281,11 +307,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 	sanitized = sanitized.replace('&amp;','&')
 	sanitized = utm_regex.sub('', sanitized)
 	sanitized = utm_regex2.sub('', sanitized)
-
-
 	sanitized = sanitized.replace('<html><body>','').replace('</body></html>','')
-
-
 
 	sanitized = bleach.Cleaner(tags=allowed_tags,
 								attributes=allowed_attributes,
@@ -321,17 +343,11 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 				domain_list.add(new_domain)
 
 	bans = g.db.query(BannedDomain.domain).filter(BannedDomain.domain.in_(list(domain_list))).all()
-
 	if bans: abort(403, description=f"Remove the banned domains {bans} and try again!")
-
 	return sanitized
 
 
-
-
-
 def allowed_attributes_emojis(tag, name, value):
-
 	if tag == 'img':
 		if name == 'loading' and value == 'lazy': return True
 		if name == 'data-bs-toggle' and value == 'tooltip': return True
@@ -339,9 +355,8 @@ def allowed_attributes_emojis(tag, name, value):
 	return False
 
 
-@with_sigalrm_timeout(1)
+@with_gevent_timeout(1)
 def filter_emojis_only(title, edit=False, graceful=False):
-
 	title = unwanted_bytes_regex.sub('', title)
 	title = whitespace_regex.sub(' ', title)
 	title = html.escape(title, quote=True)

@@ -3,8 +3,10 @@ import gevent
 from files.helpers.wrappers import *
 from files.helpers.sanitize import *
 from files.helpers.alerts import *
+from files.helpers.comments import comment_filter_moderated
 from files.helpers.contentsorting import sort_objects
 from files.helpers.const import *
+from files.helpers.media import process_image
 from files.helpers.strings import sql_ilike_clean
 from files.classes import *
 from flask import *
@@ -17,6 +19,7 @@ from os import path
 import requests
 from shutil import copyfile
 from sys import stdout
+from sqlalchemy.orm import Query
 
 
 snappyquotes = [f':#{x}:' for x in marseys_const2]
@@ -129,102 +132,39 @@ def post_id(pid, anything=None, v=None):
 
 	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
 
-	if v:
-		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
-		blocking = v.blocking.subquery()
-		blocked = v.blocked.subquery()
-
-		comments = g.db.query(
-			Comment,
-			votes.c.vote_type,
-			blocking.c.target_id,
-			blocked.c.target_id,
-		)
-		
-		if not (v and v.shadowbanned) and not (v and v.admin_level > 2):
-			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
-
-		if v.admin_level < 2:
-			filter_clause = ((Comment.filter_state != 'filtered') & (Comment.filter_state != 'removed')) | (Comment.author_id == v.id)
-			comments = comments.filter(filter_clause)
-
-		comments=comments.filter(Comment.parent_submission == post.id).join(
-			votes,
-			votes.c.comment_id == Comment.id,
-			isouter=True
-		).join(
-			blocking,
-			blocking.c.target_id == Comment.author_id,
-			isouter=True
-		).join(
-			blocked,
-			blocked.c.user_id == Comment.author_id,
-			isouter=True
-		)
-
-		output = []
-		for c in comments.all():
-			comment = c[0]
-			comment.voted = c[1] or 0
-			comment.is_blocking = c[2] or 0
-			comment.is_blocked = c[3] or 0
-			output.append(comment)
-		
-		pinned = [c[0] for c in comments.filter(Comment.is_pinned != None).all()]
-		
-		comments = comments.filter(Comment.level == 1, Comment.is_pinned == None)
-		comments = sort_objects(comments, sort, Comment)
-		comments = [c[0] for c in comments.all()]
-	else:
-		pinned = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.is_pinned != None).all()
-
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.level == 1, Comment.is_pinned == None)
-		comments = sort_objects(comments, sort, Comment)
-
-		filter_clause = (Comment.filter_state != 'filtered') & (Comment.filter_state != 'removed')
-		comments = comments.filter(filter_clause)
-
-		comments = comments.all()
-
-	offset = 0
-	ids = set()
-
 	limit = app.config['RESULTS_PER_PAGE_COMMENTS']
+	offset = 0
 
-	if post.comment_count > limit and not request.headers.get("Authorization") and not request.values.get("all"):
-		comments2 = []
-		count = 0
-		if post.created_utc > 1638672040:
-			for comment in comments:
-				comments2.append(comment)
-				ids.add(comment.id)
-				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
-				if count > limit: break
-		else:
-			for comment in comments:
-				comments2.append(comment)
-				ids.add(comment.id)
-				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
-				if count > limit: break
+	top_comments = g.db.query(Comment.id, Comment.descendant_count).filter(
+		Comment.parent_submission == post.id,
+		Comment.level == 1,
+	).order_by(Comment.is_pinned.desc().nulls_last())
+	top_comments = comment_filter_moderated(top_comments, v)
+	top_comments = sort_objects(top_comments, sort, Comment)
 
-		if len(comments) == len(comments2): offset = 0
-		else: offset = 1
-		comments = comments2
+	pg_top_comment_ids = []
+	pg_comment_qty = 0
+	for tc_id, tc_children_qty in top_comments.all():
+		if pg_comment_qty >= limit:
+			offset = 1
+			break
+		pg_comment_qty += tc_children_qty + 1
+		pg_top_comment_ids.append(tc_id)
 
-	for pin in pinned:
-		if pin.is_pinned_utc and int(time.time()) > pin.is_pinned_utc:
-			pin.is_pinned = None
-			pin.is_pinned_utc = None
-			g.db.add(pin)
-			pinned.remove(pin)
+	def comment_tree_filter(q: Query) -> Query:
+		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
+		q = comment_filter_moderated(q, v)
+		return q
 
-	top_comments = pinned + comments
-	top_comment_ids = [c.id for c in top_comments]
-	post.replies = get_comment_trees_eager(top_comment_ids, sort, v)
+	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
+	post.replies = comment_tree[None] # parent=None -> top-level comments
+	ids = {c.id for c in post.replies}
 
 	post.views += 1
+	g.db.expire_on_commit = False
 	g.db.add(post)
 	g.db.commit()
+	g.db.expire_on_commit = True
 
 	if request.headers.get("Authorization"): return post.json
 	else:
@@ -239,95 +179,52 @@ def viewmore(v, pid, sort, offset):
 	post = get_post(pid, v=v)
 	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
 
-	offset = int(offset)
+	offset_prev = int(offset)
 	try: ids = set(int(x) for x in request.values.get("ids").split(','))
 	except: abort(400)
 	
-	if sort == "new":
-		newest = g.db.query(Comment).filter(Comment.id.in_(ids)).order_by(Comment.created_utc.desc()).first()
-
-	if v:
-		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
-
-		blocking = v.blocking.subquery()
-
-		blocked = v.blocked.subquery()
-
-		comments = g.db.query(
-			Comment,
-			votes.c.vote_type,
-			blocking.c.target_id,
-			blocked.c.target_id,
-		).filter(Comment.parent_submission == pid, Comment.is_pinned == None, Comment.id.notin_(ids))
-
-		if not (v and v.shadowbanned) and not (v and v.admin_level > 2):
-			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
-
-		if not v or v.admin_level < 2:
-			filter_clause = (Comment.filter_state != 'filtered') & (Comment.filter_state != 'removed')
-			if v:
-				filter_clause = filter_clause | (Comment.author_id == v.id)
-			comments = comments.filter(filter_clause)
-
-		comments=comments.join(
-			votes,
-			votes.c.comment_id == Comment.id,
-			isouter=True
-		).join(
-			blocking,
-			blocking.c.target_id == Comment.author_id,
-			isouter=True
-		).join(
-			blocked,
-			blocked.c.user_id == Comment.author_id,
-			isouter=True
-		)
-
-		output = []
-		for c in comments.all():
-			comment = c[0]
-			comment.voted = c[1] or 0
-			comment.is_blocking = c[2] or 0
-			comment.is_blocked = c[3] or 0
-			output.append(comment)
-		
-		comments = comments.filter(Comment.level == 1)
-
-		if sort == "new":
-			comments = comments.filter(Comment.created_utc < newest.created_utc)
-		comments = sort_objects(comments, sort, Comment)
-
-		comments = [c[0] for c in comments.all()]
-	else:
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == pid, Comment.level == 1, Comment.is_pinned == None, Comment.id.notin_(ids))
-
-		if sort == "new":
-			comments = comments.filter(Comment.created_utc < newest.created_utc)
-		comments = sort_objects(comments, sort, Comment)
-
-		comments = comments.all()
-		comments = comments[offset:]
-
 	limit = app.config['RESULTS_PER_PAGE_COMMENTS']
-	comments2 = []
-	count = 0
+	offset = 0
 
-	if post.created_utc > 1638672040:
-		for comment in comments:
-			comments2.append(comment)
-			ids.add(comment.id)
-			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
-			if count > limit: break
-	else:
-		for comment in comments:
-			comments2.append(comment)
-			ids.add(comment.id)
-			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
-			if count > limit: break
-	
-	if len(comments) == len(comments2): offset = 0
-	else: offset += 1
-	comments = comments2
+	# TODO: Unify with common post_id logic
+	top_comments = g.db.query(Comment.id, Comment.descendant_count).filter(
+		Comment.parent_submission == post.id,
+		Comment.level == 1,
+		Comment.id.notin_(ids),
+		Comment.is_pinned == None,
+	).order_by(Comment.is_pinned.desc().nulls_last())
+
+	if sort == "new":
+		newest_created_utc = g.db.query(Comment.created_utc).filter(
+			Comment.id.in_(ids),
+			Comment.is_pinned == None,
+		).order_by(Comment.created_utc.desc()).limit(1).scalar()
+
+		# Needs to be <=, not just <, to support seed_db data which has many identical
+		# created_utc values. Shouldn't cause duplication in real data because of the
+		# `NOT IN :ids` in top_comments.
+		top_comments = top_comments.filter(Comment.created_utc <= newest_created_utc)
+
+	top_comments = comment_filter_moderated(top_comments, v)
+	top_comments = sort_objects(top_comments, sort, Comment)
+
+	pg_top_comment_ids = []
+	pg_comment_qty = 0
+	for tc_id, tc_children_qty in top_comments.all():
+		if pg_comment_qty >= limit:
+			offset = offset_prev + 1
+			break
+		pg_comment_qty += tc_children_qty + 1
+		pg_top_comment_ids.append(tc_id)
+
+	def comment_tree_filter(q: Query) -> Query:
+		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
+		q = comment_filter_moderated(q, v)
+		return q
+
+	_, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
+	comments = comment_tree[None] # parent=None -> top-level comments
+	ids |= {c.id for c in comments}
 
 	return render_template("comments.html", v=v, comments=comments, p=post, ids=list(ids), render_replies=True, pid=pid, sort=sort, offset=offset, ajax=True)
 
@@ -353,7 +250,7 @@ def morecomments(v, cid):
 			votes.c.vote_type,
 			blocking.c.target_id,
 			blocked.c.target_id,
-		).filter(Comment.top_comment_id == tcid, Comment.level > 9).join(
+		).filter(Comment.top_comment_id == tcid, Comment.level > RENDER_DEPTH_LIMIT).join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
@@ -396,7 +293,10 @@ def edit_post(pid, v):
 	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
 
 	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
+	title = sanitize_raw(title, allow_newlines=False, length_limit=MAX_TITLE_LENGTH)
+
 	body = guarded_value("body", 0, MAX_BODY_LENGTH)
+	body = sanitize_raw(body, allow_newlines=True, length_limit=MAX_BODY_LENGTH)
 
 	if title != p.title:
 		p.title = title
@@ -414,22 +314,7 @@ def edit_post(pid, v):
 					body += f"\n\n![]({url})"
 				else:
 					body += f'\n\n<a href="{url}">{url}</a>'
-			elif file.content_type.startswith('video/'):
-				file.save("video.mp4")
-				with open("video.mp4", 'rb') as f:
-					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-					except requests.Timeout: abort(500, "Video upload timed out, please try again!")
-					try: url = req['link']
-					except:
-						error = req['error']
-						if error == 'File exceeds max duration': error += ' (60 seconds)'
-						abort(400, error)
-				if url.endswith('.'): url += 'mp4'
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
-					body += f"\n\n![]({url})"
-				else:
-					body += f'\n\n<a href="{url}">{url}</a>'
-			else: abort(400, "Image/Video files only")
+			else: abort(400, "Image files only")
 
 	body_html = sanitize(body, edit=True)
 
@@ -663,11 +548,15 @@ def submit_post(v):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, error)
 		return render_template("submit.html", v=v, error=error, title=title, url=url, body=body), 400
 
-	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
-	url = guarded_value("url", 0, MAX_URL_LENGTH)
-	body = guarded_value("body", 0, MAX_BODY_LENGTH)
-
 	if v.is_suspended: return error("You can't perform this action while banned.")
+
+	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
+	title = sanitize_raw(title, allow_newlines=False, length_limit=MAX_TITLE_LENGTH)
+
+	url = guarded_value("url", 0, MAX_URL_LENGTH)
+	
+	body = guarded_value("body", 0, MAX_BODY_LENGTH)
+	body = sanitize_raw(body, allow_newlines=True, length_limit=MAX_BODY_LENGTH)
 	
 	title_html = filter_emojis_only(title, graceful=True)
 
@@ -819,23 +708,8 @@ def submit_post(v):
 					body += f"\n\n![]({image})"
 				else:
 					body += f'\n\n<a href="{image}">{image}</a>'
-			elif file.content_type.startswith('video/'):
-				file.save("video.mp4")
-				with open("video.mp4", 'rb') as f:
-					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-					except requests.Timeout: return error("Video upload timed out, please try again!")
-					try: url = req['link']
-					except:
-						err = req['error']
-						if err == 'File exceeds max duration': err += ' (60 seconds)'
-						return error(err)
-				if url.endswith('.'): url += 'mp4'
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
-					body += f"\n\n![]({url})"
-				else:
-					body += f'\n\n<a href="{url}">{url}</a>'
 			else:
-				return error("Image/Video files only.")
+				return error("Image files only")
 
 	body_html = sanitize(body)
 
@@ -888,21 +762,9 @@ def submit_post(v):
 
 			name2 = name.replace('.webp', 'r.webp')
 			copyfile(name, name2)
-			post.thumburl = process_image(name2, resize=100)	
-		elif file.content_type.startswith('video/'):
-			file.save("video.mp4")
-			with open("video.mp4", 'rb') as f:
-				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-				except requests.Timeout: return error("Video upload timed out, please try again!")
-				try: url = req['link']
-				except:
-					err = req['error']
-					if err == 'File exceeds max duration': err += ' (60 seconds)'
-					return error(err)
-			if url.endswith('.'): url += 'mp4'
-			post.url = url
+			post.thumburl = process_image(name2, resize=100)
 		else:
-			return error("Image/Video files only.")
+			return error("Image files only")
 		
 	if not post.thumburl and post.url:
 		gevent.spawn(thumbnail_thread, post.id)

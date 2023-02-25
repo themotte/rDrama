@@ -47,7 +47,7 @@
 {% macro single_comment(c, level) %}
 
 
-{% if c.should_hide_score %}
+{% if should_hide_score or c.should_hide_score %}
 	{% set ups="" %}
 	{% set downs="" %}
 	{% set score="" %}
@@ -72,20 +72,14 @@
 		</div>
 
 		<div class="comment-user-info">
-			{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
+			{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span>{% endif %}
 			{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author_name}}{% endif %}
 		</div>
 		
 		<div class="comment-body">
-
-				<div id="comment-{{c.id}}-only" class="{% if c.award_count('glowie') %}glow{% endif %} comment-{{c.id}}-only">
-
-						
-
-				</div>
-				
+				<div id="comment-{{c.id}}-only" class="comment-{{c.id}}-only"></div>
 	{% if render_replies %} 
-		{% if level<9 %}
+		{% if level <= RENDER_DEPTH_LIMIT - 1 %}
 			<div id="replies-of-{{c.id}}" class="">
 				{% set standalone=False %}
 				{% for reply in replies %}
@@ -143,7 +137,7 @@
 	{% elif c.author_id==NOTIFICATIONS_ID or c.author_id==AUTOJANNY_ID %}
 	<span class="font-weight-bold">Notification</span>
 	{% else %}
-		{% if c.sentto == 2 %}
+		{% if c.sentto == MODMAIL_ID %}
 			<span class="font-weight-bold">Sent to admins</span>
 		{% else %}
 			<span class="font-weight-bold">Sent to @{{c.senttouser.username}}</span>
@@ -153,7 +147,7 @@
 </div>
 {% endif %}
 
-{% if c.parent_comment and c.parent_comment.sentto %}
+{% if not standalone and c.parent_comment and c.parent_comment.sentto %}
 	{% set isreply = True %}
 {% else %}
 	{% set isreply = False %}
@@ -171,25 +165,27 @@
 		{% if c.ghost %}
 			👻
 		{% else %}
-
 			{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if c.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{c.author.verified}}"></i>
 			{% endif %}
-			{% if not c.author %}
-				{{c.print()}}
+			{% if not should_hide_username %}
+				<a href="/@{{c.author_name}}" class="user-name" onclick='popclick({{c.author.json_popover(v) | tojson}}); return false' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-20 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
 			{% endif %}
-			<a href="/@{{c.author_name}}" class="user-name" onclick='popclick({{c.author.json_popover(v) | tojson}}); return false' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-20 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
 			{% if v and v.admin_level > 1 %}
 			<span 
 				class="usernote-link" 
 				data-micromodal-trigger="modal-1" 
 				onclick='fillnote( {{c.author.json_notes(v) | tojson}}, null, {{c.id}} )'>U</span>
 			{% endif %}
-			{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}
+			{% if c.author.customtitle and not should_hide_username -%}
+				&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>
+			{%- endif %}
 		{% endif %}
 
-		{% for a in c.awards|reverse %}
-			<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
-		{% endfor %}
+		{% if FEATURES['AWARDS'] %}
+			{% for a in c.awards|reverse %}
+				<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
+			{% endfor %}
+		{% endif %}
 
 		{% if c.bannedfor %}
 			<a role="button"><i class="fas fa-hammer-crash text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}"></i></a>
@@ -221,7 +217,7 @@
 
 	<div class="comment-body">
 
-		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if c.unread %}unread{% endif %} {% if c.award_count('glowie') %}glow{% endif %} comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
+		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if c.unread %}unread{% endif %} comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
 
 			
 			{% if v and c.filter_state == 'reported' and v.can_manage_reports() %}
@@ -487,7 +483,7 @@
 						&nbsp;
 						<label class="btn btn-secondary format m-0" for="file-upload-reply-{{c.fullname}}">
 							<div id="filename-show-reply-{{c.fullname}}"><i class="far fa-image"></i></div>
-							<input autocomplete="off" id="file-upload-reply-{{c.fullname}}" type="file" multiple="multiple" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-reply-{{c.fullname}}','file-upload-reply-{{c.fullname}}')" hidden>
+							<input autocomplete="off" id="file-upload-reply-{{c.fullname}}" type="file" multiple="multiple" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-reply-{{c.fullname}}','file-upload-reply-{{c.fullname}}')" hidden>
 						</label>
 					</div>
 					<a id="save-reply-to-{{c.fullname}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}', {{level}})"role="button">Comment</a>
@@ -500,7 +496,7 @@
 
 
 	{% if render_replies %} 
-		{% if level<9 or request.path == '/notifications' %}
+		{% if level <= RENDER_DEPTH_LIMIT - 1 or request.path == '/notifications' %}
 			<div id="replies-of-{{c.id}}">
 				{% for reply in replies %}
 					{{single_comment(reply, level=level+1)}}
@@ -522,10 +518,10 @@
 						<textarea required autocomplete="off" minlength="1" maxlength="10000" name="body" form="reply-to-t3_{{c.id}}" data-id="{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3" oninput="markdown('reply-form-body-{{c.id}}', 'message-reply-{{c.id}}')"></textarea> 
 						<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
 
-							{% if c.sentto == 2 %}
+							{% if c.sentto == MODMAIL_ID %}
 								<label class="btn btn-secondary m-0 mt-3" for="file-upload">
 									<div id="filename"><i class="far fa-image"></i></div>
-									<input autocomplete="off" id="file-upload" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename','file-upload')" hidden>
+									<input autocomplete="off" id="file-upload" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename','file-upload')" hidden>
 								</label>
 							{% endif %}
 						</div>
@@ -748,7 +744,9 @@
 		<script src="{{ 'js/vendor/marked.min.js' | asset }}"></script>
 		<script src="{{ 'js/marked.custom.js' | asset }}"></script>
 		<script src="{{ 'js/comments_v.js' | asset }}"></script>
-		<script src="{{ 'js/award_modal.js' | asset }}"></script>
+		{% if FEATURES['AWARDS'] %}
+			<script src="{{ 'js/award_modal.js' | asset }}"></script>
+		{% endif %}
 	{% endif %}
 
 	<script src="{{ 'js/clipboard.js' | asset }}"></script>

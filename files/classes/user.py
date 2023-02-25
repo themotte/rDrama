@@ -1,7 +1,7 @@
 from sqlalchemy.orm import deferred, aliased
 from secrets import token_hex
 import pyotp
-from files.helpers.images import *
+from files.helpers.media import *
 from files.helpers.const import *
 from .alts import Alt
 from .saves import *
@@ -44,7 +44,6 @@ class User(Base):
 	theme = Column(String, default=defaulttheme, nullable=False)
 	themecolor = Column(String, default=DEFAULT_COLOR, nullable=False)
 	cardview = Column(Boolean, default=cardview, nullable=False)
-	song = Column(String)
 	highres = Column(String)
 	profileurl = Column(String)
 	bannerurl = Column(String)
@@ -196,13 +195,10 @@ class User(Base):
 	@property
 	@lazy
 	def user_awards(self):
-
-		return_value = list(AWARDS2.values())
-
+		if not FEATURES['AWARDS']: return []
+		return_value = list(AWARDS_ENABLED.values())
 		user_awards = g.db.query(AwardRelationship).filter_by(user_id=self.id)
-
 		for val in return_value: val['owned'] = user_awards.filter_by(kind=val['kind'], submission_id=None, comment_id=None).count()
-
 		return return_value
 
 	@property
@@ -352,7 +348,7 @@ class User(Base):
 	@property
 	@lazy
 	def received_awards(self):
-
+		if not FEATURES['AWARDS']: return []
 		awards = {}
 
 		posts_idlist = [x[0] for x in g.db.query(Submission.id).filter_by(author_id=self.id).all()]
@@ -563,7 +559,7 @@ class User(Base):
 	@property
 	@lazy
 	def created_datetime(self):
-		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))
+		return time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc))
 
 	@lazy
 	def subscribed_idlist(self, page=1):
@@ -620,3 +616,9 @@ class User(Base):
 		l = [i.strip() for i in self.custom_filter_list.split('\n')] if self.custom_filter_list else []
 		l = [i for i in l if i]
 		return l
+	
+	# Permissions
+
+	@property
+	def can_see_shadowbanned(self):
+		return self.admin_level >= PERMS['USER_SHADOWBAN'] or self.shadowbanned
