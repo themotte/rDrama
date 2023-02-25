@@ -62,6 +62,7 @@ COLORS = {'ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000
 SUBMISSION_BODY_LENGTH_MAXIMUM: Final[int] = 20000
 COMMENT_BODY_LENGTH_MAXIMUM: Final[int] = 10000
 MESSAGE_BODY_LENGTH_MAXIMUM: Final[int] = 10000
+CSS_LENGTH_MAXIMUM: Final[int] = 4000
 
 ERROR_MESSAGES = {
 	400: "That request was bad and you should feel bad",

@@ -497,20 +497,21 @@ def settings_images_banner(v):
 @app.get("/settings/blocks")
 @auth_required
 def settings_blockedpage(v):
-
 	return render_template("settings_blocks.html", v=v)
 
 @app.get("/settings/css")
 @auth_required
 def settings_css_get(v):
-
 	return render_template("settings_css.html", v=v)
 
 @app.post("/settings/css")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_css(v):
-	css = request.values.get("css").strip().replace('\\', '').strip()[:4000]
+	css = sanitize_raw(request.values.get("css", "").replace('\\', ''), allow_newlines=True, length_limit=CSS_LENGTH_MAXIMUM)
+	ok, err = validate_css(css)
+	if not ok:
+		abort(400, err)
 	v.css = css
 	g.db.add(v)
 	g.db.commit()
@@ -526,7 +527,10 @@ def settings_profilecss_get(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_profilecss(v):
-	profilecss = request.values.get("profilecss").strip().replace('\\', '').strip()[:4000]
+	profilecss = sanitize_raw(request.values.get("profilecss", "").replace('\\', ''), allow_newlines=True, length_limit=CSS_LENGTH_MAXIMUM)
+	ok, err = validate_css(profilecss)
+	if not ok:
+		abort(400, err)
 	v.profilecss = profilecss
 	g.db.add(v)
 	g.db.commit()

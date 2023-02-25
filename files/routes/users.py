@@ -380,13 +380,6 @@ def leaderboard(v:User):
 
 	return render_template("leaderboard.html", v=v, leaderboards=leaderboards)
 
-@app.get("/@<username>/css")
-def get_css(username):
-	user = get_user(username)
-	resp=make_response(user.css or "")
-	resp.headers.add("Content-Type", "text/css")
-	return resp
-
 @app.get("/@<username>/profilecss")
 def get_profilecss(username):
 	user = get_user(username)
