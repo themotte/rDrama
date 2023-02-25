@@ -15,4 +15,4 @@ class Exile(Base):
 	exiler = relationship("User", primaryjoin="User.id==Exile.exiler_id", viewonly=True)
 
 	def __repr__(self):
-		return f"<Exile(user_id={self.user_id}, sub={self.sub})>"
+		return f"<{self.__class__.__name__}(user_id={self.user_id}, sub={self.sub})>"
