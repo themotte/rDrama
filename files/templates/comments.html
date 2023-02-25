@@ -147,11 +147,7 @@
 </div>
 {% endif %}
 
-{% if not standalone and c.parent_comment and c.parent_comment.sentto %}
-	{% set isreply = True %}
-{% else %}
-	{% set isreply = False %}
-{% endif %}
+{% set isreply = not standalone and c.parent_comment and c.parent_comment.sentto %}
 
 <div id="comment-{{c.id}}" class="anchor comment {% if standalone and level==1 %} mt-0{% endif %} {% if c.collapse_for_user(v,request.path) %}collapsed{% endif %}">
 	{% if not isreply %}
@@ -161,7 +157,6 @@
 		</div>
 	{% endif %}
 	<div class="comment-user-info">
-
 		{% if c.ghost %}
 			👻
 		{% else %}
@@ -594,6 +589,7 @@
 							{% if c.post and v.id == c.post.author_id %}
 								<a id="pin2-{{c.id}}" class="list-group-item {% if c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2(this,'/pin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info mr-2"></i>Pin</a>
 								<a id="unpin2-{{c.id}}" class="list-group-item {% if not c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2(this,'/unpin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info mr-2"></i>Unpin</a>
+							{% endif %}
 						{% endif %}
 					{% endif %}
 				</ul>
