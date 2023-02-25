@@ -92,4 +92,5 @@ from files.helpers.security import *
 
 # Then the specific stuff we don't want stomped on
 from files.helpers.lazy import lazy
-from files.__main__ import Base, app, cache
+from files.classes.base import Base
+from files.__main__ import app, cache
