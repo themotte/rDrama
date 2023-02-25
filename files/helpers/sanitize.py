@@ -377,4 +377,5 @@ def validate_css(css:str) -> tuple[bool, str]:
 	practical concern) or causing styling issues with the rest of the page.
 	'''
 	if '</style' in css.lower(): return False, "Invalid CSS"
+	if '@import' in css.lower(): return False, "@import statements are not allowed"
 	return True, ""
