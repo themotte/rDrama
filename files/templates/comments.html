@@ -387,7 +387,6 @@
 
 {% if c.post %}
 	{% set sticky_url = "" %}
-
 	{% if v.admin_level > 1 %}
 		{% set sticky_url = "sticky_comment" %}
 	{% elif v.id == c.post.author_id %}
@@ -398,6 +397,7 @@
 		<button id="unpin-{{c.id}}" class="dropdown-item list-inline-item {% if c.is_pinned %}d-md-block{% endif %} text-muted d-none text-info"  data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3(this,'/un{{sticky_url}}/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Unpin</button>
 		<button id="pin-{{c.id}}" class="dropdown-item list-inline-item {% if not c.is_pinned %}d-md-block{% endif %} text-muted d-none text-info" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3(this,'/{{sticky_url}}/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Pin</button>
 	{%- endif -%}
+{% endif %}
 
 {% if v.admin_level > 1 %}
 {% if "/reported/" in request.path %}
