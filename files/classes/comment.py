@@ -42,8 +42,8 @@ class Comment(Base):
 	downvotes = Column(Integer, default=0, nullable=False)
 	realupvotes = Column(Integer, default=1, nullable=False)
 	descendant_count = Column(Integer, default=0, nullable=False)
-	body = Column(String)
-	body_html = Column(String)
+	body = Column(Text)
+	body_html = Column(Text, nullable=False)
 	ban_reason = Column(String)
 	filter_state = Column(String, nullable=False)
 
