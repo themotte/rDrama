@@ -270,23 +270,12 @@ approved_embed_hosts = [
 	]
 
 hosts = "|".join(approved_embed_hosts).replace('.','\\.')
-
 image_check_regex = re.compile(f'!\\[\\]\\(((?!(https:\\/\\/([a-z0-9-]+\\.)*({hosts})\\/|\\/)).*?)\\)', flags=re.A)
-
 embed_fullmatch_regex = re.compile(f'https:\\/\\/([a-z0-9-]+\\.)*({hosts})\\/[\\w:~,()\\-.#&\\/=?@%;+]*', flags=re.A)
-
 video_sub_regex = re.compile(f'(<p>[^<]*)(https:\\/\\/([a-z0-9-]+\\.)*({hosts})\\/[\\w:~,()\\-.#&\\/=?@%;+]*?\\.(mp4|webm|mov))', flags=re.A)
-
-youtube_regex = re.compile('(<p>[^<]*)(https:\\/\\/youtube\\.com\\/watch\\?v\\=([a-z0-9-_]{5,20})[\\w\\-.#&/=\\?@%+]*)', flags=re.I|re.A)
-
-yt_id_regex = re.compile('[a-z0-9-_]{5,20}', flags=re.I|re.A)
-
-image_regex = re.compile("(^|\\s)(https:\\/\\/[\\w\\-.#&/=\\?@%;+]{5,250}(\\.png|\\.jpg|\\.jpeg|\\.gif|\\.webp|maxwidth=9999|fidelity=high))($|\\s)", flags=re.I|re.A)
 
 procoins_li = (0,2500,5000,10000,25000,50000,125000,250000)
 
-linefeeds_regex = re.compile("([^\\n])\\n([^\\n])", flags=re.A)
-
-html_title_regex = re.compile("<title>(.{1,200})</title>", flags=re.I)
+from files.helpers.regex import *
 
 def make_name(*args, **kwargs): return request.base_url

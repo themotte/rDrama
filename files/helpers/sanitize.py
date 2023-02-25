@@ -13,6 +13,7 @@ from random import random, choice
 import gevent
 import time
 import requests
+from files.helpers.regex import *
 from files.__main__ import app
 
 TLDS = ('ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar',
@@ -378,4 +379,5 @@ def validate_css(css:str) -> tuple[bool, str]:
 	'''
 	if '</style' in css.lower(): return False, "Invalid CSS"
 	if '@import' in css.lower(): return False, "@import statements are not allowed"
+	if css_url_regex.search(css): return False, "External URL imports are not allowed"
 	return True, ""
