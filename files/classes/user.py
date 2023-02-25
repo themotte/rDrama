@@ -96,7 +96,7 @@ class User(Base):
 	login_nonce = Column(Integer, default=0, nullable=False)
 	reserved = deferred(Column(String))
 	coins = Column(Integer, default=0, nullable=False)
-	truecoins = Column(Integer, default=0, nullable=False)
+	truescore = Column(Integer, default=0, nullable=False)
 	procoins = Column(Integer, default=0, nullable=False)
 	mfa_secret = deferred(Column(String))
 	is_private = Column(Boolean, default=False, nullable=False)
@@ -145,7 +145,6 @@ class User(Base):
 	notes = relationship("UserNote", foreign_keys='UserNote.reference_user', back_populates="user")
 
 	def __init__(self, **kwargs):
-
 		if "password" in kwargs:
 			kwargs["passhash"] = self.hash_password(kwargs["password"])
 			kwargs.pop("password")
@@ -157,16 +156,22 @@ class User(Base):
 
 	def can_manage_reports(self):
 		return self.admin_level > 1
+	
+	@property
+	def age_days(self):
+		return (datetime.now() - datetime.fromtimestamp(self.created_utc)).days
 
+	@property
 	def should_comments_be_filtered(self):
 		if self.admin_level > 0:
 			return False
 		site_settings = app.config['SETTINGS']
-		minComments = site_settings.get('FilterCommentsMinComments', 0)
-		minKarma = site_settings.get('FilterCommentsMinKarma', 0)
-		minAge = site_settings.get('FilterCommentsMinAgeDays', 0)
-		accountAgeDays = (datetime.now() - datetime.fromtimestamp(self.created_utc)).days
-		return self.comment_count < minComments or accountAgeDays < minAge or self.truecoins < minKarma
+		min_comments = site_settings.get('FilterCommentsMinComments', 0)
+		min_karma = site_settings.get('FilterCommentsMinKarma', 0)
+		min_age = site_settings.get('FilterCommentsMinAgeDays', 0)
+		return self.comment_count < min_comments \
+			or self.age_days < min_age \
+			or self.truescore < min_karma
 
 	@lazy
 	def mods(self, sub):
@@ -239,7 +244,7 @@ class User(Base):
 	@property
 	@lazy
 	def paid_dues(self):
-		return not self.shadowbanned and not (self.is_banned and not self.unban_utc) and (self.admin_level or self.club_allowed or (self.club_allowed != False and self.truecoins > dues))
+		return not self.shadowbanned and not (self.is_banned and not self.unban_utc) and (self.admin_level or self.club_allowed or (self.club_allowed != False and self.truescore > dues))
 
 	@lazy
 	def any_block_exists(self, other):
@@ -282,7 +287,6 @@ class User(Base):
 
 	@cache.memoize(timeout=86400)
 	def userpagelisting(self, site=None, v=None, page=1, sort="new", t="all"):
-
 		if self.shadowbanned and not (v and (v.admin_level > 1 or v.id == self.id)): return []
 
 		posts = g.db.query(Submission.id).filter_by(author_id=self.id, is_pinned=False)

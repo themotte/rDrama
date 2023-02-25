@@ -370,7 +370,7 @@ def leaderboard(v:User):
 	comments = SimpleLeaderboard(v, LeaderboardMeta("Comments", "comment count", "comments", "Comments", "comments"), g.db, users, User.comment_count)
 	received_awards = SimpleLeaderboard(v, LeaderboardMeta("Awards", "received awards", "awards", "Awards", None), g.db, users, User.received_award_count)
 	coins_spent = SimpleLeaderboard(v, LeaderboardMeta("Spent in shop", "coins spent in shop", "spent", "Coins", None), g.db, users, User.coins_spent)
-	truescore = SimpleLeaderboard(v, LeaderboardMeta("Truescore", "truescore", "truescore", "Truescore", None), g.db, users, User.truecoins)
+	truescore = SimpleLeaderboard(v, LeaderboardMeta("Truescore", "truescore", "truescore", "Truescore", None), g.db, users, User.truescore)
 	badges = BadgeMarseyLeaderboard(v, LeaderboardMeta("Badges", "badges", "badges", "Badges", None), g.db, Badge.user_id)
 	blocks = UserBlockLeaderboard(v, LeaderboardMeta("Blocked", "most blocked", "blocked", "Blocked By", "blockers"), g.db, UserBlock.target_id)
 
