@@ -45,8 +45,8 @@ class Submission(Base):
 	title = Column(String, nullable=False)
 	title_html = Column(String, nullable=False)
 	url = Column(String)
-	body = Column(String)
-	body_html = Column(String)
+	body = Column(Text)
+	body_html = Column(Text)
 	flair = Column(String)
 	ban_reason = Column(String)
 	embed_url = Column(String)
@@ -79,7 +79,7 @@ class Submission(Base):
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
-		return f"<Submission(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
 	@lazy

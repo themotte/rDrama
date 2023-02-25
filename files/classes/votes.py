@@ -27,7 +27,7 @@ class Vote(Base):
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
-		return f"<Vote(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
 	@lazy
@@ -71,7 +71,7 @@ class CommentVote(Base):
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
-		return f"<CommentVote(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
 	@lazy

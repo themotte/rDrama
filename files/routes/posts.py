@@ -40,7 +40,7 @@ titleheaders = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWe
 
 MAX_TITLE_LENGTH = 500
 MAX_URL_LENGTH = 2048
-MAX_BODY_LENGTH = 20000
+MAX_BODY_LENGTH = SUBMISSION_BODY_LENGTH_MAXIMUM
 
 
 def guarded_value(val, min_len, max_len) -> str:
@@ -319,9 +319,6 @@ def edit_post(pid, v):
 	body_html = sanitize(body, edit=True)
 
 	p.body = body
-
-	if len(body_html) > 40000: abort(400, "Submission body_html too long! (max 40k characters)")
-
 	p.body_html = body_html
 
 	if not p.private and not p.ghost:
@@ -712,8 +709,6 @@ def submit_post(v):
 				return error("Image files only")
 
 	body_html = sanitize(body)
-
-	if len(body_html) > 40000: return error("Submission body_html too long! (max 40k characters)")
 
 	club = bool(request.values.get("club",""))
 	

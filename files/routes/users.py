@@ -380,13 +380,6 @@ def leaderboard(v:User):
 
 	return render_template("leaderboard.html", v=v, leaderboards=leaderboards)
 
-@app.get("/@<username>/css")
-def get_css(username):
-	user = get_user(username)
-	resp=make_response(user.css or "")
-	resp.headers.add("Content-Type", "text/css")
-	return resp
-
 @app.get("/@<username>/profilecss")
 def get_profilecss(username):
 	user = get_user(username)
@@ -437,7 +430,7 @@ def message2(v, username):
 	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked:
 		abort(403, "This user is blocking you.")
 
-	message = request.values.get("message", "").strip()[:10000].strip()
+	message = request.values.get("message", "").strip()[:MESSAGE_BODY_LENGTH_MAXIMUM].strip()
 
 	if not message: abort(400, "Message is empty!")
 	body_html = sanitize(message)
@@ -482,7 +475,7 @@ def message2(v, username):
 @auth_required
 def messagereply(v):
 
-	message = request.values.get("body", "").strip()[:10000].strip()
+	message = request.values.get("body", "").strip()[:MESSAGE_BODY_LENGTH_MAXIMUM].strip()
 
 	if not message and not request.files.get("file"): abort(400, "Message is empty!")
 

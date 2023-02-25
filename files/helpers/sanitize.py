@@ -369,3 +369,12 @@ def filter_emojis_only(title, edit=False, graceful=False):
 
 	if len(title) > 1500 and not graceful: abort(400)
 	else: return title
+
+def validate_css(css:str) -> tuple[bool, str]:
+	'''
+	Validates that the provided CSS is allowed. It looks somewhat ugly but
+	this prevents users from XSSing themselves (not really too much of a 
+	practical concern) or causing styling issues with the rest of the page.
+	'''
+	if '</style' in css.lower(): return False, "Invalid CSS"
+	return True, ""

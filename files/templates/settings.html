@@ -39,7 +39,7 @@
 	<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
 	<link rel="stylesheet" href="{{ ('css/'~v.theme~'.css') | asset }}">
 	{% if v.css and not request.path.startswith('/settings/css') %}
-		<link rel="stylesheet" href="/@{{v.username}}/css">
+		<style>{{v.css | safe}}</style>
 	{% endif %}
 </head>
 

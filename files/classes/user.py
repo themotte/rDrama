@@ -54,8 +54,8 @@ class User(Base):
 	verifiedcolor = Column(String)
 	winnings = Column(Integer, default=0, nullable=False)
 	email = deferred(Column(String))
-	css = deferred(Column(String))
-	profilecss = deferred(Column(String))
+	css = deferred(Column(String(CSS_LENGTH_MAXIMUM)))
+	profilecss = deferred(Column(String(CSS_LENGTH_MAXIMUM)))
 	passhash = deferred(Column(String, nullable=False))
 	post_count = Column(Integer, default=0, nullable=False)
 	comment_count = Column(Integer, default=0, nullable=False)
@@ -319,7 +319,7 @@ class User(Base):
 		return f"/@{self.username}"
 
 	def __repr__(self):
-		return f"<User(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
 	@lazy
