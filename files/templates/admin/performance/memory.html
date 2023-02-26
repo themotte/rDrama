@@ -1,0 +1,59 @@
+{%- extends 'default.html' -%}
+{% block content %}
+{%- macro post_toast_button(text, url, css_class) -%}
+<button class="btn{% if css_class %} {{css_class}}{% endif %}" onclick="post_toast(this, '{{url}}')">{{text}}</button>
+{%- endmacro -%}
+<h5 class="mt-3">System Info</h5>
+<section class="system-resource-usage">
+	<div class="overflow-x-auto">
+		<table class="table table-striped mb-5">
+			<tbody>
+				<tr>
+					<td>Total Physical RAM</td>
+					<td>{{system_vm.total | computersize}}</td>
+				</tr>
+				<tr>
+					<td>Available</td>
+					<td>{{system_vm.available | computersize}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+<h5 class="mt-3">Worker Info</h5>
+<section class="worker-resource-usage">
+	<div class="overflow-x-auto">
+		<table class="table table-striped mb-5">
+			<thead class="bg-primary text-white">
+				<tr>
+					<th>PID</th>
+					<th>Type</th>
+					<th>Started</th>
+					<th>Memory Usage (Virtual)</th>
+					<th>Memory Usage (Physical)</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for process in processes %}
+				<tr{% if process.is_self %} class='self'{% endif %}>
+					<td>{{process.pid}}</td>
+					<td>{{'Master' if process.is_master else 'Worker'}}</td>
+					<td>{{process.started_at_utc_str}}</td>
+					<td>{{process.memory_vms | computersize}}</td>
+					<td class="{{process.memory_rss_css_class}}">{{process.memory_rss | computersize}}</td>
+					<td>{%- if process.is_master -%}
+							{{post_toast_button('Scale Up', '/performance/workers/+1', 'btn-secondary')}}
+							{{post_toast_button('Scale Down', '/performance/workers/-1', 'btn-secondary')}}
+							{{post_toast_button('Reload', '/performance/workers/reload', 'btn-danger')}}
+						{%- else -%}
+							{{post_toast_button('Kill', '/performance/workers/' ~ process.pid ~ '/kill', 'btn-danger')}}
+						{%- endif -%}
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</section>
+{% endblock %}
