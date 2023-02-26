@@ -67,15 +67,7 @@ def _signal_master_process(signal:int) -> None:
 		abort(500, "This worker is an orphan!")
 	os.kill(ppid, signal)
 
-@app.post('/performance/workers/reload')
-@admin_level_required(PERMS['PERFORMANCE_RELOAD'])
-def performance_reload_workers(v):
-	_signal_master_process(Signals.SIGHUP)
-	return {'message': 'Sent reload signal successfully'}
-
-@app.post('/performance/workers/<int:pid>/kill')
-@admin_level_required(PERMS['PERFORMANCE_KILL_PROCESS'])
-def performance_kill_worker_process(v, pid:int):
+def _kill_worker_process(pid:int, signal:int) -> None:
 	workers:set[int] = {p.pid for p in psutil.process_iter() if p.name() == WORKER_PROCESS_NAME}
 	try:
 		workers.remove(os.getppid()) # don't allow killing the master process
@@ -84,7 +76,24 @@ def performance_kill_worker_process(v, pid:int):
 
 	if not pid in workers:
 		abort(404, "Worker process not found")
-	os.kill(pid, Signals.SIGKILL)
+	os.kill(pid, signal)
+
+@app.post('/performance/workers/reload')
+@admin_level_required(PERMS['PERFORMANCE_RELOAD'])
+def performance_reload_workers(v):
+	_signal_master_process(Signals.SIGHUP)
+	return {'message': 'Sent reload signal successfully'}
+
+@app.post('/performance/workers/<int:pid>/terminate')
+@admin_level_required(PERMS['PERFORMANCE_KILL_PROCESS'])
+def performance_terminate_worker_process(v, pid:int):
+	_kill_worker_process(pid, Signals.SIGTERM)
+	return {"message": f"Gracefully shut down worker PID {pid} successfully"}
+
+@app.post('/performance/workers/<int:pid>/kill')
+@admin_level_required(PERMS['PERFORMANCE_KILL_PROCESS'])
+def performance_kill_worker_process(v, pid:int):
+	_kill_worker_process(pid, Signals.SIGKILL)
 	return {"message": f"Killed worker with PID {pid} successfully"}
 
 @app.post('/performance/workers/+1')
