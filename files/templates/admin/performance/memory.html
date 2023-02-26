@@ -36,7 +36,7 @@
 			</thead>
 			<tbody>
 			{% for pid, process in processes.items() %}
-				<tr{% if process.is_self %} class='self'{% endif %}>
+				<tr{% if process.is_current %} class='self'{% endif %}>
 					<td>{{process.pid}}</td>
 					<td>{{'Master' if process.is_master else 'Worker'}}</td>
 					<td>{{process.started_at_utc_str}}</td>
