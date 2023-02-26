@@ -58,8 +58,8 @@ class RenderedPerfInfo:
 @admin_level_required(PERMS['PERFORMANCE_STATS'])
 def performance_get_stats(v):
 	system_vm = psutil.virtual_memory()
-	processes = {p.pid:RenderedPerfInfo.from_process(p) for p in psutil.process_iter() if p.name == WORKER_PROCESS_NAME}
-	return render_template('admin/performance/memory.html', processes=processes, system_vm=system_vm)
+	processes = {p.pid:RenderedPerfInfo.from_process(p) for p in psutil.process_iter() if p.name() == WORKER_PROCESS_NAME}
+	return render_template('admin/performance/memory.html', v=v, processes=processes, system_vm=system_vm)
 
 def _signal_master_process(signal:int) -> None:
 	ppid:int = os.getppid()
@@ -76,7 +76,7 @@ def performance_reload_workers(v):
 @app.post('/performance/workers/<int:pid>/kill')
 @admin_level_required(PERMS['PERFORMANCE_KILL_PROCESS'])
 def performance_kill_worker_process(v, pid:int):
-	workers:set[int] = {p.pid for p in psutil.process_iter() if p.name == WORKER_PROCESS_NAME}
+	workers:set[int] = {p.pid for p in psutil.process_iter() if p.name() == WORKER_PROCESS_NAME}
 	try:
 		workers.remove(os.getppid()) # don't allow killing the master process
 	except:

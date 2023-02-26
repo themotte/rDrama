@@ -11,7 +11,7 @@ from files.helpers.assetcache import assetcache_path
 
 @app.template_filter("computer_size")
 def computer_size(size_bytes:int) -> str:
-	return f'{size_bytes // 1024} KiB'
+	return f'{size_bytes // 1024 // 1024} MiB'
 
 @app.template_filter("shuffle")
 @pass_context
