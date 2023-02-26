@@ -10,11 +10,11 @@
 			<tbody>
 				<tr>
 					<td>Total Physical RAM</td>
-					<td>{{system_vm.total | computersize}}</td>
+					<td>{{system_vm.total | computer_size}}</td>
 				</tr>
 				<tr>
 					<td>Available</td>
-					<td>{{system_vm.available | computersize}}</td>
+					<td>{{system_vm.available | computer_size}}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -40,8 +40,8 @@
 					<td>{{process.pid}}</td>
 					<td>{{'Master' if process.is_master else 'Worker'}}</td>
 					<td>{{process.started_at_utc_str}}</td>
-					<td>{{process.memory_vms | computersize}}</td>
-					<td class="{{process.memory_rss_css_class}}">{{process.memory_rss | computersize}}</td>
+					<td>{{process.memory_vms | computer_size}}</td>
+					<td class="{{process.memory_rss_css_class}}">{{process.memory_rss | computer_size}}</td>
 					<td>{%- if process.is_master -%}
 							{{post_toast_button('Scale Up', '/performance/workers/+1', 'btn-secondary')}}
 							{{post_toast_button('Scale Down', '/performance/workers/-1', 'btn-secondary')}}
