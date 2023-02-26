@@ -47,7 +47,7 @@
 							{{post_toast_button('Scale Down', '/performance/workers/-1', 'btn-secondary')}}
 							{{post_toast_button('Reload', '/performance/workers/reload', 'btn-danger')}}
 						{%- else -%}
-							{{post_toast_button('Graceful Shutdown', '/performance/workers/' ~ process.pid ~ '/terminate', 'btn-danger')}}
+							{{post_toast_button('Shutdown', '/performance/workers/' ~ process.pid ~ '/terminate', 'btn-danger')}}
 							{{post_toast_button('Kill', '/performance/workers/' ~ process.pid ~ '/kill', 'btn-danger')}}
 						{%- endif -%}
 					</td>
