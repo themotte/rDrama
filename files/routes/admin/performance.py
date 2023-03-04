@@ -98,10 +98,7 @@ def _signal_worker_process(pid:int, signal:int) -> None:
 	workers:set[int] = {p.pid 
 		     for p in psutil.process_iter() 
 			 if p.name() == PROCESS_NAME}
-	try:
-		workers.remove(os.getppid()) # don't allow killing the master process
-	except:
-		pass
+	workers.discard(os.getppid()) # don't allow killing the master process
 
 	if not pid in workers:
 		abort(404, "Worker process not found")
