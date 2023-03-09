@@ -3,16 +3,12 @@
 {# "level" represents the nested level in this call; always starts at 1 #}
 {# this is distinct from "comment.level", which is the global depth of this comment #}
 {% macro single_comment(c, level) %}
-
-{% if should_hide_score or c.should_hide_score %}
-	{% set ups="" %}
-	{% set downs="" %}
-	{% set score="" %}
-{% else %}
-	{% set ups=c.upvotes %}
-	{% set downs=c.downvotes %}
-	{% set score=c.score %}
-{% endif %}
+	{%- if render_ctx is not defined -%}
+		{% set render_ctx = 'comments' %}
+	{%- endif -%}
+	{%- set ups = c.upvotes_str(render_ctx) -%}
+	{%- set score = c.score_str(render_ctx) -%}
+	{%- set downs = c.downvotes_str(render_ctx) -%}
 
 {%- set replies = c.replies(v) -%}
 
@@ -61,7 +57,7 @@
 
 {% else %}
 
-{%- set voted = c.vote_display(v) -%}
+{%- set voted = c.voted_display(v) -%}
 
 {% if standalone and level==1 %}
 <div class="post-info post-row-cid-{{c.id}} mb-1 mr-2 {% if request.path == '/notifications' %}mt-5{% else %}mt-3{% endif %}">

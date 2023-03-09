@@ -1,7 +1,7 @@
 from os import environ
 import re
 import time
-from typing import Optional
+from typing import Literal, Optional
 from urllib.parse import urlencode, urlparse, parse_qs
 from flask import *
 from sqlalchemy import *
@@ -14,6 +14,8 @@ from .flags import CommentFlag
 from random import randint
 from .votes import CommentVote
 from math import floor
+
+CommentRenderContext = Literal['comments', 'volunteer']
 
 class Comment(Base):
 
@@ -86,6 +88,29 @@ class Comment(Base):
 		comment_age_seconds = int(time.time()) - self.created_utc
 		comment_age_hours = comment_age_seconds / (60*60)
 		return comment_age_hours < app.config['SCORE_HIDING_TIME_HOURS']
+	
+	@lazy
+	def _score_context_str(self, score_type:Literal['score', 'upvotes', 'downvotes'], 
+			context:CommentRenderContext) -> str:
+		if self.is_message: return '' # don't show scores for messages
+		if context == 'volunteer': return '' # volunteer: hide scores
+		if self.should_hide_score: return '' # hide scores for new comments
+		
+		if score_type == 'upvotes': return str(self.upvotes)
+		if score_type == 'score': return str(self.score)
+		if score_type == 'downvotes': return str(self.downvotes)
+		
+	@lazy
+	def upvotes_str(self, context:CommentRenderContext) -> str:
+		return self._score_context_str('upvotes', context)
+	
+	@lazy
+	def score_str(self, context:CommentRenderContext) -> str:
+		return self._score_context_str('score', context)
+
+	@lazy
+	def downvotes_str(self, context:CommentRenderContext) -> str:
+		return self._score_context_str('downvotes', context)
 
 	@property
 	@lazy
@@ -472,7 +497,7 @@ class Comment(Base):
 		if not v: return -2
 		if v.id == self.author_id: return 1
 		return getattr(self, 'voted', 0)
-	
+
 	@lazy
 	def active_flags(self, v): 
 		return len(self.flags(v))
