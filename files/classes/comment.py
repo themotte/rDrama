@@ -1,6 +1,7 @@
 from os import environ
 import re
 import time
+from typing import Optional
 from urllib.parse import urlencode, urlparse, parse_qs
 from flask import *
 from sqlalchemy import *
@@ -88,7 +89,7 @@ class Comment(Base):
 
 	@property
 	@lazy
-	def top_comment(self):
+	def top_comment(self) -> Optional["Comment"]:
 		return g.db.query(Comment).filter_by(id=self.top_comment_id).one_or_none()
 
 	@lazy
@@ -379,20 +380,99 @@ class Comment(Base):
 	@lazy
 	def collapse_for_user(self, v, path):
 		if v and self.author_id == v.id: return False
-
 		if path == '/admin/removed/comments': return False
-
 		if self.over_18 and not (v and v.over_18) and not (self.post and self.post.over_18): return True
-
 		if self.is_banned: return True
-			
 		if v and v.filter_words and self.body and any(x in self.body for x in v.filter_words): return True
-		
 		return False
 
 	@property
 	@lazy
-	def is_op(self): return self.author_id==self.post.author_id
+	def is_op(self): 
+		return self.author_id == self.post.author_id
+	
+	@property
+	@lazy
+	def is_comment(self) -> bool:
+		'''
+		Returns whether this is an actual comment (i.e. not a private message)
+		'''
+		return bool(self.parent_submission)
+	
+	@property
+	@lazy
+	def is_message(self) -> bool:
+		'''
+		Returns whether this is a private message or modmail
+		'''
+		return not self.is_comment
+	
+	@property
+	@lazy
+	def is_strict_message(self) -> bool:
+		'''
+		Returns whether this is a private message or modmail
+		but is not a notification
+		'''
+		return self.is_message and not self.is_notification
+	
+	@property
+	@lazy
+	def is_modmail(self) -> bool:
+		'''
+		Returns whether this is a modmail message
+		'''
+		if not self.is_message: return False
+		if self.sentto == MODMAIL_ID: return True
+
+		top_comment: Optional["Comment"] = self.top_comment
+		return bool(top_comment.sentto == MODMAIL_ID)
+	
+	@property
+	@lazy
+	def is_notification(self) -> bool:
+		'''
+		Returns whether this is a notification
+		'''
+		return self.is_message and not self.sentto
+
+	@lazy
+	def header_msg(self, v, is_notification_page:bool, reply_count:int) -> str:
+		if self.post:
+			post_html:str = f"<a href=\"{self.post.permalink}\">{self.post.realtitle(v)}</a>"
+			if v:
+				if v.id == self.author_id and reply_count:
+					text = f"Comment {'Replies' if reply_count != 1 else 'Reply'}"
+				elif v.id == self.post.author_id and self.level == 1:
+					text = "Post Reply"
+				elif self.parent_submission in v.subscribed_idlist():
+					text = "Subscribed Thread"
+				else:
+					text = "Username Mention"
+				if is_notification_page:
+					return f"{text}: {post_html}"
+			return post_html
+		elif self.author_id in {AUTOJANNY_ID, NOTIFICATIONS_ID}:
+			return "Notification"
+		elif self.sentto == MODMAIL_ID:
+			return "Sent to admins"
+		else:
+			return f"Sent to @{self.senttouser.username}"
+		
+	@lazy
+	def voted_display(self, v) -> int:
+		'''
+		Returns data used to modify how to show the vote buttons.
+
+		:returns: A number between `-2` and `1`. `-2` is returned if `v` is 
+		`None`. `1` is returned if the user is the comment author.
+		Otherwise, a value of `-1` (downvote),` 0` (no vote or no data), or `1`
+		(upvote) is returned.
+		'''
+		if not v: return -2
+		if v.id == self.author_id: return 1
+		return getattr(self, 'voted', 0)
 	
 	@lazy
-	def active_flags(self, v): return len(self.flags(v))
+	def active_flags(self, v): 
+		return len(self.flags(v))
