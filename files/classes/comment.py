@@ -463,6 +463,10 @@ class Comment(Base):
 
 	@lazy
 	def header_msg(self, v, is_notification_page:bool, reply_count:int) -> str:
+		'''
+		Returns a message that is in the header for a comment, usually for
+		display on a notification page.
+		'''
 		if self.post:
 			post_html:str = f"<a href=\"{self.post.permalink}\">{self.post.realtitle(v)}</a>"
 			if v:
@@ -497,6 +501,24 @@ class Comment(Base):
 		if not v: return -2
 		if v.id == self.author_id: return 1
 		return getattr(self, 'voted', 0)
+	
+	@lazy
+	def sticky_api_url(self, v) -> Optional[str]:
+		'''
+		Returns the API URL used to sticky this comment.
+		:returns: Currently `None` always. Stickying comments was disabled
+		UI-side on TheMotte.
+		'''
+		return None
+		if not self.is_comment: return None
+		if not v: return None
+		if v.admin_level >= 2:
+			return 'sticky_comment'
+		if v.id == self.post.author_id:
+			return 'pin_comment'
+		if self.post.sub and v.mods(self.post.sub):
+			return 'mod_pin'
+		return None
 
 	@lazy
 	def active_flags(self, v): 

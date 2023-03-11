@@ -1,14 +1,14 @@
 {%- if v and c.filter_state == 'reported' and v.can_manage_reports() -%}
 	<div id="flaggers-{{c.id}}" class="flaggers d-none">
-	    <strong><i class="far fa-fw fa-flag"></i> Reports:</strong>
+		<strong><i class="far fa-fw fa-flag"></i> Reports:</strong>
 		<a class="btn btn-primary" style="margin:1px 5px" onclick="filter_new_comment_status({{c.id}}, 'normal')">Approve</a>
 		<a class="btn btn-secondary" style="margin:1px 5px" onclick="filter_new_comment_status({{c.id}}, 'ignored')">Approve and Ignore</a>
 		<a class="btn btn-danger" style="margin:1px 5px" onclick="filter_new_comment_status({{c.id}}, 'removed')">Remove</a>
 		<pre></pre>
 		<ul style="padding-left:20px; margin-bottom: 0;word-wrap:break-word">
-		    {% for f in c.flags(v) %}
-			    <li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %}</li>
-		    {% endfor %}
+			{% for f in c.flags(v) %}
+				<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %}</li>
+			{% endfor %}
 		</ul>
 	</div>
 {%- endif -%}
