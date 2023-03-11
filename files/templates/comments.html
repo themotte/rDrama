@@ -170,15 +170,7 @@
 	{{single_comment(comment, level = parent_level + 1)}}
 {% endfor %}
 
-{% if offset %} {# view more button #}
-	{% if p %}
-		{% set pid = p.id %}
-	{% endif %}
-	<div id="viewmore-{{offset}}">
-		<br>
-		<button id="viewbtn" class="btn btn-primary" onclick="viewmore({{pid}},'{{sort}}',{{offset}},{{ids}})">VIEW MORE COMMENTS</button>
-	</div>
-{% endif %}
+{%- include 'component/comment/view_more_button.html' -%}
 
 {% if not ajax %}
 	{% if v %}
