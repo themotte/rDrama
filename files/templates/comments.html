@@ -162,11 +162,7 @@
 {% endmacro %}
 
 {% for comment in comments %}
-	{% if parent_level %}
-		{% set parent_level = parent_level | int %}
-	{% else %}
-		{% set parent_level = 0 %}
-	{% endif %}
+	{%- set parent_level = parent_level | int if parent_level else 0 -%}
 	{{single_comment(comment, level = parent_level + 1)}}
 {% endfor %}
 
@@ -175,7 +171,7 @@
 {% if not ajax %}
 	{% if v %}
 		{% if v.admin_level >= 2 %}
-			{% include "ban_modal.html" %}
+			{% include "component/modal/ban.html" %}
 		{% endif %}
 		{%- include 'component/modal/delete_comment.html' -%}
 		{%- include 'component/modal/report_comment.html' -%}
@@ -193,14 +189,16 @@
 
 	<script src="{{ 'js/clipboard.js' | asset }}"></script>
 
-	{% if v and v.admin_level >= 2 %}
-		<script src="{{ 'js/comments_admin.js' | asset }}"></script>
+	{% if v %}
+		{% if v.admin_level >= 2 %}
+			<script src="{{ 'js/comments_admin.js' | asset }}"></script>
+		{% endif %}
 		{% if v.admin_level >= 2 %}
 			<script src="{{ 'js/filter_actions.js' | asset }}"></script>
 		{% endif %}
 	{% endif %}
 
-	{% include "component/modal/expanded_image.html.html" %}
+	{% include "component/modal/expanded_image.html" %}
 
 	<script src="{{ 'js/comments+submission_listing.js' | asset }}"></script>
 	<script src="{{ 'js/comments.js' | asset }}"></script>

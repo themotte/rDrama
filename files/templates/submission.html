@@ -114,7 +114,7 @@
 							<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-dismiss="modal" onclick="expandMarkdown(this,'{{p.id}}')"><i class="fas text-expand-icon-{{p.id}} fa-expand-alt text-center mr-3"></i><span>View source</span></button>
 						{% endif %}
 
-						{% include "post_actions_mobile.html" %}
+						{% include "component/post/actions_mobile.html" %}
 					</ul>
 				</div>
 			</div>
@@ -123,7 +123,7 @@
 {% endif %}
 
 {% if v and v.admin_level > 1 %}
-	{% include "post_admin_actions_mobile.html" %}
+	{% include "component/post/actions_admin_mobile.html" %}
 {% endif %}
 
 {% endblock %}
@@ -338,7 +338,7 @@
 							<a class="list-inline-item" role="button" onclick="expandMarkdown(this,'{{p.id}}')"><i class="fas text-expand-icon-{{p.id}} fa-expand-alt"></i><span>View source</span></a>
 						{% endif %}
 
-						{% include 'post_actions.html' %}
+						{% include 'component/post/actions.html' %}
 					</ul>
 						</div>
 						</div>
@@ -557,7 +557,7 @@
 {% endif %}
 
 {% if v %}
-	{% include "report_post_modal.html" %}
+	{% include "component/modal/report_post.html" %}
 {% endif %}
 
 {% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
