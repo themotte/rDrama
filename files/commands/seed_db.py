@@ -91,7 +91,6 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 		user = users[int(len(users) * detrand())]
 		post = Submission(
 			private=False,
-			club=None,
 			author_id=user.id,
 			over_18=False,
 			app_id=None,

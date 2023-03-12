@@ -15,9 +15,6 @@ SITE_TITLE = environ.get("SITE_TITLE", '').strip()
 SCHEME = environ.get('SCHEME', 'http' if 'localhost' in SITE else 'https')
 SITE_FULL = SCHEME + '://' + SITE
 
-CC = "COUNTRY CLUB"
-CC_TITLE = CC.title()
-
 NOTIFICATIONS_ID = 1
 AUTOJANNY_ID = 2
 MODMAIL_ID = 2

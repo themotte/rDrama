@@ -93,7 +93,7 @@ class ModAction(Base):
 	@lazy
 	def string(self):
 
-		output = self.lookup_action_type()["str"].format(self=self, cc=CC_TITLE)
+		output = self.lookup_action_type()["str"].format(self=self)
 
 		if self.note: output += f" <i>({self.note})</i>"
 
@@ -104,7 +104,6 @@ class ModAction(Base):
 	def target_link(self):
 		if self.target_user: return f'<a href="{self.target_user.url}">{self.target_user.username}</a>'
 		elif self.target_post:
-			if self.target_post.club: return f'<a href="{self.target_post.permalink}">{CC} ONLY</a>'
 			return f'<a href="{self.target_post.permalink}">{self.target_post.title_html}</a>'
 		elif self.target_comment_id: return f'<a href="/comment/{self.target_comment_id}?context=8#context">comment</a>'
 
@@ -168,16 +167,6 @@ ACTIONTYPES = {
 		"str": 'gave {self.target_link} a checkmark', 
 		"icon": 'fa-badge-check', 
 		"color": 'bg-success'
-	},
-	'club_allow': {
-		"str": 'allowed user {self.target_link} into the {cc}', 
-		"icon": 'fa-golf-club', 
-		"color": 'bg-success'
-	},
-	'club_ban': {
-		"str": 'disallowed user {self.target_link} from the {cc}', 
-		"icon": 'fa-golf-club', 
-		"color": 'bg-danger'
 	},
 	'delete_report': {
 		"str": 'deleted report on {self.target_link}', 

@@ -331,18 +331,14 @@ class Comment(Base):
 		return data
 
 	def realbody(self, v):
-		if self.post and self.post.club and not (v and (v.paid_dues or v.id in [self.author_id, self.post.author_id])): return f"<p>{CC} ONLY</p>"
-
 		body = self.body_html or ""
+		if not body: return ""
+		if v:
+			body = body.replace("old.reddit.com", v.reddit)
+			if v.nitter and not '/i/' in body and '/retweets' not in body: 
+				body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
-		if body:
-
-			if v:
-				body = body.replace("old.reddit.com", v.reddit)
-
-				if v.nitter and not '/i/' in body and '/retweets' not in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
-
-			if v and v.controversial:
+			if v.controversial:
 				captured = []
 				for i in controversial_regex.finditer(body):
 					if i.group(0) in captured: continue
@@ -357,7 +353,7 @@ class Comment(Base):
 					url_noquery = url.split('?')[0]
 					body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
 
-			if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 60:
+			if v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 60:
 				ti = max(int((time.time() - self.created_utc)/60), 1)
 				maxupvotes = min(ti, 13)
 				rand = randint(0, maxupvotes)
@@ -371,7 +367,6 @@ class Comment(Base):
 		return body
 
 	def plainbody(self, v):
-		if self.post and self.post.club and not (v and (v.paid_dues or v.id in [self.author_id, self.post.author_id])): return f"<p>{CC} ONLY</p>"
 		body = self.body
 		if not body: return ""
 		return body

@@ -51,11 +51,6 @@
 				<a id="unpin-{{p.id}}" class="dropdown-item {% if not p.stickied %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2(this,'/unsticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin</a>
 			{% endif %}
 
-			{# {% if v.admin_level > 1 or v.id == p.author_id %}
-				<a id="club-{{p.id}}" class="dropdown-item {% if p.club %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2(this,'/toggle_club/{{p.id}}','club-{{p.id}}','unclub-{{p.id}}')"><i class="fas fa-eye-slash"></i>Mark club</a>
-				<a id="unclub-{{p.id}}" class="dropdown-item {% if not p.club %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2(this,'/toggle_club/{{p.id}}','club-{{p.id}}','unclub-{{p.id}}')"><i class="fas fa-eye"></i>Unmark club</a>
-			{% endif %} #}
-
 			{% if v.admin_level > 1 %}
 				{% if "/reported/" in request.path %}
 					{% if v.id != p.author.id %}<a class="dropdown-item list-inline-item text-danger" role="button" onclick="post_toast(this,'/ban_post/{{p.id}}')"><i class="fas fa-ban"></i>Remove</a>{% endif %}
@@ -70,14 +65,11 @@
 				{% endif %}
 			{% endif %}
 
-
-
 			{% if v.id != p.author_id and not p.ghost %}
 				<a id="unblock-{{p.id}}" class="dropdown-item text-success list-inline-item {% if not p.is_blocking %}d-none{% endif %}" role="button" onclick="post_toast2(this,'/settings/unblock?username={{p.author_name}}','block-{{p.id}}','unblock-{{p.id}}')"><i class="fas fa-eye text-success"></i>Unblock user</a>
 
 				<a id="block-{{p.id}}" class="dropdown-item list-inline-item text-danger {% if p.is_blocking %}d-none{% endif %}" role="button" onclick="post_toast2(this,'/settings/block?username={{p.author_name}}','block-{{p.id}}','unblock-{{p.id}}')"><i class="fas fa-eye-slash text-danger"></i>Block user</a>
 			{% endif %}
-
 
 			{% if p.sub and v.mods(p.sub) %}
 				<a class="dropdown-item list-inline-item text-danger" role="button" onclick="post_toast(this,'/kick/{{p.id}}')"><i class="fas fa-sign-out text-danger"></i>Remove</a>
@@ -87,7 +79,6 @@
 					<a id="unexile-{{p.id}}" class="{% if not p.author.exiled_from(p.sub) %}d-none{% endif %} dropdown-item list-inline-item text-success" role="button" onclick="post_toast2(this,'/h/{{sub}}/unexile/{{p.author_id}}','exile-{{p.id}}','unexile-{{p.id}}')"><i class="fas fa-campfire text-success"></i>Unexile user</a>
 				{% endif %}
 			{% endif %}
-
 
 			{% if v.id==p.author_id or v.admin_level > 1 %}
 				<a id="mark-{{p.id}}" class="dropdown-item {% if p.over_18 %}d-none{% endif %} list-inline-item text-danger" role="button" onclick="post_toast2(this,'/toggle_post_nsfw/{{p.id}}','mark-{{p.id}}','unmark-{{p.id}}')"><i class="fas fa-eye-evil"></i>Mark +18</a>

@@ -92,7 +92,6 @@ class User(Base):
 	is_banned = Column(Integer, default=0, nullable=False)
 	unban_utc = Column(Integer, default=0, nullable=False)
 	ban_reason = deferred(Column(String))
-	club_allowed = Column(Boolean)
 	login_nonce = Column(Integer, default=0, nullable=False)
 	reserved = deferred(Column(String))
 	coins = Column(Integer, default=0, nullable=False)
@@ -236,14 +235,8 @@ class User(Base):
 	def is_blocking(self, target):
 		return g.db.query(UserBlock).filter_by(user_id=self.id, target_id=target.id).one_or_none()
 
-	@property
-	@lazy
-	def paid_dues(self):
-		return not self.shadowbanned and not (self.is_banned and not self.unban_utc) and (self.admin_level or self.club_allowed or (self.club_allowed != False and self.truecoins > dues))
-
 	@lazy
 	def any_block_exists(self, other):
-
 		return g.db.query(UserBlock).filter(
 			or_(and_(UserBlock.user_id == self.id, UserBlock.target_id == other.id), and_(
 				UserBlock.user_id == other.id, UserBlock.target_id == self.id))).first()

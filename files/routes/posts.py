@@ -56,21 +56,6 @@ def guarded_value(val, min_len, max_len) -> str:
 	# TODO: it may make sense to do more sanitisation here
 	return raw
 
-@app.post("/toggle_club/<pid>")
-@auth_required
-def toggle_club(pid, v):
-
-	post = get_post(pid)
-	if post.author_id != v.id and v.admin_level < 2: abort(403)
-
-	post.club = not post.club
-	g.db.add(post)
-
-	g.db.commit()
-
-	if post.club: return {"message": "Post has been marked as club-only!"}
-	else: return {"message": "Post has been unmarked as club-only!"}
-
 
 @app.post("/publish/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -99,7 +84,6 @@ def publish(pid, v):
 			cid = notif_comment(text, autojanny=True)
 			for follow in v.followers:
 				user = get_account(follow.user_id)
-				if post.club and not user.paid_dues: continue
 				add_notif(cid, user.id)
 
 	g.db.commit()
@@ -139,8 +123,6 @@ def post_id(pid, anything=None, v=None, sub=None):
 	if v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "new"
 	sort = request.values.get("sort", defaultsortingcomments)
-
-	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
 
 	limit = app.config['RESULTS_PER_PAGE_COMMENTS']
 	offset = 0
@@ -187,7 +169,6 @@ def post_id(pid, anything=None, v=None, sub=None):
 @auth_desired
 def viewmore(v, pid, sort, offset):
 	post = get_post(pid, v=v)
-	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
 
 	offset_prev = int(offset)
 	try: ids = set(int(x) for x in request.values.get("ids").split(','))
@@ -734,8 +715,6 @@ def submit_post(v, sub=None):
 
 	body_html = sanitize(body)
 
-	club = bool(request.values.get("club",""))
-	
 	if embed and len(embed) > 1500: embed = None
 
 	is_bot = bool(request.headers.get("Authorization"))
@@ -746,7 +725,6 @@ def submit_post(v, sub=None):
 
 	post = Submission(
 		private=bool(request.values.get("private","")),
-		club=club,
 		author_id=v.id,
 		over_18=bool(request.values.get("over_18","")),
 		app_id=v.client.application.id if v.client else None,
@@ -805,7 +783,6 @@ def submit_post(v, sub=None):
 			cid = notif_comment(text, autojanny=True)
 			for follow in v.followers:
 				user = get_account(follow.user_id)
-				if post.club and not user.paid_dues: continue
 				add_notif(cid, user.id)
 
 	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()

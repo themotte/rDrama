@@ -130,8 +130,6 @@
 
 {% block content %}
 
-{% set cc='COUNTRY CLUB' %}
-
 <div class="row mb-3" style="background-color:var(--gray-600)">
 
 	<div id="post-root" class="col-12">
@@ -211,13 +209,11 @@
 					{% endif %}
 					{% if p.realurl(v) %}
 						<h1 id="post-title" class="card-title post-title text-left mb-md-3"><a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
-							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
 							{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
 							{{p.realtitle(v) | safe}}
 						</a></h1>					
 					{% else %}
 						<h1 id="post-title" class="card-title post-title text-left mb-md-3">
-							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
 							{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
 							{{p.realtitle(v) | safe}}
 						</h1>

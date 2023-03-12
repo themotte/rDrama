@@ -191,7 +191,6 @@ def test_bulk_update_descendant_count_quick(accounts, submissions, comments):
 		for i in range(2):
 			post = Submission(**{
 				'private': False,
-				'club': None,
 				'author_id': alice.id,
 				'over_18': False,
 				'app_id': None,

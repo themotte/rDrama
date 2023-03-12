@@ -77,8 +77,6 @@ def inject_constants():
 		"NOTIFICATIONS_ID":NOTIFICATIONS_ID,
 		"MODMAIL_ID":MODMAIL_ID,
 		"PUSHER_ID":PUSHER_ID,
-		"CC":CC,
-		"CC_TITLE":CC_TITLE,
 		"listdir":listdir,
 		"config":app.config.get,
 		"COMMENT_BODY_LENGTH_MAXIMUM":COMMENT_BODY_LENGTH_MAXIMUM,

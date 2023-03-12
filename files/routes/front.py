@@ -188,7 +188,6 @@ def front_all(v, sub=None, subdomain=None):
 
 	sort=request.values.get("sort", defaultsorting)
 	t=request.values.get('t', defaulttime)
-	ccmode=request.values.get('ccmode', "false").lower()
 
 	if sort == 'bump': t='all'
 	
@@ -202,7 +201,6 @@ def front_all(v, sub=None, subdomain=None):
 					page=page,
 					t=t,
 					v=v,
-					ccmode=ccmode,
 					filter_words=v.filter_words if v else [],
 					gt=gt,
 					lt=lt,
@@ -230,13 +228,12 @@ def front_all(v, sub=None, subdomain=None):
 			g.db.commit()
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
-	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode, sub=sub, home=True)
+	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, sub=sub, home=True)
 
 
 
 @cache.memoize(timeout=86400)
-def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=0, lt=0, sub=None, site=None):
-
+def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, filter_words='', gt=0, lt=0, sub=None, site=None):
 	posts = g.db.query(Submission)
 	
 	if v and v.hidevotedon:
@@ -258,12 +255,9 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 	if not gt and not lt:
 		posts = apply_time_filter(posts, t, Submission)
 
-	if (ccmode == "true"):
-		posts = posts.filter(Submission.club == True)
-
 	posts = posts.filter_by(is_banned=False, private=False, deleted_utc = 0)
 
-	if ccmode == "false" and not gt and not lt:
+	if not gt and not lt:
 		posts = posts.filter_by(stickied=None)
 
 	if v and v.admin_level < 2:
@@ -291,7 +285,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 
 	posts = posts[:size]
 
-	if page == 1 and ccmode == "false" and not gt and not lt:
+	if page == 1 and not gt and not lt:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
 		elif v:
