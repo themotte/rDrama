@@ -10,7 +10,9 @@ else:
 	User = Any
 
 def moderated_body(target:Union[Submission, Comment], v:User) -> Optional[str]:
-	if v.admin_level >= PERMS['POST_COMMENT_MODERATION']: return None
+	if v.admin_level >= PERMS['POST_COMMENT_MODERATION'] \
+			or v.id == target.author_id:
+		return None
 	if target.deleted_utc: return 'Deleted by author'
 	if target.is_banned or target.filter_state == 'removed': return 'Removed'
 	if target.filter_state == 'filtered': return 'Filtered'
