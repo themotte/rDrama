@@ -11,6 +11,7 @@
 	{%- set downs = c.downvotes_str(render_ctx) -%}
 
 {%- set replies = c.replies(v) -%}
+{%- set is_notification_page = request.path.startswith('/notifications') -%}
 
 {% if (c.is_banned or c.deleted_utc or c.is_blocking) and not (v and v.admin_level >= 2) and not (v and v.id==c.author_id) %}
 
@@ -35,7 +36,7 @@
 					{{single_comment(reply, level=level+1)}}
 				{% endfor %}
 			</div>
-		{% elif replies and "notifications" in request.path %}
+		{% elif replies and is_notification_page %}
 			<div id="replies-of-{{c.id}}" class="d-none d-md-block">
 				{% set standalone=False %}
 				{% for reply in replies %}
@@ -60,7 +61,7 @@
 {%- set voted = c.voted_display(v) -%}
 
 {% if standalone and level==1 %}
-<div class="post-info post-row-cid-{{c.id}} mb-1 mr-2 {% if request.path == '/notifications' %}mt-5{% else %}mt-3{% endif %}">
+<div class="post-info post-row-cid-{{c.id}} mb-1 mr-2 {% if is_notification_page %}mt-5{% else %}mt-3{% endif %}">
 	{% if c.post and c.post.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 	{{c.header_msg(v, is_notification_page, replies | length) | safe}}
 	<span class="align-top">
@@ -130,7 +131,7 @@
 				{%- include 'component/comment/replybox_comment.html' -%}
 
 			{% if render_replies %} 
-				{% if level <= RENDER_DEPTH_LIMIT - 1 or request.path == '/notifications' %}
+				{% if level <= RENDER_DEPTH_LIMIT - 1 or is_notification_page %}
 					<div id="replies-of-{{c.id}}">
 						{% for reply in replies %}
 							{{single_comment(reply, level=level+1)}}
@@ -143,7 +144,7 @@
 					</div>
 				{% endif %}
 
-			{% if request.path == '/notifications' and c.level == 1 and c.sentto and not c.parent_submission and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
+			{% if is_notification_page and c.level == 1 and c.sentto and not c.parent_submission and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
 				{%- include 'components/comment/replybox_message.html' -%}
 			{% endif %}
 	{% else %}
@@ -221,7 +222,7 @@
 
 		{% if p and not (request.values and ('context' in request.values)) %}
 			collapsedCommentStorageInit('post_{{p.id}}');
-		{% elif request.path == '/notifications' or request.path.startswith('/@') %}
+		{% elif is_notification_page or request.path.startswith('/@') %}
 			collapsedCommentStorageInit('{{request.path}}');
 		{% endif %}
 		if (document.readyState === "complete" || 
