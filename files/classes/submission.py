@@ -2,12 +2,14 @@ from os import environ
 import random
 import re
 import time
+from typing import Optional
 from urllib.parse import urlparse
 from flask import render_template
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
 from files.__main__ import Base, app
 from files.helpers.const import *
+from files.helpers.content import moderated_body
 from files.helpers.lazy import lazy
 from files.helpers.assetcache import assetcache_path
 from .flags import Flag
@@ -357,6 +359,9 @@ class Submission(Base):
 		else: return ""
  
 	def realbody(self, v):
+		moderated:Optional[str] = moderated_body(self, v)
+		if moderated: return moderated
+
 		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{CC} ONLY</p>"
 
 		body = self.body_html or ""
@@ -381,6 +386,9 @@ class Submission(Base):
 		return body
 
 	def plainbody(self, v):
+		moderated:Optional[str] = moderated_body(self, v)
+		if moderated: return moderated
+
 		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{CC} ONLY</p>"
 		body = self.body
 		if not body: return ""
