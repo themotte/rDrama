@@ -58,7 +58,6 @@ class User(Base):
 	theme = Column(String, default=defaulttheme, nullable=False)
 	themecolor = Column(String, default=DEFAULT_COLOR, nullable=False)
 	cardview = Column(Boolean, default=cardview, nullable=False)
-	song = Column(String)
 	highres = Column(String)
 	profileurl = Column(String)
 	bannerurl = Column(String)
@@ -69,8 +68,8 @@ class User(Base):
 	verifiedcolor = Column(String)
 	winnings = Column(Integer, default=0, nullable=False)
 	email = deferred(Column(String))
-	css = deferred(Column(String))
-	profilecss = deferred(Column(String))
+	css = deferred(Column(String(CSS_LENGTH_MAXIMUM)))
+	profilecss = deferred(Column(String(CSS_LENGTH_MAXIMUM)))
 	passhash = deferred(Column(String, nullable=False))
 	post_count = Column(Integer, default=0, nullable=False)
 	comment_count = Column(Integer, default=0, nullable=False)
@@ -235,6 +234,7 @@ class User(Base):
 	@property
 	@lazy
 	def user_awards(self):
+		if not FEATURES['AWARDS']: return []
 		return_value = list(AWARDS_ENABLED.values())
 		user_awards = g.db.query(AwardRelationship).filter_by(user_id=self.id)
 		for val in return_value: val['owned'] = user_awards.filter_by(kind=val['kind'], submission_id=None, comment_id=None).count()
@@ -357,7 +357,7 @@ class User(Base):
 		return f"/@{self.username}"
 
 	def __repr__(self):
-		return f"<User(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
 	@lazy
@@ -386,7 +386,7 @@ class User(Base):
 	@property
 	@lazy
 	def received_awards(self):
-
+		if not FEATURES['AWARDS']: return []
 		awards = {}
 
 		posts_idlist = [x[0] for x in g.db.query(Submission.id).filter_by(author_id=self.id).all()]
@@ -660,3 +660,9 @@ class User(Base):
 		l = [i.strip() for i in self.custom_filter_list.split('\n')] if self.custom_filter_list else []
 		l = [i for i in l if i]
 		return l
+	
+	# Permissions
+
+	@property
+	def can_see_shadowbanned(self):
+		return self.admin_level >= PERMS['USER_SHADOWBAN'] or self.shadowbanned

@@ -1,6 +1,15 @@
 import time
+from collections.abc import Iterable
+from typing import TYPE_CHECKING, Any
 
+from sqlalchemy.orm import Query
 from sqlalchemy.sql import func
+
+if TYPE_CHECKING:
+	from files.classes.comment import Comment
+else:
+	Comment = Any
+
 
 def apply_time_filter(objects, t, cls):
 	now = int(time.time())
@@ -19,66 +28,75 @@ def apply_time_filter(objects, t, cls):
 	return objects.filter(cls.created_utc >= cutoff)
 
 
-def sort_objects(objects, sort, cls):
+def sort_objects(objects: Query, sort: str, cls):
 	if sort == 'hot':
 		ti = int(time.time()) + 3600
-		return objects.order_by(
+		ordered = objects.order_by(
 			-100000
 				* (cls.upvotes + 1)
-				/ (func.power((ti - cls.created_utc) / 1000, 1.23)),
-			cls.created_utc.desc())
+				/ (func.power((ti - cls.created_utc) / 1000, 1.23)))
 	elif sort == 'bump' and cls.__name__ == 'Submission':
-		return objects.filter(cls.comment_count > 1).order_by(
-			cls.bump_utc.desc(), cls.created_utc.desc())
-	elif sort == 'comments' and cls.__name__ == 'Submission':
-		return objects.order_by(
-			cls.comment_count.desc(), cls.created_utc.desc())
+		ordered = objects.filter(cls.comment_count > 1).order_by(cls.bump_utc.desc())
+	elif sort == 'comments':
+		if cls.__name__ == 'Submission': # we're checking the stringified name due to a gnarly import cycle
+			ordered = objects.order_by(cls.comment_count.desc())
+		elif cls.__name__ == 'Comment':
+			ordered = objects.order_by(cls.descendant_count.desc())
+		else:
+			ordered = objects
 	elif sort == 'controversial':
-		return objects.order_by(
+		ordered = objects.order_by(
 			(cls.upvotes + 1) / (cls.downvotes + 1)
 				+ (cls.downvotes + 1) / (cls.upvotes + 1),
-			cls.downvotes.desc(), cls.created_utc.desc())
+			cls.downvotes.desc())
 	elif sort == 'top':
-		return objects.order_by(
-			cls.downvotes - cls.upvotes, cls.created_utc.desc())
+		ordered = objects.order_by(cls.downvotes - cls.upvotes)
 	elif sort == 'bottom':
-		return objects.order_by(
-			cls.upvotes - cls.downvotes, cls.created_utc.desc())
+		ordered = objects.order_by(cls.upvotes - cls.downvotes)
 	elif sort == 'old':
 		return objects.order_by(cls.created_utc)
 	else: # default, or sort == 'new'
-		return objects.order_by(cls.created_utc.desc())
+		ordered = objects
+	ordered = ordered.order_by(cls.created_utc.desc())
+	return ordered
 
 
 # Presently designed around files.helpers.get.get_comment_trees_eager
 # Behavior should parallel that of sort_objects above. TODO: Unify someday?
-def sort_comment_results(comments, sort):
-	DESC = (2 << 30) - 1 # descending sorts, Y2038 problem, change before then
+def sort_comment_results(comments: Iterable[Comment], sort:str, *, pins:bool=False):
+	"""
+	Sorts comments results from `files.helpers.get.get_comments_trees_eager`
+	:param comments: Comments to sort
+	:param sort: The sort to use
+	:param pins: Whether to sort pinned comments. Defaults to `True`
+	"""
 	if sort == 'hot':
 		ti = int(time.time()) + 3600
 		key_func = lambda c: (
 			-100000
 				* (c.upvotes + 1)
 				/ (pow(((ti - c.created_utc) / 1000), 1.23)),
-			DESC - c.created_utc
+			-c.created_utc
 		)
+	elif sort == 'comments':
+		key_func = lambda c: -c.descendant_count
 	elif sort == 'controversial':
 		key_func = lambda c: (
 			(c.upvotes + 1) / (c.downvotes + 1)
 				+ (c.downvotes + 1) / (c.upvotes + 1),
-			DESC - c.downvotes,
-			DESC - c.created_utc
+			-c.downvotes,
+			-c.created_utc
 		)
 	elif sort == 'top':
-		key_func = lambda c: (c.downvotes - c.upvotes, DESC - c.created_utc)
+		key_func = lambda c: (c.downvotes - c.upvotes, -c.created_utc)
 	elif sort == 'bottom':
-		key_func = lambda c: (c.upvotes - c.downvotes, DESC - c.created_utc)
+		key_func = lambda c: (c.upvotes - c.downvotes, -c.created_utc)
 	elif sort == 'old':
 		key_func = lambda c: c.created_utc
 	else: # default, or sort == 'new'
-		key_func = lambda c: DESC - c.created_utc
+		key_func = lambda c: -c.created_utc
 
 	key_func_pinned = lambda c: (
 		(c.is_pinned is None, c.is_pinned == '', c.is_pinned), # sort None last
 		key_func(c))
-	return sorted(comments, key=key_func_pinned)
+	return sorted(comments, key=key_func_pinned if pins else key_func)

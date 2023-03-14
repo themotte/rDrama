@@ -3,6 +3,7 @@ import time
 from os import environ
 
 from sqlalchemy import func
+from sqlalchemy.orm import Query
 from sqlalchemy.sql.elements import not_
 
 from files.__main__ import app, cache, limiter
@@ -11,9 +12,11 @@ from files.classes.notifications import Notification
 from files.classes.sub import Sub
 from files.classes.submission import Submission
 from files.helpers.alerts import send_repeatable_notification
+from files.helpers.comments import comment_filter_moderated
 from files.helpers.config.environment import SITE
 from files.helpers.const import NOTIFICATIONS_ID
-from files.helpers.contentsorting import apply_time_filter, sort_objects
+from files.helpers.contentsorting import (apply_time_filter,
+                                          sort_comment_results, sort_objects)
 from files.helpers.get import *
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import auth_desired, auth_required
@@ -61,7 +64,7 @@ def notifications(v):
 	posts = request.values.get('posts')
 	reddit = request.values.get('reddit')
 	if modmail and v.admin_level > 1:
-		comments = g.db.query(Comment).filter(Comment.sentto==2).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
+		comments = g.db.query(Comment).filter(Comment.sentto == MODMAIL_ID).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
 		listing = comments[:25]
 	elif messages:
@@ -373,9 +376,7 @@ def changeloglist(v=None, sort="new", page=1, t="all", site=None):
 
 
 @app.get("/random_post")
-@auth_desired
-def random_post(v):
-
+def random_post():
 	p = g.db.query(Submission.id).filter(Submission.deleted_utc == 0, Submission.is_banned == False, Submission.private == False).order_by(func.random()).first()
 
 	if p: p = p[0]
@@ -385,8 +386,7 @@ def random_post(v):
 
 
 @app.get("/random_user")
-@auth_desired
-def random_user(v):
+def random_user():
 	u = g.db.query(User.username).order_by(func.random()).first()
 	
 	if u: u = u[0]
@@ -398,27 +398,31 @@ def random_user(v):
 @app.get("/comments")
 @auth_required
 def all_comments(v):
-	try: page = max(int(request.values.get("page", 1)), 1)
-	except: page = 1
+	page = max(request.values.get("page", 1, int), 1)
+	sort = request.values.get("sort", "new")
+	time_filter = request.values.get("t", defaulttimefilter)
+	time_gt = request.values.get("after", 0, int)
+	time_lt = request.values.get("before", 0, int)
 
-	sort=request.values.get("sort", "new")
-	t=request.values.get("t", defaulttimefilter)
-
-	try: gt=int(request.values.get("after", 0))
-	except: gt=0
-
-	try: lt=int(request.values.get("before", 0))
-	except: lt=0
-
-	idlist = get_comments_idlist(v=v, page=page, sort=sort, t=t, gt=gt, lt=lt)
-	comments = get_comments(idlist, v=v)
-
+	idlist = get_comments_idlist(v=v,
+		page=page, sort=sort, t=time_filter, gt=time_gt, lt=time_lt)
 	next_exists = len(idlist) > 25
-
 	idlist = idlist[:25]
 
-	if request.headers.get("Authorization"): return {"data": [x.json for x in comments]}
-	return render_template("home_comments.html", v=v, sort=sort, t=t, page=page, comments=comments, standalone=True, next_exists=next_exists)
+	def comment_tree_filter(q: Query) -> Query:
+		q = q.filter(Comment.id.in_(idlist))
+		q = comment_filter_moderated(q, v)
+		q = q.options(selectinload(Comment.post)) # used for post titles
+		return q
+
+	comments, _ = get_comment_trees_eager(comment_tree_filter, sort=sort, v=v)
+	comments = sort_comment_results(comments, sort=sort, pins=False)
+
+	if request.headers.get("Authorization"):
+		return {"data": [x.json for x in comments]}
+	return render_template("home_comments.html", v=v,
+		sort=sort, t=time_filter, page=page, next_exists=next_exists,
+		comments=comments, standalone=True)
 
 
 def get_comments_idlist(page=1, v=None, sort="new", t="all", gt=0, lt=0):

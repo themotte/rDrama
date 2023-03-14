@@ -18,4 +18,4 @@ class Marsey(Base):
 	Index('marseys_idx', name)
 
 	def __repr__(self):
-		return f"<Marsey(name={self.name})>"
+		return f"<{self.__class__.__name__}(name={self.name})>"

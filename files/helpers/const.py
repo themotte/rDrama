@@ -1,5 +1,6 @@
 import re
 from copy import deepcopy
+from typing import Final
 
 
 CC = "COUNTRY CLUB"
@@ -9,6 +10,7 @@ ENABLE_EMOJI = False
 
 NOTIFICATIONS_ID = 1
 AUTOJANNY_ID = 2
+MODMAIL_ID = 2
 SNAPPY_ID = 3
 LONGPOSTBOT_ID = 4
 ZOZBOT_ID = 5
@@ -22,8 +24,24 @@ OWNER_ID = 9
 BUG_THREAD = 0
 ROLES={}
 
+LEADERBOARD_LIMIT: Final[int] = 25
+
 THEMES = {"TheMotte", "dramblr", "reddit", "transparent", "win98", "dark", 
 			"light", "coffee", "tron", "4chan", "midnight"}
+SORTS_COMMON = {
+	"top": 'fa-arrow-alt-circle-up', 
+	"bottom": 'fa-arrow-alt-circle-down', 
+	"new": 'fa-sparkles', 
+	"old": 'fa-book', 
+	"controversial": 'fa-bullhorn',
+	"comments": 'fa-comments'
+}
+SORTS_POSTS = {
+	"hot": "fa-fire",
+	"bump": "fa-arrow-up"
+}
+SORTS_POSTS.update(SORTS_COMMON)
+SORTS_COMMENTS = SORTS_COMMON
 
 COLORS = {'ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58','8cdbe6', 'fff'}
 
@@ -32,6 +50,12 @@ SESSION_COOKIE_SAMESITE = "Lax"
 PERMANENT_SESSION_LIFETIME = 60 * 60 * 24 * 365
 DEFAULT_THEME = "TheMotte"
 FORCE_HTTPS = 1
+COLORS = {'ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58','8cdbe6', 'fff'}
+
+SUBMISSION_BODY_LENGTH_MAXIMUM: Final[int] = 20000
+COMMENT_BODY_LENGTH_MAXIMUM: Final[int] = 10000
+MESSAGE_BODY_LENGTH_MAXIMUM: Final[int] = 10000
+CSS_LENGTH_MAXIMUM: Final[int] = 4000
 
 ERROR_MESSAGES = {
 	400: "That request was bad and you should feel bad",
@@ -47,6 +71,10 @@ ERROR_MESSAGES = {
 }
 
 LOGGEDIN_ACTIVE_TIME = 15 * 60
+RENDER_DEPTH_LIMIT = 9
+'''
+The maximum depth at which a comment tree is rendered
+'''
 
 WERKZEUG_ERROR_DESCRIPTIONS = {
 	400: "The browser (or proxy) sent a request that this server could not understand.",
@@ -67,20 +95,29 @@ VIDEO_FORMATS = ['mp4','webm','mov','avi','mkv','flv','m4v','3gp']
 AUDIO_FORMATS = ['mp3','wav','ogg','aac','m4a','flac']
 NO_TITLE_EXTENSIONS = IMAGE_FORMATS + VIDEO_FORMATS + AUDIO_FORMATS
 
+FEATURES = {
+	"AWARDS": False,
+}
+
 PERMS = {
 	"DEBUG_LOGIN_TO_OTHERS": 3,
+	"USER_SHADOWBAN": 2,
 }
 
 AWARDS = {}
 
-AWARDS_ENABLED = deepcopy(AWARDS)
-for k, val in AWARDS.items():
-	if val['description'] == '???': AWARDS_ENABLED.pop(k)
+if FEATURES['AWARDS']:
+	AWARDS_ENABLED = deepcopy(AWARDS)
+	for k, val in AWARDS.items():
+		if val['description'] == '???': AWARDS_ENABLED.pop(k)
 
+	AWARDS_JL2_PRINTABLE = {}
+	for k, val in AWARDS_ENABLED.items():
+		if val['price'] == 300: AWARDS_JL2_PRINTABLE[k] = val
+else:
+	AWARDS_ENABLED = {}
+	AWARDS_JL2_PRINTABLE = {}
 
-AWARDS_JL2_PRINTABLE = {}
-for k, val in AWARDS_ENABLED.items():
-	if val['price'] == 300: AWARDS_JL2_PRINTABLE[k] = val
 
 NOTIFIED_USERS = {
 	# format: 'substring' ↦ User ID to notify

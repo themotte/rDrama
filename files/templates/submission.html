@@ -1,5 +1,5 @@
 {% extends "default.html" %}
-
+{%- import 'component/sorting_time.html' as sorting_time -%}
 
 {% if p.should_hide_score %}
 	{% set ups="" %}
@@ -137,7 +137,7 @@
 	<div id="post-root" class="col-12">
 
 		<div class="card border-0 mt-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-			<div id="post-{{p.id}}" class="{% if p.award_count('glowie') %}glow{% endif %} {% if p.deleted_utc %}deleted {% endif %}d-flex flex-row-reverse flex-nowrap justify-content-end">
+			<div id="post-{{p.id}}" class="{% if p.deleted_utc %}deleted {% endif %}d-flex flex-row-reverse flex-nowrap justify-content-end">
 
 				<div id="post-content" class="{% if p.deleted_utc %}deleted {% endif %}card-block w-100 my-md-auto">
 
@@ -172,15 +172,9 @@
 						{% if v and p.filter_state == 'reported' and v.can_manage_reports() %}
 							<a class="btn btn-primary" id="submission-report-button" role="button" style="padding:1px 5px; font-size:10px"onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags(v)}} Reports</a>
 						{% endif %}
-						
-						{% if not p.author %}
-							{{p.print()}}
-						{% endif %}
-
 						{% if p.ghost %}
 							👻
 						{% else %}
-
 							{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if p.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}var(--primary){% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{p.author.verified}}"></i>
 							{% endif %}
 
@@ -241,7 +235,6 @@
 							{% endif %}
 						{% endif %}
 
-
 						{% if p.embed_url %}
 							{% if p.domain == "twitter.com" %}
 								{{p.embed_url | safe}}
@@ -254,8 +247,6 @@
 								{{p.embed_url | safe}}
 							{% endif %}
 						{% endif %}
-
-						
 						<div id="post-text">
 							{% if p.is_image %}
 								<div class="row no-gutters">
@@ -292,7 +283,7 @@
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<input type="hidden" name="current_page" value="{{request.path}}">
 									<input type="text" autocomplete="off" maxlength="500" name="title" class="comment-box form-control rounded" required placeholder="title" value="{{p.title}}"\>
-									<textarea autocomplete="off" name="body" maxlength="20000" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10" data-id="{{p.id}}">{{p.body}}</textarea> 
+									<textarea autocomplete="off" name="body" maxlength="{{SUBMISSION_BODY_LENGTH_MAXIMUM}}" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10" data-id="{{p.id}}">{{p.body}}</textarea> 
 									
 									<div class="text-small font-weight-bold mt-1" id="charcount-post-edit" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
@@ -303,7 +294,7 @@
 										<a class="format btn btn-secondary" role="button" onclick="commentForm('post-edit-box-{{p.id}}');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Add GIF"><span class="font-weight-bolder text-uppercase">GIF</span></a>
 										<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-edit-{{p.id}}">
 											<div id="filename-show-edit-{{p.id}}"><i class="far fa-image"></i></div>
-											<input autocomplete="off" id="file-upload-edit-{{p.id}}" type="file" multiple="multiple" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-edit-{{p.id}}','file-upload-edit-{{p.id}}')" hidden>
+											<input autocomplete="off" id="file-upload-edit-{{p.id}}" type="file" multiple="multiple" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-edit-{{p.id}}','file-upload-edit-{{p.id}}')" hidden>
 										</label>
 						
 										<small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
@@ -350,16 +341,11 @@
 						{% include 'post_actions.html' %}
 					</ul>
 						</div>
-
 						</div>
-
 					</div>
-					
 					{% if v %}
-
 					<div id="voting" class="voting d-none d-md-block mb-auto">
-						<div  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1')" class="post-{{p.id}}-up mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
-
+						<div tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1')" class="post-{{p.id}}-up mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
 						<span  class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}" data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}">{{score}}</span>
 						<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1')" class="post-{{p.id}}-down text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
 					</div>
@@ -372,16 +358,9 @@
 						<span  class="post-{{p.id}}-score-none score text-muted{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 						<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1')" class="post-{{p.id}}-down arrow-down mx-auto" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></div>
 					</div>
-
 					{% endif %}
-
 				</div>
-
-
-
-
 			</div>
-
 		</div>
 
 		{% if not p.is_image and not p.is_video %}
@@ -395,10 +374,8 @@
 
  <div class="row mb-3 d-md-none">
 	<div class="col-12">
-
 		<div class="post-actions">
 			<ul class="list-inline text-right d-flex">
-
 				<li class="list-inline-item mr-auto">
 					<a href="{{p.permalink}}">
 						<i class="fas fa-comment-dots"></i>{{p.comment_count}}
@@ -441,9 +418,7 @@
 				</li>
 			</ul>
 		</div>
-
 	</div>
-
 </div>
 
 {% if v and v.id != p.author_id and p.body %}
@@ -453,27 +428,12 @@
 <div class="row border-md-0 comment-section pb-3">
 	<div class="col border-top">
 		<div class="comments-count py-3">
-			<div class="dropdown dropdown-actions">
-				<button class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
-					{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
-					{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
-					{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
-					{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
-					{{sort | capitalize}}
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-					{% if sort != "top" %}<a class="dropdown-item" href="?sort=top"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
-					{% if sort != "bottom" %}<a class="dropdown-item" href="?sort=bottom"><i class="fas fa-arrow-alt-circle-down mr-2"></i>Bottom</a>{% endif %}
-					{% if sort != "new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-					{% if sort != "old" %}<a class="dropdown-item" href="?sort=old"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
-					{% if sort != "controversial" %}<a class="dropdown-item" href="?sort=controversial"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
-				</div>
-				{% if comment_info and p.comment_count >= 2%}
-					<pre></pre>
-					<div class="total"><a href="{{p.permalink}}">View entire discussion</a></div>
-				{% endif %}
+			{{sorting_time.sort_dropdown(sort, none, SORTS_COMMENTS)}}
+			{% if comment_info and p.comment_count >= 2 %}
+			<div class="total mt-3">
+				<a href="{{p.permalink}}">View entire discussion</a>
 			</div>
+			{% endif %}
 		</div>
 
 	{% if v %}
@@ -482,7 +442,7 @@
 				<input type="hidden" name="formkey" value="{{v.formkey}}">
 				<input type="hidden" name="parent_fullname" value="t2_{{p.id}}">
 				<input autocomplete="off" id="reply-form-submission-{{p.fullname}}" type="hidden" name="submission" value="{{p.id}}">
-				<textarea required autocomplete="off" minlength="1" maxlength="10000" oninput="markdown('reply-form-body-{{p.fullname}}', 'form-preview-{{p.id}}');charLimit('reply-form-body-{{p.fullname}}','charcount-reply')" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
+				<textarea required autocomplete="off" minlength="1" maxlength="{{COMMENT_BODY_LENGTH_MAXIMUM}}" oninput="markdown('reply-form-body-{{p.fullname}}', 'form-preview-{{p.id}}');charLimit('reply-form-body-{{p.fullname}}','charcount-reply')" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
 
 				<div class="text-small font-weight-bold mt-1" id="charcount-reply" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
@@ -495,7 +455,7 @@
 					&nbsp;
 					<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-reply-{{p.fullname}}">
 						<div id="filename-show-reply-{{p.fullname}}"><i class="far fa-image"></i></div>
-						<input autocomplete="off" id="file-upload-reply-{{p.fullname}}" type="file" multiple="multiple" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-reply-{{p.fullname}}','file-upload-reply-{{p.fullname}}')" hidden>
+						<input autocomplete="off" id="file-upload-reply-{{p.fullname}}" type="file" multiple="multiple" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-reply-{{p.fullname}}','file-upload-reply-{{p.fullname}}')" hidden>
 					</label>
 				</div>
 				<a id="save-reply-to-{{p.fullname}}" role="button" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto fl-r" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>
@@ -505,7 +465,7 @@
 		</div>
 	{% else %}
 		<div class="comment-write mb-3">
-			<textarea autocomplete="off" maxlength="10000" class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
+			<textarea autocomplete="off" maxlength="{{COMMENT_BODY_LENGTH_MAXIMUM}}" class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
 		</div>
 	
 		<div class="card border-0 mt-4">
@@ -613,18 +573,6 @@
 {% if not p.replies %}
 	{% include "comments.html" %}
 {% endif %}
-
-{% if p.award_count("shit") %}
-	<script src="{{ 'js/critters.js' | asset }}"></script>
-	<script src="{{ 'js/bugs.js' | asset }}"></script>
-{% endif %}
-
-
-{% if p.award_count("fireflies") %}
-	<script src="{{ 'js/critters.js' | asset }}"></script>
-	<script src="{{ 'js/fireflies.js' | asset }}"></script>
-{% endif %}
-
 
 <script>
 	(() => {

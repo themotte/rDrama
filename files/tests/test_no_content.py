@@ -1,13 +1,39 @@
 from . import fixture_accounts
 from . import util
 
-def test_rules(accounts):
-	response = accounts.logged_off().get("/rules")
-	assert response.status_code == 200
-	assert response.text.startswith("<!DOCTYPE html>")
+@util.no_rate_limit
+def test_no_content_submissions(accounts):
+	client = accounts.client_for_account()
+
+	# get our formkey
+	submit_get_response = client.get("/submit")
+	assert submit_get_response.status_code == 200
+
+	title = '\u200e\u200e\u200e\u200e\u200e\u200e'
+	body = util.generate_text()
+	formkey = util.formkey_from(submit_get_response.text)
+
+	# test bad title against good content
+	submit_post_response = client.post("/submit", data={
+		"title": title,
+		"body": body,
+		"formkey": formkey,
+	})
+
+	assert submit_post_response.status_code == 400
+
+	title, body = body, title
+	# test good title against bad content
+	submit_post_response = client.post("/submit", data={
+		"title": title,
+		"body": body,
+		"formkey": formkey,
+	})
+
+	assert submit_post_response.status_code == 400
 
 @util.no_rate_limit
-def test_post_and_comment(accounts):
+def test_no_content_comments(accounts):
 	client = accounts.client_for_account()
 
 	# get our formkey
@@ -37,7 +63,7 @@ def test_post_and_comment(accounts):
 	post = util.ItemData.from_html(submit_post_response.text)
 	
 	# post a comment child
-	comment_body = util.generate_text()
+	comment_body = '\ufeff\ufeff\ufeff\ufeff\ufeff'
 	submit_comment_response = client.post("/comment", data={
 		"parent_fullname": post.id_full,
 		"parent_level": 1,
@@ -45,28 +71,4 @@ def test_post_and_comment(accounts):
 		"body": comment_body,
 		"formkey": util.formkey_from(submit_post_response.text),
 	})
-	assert submit_comment_response.status_code == 200
-
-	# verify it actually got posted
-	post_response = client.get(post.url)
-	assert post_response.status_code == 200
-	assert comment_body in post_response.text
-
-	# yank the ID out again
-	comment = util.ItemData.from_json(submit_comment_response.text)
-
-	# post a comment grandchild!
-	grandcomment_body = util.generate_text()
-	submit_grandcomment_response = client.post("/comment", data={
-		"parent_fullname": comment.id_full,
-		"parent_level": 1,
-		"submission": comment.id,
-		"body": grandcomment_body,
-		"formkey": util.formkey_from(submit_post_response.text),
-	})
-	assert submit_grandcomment_response.status_code == 200
-
-	# verify it actually got posted
-	post_response = client.get(post.url)
-	assert post_response.status_code == 200
-	assert grandcomment_body in post_response.text
+	assert submit_comment_response.status_code == 400

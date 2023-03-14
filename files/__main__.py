@@ -146,8 +146,8 @@ def get_remote_addr():
 if not RATE_LIMITER_ENABLED:
 	print("Rate limiter disabled in debug mode!")
 limiter = flask_limiter.Limiter(
-	app,
 	key_func=get_remote_addr,
+	app=app,
 	default_limits=["3/second;30/minute;200/hour;1000/day"],
 	application_limits=["10/second;200/minute;5000/hour;10000/day"],
 	storage_uri=environ.get("REDIS_URL", "redis://localhost"),

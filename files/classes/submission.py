@@ -49,8 +49,8 @@ class Submission(Base):
 	title = Column(String, nullable=False)
 	title_html = Column(String, nullable=False)
 	url = Column(String)
-	body = Column(String)
-	body_html = Column(String)
+	body = Column(Text)
+	body_html = Column(Text)
 	flair = Column(String)
 	ban_reason = Column(String)
 	embed_url = Column(String)
@@ -84,7 +84,7 @@ class Submission(Base):
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
-		return f"<Submission(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
 	@lazy
@@ -332,6 +332,7 @@ class Submission(Base):
 		return data
 
 	def award_count(self, kind):
+		if not FEATURES['AWARDS']: return 0
 		return len([x for x in self.awards if x.kind == kind])
 
 	@lazy
@@ -341,8 +342,8 @@ class Submission(Base):
 			url = self.url.replace("old.reddit.com", v.reddit)
 
 			if '/comments/' in url and "sort=" not in url:
-				if "?" in url: url += "&context=9" 
-				else: url += "?context=8"
+				if "?" in url: url += f"&context={RENDER_DEPTH_LIMIT}" 
+				else: url += f"?context={RENDER_DEPTH_LIMIT - 1}"
 				if v.controversial: url += "&sort=controversial"
 			return url
 		elif self.url:
@@ -377,21 +378,12 @@ class Submission(Base):
 
 	def plainbody(self, v):
 		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{CC} ONLY</p>"
-
 		body = self.body
-
 		if not body: return ""
-
 		if v:
 			body = body.replace("old.reddit.com", v.reddit)
-
 			if v.nitter and '/i/' not in body and '/retweets' not in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
-
 		return body
-
-	def print(self):
-		print(f'post: {self.id}, author: {self.author_id}', flush=True)
-		return ''
 
 	@lazy
 	def realtitle(self, v):

@@ -23,7 +23,7 @@ class Sub(Base):
 
 
 	def __repr__(self):
-		return f"<Sub(name={self.name})>"
+		return f"<{self.__class__.__name__}(name={self.name})>"
 
 	@property
 	@lazy

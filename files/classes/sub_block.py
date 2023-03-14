@@ -15,4 +15,4 @@ class SubBlock(Base):
 	Index('fki_sub_blocks_sub_fkey', sub)
 
 	def __repr__(self):
-		return f"<SubBlock(user_id={self.user_id}, sub={self.sub})>"
+		return f"<{self.__class__.__name__}(user_id={self.user_id}, sub={self.sub})>"

@@ -5,7 +5,6 @@ from typing import Optional
 
 import matplotlib.pyplot as plt
 import pyotp
-import requests
 from sqlalchemy import func
 
 from files.__main__ import app, cache, limiter
@@ -21,10 +20,10 @@ from files.classes.votes import CommentVote, Vote
 from files.helpers.alerts import *
 from files.helpers.cache import make_cache_key
 from files.helpers.captcha import validate_captcha
-from files.helpers.config.environment import IMGUR_KEY, SITE
+from files.helpers.config.environment import SITE
 from files.helpers.const import *
 from files.helpers.get import get_account, get_id
-from files.helpers.images import process_image
+from files.helpers.media import process_image
 from files.helpers.wrappers import (admin_level_required, auth_desired,
                                     auth_required)
 from files.routes.importstar import *
@@ -128,15 +127,13 @@ def chart():
 
 
 @app.get("/weekly_chart")
-@auth_desired
-def weekly_chart(v):
+def weekly_chart():
 	file = cached_chart(kind="weekly", site=SITE)
 	f = send_file(file)
 	return f
 
 @app.get("/daily_chart")
-@auth_desired
-def daily_chart(v):
+def daily_chart():
 	file = cached_chart(kind="daily", site=SITE)
 	f = send_file(file)
 	return f
@@ -330,25 +327,13 @@ def submit_contact(v: Optional[User]):
 			file.save(name)
 			url = process_image(name)
 			html += f'<img data-bs-target="#expandImageModal" data-bs-toggle="modal" onclick="expandDesktopImage(this.src)" class="img" src="{url}" loading="lazy">'
-		elif file.content_type.startswith('video/'):
-			file.save("video.mp4")
-			with open("video.mp4", 'rb') as f:
-				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-				except requests.Timeout: abort(500, "Video upload timed out, please try again!")
-				try: url = req['link']
-				except:
-					error = req['error']
-					if error == 'File exceeds max duration': error += ' (60 seconds)'
-					abort(400, error)
-			if url.endswith('.'): url += 'mp4'
-			html += f"<p>{url}</p>"
-		else: abort(400, "Image/Video files only")
+		else: abort(400, "Image files only")
 
 	new_comment = Comment(author_id=v.id if v else NOTIFICATIONS_ID,
 						  parent_submission=None,
 						  level=1,
 						  body_html=html,
-						  sentto=2
+						  sentto=MODMAIL_ID,
 						  )
 	g.db.add(new_comment)
 	g.db.flush()

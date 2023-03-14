@@ -1,4 +1,5 @@
 
+import functools
 import pprint
 import subprocess
 import sys
@@ -35,6 +36,11 @@ def _execute(command,**kwargs):
 
         proc.wait()
         if check and proc.returncode != 0:
+            print("STDOUT:")
+            print(stdout)
+            print("STDERR (not interlaced properly, sorry):")
+            print(stderr)
+            
             raise subprocess.CalledProcessError(
                     command,
                     proc.returncode,
@@ -53,31 +59,9 @@ def _docker(command, **kwargs):
     return _execute([
         "docker-compose",
         "exec", '-T',
-        "files",
+        "site",
     ] + command,
     **kwargs)
-
-def _status_single(server):
-    command = ['docker', 'container', 'inspect', '-f', '{{.State.Status}}', server]
-    result = _execute(command, check=False).stdout.strip()
-    return result
-
-# this should really be yanked out of the docker-compose somehow
-_containers = ["themotte", "themotte_postgres", "themotte_redis"]
-
-def _all_running():
-    for container in _containers:
-        if _status_single(container) != "running":
-            return False
-
-    return True
-
-def _any_exited():
-    for container in _containers:
-        if _status_single(container) == "exited":
-            return True
-
-    return False
 
 def _start():
     print("Starting containers in operation mode . . .")
@@ -92,10 +76,26 @@ def _start():
     ]
     result = _execute(command)
 
-    while not _all_running():
-        if _any_exited():
-            raise RuntimeError("Server exited prematurely")
-        time.sleep(1)
+    # alright this seems sketchy, bear with me
+
+    # previous versions of this code used the '--wait' command-line flag
+    # the problem with --wait is that it waits for the container to be healthy and working
+    # "but wait, isn't that what we want?"
+    # ah, but see, if the container will *never* be healthy and working - say, if there's a flaw causing it to fail on startup - it just waits forever
+    # so that's not actually useful
+
+    # previous versions of this code also had a check to see if the containers started up properly
+    # but this is surprisingly annoying to do if we don't know the containers' names
+    # docker-compose *can* do it, but you either have to use very new features that aren't supported on Ubuntu 22.04, or you have to go through a bunch of parsing pain
+    # and it kind of doesn't seem necessary
+
+    # see, docker-compose in this form *will* wait until it's *attempted* to start each container.
+    # so at this point in execution, either the containers are running, or they're crashed
+    # if they're running, hey, problem solved, we're good
+    # if they're crashed, y'know what, problem still solved! because our next command will fail
+
+    # maybe there's still a race condition? I dunno! Keep an eye on this.
+    # If there is a race condition then you're stuck doing something gnarly with `docker-compose ps`. Good luck!
 
     print("  Containers started!")
 
@@ -106,7 +106,6 @@ def _stop():
     command = ['docker-compose','stop']
     print("Stopping containers . . .")
     result = _execute(command)
-    time.sleep(1)
     return result
 
 def _operation(name, commands):

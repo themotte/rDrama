@@ -1,7 +1,6 @@
 import json
 import time
 from datetime import datetime
-from urllib.parse import quote, urlencode
 
 import requests
 
@@ -25,7 +24,7 @@ from files.helpers.get import *
 from files.helpers.sanitize import *
 from files.helpers.security import *
 from files.helpers.wrappers import admin_level_required, auth_required
-from files.routes.comments import comment_on_publish
+from files.routes.comments import comment_on_publish, comment_on_unpublish
 from files.routes.importstar import *
 
 from .front import frontlist
@@ -288,12 +287,12 @@ def update_filter_status(v):
 		return { 'result': f'Status of {new_status} is not permitted' }
 
 	if post_id:
-		p = g.db.query(Submission).get(post_id)
+		p = g.db.get(Submission, post_id)
 		old_status = p.filter_state
 		rows_updated = g.db.query(Submission).where(Submission.id == post_id) \
 							.update({Submission.filter_state: new_status})
 	elif comment_id:
-		c = g.db.query(Comment).get(comment_id)
+		c = g.db.get(Comment, comment_id)
 		old_status = c.filter_state
 		rows_updated = g.db.query(Comment).where(Comment.id == comment_id) \
 							.update({Comment.filter_state: new_status})
@@ -426,7 +425,7 @@ def change_settings(v, setting):
 						  parent_submission=None,
 						  level=1,
 						  body_html=body_html,
-						  sentto=2,
+						  sentto=MODMAIL_ID,
 						  distinguish_level=6
 						  )
 	g.db.add(new_comment)
@@ -747,13 +746,12 @@ def alt_votes_get(v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_link_accounts(v):
-
-	u1 = int(request.values.get("u1"))
-	u2 = int(request.values.get("u2"))
+	u1 = get_account(request.values.get("u1", ''))
+	u2 = get_account(request.values.get("u2", ''))
 
 	new_alt = Alt(
-		user1=u1, 
-		user2=u2,
+		user1=u1.id, 
+		user2=u2.id,
 		is_manual=True
 		)
 
@@ -768,7 +766,7 @@ def admin_link_accounts(v):
 	g.db.add(ma)
 
 	g.db.commit()
-	return redirect(f"/admin/alt_votes?u1={g.db.query(User).get(u1).username}&u2={g.db.query(User).get(u2).username}")
+	return redirect(f"/admin/alt_votes?u1={u1.id}&u2={u2.id}")
 
 
 @app.get("/admin/removed/posts")
@@ -1237,10 +1235,9 @@ def sticky_post(post_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def unsticky_post(post_id, v):
-
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 	if post and post.stickied:
-		if post.stickied.endswith('(pin award)'): abort(403, "Can't unpin award pins!")
+		if FEATURES['AWARDS'] and post.stickied.endswith('(pin award)'): abort(403, "Can't unpin award pins!")
 
 		post.stickied = None
 		post.stickied_utc = None
@@ -1264,7 +1261,6 @@ def unsticky_post(post_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def sticky_comment(cid, v):
-	
 	comment = get_comment(cid, v=v)
 
 	if not comment.is_pinned:
@@ -1290,11 +1286,10 @@ def sticky_comment(cid, v):
 @limiter.exempt
 @admin_level_required(2)
 def unsticky_comment(cid, v):
-	
 	comment = get_comment(cid, v=v)
 	
 	if comment.is_pinned:
-		if comment.is_pinned.endswith("(pin award)"): abort(403, "Can't unpin award pins!")
+		if FEATURES['AWARDS'] and comment.is_pinned.endswith("(pin award)"): abort(403, "Can't unpin award pins!")
 
 		comment.is_pinned = None
 		g.db.add(comment)

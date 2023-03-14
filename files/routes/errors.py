@@ -14,6 +14,7 @@ from files.helpers.const import ERROR_MESSAGES, WERKZEUG_ERROR_DESCRIPTIONS
 @app.errorhandler(403)
 @app.errorhandler(404)
 @app.errorhandler(405)
+@app.errorhandler(409)
 @app.errorhandler(413)
 @app.errorhandler(422)
 @app.errorhandler(429)

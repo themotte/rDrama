@@ -21,7 +21,7 @@ class OauthApp(Base):
 	)
 
 	id = Column(Integer, primary_key=True)
-	client_id = Column(String)
+	client_id = Column(String(length=64))
 	app_name = Column(String(length=50), nullable=False)
 	redirect_uri = Column(String(length=50), nullable=False)
 	description = Column(String(length=256), nullable=False)
@@ -71,7 +71,7 @@ class ClientAuth(Base):
 
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	oauth_client = Column(Integer, ForeignKey("oauth_apps.id"), primary_key=True)
-	access_token = Column(String, nullable=False)
+	access_token = Column(String(128), nullable=False)
 	
 	user = relationship("User", viewonly=True)
 	application = relationship("OauthApp", viewonly=True)

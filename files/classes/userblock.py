@@ -17,4 +17,4 @@ class UserBlock(Base):
 	target = relationship("User", primaryjoin="User.id==UserBlock.target_id", viewonly=True)
 
 	def __repr__(self):
-		return f"<UserBlock(user={self.user_id}, target={self.target_id})>"
+		return f"<{self.__class__.__name__}(user={self.user_id}, target={self.target_id})>"

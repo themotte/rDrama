@@ -5,7 +5,7 @@ from typing import Callable, Iterable, List, Optional, Type, Union
 
 from flask import abort, g
 from sqlalchemy import and_, or_, func
-from sqlalchemy.orm import Query, selectinload
+from sqlalchemy.orm import Query, scoped_session, selectinload
 
 from files.classes.comment import Comment
 from files.classes.domains import BannedDomain
@@ -103,6 +103,24 @@ def get_account(
 
 	return user
 
+def get_accounts_dict(ids:Union[Iterable[str], Iterable[int]], 
+		      			v:Optional[User]=None, graceful=False, 
+						include_shadowbanned=True, 
+						db:Optional[scoped_session]=None) -> Optional[dict[int, User]]:
+	if not db: db = g.db
+	if not ids: return {}
+	try: 
+		ids = set([int(id) for id in ids])
+	except:
+		if graceful: return None
+		abort(404)
+
+	users = db.query(User).filter(User.id.in_(ids))
+	if not (include_shadowbanned or (v and v.can_see_shadowbanned)):
+		users = users.filter(User.shadowbanned == None)
+	users = users.all()
+	if len(users) != len(ids) and not graceful: abort(404)
+	return {u.id:u for u in users}
 
 def get_post(
 		i:Union[str,int],
@@ -287,7 +305,7 @@ def get_comments(
 def get_comment_trees_eager(
 		query_filter_callable: Callable[[Query], Query],
 		sort: str="old",
-		v: Optional[User]=None) -> List[Comment]:
+		v: Optional[User]=None) -> tuple[list[Comment], defaultdict[Comment, list[Comment]]]:
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -344,7 +362,7 @@ def get_comment_trees_eager(
 
 	for parent_id in comments_map_parent:
 		comments_map_parent[parent_id] = sort_comment_results(
-			comments_map_parent[parent_id], sort)
+			comments_map_parent[parent_id], sort, pins=True)
 		if parent_id in comments_map:
 			comments_map[parent_id].replies2 = comments_map_parent[parent_id]
 

@@ -1,27 +1,12 @@
-from __future__ import unicode_literals
-
-import datetime
 import os
-import time
-from operator import or_
-from shutil import copyfile
-from urllib.parse import quote
-
-import pyotp
-import requests
-import youtube_dl
 
 from files.__main__ import app, cache, limiter
-from files.classes.user import User
-from files.classes.userblock import UserBlock
 from files.helpers.alerts import *
-from files.helpers.config.environment import IMGUR_KEY, YOUTUBE_KEY
 from files.helpers.const import *
-from files.helpers.images import process_image
+from files.helpers.media import process_image
 from files.helpers.sanitize import *
 from files.helpers.sanitize import filter_emojis_only
 from files.helpers.security import generate_hash
-from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import auth_required, is_not_permabanned
 from files.mail import send_mail
 from files.routes.importstar import *
@@ -189,21 +174,9 @@ def settings_profile_post(v):
 				file.save(name)
 				url = process_image(name)
 				bio += f"\n\n![]({url})"
-			elif file.content_type.startswith('video/'):
-				file.save("video.mp4")
-				with open("video.mp4", 'rb') as f:
-					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-					except requests.Timeout: abort(500, "Video upload timed out, please try again!")
-					try: url = req['link']
-					except:
-						error = req['error']
-						if error == 'File exceeds max duration': error += ' (60 seconds)'
-						abort(400, error)
-				if url.endswith('.'): url += 'mp4'
-				bio += f"\n\n{url}"
 			else:
-				if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, "Image/Video files only")
-				return render_template("settings_profile.html", v=v, error="Image/Video files only."), 400
+				if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, "Image files only")
+				return render_template("settings_profile.html", v=v, error="Image files only"), 400
 		
 		bio_html = sanitize(bio)
 
@@ -233,14 +206,14 @@ def settings_profile_post(v):
 
 	defaultsortingcomments = request.values.get("defaultsortingcomments")
 	if defaultsortingcomments:
-		if defaultsortingcomments in {"new", "old", "controversial", "top", "bottom"}:
+		if defaultsortingcomments in SORTS_COMMENTS:
 			v.defaultsortingcomments = defaultsortingcomments
 			updated = True
 		else: abort(400)
 
 	defaultsorting = request.values.get("defaultsorting")
 	if defaultsorting:
-		if defaultsorting in {"hot", "bump", "new", "old", "comments", "controversial", "top", "bottom"}:
+		if defaultsorting in SORTS_POSTS:
 			v.defaultsorting = defaultsorting
 			updated = True
 		else: abort(400)
@@ -526,20 +499,21 @@ def settings_images_banner(v):
 @app.get("/settings/blocks")
 @auth_required
 def settings_blockedpage(v):
-
 	return render_template("settings_blocks.html", v=v)
 
 @app.get("/settings/css")
 @auth_required
 def settings_css_get(v):
-
 	return render_template("settings_css.html", v=v)
 
 @app.post("/settings/css")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_css(v):
-	css = request.values.get("css").strip().replace('\\', '').strip()[:4000]
+	css = sanitize_raw(request.values.get("css", "").replace('\\', ''), allow_newlines=True, length_limit=CSS_LENGTH_MAXIMUM)
+	ok, err = validate_css(css)
+	if not ok:
+		abort(400, err)
 	v.css = css
 	g.db.add(v)
 	g.db.commit()
@@ -555,7 +529,10 @@ def settings_profilecss_get(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_profilecss(v):
-	profilecss = request.values.get("profilecss").strip().replace('\\', '').strip()[:4000]
+	profilecss = sanitize_raw(request.values.get("profilecss", "").replace('\\', ''), allow_newlines=True, length_limit=CSS_LENGTH_MAXIMUM)
+	ok, err = validate_css(profilecss)
+	if not ok:
+		abort(400, err)
 	v.profilecss = profilecss
 	g.db.add(v)
 	g.db.commit()
@@ -646,85 +623,6 @@ def settings_name_change(v):
 	v.username=new_name
 	v.name_changed_utc=int(time.time())
 	g.db.add(v)
-	g.db.commit()
-
-	return redirect("/settings/profile")
-
-@app.post("/settings/song_change")
-@limiter.limit("2/second;10/day")
-@auth_required
-def settings_song_change(v):
-	song=request.values.get("song").strip()
-
-	if song == "" and v.song:
-		if path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
-			os.remove(f"/songs/{v.song}.mp3")
-		v.song = None
-		g.db.add(v)
-		g.db.commit()
-		return redirect("/settings/profile")
-
-	song = song.replace("https://music.youtube.com", "https://youtube.com")
-	if song.startswith(("https://www.youtube.com/watch?v=", "https://youtube.com/watch?v=", "https://m.youtube.com/watch?v=")):
-		id = song.split("v=")[1]
-	elif song.startswith("https://youtu.be/"):
-		id = song.split("https://youtu.be/")[1]
-	else:
-		return render_template("settings_profile.html", v=v, error="Not a youtube link.")
-
-	if "?" in id: id = id.split("?")[0]
-	if "&" in id: id = id.split("&")[0]
-
-	if path.isfile(f'/songs/{id}.mp3'): 
-		v.song = id
-		g.db.add(v)
-		g.db.commit()
-		return redirect("/settings/profile")
-		
-	
-	req = requests.get(f"https://www.googleapis.com/youtube/v3/videos?id={id}&key={YOUTUBE_KEY}&part=contentDetails", timeout=5).json()
-	duration = req['items'][0]['contentDetails']['duration']
-	if duration == 'P0D':
-		return render_template("settings_profile.html", v=v, error="Can't use a live youtube video!")
-
-	if "H" in duration:
-		return render_template("settings_profile.html", v=v, error="Duration of the video must not exceed 15 minutes.")
-
-	if "M" in duration:
-		duration = int(duration.split("PT")[1].split("M")[0])
-		if duration > 15: 
-			return render_template("settings_profile.html", v=v, error="Duration of the video must not exceed 15 minutes.")
-
-
-	if v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
-		os.remove(f"/songs/{v.song}.mp3")
-
-	ydl_opts = {
-		'outtmpl': '/songs/%(title)s.%(ext)s',
-		'format': 'bestaudio/best',
-		'postprocessors': [{
-			'key': 'FFmpegExtractAudio',
-			'preferredcodec': 'mp3',
-			'preferredquality': '192',
-		}],
-	}
-
-	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-		try: ydl.download([f"https://youtube.com/watch?v={id}"])
-		except Exception as e:
-			print(e)
-			return render_template("settings_profile.html",
-						   v=v,
-						   error="Age-restricted videos aren't allowed.")
-
-	files = os.listdir("/songs/")
-	paths = [path.join("/songs/", basename) for basename in files]
-	songfile = max(paths, key=path.getctime)
-	os.rename(songfile, f"/songs/{id}.mp3")
-
-	v.song = id
-	g.db.add(v)
-
 	g.db.commit()
 
 	return redirect("/settings/profile")

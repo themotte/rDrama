@@ -52,7 +52,7 @@ titleheaders = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWe
 
 MAX_TITLE_LENGTH = 500
 MAX_URL_LENGTH = 2048
-MAX_BODY_LENGTH = 20000
+MAX_BODY_LENGTH = SUBMISSION_BODY_LENGTH_MAXIMUM
 
 
 def guarded_value(val, min_len, max_len) -> str:
@@ -272,7 +272,7 @@ def morecomments(v, cid):
 			votes.c.vote_type,
 			blocking.c.target_id,
 			blocked.c.target_id,
-		).filter(Comment.top_comment_id == tcid, Comment.level > 9).join(
+		).filter(Comment.top_comment_id == tcid, Comment.level > RENDER_DEPTH_LIMIT).join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
@@ -315,7 +315,10 @@ def edit_post(pid, v):
 	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
 
 	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
+	title = sanitize_raw(title, allow_newlines=False, length_limit=MAX_TITLE_LENGTH)
+
 	body = guarded_value("body", 0, MAX_BODY_LENGTH)
+	body = sanitize_raw(body, allow_newlines=True, length_limit=MAX_BODY_LENGTH)
 
 	if title != p.title:
 		p.title = title
@@ -333,29 +336,11 @@ def edit_post(pid, v):
 					body += f"\n\n![]({url})"
 				else:
 					body += f'\n\n<a href="{url}">{url}</a>'
-			elif file.content_type.startswith('video/'):
-				file.save("video.mp4")
-				with open("video.mp4", 'rb') as f:
-					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-					except requests.Timeout: abort(500, "Video upload timed out, please try again!")
-					try: url = req['link']
-					except:
-						error = req['error']
-						if error == 'File exceeds max duration': error += ' (60 seconds)'
-						abort(400, error)
-				if url.endswith('.'): url += 'mp4'
-				if MULTIMEDIA_EMBEDDING_ENABLED:
-					body += f"\n\n![]({url})"
-				else:
-					body += f'\n\n<a href="{url}">{url}</a>'
-			else: abort(400, "Image/Video files only")
+			else: abort(400, "Image files only")
 
 	body_html = sanitize(body, edit=True)
 
 	p.body = body
-
-	if len(body_html) > 40000: abort(400, "Submission body_html too long! (max 40k characters)")
-
 	p.body_html = body_html
 
 	if not p.private and not p.ghost:
@@ -585,9 +570,15 @@ def submit_post(v, sub=None):
 		SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
 		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body), 400
 
+	if v.is_suspended: return error("You can't perform this action while banned.")
+
 	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
+	title = sanitize_raw(title, allow_newlines=False, length_limit=MAX_TITLE_LENGTH)
+
 	url = guarded_value("url", 0, MAX_URL_LENGTH)
+	
 	body = guarded_value("body", 0, MAX_BODY_LENGTH)
+	body = sanitize_raw(body, allow_newlines=True, length_limit=MAX_BODY_LENGTH)
 
 	sub = request.values.get("sub")
 	if sub: sub = sub.replace('/h/','').replace('s/','')
@@ -599,8 +590,6 @@ def submit_post(v, sub=None):
 		sub = sub[0]
 		if v.exiled_from(sub): return error(f"You're exiled from /h/{sub}")
 	else: sub = None
-
-	if v.is_suspended: return error("You can't perform this action while banned.")
 	
 	title_html = filter_emojis_only(title, graceful=True)
 
@@ -752,27 +741,10 @@ def submit_post(v, sub=None):
 					body += f"\n\n![]({image})"
 				else:
 					body += f'\n\n<a href="{image}">{image}</a>'
-			elif file.content_type.startswith('video/'):
-				file.save("video.mp4")
-				with open("video.mp4", 'rb') as f:
-					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-					except requests.Timeout: return error("Video upload timed out, please try again!")
-					try: url = req['link']
-					except:
-						err = req['error']
-						if err == 'File exceeds max duration': err += ' (60 seconds)'
-						return error(err)
-				if url.endswith('.'): url += 'mp4'
-				if MULTIMEDIA_EMBEDDING_ENABLED:
-					body += f"\n\n![]({url})"
-				else:
-					body += f'\n\n<a href="{url}">{url}</a>'
 			else:
-				return error("Image/Video files only.")
+				return error("Image files only")
 
 	body_html = sanitize(body)
-
-	if len(body_html) > 40000: return error("Submission body_html too long! (max 40k characters)")
 
 	club = bool(request.values.get("club",""))
 	
@@ -822,21 +794,9 @@ def submit_post(v, sub=None):
 
 			name2 = name.replace('.webp', 'r.webp')
 			copyfile(name, name2)
-			post.thumburl = process_image(name2, resize=100)	
-		elif file.content_type.startswith('video/'):
-			file.save("video.mp4")
-			with open("video.mp4", 'rb') as f:
-				try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-				except requests.Timeout: return error("Video upload timed out, please try again!")
-				try: url = req['link']
-				except:
-					err = req['error']
-					if err == 'File exceeds max duration': err += ' (60 seconds)'
-					return error(err)
-			if url.endswith('.'): url += 'mp4'
-			post.url = url
+			post.thumburl = process_image(name2, resize=100)
 		else:
-			return error("Image/Video files only.")
+			return error("Image files only")
 		
 	if not post.thumburl and post.url:
 		gevent.spawn(thumbnail_thread, post.id)
