@@ -145,7 +145,7 @@
 				{% endif %}
 
 			{% if is_notification_page and c.level == 1 and c.sentto and not c.parent_submission and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
-				{%- include 'components/comment/replybox_message.html' -%}
+				{%- include 'component/comment/replybox_message.html' -%}
 			{% endif %}
 	{% else %}
 		<div id="replies-of-{{c.id}}"></div>
