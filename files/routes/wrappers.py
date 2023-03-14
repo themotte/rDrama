@@ -8,7 +8,7 @@ from files.__main__ import app, cache, db_session
 from files.classes.clients import ClientAuth
 from files.classes.user import User
 from files.helpers.config.environment import SITE
-from files.helpers.const import LOGGEDIN_ACTIVE_TIME
+from files.helpers.const import *
 
 
 def get_logged_in_user():
@@ -30,7 +30,7 @@ def get_logged_in_user():
 		lo_user = session.get("lo_user")
 		if lo_user:
 			id = int(lo_user)
-			v = g.db.get(User, id)
+			v = g.db.query(User).get(id)
 			if v:
 				v.client = None
 				nonce = session.get("login_nonce", 0)

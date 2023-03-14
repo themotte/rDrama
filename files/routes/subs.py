@@ -1,9 +1,27 @@
-from files.__main__ import app, limiter, mail
-from files.helpers.alerts import *
-from files.helpers.wrappers import *
-from files.classes import *
-from .front import frontlist
+import os
+import time
 
+from flask import g, redirect, render_template
+from sqlalchemy import func
+
+from files.__main__ import app, cache, limiter
+from files.classes.exiles import Exile
+from files.classes.mod import Mod
+from files.classes.sub import Sub
+from files.classes.sub_block import SubBlock
+from files.classes.submission import Submission
+from files.classes.user import User
+from files.helpers.alerts import (send_notification,
+                                  send_repeatable_notification)
+from files.helpers.config.regex import valid_sub_regex
+from files.helpers.get import get_account, get_comment, get_post, get_user
+from files.helpers.images import process_image
+from files.helpers.sanitize import sanitize
+from files.helpers.wrappers import (auth_desired, auth_required,
+                                    is_not_permabanned)
+from files.routes.importstar import *
+
+from .front import frontlist
 
 
 @app.post("/exile/post/<pid>")
@@ -347,7 +365,7 @@ def sub_banner(v, sub):
 	if bannerurl:
 		if sub.bannerurl and '/images/' in sub.bannerurl:
 			fpath = '/images/' + sub.bannerurl.split('/images/')[1]
-			if path.isfile(fpath): os.remove(fpath)
+			if os.path.isfile(fpath): os.remove(fpath)
 		sub.bannerurl = bannerurl
 		g.db.add(sub)
 		g.db.commit()
@@ -373,7 +391,7 @@ def sub_sidebar(v, sub):
 	if sidebarurl:
 		if sub.sidebarurl and '/images/' in sub.sidebarurl:
 			fpath = '/images/' + sub.sidebarurl.split('/images/')[1]
-			if path.isfile(fpath): os.remove(fpath)
+			if os.path.isfile(fpath): os.remove(fpath)
 		sub.sidebarurl = sidebarurl
 		g.db.add(sub)
 		g.db.commit()

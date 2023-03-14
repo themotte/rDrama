@@ -1,26 +1,38 @@
 import time
-import gevent
-from files.helpers.wrappers import *
-from files.helpers.sanitize import *
-from files.helpers.alerts import *
-from files.helpers.comments import comment_filter_moderated
-from files.helpers.contentsorting import sort_objects
-from files.helpers.const import *
-from files.helpers.media import process_image
-from files.helpers.strings import sql_ilike_clean
-from files.classes import *
-from flask import *
 from io import BytesIO
-from files.__main__ import app, limiter, cache, db_session
-from PIL import Image as PILimage
-from .front import frontlist, changeloglist
-from urllib.parse import ParseResult, urlunparse, urlparse, quote, unquote
 from os import path
-import requests
 from shutil import copyfile
 from sys import stdout
+from urllib.parse import (ParseResult, parse_qs, unquote, urlencode, urlparse,
+                          urlunparse)
+
+import gevent
+import requests
+from PIL import Image as PILimage
+from sqlalchemy import func
 from sqlalchemy.orm import Query
 
+from files.__main__ import app, cache, db_session, limiter
+from files.classes.mod_logs import ModAction
+from files.classes.saves import SaveRelationship
+from files.classes.sub import Sub
+from files.classes.submission import Submission
+from files.classes.user import User
+from files.classes.votes import CommentVote, Vote
+from files.helpers.alerts import *
+from files.helpers.config.environment import *
+from files.helpers.const import *
+from files.helpers.comments import comment_filter_moderated
+from files.helpers.contentsorting import sort_objects
+from files.helpers.get import (get_account, get_comment_trees_eager,
+                               get_domain, get_post)
+from files.helpers.images import process_image
+from files.helpers.sanitize import *
+from files.helpers.strings import sql_ilike_clean
+from files.helpers.wrappers import auth_desired, auth_required
+from files.routes.importstar import *
+
+from .front import changeloglist, frontlist
 
 snappyquotes = [f':#{x}:' for x in marseys_const2]
 
@@ -105,7 +117,7 @@ def publish(pid, v):
 	g.db.commit()
 
 	cache.delete_memoized(frontlist)
-	cache.delete_memoized(User.userpagelisting)
+	#cache.delete_memoized(User.userpagelisting)
 
 	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()):
 		cache.delete_memoized(changeloglist)
@@ -320,7 +332,7 @@ def edit_post(pid, v):
 				name = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(name)
 				url = process_image(name)
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+				if MULTIMEDIA_EMBEDDING_ENABLED:
 					body += f"\n\n![]({url})"
 				else:
 					body += f'\n\n<a href="{url}">{url}</a>'
@@ -680,19 +692,19 @@ def submit_post(v, sub=None):
 
 	similar_posts = g.db.query(Submission).filter(
 					Submission.author_id == v.id,
-					Submission.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+					Submission.title.op('<->')(title) < SPAM_SIMILARITY_THRESHOLD,
 					Submission.created_utc > cutoff
 	).all()
 
 	if url:
 		similar_urls = g.db.query(Submission).filter(
 					Submission.author_id == v.id,
-					Submission.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
+					Submission.url.op('<->')(url) < SPAM_URL_SIMILARITY_THRESHOLD,
 					Submission.created_utc > cutoff
 		).all()
 	else: similar_urls = []
 
-	threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
+	threshold = SPAM_SIMILAR_COUNT_THRESHOLD
 	if v.age >= (60 * 60 * 24 * 7): threshold *= 3
 	elif v.age >= (60 * 60 * 24): threshold *= 2
 
@@ -725,7 +737,7 @@ def submit_post(v, sub=None):
 				name = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(name)
 				image = process_image(name)
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+				if MULTIMEDIA_EMBEDDING_ENABLED:
 					body += f"\n\n![]({image})"
 				else:
 					body += f'\n\n<a href="{image}">{image}</a>'
@@ -813,7 +825,7 @@ def submit_post(v, sub=None):
 	g.db.commit()
 
 	cache.delete_memoized(frontlist)
-	cache.delete_memoized(User.userpagelisting)
+	#cache.delete_memoized(User.userpagelisting)
 
 	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()) and not post.private:
 		cache.delete_memoized(changeloglist)
@@ -941,7 +953,7 @@ def api_pin_post(post_id, v):
 	post.is_pinned = not post.is_pinned
 	g.db.add(post)
 
-	cache.delete_memoized(User.userpagelisting)
+	#cache.delete_memoized(User.userpagelisting)
 
 	g.db.commit()
 	if post.is_pinned: return {"message": "Post pinned!"}

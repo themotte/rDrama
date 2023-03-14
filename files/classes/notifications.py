@@ -1,7 +1,11 @@
-from sqlalchemy import *
-from sqlalchemy.orm import relationship
-from files.__main__ import Base
 import time
+
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.schema import Column, ForeignKey, Index
+from sqlalchemy.sql.sqltypes import Boolean, Integer
+
+from files.classes.base import Base
+
 
 class Notification(Base):
 

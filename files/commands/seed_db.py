@@ -7,7 +7,7 @@ from sqlalchemy.orm import scoped_session
 from werkzeug.security import generate_password_hash
 
 from files.__main__ import app, db_session
-from files.classes import User, Submission, Comment, Vote, CommentVote
+from files.classes import Comment, CommentVote, Submission, User, Vote
 from files.helpers.comments import bulk_recompute_descendant_counts
 
 @app.cli.command('seed_db')

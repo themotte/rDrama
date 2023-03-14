@@ -1,8 +1,30 @@
+import hmac
+from os import environ
+import random
+import secrets
+import time
 from urllib.parse import urlencode
-from files.mail import *
+
+import requests
+
+from sqlalchemy import func
+
 from files.__main__ import app, limiter
-from files.helpers.const import *
+from files.classes.alts import Alt
+from files.classes.badges import Badge
+from files.classes.user import User
+from files.helpers.alerts import send_notification
+from files.helpers.config.environment import RATE_LIMITER_ENABLED, SECRET_KEY, SITE_FULL, WELCOME_MSG
+from files.helpers.config.regex import (email_regex, valid_password_regex,
+                                        valid_username_regex)
 from files.helpers.captcha import validate_captcha
+from files.helpers.const import *
+from files.helpers.get import get_account, get_user
+from files.helpers.security import generate_hash, hash_password, validate_hash
+from files.helpers.strings import sql_ilike_clean
+from files.helpers.wrappers import auth_desired, auth_required
+from files.mail import send_mail, send_verification_email
+from files.routes.importstar import *
 
 @app.get("/login")
 @auth_desired
@@ -134,7 +156,7 @@ def login_post():
 		abort(400)
 
 	session.permanent = True
-	session["session_id"] = token_hex(49)
+	session["session_id"] = secrets.token_hex(49)
 	session["lo_user"] = account.id
 	session["login_nonce"] = account.login_nonce
 	if account.id == OWNER_ID:
@@ -196,12 +218,12 @@ def sign_up_get(v):
 		return render_template("sign_up_failed_ref.html")
 
 	now = int(time.time())
-	token = token_hex(16)
+	token = secrets.token_hex(16)
 	session["signup_token"] = token
 
 	formkey_hashstr = str(now) + token + agent
 
-	formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
+	formkey = hmac.new(key=bytes(SECRET_KEY, "utf-16"),
 					   msg=bytes(formkey_hashstr, "utf-16"),
 					   digestmod='md5'
 					   ).hexdigest()
@@ -258,7 +280,7 @@ def sign_up_post(v):
 
 		return redirect(f"/signup?{urlencode(args)}")
 
-	if app.config['RATE_LIMITER_ENABLED']:
+	if RATE_LIMITER_ENABLED:
 		if now - int(form_timestamp) < 5:
 			return signup_error("There was a problem. Please try again.")
 
@@ -348,7 +370,7 @@ def sign_up_post(v):
 	send_notification(new_user.id, WELCOME_MSG)
 
 	session.permanent = True
-	session["session_id"] = token_hex(49)
+	session["session_id"] = secrets.token_hex(49)
 	session["lo_user"] = new_user.id
 
 	g.db.commit()

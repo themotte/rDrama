@@ -1,23 +1,40 @@
-from files.helpers.media import process_image
-from files.mail import *
-from files.__main__ import app, limiter, mail
-from files.helpers.alerts import *
-from files.helpers.const import *
-from files.helpers.captcha import validate_captcha
-from files.classes.award import AWARDS
-from sqlalchemy import func
-from os import path
 import calendar
+import time
+from operator import or_
+from typing import Optional
+
 import matplotlib.pyplot as plt
-from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
-from files.classes.badges import BadgeDef
-import logging
+import pyotp
+from sqlalchemy import func
+
+from files.__main__ import app, cache, limiter
+from files.classes.award import AwardRelationship
+from files.classes.badges import Badge, BadgeDef
+from files.classes.comment import Comment
+from files.classes.marsey import Marsey
+from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2, ModAction
+from files.classes.submission import Submission
+from files.classes.user import User
+from files.classes.userblock import UserBlock
+from files.classes.votes import CommentVote, Vote
+from files.helpers.alerts import *
+from files.helpers.cache import make_cache_key
+from files.helpers.captcha import validate_captcha
+from files.helpers.config.environment import SITE
+from files.helpers.const import *
+from files.helpers.get import get_account, get_id
+from files.helpers.media import process_image
+from files.helpers.wrappers import (admin_level_required, auth_desired,
+                                    auth_required)
+from files.routes.importstar import *
+
 
 @app.get('/logged_out/')
 @app.get('/logged_out/<path:old>')
 def logged_out(old = ""):
 	# Remove trailing question mark from request.full_path which flask adds if there are no query parameters
 	redirect_url = request.full_path.replace("/logged_out", "", 1)
+	if not SITE in redirect_url: redirect('/')
 	if redirect_url.endswith("?"):
 		redirect_url = redirect_url[:-1]
 
@@ -32,7 +49,7 @@ def logged_out(old = ""):
 	return redirect(redirect_url)
 
 @app.get("/marsey_list")
-@cache.memoize(timeout=600, make_name=make_name)
+@cache.memoize(timeout=600, make_name=make_cache_key)
 def marsey_list():
 	marseys = [f"{x.name} : {x.tags}" for x in g.db.query(Marsey).order_by(Marsey.count.desc())]
 
@@ -55,7 +72,7 @@ def support(v):
 
 @app.get("/stats")
 @auth_desired
-@cache.memoize(timeout=86400, make_name=make_name)
+@cache.memoize(timeout=86400, make_name=make_cache_key)
 def participation_stats(v):
 
 
@@ -380,7 +397,7 @@ def robots_txt():
 
 @app.get("/badges")
 @admin_level_required(2)
-@cache.memoize(timeout=3600, make_name=make_name)
+@cache.memoize(timeout=3600, make_name=make_cache_key)
 def badges(v):
 	badges = g.db.query(BadgeDef).order_by(BadgeDef.id).all()
 	counts_raw = g.db.query(Badge.badge_id, func.count()).group_by(Badge.badge_id).all()

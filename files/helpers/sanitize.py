@@ -1,19 +1,28 @@
 import functools
 import html
-import bleach
-from bs4 import BeautifulSoup
-from bleach.linkifier import LinkifyFilter, build_url_re
-from functools import partial
-from .get import *
-from os import path, environ
 import re
-from mistletoe import markdown
-from json import loads, dump
-from random import random, choice
+import signal
+from os import path
+from random import choice, random
+from urllib.parse import parse_qs, urlparse
+
+import bleach
 import gevent
-import time
-import requests
+from bleach.linkifier import LinkifyFilter, build_url_re
+from bs4 import BeautifulSoup
+from flask import abort, g
+from mistletoe import markdown
+
 from files.__main__ import app
+from files.classes.domains import BannedDomain
+from files.classes.marsey import Marsey
+from files.helpers.config.environment import (MENTION_LIMIT,
+                                              MULTIMEDIA_EMBEDDING_ENABLED,
+                                              SITE_FULL)
+from files.helpers.config.regex import *
+from files.helpers.config.stateful import marseys_const2
+from files.helpers.const import *
+from files.helpers.get import get_user, get_users
 
 TLDS = ('ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar',
 	'arpa','as','asia','at','au','aw','ax','az','ba','bb','bd','be','bf','bg',
@@ -42,7 +51,7 @@ allowed_tags = ('b','blockquote','br','code','del','em','h1','h2','h3','h4',
 		'tbody','th','thead','td','tr','ul','a','span','ruby','rp','rt',
 		'spoiler',)
 
-if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+if MULTIMEDIA_EMBEDDING_ENABLED:
 	allowed_tags += ('img', 'lite-youtube', 'video', 'source',)
 
 
@@ -181,7 +190,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 	# double newlines, eg. hello\nworld becomes hello\n\nworld, which later becomes <p>hello</p><p>world</p>
 	sanitized = linefeeds_regex.sub(r'\1\n\n\2', sanitized)
 
-	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+	if MULTIMEDIA_EMBEDDING_ENABLED:
 		# turn eg. https://wikipedia.org/someimage.jpg into ![](https://wikipedia.org/someimage.jpg)
 		sanitized = image_regex.sub(r'\1![](\2)\4', sanitized)
 
@@ -220,7 +229,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 		users = get_users(names,graceful=True)
 
 		if len(users) > app.config['MENTION_LIMIT']:
-			abort(400, f'Mentioned {len(users)} users but limit is {app.config["MENTION_LIMIT"]}')
+			abort(403, f'Mentioned {len(users)} users but limit is {app.config["MENTION_LIMIT"]}')
 
 		for u in users:
 			if not u: continue
@@ -231,7 +240,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	soup = BeautifulSoup(sanitized, 'lxml')
 
-	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+	if MULTIMEDIA_EMBEDDING_ENABLED:
 		for tag in soup.find_all("img"):
 			if tag.get("src") and not tag["src"].startswith('/pp/'):
 				tag["loading"] = "lazy"
@@ -246,7 +255,6 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 
 	sanitized = str(soup)
-
 	sanitized = spoiler_regex.sub(r'<spoiler>\1</spoiler>', sanitized)
 
 	marseys_used = set()
@@ -280,7 +288,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	if "https://youtube.com/watch?v=" in sanitized: sanitized = sanitized.replace("?t=", "&t=")
 
-	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+	if MULTIMEDIA_EMBEDDING_ENABLED:
 		captured = []
 		for i in youtube_regex.finditer(sanitized):
 			if i.group(0) in captured: continue
@@ -296,7 +304,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 			sanitized = sanitized.replace(i.group(0), htmlsource)
 
-	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+	if MULTIMEDIA_EMBEDDING_ENABLED:
 		sanitized = video_sub_regex.sub(r'\1<video controls preload="none"><source src="\2"></video>', sanitized)
 
 	if comment:
@@ -308,25 +316,18 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 	sanitized = utm_regex.sub('', sanitized)
 	sanitized = utm_regex2.sub('', sanitized)
 	sanitized = sanitized.replace('<html><body>','').replace('</body></html>','')
-
 	sanitized = bleach.Cleaner(tags=allowed_tags,
 								attributes=allowed_attributes,
 								protocols=['http', 'https'],
 								styles=['color', 'background-color', 'font-weight', 'text-align'],
-								filters=[partial(LinkifyFilter, skip_tags=["pre"], parse_email=False, callbacks=[callback], url_re=url_re)],
+								filters=[functools.partial(LinkifyFilter, skip_tags=["pre"], parse_email=False, callbacks=[callback], url_re=url_re)],
 								strip=True,
 								).clean(sanitized)
 
-
-
 	soup = BeautifulSoup(sanitized, 'lxml')
-
 	links = soup.find_all("a")
-
 	domain_list = set()
-
 	for link in links:
-
 		href = link.get("href")
 		if not href: continue
 

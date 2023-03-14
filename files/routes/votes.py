@@ -1,10 +1,14 @@
-from files.helpers.wrappers import *
-from files.helpers.get import *
-from files.helpers.const import *
-from files.classes import *
-from flask import *
-from files.__main__ import app, limiter, cache
 from os import environ
+
+from files.__main__ import app, limiter
+from files.classes.comment import Comment
+from files.classes.submission import Submission
+from files.classes.votes import CommentVote, Vote
+from files.helpers.const import *
+from files.helpers.get import get_post, get_comment
+from files.helpers.wrappers import admin_level_required, is_not_permabanned
+from files.routes.importstar import *
+
 
 @app.get("/votes")
 @limiter.exempt

@@ -1,5 +1,9 @@
-from sqlalchemy import *
-from files.__main__ import Base
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.schema import Column, ForeignKey, Index
+from sqlalchemy.sql.sqltypes import Integer, String
+
+from files.classes.base import Base
+
 
 class Marsey(Base):
 	__tablename__ = "marseys"

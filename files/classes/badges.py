@@ -1,12 +1,11 @@
-from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.__main__ import Base, app
-from os import environ
-from files.helpers.lazy import lazy
-from files.helpers.const import *
+from sqlalchemy.sql.schema import Column, ForeignKey, Index, UniqueConstraint
+from sqlalchemy.sql.sqltypes import Integer, String
+
+from files.classes.base import Base
 from files.helpers.assetcache import assetcache_path
-from datetime import datetime
-from json import loads
+from files.helpers.lazy import lazy
+
 
 class BadgeDef(Base):
 	__tablename__ = "badge_defs"

@@ -1,11 +1,15 @@
-from files.helpers.wrappers import *
-import re
-from sqlalchemy import *
-from flask import *
-from files.__main__ import app
-from files.helpers.contentsorting import apply_time_filter, sort_objects
-from files.helpers.strings import sql_ilike_clean
+from operator import or_
 
+from files.__main__ import app
+from files.classes.comment import Comment
+from files.classes.submission import Submission
+from files.classes.user import User
+from files.helpers.config.regex import query_regex
+from files.helpers.contentsorting import apply_time_filter, sort_objects
+from files.helpers.get import get_comments, get_posts, get_user
+from files.helpers.strings import sql_ilike_clean
+from files.helpers.wrappers import auth_desired
+from files.routes.importstar import *
 
 valid_params=[
 	'author',

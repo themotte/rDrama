@@ -1,11 +1,19 @@
+from __future__ import annotations
+
 from collections import defaultdict
 from typing import Callable, Iterable, List, Optional, Type, Union
 
-from flask import g
+from flask import abort, g
 from sqlalchemy import and_, or_, func
 from sqlalchemy.orm import Query, scoped_session, selectinload
 
-from files.classes import *
+from files.classes.comment import Comment
+from files.classes.domains import BannedDomain
+from files.classes.flags import CommentFlag
+from files.classes.submission import Submission
+from files.classes.user import User
+from files.classes.userblock import UserBlock
+from files.classes.votes import CommentVote, Vote
 from files.helpers.const import AUTOJANNY_ID
 from files.helpers.contentsorting import sort_comment_results
 

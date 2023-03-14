@@ -1,6 +1,9 @@
-from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.__main__ import Base
+from sqlalchemy.sql.schema import Column, ForeignKey, Index
+from sqlalchemy.sql.sqltypes import Integer
+
+from files.classes.base import Base
+
 
 class UserBlock(Base):
 

@@ -1,26 +1,23 @@
-from os import environ
 import time
-from flask import *
 from urllib.parse import quote
 
-from files.helpers.security import *
-from files.helpers.wrappers import *
-from files.helpers.const import *
-from files.classes import *
-from files.__main__ import app, mail, limiter
 from flask_mail import Message
 
-SITE_ID = environ.get("SITE_ID").strip()
-SITE_TITLE = environ.get("SITE_TITLE").strip()
+from files.__main__ import app, limiter, mail
+from files.classes import Badge, User
+from files.helpers.alerts import send_notification
+from files.helpers.config.environment import SITE, SITE_ID, SITE_TITLE
+from files.helpers.config.regex import email_regex
+from files.helpers.security import generate_hash, validate_hash
+from files.helpers.wrappers import auth_required
+from files.routes.importstar import *
 
 def send_mail(to_address, subject, html):
-
 	msg = Message(html=html, subject=subject, sender=f"{SITE_ID}@{SITE}", recipients=[to_address])
 	mail.send(msg)
 
 
 def send_verification_email(user, email=None):
-
 	if not email:
 		email = user.email
 
@@ -44,16 +41,13 @@ def send_verification_email(user, email=None):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def api_verify_email(v):
-
 	send_verification_email(v)
-
 	return {"message": "Email has been sent (ETA ~5 minutes)"}
 
 
 @app.get("/activate")
 @auth_required
 def activate(v):
-
 	email = request.values.get("email", "").strip().lower()
 
 	if not email_regex.fullmatch(email):

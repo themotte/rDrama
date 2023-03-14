@@ -1,29 +1,40 @@
-from sqlalchemy.orm import deferred, aliased
-from secrets import token_hex
-import pyotp
-from files.helpers.media import *
-from files.helpers.const import *
-from .alts import Alt
-from .saves import *
-from .notifications import Notification
-from .award import AwardRelationship
-from .follows import *
-from .subscriptions import *
-from .userblock import *
-from .badges import *
-from .clients import *
-from .mod_logs import *
-from .mod import *
-from .exiles import *
-from .sub_block import *
-from files.__main__ import app, Base, cache
-from files.helpers.security import *
-from files.helpers.assetcache import assetcache_path
-from files.helpers.contentsorting import apply_time_filter, sort_objects
-import random
+import time
 from datetime import datetime
-from os import environ, remove, path
+from operator import and_, or_
+from os import environ
 
+import flask.config
+
+import pyotp
+from flask import g, session
+from sqlalchemy.orm import aliased, deferred, relationship
+from sqlalchemy.sql.schema import Column, ForeignKey, Index, UniqueConstraint
+from sqlalchemy.sql.sqltypes import Boolean, DateTime, Integer, String
+from werkzeug.security import check_password_hash
+
+#from files.__main__ import cache
+from files.classes.alts import Alt
+from files.classes.award import AwardRelationship
+from files.classes.badges import Badge
+from files.classes.base import Base
+from files.classes.clients import OauthApp
+from files.classes.comment import Comment
+from files.classes.exiles import Exile
+from files.classes.follows import Follow
+from files.classes.mod import Mod
+from files.classes.mod_logs import ModAction
+from files.classes.notifications import Notification
+from files.classes.saves import CommentSaveRelationship, SaveRelationship
+from files.classes.sub_block import SubBlock
+from files.classes.submission import Submission
+from files.classes.subscriptions import Subscription
+from files.classes.userblock import UserBlock
+from files.helpers.assetcache import assetcache_path
+from files.helpers.config.environment import *
+from files.helpers.const import *
+from files.helpers.contentsorting import apply_time_filter, sort_objects
+from files.helpers.lazy import lazy
+from files.helpers.security import generate_hash, hash_password, validate_hash
 
 defaulttheme = "TheMotte"
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
@@ -158,10 +169,10 @@ class User(Base):
 	def can_manage_reports(self):
 		return self.admin_level > 1
 
-	def should_comments_be_filtered(self):
+	def should_comments_be_filtered(self, config: flask.config.Config):
 		if self.admin_level > 0:
 			return False
-		site_settings = app.config['SETTINGS']
+		site_settings = config['SETTINGS']
 		minComments = site_settings.get('FilterCommentsMinComments', 0)
 		minKarma = site_settings.get('FilterCommentsMinKarma', 0)
 		minAge = site_settings.get('FilterCommentsMinAgeDays', 0)
@@ -280,7 +291,7 @@ class User(Base):
 			if u.patron: return True
 		return False
 
-	@cache.memoize(timeout=86400)
+	#@cache.memoize(timeout=86400)
 	def userpagelisting(self, site=None, v=None, page=1, sort="new", t="all"):
 
 		if self.shadowbanned and not (v and (v.admin_level > 1 or v.id == self.id)): return []
@@ -322,11 +333,10 @@ class User(Base):
 	def has_badge(self, badge_id):
 		return g.db.query(Badge).filter_by(user_id=self.id, badge_id=badge_id).one_or_none()
 
-	def hash_password(self, password):
-		return generate_password_hash(
-			password, method='pbkdf2:sha512', salt_length=8)
+	def hash_password(self, password:str):
+		return hash_password(password)
 
-	def verifyPass(self, password):
+	def verifyPass(self, password:str):
 		return check_password_hash(self.passhash, password)
 
 	@property

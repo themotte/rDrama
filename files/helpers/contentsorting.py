@@ -1,11 +1,9 @@
 import time
 from collections.abc import Iterable
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-from sqlalchemy.sql import func
 from sqlalchemy.orm import Query
-
-from files.helpers.const import *
+from sqlalchemy.sql import func
 
 if TYPE_CHECKING:
 	from files.classes.comment import Comment

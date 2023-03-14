@@ -1,3 +1,9 @@
+import time
+from os import environ, listdir
+
+from flask import render_template
+from jinja2 import pass_context
+
 from os import listdir, environ
 import random
 import time
@@ -5,9 +11,12 @@ import time
 from jinja2 import pass_context
 
 from files.__main__ import app
-from .get import *
-from .const import * 
 from files.helpers.assetcache import assetcache_path
+from files.helpers.config.environment import (DEFAULT_COLOR, PUSHER_ID, SITE,
+                                              SITE_FULL, SITE_ID, SITE_TITLE)
+from files.helpers.const import *
+from files.helpers.get import get_post
+
 
 
 @app.template_filter("shuffle")
@@ -27,7 +36,6 @@ def post_embed(id, v):
 	
 	if p: return render_template("submission_listing.html", listing=[p], v=v)
 	return ''
-
 
 @app.template_filter("timestamp")
 def timestamp(timestamp):

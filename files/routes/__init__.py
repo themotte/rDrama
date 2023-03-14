@@ -1,5 +1,13 @@
+# import our app then...
 from files.__main__ import app
 
+# import jinja2 helper then...
+from files.helpers.jinja2 import *
+
+# import allroutes then...
+from files.routes.allroutes import *
+
+# import routes :)
 from .admin import *
 from .comments import *
 from .errors import *

@@ -1,9 +1,13 @@
-from sqlalchemy import *
-from sqlalchemy.orm import relationship
-from files.__main__ import Base
-from files.helpers.lazy import lazy
-from files.helpers.const import *
 import time
+
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.schema import Column, ForeignKey, Index
+from sqlalchemy.sql.sqltypes import Integer, String
+
+from files.classes.base import Base
+from files.helpers.const import *
+from files.helpers.lazy import lazy
+
 
 class Flag(Base):
 

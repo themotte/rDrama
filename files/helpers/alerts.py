@@ -1,7 +1,11 @@
-from files.classes import *
 from flask import g
-from .sanitize import *
-from .const import *
+
+from files.classes import Comment, Notification
+from files.helpers.config.regex import *
+from files.helpers.const import *
+from files.helpers.get import get_user
+from files.helpers.sanitize import sanitize
+
 
 def create_comment(text_html, autojanny=False):
 	if autojanny: author_id = AUTOJANNY_ID

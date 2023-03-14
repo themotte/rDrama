@@ -1,16 +1,28 @@
-from files.helpers.wrappers import *
-from files.helpers.alerts import *
-from files.helpers.media import process_image
-from files.helpers.const import *
-from files.helpers.comments import comment_on_publish
-from files.classes import *
-from flask import *
-from files.__main__ import app, limiter
-from files.helpers.sanitize import filter_emojis_only
+import time
+
 import requests
-from shutil import copyfile
-from json import loads
-from collections import Counter
+
+from files.__main__ import app, limiter
+from files.classes.comment import Comment
+from files.classes.mod_logs import ModAction
+from files.classes.saves import CommentSaveRelationship
+from files.classes.submission import Submission
+from files.classes.user import User
+from files.classes.votes import CommentVote
+from files.helpers.alerts import *
+from files.helpers.comments import comment_on_publish, comment_on_unpublish
+from files.helpers.assetcache import assetcache_path
+from files.helpers.config.environment import (COMMENT_SPAM_COUNT_THRESHOLD,
+                                              COMMENT_SPAM_SIMILAR_THRESHOLD,
+                                              IMGUR_KEY,
+                                              MULTIMEDIA_EMBEDDING_ENABLED,
+                                              PUSHER_ID, PUSHER_KEY, SITE_FULL,
+                                              SITE_ID)
+from files.helpers.const import *
+from files.helpers.get import get_comment, get_post
+from files.helpers.media import process_image
+from files.helpers.wrappers import auth_desired, auth_required
+from files.routes.importstar import *
 
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
@@ -148,7 +160,7 @@ def api_comment(v):
 				if image == "":
 					abort(500, "Image upload failed")
 
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+				if MULTIMEDIA_EMBEDDING_ENABLED:
 					body += f"\n\n![]({image})"
 				else:
 					body += f'\n\n<a href="{image}">{image}</a>'
@@ -178,11 +190,11 @@ def api_comment(v):
 		similar_comments = g.db.query(Comment).filter(
 			Comment.author_id == v.id,
 			Comment.body.op(
-				'<->')(body) < app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"],
+				'<->')(body) < COMMENT_SPAM_SIMILAR_THRESHOLD,
 			Comment.created_utc > cutoff
 		).all()
 
-		threshold = app.config["COMMENT_SPAM_COUNT_THRESHOLD"]
+		threshold = COMMENT_SPAM_COUNT_THRESHOLD
 		if v.age >= (60 * 60 * 24 * 7):
 			threshold *= 3
 		elif v.age >= (60 * 60 * 24):
