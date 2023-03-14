@@ -9,6 +9,7 @@ from sqlalchemy.orm import relationship
 from files.__main__ import Base, app
 from files.classes.votes import CommentVote
 from files.helpers.const import *
+from files.helpers.content import moderated_body
 from files.helpers.lazy import lazy
 from .flags import CommentFlag
 from random import randint
@@ -357,6 +358,8 @@ class Comment(Base):
 		return data
 
 	def realbody(self, v):
+		moderated:Optional[str] = moderated_body(self, v)
+		if moderated: return moderated
 		if self.post and self.post.club and not (v and (v.paid_dues or v.id in [self.author_id, self.post.author_id])): return f"<p>{CC} ONLY</p>"
 
 		body = self.body_html or ""
@@ -397,6 +400,8 @@ class Comment(Base):
 		return body
 
 	def plainbody(self, v):
+		moderated:Optional[str] = moderated_body(self, v)
+		if moderated: return moderated
 		if self.post and self.post.club and not (v and (v.paid_dues or v.id in [self.author_id, self.post.author_id])): return f"<p>{CC} ONLY</p>"
 		body = self.body
 		if not body: return ""
