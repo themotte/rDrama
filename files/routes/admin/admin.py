@@ -10,7 +10,7 @@ from files.helpers.const import *
 from files.classes import *
 from flask import *
 from files.__main__ import app, cache, limiter
-from .front import frontlist
+from ..front import frontlist
 from files.helpers.comments import comment_on_publish, comment_on_unpublish
 from datetime import datetime
 import requests

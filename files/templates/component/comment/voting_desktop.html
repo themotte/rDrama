@@ -1,0 +1,28 @@
+{# upvote #}
+{%- if v and request.path.startswith('/@') and v.admin_level < 2 -%}
+	{% if voted==1 %}
+		<button class="btn caction p-0 m-0 pr-3 nobackground arrow-up mx-0 comment-{{c.id}}-up active"></button>
+	{% endif %}
+{% elif v %}
+	<button tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '1')" class="comment-{{c.id}}-up btn caction p-0 m-0 pr-3 nobackground arrow-up upvote-button comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
+{% else %}
+	<button tabindex="0" class="comment-{{c.id}}-up btn caction nobackground p-0 m-0 pr-3 arrow-up" onclick="location.href='/login';"></button>
+{% endif %}
+
+{# score #}
+<button class="btn caction nobackground p-0 m-0">
+	<span data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}"  class="comment-score-{{c.id}} score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}">{{score}}</span>
+</button>
+
+{# downvote #}
+{%- if v and request.path.startswith('/@') and v.admin_level < 2 -%}
+	{% if voted == -1 %}
+		<li class=" arrow-down py-0 m-0 px-3 comment-{{c.id}}-down active"></li>
+	{% endif %}
+{%- elif environ.get('DISABLE_DOWNVOTES') == '1' -%}
+	{# downvotes not allowed, nop #}
+{%- elif v -%}
+	<button tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '-1')" class="comment-{{c.id}}-down btn caction py-0 m-0 px-3 nobackground arrow-down downvote-button comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}"></button>						
+{%- else -%}
+	<button tabindex="0" role="button" class="comment-{{c.id}}-down btn caction py-0 m-0 px-3 nobackground arrow-down" onclick="location.href='/login';"></button>
+{%- endif %}

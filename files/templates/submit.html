@@ -93,9 +93,7 @@
 												<i class="fas fa-quote-right" aria-hidden="true"></i>
 												</small>
 												&nbsp;
-												<small class="btn btn-secondary format d-inline-block m-0" onclick="getGif();commentForm('post-text')" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Add GIF"><span class="font-weight-bolder text-uppercase" aria-hidden="true" >GIF</span></small>
-												&nbsp;
-																
+			
 												<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-submit">
 													<div id="filename-show-submit"><i class="far fa-image"></i></div>
 													<input autocomplete="off" id="file-upload-submit" multiple="multiple" type="file" name="file2" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-submit','file-upload-submit');checkForRequired()" hidden>

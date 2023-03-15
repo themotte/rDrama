@@ -243,7 +243,7 @@
 							{% if p.realbody(v) %}
 								<a class="list-inline-item" role="button" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
 							{% endif %}
-							{% include 'post_actions.html' %}
+							{% include 'component/post/actions.html' %}
 						</ul>
 					</div>
 				</div>
@@ -292,7 +292,7 @@
 								</div>
 								<div class="modal-body">
 									<ul class="list-group post-actions">
-										{% include "post_actions_mobile.html" %}
+										{% include "component/post/actions_mobile.html" %}
 									</ul>
 								</div>
 							</div>
@@ -311,7 +311,7 @@
 
 
 	{% if v and v.admin_level > 1 %}
-		{% include "post_admin_actions_mobile.html" %}
+		{% include "component/post/actions_admin_mobile.html" %}
 	{% endif %}
 
 
@@ -407,13 +407,13 @@
 {% endfor %}
 
 {% if v %}
-	{% include "delete_post_modal.html" %}
-	{% include "report_post_modal.html" %}
+	{% include "component/modal/delete_post.html" %}
+	{% include "component/modal/report_post.html" %}
 	{% if v.admin_level > 1 %}
-		{% include "ban_modal.html" %}
+		{% include "component/modal/ban.html" %}
 	{% endif %}
 {% endif %}
-{% include "expanded_image_modal.html" %}
+{% include "component/modal/expanded_image.html" %}
 
 <script src="{{ 'js/clipboard.js' | asset }}"></script>
 <script src="{{ 'js/comments+submission_listing.js' | asset }}"></script>
