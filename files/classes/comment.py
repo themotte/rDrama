@@ -91,13 +91,12 @@ class Comment(Base):
 		comment_age_hours = comment_age_seconds / (60*60)
 		return comment_age_hours < app.config['SCORE_HIDING_TIME_HOURS']
 	
-	@lazy
 	def _score_context_str(self, score_type:Literal['score', 'upvotes', 'downvotes'], 
 			context:CommentRenderContext) -> str:
 		if self.is_message: return '' # don't show scores for messages
 		if context == 'volunteer': return '' # volunteer: hide scores
 		if self.should_hide_score: return '' # hide scores for new comments
-		
+
 		if score_type == 'upvotes': return str(self.upvotes)
 		if score_type == 'score': return str(self.score)
 		if score_type == 'downvotes': return str(self.downvotes)
