@@ -1,0 +1,27 @@
+{% if v and v.id==c.author_id %}
+	<div id="comment-edit-{{c.id}}" class="d-none comment-write collapsed child">
+		<form id="comment-edit-form-{{c.id}}" action="/edit_comment/{{c.id}}" method="post" enctype="multipart/form-data"> 
+			<input type="hidden" name="formkey" value="{{v.formkey}}">
+			<textarea autocomplete="off" maxlength="{{COMMENT_BODY_LENGTH_MAXIMUM}}" oninput="markdown('comment-edit-body-{{c.id}}', 'preview-edit-{{c.id}}');charLimit('comment-edit-body-{{c.id}}','charcount-edit-{{c.id}}')" id="comment-edit-body-{{c.id}}" data-id="{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
+			<div class="text-small font-weight-bold mt-1" id="charcount-edit-{{c.id}}" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
+			<div class="comment-format">
+				<a class="btn btn-secondary format m-0" role="button" onclick="makeBold('comment-edit-body-{{c.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Bold"><i class="fas fa-bold"></i></a>
+				&nbsp;
+				<a class="btn btn-secondary format m-0" role="button" onclick="makeItalics('comment-edit-body-{{c.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Italicize"><i class="fas fa-italic"></i></a>
+				&nbsp;
+				<a class="btn btn-secondary format m-0" role="button" onclick="makeQuote('comment-edit-body-{{c.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote"><i class="fas fa-quote-right"></i></a>
+				&nbsp;
+				<small class="btn btn-secondary format m-0" aria-hidden="true" onclick="commentForm('comment-edit-body-{{c.id}}');getGif()" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add GIF"><span class="font-weight-bolder text-uppercase">GIF</span></small>
+				&nbsp;
+				<label class="btn btn-secondary format m-0" for="file-edit-reply-{{c.id}}">
+					<div id="filename-edit-reply-{{c.id}}"><i class="far fa-image"></i></div>
+						<input autocomplete="off" id="file-edit-reply-{{c.id}}" type="file" multiple="multiple" name="file" accept="image\/*, video\/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-edit-reply-{{c.id}}','file-edit-reply-{{c.id}}')" hidden>
+				</label>
+			</div>
+			<a id="edit-btn-{{c.id}}" role="button" form="comment-edit-form-{{c.id}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
+			<a id="cancel-edit-{{c.id}}" role="button" onclick="toggleEdit('{{c.id}}')" class="btn btn-link text-muted ml-auto cancel-form fl-r commentmob">Cancel</a> 
+		</form>
+		<div id="preview-edit-{{c.id}}" class="preview mb-3 mt-5"></div>
+		<div class="form-text text-small p-0 m-0"><a href="/formatting" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>Formatting help</a></div>
+	</div>
+{% endif %}

@@ -1,0 +1,29 @@
+<div class="modal fade" id="reportCommentModal" tabindex="-1" role="dialog" aria-labelledby="reportCommentModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Report <span id="comment-author"></span>'s comment</h5>
+                <button class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="far fa-times"></i></span>
+                </button>
+            </div>
+            <div class="" id="reportCommentFormBefore">
+                {% include 'report_reasons.html' %}
+                <div class="modal-footer">
+                    <button class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
+                    <button id="reportCommentButton" class="btn btn-danger">Report comment</button>
+                </div>
+            </div>
+            
+            <div class="d-none" id="reportCommentFormAfter">
+                <div class="modal-body">
+                    <div class="h6">Thank you for reporting this comment!</div>
+                    <small class="form-text text-muted">We'll take it from here.</small>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

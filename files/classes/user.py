@@ -1,6 +1,7 @@
 from sqlalchemy.orm import deferred, aliased
 from secrets import token_hex
 import pyotp
+from files.classes.base import Base
 from files.helpers.media import *
 from files.helpers.const import *
 from .alts import Alt
@@ -13,7 +14,7 @@ from .userblock import *
 from .badges import *
 from .clients import *
 from .mod_logs import *
-from files.__main__ import app, Base, cache
+from files.__main__ import app, cache
 from files.helpers.security import *
 from files.helpers.assetcache import assetcache_path
 from files.helpers.contentsorting import apply_time_filter, sort_objects

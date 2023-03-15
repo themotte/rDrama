@@ -865,16 +865,11 @@ def remove_follow(username, v):
 from urllib.parse import urlparse
 import re
 
-@app.get("/pp/<id>")
-@app.get("/uid/<id>/pic")
-@app.get("/uid/<id>/pic/profile")
+@app.get("/pp/<int:id>")
+@app.get("/uid/<int:id>/pic")
+@app.get("/uid/<int:id>/pic/profile")
 @limiter.exempt
-def user_profile_uid(v, id):
-	try: id = int(id)
-	except:
-		try: id = int(id, 36)
-		except: abort(404)
-
+def user_profile_uid(id:int):
 	name = f"/pp/{id}"
 	path = cache.get(name)
 	tout = 5 * 60 # 5 min
