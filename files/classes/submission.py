@@ -8,7 +8,6 @@ from sqlalchemy.orm import declared_attr, deferred, relationship, scoped_session
 from files.__main__ import app
 from files.classes.base import CreatedBase
 from files.classes.votes import Vote
-from files.helpers.alerts import execute_username_mentions_submission
 from files.helpers.assetcache import assetcache_path
 from files.helpers.caching import invalidate_cache
 from files.helpers.const import *
@@ -110,6 +109,7 @@ class Submission(CreatedBase):
 		db.add(author)
 
 	def publish(self):
+		from files.helpers.alerts import execute_username_mentions_submission
 		if self.private: return
 		if not self.ghost: execute_username_mentions_submission(self)
 		invalidate_cache(userpagelisting=True, changeloglist=\
