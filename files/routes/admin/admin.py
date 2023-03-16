@@ -1,4 +1,5 @@
 import time
+from files.helpers.caching import invalidate_cache
 
 from files.helpers.wrappers import *
 from files.helpers.alerts import *
@@ -10,7 +11,6 @@ from files.helpers.const import *
 from files.classes import *
 from flask import *
 from files.__main__ import app, cache, limiter
-from ..front import frontlist
 from files.helpers.comments import comment_on_publish, comment_on_unpublish
 from datetime import datetime
 import requests
@@ -830,7 +830,7 @@ def shadowban(user_id, v):
 	)
 	g.db.add(ma)
 	
-	cache.delete_memoized(frontlist)
+	invalidate_cache()
 
 	body = f"@{v.username} has shadowbanned @{user.username}"
 
@@ -878,7 +878,7 @@ def unshadowban(user_id, v):
 	)
 	g.db.add(ma)
 	
-	cache.delete_memoized(frontlist)
+	invalidate_cache()
 
 	g.db.commit()
 	return {"message": "User unshadowbanned!"}
@@ -1108,7 +1108,7 @@ def ban_post(post_id, v):
 		)
 	g.db.add(ma)
 
-	cache.delete_memoized(frontlist)
+	invalidate_cache()
 
 	v.coins += 1
 	g.db.add(v)
@@ -1144,7 +1144,7 @@ def unban_post(post_id, v):
 
 	g.db.add(post)
 
-	cache.delete_memoized(frontlist)
+	invalidate_cache()
 
 	v.coins -= 1
 	g.db.add(v)
@@ -1213,7 +1213,7 @@ def sticky_post(post_id, v):
 		if v.id != post.author_id:
 			send_repeatable_notification(post.author_id, f"@{v.username} has pinned your [post](/post/{post_id})!")
 
-		cache.delete_memoized(frontlist)
+		invalidate_cache()
 		g.db.commit()
 	return {"message": "Post pinned!"}
 
@@ -1239,7 +1239,7 @@ def unsticky_post(post_id, v):
 		if v.id != post.author_id:
 			send_repeatable_notification(post.author_id, f"@{v.username} has unpinned your [post](/post/{post_id})!")
 
-		cache.delete_memoized(frontlist)
+		invalidate_cache()
 		g.db.commit()
 	return {"message": "Post unpinned!"}
 

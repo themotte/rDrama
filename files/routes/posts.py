@@ -1,5 +1,7 @@
 import time
 import gevent
+from files.helpers.caching import invalidate_cache
+from files.helpers.content import canonicalize_url
 from files.helpers.wrappers import *
 from files.helpers.sanitize import *
 from files.helpers.alerts import *
@@ -13,7 +15,6 @@ from flask import *
 from io import BytesIO
 from files.__main__ import app, limiter, cache, db_session
 from PIL import Image as PILimage
-from .front import frontlist, changeloglist
 from urllib.parse import ParseResult, urlunparse, urlparse, quote, unquote
 from os import path
 import requests
@@ -84,32 +85,8 @@ def publish(pid, v):
 	post.created_utc = int(time.time())
 	g.db.add(post)
 	
-	if not post.ghost:
-		notify_users = NOTIFY_USERS(f'{post.title} {post.body}', v)
-
-		if notify_users:
-			cid = notif_comment2(post)
-			for x in notify_users:
-				add_notif(cid, x)
-
-		if v.followers:
-			text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
-			if post.sub: text += f" in <a href='/h/{post.sub}'>/h/{post.sub}"
-
-			cid = notif_comment(text, autojanny=True)
-			for follow in v.followers:
-				user = get_account(follow.user_id)
-				if post.club and not user.paid_dues: continue
-				add_notif(cid, user.id)
-
+	post.publish()
 	g.db.commit()
-
-	cache.delete_memoized(frontlist)
-	cache.delete_memoized(User.userpagelisting)
-
-	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()):
-		cache.delete_memoized(changeloglist)
-
 	return redirect(post.permalink)
 
 @app.get("/submit")
@@ -330,13 +307,7 @@ def edit_post(pid, v):
 
 	p.body = body
 	p.body_html = body_html
-
-	if not p.private and not p.ghost:
-		notify_users = NOTIFY_USERS(f'{p.title} {p.body}', v)
-		if notify_users:
-			cid = notif_comment2(p)
-			for x in notify_users:
-				add_notif(cid, x)
+	p.publish()
 
 	if v.id == p.author_id:
 		if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
@@ -353,17 +324,16 @@ def edit_post(pid, v):
 
 	return redirect(p.permalink)
 
+
 def archiveorg(url):
 	try: requests.get(f'https://web.archive.org/save/{url}', headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}, timeout=100)
 	except: pass
 
 
 def thumbnail_thread(pid):
-
 	db = db_session()
 
 	def expand_url(post_url, fragment_url):
-
 		if fragment_url.startswith("https://"):
 			return fragment_url
 		elif fragment_url.startswith("https://"):
@@ -399,8 +369,6 @@ def thumbnail_thread(pid):
 	if x.status_code != 200:
 		db.close()
 		return
-	
-
 
 	if x.headers.get("Content-Type","").startswith("text/html"):
 		soup=BeautifulSoup(x.content, 'lxml')
@@ -408,15 +376,13 @@ def thumbnail_thread(pid):
 		thumb_candidate_urls=[]
 
 		meta_tags = [
-			"drama:thumbnail",
+			"themotte:thumbnail",
 			"twitter:image",
 			"og:image",
 			"thumbnail"
 			]
 
 		for tag_name in meta_tags:
-			
-
 			tag = soup.find(
 				'meta', 
 				attrs={
@@ -501,16 +467,7 @@ def api_is_repost():
 	url = request.values.get('url')
 	if not url: abort(400)
 
-	for rd in ("://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it", "://teddit.net"):
-		url = url.replace(rd, "://old.reddit.com")
-
-	url = url.replace("nitter.net", "twitter.com").replace("old.reddit.com/gallery", "reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube").replace("https://www.twitter", "https://twitter").replace("https://www.instagram", "https://instagram").replace("https://www.tiktok", "https://tiktok")
-
-	if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
-	elif "/media.giphy.com/" in url or "/c.tenor.com/" in url: url = url.replace(".gif", ".webp")
-	elif "/i.ibb.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp").replace(".gif", ".webp")
-
-	if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): url = url.replace("https://streamable.com/", "https://streamable.com/e/")
+	url = canonicalize_url(url)
 
 	parsed_url = urlparse(url)
 
@@ -551,7 +508,6 @@ def api_is_repost():
 @limiter.limit("1/second;2/minute;10/hour;50/day")
 @auth_required
 def submit_post(v, sub=None):
-
 	def error(error):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, error)
 	
@@ -586,17 +542,7 @@ def submit_post(v, sub=None):
 	embed = None
 
 	if url:
-		for rd in ("://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it", "://teddit.net"):
-			url = url.replace(rd, "://old.reddit.com")
-
-		url = url.replace("nitter.net", "twitter.com").replace("old.reddit.com/gallery", "reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube").replace("https://www.twitter", "https://twitter").replace("https://www.instagram", "https://instagram").replace("https://www.tiktok", "https://tiktok")
-
-		if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
-		elif "/media.giphy.com/" in url or "/c.tenor.com/" in url: url = url.replace(".gif", ".webp")
-		elif "/i.ibb.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp").replace(".gif", ".webp")
-
-		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): url = url.replace("https://streamable.com/", "https://streamable.com/e/")
-
+		url = canonicalize_url(url)
 		parsed_url = urlparse(url)
 
 		domain = parsed_url.netloc
@@ -761,18 +707,9 @@ def submit_post(v, sub=None):
 		ghost=False,
 		filter_state='filtered' if v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts'] else 'normal'
 	)
-
-	g.db.add(post)
-	g.db.flush()
-
-	vote = Vote(user_id=v.id,
-				vote_type=1,
-				submission_id=post.id
-				)
-	g.db.add(vote)
+	post.submit(g.db)
 	
 	if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
-
 		file = request.files['file']
 
 		if file.content_type.startswith('image/'):
@@ -789,34 +726,7 @@ def submit_post(v, sub=None):
 	if not post.thumburl and post.url:
 		gevent.spawn(thumbnail_thread, post.id)
 
-	if not post.private and not post.ghost:
-
-		notify_users = NOTIFY_USERS(f'{title} {body}', v)
-
-		if notify_users:
-			cid = notif_comment2(post)
-			for x in notify_users:
-				add_notif(cid, x)
-
-		if (request.values.get('followers') or is_bot) and v.followers:
-			text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
-			if post.sub: text += f" in <a href='/h/{post.sub}'>/h/{post.sub}"
-
-			cid = notif_comment(text, autojanny=True)
-			for follow in v.followers:
-				user = get_account(follow.user_id)
-				if post.club and not user.paid_dues: continue
-				add_notif(cid, user.id)
-
-	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
-	g.db.add(v)
-	g.db.commit()
-
-	cache.delete_memoized(frontlist)
-	cache.delete_memoized(User.userpagelisting)
-
-	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()) and not post.private:
-		cache.delete_memoized(changeloglist)
+	post.publish()
 
 	if request.headers.get("Authorization"): return post.json
 	else:
@@ -830,7 +740,6 @@ def submit_post(v, sub=None):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def delete_post_pid(pid, v):
-
 	post = get_post(pid)
 	if post.author_id != v.id:
 		abort(403)
@@ -841,7 +750,7 @@ def delete_post_pid(pid, v):
 
 	g.db.add(post)
 
-	cache.delete_memoized(frontlist)
+	invalidate_cache()
 
 	g.db.commit()
 
@@ -853,10 +762,11 @@ def delete_post_pid(pid, v):
 def undelete_post_pid(pid, v):
 	post = get_post(pid)
 	if post.author_id != v.id: abort(403)
-	post.deleted_utc =0
+	post.deleted_utc = 0
+
 	g.db.add(post)
 
-	cache.delete_memoized(frontlist)
+	invalidate_cache()
 
 	g.db.commit()
 

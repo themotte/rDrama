@@ -3,11 +3,14 @@ from urllib.parse import urlparse
 
 from flask import g
 from sqlalchemy import *
-from sqlalchemy.orm import declared_attr, deferred, relationship
+from sqlalchemy.orm import declared_attr, deferred, relationship, scoped_session
 
 from files.__main__ import app
 from files.classes.base import CreatedBase
+from files.classes.votes import Vote
+from files.helpers.alerts import execute_username_mentions_submission
 from files.helpers.assetcache import assetcache_path
+from files.helpers.caching import invalidate_cache
 from files.helpers.const import *
 from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy
@@ -86,6 +89,31 @@ class Submission(CreatedBase):
 	notes = relationship("UserNote", back_populates="post")
 
 	bump_utc = deferred(Column(Integer, server_default=FetchedValue()))
+
+	def submit(self, db:scoped_session):
+		# create submission...
+		db.add(self)
+		db.flush()
+		
+		# then create vote...
+		vote = Vote(
+			user_id=self.author_id, 
+	    	vote_type=1,
+			submission_id=self.id
+		)
+		db.add(vote)
+		author = self.author
+		author.post_count = db.query(Submission.id).filter_by(
+			author_id=self.author_id, 
+			is_banned=False, 
+			deleted_utc=0).count()
+		db.add(author)
+
+	def publish(self):
+		if self.private: return
+		if not self.ghost: execute_username_mentions_submission(self)
+		invalidate_cache(userpagelisting=True, changeloglist=\
+			"[changelog]" in self.title.lower() or "(changelog)" in self.title.lower())
 
 	def __repr__(self):
 		return f"<{self.__class__.__name__}(id={self.id})>"

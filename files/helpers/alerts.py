@@ -1,5 +1,6 @@
 from files.classes import *
 from flask import g
+
 from .sanitize import *
 from .const import *
 
@@ -81,7 +82,7 @@ def add_notif(cid, uid):
 		g.db.add(notif)
 
 
-def NOTIFY_USERS(text, v):
+def NOTIFY_USERS(text, v) -> set[int]:
 	notify_users = set()
 	for word, id in NOTIFIED_USERS.items():
 		if id == 0 or v.id == id: continue
@@ -98,3 +99,13 @@ def NOTIFY_USERS(text, v):
 		if user and v.id != user.id and not v.any_block_exists(user): notify_users.add(user.id)
 
 	return notify_users
+
+def execute_username_mentions_submission(target:Submission):
+	text:str = f'{target.title} {target.body}'
+
+	notify_users = NOTIFY_USERS(text, target.author)
+	if not notify_users: return
+	
+	comment_id = notif_comment2(target)
+	for user_id in notify_users:
+		add_notif(comment_id, user_id)
