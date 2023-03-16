@@ -9,7 +9,6 @@ from files.__main__ import app
 from files.classes.base import CreatedBase
 from files.classes.votes import Vote
 from files.helpers.assetcache import assetcache_path
-from files.helpers.caching import invalidate_cache
 from files.helpers.const import *
 from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy
@@ -109,6 +108,11 @@ class Submission(CreatedBase):
 		db.add(author)
 
 	def publish(self):
+		# this is absolutely horrifying. imports are very very tangled and the
+		# spider web of imports is hard to maintain. we defer loading these
+		# imports until as late as possible. otherwise there are import loops
+		# that would require much more work to untangle
+		from files.helpers.caching import invalidate_cache
 		from files.helpers.alerts import execute_username_mentions_submission
 		if self.private: return
 		if not self.ghost: execute_username_mentions_submission(self)

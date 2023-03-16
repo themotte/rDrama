@@ -208,10 +208,6 @@ def admin_app_reject(v, aid):
 @app.get("/admin/app/<aid>")
 @admin_level_required(2)
 def admin_app_id(v, aid):
-	abort(503, "This function isn't available right now.")
-
-	aid=aid
-
 	oauth = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
 	pids=oauth.idlist(page=int(request.values.get("page",1)))
@@ -231,14 +227,9 @@ def admin_app_id(v, aid):
 @app.get("/admin/app/<aid>/comments")
 @admin_level_required(2)
 def admin_app_id_comments(v, aid):
-	abort(503, "This function isn't available right now.")
-
-	aid=aid
-
 	oauth = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
-	cids=oauth.comments_idlist(page=int(request.values.get("page",1)),
-		)
+	cids=oauth.comments_idlist(page=int(request.values.get("page",1)))
 
 	next_exists=len(cids)==101
 	cids=cids[:100]
