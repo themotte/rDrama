@@ -8,7 +8,6 @@ from sqlalchemy.sql.sqltypes import (Boolean, Integer, String,
                                      Text)
 from files.classes.base import CreatedBase
 
-from files.classes.cron.scheduler import ScheduledTask
 from files.classes.submission import Submission
 from files.helpers.const import (RENDER_DEPTH_LIMIT, SITE_FULL,
                                  SUBMISSION_TITLE_LENGTH_MAXIMUM)
@@ -40,9 +39,9 @@ class ScheduledSubmission(CreatedBase):
 	flair = Column(String)
 	embed_url = Column(String)
 
-	task_id = Column(Integer, ForeignKey(ScheduledTask.id), nullable=False)
+	task_id = Column(Integer, ForeignKey("tasks_repeatable.id"), nullable=False)
 
-	task = relationship(ScheduledTask)
+	task = relationship("ScheduledTask")
 
 	def make_submission(self, ctx:ScheduledSubmissionContext) -> Submission:
 		title:str = ctx.make_title(self.title)
