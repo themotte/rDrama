@@ -3,12 +3,12 @@ from os import environ, listdir
 
 from jinja2 import pass_context
 
-from files.__main__ import app
 from files.helpers.assetcache import assetcache_path
 from files.helpers.time import format_age
 
 from .const import *
 from .get import *
+from files.__main__ import app
 
 
 @app.template_filter("computer_size")
