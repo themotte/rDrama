@@ -208,6 +208,7 @@ def admin_app_reject(v, aid):
 @app.get("/admin/app/<aid>")
 @admin_level_required(2)
 def admin_app_id(v, aid):
+	abort(503, "This function isn't available right now.")
 
 	aid=aid
 
@@ -230,6 +231,7 @@ def admin_app_id(v, aid):
 @app.get("/admin/app/<aid>/comments")
 @admin_level_required(2)
 def admin_app_id_comments(v, aid):
+	abort(503, "This function isn't available right now.")
 
 	aid=aid
 
