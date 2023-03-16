@@ -1,13 +1,14 @@
-import html
-from .front import frontlist
 from datetime import datetime
-from files.helpers.get import *
-from yattag import Doc
-from files.helpers.const import *
-from files.helpers.wrappers import *
-from files.helpers.jinja2 import *
 
+from yattag import Doc
+
+import files.helpers.listing as listing
 from files.__main__ import app
+from files.helpers.const import *
+from files.helpers.get import *
+from files.helpers.jinja2 import *
+from files.helpers.wrappers import *
+
 
 @app.get('/rss')
 @app.get('/feed')
@@ -16,7 +17,7 @@ def feeds_front(sort='new', t='all'):
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
-	ids, next_exists = frontlist(
+	ids, next_exists = listing.frontlist(
 		sort=sort,
 		page=page,
 		t=t,

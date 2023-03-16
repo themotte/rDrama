@@ -1,6 +1,5 @@
 from files.__main__ import cache
-from files.classes.user import User
-import files.routes.front as route_front
+import files.helpers.listing as listing
 
 # i hate this.
 #
@@ -15,6 +14,6 @@ def invalidate_cache(*, frontlist=True, userpagelisting=False, changeloglist=Fal
 	Invalidates the caches for the front page listing, user page listings,
 	and optionally, the changelog listing.
 	'''
-	if frontlist: cache.delete_memoized(route_front.frontlist)
-	if userpagelisting: cache.delete_memoized(User.userpagelisting)
-	if changeloglist: cache.delete_memoized(route_front.changeloglist)
+	if frontlist: cache.delete_memoized(listing.frontlist)
+	if userpagelisting: cache.delete_memoized(listing.userpagelisting)
+	if changeloglist: cache.delete_memoized(listing.changeloglist)

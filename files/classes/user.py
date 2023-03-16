@@ -24,10 +24,9 @@ from .mod_logs import *
 from .mod import *
 from .exiles import *
 from .sub_block import *
-from files.__main__ import app, cache
+from files.__main__ import app
 from files.helpers.security import *
 from files.helpers.assetcache import assetcache_path
-from files.helpers.contentsorting import apply_time_filter, sort_objects
 
 defaulttheme = "TheMotte"
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
@@ -269,22 +268,6 @@ class User(CreatedBase):
 		for u in self.alts_unique:
 			if u.patron: return True
 		return False
-
-	@cache.memoize(timeout=86400)
-	def userpagelisting(self, site=None, v=None, page=1, sort="new", t="all"):
-		if self.shadowbanned and not (v and (v.admin_level > 1 or v.id == self.id)): return []
-
-		posts = g.db.query(Submission.id).filter_by(author_id=self.id, is_pinned=False)
-
-		if not (v and (v.admin_level > 1 or v.id == self.id)):
-			posts = posts.filter_by(deleted_utc=0, is_banned=False, private=False, ghost=False)
-
-		posts = apply_time_filter(posts, t, Submission)
-		posts = sort_objects(posts, sort, Submission)
-
-		posts = posts.offset(25 * (page - 1)).limit(26).all()
-
-		return [x[0] for x in posts]
 
 	@property
 	@lazy
