@@ -30,7 +30,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 		posts = posts.filter(filter_clause)
 
 	if sub: posts = posts.filter_by(sub=sub.name)
-	elif v: posts = posts.filter(Submission.sub == None | Submission.sub.notin_(v.all_blocks))
+	elif v: posts = posts.filter((Submission.sub == None) | Submission.sub.notin_(v.all_blocks))
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
 	if lt: posts = posts.filter(Submission.created_utc < lt)
