@@ -1,10 +1,11 @@
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Final, Union
 
 DATE_FORMAT: Final[str] = '%Y %B %d'
 DATETIME_FORMAT: Final[str] = '%Y %B %d %H:%M:%S UTC'
 
+AgeFormattable = Union[int, timedelta]
 TimestampFormattable = Union[int, float, datetime, time.struct_time]
 
 def format_datetime(timestamp:TimestampFormattable) -> str:
@@ -12,6 +13,34 @@ def format_datetime(timestamp:TimestampFormattable) -> str:
 
 def format_date(timestamp:TimestampFormattable) -> str:
 	return _format_timestamp(timestamp, DATE_FORMAT)
+
+def format_age(age:AgeFormattable) -> str:
+	if isinstance(age, timedelta):
+		age = int(age.total_seconds())
+
+	if age < 60: return "just now"
+	if age < 3600:
+		minutes = int(age / 60)
+		return f"{minutes}m ago"
+	if age < 86400:
+		hours = int(age / 3600)
+		return f"{hours}hr ago"
+	if age < 2678400:
+		days = int(age / 86400)
+		return f"{days}d ago"
+
+	now = time.gmtime()
+	ctd = time.gmtime(age)
+
+	months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
+	if now.tm_mday < ctd.tm_mday:
+		months -= 1
+
+	if months < 12:
+		return f"{months}mo ago"
+	else:
+		years = int(months / 12)
+		return f"{years}yr ago"
 
 def _format_timestamp(timestamp:TimestampFormattable, format:str) -> str:
 	if isinstance(timestamp, datetime):

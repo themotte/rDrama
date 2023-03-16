@@ -59,6 +59,8 @@ PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 DEFAULT_COLOR = environ.get("DEFAULT_COLOR", "fff").strip()
 COLORS = {'ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58','8cdbe6', DEFAULT_COLOR}
 
+SUBMISSION_TITLE_LENGTH_MAXIMUM: Final[int] = 500
+SUBMISSION_URL_LENGTH_MAXIMUM: Final[int] = 2048
 SUBMISSION_BODY_LENGTH_MAXIMUM: Final[int] = 20000
 COMMENT_BODY_LENGTH_MAXIMUM: Final[int] = 10000
 MESSAGE_BODY_LENGTH_MAXIMUM: Final[int] = 10000
@@ -98,6 +100,7 @@ WERKZEUG_ERROR_DESCRIPTIONS = {
 }
 
 IMAGE_FORMATS = ['png','gif','jpg','jpeg','webp']
+IMAGE_URL_ENDINGS = IMAGE_FORMATS + ['.webp', '.jpg', '.png', '.gif', '.jpeg', '?maxwidth=9999', '&fidelity=high']
 VIDEO_FORMATS = ['mp4','webm','mov','avi','mkv','flv','m4v','3gp']
 AUDIO_FORMATS = ['mp3','wav','ogg','aac','m4a','flac']
 NO_TITLE_EXTENSIONS = IMAGE_FORMATS + VIDEO_FORMATS + AUDIO_FORMATS

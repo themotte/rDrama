@@ -1,7 +1,14 @@
-from sqlalchemy.orm import deferred, aliased
+import time
+import random
 from secrets import token_hex
+from datetime import datetime
+from os import environ, remove, path
+
+from flask import g, session
+from sqlalchemy.orm import declared_attr, deferred, aliased
 import pyotp
-from files.classes.base import Base
+
+from files.classes.base import CreatedBase
 from files.helpers.media import *
 from files.helpers.const import *
 from .alts import Alt
@@ -21,16 +28,12 @@ from files.__main__ import app, cache
 from files.helpers.security import *
 from files.helpers.assetcache import assetcache_path
 from files.helpers.contentsorting import apply_time_filter, sort_objects
-import random
-from datetime import datetime
-from os import environ, remove, path
-
 
 defaulttheme = "TheMotte"
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 cardview = bool(int(environ.get("CARD_VIEW", 1)))
 
-class User(Base):
+class User(CreatedBase):
 	__tablename__ = "users"
 	__table_args__ = (
 		UniqueConstraint('bannerurl', name='one_banner'),
@@ -64,7 +67,6 @@ class User(Base):
 	post_count = Column(Integer, default=0, nullable=False)
 	comment_count = Column(Integer, default=0, nullable=False)
 	received_award_count = Column(Integer, default=0, nullable=False)
-	created_utc = Column(Integer, nullable=False)
 	admin_level = Column(Integer, default=0, nullable=False)
 	coins_spent = Column(Integer, default=0, nullable=False)
 	lootboxes_bought = Column(Integer, default=0, nullable=False)
@@ -129,7 +131,11 @@ class User(Base):
 	Index('fki_user_referrer_fkey', referred_by)
 	Index('user_banned_idx', is_banned)
 	Index('user_private_idx', is_private)
-	Index('users_created_utc_index', created_utc)
+
+	@declared_attr
+	def users_created_utc_index(self):
+		return Index('users_created_utc_index', self.created_utc)
+
 	Index('users_subs_idx', stored_subscriber_count)
 	Index('users_unbanutc_idx', unban_utc.desc())
 
@@ -146,15 +152,10 @@ class User(Base):
 	notes = relationship("UserNote", foreign_keys='UserNote.reference_user', back_populates="user")
 
 	def __init__(self, **kwargs):
-
 		if "password" in kwargs:
 			kwargs["passhash"] = self.hash_password(kwargs["password"])
 			kwargs.pop("password")
-
-		if "created_utc" not in kwargs: kwargs["created_utc"] = int(time.time())
-
 		super().__init__(**kwargs)
-
 
 	def can_manage_reports(self):
 		return self.admin_level > 1
@@ -166,7 +167,7 @@ class User(Base):
 		minComments = site_settings.get('FilterCommentsMinComments', 0)
 		minKarma = site_settings.get('FilterCommentsMinKarma', 0)
 		minAge = site_settings.get('FilterCommentsMinAgeDays', 0)
-		accountAgeDays = (datetime.now() - datetime.fromtimestamp(self.created_utc)).days
+		accountAgeDays = self.age_timedelta.days
 		return self.comment_count < minComments or accountAgeDays < minAge or self.truecoins < minKarma
 
 	@lazy
@@ -200,12 +201,6 @@ class User(Base):
 
 	@property
 	@lazy
-	def created_date(self):
-
-		return time.strftime("%d %b %Y", time.gmtime(self.created_utc))
-
-	@property
-	@lazy
 	def discount(self):
 		if self.patron == 1: discount = 0.90
 		elif self.patron == 2: discount = 0.85
@@ -219,7 +214,6 @@ class User(Base):
 			if self.has_badge(badge): discount -= discounts[badge]
 
 		return discount
-		
 
 	@property
 	@lazy
@@ -256,11 +250,6 @@ class User(Base):
 
 	@property
 	@lazy
-	def age(self):
-		return int(time.time()) - self.created_utc
-
-	@property
-	@lazy
 	def ban_reason_link(self):
 		if self.ban_reason:
 			if self.ban_reason.startswith("/post/"): return self.ban_reason.split(None, 1)[0]
@@ -283,7 +272,6 @@ class User(Base):
 
 	@cache.memoize(timeout=86400)
 	def userpagelisting(self, site=None, v=None, page=1, sort="new", t="all"):
-
 		if self.shadowbanned and not (v and (v.admin_level > 1 or v.id == self.id)): return []
 
 		posts = g.db.query(Submission.id).filter_by(author_id=self.id, is_pinned=False)
@@ -333,7 +321,6 @@ class User(Base):
 	@property
 	@lazy
 	def formkey(self):
-
 		msg = f"{session['session_id']}+{self.id}+{self.login_nonce}"
 
 		return generate_hash(msg)
@@ -441,7 +428,6 @@ class User(Base):
 	@property
 	@lazy
 	def alts(self):
-
 		subq = g.db.query(Alt).filter(
 			or_(
 				Alt.user1 == self.id,
@@ -478,7 +464,6 @@ class User(Base):
 		return modded_subs
 
 	def has_follower(self, user):
-
 		return g.db.query(Follow).filter_by(target_id=self.id, user_id=user.id).one_or_none()
 
 	@property
@@ -543,8 +528,6 @@ class User(Base):
 	@property
 	@lazy
 	def json_core(self):
-
-		now = int(time.time())
 		if self.is_suspended:
 			return {'username': self.username,
 					'url': self.url,
@@ -575,8 +558,6 @@ class User(Base):
 
 		self.is_banned = admin.id if admin else AUTOJANNY_ID
 		if reason: self.ban_reason = reason
-
-
 
 	@property
 	def is_suspended(self):
@@ -615,7 +596,6 @@ class User(Base):
 
 	@lazy
 	def saved_idlist(self, page=1):
-
 		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).filter_by(user_id=self.id).all()]
 		posts = g.db.query(Submission.id).filter(Submission.id.in_(saved), Submission.is_banned == False, Submission.deleted_utc == 0)
 
@@ -626,7 +606,6 @@ class User(Base):
 
 	@lazy
 	def saved_comment_idlist(self, page=1):
-
 		saved = [x[0] for x in g.db.query(CommentSaveRelationship.comment_id).filter_by(user_id=self.id).all()]
 		comments = g.db.query(Comment.id).filter(Comment.id.in_(saved), Comment.is_banned == False, Comment.deleted_utc == 0)
 

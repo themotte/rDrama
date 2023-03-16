@@ -14,7 +14,6 @@ class VolunteerJanitorResult(enum.Enum):
     Ban = 6
 
 class VolunteerJanitorRecord(Base):
-
     __tablename__ = "volunteer_janitor"
 
     id = Column(Integer, primary_key=True)

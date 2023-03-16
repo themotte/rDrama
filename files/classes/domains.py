@@ -2,7 +2,6 @@ from sqlalchemy import *
 from files.classes.base import Base
 
 class BannedDomain(Base):
-
 	__tablename__ = "banneddomains"
 	domain = Column(String, primary_key=True)
 	reason = Column(String, nullable=False)

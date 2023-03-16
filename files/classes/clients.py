@@ -1,4 +1,4 @@
-from flask import *
+from flask import g
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from .submission import Submission
@@ -6,7 +6,6 @@ from .comment import Comment
 from files.classes.base import Base
 from files.helpers.lazy import lazy
 from files.helpers.const import *
-import time
 
 class OauthApp(Base):
 
@@ -24,18 +23,8 @@ class OauthApp(Base):
 
 	author = relationship("User", viewonly=True)
 
-	def __repr__(self): return f"<OauthApp(id={self.id})>"
-
-
-	@property
-	@lazy
-	def created_date(self):
-		return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
-
-	@property
-	@lazy
-	def created_datetime(self):
-		return time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc))
+	def __repr__(self): 
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
 	@lazy
@@ -43,30 +32,20 @@ class OauthApp(Base):
 
 	@lazy
 	def idlist(self, page=1):
-
 		posts = g.db.query(Submission.id).filter_by(app_id=self.id)
-		
 		posts=posts.order_by(Submission.created_utc.desc())
-
 		posts=posts.offset(100*(page-1)).limit(101)
-
 		return [x[0] for x in posts.all()]
 
 	@lazy
 	def comments_idlist(self, page=1):
-
 		posts = g.db.query(Comment.id).filter_by(app_id=self.id)
-		
 		posts=posts.order_by(Comment.created_utc.desc())
-
 		posts=posts.offset(100*(page-1)).limit(101)
-
 		return [x[0] for x in posts.all()]
 
 
-
 class ClientAuth(Base):
-
 	__tablename__ = "client_auths"
 	__table_args__ = (
 		UniqueConstraint('access_token', name='unique_access'),
@@ -78,13 +57,3 @@ class ClientAuth(Base):
 	
 	user = relationship("User", viewonly=True)
 	application = relationship("OauthApp", viewonly=True)
-
-	@property
-	@lazy
-	def created_date(self):
-		return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
-
-	@property
-	@lazy
-	def created_datetime(self):
-		return time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc))

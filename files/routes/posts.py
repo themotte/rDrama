@@ -693,8 +693,8 @@ def submit_post(v, sub=None):
 	else: similar_urls = []
 
 	threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
-	if v.age >= (60 * 60 * 24 * 7): threshold *= 3
-	elif v.age >= (60 * 60 * 24): threshold *= 2
+	if v.age_seconds >= (60 * 60 * 24 * 7): threshold *= 3
+	elif v.age_seconds >= (60 * 60 * 24): threshold *= 2
 
 	if max(len(similar_urls), len(similar_posts)) >= threshold:
 

@@ -183,9 +183,9 @@ def api_comment(v):
 		).all()
 
 		threshold = app.config["COMMENT_SPAM_COUNT_THRESHOLD"]
-		if v.age >= (60 * 60 * 24 * 7):
+		if v.age_seconds >= (60 * 60 * 24 * 7):
 			threshold *= 3
-		elif v.age >= (60 * 60 * 24):
+		elif v.age_seconds >= (60 * 60 * 24):
 			threshold *= 2
 
 		if len(similar_comments) > threshold:
@@ -280,11 +280,11 @@ def edit_comment(cid, v):
 		).all()
 
 		threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
-		if v.age >= (60 * 60 * 24 * 30):
+		if v.age_seconds >= (60 * 60 * 24 * 30):
 			threshold *= 4
-		elif v.age >= (60 * 60 * 24 * 7):
+		elif v.age_seconds >= (60 * 60 * 24 * 7):
 			threshold *= 3
-		elif v.age >= (60 * 60 * 24):
+		elif v.age_seconds >= (60 * 60 * 24):
 			threshold *= 2
 
 		if len(similar_comments) > threshold:

@@ -1,31 +1,27 @@
-from os import environ
-import random
-import re
 import time
-from typing import Optional
 from urllib.parse import urlparse
-from flask import render_template
-from sqlalchemy import *
-from sqlalchemy.orm import relationship, deferred
-from files.classes.base import Base
-from files.__main__ import app
-from files.helpers.const import *
-from files.helpers.content import moderated_body
-from files.helpers.lazy import lazy
-from files.helpers.assetcache import assetcache_path
-from .flags import Flag
-from .comment import Comment
-from flask import g
-from .sub import Sub
-from .votes import CommentVote
 
-class Submission(Base):
+from flask import g
+from sqlalchemy import *
+from sqlalchemy.orm import declared_attr, deferred, relationship
+
+from files.__main__ import app
+from files.classes.base import CreatedBase
+from files.helpers.assetcache import assetcache_path
+from files.helpers.const import *
+from files.helpers.content import body_displayed
+from files.helpers.lazy import lazy
+from files.helpers.time import format_age
+
+from .flags import Flag
+
+
+class Submission(CreatedBase):
 	__tablename__ = "submissions"
 
 	id = Column(Integer, primary_key=True)
 	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 	edited_utc = Column(Integer, default=0, nullable=False)
-	created_utc = Column(Integer, nullable=False)
 	thumburl = Column(String)
 	is_banned = Column(Boolean, default=False, nullable=False)
 	bannedfor = Column(Boolean)
@@ -62,11 +58,22 @@ class Submission(Base):
 	Index('subimssion_binary_group_idx', is_banned, deleted_utc, over_18)
 	Index('submission_isbanned_idx', is_banned)
 	Index('submission_isdeleted_idx', deleted_utc)
-	Index('submission_new_sort_idx', is_banned, deleted_utc, created_utc.desc(), over_18)
+
+	@declared_attr
+	def submission_new_sort_idx(self):
+		return Index('submission_new_sort_idx', self.is_banned, self.deleted_utc, self.created_utc.desc(), self.over_18)
+
 	Index('submission_pinned_idx', is_pinned)
 	Index('submissions_author_index', author_id)
-	Index('submissions_created_utc_asc_idx', created_utc.nullsfirst())
-	Index('submissions_created_utc_desc_idx', created_utc.desc())
+
+	@declared_attr
+	def submisission_created_utc_asc_idx(self):
+		return Index('submissions_created_utc_asc_idx', self.created_utc.nulls_first())
+	
+	@declared_attr
+	def submissions_created_utc_desc_idx(self):
+		return Index('submissions_created_utc_desc_idx', self.created_utc.desc())
+
 	Index('submissions_over18_index', over_18)
 
 	author = relationship("User", primaryjoin="Submission.author_id==User.id")
@@ -80,18 +87,13 @@ class Submission(Base):
 
 	bump_utc = deferred(Column(Integer, server_default=FetchedValue()))
 
-	def __init__(self, *args, **kwargs):
-		if "created_utc" not in kwargs: kwargs["created_utc"] = int(time.time())
-		super().__init__(*args, **kwargs)
-
 	def __repr__(self):
 		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
 	@lazy
 	def should_hide_score(self):
-		submission_age_seconds = int(time.time()) - self.created_utc
-		submission_age_hours = submission_age_seconds / (60*60)
+		submission_age_hours = self.age_seconds / (60*60)
 		return submission_age_hours < app.config['SCORE_HIDING_TIME_HOURS']
 
 	@property
@@ -110,82 +112,14 @@ class Submission(Base):
 		return flags
 
 	@property
-	@lazy
-	def created_datetime(self):
-		return time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc))
-
-	@property
-	@lazy
-	def created_datetime(self):
-		return time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc))
-
-	@property
-	@lazy
-	def age_string(self):
-
-		age = int(time.time()) - self.created_utc
-
-		if age < 60:
-			return "just now"
-		elif age < 3600:
-			minutes = int(age / 60)
-			return f"{minutes}m ago"
-		elif age < 86400:
-			hours = int(age / 3600)
-			return f"{hours}hr ago"
-		elif age < 2678400:
-			days = int(age / 86400)
-			return f"{days}d ago"
-
-		now = time.gmtime()
-		ctd = time.gmtime(self.created_utc)
-
-		months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
-		if now.tm_mday < ctd.tm_mday:
-			months -= 1
-
-		if months < 12:
-			return f"{months}mo ago"
-		else:
-			years = int(months / 12)
-			return f"{years}yr ago"
-
-	@property
-	@lazy
 	def edited_string(self):
-
 		if not self.edited_utc: return "never"
-
-		age = int(time.time()) - self.edited_utc
-
-		if age < 60:
-			return "just now"
-		elif age < 3600:
-			minutes = int(age / 60)
-			return f"{minutes}m ago"
-		elif age < 86400:
-			hours = int(age / 3600)
-			return f"{hours}hr ago"
-		elif age < 2678400:
-			days = int(age / 86400)
-			return f"{days}d ago"
-
-		now = time.gmtime()
-		ctd = time.gmtime(self.edited_utc)
-		months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
-
-		if months < 12:
-			return f"{months}mo ago"
-		else:
-			years = now.tm_year - ctd.tm_year
-			return f"{years}yr ago"
-
+		return format_age(int(time.time()) - self.edited_utc)
 
 	@property
 	@lazy
 	def edited_datetime(self):
 		return time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.edited_utc))
-
 
 	@property
 	@lazy
@@ -196,7 +130,6 @@ class Submission(Base):
 	@lazy
 	def fullname(self):
 		return f"t2_{self.id}"	
-
 
 	@property
 	@lazy
@@ -298,7 +231,6 @@ class Submission(Base):
 	@property
 	@lazy
 	def json_core(self):
-
 		if self.is_banned:
 			return {'is_banned': True,
 					'deleted_utc': self.deleted_utc,
@@ -320,7 +252,6 @@ class Submission(Base):
 	@property
 	@lazy
 	def json(self):
-
 		data=self.json_core
 		
 		if self.deleted_utc or self.is_banned:
@@ -360,50 +291,14 @@ class Submission(Base):
 		else: return ""
  
 	def realbody(self, v):
-		moderated:Optional[str] = moderated_body(self, v)
-		if moderated: return moderated
-
-		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{CC} ONLY</p>"
-
-		body = self.body_html or ""
-
-		if v:
-			body = body.replace("old.reddit.com", v.reddit)
-
-			if v.nitter and '/i/' not in body and '/retweets' not in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
-
-		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 20:
-			ti = max(int((time.time() - self.created_utc)/60), 1)
-			maxupvotes = min(ti, 11)
-			rand = random.randint(0, maxupvotes)
-			if self.upvotes < rand:
-				amount = random.randint(0, 3)
-				if amount == 1:
-					self.views += amount*random.randint(3, 5)
-					self.upvotes += amount
-					g.db.add(self)
-					g.db.commit()
-
-		return body
+		return body_displayed(self, v, True)
 
 	def plainbody(self, v):
-		moderated:Optional[str] = moderated_body(self, v)
-		if moderated: return moderated
-
-		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{CC} ONLY</p>"
-		body = self.body
-		if not body: return ""
-		if v:
-			body = body.replace("old.reddit.com", v.reddit)
-			if v.nitter and '/i/' not in body and '/retweets' not in body: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
-		return body
+		return body_displayed(self, v, False)
 
 	@lazy
 	def realtitle(self, v):
-		if self.title_html:
-			return self.title_html
-		else:
-			return self.title
+		return self.title_html if self.title_html else self.title
 
 	@lazy
 	def plaintitle(self, v):
@@ -422,4 +317,5 @@ class Submission(Base):
 		return False
 
 	@lazy
-	def active_flags(self, v): return len(self.flags(v))
+	def active_flags(self, v): 
+		return len(self.flags(v))

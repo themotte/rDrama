@@ -1,8 +1,8 @@
 from sqlalchemy import *
-from files.classes.base import Base
+from files.classes.base import CreatedBase
 
 
-class Alt(Base):
+class Alt(CreatedBase):
 	__tablename__ = "alts"
 
 	user1 = Column(Integer, ForeignKey("users.id"), primary_key=True)
