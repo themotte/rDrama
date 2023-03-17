@@ -39,10 +39,6 @@ class ScheduledSubmission(CreatedBase):
 	flair = Column(String)
 	embed_url = Column(String)
 
-	task_id = Column(Integer, ForeignKey("tasks_repeatable.id"), nullable=False)
-
-	task = relationship("ScheduledTask")
-
 	def make_submission(self, ctx:ScheduledSubmissionContext) -> Submission:
 		title:str = ctx.make_title(self.title)
 		title_html:str = filter_emojis_only(title, graceful=True)
