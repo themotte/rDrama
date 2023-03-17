@@ -1,3 +1,7 @@
+'''
+Main entry point for the application. Global state among other things are 
+stored here.
+'''
 
 import gevent.monkey
 
@@ -24,7 +28,10 @@ from sqlalchemy import *
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from files.helpers.const import Service
+from files.helpers.config.stateful import const_initialize
 from files.helpers.strings import bool_from_string
+
+# let's create our flask app..
 
 app = flask.app.Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
@@ -32,12 +39,18 @@ app.jinja_env.cache = {}
 app.jinja_env.auto_reload = True
 faulthandler.enable()
 
+# ...then check that debug mode was not accidentally enabled...
+
 if bool_from_string(environ.get("ENFORCE_PRODUCTION", True)) and app.debug:
 	raise ValueError("Debug mode is not allowed! If this is a dev environment, please set ENFORCE_PRODUCTION to false")
+
+# ...and then attempt to load a .env file if the environment is not configured...
 
 if environ.get("SITE_ID") is None:
 	from dotenv import load_dotenv
 	load_dotenv(dotenv_path=Path("env"))
+
+# ...and let's add the flask profiler if it's enabled...
 
 if environ.get("FLASK_PROFILER_ENDPOINT"):
 	app.config["flask_profiler"] = {
@@ -55,6 +68,8 @@ if environ.get("FLASK_PROFILER_ENDPOINT"):
 
 	profiler = flask_profiler.Profiler()
 	profiler.init_app(app)
+
+# ...and then let's install code to unmangle jinja2 stacktraces...
 
 try:
 	import inspect as inspectlib
@@ -91,6 +106,8 @@ try:
 except ModuleNotFoundError:
 	# failed to import, just keep on going
 	pass
+
+# ...and let's load up app config...
 
 app.config["SITE_ID"]=environ.get("SITE_ID").strip()
 app.config["SITE_TITLE"]=environ.get("SITE_TITLE").strip()
@@ -141,6 +158,8 @@ r = redis.Redis(
 	ssl_cert_reqs=None
 )
 
+# ...now let's configure our ratelimiter...
+
 def get_remote_addr():
 	with app.app_context():
 		return request.headers.get('X-Real-IP', default='127.0.0.1')
@@ -160,58 +179,28 @@ limiter = flask_limiter.Limiter(
 	enabled=app.config['RATE_LIMITER_ENABLED'],
 )
 
-engine = create_engine(app.config['DATABASE_URL'])
+# then load the database.
 
+engine = create_engine(app.config['DATABASE_URL'])
 db_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
+
+# now that we have our session, let's initialize some constants we need to startup
+const_initialize(db_session)
+
+# ...now let's add the cache, compression, and mail extensions to our app...
 
 cache = flask_caching.Cache(app)
 flask_compress.Compress(app)
 mail = flask_mail.Mail(app)
 
-@app.before_request
-def before_request():
-	with open('site_settings.json', 'r') as f:
-		app.config['SETTINGS'] = json.load(f)
-
-	if request.host != app.config["SERVER_NAME"]:
-		return {"error": "Unauthorized host provided."}, 403
-
-	if not app.config['SETTINGS']['Bots'] and request.headers.get("Authorization"):
-		abort(403, "Bots are currently not allowed")
-
-	g.agent = request.headers.get("User-Agent")
-	if not g.agent:
-		return 'Please use a "User-Agent" header!', 403
-
-	ua = g.agent.lower()
-	g.debug = app.debug
-	g.webview = ('; wv) ' in ua)
-	g.inferior_browser = (
-		'iphone' in ua or
-		'ipad' in ua or
-		'ipod' in ua or
-		'mac os' in ua or
-		' firefox/' in ua)
-	g.timestamp = int(time.time())
-
-	limiter.check()
-
-	g.db = db_session()
-
-
-@app.teardown_appcontext
-def teardown_request(error):
-	if hasattr(g, 'db') and g.db:
-		g.db.close()
-	stdout.flush()
-
-@app.after_request
-def after_request(response):
-	response.headers.add("Strict-Transport-Security", "max-age=31536000")
-	response.headers.add("X-Frame-Options", "deny")
-	return response
+# ...and now parse arguments to find out what type of instance this is...
 
 service:Service = Service.from_argv()
+
+if service != Service.CRON:
+	from files.routes.allroutes import *
+
+# ...and now let's conditionally import the rest of the routes...
 
 if service == Service.THEMOTTE:
 	from files.routes import *

@@ -14,7 +14,8 @@ from mistletoe import markdown
 from files.helpers.const import image_check_regex, embed_fullmatch_regex, video_sub_regex
 from files.helpers.content import canonicalize_url
 from files.helpers.get import *
-from files.helpers.regex import *
+from files.helpers.config.regex import *
+from files.helpers.config.stateful import marseys_const2
 from files.__main__ import app # violates isort, but crashes otherwise
 
 TLDS = ('ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar',

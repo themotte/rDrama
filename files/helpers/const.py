@@ -7,10 +7,6 @@ from typing import Final
 
 from flask import request
 
-from files.__main__ import db_session
-from files.classes.sub import Sub
-from files.classes.marsey import Marsey
-
 SITE = environ.get("DOMAIN", '').strip()
 SITE_ID = environ.get("SITE_ID", '').strip()
 SITE_TITLE = environ.get("SITE_TITLE", '').strip()
@@ -123,6 +119,7 @@ NO_TITLE_EXTENSIONS = IMAGE_FORMATS + VIDEO_FORMATS + AUDIO_FORMATS
 
 FEATURES = {
 	"AWARDS": False,
+	"EMOJI": False,
 }
 
 PERMS = {
@@ -169,13 +166,6 @@ CF_ZONE = environ.get("CF_ZONE", "").strip()
 CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
 
 dues = int(environ.get("DUES").strip())
-
-christian_emojis = (':#marseyjesus:',':#marseyimmaculate:',':#marseymothermary:',':#marseyfatherjoseph:',':#gigachadorthodox:',':#marseyorthodox:',':#marseyorthodoxpat:')
-
-db = db_session()
-marseys_const = [x[0] for x in db.query(Marsey.name).filter(Marsey.name!='chudsey').all()]
-marseys_const2 = marseys_const + ['chudsey','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','exclamationpoint','period','questionmark']
-db.close()
 
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 
@@ -242,6 +232,6 @@ video_sub_regex = re.compile(f'(<p>[^<]*)(https:\\/\\/([a-z0-9-]+\\.)*({hosts})\
 
 procoins_li = (0,2500,5000,10000,25000,50000,125000,250000)
 
-from files.helpers.regex import *
+from files.helpers.config.regex import *
 
 def make_name(*args, **kwargs): return request.base_url

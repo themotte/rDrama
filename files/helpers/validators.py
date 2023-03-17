@@ -13,7 +13,7 @@ from files.helpers.const import (SITE_FULL, SUBMISSION_BODY_LENGTH_MAXIMUM,
                                  SUBMISSION_URL_LENGTH_MAXIMUM, YOUTUBE_KEY)
 from files.helpers.content import canonicalize_url2
 from files.helpers.media import process_image
-from files.helpers.regex import yt_id_regex
+from files.helpers.config.regex import yt_id_regex
 from files.helpers.sanitize import filter_emojis_only, sanitize, sanitize_raw
 
 
