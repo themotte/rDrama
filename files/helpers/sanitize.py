@@ -1,20 +1,20 @@
 import functools
 import html
-import bleach
-from bs4 import BeautifulSoup
-from bleach.linkifier import LinkifyFilter, build_url_re
-from functools import partial
-from .get import *
-from os import path, environ
+import random
 import re
-from mistletoe import markdown
-from json import loads, dump
-from random import random, choice
+from functools import partial
+from os import path
+
+import bleach
 import gevent
-import time
-import requests
-from files.helpers.regex import *
+from bleach.linkifier import LinkifyFilter, build_url_re
+from bs4 import BeautifulSoup
+from mistletoe import markdown
+
 from files.__main__ import app
+from files.helpers.const import image_check_regex, image_regex
+from files.helpers.get import *
+from files.helpers.regex import *
 
 TLDS = ('ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar',
 	'arpa','as','asia','at','au','aw','ax','az','ba','bb','bd','be','bf','bg',
@@ -119,11 +119,11 @@ def render_emoji(html, regexp, edit, marseys_used=set(), b=False):
 		emoji = i.group(1).lower()
 		attrs = ''
 		if b: attrs += ' b'
-		if not edit and len(emojis) <= 20 and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): attrs += ' g'
+		if not edit and len(emojis) <= 20 and random.random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): attrs += ' g'
 
 		old = emoji
 		emoji = emoji.replace('!','').replace('#','')
-		if emoji == 'marseyrandom': emoji = choice(marseys_const2)
+		if emoji == 'marseyrandom': emoji = random.choice(marseys_const2)
 
 		emoji_partial_pat = '<img loading="lazy" alt=":{0}:" src="{1}"{2}>'
 		emoji_partial = '<img loading="lazy" data-bs-toggle="tooltip" alt=":{0}:" title=":{0}:" src="{1}"{2}>'
@@ -317,8 +317,6 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 								filters=[partial(LinkifyFilter, skip_tags=["pre"], parse_email=False, callbacks=[callback], url_re=url_re)],
 								strip=True,
 								).clean(sanitized)
-
-
 
 	soup = BeautifulSoup(sanitized, 'lxml')
 
