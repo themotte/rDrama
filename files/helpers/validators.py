@@ -9,7 +9,7 @@ from werkzeug.datastructures import FileStorage
 
 import files.helpers.embeds as embeds
 from files.helpers.config.environment import YOUTUBE_KEY
-from files.helpers.const import (SITE_FULL, SUBMISSION_BODY_LENGTH_MAXIMUM,
+from files.helpers.config.const import (SITE_FULL, SUBMISSION_BODY_LENGTH_MAXIMUM,
                                  SUBMISSION_TITLE_LENGTH_MAXIMUM,
                                  SUBMISSION_URL_LENGTH_MAXIMUM)
 from files.helpers.content import canonicalize_url2

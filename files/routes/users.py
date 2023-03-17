@@ -9,7 +9,7 @@ from files.helpers.alerts import *
 from files.helpers.media import process_image
 from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
-from files.helpers.const import *
+from files.helpers.config.const import *
 from files.helpers.assetcache import assetcache_path
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.mail import *

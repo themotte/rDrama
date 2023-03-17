@@ -10,7 +10,7 @@ import pyotp
 
 from files.classes.base import CreatedBase
 from files.helpers.media import *
-from files.helpers.const import *
+from files.helpers.config.const import *
 from .alts import Alt
 from .saves import *
 from .notifications import Notification

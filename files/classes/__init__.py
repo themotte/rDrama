@@ -87,7 +87,7 @@ from .cron.scheduler import ScheduledTask, RepeatableTask
 from .cron.submission import ScheduledSubmissionTemplate
 
 # Then the import * from files.*
-from files.helpers.const import *
+from files.helpers.config.const import *
 from files.helpers.media import *
 from files.helpers.lazy import *
 from files.helpers.security import *

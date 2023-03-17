@@ -2,7 +2,7 @@ from files.__main__ import app, limiter
 from files.helpers.wrappers import *
 from files.helpers.alerts import *
 from files.helpers.get import *
-from files.helpers.const import *
+from files.helpers.config.const import *
 from files.classes.award import *
 from flask import g, request
 from files.helpers.sanitize import filter_emojis_only

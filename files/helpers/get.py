@@ -6,7 +6,7 @@ from sqlalchemy import and_, or_, func
 from sqlalchemy.orm import Query, scoped_session, selectinload
 
 from files.classes import *
-from files.helpers.const import AUTOJANNY_ID
+from files.helpers.config.const import AUTOJANNY_ID
 from files.helpers.contentsorting import sort_comment_results
 
 

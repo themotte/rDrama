@@ -5,7 +5,7 @@ from .submission import Submission
 from .comment import Comment
 from files.classes.base import Base
 from files.helpers.lazy import lazy
-from files.helpers.const import *
+from files.helpers.config.const import *
 
 class OauthApp(Base):
 

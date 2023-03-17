@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from mistletoe import markdown
 from files.helpers.config.environment import MENTION_LIMIT, MULTIMEDIA_EMBEDDING_ENABLED
 
-from files.helpers.const import image_check_regex, embed_fullmatch_regex, video_sub_regex
+from files.helpers.config.const import image_check_regex, embed_fullmatch_regex, video_sub_regex
 from files.helpers.content import canonicalize_url
 from files.helpers.get import *
 from files.helpers.config.regex import *

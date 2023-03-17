@@ -7,7 +7,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
 from files.classes.base import CreatedBase
-from files.helpers.const import *
+from files.helpers.config.const import *
 from files.helpers.content import (body_displayed,
                                    execute_shadowbanned_fake_votes)
 from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS

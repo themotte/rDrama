@@ -2,7 +2,7 @@ from files.helpers.alerts import *
 from files.helpers.caching import invalidate_cache
 from files.helpers.media import process_image
 from files.helpers.sanitize import *
-from files.helpers.const import *
+from files.helpers.config.const import *
 from files.mail import *
 from files.__main__ import app, limiter
 import os

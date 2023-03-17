@@ -7,7 +7,7 @@ from files.helpers.sanitize import *
 from files.helpers.security import *
 from files.helpers.get import *
 from files.helpers.media import *
-from files.helpers.const import *
+from files.helpers.config.const import *
 from files.classes import *
 from flask import *
 from files.__main__ import app, cache, limiter

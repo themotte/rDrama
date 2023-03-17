@@ -20,7 +20,7 @@ from files.helpers.sanitize import *
 from files.helpers.alerts import *
 from files.helpers.comments import comment_filter_moderated
 from files.helpers.contentsorting import sort_objects
-from files.helpers.const import *
+from files.helpers.config.const import *
 from files.helpers.media import process_image
 from files.helpers.strings import sql_ilike_clean
 from files.classes import *

@@ -4,7 +4,7 @@ from typing import Any, Callable, Final, Optional
 from sqlalchemy import Column, func
 from sqlalchemy.orm import scoped_session, Query
 
-from files.helpers.const import LEADERBOARD_LIMIT
+from files.helpers.config.const import LEADERBOARD_LIMIT
 
 from files.classes.badges import Badge
 from files.classes.marsey import Marsey

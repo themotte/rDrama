@@ -8,7 +8,7 @@ from sqlalchemy.sql.sqltypes import (Boolean, Integer, String,
 from files.classes.base import CreatedBase
 
 from files.classes.submission import Submission
-from files.helpers.const import (RENDER_DEPTH_LIMIT, SITE_FULL,
+from files.helpers.config.const import (RENDER_DEPTH_LIMIT, SITE_FULL,
                                  SUBMISSION_TITLE_LENGTH_MAXIMUM)
 from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy

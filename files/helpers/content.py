@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any, Optional, Union
 
 from sqlalchemy.orm import scoped_session
 
-from files.helpers.const import PERMS
+from files.helpers.config.const import PERMS
 
 if TYPE_CHECKING:
 	from files.classes import Comment, Submission, User

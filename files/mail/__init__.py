@@ -5,7 +5,7 @@ from urllib.parse import quote
 
 from files.helpers.security import *
 from files.helpers.wrappers import *
-from files.helpers.const import *
+from files.helpers.config.const import *
 from files.classes import *
 from files.__main__ import app, mail, limiter
 from flask_mail import Message

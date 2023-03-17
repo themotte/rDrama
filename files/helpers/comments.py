@@ -1,7 +1,7 @@
 from pusher_push_notifications import PushNotifications
 from files.classes import Comment, Notification, Subscription, User
 from files.helpers.alerts import NOTIFY_USERS
-from files.helpers.const import PUSHER_ID, PUSHER_KEY, SITE_ID, SITE_FULL
+from files.helpers.config.const import PUSHER_ID, PUSHER_KEY, SITE_ID, SITE_FULL
 from files.helpers.assetcache import assetcache_path
 from flask import g
 from sqlalchemy import select, update

@@ -4,7 +4,7 @@ import time
 import user_agents
 
 from files.helpers.alerts import *
-from files.helpers.const import *
+from files.helpers.config.const import *
 from files.helpers.get import *
 from files.routes.importstar import *
 from files.__main__ import cache, db_session

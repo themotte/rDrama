@@ -1,7 +1,7 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.classes.base import CreatedBase
-from files.helpers.const import *
+from files.helpers.config.const import *
 from enum import Enum
 from sqlalchemy import Enum as EnumType
 

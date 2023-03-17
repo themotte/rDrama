@@ -9,7 +9,7 @@ from sqlalchemy.orm import (declared_attr, deferred, relationship,
 from files.classes.base import CreatedBase
 from files.classes.votes import Vote
 from files.helpers.assetcache import assetcache_path
-from files.helpers.const import *
+from files.helpers.config.const import *
 from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS
 from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy

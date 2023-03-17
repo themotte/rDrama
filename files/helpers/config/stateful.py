@@ -3,7 +3,7 @@ from string import ascii_lowercase
 from sqlalchemy.orm import scoped_session
 
 from files.classes.marsey import Marsey
-from files.helpers.const import FEATURES
+from files.helpers.config.const import FEATURES
 
 marseys_const: list[str] = []
 marseys_const2: list[str] = []

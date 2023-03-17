@@ -6,7 +6,7 @@ from jinja2 import pass_context
 from files.helpers.assetcache import assetcache_path
 from files.helpers.time import format_age
 
-from .const import *
+from .config.const import *
 from .get import *
 from files.__main__ import app
 

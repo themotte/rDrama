@@ -9,7 +9,7 @@ from files.__main__ import app
 from files.classes.cron.scheduler import DayOfWeek, RepeatableTask, ScheduledTaskType
 from files.classes.cron.submission import ScheduledSubmissionTemplate
 from files.classes.user import User
-from files.helpers.const import PERMS, SUBMISSION_FLAIR_LENGTH_MAXIMUM
+from files.helpers.config.const import PERMS, SUBMISSION_FLAIR_LENGTH_MAXIMUM
 from files.helpers.wrappers import admin_level_required
 
 

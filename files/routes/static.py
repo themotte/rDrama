@@ -8,7 +8,7 @@ from files.classes.badges import BadgeDef
 from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
 from files.helpers.alerts import *
 from files.helpers.captcha import validate_captcha
-from files.helpers.const import *
+from files.helpers.config.const import *
 from files.helpers.media import process_image
 from files.mail import *
 from files.__main__ import app, cache, limiter # violates isort but used to prevent getting shadowed
