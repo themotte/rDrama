@@ -35,7 +35,7 @@
 
 # First the import * from places which don't go circular
 from sqlalchemy import *
-from flask import *
+from flask import abort, g, render_template, redirect, request, send_file, send_from_directory
 
 # Then everything except what's in files.*
 import pyotp
@@ -95,4 +95,3 @@ from files.helpers.security import *
 # Then the specific stuff we don't want stomped on
 from files.helpers.lazy import lazy
 from files.classes.base import Base, CreatedBase
-from files.__main__ import app, cache
