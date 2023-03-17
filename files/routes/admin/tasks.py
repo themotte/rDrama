@@ -2,6 +2,7 @@ from datetime import time
 from typing import Optional
 
 from flask import abort, g, redirect, render_template, request
+from files.helpers.config.environment import MULTIMEDIA_EMBEDDING_ENABLED
 
 import files.helpers.validators as validators
 from files.__main__ import app
@@ -41,7 +42,7 @@ def _get_request_dayofweek() -> DayOfWeek:
 def tasks_scheduled_posts_post(v:User):
 	validated_post:validators.ValidatedSubmissionLike = \
 		validators.ValidatedSubmissionLike.from_flask_request(request, 
-			allow_embedding=app.config['MULTIMEDIA_EMBEDDING_ENABLED']
+			allow_embedding=MULTIMEDIA_EMBEDDING_ENABLED,
 		)
 	
 	# first build the template

@@ -271,7 +271,7 @@ def edit_post(pid, v):
 	validated_post: validators.ValidatedSubmissionLike = \
 		validators.ValidatedSubmissionLike.from_flask_request(
 			request,
-			allow_embedding=app.config['MULTIMEDIA_EMBEDDING_ENABLED'],
+			allow_embedding=MULTIMEDIA_EMBEDDING_ENABLED,
 			allow_media_url_upload=False,
 			embed_url_file_key="file",
 			edit=True
@@ -566,7 +566,9 @@ def submit_post(v, sub=None):
 
 	try:
 		validated_post: validators.ValidatedSubmissionLike = \
-			validators.ValidatedSubmissionLike.from_flask_request(request, app.config['MULTIMEDIA_EMBEDDING_ENABLED'])
+			validators.ValidatedSubmissionLike.from_flask_request(request,
+				allow_embedding=MULTIMEDIA_EMBEDDING_ENABLED,
+			)
 	except ValueError as e:
 		return error(str(e))
 

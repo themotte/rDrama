@@ -10,6 +10,7 @@ import gevent
 from bleach.linkifier import LinkifyFilter, build_url_re
 from bs4 import BeautifulSoup
 from mistletoe import markdown
+from files.helpers.config.environment import MENTION_LIMIT, MULTIMEDIA_EMBEDDING_ENABLED
 
 from files.helpers.const import image_check_regex, embed_fullmatch_regex, video_sub_regex
 from files.helpers.content import canonicalize_url
@@ -45,7 +46,7 @@ allowed_tags = ('b','blockquote','br','code','del','em','h1','h2','h3','h4',
 		'tbody','th','thead','td','tr','ul','a','span','ruby','rp','rt',
 		'spoiler',)
 
-if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+if MULTIMEDIA_EMBEDDING_ENABLED:
 	allowed_tags += ('img', 'lite-youtube', 'video', 'source',)
 
 
@@ -184,7 +185,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 	# double newlines, eg. hello\nworld becomes hello\n\nworld, which later becomes <p>hello</p><p>world</p>
 	sanitized = linefeeds_regex.sub(r'\1\n\n\2', sanitized)
 
-	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+	if MULTIMEDIA_EMBEDDING_ENABLED:
 		# turn eg. https://wikipedia.org/someimage.jpg into ![](https://wikipedia.org/someimage.jpg)
 		sanitized = image_regex.sub(r'\1![](\2)\4', sanitized)
 
@@ -222,8 +223,8 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 		names = set(m.group(2) for m in matches)
 		users = get_users(names,graceful=True)
 
-		if len(users) > app.config['MENTION_LIMIT']:
-			abort(400, f'Mentioned {len(users)} users but limit is {app.config["MENTION_LIMIT"]}')
+		if len(users) > MENTION_LIMIT:
+			abort(400, f'Mentioned {len(users)} users but limit is {MENTION_LIMIT}')
 
 		for u in users:
 			if not u: continue
@@ -234,7 +235,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	soup = BeautifulSoup(sanitized, 'lxml')
 
-	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+	if MULTIMEDIA_EMBEDDING_ENABLED:
 		for tag in soup.find_all("img"):
 			if tag.get("src") and not tag["src"].startswith('/pp/'):
 				tag["loading"] = "lazy"
@@ -283,7 +284,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	if "https://youtube.com/watch?v=" in sanitized: sanitized = sanitized.replace("?t=", "&t=")
 
-	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+	if MULTIMEDIA_EMBEDDING_ENABLED:
 		captured = []
 		for i in youtube_regex.finditer(sanitized):
 			if i.group(0) in captured: continue
@@ -299,7 +300,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 			sanitized = sanitized.replace(i.group(0), htmlsource)
 
-	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+	if MULTIMEDIA_EMBEDDING_ENABLED:
 		sanitized = video_sub_regex.sub(r'\1<video controls preload="none"><source src="\2"></video>', sanitized)
 
 	if comment:
@@ -381,65 +382,3 @@ def validate_css(css:str) -> tuple[bool, str]:
 	if '@import' in css.lower(): return False, "@import statements are not allowed"
 	if css_url_regex.search(css): return False, "External URL imports are not allowed"
 	return True, ""
-
-
-def sanitize_url(url:Optional[str]) -> Optional[str]:
-	if not url: return None
-	url = canonicalize_url(url)
-	parsed_url = urlparse(url)
-
-	domain = parsed_url.netloc
-	if domain in ('old.reddit.com','twitter.com','instagram.com','tiktok.com'):
-		new_url = ParseResult(scheme="https",
-				netloc=parsed_url.netloc,
-				path=parsed_url.path,
-				params=parsed_url.params,
-				query=None,
-				fragment=parsed_url.fragment)
-	else:
-		qd = parse_qs(parsed_url.query)
-		filtered = {k: val for k, val in qd.items() if not k.startswith('utm_') and not k.startswith('ref_')}
-
-		new_url = ParseResult(scheme="https",
-							netloc=parsed_url.netloc,
-							path=parsed_url.path,
-							params=parsed_url.params,
-							query=urlencode(filtered, doseq=True),
-							fragment=parsed_url.fragment)
-		
-	search_url = urlunparse(new_url)
-
-	if search_url.endswith('/'): url = url[:-1]
-
-	
-
-	domain_obj = get_domain(domain)
-	if not domain_obj: domain_obj = get_domain(domain+parsed_url.path)
-
-	if domain_obj:
-		reason = f"Remove the {domain_obj.domain} link from your post and try again. {domain_obj.reason}"
-		return error(reason)
-	elif "twitter.com" == domain:
-		try: embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}, timeout=5).json()["html"]
-		except: pass
-	elif url.startswith('https://youtube.com/watch?v='):
-		url = unquote(url).replace('?t', '&t')
-		yt_id = url.split('https://youtube.com/watch?v=')[1].split('&')[0].split('%')[0]
-
-		if yt_id_regex.fullmatch(yt_id):
-			req = requests.get(f"https://www.googleapis.com/youtube/v3/videos?id={yt_id}&key={YOUTUBE_KEY}&part=contentDetails", timeout=5).json()
-			if req.get('items'):
-				params = parse_qs(urlparse(url).query)
-				t = params.get('t', params.get('start', [0]))[0]
-				if isinstance(t, str): t = t.replace('s','')
-
-				embed = f'<lite-youtube videoid="{yt_id}" params="autoplay=1&modestbranding=1'
-				if t:
-					try: embed += f'&start={int(t)}'
-					except: pass
-				embed += '"></lite-youtube>'
-			
-	elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
-		id = url.split("/post/")[1]
-		if "/" in id: id = id.split("/")[0]
-		embed = str(int(id))
