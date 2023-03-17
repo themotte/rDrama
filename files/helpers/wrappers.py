@@ -93,7 +93,7 @@ def check_ban_evade(v):
 
 
 def auth_desired(f):
-	@functools.wraps
+	@functools.wraps(f)
 	def wrapper(*args, **kwargs):
 		v = get_logged_in_user()
 		check_ban_evade(v)
@@ -102,7 +102,7 @@ def auth_desired(f):
 
 
 def auth_required(f):
-	@functools.wraps
+	@functools.wraps(f)
 	def wrapper(*args, **kwargs):
 		v = get_logged_in_user()
 		if not v: abort(401)
@@ -131,6 +131,5 @@ def admin_level_required(x):
 			if not v: abort(401)
 			if v.admin_level < x: abort(403)
 			return make_response(f(*args, v=v, **kwargs))
-		wrapper.__name__ = f.__name__ # __name__ isn't being assigned for some reason
 		return wrapper
 	return wrapper_maker
