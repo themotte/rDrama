@@ -24,7 +24,6 @@ from .mod_logs import *
 from .mod import *
 from .exiles import *
 from .sub_block import *
-from files.__main__ import app
 from files.helpers.security import *
 from files.helpers.assetcache import assetcache_path
 
@@ -160,6 +159,7 @@ class User(CreatedBase):
 		return self.admin_level > 1
 
 	def should_comments_be_filtered(self):
+		from files.__main__ import app # i know
 		if self.admin_level > 0:
 			return False
 		site_settings = app.config['SETTINGS']

@@ -7,10 +7,9 @@ from typing import Any, Optional, Union
 from flask import g
 from sqlalchemy.orm import declared_attr, relationship, scoped_session
 from sqlalchemy.schema import Column, ForeignKey
-from sqlalchemy.sql.sqltypes import (Boolean, DateTime, Integer, SmallInteger, String,
+from sqlalchemy.sql.sqltypes import (Boolean, DateTime, Integer, SmallInteger,
                                      Text, Time)
 
-from files.__main__ import app
 from files.classes.base import CreatedBase
 from files.classes.cron.submission import (ScheduledSubmissionTemplate,
                                            ScheduledSubmissionTemplateContext)
@@ -142,6 +141,8 @@ class RepeatableTask(ScheduledTask):
 		return run
 
 	def _run_unwrapped(self, db:scoped_session, trigger_time:datetime):
+		from files.__main__ import app # i know
+
 		if self.type != ScheduledTaskType.SCHEDULED_SUBMISSION:
 			raise NotImplementedError("Scheduled task type not implemented")
 		scheduled:ScheduledSubmissionTemplate = db.get(ScheduledSubmissionTemplate, self.data_id)
