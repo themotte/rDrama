@@ -4,16 +4,16 @@ import urllib.parse
 from dataclasses import dataclass
 from typing import NoReturn, Optional
 
-import requests
 from flask import Request, abort, request
 from werkzeug.datastructures import FileStorage
 
+import files.helpers.embeds as embeds
+from files.helpers.config.environment import YOUTUBE_KEY
 from files.helpers.const import (SITE_FULL, SUBMISSION_BODY_LENGTH_MAXIMUM,
                                  SUBMISSION_TITLE_LENGTH_MAXIMUM,
-                                 SUBMISSION_URL_LENGTH_MAXIMUM, YOUTUBE_KEY)
+                                 SUBMISSION_URL_LENGTH_MAXIMUM)
 from files.helpers.content import canonicalize_url2
 from files.helpers.media import process_image
-from files.helpers.config.regex import yt_id_regex
 from files.helpers.sanitize import filter_emojis_only, sanitize, sanitize_raw
 
 
@@ -56,34 +56,14 @@ class ValidatedSubmissionLike:
 		url_canonical: Optional[urllib.parse.ParseResult] = self.url_canonical
 		if not url or not url_canonical: return None
 
+		embed:Optional[str] = None
 		domain:str = url_canonical.netloc
 
 		if domain == "twitter.com":
-			try: 
-				embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}, timeout=5).json()["html"]
-			except: 
-				return None
+			embed = embeds.twitter(url)
 		
-		if self.url.startswith('https://youtube.com/watch?v='):
-			url = urllib.parse.unquote(url).replace('?t', '&t')
-			yt_id = url.split('https://youtube.com/watch?v=')[1].split('&')[0].split('%')[0]
-
-			if yt_id_regex.fullmatch(yt_id):
-				req = requests.get(f"https://www.googleapis.com/youtube/v3/videos?id={yt_id}&key={YOUTUBE_KEY}&part=contentDetails", timeout=5).json()
-				if req.get('items'):
-					params = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)
-					t = params.get('t', params.get('start', [0]))[0]
-					if isinstance(t, str): t = t.replace('s','')
-
-					embed = f'<lite-youtube videoid="{yt_id}" params="autoplay=1&modestbranding=1'
-					if t:
-						try: embed += f'&start={int(t)}'
-						except: pass
-					embed += '"></lite-youtube>'
-				else:
-					return None
-			else:
-				return None
+		if url.startswith('https://youtube.com/watch?v=') and YOUTUBE_KEY:
+			embed = embeds.youtube(url)
 			
 		if SITE_FULL in domain and "/post/" in url and "context" not in url:
 			id = url.split("/post/")[1]
@@ -155,7 +135,7 @@ class ValidatedSubmissionLike:
 				name = f'/images/{time.time()}'.replace('.','') + '.webp'
 				file.save(name)
 				image = process_image(name)
-				if allow_embedding: # app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+				if allow_embedding:
 					body += f"\n\n![]({image})"
 				else:
 					body += f'\n\n<a href="{image}">{image}</a>'
@@ -193,4 +173,3 @@ class ValidatedSubmissionLike:
 			url=url,
 			thumburl=thumburl,
 		)
-	

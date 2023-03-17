@@ -172,8 +172,6 @@ CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/
 
 dues = int(environ.get("DUES").strip())
 
-YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
-
 proxies = {}
 
 approved_embed_hosts = [
