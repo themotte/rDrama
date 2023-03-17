@@ -58,16 +58,6 @@ class DayOfWeek(IntFlag):
 		return _days[weekday] in self
 
 
-class ScheduledTaskRun(CreatedBase):
-	__tablename__ = "tasks_ran"
-	
-	id = Column(Integer, primary_key=True)
-	task_id = Column(Integer, nullable=False)
-	traceback_str = Column(Text, nullable=True)
-
-	task = relationship("ScheduledTask")
-
-
 class ScheduledTask(CreatedBase):
 	__abstract__ = True
 
@@ -124,6 +114,7 @@ class ScheduledTask(CreatedBase):
 			g.db = db
 			submission.publish()
 
+
 class RepeatableTask(ScheduledTask):
 	__tablename__ = "tasks_repeatable"
 
@@ -149,3 +140,13 @@ class RepeatableTask(ScheduledTask):
 			raise Exception("Could not find suitable timestamp to run next task")
 
 		return datetime.combine(target_date, self.time_of_day_utc, tzinfo=timezone.utc) # type: ignore
+
+
+class ScheduledTaskRun(CreatedBase):
+	__tablename__ = "tasks_ran"
+	
+	id = Column(Integer, primary_key=True)
+	task_id = Column(Integer, nullable=False)
+	traceback_str = Column(Text, nullable=True)
+
+	task = relationship(ScheduledTask)
