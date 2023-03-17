@@ -1,21 +1,22 @@
 import random
-from typing import Any, TYPE_CHECKING, Optional, Union
+import urllib.parse
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from sqlalchemy.orm import scoped_session
 
 from files.helpers.const import PERMS
 
 if TYPE_CHECKING:
-	from files.classes import Submission, Comment, User
+	from files.classes import Comment, Submission, User
 	Submittable = Union[Submission, Comment]
 else:
-	Submission = Any
 	Comment = Any
+	Submission = Any
 	User = Any
 	Submittable = Any
 
 
-def canonicalize_url(url:str) -> str:
+def _replace_urls(url:str) -> str:
 	def _replace_extensions(url:str, exts:list[str]) -> str:
 		for ext in exts:
 			url = url.replace(f'.{ext}', '.webp')
@@ -49,6 +50,41 @@ def canonicalize_url(url:str) -> str:
 	if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): 
 		url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 	return url
+
+def _httpsify_and_remove_tracking_urls(url:str) -> urllib.parse.ParseResult:
+	parsed_url = urllib.parse.urlparse(url)
+	domain = parsed_url.netloc
+	is_reddit_twitter_instagram_tiktok:bool = domain in \
+		('old.reddit.com','twitter.com','instagram.com','tiktok.com')
+
+	if is_reddit_twitter_instagram_tiktok:
+		query = ""
+	else:
+		qd = urllib.parse.parse_qs(parsed_url.query)
+		filtered = {k: val for k, val in qd.items() if not k.startswith('utm_') and not k.startswith('ref_')}
+		query = urllib.parse.urlencode(filtered, doseq=True)
+	
+	new_url = urllib.parse.ParseResult(
+		scheme="https",
+		netloc=parsed_url.netloc,
+		path=parsed_url.path,
+		params=parsed_url.params,
+		query=query,
+		fragment=parsed_url.fragment,
+	)
+	return new_url
+
+
+def canonicalize_url(url:str, *, httpsify:bool=False) -> str:
+	return _replace_urls(url)
+
+def canonicalize_url2(url:str, *, httpsify:bool=False) -> urllib.parse.ParseResult:
+	url_parsed = _replace_urls(url)
+	if httpsify: 
+		url_parsed = _httpsify_and_remove_tracking_urls(url)
+	else:
+		url_parsed = urllib.parse.urlparse(url)
+	return url_parsed
 
 
 def moderated_body(target:Submittable, v:Optional[User]) -> Optional[str]:

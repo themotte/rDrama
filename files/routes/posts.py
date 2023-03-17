@@ -1,7 +1,20 @@
 import time
+import urllib.parse
+from io import BytesIO
+from os import path
+from sys import stdout
+from urllib.parse import ParseResult, urlparse
+
 import gevent
+import requests
+import werkzeug.wrappers
+from flask import *
+from PIL import Image as PILimage
+from sqlalchemy.orm import Query
+
+import files.helpers.validators as validators
 from files.helpers.caching import invalidate_cache
-from files.helpers.content import canonicalize_url
+from files.helpers.content import canonicalize_url2
 from files.helpers.wrappers import *
 from files.helpers.sanitize import *
 from files.helpers.alerts import *
@@ -11,16 +24,7 @@ from files.helpers.const import *
 from files.helpers.media import process_image
 from files.helpers.strings import sql_ilike_clean
 from files.classes import *
-from flask import *
-from io import BytesIO
 from files.__main__ import app, limiter, cache, db_session
-from PIL import Image as PILimage
-from urllib.parse import ParseResult, urlunparse, urlparse, quote, unquote
-from os import path
-import requests
-from shutil import copyfile
-from sys import stdout
-from sqlalchemy.orm import Query
 
 
 snappyquotes = [f':#{x}:' for x in marseys_const2]
@@ -29,7 +33,7 @@ if path.exists(f'snappy_{SITE_ID}.txt'):
 	with open(f'snappy_{SITE_ID}.txt', "r", encoding="utf-8") as f:
 		snappyquotes += f.read().split("\n{[para]}\n")
 
-discounts = {
+discounts = { # <- why is this here?
 	69: 0.02,
 	70: 0.04,
 	71: 0.06,
@@ -41,21 +45,7 @@ titleheaders = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWe
 
 MAX_TITLE_LENGTH = 500
 MAX_URL_LENGTH = 2048
-MAX_BODY_LENGTH = SUBMISSION_BODY_LENGTH_MAXIMUM
 
-
-def guarded_value(val, min_len, max_len) -> str:
-	'''
-	Get request value `val` and ensure it is within length constraints
-	Requires a request context and either aborts early or returns a good value
-	'''
-	raw = request.values.get(val, '').strip()
-	raw = raw.replace('\u200e', '')
-
-	if len(raw) < min_len: abort(400, f"Minimum length for {val} is {min_len}")
-	if len(raw) > max_len: abort(400, f"Maximum length for {val} is {max_len}")
-	# TODO: it may make sense to do more sanitisation here
-	return raw
 
 @app.post("/toggle_club/<pid>")
 @auth_required
@@ -276,37 +266,31 @@ def morecomments(v, cid):
 @auth_required
 def edit_post(pid, v):
 	p = get_post(pid)
-
 	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
 
-	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
-	title = sanitize_raw(title, allow_newlines=False, length_limit=MAX_TITLE_LENGTH)
+	validated_post: validators.ValidatedSubmissionLike = \
+		validators.ValidatedSubmissionLike.from_flask_request(
+			request,
+			allow_embedding=app.config['MULTIMEDIA_EMBEDDING_ENABLED'],
+			allow_media_url_upload=False,
+			embed_url_file_key="file",
+			edit=True
+		)
+	changed:bool=False
 
-	body = guarded_value("body", 0, MAX_BODY_LENGTH)
-	body = sanitize_raw(body, allow_newlines=True, length_limit=MAX_BODY_LENGTH)
+	if validated_post.title != p.title:
+		p.title = validated_post.title
+		p.title_html = validated_post.title_html
+		changed = True
 
-	if title != p.title:
-		p.title = title
-		title_html = filter_emojis_only(title, edit=True)
-		p.title_html = title_html
+	if validated_post.body != validated_post.body:
+		p.body = validated_post.body
+		p.body_html = validated_post.body_html
+		changed = True
 
-	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
-		files = request.files.getlist('file')[:4]
-		for file in files:
-			if file.content_type.startswith('image/'):
-				name = f'/images/{time.time()}'.replace('.','') + '.webp'
-				file.save(name)
-				url = process_image(name)
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
-					body += f"\n\n![]({url})"
-				else:
-					body += f'\n\n<a href="{url}">{url}</a>'
-			else: abort(400, "Image files only")
+	if not changed:
+		abort(400, "You need to change something")
 
-	body_html = sanitize(body, edit=True)
-
-	p.body = body
-	p.body_html = body_html
 	p.publish()
 
 	if v.id == p.author_id:
@@ -467,31 +451,7 @@ def api_is_repost():
 	url = request.values.get('url')
 	if not url: abort(400)
 
-	url = canonicalize_url(url)
-
-	parsed_url = urlparse(url)
-
-	domain = parsed_url.netloc
-	if domain in ('old.reddit.com','twitter.com','instagram.com','tiktok.com'):
-		new_url = ParseResult(scheme="https",
-				netloc=parsed_url.netloc,
-				path=parsed_url.path,
-				params=parsed_url.params,
-				query=None,
-				fragment=parsed_url.fragment)
-	else:
-		qd = parse_qs(parsed_url.query)
-		filtered = {k: val for k, val in qd.items() if not k.startswith('utm_') and not k.startswith('ref_')}
-
-		new_url = ParseResult(scheme="https",
-							netloc=parsed_url.netloc,
-							path=parsed_url.path,
-							params=parsed_url.params,
-							query=urlencode(filtered, doseq=True),
-							fragment=parsed_url.fragment)
-	
-	url = urlunparse(new_url)
-
+	url = urllib.parse.unparse(canonicalize_url2(url, httpsify=True))
 	if url.endswith('/'): url = url[:-1]
 
 	search_url = sql_ilike_clean(url)
@@ -503,12 +463,100 @@ def api_is_repost():
 	if repost: return {'permalink': repost.permalink}
 	else: return {'permalink': ''}
 
+
+def _do_antispam_submission_check(v:User, validated:validators.ValidatedSubmissionLike):
+	now = int(time.time())
+	cutoff = now - 60 * 60 * 24
+
+	similar_posts = g.db.query(Submission).filter(
+		Submission.author_id == v.id,
+		Submission.title.op('<->')(validated.title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+		Submission.created_utc > cutoff
+	).all()
+
+	if validated.url:
+		similar_urls = g.db.query(Submission).filter(
+			Submission.author_id == v.id,
+			Submission.url.op('<->')(validated.url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
+			Submission.created_utc > cutoff
+		).all()
+	else: 
+		similar_urls = []
+
+	threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
+	if v.age_seconds >= (60 * 60 * 24 * 7): threshold *= 3
+	elif v.age_seconds >= (60 * 60 * 24): threshold *= 2
+
+	if max(len(similar_urls), len(similar_posts)) < threshold:
+		return
+
+	text = "Your account has been banned for **1 day** for the following reason:\n\n> Too much spam!"
+	send_repeatable_notification(v.id, text)
+
+	v.ban(reason="Spamming.", days=1)
+	for post in similar_posts + similar_urls:
+		post.is_banned = True
+		post.is_pinned = False
+		post.ban_reason = "AutoJanny"
+		g.db.add(post)
+		ma=ModAction(
+				user_id=AUTOJANNY_ID,
+				target_submission_id=post.id,
+				kind="ban_post",
+				_note="spam"
+		)
+		g.db.add(ma)
+	g.db.commit()
+	abort(403)
+
+
+def _execute_domain_ban_check(parsed_url:ParseResult):
+	domain:str = parsed_url.netloc
+	domain_obj = get_domain(domain)
+	if not domain_obj: 
+		domain_obj = get_domain(domain+parsed_url.path)
+	if not domain_obj: return
+	abort(403, f"Remove the {domain_obj.domain} link from your post and try again. {domain_obj.reason}")
+
+
+def _duplicate_check(search_url:Optional[str]) -> Optional[werkzeug.wrappers.Response]:
+	if not search_url: return None
+	repost = g.db.query(Submission).filter(
+		func.lower(Submission.url) == search_url.lower(),
+		Submission.deleted_utc == 0,
+		Submission.is_banned == False
+	).first()
+	if repost and SITE != 'localhost': 
+		return redirect(repost.permalink)
+	return None
+
+
+def _duplicate_check2(
+		user_id:int, 
+		validated_post:validators.ValidatedSubmissionLike) -> Optional[werkzeug.wrappers.Response]:
+	dup = g.db.query(Submission).filter(
+		Submission.author_id == user_id,
+		Submission.deleted_utc == 0,
+		Submission.title == validated_post.title,
+		Submission.url == validated_post.url,
+		Submission.body == validated_post.body
+	).one_or_none()
+
+	if dup and SITE != 'localhost': 
+		return redirect(dup.permalink)
+	return None
+
+
 @app.post("/submit")
 # @app.post("/h/<sub>/submit")
 @limiter.limit("1/second;2/minute;10/hour;50/day")
 @auth_required
 def submit_post(v, sub=None):
 	def error(error):
+		title:str = request.values.get("title", "")
+		body:str = request.values.get("body", "")
+		url:str = request.values.get("url", "")
+
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, error)
 	
 		SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
@@ -516,13 +564,11 @@ def submit_post(v, sub=None):
 
 	if v.is_suspended: return error("You can't perform this action while banned.")
 
-	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
-	title = sanitize_raw(title, allow_newlines=False, length_limit=MAX_TITLE_LENGTH)
-
-	url = guarded_value("url", 0, MAX_URL_LENGTH)
-	
-	body = guarded_value("body", 0, MAX_BODY_LENGTH)
-	body = sanitize_raw(body, allow_newlines=True, length_limit=MAX_BODY_LENGTH)
+	try:
+		validated_post: validators.ValidatedSubmissionLike = \
+			validators.ValidatedSubmissionLike.from_flask_request(request, app.config['MULTIMEDIA_EMBEDDING_ENABLED'])
+	except ValueError as e:
+		return error(str(e))
 
 	sub = request.values.get("sub")
 	if sub: sub = sub.replace('/h/','').replace('s/','')
@@ -534,161 +580,27 @@ def submit_post(v, sub=None):
 		sub = sub[0]
 		if v.exiled_from(sub): return error(f"You're exiled from /h/{sub}")
 	else: sub = None
-	
-	title_html = filter_emojis_only(title, graceful=True)
 
-	if len(title_html) > 1500: return error("Rendered title is too big!")
+	duplicate:Optional[werkzeug.wrappers.Response] = \
+		_duplicate_check(validated_post.repost_search_url)
+	if duplicate: return duplicate
 
-	embed = None
+	parsed_url:Optional[ParseResult] = validated_post.url_canonical
+	if parsed_url:
+		_execute_domain_ban_check(parsed_url)
 
-	if url:
-		url = canonicalize_url(url)
-		parsed_url = urlparse(url)
+	duplicate:Optional[werkzeug.wrappers.Response] = \
+		_duplicate_check2(v.id, validated_post)
+	if duplicate: return duplicate
 
-		domain = parsed_url.netloc
-		if domain in ('old.reddit.com','twitter.com','instagram.com','tiktok.com'):
-			new_url = ParseResult(scheme="https",
-					netloc=parsed_url.netloc,
-					path=parsed_url.path,
-					params=parsed_url.params,
-					query=None,
-					fragment=parsed_url.fragment)
-		else:
-			qd = parse_qs(parsed_url.query)
-			filtered = {k: val for k, val in qd.items() if not k.startswith('utm_') and not k.startswith('ref_')}
-
-			new_url = ParseResult(scheme="https",
-								netloc=parsed_url.netloc,
-								path=parsed_url.path,
-								params=parsed_url.params,
-								query=urlencode(filtered, doseq=True),
-								fragment=parsed_url.fragment)
-		
-		search_url = urlunparse(new_url)
-
-		if search_url.endswith('/'): url = url[:-1]
-
-		repost = g.db.query(Submission).filter(
-			func.lower(Submission.url) == search_url.lower(),
-			Submission.deleted_utc == 0,
-			Submission.is_banned == False
-		).first()
-		if repost and SITE != 'localhost': return redirect(repost.permalink)
-
-		domain_obj = get_domain(domain)
-		if not domain_obj: domain_obj = get_domain(domain+parsed_url.path)
-
-		if domain_obj:
-			reason = f"Remove the {domain_obj.domain} link from your post and try again. {domain_obj.reason}"
-			return error(reason)
-		elif "twitter.com" == domain:
-			try: embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}, timeout=5).json()["html"]
-			except: pass
-		elif url.startswith('https://youtube.com/watch?v='):
-			url = unquote(url).replace('?t', '&t')
-			yt_id = url.split('https://youtube.com/watch?v=')[1].split('&')[0].split('%')[0]
-
-			if yt_id_regex.fullmatch(yt_id):
-				req = requests.get(f"https://www.googleapis.com/youtube/v3/videos?id={yt_id}&key={YOUTUBE_KEY}&part=contentDetails", timeout=5).json()
-				if req.get('items'):
-					params = parse_qs(urlparse(url).query)
-					t = params.get('t', params.get('start', [0]))[0]
-					if isinstance(t, str): t = t.replace('s','')
-
-					embed = f'<lite-youtube videoid="{yt_id}" params="autoplay=1&modestbranding=1'
-					if t:
-						try: embed += f'&start={int(t)}'
-						except: pass
-					embed += '"></lite-youtube>'
-			
-		elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
-			id = url.split("/post/")[1]
-			if "/" in id: id = id.split("/")[0]
-			embed = str(int(id))
-
-
-	if not url and not body and not request.files.get("file") and not request.files.get("file2"):
-		return error("Please enter a url or some text.")
-
-	dup = g.db.query(Submission).filter(
-		Submission.author_id == v.id,
-		Submission.deleted_utc == 0,
-		Submission.title == title,
-		Submission.url == url,
-		Submission.body == body
-	).one_or_none()
-
-	if dup and SITE != 'localhost': return redirect(dup.permalink)
-
-	now = int(time.time())
-	cutoff = now - 60 * 60 * 24
-
-
-	similar_posts = g.db.query(Submission).filter(
-					Submission.author_id == v.id,
-					Submission.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
-					Submission.created_utc > cutoff
-	).all()
-
-	if url:
-		similar_urls = g.db.query(Submission).filter(
-					Submission.author_id == v.id,
-					Submission.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
-					Submission.created_utc > cutoff
-		).all()
-	else: similar_urls = []
-
-	threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
-	if v.age_seconds >= (60 * 60 * 24 * 7): threshold *= 3
-	elif v.age_seconds >= (60 * 60 * 24): threshold *= 2
-
-	if max(len(similar_urls), len(similar_posts)) >= threshold:
-
-		text = "Your account has been banned for **1 day** for the following reason:\n\n> Too much spam!"
-		send_repeatable_notification(v.id, text)
-
-		v.ban(reason="Spamming.",
-			  days=1)
-
-		for post in similar_posts + similar_urls:
-			post.is_banned = True
-			post.is_pinned = False
-			post.ban_reason = "AutoJanny"
-			g.db.add(post)
-			ma=ModAction(
-					user_id=AUTOJANNY_ID,
-					target_submission_id=post.id,
-					kind="ban_post",
-					_note="spam"
-					)
-			g.db.add(ma)
-		return redirect("/notifications")
-
-	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
-		files = request.files.getlist('file2')[:4]
-		for file in files:
-			if file.content_type.startswith('image/'):
-				name = f'/images/{time.time()}'.replace('.','') + '.webp'
-				file.save(name)
-				image = process_image(name)
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
-					body += f"\n\n![]({image})"
-				else:
-					body += f'\n\n<a href="{image}">{image}</a>'
-			else:
-				return error("Image files only")
-
-	body_html = sanitize(body)
+	_do_antispam_submission_check(v, validated_post)
 
 	club = bool(request.values.get("club",""))
-	
-	if embed and len(embed) > 1500: embed = None
-
 	is_bot = bool(request.headers.get("Authorization"))
 
 	# Invariant: these values are guarded and obey the length bound
-	assert len(title) <= MAX_TITLE_LENGTH
-	assert len(body) <= MAX_BODY_LENGTH
+	assert len(validated_post.title) <= MAX_TITLE_LENGTH
+	assert len(validated_post.body) <= SUBMISSION_BODY_LENGTH_MAXIMUM
 
 	post = Submission(
 		private=bool(request.values.get("private","")),
@@ -696,32 +608,19 @@ def submit_post(v, sub=None):
 		author_id=v.id,
 		over_18=bool(request.values.get("over_18","")),
 		app_id=v.client.application.id if v.client else None,
-		is_bot = is_bot,
-		url=url,
-		body=body,
-		body_html=body_html,
-		embed_url=embed,
-		title=title,
-		title_html=title_html,
+		is_bot=is_bot,
+		url=validated_post.url,
+		body=validated_post.body,
+		body_html=validated_post.body_html,
+		embed_url=validated_post.embed_slow,
+		title=validated_post.title,
+		title_html=validated_post.title_html,
 		sub=sub,
 		ghost=False,
-		filter_state='filtered' if v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts'] else 'normal'
+		filter_state='filtered' if v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts'] else 'normal',
+		thumburl=validated_post.thumburl
 	)
 	post.submit(g.db)
-	
-	if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
-		file = request.files['file']
-
-		if file.content_type.startswith('image/'):
-			name = f'/images/{time.time()}'.replace('.','') + '.webp'
-			file.save(name)
-			post.url = process_image(name)
-
-			name2 = name.replace('.webp', 'r.webp')
-			copyfile(name, name2)
-			post.thumburl = process_image(name2, resize=100)
-		else:
-			return error("Image files only")
 		
 	if not post.thumburl and post.url:
 		gevent.spawn(thumbnail_thread, post.id)
@@ -729,7 +628,8 @@ def submit_post(v, sub=None):
 	post.publish()
 	g.db.commit()
 
-	if request.headers.get("Authorization"): return post.json
+	if request.headers.get("Authorization"): 
+		return post.json
 	else:
 		post.voted = 1
 		if 'megathread' in post.title.lower(): sort = 'new'

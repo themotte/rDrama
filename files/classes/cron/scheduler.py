@@ -2,18 +2,18 @@ from __future__ import annotations
 
 from datetime import date, datetime, timedelta, timezone
 from enum import IntEnum, IntFlag
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from flask import g
 from sqlalchemy.orm import declared_attr, relationship, scoped_session
 from sqlalchemy.schema import Column, ForeignKey
-from sqlalchemy.sql.sqltypes import (Boolean, Integer, SmallInteger, String,
+from sqlalchemy.sql.sqltypes import (Boolean, DateTime, Integer, SmallInteger, String,
                                      Text, Time)
 
 from files.__main__ import app
 from files.classes.base import CreatedBase
-from files.classes.cron.submission import (ScheduledSubmission,
-                                           ScheduledSubmissionContext)
+from files.classes.cron.submission import (ScheduledSubmissionTemplate,
+                                           ScheduledSubmissionTemplateContext)
 from files.classes.submission import Submission
 
 
@@ -33,6 +33,7 @@ class DayOfWeek(IntFlag):
 	WEEKDAYS = MONDAY | TUESDAY | WEDNESDAY | THURSDAY | FRIDAY
 	WEEKENDS = SATURDAY | SUNDAY
 
+	NONE = 0 << 0
 	ALL = WEEKDAYS | WEEKENDS
 
 	@property
@@ -71,7 +72,7 @@ class ScheduledTask(CreatedBase):
 	
 	@declared_attr
 	def type_id(self):
-		return Column(String(64), nullable=False)
+		return Column(SmallInteger, nullable=False)
 	
 	@declared_attr
 	def data_id(self):
@@ -89,6 +90,14 @@ class ScheduledTask(CreatedBase):
 	@declared_attr
 	def enabled(self):
 		return Column(Boolean, default=True, nullable=False)
+	
+	@declared_attr
+	def last_run(self):
+		return Column(DateTime, default=None)
+	
+	@property
+	def last_run_or_created_utc(self) -> datetime:
+		return self.last_run or self.created_datetime_py
 	
 	def next_trigger(self, anchor:datetime) -> Optional[datetime]:
 		raise NotImplementedError()
@@ -128,15 +137,15 @@ class RepeatableTask(ScheduledTask):
 		try:
 			self._run_unwrapped(db, trigger_time)
 		except Exception as e:
-			run.traceback_str = str(e)
+			run.exception = e
 		db.add(run)
 		return run
 
 	def _run_unwrapped(self, db:scoped_session, trigger_time:datetime):
 		if self.type != ScheduledTaskType.SCHEDULED_SUBMISSION:
 			raise NotImplementedError("Scheduled task type not implemented")
-		scheduled:ScheduledSubmission = db.get(ScheduledSubmission, self.data_id)
-		submission:Submission = scheduled.make_submission(ScheduledSubmissionContext(trigger_time))
+		scheduled:ScheduledSubmissionTemplate = db.get(ScheduledSubmissionTemplate, self.data_id)
+		submission:Submission = scheduled.make_submission(ScheduledSubmissionTemplateContext(trigger_time))
 		submission.submit(db) # TODO: thumbnails
 		with app.app_context(): # TODO: don't require app context (currently required for username pings)
 			g.db = db
@@ -148,6 +157,15 @@ class RepeatableTaskRun(CreatedBase):
 	
 	id = Column(Integer, primary_key=True)
 	task_id = Column(Integer, ForeignKey(RepeatableTask.id), nullable=False)
+	manual = Column(Boolean, default=False, nullable=False)
 	traceback_str = Column(Text, nullable=True)
 
 	task = relationship(RepeatableTask)
+
+	exception: Optional[Exception] = None # not part of the db model
+
+	def __setattr__(self, __name: str, __value: Any) -> None:
+		if __name == "exception":
+			self.exception = __value
+			self.traceback_str = str(__value)
+		return super().__setattr__(__name, __value)

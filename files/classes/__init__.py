@@ -84,7 +84,7 @@ from .views import ViewerRelationship
 from .votes import Vote, CommentVote
 from .volunteer_janitor import VolunteerJanitorRecord
 from .cron.scheduler import ScheduledTask, RepeatableTask
-from .cron.submission import ScheduledSubmission
+from .cron.submission import ScheduledSubmissionTemplate
 
 # Then the import * from files.*
 from files.helpers.const import *

@@ -1,5 +1,7 @@
 import re
+import sys
 from copy import deepcopy
+from enum import IntEnum
 from os import environ
 from typing import Final
 
@@ -14,6 +16,19 @@ SITE_ID = environ.get("SITE_ID", '').strip()
 SITE_TITLE = environ.get("SITE_TITLE", '').strip()
 SCHEME = environ.get('SCHEME', 'http' if 'localhost' in SITE else 'https')
 SITE_FULL = SCHEME + '://' + SITE
+
+class Service(IntEnum):
+	THEMOTTE = 0
+	CRON = 1
+	CHAT = 2
+
+	@classmethod
+	def from_argv(cls):
+		if "cron" in sys.argv:
+			return cls.CRON
+		if "load_chat" in sys.argv:
+			return cls.CHAT
+		return cls.THEMOTTE
 
 CC = "COUNTRY CLUB"
 CC_TITLE = CC.title()
@@ -59,6 +74,7 @@ PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 DEFAULT_COLOR = environ.get("DEFAULT_COLOR", "fff").strip()
 COLORS = {'ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58','8cdbe6', DEFAULT_COLOR}
 
+SUBMISSION_FLAIR_LENGTH_MAXIMUM: Final[int] = 350
 SUBMISSION_TITLE_LENGTH_MAXIMUM: Final[int] = 500
 SUBMISSION_URL_LENGTH_MAXIMUM: Final[int] = 2048
 SUBMISSION_BODY_LENGTH_MAXIMUM: Final[int] = 20000

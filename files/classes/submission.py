@@ -3,7 +3,8 @@ from urllib.parse import urlparse
 
 from flask import g
 from sqlalchemy import *
-from sqlalchemy.orm import declared_attr, deferred, relationship, scoped_session
+from sqlalchemy.orm import (declared_attr, deferred, relationship,
+                            scoped_session)
 
 from files.__main__ import app
 from files.classes.base import CreatedBase
@@ -96,7 +97,7 @@ class Submission(CreatedBase):
 		# then create vote...
 		vote = Vote(
 			user_id=self.author_id, 
-	    	vote_type=1,
+			vote_type=1,
 			submission_id=self.id
 		)
 		db.add(vote)
@@ -112,8 +113,8 @@ class Submission(CreatedBase):
 		# spider web of imports is hard to maintain. we defer loading these
 		# imports until as late as possible. otherwise there are import loops
 		# that would require much more work to untangle
-		from files.helpers.caching import invalidate_cache
 		from files.helpers.alerts import execute_username_mentions_submission
+		from files.helpers.caching import invalidate_cache
 		if self.private: return
 		if not self.ghost: execute_username_mentions_submission(self)
 		invalidate_cache(userpagelisting=True, changeloglist=\

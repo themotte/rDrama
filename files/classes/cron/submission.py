@@ -2,7 +2,6 @@ import functools
 from dataclasses import dataclass
 from datetime import datetime
 
-from sqlalchemy.orm import relationship
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.sql.sqltypes import (Boolean, Integer, String,
                                      Text)
@@ -15,16 +14,17 @@ from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy
 from files.helpers.sanitize import filter_emojis_only
 
+
 @dataclass(frozen=True, slots=True)
-class ScheduledSubmissionContext:
+class ScheduledSubmissionTemplateContext:
 	time: datetime
 
 	def make_title(self, title_template:str) -> str:
 		return self.time.strftime(title_template)
 
 
-class ScheduledSubmission(CreatedBase):
-	__tablename__ = "submissions_scheduled"
+class ScheduledSubmissionTemplate(CreatedBase):
+	__tablename__ = "submission_templates"
 
 	id = Column(Integer, primary_key=True, nullable=False)
 	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
@@ -39,7 +39,7 @@ class ScheduledSubmission(CreatedBase):
 	flair = Column(String)
 	embed_url = Column(String)
 
-	def make_submission(self, ctx:ScheduledSubmissionContext) -> Submission:
+	def make_submission(self, ctx:ScheduledSubmissionTemplateContext) -> Submission:
 		title:str = ctx.make_title(self.title)
 		title_html:str = filter_emojis_only(title, graceful=True)
 		if len(title_html) > 1500: raise ValueError("Rendered title too large")
@@ -102,8 +102,9 @@ class ScheduledSubmission(CreatedBase):
 
 	@lazy
 	def realurl(self, v):
-		if v and self.url and self.url.startswith("https://old.reddit.com/"):
+		if not self.url: return ""
 
+		if v and self.url.startswith("https://old.reddit.com/"):
 			url = self.url.replace("old.reddit.com", v.reddit)
 
 			if '/comments/' in url and "sort=" not in url:
@@ -111,12 +112,13 @@ class ScheduledSubmission(CreatedBase):
 				else: url += f"?context={RENDER_DEPTH_LIMIT - 1}"
 				if v.controversial: url += "&sort=controversial"
 			return url
-		elif self.url:
-			if v and v.nitter and '/i/' not in self.url and '/retweets' not in self.url: 
-				return self.url.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
-			if self.url.startswith('/'): return SITE_FULL + self.url
-			return self.url
-		else: return ""
+	
+		if v and v.nitter and '/i/' not in self.url and '/retweets' not in self.url: 
+			return self.url.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+
+		if self.url.startswith('/'): 
+			return SITE_FULL + self.url
+		return self.url
  
 	def realbody(self, v):
 		return body_displayed(self, v, True)

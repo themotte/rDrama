@@ -10,7 +10,7 @@ import json
 import secrets
 import time
 from os import environ, path
-from sys import argv, stdout
+from sys import stdout
 
 import flask
 import flask_caching
@@ -23,6 +23,7 @@ import redis
 from sqlalchemy import *
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+from files.helpers.const import Service
 from files.helpers.strings import bool_from_string
 
 app = flask.app.Flask(__name__, template_folder='templates')
@@ -210,7 +211,9 @@ def after_request(response):
 	response.headers.add("X-Frame-Options", "deny")
 	return response
 
-if "load_chat" in argv:
-	from files.routes.chat import *
-else:
+service:Service = Service.from_argv()
+
+if service == Service.THEMOTTE:
 	from files.routes import *
+elif service == Service.CHAT:
+	from files.routes.chat import *

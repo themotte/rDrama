@@ -23,7 +23,7 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 	COMMENT_UPVOTE_PROB   = 0.0008
 	COMMENT_DOWNVOTE_PROB = 0.0003
 
-	db: scoped_session = db_session()
+	db: scoped_session = db_session() # type: ignore
 
 	def detrand():
 		detrand.randstate = bytes(hashlib.sha256(detrand.randstate).hexdigest(), 'utf-8')
