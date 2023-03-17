@@ -727,6 +727,7 @@ def submit_post(v, sub=None):
 		gevent.spawn(thumbnail_thread, post.id)
 
 	post.publish()
+	g.db.commit()
 
 	if request.headers.get("Authorization"): return post.json
 	else:
