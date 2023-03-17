@@ -6,11 +6,11 @@ from sqlalchemy import *
 from sqlalchemy.orm import (declared_attr, deferred, relationship,
                             scoped_session)
 
-from files.__main__ import app
 from files.classes.base import CreatedBase
 from files.classes.votes import Vote
 from files.helpers.assetcache import assetcache_path
 from files.helpers.const import *
+from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS
 from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy
 from files.helpers.time import format_age
@@ -127,7 +127,7 @@ class Submission(CreatedBase):
 	@lazy
 	def should_hide_score(self):
 		submission_age_hours = self.age_seconds / (60*60)
-		return submission_age_hours < app.config['SCORE_HIDING_TIME_HOURS']
+		return submission_age_hours < SCORE_HIDING_TIME_HOURS
 
 	@property
 	@lazy

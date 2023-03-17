@@ -6,11 +6,11 @@ from flask import g
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
-from files.__main__ import app
 from files.classes.base import CreatedBase
 from files.helpers.const import *
 from files.helpers.content import (body_displayed,
                                    execute_shadowbanned_fake_votes)
+from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS
 from files.helpers.lazy import lazy
 from files.helpers.time import format_age
 
@@ -79,10 +79,9 @@ class Comment(CreatedBase):
 
 	@property
 	@lazy
-	def should_hide_score(self):
-		comment_age_seconds = int(time.time()) - self.created_utc
-		comment_age_hours = comment_age_seconds / (60*60)
-		return comment_age_hours < app.config['SCORE_HIDING_TIME_HOURS']
+	def should_hide_score(self) -> bool:
+		comment_age_hours = self.age_seconds / (60*60)
+		return comment_age_hours < SCORE_HIDING_TIME_HOURS
 	
 	def _score_context_str(self, score_type:Literal['score', 'upvotes', 'downvotes'], 
 			context:CommentRenderContext) -> str:

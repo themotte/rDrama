@@ -7,13 +7,16 @@ import gevent.monkey
 
 gevent.monkey.patch_all()
 
-from pathlib import Path
+# ^ special case: in general imports should go
+# stdlib - externals - internals, but gevent does monkey patching for stdlib 
+# functions so we want to monkey patch before importing other things
 
 import faulthandler
 import json
 import secrets
 import time
 from os import environ, path
+from pathlib import Path
 from sys import stdout
 
 import flask
@@ -27,11 +30,11 @@ import redis
 from sqlalchemy import *
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from files.helpers.const import Service
 from files.helpers.config.stateful import const_initialize
+from files.helpers.const import Service
 from files.helpers.strings import bool_from_string
 
-# let's create our flask app..
+# let's create our flask app...
 
 app = flask.app.Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
@@ -69,7 +72,7 @@ if environ.get("FLASK_PROFILER_ENDPOINT"):
 	profiler = flask_profiler.Profiler()
 	profiler.init_app(app)
 
-# ...and then let's install code to unmangle jinja2 stacktraces...
+# ...and then let's install code to unmangle jinja2 stacktraces for easy_profile...
 
 try:
 	import inspect as inspectlib
@@ -109,48 +112,56 @@ except ModuleNotFoundError:
 
 # ...and let's load up app config...
 
-app.config["SITE_ID"]=environ.get("SITE_ID").strip()
-app.config["SITE_TITLE"]=environ.get("SITE_TITLE").strip()
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['DATABASE_URL'] = environ.get("DATABASE_URL", "postgresql://postgres@localhost:5432")
-app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
-app.config["SERVER_NAME"] = environ.get("DOMAIN").strip()
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 if app.debug else 3153600
-app.config["SESSION_COOKIE_NAME"] = "session_" + environ.get("SITE_ID").strip().lower()
-app.config["VERSION"] = "1.0.0"
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config["SESSION_COOKIE_SECURE"] = bool(environ.get('SESSION_COOKIE_SECURE', "localhost" not in environ.get("DOMAIN")))
-app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
-app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 365
-app.config["DEFAULT_COLOR"] = environ.get("DEFAULT_COLOR", "ffffff").strip()
-app.config["DEFAULT_THEME"] = "TheMotte"
-app.config["FORCE_HTTPS"] = 1
-app.config["UserAgent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
-app.config["HCAPTCHA_SITEKEY"] = environ.get("HCAPTCHA_SITEKEY","").strip()
-app.config["HCAPTCHA_SECRET"] = environ.get("HCAPTCHA_SECRET","").strip()
-app.config["SPAM_SIMILARITY_THRESHOLD"] = float(environ.get("SPAM_SIMILARITY_THRESHOLD", 0.5))
-app.config["SPAM_URL_SIMILARITY_THRESHOLD"] = float(environ.get("SPAM_URL_SIMILARITY_THRESHOLD", 0.1))
-app.config["SPAM_SIMILAR_COUNT_THRESHOLD"] = int(environ.get("SPAM_SIMILAR_COUNT_THRESHOLD", 10))
-app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"] = float(environ.get("COMMENT_SPAM_SIMILAR_THRESHOLD", 0.5))
-app.config["COMMENT_SPAM_COUNT_THRESHOLD"] = int(environ.get("COMMENT_SPAM_COUNT_THRESHOLD", 10))
-app.config["CACHE_TYPE"] = "RedisCache"
-app.config["CACHE_REDIS_URL"] = environ.get("REDIS_URL", "redis://localhost")
-app.config['MAIL_SERVER'] = environ.get("MAIL_SERVER", "").strip()
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = environ.get("MAIL_USERNAME", "").strip()
-app.config['MAIL_PASSWORD'] = environ.get("MAIL_PASSWORD", "").strip()
-app.config['DESCRIPTION'] = environ.get("DESCRIPTION", "DESCRIPTION GOES HERE").strip()
-app.config['SETTINGS'] = {}
-app.config['SQLALCHEMY_DATABASE_URI'] = app.config['DATABASE_URL']
-app.config['MENTION_LIMIT'] = int(environ.get('MENTION_LIMIT', 100))
-app.config['MULTIMEDIA_EMBEDDING_ENABLED'] = environ.get('MULTIMEDIA_EMBEDDING_ENABLED', "false").lower() == "true"
-app.config['RESULTS_PER_PAGE_COMMENTS'] = int(environ.get('RESULTS_PER_PAGE_COMMENTS',50))
-app.config['SCORE_HIDING_TIME_HOURS'] = int(environ.get('SCORE_HIDING_TIME_HOURS'))
-app.config['ENABLE_SERVICES'] = bool_from_string(environ.get('ENABLE_SERVICES', False))
+from files.helpers.const import DEFAULT_THEME, MAX_CONTENT_LENGTH, SESSION_COOKIE_SAMESITE, PERMANENT_SESSION_LIFETIME
+from files.helpers.config.environment import *
 
-app.config['DBG_VOLUNTEER_PERMISSIVE'] = bool_from_string(environ.get('DBG_VOLUNTEER_PERMISSIVE', False))
-app.config['VOLUNTEER_JANITOR_ENABLE'] = bool_from_string(environ.get('VOLUNTEER_JANITOR_ENABLE', True))
+app.config.update({
+	"SITE_ID": SITE_ID,
+	"SITE_TITLE": SITE_TITLE,
+	"SQLALCHEMY_TRACK_MODIFICATIONS": SQLALCHEMY_TRACK_MODIFICATIONS,
+	"DATABASE_URL": DATABASE_URL,
+	"SECRET_KEY": SECRET_KEY,
+	"SERVER_NAME": SERVER_NAME,
+	"SEND_FILE_MAX_AGE_DEFAULT": 0 if app.debug else 3153600,
+	"SESSION_COOKIE_NAME": f'session_{SITE_ID}',
+	"VERSION": "1.0.0",
+	"MAX_CONTENT_LENGTH": MAX_CONTENT_LENGTH,
+	"SESSION_COOKIE_SECURE": SESSION_COOKIE_SECURE,
+	"SESSION_COOKIE_SAMESITE": SESSION_COOKIE_SAMESITE,
+	"PERMANENT_SESSION_LIFETIME": PERMANENT_SESSION_LIFETIME,
+	"DEFAULT_COLOR": DEFAULT_COLOR,
+	"DEFAULT_THEME": DEFAULT_THEME,
+	"FORCE_HTTPS": 1,
+	"UserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36",
+	"HCAPTCHA_SITEKEY": HCAPTCHA_SITEKEY,
+	"HCAPTCHA_SECRET": HCAPTCHA_SECRET,
+	"SPAM_SIMILARITY_THRESHOLD": SPAM_SIMILARITY_THRESHOLD,
+	"SPAM_URL_SIMILARITY_THRESHOLD": SPAM_URL_SIMILARITY_THRESHOLD,
+	"SPAM_SIMILAR_COUNT_THRESHOLD": SPAM_SIMILAR_COUNT_THRESHOLD,
+	"COMMENT_SPAM_SIMILAR_THRESHOLD": COMMENT_SPAM_SIMILAR_THRESHOLD,
+	"COMMENT_SPAM_COUNT_THRESHOLD": COMMENT_SPAM_COUNT_THRESHOLD,
+	"CACHE_TYPE": "RedisCache",
+	"CACHE_REDIS_URL": CACHE_REDIS_URL,
+	"MAIL_SERVER": MAIL_SERVER,
+	"MAIL_PORT": MAIL_PORT,
+	"MAIL_USE_TLS": MAIL_USE_TLS,
+	"DESCRIPTION": DESCRIPTION,
+	"MAIL_USERNAME": MAIL_USERNAME,
+	"MAIL_PASSWORD": MAIL_PASSWORD,
+	"DESCRIPTION": DESCRIPTION,
+	"SETTINGS": {},
+	"SQLALCHEMY_DATABASE_URI": DATABASE_URL,
+	"MENTION_LIMIT": MENTION_LIMIT,
+	"MULTIMEDIA_EMBEDDING_ENABLED": MULTIMEDIA_EMBEDDING_ENABLED,
+	"RESULTS_PER_PAGE_COMMENTS": RESULTS_PER_PAGE_COMMENTS,
+	"SCORE_HIDING_TIME_HOURS": SCORE_HIDING_TIME_HOURS,
+	"ENABLE_SERVICES": ENABLE_SERVICES,
+
+	"DBG_VOLUNTEER_PERMISSIVE": DBG_VOLUNTEER_PERMISSIVE,
+	"VOLUNTEER_JANITOR_ENABLE": VOLUNTEER_JANITOR_ENABLE,
+})
+
+# ...and then let's load redis so that...
 
 r = redis.Redis(
 	host=environ.get("REDIS_URL", "redis://localhost"), 
@@ -158,7 +169,7 @@ r = redis.Redis(
 	ssl_cert_reqs=None
 )
 
-# ...now let's configure our ratelimiter...
+# ...we can configure our ratelimiter...
 
 def get_remote_addr():
 	with app.app_context():
@@ -179,7 +190,7 @@ limiter = flask_limiter.Limiter(
 	enabled=app.config['RATE_LIMITER_ENABLED'],
 )
 
-# then load the database.
+# ...and then after that we can load the database.
 
 engine = create_engine(app.config['DATABASE_URL'])
 db_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
