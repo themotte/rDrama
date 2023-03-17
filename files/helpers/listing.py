@@ -3,9 +3,9 @@ Module for listings.
 """
 
 import time
-from operator import not_
 
 from flask import g
+from sqlalchemy.sql.expression import not_
 
 from files.__main__ import cache
 from files.classes.submission import Submission
@@ -50,12 +50,12 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 		posts = posts.filter(Submission.author_id.notin_(v.userblocks))
 
 	if not (v and v.changelogsub):
-		posts=posts.filter(not_(Submission.title.ilike('[changelog]%')))
+		posts = posts.filter(not_(Submission.title.ilike('[changelog]%')))
 
 	if v and filter_words:
 		for word in filter_words:
 			word  = sql_ilike_clean(word).strip()
-			posts=posts.filter(not_(Submission.title.ilike(f'%{word}%')))
+			posts = posts.filter(not_(Submission.title.ilike(f'%{word}%')))
 
 	if not (v and v.shadowbanned):
 		posts = posts.join(User, User.id == Submission.author_id).filter(User.shadowbanned == None)
