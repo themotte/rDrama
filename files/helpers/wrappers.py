@@ -2,12 +2,18 @@ import functools
 import time
 
 import user_agents
-from flask import g, make_response, session
 
 from files.helpers.alerts import *
-from files.helpers.get import *
-from files.__main__ import cache, db_session
 from files.helpers.const import *
+from files.helpers.get import *
+from files.routes.importstar import *
+from files.__main__ import cache, db_session
+
+
+def wraps_partial(func, *args, **kwargs):
+	pfunc = functools.partial(func, *args, **kwargs)
+	functools.update_wrapper(pfunc, func)
+	return pfunc
 
 
 def get_logged_in_user():
@@ -125,7 +131,7 @@ def is_not_permabanned(f):
 
 def admin_level_required(x):
 	def wrapper_maker(f):
-		@functools.wraps(f)
+		@wraps_partial(f)
 		def wrapper(*args, **kwargs):
 			v = get_logged_in_user()
 			if not v: abort(401)
