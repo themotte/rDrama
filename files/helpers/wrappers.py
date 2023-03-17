@@ -125,11 +125,12 @@ def is_not_permabanned(f):
 
 def admin_level_required(x):
 	def wrapper_maker(f):
+		@functools.wraps(f)
 		def wrapper(*args, **kwargs):
 			v = get_logged_in_user()
 			if not v: abort(401)
 			if v.admin_level < x: abort(403)
 			return make_response(f(*args, v=v, **kwargs))
-		functools.update_wrapper(wrapper, f)
+		wrapper.__name__ = f.__name__ # __name__ isn't being assigned for some reason
 		return wrapper
 	return wrapper_maker
