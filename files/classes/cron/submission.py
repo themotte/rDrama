@@ -12,7 +12,6 @@ from files.helpers.const import (RENDER_DEPTH_LIMIT, SITE_FULL,
                                  SUBMISSION_TITLE_LENGTH_MAXIMUM)
 from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy
-from files.helpers.sanitize import filter_emojis_only
 
 
 @dataclass(frozen=True, slots=True)
@@ -40,6 +39,8 @@ class ScheduledSubmissionTemplate(CreatedBase):
 	embed_url = Column(String)
 
 	def make_submission(self, ctx:ScheduledSubmissionTemplateContext) -> Submission:
+		from files.helpers.sanitize import filter_emojis_only # avoiding an import loop here
+
 		title:str = ctx.make_title(self.title)
 		title_html:str = filter_emojis_only(title, graceful=True)
 		if len(title_html) > 1500: raise ValueError("Rendered title too large")

@@ -1,4 +1,3 @@
-from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.classes.base import CreatedBase
