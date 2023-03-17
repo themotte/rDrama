@@ -1,14 +1,15 @@
-from os import environ
 import time
-from flask import *
+from os import environ
 from urllib.parse import quote
 
+from flask_mail import Message
+
+from files.__main__ import app, limiter, mail
+from files.classes import *
+from files.helpers.config.const import *
 from files.helpers.security import *
 from files.helpers.wrappers import *
-from files.helpers.config.const import *
-from files.classes import *
-from files.__main__ import app, mail, limiter
-from flask_mail import Message
+from files.routes.importstar import *
 
 SITE_ID = environ.get("SITE_ID").strip()
 SITE_TITLE = environ.get("SITE_TITLE").strip()

@@ -1,27 +1,31 @@
-import qrcode
 import io
-import time
 import math
+import time
+from collections import Counter
 
-from files.classes.leaderboard import SimpleLeaderboard, BadgeMarseyLeaderboard, UserBlockLeaderboard, LeaderboardMeta
+import gevent
+import qrcode
+
+from files.__main__ import app, limiter
+from files.classes.leaderboard import (BadgeMarseyLeaderboard, LeaderboardMeta,
+                                       SimpleLeaderboard, UserBlockLeaderboard)
 from files.classes.views import ViewerRelationship
 from files.helpers.alerts import *
+from files.helpers.assetcache import assetcache_path
+from files.helpers.config.const import *
+from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.media import process_image
 from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
-from files.helpers.config.const import *
-from files.helpers.assetcache import assetcache_path
-from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.mail import *
-from flask import *
-from files.__main__ import app, limiter
-from collections import Counter
-import gevent
+from files.routes.importstar import *
+
 
 # warning: do not move currently. these have import-time side effects but 
 # until this is refactored to be not completely awful, there's not really
 # a better option.
-from files.helpers.services import * 
+from files.helpers.services import *
+
 
 @app.get("/@<username>/upvoters/<uid>/posts")
 @admin_level_required(3)
@@ -862,8 +866,9 @@ def remove_follow(username, v):
 
 	return {"message": "Follower removed!"}
 
-from urllib.parse import urlparse
 import re
+from urllib.parse import urlparse
+
 
 @app.get("/pp/<int:id>")
 @app.get("/uid/<int:id>/pic")

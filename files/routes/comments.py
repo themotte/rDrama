@@ -1,16 +1,12 @@
-from files.helpers.wrappers import *
-from files.helpers.alerts import *
-from files.helpers.media import process_image
-from files.helpers.config.const import *
-from files.helpers.comments import comment_on_publish
-from files.classes import *
-from flask import *
 from files.__main__ import app, limiter
-from files.helpers.sanitize import filter_emojis_only
-import requests
-from shutil import copyfile
-from json import loads
-from collections import Counter
+from files.classes import *
+from files.helpers.alerts import *
+from files.helpers.comments import comment_on_publish
+from files.helpers.config.const import *
+from files.helpers.media import process_image
+from files.helpers.wrappers import *
+from files.routes.importstar import *
+
 
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")

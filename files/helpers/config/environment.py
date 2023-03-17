@@ -83,6 +83,8 @@ VOLUNTEER_JANITOR_ENABLE = bool_from_string(environ.get('VOLUNTEER_JANITOR_ENABL
 
 RATE_LIMITER_ENABLED = not bool_from_string(environ.get('DBG_LIMITER_DISABLED', False))
 
+ENABLE_DOWNVOTES = not bool_from_string(environ.get('DISABLE_DOWNVOTES', False))
+
 # other stuff from const.py that aren't constants
 dues = int(environ.get("DUES").strip())
 

@@ -8,24 +8,23 @@ from urllib.parse import ParseResult, urlparse
 import gevent
 import requests
 import werkzeug.wrappers
-from flask import *
 from PIL import Image as PILimage
 from sqlalchemy.orm import Query
 
 import files.helpers.validators as validators
-from files.helpers.caching import invalidate_cache
-from files.helpers.content import canonicalize_url2
-from files.helpers.wrappers import *
-from files.helpers.sanitize import *
-from files.helpers.alerts import *
-from files.helpers.comments import comment_filter_moderated
-from files.helpers.contentsorting import sort_objects
-from files.helpers.config.const import *
-from files.helpers.media import process_image
-from files.helpers.strings import sql_ilike_clean
+from files.__main__ import app, cache, db_session, limiter
 from files.classes import *
-from files.__main__ import app, limiter, cache, db_session
-
+from files.helpers.alerts import *
+from files.helpers.caching import invalidate_cache
+from files.helpers.comments import comment_filter_moderated
+from files.helpers.config.const import *
+from files.helpers.content import canonicalize_url2
+from files.helpers.contentsorting import sort_objects
+from files.helpers.media import process_image
+from files.helpers.sanitize import *
+from files.helpers.strings import sql_ilike_clean
+from files.helpers.wrappers import *
+from files.routes.importstar import *
 
 snappyquotes = [f':#{x}:' for x in marseys_const2]
 

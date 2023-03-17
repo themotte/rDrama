@@ -12,12 +12,8 @@ gevent.monkey.patch_all()
 # functions so we want to monkey patch before importing other things
 
 import faulthandler
-import json
-import secrets
-import time
-from os import environ, path
+from os import environ
 from pathlib import Path
-from sys import stdout
 
 import flask
 import flask_caching
@@ -164,7 +160,7 @@ app.config.update({
 # ...and then let's load redis so that...
 
 r = redis.Redis(
-	host=environ.get("REDIS_URL", "redis://localhost"), 
+	host=CACHE_REDIS_URL, 
 	decode_responses=True, 
 	ssl_cert_reqs=None
 )
@@ -175,9 +171,9 @@ def get_remote_addr():
 	with app.app_context():
 		return request.headers.get('X-Real-IP', default='127.0.0.1')
 
-app.config['RATE_LIMITER_ENABLED'] = not bool_from_string(environ.get('DBG_LIMITER_DISABLED', False))
+app.config['RATE_LIMITER_ENABLED'] = RATE_LIMITER_ENABLED
 
-if not app.config['RATE_LIMITER_ENABLED']:
+if not RATE_LIMITER_ENABLED:
 	print("Rate limiter disabled in debug mode!")
 
 limiter = flask_limiter.Limiter(
@@ -185,20 +181,21 @@ limiter = flask_limiter.Limiter(
 	app=app,
 	default_limits=["3/second;30/minute;200/hour;1000/day"],
 	application_limits=["10/second;200/minute;5000/hour;10000/day"],
-	storage_uri=environ.get("REDIS_URL", "redis://localhost"),
+	storage_uri=CACHE_REDIS_URL,
 	auto_check=False,
-	enabled=app.config['RATE_LIMITER_ENABLED'],
+	enabled=RATE_LIMITER_ENABLED,
 )
 
 # ...and then after that we can load the database.
 
-engine = create_engine(app.config['DATABASE_URL'])
+engine = create_engine(DATABASE_URL)
 db_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
 
-# now that we have our session, let's initialize some constants we need to startup
+# now that we have our db, let's initialize some constants we need to startup.
+
 const_initialize(db_session)
 
-# ...now let's add the cache, compression, and mail extensions to our app...
+# now that we've that, let's add the cache, compression, and mail extensions to our app...
 
 cache = flask_caching.Cache(app)
 flask_compress.Compress(app)
@@ -208,10 +205,12 @@ mail = flask_mail.Mail(app)
 
 service:Service = Service.from_argv()
 
+# ...and then import the before and after request handlers if this we will import routes.
+
 if service != Service.CRON:
 	from files.routes.allroutes import *
 
-# ...and now let's conditionally import the rest of the routes...
+# setup is done. let's conditionally import the rest of the routes.
 
 if service == Service.THEMOTTE:
 	from files.routes import *
