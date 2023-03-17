@@ -1,17 +1,18 @@
+import calendar
+
+import matplotlib.pyplot as plt
+from sqlalchemy import func
+
+from files.classes.award import AWARDS
+from files.classes.badges import BadgeDef
+from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
+from files.helpers.alerts import *
+from files.helpers.captcha import validate_captcha
+from files.helpers.const import *
 from files.helpers.media import process_image
 from files.mail import *
-from files.__main__ import app, limiter, mail
-from files.helpers.alerts import *
-from files.helpers.const import *
-from files.helpers.captcha import validate_captcha
-from files.classes.award import AWARDS
-from sqlalchemy import func
-from os import path
-import calendar
-import matplotlib.pyplot as plt
-from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
-from files.classes.badges import BadgeDef
-import logging
+from files.__main__ import app, cache, limiter # violates isort but used to prevent getting shadowed
+
 
 @app.get('/logged_out/')
 @app.get('/logged_out/<path:old>')
