@@ -72,6 +72,7 @@ class ScheduledSubmissionTemplate(CreatedBase):
 		Do not use this for getting the HTML. Instead call 
 		`ScheduledSubmissionContext.make_title()`
 		'''
+		from files.helpers.sanitize import filter_emojis_only
 		return filter_emojis_only(self.title)
 
 	@property
