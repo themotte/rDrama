@@ -1,27 +1,31 @@
 
-from pathlib import Path
 import gevent.monkey
+
 gevent.monkey.patch_all()
-from os import environ, path
-import secrets
-from files.helpers.strings import bool_from_string
-from flask import *
-from flask_caching import Cache
-from flask_limiter import Limiter
-from flask_compress import Compress
-from flask_mail import Mail
-import flask_profiler
-from sqlalchemy.orm import sessionmaker, scoped_session
-from sqlalchemy import *
-import gevent
-import redis
-import time
-from sys import stdout, argv
+
+from pathlib import Path
+
 import faulthandler
 import json
+import secrets
+import time
+from os import environ, path
+from sys import argv, stdout
 
+import flask
+import flask_caching
+import flask_compress
+import flask_limiter
+import flask_mail
+import flask_profiler
+import gevent
+import redis
+from sqlalchemy import *
+from sqlalchemy.orm import scoped_session, sessionmaker
 
-app = Flask(__name__, template_folder='templates')
+from files.helpers.strings import bool_from_string
+
+app = flask.app.Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
 app.jinja_env.cache = {}
 app.jinja_env.auto_reload = True
@@ -52,11 +56,11 @@ if environ.get("FLASK_PROFILER_ENDPOINT"):
 	profiler.init_app(app)
 
 try:
-	from easy_profile import EasyProfileMiddleware
-	from jinja2.utils import internal_code
-
 	import inspect as inspectlib
 	import linecache
+
+	from easy_profile import EasyProfileMiddleware
+	from jinja2.utils import internal_code
 	
 	def jinja_unmangle_stacktrace():
 		rewritten_frames = []
@@ -130,16 +134,22 @@ app.config['ENABLE_SERVICES'] = bool_from_string(environ.get('ENABLE_SERVICES', 
 app.config['DBG_VOLUNTEER_PERMISSIVE'] = bool_from_string(environ.get('DBG_VOLUNTEER_PERMISSIVE', False))
 app.config['VOLUNTEER_JANITOR_ENABLE'] = bool_from_string(environ.get('VOLUNTEER_JANITOR_ENABLE', True))
 
-r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_responses=True, ssl_cert_reqs=None)
+r = redis.Redis(
+	host=environ.get("REDIS_URL", "redis://localhost"), 
+	decode_responses=True, 
+	ssl_cert_reqs=None
+)
 
 def get_remote_addr():
 	with app.app_context():
 		return request.headers.get('X-Real-IP', default='127.0.0.1')
 
 app.config['RATE_LIMITER_ENABLED'] = not bool_from_string(environ.get('DBG_LIMITER_DISABLED', False))
+
 if not app.config['RATE_LIMITER_ENABLED']:
 	print("Rate limiter disabled in debug mode!")
-limiter = Limiter(
+
+limiter = flask_limiter.Limiter(
 	key_func=get_remote_addr,
 	app=app,
 	default_limits=["3/second;30/minute;200/hour;1000/day"],
@@ -153,9 +163,9 @@ engine = create_engine(app.config['DATABASE_URL'])
 
 db_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
 
-cache = Cache(app)
-Compress(app)
-mail = Mail(app)
+cache = flask_caching.Cache(app)
+flask_compress.Compress(app)
+mail = flask_mail.Mail(app)
 
 @app.before_request
 def before_request():
