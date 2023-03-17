@@ -10,12 +10,6 @@ from files.routes.importstar import *
 from files.__main__ import cache, db_session
 
 
-def wraps_partial(func, *args, **kwargs):
-	pfunc = functools.partial(func, *args, **kwargs)
-	functools.update_wrapper(pfunc, func)
-	return pfunc
-
-
 def get_logged_in_user():
 	if hasattr(g, 'v'):
 		return g.v
@@ -131,11 +125,11 @@ def is_not_permabanned(f):
 
 def admin_level_required(x):
 	def wrapper_maker(f):
-		@wraps_partial(f)
 		def wrapper(*args, **kwargs):
 			v = get_logged_in_user()
 			if not v: abort(401)
 			if v.admin_level < x: abort(403)
 			return make_response(f(*args, v=v, **kwargs))
+		functools.update_wrapper(wrapper, f)
 		return wrapper
 	return wrapper_maker
