@@ -142,11 +142,11 @@ class RepeatableTask(ScheduledTask):
 		return datetime.combine(target_date, self.time_of_day_utc, tzinfo=timezone.utc) # type: ignore
 
 
-class ScheduledTaskRun(CreatedBase):
+class RepeatableTaskRun(CreatedBase):
 	__tablename__ = "tasks_ran"
 	
 	id = Column(Integer, primary_key=True)
-	task_id = Column(Integer, nullable=False)
+	task_id = Column(Integer, ForeignKey(RepeatableTask.id), nullable=False)
 	traceback_str = Column(Text, nullable=True)
 
-	task = relationship(ScheduledTask)
+	task = relationship(RepeatableTask)
