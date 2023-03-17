@@ -95,24 +95,6 @@ class ScheduledTask(CreatedBase):
 	
 	def __repr__(self) -> str:
 		return f'<{self.__class__.__name__}(id={self.id}, created_utc={self.created_date}, author_id={self.author_id})>'
-	
-	def run(self, db:scoped_session, trigger_time:datetime) -> ScheduledTaskRun:
-		run:ScheduledTaskRun = ScheduledTaskRun(task_id=self.id)
-		try:
-			self._run_unwrapped(db, trigger_time)
-		except Exception as e:
-			run.traceback_str = str(e)
-		return run
-
-	def _run_unwrapped(self, db:scoped_session, trigger_time:datetime):
-		if self.type != ScheduledTaskType.SCHEDULED_SUBMISSION:
-			raise NotImplementedError("Scheduled task type not implemented")
-		scheduled:ScheduledSubmission = db.get(ScheduledSubmission, self.data_id)
-		submission:Submission = scheduled.make_submission(ScheduledSubmissionContext(trigger_time))
-		submission.submit(db) # TODO: thumbnails
-		with app.app_context(): # TODO: don't require app context (currently required for username pings)
-			g.db = db
-			submission.publish()
 
 
 class RepeatableTask(ScheduledTask):
@@ -140,10 +122,29 @@ class RepeatableTask(ScheduledTask):
 			raise Exception("Could not find suitable timestamp to run next task")
 
 		return datetime.combine(target_date, self.time_of_day_utc, tzinfo=timezone.utc) # type: ignore
+	
+	def run(self, db:scoped_session, trigger_time:datetime) -> RepeatableTaskRun:
+		run:RepeatableTaskRun = RepeatableTaskRun(task_id=self.id)
+		try:
+			self._run_unwrapped(db, trigger_time)
+		except Exception as e:
+			run.traceback_str = str(e)
+		db.add(run)
+		return run
+
+	def _run_unwrapped(self, db:scoped_session, trigger_time:datetime):
+		if self.type != ScheduledTaskType.SCHEDULED_SUBMISSION:
+			raise NotImplementedError("Scheduled task type not implemented")
+		scheduled:ScheduledSubmission = db.get(ScheduledSubmission, self.data_id)
+		submission:Submission = scheduled.make_submission(ScheduledSubmissionContext(trigger_time))
+		submission.submit(db) # TODO: thumbnails
+		with app.app_context(): # TODO: don't require app context (currently required for username pings)
+			g.db = db
+			submission.publish()
 
 
 class RepeatableTaskRun(CreatedBase):
-	__tablename__ = "tasks_ran"
+	__tablename__ = "tasks_repeatable_runs"
 	
 	id = Column(Integer, primary_key=True)
 	task_id = Column(Integer, ForeignKey(RepeatableTask.id), nullable=False)
