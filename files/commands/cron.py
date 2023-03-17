@@ -29,10 +29,9 @@ def _acquire_exclusive_lock(db:scoped_session, table:str):
 		db.execute(f"LOCK TABLE {table} IN ACCESS EXCLUSIVE")
 		try:
 			yield
+			db.commit()
 		except:
 			db.rollback()
-		finally:
-			db.commit()
 
 
 def _run_tasks(db:scoped_session):
