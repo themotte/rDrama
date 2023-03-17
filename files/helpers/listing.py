@@ -62,7 +62,10 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 
 	posts = sort_objects(posts, sort, Submission)
 
-	size = v.frontsize or 25
+	if v:
+		size = v.frontsize or 25
+	else:
+		size = 25
 
 	posts = posts.offset(size * (page - 1)).limit(size+1).all()
 
@@ -74,7 +77,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if sub: pins = pins.filter_by(sub=sub.name)
 		elif v:
-			pins = pins.filter(Submission.sub == None | Submission.sub.notin_(v.all_blocks))
+			pins = pins.filter((Submission.sub == None) | Submission.sub.notin_(v.all_blocks))
 			if v.admin_level < 2:
 				pins = pins.filter(Submission.author_id.notin_(v.userblocks))
 

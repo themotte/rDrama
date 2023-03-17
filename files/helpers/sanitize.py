@@ -11,7 +11,7 @@ from bleach.linkifier import LinkifyFilter, build_url_re
 from bs4 import BeautifulSoup
 from mistletoe import markdown
 
-from files.helpers.const import image_check_regex, image_regex
+from files.helpers.const import image_check_regex, embed_fullmatch_regex, video_sub_regex
 from files.helpers.get import *
 from files.helpers.regex import *
 from files.__main__ import app # violates isort, but crashes otherwise
