@@ -1,10 +1,14 @@
-from .get import *
-from .alerts import *
-from files.helpers.const import *
-from files.__main__ import db_session
-from random import randint
-import user_agents
+import functools
 import time
+
+import user_agents
+from flask import g, make_response, session
+
+from files.helpers.alerts import *
+from files.helpers.get import *
+from files.__main__ import cache, db_session
+from files.helpers.const import *
+
 
 def get_logged_in_user():
 	if hasattr(g, 'v'):
@@ -80,68 +84,52 @@ def get_logged_in_user():
 	g.v = v
 	return v
 
+
 def check_ban_evade(v):
 	if v and not v.patron and v.admin_level < 2 and v.ban_evade and not v.unban_utc:
 		v.shadowbanned = "AutoJanny"
 		g.db.add(v)
 		g.db.commit()
 
+
 def auth_desired(f):
+	@functools.wraps
 	def wrapper(*args, **kwargs):
 		v = get_logged_in_user()
-
 		check_ban_evade(v)
-
 		return make_response(f(*args, v=v, **kwargs))
-
-	wrapper.__name__ = f.__name__
 	return wrapper
 
 
 def auth_required(f):
-
+	@functools.wraps
 	def wrapper(*args, **kwargs):
 		v = get_logged_in_user()
 		if not v: abort(401)
-
 		check_ban_evade(v)
-
 		return make_response(f(*args, v=v, **kwargs))
-
-	wrapper.__name__ = f.__name__
 	return wrapper
 
 
 def is_not_permabanned(f):
-
+	@functools.wraps(f)
 	def wrapper(*args, **kwargs):
 		v = get_logged_in_user()
 		if not v: abort(401)
-		
 		check_ban_evade(v)
-
 		if v.is_suspended_permanently:
 			abort(403, "You are permanently banned")
-
 		return make_response(f(*args, v=v, **kwargs))
-
-	wrapper.__name__ = f.__name__
 	return wrapper
 
 
 def admin_level_required(x):
-
 	def wrapper_maker(f):
-
+		@functools.wraps(f)
 		def wrapper(*args, **kwargs):
 			v = get_logged_in_user()
 			if not v: abort(401)
-
 			if v.admin_level < x: abort(403)
-
 			return make_response(f(*args, v=v, **kwargs))
-
-		wrapper.__name__ = f.__name__
 		return wrapper
-
 	return wrapper_maker
