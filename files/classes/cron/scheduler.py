@@ -192,6 +192,8 @@ class ScheduledTask(AbstractConcreteBase, CreatedBase):
 
 
 class RepeatableTask(ScheduledTask):
+	__abstract__ = True
+
 	frequency_day = Column(SmallInteger, nullable=False)
 	time_of_day_utc = Column(Time, nullable=False)
 
