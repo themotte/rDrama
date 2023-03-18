@@ -2,8 +2,8 @@ import importlib
 from types import ModuleType
 from typing import Callable
 
-from sqlalchemy.schema import Column
-from sqlalchemy.sql.sqltypes import String
+from sqlalchemy.schema import Column, ForeignKey
+from sqlalchemy.sql.sqltypes import String, Integer
 
 from files.classes.cron.scheduler import RepeatableTask, TaskRunContext
 
@@ -18,6 +18,7 @@ class PythonCodeTask(RepeatableTask):
 		"concrete": True,
 	}
 
+	id = Column(Integer, ForeignKey(RepeatableTask.id), primary_key=True)
 	import_path = Column(String, nullable=False)
 	callable = Column(String, nullable=False)
 	

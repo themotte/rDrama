@@ -22,6 +22,7 @@ class ScheduledSubmissionTask(RepeatableTask):
 		"concrete": True,
 	}
 
+	id = Column(Integer, ForeignKey(RepeatableTask.id), primary_key=True)
 	author_id_submission = Column(Integer, ForeignKey("users.id"), nullable=False)
 	ghost = Column(Boolean, default=False, nullable=False)
 	private = Column(Boolean, default=False, nullable=False)
