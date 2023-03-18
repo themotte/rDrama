@@ -6,8 +6,9 @@ from typing import Final, Optional
 
 from sqlalchemy.orm import scoped_session
 
-from files.classes.cron.scheduler import RepeatableTask, RepeatableTaskRun, ScheduledTaskState
 from files.__main__ import app, db_session
+from files.classes.cron.scheduler import (RepeatableTask, RepeatableTaskRun,
+                                          ScheduledTaskState)
 
 CRON_SLEEP: Final[int] = 15
 '''
