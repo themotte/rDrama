@@ -17,10 +17,11 @@ if "localhost" in SITE:
 else: 
 	SITE_FULL = 'https://' + SITE
 
-WELCOME_MSG = f"""Welcome to {SITE_TITLE}! Please read [the rules](/rules) first. Then [read some of our current conversations](/) and feel free to comment or post!
-               We encourage people to comment even if they aren't sure they fit in; as long as your comment follows [community rules](/rules), we are happy to have 
-			   posters from all backgrounds, education levels, and specialties.
-			   """
+WELCOME_MSG = \
+	f"""Welcome to {SITE_TITLE}! Please read [the rules](/rules) first. Then [read some of our current conversations](/) and feel free to comment or post!
+	We encourage people to comment even if they aren't sure they fit in; as long as your comment follows [community rules](/rules), we are happy to have 
+	posters from all backgrounds, education levels, and specialties.
+	"""
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 DATABASE_URL = environ.get("DATABASE_URL", "postgresql://postgres@localhost:5432")
@@ -96,4 +97,7 @@ YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 
 CF_KEY = environ.get("CF_KEY", "").strip()
 CF_ZONE = environ.get("CF_ZONE", "").strip()
-CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
+CF_HEADERS = {
+	"Authorization": f"Bearer {CF_KEY}", 
+	"Content-Type": "application/json"
+}
