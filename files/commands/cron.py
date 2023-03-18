@@ -15,6 +15,16 @@ CRON_SLEEP_SECONDS: Final[int] = 15
 '''
 How long the app will sleep for between runs. Lower values give better 
 resolution, but will hit the database more.
+
+The cost of a lower value is potentially higher lock contention. A value below
+`0` will raise a `ValueError` (on call to `time.sleep`). A value of `0` is
+possible but not recommended.
+
+The sleep time is not guaranteed to be exactly this value (notable, it may be 
+slightly longer if the system is very busy)
+
+This value is passed to `time.sleep()`. For more information on that, see
+the Python documentation: https://docs.python.org/3/library/time.html
 '''
 
 @app.cli.command('cron')
