@@ -10,14 +10,14 @@ import gevent
 from bleach.linkifier import LinkifyFilter, build_url_re
 from bs4 import BeautifulSoup
 from mistletoe import markdown
-from files.helpers.config.environment import MENTION_LIMIT, MULTIMEDIA_EMBEDDING_ENABLED
 
-from files.helpers.config.const import image_check_regex, embed_fullmatch_regex, video_sub_regex
-from files.helpers.content import canonicalize_url
-from files.helpers.get import *
+from files.helpers.config.const import (embed_fullmatch_regex,
+                                        image_check_regex, video_sub_regex)
+from files.helpers.config.environment import (MENTION_LIMIT,
+                                              MULTIMEDIA_EMBEDDING_ENABLED)
 from files.helpers.config.regex import *
 from files.helpers.config.stateful import marseys_const2
-from files.__main__ import app # violates isort, but crashes otherwise
+from files.helpers.get import *
 
 TLDS = ('ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar',
 	'arpa','as','asia','at','au','aw','ax','az','ba','bb','bd','be','bf','bg',

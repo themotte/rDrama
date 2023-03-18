@@ -1,23 +1,25 @@
 from __future__ import annotations
 
+import contextlib
+import dataclasses
 from datetime import date, datetime, timedelta, timezone
-from enum import IntEnum, IntFlag
-from typing import Any, Optional, Union
+from enum import IntFlag
+from typing import TYPE_CHECKING, Any, Optional, Union
 
-from flask import g
+import flask
+import flask_caching
+import flask_mail
+import redis
+from sqlalchemy.ext.declarative import AbstractConcreteBase
 from sqlalchemy.orm import declared_attr, relationship, scoped_session
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.sql.sqltypes import (Boolean, DateTime, Integer, SmallInteger,
                                      Text, Time)
 
 from files.classes.base import CreatedBase
-from files.classes.cron.submission import (ScheduledSubmissionTemplate,
-                                           ScheduledSubmissionTemplateContext)
-from files.classes.submission import Submission
 
-
-class ScheduledTaskType(IntEnum):
-	SCHEDULED_SUBMISSION = 1
+if TYPE_CHECKING:
+	from files.classes.user import User
 
 
 class DayOfWeek(IntFlag):
@@ -58,7 +60,110 @@ class DayOfWeek(IntFlag):
 		return _days[weekday] in self
 
 
-class ScheduledTask(CreatedBase):
+_UserConvertible = Union["User", str, int]
+
+@dataclasses.dataclass(frozen=True, kw_only=True, slots=True)
+class TaskRunContext:
+	'''
+	A full task run context, with references to all app globals embedded.
+	This is the entirety of the application's global state at this point.
+
+	This is explicit state. This is useful so scheduled tasks do not have 
+	to import from  `files.__main__` and so they can use all of the features
+	of the application without being in a request context.
+	'''
+	app:flask.app.Flask
+	'''
+	The application. Many of the app functions use the app context globals and 
+	do not have their state explicitly passed. This is a convenience get out of
+	jail free card so that most features (excepting those that require a 
+	`request` context can be used.)
+	'''
+	cache:flask_caching.Cache
+	db:scoped_session
+	mail:flask_mail.Mail
+	redis:redis.Redis
+	trigger_time:datetime
+
+	@contextlib.contextmanager
+	def app_context(self, *, v:Optional[_UserConvertible]=None):
+		'''
+		Context manager that uses `self.app` to generate an app context and set
+		up the application with expected globals. This assigns `g.db`, `g.v`, 
+		and `g.debug`.
+		
+		This is intended for use with legacy code that does not pass state 
+		explicitly and instead relies on the use of `g` for state passing. If
+		at all possible, state should be passed explicitly to functions that
+		require it.
+
+		Usage is simple:
+		```py
+		with ctx.app_context() as app_ctx:
+			# code that requires g
+		```
+
+		Any code that uses `g` can be ran here. As this is intended for
+		scenarios that may be outside of a request context code that uses the
+		request context may still raise `RuntimeException`s.
+
+		An example
+
+		```py
+		from flask import g, request # import works ok
+
+		def legacy_function():
+			u:Optional[User] = g.db.get(User, 1784) # works ok! :)
+			u.admin_level = \\
+				request.values.get("admin_level", default=9001, type=int) 
+				# raises a RuntimeError :(
+			g.db.commit()
+		```
+
+		This is because there is no actual request being made. Creating a 
+		mock request context is doable but outside of the scope of this 
+		function as this is often not needed outside of route handlers (where
+		this function is out of scope anyway).
+
+		:param v: A `User`, an `int`, a `str`, or `None`. `g.v` will be set
+		using the following rules:
+		          
+		1. If `v` is an `int`, `files.helpers.get_account` is called and the 
+		result of that is stored in `g.v`.
+		
+		2. If `v` is an `str`, `files.helpers.get_user` is called and the 
+		result of that is stored in `g.v`.
+		
+		3. If `v` is a `User`, it is stored in `g.v`.
+			      
+		It is expected that callees will provide a valid user ID or username.
+		If an invalid one is provided, *no* exception will be raised and `g.v`
+		will be set to `None`.
+		'''
+		with self.app.app_context() as app_ctx:
+			app_ctx.g.db = self.db
+
+			from files.helpers.get import get_account, get_user
+
+			if isinstance(v, str):
+				v = get_user(v, graceful=True)
+			elif isinstance(v, int):
+				v = get_account(v, graceful=True, db=self.db)
+
+			app_ctx.g.v = v
+			app_ctx.g.debug = self.app.debug
+			yield app_ctx
+
+	@contextlib.contextmanager
+	def with_transaction(self):
+		try:
+			yield
+			self.db.commit()
+		except:
+			self.db.rollback()
+
+
+class ScheduledTask(AbstractConcreteBase, CreatedBase):
 	__abstract__ = True
 
 	@declared_attr
@@ -68,23 +173,6 @@ class ScheduledTask(CreatedBase):
 	@declared_attr
 	def author_id(self):
 		return Column(Integer, ForeignKey("users.id"), nullable=False)
-	
-	@declared_attr
-	def type_id(self):
-		return Column(SmallInteger, nullable=False)
-	
-	@declared_attr
-	def data_id(self):
-		'''
-		Generic pointer to some sort of data, dependent on the task type.
-		For `ScheduledTaskType.SCHEDULED_SUBMISSION`, this is the 
-		`ScheduledSubmission` id.
-		'''
-		return Column(Integer)
-
-	@property
-	def type(self) -> ScheduledTaskType:
-		return ScheduledTaskType(self.type_id)
 	
 	@declared_attr
 	def enabled(self):
@@ -134,23 +222,23 @@ class RepeatableTask(ScheduledTask):
 	def run(self, db:scoped_session, trigger_time:datetime) -> RepeatableTaskRun:
 		run:RepeatableTaskRun = RepeatableTaskRun(task_id=self.id)
 		try:
-			self._run_unwrapped(db, trigger_time)
+			from files.__main__ import app, cache, mail, r # i know
+			ctx:TaskRunContext = TaskRunContext(
+				app=app,
+				cache=cache,
+				db=db,
+				mail=mail,
+				redis=r,
+				trigger_time=trigger_time,
+			)
+			self.run_task(ctx)
 		except Exception as e:
 			run.exception = e
 		db.add(run)
 		return run
 
-	def _run_unwrapped(self, db:scoped_session, trigger_time:datetime):
-		from files.__main__ import app # i know
-
-		if self.type != ScheduledTaskType.SCHEDULED_SUBMISSION:
-			raise NotImplementedError("Scheduled task type not implemented")
-		scheduled:ScheduledSubmissionTemplate = db.get(ScheduledSubmissionTemplate, self.data_id)
-		submission:Submission = scheduled.make_submission(ScheduledSubmissionTemplateContext(trigger_time))
-		submission.submit(db) # TODO: thumbnails
-		with app.app_context(): # TODO: don't require app context (currently required for username pings)
-			g.db = db
-			submission.publish()
+	def run_task(self, ctx:TaskRunContext):
+		raise NotImplementedError()
 
 
 class RepeatableTaskRun(CreatedBase):
@@ -168,5 +256,5 @@ class RepeatableTaskRun(CreatedBase):
 	def __setattr__(self, __name: str, __value: Any) -> None:
 		if __name == "exception":
 			self.exception = __value
-			self.traceback_str = str(__value)
+			self.traceback_str = str(__value) if __value else None
 		return super().__setattr__(__name, __value)

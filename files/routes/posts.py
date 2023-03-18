@@ -40,7 +40,9 @@ discounts = { # <- why is this here?
 	73: 0.10,
 }
 
-titleheaders = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
+titleheaders = {
+	"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"
+}
 
 MAX_TITLE_LENGTH = 500
 MAX_URL_LENGTH = 2048

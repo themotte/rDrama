@@ -1,32 +1,28 @@
 import functools
-from dataclasses import dataclass
 from datetime import datetime
 
 from sqlalchemy.schema import Column, ForeignKey
-from sqlalchemy.sql.sqltypes import (Boolean, Integer, String,
-                                     Text)
-from files.classes.base import CreatedBase
+from sqlalchemy.sql.sqltypes import Boolean, Integer, String, Text
 
+from files.classes.cron.scheduler import RepeatableTask, TaskRunContext
 from files.classes.submission import Submission
 from files.helpers.config.const import (RENDER_DEPTH_LIMIT, SITE_FULL,
-                                 SUBMISSION_TITLE_LENGTH_MAXIMUM)
+                                        SUBMISSION_TITLE_LENGTH_MAXIMUM)
 from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy
 
-
-@dataclass(frozen=True, slots=True)
-class ScheduledSubmissionTemplateContext:
-	time: datetime
-
-	def make_title(self, title_template:str) -> str:
-		return self.time.strftime(title_template)
+_TABLE_NAME = "tasks_repeatable_scheduled_submissions"
 
 
-class ScheduledSubmissionTemplate(CreatedBase):
-	__tablename__ = "submission_templates"
+class ScheduledSubmissionTask(RepeatableTask):
+	__tablename__ = _TABLE_NAME
+	
+	__mapper_args__ = {
+		"polymorphic_identity": _TABLE_NAME,
+		"concrete": True,
+	}
 
-	id = Column(Integer, primary_key=True, nullable=False)
-	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+	author_id_submission = Column(Integer, ForeignKey("users.id"), nullable=False)
 	ghost = Column(Boolean, default=False, nullable=False)
 	private = Column(Boolean, default=False, nullable=False)
 	over_18 = Column(Boolean, default=False, nullable=False)
@@ -38,17 +34,26 @@ class ScheduledSubmissionTemplate(CreatedBase):
 	flair = Column(String)
 	embed_url = Column(String)
 
-	def make_submission(self, ctx:ScheduledSubmissionTemplateContext) -> Submission:
-		from files.helpers.sanitize import filter_emojis_only # avoiding an import loop here
+	def run_task(self, ctx:TaskRunContext) -> None:
+		submission:Submission = self.make_submission(ctx)
+		with ctx.app_context():
+			# TODO: stop using app context (currently required for sanitize and
+			# username pings)
+			submission.submit(ctx.db) # TODO: thumbnails
+			submission.publish()
 
-		title:str = ctx.make_title(self.title)
+	def make_submission(self, ctx:TaskRunContext) -> Submission:
+		from files.helpers.sanitize import \
+			filter_emojis_only  # avoiding an import loop here
+
+		title:str = self.make_title(ctx.trigger_time)
 		title_html:str = filter_emojis_only(title, graceful=True)
 		if len(title_html) > 1500: raise ValueError("Rendered title too large")
 
 		return Submission(
-			created_utc=int(ctx.time.timestamp()),
+			created_utc=int(ctx.trigger_time.timestamp()),
 			private=self.private,
-			author_id=self.author_id,
+			author_id=self.author_id_submission,
 			over_18=self.over_18,
 			app_id=None,
 			is_bot =self.is_bot,
@@ -62,6 +67,9 @@ class ScheduledSubmissionTemplate(CreatedBase):
 			filter_state='normal',
 			embed_url=self.embed_url,
 		)
+	
+	def make_title(self, trigger_time:datetime) -> str:
+		return trigger_time.strftime(self.title)
 	
 	# properties below here are mocked in order to reuse part of the submission
 	# HTML template for previewing a submitted task

@@ -23,7 +23,7 @@ import flask_mail
 import flask_profiler
 import gevent
 import redis
-from sqlalchemy import *
+from sqlalchemy.engine import create_engine, Engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from files.helpers.config.stateful import const_initialize
@@ -188,8 +188,8 @@ limiter = flask_limiter.Limiter(
 
 # ...and then after that we can load the database.
 
-engine = create_engine(DATABASE_URL)
-db_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
+engine:Engine = create_engine(DATABASE_URL)
+db_session:scoped_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
 
 # now that we have our db, let's initialize some constants we need to startup.
 

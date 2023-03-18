@@ -8,7 +8,8 @@ from files.classes.leaderboard import (LeaderboardMeta, ReceivedDownvotesLeaderb
 				       					GivenUpvotesLeaderboard)
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.const import PUSHER_ID, PUSHER_KEY, SITE_FULL, SITE_ID
-from files.__main__ import app, db_session
+from files.helpers.config.environment import ENABLE_SERVICES
+from files.__main__ import db_session
 
 if PUSHER_ID != 'blahblahblah':
 	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
@@ -55,5 +56,5 @@ def leaderboard_thread():
 	db.close()
 	sys.stdout.flush()
 
-if app.config["ENABLE_SERVICES"]:
+if ENABLE_SERVICES:
 	gevent.spawn(leaderboard_thread())

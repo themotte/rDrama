@@ -86,7 +86,8 @@ def NOTIFY_USERS(text, v) -> set[int]:
 	notify_users = set()
 	for word, id in NOTIFIED_USERS.items():
 		if id == 0 or v.id == id: continue
-		if word in text.lower() and id not in notify_users: notify_users.add(id)
+		if word in text.lower() and id not in notify_users: 
+			notify_users.add(id)
 
 	captured = []
 	for i in mention_regex.finditer(text):
@@ -96,7 +97,8 @@ def NOTIFY_USERS(text, v) -> set[int]:
 		captured.append(i.group(0))
 
 		user = get_user(i.group(2), graceful=True)
-		if user and v.id != user.id and not v.any_block_exists(user): notify_users.add(user.id)
+		if user and v.id != user.id and not v.any_block_exists(user): 
+			notify_users.add(user.id)
 
 	return notify_users
 

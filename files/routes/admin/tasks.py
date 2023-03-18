@@ -7,7 +7,7 @@ from files.helpers.config.environment import MULTIMEDIA_EMBEDDING_ENABLED
 import files.helpers.validators as validators
 from files.__main__ import app
 from files.classes.cron.scheduler import DayOfWeek, RepeatableTask, ScheduledTaskType
-from files.classes.cron.submission import ScheduledSubmissionTemplate
+from files.classes.cron.submission import ScheduledSubmissionTask
 from files.classes.user import User
 from files.helpers.config.const import PERMS, SUBMISSION_FLAIR_LENGTH_MAXIMUM
 from files.helpers.wrappers import admin_level_required
@@ -16,8 +16,8 @@ from files.helpers.wrappers import admin_level_required
 @app.get('/tasks/scheduled_posts/')
 @admin_level_required(PERMS['SCHEDULED_POSTS'])
 def tasks_scheduled_posts_get(v:User):
-	submissions:list[ScheduledSubmissionTemplate] = \
-		g.db.query(ScheduledSubmissionTemplate).all()
+	submissions:list[ScheduledSubmissionTask] = \
+		g.db.query(ScheduledSubmissionTask).all()
 	return render_template("admin/tasks/scheduled_posts.html", v=v, listing=submissions)
 
 
@@ -48,7 +48,7 @@ def tasks_scheduled_posts_post(v:User):
 	# first build the template
 	flair:str=validators.guarded_value("flair", min_len=0, max_len=SUBMISSION_FLAIR_LENGTH_MAXIMUM)
 	
-	template:ScheduledSubmissionTemplate = ScheduledSubmissionTemplate(
+	template:ScheduledSubmissionTask = ScheduledSubmissionTask(
 		author_id=v.id, # TODO: allow customization
 		ghost=_get_request_bool("ghost"),
 		private=_get_request_bool("private"),
@@ -89,7 +89,7 @@ def tasks_scheduled_posts_post(v:User):
 @app.get('/tasks/scheduled_posts/<int:pid>')
 @admin_level_required(PERMS['SCHEDULED_POSTS'])
 def tasks_scheduled_post_get(v:User, pid:int):
-	submission: Optional[ScheduledSubmissionTemplate] = \
-		g.db.get(ScheduledSubmissionTemplate, pid)
+	submission: Optional[ScheduledSubmissionTask] = \
+		g.db.get(ScheduledSubmissionTask, pid)
 	if not submission: abort(404)
 	return render_template("admin/tasks/scheduled_post.html", v=v, p=submission)

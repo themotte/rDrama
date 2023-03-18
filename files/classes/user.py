@@ -159,7 +159,7 @@ class User(CreatedBase):
 		return self.admin_level > 1
 
 	def should_comments_be_filtered(self):
-		from files.__main__ import app # i know
+		from files.__main__ import app # avoiding import loop
 		if self.admin_level > 0:
 			return False
 		site_settings = app.config['SETTINGS']

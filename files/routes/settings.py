@@ -1,15 +1,14 @@
+import os
+from shutil import copyfile
+
+from files.__main__ import app, limiter
 from files.helpers.alerts import *
 from files.helpers.caching import invalidate_cache
+from files.helpers.config.const import *
 from files.helpers.media import process_image
 from files.helpers.sanitize import *
-from files.helpers.config.const import *
-from files.mail import *
-from files.__main__ import app, limiter
-import os
 from files.helpers.sanitize import filter_emojis_only
-from files.helpers.strings import sql_ilike_clean
-from shutil import copyfile
-import requests
+from files.mail import *
 
 tiers={
 	"(Paypig)": 1,

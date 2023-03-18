@@ -35,7 +35,6 @@
 
 # First the import * from places which don't go circular
 from sqlalchemy import *
-from flask import abort, g, render_template, redirect, request, send_file, send_from_directory
 
 # Then everything except what's in files.*
 import pyotp
@@ -84,7 +83,8 @@ from .views import ViewerRelationship
 from .votes import Vote, CommentVote
 from .volunteer_janitor import VolunteerJanitorRecord
 from .cron.scheduler import ScheduledTask, RepeatableTask
-from .cron.submission import ScheduledSubmissionTemplate
+from .cron.submission import ScheduledSubmissionTask
+from .cron.pycallable import PythonCodeTask
 
 # Then the import * from files.*
 from files.helpers.config.const import *

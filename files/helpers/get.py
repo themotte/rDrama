@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import Callable, Iterable, List, Optional, Type, Union
 
-from flask import g
+from flask import abort, g
 from sqlalchemy import and_, or_, func
 from sqlalchemy.orm import Query, scoped_session, selectinload
 

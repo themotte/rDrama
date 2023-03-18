@@ -11,8 +11,8 @@ from files.__main__ import app, db_session
 
 CRON_SLEEP: Final[int] = 15
 '''
-Resolution of our clock. Lower values give better resolution, but will hit the
-database more.
+How long the app will sleep for between runs. Lower values give better 
+resolution, but will hit the database more.
 '''
 
 @app.cli.command('cron')
