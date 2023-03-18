@@ -6,8 +6,9 @@ from sqlalchemy.sql.sqltypes import Boolean, Integer, String, Text
 
 from files.classes.cron.scheduler import RepeatableTask, TaskRunContext
 from files.classes.submission import Submission
-from files.helpers.config.const import (RENDER_DEPTH_LIMIT, SITE_FULL,
+from files.helpers.config.const import (RENDER_DEPTH_LIMIT,
                                         SUBMISSION_TITLE_LENGTH_MAXIMUM)
+from files.helpers.config.environment import SITE_FULL
 from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy
 

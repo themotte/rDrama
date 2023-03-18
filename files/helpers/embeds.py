@@ -1,3 +1,16 @@
+'''
+Assists with adding embeds to submissions. 
+
+This module is not intended to be imported using the `from X import Y` syntax.
+
+Example usage:
+
+```py
+import files.helpers.embeds as embeds
+embeds.youtube("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+```
+'''
+
 import urllib.parse
 from typing import Optional
 
@@ -5,6 +18,8 @@ import requests
 
 from files.helpers.config.environment import YOUTUBE_KEY
 from files.helpers.config.regex import yt_id_regex
+
+__all__ = ('twitter', 'youtube',)
 
 def twitter(url:str) -> Optional[str]:
 	try: 
