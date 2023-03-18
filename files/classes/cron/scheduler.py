@@ -3,8 +3,8 @@ from __future__ import annotations
 import contextlib
 import dataclasses
 from datetime import date, datetime, timedelta, timezone
-from enum import IntFlag
-from typing import TYPE_CHECKING, Any, Optional, Union
+from enum import IntEnum, IntFlag
+from typing import TYPE_CHECKING, Any, Final, Optional, Union
 
 import flask
 import flask_caching
@@ -20,6 +20,10 @@ from files.classes.base import CreatedBase
 
 if TYPE_CHECKING:
 	from files.classes.user import User
+
+class ScheduledTaskType(IntEnum):
+	PYTHON_CALLABLE = 1
+	SCHEDULED_SUBMISSION = 2
 
 
 class DayOfWeek(IntFlag):
@@ -162,8 +166,10 @@ class TaskRunContext:
 		except:
 			self.db.rollback()
 
+_TABLE_NAME: Final[str] = "tasks_scheduled"
 
-class ScheduledTask(AbstractConcreteBase, CreatedBase):
+class ScheduledTask(CreatedBase):
+	__tablename__ = _TABLE_NAME
 	@declared_attr
 	def id(self):
 		return Column(Integer, primary_key=True, nullable=False)
@@ -171,6 +177,14 @@ class ScheduledTask(AbstractConcreteBase, CreatedBase):
 	@declared_attr
 	def author_id(self):
 		return Column(Integer, ForeignKey("users.id"), nullable=False)
+
+	@declared_attr
+	def type_id(self):
+		return Column(SmallInteger, nullable=False)
+
+	@property
+	def type(self) -> ScheduledTaskType:
+		return ScheduledTaskType(self.type_id)
 	
 	@declared_attr
 	def enabled(self):
@@ -189,6 +203,11 @@ class ScheduledTask(AbstractConcreteBase, CreatedBase):
 	
 	def __repr__(self) -> str:
 		return f'<{self.__class__.__name__}(id={self.id}, created_utc={self.created_date}, author_id={self.author_id})>'
+	
+	__mapper_args__ = {
+		"polymorphic_identity": _TABLE_NAME,
+		"polymorphic_on": type_id,
+	}
 
 
 class RepeatableTask(ScheduledTask):
