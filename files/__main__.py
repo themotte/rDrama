@@ -11,7 +11,6 @@ from flask_limiter import Limiter
 from flask_compress import Compress
 from flask_mail import Mail
 import flask_profiler
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import *
 import gevent
@@ -150,9 +149,7 @@ limiter = Limiter(
 	enabled=app.config['RATE_LIMITER_ENABLED'],
 )
 
-Base = declarative_base()
-
-engine = create_engine(app.config['DATABASE_URL'], future=True)
+engine = create_engine(app.config['DATABASE_URL'])
 
 db_session = scoped_session(sessionmaker(bind=engine, autoflush=False, future=True))
 

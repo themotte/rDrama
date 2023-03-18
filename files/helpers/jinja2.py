@@ -9,6 +9,9 @@ from .get import *
 from .const import * 
 from files.helpers.assetcache import assetcache_path
 
+@app.template_filter("computer_size")
+def computer_size(size_bytes:int) -> str:
+	return f'{size_bytes // 1024 // 1024} MiB'
 
 @app.template_filter("shuffle")
 @pass_context
@@ -81,6 +84,8 @@ def inject_constants():
 		"CC_TITLE":CC_TITLE,
 		"listdir":listdir,
 		"config":app.config.get,
+		"COMMENT_BODY_LENGTH_MAXIMUM":COMMENT_BODY_LENGTH_MAXIMUM,
+		"SUBMISSION_BODY_LENGTH_MAXIMUM":SUBMISSION_BODY_LENGTH_MAXIMUM,
 		"DEFAULT_COLOR":DEFAULT_COLOR,
 		"COLORS":COLORS,
 		"THEMES":THEMES,
@@ -89,6 +94,7 @@ def inject_constants():
 		"RENDER_DEPTH_LIMIT":RENDER_DEPTH_LIMIT,
 		"SORTS_COMMENTS":SORTS_COMMENTS,
 		"SORTS_POSTS":SORTS_POSTS,
+		"CSS_LENGTH_MAXIMUM":CSS_LENGTH_MAXIMUM,
 	}
 
 

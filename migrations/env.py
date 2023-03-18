@@ -22,7 +22,7 @@ logger = logging.getLogger('alembic.env')
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from files.__main__ import Base
+from files.classes.base import Base
 target_metadata = Base.metadata
 
 config.set_main_option(
@@ -50,7 +50,10 @@ def run_migrations_offline():
     """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url, target_metadata=target_metadata, literal_binds=True
+        url=url, target_metadata=target_metadata, literal_binds=True,
+        #compare_type=True,
+		# compare_type is commented out here in order to make tests pass
+		# this should be uncommented when migrations are completely up to date
     )
 
     with context.begin_transaction():
@@ -81,6 +84,7 @@ def run_migrations_online():
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
+            #compare_type=True,
             process_revision_directives=process_revision_directives,
             **current_app.extensions['migrate'].configure_args
         )

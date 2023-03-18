@@ -1,11 +1,13 @@
-from os import environ, listdir
 import re
 from copy import deepcopy
-from json import loads
+from os import environ
+from typing import Final
+
+from flask import request
+
 from files.__main__ import db_session
 from files.classes.sub import Sub
 from files.classes.marsey import Marsey
-from flask import request
 
 SITE = environ.get("DOMAIN", '').strip()
 SITE_ID = environ.get("SITE_ID", '').strip()
@@ -33,6 +35,8 @@ BUG_THREAD = 0
 WELCOME_MSG = f"Welcome to {SITE_TITLE}! Please read [the rules](/rules) first. Then [read some of our current conversations](/) and feel free to comment or post!\n\nWe encourage people to comment even if they aren't sure they fit in; as long as your comment follows [community rules](/rules), we are happy to have posters from all backgrounds, education levels, and specialties."
 ROLES={}
 
+LEADERBOARD_LIMIT: Final[int] = 25
+
 THEMES = {"TheMotte", "dramblr", "reddit", "transparent", "win98", "dark", 
 			"light", "coffee", "tron", "4chan", "midnight"}
 SORTS_COMMON = {
@@ -50,11 +54,15 @@ SORTS_POSTS = {
 SORTS_POSTS.update(SORTS_COMMON)
 SORTS_COMMENTS = SORTS_COMMON
 
-IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 PUSHER_ID = environ.get("PUSHER_ID", "").strip()
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 DEFAULT_COLOR = environ.get("DEFAULT_COLOR", "fff").strip()
 COLORS = {'ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58','8cdbe6', DEFAULT_COLOR}
+
+SUBMISSION_BODY_LENGTH_MAXIMUM: Final[int] = 20000
+COMMENT_BODY_LENGTH_MAXIMUM: Final[int] = 10000
+MESSAGE_BODY_LENGTH_MAXIMUM: Final[int] = 10000
+CSS_LENGTH_MAXIMUM: Final[int] = 4000
 
 ERROR_MESSAGES = {
 	400: "That request was bad and you should feel bad",
@@ -100,6 +108,12 @@ FEATURES = {
 
 PERMS = {
 	"DEBUG_LOGIN_TO_OTHERS": 3,
+	'PERFORMANCE_KILL_PROCESS': 3,
+	'PERFORMANCE_SCALE_UP_DOWN': 3,
+	'PERFORMANCE_RELOAD': 3,
+	'PERFORMANCE_STATS': 3,
+	"POST_COMMENT_MODERATION": 2,
+	"USER_SHADOWBAN": 2,
 }
 
 AWARDS = {}
@@ -256,23 +270,12 @@ approved_embed_hosts = [
 	]
 
 hosts = "|".join(approved_embed_hosts).replace('.','\\.')
-
 image_check_regex = re.compile(f'!\\[\\]\\(((?!(https:\\/\\/([a-z0-9-]+\\.)*({hosts})\\/|\\/)).*?)\\)', flags=re.A)
-
 embed_fullmatch_regex = re.compile(f'https:\\/\\/([a-z0-9-]+\\.)*({hosts})\\/[\\w:~,()\\-.#&\\/=?@%;+]*', flags=re.A)
-
 video_sub_regex = re.compile(f'(<p>[^<]*)(https:\\/\\/([a-z0-9-]+\\.)*({hosts})\\/[\\w:~,()\\-.#&\\/=?@%;+]*?\\.(mp4|webm|mov))', flags=re.A)
-
-youtube_regex = re.compile('(<p>[^<]*)(https:\\/\\/youtube\\.com\\/watch\\?v\\=([a-z0-9-_]{5,20})[\\w\\-.#&/=\\?@%+]*)', flags=re.I|re.A)
-
-yt_id_regex = re.compile('[a-z0-9-_]{5,20}', flags=re.I|re.A)
-
-image_regex = re.compile("(^|\\s)(https:\\/\\/[\\w\\-.#&/=\\?@%;+]{5,250}(\\.png|\\.jpg|\\.jpeg|\\.gif|\\.webp|maxwidth=9999|fidelity=high))($|\\s)", flags=re.I|re.A)
 
 procoins_li = (0,2500,5000,10000,25000,50000,125000,250000)
 
-linefeeds_regex = re.compile("([^\\n])\\n([^\\n])", flags=re.A)
-
-html_title_regex = re.compile("<title>(.{1,200})</title>", flags=re.I)
+from files.helpers.regex import *
 
 def make_name(*args, **kwargs): return request.base_url

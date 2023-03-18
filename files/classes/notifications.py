@@ -1,6 +1,6 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.__main__ import Base
+from files.classes.base import Base
 import time
 
 class Notification(Base):
@@ -24,4 +24,4 @@ class Notification(Base):
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
-		return f"<Notification(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"

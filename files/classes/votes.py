@@ -1,7 +1,7 @@
 from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.__main__ import Base
+from files.classes.base import Base
 from files.helpers.lazy import lazy
 import time
 
@@ -27,7 +27,7 @@ class Vote(Base):
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
-		return f"<Vote(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
 	@lazy
@@ -71,7 +71,7 @@ class CommentVote(Base):
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
-		return f"<CommentVote(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
 	@lazy

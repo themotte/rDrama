@@ -1,4 +1,5 @@
 from files.helpers.alerts import *
+from files.helpers.media import process_image
 from files.helpers.sanitize import *
 from files.helpers.const import *
 from files.mail import *
@@ -171,21 +172,9 @@ def settings_profile_post(v):
 				file.save(name)
 				url = process_image(name)
 				bio += f"\n\n![]({url})"
-			elif file.content_type.startswith('video/'):
-				file.save("video.mp4")
-				with open("video.mp4", 'rb') as f:
-					try: req = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)], timeout=5).json()['data']
-					except requests.Timeout: abort(500, "Video upload timed out, please try again!")
-					try: url = req['link']
-					except:
-						error = req['error']
-						if error == 'File exceeds max duration': error += ' (60 seconds)'
-						abort(400, error)
-				if url.endswith('.'): url += 'mp4'
-				bio += f"\n\n{url}"
 			else:
-				if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, "Image/Video files only")
-				return render_template("settings_profile.html", v=v, error="Image/Video files only."), 400
+				if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, "Image files only")
+				return render_template("settings_profile.html", v=v, error="Image files only"), 400
 		
 		bio_html = sanitize(bio)
 
@@ -508,20 +497,21 @@ def settings_images_banner(v):
 @app.get("/settings/blocks")
 @auth_required
 def settings_blockedpage(v):
-
 	return render_template("settings_blocks.html", v=v)
 
 @app.get("/settings/css")
 @auth_required
 def settings_css_get(v):
-
 	return render_template("settings_css.html", v=v)
 
 @app.post("/settings/css")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_css(v):
-	css = request.values.get("css").strip().replace('\\', '').strip()[:4000]
+	css = sanitize_raw(request.values.get("css", "").replace('\\', ''), allow_newlines=True, length_limit=CSS_LENGTH_MAXIMUM)
+	ok, err = validate_css(css)
+	if not ok:
+		abort(400, err)
 	v.css = css
 	g.db.add(v)
 	g.db.commit()
@@ -537,7 +527,10 @@ def settings_profilecss_get(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_profilecss(v):
-	profilecss = request.values.get("profilecss").strip().replace('\\', '').strip()[:4000]
+	profilecss = sanitize_raw(request.values.get("profilecss", "").replace('\\', ''), allow_newlines=True, length_limit=CSS_LENGTH_MAXIMUM)
+	ok, err = validate_css(profilecss)
+	if not ok:
+		abort(400, err)
 	v.profilecss = profilecss
 	g.db.add(v)
 	g.db.commit()

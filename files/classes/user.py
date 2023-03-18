@@ -1,7 +1,8 @@
 from sqlalchemy.orm import deferred, aliased
 from secrets import token_hex
 import pyotp
-from files.helpers.images import *
+from files.classes.base import Base
+from files.helpers.media import *
 from files.helpers.const import *
 from .alts import Alt
 from .saves import *
@@ -16,7 +17,7 @@ from .mod_logs import *
 from .mod import *
 from .exiles import *
 from .sub_block import *
-from files.__main__ import app, Base, cache
+from files.__main__ import app, cache
 from files.helpers.security import *
 from files.helpers.assetcache import assetcache_path
 from files.helpers.contentsorting import apply_time_filter, sort_objects
@@ -57,8 +58,8 @@ class User(Base):
 	verifiedcolor = Column(String)
 	winnings = Column(Integer, default=0, nullable=False)
 	email = deferred(Column(String))
-	css = deferred(Column(String))
-	profilecss = deferred(Column(String))
+	css = deferred(Column(String(CSS_LENGTH_MAXIMUM)))
+	profilecss = deferred(Column(String(CSS_LENGTH_MAXIMUM)))
 	passhash = deferred(Column(String, nullable=False))
 	post_count = Column(Integer, default=0, nullable=False)
 	comment_count = Column(Integer, default=0, nullable=False)
@@ -347,7 +348,7 @@ class User(Base):
 		return f"/@{self.username}"
 
 	def __repr__(self):
-		return f"<User(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
 	@lazy
@@ -650,3 +651,9 @@ class User(Base):
 		l = [i.strip() for i in self.custom_filter_list.split('\n')] if self.custom_filter_list else []
 		l = [i for i in l if i]
 		return l
+	
+	# Permissions
+
+	@property
+	def can_see_shadowbanned(self):
+		return self.admin_level >= PERMS['USER_SHADOWBAN'] or self.shadowbanned

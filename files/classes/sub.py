@@ -1,6 +1,6 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.__main__ import Base
+from files.classes.base import Base
 from files.helpers.lazy import lazy
 from os import environ
 from .sub_block import *
@@ -25,7 +25,7 @@ class Sub(Base):
 
 
 	def __repr__(self):
-		return f"<Sub(name={self.name})>"
+		return f"<{self.__class__.__name__}(name={self.name})>"
 
 	@property
 	@lazy

@@ -86,10 +86,11 @@ from .volunteer_janitor import VolunteerJanitorRecord
 
 # Then the import * from files.*
 from files.helpers.const import *
-from files.helpers.images import *
+from files.helpers.media import *
 from files.helpers.lazy import *
 from files.helpers.security import *
 
 # Then the specific stuff we don't want stomped on
 from files.helpers.lazy import lazy
-from files.__main__ import Base, app, cache
+from files.classes.base import Base
+from files.__main__ import app, cache
