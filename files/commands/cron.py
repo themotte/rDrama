@@ -25,10 +25,10 @@ def cron_app():
 
 @contextlib.contextmanager
 def _acquire_exclusive_lock(db:scoped_session, table:str):
-	with db.begin_nested():
+	with db.begin_nested() as t:
 		db.execute(f"LOCK TABLE {table} IN ACCESS EXCLUSIVE")
 		try:
-			yield
+			yield t
 			db.commit()
 		except:
 			db.rollback()

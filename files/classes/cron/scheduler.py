@@ -164,11 +164,9 @@ class TaskRunContext:
 
 
 class ScheduledTask(AbstractConcreteBase, CreatedBase):
-	__abstract__ = True
-
 	@declared_attr
 	def id(self):
-		return Column(Integer, primary_key=True)
+		return Column(Integer, primary_key=True, nullable=False)
 	
 	@declared_attr
 	def author_id(self):
