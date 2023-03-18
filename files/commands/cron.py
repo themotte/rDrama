@@ -73,7 +73,7 @@ def _run_tasks(db:scoped_session):
 	'''
 	now:datetime = datetime.now(tz=timezone.utc)
 
-	with _acquire_exclusive_lock(db, "tasks_repeatable"):	
+	with _acquire_exclusive_lock(db, RepeatableTask.__tablename__):	
 		tasks:list[RepeatableTask] = db.query(RepeatableTask).filter(
 			RepeatableTask.enabled == True,
 			RepeatableTask.frequency_day != int(DayOfWeek.NONE),
@@ -81,7 +81,7 @@ def _run_tasks(db:scoped_session):
 			RepeatableTask.run_time_last <= now).all()
 
 	for task in tasks:
-		with _acquire_exclusive_lock(db, "tasks_repeatable"):
+		with _acquire_exclusive_lock(db, RepeatableTask.__tablename__):
 			trigger_time:Optional[datetime] = \
 				task.next_trigger(task.run_time_last_or_created_utc)
 			if not trigger_time: continue
@@ -96,6 +96,6 @@ def _run_tasks(db:scoped_session):
 				f"Exception running task (ID {run.task_id}, run ID {run.id})", 
 				exc_info=run.exception
 			)
-		with _acquire_exclusive_lock(db, "tasks_repeatable"):
+		with _acquire_exclusive_lock(db, RepeatableTask.__tablename__):
 			task.run_state_enum = ScheduledTaskState.WAITING
 		db.commit()
