@@ -9,6 +9,7 @@ from files.classes.cron.scheduler import RepeatableTask, TaskRunContext
 
 _TABLE_NAME = "tasks_repeatable_python"
 
+__all__ = ('PythonCodeTask',)
 
 class PythonCodeTask(RepeatableTask):
 	__tablename__ = _TABLE_NAME	

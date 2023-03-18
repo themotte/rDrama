@@ -25,6 +25,11 @@ class ScheduledTaskType(IntEnum):
 	SCHEDULED_SUBMISSION = 2
 
 
+class ScheduledTaskState(IntEnum):
+	WAITING = 1
+	RUNNING = 2
+
+
 class DayOfWeek(IntFlag):
 	SUNDAY = 1 << 1
 	MONDAY = 1 << 2
@@ -176,7 +181,8 @@ class RepeatableTask(CreatedBase):
 	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 	type_id = Column(SmallInteger, nullable=False)
 	enabled = Column(Boolean, default=True, nullable=False)
-	last_run = Column(DateTime, default=None)
+	run_state = Column(SmallInteger, default=int(ScheduledTaskState.WAITING), nullable=False)
+	run_time_last = Column(DateTime, default=None)
 	
 	frequency_day = Column(SmallInteger, nullable=False)
 	time_of_day_utc = Column(Time, nullable=False)
@@ -184,14 +190,30 @@ class RepeatableTask(CreatedBase):
 	@property
 	def type(self) -> ScheduledTaskType:
 		return ScheduledTaskType(self.type_id)
+	
+	@type.setter
+	def type(self, value:ScheduledTaskType):
+		self.type_id = value
 
 	@property
 	def frequency_day_flags(self) -> DayOfWeek:
 		return DayOfWeek(self.frequency_day)
 	
+	@frequency_day_flags.setter
+	def frequency_day_flags(self, value:DayOfWeek)
+		self.frequency_day = int(value)
+	
 	@property
-	def last_run_or_created_utc(self) -> datetime:
-		return self.last_run or self.created_datetime_py
+	def run_state_enum(self) -> ScheduledTaskState:
+		return self.run_state
+	
+	@run_state_enum.setter
+	def run_state_enum(self, value:ScheduledTaskState):
+		self.run_state = int(value)
+	
+	@property
+	def run_time_last_or_created_utc(self) -> datetime:
+		return self.run_time_last or self.created_datetime_py
 	
 	def next_trigger(self, anchor:datetime) -> Optional[datetime]:
 		if not self.enabled: return None

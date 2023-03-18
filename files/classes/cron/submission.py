@@ -14,6 +14,8 @@ from files.helpers.lazy import lazy
 
 _TABLE_NAME = "tasks_repeatable_scheduled_submissions"
 
+__all__ = ('ScheduledSubmissionTask',)
+
 
 class ScheduledSubmissionTask(RepeatableTask):
 	__tablename__ = _TABLE_NAME

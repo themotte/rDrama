@@ -6,7 +6,7 @@ from typing import Final, Optional
 
 from sqlalchemy.orm import scoped_session
 
-from files.classes.cron.scheduler import RepeatableTask, RepeatableTaskRun
+from files.classes.cron.scheduler import RepeatableTask, RepeatableTaskRun, ScheduledTaskState
 from files.__main__ import app, db_session
 
 CRON_SLEEP: Final[int] = 15
@@ -31,7 +31,11 @@ def _acquire_exclusive_lock(db:scoped_session, table:str):
 			yield t
 			db.commit()
 		except:
-			db.rollback()
+			try:
+				db.rollback()
+			except:
+				logging.warning(
+					f"Failed to rollback database. The table {table} might still be locked.")
 
 
 def _run_tasks(db:scoped_session):
@@ -47,22 +51,26 @@ def _run_tasks(db:scoped_session):
 
 	with _acquire_exclusive_lock(db, "tasks_repeatable"):
 		tasks:list[RepeatableTask] = db.query(RepeatableTask).filter(
-			RepeatableTask.enabled == True).all()
+			RepeatableTask.enabled == True,
+			RepeatableTask.run_state != int(ScheduledTaskState.RUNNING)).all()
 
 	now:datetime = datetime.now(tz=timezone.utc)
 	for task in tasks:
 		trigger_time:Optional[datetime] = \
-			task.next_trigger(task.last_run_or_created_utc)
+			task.next_trigger(task.run_time_last_or_created_utc)
 
 		with _acquire_exclusive_lock(db, "tasks_repeatable"):
 			if not trigger_time: continue
 			if now < trigger_time: continue
-			task.last_run = now
+			task.run_time_last = now
+			task.run_state_enum = ScheduledTaskState.RUNNING
 		
-		run:RepeatableTaskRun = task.run(db, task.last_run_or_created_utc)
+		run:RepeatableTaskRun = task.run(db, task.run_time_last_or_created_utc)
 		if run.exception:
 			logging.exception(
 				f"Exception running task (ID {run.task_id}, run ID {run.id})", 
 				exc_info=run.exception
 			)
+		with _acquire_exclusive_lock(db, "tasks_repeatable"):
+			task.run_state_enum = ScheduledTaskState.WAITING
 	db.commit()
