@@ -7,7 +7,7 @@ from files.helpers.alerts import *
 from files.helpers.config.const import *
 from files.helpers.get import *
 from files.routes.importstar import *
-from files.__main__ import cache, db_session
+from files.__main__ import app, cache, db_session
 
 
 def get_logged_in_user():
