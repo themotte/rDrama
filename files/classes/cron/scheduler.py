@@ -88,10 +88,39 @@ class TaskRunContext:
 	`request` context can be used.)
 	'''
 	cache:flask_caching.Cache
+	'''
+	A cache extension. This is useful for situations where a scheduled task
+	might want to interact with the cache in some way (for example invalidating
+	or adding something to the cache.)
+	'''
 	db:scoped_session
+	'''
+	A database session. Useful for when a task needs to modify something in the
+	database (for example creating a submission)
+	'''
 	mail:flask_mail.Mail
+	'''
+	The mail extension. Needed for sending emails.
+	'''
 	redis:redis.Redis
+	'''
+	A direct reference to our redis connection. Normally most operations that
+	involve the redis datastore use flask_caching's Cache object (accessed via 
+	the `cache` property), however this is provided as a convenience for more 
+	granular redis operations.
+	'''
+	task:RepeatableTask
+	'''
+	A reference to the task that is being ran.
+	'''
+	task_run:RepeatableTaskRun
+	'''
+	A reference to this current run of the task.
+	'''
 	trigger_time:datetime
+	'''
+	The date and time (UTC) that this task was triggered
+	'''
 
 	@contextlib.contextmanager
 	def app_context(self, *, v:Optional[_UserConvertible]=None):
@@ -168,7 +197,7 @@ class TaskRunContext:
 			yield app_ctx
 
 	@contextlib.contextmanager
-	def with_transaction(self):
+	def db_transaction(self):
 		try:
 			yield
 			self.db.commit()
@@ -246,11 +275,14 @@ class RepeatableTask(CreatedBase):
 				db=db,
 				mail=mail,
 				redis=r,
+				task=self,
+				task_run=run,
 				trigger_time=trigger_time,
 			)
 			self.run_task(ctx)
 		except Exception as e:
 			run.exception = e
+		run.completed_utc = datetime.now(tz=timezone.utc)
 		db.add(run)
 		return run
 
@@ -273,6 +305,8 @@ class RepeatableTaskRun(CreatedBase):
 	task_id = Column(Integer, ForeignKey(RepeatableTask.id), nullable=False)
 	manual = Column(Boolean, default=False, nullable=False)
 	traceback_str = Column(Text, nullable=True)
+
+	completed_utc = Column(DateTime)
 
 	task = relationship(RepeatableTask)
 
