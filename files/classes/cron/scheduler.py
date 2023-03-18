@@ -10,8 +10,7 @@ import flask
 import flask_caching
 import flask_mail
 import redis
-from sqlalchemy.ext.declarative import AbstractConcreteBase
-from sqlalchemy.orm import declared_attr, relationship, scoped_session
+from sqlalchemy.orm import relationship, scoped_session
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.sql.sqltypes import (Boolean, DateTime, Integer, SmallInteger,
                                      Text, Time)
@@ -166,59 +165,33 @@ class TaskRunContext:
 		except:
 			self.db.rollback()
 
-_TABLE_NAME: Final[str] = "tasks_scheduled"
 
-class ScheduledTask(CreatedBase):
+_TABLE_NAME: Final[str] = "tasks_repeatable"
+
+
+class RepeatableTask(CreatedBase):
 	__tablename__ = _TABLE_NAME
-	@declared_attr
-	def id(self):
-		return Column(Integer, primary_key=True, nullable=False)
-	
-	@declared_attr
-	def author_id(self):
-		return Column(Integer, ForeignKey("users.id"), nullable=False)
 
-	@declared_attr
-	def type_id(self):
-		return Column(SmallInteger, nullable=False)
-
-	@property
-	def type(self) -> ScheduledTaskType:
-		return ScheduledTaskType(self.type_id)
+	id = Column(Integer, primary_key=True, nullable=False)
+	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+	type_id = Column(SmallInteger, nullable=False)
+	enabled = Column(Boolean, default=True, nullable=False)
+	last_run = Column(DateTime, default=None)
 	
-	@declared_attr
-	def enabled(self):
-		return Column(Boolean, default=True, nullable=False)
-	
-	@declared_attr
-	def last_run(self):
-		return Column(DateTime, default=None)
-	
-	@property
-	def last_run_or_created_utc(self) -> datetime:
-		return self.last_run or self.created_datetime_py
-	
-	def next_trigger(self, anchor:datetime) -> Optional[datetime]:
-		raise NotImplementedError()
-	
-	def __repr__(self) -> str:
-		return f'<{self.__class__.__name__}(id={self.id}, created_utc={self.created_date}, author_id={self.author_id})>'
-	
-	__mapper_args__ = {
-		"polymorphic_identity": _TABLE_NAME,
-		"polymorphic_on": type_id,
-	}
-
-
-class RepeatableTask(ScheduledTask):
-	__abstract__ = True
-
 	frequency_day = Column(SmallInteger, nullable=False)
 	time_of_day_utc = Column(Time, nullable=False)
 
 	@property
+	def type(self) -> ScheduledTaskType:
+		return ScheduledTaskType(self.type_id)
+
+	@property
 	def frequency_day_flags(self) -> DayOfWeek:
-		return DayOfWeek(self.frequency)
+		return DayOfWeek(self.frequency_day)
+	
+	@property
+	def last_run_or_created_utc(self) -> datetime:
+		return self.last_run or self.created_datetime_py
 	
 	def next_trigger(self, anchor:datetime) -> Optional[datetime]:
 		if not self.enabled: return None
@@ -256,6 +229,14 @@ class RepeatableTask(ScheduledTask):
 
 	def run_task(self, ctx:TaskRunContext):
 		raise NotImplementedError()
+	
+	def __repr__(self) -> str:
+		return f'<{self.__class__.__name__}(id={self.id}, created_utc={self.created_date}, author_id={self.author_id})>'
+	
+	__mapper_args__ = {
+		"polymorphic_identity": _TABLE_NAME,
+		"polymorphic_on": type_id,
+	}
 
 
 class RepeatableTaskRun(CreatedBase):
