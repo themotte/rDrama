@@ -147,6 +147,11 @@ class TaskRunContext:
 		It is expected that callees will provide a valid user ID or username.
 		If an invalid one is provided, *no* exception will be raised and `g.v`
 		will be set to `None`.
+
+		This is mainly provided as an optional feature so that tasks can be 
+		somewhat "sudo"ed as a particular user. Note that `g.v` is always 
+		assigned (even if to `None`) in order to prevent code that depends on
+		its existence from raising an exception.
 		'''
 		with self.app.app_context() as app_ctx:
 			app_ctx.g.db = self.db

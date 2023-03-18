@@ -7,10 +7,11 @@ from typing import Final, Optional
 from sqlalchemy.orm import scoped_session
 
 from files.__main__ import app, db_session
-from files.classes.cron.scheduler import (RepeatableTask, RepeatableTaskRun,
+from files.classes.cron.scheduler import (DayOfWeek, RepeatableTask,
+                                          RepeatableTaskRun,
                                           ScheduledTaskState)
 
-CRON_SLEEP: Final[int] = 15
+CRON_SLEEP_SECONDS: Final[int] = 15
 '''
 How long the app will sleep for between runs. Lower values give better 
 resolution, but will hit the database more.
@@ -21,7 +22,7 @@ def cron_app():
 	db:scoped_session = db_session() # type: ignore
 	while True:
 		_run_tasks(db)
-		time.sleep(CRON_SLEEP)
+		time.sleep(CRON_SLEEP_SECONDS)
 
 
 @contextlib.contextmanager
@@ -53,14 +54,14 @@ def _run_tasks(db:scoped_session):
 	with _acquire_exclusive_lock(db, "tasks_repeatable"):
 		tasks:list[RepeatableTask] = db.query(RepeatableTask).filter(
 			RepeatableTask.enabled == True,
+			RepeatableTask.frequency_day != int(DayOfWeek.NONE),
 			RepeatableTask.run_state != int(ScheduledTaskState.RUNNING)).all()
 
 	now:datetime = datetime.now(tz=timezone.utc)
 	for task in tasks:
-		trigger_time:Optional[datetime] = \
-			task.next_trigger(task.run_time_last_or_created_utc)
-
 		with _acquire_exclusive_lock(db, "tasks_repeatable"):
+			trigger_time:Optional[datetime] = \
+				task.next_trigger(task.run_time_last_or_created_utc)
 			if not trigger_time: continue
 			if now < trigger_time: continue
 			task.run_time_last = now
@@ -68,10 +69,11 @@ def _run_tasks(db:scoped_session):
 		
 		run:RepeatableTaskRun = task.run(db, task.run_time_last_or_created_utc)
 		if run.exception:
+			# TODO: collect errors somewhere other than just here (see #220)
 			logging.exception(
 				f"Exception running task (ID {run.task_id}, run ID {run.id})", 
 				exc_info=run.exception
 			)
 		with _acquire_exclusive_lock(db, "tasks_repeatable"):
 			task.run_state_enum = ScheduledTaskState.WAITING
-	db.commit()
+		db.commit()
