@@ -1,6 +1,6 @@
+import contextlib
 import logging
 import time
-from contextlib import contextmanager
 from datetime import datetime, timezone
 from typing import Final, Optional
 
@@ -23,7 +23,7 @@ def cron_app():
 		time.sleep(CRON_SLEEP)
 
 
-@contextmanager
+@contextlib.contextmanager
 def _acquire_exclusive_lock(db:scoped_session, table:str):
 	with db.begin_nested():
 		db.execute(f"LOCK TABLE {table} IN ACCESS EXCLUSIVE")
