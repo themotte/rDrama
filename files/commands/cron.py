@@ -27,8 +27,18 @@ This value is passed to `time.sleep()`. For more information on that, see
 the Python documentation: https://docs.python.org/3/library/time.html
 '''
 
+@app.cli.command('cron_master')
+def cron_app_master():
+	'''
+	The "master" process
+	'''
+	pass
+
 @app.cli.command('cron')
 def cron_app():
+	'''
+	The "worker" process task. This actually executes tasks.
+	'''
 	db:scoped_session = db_session() # type: ignore
 	while True:
 		_run_tasks(db)
@@ -61,14 +71,15 @@ def _run_tasks(db:scoped_session):
 	running task does not lock the entire table for its entire run, which would
 	for example, prevent any statistics about status from being gathered.
 	'''
+	now:datetime = datetime.now(tz=timezone.utc)
 
-	with _acquire_exclusive_lock(db, "tasks_repeatable"):
+	with _acquire_exclusive_lock(db, "tasks_repeatable"):	
 		tasks:list[RepeatableTask] = db.query(RepeatableTask).filter(
 			RepeatableTask.enabled == True,
 			RepeatableTask.frequency_day != int(DayOfWeek.NONE),
-			RepeatableTask.run_state != int(ScheduledTaskState.RUNNING)).all()
+			RepeatableTask.run_state != int(ScheduledTaskState.RUNNING),
+			RepeatableTask.run_time_last <= now).all()
 
-	now:datetime = datetime.now(tz=timezone.utc)
 	for task in tasks:
 		with _acquire_exclusive_lock(db, "tasks_repeatable"):
 			trigger_time:Optional[datetime] = \
