@@ -10,7 +10,7 @@ from files.classes.base import CreatedBase
 from files.helpers.config.const import *
 from files.helpers.content import (body_displayed,
                                    execute_shadowbanned_fake_votes)
-from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS
+from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS, SITE_FULL
 from files.helpers.lazy import lazy
 from files.helpers.time import format_age
 

@@ -1,4 +1,5 @@
 from urllib.parse import urlencode
+from files.helpers.config.environment import HCAPTCHA_SECRET, HCAPTCHA_SITEKEY, WELCOME_MSG
 from files.mail import *
 from files.__main__ import app, limiter
 from files.helpers.config.const import *
@@ -201,7 +202,7 @@ def sign_up_get(v):
 
 	formkey_hashstr = str(now) + token + agent
 
-	formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
+	formkey = hmac.new(key=bytes(SECRET_KEY, "utf-16"),
 					   msg=bytes(formkey_hashstr, "utf-16"),
 					   digestmod='md5'
 					   ).hexdigest()
@@ -212,7 +213,7 @@ def sign_up_get(v):
 						   formkey=formkey,
 						   now=now,
 						   ref_user=ref_user,
-						   hcaptcha=app.config["HCAPTCHA_SITEKEY"],
+						   hcaptcha=HCAPTCHA_SITEKEY,
 						   error=error
 						   )
 
@@ -237,7 +238,7 @@ def sign_up_post(v):
 
 	correct_formkey_hashstr = form_timestamp + submitted_token + agent
 
-	correct_formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
+	correct_formkey = hmac.new(key=bytes(SECRET_KEY, "utf-16"),
 								msg=bytes(correct_formkey_hashstr, "utf-16"),
 								digestmod='md5'
 							   ).hexdigest()
@@ -289,8 +290,7 @@ def sign_up_post(v):
 	if existing_account:
 		return signup_error("An account with that username already exists.")
 	
-	if not validate_captcha(app.config.get("HCAPTCHA_SECRET", ""), 
-	                        app.config.get("HCAPTCHA_SITEKEY", ""), 
+	if not validate_captcha(HCAPTCHA_SECRET, HCAPTCHA_SITEKEY,
 	                        request.values.get("h-captcha-response", "")):
 		return signup_error("Unable to verify CAPTCHA")
 

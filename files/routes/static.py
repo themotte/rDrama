@@ -9,6 +9,7 @@ from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
 from files.helpers.alerts import *
 from files.helpers.captcha import validate_captcha
 from files.helpers.config.const import *
+from files.helpers.config.environment import HCAPTCHA_SECRET, HCAPTCHA_SITEKEY
 from files.helpers.media import process_image
 from files.mail import *
 from files.__main__ import app, cache, limiter # violates isort but used to prevent getting shadowed
@@ -281,15 +282,13 @@ def api(v):
 @app.get("/media")
 @auth_desired
 def contact(v):
-	return render_template("contact.html", v=v,
-			               hcaptcha=app.config.get("HCAPTCHA_SITEKEY", ""))
+	return render_template("contact.html", v=v, hcaptcha=HCAPTCHA_SITEKEY)
 
 @app.post("/send_admin")
 @limiter.limit("1/second;2/minute;6/hour;10/day")
 @auth_desired
 def submit_contact(v: Optional[User]):
-	if not v and not validate_captcha(app.config.get("HCAPTCHA_SECRET", ""),
-	                                  app.config.get("HCAPTCHA_SITEKEY", ""),
+	if not v and not validate_captcha(HCAPTCHA_SECRET, HCAPTCHA_SITEKEY,
 	                                  request.values.get("h-captcha-response", "")):
 		abort(403, "CAPTCHA provided was not correct. Please try it again")
 	body = request.values.get("message")

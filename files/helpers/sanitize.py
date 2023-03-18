@@ -14,7 +14,7 @@ from mistletoe import markdown
 from files.helpers.config.const import (embed_fullmatch_regex,
                                         image_check_regex, video_sub_regex)
 from files.helpers.config.environment import (MENTION_LIMIT,
-                                              MULTIMEDIA_EMBEDDING_ENABLED)
+                                              MULTIMEDIA_EMBEDDING_ENABLED, SITE_FULL)
 from files.helpers.config.regex import *
 from files.helpers.config.stateful import marseys_const2
 from files.helpers.get import *

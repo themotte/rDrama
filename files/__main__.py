@@ -23,11 +23,11 @@ import flask_mail
 import flask_profiler
 import gevent
 import redis
-from sqlalchemy.engine import create_engine, Engine
+from sqlalchemy.engine import Engine, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from files.helpers.config.stateful import const_initialize
 from files.helpers.config.const import Service
+from files.helpers.config.stateful import const_initialize
 from files.helpers.strings import bool_from_string
 
 # let's create our flask app...
@@ -108,7 +108,9 @@ except ModuleNotFoundError:
 
 # ...and let's load up app config...
 
-from files.helpers.config.const import DEFAULT_THEME, MAX_CONTENT_LENGTH, SESSION_COOKIE_SAMESITE, PERMANENT_SESSION_LIFETIME
+from files.helpers.config.const import (DEFAULT_THEME, MAX_CONTENT_LENGTH,
+                                        PERMANENT_SESSION_LIFETIME,
+                                        SESSION_COOKIE_SAMESITE)
 from files.helpers.config.environment import *
 
 app.config.update({

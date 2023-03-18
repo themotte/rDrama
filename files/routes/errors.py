@@ -4,8 +4,11 @@ from urllib.parse import quote, urlencode
 
 from flask import g, redirect, render_template, request, session
 
-from files.helpers.config.const import ERROR_MESSAGES, SITE_FULL, WERKZEUG_ERROR_DESCRIPTIONS
 from files.__main__ import app
+from files.helpers.config.const import (ERROR_MESSAGES,
+                                        WERKZEUG_ERROR_DESCRIPTIONS)
+from files.helpers.config.environment import SITE_FULL
+
 
 @app.errorhandler(400)
 @app.errorhandler(401)

@@ -86,7 +86,7 @@ RATE_LIMITER_ENABLED = not bool_from_string(environ.get('DBG_LIMITER_DISABLED', 
 ENABLE_DOWNVOTES = not bool_from_string(environ.get('DISABLE_DOWNVOTES', False))
 
 # other stuff from const.py that aren't constants
-dues = int(environ.get("DUES").strip())
+CLUB_TRUESCORE_MINIMUM = int(environ.get("DUES").strip())
 
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 PUSHER_ID = environ.get("PUSHER_ID", "").strip()

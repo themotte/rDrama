@@ -24,6 +24,7 @@ from .mod_logs import *
 from .mod import *
 from .exiles import *
 from .sub_block import *
+from files.helpers.config.environment import CLUB_TRUESCORE_MINIMUM, DEFAULT_COLOR, SITE_FULL, SITE_ID
 from files.helpers.security import *
 from files.helpers.assetcache import assetcache_path
 
@@ -233,7 +234,7 @@ class User(CreatedBase):
 	@property
 	@lazy
 	def paid_dues(self):
-		return not self.shadowbanned and not (self.is_banned and not self.unban_utc) and (self.admin_level or self.club_allowed or (self.club_allowed != False and self.truecoins > dues))
+		return not self.shadowbanned and not (self.is_banned and not self.unban_utc) and (self.admin_level or self.club_allowed or (self.club_allowed != False and self.truecoins > CLUB_TRUESCORE_MINIMUM))
 
 	@lazy
 	def any_block_exists(self, other):

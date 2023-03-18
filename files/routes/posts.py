@@ -18,6 +18,7 @@ from files.helpers.alerts import *
 from files.helpers.caching import invalidate_cache
 from files.helpers.comments import comment_filter_moderated
 from files.helpers.config.const import *
+from files.helpers.config.environment import SITE_ID
 from files.helpers.content import canonicalize_url2
 from files.helpers.contentsorting import sort_objects
 from files.helpers.media import process_image
