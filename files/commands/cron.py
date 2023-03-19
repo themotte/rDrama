@@ -30,6 +30,10 @@ the Python documentation: https://docs.python.org/3/library/time.html
 '''
 
 MAXIMUM_MEMORY_RSS: Final[int] = 300 * 1024 * 1024
+'''
+Maximum real memory that can be used by the worker before it gets terminated
+by our master process.
+'''
 
 _CRON_COMMAND_NAME = "cron"
 
@@ -37,7 +41,9 @@ _CRON_COMMAND_NAME = "cron"
 def cron_app_master():
 	'''
 	The "master" process. This is essentially an application unto itself. It 
-	spawns 1 worker child. Some code changes would have to be made to get it
+	spawns 1 worker child. 
+	
+	Implementation note: Some code changes would have to be made to get it
 	to orchestrate more, although this is both realistically not a concern™
 	and also more than one master can be spawned without causing any issues.
 
@@ -80,7 +86,12 @@ def cron_app_worker():
 
 
 @contextlib.contextmanager
-def _acquire_exclusive_lock(db:scoped_session, table:str): 
+def _acquire_exclusive_lock(db:scoped_session, table:str):
+	'''
+	Acquires an exclusive lock on the table provided by the `table` parameter.
+	This can be used for synchronizing the state of the specified table and 
+	making sure no readers can access it while in the critical section.
+	''' 
 	# TODO: make `table` the type LiteralString once we upgrade to python 3.11
 	with db.begin_nested() as t:
 		db.execute(f"LOCK TABLE {table} IN ACCESS EXCLUSIVE")
