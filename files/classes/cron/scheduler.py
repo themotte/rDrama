@@ -234,7 +234,7 @@ class RepeatableTask(CreatedBase):
 		return DayOfWeek(self.frequency_day)
 	
 	@frequency_day_flags.setter
-	def frequency_day_flags(self, value:DayOfWeek)
+	def frequency_day_flags(self, value:DayOfWeek):
 		self.frequency_day = int(value)
 	
 	@property
