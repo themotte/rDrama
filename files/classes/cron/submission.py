@@ -11,6 +11,7 @@ from files.helpers.config.const import (RENDER_DEPTH_LIMIT,
 from files.helpers.config.environment import SITE_FULL
 from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy
+from files.helpers.sanitize import filter_emojis_only
 
 _TABLE_NAME = "tasks_repeatable_scheduled_submissions"
 
@@ -47,9 +48,6 @@ class ScheduledSubmissionTask(RepeatableTask):
 			submission.publish()
 
 	def make_submission(self, ctx:TaskRunContext) -> Submission:
-		from files.helpers.sanitize import \
-			filter_emojis_only  # avoiding an import loop here
-
 		title:str = self.make_title(ctx.trigger_time)
 		title_html:str = filter_emojis_only(title, graceful=True)
 		if len(title_html) > 1500: raise ValueError("Rendered title too large")
@@ -78,13 +76,16 @@ class ScheduledSubmissionTask(RepeatableTask):
 	# properties below here are mocked in order to reuse part of the submission
 	# HTML template for previewing a submitted task
 
+	@property
+	def deleted_utc(self) -> int:
+		return not int(self.enabled)
+
 	@functools.cached_property
 	def title_html(self) -> str:
 		'''
 		Do not use this for getting the HTML. Instead call 
 		`ScheduledSubmissionContext.make_title()`
 		'''
-		from files.helpers.sanitize import filter_emojis_only
 		return filter_emojis_only(self.title)
 
 	@property

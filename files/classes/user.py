@@ -1,32 +1,32 @@
 import time
-import random
-from secrets import token_hex
-from datetime import datetime
-from os import environ, remove, path
+from os import environ
 
-from flask import g, session
-from sqlalchemy.orm import declared_attr, deferred, aliased
 import pyotp
+from flask import g, session
+from sqlalchemy.orm import aliased, declared_attr, deferred
 
 from files.classes.base import CreatedBase
-from files.helpers.media import *
+from files.helpers.assetcache import assetcache_path
 from files.helpers.config.const import *
+from files.helpers.config.environment import (CLUB_TRUESCORE_MINIMUM,
+                                              DEFAULT_COLOR, SITE_FULL,
+                                              SITE_ID)
+from files.helpers.media import *
+from files.helpers.security import *
+
 from .alts import Alt
-from .saves import *
-from .notifications import Notification
 from .award import AwardRelationship
-from .follows import *
-from .subscriptions import *
-from .userblock import *
 from .badges import *
 from .clients import *
-from .mod_logs import *
-from .mod import *
 from .exiles import *
+from .follows import *
+from .mod import *
+from .mod_logs import *
+from .notifications import Notification
+from .saves import *
 from .sub_block import *
-from files.helpers.config.environment import CLUB_TRUESCORE_MINIMUM, DEFAULT_COLOR, SITE_FULL, SITE_ID
-from files.helpers.security import *
-from files.helpers.assetcache import assetcache_path
+from .subscriptions import *
+from .userblock import *
 
 defaulttheme = "TheMotte"
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
@@ -160,9 +160,10 @@ class User(CreatedBase):
 		return self.admin_level > 1
 
 	def should_comments_be_filtered(self):
-		from files.__main__ import app # avoiding import loop
+		from files.__main__ import app  # avoiding import loop
 		if self.admin_level > 0:
 			return False
+		# TODO: move settings out of app.config
 		site_settings = app.config['SETTINGS']
 		minComments = site_settings.get('FilterCommentsMinComments', 0)
 		minKarma = site_settings.get('FilterCommentsMinKarma', 0)

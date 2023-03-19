@@ -14,7 +14,7 @@ from files.helpers.wrappers import admin_level_required
 
 
 @app.get('/tasks/scheduled_posts/')
-@admin_level_required(PERMS['SCHEDULED_POSTS'])
+@admin_level_required(PERMS['SCHEDULER_POSTS'])
 def tasks_scheduled_posts_get(v:User):
 	submissions:list[ScheduledSubmissionTask] = \
 		g.db.query(ScheduledSubmissionTask).all()
@@ -38,7 +38,7 @@ def _get_request_dayofweek() -> DayOfWeek:
 
 
 @app.post('/tasks/scheduled_posts/')
-@admin_level_required(PERMS['SCHEDULED_POSTS'])
+@admin_level_required(PERMS['SCHEDULER_POSTS'])
 def tasks_scheduled_posts_post(v:User):
 	validated_post:validators.ValidatedSubmissionLike = \
 		validators.ValidatedSubmissionLike.from_flask_request(request, 
@@ -46,7 +46,7 @@ def tasks_scheduled_posts_post(v:User):
 		)
 	
 	# first build the template
-	flair:str=validators.guarded_value("flair", min_len=0, max_len=SUBMISSION_FLAIR_LENGTH_MAXIMUM)
+	flair:str = validators.guarded_value("flair", min_len=0, max_len=SUBMISSION_FLAIR_LENGTH_MAXIMUM)
 	
 	template:ScheduledSubmissionTask = ScheduledSubmissionTask(
 		author_id=v.id, # TODO: allow customization
@@ -87,7 +87,7 @@ def tasks_scheduled_posts_post(v:User):
 	return redirect(f'/tasks/scheduled_posts/{template.id}')
 
 @app.get('/tasks/scheduled_posts/<int:pid>')
-@admin_level_required(PERMS['SCHEDULED_POSTS'])
+@admin_level_required(PERMS['SCHEDULER_POSTS'])
 def tasks_scheduled_post_get(v:User, pid:int):
 	submission: Optional[ScheduledSubmissionTask] = \
 		g.db.get(ScheduledSubmissionTask, pid)

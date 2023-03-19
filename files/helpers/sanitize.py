@@ -2,22 +2,28 @@ import functools
 import html
 import random
 import re
+import urllib.parse
 from functools import partial
 from os import path
+from typing import Optional
 
 import bleach
 import gevent
 from bleach.linkifier import LinkifyFilter, build_url_re
 from bs4 import BeautifulSoup
+from flask import abort, g
 from mistletoe import markdown
 
+from files.classes.domains import BannedDomain
+from files.classes.marsey import Marsey
 from files.helpers.config.const import (embed_fullmatch_regex,
                                         image_check_regex, video_sub_regex)
 from files.helpers.config.environment import (MENTION_LIMIT,
-                                              MULTIMEDIA_EMBEDDING_ENABLED, SITE_FULL)
+                                              MULTIMEDIA_EMBEDDING_ENABLED,
+                                              SITE_FULL)
 from files.helpers.config.regex import *
 from files.helpers.config.stateful import marseys_const2
-from files.helpers.get import *
+from files.helpers.get import get_user, get_users
 
 TLDS = ('ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar',
 	'arpa','as','asia','at','au','aw','ax','az','ba','bb','bd','be','bf','bg',
@@ -290,7 +296,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 			if i.group(0) in captured: continue
 			captured.append(i.group(0))
 
-			params = parse_qs(urlparse(i.group(2).replace('&amp;','&')).query)
+			params = urllib.parse.parse_qs(urllib.parse.urlparse(i.group(2).replace('&amp;','&')).query)
 			t = params.get('t', params.get('start', [0]))[0]
 			if isinstance(t, str): t = t.replace('s','')
 
@@ -332,7 +338,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 		href = link.get("href")
 		if not href: continue
 
-		url = urlparse(href)
+		url = urllib.parse.urlparse(href)
 		domain = url.netloc
 		url_path = url.path
 		domain_list.add(domain+url_path)

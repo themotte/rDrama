@@ -12,6 +12,29 @@ _TABLE_NAME = "tasks_repeatable_python"
 __all__ = ('PythonCodeTask',)
 
 class PythonCodeTask(RepeatableTask):
+	'''
+	A repeatable task that is naively calls a Python callable. It can access
+	all of the app state as that is provided to the callee. An example task 
+	that sets the fictional `hams` variable on a `User` to `eggs` is shown
+	below.
+
+	```py
+	from files.classes.user import User
+	from files.classes.cron.scheduler import TaskRunContext
+	from files.helpers.get import get_account
+	
+	def spam_task(ctx:TaskRunContext):
+		user:Optional[User] = get_account(1784, graceful=True, db=ctx.db)
+		if not user: raise Exception("User not found!")
+		user.hams = "eggs"
+		ctx.db.commit()
+	```
+
+	The `import_path` and `callable` properties are passed to `importlib`
+	which then imports the module and then calls the callable with the current
+	task context.
+	'''
+	
 	__tablename__ = _TABLE_NAME	
 	
 	__mapper_args__ = {
