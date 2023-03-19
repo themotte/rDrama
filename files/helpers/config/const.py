@@ -2,7 +2,6 @@ import re
 import sys
 from copy import deepcopy
 from enum import IntEnum
-from os import environ
 from typing import Final
 
 from flask import request
@@ -126,6 +125,7 @@ PERMS = {
 	"PERFORMANCE_STATS": 3,
 	"POST_COMMENT_MODERATION": 2,
 	"SCHEDULER_POSTS": 2,
+	"SCHEDULER_TASK_TRACEBACK": 3,
 	"USER_SHADOWBAN": 2,
 }
 

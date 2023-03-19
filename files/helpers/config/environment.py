@@ -24,11 +24,13 @@ WELCOME_MSG = \
 	"""
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+CARD_VIEW = bool_from_string(environ.get("CARD_VIEW", True))
 DATABASE_URL = environ.get("DATABASE_URL", "postgresql://postgres@localhost:5432")
 SECRET_KEY = environ.get('MASTER_KEY', '')
 SERVER_NAME = environ.get("DOMAIN").strip()
 SESSION_COOKIE_SECURE = "localhost" not in SERVER_NAME
 DEFAULT_COLOR = environ.get("DEFAULT_COLOR", "fff").strip()
+DEFAULT_TIME_FILTER = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 HCAPTCHA_SITEKEY = environ.get("HCAPTCHA_SITEKEY","").strip()
 HCAPTCHA_SECRET = environ.get("HCAPTCHA_SECRET","").strip()
 

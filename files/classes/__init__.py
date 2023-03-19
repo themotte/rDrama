@@ -47,8 +47,7 @@ from flask import g
 from flask import render_template
 from json import loads
 from math import floor
-from os import environ
-from os import environ, remove, path
+from os import remove, path
 from random import randint
 from secrets import token_hex
 from sqlalchemy.orm import deferred, aliased

@@ -1,16 +1,12 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
+from files.helpers.config.environment import SITE_FULL
 from files.classes.base import Base
 from files.helpers.lazy import lazy
-from os import environ
 from .sub_block import *
 
-SITE = environ.get("DOMAIN", '').strip()
-if SITE == "localhost": SITE_FULL = 'http://' + SITE
-else: SITE_FULL = 'https://' + SITE
 
 class Sub(Base):
-
 	__tablename__ = "subs"
 	name = Column(String, primary_key=True)
 	sidebar = Column(String)
@@ -22,7 +18,6 @@ class Sub(Base):
 	Index('subs_idx', name)
 
 	blocks = relationship("SubBlock", lazy="dynamic", primaryjoin="SubBlock.sub==Sub.name", viewonly=True)
-
 
 	def __repr__(self):
 		return f"<{self.__class__.__name__}(name={self.name})>"

@@ -3,13 +3,14 @@ from os import environ, listdir
 
 from jinja2 import pass_context
 
+from files.__main__ import app
 from files.helpers.assetcache import assetcache_path
+from files.helpers.config.environment import (DEFAULT_COLOR, PUSHER_ID, SITE,
+                                              SITE_FULL, SITE_ID, SITE_TITLE)
 from files.helpers.time import format_age
 
 from .config.const import *
 from .get import *
-from files.helpers.config.environment import DEFAULT_COLOR, PUSHER_ID, SITE, SITE_FULL, SITE_ID, SITE_TITLE
-from files.__main__ import app
 
 
 @app.template_filter("computer_size")

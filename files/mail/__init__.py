@@ -7,21 +7,18 @@ from flask_mail import Message
 from files.__main__ import app, limiter, mail
 from files.classes import *
 from files.helpers.config.const import *
+from files.helpers.config.environment import SITE_ID, SITE_TITLE
 from files.helpers.security import *
 from files.helpers.wrappers import *
 from files.routes.importstar import *
 
-SITE_ID = environ.get("SITE_ID").strip()
-SITE_TITLE = environ.get("SITE_TITLE").strip()
 
 def send_mail(to_address, subject, html):
-
 	msg = Message(html=html, subject=subject, sender=f"{SITE_ID}@{SITE}", recipients=[to_address])
 	mail.send(msg)
 
 
 def send_verification_email(user, email=None):
-
 	if not email:
 		email = user.email
 

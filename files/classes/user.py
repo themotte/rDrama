@@ -1,5 +1,4 @@
 import time
-from os import environ
 
 import pyotp
 from flask import g, session
@@ -8,7 +7,8 @@ from sqlalchemy.orm import aliased, declared_attr, deferred
 from files.classes.base import CreatedBase
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.const import *
-from files.helpers.config.environment import (CLUB_TRUESCORE_MINIMUM,
+from files.helpers.config.environment import (CARD_VIEW,
+                                              CLUB_TRUESCORE_MINIMUM,
                                               DEFAULT_COLOR, SITE_FULL,
                                               SITE_ID)
 from files.helpers.media import *
@@ -29,8 +29,6 @@ from .subscriptions import *
 from .userblock import *
 
 defaulttheme = "TheMotte"
-defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
-cardview = bool(int(environ.get("CARD_VIEW", 1)))
 
 class User(CreatedBase):
 	__tablename__ = "users"
@@ -49,7 +47,7 @@ class User(CreatedBase):
 	titlecolor = Column(String(length=6), default=DEFAULT_COLOR, nullable=False)
 	theme = Column(String, default=defaulttheme, nullable=False)
 	themecolor = Column(String, default=DEFAULT_COLOR, nullable=False)
-	cardview = Column(Boolean, default=cardview, nullable=False)
+	cardview = Column(Boolean, default=CARD_VIEW, nullable=False)
 	highres = Column(String)
 	profileurl = Column(String)
 	bannerurl = Column(String)
@@ -105,7 +103,7 @@ class User(CreatedBase):
 	stored_subscriber_count = Column(Integer, default=0, nullable=False)
 	defaultsortingcomments = Column(String, default="new", nullable=False)
 	defaultsorting = Column(String, default="new", nullable=False)
-	defaulttime = Column(String, default=defaulttimefilter, nullable=False)
+	defaulttime = Column(String, default=DEFAULT_TIME_FILTER, nullable=False)
 	is_nofollow = Column(Boolean, default=False, nullable=False)
 	custom_filter_list = Column(String)
 	ban_evade = Column(Integer, default=0, nullable=False)
