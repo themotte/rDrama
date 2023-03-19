@@ -1,6 +1,6 @@
 '''
-Environment data. Using `files.helpers.const` for non-constants is highly 
-discouraged. If it's an environment configuration, it should go in here.
+Environment data. Please don't use `files.helpers.config.const` for things that
+aren't constants. If it's an environment configuration, it should go in here.
 '''
 
 from os import environ
