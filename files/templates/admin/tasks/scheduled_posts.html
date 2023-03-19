@@ -1,9 +1,22 @@
+{%- import "util/forms.html" as forms -%}
 {%- extends 'default.html' -%}
 {%- block content -%}
-<section class="mb-3">
-    <p>This page lists the currently scheduled posts. Click on a post to learn more.</p>
+<section id="scheduled-post-listing" class="listing submission-listing mb-3">
+	{%- include "submission_listing.html" -%}
 </section>
-<section>
-    {%- include "submission_listing.html" -%}
+<section id="scheduled-post-new" class="settings-section rounded">
+	<h5>Submit a Scheduled Post</h5>
+	<p>This tool allows you to submit a scheduled post.</p>
+	<form action="/tasks/scheduled_posts/" method="post">
+		{# (label, name, id, min_length=none, max_length=none, required=false) #}
+		{# TODO: don't hardcode this #}
+		{{forms.text_field("Title", "title", "title", min_length=0, max_length=300, required=true)}}
+		{{forms.text_field("URL (optional)", "url", "url", min_length=0, max_length=2048, required=false)}}
+		{{forms.textarea_field("Body", "body", "body", min_length=0, max_length=40000, required=false)}}
+		{%- for day in ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] -%}
+			<input type="checkbox" name="schedule_day_{{day}}" id="scheduled-post-day-{{day}}"> <label for="schedule_day_{{day}}">{{day.title()}}</label>
+		{%- endfor -%}
+		<input type="submit" onclick="disable(this)" value="Submit" class="btn btn-primary">
+	</form>
 </section>
 {%- endblock -%}

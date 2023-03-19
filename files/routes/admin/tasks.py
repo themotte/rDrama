@@ -47,22 +47,6 @@ def tasks_scheduled_posts_post(v:User):
 	
 	# first build the template
 	flair:str = validators.guarded_value("flair", min_len=0, max_len=SUBMISSION_FLAIR_LENGTH_MAXIMUM)
-	
-	template:ScheduledSubmissionTask = ScheduledSubmissionTask(
-		author_id=v.id, # TODO: allow customization
-		ghost=_get_request_bool("ghost"),
-		private=_get_request_bool("private"),
-		over_18=_get_request_bool("over_18"),
-		is_bot=False, # TODO: do we need this?
-		title=validated_post.title,
-		url=validated_post.url,
-		body=validated_post.body,
-		body_html=validated_post.body_html,
-		flair=flair,
-		embed_url=validated_post.embed_slow,
-	)
-	g.db.add(template)
-	g.db.flush()
 
 	# and then build the schedule
 	enabled:bool = _get_request_bool('enabled')
@@ -74,17 +58,29 @@ def tasks_scheduled_posts_post(v:User):
 	time_of_day_utc:time = time(hour, minute, second)
 
 	# and then build the scheduled task
-	task:RepeatableTask = RepeatableTask(
+	task:ScheduledSubmissionTask = ScheduledSubmissionTask(
 		author_id=v.id,
-		type_id=int(ScheduledTaskType.SCHEDULED_SUBMISSION),
-		data_id=template.id,
+		author_id_submission=v.id, # TODO: allow customization
 		enabled=enabled,
+		ghost=_get_request_bool("ghost"),
+		private=_get_request_bool("private"),
+		over_18=_get_request_bool("over_18"),
+		is_bot=False, # TODO: do we need this?
+		title=validated_post.title,
+		url=validated_post.url,
+		body=validated_post.body,
+		body_html=validated_post.body_html,
+		flair=flair,
+		embed_url=validated_post.embed_slow,
 		frequency_day=int(frequency_day),
 		time_of_day_utc=time_of_day_utc,
+		type_id=int(ScheduledTaskType.SCHEDULED_SUBMISSION),
 	)
 	g.db.add(task)
+	g.db.flush()
+	g.db.add(task)
 	g.db.commit()
-	return redirect(f'/tasks/scheduled_posts/{template.id}')
+	return redirect(f'/tasks/scheduled_posts/{task.id}')
 
 @app.get('/tasks/scheduled_posts/<int:pid>')
 @admin_level_required(PERMS['SCHEDULER_POSTS'])

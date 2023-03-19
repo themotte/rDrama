@@ -22,7 +22,7 @@ The cost of a lower value is potentially higher lock contention. A value below
 `0` will raise a `ValueError` (on call to `time.sleep`). A value of `0` is
 possible but not recommended.
 
-The sleep time is not guaranteed to be exactly this value (notable, it may be 
+The sleep time is not guaranteed to be exactly this value (notably, it may be 
 slightly longer if the system is very busy)
 
 This value is passed to `time.sleep()`. For more information on that, see
@@ -67,9 +67,9 @@ def cron_app_master():
 				continue
 			mem_rss:int = process.memory_info().rss
 			if mem_rss > MAXIMUM_MEMORY_RSS:
-				logging.info(f"Killing cron worker with PID {process.pid} due "
-		 			f"to high memory usage ({mem_rss} MB vs maximum "
-					f"{MAXIMUM_MEMORY_RSS} MB)")
+				logging.warning("Killing and restarting cron worker with PID "
+		    		f"{process.pid} due to high memory usage ({mem_rss} MB vs "
+		 			f"maximum {MAXIMUM_MEMORY_RSS} MB)")
 				process.terminate()
 		time.sleep(CRON_SLEEP_SECONDS)
 
@@ -86,7 +86,7 @@ def cron_app_worker():
 
 
 @contextlib.contextmanager
-def _acquire_exclusive_lock(db:scoped_session, table:str):
+def _acquire_lock_exclusive(db:scoped_session, table:str):
 	'''
 	Acquires an exclusive lock on the table provided by the `table` parameter.
 	This can be used for synchronizing the state of the specified table and 
@@ -119,7 +119,7 @@ def _run_tasks(db:scoped_session):
 	'''
 	now:datetime = datetime.now(tz=timezone.utc)
 
-	with _acquire_exclusive_lock(db, RepeatableTask.__tablename__):	
+	with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
 		tasks:list[RepeatableTask] = db.query(RepeatableTask).filter(
 			RepeatableTask.enabled == True,
 			RepeatableTask.frequency_day != int(DayOfWeek.NONE),
@@ -127,7 +127,7 @@ def _run_tasks(db:scoped_session):
 			RepeatableTask.run_time_last <= now).all()
 
 	for task in tasks:
-		with _acquire_exclusive_lock(db, RepeatableTask.__tablename__):
+		with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
 			trigger_time:Optional[datetime] = \
 				task.next_trigger(task.run_time_last_or_created_utc)
 			if not trigger_time: continue
@@ -137,11 +137,12 @@ def _run_tasks(db:scoped_session):
 		
 		run:RepeatableTaskRun = task.run(db, task.run_time_last_or_created_utc)
 		if run.exception:
-			# TODO: collect errors somewhere other than just here (see #220)
+			# TODO: collect errors somewhere other than just here and in the 
+			# task run object itself (see #220).
 			logging.exception(
 				f"Exception running task (ID {run.task_id}, run ID {run.id})", 
 				exc_info=run.exception
 			)
-		with _acquire_exclusive_lock(db, RepeatableTask.__tablename__):
+		with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
 			task.run_state_enum = ScheduledTaskState.WAITING
 		db.commit()
