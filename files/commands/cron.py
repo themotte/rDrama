@@ -54,7 +54,6 @@ def cron_app_master():
 		nonlocal process
 		process = popen_creation()
 
-	_respawn_worker_process()
 	while True:
 		with process.oneshot():
 			if not process.is_running():
