@@ -1,4 +1,5 @@
 from files.__main__ import app
+from files.helpers.config.const import FEATURES
 
 from .admin import *
 from .comments import *
