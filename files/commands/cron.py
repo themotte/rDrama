@@ -1,9 +1,11 @@
 import contextlib
 import logging
+import sys
 import time
 from datetime import datetime, timezone
 from typing import Final, Optional
 
+import psutil
 from sqlalchemy.orm import scoped_session
 
 from files.__main__ import app, db_session
@@ -27,15 +29,48 @@ This value is passed to `time.sleep()`. For more information on that, see
 the Python documentation: https://docs.python.org/3/library/time.html
 '''
 
+MAXIMUM_MEMORY_RSS: Final[int] = 300 * 1024 * 1024
+
+_CRON_COMMAND_NAME = "cron"
+
 @app.cli.command('cron_master')
 def cron_app_master():
 	'''
-	The "master" process
-	'''
-	pass
+	The "master" process. This is essentially an application unto itself. It 
+	spawns 1 worker child. Some code changes would have to be made to get it
+	to orchestrate more, although this is both realistically not a concern™
+	and also more than one master can be spawned without causing any issues.
 
-@app.cli.command('cron')
-def cron_app():
+	Ideally this would not just be one function, but making it larger feels
+	like overengineering it.
+	'''
+	popen_creation = lambda:psutil.Popen([
+		sys.executable,
+		"flask", _CRON_COMMAND_NAME,
+	])
+	process:psutil.Popen = popen_creation()
+	
+	def _respawn_worker_process():
+		nonlocal process
+		process = popen_creation()
+
+	_respawn_worker_process()
+	while True:
+		with process.oneshot():
+			if not process.is_running():
+				_respawn_worker_process()
+				continue
+			mem_rss:int = process.memory_info().rss
+			if mem_rss > MAXIMUM_MEMORY_RSS:
+				logging.info(f"Killing cron worker with PID {process.pid} due "
+		 			f"to high memory usage ({mem_rss} MB vs maximum "
+					f"{MAXIMUM_MEMORY_RSS} MB)")
+				process.terminate()
+		time.sleep(CRON_SLEEP_SECONDS)
+
+
+@app.cli.command(_CRON_COMMAND_NAME)
+def cron_app_worker():
 	'''
 	The "worker" process task. This actually executes tasks.
 	'''
@@ -58,7 +93,8 @@ def _acquire_exclusive_lock(db:scoped_session, table:str):
 				db.rollback()
 			except:
 				logging.warning(
-					f"Failed to rollback database. The table {table} might still be locked.")
+					f"Failed to rollback database. The table {table} might "
+					"still be locked.")
 
 
 def _run_tasks(db:scoped_session):
