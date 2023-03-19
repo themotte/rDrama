@@ -75,8 +75,9 @@ def _httpsify_and_remove_tracking_urls(url:str) -> urllib.parse.ParseResult:
 	return new_url
 
 
-def canonicalize_url(url:str, *, httpsify:bool=False) -> str:
+def canonicalize_url(url:str) -> str:
 	return _replace_urls(url)
+
 
 def canonicalize_url2(url:str, *, httpsify:bool=False) -> urllib.parse.ParseResult:
 	url_parsed = _replace_urls(url)
