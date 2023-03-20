@@ -39,7 +39,6 @@ class PythonCodeTask(RepeatableTask):
 	
 	__mapper_args__ = {
 		"polymorphic_identity": _TABLE_NAME,
-		"concrete": True,
 	}
 
 	id = Column(Integer, ForeignKey(RepeatableTask.id), primary_key=True)

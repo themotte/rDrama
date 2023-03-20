@@ -23,11 +23,9 @@ class ScheduledSubmissionTask(RepeatableTask):
 	
 	__mapper_args__ = {
 		"polymorphic_identity": _TABLE_NAME,
-		"concrete": True,
 	}
 
 	id = Column(Integer, ForeignKey(RepeatableTask.id), primary_key=True)
-	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 	author_id_submission = Column(Integer, ForeignKey("users.id"), nullable=False)
 	ghost = Column(Boolean, default=False, nullable=False)
 	private = Column(Boolean, default=False, nullable=False)
