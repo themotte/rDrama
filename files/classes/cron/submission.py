@@ -88,6 +88,9 @@ class ScheduledSubmissionTask(RepeatableTask):
 		`ScheduledSubmissionContext.make_title()`
 		'''
 		return filter_emojis_only(self.title)
+	
+	def author_name(self) -> str:
+		return self.author.username
 
 	@property
 	def upvotes(self) -> int:
