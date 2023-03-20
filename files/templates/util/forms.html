@@ -21,7 +21,7 @@
 	<br>
 {%- endmacro -%}
 
-{%- macro formkey() -%}
+{%- macro formkey(v) -%}
 {% if v %}
 <input type="hidden" name="formkey", value="{{v.formkey}}">
 {% endif %}
