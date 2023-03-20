@@ -4,9 +4,12 @@
 <section id="scheduled-post-listing" class="listing submission-listing mt-3 mb-3">
 	{%- include "submission_listing.html" -%}
 </section>
-<section id="scheduled-post-new" class="settings-section rounded mb-3 bordered-section">
+<section id="scheduled-post-new" class="settings-section rounded mb-3 bordered-section" style="width:75%">
 	<h5>Submit a Scheduled Post</h5>
-	<p>This tool allows you to submit a scheduled post.</p>
+	<p>
+	This tool allows you to submit a scheduled post. It will be submitted as you at the scheduled date and time, and will perform tasks as if a post was submitted manually (including notifying any subscribers and any post-submit actions).<br> 
+	You may use <a href="https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior">Python strftime formatting</a> in the title of your submitted post if you want to include the date in your submitted post.
+	</p>
 	<form action="/tasks/scheduled_posts/" method="post">
 		{# (label, name, id, min_length=none, max_length=none, required=false) #}
 		{# TODO: don't hardcode this #}
