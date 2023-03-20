@@ -21,12 +21,12 @@
 {%- endmacro -%}
 
 {%- macro formkey(v) -%}
-{% if v %}
-<input type="hidden" name="formkey" value="{{v.formkey}}">
-{% endif %}
+	{% if v %}
+		<input type="hidden" name="formkey" value="{{v.formkey}}">
+	{% endif %}
 {%- endmacro -%}
 
 {%- macro checkbox(name, id, label, checked) -%}
 	<input type="checkbox" class="form-check-input" name="{{name}}" id="{{id}}"{% if checked %} checked{% endif %}>
-	<label for="{{name}}" class="form-check-label">{{label}}</label>
+	<label for="{{name}}" class="form-check-label" class="mr-3">{{label}}</label>
 {%- endmacro -%}

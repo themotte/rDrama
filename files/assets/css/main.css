@@ -5171,6 +5171,12 @@ div[id^="reply-edit-"] li > p:first-child {
 	display: inline;
 }
 
+/* settings, etc */
+.bordered-section {
+	border: 1px black solid;
+	padding: 3px 3px 3px 3px;
+}
+
 
 /***********************
   Volunteer Teaser 
