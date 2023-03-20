@@ -110,6 +110,8 @@ class ValidatedSubmissionLike:
 		def _process_media(file:Optional[FileStorage]) -> tuple[bool, Optional[str], Optional[str]]:
 			if request.headers.get("cf-ipcountry") == "T1": return False, None, None
 			if not file: return False, None, None
+			if not file.content_length: return False, None, None 
+			# handle bad browsers sending garbage
 			if not file.content_type.startswith('image/'):
 				abort(415, "Image files only")
 
@@ -127,8 +129,12 @@ class ValidatedSubmissionLike:
 			if request.headers.get("cf-ipcountry") == "T1": return False, body # do not allow Tor uploads
 			if not file2: return False, body
 			file2 = file2[:4]
+			if all(file.content_length == 0 for file in file2): 
+				return False, body  # handle bad browsers sending garbage
 
 			for file in file2:
+				if not file.content_length:
+					continue # handle bad browsers sending garbage
 				if not file.content_type.startswith('image/'):
 					abort(415, "Image files only")
 				
