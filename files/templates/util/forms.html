@@ -17,8 +17,7 @@
 
 {%- macro textarea_field(label, name, id, min_length=none, max_length=none, required=false) -%}
 	<label for="{{id}}">{{label}}</label>
-	<textarea id="{{id}}" class="form-control" name="{{name}}"{% if required %} required {% endif %}{% if min_length %} minlength="{{min_length}}" {% endif %}{% if max_length %} maxlength="{{max_length}}" {% endif %} rows="5" columns="80">
-	<br>
+	<textarea id="{{id}}" class="form-control" name="{{name}}"{% if required %} required {% endif %}{% if min_length %} minlength="{{min_length}}" {% endif %}{% if max_length %} maxlength="{{max_length}}" {% endif %} rows="5" columns="80"></textarea>
 {%- endmacro -%}
 
 {%- macro formkey(v) -%}
