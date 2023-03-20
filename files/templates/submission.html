@@ -422,6 +422,7 @@
 {% if v and v.id != p.author_id and p.body %}
 	<textarea autocomplete="off" class="d-none card border my-2 p-3 comment-box form-control rounded" id="markdown-{{p.id}}" readonly>{{p.body.strip()}}</textarea> 
 {% endif %}
+{%- block comment_section -%}
 <div class="row border-md-0 comment-section pb-3">
 	<div class="col border-top">
 		<div class="comments-count py-3">
@@ -547,6 +548,8 @@
 
 </div>
 
+{%- endblock -%}
+
 {% if v and v.id==p.author_id %}
 	{% include "component/modal/delete_post.html" %}
 {% endif %}
@@ -565,9 +568,11 @@
 
 <script src="{{ 'js/clipboard.js' | asset }}"></script>
 
+{%- block comment_section2 -%} {# why is this here #}
 {% if not p.replies %}
 	{% include "comments.html" %}
 {% endif %}
+{%- endblock -%}
 
 <script>
 	(() => {
