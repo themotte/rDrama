@@ -4,7 +4,7 @@
 <section id="scheduled-post-listing" class="listing submission-listing mb-3">
 	{%- include "submission_listing.html" -%}
 </section>
-<section id="scheduled-post-new" class="settings-section rounded mb-3 bordered-section">
+<section id="scheduled-post-new" class="settings-section rounded mt-3 mb-3 bordered-section">
 	<h5>Submit a Scheduled Post</h5>
 	<p>This tool allows you to submit a scheduled post.</p>
 	<form action="/tasks/scheduled_posts/" method="post">
@@ -21,7 +21,7 @@
 		</fieldset>
 
 		<label class="mr-3">Time</label><input class="form-inline" style="display:inline;" type="number" name="hour" min="0" max="23">:<input class="form-inline" style="display:inline;" type="number" name="minute" min="0" max="59">
-		{{forms.checkbox("enabled", "scheduled-post-enabled-input", "Enabled", true)}}
+		{{forms.checkbox("enabled", "scheduled-post-enabled-input", "Enabled", true)}}<br>
 		<input type="submit" onclick="disable(this)" value="Submit" class="btn btn-primary">
 		{{forms.formkey(v)}}
 	</form>
