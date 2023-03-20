@@ -6,6 +6,7 @@ from collections import Counter
 import gevent
 import qrcode
 
+import files.helpers.listing as listings
 from files.__main__ import app, limiter
 from files.classes.leaderboard import (BadgeMarseyLeaderboard, LeaderboardMeta,
                                        SimpleLeaderboard, UserBlockLeaderboard)
@@ -677,7 +678,7 @@ def u_username(username, v=None):
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
-	ids = u.userpagelisting(site=SITE, v=v, page=page, sort=sort, t=t)
+	ids = listings.userpagelisting(u, site=SITE, v=v, page=page, sort=sort, t=t)
 
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
