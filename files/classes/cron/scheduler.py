@@ -293,7 +293,6 @@ class RepeatableTask(CreatedBase):
 		return f'<{self.__class__.__name__}(id={self.id}, created_utc={self.created_date}, author_id={self.author_id})>'
 	
 	__mapper_args__ = {
-		"polymorphic_identity": _TABLE_NAME,
 		"polymorphic_on": type_id,
 	}
 
