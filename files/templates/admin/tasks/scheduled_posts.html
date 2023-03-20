@@ -17,6 +17,7 @@
 			<input type="checkbox" name="schedule_day_{{day}}" id="scheduled-post-day-{{day}}"> <label for="schedule_day_{{day}}">{{day.title()}}</label>
 		{%- endfor -%}
 		<br>
+		<label>Time</label> <input type="number" name="hour" min="0" max="23">:<input type="number" name="minute" min="0" max="59">
 		<input type="submit" onclick="disable(this)" value="Submit" class="btn btn-primary">
 		{{forms.formkey(v)}}
 	</form>
