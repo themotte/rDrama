@@ -88,6 +88,6 @@ def tasks_scheduled_posts_post(v:User):
 def tasks_scheduled_post_get(v:User, pid:int):
 	type = with_polymorphic(RepeatableTask, [ScheduledSubmissionTask])
 	submission: Optional[ScheduledSubmissionTask] = \
-		g.db.query(type, ScheduledSubmissionTask.id == pid)
+		g.db.query(type, ScheduledSubmissionTask.id == pid).first()
 	if not submission: abort(404)
 	return render_template("admin/tasks/scheduled_post.html", v=v, p=submission)
