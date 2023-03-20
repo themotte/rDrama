@@ -4,7 +4,7 @@
 <section id="scheduled-post-listing" class="listing submission-listing mb-3">
 	{%- include "submission_listing.html" -%}
 </section>
-<section id="scheduled-post-new" class="settings-section rounded">
+<section id="scheduled-post-new" class="settings-section rounded mb-3">
 	<h5>Submit a Scheduled Post</h5>
 	<p>This tool allows you to submit a scheduled post.</p>
 	<form action="/tasks/scheduled_posts/" method="post">
@@ -16,7 +16,9 @@
 		{%- for day in ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] -%}
 			<input type="checkbox" name="schedule_day_{{day}}" id="scheduled-post-day-{{day}}"> <label for="schedule_day_{{day}}">{{day.title()}}</label>
 		{%- endfor -%}
+		<br>
 		<input type="submit" onclick="disable(this)" value="Submit" class="btn btn-primary">
+		{{forms.formkey()}}
 	</form>
 </section>
 {%- endblock -%}

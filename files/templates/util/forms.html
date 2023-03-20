@@ -12,9 +12,17 @@
 {%- macro text_field(label, name, id, min_length=none, max_length=none, required=false) -%}
 	<label for="{{id}}">{{label}}</label>
 	<input id="{{id}}" name="{{name}}"{% if required %} required {% endif %}{% if min_length %} minlength="{{min_length}}" {% endif %}{% if max_length %} maxlength="{{max_length}}" {% endif %}>
+	<br>
 {%- endmacro -%}
 
 {%- macro textarea_field(label, name, id, min_length=none, max_length=none, required=false) -%}
 	<label for="{{id}}">{{label}}</label>
-	<input id="{{id}}" type="textarea" name="{{name}}"{% if required %} required {% endif %}{% if min_length %} minlength="{{min_length}}" {% endif %}{% if max_length %} maxlength="{{max_length}}" {% endif %}>
+	<input id="{{id}}" type="textarea" name="{{name}}"{% if required %} required {% endif %}{% if min_length %} minlength="{{min_length}}" {% endif %}{% if max_length %} maxlength="{{max_length}}" {% endif %} rows="5" columns="80">
+	<br>
+{%- endmacro -%}
+
+{%- macro formkey() -%}
+{% if v %}
+<input type="hidden" name="formkey", value="{{v.formkey}}">
+{% endif %}
 {%- endmacro -%}
