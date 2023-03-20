@@ -39,6 +39,7 @@ class ScheduledSubmissionTask(RepeatableTask):
 	embed_url = Column(String)
 
 	author = relationship("User", foreign_keys=author_id_submission)
+	task = relationship(RepeatableTask)
 
 	def run_task(self, ctx:TaskRunContext) -> None:
 		submission:Submission = self.make_submission(ctx)
@@ -79,7 +80,7 @@ class ScheduledSubmissionTask(RepeatableTask):
 
 	@property
 	def deleted_utc(self) -> int:
-		return not int(self.enabled)
+		return int(not self.task.enabled)
 
 	@functools.cached_property
 	def title_html(self) -> str:
@@ -157,3 +158,19 @@ class ScheduledSubmissionTask(RepeatableTask):
 	@lazy
 	def plaintitle(self, v):
 		return self.title
+	
+	@property
+	def permalink(self):
+		return f"/tasks/scheduled_posts/{self.id}"
+	
+	@property
+	def shortlink(self):
+		return self.permalink
+	
+	@property
+	def is_real_submission(self) -> bool:
+		return False
+	
+	@property
+	def should_hide_score(self) -> bool:
+		return True

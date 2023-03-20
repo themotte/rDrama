@@ -86,8 +86,7 @@ def tasks_scheduled_posts_post(v:User):
 @app.get('/tasks/scheduled_posts/<int:pid>')
 @admin_level_required(PERMS['SCHEDULER_POSTS'])
 def tasks_scheduled_post_get(v:User, pid:int):
-	type = with_polymorphic(RepeatableTask, [ScheduledSubmissionTask])
 	submission: Optional[ScheduledSubmissionTask] = \
-		g.db.query(type, ScheduledSubmissionTask.id == pid).first()
+		g.db.get(ScheduledSubmissionTask, pid)
 	if not submission: abort(404)
 	return render_template("admin/tasks/scheduled_post.html", v=v, p=submission)

@@ -353,3 +353,7 @@ class Submission(CreatedBase):
 	@lazy
 	def active_flags(self, v): 
 		return len(self.flags(v))
+	
+	@property
+	def is_real_submission(self) -> bool:
+		return True
