@@ -2,31 +2,30 @@ import time
 
 import pyotp
 from flask import g, session
-from sqlalchemy.orm import aliased, declared_attr, deferred
+from sqlalchemy.orm import aliased, declared_attr, deferred, relationship
 
+from files.classes.alts import Alt
+from files.classes.award import AwardRelationship
+from files.classes.badges import Badge
 from files.classes.base import CreatedBase
+from files.classes.clients import *  # note: imports Comment and Submission
+from files.classes.exiles import *
+from files.classes.follows import Follow
+from files.classes.mod import Mod
+from files.classes.notifications import Notification
+from files.classes.saves import CommentSaveRelationship, SaveRelationship
+from files.classes.sub_block import SubBlock
+from files.classes.subscriptions import Subscription
+from files.classes.userblock import UserBlock
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.const import *
 from files.helpers.config.environment import (CARD_VIEW,
                                               CLUB_TRUESCORE_MINIMUM,
-                                              DEFAULT_COLOR, SITE_FULL,
+                                              DEFAULT_COLOR,
+                                              DEFAULT_TIME_FILTER, SITE_FULL,
                                               SITE_ID)
 from files.helpers.media import *
 from files.helpers.security import *
-
-from .alts import Alt
-from .award import AwardRelationship
-from .badges import *
-from .clients import *
-from .exiles import *
-from .follows import *
-from .mod import *
-from .mod_logs import *
-from .notifications import Notification
-from .saves import *
-from .sub_block import *
-from .subscriptions import *
-from .userblock import *
 
 defaulttheme = "TheMotte"
 
