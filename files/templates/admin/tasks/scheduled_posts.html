@@ -1,10 +1,10 @@
 {%- import "util/forms.html" as forms -%}
 {%- extends 'default.html' -%}
 {%- block content -%}
-<section id="scheduled-post-listing" class="listing submission-listing mb-3">
+<section id="scheduled-post-listing" class="listing submission-listing mt-3 mb-3">
 	{%- include "submission_listing.html" -%}
 </section>
-<section id="scheduled-post-new" class="settings-section rounded mt-3 mb-3 bordered-section">
+<section id="scheduled-post-new" class="settings-section rounded mb-3 bordered-section">
 	<h5>Submit a Scheduled Post</h5>
 	<p>This tool allows you to submit a scheduled post.</p>
 	<form action="/tasks/scheduled_posts/" method="post">

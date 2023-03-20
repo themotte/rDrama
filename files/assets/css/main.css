@@ -5174,7 +5174,7 @@ div[id^="reply-edit-"] li > p:first-child {
 /* settings, etc */
 .bordered-section {
 	border: 1px black solid;
-	padding: 3px 3px 3px 3px;
+	padding: 1em;
 }
 
 
