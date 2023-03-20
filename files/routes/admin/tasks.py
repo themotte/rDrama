@@ -3,6 +3,7 @@ from typing import Optional
 
 from flask import abort, g, redirect, render_template, request
 from files.helpers.config.environment import MULTIMEDIA_EMBEDDING_ENABLED
+from sqlalchemy.orm import with_polymorphic
 
 import files.helpers.validators as validators
 from files.__main__ import app
@@ -85,7 +86,7 @@ def tasks_scheduled_posts_post(v:User):
 @app.get('/tasks/scheduled_posts/<int:pid>')
 @admin_level_required(PERMS['SCHEDULER_POSTS'])
 def tasks_scheduled_post_get(v:User, pid:int):
-	submission: Optional[ScheduledSubmissionTask] = \
-		g.db.get(ScheduledSubmissionTask, pid)
+	type = with_polymorphic(RepeatableTask, [ScheduledSubmissionTask])
+	submission: Optional[ScheduledSubmissionTask] = g.db.get(type, pid)
 	if not submission: abort(404)
 	return render_template("admin/tasks/scheduled_post.html", v=v, p=submission)
