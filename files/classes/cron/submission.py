@@ -89,6 +89,7 @@ class ScheduledSubmissionTask(RepeatableTask):
 		'''
 		return filter_emojis_only(self.title)
 	
+	@property
 	def author_name(self) -> str:
 		return self.author.username
 
@@ -110,6 +111,10 @@ class ScheduledSubmissionTask(RepeatableTask):
 	
 	@property
 	def comment_count(self) -> int:
+		return 0
+	
+	@property
+	def views(self) -> int:
 		return 0
 	
 	@property
