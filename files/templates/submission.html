@@ -422,9 +422,7 @@
 {% if v and v.id != p.author_id and p.body %}
 	<textarea autocomplete="off" class="d-none card border my-2 p-3 comment-box form-control rounded" id="markdown-{{p.id}}" readonly>{{p.body.strip()}}</textarea> 
 {% endif %}
-
 <div class="row border-md-0 comment-section pb-3">
-{%- block comment_section -%}
 	<div class="col border-top">
 		<div class="comments-count py-3">
 			{{sorting_time.sort_dropdown(sort, none, SORTS_COMMENTS)}}
@@ -587,5 +585,4 @@
 		{% endif %}
 	})()
 </script>
-{%- endblock -%}
 {% endblock %}
