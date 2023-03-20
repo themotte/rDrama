@@ -568,9 +568,11 @@
 
 <script src="{{ 'js/clipboard.js' | asset }}"></script>
 
+{%- block comment_section2 -%}
 {% if not p.replies %}
 	{% include "comments.html" %}
 {% endif %}
+{%- endblock -%}
 
 <script>
 	(() => {
