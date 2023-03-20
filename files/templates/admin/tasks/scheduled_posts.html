@@ -18,7 +18,7 @@
 			{{forms.checkbox("schedule_day_" ~ day, "scheduled-post-day-" ~ day, day.title())}}
 		{%- endfor -%}
 		</div>
-		<label>Time</label> <input class="form-inline" type="number" name="hour" min="0" max="23">:<input class="form-inline" type="number" name="minute" min="0" max="59">
+		<label>Time</label> <input class="form-inline" style="display:inline;" type="number" name="hour" min="0" max="23">:<input class="form-inline" style="display:inline;" type="number" name="minute" min="0" max="59">
 		{{forms.checkbox("enabled", "scheduled-post-enabled-input", "Enabled", true)}}
 		<input type="submit" onclick="disable(this)" value="Submit" class="btn btn-primary">
 		{{forms.formkey(v)}}
