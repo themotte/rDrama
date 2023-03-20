@@ -24,7 +24,6 @@ from files.helpers.config.environment import (CARD_VIEW,
                                               DEFAULT_COLOR,
                                               DEFAULT_TIME_FILTER, SITE_FULL,
                                               SITE_ID)
-from files.helpers.media import *
 from files.helpers.security import *
 
 defaulttheme = "TheMotte"
