@@ -3,11 +3,10 @@ from types import ModuleType
 from typing import Callable
 
 from sqlalchemy.schema import Column, ForeignKey
-from sqlalchemy.sql.sqltypes import String, Integer
+from sqlalchemy.sql.sqltypes import Integer, String
 
-from files.classes.cron.scheduler import RepeatableTask, TaskRunContext
-
-_TABLE_NAME = "tasks_repeatable_python"
+from files.classes.cron.scheduler import (RepeatableTask, ScheduledTaskType,
+                                          TaskRunContext)
 
 __all__ = ('PythonCodeTask',)
 
@@ -35,10 +34,10 @@ class PythonCodeTask(RepeatableTask):
 	task context.
 	'''
 	
-	__tablename__ = _TABLE_NAME	
+	__tablename__ = "tasks_repeatable_python"
 	
 	__mapper_args__ = {
-		"polymorphic_identity": _TABLE_NAME,
+		"polymorphic_identity": int(ScheduledTaskType.PYTHON_CALLABLE),
 	}
 
 	id = Column(Integer, ForeignKey(RepeatableTask.id), primary_key=True)

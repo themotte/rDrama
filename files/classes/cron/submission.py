@@ -4,7 +4,8 @@ from datetime import datetime
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.sql.sqltypes import Boolean, Integer, String, Text
 
-from files.classes.cron.scheduler import RepeatableTask, TaskRunContext
+from files.classes.cron.scheduler import (RepeatableTask, ScheduledTaskType,
+                                          TaskRunContext)
 from files.classes.submission import Submission
 from files.helpers.config.const import (RENDER_DEPTH_LIMIT,
                                         SUBMISSION_TITLE_LENGTH_MAXIMUM)
@@ -13,16 +14,14 @@ from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy
 from files.helpers.sanitize import filter_emojis_only
 
-_TABLE_NAME = "tasks_repeatable_scheduled_submissions"
-
 __all__ = ('ScheduledSubmissionTask',)
 
 
 class ScheduledSubmissionTask(RepeatableTask):
-	__tablename__ = _TABLE_NAME
+	__tablename__ = "tasks_repeatable_scheduled_submissions"
 	
 	__mapper_args__ = {
-		"polymorphic_identity": _TABLE_NAME,
+		"polymorphic_identity": int(ScheduledTaskType.SCHEDULED_SUBMISSION),
 	}
 
 	id = Column(Integer, ForeignKey(RepeatableTask.id), primary_key=True)
