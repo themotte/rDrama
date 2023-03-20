@@ -3,6 +3,7 @@ from datetime import datetime
 
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.sql.sqltypes import Boolean, Integer, String, Text
+from sqlalchemy.orm import relationship
 
 from files.classes.cron.scheduler import (RepeatableTask, ScheduledTaskType,
                                           TaskRunContext)
@@ -36,6 +37,8 @@ class ScheduledSubmissionTask(RepeatableTask):
 	body_html = Column(Text)
 	flair = Column(String)
 	embed_url = Column(String)
+
+	author = relationship("User", foreign_keys=author_id_submission)
 
 	def run_task(self, ctx:TaskRunContext) -> None:
 		submission:Submission = self.make_submission(ctx)
