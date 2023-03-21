@@ -1,4 +1,4 @@
-
+{%- import "util/forms.html" as forms -%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -162,7 +162,7 @@
 				{% if mfa_secret %}
 				<div>
 					<form action="/settings/security" method="post">
-						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						{{forms.formkey(v)}}
 						<input type="hidden" name="2fa_secret" value="{{mfa_secret}}">
 						<div class="modal-body">
 							<p>
@@ -191,7 +191,7 @@
 				{% else %}
 				<div>
 					<form action="/settings/security" method="post">
-						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						{{forms.formkey(v)}}
 						<input type="hidden" name="2fa_secret" value="{{mfa_secret}}">
 						<div class="modal-body">
 

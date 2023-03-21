@@ -130,7 +130,7 @@
 
 							<div>
 								<form action="/settings/images/profile" method="post" enctype="multipart/form-data">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
+									{{forms.formkey(v)}}
 									<label class="btn btn-secondary text-capitalize mr-2 mb-0">
 										Update<input autocomplete="off" type="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} hidden name="profile" onchange="form.submit()">
 									</label>
@@ -163,7 +163,7 @@
 
 							<div>
 								<form action="/settings/images/banner" method="post" enctype="multipart/form-data">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
+									{{forms.formkey(v)}}
 									<label class="btn btn-secondary text-capitalize mr-2 mb-0">
 										Update<input autocomplete="off" type="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*" hidden name="banner" onchange="form.submit()">
 									</label>
@@ -249,7 +249,7 @@
 									<p>Your original username will always stay reserved for you: <code>{{v.original_username}}</code></p>
 
 									<form action="/settings/name_change" method="post">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
+										{{forms.formkey(v)}}
 										<input autocomplete="off" type="text" name="name" class="form-control" value="{{v.username}}">
 										<small>3-25 characters, including letters, numbers, _ , and -</small>
 										<div class="d-flex mt-2">
@@ -267,7 +267,7 @@
 								<div class="w-lg-100">
 
 									<form id="profile-settings" action="/settings/title_change" method="post">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
+										{{forms.formkey(v)}}
 										<input maxlength=100 {% if v.flairchanged %}disabled{% endif %} autocomplete="off" id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if v.flairchanged %}Your flair has been locked until {{ti}}{% elif v.customtitleplain %}{{v.customtitleplain}}{% endif %}">
 										<div class="d-flex mt-2">
 											<small>Limit of 100 characters</small>
@@ -285,7 +285,7 @@
 								<div class="d-flex">
 
 									<form action="/settings/titlecolor" id="titlecolor-form" method="post" class="color-picker" style="line-height: 0">
-											<input type="hidden" name="formkey" value="{{v.formkey}}">
+											{{forms.formkey(v)}}
 
 											{% for titlecolor in COLORS %}
 											<input autocomplete="off" type="radio" name="titlecolor" id="titlecolor-{{titlecolor}}" value="{{titlecolor}}" {% if v.titlecolor == titlecolor %}checked{% endif %} onclick="document.getElementById('titlecolor-form').submit()">
@@ -309,7 +309,7 @@
 								<p class="text-small mb-2">Or type a color code:</p>
 								<div class="d-flex">
 								<form action="/settings/titlecolor" id="color-code-form" method="post">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
+									{{forms.formkey(v)}}
 									<input autocomplete="off" class="form-control" type="text" name="titlecolor" id="color-code" maxlength="6" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
 									<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input autocomplete="off" type="text" for="color-code" onclick="form.submit()" hidden=""></label>
 								</form>
@@ -330,7 +330,7 @@
 									<div class="d-flex">
 		
 										<form action="/settings/verifiedcolor" id="verifiedcolor-form" method="post" class="color-picker" style="line-height: 0">
-												<input type="hidden" name="formkey" value="{{v.formkey}}">
+												{{forms.formkey(v)}}
 		
 											{% for verifiedcolor in COLORS %}
 												<input autocomplete="off" type="radio" name="verifiedcolor" id="verifiedcolor-{{verifiedcolor}}" value="{{verifiedcolor}}" {% if v.verifiedcolor == verifiedcolor %}checked{% endif %} onclick="document.getElementById('verifiedcolor-form').submit()">
@@ -352,7 +352,7 @@
 									<p class="text-small mb-2">Or type a color code:</p>
 									<div class="d-flex">
 									<form action="/settings/verifiedcolor" id="color-code-form" method="post">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
+										{{forms.formkey(v)}}
 										<input autocomplete="off" class="form-control" type="text" name="verifiedcolor" id="color-code" maxlength="6" value="{% if v.verifiedcolor %}{{v.verifiedcolor}}{% endif %}">
 										<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input autocomplete="off" type="text" for="color-code" onclick="form.submit()" hidden=""></label>
 									</form>
@@ -369,7 +369,7 @@
 
 								<div class="w-lg-100">						
 									<form id="profile-bio" action="/settings/profile" method="post" enctype="multipart/form-data">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
+										{{forms.formkey(v)}}
 										<div class="input-group mb-2">
 											<textarea autocomplete="off"  id="bio-text" class="form-control rounded" aria-label="With textarea" placeholder="Tell the community a bit about yourself." rows="3" name="bio" form="profile-bio" maxlength="1500">{% if v.bio %}{{v.bio}}{% endif %}</textarea>
 										</div>
@@ -404,7 +404,7 @@
 							
 								<div class="w-lg-100">						
 									<form id="profile-friends" action="/settings/profile" method="post" enctype="multipart/form-data">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
+										{{forms.formkey(v)}}
 										<div class="input-group mb-2">
 											<textarea autocomplete="off"  id="friends-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter your friends on the site..." rows="3" name="friends" form="profile-friends" maxlength="1500">{% if v.friends %}{{v.friends}}{% endif %}</textarea>
 										</div>

@@ -170,7 +170,7 @@
 						{% endif %}
 
 						<form class="d-none toggleable" id="message" action="/@{{u.username}}/message" onsubmit="submitFormAjax(event)">
-							<input type="hidden" name="formkey" value="{{v.formkey}}"> 
+							{{forms.formkey(v)}} 
 							<pre></pre>
 							<textarea autocomplete="off" id="input-message" form="message" name="message" rows="3" minlength="1" maxlength="{{MESSAGE_BODY_LENGTH_MAXIMUM}}" class="form-control b2" oninput="markdown('input-message', 'message-preview')" required></textarea>
 							<pre></pre>
@@ -196,7 +196,7 @@
 							<div class="w-lg-100">
 
 								<form action="/admin/title_change/{{u.id}}" method="post">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
+									{{forms.formkey(v)}}
 									<input maxlength=100 autocomplete="off" id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitleplain %}{{u.customtitleplain}}{% endif %}">
 									<div class="d-flex mt-2">
 										<div class="custom-control custom-checkbox">
@@ -213,13 +213,13 @@
 						<pre></pre>
 						{% if u.is_suspended %}
 							<form action="/unban_user/{{u.id}}/" method="post" action="">
-								<input type="hidden" name="formkey" value="{{v.formkey}}">
+								{{forms.formkey(v)}}
 								<input type="hidden" name="redir" value="true">
 								<input type="submit" class="btn btn-success" value="Unban user">
 							</form>
 						{% else %}
 							<form action="/ban_user/{{u.id}}" method="post" action="">
-								<input type="hidden" name="formkey" value="{{v.formkey}}">
+								{{forms.formkey(v)}}
 								<input type="hidden" name="redir" value="true">
 								<input autocomplete="off" style="font-size:11px" type="text" class="form-control" name="reason" placeholder="Ban Reason" oninput="document.getElementById('user-ban-submit').disabled=false">
 								<input autocomplete="off" style="font-size:11px" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
@@ -428,7 +428,7 @@
 
 					<form class="d-none toggleable" id='message-mobile' action="/@{{u.username}}/message" onsubmit="submitFormAjax(event)">
 						<pre></pre>
-						<input type="hidden" name="formkey" value="{{v.formkey}}"> 
+						{{forms.formkey(v)}} 
 						<textarea autocomplete="off" id="input-message-mobile" form="message-mobile" name="message" rows="3" minlength="1" maxlength="{{MESSAGE_BODY_LENGTH_MAXIMUM}}" class="form-control" oninput="markdown('input-message-mobile', 'message-preview-mobile')" required></textarea>
 						<pre></pre>
 						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('input-message-mobile')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Bold"></pre>
@@ -453,7 +453,7 @@
 							<div class="w-lg-100">
 
 								<form action="/admin/title_change/{{u.id}}" method="post">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
+									{{forms.formkey(v)}}
 									<input maxlength=100 autocomplete="off" id="customtitlebody-mobile" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitleplain %}{{u.customtitleplain}}{% endif %}">
 									<div class="d-flex mt-2">
 										<div class="custom-control custom-checkbox">
@@ -476,7 +476,7 @@
 							</form>
 						{% else %}
 							<form action="/ban_user/{{u.id}}/" method="post">
-								<input type="hidden" name="formkey" value="{{v.formkey}}">
+								{{forms.formkey(v)}}
 								<input type="hidden" name="redir" value="true">
 								<input autocomplete="off" style="font-size:11px" type="text" class="form-control" name="reason" placeholder="Ban Reason" oninput="document.getElementById('user-ban-submit2').disabled=false">
 								<input autocomplete="off" style="font-size:11px" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
