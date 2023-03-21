@@ -26,15 +26,11 @@ def _get_request_bool(name:str) -> bool:
 
 
 def _get_request_dayofweek() -> DayOfWeek:
-	week:DayOfWeek = DayOfWeek.NONE
-	if _get_request_bool('schedule_day_sunday'): week |= DayOfWeek.SUNDAY
-	if _get_request_bool('schedule_day_monday'): week |= DayOfWeek.MONDAY
-	if _get_request_bool('schedule_day_tuesday'): week |= DayOfWeek.TUESDAY
-	if _get_request_bool('schedule_day_wednesday'): week |= DayOfWeek.WEDNESDAY
-	if _get_request_bool('schedule_day_thursday'): week |= DayOfWeek.THURSDAY
-	if _get_request_bool('schedule_day_friday'): week |= DayOfWeek.FRIDAY
-	if _get_request_bool('schedule_day_saturday'): week |= DayOfWeek.SATURDAY
-	return week
+	days:DayOfWeek = DayOfWeek.NONE
+	for day in DayOfWeek.all_days:
+		name:str = day.name.lower()
+		if _get_request_bool(f'schedule_day_{name}'): days |= day
+	return days
 
 
 @app.post('/tasks/scheduled_posts/')
