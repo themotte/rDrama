@@ -88,7 +88,7 @@ class Submission(CreatedBase):
 	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
 	subr = relationship("Sub", primaryjoin="foreign(Submission.sub)==remote(Sub.name)", viewonly=True)
 	notes = relationship("UserNote", back_populates="post")
-	task = relationship("ScheduledSubmissionTask", viewonly=True, back_populates="submissions")
+	task = relationship("ScheduledSubmissionTask", back_populates="submissions")
 
 	bump_utc = deferred(Column(Integer, server_default=FetchedValue()))
 
