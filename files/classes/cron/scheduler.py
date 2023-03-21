@@ -288,7 +288,11 @@ class RepeatableTask(CreatedBase):
 
 	def run_task(self, ctx:TaskRunContext):
 		raise NotImplementedError()
-	
+
+	def contains_day_str(self, day_str:str) -> bool:
+		return bool(day_str) and \
+			DayOfWeek[day_str.upper()] in self.frequency_day_flags
+
 	def __repr__(self) -> str:
 		return f'<{self.__class__.__name__}(id={self.id}, created_utc={self.created_date}, author_id={self.author_id})>'
 	

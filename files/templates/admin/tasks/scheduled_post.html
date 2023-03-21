@@ -1,3 +1,9 @@
 {%- extends "submission.html" -%}
-{%- block comment_section -%}{%- endblock -%}
+{%- block comment_section -%}
+<section class="scheduled-post-edit">
+	<form action="/tasks/scheduled_posts/{{p.id}}" method="post">
+		{{forms.scheduled_post_time_selection_form(p)}}
+	</form>
+</section>
+{%- endblock -%}
 {%- block comment_section2 -%}{%- endblock -%}

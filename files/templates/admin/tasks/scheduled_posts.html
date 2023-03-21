@@ -16,18 +16,7 @@
 		{{forms.text_field("Title", "title", "title", min_length=0, max_length=300, required=true)}}
 		{{forms.text_field("URL (optional)", "url", "url", min_length=0, max_length=2048, required=false)}}
 		{{forms.textarea_field("Body", "body", "body", min_length=0, max_length=40000, required=false)}}
-		<fieldset class="scheduled-post-day-selection form-check">
-			<label class="mr-3">Days</label>
-			{%- for day in ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] -%}
-				{{forms.checkbox("schedule_day_" ~ day, "scheduled-post-day-" ~ day, day.title())}}
-			{%- endfor -%}
-		</fieldset>
-		<div class="form-inline">
-			<label class="mr-3">Time</label><input type="number" name="hour" min="0" max="23">:<input type="number" name="minute" min="0" max="59">
-		</div>
-		{{forms.checkbox("enabled", "scheduled-post-enabled-input", "Enabled", true)}}<br>
-		<input type="submit" onclick="disable(this)" value="Submit" class="btn btn-primary">
-		{{forms.formkey(v)}}
+		{{forms.scheduled_post_time_selection_form(none)}}
 	</form>
 </section>
 {%- endblock -%}
