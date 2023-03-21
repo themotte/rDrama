@@ -5,8 +5,8 @@ from typing import Callable
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.sql.sqltypes import Integer, String
 
-from files.classes.cron.scheduler import (RepeatableTask, ScheduledTaskType,
-                                          TaskRunContext)
+from files.classes.cron.tasks import (RepeatableTask, ScheduledTaskType,
+                                      TaskRunContext)
 
 __all__ = ('PythonCodeTask',)
 

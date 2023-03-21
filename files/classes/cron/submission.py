@@ -1,12 +1,12 @@
 import functools
 from datetime import datetime
 
+from sqlalchemy.orm import relationship
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.sql.sqltypes import Boolean, Integer, String, Text
-from sqlalchemy.orm import relationship
 
-from files.classes.cron.scheduler import (RepeatableTask, ScheduledTaskType,
-                                          TaskRunContext)
+from files.classes.cron.tasks import (RepeatableTask, ScheduledTaskType,
+                                      TaskRunContext)
 from files.classes.submission import Submission
 from files.helpers.config.const import (RENDER_DEPTH_LIMIT,
                                         SUBMISSION_TITLE_LENGTH_MAXIMUM)

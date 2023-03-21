@@ -27,7 +27,13 @@ class ScheduledTaskType(IntEnum):
 
 class ScheduledTaskState(IntEnum):
 	WAITING = 1
+	'''
+	A task waiting to be triggered
+	'''
 	RUNNING = 2
+	'''
+	A task that is currently running
+	'''
 
 
 class DayOfWeek(IntFlag):
@@ -45,8 +51,8 @@ class DayOfWeek(IntFlag):
 	NONE = 0 << 0
 	ALL = WEEKDAYS | WEEKENDS
 
-	@property
 	@classmethod
+	@property
 	def all_days(cls) -> list["DayOfWeek"]:
 		return [
 			cls.SUNDAY, cls.MONDAY, cls.TUESDAY, cls.WEDNESDAY, 
@@ -229,6 +235,8 @@ class RepeatableTask(CreatedBase):
 	frequency_day = Column(SmallInteger, nullable=False)
 	time_of_day_utc = Column(Time, nullable=False)
 
+	runs = relationship("RepeatableTaskRun", back_populates="task")
+
 	@property
 	def type(self) -> ScheduledTaskType:
 		return ScheduledTaskType(self.type_id)
@@ -276,7 +284,7 @@ class RepeatableTask(CreatedBase):
 	def run(self, db:scoped_session, trigger_time:datetime) -> RepeatableTaskRun:
 		run:RepeatableTaskRun = RepeatableTaskRun(task_id=self.id)
 		try:
-			from files.__main__ import app, cache, mail, r # i know
+			from files.__main__ import app, cache, mail, r  # i know
 			ctx:TaskRunContext = TaskRunContext(
 				app=app,
 				cache=cache,
@@ -319,7 +327,7 @@ class RepeatableTaskRun(CreatedBase):
 
 	completed_utc = Column(DateTime)
 
-	task = relationship(RepeatableTask)
+	task = relationship(RepeatableTask, back_populates="runs")
 
 	exception: Optional[Exception] = None # not part of the db model
 

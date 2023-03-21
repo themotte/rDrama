@@ -9,9 +9,8 @@ import psutil
 from sqlalchemy.orm import scoped_session
 
 from files.__main__ import app, db_session
-from files.classes.cron.scheduler import (DayOfWeek, RepeatableTask,
-                                          RepeatableTaskRun,
-                                          ScheduledTaskState)
+from files.classes.cron.tasks import (DayOfWeek, RepeatableTask,
+                                      RepeatableTaskRun, ScheduledTaskState)
 
 CRON_SLEEP_SECONDS: Final[int] = 15
 '''

@@ -81,7 +81,7 @@ from .usernotes import UserTag, UserNote
 from .views import ViewerRelationship
 from .votes import Vote, CommentVote
 from .volunteer_janitor import VolunteerJanitorRecord
-from .cron.scheduler import RepeatableTask
+from .cron.tasks import RepeatableTask
 from .cron.submission import ScheduledSubmissionTask
 from .cron.pycallable import PythonCodeTask
 
