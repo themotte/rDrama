@@ -55,6 +55,7 @@ class Submission(CreatedBase):
 	ban_reason = Column(String)
 	embed_url = Column(String)
 	filter_state = Column(String, nullable=False)
+	task_id = Column(Integer, ForeignKey("ScheduledSubmissionTask.id"))
 
 	Index('fki_submissions_approver_fkey', is_approved)
 	Index('post_app_id_idx', app_id)
@@ -87,6 +88,7 @@ class Submission(CreatedBase):
 	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
 	subr = relationship("Sub", primaryjoin="foreign(Submission.sub)==remote(Sub.name)", viewonly=True)
 	notes = relationship("UserNote", back_populates="post")
+	task = relationship("ScheduledSubmissionTask", viewonly=True, back_populates="submissions")
 
 	bump_utc = deferred(Column(Integer, server_default=FetchedValue()))
 

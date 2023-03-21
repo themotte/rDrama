@@ -40,6 +40,7 @@
 	<div class="form-inline">
 		<label class="mr-3">Time</label>
 		<input type="number" name="hour" min="0" max="23"{% if p %} value="{{p.task.time_of_day_utc.hour}}"{% endif %} required>:<input type="number" name="minute" min="0" max="59"{% if p %} value="{{p.task.time_of_day_utc.minute}}"{% endif %} required>
+		<span class="text-gray ml-3"> (Note: all times are in UTC)</span>
 	</div>
 	{{checkbox("enabled", "scheduled-post-enabled-input", "Enabled", p.task.enabled if p else true)}}<br>
 	<input type="submit" onclick="disable(this)" value="Submit" class="btn btn-primary">

@@ -1,10 +1,19 @@
 {%- extends "submission.html" -%}
 {%- block comment_section -%}
+<section class="scheduled-post-go-back" style="padding:1em;">
+	You are viewing a single scheduled post. <a href="/tasks/scheduled_posts/">View all scheduled posts</a>
+</section>
 <section class="scheduled-post-edit">
 	<h5>Edit Scheduled Post</h5>
 	<form action="/tasks/scheduled_posts/{{p.id}}" method="post">
 		{{forms.scheduled_post_time_selection_form(v, p)}}
 	</form>
+</section>
+<section class="scheduled-post-submissions">
+	<h1>Previous Task Runs</h1>
+	{%- with posts = p.posts -%}
+		{%- include "submission_listing.html" -%}
+	{%- endwith -%}
 </section>
 {%- endblock -%}
 {%- block comment_section2 -%}{%- endblock -%}
