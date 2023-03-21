@@ -53,7 +53,7 @@ def cron_app_master():
 	'''
 	spawn_worker:Callable[[], psutil.Popen] = lambda:psutil.Popen([
 		sys.executable,
-		"flask", "-m", _CRON_COMMAND_NAME,
+		"-m", "flask", _CRON_COMMAND_NAME,
 	])
 	process:psutil.Popen = spawn_worker()
 	
