@@ -243,9 +243,7 @@
 							{% if p.realbody(v) %}
 								<a class="list-inline-item" role="button" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
 							{% endif %}
-							{%- block post_actions -%}
-								{% include 'component/post/actions.html' %}
-							{%- endblock -%}
+							{% include 'component/post/actions.html' %}
 						</ul>
 					</div>
 				</div>
@@ -294,9 +292,7 @@
 								</div>
 								<div class="modal-body">
 									<ul class="list-group post-actions">
-										{%- block post_actions_mobile -%}
-											{% include "component/post/actions_mobile.html" %}
-										{%- endblock -%}
+										{% include "component/post/actions_mobile.html" %}
 									</ul>
 								</div>
 							</div>
@@ -315,9 +311,7 @@
 
 
 	{% if v and v.admin_level > 1 %}
-		{%- block post_actions_mobile_admin -%}
-			{% include "component/post/actions_admin_mobile.html" %}
-		{%- endblock -%}
+		{% include "component/post/actions_admin_mobile.html" %}
 	{% endif %}
 
 
