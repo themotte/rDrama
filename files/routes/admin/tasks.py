@@ -2,14 +2,15 @@ from datetime import time
 from typing import Optional
 
 from flask import abort, g, redirect, render_template, request
+from files.helpers.config.environment import MULTIMEDIA_EMBEDDING_ENABLED
+from sqlalchemy.orm import with_polymorphic
 
 import files.helpers.validators as validators
 from files.__main__ import app
-from files.classes.cron.scheduler import DayOfWeek, ScheduledTaskType
+from files.classes.cron.scheduler import DayOfWeek, RepeatableTask, ScheduledTaskType
 from files.classes.cron.submission import ScheduledSubmissionTask
 from files.classes.user import User
 from files.helpers.config.const import PERMS, SUBMISSION_FLAIR_LENGTH_MAXIMUM
-from files.helpers.config.environment import MULTIMEDIA_EMBEDDING_ENABLED
 from files.helpers.wrappers import admin_level_required
 
 
@@ -18,8 +19,7 @@ from files.helpers.wrappers import admin_level_required
 def tasks_scheduled_posts_get(v:User):
 	submissions:list[ScheduledSubmissionTask] = \
 		g.db.query(ScheduledSubmissionTask).all()
-	return render_template(
-		"admin/tasks/scheduled_posts.html", v=v, listing=submissions)
+	return render_template("admin/tasks/scheduled_posts.html", v=v, listing=submissions)
 
 
 def _get_request_bool(name:str) -> bool:
@@ -47,8 +47,7 @@ def tasks_scheduled_posts_post(v:User):
 		)
 	
 	# first build the template
-	flair:str = validators.guarded_value(
-		"flair", min_len=0, max_len=SUBMISSION_FLAIR_LENGTH_MAXIMUM)
+	flair:str = validators.guarded_value("flair", min_len=0, max_len=SUBMISSION_FLAIR_LENGTH_MAXIMUM)
 
 	# and then build the schedule
 	enabled:bool = _get_request_bool('enabled')
@@ -82,16 +81,13 @@ def tasks_scheduled_posts_post(v:User):
 	g.db.commit()
 	return redirect(f'/tasks/scheduled_posts/{task.id}')
 
-
 @app.get('/tasks/scheduled_posts/<int:pid>')
 @admin_level_required(PERMS['SCHEDULER_POSTS'])
 def tasks_scheduled_post_get(v:User, pid:int):
 	submission: Optional[ScheduledSubmissionTask] = \
 		g.db.get(ScheduledSubmissionTask, pid)
 	if not submission: abort(404)
-	return render_template(
-		"admin/tasks/scheduled_post.html", v=v, p=submission)
-
+	return render_template("admin/tasks/scheduled_post.html", v=v, p=submission)
 
 @app.post('/tasks/scheduled_posts/<int:pid>/content')
 def task_scheduled_post_content_post(v:User, pid:int):
