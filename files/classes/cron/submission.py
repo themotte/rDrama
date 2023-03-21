@@ -71,6 +71,7 @@ class ScheduledSubmissionTask(RepeatableTask):
 			ghost=self.ghost,
 			filter_state='normal',
 			embed_url=self.embed_url,
+			task_id=self.id,
 		)
 	
 	def make_title(self, trigger_time:datetime) -> str:
