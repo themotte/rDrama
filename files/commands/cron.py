@@ -82,7 +82,13 @@ def cron_app_worker():
 	'''
 	db:scoped_session = db_session() # type: ignore
 	while True:
-		_run_tasks(db)
+		try:
+			_run_tasks(db)
+		except Exception as e:
+			logging.exception(
+				"An unhandled exception occurred while running tasks",
+				exc_info=e
+			)
 		time.sleep(CRON_SLEEP_SECONDS)
 
 
@@ -94,18 +100,22 @@ def _acquire_lock_exclusive(db:scoped_session, table:str):
 	making sure no readers can access it while in the critical section.
 	''' 
 	# TODO: make `table` the type LiteralString once we upgrade to python 3.11
-	with db.begin_nested() as t:
-		db.execute(f"LOCK TABLE {table} IN ACCESS EXCLUSIVE MODE")
+	db.execute(f"LOCK TABLE {table} IN ACCESS EXCLUSIVE MODE")
+	try:
+		yield
+		db.commit()
+	except Exception:
+		logging.error(
+			"An exception occurred during an operation in a critical section. "
+		    "A task might not occur or might be duplicated."
+		)
 		try:
-			yield t
-			db.commit()
+			db.rollback()
 		except:
-			try:
-				db.rollback()
-			except:
-				logging.warning(
-					f"Failed to rollback database. The table {table} might "
-					"still be locked.")
+			logging.warning(
+				f"Failed to rollback database. The table {table} might still "
+				"be locked.")
+		raise
 
 
 def _run_tasks(db:scoped_session):
@@ -146,4 +156,3 @@ def _run_tasks(db:scoped_session):
 			)
 		with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
 			task.run_state_enum = ScheduledTaskState.WAITING
-		db.commit()
