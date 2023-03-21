@@ -3,7 +3,7 @@ import logging
 import sys
 import time
 from datetime import datetime, timezone
-from typing import Final, Optional
+from typing import Callable, Final, Optional
 
 import psutil
 from sqlalchemy.orm import scoped_session
@@ -45,20 +45,21 @@ def cron_app_master():
 	
 	Implementation note: Some code changes would have to be made to get it
 	to orchestrate more, although this is both realistically not a concern™
-	and also more than one master can be spawned without causing any issues.
+	and also more than one master can be spawned without causing any issues
+	as synchronization is provided by the database.
 
 	Ideally this would not just be one function, but making it larger feels
 	like overengineering it.
 	'''
-	popen_creation = lambda:psutil.Popen([
+	spawn_worker:Callable[[], psutil.Popen] = lambda:psutil.Popen([
 		sys.executable,
-		"flask", _CRON_COMMAND_NAME,
+		"flask", "-m", _CRON_COMMAND_NAME,
 	])
-	process:psutil.Popen = popen_creation()
+	process:psutil.Popen = spawn_worker()
 	
 	def _respawn_worker_process():
 		nonlocal process
-		process = popen_creation()
+		process = spawn_worker()
 
 	while True:
 		with process.oneshot():

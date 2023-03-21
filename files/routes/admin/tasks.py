@@ -3,11 +3,10 @@ from typing import Optional
 
 from flask import abort, g, redirect, render_template, request
 from files.helpers.config.environment import MULTIMEDIA_EMBEDDING_ENABLED
-from sqlalchemy.orm import with_polymorphic
 
 import files.helpers.validators as validators
 from files.__main__ import app
-from files.classes.cron.scheduler import DayOfWeek, RepeatableTask, ScheduledTaskType
+from files.classes.cron.scheduler import DayOfWeek, ScheduledTaskType
 from files.classes.cron.submission import ScheduledSubmissionTask
 from files.classes.user import User
 from files.helpers.config.const import PERMS, SUBMISSION_FLAIR_LENGTH_MAXIMUM
