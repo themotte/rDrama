@@ -89,7 +89,34 @@ def tasks_scheduled_post_get(v:User, pid:int):
 	if not submission: abort(404)
 	return render_template("admin/tasks/scheduled_post.html", v=v, p=submission)
 
-@app.post('/tasks/scheduled_posts/<int:pid>')
+@app.post('/tasks/scheduled_posts/<int:pid>/content')
+def task_scheduled_post_content_post(v:User, pid:int):
+	submission: Optional[ScheduledSubmissionTask] = \
+		g.db.get(ScheduledSubmissionTask, pid)
+	validated_post:validators.ValidatedSubmissionLike = \
+		validators.ValidatedSubmissionLike.from_flask_request(request, 
+			allow_embedding=MULTIMEDIA_EMBEDDING_ENABLED,
+		)
+	
+	edited:bool = False
+	if submission.body != validated_post.body:
+		submission.body = validated_post.body
+		submission.body_html = validated_post.body_html
+		edited = True
+	
+	if submission.title != validated_post.title:
+		submission.title = validated_post.title
+		edited = True
+
+	if not edited:
+		abort(400, "Title or body must be edited")
+	
+	g.db.commit()
+	return {"message": "Edited scheduled post content successfully"}
+	
+
+
+@app.post('/tasks/scheduled_posts/<int:pid>/schedule')
 @admin_level_required(PERMS['SCHEDULER_POSTS'])
 def task_scheduled_post_post(v:User, pid:int):
 	submission: Optional[ScheduledSubmissionTask] = \

@@ -176,3 +176,7 @@ class ScheduledSubmissionTask(RepeatableTask):
 	@property
 	def should_hide_score(self) -> bool:
 		return True
+
+	@property
+	def edit_url(self) -> str:
+		return f"/tasks/scheduled_posts/{self.id}/content"

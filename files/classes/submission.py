@@ -359,3 +359,7 @@ class Submission(CreatedBase):
 	@property
 	def is_real_submission(self) -> bool:
 		return True
+	
+	@property
+	def edit_url(self) -> str:
+		return f"/edit_post/{self.id}"
