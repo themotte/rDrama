@@ -28,5 +28,5 @@
 
 {%- macro checkbox(name, id, label, checked) -%}
 	<input type="checkbox" class="form-check-input" name="{{name}}" id="{{id}}"{% if checked %} checked{% endif %}>
-	<label for="{{name}}" class="form-check-label" class="mr-3">{{label}}</label>
+	<label for="{{name}}" class="form-check-label" style="margin-right:1em;">{{label}}</label>
 {%- endmacro -%}

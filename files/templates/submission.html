@@ -113,8 +113,9 @@
 						{% elif p.body %}
 							<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-dismiss="modal" onclick="expandMarkdown(this,'{{p.id}}')"><i class="fas text-expand-icon-{{p.id}} fa-expand-alt text-center mr-3"></i><span>View source</span></button>
 						{% endif %}
-
-						{% include "component/post/actions_mobile.html" %}
+						{%- block post_actions_mobile -%}
+							{% include "component/post/actions_mobile.html" %}
+						{%- endblock -%}
 					</ul>
 				</div>
 			</div>
@@ -123,7 +124,9 @@
 {% endif %}
 
 {% if v and v.admin_level > 1 %}
-	{% include "component/post/actions_admin_mobile.html" %}
+	{%- block post_actions_mobile_admin -%}
+		{% include "component/post/actions_admin_mobile.html" %}
+	{%- endblock -%}
 {% endif %}
 
 {% endblock %}
@@ -335,8 +338,9 @@
 						{% if v and v.id != p.author_id and p.body %}
 							<a class="list-inline-item" role="button" onclick="expandMarkdown(this,'{{p.id}}')"><i class="fas text-expand-icon-{{p.id}} fa-expand-alt"></i><span>View source</span></a>
 						{% endif %}
-
-						{% include 'component/post/actions.html' %}
+						{%- block post_actions -%}
+							{% include 'component/post/actions.html' %}
+						{%- endblock -%}
 					</ul>
 						</div>
 						</div>
