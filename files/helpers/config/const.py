@@ -8,17 +8,40 @@ from flask import request
 
 
 class Service(IntEnum):
+	'''
+	An enumeration of services provided by this application
+	'''
 	THEMOTTE = 0
+	'''
+	TheMotte web application. Handles most routes and tasks performed,
+	including all non-chat web requests.
+	'''
 	CRON = 1
+	'''
+	Runs tasks periodicially on a set schedule
+	'''
 	CHAT = 2
+	'''
+	Chat application.
+	'''
+	MIGRATION = 3
+	'''
+	Migration mode. Used for performing database migrations
+	'''
 
 	@classmethod
 	def from_argv(cls):
+		if "db" in sys.argv:
+			return cls.MIGRATION
 		if "cron" in sys.argv:
 			return cls.CRON
 		if "load_chat" in sys.argv:
 			return cls.CHAT
 		return cls.THEMOTTE
+	
+	@property
+	def enable_services(self) -> bool:
+		return self not in {self.CRON, self.MIGRATION}
 
 CC = "COUNTRY CLUB"
 CC_TITLE = CC.title()

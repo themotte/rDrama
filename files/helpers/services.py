@@ -4,7 +4,7 @@ import gevent
 from pusher_push_notifications import PushNotifications
 from sqlalchemy.orm import scoped_session
 
-from files.__main__ import db_session
+from files.__main__ import db_session, service
 from files.classes.leaderboard import (GivenUpvotesLeaderboard,
                                        LeaderboardMeta,
                                        ReceivedDownvotesLeaderboard)
@@ -12,7 +12,7 @@ from files.helpers.assetcache import assetcache_path
 from files.helpers.config.environment import (ENABLE_SERVICES, PUSHER_ID,
                                               PUSHER_KEY, SITE_FULL, SITE_ID)
 
-if PUSHER_ID != 'blahblahblah':
+if service.enable_services and ENABLE_SERVICES and PUSHER_ID != 'blahblahblah':
 	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 else:
 	beams_client = None
@@ -57,5 +57,5 @@ def leaderboard_thread():
 	db.close()
 	sys.stdout.flush()
 
-if ENABLE_SERVICES:
+if service.enable_services and ENABLE_SERVICES:
 	gevent.spawn(leaderboard_thread())

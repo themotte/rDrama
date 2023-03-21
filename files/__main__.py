@@ -30,7 +30,11 @@ from files.helpers.config.const import Service
 from files.helpers.config.stateful import const_initialize
 from files.helpers.strings import bool_from_string
 
-# let's create our flask app...
+# first, let's parse arguments to find out what type of instance this is...
+
+service:Service = Service.from_argv()
+
+# ...and then let's create our flask app...
 
 app = flask.app.Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
@@ -154,6 +158,7 @@ app.config.update({
 	"RESULTS_PER_PAGE_COMMENTS": RESULTS_PER_PAGE_COMMENTS,
 	"SCORE_HIDING_TIME_HOURS": SCORE_HIDING_TIME_HOURS,
 	"ENABLE_SERVICES": ENABLE_SERVICES,
+	"RATE_LIMITER_ENABLED": RATE_LIMITER_ENABLED,
 
 	"DBG_VOLUNTEER_PERMISSIVE": DBG_VOLUNTEER_PERMISSIVE,
 	"VOLUNTEER_JANITOR_ENABLE": VOLUNTEER_JANITOR_ENABLE,
@@ -173,9 +178,7 @@ def get_remote_addr():
 	with app.app_context():
 		return request.headers.get('X-Real-IP', default='127.0.0.1')
 
-app.config['RATE_LIMITER_ENABLED'] = RATE_LIMITER_ENABLED
-
-if not RATE_LIMITER_ENABLED:
+if service.enable_services and not RATE_LIMITER_ENABLED:
 	print("Rate limiter disabled in debug mode!")
 
 limiter = flask_limiter.Limiter(
@@ -203,13 +206,9 @@ cache = flask_caching.Cache(app)
 flask_compress.Compress(app)
 mail = flask_mail.Mail(app)
 
-# ...and now parse arguments to find out what type of instance this is...
-
-service:Service = Service.from_argv()
-
 # ...and then import the before and after request handlers if this we will import routes.
 
-if service != Service.CRON:
+if service.enable_services:
 	from files.routes.allroutes import *
 
 # setup is done. let's conditionally import the rest of the routes.
