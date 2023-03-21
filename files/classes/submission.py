@@ -55,7 +55,7 @@ class Submission(CreatedBase):
 	ban_reason = Column(String)
 	embed_url = Column(String)
 	filter_state = Column(String, nullable=False)
-	task_id = Column(Integer, ForeignKey("ScheduledSubmissionTask.id"))
+	task_id = Column(Integer, ForeignKey("tasks_repeatable_scheduled_submissions.id"))
 
 	Index('fki_submissions_approver_fkey', is_approved)
 	Index('post_app_id_idx', app_id)
