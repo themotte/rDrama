@@ -95,7 +95,7 @@ def _acquire_lock_exclusive(db:scoped_session, table:str):
 	''' 
 	# TODO: make `table` the type LiteralString once we upgrade to python 3.11
 	with db.begin_nested() as t:
-		db.execute(f"LOCK TABLE {table} IN ACCESS EXCLUSIVE")
+		db.execute(f"LOCK TABLE {table} IN ACCESS EXCLUSIVE MODE")
 		try:
 			yield t
 			db.commit()
