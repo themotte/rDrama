@@ -30,7 +30,7 @@
 	<label for="{{name}}" class="form-check-label" style="margin-right:1em;">{{label}}</label>
 {%- endmacro -%}
 
-{%- macro scheduled_post_time_selection_form(p) -%}
+{%- macro scheduled_post_time_selection_form(v, p) -%}
 	<fieldset class="scheduled-post-day-selection form-check">
 	<label class="mr-3">Days</label>
 	{%- for day in ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] -%}
@@ -39,9 +39,9 @@
 	</fieldset>
 	<div class="form-inline">
 		<label class="mr-3">Time</label>
-		<input type="number" name="hour" min="0" max="23"{% if p %} value="{{p.task.time_of_day_utc.hour}}"{% endif %}>:<input type="number" name="minute" min="0" max="59"{% if p %} value="{{p.task.time_of_day_utc.minute}}"{% endif %}>
+		<input type="number" name="hour" min="0" max="23"{% if p %} value="{{p.task.time_of_day_utc.hour}}"{% endif %} required>:<input type="number" name="minute" min="0" max="59"{% if p %} value="{{p.task.time_of_day_utc.minute}}"{% endif %} required>
 	</div>
-	{{checkbox("enabled", "scheduled-post-enabled-input", "Enabled", true)}}<br>
+	{{checkbox("enabled", "scheduled-post-enabled-input", "Enabled", p.task.enabled if p else true)}}<br>
 	<input type="submit" onclick="disable(this)" value="Submit" class="btn btn-primary">
 	{{formkey(v)}}
 {%- endmacro -%}

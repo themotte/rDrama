@@ -78,8 +78,6 @@ def tasks_scheduled_posts_post(v:User):
 		type_id=int(ScheduledTaskType.SCHEDULED_SUBMISSION),
 	)
 	g.db.add(task)
-	g.db.flush()
-	g.db.add(task)
 	g.db.commit()
 	return redirect(f'/tasks/scheduled_posts/{task.id}')
 
@@ -90,3 +88,21 @@ def tasks_scheduled_post_get(v:User, pid:int):
 		g.db.get(ScheduledSubmissionTask, pid)
 	if not submission: abort(404)
 	return render_template("admin/tasks/scheduled_post.html", v=v, p=submission)
+
+@app.post('/tasks/scheduled_posts/<int:pid>')
+@admin_level_required(PERMS['SCHEDULER_POSTS'])
+def task_scheduled_post_post(v:User, pid:int):
+	submission: Optional[ScheduledSubmissionTask] = \
+		g.db.get(ScheduledSubmissionTask, pid)
+
+	# rebuild the schedule
+	submission.enabled = _get_request_bool('enabled')
+	submission.frequency_day_flags = _get_request_dayofweek()
+	hour:int = validators.int_ranged('hour', 0, 23)
+	minute:int = validators.int_ranged('minute', 0, 59)
+	second:int = 0 # TODO: seconds?
+
+	time_of_day_utc:time = time(hour, minute, second)
+	submission.time_of_day_utc = time_of_day_utc
+	g.db.commit()
+	return redirect(f'/tasks/scheduled_posts/{submission.id}')

@@ -14,8 +14,8 @@
 		{# TODO: don't hardcode this #}
 		{{forms.text_field("Title", "title", "title", min_length=0, max_length=300, required=true)}}
 		{{forms.text_field("URL (optional)", "url", "url", min_length=0, max_length=2048, required=false)}}
-		{{forms.textarea_field("Body", "body", "body", min_length=0, max_length=40000, required=false)}}
-		{{forms.scheduled_post_time_selection_form(none)}}
+		{{forms.textarea_field("Body", "body", "body", min_length=0, max_length=SUBMISSION_BODY_LENGTH_MAXIMUM, required=false)}}
+		{{forms.scheduled_post_time_selection_form(v, none)}}
 	</form>
 </section>
 {%- endblock -%}
