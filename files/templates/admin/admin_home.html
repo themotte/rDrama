@@ -6,9 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<pre></pre>
-<pre></pre>
-<h3>Admin Tools</h3>
+<h2 class="mt-2">Admin Tools</h2>
 
 <div class="mb-3">
 	<strong>Users Here Now:</strong> {{g.loggedin_counter + g.loggedout_counter}} &mdash; 
@@ -16,49 +14,54 @@
 	<a href="/admin/loggedout">{{g.loggedout_counter}} Logged-Out</a>
 </div>
 
-<h4>Content</h4>
+<h3>Content</h3>
 <ul>
 	<li><a href="/admin/image_posts">Image Posts</a></li>
 	<li><a href="/admin/reported/posts">Reported Posts/Comments</a></li>
 	<li><a href="/admin/removed/posts">Removed Posts/Comments</a></li>
 </ul>
 
-<h4>Filtering</h4>
+<h3>Filtering</h3>
 <ul>
 	<li><a href="/admin/filtered/posts">Filtered Posts/Comments</a></li>
 </ul>
 
-<h4>Users</h4>
+<h3>Users</h3>
 <ul>
 	<li><a href="/admin/users">Users Feed</a></li>
 	<li><a href="/admin/shadowbanned">Shadowbanned Users</a></li>
 	<li><a href="/banned">Permabanned Users</a></li>
 </ul>
 
-<h4>Safety</h4>
+<h3>Safety</h3>
 <ul>
 	<li><a href="/admin/banned_domains">Banned Domains</a></li>
 	<li><a href="/admin/alt_votes">Multi Vote Analysis</a></li>
 </ul>
 
-<h4>Grant</h4>
+<h3>Grant</h3>
 <ul>
 	<li><a href="/admin/badge_grant">Grant Badges</a></li>
 	<li><a href="/admin/badge_remove">Remove Badges</a></li>
 </ul>
 
-<h4>API Access Control</h4>
+<h3>API Access Control</h3>
 <ul>
 	<li><a href="/admin/apps">Apps</a></li>
 </ul>
 
-<h4>Statistics</h4>
+<h3>Statistics</h3>
 <ul>
 	<li><a href="/stats">Content Stats</a></li>
 	<li><a href="/weekly_chart">Weekly Stat Chart</a></li>
 	<li><a href="/daily_chart">Daily Stat Chart</a></li>
 </ul>
-
+<section id="admin-section-scheduler" class="admin-section mt-3">
+<h3>Scheduler</h3>
+<ul>
+	{%- if v.admin_level >= PERMS['SCHEDULED_POSTS'] -%}<li><a href="/tasks/scheduled_posts">Scheduled Posts</a></li>{%- endif -%}
+</ul>
+</section>
 {% if v.admin_level >= 3 %}
 <section id="admin-section-performance" class="admin-section mt-3">
 	<h4>Performance</h4>
@@ -69,48 +72,33 @@
 {% endif %}
 
 {% if v.admin_level >= 3 %}
-	<pre></pre>
-	<div class="custom-control custom-switch">
-		<input autocomplete="off" type="checkbox" class="custom-control-input" id="signups" {% if site_settings['Signups'] %}checked{% endif %} onchange="post_toast(this,'/admin/site_settings/Signups');">
-		<label class="custom-control-label" for="signups">Signups</label>
+	<h3>Site Settings</h3>
+	{%- macro site_setting_bool(name, label) -%}
+		<div class="custom-control custom-switch">
+			<input autocomplete="off" type="checkbox" class="custom-control-input" id="site-setting-{{name}}" {% if site_settings[name] %}checked{% endif %} onchange="post_toast(this,'/admin/site_settings/{{name}}');">
+			<label class="custom-control-label" for="site-setting-{{name}}">{{label}}</label>
+		</div>
+	{%- endmacro -%}
+	{%- macro site_setting_int(name, label) -%}
+		<div class="custom-control custom-switch">
+			<input type="number" class="" id="site-setting-{{name}}" name="{{name}}" value="{{ site_settings[name] }}" 
+				onblur="post_toast(null, '/admin/site_settings/{{name}}', false, { new_value: this.value })"/>
+		<label for="site-setting-{{name}}">{{label}}</label>
 	</div>
-
-	<div class="custom-control custom-switch">
-		<input autocomplete="off" type="checkbox" class="custom-control-input" id="bots" {% if site_settings['Bots']  %}checked{% endif %} onchange="post_toast(this,'/admin/site_settings/Bots');">
-		<label class="custom-control-label" for="bots">Bots</label>
-	</div>
-
-	<div class="custom-control custom-switch">
-		<input autocomplete="off" type="checkbox" class="custom-control-input" id="FilterNewPosts" {% if site_settings['FilterNewPosts'] %}checked{% endif %} onchange="post_toast(this,'/admin/site_settings/FilterNewPosts');">
-		<label class="custom-control-label" for="FilterNewPosts">Filter New Posts</label>
-	</div>
-
-	<div class="custom-control custom-switch">
-		<input autocomplete="off" type="checkbox" class="custom-control-input" id="Read-only mode" {% if site_settings['Read-only mode']  %}checked{% endif %} onchange="post_toast(this,'/admin/site_settings/Read-only mode');">
-		<label class="custom-control-label" for="Read-only mode">Read-only mode</label>
-	</div>
-
+	{%- endmacro -%}
+	{{site_setting_bool('signups', 'Signups')}}
+	{{site_setting_bool('bots', 'Bots')}}
+	{{site_setting_bool('FilterNewPosts', 'Filter New Posts')}}
+	{{site_setting_bool('Read-only mode', 'Read-Only Mode')}}
 	<div class="custom-control custom-switch">
 		<input autocomplete="off" type="checkbox" class="custom-control-input" id="under_attack" name="under_attack" {% if under_attack%}checked{% endif %} onchange="post_toast(this,'/admin/under_attack');">
 		<label class="custom-control-label" for="under_attack">Under attack mode</label>
 	</div>
 
-<h4>Comment Filtering</h4>
-	<div class="custom-control custom-switch">
-		<input type="number" class="" id="min_comments" name="min_comments" value="{{ site_settings['FilterCommentsMinComments'] }}"
-			onblur="post_toast(null, '/admin/site_settings/FilterCommentsMinComments', false, { new_value: this.value })"/>
-		<label for="min_comments">Minimum Comments</label>
-	</div>
-	<div class="custom-control custom-switch">
-		<input type="number" class="" id="min_karma" name="min_karma" value="{{ site_settings['FilterCommentsMinKarma'] }}"
-				onblur="post_toast(null, '/admin/site_settings/FilterCommentsMinKarma', false, { new_value: this.value })"/>
-		<label for="min_karma">Minimum Karma</label>
-	</div>
-	<div class="custom-control custom-switch">
-		<input type="number" class="" id="min_age" name="min_age" value="{{ site_settings['FilterCommentsMinAgeDays'] }}"
-				onblur="post_toast(null, '/admin/site_settings/FilterCommentsMinAgeDays', false, { new_value: this.value })"/>
-		<label for="min_age">Minimum Account Age (days)</label>
-	</div>
+	<h4>Comment Filtering</h4>
+	{{site_setting_int('FilterCommentsMinComments', 'Minimum Comments')}}
+	{{site_setting_int('FilterCommentsMinKarma', 'Minimum Karma')}}
+	{{site_setting_int('FilterCommentsMinAgeDays', 'Minimum Account Age (Days)')}}
 
 	<button class="btn btn-primary mt-3" onclick="post_toast(this,'/admin/purge_cache');">PURGE CDN CACHE</button>
 	<button class="btn btn-primary mt-3" onclick="post_toast(this,'/admin/dump_cache');">DUMP INTERNAL CACHE</button>
