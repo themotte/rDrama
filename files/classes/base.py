@@ -44,4 +44,4 @@ class CreatedBase(Base):
 
 	@property
 	def age_string(self) -> str:
-		return format_age(self.created_utc)
+		return format_age(self.age_seconds)
