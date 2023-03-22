@@ -59,7 +59,7 @@
 <section id="admin-section-scheduler" class="admin-section mt-3">
 <h3>Scheduler</h3>
 <ul>
-	{%- if v.admin_level >= PERMS['SCHEDULED_POSTS'] -%}<li><a href="/tasks/scheduled_posts">Scheduled Posts</a></li>{%- endif -%}
+	{%- if v.admin_level >= PERMS['SCHEDULER_POSTS'] -%}<li><a href="/tasks/scheduled_posts">Scheduled Posts</a></li>{%- endif -%}
 </ul>
 </section>
 {% if v.admin_level >= 3 %}
