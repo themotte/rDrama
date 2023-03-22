@@ -87,8 +87,15 @@ class ScheduledSubmissionTask(RepeatableTask):
 	@functools.cached_property
 	def title_html(self) -> str:
 		'''
-		Do not use this for getting the HTML. Instead call 
-		`ScheduledSubmissionContext.make_title()`
+		This is used as a mock property for display in submission listings that
+		contain scheduled posts.
+
+		.. warning::
+		This property should not be used for generating the HTML for an actual
+		submission as this will be missing the special formatting that may be
+		applies to titles. Instead call 
+		`ScheduledSubmissionContext.make_title()` with the `datetime` that the
+		event was triggered at. 
 		'''
 		return filter_emojis_only(self.title)
 	

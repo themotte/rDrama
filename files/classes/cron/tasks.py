@@ -136,6 +136,13 @@ class TaskRunContext:
 	The date and time (UTC) that this task was triggered
 	'''
 
+	@property
+	def run_time(self) -> datetime:
+		'''
+		The date and time (UTC) that this task was actually ran
+		'''
+		return self.task_run.created_datetime_py
+
 	@contextlib.contextmanager
 	def app_context(self, *, v:Optional[_UserConvertible]=None):
 		'''

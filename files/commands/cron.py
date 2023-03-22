@@ -1,5 +1,6 @@
 import contextlib
 import logging
+import subprocess
 import sys
 import time
 from datetime import datetime, timezone
@@ -51,20 +52,23 @@ def cron_app_master():
 	Ideally this would not just be one function, but making it larger feels
 	like overengineering it.
 	'''
-	spawn_worker:Callable[[], psutil.Popen] = lambda:psutil.Popen([
-		sys.executable,
-		"-m", "flask", _CRON_COMMAND_NAME,
-	])
-	process:psutil.Popen = spawn_worker()
 	
-	def _respawn_worker_process():
-		nonlocal process
-		process = spawn_worker()
+	def _spawn_worker_process():
+		return psutil.Popen(
+			[
+				sys.executable,
+				"-m", "flask", _CRON_COMMAND_NAME,
+			],
+			stdout=subprocess.PIPE,
+			stderr=subprocess.PIPE,
+		)
+
+	process:psutil.Popen = _spawn_worker_process()
 
 	while True:
 		with process.oneshot():
 			if not process.is_running():
-				_respawn_worker_process()
+				process = _spawn_worker_process()
 				continue
 			mem_rss:int = process.memory_info().rss
 			if mem_rss > MAXIMUM_MEMORY_RSS:
@@ -107,7 +111,7 @@ def _acquire_lock_exclusive(db:scoped_session, table:str):
 	except Exception:
 		logging.error(
 			"An exception occurred during an operation in a critical section. "
-		    "A task might not occur or might be duplicated."
+			"A task might not occur or might be duplicated."
 		)
 		try:
 			db.rollback()
