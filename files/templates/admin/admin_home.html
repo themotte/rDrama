@@ -56,15 +56,17 @@
 	<li><a href="/weekly_chart">Weekly Stat Chart</a></li>
 	<li><a href="/daily_chart">Daily Stat Chart</a></li>
 </ul>
+
 <section id="admin-section-scheduler" class="admin-section mt-3">
-<h3>Scheduler</h3>
-<ul>
-	{%- if v.admin_level >= PERMS['SCHEDULER_POSTS'] -%}<li><a href="/tasks/scheduled_posts">Scheduled Posts</a></li>{%- endif -%}
-</ul>
+	<h3>Scheduler</h3>
+	<ul>
+		{%- if v.admin_level >= PERMS['SCHEDULER_POSTS'] -%}<li><a href="/tasks/scheduled_posts">Scheduled Posts</a></li>{%- endif -%}
+	</ul>
 </section>
+
 {% if v.admin_level >= 3 %}
 <section id="admin-section-performance" class="admin-section mt-3">
-	<h4>Performance</h4>
+	<h3>Performance</h3>
 	<ul>
 		<li><a href="/performance/">Performance</a></li>
 	</ul>
