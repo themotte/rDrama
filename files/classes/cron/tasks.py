@@ -274,7 +274,7 @@ class RepeatableTask(CreatedBase):
 
 		for i in range(8):
 			target_date = target_date + day
-			if i == 0 and target_date.time() < self.time_of_day_utc: continue
+			if i == 0 and target_date.time() > self.time_of_day_utc: continue
 			if target_date in self.frequency_day_flags: break
 		else:
 			raise Exception("Could not find suitable timestamp to run next task")
