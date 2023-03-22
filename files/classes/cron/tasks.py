@@ -76,7 +76,7 @@ class DayOfWeek(IntFlag):
 		if not isinstance(other, date):
 			return super().__contains__(other)
 		weekday:int = other.weekday()
-		if not 6 <= weekday <= 0:
+		if not 0 <= weekday <= 6:
 			raise Exception(
 				f"Unexpected weekday value (got {weekday}, expected 0-6)")
 		return _days[weekday] in self

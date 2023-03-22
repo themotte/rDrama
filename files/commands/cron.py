@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from typing import Callable, Final, Optional
 
 import psutil
+from sqlalchemy import or_
 from sqlalchemy.orm import scoped_session
 
 from files.__main__ import app, db_session
@@ -134,7 +135,9 @@ def _run_tasks(db:scoped_session):
 			RepeatableTask.enabled == True,
 			RepeatableTask.frequency_day != int(DayOfWeek.NONE),
 			RepeatableTask.run_state != int(ScheduledTaskState.RUNNING),
-			RepeatableTask.run_time_last <= now).all()
+			or_(RepeatableTask.run_time_last <= now,
+				RepeatableTask.run_time_last == None),
+		).all()
 
 	for task in tasks:
 		with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
