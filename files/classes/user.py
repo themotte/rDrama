@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import time
-from typing import Union
+from typing import TYPE_CHECKING, Union
 
 import pyotp
 from flask import g, session
@@ -10,7 +12,6 @@ from files.classes.award import AwardRelationship
 from files.classes.badges import Badge
 from files.classes.base import CreatedBase
 from files.classes.clients import *  # note: imports Comment and Submission
-from files.classes.cron.submission import ScheduledSubmissionTask
 from files.classes.exiles import *
 from files.classes.follows import Follow
 from files.classes.mod import Mod
@@ -27,6 +28,9 @@ from files.helpers.config.environment import (CARD_VIEW,
                                               DEFAULT_TIME_FILTER, SITE_FULL,
                                               SITE_ID)
 from files.helpers.security import *
+
+if TYPE_CHECKING:
+	from files.classes.cron.submission import ScheduledSubmissionTask
 
 defaulttheme = "TheMotte"
 
@@ -620,7 +624,8 @@ class User(CreatedBase):
 		if isinstance(target, Submission):
 			if self.author_id == target.author_id: return True
 			return self.admin_level >= PERMS['POST_EDITING']
-		if isinstance(target, ScheduledSubmissionTask):
+		if target.__class__.__name__ == "ScheduledSubmissionTask": 
+			# XXX: avoiding import loop. should be fixed someday.
 			return self.admin_level >= PERMS['SCHEDULER_POSTS']
 
 	@property
