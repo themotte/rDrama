@@ -4,7 +4,7 @@ FROM python:3.10 AS base
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && apt -y upgrade && apt install -y supervisor
+RUN apt update && apt -y upgrade
 
 # we'll end up blowing away this directory via docker-compose
 WORKDIR /service
@@ -25,7 +25,7 @@ ENV FLASK_APP=files/cli:app
 FROM base AS release
 
 COPY bootstrap/supervisord.conf.release /etc/supervisord.conf
-CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
+CMD [ "/usr/local/bin/supervisord", "-c", "/etc/supervisord.conf" ]
 
 
 ###################################################################
@@ -37,7 +37,7 @@ COPY thirdparty/sqlalchemy-easy-profile sqlalchemy-easy-profile
 RUN cd sqlalchemy-easy-profile && python3 setup.py install
 
 COPY bootstrap/supervisord.conf.dev /etc/supervisord.conf
-CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
+CMD [ "/usr/local/bin/supervisord", "-c", "/etc/supervisord.conf" ]
 
 
 ###################################################################

@@ -1,12 +1,9 @@
 import contextlib
 import logging
-import subprocess
-import sys
 import time
 from datetime import datetime, timezone
-from typing import Callable, Final, Optional
+from typing import Final, Optional
 
-import psutil
 from sqlalchemy import or_
 from sqlalchemy.orm import scoped_session
 
@@ -30,55 +27,7 @@ This value is passed to `time.sleep()`. For more information on that, see
 the Python documentation: https://docs.python.org/3/library/time.html
 '''
 
-MAXIMUM_MEMORY_RSS: Final[int] = 300 * 1024 * 1024
-'''
-Maximum real memory that can be used by the worker before it gets terminated
-by our master process.
-'''
-
 _CRON_COMMAND_NAME = "cron"
-
-@app.cli.command('cron_master')
-def cron_app_master():
-	'''
-	The "master" process. This is essentially an application unto itself. It 
-	spawns 1 worker child. 
-	
-	Implementation note: Some code changes would have to be made to get it
-	to orchestrate more, although this is both realistically not a concern™
-	and also more than one master can be spawned without causing any issues
-	as synchronization is provided by the database.
-
-	Ideally this would not just be one function, but making it larger feels
-	like overengineering it.
-	'''
-	logging.info("Starting scheduler master process")
-	
-	def _spawn_worker_process():
-		return psutil.Popen(
-			[
-				sys.executable,
-				"-m", "flask", _CRON_COMMAND_NAME,
-			],
-			stdout=subprocess.PIPE,
-			stderr=subprocess.PIPE,
-		)
-
-	process:psutil.Popen = _spawn_worker_process()
-
-	while True:
-		with process.oneshot():
-			if not process.is_running():
-				logging.warning("Worker process is not running. Restarting.")
-				process = _spawn_worker_process()
-				continue
-			mem_rss:int = process.memory_info().rss
-			if mem_rss > MAXIMUM_MEMORY_RSS:
-				logging.warning("Killing and restarting cron worker with PID "
-		    		f"{process.pid} due to high memory usage ({mem_rss} MB vs "
-		 			f"maximum {MAXIMUM_MEMORY_RSS} MB)")
-				process.terminate()
-		time.sleep(CRON_SLEEP_SECONDS)
 
 
 @app.cli.command(_CRON_COMMAND_NAME)
