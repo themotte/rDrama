@@ -61,7 +61,7 @@ def tasks_get_task_run(v:User, task_id:int, run_id:int):
 	return render_template("admin/tasks/single_run.html", v=v, run=run)
 
 
-@app.post('/tasks/<int:pid>/schedule')
+@app.post('/tasks/<int:task_id>/schedule')
 @admin_level_required(PERMS['SCHEDULER'])
 def task_schedule_post(v:User, task_id:int): # pyright: ignore
 	_modify_task_schedule(task_id)
@@ -170,7 +170,7 @@ def task_scheduled_post_content_post(v:User, pid:int): # pyright: ignore
 	g.db.commit()
 	return redirect(f'/tasks/scheduled_posts/{pid}')
 
-@app.post('/tasks/scheduled_posts/<int:pid>/schedule')
+@app.post('/tasks/scheduled_posts/<int:task_id>/schedule')
 @admin_level_required(PERMS['SCHEDULER'])
 def task_scheduled_post_post(v:User, task_id:int): # pyright: ignore
 	# permission being SCHEDULER is intentional as SCHEDULER_POSTS is for
