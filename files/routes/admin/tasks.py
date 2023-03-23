@@ -168,9 +168,9 @@ def task_scheduled_post_content_post(v:User, pid:int): # pyright: ignore
 		abort(400, "Title or body must be edited")
 	
 	g.db.commit()
-	return {"message": "Edited scheduled post content successfully"}
+	return redirect(f'/tasks/scheduled_posts/{pid}')
 
-@app.post('/tasks/<int:pid>/schedule')
+@app.post('/tasks/scheduled_posts/<int:pid>/schedule')
 @admin_level_required(PERMS['SCHEDULER'])
 def task_scheduled_post_post(v:User, task_id:int): # pyright: ignore
 	# permission being SCHEDULER is intentional as SCHEDULER_POSTS is for
