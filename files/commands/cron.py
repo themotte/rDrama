@@ -52,6 +52,7 @@ def cron_app_master():
 	Ideally this would not just be one function, but making it larger feels
 	like overengineering it.
 	'''
+	logging.info("Starting scheduler master process")
 	
 	def _spawn_worker_process():
 		return psutil.Popen(
@@ -68,6 +69,7 @@ def cron_app_master():
 	while True:
 		with process.oneshot():
 			if not process.is_running():
+				logging.warning("Worker process is not running. Restarting.")
 				process = _spawn_worker_process()
 				continue
 			mem_rss:int = process.memory_info().rss
@@ -84,6 +86,7 @@ def cron_app_worker():
 	'''
 	The "worker" process task. This actually executes tasks.
 	'''
+	logging.info("Starting scheduler worker process")
 	db:scoped_session = db_session() # type: ignore
 	while True:
 		try:
