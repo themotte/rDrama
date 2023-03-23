@@ -18,7 +18,6 @@ from files.helpers.alerts import *
 from files.helpers.caching import invalidate_cache
 from files.helpers.comments import comment_filter_moderated
 from files.helpers.config.const import *
-from files.helpers.config.environment import SITE_ID
 from files.helpers.content import canonicalize_url2
 from files.helpers.contentsorting import sort_objects
 from files.helpers.media import process_image
@@ -27,11 +26,6 @@ from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import *
 from files.routes.importstar import *
 
-snappyquotes = [f':#{x}:' for x in marseys_const2]
-
-if path.exists(f'snappy_{SITE_ID}.txt'):
-	with open(f'snappy_{SITE_ID}.txt', "r", encoding="utf-8") as f:
-		snappyquotes += f.read().split("\n{[para]}\n")
 
 discounts = { # <- why is this here?
 	69: 0.02,

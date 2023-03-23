@@ -105,6 +105,15 @@ class ValidatedSubmissionLike:
 		normal submission API has a lot of duplicate code and while this is not
 		a pretty solution, this essentially forces all submission-likes through
 		a central interface.
+
+		:param request: The Flask Request object.
+		:param allow_embedding: Whether to allow embedding. This should usually
+		be the value from the environment.
+		:param allow_media_url_upload: Whether to allow media URL upload. This
+		should generally be `True` for submission submitting if file uploads 
+		are allowed and `False` in other contexts (such as editing)
+		:param embed_url_file_key: The key to use for inline file uploads.
+		:param edit: The value of `edit` to pass to `sanitize`
 		'''
 
 		def _process_media(file:Optional[FileStorage]) -> tuple[bool, Optional[str], Optional[str]]:

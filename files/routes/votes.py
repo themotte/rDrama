@@ -1,9 +1,11 @@
 from files.__main__ import app, limiter
-from files.classes import *
-from files.helpers.config.const import *
+from files.classes.comment import Comment
+from files.classes.submission import Submission
+from files.classes.votes import CommentVote, Vote
+from files.helpers.config.const import OWNER_ID
 from files.helpers.config.environment import ENABLE_DOWNVOTES
-from files.helpers.get import *
-from files.helpers.wrappers import *
+from files.helpers.get import get_comment, get_post
+from files.helpers.wrappers import admin_level_required, is_not_permabanned
 from files.routes.importstar import *
 
 
@@ -15,8 +17,8 @@ def admin_vote_info_get(v):
 	if not link: return render_template("votes.html", v=v)
 
 	try:
-		if "t2_" in link: thing = get_post(int(link.split("t2_")[1]), v=v)
-		elif "t3_" in link: thing = get_comment(int(link.split("t3_")[1]), v=v)
+		if "t2_" in link: thing = get_post(link.split("t2_")[1], v=v)
+		elif "t3_" in link: thing = get_comment(link.split("t3_")[1], v=v)
 		else: abort(400)
 	except: abort(400)
 
