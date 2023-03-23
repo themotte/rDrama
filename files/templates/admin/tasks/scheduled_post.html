@@ -1,7 +1,8 @@
 {%- extends "submission.html" -%}
 {%- block comment_section -%}
 <section class="scheduled-post-go-back bordered-section" style="padding:1em;">
-	You are viewing a single scheduled post. <a href="/tasks/scheduled_posts/">View all scheduled posts</a>
+	You are viewing a single scheduled post. View <a href="/tasks/scheduled_posts/">all scheduled posts</a>
+	{%- if v.admin_level >= PERMS['SCHEDULER'] %} or <a href="/tasks/{{p.id}}">the associated task</a>{%- endif -%}
 </section>
 {%- if v.admin_level >= PERMS['SCHEDULER'] -%}
 <section class="scheduled-post-edit scheduler-edit mt-3">

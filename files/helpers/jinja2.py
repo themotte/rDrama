@@ -8,7 +8,7 @@ from files.classes.cron.tasks import ScheduledTaskType
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.environment import (DEFAULT_COLOR, PUSHER_ID, SITE,
                                               SITE_FULL, SITE_ID, SITE_TITLE)
-from files.helpers.time import format_age
+from files.helpers.time import format_age, format_datetime
 
 from .config.const import *
 from .get import *
@@ -36,9 +36,13 @@ def post_embed(id, v):
 	if p: return render_template("submission_listing.html", listing=[p], v=v)
 	return ''
 
-
 @app.template_filter("timestamp")
 def timestamp(timestamp):
+	if not timestamp: return ''
+	return format_datetime(timestamp)
+
+@app.template_filter("agestamp")
+def agestamp(timestamp):
 	if not timestamp: return ''
 	return format_age(timestamp)
 

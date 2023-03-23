@@ -20,7 +20,7 @@
 				{%- if run.completed_utc -%}
 				<tr>
 					<td>Completed (UTC)</td>
-					<td>{{run.completed_datetime_str}} ({{run.completed_utc | timestamp}})</td>
+					<td>{{run.completed_datetime_str}} ({{run.completed_utc | agestamp}})</td>
 				</tr>
 				<tr>
 					<td>Elapsed Time</td>
