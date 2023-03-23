@@ -271,7 +271,7 @@ def edit_post(pid, v):
 		p.title_html = validated_post.title_html
 		changed = True
 
-	if validated_post.body != validated_post.body:
+	if validated_post.body != p.body:
 		p.body = validated_post.body
 		p.body_html = validated_post.body_html
 		changed = True
