@@ -21,7 +21,7 @@
 					<td>Last Run (UTC)</td>
 					<td>{{task.run_time_last_str}}</td>
 				</tr>
-				{%- if task.ScheduledTaskType == ScheduledTaskType.SCHEDULED_SUBMISSION -%}
+				{%- if task.type == ScheduledTaskType.SCHEDULED_SUBMISSION -%}
 				<tr>
 					<td>Scheduled Post</td>
 					<td>
@@ -32,7 +32,7 @@
 						{%- endif -%}
 					</td>
 				</tr>
-				{%- elif task.ScheduledTaskType == ScheduledTaskType.PYTHON_CALLABLE -%}
+				{%- elif task.type == ScheduledTaskType.PYTHON_CALLABLE -%}
 				<tr>
 					<td>Import Path</td>
 					<td>{{task.import_path}}</td>
