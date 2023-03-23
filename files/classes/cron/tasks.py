@@ -16,7 +16,7 @@ from sqlalchemy.sql.sqltypes import (Boolean, DateTime, Integer, SmallInteger,
                                      Text, Time)
 
 from files.classes.base import CreatedBase
-from files.helpers.time import format_datetime
+from files.helpers.time import format_age, format_datetime
 
 if TYPE_CHECKING:
 	from files.classes.user import User
@@ -276,6 +276,12 @@ class RepeatableTask(CreatedBase):
 	@property
 	def run_time_last_or_created_utc(self) -> datetime:
 		return self.run_time_last or self.created_datetime_py
+	
+	@property
+	def run_time_last_str(self) -> str:
+		if not self.run_time_last: return 'Never'
+		return f'{format_datetime(self.run_time_last)} ' \
+				f'({format_age(self.run_time_last)})'
 	
 	def next_trigger(self, anchor:datetime) -> Optional[datetime]:
 		if not self.enabled: return None

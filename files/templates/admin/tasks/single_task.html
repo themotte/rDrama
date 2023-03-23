@@ -11,11 +11,15 @@
 				</tr>
 				<tr>
 					<td>Status</td>
-					<td>{{task.status.name.title()}}</td>
+					<td>{{task.run_state_enum.name.title()}}</td>
 				</tr>
 				<tr>
 					<td>Created (UTC)</td>
 					<td>{{task.created_datetime}} ({{task.age_string}})</td>
+				</tr>
+				<tr>
+					<td>Last Run (UTC)</td>
+					<td>{{task.run_time_last_str}}</td>
 				</tr>
 				{%- if task.ScheduledTaskType == ScheduledTaskType.SCHEDULED_SUBMISSION -%}
 				<tr>

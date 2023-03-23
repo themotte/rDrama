@@ -19,7 +19,7 @@
 					<td><a href="/tasks/{{task.id}}">Task {{task.id}}</a></td>
 					<td>{{task.age_string}}</td>
 					<td>{{task.type}}</td>
-					<td>{{task.status.name.title()}}</td>
+					<td>{{task.run_state_enum.name.title()}}</td>
 					<td>{{task.enabled}}</td>
 				</tr>
 				{%- endfor -%}
