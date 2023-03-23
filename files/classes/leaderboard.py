@@ -62,7 +62,7 @@ class SimpleLeaderboard(Leaderboard):
 		self._all_users = self.users_query.order_by(self.column.desc()).limit(self.meta.limit).all()
 		if self.v not in self._all_users:
 			sq = self.db.query(User.id, self.column, func.rank().over(order_by=self.column.desc()).label("rank")).subquery()
-			sq_data = self.db.query(sq.c.id, sq.c.column, sq.c.rank).filter(sq.c.id == self.v.id).limit(1).one()
+			sq_data = self.db.query(sq.c.id, sq.c[self.column.name], sq.c.rank).filter(sq.c.id == self.v.id).limit(1).one()
 			self._v_value:int = sq_data[1]
 			self._v_position:int = sq_data[2]
 
