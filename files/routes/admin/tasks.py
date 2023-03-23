@@ -37,23 +37,25 @@ def tasks_get(v:User):
 	return render_template("admin/tasks/tasks.html", v=v, listing=tasks)
 
 
-@app.get('/tasks/<task_id:int>/')
+@app.get('/tasks/<int:task_id>/')
 @admin_level_required(PERMS['SCHEDULER'])
 def tasks_get_task(v:User, task_id:int):
 	task:RepeatableTask = g.db.get(RepeatableTask, task_id)
+	if not task: abort(404)
 	return render_template("admin/tasks/single_task.html", v=v, task=task)
 
 
-@app.get('/tasks/<task_id:int>/runs/')
+@app.get('/tasks/<int:task_id>/runs/')
 @admin_level_required(PERMS['SCHEDULER'])
 def tasks_get_task_redirect(v:User, task_id:int): # pyright: ignore
 	return redirect(f'/tasks/{task_id}/')
 
 
-@app.get('/tasks/<task_id:int>/runs/<run_id:int>')
+@app.get('/tasks/<int:task_id>/runs/<int:run_id>')
 @admin_level_required(PERMS['SCHEDULER'])
 def tasks_get_task_run(v:User, task_id:int, run_id:int):
 	run:RepeatableTaskRun = g.db.get(RepeatableTaskRun, run_id)
+	if not run: abort(404)
 	if run.task_id != task_id:
 		return redirect(f'/tasks/{run.task_id}/runs/{run.id}')
 	return render_template("admin/tasks/single_run.html", v=v, run=run)
@@ -144,6 +146,9 @@ def tasks_scheduled_post_get(v:User, pid:int):
 def task_scheduled_post_content_post(v:User, pid:int): # pyright: ignore
 	submission: Optional[ScheduledSubmissionTask] = \
 		g.db.get(ScheduledSubmissionTask, pid)
+	if not submission: abort(404)
+	if not v.can_edit(submission): abort(403)
+
 	validated_post:validators.ValidatedSubmissionLike = \
 		validators.ValidatedSubmissionLike.from_flask_request(request, 
 			allow_embedding=MULTIMEDIA_EMBEDDING_ENABLED,
@@ -167,7 +172,7 @@ def task_scheduled_post_content_post(v:User, pid:int): # pyright: ignore
 
 @app.post('/tasks/<int:pid>/schedule')
 @admin_level_required(PERMS['SCHEDULER'])
-def task_scheduled_post_post(v:User, task_id:int):
+def task_scheduled_post_post(v:User, task_id:int): # pyright: ignore
 	# permission being SCHEDULER is intentional as SCHEDULER_POSTS is for
 	# creating or editing post content
 	_modify_task_schedule(task_id)
