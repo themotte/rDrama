@@ -263,12 +263,12 @@ def morecomments(v, cid):
 	return render_template("comments.html", v=v, comments=comments, p=p, render_replies=True, ajax=True)
 
 
-@app.post("/edit_post/<pid>")
+@app.post("/edit_post/<int:pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def edit_post(pid, v):
 	p = get_post(pid)
-	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
+	if not v.can_edit(p): abort(403)
 
 	validated_post: validators.ValidatedSubmissionLike = \
 		validators.ValidatedSubmissionLike.from_flask_request(

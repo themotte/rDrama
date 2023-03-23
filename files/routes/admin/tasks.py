@@ -6,11 +6,64 @@ from flask import abort, g, redirect, render_template, request
 import files.helpers.validators as validators
 from files.__main__ import app
 from files.classes.cron.submission import ScheduledSubmissionTask
-from files.classes.cron.tasks import DayOfWeek, ScheduledTaskType
+from files.classes.cron.tasks import (DayOfWeek, RepeatableTask,
+                                      RepeatableTaskRun, ScheduledTaskType)
 from files.classes.user import User
 from files.helpers.config.const import PERMS, SUBMISSION_FLAIR_LENGTH_MAXIMUM
 from files.helpers.config.environment import MULTIMEDIA_EMBEDDING_ENABLED
 from files.helpers.wrappers import admin_level_required
+
+
+def _modify_task_schedule(pid:int):
+	task: Optional[RepeatableTask] = g.db.get(RepeatableTask, pid)
+	if not task: abort(404)
+
+	# rebuild the schedule
+	task.enabled = _get_request_bool('enabled')
+	task.frequency_day_flags = _get_request_dayofweek()
+	hour:int = validators.int_ranged('hour', 0, 23)
+	minute:int = validators.int_ranged('minute', 0, 59)
+	second:int = 0 # TODO: seconds?
+
+	time_of_day_utc:time = time(hour, minute, second)
+	task.time_of_day_utc = time_of_day_utc
+	g.db.commit()
+
+@app.get('/tasks/')
+@admin_level_required(PERMS['SCHEDULER'])
+def tasks_get(v:User):
+	tasks:list[RepeatableTask] = \
+		g.db.query(RepeatableTask).all()
+	return render_template("admin/tasks/tasks.html", v=v, listing=tasks)
+
+
+@app.get('/tasks/<task_id:int>/')
+@admin_level_required(PERMS['SCHEDULER'])
+def tasks_get_task(v:User, task_id:int):
+	task:RepeatableTask = g.db.get(RepeatableTask, task_id)
+	return render_template("admin/tasks/single_task.html", v=v, task=task)
+
+
+@app.get('/tasks/<task_id:int>/runs/')
+@admin_level_required(PERMS['SCHEDULER'])
+def tasks_get_task_redirect(v:User, task_id:int): # pyright: ignore
+	return redirect(f'/tasks/{task_id}/')
+
+
+@app.get('/tasks/<task_id:int>/runs/<run_id:int>')
+@admin_level_required(PERMS['SCHEDULER'])
+def tasks_get_task_run(v:User, task_id:int, run_id:int):
+	run:RepeatableTaskRun = g.db.get(RepeatableTaskRun, run_id)
+	if run.task_id != task_id:
+		return redirect(f'/tasks/{run.task_id}/runs/{run.id}')
+	return render_template("admin/tasks/single_run.html", v=v, run=run)
+
+
+@app.post('/tasks/<int:pid>/schedule')
+@admin_level_required(PERMS['SCHEDULER'])
+def task_schedule_post(v:User, task_id:int): # pyright: ignore
+	_modify_task_schedule(task_id)
+	return redirect(f'/tasks/{task_id}')
 
 
 @app.get('/tasks/scheduled_posts/')
@@ -76,6 +129,7 @@ def tasks_scheduled_posts_post(v:User):
 	g.db.commit()
 	return redirect(f'/tasks/scheduled_posts/{task.id}')
 
+
 @app.get('/tasks/scheduled_posts/<int:pid>')
 @admin_level_required(PERMS['SCHEDULER_POSTS'])
 def tasks_scheduled_post_get(v:User, pid:int):
@@ -84,8 +138,10 @@ def tasks_scheduled_post_get(v:User, pid:int):
 	if not submission: abort(404)
 	return render_template("admin/tasks/scheduled_post.html", v=v, p=submission)
 
+
 @app.post('/tasks/scheduled_posts/<int:pid>/content')
-def task_scheduled_post_content_post(v:User, pid:int):
+@admin_level_required(PERMS['SCHEDULER_POSTS'])
+def task_scheduled_post_content_post(v:User, pid:int): # pyright: ignore
 	submission: Optional[ScheduledSubmissionTask] = \
 		g.db.get(ScheduledSubmissionTask, pid)
 	validated_post:validators.ValidatedSubmissionLike = \
@@ -108,23 +164,11 @@ def task_scheduled_post_content_post(v:User, pid:int):
 	
 	g.db.commit()
 	return {"message": "Edited scheduled post content successfully"}
-	
 
-
-@app.post('/tasks/scheduled_posts/<int:pid>/schedule')
-@admin_level_required(PERMS['SCHEDULER_POSTS'])
-def task_scheduled_post_post(v:User, pid:int):
-	submission: Optional[ScheduledSubmissionTask] = \
-		g.db.get(ScheduledSubmissionTask, pid)
-
-	# rebuild the schedule
-	submission.enabled = _get_request_bool('enabled')
-	submission.frequency_day_flags = _get_request_dayofweek()
-	hour:int = validators.int_ranged('hour', 0, 23)
-	minute:int = validators.int_ranged('minute', 0, 59)
-	second:int = 0 # TODO: seconds?
-
-	time_of_day_utc:time = time(hour, minute, second)
-	submission.time_of_day_utc = time_of_day_utc
-	g.db.commit()
-	return redirect(f'/tasks/scheduled_posts/{submission.id}')
+@app.post('/tasks/<int:pid>/schedule')
+@admin_level_required(PERMS['SCHEDULER'])
+def task_scheduled_post_post(v:User, task_id:int):
+	# permission being SCHEDULER is intentional as SCHEDULER_POSTS is for
+	# creating or editing post content
+	_modify_task_schedule(task_id)
+	return redirect(f'/tasks/scheduled_posts/{task_id}')

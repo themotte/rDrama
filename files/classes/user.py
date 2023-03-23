@@ -1,4 +1,5 @@
 import time
+from typing import Union
 
 import pyotp
 from flask import g, session
@@ -9,6 +10,7 @@ from files.classes.award import AwardRelationship
 from files.classes.badges import Badge
 from files.classes.base import CreatedBase
 from files.classes.clients import *  # note: imports Comment and Submission
+from files.classes.cron.submission import ScheduledSubmissionTask
 from files.classes.exiles import *
 from files.classes.follows import Follow
 from files.classes.mod import Mod
@@ -613,6 +615,13 @@ class User(CreatedBase):
 		return l
 	
 	# Permissions
+
+	def can_edit(self, target:Union[Submission, ScheduledSubmissionTask]):
+		if isinstance(target, Submission):
+			if self.author_id == target.author_id: return True
+			return self.admin_level >= PERMS['POST_EDITING']
+		if isinstance(target, ScheduledSubmissionTask):
+			return self.admin_level >= PERMS['SCHEDULER_POSTS']
 
 	@property
 	def can_see_shadowbanned(self):

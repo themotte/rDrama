@@ -1,0 +1,55 @@
+{%- extends "default.html" -%}
+{%- block content -%}
+<h1 class="mt-3">Task #{{task.id}}</h1>
+<section class="task-section task-{{task.id}} mt-3" id="task-info-section">
+	<div class="overflow-x-auto">
+		<table class="table table-striped mb-5">
+			<tbody>
+				<tr>
+					<td>ID</td>
+					<td>{{task.id}}</td>
+				</tr>
+				<tr>
+					<td>Status</td>
+					<td>{{task.status.name.title()}}</td>
+				</tr>
+				<tr>
+					<td>Created (UTC)</td>
+					<td>{{task.created_datetime}} ({{task.age_string}})</td>
+				</tr>
+				{%- if task.ScheduledTaskType == ScheduledTaskType.SCHEDULED_SUBMISSION -%}
+				<tr>
+					<td>Scheduled Post</td>
+					<td>
+						{%- if v.admin_level >= PERMS['SCHEDULER_POSTS'] -%}
+							<a href="/tasks/scheduled_posts/{{task.id}}">{{task.title}}</a>
+						{%- else -%}
+							{{task.title}}
+						{%- endif -%}
+					</td>
+				</tr>
+				{%- elif task.ScheduledTaskType == ScheduledTaskType.PYTHON_CALLABLE -%}
+				<tr>
+					<td>Import Path</td>
+					<td>{{task.import_path}}</td>
+				</tr>
+				<tr>
+					<td>Callable</td>
+					<td>{{task.callable}}</td>
+				</tr>
+				{%- endif -%}
+				<tr>
+					<td>Enabled</td>
+					<td>{{task.enabled}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+<section class="scheduled-task-edit scheduler-edit mt-3">
+	<h5 class="mb-2">Edit Scheduled Task</h5>
+	<form action="/tasks/{{task.id}}/schedule" method="post">
+		{{forms.scheduled_post_time_selection_form(v, p)}}
+	</form>
+</section>
+{%- endblock -%}

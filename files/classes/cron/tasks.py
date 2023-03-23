@@ -16,6 +16,7 @@ from sqlalchemy.sql.sqltypes import (Boolean, DateTime, Integer, SmallInteger,
                                      Text, Time)
 
 from files.classes.base import CreatedBase
+from files.helpers.time import format_datetime
 
 if TYPE_CHECKING:
 	from files.classes.user import User
@@ -23,6 +24,10 @@ if TYPE_CHECKING:
 class ScheduledTaskType(IntEnum):
 	PYTHON_CALLABLE = 1
 	SCHEDULED_SUBMISSION = 2
+
+	def __str__(self):
+		if not self.name: return super().__str__()
+		return self.name.replace('_', ' ').title()
 
 
 class ScheduledTaskState(IntEnum):
@@ -337,6 +342,30 @@ class RepeatableTaskRun(CreatedBase):
 	task = relationship(RepeatableTask, back_populates="runs")
 
 	exception: Optional[Exception] = None # not part of the db model
+
+	@property
+	def completed_datetime_py(self) -> datetime:
+		return datetime.fromtimestamp(self.completed_utc, tz=timezone.utc)
+
+	@property
+	def completed_datetime_str(self) -> str:
+		return format_datetime(self.completed_utc)
+
+	@property
+	def status_text(self) -> str:
+		if not self.completed_utc: return "Running"
+		return "Failed" if self.traceback_str else "Completed"
+	
+	@property
+	def time_elapsed(self) -> Optional[timedelta]:
+		if not self.completed_utc: return None
+		return self.completed_datetime_py - self.created_datetime_py
+	
+	@property
+	def time_elapsed_str(self) -> str:
+		elapsed:Optional[timedelta] = self.time_elapsed
+		if not elapsed: return ''
+		return str(elapsed)
 
 	def __setattr__(self, __name: str, __value: Any) -> None:
 		if __name == "exception":

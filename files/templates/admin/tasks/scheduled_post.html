@@ -3,12 +3,14 @@
 <section class="scheduled-post-go-back bordered-section" style="padding:1em;">
 	You are viewing a single scheduled post. <a href="/tasks/scheduled_posts/">View all scheduled posts</a>
 </section>
-<section class="scheduled-post-edit mt-3">
+{%- if v.admin_level >= PERMS['SCHEDULER'] -%}
+<section class="scheduled-post-edit scheduler-edit mt-3">
 	<h5 class="mb-2">Edit Scheduled Post</h5>
 	<form action="/tasks/scheduled_posts/{{p.id}}/schedule" method="post">
 		{{forms.scheduled_post_time_selection_form(v, p)}}
 	</form>
 </section>
+{%- endif -%}
 <section class="scheduled-post-submissions mt-3">
 	<h5 class="mb-2">Previous Task Runs</h5>
 	{%- with listing = p.submissions -%}

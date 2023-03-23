@@ -59,7 +59,7 @@
 												<label class='mt-4' for="title">Post Title</label>
 
 
-												<input autocomplete="off" class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="Required" value="{{title}}" minlength="1" maxlength="500" required oninput="checkForRequired();savetext()">
+												<input autocomplete="off" class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="Required" value="{{title}}" minlength="1" maxlength="{{SUBMISSION_TITLE_LENGTH_MAXIMUM}}" required oninput="checkForRequired();savetext()">
 
 												<div id="urlblock">
 														<label for="URL" class="mt-3">URL</label>

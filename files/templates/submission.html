@@ -273,13 +273,13 @@
 						</div>
 					</div>
 
-					{% if v and (v.id==p.author_id or v.admin_level > 2) and not v.is_suspended %}
+					{% if v and v.can_edit(p) %}
 						<div id="edit-post-body-{{p.id}}" class="d-none comment-write collapsed child">
 							<form id="post-edit-form-{{p.id}}" action="{{p.edit_url}}" method="post" enctype="multipart/form-data">
 								<div class="d-flex flex-column">
 									{{forms.formkey(v)}}
 									<input type="hidden" name="current_page" value="{{request.path}}">
-									<input type="text" autocomplete="off" maxlength="500" name="title" class="comment-box form-control rounded" required placeholder="title" value="{{p.title}}"\>
+									<input type="text" autocomplete="off" maxlength="{{SUBMISSION_TITLE_LENGTH_MAXIMUM}}" name="title" class="comment-box form-control rounded" required placeholder="title" value="{{p.title}}"\>
 									<textarea autocomplete="off" name="body" maxlength="{{SUBMISSION_BODY_LENGTH_MAXIMUM}}" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10" data-id="{{p.id}}">{{p.body}}</textarea> 
 									
 									<div class="text-small font-weight-bold mt-1" id="charcount-post-edit" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
@@ -304,7 +304,6 @@
 							<div class="form-text text-small p-0 m-0"><a href="/formatting" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>Formatting help</a></div>
 						</div>
 					{% endif %}
-
 							{% if p.embed_url and "http" not in p.embed_url and "<" not in p.embed_url %}
 							<div id="crosspost-embed">
 							<div class="row no-gutters">
@@ -331,7 +330,7 @@
 							<a class="list-inline-item" role="button" onclick="togglePostEdit('{{p.id}}')"><i class="fas fa-edit"></i>Edit</a>
 						{% endif %}
 
-						{% if v and v.id != p.author_id and p.body %}
+						{% if v and v.can_edit(p) and p.body %}
 							<a class="list-inline-item" role="button" onclick="expandMarkdown(this,'{{p.id}}')"><i class="fas text-expand-icon-{{p.id}} fa-expand-alt"></i><span>View source</span></a>
 						{% endif %}
 						{% include 'component/post/actions.html' %}

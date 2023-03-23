@@ -4,6 +4,7 @@ from os import environ, listdir
 from jinja2 import pass_context
 
 from files.__main__ import app
+from files.classes.cron.tasks import ScheduledTaskType
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.environment import (DEFAULT_COLOR, PUSHER_ID, SITE,
                                               SITE_FULL, SITE_ID, SITE_TITLE)
@@ -65,6 +66,7 @@ def inject_constants():
 		"config":app.config.get,
 		"COMMENT_BODY_LENGTH_MAXIMUM":COMMENT_BODY_LENGTH_MAXIMUM,
 		"SUBMISSION_BODY_LENGTH_MAXIMUM":SUBMISSION_BODY_LENGTH_MAXIMUM,
+		"SUBMISSION_TITLE_LENGTH_MAXIMUM":SUBMISSION_TITLE_LENGTH_MAXIMUM,
 		"DEFAULT_COLOR":DEFAULT_COLOR,
 		"COLORS":COLORS,
 		"THEMES":THEMES,
@@ -74,6 +76,7 @@ def inject_constants():
 		"SORTS_COMMENTS":SORTS_COMMENTS,
 		"SORTS_POSTS":SORTS_POSTS,
 		"CSS_LENGTH_MAXIMUM":CSS_LENGTH_MAXIMUM,
+		"ScheduledTaskType":ScheduledTaskType,
 	}
 
 

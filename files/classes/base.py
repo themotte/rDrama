@@ -5,7 +5,7 @@ from sqlalchemy.orm import declarative_base, declared_attr
 from sqlalchemy.schema import Column
 from sqlalchemy.sql.sqltypes import Integer
 
-from files.helpers.time import format_age
+from files.helpers.time import format_age, format_datetime
 
 Base = declarative_base()
 
@@ -28,7 +28,7 @@ class CreatedBase(Base):
 	
 	@property
 	def created_datetime(self) -> str:
-		return time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc))
+		return format_datetime(self.created_utc)
 	
 	@property
 	def created_datetime_py(self) -> datetime:

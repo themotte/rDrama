@@ -1,0 +1,41 @@
+{%- extends "default.html" -%}
+{%- block content -%}
+<h1 class="mt-2">Run for <a href="/tasks/{{task.id}}">Task #{{task.id}}</a></h1>
+<section class="task-run-section task-{{run.task_id}} task-run-{{run.id}} mt-2" id="task-run-info-section">
+	<div class="overflow-x-auto">
+		<table class="table table-striped mb-5">
+			<tbody>
+				<tr>
+					<td>ID</td>
+					<td>{{run.id}}</td>
+				</tr>
+				<tr>
+					<td>Status</td>
+					<td>{{run.status_text}}</td>
+				</tr>
+				<tr>
+					<td>Started (UTC)</td>
+					<td>{{run.created_datetime}} ({{run.age_string}})</td>
+				</tr>
+				{%- if run.completed_utc -%}
+				<tr>
+					<td>Completed (UTC)</td>
+					<td>{{run.completed_datetime_str}} ({{run.completed_utc | timestamp}})</td>
+				</tr>
+				<tr>
+					<td>Elapsed Time</td>
+					<td>{{run.elapsed_str}}</td>
+				</tr>
+				{%- endif -%}
+			</tbody>
+		</table>
+	</div>
+</section>
+{%- if run.traceback_str and v.admin_level >= PERMS['SCHEDULER_TASK_TRACEBACK'] -%}
+<section class="task-run-section task-{{run.task_id}} task-run-{{run.id}} mt-2" id="task-run-exception-section">
+	<h2>Exception Traceback</h2>
+	<p>During this run, the task encountered an unhandled exception.</p>
+	<pre class="mt-2">{{run.traceback_str}}</pre>
+</section>
+{%- endif -%}
+{%- endblock -%}
