@@ -267,22 +267,22 @@ class RepeatableTask(CreatedBase):
 	
 	@property
 	def run_state_enum(self) -> ScheduledTaskState:
-		return self.run_state
-	
+		return ScheduledTaskState(self.run_state)
+
 	@run_state_enum.setter
 	def run_state_enum(self, value:ScheduledTaskState):
 		self.run_state = int(value)
-	
+
 	@property
 	def run_time_last_or_created_utc(self) -> datetime:
 		return self.run_time_last or self.created_datetime_py
-	
+
 	@property
 	def run_time_last_str(self) -> str:
 		if not self.run_time_last: return 'Never'
 		return f'{format_datetime(self.run_time_last)} ' \
 				f'({format_age(self.run_time_last)})'
-	
+
 	def next_trigger(self, anchor:datetime) -> Optional[datetime]:
 		if not self.enabled: return None
 		if self.frequency_day_flags.empty: return None
@@ -298,7 +298,7 @@ class RepeatableTask(CreatedBase):
 			raise Exception("Could not find suitable timestamp to run next task")
 
 		return datetime.combine(target_date, self.time_of_day_utc, tzinfo=timezone.utc) # type: ignore
-	
+
 	def run(self, db:scoped_session, trigger_time:datetime) -> RepeatableTaskRun:
 		run:RepeatableTaskRun = RepeatableTaskRun(task_id=self.id)
 		try:
@@ -329,7 +329,7 @@ class RepeatableTask(CreatedBase):
 
 	def __repr__(self) -> str:
 		return f'<{self.__class__.__name__}(id={self.id}, created_utc={self.created_date}, author_id={self.author_id})>'
-	
+
 	__mapper_args__ = {
 		"polymorphic_on": type_id,
 	}
@@ -361,12 +361,12 @@ class RepeatableTaskRun(CreatedBase):
 	def status_text(self) -> str:
 		if not self.completed_utc: return "Running"
 		return "Failed" if self.traceback_str else "Completed"
-	
+
 	@property
 	def time_elapsed(self) -> Optional[timedelta]:
 		if not self.completed_utc: return None
 		return self.completed_datetime_py - self.created_datetime_py
-	
+
 	@property
 	def time_elapsed_str(self) -> str:
 		elapsed:Optional[timedelta] = self.time_elapsed
