@@ -17,6 +17,7 @@ from files.helpers.config.environment import SITE_FULL
 @app.errorhandler(405)
 @app.errorhandler(409)
 @app.errorhandler(413)
+@app.errorhandler(415)
 @app.errorhandler(422)
 @app.errorhandler(429)
 def error(e):

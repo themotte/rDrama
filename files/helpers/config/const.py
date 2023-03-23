@@ -104,6 +104,7 @@ ERROR_MESSAGES = {
 	405: "Something went wrong and it's probably my fault. If you can do it reliably, or it's causing problems for you, please report it!",
 	409: "There's a conflict between what you're trying to do and what you or someone else has done and because of that you can't do what you're trying to do.",
 	413: "Max file size is 8 MB",
+	415: "That file type isn't allowed to be uploaded here",
 	422: "Something is wrong about your request. If you keep getting this unexpectedly, please report it!",
 	429: "Are you hammering the site? Stop that, yo.",
 	500: "Something went wrong and it's probably my fault. If you can do it reliably, or it's causing problems for you, please report it!",
