@@ -353,7 +353,10 @@ class RepeatableTaskRun(CreatedBase):
 	def completed_datetime_py(self) -> datetime | None:
 		if self.completed_utc is None:
 			return None
-		return datetime.fromtimestamp(self.completed_utc, tz=timezone.utc)
+		return datetime.combine(
+			self.completed_utc.date(),
+			self.completed_utc.time(),
+			timezone.utc)
 
 	@property
 	def completed_datetime_str(self) -> str:
@@ -366,7 +369,7 @@ class RepeatableTaskRun(CreatedBase):
 
 	@property
 	def time_elapsed(self) -> Optional[timedelta]:
-		if not self.completed_datetime_py: return None
+		if self.completed_datetime_py is None: return None
 		return self.completed_datetime_py - self.created_datetime_py
 
 	@property
