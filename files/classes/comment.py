@@ -128,7 +128,7 @@ class Comment(CreatedBase):
 	@property
 	def edited_string(self):
 		if not self.edited_utc: return "never"
-		return format_age(int(time.time()) - self.edited_utc)
+		return format_age(self.edited_utc)
 
 	@property
 	@lazy

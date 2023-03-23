@@ -1,3 +1,4 @@
+import calendar
 import time
 from datetime import datetime, timedelta
 from typing import Final, Union
@@ -14,9 +15,9 @@ def format_datetime(timestamp:TimestampFormattable) -> str:
 def format_date(timestamp:TimestampFormattable) -> str:
 	return _format_timestamp(timestamp, DATE_FORMAT)
 
-def format_age(age:AgeFormattable) -> str:
-	if isinstance(age, timedelta):
-		age = int(age.total_seconds())
+def format_age(timestamp:TimestampFormattable) -> str:
+	timestamp = _make_timestamp(timestamp)
+	age:int = int(time.time()) - timestamp
 
 	if age < 60: return "just now"
 	if age < 3600:
@@ -30,7 +31,7 @@ def format_age(age:AgeFormattable) -> str:
 		return f"{days}d ago"
 
 	now = time.gmtime()
-	ctd = time.gmtime(age)
+	ctd = time.gmtime(timestamp)
 
 	months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
 	if now.tm_mday < ctd.tm_mday:
@@ -51,3 +52,11 @@ def _format_timestamp(timestamp:TimestampFormattable, format:str) -> str:
 		raise TypeError("Invalid argument type (must be one of int, float, "
 						"datettime, or struct_time)")
 	return time.strftime(format, timestamp)
+
+def _make_timestamp(timestamp:TimestampFormattable) -> int:
+	if isinstance(timestamp, (int, float)):
+		return int(timestamp)
+	if isinstance(timestamp, datetime):
+		return int(timestamp.timestamp())
+	if isinstance(timestamp, time.struct_time):
+		return calendar.timegm(timestamp)
