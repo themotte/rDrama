@@ -326,11 +326,11 @@
 							</a>
 						</li>
 
-						{% if v and (v.id==p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
+						{% if v and v.can_edit(p) %}
 							<a class="list-inline-item" role="button" onclick="togglePostEdit('{{p.id}}')"><i class="fas fa-edit"></i>Edit</a>
 						{% endif %}
 
-						{% if v and v.can_edit(p) and p.body %}
+						{% if not (v and v.can_edit(p)) and p.body %}
 							<a class="list-inline-item" role="button" onclick="expandMarkdown(this,'{{p.id}}')"><i class="fas text-expand-icon-{{p.id}} fa-expand-alt"></i><span>View source</span></a>
 						{% endif %}
 						{% include 'component/post/actions.html' %}
