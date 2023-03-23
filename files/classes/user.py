@@ -622,7 +622,7 @@ class User(CreatedBase):
 
 	def can_edit(self, target:Union[Submission, ScheduledSubmissionTask]):
 		if isinstance(target, Submission):
-			if self.author_id == target.author_id: return True
+			if self.id == target.author_id: return True
 			return self.admin_level >= PERMS['POST_EDITING']
 		if target.__class__.__name__ == "ScheduledSubmissionTask": 
 			# XXX: avoiding import loop. should be fixed someday.
