@@ -1,7 +1,7 @@
 import calendar
 import time
 from datetime import datetime, timedelta
-from typing import Final, Union
+from typing import Final, Optional, Union
 
 DATE_FORMAT: Final[str] = '%Y %B %d'
 DATETIME_FORMAT: Final[str] = '%Y %B %d %H:%M:%S UTC'
@@ -9,13 +9,16 @@ DATETIME_FORMAT: Final[str] = '%Y %B %d %H:%M:%S UTC'
 AgeFormattable = Union[int, timedelta]
 TimestampFormattable = Union[int, float, datetime, time.struct_time]
 
-def format_datetime(timestamp:TimestampFormattable) -> str:
+def format_datetime(timestamp: TimestampFormattable | None) -> str:
 	return _format_timestamp(timestamp, DATETIME_FORMAT)
 
-def format_date(timestamp:TimestampFormattable) -> str:
+def format_date(timestamp: TimestampFormattable | None) -> str:
 	return _format_timestamp(timestamp, DATE_FORMAT)
 
-def format_age(timestamp:TimestampFormattable) -> str:
+def format_age(timestamp: TimestampFormattable | None) -> str:
+	if timestamp is None:
+		return ""
+
 	timestamp = _make_timestamp(timestamp)
 	age:int = int(time.time()) - timestamp
 
@@ -43,8 +46,10 @@ def format_age(timestamp:TimestampFormattable) -> str:
 		years = int(months / 12)
 		return f"{years}yr ago"
 
-def _format_timestamp(timestamp:TimestampFormattable, format:str) -> str:
-	if isinstance(timestamp, datetime):
+def _format_timestamp(timestamp: TimestampFormattable | None, format: str) -> str:
+	if timestamp is None:
+		return ""
+	elif isinstance(timestamp, datetime):
 		return timestamp.strftime(format)
 	elif isinstance(timestamp, (int, float)):
 		timestamp = time.gmtime(timestamp)
@@ -53,7 +58,7 @@ def _format_timestamp(timestamp:TimestampFormattable, format:str) -> str:
 						"datettime, or struct_time)")
 	return time.strftime(format, timestamp)
 
-def _make_timestamp(timestamp:TimestampFormattable) -> int:
+def _make_timestamp(timestamp: TimestampFormattable) -> int:
 	if isinstance(timestamp, (int, float)):
 		return int(timestamp)
 	if isinstance(timestamp, datetime):

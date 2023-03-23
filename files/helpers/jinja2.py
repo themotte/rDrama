@@ -1,13 +1,14 @@
 import random
-from os import environ, listdir
+from os import listdir
 
 from jinja2 import pass_context
 
 from files.__main__ import app
 from files.classes.cron.tasks import ScheduledTaskType
 from files.helpers.assetcache import assetcache_path
-from files.helpers.config.environment import (DEFAULT_COLOR, PUSHER_ID, SITE,
-                                              SITE_FULL, SITE_ID, SITE_TITLE)
+from files.helpers.config.environment import (CARD_VIEW, DEFAULT_COLOR,
+	ENABLE_DOWNVOTES, FINGERPRINT_TOKEN, PUSHER_ID, SITE, SITE_FULL, SITE_ID,
+	SITE_TITLE)
 from files.helpers.time import format_age, format_datetime
 
 from .config.const import *
@@ -55,7 +56,6 @@ def template_asset(asset_path):
 @app.context_processor
 def inject_constants():
 	return {
-		"environ":environ,
 		"SITE":SITE,
 		"SITE_ID":SITE_ID,
 		"SITE_TITLE":SITE_TITLE,
@@ -68,6 +68,9 @@ def inject_constants():
 		"CC_TITLE":CC_TITLE,
 		"listdir":listdir,
 		"config":app.config.get,
+		"ENABLE_DOWNVOTES": ENABLE_DOWNVOTES,
+		"CARD_VIEW": CARD_VIEW,
+		"FINGERPRINT_TOKEN": FINGERPRINT_TOKEN,
 		"COMMENT_BODY_LENGTH_MAXIMUM":COMMENT_BODY_LENGTH_MAXIMUM,
 		"SUBMISSION_BODY_LENGTH_MAXIMUM":SUBMISSION_BODY_LENGTH_MAXIMUM,
 		"SUBMISSION_TITLE_LENGTH_MAXIMUM":SUBMISSION_TITLE_LENGTH_MAXIMUM,

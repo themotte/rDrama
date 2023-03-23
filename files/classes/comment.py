@@ -280,7 +280,7 @@ class Comment(CreatedBase):
 		return data
 
 	def realbody(self, v):
-		body = body_displayed(self, v, True)
+		body = body_displayed(self, v, is_html=True)
 		if v and v.controversial:
 			captured = []
 			for i in controversial_regex.finditer(body):
@@ -297,7 +297,7 @@ class Comment(CreatedBase):
 		return body
 
 	def plainbody(self, v):
-		return body_displayed(self, v, False)
+		return body_displayed(self, v, is_html=False)
 
 	@lazy
 	def collapse_for_user(self, v, path):

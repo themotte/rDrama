@@ -120,8 +120,12 @@ class Submission(CreatedBase):
 		from files.helpers.caching import invalidate_cache
 		if self.private: return
 		if not self.ghost: execute_username_mentions_submission(self)
-		invalidate_cache(userpagelisting=True, changeloglist=\
-			"[changelog]" in self.title.lower() or "(changelog)" in self.title.lower())
+		invalidate_cache(
+			frontlist=True,
+			userpagelisting=True,
+			changeloglist=("[changelog]" in self.title.lower()
+				or "(changelog)" in self.title.lower()),
+		)
 
 	def __repr__(self):
 		return f"<{self.__class__.__name__}(id={self.id})>"
@@ -327,10 +331,10 @@ class Submission(CreatedBase):
 		else: return ""
  
 	def realbody(self, v):
-		return body_displayed(self, v, True)
+		return body_displayed(self, v, is_html=True)
 
 	def plainbody(self, v):
-		return body_displayed(self, v, False)
+		return body_displayed(self, v, is_html=False)
 
 	@lazy
 	def realtitle(self, v):

@@ -198,7 +198,7 @@ def settings_profile_post(v):
 		if frontsize in {"15", "25", "50", "100"}:
 			v.frontsize = int(frontsize)
 			updated = True
-			invalidate_cache()
+			invalidate_cache(frontlist=True)
 		else: abort(400)
 
 	defaultsortingcomments = request.values.get("defaultsortingcomments")
@@ -274,7 +274,7 @@ def changelogsub(v):
 	v.changelogsub = not v.changelogsub
 	g.db.add(v)
 
-	invalidate_cache()
+	invalidate_cache(frontlist=True)
 
 	g.db.commit()
 	if v.changelogsub: return {"message": "You have subscribed to the changelog!"}
@@ -556,7 +556,7 @@ def settings_block_user(v):
 						  target_id=user.id,
 						  )
 	g.db.add(new_block)
-	invalidate_cache()
+	invalidate_cache(frontlist=True)
 	g.db.commit()
 
 	return {"message": f"@{user.username} blocked."}
@@ -570,7 +570,7 @@ def settings_unblock_user(v):
 	x = v.is_blocking(user)
 	if not x: abort(409)
 	g.db.delete(x)
-	invalidate_cache()
+	invalidate_cache(frontlist=True)
 	g.db.commit()
 
 	return {"message": f"@{user.username} unblocked."}

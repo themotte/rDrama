@@ -1,6 +1,5 @@
 import functools
 import html
-import random
 import re
 import urllib.parse
 from functools import partial
@@ -22,7 +21,6 @@ from files.helpers.config.environment import (MENTION_LIMIT,
                                               MULTIMEDIA_EMBEDDING_ENABLED,
                                               SITE_FULL)
 from files.helpers.config.regex import *
-from files.helpers.config.stateful import marseys_const2
 from files.helpers.get import get_user, get_users
 
 TLDS = ('ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar',
@@ -128,11 +126,9 @@ def render_emoji(html, regexp, edit, marseys_used=set(), b=False):
 		emoji = i.group(1).lower()
 		attrs = ''
 		if b: attrs += ' b'
-		if not edit and len(emojis) <= 20 and random.random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): attrs += ' g'
 
 		old = emoji
 		emoji = emoji.replace('!','').replace('#','')
-		if emoji == 'marseyrandom': emoji = random.choice(marseys_const2)
 
 		emoji_partial_pat = '<img loading="lazy" alt=":{0}:" src="{1}"{2}>'
 		emoji_partial = '<img loading="lazy" data-bs-toggle="tooltip" alt=":{0}:" title=":{0}:" src="{1}"{2}>'

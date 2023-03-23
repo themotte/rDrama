@@ -27,7 +27,6 @@ from sqlalchemy.engine import Engine, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from files.helpers.config.const import Service
-from files.helpers.config.stateful import const_initialize
 from files.helpers.strings import bool_from_string
 
 # first, let's parse arguments to find out what type of instance this is...
@@ -195,10 +194,6 @@ limiter = flask_limiter.Limiter(
 
 engine:Engine = create_engine(DATABASE_URL)
 db_session:scoped_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
-
-# now that we have our db, let's initialize some constants we need to startup.
-
-const_initialize(db_session)
 
 # now that we've that, let's add the cache, compression, and mail extensions to our app...
 

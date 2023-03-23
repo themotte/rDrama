@@ -27,14 +27,6 @@ from files.helpers.wrappers import *
 from files.routes.importstar import *
 
 
-discounts = { # <- why is this here?
-	69: 0.02,
-	70: 0.04,
-	71: 0.06,
-	72: 0.08,
-	73: 0.10,
-}
-
 titleheaders = {
 	"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"
 }
@@ -649,7 +641,7 @@ def delete_post_pid(pid, v):
 
 	g.db.add(post)
 
-	invalidate_cache()
+	invalidate_cache(frontlist=True)
 
 	g.db.commit()
 
@@ -665,7 +657,7 @@ def undelete_post_pid(pid, v):
 
 	g.db.add(post)
 
-	invalidate_cache()
+	invalidate_cache(frontlist=True)
 
 	g.db.commit()
 

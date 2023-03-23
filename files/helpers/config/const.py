@@ -137,7 +137,6 @@ NO_TITLE_EXTENSIONS = IMAGE_FORMATS + VIDEO_FORMATS + AUDIO_FORMATS
 
 FEATURES = {
 	"AWARDS": False,
-	"EMOJI": False,
 }
 
 PERMS = {
@@ -174,14 +173,6 @@ NOTIFIED_USERS = {
 }
 
 patron = 'Patron'
-
-discounts = {
-	69: 0.02,
-	70: 0.04,
-	71: 0.06,
-	72: 0.08,
-	73: 0.10,
-}
 
 proxies = {}
 

@@ -17,14 +17,16 @@ if "localhost" in SITE:
 else: 
 	SITE_FULL = 'https://' + SITE
 
-WELCOME_MSG = \
-	f"""Welcome to {SITE_TITLE}! Please read [the rules](/rules) first. Then [read some of our current conversations](/) and feel free to comment or post!
-	We encourage people to comment even if they aren't sure they fit in; as long as your comment follows [community rules](/rules), we are happy to have 
-	posters from all backgrounds, education levels, and specialties.
-	"""
+WELCOME_MSG = (
+	f"Welcome to {SITE_TITLE}! Please read [the rules](/rules) first. "
+	"Then [read some of our current conversations](/) and feel free to comment "
+	"or post!\n"
+	"We encourage people to comment even if they aren't sure they fit in; as "
+	"long as your comment follows [community rules](/rules), we are happy to "
+	"have posters from all backgrounds, education levels, and specialties."
+)
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-CARD_VIEW = bool_from_string(environ.get("CARD_VIEW", True))
 DATABASE_URL = environ.get("DATABASE_URL", "postgresql://postgres@localhost:5432")
 SECRET_KEY = environ.get('MASTER_KEY', '')
 SERVER_NAME = environ.get("DOMAIN").strip()
@@ -87,6 +89,8 @@ VOLUNTEER_JANITOR_ENABLE = bool_from_string(environ.get('VOLUNTEER_JANITOR_ENABL
 RATE_LIMITER_ENABLED = not bool_from_string(environ.get('DBG_LIMITER_DISABLED', False))
 
 ENABLE_DOWNVOTES = not bool_from_string(environ.get('DISABLE_DOWNVOTES', False))
+CARD_VIEW = bool_from_string(environ.get("CARD_VIEW", True))
+FINGERPRINT_TOKEN = environ.get("FP", None)
 
 # other stuff from const.py that aren't constants
 CLUB_TRUESCORE_MINIMUM = int(environ.get("DUES").strip())

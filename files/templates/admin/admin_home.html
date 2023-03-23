@@ -86,8 +86,8 @@
 		<div class="custom-control custom-switch">
 			<input type="number" class="" id="site-setting-{{name}}" name="{{name}}" value="{{ site_settings[name] }}" 
 				onblur="post_toast(null, '/admin/site_settings/{{name}}', false, { new_value: this.value })"/>
-		<label for="site-setting-{{name}}">{{label}}</label>
-	</div>
+			<label for="site-setting-{{name}}">{{label}}</label>
+		</div>
 	{%- endmacro -%}
 	{{site_setting_bool('signups', 'Signups')}}
 	{{site_setting_bool('bots', 'Bots')}}

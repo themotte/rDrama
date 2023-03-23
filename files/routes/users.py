@@ -2,12 +2,13 @@ import io
 import math
 import time
 from collections import Counter
+from urllib.parse import urlparse
 
 import gevent
 import qrcode
 
 import files.helpers.listing as listings
-from files.__main__ import app, limiter
+from files.__main__ import app, cache, limiter
 from files.classes.leaderboard import (BadgeMarseyLeaderboard, LeaderboardMeta,
                                        SimpleLeaderboard, UserBlockLeaderboard)
 from files.classes.views import ViewerRelationship
@@ -866,10 +867,6 @@ def remove_follow(username, v):
 	g.db.commit()
 
 	return {"message": "Follower removed!"}
-
-import re
-from urllib.parse import urlparse
-
 
 @app.get("/pp/<int:id>")
 @app.get("/uid/<int:id>/pic")

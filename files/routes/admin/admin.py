@@ -833,7 +833,7 @@ def shadowban(user_id, v):
 	)
 	g.db.add(ma)
 	
-	invalidate_cache()
+	invalidate_cache(frontlist=True)
 
 	body = f"@{v.username} has shadowbanned @{user.username}"
 
@@ -881,7 +881,7 @@ def unshadowban(user_id, v):
 	)
 	g.db.add(ma)
 	
-	invalidate_cache()
+	invalidate_cache(frontlist=True)
 
 	g.db.commit()
 	return {"message": "User unshadowbanned!"}
@@ -1111,7 +1111,7 @@ def ban_post(post_id, v):
 		)
 	g.db.add(ma)
 
-	invalidate_cache()
+	invalidate_cache(frontlist=True)
 
 	v.coins += 1
 	g.db.add(v)
@@ -1147,7 +1147,7 @@ def unban_post(post_id, v):
 
 	g.db.add(post)
 
-	invalidate_cache()
+	invalidate_cache(frontlist=True)
 
 	v.coins -= 1
 	g.db.add(v)
@@ -1216,7 +1216,7 @@ def sticky_post(post_id, v):
 		if v.id != post.author_id:
 			send_repeatable_notification(post.author_id, f"@{v.username} has pinned your [post](/post/{post_id})!")
 
-		invalidate_cache()
+		invalidate_cache(frontlist=True)
 		g.db.commit()
 	return {"message": "Post pinned!"}
 
@@ -1242,7 +1242,7 @@ def unsticky_post(post_id, v):
 		if v.id != post.author_id:
 			send_repeatable_notification(post.author_id, f"@{v.username} has unpinned your [post](/post/{post_id})!")
 
-		invalidate_cache()
+		invalidate_cache(frontlist=True)
 		g.db.commit()
 	return {"message": "Post unpinned!"}
 

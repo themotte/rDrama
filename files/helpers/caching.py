@@ -11,7 +11,7 @@ import files.helpers.listing as listing
 # 
 # the question is whether it's worth it.
 
-def invalidate_cache(*, frontlist=True, userpagelisting=False, changeloglist=False):
+def invalidate_cache(*, frontlist=False, userpagelisting=False, changeloglist=False):
 	'''
 	Invalidates the caches for the front page listing, user page listings,
 	and optionally, the changelog listing.

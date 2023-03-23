@@ -33,13 +33,6 @@ def logged_out(old = ""):
 
 	return redirect(redirect_url)
 
-@app.get("/marsey_list")
-@cache.memoize(timeout=600, make_name=make_name)
-def marsey_list():
-	marseys = [f"{x.name} : {x.tags}" for x in g.db.query(Marsey).order_by(Marsey.count.desc())]
-
-	return str(marseys).replace("'",'"')
-
 @app.get('/sidebar')
 @auth_desired
 def sidebar(v):

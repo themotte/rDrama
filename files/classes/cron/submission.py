@@ -136,29 +136,13 @@ class ScheduledSubmissionTask(RepeatableTask):
 
 	@lazy
 	def realurl(self, v):
-		if not self.url: return ""
-
-		if v and self.url.startswith("https://old.reddit.com/"):
-			url = self.url.replace("old.reddit.com", v.reddit)
-
-			if '/comments/' in url and "sort=" not in url:
-				if "?" in url: url += f"&context={RENDER_DEPTH_LIMIT}" 
-				else: url += f"?context={RENDER_DEPTH_LIMIT - 1}"
-				if v.controversial: url += "&sort=controversial"
-			return url
-	
-		if v and v.nitter and '/i/' not in self.url and '/retweets' not in self.url: 
-			return self.url.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
-
-		if self.url.startswith('/'): 
-			return SITE_FULL + self.url
-		return self.url
+		return Submission.realurl(self, v)
  
 	def realbody(self, v):
-		return body_displayed(self, v, True)
+		return body_displayed(self, v, is_html=True)
 
 	def plainbody(self, v):
-		return body_displayed(self, v, False)
+		return body_displayed(self, v, is_html=False)
 
 	@lazy
 	def realtitle(self, v):

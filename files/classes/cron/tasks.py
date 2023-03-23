@@ -280,8 +280,8 @@ class RepeatableTask(CreatedBase):
 	@property
 	def run_time_last_str(self) -> str:
 		if not self.run_time_last: return 'Never'
-		return f'{format_datetime(self.run_time_last)} ' \
-				f'({format_age(self.run_time_last)})'
+		return (f'{format_datetime(self.run_time_last)} ' 
+				f'({format_age(self.run_time_last)})')
 
 	def next_trigger(self, anchor:datetime) -> Optional[datetime]:
 		if not self.enabled: return None
@@ -324,8 +324,8 @@ class RepeatableTask(CreatedBase):
 		raise NotImplementedError()
 
 	def contains_day_str(self, day_str:str) -> bool:
-		return bool(day_str) and \
-			DayOfWeek[day_str.upper()] in self.frequency_day_flags
+		return (bool(day_str)
+			and DayOfWeek[day_str.upper()] in self.frequency_day_flags)
 
 	def __repr__(self) -> str:
 		return f'<{self.__class__.__name__}(id={self.id}, created_utc={self.created_date}, author_id={self.author_id})>'
@@ -347,10 +347,12 @@ class RepeatableTaskRun(CreatedBase):
 
 	task = relationship(RepeatableTask, back_populates="runs")
 
-	exception: Optional[Exception] = None # not part of the db model
+	_exception: Optional[Exception] = None # not part of the db model
 
 	@property
-	def completed_datetime_py(self) -> datetime:
+	def completed_datetime_py(self) -> datetime | None:
+		if self.completed_utc is None:
+			return None
 		return datetime.fromtimestamp(self.completed_utc, tz=timezone.utc)
 
 	@property
@@ -364,7 +366,7 @@ class RepeatableTaskRun(CreatedBase):
 
 	@property
 	def time_elapsed(self) -> Optional[timedelta]:
-		if not self.completed_utc: return None
+		if not self.completed_datetime_py: return None
 		return self.completed_datetime_py - self.created_datetime_py
 
 	@property
@@ -373,8 +375,11 @@ class RepeatableTaskRun(CreatedBase):
 		if not elapsed: return ''
 		return str(elapsed)
 
-	def __setattr__(self, __name: str, __value: Any) -> None:
-		if __name == "exception":
-			self.exception = __value
-			self.traceback_str = str(__value) if __value else None
-		return super().__setattr__(__name, __value)
+	@property
+	def exception(self) -> Optional[Exception]:
+		return self._exception
+
+	@exception.setter
+	def exception(self, value: Optional[Exception]) -> None:
+		self._exception = value
+		self.traceback_str = str(value) if value else None

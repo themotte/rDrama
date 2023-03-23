@@ -2,7 +2,7 @@
 {%- import 'component/sorting_time.html' as sorting_time -%}
 {% block desktopBanner %}
 
-{% if v and environ.get("FP") %}
+{% if v and FINGERPRINT_TOKEN %}
 	{% if not v.fp %}
 		<script>
 			function fp(fp) {
@@ -22,7 +22,7 @@
 				script.src = "{{ 'js/fp.js' | asset }}";
 				document.head.appendChild(script);
 			})
-				.then(() => FingerprintJS.load({token: '{{environ.get("FP")}}'}));
+				.then(() => FingerprintJS.load({token: '{{FINGERPRINT_TOKEN}}'}));
 
 			fpPromise
 				.then(fp => fp.get())
