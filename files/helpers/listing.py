@@ -3,6 +3,7 @@ Module for listings.
 """
 
 import time
+from typing import Final
 
 from flask import g
 from sqlalchemy.sql.expression import not_
@@ -15,7 +16,11 @@ from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.strings import sql_ilike_clean
 
 
-@cache.memoize(timeout=86400)
+FRONTLIST_TIMEOUT_SECS: Final[int] = 86400
+USERPAGELISTING_TIMEOUT_SECS: Final[int] = 86400
+CHANGELOGLIST_TIMEOUT_SECS: Final[int] = 86400
+
+@cache.memoize(timeout=FRONTLIST_TIMEOUT_SECS)
 def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=0, lt=0, sub=None, site=None):
 	posts = g.db.query(Submission)
 	
@@ -99,7 +104,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 	return posts, next_exists
 
 
-@cache.memoize(timeout=86400)
+@cache.memoize(timeout=USERPAGELISTING_TIMEOUT_SECS)
 def userpagelisting(u:User, site=None, v=None, page=1, sort="new", t="all"):
 	if u.shadowbanned and not (v and (v.admin_level > 1 or v.id == u.id)): return []
 
@@ -115,7 +120,8 @@ def userpagelisting(u:User, site=None, v=None, page=1, sort="new", t="all"):
 
 	return [x[0] for x in posts]
 
-@cache.memoize(timeout=86400)
+
+@cache.memoize(timeout=CHANGELOGLIST_TIMEOUT_SECS)
 def changeloglist(v=None, sort="new", page=1, t="all", site=None):
 	posts = g.db.query(Submission.id).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
 

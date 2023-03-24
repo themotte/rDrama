@@ -2,7 +2,7 @@ import shutil
 import time
 import urllib.parse
 from dataclasses import dataclass
-from typing import NoReturn, Optional
+from typing import Optional
 
 from flask import Request, abort, request
 from werkzeug.datastructures import FileStorage
@@ -32,12 +32,10 @@ def guarded_value(val:str, min_len:int, max_len:int) -> str:
 
 
 def int_ranged(val:str, min:int, max:int) -> int:
-	def error() -> NoReturn:
+	raw:Optional[int] = request.values.get(val, default=None, type=int)
+	if raw is None or raw < min or raw > max:
 		abort(400, 
 			f"Invalid input ('{val}' must be an integer and be between {min} and {max})")
-
-	raw:Optional[int] = request.values.get(val, default=None, type=int)
-	if raw is None or raw < min or raw > max: error()
 	return raw
 
 @dataclass(frozen=True, kw_only=True, slots=True)

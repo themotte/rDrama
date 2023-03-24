@@ -20,7 +20,6 @@ def create_comment(text_html, autojanny=False):
 	return new_comment.id
 
 def send_repeatable_notification(uid, text, autojanny=False):
-
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
 	
@@ -39,13 +38,11 @@ def send_repeatable_notification(uid, text, autojanny=False):
 
 
 def send_notification(uid, text, autojanny=False):
-
 	cid = notif_comment(text, autojanny)
 	add_notif(cid, uid)
 
 
 def notif_comment(text, autojanny=False):
-
 	if autojanny:
 		author_id = AUTOJANNY_ID
 		alert = True
@@ -62,7 +59,6 @@ def notif_comment(text, autojanny=False):
 
 
 def notif_comment2(p):
-
 	search_html = f'%</a> has mentioned you: <a href="/post/{p.id}">%'
 
 	existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.parent_submission == None, Comment.body_html.like(search_html)).first()

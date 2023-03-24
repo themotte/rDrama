@@ -30,6 +30,7 @@ def twitter(url:str) -> Optional[str]:
 		return None
 
 def youtube(url:str) -> Optional[str]:
+	if not YOUTUBE_KEY: return None
 	url = urllib.parse.unquote(url).replace('?t', '&t')
 	yt_id = url.split('https://youtube.com/watch?v=')[1].split('&')[0].split('%')[0]
 

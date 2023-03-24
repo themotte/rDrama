@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import random
 import urllib.parse
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 from sqlalchemy.orm import scoped_session
 
@@ -9,11 +11,6 @@ from files.helpers.config.const import PERMS
 if TYPE_CHECKING:
 	from files.classes import Comment, Submission, User
 	Submittable = Union[Submission, Comment]
-else:
-	Comment = Any
-	Submission = Any
-	User = Any
-	Submittable = Any
 
 
 def _replace_urls(url:str) -> str:
@@ -50,6 +47,7 @@ def _replace_urls(url:str) -> str:
 	if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): 
 		url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 	return url
+
 
 def _httpsify_and_remove_tracking_urls(url:str) -> urllib.parse.ParseResult:
 	parsed_url = urllib.parse.urlparse(url)
@@ -97,6 +95,7 @@ def moderated_body(target:Submittable, v:Optional[User]) -> Optional[str]:
 	if target.filter_state == 'filtered': return 'Filtered'
 	return None
 
+
 def body_displayed(target:Submittable, v:Optional[User], is_html:bool) -> str:
 	moderated:Optional[str] = moderated_body(target, v)
 	if moderated: return moderated
@@ -109,6 +108,7 @@ def body_displayed(target:Submittable, v:Optional[User], is_html:bool) -> str:
 	if v.nitter and '/i/' not in body and '/retweets' not in body: 
 		body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 	return body
+
 
 def execute_shadowbanned_fake_votes(db:scoped_session, target:Submittable, v:Optional[User]):
 	if not target or not v: return
