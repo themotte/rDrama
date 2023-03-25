@@ -14,7 +14,7 @@ from files.helpers.config.environment import (SCORE_HIDING_TIME_HOURS, SITE,
                                               SITE_FULL, SITE_ID)
 from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy
-from files.helpers.time import format_age
+from files.helpers.time import format_age, format_datetime
 
 from .flags import Flag
 
@@ -153,13 +153,11 @@ class Submission(CreatedBase):
 
 	@property
 	def edited_string(self):
-		if not self.edited_utc: return "never"
-		return format_age(self.edited_utc)
+		return format_age(self.edited_utc) if self.edited_utc else "never"
 
 	@property
-	@lazy
 	def edited_datetime(self):
-		return time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.edited_utc))
+		return format_datetime(self.edited_utc) if self.edited_utc else ""
 
 	@property
 	@lazy

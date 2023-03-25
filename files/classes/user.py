@@ -544,11 +544,6 @@ class User(CreatedBase):
 	def applications(self):
 		return g.db.query(OauthApp).filter_by(author_id=self.id).order_by(OauthApp.id)
 
-	@property
-	@lazy
-	def created_datetime(self):
-		return time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc))
-
 	@lazy
 	def subscribed_idlist(self, page=1):
 		posts = g.db.query(Subscription.submission_id).filter_by(user_id=self.id).all()
