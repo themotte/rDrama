@@ -15,6 +15,7 @@ from files.classes.clients import *  # note: imports Comment and Submission
 from files.classes.exiles import *
 from files.classes.follows import Follow
 from files.classes.mod import Mod
+from files.classes.mod_logs import ModAction
 from files.classes.notifications import Notification
 from files.classes.saves import CommentSaveRelationship, SaveRelationship
 from files.classes.sub_block import SubBlock
