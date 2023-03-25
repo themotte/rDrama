@@ -43,18 +43,14 @@ import re
 import time
 from copy import deepcopy
 from datetime import datetime
-from flask import g
-from flask import render_template
+from flask import g, render_template
 from json import loads
 from math import floor
 from os import remove, path
 from random import randint
 from secrets import token_hex
-from sqlalchemy.orm import deferred, aliased
-from sqlalchemy.orm import relationship
-from sqlalchemy.orm import relationship, deferred
+from sqlalchemy.orm import aliased, deferred, relationship
 from urllib.parse import urlencode, urlparse, parse_qs
-from urllib.parse import urlparse
 
 # It is now safe to define the models
 from .alts import Alt
@@ -88,9 +84,8 @@ from .cron.pycallable import PythonCodeTask
 # Then the import * from files.*
 from files.helpers.config.const import *
 from files.helpers.media import *
-from files.helpers.lazy import *
+from files.helpers.lazy import lazy
 from files.helpers.security import *
 
 # Then the specific stuff we don't want stomped on
-from files.helpers.lazy import lazy
 from files.classes.base import Base, CreatedBase
