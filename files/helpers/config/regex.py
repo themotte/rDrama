@@ -29,10 +29,13 @@ spoiler_regex = re.compile('''\\|\\|(.+)\\|\\|''', flags=re.A)
 reddit_regex = re.compile('(^|\\s|<p>)\\/?((r|u)\\/(\\w|-){3,25})(?![^<]*<\\/(code|pre|a)>)', flags=re.A)
 sub_regex = re.compile('(^|\\s|<p>)\\/?(h\\/(\\w|-){3,25})', flags=re.A)
 
-# Bytes that shouldn't be allowed in user-submitted text
-# U+200E is LTR toggle,  U+200F is RTL toggle, U+200B and U+FEFF are Zero-Width Spaces,
-# and U+1242A is a massive and terrifying cuneiform numeral
+
 unwanted_bytes_regex = re.compile("\u200e|\u200f|\u200b|\ufeff|\U0001242a")
+'''
+Bytes that shouldn't be allowed in user-submitted text
+U+200E is LTR toggle,  U+200F is RTL toggle, U+200B and U+FEFF are Zero-Width 
+Spaces, and U+1242A is a massive and terrifying cuneiform numeral
+'''
 
 whitespace_regex = re.compile('\\s+')
 
@@ -46,11 +49,17 @@ emoji_regex3 = re.compile(f"(?<!\"):([!@{valid_username_chars}]{{1,31}}?):", fla
 
 snappy_url_regex = re.compile('<a href=\\"(https?:\\/\\/[a-z]{1,20}\\.[\\w:~,()\\-.#&\\/=?@%;+]{5,250})\\" rel=\\"nofollow noopener noreferrer\\" target=\\"_blank\\">([\\w:~,()\\-.#&\\/=?@%;+]{5,250})<\\/a>', flags=re.A)
 
-# Technically this allows stuff that is not a valid email address, but realistically
-# we care "does this email go to the correct person" rather than "is this email
-# address syntactically valid", so if we care we should be sending a confirmation
-# link, and otherwise should be pretty liberal in what we accept here.
 email_regex = re.compile('[^@]+@[^@]+\\.[^@]+', flags=re.A)
+'''
+Regex to use for email addresses.
+
+.. note:: 
+   Technically this allows stuff that is not a valid email address, but 
+   realistically we care "does this email go to the correct person" rather 
+   than "is this email address syntactically valid", so if we care we should 
+   be sending a confirmation link, and otherwise should be pretty liberal in 
+   what we accept here.
+'''
 
 utm_regex = re.compile('utm_[a-z]+=[a-z0-9_]+&', flags=re.A)
 utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
