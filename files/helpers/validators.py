@@ -88,7 +88,7 @@ class ValidatedSubmissionLike:
 	def url_canonical_str(self) -> Optional[str]:
 		url_canonical:Optional[urllib.parse.ParseResult] = self.url_canonical
 		if not url_canonical: return None
-		return urllib.parse.urlunparse(url_canonical)
+		return url_canonical.geturl()
 
 	@classmethod
 	def from_flask_request(cls, 
