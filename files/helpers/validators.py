@@ -8,13 +8,13 @@ from flask import Request, abort, request
 from werkzeug.datastructures import FileStorage
 
 import files.helpers.embeds as embeds
+import files.helpers.sanitize as sanitize
 from files.helpers.config.environment import SITE_FULL, YOUTUBE_KEY
 from files.helpers.config.const import (SUBMISSION_BODY_LENGTH_MAXIMUM,
                                  SUBMISSION_TITLE_LENGTH_MAXIMUM,
                                  SUBMISSION_URL_LENGTH_MAXIMUM)
 from files.helpers.content import canonicalize_url2
 from files.helpers.media import process_image
-from files.helpers.sanitize import filter_emojis_only, sanitize, sanitize_raw
 
 
 def guarded_value(val:str, min_len:int, max_len:int) -> str:
@@ -155,12 +155,12 @@ class ValidatedSubmissionLike:
 			return True, body
 
 		title = guarded_value("title", 1, SUBMISSION_TITLE_LENGTH_MAXIMUM)
-		title = sanitize_raw(title, allow_newlines=False, length_limit=SUBMISSION_TITLE_LENGTH_MAXIMUM)
+		title = sanitize.sanitize_raw(title, allow_newlines=False, length_limit=SUBMISSION_TITLE_LENGTH_MAXIMUM)
 
 		url = guarded_value("url", 0, SUBMISSION_URL_LENGTH_MAXIMUM)
 	
 		body_raw = guarded_value("body", 0, SUBMISSION_BODY_LENGTH_MAXIMUM)
-		body_raw = sanitize_raw(body_raw, allow_newlines=True, length_limit=SUBMISSION_BODY_LENGTH_MAXIMUM)
+		body_raw = sanitize.sanitize_raw(body_raw, allow_newlines=True, length_limit=SUBMISSION_BODY_LENGTH_MAXIMUM)
 
 		if not url and allow_media_url_upload:
 			has_file, url, thumburl = _process_media(request.files.get("file"))
@@ -173,16 +173,16 @@ class ValidatedSubmissionLike:
 		if not body_raw and not url and not has_file and not has_file2:
 			raise ValueError("Please enter a URL or some text")
 		
-		title_html = filter_emojis_only(title, graceful=True)
+		title_html = sanitize.filter_emojis_only(title, graceful=True)
 		if len(title_html) > 1500:
 			raise ValueError("Rendered title is too big!")
 		
 		return ValidatedSubmissionLike(
 			title=title,
-			title_html=filter_emojis_only(title, graceful=True),
+			title_html=sanitize.filter_emojis_only(title, graceful=True),
 			body=body,
 			body_raw=body_raw,
-			body_html=sanitize(body, edit=edit),
+			body_html=sanitize.sanitize(body, edit=edit),
 			url=url,
 			thumburl=thumburl,
 		)
