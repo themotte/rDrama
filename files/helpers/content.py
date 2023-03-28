@@ -4,7 +4,7 @@ import random
 import urllib.parse
 from typing import TYPE_CHECKING, Optional, Union
 
-from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import Session
 
 from files.helpers.config.const import PERMS
 
@@ -110,7 +110,7 @@ def body_displayed(target:Submittable, v:Optional[User], is_html:bool) -> str:
 	return body
 
 
-def execute_shadowbanned_fake_votes(db:scoped_session, target:Submittable, v:Optional[User]):
+def execute_shadowbanned_fake_votes(db:Session, target:Submittable, v:Optional[User]):
 	if not target or not v: return
 	if not v.shadowbanned: return
 	if v.id != target.author_id: return

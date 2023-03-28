@@ -192,8 +192,8 @@ limiter = flask_limiter.Limiter(
 
 # ...and then after that we can load the database.
 
-engine:Engine = create_engine(DATABASE_URL)
-db_session:scoped_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
+engine: Engine = create_engine(DATABASE_URL)
+db_session: scoped_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
 
 # now that we've that, let's add the cache, compression, and mail extensions to our app...
 

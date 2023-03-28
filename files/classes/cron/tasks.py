@@ -4,13 +4,13 @@ import contextlib
 import dataclasses
 from datetime import date, datetime, timedelta, timezone
 from enum import IntEnum, IntFlag
-from typing import TYPE_CHECKING, Any, Final, Optional, Union
+from typing import TYPE_CHECKING, Final, Optional, Union
 
 import flask
 import flask_caching
 import flask_mail
 import redis
-from sqlalchemy.orm import relationship, scoped_session
+from sqlalchemy.orm import relationship, Session
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.sql.sqltypes import (Boolean, DateTime, Integer, SmallInteger,
                                      Text, Time)
@@ -112,7 +112,7 @@ class TaskRunContext:
 	might want to interact with the cache in some way (for example invalidating
 	or adding something to the cache.)
 	'''
-	db:scoped_session
+	db:Session
 	'''
 	A database session. Useful for when a task needs to modify something in the
 	database (for example creating a submission)
@@ -283,7 +283,17 @@ class RepeatableTask(CreatedBase):
 		return (f'{format_datetime(self.run_time_last)} ' 
 				f'({format_age(self.run_time_last)})')
 
-	def next_trigger(self, anchor:datetime) -> Optional[datetime]:
+	@property
+	def trigger_time(self) -> datetime | None:
+		return self.next_trigger(self.run_time_last_or_created_utc)
+
+	def can_run(self, now: datetime) -> bool:
+		return not (
+			self.trigger_time is None
+			or now < self.trigger_time
+			or self.run_state_enum != ScheduledTaskState.WAITING)
+
+	def next_trigger(self, anchor: datetime) -> datetime | None:
 		if not self.enabled: return None
 		if self.frequency_day_flags.empty: return None
 
@@ -299,11 +309,11 @@ class RepeatableTask(CreatedBase):
 
 		return datetime.combine(target_date, self.time_of_day_utc, tzinfo=timezone.utc) # type: ignore
 
-	def run(self, db:scoped_session, trigger_time:datetime) -> RepeatableTaskRun:
+	def run(self, db: Session, trigger_time: datetime) -> RepeatableTaskRun:
 		run:RepeatableTaskRun = RepeatableTaskRun(task_id=self.id)
 		try:
 			from files.__main__ import app, cache, mail, r  # i know
-			ctx:TaskRunContext = TaskRunContext(
+			ctx: TaskRunContext = TaskRunContext(
 				app=app,
 				cache=cache,
 				db=db,

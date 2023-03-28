@@ -2,7 +2,7 @@ import sys
 
 import gevent
 from pusher_push_notifications import PushNotifications
-from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import Session
 
 from files.__main__ import db_session, service
 from files.classes.leaderboard import (GivenUpvotesLeaderboard,
@@ -49,7 +49,7 @@ _lb_given_upvotes_meta = LeaderboardMeta("Upvotes", "given upvotes", "given-upvo
 def leaderboard_thread():
 	global lb_downvotes_received, lb_upvotes_given
 
-	db:scoped_session = db_session() # type: ignore
+	db: Session = db_session()
 
 	lb_downvotes_received = ReceivedDownvotesLeaderboard(_lb_received_downvotes_meta, db)
 	lb_upvotes_given = GivenUpvotesLeaderboard(_lb_given_upvotes_meta, db)

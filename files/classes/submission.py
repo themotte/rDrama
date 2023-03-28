@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 from flask import g
 from sqlalchemy import *
 from sqlalchemy.orm import (declared_attr, deferred, relationship,
-                            scoped_session)
+                            Session)
 
 from files.classes.base import CreatedBase
 from files.classes.votes import Vote
@@ -92,7 +92,7 @@ class Submission(CreatedBase):
 
 	bump_utc = deferred(Column(Integer, server_default=FetchedValue()))
 
-	def submit(self, db:scoped_session):
+	def submit(self, db: Session):
 		# create submission...
 		db.add(self)
 		db.flush()

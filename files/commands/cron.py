@@ -2,10 +2,9 @@ import contextlib
 import logging
 import time
 from datetime import datetime, timezone
-from typing import Final, Optional
+from typing import Final
 
-from sqlalchemy import or_
-from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import scoped_session, Session
 
 from files.__main__ import app, db_session
 from files.classes.cron.tasks import (DayOfWeek, RepeatableTask,
@@ -36,10 +35,9 @@ def cron_app_worker():
 	The "worker" process task. This actually executes tasks.
 	'''
 	logging.info("Starting scheduler worker process")
-	db:scoped_session = db_session() # type: ignore
 	while True:
 		try:
-			_run_tasks(db)
+			_run_tasks(db_session)
 		except Exception as e:
 			logging.exception(
 				"An unhandled exception occurred while running tasks",
@@ -49,13 +47,14 @@ def cron_app_worker():
 
 
 @contextlib.contextmanager
-def _acquire_lock_exclusive(db:scoped_session, table:str):
+def _acquire_lock_exclusive(db: Session, table: str):
 	'''
 	Acquires an exclusive lock on the table provided by the `table` parameter.
 	This can be used for synchronizing the state of the specified table and 
 	making sure no readers can access it while in the critical section.
 	''' 
 	# TODO: make `table` the type LiteralString once we upgrade to python 3.11
+	db.begin() # we want to raise an exception if there's a txn in progress
 	db.execute(f"LOCK TABLE {table} IN ACCESS EXCLUSIVE MODE")
 	try:
 		yield
@@ -74,7 +73,7 @@ def _acquire_lock_exclusive(db:scoped_session, table:str):
 		raise
 
 
-def _run_tasks(db:scoped_session):
+def _run_tasks(db_session_factory: scoped_session):
 	'''
 	Runs tasks, attempting to guarantee that a task is ran once and only once.
 	This uses postgres to lock the table containing our tasks at key points in
@@ -84,27 +83,37 @@ def _run_tasks(db:scoped_session):
 	running task does not lock the entire table for its entire run, which would
 	for example, prevent any statistics about status from being gathered.
 	'''
-	now:datetime = datetime.now(tz=timezone.utc)
+	db: Session = db_session_factory()
 
 	with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
-		tasks:list[RepeatableTask] = db.query(RepeatableTask).filter(
+		now: datetime = datetime.now(tz=timezone.utc)
+
+		tasks: list[RepeatableTask] = db.query(RepeatableTask).filter(
 			RepeatableTask.enabled == True,
 			RepeatableTask.frequency_day != int(DayOfWeek.NONE),
 			RepeatableTask.run_state != int(ScheduledTaskState.RUNNING),
-			or_(RepeatableTask.run_time_last <= now,
-				RepeatableTask.run_time_last == None),
+			(RepeatableTask.run_time_last <= now)
+				| (RepeatableTask.run_time_last == None),
 		).all()
 
-	for task in tasks:
+		# SQLA needs to query again for the inherited object info anyway
+		# so it's fine that objects in the list get expired on txn end.
+		# Prefer more queries to risk of task run duplication.
+		tasks_to_run: list[RepeatableTask] = list(filter(
+			lambda task: task.can_run(now),	tasks))
+
+	for task in tasks_to_run:
+		now = datetime.now(tz=timezone.utc)
 		with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
-			trigger_time:Optional[datetime] = \
-				task.next_trigger(task.run_time_last_or_created_utc)
-			if not trigger_time: continue
-			if now < trigger_time: continue
+			# We need to check for runnability again because we don't mutex
+			# the RepeatableTask.run_state until now.
+			if not task.can_run(now):
+				continue
 			task.run_time_last = now
 			task.run_state_enum = ScheduledTaskState.RUNNING
-		
-		run:RepeatableTaskRun = task.run(db, task.run_time_last_or_created_utc)
+
+		db.begin()
+		run: RepeatableTaskRun = task.run(db, task.run_time_last_or_created_utc)
 		if run.exception:
 			# TODO: collect errors somewhere other than just here and in the 
 			# task run object itself (see #220).
@@ -112,5 +121,9 @@ def _run_tasks(db:scoped_session):
 				f"Exception running task (ID {run.task_id}, run ID {run.id})", 
 				exc_info=run.exception
 			)
+			db.rollback()
+		else:
+			db.commit()
+
 		with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
 			task.run_state_enum = ScheduledTaskState.WAITING

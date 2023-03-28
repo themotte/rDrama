@@ -40,7 +40,8 @@ class ScheduledSubmissionTask(RepeatableTask):
 
 	author = relationship("User", foreign_keys=author_id_submission)
 	task = relationship(RepeatableTask)
-	submissions = relationship(Submission, back_populates="task")
+	submissions = relationship(Submission,
+		back_populates="task", order_by="Submission.id.desc()")
 
 	def run_task(self, ctx:TaskRunContext) -> None:
 		submission:Submission = self.make_submission(ctx)

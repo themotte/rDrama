@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Any, Callable, Final, Optional
 
 from sqlalchemy import Column, func
-from sqlalchemy.orm import scoped_session, Query
+from sqlalchemy.orm import Session, Query
 
 from files.helpers.config.const import LEADERBOARD_LIMIT
 
@@ -51,9 +51,9 @@ class Leaderboard:
 		raise NotImplementedError()
 
 class SimpleLeaderboard(Leaderboard):
-	def __init__(self, v:User, meta:LeaderboardMeta, db:scoped_session, users_query:Query, column:Column):
+	def __init__(self, v:User, meta:LeaderboardMeta, db:Session, users_query:Query, column:Column):
 		super().__init__(v, meta)
-		self.db:scoped_session = db
+		self.db:Session = db
 		self.users_query:Query = users_query
 		self.column:Column = column
 		self._calculate()
@@ -92,9 +92,9 @@ class _CountedAndRankedLeaderboard(Leaderboard):
 		return func.rank().over(order_by=func.count(criteria).desc()).label("rank")
 	
 class BadgeMarseyLeaderboard(_CountedAndRankedLeaderboard):
-	def __init__(self, v:User, meta:LeaderboardMeta, db:scoped_session, column:Column):
+	def __init__(self, v:User, meta:LeaderboardMeta, db:Session, column:Column):
 		super().__init__(v, meta)
-		self.db:scoped_session = db
+		self.db:Session = db
 		self.column = column
 		self._calculate()
 
@@ -135,9 +135,9 @@ class BadgeMarseyLeaderboard(_CountedAndRankedLeaderboard):
 		return lambda u:self._all_users[u]
 	
 class UserBlockLeaderboard(_CountedAndRankedLeaderboard):
-	def __init__(self, v:User, meta:LeaderboardMeta, db:scoped_session, column:Column):
+	def __init__(self, v:User, meta:LeaderboardMeta, db:Session, column:Column):
 		super().__init__(v, meta)
-		self.db:scoped_session = db
+		self.db:Session = db
 		self.column = column
 		self._calculate()
 	
@@ -169,7 +169,7 @@ class UserBlockLeaderboard(_CountedAndRankedLeaderboard):
 		return self._v_value
 
 class RawSqlLeaderboard(Leaderboard):
-	def __init__(self, meta:LeaderboardMeta, db:scoped_session, query:str) -> None: # should be LiteralString on py3.11+
+	def __init__(self, meta:LeaderboardMeta, db:Session, query:str) -> None: # should be LiteralString on py3.11+
 		super().__init__(None, meta)
 		self.db = db
 		self._calculate(query)
@@ -234,7 +234,7 @@ FROM cv_for_user cvfu
 ORDER BY count DESC LIMIT 25
 	"""
 
-	def __init__(self, meta:LeaderboardMeta, db:scoped_session) -> None:
+	def __init__(self, meta:LeaderboardMeta, db:Session) -> None:
 		super().__init__(meta, db, self._query)
 
 class GivenUpvotesLeaderboard(RawSqlLeaderboard):
@@ -248,5 +248,5 @@ FULL OUTER JOIN (SELECT user_id, COUNT(*) FROM commentvotes WHERE vote_type = 1 
 ORDER BY count DESC LIMIT 25
 	"""
 
-	def __init__(self, meta:LeaderboardMeta, db:scoped_session) -> None:
+	def __init__(self, meta:LeaderboardMeta, db:Session) -> None:
 		super().__init__(meta, db, self._query)
