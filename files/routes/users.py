@@ -376,7 +376,9 @@ def leaderboard(v:User):
 
 	# note: lb_downvotes_received and lb_upvotes_given are global variables
 	# that are populated by leaderboard_thread() in files.helpers.services
-	leaderboards = [coins, coins_spent, truescore, subscribers, posts, comments, received_awards, badges, blocks, lb_downvotes_received, lb_upvotes_given]
+	leaderboards = [coins, coins_spent, truescore, subscribers, posts, comments, received_awards, badges, blocks]
+	if lb_downvotes_received is not None and lb_upvotes_given is not None:
+		leaderboards.extend([lb_downvotes_received, lb_upvotes_given])
 
 	return render_template("leaderboard.html", v=v, leaderboards=leaderboards)
 

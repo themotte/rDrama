@@ -44,6 +44,9 @@ def pusher_thread2(interests, notifbody, username):
 _lb_received_downvotes_meta = LeaderboardMeta("Downvotes", "received downvotes", "received-downvotes", "downvotes", "downvoted")
 _lb_given_upvotes_meta = LeaderboardMeta("Upvotes", "given upvotes", "given-upvotes", "upvotes", "upvoting")
 
+lb_downvotes_received: ReceivedDownvotesLeaderboard | None = None
+lb_upvotes_given: GivenUpvotesLeaderboard | None = None
+
 def leaderboard_thread():
 	global lb_downvotes_received, lb_upvotes_given
 
