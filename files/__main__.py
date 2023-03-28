@@ -151,7 +151,7 @@ limiter = Limiter(
 
 engine = create_engine(app.config['DATABASE_URL'])
 
-db_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
+db_session = scoped_session(sessionmaker(bind=engine, autoflush=False, future=True))
 
 cache = Cache(app)
 Compress(app)
