@@ -132,7 +132,7 @@ class BadgeMarseyLeaderboard(_CountedAndRankedLeaderboard):
 
 	@property
 	def value_func(self) -> Callable[[User], int]:
-		return lambda u:self._all_users[u]
+		return lambda u: self._all_users[u]
 	
 class UserBlockLeaderboard(_CountedAndRankedLeaderboard):
 	def __init__(self, v:User, meta:LeaderboardMeta, db:scoped_session, column:Column):
@@ -167,6 +167,10 @@ class UserBlockLeaderboard(_CountedAndRankedLeaderboard):
 	@property
 	def v_value(self) -> int:
 		return self._v_value
+
+	@property
+	def value_func(self) -> Callable[[User], int]:
+		return lambda u: self._all_users[u]
 
 class RawSqlLeaderboard(Leaderboard):
 	def __init__(self, meta:LeaderboardMeta, db:scoped_session, query:str) -> None: # should be LiteralString on py3.11+
