@@ -43,15 +43,11 @@
 	{% endif %}
 </head>
 
-<body id="settings" {% if v and v.background %}style="overflow-x: hidden;background:url(/assets/images/backgrounds/{{v.background}}?v=3) center center fixed; background-color: var(--background){% if 'anime' not in v.background %};background-size: cover{% endif %}"{% endif %}>
-
+<body id="settings">
 	{% include "header.html" %}
 		<div class="container">
-
 		<div class="row justify-content-around">
-
 	<div class="col h-100">
-
 		{% if error %}
 		<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
 			<i class="fas fa-exclamation-circle my-auto"></i>

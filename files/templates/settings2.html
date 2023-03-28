@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -50,12 +49,9 @@
 	{% endif %}
 </head>
 
-<body id="settings2" {% if v and v.background %}style="overflow-x: hidden;background:url(/assets/images/backgrounds/{{v.background}}?v=3) center center fixed; background-color: var(--background){% if 'anime' not in v.background %};background-size: cover{% endif %}"{% endif %}>
-
+<body id="settings2">
 {% include "header.html" %}
-
 {% block subNav %}
-
 {% set mod = (v and v.admin_level > 1) %}
 <div class="container-fluid bg-white d-none d-md-block" style="padding-top: 50px; padding-bottom: 0 !important;">
 	<div class="row box-shadow-bottom">
