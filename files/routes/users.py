@@ -1,27 +1,33 @@
-import qrcode
 import io
-import time
 import math
+import time
+from collections import Counter
+from urllib.parse import urlparse
 
-from files.classes.leaderboard import SimpleLeaderboard, BadgeMarseyLeaderboard, UserBlockLeaderboard, LeaderboardMeta
+import gevent
+import qrcode
+
+import files.helpers.listing as listings
+from files.__main__ import app, cache, limiter
+from files.classes.leaderboard import (BadgeMarseyLeaderboard, LeaderboardMeta,
+                                       SimpleLeaderboard, UserBlockLeaderboard)
 from files.classes.views import ViewerRelationship
 from files.helpers.alerts import *
+from files.helpers.assetcache import assetcache_path
+from files.helpers.config.const import *
+from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.media import process_image
 from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
-from files.helpers.const import *
-from files.helpers.assetcache import assetcache_path
-from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.mail import *
-from flask import *
-from files.__main__ import app, limiter
-from collections import Counter
-import gevent
+from files.routes.importstar import *
+
 
 # warning: do not move currently. these have import-time side effects but 
 # until this is refactored to be not completely awful, there's not really
 # a better option.
-from files.helpers.services import * 
+from files.helpers.services import *
+
 
 @app.get("/@<username>/upvoters/<uid>/posts")
 @admin_level_required(3)
@@ -376,7 +382,9 @@ def leaderboard(v:User):
 
 	# note: lb_downvotes_received and lb_upvotes_given are global variables
 	# that are populated by leaderboard_thread() in files.helpers.services
-	leaderboards = [coins, coins_spent, truescore, subscribers, posts, comments, received_awards, badges, blocks, lb_downvotes_received, lb_upvotes_given]
+	leaderboards = [coins, coins_spent, truescore, subscribers, posts, comments, received_awards, badges, blocks]
+	if lb_downvotes_received is not None and lb_upvotes_given is not None:
+		leaderboards.extend([lb_downvotes_received, lb_upvotes_given])
 
 	return render_template("leaderboard.html", v=v, leaderboards=leaderboards)
 
@@ -673,7 +681,7 @@ def u_username(username, v=None):
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
-	ids = u.userpagelisting(site=SITE, v=v, page=page, sort=sort, t=t)
+	ids = listings.userpagelisting(u, site=SITE, v=v, page=page, sort=sort, t=t)
 
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
@@ -861,9 +869,6 @@ def remove_follow(username, v):
 	g.db.commit()
 
 	return {"message": "Follower removed!"}
-
-from urllib.parse import urlparse
-import re
 
 @app.get("/pp/<int:id>")
 @app.get("/uid/<int:id>/pic")

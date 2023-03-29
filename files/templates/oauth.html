@@ -16,7 +16,7 @@
 
 		<form action="/authorize" method="post" class="mt-md-3" id="login">
 
-				<input type="hidden" name="formkey" value="{{v.formkey}}">
+				{{forms.formkey(v)}}
 				<input type="hidden" name="scopes" value="{{scopes_txt}}">
 				<input type="hidden" name="redirect_uri" value="{{redirect_uri}}">
 				<input type="hidden" name="permanent" value="{{permanent}}">

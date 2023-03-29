@@ -1,3 +1,5 @@
+{%- if p.is_real_submission -%}
+
 {% if v and v.id==p.author_id and p.private %}
 	<form action="/publish/{{p.id}}" method="post">
 		<input type="hidden" name="formkey", value="{{v.formkey}}">
@@ -87,3 +89,4 @@
 			{% endif %}
 		</ul>
 	{% endif %}
+{%- endif -%} {# {%- if p.is_real_submission -%} #}

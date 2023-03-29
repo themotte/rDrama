@@ -36,6 +36,8 @@ psycopg2-binary = "*"
 pusher_push_notifications = "*"
 yattag = "*"
 webptools = "*"
+supervisor = "*"
+superlance = "*"
 pytest = "*"
 
 [tool.poetry.dev-dependencies]

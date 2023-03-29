@@ -2,9 +2,8 @@ from files.__main__ import app, limiter
 from files.helpers.wrappers import *
 from files.helpers.alerts import *
 from files.helpers.get import *
-from files.helpers.const import *
+from files.helpers.config.const import *
 from files.classes.award import *
-from .front import frontlist
 from flask import g, request
 from files.helpers.sanitize import filter_emojis_only
 from copy import deepcopy
@@ -24,7 +23,7 @@ def shop(v):
 
 	for val in AWARDS.values():
 		val["baseprice"] = int(val["price"])
-		val["price"] = int(val["price"] * v.discount)
+		val["price"] = val["baseprice"]
 
 	sales = g.db.query(func.sum(User.coins_spent)).scalar()
 	return render_template("shop.html", awards=list(AWARDS.values()), v=v, sales=sales)
@@ -46,7 +45,7 @@ def buy(v, award):
 	if award not in AWARDS: abort(400)
 	og_price = AWARDS[award]["price"]
 
-	price = int(og_price * v.discount)
+	price = int(og_price)
 
 	if request.values.get("mb"):
 		if v.procoins < price: abort(400, "Not enough marseybux.")

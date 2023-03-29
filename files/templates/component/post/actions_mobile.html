@@ -1,3 +1,4 @@
+{%- if p.is_real_submission -%}
 {% if v and v.id==p.author_id and p.private %}
 	<form class="btn-block" action="/publish/{{p.id}}" method="post">
 		<input type="hidden" name="formkey", value="{{v.formkey}}">
@@ -49,3 +50,4 @@
 		<button id="block2-{{p.id}}" class="blockuser nobackground btn btn-link btn-block btn-lg text-danger text-left{% if p.is_blocking %} d-none{% endif %}" onclick="document.getElementById('block2-{{p.id}}').classList.toggle('d-none');document.getElementById('prompt2-{{p.id}}').classList.toggle('d-none');"><i class="fas fa-eye-slash mr-3 text-danger"></i>Block user</button>
 	{% endif %}
 {% endif %}
+{%- endif -%} {# {%- if p.is_real_submission -%} #}

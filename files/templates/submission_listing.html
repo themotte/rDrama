@@ -102,7 +102,7 @@
 
 					<span class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-					<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1', '{{v.id}}')" class="post-{{p.id}}-down text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
+					<div {% if not ENABLE_DOWNVOTES %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1', '{{v.id}}')" class="post-{{p.id}}-down text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
 
 					{% else %}
 
@@ -110,7 +110,7 @@
 
 					<span class="post-{{p.id}}-score-none score{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-					<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1', '{{v.id}}')" class="post-{{p.id}}-down text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
+					<div {% if not ENABLE_DOWNVOTES %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1', '{{v.id}}')" class="post-{{p.id}}-down text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
 
 					{% endif %}
 
@@ -314,20 +314,20 @@
 			</div>
 		{% endif %}
 
-		{% if p.is_image and not p.over_18 and ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}
+		{% if p.is_image and not p.over_18 and ((v and v.cardview) or (not v and CARD_VIEW)) %}
 			<div style="text-align: center" class="mt-3 mb-4">
 				<a {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
 					<img loading="lazy" data-src="{{p.realurl(v)}}" src="/assets/images/loading.webp" class="img-fluid" style="max-height:20rem" alt="Unable to load image">
 				</a>
 			</div>
 		{% elif p.is_video %}
-			<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-4">
+			<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and CARD_VIEW)) %}d-none{% endif %} mt-4">
 				<video id="video2-{{p.id}}" controls preload="none" class="vid">
 					<source src="{{p.realurl(v)}}" type="video/mp4">
 				</video>
 			</div>
 		{% elif p.is_youtube %}
-			<div id="video-{{p.id}}" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-3 mb-4 youtube_embed">
+			<div id="video-{{p.id}}" class="{% if p.over_18 or not ((v and v.cardview) or (not v and CARD_VIEW)) %}d-none{% endif %} mt-3 mb-4 youtube_embed">
 				{{p.embed_url | safe}}
 			</div>
 		{% endif %}
