@@ -46,7 +46,6 @@ class User(CreatedBase):
 	id = Column(Integer, primary_key=True)
 	username = Column(String(length=255), nullable=False)
 	namecolor = Column(String(length=6), default=DEFAULT_COLOR, nullable=False)
-	background = Column(String)
 	customtitle = Column(String)
 	customtitleplain = deferred(Column(String))
 	titlecolor = Column(String(length=6), default=DEFAULT_COLOR, nullable=False)

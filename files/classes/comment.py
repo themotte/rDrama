@@ -188,7 +188,10 @@ class Comment(CreatedBase):
 	@property
 	@lazy
 	def shortlink(self):
-		return f"{self.post.shortlink}/{self.id}?context=8#context"
+		if self.post:
+			return f"{self.post.shortlink}/{self.id}?context=8#context"
+		else:
+			return f"/comment/{self.id}?context=8#context"
 
 	@property
 	@lazy

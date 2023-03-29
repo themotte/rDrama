@@ -63,7 +63,6 @@
 {% if standalone and level==1 %}
 <div class="post-info post-row-cid-{{c.id}} mb-1 mr-2 {% if is_notification_page %}mt-5{% else %}mt-3{% endif %}">
 	{% if c.post and c.post.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
-	{{c.header_msg(v, is_notification_page, replies | length) | safe}}
 	<span class="align-top">
 		<span class="font-weight-bold">{{c.header_msg(v, is_notification_page, replies | length) | safe}}</span>
 	</span>

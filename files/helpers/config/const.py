@@ -64,8 +64,8 @@ ROLES={}
 
 LEADERBOARD_LIMIT: Final[int] = 25
 
-THEMES = {"TheMotte", "dramblr", "reddit", "transparent", "win98", "dark", 
-			"light", "coffee", "tron", "4chan", "midnight"}
+THEMES = ["TheMotte", "dramblr", "reddit", "win98", "dark", 
+			"light", "coffee", "tron", "4chan", "midnight"]
 SORTS_COMMON = {
 	"top": 'fa-arrow-alt-circle-up', 
 	"bottom": 'fa-arrow-alt-circle-down', 

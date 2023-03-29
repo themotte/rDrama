@@ -1,7 +1,7 @@
 """create scheduled tasks
 
 Revision ID: 8b97d5de5050
-Revises: 85458909736a
+Revises: d1e116e8eea5
 Create Date: 2023-03-21 15:42:19.412413+00:00
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '8b97d5de5050'
-down_revision = '85458909736a'
+down_revision = 'd1e116e8eea5'
 branch_labels = None
 depends_on = None
 

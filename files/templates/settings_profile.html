@@ -1,69 +1,38 @@
 {% extends "settings.html" %}
-
 {% block pagetitle %}Profile Settings - {{SITE_TITLE}}{% endblock %}
-
 {% block content %}
 
-<style>
-	.bg-image {
-		padding: 0.25rem;
-		width: 15rem;
-		height: 10rem;
-		object-fit: cover;
-	}
-	.bg-button {
-		margin: 0.25rem;
-		padding: 0;
-	}
-</style>
-
 <div id="posts" class="row">
-
 	<div class="col col-lg-10">
-
 		<div class="settings">
-
 			<h2 class="h5" name="referral">Theme</h2>
-
 			<div class="settings-section rounded">
-
 					<div class="d-lg-flex border-bottom">
-
 						<div class="title w-lg-25">
 							<label for="cardview">Card View</label>
 						</div>
-
 						<div class="body w-lg-100">
-
 							<div class="custom-control custom-switch">
 								<input autocomplete="off" type="checkbox" class="custom-control-input" id="cardview" name="cardview"{% if v.cardview %} checked{% endif %} onchange="post_toast(this,'/settings/profile?cardview='+document.getElementById('cardview').checked);">
 								<label class="custom-control-label" for="cardview"></label>
 							</div>
-
 							<span class="text-small-extra text-muted">Enable if you would like to display images and videos in full size on the frontpage.</span>
-
 						</div>
-
 					</div>
 
 
 					<div class="d-lg-flex border-bottom">
-
 						<div class="title w-lg-25">
 							<label for="highlightcomments">Highlight New Comments</label>
 						</div>
 
 						<div class="body w-lg-100">
-
 							<div class="custom-control custom-switch">
 								<input autocomplete="off" type="checkbox" class="custom-control-input" id="highlightcomments" name="highlightcomments"{% if v.highlightcomments %} checked{% endif %} onchange="post_toast(this,'/settings/profile?highlightcomments='+document.getElementById('highlightcomments').checked);">
 								<label class="custom-control-label" for="highlightcomments"></label>
 							</div>
-
 							<span class="text-small-extra text-muted">Enable if you would like to highlight comments made after the last time you visited a thread.</span>
-
 						</div>
-
 					</div>
 
 
@@ -71,7 +40,6 @@
 						<div class="title w-lg-25">
 							<label for="theme">Website Theme</label>
 						</div>
-
 						<div class="body w-lg-100">
 							<p>Change the theme for the website.</p>
 							<div class="input-group mb2">
@@ -83,51 +51,17 @@
 								{% endfor %}
 							</select>
 							</div>
-
 						</div>
-
 				</div>
-
-			<div class="d-lg-flex border-bottom">
-			<div class="title w-lg-25">
-				<label for="theme">Website Backgrounds</label>
-			</div>
-				<div class="body w-lg-100">
-					<p>Change the background for the website.</p>
-					<div class="input-group mb2">
-							<select autocomplete="off" id='backgroundSelector' class="form-control" form="profile-settings" name="background" onchange="updatebgselection();">								
-							{% for entry in ["space"] %}
-								<option value="{{entry}}" {% if v.background and v.background.startswith(entry) %}selected{% endif %}>
-									{{entry}}
-								</option>
-							{% endfor %}
-						</select>
-					</div>
-					{% if v.background %}
-						<div class="d-flex mt-2">
-							<a class="btn btn-primary ml-auto" role="button" onclick="post_toast(this,'/settings/removebackground','1')">Remove Background</a>
-							<pre></pre>
-						</div>
-					{% endif %}
-					<div id="bgcontainer"></div>
-				</div>
-				</div>
-			</div>
 
 			<h2 class="h5">Profile Picture</h2>
-
 			<div class="settings-section rounded">
-
 				<div class="d-flex">
-
 					<div class="title w-lg-25 text-md-center">
 						<img loading="lazy" alt="your profile picture" src="{{v.profile_url}}" class="profile-pic-75">
 					</div>
-
 					<div class="body w-lg-100 my-auto">
-
 						<div class="d-flex">
-
 							<div>
 								<form action="/settings/images/profile" method="post" enctype="multipart/form-data">
 									{{forms.formkey(v)}}
@@ -135,32 +69,21 @@
 										Update<input autocomplete="off" type="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} hidden name="profile" onchange="form.submit()">
 									</label>
 								</form>
-
 							</div>
-
 						</div>
-
 						<div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files are supported. Max file size is {% if v and v.patron %}8{% else %}4{% endif %} MB.</div>
-
 					</div>
-
 				</div>
-
 			</div>
 			<h2 class="h5">Profile Banner</h2>
 
 			<div class="settings-section rounded">
-
 				<div class="d-flex">
-
 					<div class="title w-lg-75 text-md-center">
 						<img loading="lazy" alt="your banner" src="{{v.banner_url}}" class="banner-pic-135">
 					</div>
-
 					<div class="body w-lg-100 my-auto">
-
 						<div class="d-flex">
-
 							<div>
 								<form action="/settings/images/banner" method="post" enctype="multipart/form-data">
 									{{forms.formkey(v)}}
@@ -168,83 +91,49 @@
 										Update<input autocomplete="off" type="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*" hidden name="banner" onchange="form.submit()">
 									</label>
 								</form>
-
 							</div>
-
 						</div>
-
 						<div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files are supported. Max file size is {% if v and v.patron %}8{% else %}4{% endif %} MB.</div>
-
 					</div>
-
 				</div>
-
 			</div>
 
 			<h2 class="h5" id="referral" name="referral">Referrals</h2>
-
 			<p class="text-small text-muted">Invite a friend.</p>
-
 			<div class="settings-section rounded">
-
 				<div class="d-lg-flex">
-
 					<div class="title w-lg-25">
 						<label for="referral_code">Referral code</label>
 					</div>
-
 					<div class="body w-lg-100">
-
 						<div class="input-group">
-
 							<input autocomplete="off" type="text" readonly="" class="form-control copy-link" id="referral_code" value="{{SITE_FULL}}/signup?ref={{v.username}}" data-clipboard-text="{{SITE_FULL}}/signup?ref={{v.username}}">
-
 							<span class="input-group-append" data-bs-toggle="tooltip" data-bs-placement="top" title="You have referred {{v.referral_count}} user{{'s' if v.referral_count != 1 else ''}} so far. {% if v.referral_count==0 %}¯\_(ツ)_/¯{% elif v.referral_count>10%}Wow!{% endif %}">
 								<span class="input-group-text text-primary border-0">
 									<i class="far fa-user mr-1" aria-hidden="true"></i>{{v.referral_count}}</span>
 								</span>
-
 							</div>
-
 							<div class="text-small-extra text-muted mt-3">Share this link with a friend. {% if v.referral_count==0 %} When they sign up, you'll get the bronze recruitment badge.{% elif v.referral_count<10 %} When you refer 10 friends, you'll receive the silver recruitment badge.{% elif v.referral_count<100 %} When you refer 100 friends, you'll receive the gold recruitment badge.{% endif %}</div>
-
 							</div>
-
 						</div>
-
 					</div>
 
-					
 					<h2 class="h5" name="referral">RSS Feed</h2>
-
 					<p class="text-small text-muted">Subscribe to the {{SITE_TITLE}} RSS feed.</p>
-
 					<div class="settings-section rounded">
-
 						<div class="d-lg-flex">
-
 							<div class="body w-lg-100">
-
 								<input autocomplete="off" type="text" readonly="" class="form-control copy-link" id="rss_feed" value="{{SITE_FULL}}/rss/new/all" data-clipboard-text="{{SITE_FULL}}/rss/new/all">
-
 								<div class="text-small-extra text-muted mt-3">You can change the feed by replacing "new" with whatever sorting you want and "all" with whatever time filter you want.</div>
-
 							</div>
-
 						</div>
-
 					</div>
 
 						<h2 class="h5" id="bio" name="bio">Your Profile</h2>
-
 						<p class="text-small text-muted">Edit how others see you on {{SITE_TITLE}}.</p>
-
 						<div class="settings-section rounded mb-0">
-
 							<div class="body d-lg-flex border-bottom">
-
 								<label class="text-black w-lg-25">Username</label>
-
 								<div class="w-lg-100">
 									<p>Your original username will always stay reserved for you: <code>{{v.original_username}}</code></p>
 
@@ -257,15 +146,11 @@
 										</div>
 									</form>
 								</div>
-
-							</div>				
+							</div>
 
 							<div class="body d-lg-flex border-bottom">
-
 								<label class="text-black w-lg-25">Flair</label>
-
 								<div class="w-lg-100">
-
 									<form id="profile-settings" action="/settings/title_change" method="post">
 										{{forms.formkey(v)}}
 										<input maxlength=100 {% if v.flairchanged %}disabled{% endif %} autocomplete="off" id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if v.flairchanged %}Your flair has been locked until {{ti}}{% elif v.customtitleplain %}{{v.customtitleplain}}{% endif %}">
@@ -275,15 +160,11 @@
 										</div>
 									</form>
 								</div>
-
 							</div>
 
 							<div class="body d-lg-flex border-bottom">
-
 								<label class="text-black w-lg-25">Flair Color</label>
-
 								<div class="d-flex">
-
 									<form action="/settings/titlecolor" id="titlecolor-form" method="post" class="color-picker" style="line-height: 0">
 											{{forms.formkey(v)}}
 
@@ -299,12 +180,8 @@
 												</span>
 											</label>
 											{% endfor %}
-
 									</form>
-
 								</div>
-		
-									
 
 								<p class="text-small mb-2">Or type a color code:</p>
 								<div class="d-flex">
@@ -317,18 +194,10 @@
 
 							</div>
 
-
-
-
-
 							{% if v.verified %}
-
 								<div class="body d-lg-flex border-bottom">
-
 									<label class="text-black w-lg-25">Bluecheck Color</label>
-		
 									<div class="d-flex">
-		
 										<form action="/settings/verifiedcolor" id="verifiedcolor-form" method="post" class="color-picker" style="line-height: 0">
 												{{forms.formkey(v)}}
 		
@@ -361,12 +230,8 @@
 								</div>	
 							{% endif %}
 
-
-
 							<div class="body d-lg-flex border-bottom">
-								
 								<label class="text-black w-lg-25">Bio</label>
-
 								<div class="w-lg-100">						
 									<form id="profile-bio" action="/settings/profile" method="post" enctype="multipart/form-data">
 										{{forms.formkey(v)}}
@@ -394,14 +259,10 @@
 										</div>
 									</form>
 								</div>
-
 							</div>
 
-
 							<div class="body d-lg-flex border-bottom">
-
 								<label class="text-black w-lg-25">Friends</label>
-							
 								<div class="w-lg-100">						
 									<form id="profile-friends" action="/settings/profile" method="post" enctype="multipart/form-data">
 										{{forms.formkey(v)}}
@@ -414,58 +275,39 @@
 											<input autocomplete="off" class="btn btn-primary ml-auto" id="friendsSave" type="submit" value="Save Changes">
 										</div>
 									</form>
-								</div>
-							
+								</div>							
 							</div>
 
-
 						<div class="d-lg-flex border-bottom">
-
 							<div class="title w-lg-25">
 								<label for="privateswitch">Private Mode</label>
 							</div>
-
 							<div class="body w-lg-100">
-
 								<div class="custom-control custom-switch">
 									<input autocomplete="off" type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="post_toast(this,'/settings/profile?private='+document.getElementById('privateswitch').checked)">
 									<label class="custom-control-label" for="privateswitch"></label>
 								</div>
-
 								<span class="text-small-extra text-muted">This will hide your post and comment history from others. We will also ask search engines to not index your profile page. (Your content will still be accessible via direct link.)</span>
-
 							</div>
-
 						</div>
 						<div class="d-lg-flex border-bottom">
-
 							<div class="title w-lg-25">
 								<label for="nofollowswitch">Disable Subscriptions</label>
 							</div>
-
 							<div class="body w-lg-100">
-
 								<div class="custom-control custom-switch">
 									<input autocomplete="off" type="checkbox" class="custom-control-input" id="nofollowswitch" name="nofollow"{% if v.is_nofollow%} checked{% endif %} onchange="post_toast(this,'/settings/profile?nofollow='+document.getElementById('nofollowswitch').checked)">
 									<label class="custom-control-label" for="nofollowswitch"></label>
 								</div>
-
 								<span class="text-small-extra text-muted">Prevent other users from following you.</span>
-
 							</div>
-
 						</div>
 					</div>
 					</div>
-
 				</div>
-
 		</div>
-
 	</div>
-
 </div>
-
 </div>
 <script src="{{ 'js/settings_profile.js' | asset }}"></script>
 {% endblock %}
