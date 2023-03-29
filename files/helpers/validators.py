@@ -115,11 +115,14 @@ class ValidatedSubmissionLike:
 		'''
 
 		def _process_media(file:Optional[FileStorage]) -> tuple[bool, Optional[str], Optional[str]]:
-			if request.headers.get("cf-ipcountry") == "T1": return False, None, None
-			if not file: return False, None, None
-			if not file.content_length: return False, None, None 
-			# handle bad browsers sending garbage
-			if not file.content_type.startswith('image/'):
+			if request.headers.get("cf-ipcountry") == "T1": # forbid Tor uploads
+				return False, None, None
+			elif not file:
+				# We actually care about falseyness, not just `is not None` because
+				# no attachment is <FileStorage: '' ('application/octet-stream')>
+				# (at least from Firefox 111).
+				return False, None, None
+			elif not file.content_type.startswith('image/'):
 				abort(415, "Image files only")
 
 			name = f'/images/{time.time()}'.replace('.','') + '.webp'
@@ -133,15 +136,16 @@ class ValidatedSubmissionLike:
 			return True, url, thumburl
 
 		def _process_media2(body:str, file2:Optional[list[FileStorage]]) -> tuple[bool, str]:
-			if request.headers.get("cf-ipcountry") == "T1": return False, body # do not allow Tor uploads
-			if not file2: return False, body
+			if request.headers.get("cf-ipcountry") == "T1": # forbid Tor uploads
+				return False, body
+			elif not file2: # empty list or None
+				return False, body
 			file2 = file2[:4]
-			if all(file.content_length == 0 for file in file2): 
-				return False, body  # handle bad browsers sending garbage
+			if not all(file for file in file2):
+				# Falseyness check to handle <'' ('application/octet-stream')>
+				return False, body
 
 			for file in file2:
-				if not file.content_length:
-					continue # handle bad browsers sending garbage
 				if not file.content_type.startswith('image/'):
 					abort(415, "Image files only")
 				
