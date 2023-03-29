@@ -116,10 +116,12 @@ class Submission(CreatedBase):
 		# spider web of imports is hard to maintain. we defer loading these
 		# imports until as late as possible. otherwise there are import loops
 		# that would require much more work to untangle
-		from files.helpers.alerts import execute_username_mentions_submission
+		from files.helpers.alerts import notify_submission_publish
 		from files.helpers.caching import invalidate_cache
+
 		if self.private: return
-		if not self.ghost: execute_username_mentions_submission(self)
+		if not self.ghost:
+			notify_submission_publish(self)
 		invalidate_cache(
 			frontlist=True,
 			userpagelisting=True,

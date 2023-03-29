@@ -98,12 +98,24 @@ def NOTIFY_USERS(text, v) -> set[int]:
 
 	return notify_users
 
-def execute_username_mentions_submission(target:Submission):
-	text:str = f'{target.title} {target.body}'
-
+def notify_submission_publish(target: Submission):
+	# Username mentions in title & body
+	text: str = f'{target.title} {target.body}'
 	notify_users = NOTIFY_USERS(text, target.author)
-	if not notify_users: return
-	
-	comment_id = notif_comment2(target)
-	for user_id in notify_users:
-		add_notif(comment_id, user_id)
+	if notify_users:
+		comment_id = notif_comment2(target)
+		for user_id in notify_users:
+			add_notif(comment_id, user_id)
+
+	# Submission author followers
+	if target.author.followers:
+		message: str = (
+			f"@{target.author.username} has made a new post: "
+			f"[{target.title}]({target.shortlink})"
+		)
+		if target.sub:
+			message += f" in <a href='/h/{target.sub}'>/h/{target.sub}"
+
+		cid = notif_comment(message, autojanny=True)
+		for follow in target.author.followers:
+			add_notif(cid, follow.user_id)

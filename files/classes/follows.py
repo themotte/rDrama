@@ -13,4 +13,7 @@ class Follow(CreatedBase):
 	target = relationship("User", primaryjoin="User.id==Follow.target_id", viewonly=True)
 
 	def __repr__(self):
-		return f"<{self.__class__.__name__}(id={self.id})>"
+		return (
+			f"<{self.__class__.__name__}("
+			f"target_id={self.target_id}, user_id={self.user_id})>"
+		)
