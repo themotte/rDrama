@@ -21,7 +21,7 @@ USERPAGELISTING_TIMEOUT_SECS: Final[int] = 86400
 CHANGELOGLIST_TIMEOUT_SECS: Final[int] = 86400
 
 @cache.memoize(timeout=FRONTLIST_TIMEOUT_SECS)
-def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=0, lt=0, sub=None, site=None):
+def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=0, lt=0):
 	posts = g.db.query(Submission)
 	
 	if v and v.hidevotedon:
@@ -33,9 +33,6 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 		if v:
 			filter_clause = filter_clause | (Submission.author_id == v.id)
 		posts = posts.filter(filter_clause)
-
-	if sub: posts = posts.filter_by(sub=sub.name)
-	elif v: posts = posts.filter((Submission.sub == None) | Submission.sub.notin_(v.all_blocks))
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
 	if lt: posts = posts.filter(Submission.created_utc < lt)
@@ -80,9 +77,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 
 	if page == 1 and ccmode == "false" and not gt and not lt:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
-		if sub: pins = pins.filter_by(sub=sub.name)
-		elif v:
-			pins = pins.filter((Submission.sub == None) | Submission.sub.notin_(v.all_blocks))
+		if v:
 			if v.admin_level < 2:
 				pins = pins.filter(Submission.author_id.notin_(v.userblocks))
 
