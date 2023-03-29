@@ -1,13 +1,19 @@
-from os import listdir, environ
 import random
-import time
+from os import listdir
 
 from jinja2 import pass_context
 
 from files.__main__ import app
-from .get import *
-from .const import * 
+from files.classes.cron.tasks import ScheduledTaskType
 from files.helpers.assetcache import assetcache_path
+from files.helpers.config.environment import (CARD_VIEW, DEFAULT_COLOR,
+	ENABLE_DOWNVOTES, FINGERPRINT_TOKEN, PUSHER_ID, SITE, SITE_FULL, SITE_ID,
+	SITE_TITLE)
+from files.helpers.time import format_age, format_datetime
+
+from .config.const import *
+from .get import *
+
 
 @app.template_filter("computer_size")
 def computer_size(size_bytes:int) -> str:
@@ -31,36 +37,15 @@ def post_embed(id, v):
 	if p: return render_template("submission_listing.html", listing=[p], v=v)
 	return ''
 
-
 @app.template_filter("timestamp")
 def timestamp(timestamp):
+	if not timestamp: return ''
+	return format_datetime(timestamp)
 
-	age = int(time.time()) - timestamp
-
-	if age < 60:
-		return "just now"
-	elif age < 3600:
-		minutes = int(age / 60)
-		return f"{minutes}m ago"
-	elif age < 86400:
-		hours = int(age / 3600)
-		return f"{hours}hr ago"
-	elif age < 2678400:
-		days = int(age / 86400)
-		return f"{days}d ago"
-
-	now = time.gmtime()
-	ctd = time.gmtime(timestamp)
-
-	months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
-	if now.tm_mday < ctd.tm_mday:
-		months -= 1
-
-	if months < 12:
-		return f"{months}mo ago"
-	else:
-		years = int(months / 12)
-		return f"{years}yr ago"
+@app.template_filter("agestamp")
+def agestamp(timestamp):
+	if not timestamp: return ''
+	return format_age(timestamp)
 
 
 @app.template_filter("asset")
@@ -71,7 +56,6 @@ def template_asset(asset_path):
 @app.context_processor
 def inject_constants():
 	return {
-		"environ":environ,
 		"SITE":SITE,
 		"SITE_ID":SITE_ID,
 		"SITE_TITLE":SITE_TITLE,
@@ -84,8 +68,12 @@ def inject_constants():
 		"CC_TITLE":CC_TITLE,
 		"listdir":listdir,
 		"config":app.config.get,
+		"ENABLE_DOWNVOTES": ENABLE_DOWNVOTES,
+		"CARD_VIEW": CARD_VIEW,
+		"FINGERPRINT_TOKEN": FINGERPRINT_TOKEN,
 		"COMMENT_BODY_LENGTH_MAXIMUM":COMMENT_BODY_LENGTH_MAXIMUM,
 		"SUBMISSION_BODY_LENGTH_MAXIMUM":SUBMISSION_BODY_LENGTH_MAXIMUM,
+		"SUBMISSION_TITLE_LENGTH_MAXIMUM":SUBMISSION_TITLE_LENGTH_MAXIMUM,
 		"DEFAULT_COLOR":DEFAULT_COLOR,
 		"COLORS":COLORS,
 		"THEMES":THEMES,
@@ -95,6 +83,7 @@ def inject_constants():
 		"SORTS_COMMENTS":SORTS_COMMENTS,
 		"SORTS_POSTS":SORTS_POSTS,
 		"CSS_LENGTH_MAXIMUM":CSS_LENGTH_MAXIMUM,
+		"ScheduledTaskType":ScheduledTaskType,
 	}
 
 

@@ -1,7 +1,8 @@
 from files.classes import *
 from flask import g
+
 from .sanitize import *
-from .const import *
+from .config.const import *
 
 def create_comment(text_html, autojanny=False):
 	if autojanny: author_id = AUTOJANNY_ID
@@ -19,7 +20,6 @@ def create_comment(text_html, autojanny=False):
 	return new_comment.id
 
 def send_repeatable_notification(uid, text, autojanny=False):
-
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
 	
@@ -38,13 +38,11 @@ def send_repeatable_notification(uid, text, autojanny=False):
 
 
 def send_notification(uid, text, autojanny=False):
-
 	cid = notif_comment(text, autojanny)
 	add_notif(cid, uid)
 
 
 def notif_comment(text, autojanny=False):
-
 	if autojanny:
 		author_id = AUTOJANNY_ID
 		alert = True
@@ -61,7 +59,6 @@ def notif_comment(text, autojanny=False):
 
 
 def notif_comment2(p):
-
 	search_html = f'%</a> has mentioned you: <a href="/post/{p.id}">%'
 
 	existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.parent_submission == None, Comment.body_html.like(search_html)).first()
@@ -81,11 +78,12 @@ def add_notif(cid, uid):
 		g.db.add(notif)
 
 
-def NOTIFY_USERS(text, v):
+def NOTIFY_USERS(text, v) -> set[int]:
 	notify_users = set()
 	for word, id in NOTIFIED_USERS.items():
 		if id == 0 or v.id == id: continue
-		if word in text.lower() and id not in notify_users: notify_users.add(id)
+		if word in text.lower() and id not in notify_users: 
+			notify_users.add(id)
 
 	captured = []
 	for i in mention_regex.finditer(text):
@@ -95,6 +93,29 @@ def NOTIFY_USERS(text, v):
 		captured.append(i.group(0))
 
 		user = get_user(i.group(2), graceful=True)
-		if user and v.id != user.id and not v.any_block_exists(user): notify_users.add(user.id)
+		if user and v.id != user.id and not v.any_block_exists(user): 
+			notify_users.add(user.id)
 
 	return notify_users
+
+def notify_submission_publish(target: Submission):
+	# Username mentions in title & body
+	text: str = f'{target.title} {target.body}'
+	notify_users = NOTIFY_USERS(text, target.author)
+	if notify_users:
+		comment_id = notif_comment2(target)
+		for user_id in notify_users:
+			add_notif(comment_id, user_id)
+
+	# Submission author followers
+	if target.author.followers:
+		message: str = (
+			f"@{target.author.username} has made a new post: "
+			f"[{target.title}]({target.shortlink})"
+		)
+		if target.sub:
+			message += f" in <a href='/h/{target.sub}'>/h/{target.sub}"
+
+		cid = notif_comment(message, autojanny=True)
+		for follow in target.author.followers:
+			add_notif(cid, follow.user_id)

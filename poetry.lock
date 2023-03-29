@@ -902,6 +902,31 @@ pymysql = ["pymysql", "pymysql (<1)"]
 sqlcipher = ["sqlcipher3_binary"]
 
 [[package]]
+name = "superlance"
+version = "2.0.0"
+description = "superlance plugins for supervisord"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+supervisor = "*"
+
+[[package]]
+name = "supervisor"
+version = "4.2.5"
+description = "A system for controlling process state under UNIX"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+setuptools = "*"
+
+[package.extras]
+testing = ["pytest", "pytest-cov"]
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -1039,8 +1064,8 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.10"
-content-hash = "2a0f266aae2676e4fb10a7cd37f657ca14bfd2c0db21f0e0cd262691ecf429ee"
+python-versions = "~3.10"    # updating to 3.11 causes instability; see https://github.com/themotte/rDrama/issues/446
+content-hash = "bb33c14d0075dd9f0d81589e0445495444bfe16c73bd9cd9f88e3d17e60cab0e"
 
 [metadata.files]
 alembic = [
@@ -2116,6 +2141,14 @@ sqlalchemy = [
     {file = "SQLAlchemy-1.4.43-cp39-cp39-win32.whl", hash = "sha256:c1f5bfffc3227d05d90c557b10604962f655b4a83c9f3ad507a81ac8d6847679"},
     {file = "SQLAlchemy-1.4.43-cp39-cp39-win_amd64.whl", hash = "sha256:a7fa3e57a7b0476fbcba72b231150503d53dbcbdd23f4a86be5152912a923b6e"},
     {file = "SQLAlchemy-1.4.43.tar.gz", hash = "sha256:c628697aad7a141da8fc3fd81b4874a711cc84af172e1b1e7bbfadf760446496"},
+]
+superlance = [
+    {file = "superlance-2.0.0-py2.py3-none-any.whl", hash = "sha256:7826dca1f272ad3cd2302a4e8d71c6573614367a713b1273ba6af230a5019d29"},
+    {file = "superlance-2.0.0.tar.gz", hash = "sha256:afe221c60924eb056a2f2cac5bdbca1ff49462fa6e3c949cad34e507a76a18bf"},
+]
+supervisor = [
+    {file = "supervisor-4.2.5-py2.py3-none-any.whl", hash = "sha256:2ecaede32fc25af814696374b79e42644ecaba5c09494c51016ffda9602d0f08"},
+    {file = "supervisor-4.2.5.tar.gz", hash = "sha256:34761bae1a23c58192281a5115fb07fbf22c9b0133c08166beffc70fed3ebc12"},
 ]
 tomli = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},

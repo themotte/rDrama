@@ -24,7 +24,7 @@
 		<input autocomplete="off" class="form-control" name="email" value="">
 		{% endif %}
 		<label for="input-message" class="mt-3">Your message</label>
-		<input type="hidden" name="formkey" value="{{v.formkey}}">
+		{{forms.formkey(v)}}
 		<textarea autocomplete="off" maxlength="{{MESSAGE_BODY_LENGTH_MAXIMUM}}" id="input-message" form="contactform" name="message" class="form-control" required></textarea>
 		<label class="btn btn-secondary m-0 mt-3" for="file-upload">
 			<div id="filename"><i class="far fa-image"></i></div>

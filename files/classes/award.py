@@ -1,9 +1,8 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.classes.base import Base
-from os import environ
+from files.helpers.config.const import AWARDS
 from files.helpers.lazy import lazy
-from files.helpers.const import *
 
 class AwardRelationship(Base):
 

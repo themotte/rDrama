@@ -1,11 +1,13 @@
-from files.helpers.wrappers import *
-from files.helpers.alerts import *
-from files.helpers.get import *
-from files.helpers.const import *
-from files.classes import *
-from flask import *
-from files.__main__ import app, limiter
 import sqlalchemy.exc
+
+from files.__main__ import app, limiter
+from files.classes import *
+from files.helpers.alerts import *
+from files.helpers.config.const import *
+from files.helpers.get import *
+from files.helpers.wrappers import *
+from files.routes.importstar import *
+
 
 @app.get("/authorize")
 @auth_required
@@ -208,9 +210,6 @@ def admin_app_reject(v, aid):
 @app.get("/admin/app/<aid>")
 @admin_level_required(2)
 def admin_app_id(v, aid):
-
-	aid=aid
-
 	oauth = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
 	pids=oauth.idlist(page=int(request.values.get("page",1)))
@@ -230,13 +229,9 @@ def admin_app_id(v, aid):
 @app.get("/admin/app/<aid>/comments")
 @admin_level_required(2)
 def admin_app_id_comments(v, aid):
-
-	aid=aid
-
 	oauth = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
-	cids=oauth.comments_idlist(page=int(request.values.get("page",1)),
-		)
+	cids=oauth.comments_idlist(page=int(request.values.get("page",1)))
 
 	next_exists=len(cids)==101
 	cids=cids[:100]

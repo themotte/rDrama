@@ -13,7 +13,7 @@
 			<div class="body d-lg-flex border-bottom">
 				<div class="w-lg-100">
 					<form id="profile-settings" action="/settings/profilecss" method="post">
-						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						{{forms.formkey(v)}}
 						<textarea autocomplete="off" class="form-control rounded" id="bio-text" aria-label="With textarea" placeholder="Custom profile css" rows="50" name="profilecss" form="profile-settings" maxlength="{{CSS_LENGTH_MAXIMUM}}">{% if v.profilecss %}{{v.profilecss}}{% endif %}</textarea>
 						<small>Limit of {{CSS_LENGTH_MAXIMUM}} characters</small>
 						<div class="d-flex mt-2">

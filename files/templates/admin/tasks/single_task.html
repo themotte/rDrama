@@ -1,0 +1,91 @@
+{%- extends "default.html" -%}
+{%- block content -%}
+<h1 class="mt-3">Task #{{task.id}}</h1>
+<section class="scheduled-post-go-back bordered-section" style="padding:1em;">
+	You are viewing a single task. View <a href="/tasks/">all tasks</a>
+</section>
+<section class="task-section task-{{task.id}} mt-3" id="task-info-section">
+	<div class="overflow-x-auto">
+		<table class="table table-striped mb-5">
+			<tbody>
+				<tr>
+					<td>ID</td>
+					<td>{{task.id}}</td>
+				</tr>
+				<tr>
+					<td>Status</td>
+					<td>{{task.run_state_enum.name.title()}}</td>
+				</tr>
+				<tr>
+					<td>Created (UTC)</td>
+					<td>{{task.created_datetime}} ({{task.age_string}})</td>
+				</tr>
+				<tr>
+					<td>Last Run (UTC)</td>
+					<td>{{task.run_time_last_str}}</td>
+				</tr>
+				<tr>
+					<td>Next Run (UTC)</td>
+					<td>{{task.next_trigger(task.run_time_last_or_created_utc) | timestamp}}</td>
+				</tr>
+				{%- if task.type == ScheduledTaskType.SCHEDULED_SUBMISSION -%}
+				<tr>
+					<td>Scheduled Post</td>
+					<td>
+						{%- if v.admin_level >= PERMS['SCHEDULER_POSTS'] -%}
+							<a href="/tasks/scheduled_posts/{{task.id}}">{{task.title}}</a>
+						{%- else -%}
+							{{task.title}}
+						{%- endif -%}
+					</td>
+				</tr>
+				{%- elif task.type == ScheduledTaskType.PYTHON_CALLABLE -%}
+				<tr>
+					<td>Import Path</td>
+					<td>{{task.import_path}}</td>
+				</tr>
+				<tr>
+					<td>Callable</td>
+					<td>{{task.callable}}</td>
+				</tr>
+				{%- endif -%}
+				<tr>
+					<td>Enabled</td>
+					<td>{{task.enabled}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+<section class="scheduled-task-edit scheduler-edit task-{{task.id}} mt-3" id="edit-schedule-section">
+	<h5 class="mb-2">Edit Scheduled Task</h5>
+	<form action="/tasks/{{task.id}}/schedule" method="post">
+		{{forms.scheduled_post_time_selection_form(v, task)}}
+	</form>
+</section>
+<section class="scheduled-task-run scheduler-edit task-{{task.id}} mt-3" id="task-run-section">
+	<h5 class="mb-2">Previous Task Runs</h5>
+	<div class="overflow-x-auto">
+		<table class="table table-striped mb-5">
+			<thead>
+				<tr>
+					<td>ID</td>
+					<td>Status</td>
+					<td>Started</td>
+					<td>Completed</td>
+				</tr>
+			</thead>
+			<tbody>
+				{%- for run in task.runs -%}
+				<tr>
+					<td><a href="/tasks/{{task.id}}/runs/{{run.id}}">{{run.id}}</a></td>
+					<td>{{run.status_text}}</td>
+					<td>{{run.age_string}}</td>
+					<td>{{run.completed_utc | agestamp}}</td>
+				</tr>
+				{%- endfor -%}
+			</tbody>
+		</table>
+	</div>
+</section>
+{%- endblock -%}

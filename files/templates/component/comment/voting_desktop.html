@@ -19,7 +19,7 @@
 	{% if voted == -1 %}
 		<li class=" arrow-down py-0 m-0 px-3 comment-{{c.id}}-down active"></li>
 	{% endif %}
-{%- elif environ.get('DISABLE_DOWNVOTES') == '1' -%}
+{%- elif not ENABLE_DOWNVOTES -%}
 	{# downvotes not allowed, nop #}
 {%- elif v -%}
 	<button tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '-1')" class="comment-{{c.id}}-down btn caction py-0 m-0 px-3 nobackground arrow-down downvote-button comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}"></button>						

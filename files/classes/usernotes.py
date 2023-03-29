@@ -1,9 +1,7 @@
-import time
-from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.classes.base import Base
-from files.helpers.const import *
+from files.classes.base import CreatedBase
+from files.helpers.config.const import *
 from enum import Enum
 from sqlalchemy import Enum as EnumType
 
@@ -17,13 +15,11 @@ class UserTag(Enum):
     Spam    = 6
     Bot     = 7
 
-class UserNote(Base):
-
+class UserNote(CreatedBase):
 	__tablename__ = "usernotes"
 
 	id = Column(Integer, primary_key=True)
 	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-	created_utc = Column(Integer, nullable=False)
 	reference_user = Column(Integer, ForeignKey("users.id", ondelete='CASCADE'), nullable=False)
 	reference_comment = Column(Integer, ForeignKey("comments.id", ondelete='SET NULL'))
 	reference_post = Column(Integer, ForeignKey("submissions.id", ondelete='SET NULL'))
@@ -35,11 +31,6 @@ class UserNote(Base):
 
 	comment = relationship("Comment", back_populates="notes")
 	post = relationship("Submission", back_populates="notes")
-	
-	def __init__(self, *args, **kwargs):
-		if "created_utc" not in kwargs:
-			kwargs["created_utc"] = int(time.time())
-		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
 		return f"<{self.__class__.__name__}(id={self.id})>"

@@ -1,16 +1,12 @@
-from files.helpers.wrappers import *
-from files.helpers.alerts import *
-from files.helpers.media import process_image
-from files.helpers.const import *
-from files.helpers.comments import comment_on_publish
-from files.classes import *
-from flask import *
 from files.__main__ import app, limiter
-from files.helpers.sanitize import filter_emojis_only
-import requests
-from shutil import copyfile
-from json import loads
-from collections import Counter
+from files.classes import *
+from files.helpers.alerts import *
+from files.helpers.comments import comment_on_publish
+from files.helpers.config.const import *
+from files.helpers.media import process_image
+from files.helpers.wrappers import *
+from files.routes.importstar import *
+
 
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
@@ -183,9 +179,9 @@ def api_comment(v):
 		).all()
 
 		threshold = app.config["COMMENT_SPAM_COUNT_THRESHOLD"]
-		if v.age >= (60 * 60 * 24 * 7):
+		if v.age_seconds >= (60 * 60 * 24 * 7):
 			threshold *= 3
-		elif v.age >= (60 * 60 * 24):
+		elif v.age_seconds >= (60 * 60 * 24):
 			threshold *= 2
 
 		if len(similar_comments) > threshold:
@@ -280,11 +276,11 @@ def edit_comment(cid, v):
 		).all()
 
 		threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
-		if v.age >= (60 * 60 * 24 * 30):
+		if v.age_seconds >= (60 * 60 * 24 * 30):
 			threshold *= 4
-		elif v.age >= (60 * 60 * 24 * 7):
+		elif v.age_seconds >= (60 * 60 * 24 * 7):
 			threshold *= 3
-		elif v.age >= (60 * 60 * 24):
+		elif v.age_seconds >= (60 * 60 * 24):
 			threshold *= 2
 
 		if len(similar_comments) > threshold:

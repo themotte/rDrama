@@ -1,14 +1,15 @@
 import hashlib
 import math
 from typing import Optional
-import sqlalchemy
-from sqlalchemy.orm import scoped_session
 
+import sqlalchemy
+from sqlalchemy.orm import Session
 from werkzeug.security import generate_password_hash
 
 from files.__main__ import app, db_session
-from files.classes import User, Submission, Comment, Vote, CommentVote
+from files.classes import Comment, CommentVote, Submission, User, Vote
 from files.helpers.comments import bulk_recompute_descendant_counts
+
 
 @app.cli.command('seed_db')
 def seed_db():
@@ -23,7 +24,7 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 	COMMENT_UPVOTE_PROB   = 0.0008
 	COMMENT_DOWNVOTE_PROB = 0.0003
 
-	db: scoped_session = db_session()
+	db: Session = db_session()
 
 	def detrand():
 		detrand.randstate = bytes(hashlib.sha256(detrand.randstate).hexdigest(), 'utf-8')

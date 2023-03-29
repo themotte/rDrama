@@ -1,15 +1,14 @@
+import os
+from shutil import copyfile
+
+from files.__main__ import app, limiter
 from files.helpers.alerts import *
+from files.helpers.caching import invalidate_cache
+from files.helpers.config.const import *
 from files.helpers.media import process_image
 from files.helpers.sanitize import *
-from files.helpers.const import *
-from files.mail import *
-from files.__main__ import app, cache, limiter
-from .front import frontlist
-import os
 from files.helpers.sanitize import filter_emojis_only
-from files.helpers.strings import sql_ilike_clean
-from shutil import copyfile
-import requests
+from files.mail import *
 
 tiers={
 	"(Paypig)": 1,
@@ -186,7 +185,7 @@ def settings_profile_post(v):
 		if frontsize in {"15", "25", "50", "100"}:
 			v.frontsize = int(frontsize)
 			updated = True
-			cache.delete_memoized(frontlist)
+			invalidate_cache(frontlist=True)
 		else: abort(400)
 
 	defaultsortingcomments = request.values.get("defaultsortingcomments")
@@ -263,7 +262,7 @@ def changelogsub(v):
 	v.changelogsub = not v.changelogsub
 	g.db.add(v)
 
-	cache.delete_memoized(frontlist)
+	invalidate_cache(frontlist=True)
 
 	g.db.commit()
 	if v.changelogsub: return {"message": "You have subscribed to the changelog!"}
@@ -542,7 +541,7 @@ def settings_block_user(v):
 						  target_id=user.id,
 						  )
 	g.db.add(new_block)
-	cache.delete_memoized(frontlist)
+	invalidate_cache(frontlist=True)
 	g.db.commit()
 
 	return {"message": f"@{user.username} blocked."}
@@ -556,7 +555,7 @@ def settings_unblock_user(v):
 	x = v.is_blocking(user)
 	if not x: abort(409)
 	g.db.delete(x)
-	cache.delete_memoized(frontlist)
+	invalidate_cache(frontlist=True)
 	g.db.commit()
 
 	return {"message": f"@{user.username} unblocked."}

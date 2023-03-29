@@ -3,6 +3,13 @@ nodaemon=true
 pidfile=/tmp/supervisord.pid
 logfile=/tmp/supervisord.log
 
+[unix_http_server]
+file = /run/supervisor.sock
+# complains about no authentication on startup, but it's 0700 root:root by default
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
 [program:service]
 directory=/service
 command=sh -c 'python3 -m flask db upgrade && ENABLE_SERVICES=true gunicorn files.__main__:app -k gevent -w ${CORE_OVERRIDE:-$(( `nproc` * 2 ))} --reload -b 0.0.0.0:80 --max-requests 1000 --max-requests-jitter 500'
@@ -10,3 +17,15 @@ stdout_logfile=/dev/stdout
 stdout_logfile_maxbytes=0
 stderr_logfile=/dev/stderr
 stderr_logfile_maxbytes=0
+
+[program:cron]
+directory=/service
+command=sh -c 'python3 -m flask cron'
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+
+[eventlistener:memmon]
+command=memmon -p cron=200MB
+events=TICK_60

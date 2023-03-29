@@ -1,4 +1,4 @@
-from files.helpers.const import RENDER_DEPTH_LIMIT
+from files.helpers.config.const import RENDER_DEPTH_LIMIT
 from . import fixture_accounts
 from . import fixture_submissions
 from . import fixture_comments

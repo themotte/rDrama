@@ -6,7 +6,7 @@ from typing import Final
 import psutil
 from flask import abort, render_template, request
 
-from files.helpers.const import PERMS
+from files.helpers.config.const import PERMS
 from files.helpers.time import format_datetime
 from files.helpers.wrappers import admin_level_required
 from files.__main__ import app
