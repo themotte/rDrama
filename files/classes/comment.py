@@ -401,9 +401,9 @@ class Comment(CreatedBase):
 		if not v: return -2
 		if v.id == self.author_id: return 1
 		return getattr(self, 'voted', 0)
-	
-	@lazy
-	def sticky_api_url(self, v) -> Optional[str]:
+
+
+	def sticky_api_url(self, v) -> str | None:
 		'''
 		Returns the API URL used to sticky this comment.
 		:returns: Currently `None` always. Stickying comments was disabled
@@ -417,6 +417,7 @@ class Comment(CreatedBase):
 		elif v.id == self.post.author_id:
 			return 'pin_comment'
 		return None
+
 
 	@lazy
 	def active_flags(self, v): 
