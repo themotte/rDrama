@@ -1,8 +1,7 @@
+import sys
 import time
 import urllib.parse
 from io import BytesIO
-from os import path
-from sys import stdout
 from urllib.parse import ParseResult, urlparse
 
 import gevent
@@ -12,7 +11,7 @@ from PIL import Image as PILimage
 from sqlalchemy.orm import Query
 
 import files.helpers.validators as validators
-from files.__main__ import app, cache, db_session, limiter
+from files.__main__ import app, db_session, limiter
 from files.classes import *
 from files.helpers.alerts import *
 from files.helpers.caching import invalidate_cache
@@ -421,7 +420,7 @@ def thumbnail_thread(pid):
 
 	db.commit()
 	db.close()
-	stdout.flush()
+	sys.stdout.flush()
 	return
 
 
@@ -430,7 +429,7 @@ def api_is_repost():
 	url = request.values.get('url')
 	if not url: abort(400)
 
-	url = urllib.parse.unparse(canonicalize_url2(url, httpsify=True))
+	url = canonicalize_url2(url, httpsify=True).geturl()
 	if url.endswith('/'): url = url[:-1]
 
 	search_url = sql_ilike_clean(url)
@@ -647,7 +646,6 @@ def undelete_post_pid(pid, v):
 @app.post("/toggle_comment_nsfw/<cid>")
 @auth_required
 def toggle_comment_nsfw(cid, v):
-
 	comment = g.db.query(Comment).filter_by(id=cid).one_or_none()
 	if comment.author_id != v.id and not v.admin_level > 1: abort(403)
 	comment.over_18 = not comment.over_18
@@ -661,7 +659,6 @@ def toggle_comment_nsfw(cid, v):
 @app.post("/toggle_post_nsfw/<pid>")
 @auth_required
 def toggle_post_nsfw(pid, v):
-
 	post = get_post(pid)
 
 	if post.author_id != v.id and not v.admin_level > 1:
@@ -687,7 +684,6 @@ def toggle_post_nsfw(pid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def save_post(pid, v):
-
 	post=get_post(pid)
 
 	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
@@ -703,7 +699,6 @@ def save_post(pid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def unsave_post(pid, v):
-
 	post=get_post(pid)
 
 	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
@@ -722,7 +717,7 @@ def api_pin_post(post_id, v):
 	post.is_pinned = not post.is_pinned
 	g.db.add(post)
 
-	cache.delete_memoized(User.userpagelisting)
+	invalidate_cache(userpagelisting=True)
 
 	g.db.commit()
 	if post.is_pinned: return {"message": "Post pinned!"}
