@@ -50,7 +50,8 @@ if bool_from_string(environ.get("ENFORCE_PRODUCTION", True)) and app.debug:
 
 if environ.get("SITE_ID") is None:
 	from dotenv import load_dotenv
-	load_dotenv(dotenv_path=Path("env"))
+	load_dotenv(dotenv_path=Path("bootstrap/site_env"))
+	load_dotenv(dotenv_path=Path("env"), override=True)
 
 # ...and let's add the flask profiler if it's enabled...
 

@@ -1,6 +1,4 @@
-image.*
-video.mp4
-video.webm
+# Python, Flask, IDEs
 cache/
 __pycache__/
 .idea/
@@ -12,3 +10,11 @@ flask_session/
 .DS_Store
 .venv
 *.pyc
+
+# rdrama Media Runtime Artifacts
+image.*
+video.mp4
+video.webm
+
+# Optional env file for some environments
+env
