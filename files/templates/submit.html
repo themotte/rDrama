@@ -39,7 +39,7 @@
 {% include "header.html" %}
 {% block form %}
 		<div class="submit-grid-view">
-			<form id="submitform" action="{% if sub %}/h/{{sub.name}}{% endif %}/submit" method="post" enctype="multipart/form-data" style="grid-column: 2">
+			<form id="submitform" action="/submit" method="post" enctype="multipart/form-data" style="grid-column: 2">
 				<div class="container">
 						<div class="row justify-content-center mb-5">
 								<div class="col p-3 py-md-0">
@@ -145,13 +145,6 @@
 			</form>
 		</div>
 		{% endblock %}
-
-		{% if request.path == '/submit' %}
-			<script>
-				let sub = document.getElementById('sub')
-				if (sub) sub.value = localStorage.getItem("sub")
-			</script>
-		{% endif %}
 
 		<script src="{{ 'js/vendor/purify.min.js' | asset }}"></script>
 		<script src="{{ 'js/vendor/marked.min.js' | asset }}"></script>

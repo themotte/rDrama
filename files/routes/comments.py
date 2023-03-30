@@ -11,7 +11,7 @@ from files.routes.importstar import *
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
 @auth_desired
-def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
+def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	comment = get_comment(cid, v=v)
 
 	if v and request.values.get("read"):

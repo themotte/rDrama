@@ -112,9 +112,6 @@ def notify_submission_publish(target: Submission):
 			f"@{target.author.username} has made a new post: "
 			f"[{target.title}]({target.shortlink})"
 		)
-		if target.sub:
-			message += f" in <a href='/h/{target.sub}'>/h/{target.sub}"
-
 		cid = notif_comment(message, autojanny=True)
 		for follow in target.author.followers:
 			add_notif(cid, follow.user_id)

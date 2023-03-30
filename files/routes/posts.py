@@ -547,10 +547,6 @@ def submit_post(v):
 	except ValueError as e:
 		return error(str(e))
 
-	sub = request.values.get("sub")
-	if sub: sub = sub.replace('/h/','').replace('s/','')
-
-
 	duplicate:Optional[werkzeug.wrappers.Response] = \
 		_duplicate_check(validated_post.repost_search_url)
 	if duplicate: return duplicate

@@ -414,10 +414,8 @@ class Comment(CreatedBase):
 		if not v: return None
 		if v.admin_level >= 2:
 			return 'sticky_comment'
-		if v.id == self.post.author_id:
+		elif v.id == self.post.author_id:
 			return 'pin_comment'
-		if self.post.sub and v.mods(self.post.sub):
-			return 'mod_pin'
 		return None
 
 	@lazy
