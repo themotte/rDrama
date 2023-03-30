@@ -100,7 +100,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 
 
 @cache.memoize(timeout=USERPAGELISTING_TIMEOUT_SECS)
-def userpagelisting(u:User, site=None, v=None, page=1, sort="new", t="all"):
+def userpagelisting(u:User, v=None, page=1, sort="new", t="all"):
 	if u.shadowbanned and not (v and (v.admin_level > 1 or v.id == u.id)): return []
 
 	posts = g.db.query(Submission.id).filter_by(author_id=u.id, is_pinned=False)
@@ -117,7 +117,7 @@ def userpagelisting(u:User, site=None, v=None, page=1, sort="new", t="all"):
 
 
 @cache.memoize(timeout=CHANGELOGLIST_TIMEOUT_SECS)
-def changeloglist(v=None, sort="new", page=1, t="all", site=None):
+def changeloglist(v=None, sort="new", page=1, t="all"):
 	posts = g.db.query(Submission.id).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
 
 	if v.admin_level < 2:

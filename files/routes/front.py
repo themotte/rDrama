@@ -199,7 +199,6 @@ def front_all(v, subdomain=None):
 					filter_words=v.filter_words if v else [],
 					gt=gt,
 					lt=lt,
-					site=SITE
 					)
 
 	posts = get_posts(ids, v=v, eager=True)
@@ -238,7 +237,6 @@ def changelog(v):
 					page=page,
 					t=t,
 					v=v,
-					site=SITE
 					)
 
 	next_exists = (len(ids) > 25)
