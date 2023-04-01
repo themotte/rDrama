@@ -163,15 +163,9 @@ def notifications(v):
 
 @app.get("/")
 @app.get("/catalog")
-# @app.get("/h/<sub>")
-# @app.get("/s/<sub>")
 @limiter.limit("3/second;30/minute;1000/hour;5000/day")
 @auth_desired
-def front_all(v, sub=None, subdomain=None):
-	if sub: sub = g.db.query(Sub).filter_by(name=sub.strip().lower()).one_or_none()
-	
-	if (request.path.startswith('/h/') or request.path.startswith('/s/')) and not sub: abort(404)
-
+def front_all(v, subdomain=None):
 	if g.webview and not session.get("session_id"):
 		session["session_id"] = secrets.token_hex(49)
 
@@ -205,8 +199,6 @@ def front_all(v, sub=None, subdomain=None):
 					filter_words=v.filter_words if v else [],
 					gt=gt,
 					lt=lt,
-					sub=sub,
-					site=SITE
 					)
 
 	posts = get_posts(ids, v=v, eager=True)
@@ -229,7 +221,7 @@ def front_all(v, sub=None, subdomain=None):
 			g.db.commit()
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
-	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode, sub=sub, home=True)
+	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode, home=True)
 
 
 @app.get("/changelog")
@@ -245,7 +237,6 @@ def changelog(v):
 					page=page,
 					t=t,
 					v=v,
-					site=SITE
 					)
 
 	next_exists = (len(ids) > 25)

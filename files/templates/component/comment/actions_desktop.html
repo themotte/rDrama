@@ -55,14 +55,6 @@
 		{% endif %}
 	{% endif %}
 
-	{% if c.post %}
-		{% set sub = c.post.sub %}
-		{% if sub and v.mods(sub) and not c.author.mods(sub) %}
-			<button id="exile-{{c.id}}" class="d-none {% if not c.author.exiled_from(sub) %}d-md-block{% endif %} dropdown-item list-inline-item text-danger" onclick="post_toast2(this,'/exile/comment/{{c.id}}','exile-{{c.id}}','unexile-{{c.id}}')"><i class="fas fa-campfire text-danger fa-fw"></i>Exile user</button>
-			<button id="unexile-{{c.id}}" class="d-none {% if c.author.exiled_from(sub) %}d-md-block{% endif %} dropdown-item list-inline-item text-success" onclick="post_toast2(this,'/h/{{sub}}/unexile/{{c.author_id}}','exile-{{c.id}}','unexile-{{c.id}}')"><i class="fas fa-campfire text-success fa-fw"></i>Unexile user</button>
-		{% endif %}
-	{% endif %}
-
 	{% if c.parent_submission and (c.author_id==v.id or v.admin_level >= 2) %}
 		<button id="unmark-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.over_18 %}d-md-block{% endif %} text-danger" onclick="post_toast3(this,'/toggle_comment_nsfw/{{c.id}}','mark-{{c.id}}','unmark-{{c.id}}')"><i class="fas fa-eye-evil text-danger fa-fw"></i>Unmark +18</button>
 		<button id="mark-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.over_18 %}d-md-block{% endif %} text-danger" onclick="post_toast3(this,'/toggle_comment_nsfw/{{c.id}}','mark-{{c.id}}','unmark-{{c.id}}')"><i class="fas fa-eye-evil text-danger fa-fw"></i>Mark +18</button>

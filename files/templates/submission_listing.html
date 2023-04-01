@@ -152,14 +152,6 @@
 						{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
 						{{p.realtitle(v) | safe}}
 					</a></h5>
-
-					{% if p.sub %}
-						<a href='/h/{{p.sub}}'>/h/{{p.sub}}</a>&nbsp;&nbsp;
-					{% endif %}
-
-					{% if p.sub and p.author.exiled_from(p.sub) %}
-						<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User has been exiled from /h/{{p.sub}}"></i></a>
-					{% endif %}
 				</div>
 
 				<div class="post-info text-left">
@@ -366,7 +358,7 @@
 					</span>
 					<h2 class="h5">You haven't {% if "saved" in request.full_path %}saved{% else %}made{% endif %} a post yet</h2>
 					<p class="text-muted mb-md-5">Your {% if "saved" in request.full_path %}saved posts{% else %}posting history{% endif %} will show here.</p>
-					{% if "saved" not in request.full_path %}<a href="{% if sub %}/h/{{sub.name}}{% endif %}/submit" class="btn btn-primary">Create a post</a>{% endif %}
+					{% if "saved" not in request.full_path %}<a href="/submit" class="btn btn-primary">Create a post</a>{% endif %}
 				</div>			
 			</div>	
 		</div>

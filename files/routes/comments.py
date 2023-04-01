@@ -10,10 +10,8 @@ from files.routes.importstar import *
 
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
-# @app.get("/h/<sub>/comment/<cid>")
-# @app.get("/h/<sub>/post/<pid>/<anything>/<cid>")
 @auth_desired
-def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
+def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	comment = get_comment(cid, v=v)
 
 	if v and request.values.get("read"):
@@ -100,7 +98,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None, sub=None):
 	else: 
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
-		return render_template(template, v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True, sub=post.subr)
+		return render_template(template, v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True)
 
 @app.post("/comment")
 @limiter.limit("1/second;20/minute;200/hour;1000/day")
@@ -115,7 +113,6 @@ def api_comment(v):
 	parent = None
 	parent_post = None
 	parent_comment_id = None
-	sub = None
 
 	if parent_fullname.startswith("t2_"):
 		parent = get_post(id, v=v)
@@ -127,8 +124,6 @@ def api_comment(v):
 	else: abort(400)
 	if not parent_post: abort(404) # don't allow sending comments to the ether
 	level = 1 if isinstance(parent, Submission) else parent.level + 1
-	sub = parent_post.sub
-	if sub and v.exiled_from(sub): abort(403, f"You're exiled from /h/{sub}")
 
 	body = sanitize_raw(request.values.get("body"), allow_newlines=True, length_limit=COMMENT_BODY_LENGTH_MAXIMUM)
 	if not body and not request.files.get('file'): 
@@ -408,46 +403,6 @@ def unpin_comment(cid, v):
 
 		if v.id != comment.author_id:
 			message = f"@{v.username} (OP) has unpinned your [comment]({comment.shortlink})!"
-			send_repeatable_notification(comment.author_id, message)
-		g.db.commit()
-	return {"message": "Comment unpinned!"}
-
-
-@app.post("/mod_pin/<cid>")
-@auth_required
-def mod_pin(cid, v):
-	
-	comment = get_comment(cid, v=v)
-	
-	if not comment.is_pinned:
-		if not (comment.post.sub and v.mods(comment.post.sub)): abort(403)
-		
-		comment.is_pinned = v.username + " (Mod)"
-
-		g.db.add(comment)
-
-		if v.id != comment.author_id:
-			message = f"@{v.username} (Mod) has pinned your [comment]({comment.shortlink})!"
-			send_repeatable_notification(comment.author_id, message)
-
-		g.db.commit()
-	return {"message": "Comment pinned!"}
-	
-
-@app.post("/unmod_pin/<cid>")
-@auth_required
-def mod_unpin(cid, v):
-	
-	comment = get_comment(cid, v=v)
-	
-	if comment.is_pinned:
-		if not (comment.post.sub and v.mods(comment.post.sub)): abort(403)
-
-		comment.is_pinned = None
-		g.db.add(comment)
-
-		if v.id != comment.author_id:
-			message = f"@{v.username} (Mod) has unpinned your [comment]({comment.shortlink})!"
 			send_repeatable_notification(comment.author_id, message)
 		g.db.commit()
 	return {"message": "Comment unpinned!"}

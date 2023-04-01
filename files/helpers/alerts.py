@@ -66,7 +66,6 @@ def notif_comment2(p):
 	if existing: return existing[0]
 	else:
 		text = f"@{p.author.username} has mentioned you: [{p.title}](/post/{p.id})"
-		if p.sub: text += f" in <a href='/h/{p.sub}'>/h/{p.sub}"
 		text_html = sanitize(text, alert=True)
 		return create_comment(text_html)
 
@@ -113,9 +112,6 @@ def notify_submission_publish(target: Submission):
 			f"@{target.author.username} has made a new post: "
 			f"[{target.title}]({target.shortlink})"
 		)
-		if target.sub:
-			message += f" in <a href='/h/{target.sub}'>/h/{target.sub}"
-
 		cid = notif_comment(message, autojanny=True)
 		for follow in target.author.followers:
 			add_notif(cid, follow.user_id)

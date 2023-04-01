@@ -27,10 +27,6 @@
 		<link rel="stylesheet" href="{{ 'css/catalog.css' | asset }}">
 	{% endif %}
 
-	{% if sub and sub.css and not request.path.endswith('settings') %}
-		<link rel="stylesheet" href="/h/{{sub.name}}/css" type="text/css">
-	{% endif %}
-
 	{% if v and v.themecolor == '30409f' %}
 		<style>
 			p a {
@@ -218,14 +214,10 @@
 {% include "header.html" %}
 
 {% block Banner %}
-	{% if '@' not in request.path %}		
-		{% if sub %}
-			<img alt="/h/{{sub.name}} banner" class="primary_banner" role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" onclick="expandDesktopImage('{{sub.banner_url}}')" loading="lazy" src="{{sub.banner_url}}" width=100% style="object-fit:cover;max-height:25vw">
-		{% else %}
-			<a href="/">
-				<img alt="site banner" class="primary_banner" src="{{ ('images/'~SITE_ID~'/banner.webp') | asset }}" width="100%">
-			</a>	
-		{% endif %}
+	{% if '@' not in request.path %}
+		<a href="/">
+			<img alt="site banner" class="primary_banner" src="{{ ('images/'~SITE_ID~'/banner.webp') | asset }}" width="100%">
+		</a>
 	{% endif %}
 {% endblock %}
 

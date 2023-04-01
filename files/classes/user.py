@@ -12,13 +12,10 @@ from files.classes.award import AwardRelationship
 from files.classes.badges import Badge
 from files.classes.base import CreatedBase
 from files.classes.clients import *  # note: imports Comment and Submission
-from files.classes.exiles import *
 from files.classes.follows import Follow
-from files.classes.mod import Mod
 from files.classes.mod_logs import ModAction
 from files.classes.notifications import Notification
 from files.classes.saves import CommentSaveRelationship, SaveRelationship
-from files.classes.sub_block import SubBlock
 from files.classes.subscriptions import Subscription
 from files.classes.userblock import UserBlock
 from files.helpers.assetcache import assetcache_path
@@ -113,7 +110,6 @@ class User(CreatedBase):
 	ban_evade = Column(Integer, default=0, nullable=False)
 	original_username = deferred(Column(String))
 	referred_by = Column(Integer, ForeignKey("users.id"))
-	subs_created = Column(Integer, default=0, nullable=False)
 	volunteer_last_started_utc = Column(DateTime, nullable=True)
 
 	Index(
@@ -172,30 +168,6 @@ class User(CreatedBase):
 		minAge = site_settings.get('FilterCommentsMinAgeDays', 0)
 		accountAgeDays = self.age_timedelta.days
 		return self.comment_count < minComments or accountAgeDays < minAge or self.truecoins < minKarma
-
-	@lazy
-	def mods(self, sub):
-		return self.admin_level == 3 or bool(g.db.query(Mod.user_id).filter_by(user_id=self.id, sub=sub).one_or_none())
-
-	@lazy
-	def exiled_from(self, sub):
-		return self.admin_level < 2 and bool(g.db.query(Exile.user_id).filter_by(user_id=self.id, sub=sub).one_or_none())
-
-	@property
-	@lazy
-	def all_blocks(self):
-		return [x[0] for x in g.db.query(SubBlock.sub).filter_by(user_id=self.id).all()]
-
-	@lazy
-	def blocks(self, sub):
-		return g.db.query(SubBlock).filter_by(user_id=self.id, sub=sub).one_or_none()
-
-	@lazy
-	def mod_date(self, sub):
-		if self.id == OWNER_ID: return 1
-		mod = g.db.query(Mod).filter_by(user_id=self.id, sub=sub).one_or_none()
-		if not mod: return None
-		return mod.created_utc
 
 	@property
 	@lazy
@@ -427,12 +399,6 @@ class User(CreatedBase):
 			output.append(user)
 
 		return output
-
-	@property
-	@lazy
-	def moderated_subs(self):
-		modded_subs = g.db.query(Mod.sub).filter_by(user_id=self.id).all()
-		return modded_subs
 
 	def has_follower(self, user):
 		return g.db.query(Follow).filter_by(target_id=self.id, user_id=user.id).one_or_none()

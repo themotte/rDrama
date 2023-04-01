@@ -20,4 +20,3 @@ if FEATURES['AWARDS']:
 from .volunteer import *
 if app.debug:
 	from .dev import *
-# from .subs import *

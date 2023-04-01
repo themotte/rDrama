@@ -24,13 +24,6 @@
 		{% endfor %}
 	{% endif %}
 
-	{% if c.post %}
-		{% set sub = c.post.sub %}
-		{% if sub and c.author.exiled_from(sub) %}
-			<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User has been exiled from /h/{{sub}}"></i></a>
-		{% endif %}
-	{% endif %}
-
 	{% if c.bannedfor %}
 		<a role="button"><i class="fas fa-hammer-crash text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}"></i></a>
 	{% endif %}

@@ -1,12 +1,11 @@
-import time
 from urllib.parse import urlparse
 
 from flask import g
 from sqlalchemy import *
-from sqlalchemy.orm import (declared_attr, deferred, relationship,
-                            Session)
+from sqlalchemy.orm import Session, declared_attr, deferred, relationship
 
 from files.classes.base import CreatedBase
+from files.classes.flags import Flag
 from files.classes.votes import Vote
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.const import *
@@ -15,8 +14,6 @@ from files.helpers.config.environment import (SCORE_HIDING_TIME_HOURS, SITE,
 from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy
 from files.helpers.time import format_age, format_datetime
-
-from .flags import Flag
 
 
 class Submission(CreatedBase):
@@ -34,7 +31,6 @@ class Submission(CreatedBase):
 	distinguish_level = Column(Integer, default=0, nullable=False)
 	stickied = Column(String)
 	stickied_utc = Column(Integer)
-	sub = Column(String, ForeignKey("subs.name"))
 	is_pinned = Column(Boolean, default=False, nullable=False)
 	private = Column(Boolean, default=False, nullable=False)
 	club = Column(Boolean, default=False, nullable=False)
@@ -86,7 +82,6 @@ class Submission(CreatedBase):
 	awards = relationship("AwardRelationship", viewonly=True)
 	reports = relationship("Flag", viewonly=True)
 	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
-	subr = relationship("Sub", primaryjoin="foreign(Submission.sub)==remote(Sub.name)", viewonly=True)
 	notes = relationship("UserNote", back_populates="post")
 	task = relationship("ScheduledSubmissionTask", back_populates="submissions")
 
@@ -175,8 +170,6 @@ class Submission(CreatedBase):
 	@lazy
 	def shortlink(self):
 		link = f"/post/{self.id}"
-		if self.sub: link = f"/h/{self.sub}{link}"
-
 		if self.club: return link + '/-'
 
 		output = title_regex.sub('', self.title.lower())

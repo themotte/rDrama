@@ -1,8 +1,7 @@
+import sys
 import time
 import urllib.parse
 from io import BytesIO
-from os import path
-from sys import stdout
 from urllib.parse import ParseResult, urlparse
 
 import gevent
@@ -12,7 +11,7 @@ from PIL import Image as PILimage
 from sqlalchemy.orm import Query
 
 import files.helpers.validators as validators
-from files.__main__ import app, cache, db_session, limiter
+from files.__main__ import app, db_session, limiter
 from files.classes import *
 from files.helpers.alerts import *
 from files.helpers.caching import invalidate_cache
@@ -68,23 +67,14 @@ def publish(pid, v):
 	return redirect(post.permalink)
 
 @app.get("/submit")
-# @app.get("/h/<sub>/submit")
 @auth_required
-def submit_get(v, sub=None):
-	if sub: sub = g.db.query(Sub.name).filter_by(name=sub.strip().lower()).one_or_none()
-	
-	if request.path.startswith('/h/') and not sub: abort(404)
-
-	SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
-
-	return render_template("submit.html", SUBS=SUBS, v=v, sub=sub)
+def submit_get(v):
+	return render_template("submit.html", v=v)
 
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
-# @app.get("/h/<sub>/post/<pid>")
-# @app.get("/h/<sub>/post/<pid>/<anything>")
 @auth_desired
-def post_id(pid, anything=None, v=None, sub=None):
+def post_id(pid, anything=None, v=None):
 	post = get_post(pid, v=v)
 
 	if post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
@@ -135,7 +125,7 @@ def post_id(pid, anything=None, v=None, sub=None):
 	else:
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
-		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset, sub=post.subr)
+		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset)
 
 @app.get("/viewmore/<pid>/<sort>/<offset>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -430,7 +420,7 @@ def thumbnail_thread(pid):
 
 	db.commit()
 	db.close()
-	stdout.flush()
+	sys.stdout.flush()
 	return
 
 
@@ -439,7 +429,7 @@ def api_is_repost():
 	url = request.values.get('url')
 	if not url: abort(400)
 
-	url = urllib.parse.unparse(canonicalize_url2(url, httpsify=True))
+	url = canonicalize_url2(url, httpsify=True).geturl()
 	if url.endswith('/'): url = url[:-1]
 
 	search_url = sql_ilike_clean(url)
@@ -536,19 +526,16 @@ def _duplicate_check2(
 
 
 @app.post("/submit")
-# @app.post("/h/<sub>/submit")
 @limiter.limit("1/second;2/minute;10/hour;50/day")
 @auth_required
-def submit_post(v, sub=None):
+def submit_post(v):
 	def error(error):
 		title:str = request.values.get("title", "")
 		body:str = request.values.get("body", "")
 		url:str = request.values.get("url", "")
 
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, error)
-	
-		SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
-		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body), 400
+		return render_template("submit.html", v=v, error=error, title=title, url=url, body=body), 400
 
 	if v.is_suspended: return error("You can't perform this action while banned.")
 
@@ -559,17 +546,6 @@ def submit_post(v, sub=None):
 			)
 	except ValueError as e:
 		return error(str(e))
-
-	sub = request.values.get("sub")
-	if sub: sub = sub.replace('/h/','').replace('s/','')
-
-	if sub and sub != 'none':
-		sname = sub.strip().lower()
-		sub = g.db.query(Sub.name).filter_by(name=sname).one_or_none()
-		if not sub: return error(f"/h/{sname} not found!")
-		sub = sub[0]
-		if v.exiled_from(sub): return error(f"You're exiled from /h/{sub}")
-	else: sub = None
 
 	duplicate:Optional[werkzeug.wrappers.Response] = \
 		_duplicate_check(validated_post.repost_search_url)
@@ -605,7 +581,6 @@ def submit_post(v, sub=None):
 		embed_url=validated_post.embed_slow,
 		title=validated_post.title,
 		title_html=validated_post.title_html,
-		sub=sub,
 		ghost=False,
 		filter_state='filtered' if v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts'] else 'normal',
 		thumburl=validated_post.thumburl
@@ -624,7 +599,7 @@ def submit_post(v, sub=None):
 		post.voted = 1
 		if 'megathread' in post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
-		return render_template('submission.html', v=v, p=post, sort=sort, render_replies=True, offset=0, success=True, sub=post.subr)
+		return render_template('submission.html', v=v, p=post, sort=sort, render_replies=True, offset=0, success=True)
 
 
 @app.post("/delete_post/<pid>")
@@ -667,7 +642,6 @@ def undelete_post_pid(pid, v):
 @app.post("/toggle_comment_nsfw/<cid>")
 @auth_required
 def toggle_comment_nsfw(cid, v):
-
 	comment = g.db.query(Comment).filter_by(id=cid).one_or_none()
 	if comment.author_id != v.id and not v.admin_level > 1: abort(403)
 	comment.over_18 = not comment.over_18
@@ -681,7 +655,6 @@ def toggle_comment_nsfw(cid, v):
 @app.post("/toggle_post_nsfw/<pid>")
 @auth_required
 def toggle_post_nsfw(pid, v):
-
 	post = get_post(pid)
 
 	if post.author_id != v.id and not v.admin_level > 1:
@@ -707,7 +680,6 @@ def toggle_post_nsfw(pid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def save_post(pid, v):
-
 	post=get_post(pid)
 
 	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
@@ -723,7 +695,6 @@ def save_post(pid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def unsave_post(pid, v):
-
 	post=get_post(pid)
 
 	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
@@ -742,7 +713,7 @@ def api_pin_post(post_id, v):
 	post.is_pinned = not post.is_pinned
 	g.db.add(post)
 
-	cache.delete_memoized(User.userpagelisting)
+	invalidate_cache(userpagelisting=True)
 
 	g.db.commit()
 	if post.is_pinned: return {"message": "Post pinned!"}
