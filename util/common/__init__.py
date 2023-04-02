@@ -1,13 +1,10 @@
-
-import functools
-import pprint
+# import pprint
 import subprocess
 import sys
-import time
 
 def _execute(command,**kwargs):
-    #print("Running:")
-    #pprint.pprint(command)
+    # print("Running:")
+    # pprint.pprint(command)
 
     check = kwargs.get('check', True)
     on_stdout_line = kwargs.get('on_stdout_line', None)

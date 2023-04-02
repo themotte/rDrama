@@ -3,11 +3,10 @@
 import sys
 from common import error, run_help
 
-from command import run_command
-from test import run_test
+from .command import run_command
+from .test import run_test
 
-if __name__=='__main__':
-
+if __name__ == '__main__':
     if len(sys.argv) < 2:
         error("Usage: './manage.py <command> [options]'")
 
