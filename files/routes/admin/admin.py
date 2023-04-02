@@ -59,6 +59,7 @@ def remove_admin(v, username):
 	g.db.commit()
 	return {"message": "Admin removed!"}
 
+
 @app.post("/@<username>/delete_note/<id>")
 @limiter.exempt
 @admin_level_required(2)
@@ -70,11 +71,11 @@ def delete_note(v,username,id):
 		'success':True, 'message': 'Note deleted', 'note': id
 	}), 200)
 
+
 @app.post("/@<username>/create_note")
 @limiter.exempt
 @admin_level_required(2)
 def create_note(v,username):
-
 	def result(msg,succ,note):
 		return make_response(jsonify({
 			'success':succ, 'message': msg, 'note': note
@@ -110,6 +111,7 @@ def create_note(v,username):
 	g.db.commit()
 
 	return result('Note saved',True,note.json())
+
 
 @app.post("/@<username>/revert_actions")
 @limiter.exempt
@@ -159,11 +161,11 @@ def revert_actions(v, username):
 	g.db.commit()
 	return {"message": "Admin actions reverted!"}
 
+
 @app.post("/@<username>/club_allow")
 @limiter.exempt
 @admin_level_required(2)
 def club_allow(v, username):
-
 	u = get_user(username, v=v)
 
 	if not u: abort(404)
@@ -188,11 +190,11 @@ def club_allow(v, username):
 	g.db.commit()
 	return {"message": f"@{username} has been allowed into the {CC_TITLE}!"}
 
+
 @app.post("/@<username>/club_ban")
 @limiter.exempt
 @admin_level_required(2)
 def club_ban(v, username):
-
 	u = get_user(username, v=v)
 
 	if not u: abort(404)
@@ -309,7 +311,6 @@ def update_filter_status(v):
 @limiter.exempt
 @admin_level_required(2)
 def image_posts_listing(v):
-
 	try: page = int(request.values.get('page', 1))
 	except: page = 1
 
@@ -348,7 +349,6 @@ def reported_posts(v):
 @limiter.exempt
 @admin_level_required(2)
 def reported_comments(v):
-
 	page = max(1, int(request.values.get("page", 1)))
 
 	listing = g.db.query(Comment
@@ -583,7 +583,6 @@ def badge_remove_post(v):
 @limiter.exempt
 @admin_level_required(2)
 def users_list(v):
-
 	try: page = int(request.values.get("page", 1))
 	except: page = 1
 
@@ -628,7 +627,6 @@ def loggedout_list(v):
 @limiter.exempt
 @admin_level_required(2)
 def alt_votes_get(v):
-
 	u1 = request.values.get("u1")
 	u2 = request.values.get("u2")
 
@@ -762,7 +760,6 @@ def admin_link_accounts(v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_removed(v):
-
 	try: page = int(request.values.get("page", 1))
 	except: page = 1
 
@@ -790,7 +787,6 @@ def admin_removed(v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_removed_comments(v):
-
 	try: page = int(request.values.get("page", 1))
 	except: page = 1
 	
@@ -927,7 +923,6 @@ def unverify(user_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_title_change(user_id, v):
-
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
 	new_name=request.values.get("title").strip()[:256]
@@ -1052,7 +1047,6 @@ def ban_user(user_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def unban_user(user_id, v):
-
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
 	if not user or not user.is_banned: abort(400)
@@ -1089,7 +1083,6 @@ def unban_user(user_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def ban_post(post_id, v):
-
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 
 	if not post:
@@ -1127,7 +1120,6 @@ def ban_post(post_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def unban_post(post_id, v):
-
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 
 	if not post:
@@ -1161,7 +1153,6 @@ def unban_post(post_id, v):
 @limiter.exempt
 @admin_level_required(1)
 def api_distinguish_post(post_id, v):
-
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 
 	if not post: abort(404)
@@ -1194,7 +1185,6 @@ def api_distinguish_post(post_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def sticky_post(post_id, v):
-
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 	if post and not post.stickied:
 		pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.is_banned == False).count()
@@ -1302,7 +1292,6 @@ def unsticky_comment(cid, v):
 @limiter.exempt
 @admin_level_required(2)
 def api_ban_comment(c_id, v):
-
 	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
 	if not comment:
 		abort(404)
@@ -1325,7 +1314,6 @@ def api_ban_comment(c_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def api_unban_comment(c_id, v):
-
 	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
 	if not comment: abort(404)
 	
@@ -1398,7 +1386,6 @@ def admin_dump_cache(v):
 @limiter.exempt
 @admin_level_required(3)
 def admin_banned_domains(v):
-
 	banned_domains = g.db.query(BannedDomain).all()
 	return render_template("admin/banned_domains.html", v=v, banned_domains=banned_domains)
 
@@ -1406,7 +1393,6 @@ def admin_banned_domains(v):
 @limiter.exempt
 @admin_level_required(3)
 def admin_toggle_ban_domain(v):
-
 	domain=request.values.get("domain", "").strip()
 	if not domain: abort(400)
 
@@ -1441,7 +1427,6 @@ def admin_toggle_ban_domain(v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_nuke_user(v):
-
 	user=get_user(request.values.get("user"))
 
 	for post in g.db.query(Submission).filter_by(author_id=user.id).all():
@@ -1476,7 +1461,6 @@ def admin_nuke_user(v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_nunuke_user(v):
-
 	user=get_user(request.values.get("user"))
 
 	for post in g.db.query(Submission).filter_by(author_id=user.id).all():

@@ -25,7 +25,6 @@ from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import *
 from files.routes.importstar import *
 
-
 titleheaders = {
 	"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"
 }
@@ -37,7 +36,6 @@ MAX_URL_LENGTH = 2048
 @app.post("/toggle_club/<pid>")
 @auth_required
 def toggle_club(pid, v):
-
 	post = get_post(pid)
 	if post.author_id != v.id and v.admin_level < 2: abort(403)
 

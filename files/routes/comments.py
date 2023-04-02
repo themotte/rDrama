@@ -331,7 +331,6 @@ def edit_comment(cid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def delete_comment(cid, v):
-
 	c = get_comment(cid, v=v)
 
 	if not c.deleted_utc:
@@ -349,7 +348,6 @@ def delete_comment(cid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def undelete_comment(cid, v):
-
 	c = get_comment(cid, v=v)
 
 	if c.deleted_utc:
@@ -412,7 +410,6 @@ def unpin_comment(cid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def save_comment(cid, v):
-
 	comment=get_comment(cid)
 
 	save=g.db.query(CommentSaveRelationship).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
@@ -429,7 +426,6 @@ def save_comment(cid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def unsave_comment(cid, v):
-
 	comment=get_comment(cid)
 
 	save=g.db.query(CommentSaveRelationship).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()

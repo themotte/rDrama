@@ -302,7 +302,6 @@ def get_comment_trees_eager(
 		query_filter_callable: Callable[[Query], Query],
 		sort: str="old",
 		v: Optional[User]=None) -> tuple[list[Comment], defaultdict[Comment, list[Comment]]]:
-
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 		blocking = v.blocking.subquery()

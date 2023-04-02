@@ -482,7 +482,6 @@ def message2(v, username):
 @limiter.limit("1/second;6/minute;50/hour;200/day")
 @auth_required
 def messagereply(v):
-
 	message = request.values.get("body", "").strip()[:MESSAGE_BODY_LENGTH_MAXIMUM].strip()
 
 	if not message and not request.files.get("file"): abort(400, "Message is empty!")
@@ -594,7 +593,6 @@ def mfa_qr(secret, v):
 
 @app.get("/is_available/<name>")
 def api_is_available(name):
-
 	name=name.strip()
 
 	if len(name)<3 or len(name)>25:
@@ -807,7 +805,6 @@ def u_user_id_info(id, v=None):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def follow_user(username, v):
-
 	target = get_user(username)
 
 	if target.id==v.id: abort(400, "You can't follow yourself!")
@@ -900,7 +897,6 @@ def user_profile_uid(id:int):
 @app.get("/@<username>/pic")
 @limiter.exempt
 def user_profile_name(username:str):
-
 	name = f"/@{username}/pic"
 	path = cache.get(name)
 	tout = 5 * 60 # 5 min
@@ -926,7 +922,6 @@ def user_profile_name(username:str):
 @app.get("/@<username>/saved/posts")
 @auth_required
 def saved_posts(v, username):
-
 	page=int(request.values.get("page",1))
 
 	ids=v.saved_idlist(page=page)
@@ -950,7 +945,6 @@ def saved_posts(v, username):
 @app.get("/@<username>/saved/comments")
 @auth_required
 def saved_comments(v, username):
-
 	page=int(request.values.get("page",1))
 
 	ids=v.saved_comment_idlist(page=page)

@@ -52,8 +52,6 @@ def support(v):
 @auth_desired
 @cache.memoize(timeout=86400, make_name=make_name)
 def participation_stats(v):
-
-
 	day = int(time.time()) - 86400
 
 	week = int(time.time()) - 604800
@@ -64,38 +62,40 @@ def participation_stats(v):
 
 	active_users = set(posters) | set(commenters) | set(voters) | set(commentvoters)
 
-	stats = {"marseys": g.db.query(Marsey.name).count(),
-			"users": g.db.query(User.id).count(),
-			"private users": g.db.query(User.id).filter_by(is_private=True).count(),
-			"banned users": g.db.query(User.id).filter(User.is_banned > 0).count(),
-			"verified email users": g.db.query(User.id).filter_by(is_activated=True).count(),
-			"coins in circulation": g.db.query(func.sum(User.coins)).scalar(),
-			"total shop sales": g.db.query(func.sum(User.coins_spent)).scalar(),
-			"signups last 24h": g.db.query(User.id).filter(User.created_utc > day).count(),
-			"total posts": g.db.query(Submission.id).count(),
-			"posting users": g.db.query(Submission.author_id).distinct().count(),
-			"listed posts": g.db.query(Submission.id).filter_by(is_banned=False).filter(Submission.deleted_utc == 0).count(),
-			"removed posts (by admins)": g.db.query(Submission.id).filter_by(is_banned=True).count(),
-			"deleted posts (by author)": g.db.query(Submission.id).filter(Submission.deleted_utc > 0).count(),
-			"posts last 24h": g.db.query(Submission.id).filter(Submission.created_utc > day).count(),
-			"total comments": g.db.query(Comment.id).filter(Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count(),
-			"commenting users": g.db.query(Comment.author_id).distinct().count(),
-			"removed comments (by admins)": g.db.query(Comment.id).filter_by(is_banned=True).count(),
-			"deleted comments (by author)": g.db.query(Comment.id).filter(Comment.deleted_utc > 0).count(),
-			"comments last_24h": g.db.query(Comment.id).filter(Comment.created_utc > day, Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count(),
-			"post votes": g.db.query(Vote.submission_id).count(),
-			"post voting users": g.db.query(Vote.user_id).distinct().count(),
-			"comment votes": g.db.query(CommentVote.comment_id).count(),
-			"comment voting users": g.db.query(CommentVote.user_id).distinct().count(),
-			"total upvotes": g.db.query(Vote.submission_id).filter_by(vote_type=1).count() + g.db.query(CommentVote.comment_id).filter_by(vote_type=1).count(),
-			"total downvotes": g.db.query(Vote.submission_id).filter_by(vote_type=-1).count() + g.db.query(CommentVote.comment_id).filter_by(vote_type=-1).count(),
-			"total awards": g.db.query(AwardRelationship.id).count(),
-			"awards given": g.db.query(AwardRelationship.id).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count(),
-			"users who posted, commented, or voted in the past 7 days": len(active_users),
-			}
+	users: Query = g.db.query(User.id)
+	submissions: Query = g.db.query(Submission.id)
+	comments: Query = g.db.query(Comment.id)
 
-	g.db.commit()
-
+	stats = {
+		"marseys": g.db.query(Marsey.name).count(),
+		"users": users.count(),
+		"private users": users.filter_by(is_private=True).count(),
+		"banned users": users.filter(User.is_banned > 0).count(),
+		"verified email users": users.filter_by(is_activated=True).count(),
+		"coins in circulation": g.db.query(func.sum(User.coins)).scalar(),
+		"total shop sales": g.db.query(func.sum(User.coins_spent)).scalar(),
+		"signups last 24h": users.filter(User.created_utc > day).count(),
+		"total posts": submissions.count(),
+		"posting users": g.db.query(Submission.author_id).distinct().count(),
+		"listed posts": submissions.filter_by(is_banned=False).filter(Submission.deleted_utc == 0).count(),
+		"removed posts (by admins)": submissions.filter_by(is_banned=True).count(),
+		"deleted posts (by author)": submissions.filter(Submission.deleted_utc > 0).count(),
+		"posts last 24h": submissions.filter(Submission.created_utc > day).count(),
+		"total comments": comments.filter(Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count(),
+		"commenting users": g.db.query(Comment.author_id).distinct().count(),
+		"removed comments (by admins)": comments.filter_by(is_banned=True).count(),
+		"deleted comments (by author)": comments.filter(Comment.deleted_utc > 0).count(),
+		"comments last_24h": comments.filter(Comment.created_utc > day, Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count(),
+		"post votes": g.db.query(Vote.submission_id).count(),
+		"post voting users": g.db.query(Vote.user_id).distinct().count(),
+		"comment votes": g.db.query(CommentVote.comment_id).count(),
+		"comment voting users": g.db.query(CommentVote.user_id).distinct().count(),
+		"total upvotes": g.db.query(Vote.submission_id).filter_by(vote_type=1).count() + g.db.query(CommentVote.comment_id).filter_by(vote_type=1).count(),
+		"total downvotes": g.db.query(Vote.submission_id).filter_by(vote_type=-1).count() + g.db.query(CommentVote.comment_id).filter_by(vote_type=-1).count(),
+		"total awards": g.db.query(AwardRelationship.id).count(),
+		"awards given": g.db.query(AwardRelationship.id).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count(),
+		"users who posted, commented, or voted in the past 7 days": len(active_users),
+	}
 	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=stats)
 
 
@@ -109,6 +109,7 @@ def weekly_chart():
 	file = cached_chart(kind="weekly", site=SITE)
 	f = send_file(file)
 	return f
+
 
 @app.get("/daily_chart")
 def daily_chart():
@@ -151,7 +152,7 @@ def cached_chart(kind, site):
 	posts_chart = plt.subplot2grid((30, 20), (10, 0), rowspan=6, colspan=30)
 	comments_chart = plt.subplot2grid((30, 20), (20, 0), rowspan=6, colspan=30)
 
-	signup_chart.grid(), posts_chart.grid(), comments_chart.grid()
+	_ = signup_chart.grid(), posts_chart.grid(), comments_chart.grid()
 
 	signup_chart.plot(
 		daily_times,
@@ -207,7 +208,6 @@ def admins(v):
 @app.get("/modlog")
 @auth_desired
 def log(v):
-
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
@@ -249,7 +249,6 @@ def log(v):
 @app.get("/log/<id>")
 @auth_desired
 def log_item(v, id):
-
 	try: id = int(id)
 	except: abort(404)
 
@@ -288,7 +287,7 @@ def submit_contact(v: Optional[User]):
 	email = request.values.get("email")
 	if not body: abort(400)
 
-	header  = "This message has been sent automatically to all admins via [/contact](/contact)\n"
+	header = "This message has been sent automatically to all admins via [/contact](/contact)\n"
 	if not email:
 		email = ""
 	else:
@@ -305,12 +304,13 @@ def submit_contact(v: Optional[User]):
 			html += f'<img data-bs-target="#expandImageModal" data-bs-toggle="modal" onclick="expandDesktopImage(this.src)" class="img" src="{url}" loading="lazy">'
 		else: abort(400, "Image files only")
 
-	new_comment = Comment(author_id=v.id if v else NOTIFICATIONS_ID,
-						  parent_submission=None,
-						  level=1,
-						  body_html=html,
-						  sentto=MODMAIL_ID,
-						  )
+	new_comment = Comment(
+		author_id=v.id if v else NOTIFICATIONS_ID,
+		parent_submission=None,
+		level=1,
+		body_html=html,
+		sentto=MODMAIL_ID,
+	)
 	g.db.add(new_comment)
 	g.db.flush()
 	new_comment.top_comment_id = new_comment.id
@@ -400,14 +400,12 @@ def blocks(v):
 @app.get("/banned")
 @auth_desired
 def banned(v):
-
 	users = [x for x in g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).all()]
 	return render_template("banned.html", v=v, users=users)
 
 @app.get("/formatting")
 @auth_desired
 def formatting(v):
-
 	return render_template("formatting.html", v=v)
 
 @app.get("/service-worker.js")
@@ -417,7 +415,6 @@ def serviceworker():
 @app.get("/settings/security")
 @auth_required
 def settings_security(v):
-
 	return render_template("settings_security.html",
 						   v=v,
 						   mfa_secret=pyotp.random_base32() if not v.mfa_secret else None
