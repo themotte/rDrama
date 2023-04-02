@@ -103,7 +103,6 @@ def disconnect(v):
 @socketio.on('typing')
 @auth_required
 def typing_indicator(data, v):
-
 	if data and v.username not in typing: typing.append(v.username)
 	elif not data and v.username in typing: typing.remove(v.username)
 

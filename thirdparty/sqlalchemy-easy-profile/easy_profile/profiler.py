@@ -95,7 +95,6 @@ class SessionProfiler:
             reporter = StreamReporter()
 
         def decorator(func):
-
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
                 if path_callback is not None:

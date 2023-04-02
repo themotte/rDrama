@@ -197,13 +197,11 @@ class User(CreatedBase):
 
 	@lazy
 	def any_block_exists(self, other):
-
 		return g.db.query(UserBlock).filter(
 			or_(and_(UserBlock.user_id == self.id, UserBlock.target_id == other.id), and_(
 				UserBlock.user_id == other.id, UserBlock.target_id == self.id))).first()
 
 	def validate_2fa(self, token):
-
 		x = pyotp.TOTP(self.mfa_secret)
 		return x.verify(token, valid_window=1)
 

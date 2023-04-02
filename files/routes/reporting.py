@@ -10,7 +10,6 @@ from files.helpers.wrappers import *
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def api_flag_post(pid, v):
-
 	post = get_post(pid)
 	reason = request.values.get("reason", "").strip()[:100]
 	reason = filter_emojis_only(reason)
@@ -41,7 +40,6 @@ def api_flag_post(pid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def api_flag_comment(cid, v):
-
 	comment = get_comment(cid)
 	reason = request.values.get("reason", "").strip()[:100]
 	reason = filter_emojis_only(reason)

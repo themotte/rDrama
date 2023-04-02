@@ -22,7 +22,6 @@ def authorize_prompt(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def authorize(v):
-
 	client_id = request.values.get("client_id")
 	application = g.db.query(OauthApp).filter_by(client_id=client_id).one_or_none()
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
@@ -44,7 +43,6 @@ def authorize(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def request_api_keys(v):
-
 	new_app = OauthApp(
 		app_name=request.values.get('name').replace('<','').replace('>',''),
 		redirect_uri=request.values.get('redirect_uri'),
@@ -85,7 +83,6 @@ def request_api_keys(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def delete_oauth_app(v, aid):
-
 	aid = int(aid)
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
@@ -105,7 +102,6 @@ def delete_oauth_app(v, aid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def edit_oauth_app(v, aid):
-
 	aid = int(aid)
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
@@ -126,7 +122,6 @@ def edit_oauth_app(v, aid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def admin_app_approve(v, aid):
-
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 	user = app.author
 
@@ -160,7 +155,6 @@ def admin_app_approve(v, aid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_app_revoke(v, aid):
-
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 	if app:
 		for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
@@ -185,7 +179,6 @@ def admin_app_revoke(v, aid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_app_reject(v, aid):
-
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
 	if app:
@@ -251,7 +244,6 @@ def admin_app_id_comments(v, aid):
 @app.get("/admin/apps")
 @admin_level_required(2)
 def admin_apps_list(v):
-
 	apps = g.db.query(OauthApp).order_by(OauthApp.id.desc()).all()
 
 	return render_template("admin/apps.html", v=v, apps=apps)
@@ -261,7 +253,6 @@ def admin_apps_list(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def reroll_oauth_tokens(aid, v):
-
 	aid = aid
 
 	a = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
