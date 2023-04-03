@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 from files.classes.base import CreatedBase
 from files.helpers.config.const import *
 from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS, SITE_FULL
-from files.helpers.content import (body_displayed,
+from files.helpers.content import (ModerationState, body_displayed,
                                    execute_shadowbanned_fake_votes)
 from files.helpers.lazy import lazy
 from files.helpers.time import format_age
@@ -424,35 +424,22 @@ class Comment(CreatedBase):
 		return len(self.flags(v))
 
 	@lazy
-	def show_descendants(self, v:"User") -> bool:
-		if v.id == self.author_id: return True
-		moderated:bool = self.is_moderated and bool(v.admin_level < PERMS['POST_COMMENT_MODERATION'])
-		shadowbanned:bool = self.author.shadowbanned and bool(v.admin_level < PERMS['USER_SHADOWBAN'])
+	def show_descendants(self, v:"User | None") -> bool:
+		if v and v.id == self.author_id: return True
+		moderated:bool = self.moderation_state.explicitly_moderated and (not v or bool(v.admin_level < PERMS['POST_COMMENT_MODERATION']))
+		shadowbanned:bool = self.author.shadowbanned and (not v or bool(v.admin_level < PERMS['USER_SHADOWBAN']))
 		if not moderated and not shadowbanned: return True
 		return bool(self.descendant_count)
 
 	@lazy
-	def visibility_state(self, v:"User") -> tuple[bool, str]:
+	def visibility_state(self, v:"User | None") -> tuple[bool, str]:
 		'''
 		Returns a tuple of whether this content is visible and a publicly 
 		visible message to accompany it. The visibility state machine is
 		a slight mess but... this should at least unify the state checks.
 		'''
-		if v.id == self.author_id:
-			return True, "This shouldn't be here, please report it!"
-		if self.is_banned and v.admin_level < PERMS['POST_COMMENT_MODERATION']:
-			return False, f'Removed by @{self.ban_reason}'
-		if self.filter_state == 'removed' and v.admin_level < PERMS['POST_COMMENT_MODERATION']:
-			return False, 'Removed'
-		if self.filter_state == 'filtered' and v.admin_level < PERMS['POST_COMMENT_MODERATION']:
-			return False, 'Filtered, please go kick a mod in the ass to fix this'
-		if self.deleted_utc or (self.author.shadowbanned and v.admin_level < PERMS['USER_SHADOWBAN']):
-			return False, 'Deleted by author'
-		if getattr(self, 'is_blocking', False):
-			return False, f'You are blocking @{self.author_name}'
-		return True, "This shouldn't be here, please report it!"
+		return self.moderation_state.visibility_state(v, getattr(self, 'is_blocking', False))
 
 	@property
-	@lazy
-	def is_moderated(self) -> bool:
-		return bool(self.is_banned or self.filter_state in ('filtered', 'removed'))
+	def moderation_state(self) -> ModerationState:
+		return ModerationState.from_submittable(self)

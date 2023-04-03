@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import random
 import urllib.parse
-from typing import TYPE_CHECKING, Optional, Union
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Optional, Union, Any
 
 from sqlalchemy.orm import Session
 
@@ -11,6 +12,8 @@ from files.helpers.config.const import PERMS
 if TYPE_CHECKING:
 	from files.classes import Comment, Submission, User
 	Submittable = Union[Submission, Comment]
+else:
+	Submittable = Any
 
 
 def _replace_urls(url:str) -> str:
@@ -86,18 +89,91 @@ def canonicalize_url2(url:str, *, httpsify:bool=False) -> urllib.parse.ParseResu
 	return url_parsed
 
 
-def moderated_body(target:Submittable, v:Optional[User]) -> Optional[str]:
-	if v and (v.admin_level >= PERMS['POST_COMMENT_MODERATION'] \
-			or v.id == target.author_id):
+@dataclass(frozen=True, kw_only=True, slots=True)
+class ModerationState:
+	'''
+	The moderation state machine. This holds moderation state information,
+	including whether this was removed, deleted, filtered, whether OP was 
+	shadowbanned, etc
+	'''
+	removed: bool
+	removed_by: str | None
+	deleted: bool
+	reports_ignored: bool
+	filtered: bool
+	op_shadowbanned: bool
+	op_id: int
+	op_name: str
+
+	@classmethod
+	def from_submittable(cls, target: Submittable) -> "ModerationState":
+		return cls(
+			removed=bool(target.is_banned or target.filter_state == 'removed'),
+			removed_by=target.ban_reason,  # type: ignore
+			deleted=bool(target.deleted_utc != 0),
+			reports_ignored=bool(target.filter_state == 'ignored'),
+			filtered=bool(target.filter_state == 'filtered'),
+			op_shadowbanned=bool(target.author.shadowbanned),
+			op_id=target.author_id,  # type: ignore
+			op_name=target.author_name
+		)
+
+	def moderated_body(self, v: User | None) -> str | None:
+		if v and (v.admin_level >= PERMS['POST_COMMENT_MODERATION'] \
+			or v.id == self.op_id):
+			return None
+		if self.deleted: return 'Deleted by author'
+		if self.removed: return 'Removed'
+		if self.filtered: return 'Filtered'
 		return None
-	if target.deleted_utc: return 'Deleted by author'
-	if target.is_banned or target.filter_state == 'removed': return 'Removed'
-	if target.filter_state == 'filtered': return 'Filtered'
-	return None
+	
+	def visibility_state(self, v: User | None, is_blocking: bool) -> tuple[bool, str]:
+		'''
+		Returns a tuple of whether this content is visible and a publicly 
+		visible message to accompany it. The visibility state machine is
+		a slight mess but... this should at least unify the state checks.
+		'''
+		def cannot(v: User | None, perm_level: int) -> bool:
+			return not (v and v.admin_level >= perm_level)
+
+		if v.id == self.op_id:
+			return True, "This shouldn't be here, please report it!"
+		if self.deleted and cannot(v, PERMS['POST_COMMENT_MODERATION']):
+			return False, f'Removed by @{self.removed_by}'
+		if self.filtered and cannot(v, PERMS['POST_COMMENT_MODERATION']):
+			return False, 'Removed'
+		if self.filtered and cannot(v, PERMS['POST_COMMENT_MODERATION']):
+			return False, 'Filtered, please go kick a mod in the ass to fix this'
+		if (self.deleted and cannot(v, PERMS['POST_COMMENT_MODERATION'])) or \
+				(self.op_shadowbanned and cannot(v, PERMS['USER_SHADOWBAN'])):
+			return False, 'Deleted by author'
+		if is_blocking:
+			return False, f'You are blocking @{self.op_name}'
+		return True, "This shouldn't be here, please report it!"
+	
+	def is_visible_to(self, v: User | None, is_blocking: bool) -> bool:
+		return self.visibility_state(v, is_blocking)[0]
+	
+	def replacement_message(self, v: User | None, is_blocking: bool) -> str:
+		return self.visibility_state(v, is_blocking)[1]
+	
+	@property
+	def publicly_visible(self) -> bool:
+		return all(
+			not state for state in 
+			[self.deleted, self.removed, self.filtered, self.op_shadowbanned]
+		)
+	
+	@property
+	def explicitly_moderated(self) -> bool:
+		'''
+		Whether this was removed or filtered and not as the result of a shadowban
+		'''
+		return self.removed or self.filtered
 
 
 def body_displayed(target:Submittable, v:Optional[User], is_html:bool) -> str:
-	moderated:Optional[str] = moderated_body(target, v)
+	moderated:Optional[str] = target.moderation_state.moderated_body(v)
 	if moderated: return moderated
 
 	body = target.body_html if is_html else target.body
