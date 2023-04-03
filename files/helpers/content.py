@@ -3,7 +3,7 @@ from __future__ import annotations
 import random
 import urllib.parse
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Optional, Union, Any
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from sqlalchemy.orm import Session
 
@@ -122,6 +122,7 @@ class ModerationState:
 		if v and (v.admin_level >= PERMS['POST_COMMENT_MODERATION'] \
 			or v.id == self.op_id):
 			return None
+		if self.appear_deleted(v): return 'Deleted by author'
 		if self.deleted: return 'Deleted by author'
 		if self.removed: return 'Removed'
 		if self.filtered: return 'Filtered'
@@ -156,6 +157,11 @@ class ModerationState:
 	
 	def replacement_message(self, v: User | None, is_blocking: bool) -> str:
 		return self.visibility_state(v, is_blocking)[1]
+	
+	def appear_deleted(self, v: User | None) -> bool:
+		if self.deleted: return True
+		if not self.op_shadowbanned: return False
+		return (not v) or bool(v.admin_level < PERMS['USER_SHADOWBAN'])
 	
 	@property
 	def publicly_visible(self) -> bool:
