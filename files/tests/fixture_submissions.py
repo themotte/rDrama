@@ -26,7 +26,7 @@ class SubmissionsFixture:
 		post_id_full = post_info.id_full
 		assert post_id_full.startswith('post_')
 
-		post_id = int(post_id_full[3:])
+		post_id = int(post_id_full.split('_')[1])
 
 		db = db_session()
 		submission = db.query(Submission).filter_by(id=post_id).first()
