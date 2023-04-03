@@ -1,15 +1,14 @@
+import os
+from shutil import copyfile
+
+from files.__main__ import app, limiter
 from files.helpers.alerts import *
+from files.helpers.caching import invalidate_cache
+from files.helpers.config.const import *
 from files.helpers.media import process_image
 from files.helpers.sanitize import *
-from files.helpers.const import *
-from files.mail import *
-from files.__main__ import app, cache, limiter
-from .front import frontlist
-import os
 from files.helpers.sanitize import filter_emojis_only
-from files.helpers.strings import sql_ilike_clean
-from shutil import copyfile
-import requests
+from files.mail import *
 
 tiers={
 	"(Paypig)": 1,
@@ -22,26 +21,13 @@ tiers={
 	"(LlamaBean)": 1,
 	}
 
-@app.post("/settings/removebackground")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
-def removebackground(v):
-	v.background = None
-	g.db.add(v)
-	g.db.commit()
-	return {"message": "Background removed!"}
-
 @app.post("/settings/profile")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_profile_post(v):
 	updated = False
 
-	if request.values.get("background", v.background) != v.background:
-		updated = True
-		v.background = request.values.get("background")
-
-	elif request.values.get("reddit", v.reddit) != v.reddit:
+	if request.values.get("reddit", v.reddit) != v.reddit:
 		reddit = request.values.get("reddit")
 		if reddit in {'old.reddit.com', 'reddit.com', 'i.reddit.com', 'teddit.net', 'libredd.it', 'unddit.com'}:
 			updated = True
@@ -199,7 +185,7 @@ def settings_profile_post(v):
 		if frontsize in {"15", "25", "50", "100"}:
 			v.frontsize = int(frontsize)
 			updated = True
-			cache.delete_memoized(frontlist)
+			invalidate_cache(frontlist=True)
 		else: abort(400)
 
 	defaultsortingcomments = request.values.get("defaultsortingcomments")
@@ -226,10 +212,11 @@ def settings_profile_post(v):
 	theme = request.values.get("theme")
 	if theme:
 		if theme in THEMES:
-			if theme == "transparent" and not v.background: 
-				abort(400, "You need to set a background to use the transparent theme!")
 			v.theme = theme
-			if theme == "win98": v.themecolor = "30409f"
+			if theme == "win98": 
+				v.themecolor = "30409f"
+			else:
+				v.themecolor = "fff"
 			updated = True
 		else: abort(400)
 
@@ -275,7 +262,7 @@ def changelogsub(v):
 	v.changelogsub = not v.changelogsub
 	g.db.add(v)
 
-	cache.delete_memoized(frontlist)
+	invalidate_cache(frontlist=True)
 
 	g.db.commit()
 	if v.changelogsub: return {"message": "You have subscribed to the changelog!"}
@@ -285,7 +272,6 @@ def changelogsub(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def namecolor(v):
-
 	color = str(request.values.get("color", "")).strip()
 	if color.startswith('#'): color = color[1:]
 	if len(color) != 6: return render_template("settings_security.html", v=v, error="Invalid color code")
@@ -298,7 +284,6 @@ def namecolor(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def themecolor(v):
-
 	themecolor = str(request.values.get("themecolor", "")).strip()
 	if themecolor.startswith('#'): themecolor = themecolor[1:]
 	if len(themecolor) != 6: return render_template("settings_security.html", v=v, error="Invalid color code")
@@ -311,7 +296,6 @@ def themecolor(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def titlecolor(v):
-
 	titlecolor = str(request.values.get("titlecolor", "")).strip()
 	if titlecolor.startswith('#'): titlecolor = titlecolor[1:]
 	if len(titlecolor) != 6: return render_template("settings_profile.html", v=v, error="Invalid color code")
@@ -497,20 +481,21 @@ def settings_images_banner(v):
 @app.get("/settings/blocks")
 @auth_required
 def settings_blockedpage(v):
-
 	return render_template("settings_blocks.html", v=v)
 
 @app.get("/settings/css")
 @auth_required
 def settings_css_get(v):
-
 	return render_template("settings_css.html", v=v)
 
 @app.post("/settings/css")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_css(v):
-	css = request.values.get("css").strip().replace('\\', '').strip()[:4000]
+	css = sanitize_raw(request.values.get("css", "").replace('\\', ''), allow_newlines=True, length_limit=CSS_LENGTH_MAXIMUM)
+	ok, err = validate_css(css)
+	if not ok:
+		abort(400, err)
 	v.css = css
 	g.db.add(v)
 	g.db.commit()
@@ -526,7 +511,10 @@ def settings_profilecss_get(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_profilecss(v):
-	profilecss = request.values.get("profilecss").strip().replace('\\', '').strip()[:4000]
+	profilecss = sanitize_raw(request.values.get("profilecss", "").replace('\\', ''), allow_newlines=True, length_limit=CSS_LENGTH_MAXIMUM)
+	ok, err = validate_css(profilecss)
+	if not ok:
+		abort(400, err)
 	v.profilecss = profilecss
 	g.db.add(v)
 	g.db.commit()
@@ -553,7 +541,7 @@ def settings_block_user(v):
 						  target_id=user.id,
 						  )
 	g.db.add(new_block)
-	cache.delete_memoized(frontlist)
+	invalidate_cache(frontlist=True)
 	g.db.commit()
 
 	return {"message": f"@{user.username} blocked."}
@@ -567,7 +555,7 @@ def settings_unblock_user(v):
 	x = v.is_blocking(user)
 	if not x: abort(409)
 	g.db.delete(x)
-	cache.delete_memoized(frontlist)
+	invalidate_cache(frontlist=True)
 	g.db.commit()
 
 	return {"message": f"@{user.username} unblocked."}

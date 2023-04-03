@@ -5,7 +5,7 @@ from typing import Any, TYPE_CHECKING
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Query
 
-from files.helpers.const import *
+from files.helpers.config.const import *
 
 if TYPE_CHECKING:
 	from files.classes.comment import Comment

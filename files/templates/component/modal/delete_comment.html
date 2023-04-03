@@ -1,0 +1,22 @@
+<div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header d-none d-md-flex">
+				<h5 class="modal-title">Delete comment?</h5>
+				<button class="close" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true"><i class="far fa-times"></i></span>
+				</button>
+			</div>
+			<div class="modal-body text-center">
+				<div class="py-4">
+					<i class="fas fa-trash-alt text-muted d-none d-md-block" style="font-size: 3.5rem;"></i>
+				</div>
+				<div class="h4 d-md-none">Delete comment?</div>
+				<p class="d-none d-md-block">Your comment will be deleted everywhere on {{SITE_TITLE}}.</p>
+				<p class="text-muted d-md-none">Your comment will be deleted everywhere on {{SITE_TITLE}}.</p>
+				<button id="deleteCommentButton" class="btn btn-danger btn-block mt-5" data-bs-dismiss="modal">Delete comment</button>
+				<button class="btn btn-secondary btn-block" data-bs-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>

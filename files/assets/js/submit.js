@@ -94,8 +94,6 @@ function savetext() {
 	localStorage.setItem("post_title", document.getElementById('post-title').value)
 	localStorage.setItem("post_text", document.getElementById('post-text').value)
 	localStorage.setItem("post_url", document.getElementById('post-url').value)
-	let sub = document.getElementById('sub')
-	if (sub) localStorage.setItem("sub", sub.value)
 }
 
 

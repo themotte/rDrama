@@ -53,7 +53,7 @@ As an example, let's say we want to add a column `is_flagged` to the `comments` 
 
 1. Update the `Comment` model in `files/classes/comment.py`
 ```python
-	from files.__main__ import Base
+	from files.classes.base import Base
 	class Comment(Base):
 		__tablename__ = "comments"
 		id = Column(Integer, primary_key=True)

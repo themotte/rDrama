@@ -1,12 +1,9 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.__main__ import Base, app
-from os import environ
+from files.classes.base import Base
 from files.helpers.lazy import lazy
-from files.helpers.const import *
+from files.helpers.config.const import *
 from files.helpers.assetcache import assetcache_path
-from datetime import datetime
-from json import loads
 
 class BadgeDef(Base):
 	__tablename__ = "badge_defs"
@@ -19,7 +16,7 @@ class BadgeDef(Base):
 	description = Column(String)
 
 	def __repr__(self):
-		return f"<BadgeDef(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 class Badge(Base):
 
@@ -38,7 +35,7 @@ class Badge(Base):
 		lazy="joined", innerjoin=True, viewonly=True)
 
 	def __repr__(self):
-		return f"<Badge(user_id={self.user_id}, badge_id={self.badge_id})>"
+		return f"<{self.__class__.__name__}(user_id={self.user_id}, badge_id={self.badge_id})>"
 
 	@property
 	@lazy

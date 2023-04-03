@@ -1,30 +1,28 @@
-from os import environ
 import time
-from flask import *
 from urllib.parse import quote
 
-from files.helpers.security import *
-from files.helpers.wrappers import *
-from files.helpers.const import *
-from files.classes import *
-from files.__main__ import app, mail, limiter
 from flask_mail import Message
 
-SITE_ID = environ.get("SITE_ID").strip()
-SITE_TITLE = environ.get("SITE_TITLE").strip()
+from files.__main__ import app, limiter, mail
+from files.classes.badges import Badge
+from files.classes.user import User
+from files.helpers.config.const import *
+from files.helpers.config.environment import SERVER_NAME, SITE_ID, SITE_TITLE
+from files.helpers.security import *
+from files.helpers.wrappers import *
+from files.routes.importstar import *
+
 
 def send_mail(to_address, subject, html):
-
 	msg = Message(html=html, subject=subject, sender=f"{SITE_ID}@{SITE}", recipients=[to_address])
 	mail.send(msg)
 
 
 def send_verification_email(user, email=None):
-
 	if not email:
 		email = user.email
 
-	url = f"https://{app.config['SERVER_NAME']}/activate"
+	url = f"https://{SERVER_NAME}/activate"
 	now = int(time.time())
 
 	token = generate_hash(f"{email}+{user.id}+{now}")
@@ -44,16 +42,13 @@ def send_verification_email(user, email=None):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def api_verify_email(v):
-
 	send_verification_email(v)
-
 	return {"message": "Email has been sent (ETA ~5 minutes)"}
 
 
 @app.get("/activate")
 @auth_required
 def activate(v):
-
 	email = request.values.get("email", "").strip().lower()
 
 	if not email_regex.fullmatch(email):

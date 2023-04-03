@@ -1,4 +1,4 @@
-
+{%- import "util/forms.html" as forms -%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,19 +39,15 @@
 	<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
 	<link rel="stylesheet" href="{{ ('css/'~v.theme~'.css') | asset }}">
 	{% if v.css and not request.path.startswith('/settings/css') %}
-		<link rel="stylesheet" href="/@{{v.username}}/css">
+		<style>{{v.css | safe}}</style>
 	{% endif %}
 </head>
 
-<body id="settings" {% if v and v.background %}style="overflow-x: hidden;background:url(/assets/images/backgrounds/{{v.background}}?v=3) center center fixed; background-color: var(--background){% if 'anime' not in v.background %};background-size: cover{% endif %}"{% endif %}>
-
+<body id="settings">
 	{% include "header.html" %}
 		<div class="container">
-
 		<div class="row justify-content-around">
-
 	<div class="col h-100">
-
 		{% if error %}
 		<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
 			<i class="fas fa-exclamation-circle my-auto"></i>
@@ -162,7 +158,7 @@
 				{% if mfa_secret %}
 				<div>
 					<form action="/settings/security" method="post">
-						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						{{forms.formkey(v)}}
 						<input type="hidden" name="2fa_secret" value="{{mfa_secret}}">
 						<div class="modal-body">
 							<p>
@@ -191,7 +187,7 @@
 				{% else %}
 				<div>
 					<form action="/settings/security" method="post">
-						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						{{forms.formkey(v)}}
 						<input type="hidden" name="2fa_secret" value="{{mfa_secret}}">
 						<div class="modal-body">
 

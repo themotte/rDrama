@@ -142,17 +142,6 @@
 				</div>
 				{% endif %}
 
-				{% if u.moderated_subs %}
-					<div class="text-white rounded p-2 mb-3" style="background-color: rgba(50, 50, 50, 0.6); width: 30%;">
-						<p class="text-uppercase my-0 pb-1" style="font-weight: bold; font-size: 12px;">Moderator of</p>
-						{% for a in u.moderated_subs %}
-							<span class="d-inline-block mx-1">
-								<a href="/h/{{a['sub']}}">/h/{{a['sub']}}</a>
-							</span>
-						{% endfor %}
-					</div>
-				{% endif %}
-
 				<div class="d-flex justify-content-between align-items-center">
 					<div>
 					{% if v and v.id != u.id %}
@@ -170,9 +159,9 @@
 						{% endif %}
 
 						<form class="d-none toggleable" id="message" action="/@{{u.username}}/message" onsubmit="submitFormAjax(event)">
-							<input type="hidden" name="formkey" value="{{v.formkey}}"> 
+							{{forms.formkey(v)}} 
 							<pre></pre>
-							<textarea autocomplete="off" id="input-message" form="message" name="message" rows="3" minlength="1" maxlength="10000" class="form-control b2" oninput="markdown('input-message', 'message-preview')" required></textarea>
+							<textarea autocomplete="off" id="input-message" form="message" name="message" rows="3" minlength="1" maxlength="{{MESSAGE_BODY_LENGTH_MAXIMUM}}" class="form-control b2" oninput="markdown('input-message', 'message-preview')" required></textarea>
 							<pre></pre>
 							<pre class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('input-message')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Bold"></pre>
 							&nbsp;
@@ -196,7 +185,7 @@
 							<div class="w-lg-100">
 
 								<form action="/admin/title_change/{{u.id}}" method="post">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
+									{{forms.formkey(v)}}
 									<input maxlength=100 autocomplete="off" id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitleplain %}{{u.customtitleplain}}{% endif %}">
 									<div class="d-flex mt-2">
 										<div class="custom-control custom-checkbox">
@@ -213,13 +202,13 @@
 						<pre></pre>
 						{% if u.is_suspended %}
 							<form action="/unban_user/{{u.id}}/" method="post" action="">
-								<input type="hidden" name="formkey" value="{{v.formkey}}">
+								{{forms.formkey(v)}}
 								<input type="hidden" name="redir" value="true">
 								<input type="submit" class="btn btn-success" value="Unban user">
 							</form>
 						{% else %}
 							<form action="/ban_user/{{u.id}}" method="post" action="">
-								<input type="hidden" name="formkey" value="{{v.formkey}}">
+								{{forms.formkey(v)}}
 								<input type="hidden" name="redir" value="true">
 								<input autocomplete="off" style="font-size:11px" type="text" class="form-control" name="reason" placeholder="Ban Reason" oninput="document.getElementById('user-ban-submit').disabled=false">
 								<input autocomplete="off" style="font-size:11px" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
@@ -387,17 +376,6 @@
 				</div>
 				{% endif %}
 
-				{% if u.moderated_subs %}
-					<div class="text-white rounded p-2 mb-3" style="background-color: rgba(50, 50, 50, 0.6);">
-						<p class="text-uppercase my-0 pb-1" style="font-weight: bold; font-size: 12px;">Moderator of</p>
-						{% for a in u.moderated_subs %}
-							<span class="d-inline-block mx-1">
-								<a href="/h/{{a['sub']}}">/h/{{a['sub']}}</a>
-							</span>
-						{% endfor %}
-					</div>
-				{% endif %}
-
 				<div class="mb-3">
 					{% for b in u.badges %}
 						{% if b.url %}
@@ -428,8 +406,8 @@
 
 					<form class="d-none toggleable" id='message-mobile' action="/@{{u.username}}/message" onsubmit="submitFormAjax(event)">
 						<pre></pre>
-						<input type="hidden" name="formkey" value="{{v.formkey}}"> 
-						<textarea autocomplete="off" id="input-message-mobile" form="message-mobile" name="message" rows="3" minlength="1" maxlength="10000" class="form-control" oninput="markdown('input-message-mobile', 'message-preview-mobile')" required></textarea>
+						{{forms.formkey(v)}} 
+						<textarea autocomplete="off" id="input-message-mobile" form="message-mobile" name="message" rows="3" minlength="1" maxlength="{{MESSAGE_BODY_LENGTH_MAXIMUM}}" class="form-control" oninput="markdown('input-message-mobile', 'message-preview-mobile')" required></textarea>
 						<pre></pre>
 						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('input-message-mobile')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Bold"></pre>
 						&nbsp;
@@ -453,7 +431,7 @@
 							<div class="w-lg-100">
 
 								<form action="/admin/title_change/{{u.id}}" method="post">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
+									{{forms.formkey(v)}}
 									<input maxlength=100 autocomplete="off" id="customtitlebody-mobile" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitleplain %}{{u.customtitleplain}}{% endif %}">
 									<div class="d-flex mt-2">
 										<div class="custom-control custom-checkbox">
@@ -476,7 +454,7 @@
 							</form>
 						{% else %}
 							<form action="/ban_user/{{u.id}}/" method="post">
-								<input type="hidden" name="formkey" value="{{v.formkey}}">
+								{{forms.formkey(v)}}
 								<input type="hidden" name="redir" value="true">
 								<input autocomplete="off" style="font-size:11px" type="text" class="form-control" name="reason" placeholder="Ban Reason" oninput="document.getElementById('user-ban-submit2').disabled=false">
 								<input autocomplete="off" style="font-size:11px" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">

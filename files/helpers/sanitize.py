@@ -1,19 +1,27 @@
 import functools
 import html
-import bleach
-from bs4 import BeautifulSoup
-from bleach.linkifier import LinkifyFilter, build_url_re
-from functools import partial
-from .get import *
-from os import path, environ
 import re
-from mistletoe import markdown
-from json import loads, dump
-from random import random, choice
+import urllib.parse
+from functools import partial
+from os import path
+from typing import Optional
+
+import bleach
 import gevent
-import time
-import requests
-from files.__main__ import app
+from bleach.linkifier import LinkifyFilter, build_url_re
+from bs4 import BeautifulSoup
+from flask import abort, g
+from mistletoe import markdown
+
+from files.classes.domains import BannedDomain
+from files.classes.marsey import Marsey
+from files.helpers.config.const import (embed_fullmatch_regex,
+                                        image_check_regex, video_sub_regex)
+from files.helpers.config.environment import (MENTION_LIMIT,
+                                              MULTIMEDIA_EMBEDDING_ENABLED,
+                                              SITE_FULL)
+from files.helpers.config.regex import *
+from files.helpers.get import get_user, get_users
 
 TLDS = ('ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar',
 	'arpa','as','asia','at','au','aw','ax','az','ba','bb','bd','be','bf','bg',
@@ -42,7 +50,7 @@ allowed_tags = ('b','blockquote','br','code','del','em','h1','h2','h3','h4',
 		'tbody','th','thead','td','tr','ul','a','span','ruby','rp','rt',
 		'spoiler',)
 
-if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+if MULTIMEDIA_EMBEDDING_ENABLED:
 	allowed_tags += ('img', 'lite-youtube', 'video', 'source',)
 
 
@@ -118,11 +126,9 @@ def render_emoji(html, regexp, edit, marseys_used=set(), b=False):
 		emoji = i.group(1).lower()
 		attrs = ''
 		if b: attrs += ' b'
-		if not edit and len(emojis) <= 20 and random() < 0.0025 and ('marsey' in emoji or emoji in marseys_const2): attrs += ' g'
 
 		old = emoji
 		emoji = emoji.replace('!','').replace('#','')
-		if emoji == 'marseyrandom': emoji = choice(marseys_const2)
 
 		emoji_partial_pat = '<img loading="lazy" alt=":{0}:" src="{1}"{2}>'
 		emoji_partial = '<img loading="lazy" data-bs-toggle="tooltip" alt=":{0}:" title=":{0}:" src="{1}"{2}>'
@@ -158,12 +164,30 @@ def with_gevent_timeout(timeout: int):
 		return wrapped
 	return inner
 
+REMOVED_CHARACTERS = ['\u200e', '\u200b', '\ufeff']
+"""
+Characters which are removed from content
+"""
+
+def sanitize_raw(sanitized:Optional[str], allow_newlines:bool, length_limit:Optional[int]) -> str:
+	if not sanitized: return ""
+	for char in REMOVED_CHARACTERS:
+		sanitized = sanitized.replace(char, '')
+	if allow_newlines:
+		sanitized = sanitized.replace("\r\n", "\n")
+	else:
+		sanitized = sanitized.replace("\r","").replace("\n", "")
+	sanitized = sanitized.strip()
+	if length_limit is not None:
+		sanitized = sanitized[:length_limit]
+	return sanitized
+
 @with_gevent_timeout(2)
 def sanitize(sanitized, alert=False, comment=False, edit=False):
 	# double newlines, eg. hello\nworld becomes hello\n\nworld, which later becomes <p>hello</p><p>world</p>
 	sanitized = linefeeds_regex.sub(r'\1\n\n\2', sanitized)
 
-	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+	if MULTIMEDIA_EMBEDDING_ENABLED:
 		# turn eg. https://wikipedia.org/someimage.jpg into ![](https://wikipedia.org/someimage.jpg)
 		sanitized = image_regex.sub(r'\1![](\2)\4', sanitized)
 
@@ -201,8 +225,8 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 		names = set(m.group(2) for m in matches)
 		users = get_users(names,graceful=True)
 
-		if len(users) > app.config['MENTION_LIMIT']:
-			abort(400, f'Mentioned {len(users)} users but limit is {app.config["MENTION_LIMIT"]}')
+		if len(users) > MENTION_LIMIT:
+			abort(400, f'Mentioned {len(users)} users but limit is {MENTION_LIMIT}')
 
 		for u in users:
 			if not u: continue
@@ -213,7 +237,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	soup = BeautifulSoup(sanitized, 'lxml')
 
-	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+	if MULTIMEDIA_EMBEDDING_ENABLED:
 		for tag in soup.find_all("img"):
 			if tag.get("src") and not tag["src"].startswith('/pp/'):
 				tag["loading"] = "lazy"
@@ -262,13 +286,13 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	if "https://youtube.com/watch?v=" in sanitized: sanitized = sanitized.replace("?t=", "&t=")
 
-	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+	if MULTIMEDIA_EMBEDDING_ENABLED:
 		captured = []
 		for i in youtube_regex.finditer(sanitized):
 			if i.group(0) in captured: continue
 			captured.append(i.group(0))
 
-			params = parse_qs(urlparse(i.group(2).replace('&amp;','&')).query)
+			params = urllib.parse.parse_qs(urllib.parse.urlparse(i.group(2).replace('&amp;','&')).query)
 			t = params.get('t', params.get('start', [0]))[0]
 			if isinstance(t, str): t = t.replace('s','')
 
@@ -278,7 +302,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 			sanitized = sanitized.replace(i.group(0), htmlsource)
 
-	if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+	if MULTIMEDIA_EMBEDDING_ENABLED:
 		sanitized = video_sub_regex.sub(r'\1<video controls preload="none"><source src="\2"></video>', sanitized)
 
 	if comment:
@@ -299,8 +323,6 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 								strip=True,
 								).clean(sanitized)
 
-
-
 	soup = BeautifulSoup(sanitized, 'lxml')
 
 	links = soup.find_all("a")
@@ -312,7 +334,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 		href = link.get("href")
 		if not href: continue
 
-		url = urlparse(href)
+		url = urllib.parse.urlparse(href)
 		domain = url.netloc
 		url_path = url.path
 		domain_list.add(domain+url_path)
@@ -351,3 +373,14 @@ def filter_emojis_only(title, edit=False, graceful=False):
 
 	if len(title) > 1500 and not graceful: abort(400)
 	else: return title
+
+def validate_css(css:str) -> tuple[bool, str]:
+	'''
+	Validates that the provided CSS is allowed. It looks somewhat ugly but
+	this prevents users from XSSing themselves (not really too much of a 
+	practical concern) or causing styling issues with the rest of the page.
+	'''
+	if '</style' in css.lower(): return False, "Invalid CSS"
+	if '@import' in css.lower(): return False, "@import statements are not allowed"
+	if css_url_regex.search(css): return False, "External URL imports are not allowed"
+	return True, ""

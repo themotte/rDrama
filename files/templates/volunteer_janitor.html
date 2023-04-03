@@ -6,16 +6,13 @@
         <p class="text">Please rate these comments. You must choose a rating for each one. If you're undecided, just trust your gut!<p>
         <p class="text"><a href="/rules">Here's a link to the full rules</a> if you need a reference. Open this in a new tab; you may not be able to return to this page otherwise.</p>
     </div>
-
     <hr />
-
     {% for c in duty.comments() %}
-
         <div>
             <div class="comment">
                 {% with comments=[c] %}
                     {% set should_hide_username = true %}
-                    {% set should_hide_score = true %}
+                    {% set render_ctx = 'volunteer' %}
                     {% include "comments.html" %}
                 {% endwith %}
             </div>
@@ -52,11 +49,7 @@
                 </div>
             </div>
         </div>
-
         <hr />
-
     {% endfor %}
-
 </div>
-
 {% endmacro %}

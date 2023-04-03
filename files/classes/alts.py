@@ -1,5 +1,5 @@
 from sqlalchemy import *
-from files.__main__ import Base
+from files.classes.base import Base
 
 
 class Alt(Base):
@@ -12,5 +12,4 @@ class Alt(Base):
 	Index('alts_user2_idx', user2)
 
 	def __repr__(self):
-
-		return f"<Alt(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"

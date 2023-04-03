@@ -1,12 +1,11 @@
-from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.__main__ import Base
+
+from files.classes.base import CreatedBase
 from files.helpers.lazy import lazy
-import time
 
-class Vote(Base):
 
+class Vote(CreatedBase):
 	__tablename__ = "votes"
 
 	submission_id = Column(Integer, ForeignKey("submissions.id"), primary_key=True)
@@ -14,7 +13,6 @@ class Vote(Base):
 	vote_type = Column(Integer, nullable=False)
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	real = Column(Boolean, default=True, nullable=False)
-	created_utc = Column(Integer, nullable=False)
 
 	Index('votes_type_index', vote_type)
 	Index('vote_user_index', user_id)
@@ -22,12 +20,8 @@ class Vote(Base):
 	user = relationship("User", lazy="subquery", viewonly=True)
 	post = relationship("Submission", lazy="subquery", viewonly=True)
 
-	def __init__(self, *args, **kwargs):
-		if "created_utc" not in kwargs: kwargs["created_utc"] = int(time.time())
-		super().__init__(*args, **kwargs)
-
 	def __repr__(self):
-		return f"<Vote(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
 	@lazy
@@ -45,12 +39,10 @@ class Vote(Base):
 		data=self.json_core
 		data["user"]=self.user.json_core
 		data["post"]=self.post.json_core
-	
 		return data
 
 
-class CommentVote(Base):
-
+class CommentVote(CreatedBase):
 	__tablename__ = "commentvotes"
 
 	comment_id = Column(Integer, ForeignKey("comments.id"), primary_key=True)
@@ -58,7 +50,6 @@ class CommentVote(Base):
 	vote_type = Column(Integer, nullable=False)
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	real = Column(Boolean, default=True, nullable=False)
-	created_utc = Column(Integer, nullable=False)
 
 	Index('cvote_user_index', user_id)
 	Index('commentvotes_comments_type_index', vote_type)
@@ -66,12 +57,8 @@ class CommentVote(Base):
 	user = relationship("User", lazy="subquery")
 	comment = relationship("Comment", lazy="subquery", viewonly=True)
 
-	def __init__(self, *args, **kwargs):
-		if "created_utc" not in kwargs: kwargs["created_utc"] = int(time.time())
-		super().__init__(*args, **kwargs)
-
 	def __repr__(self):
-		return f"<CommentVote(id={self.id})>"
+		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
 	@lazy
@@ -89,5 +76,4 @@ class CommentVote(Base):
 		data=self.json_core
 		data["user"]=self.user.json_core
 		data["comment"]=self.comment.json_core
-	
 		return data

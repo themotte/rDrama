@@ -1,12 +1,14 @@
+from __future__ import annotations
+
 from collections import defaultdict
 from typing import Callable, Iterable, List, Optional, Type, Union
 
-from flask import g
+from flask import abort, g
 from sqlalchemy import and_, or_, func
-from sqlalchemy.orm import Query, selectinload
+from sqlalchemy.orm import Query, scoped_session, selectinload
 
 from files.classes import *
-from files.helpers.const import AUTOJANNY_ID
+from files.helpers.config.const import AUTOJANNY_ID
 from files.helpers.contentsorting import sort_comment_results
 
 
@@ -78,23 +80,43 @@ def get_account(
 		id:Union[str,int],
 		v:Optional[User]=None,
 		graceful:bool=False,
-		include_blocks:bool=False) -> Optional[User]:
+		include_blocks:bool=False,
+		db:Optional[scoped_session]=None) -> Optional[User]:
 	try:
 		id = int(id)
 	except:
 		if graceful: return None
 		abort(404)
 
-	user = g.db.get(User, id)
+	if not db: db = g.db
+	user = db.get(User, id)
 	if not user:
 		if graceful: return None
 		abort(404)
 
 	if v and include_blocks:
-		user = _add_block_props(user, v)
+		user = _add_block_props(user, v, db)
 
 	return user
 
+def get_accounts_dict(ids:Union[Iterable[str], Iterable[int]], 
+		      			v:Optional[User]=None, graceful=False, 
+						include_shadowbanned=True, 
+						db:Optional[scoped_session]=None) -> Optional[dict[int, User]]:
+	if not db: db = g.db
+	if not ids: return {}
+	try: 
+		ids = set([int(id) for id in ids])
+	except:
+		if graceful: return None
+		abort(404)
+
+	users = db.query(User).filter(User.id.in_(ids))
+	if not (include_shadowbanned or (v and v.can_see_shadowbanned)):
+		users = users.filter(User.shadowbanned == None)
+	users = users.all()
+	if len(users) != len(ids) and not graceful: abort(404)
+	return {u.id:u for u in users}
 
 def get_post(
 		i:Union[str,int],
@@ -369,8 +391,10 @@ def get_domain(s:str) -> Optional[BannedDomain]:
 
 def _add_block_props(
 		target:Union[Submission, Comment, User],
-		v:Optional[User]):
+		v:Optional[User],
+		db:Optional[scoped_session]=None):
 	if not v: return target
+	if not db: db = g.db
 	id = None
 
 	if any(isinstance(target, cls) for cls in [Submission, Comment]):
@@ -390,7 +414,7 @@ def _add_block_props(
 		target.is_blocked = False
 		return target
 
-	block = g.db.query(UserBlock).filter(
+	block = db.query(UserBlock).filter(
 		or_(
 			and_(
 				UserBlock.user_id == v.id,

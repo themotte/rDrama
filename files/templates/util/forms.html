@@ -1,0 +1,48 @@
+{%- macro _rounded_section_top(label, name, id) -%}
+<div class="body d-lg-flex border-bottom">
+	<label class="text-black w-lg-25 label-{{id}}" for="{{name}}">{{label}}</label>
+</div>
+<div class="w-lg-100">
+{%- endmacro -%}
+
+{%- macro _rounded_section_bottom() -%}
+</div>
+{%- endmacro -%}
+
+{%- macro text_field(label, name, id, min_length=none, max_length=none, required=false) -%}
+	<label for="{{id}}">{{label}}</label>
+	<input id="{{id}}" class="form-control" name="{{name}}" {% if required %} required {% endif %}{% if min_length %} minlength="{{min_length}}" {% endif %}{% if max_length %} maxlength="{{max_length}}" {% endif %}>
+{%- endmacro -%}
+
+{%- macro textarea_field(label, name, id, min_length=none, max_length=none, required=false) -%}
+	<label for="{{id}}">{{label}}</label>
+	<textarea id="{{id}}" class="form-control" name="{{name}}" {% if required %} required {% endif %}{% if min_length %} minlength="{{min_length}}" {% endif %}{% if max_length %} maxlength="{{max_length}}" {% endif %} rows="5" columns="80"></textarea>
+{%- endmacro -%}
+
+{%- macro formkey(v) -%}
+	{% if v %}
+		<input type="hidden" name="formkey" value="{{v.formkey}}">
+	{% endif %}
+{%- endmacro -%}
+
+{%- macro checkbox(name, id, label, checked) -%}
+	<input type="checkbox" class="form-check-input" name="{{name}}" id="{{id}}" {% if checked %} checked{% endif %}>
+	<label for="{{name}}" class="form-check-label" style="margin-right:1em;">{{label}}</label>
+{%- endmacro -%}
+
+{%- macro scheduled_post_time_selection_form(v, p) -%}
+	<fieldset class="scheduled-post-day-selection form-check">
+	<label class="mr-3">Days</label>
+	{%- for day in ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'] -%}
+		{{checkbox("schedule_day_" ~ day, "scheduled-post-day-" ~ day, day.title(), p and p.contains_day_str(day))}}
+	{%- endfor -%}
+	</fieldset>
+	<div class="form-inline">
+		<label class="mr-3">Time</label>
+		<input type="number" name="hour" min="0" max="23" style="width:5em;"{% if p %} value="{{p.task.time_of_day_utc.hour}}"{% endif %} required>:<input type="number" name="minute" min="0" max="59" style="width:5em;"{% if p %} value="{{p.task.time_of_day_utc.minute}}"{% endif %} required>
+		<span class="text-gray ml-3"> (Note: all times are in UTC)</span>
+	</div>
+	{{checkbox("enabled", "scheduled-post-enabled-input", "Enabled", p.task.enabled if p else true)}}<br>
+	<input type="submit" onclick="disable(this)" value="Submit" class="btn btn-primary">
+	{{formkey(v)}}
+{%- endmacro -%}

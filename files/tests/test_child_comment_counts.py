@@ -1,4 +1,4 @@
-from files.helpers.const import RENDER_DEPTH_LIMIT
+from files.helpers.config.const import RENDER_DEPTH_LIMIT
 from . import fixture_accounts
 from . import fixture_submissions
 from . import fixture_comments
@@ -202,7 +202,6 @@ def test_bulk_update_descendant_count_quick(accounts, submissions, comments):
 				'embed_url': None,
 				'title': f'Clever unique post title number {i}',
 				'title_html': f'Clever unique post title number {i}',
-				'sub': None,
 				'ghost': False,
 				'filter_state': 'normal'
 			})
