@@ -301,11 +301,9 @@
 		{% endif %}
 	</script>
 
-
 	{% if v and v.admin_level > 1 %}
 		{% include "component/post/actions_admin_mobile.html" %}
 	{% endif %}
-
 
 	{% if not p.club or v and (v.paid_dues or v.id == p.author_id) %}
 		{% if p.realbody(v) %}
@@ -335,19 +333,7 @@
 
 </div>
 {% else %}
-
-	{% if request.path.endswith('/admin/queue') %}
-
-	<div class="row no-gutters">	
-		<div class="col">			
-			<div class="text-center py-7">
-				<div class="h4 p-2">This queue is empty. (That's a good thing.)</div>
-			</div>			
-		</div>	
-	</div>
-
-
-	{% elif u %}
+	{% if u %}
 		{% if v and v.id == u.id %}
 		<div class="row no-gutters">	
 			<div class="col">			
@@ -362,8 +348,6 @@
 				</div>			
 			</div>	
 		</div>
-
-
 		{% else %}
 		<div class="row no-gutters">	
 			<div class="col">			
@@ -380,7 +364,6 @@
 			</div>	
 		</div>
 		{% endif %}
-
 	{% else %}
 		<div class="row no-gutters">	
 			<div class="col">			
