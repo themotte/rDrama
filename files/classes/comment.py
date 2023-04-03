@@ -425,10 +425,8 @@ class Comment(CreatedBase):
 
 	@lazy
 	def show_descendants(self, v:"User | None") -> bool:
-		if v and v.id == self.author_id: return True
-		moderated:bool = self.moderation_state.explicitly_moderated and ((not v) or bool(v.admin_level < PERMS['POST_COMMENT_MODERATION']))
-		shadowbanned:bool = self.author.shadowbanned and ((not v) or bool(v.admin_level < PERMS['USER_SHADOWBAN']))
-		if not moderated and not shadowbanned: return True
+		if self.moderation_state.is_visible_to(v, getattr(self, 'is_blocking', False)):
+			return True
 		return bool(self.descendant_count)
 
 	@lazy
