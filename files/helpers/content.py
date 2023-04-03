@@ -136,7 +136,7 @@ class ModerationState:
 		def cannot(v: User | None, perm_level: int) -> bool:
 			return not (v and v.admin_level >= perm_level)
 
-		if v.id == self.op_id:
+		if v and v.id == self.op_id:
 			return True, "This shouldn't be here, please report it!"
 		if self.deleted and cannot(v, PERMS['POST_COMMENT_MODERATION']):
 			return False, f'Removed by @{self.removed_by}'
