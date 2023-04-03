@@ -122,8 +122,8 @@ class ModerationState:
 		if v and (v.admin_level >= PERMS['POST_COMMENT_MODERATION'] \
 			or v.id == self.op_id):
 			return None
-		if self.appear_deleted(v): return 'Deleted by author'
-		if self.removed: return 'Removed'
+		if self.deleted: return 'Deleted'
+		if self.appear_removed(v): return 'Removed'
 		if self.filtered: return 'Filtered'
 		return None
 	
@@ -141,15 +141,15 @@ class ModerationState:
 
 		if v and v.id == self.op_id:
 			return True, "This shouldn't be here, please report it!"
-		if self.removed and not can_moderate:
+		if (self.removed and not can_moderate) or \
+				(self.op_shadowbanned and not can_shadowban):
 			msg: str = 'Removed'
 			if self.removed_by_name:
 				msg = f'Removed by @{self.removed_by_name}'
 			return False, msg
 		if self.filtered and not can_moderate:
 			return False, 'Filtered, please go kick a mod in the ass to fix this'
-		if (self.deleted and not can_moderate) or \
-				(self.op_shadowbanned and not can_shadowban):
+		if self.deleted and not can_moderate:
 			return False, 'Deleted by author'
 		if is_blocking:
 			return False, f'You are blocking @{self.op_name_safe}'
@@ -161,8 +161,8 @@ class ModerationState:
 	def replacement_message(self, v: User | None, is_blocking: bool) -> str:
 		return self.visibility_state(v, is_blocking)[1]
 	
-	def appear_deleted(self, v: User | None) -> bool:
-		if self.deleted: return True
+	def appear_removed(self, v: User | None) -> bool:
+		if self.removed: return True
 		if not self.op_shadowbanned: return False
 		return (not v) or bool(v.admin_level < PERMS['USER_SHADOWBAN'])
 	
