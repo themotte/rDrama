@@ -97,25 +97,25 @@ class ModerationState:
 	shadowbanned, etc
 	'''
 	removed: bool
-	removed_by: str | None
+	removed_by_name: str | None
 	deleted: bool
 	reports_ignored: bool
 	filtered: bool
 	op_shadowbanned: bool
 	op_id: int
-	op_name: str
+	op_name_safe: str
 
 	@classmethod
 	def from_submittable(cls, target: Submittable) -> "ModerationState":
 		return cls(
 			removed=bool(target.is_banned or target.filter_state == 'removed'),
-			removed_by=target.ban_reason,  # type: ignore
+			removed_by_name=target.ban_reason,  # type: ignore
 			deleted=bool(target.deleted_utc != 0),
 			reports_ignored=bool(target.filter_state == 'ignored'),
 			filtered=bool(target.filter_state == 'filtered'),
 			op_shadowbanned=bool(target.author.shadowbanned),
 			op_id=target.author_id,  # type: ignore
-			op_name=target.author_name
+			op_name_safe=target.author_name
 		)
 
 	def moderated_body(self, v: User | None) -> str | None:
@@ -123,7 +123,6 @@ class ModerationState:
 			or v.id == self.op_id):
 			return None
 		if self.appear_deleted(v): return 'Deleted by author'
-		if self.deleted: return 'Deleted by author'
 		if self.removed: return 'Removed'
 		if self.filtered: return 'Filtered'
 		return None
@@ -134,22 +133,26 @@ class ModerationState:
 		visible message to accompany it. The visibility state machine is
 		a slight mess but... this should at least unify the state checks.
 		'''
-		def cannot(v: User | None, perm_level: int) -> bool:
-			return not (v and v.admin_level >= perm_level)
+		def can(v: User | None, perm_level: int) -> bool:
+			return v and v.admin_level >= perm_level
+
+		can_moderate: bool = can(v, PERMS['POST_COMMENT_MODERATION'])
+		can_shadowban: bool = can(v, PERMS['USER_SHADOWBAN'])
 
 		if v and v.id == self.op_id:
 			return True, "This shouldn't be here, please report it!"
-		if self.deleted and cannot(v, PERMS['POST_COMMENT_MODERATION']):
-			return False, f'Removed by @{self.removed_by}'
-		if self.filtered and cannot(v, PERMS['POST_COMMENT_MODERATION']):
-			return False, 'Removed'
-		if self.filtered and cannot(v, PERMS['POST_COMMENT_MODERATION']):
+		if self.removed and not can_moderate:
+			msg: str = 'Removed'
+			if self.removed_by_name:
+				msg = f'Removed by @{self.removed_by_name}'
+			return False, msg
+		if self.filtered and not can_moderate:
 			return False, 'Filtered, please go kick a mod in the ass to fix this'
-		if (self.deleted and cannot(v, PERMS['POST_COMMENT_MODERATION'])) or \
-				(self.op_shadowbanned and cannot(v, PERMS['USER_SHADOWBAN'])):
+		if (self.deleted and not can_moderate) or \
+				(self.op_shadowbanned and not can_shadowban):
 			return False, 'Deleted by author'
 		if is_blocking:
-			return False, f'You are blocking @{self.op_name}'
+			return False, f'You are blocking @{self.op_name_safe}'
 		return True, "This shouldn't be here, please report it!"
 	
 	def is_visible_to(self, v: User | None, is_blocking: bool) -> bool:
