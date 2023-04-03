@@ -276,13 +276,13 @@ def update_filter_status(v):
 		return { 'result': f'Status of {new_status} is not permitted' }
 
 	if post_id:
-		p = g.db.get(Submission, post_id)
-		old_status = p.filter_state
+		target = g.db.get(Submission, post_id)
+		old_status = target.filter_state
 		rows_updated = g.db.query(Submission).where(Submission.id == post_id) \
 							.update({Submission.filter_state: new_status})
 	elif comment_id:
-		c = g.db.get(Comment, comment_id)
-		old_status = c.filter_state
+		target = g.db.get(Comment, comment_id)
+		old_status = target.filter_state
 		rows_updated = g.db.query(Comment).where(Comment.id == comment_id) \
 							.update({Comment.filter_state: new_status})
 	else:
@@ -290,15 +290,15 @@ def update_filter_status(v):
 
 	if rows_updated == 1:
 		# If comment now visible, update state to reflect publication.
-		if (comment_id
+		if (isinstance(target, Comment)
 				and old_status in ['filtered', 'removed']
 				and new_status in ['normal', 'ignored']):
-			comment_on_publish(c)
+			comment_on_publish(target) # XXX: can cause discrepancies if removal state ≠ filter state
 
-		if (comment_id
+		if (isinstance(target, Comment)
 				and old_status in ['normal', 'ignored']
 				and new_status in ['filtered', 'removed']):
-			comment_on_unpublish(c)
+			comment_on_unpublish(target) # XXX: can cause discrepancies if removal state ≠ filter state
 
 		g.db.commit()
 		return { 'result': 'Update successful' }
@@ -1302,7 +1302,6 @@ def unsticky_comment(cid, v):
 @limiter.exempt
 @admin_level_required(2)
 def api_ban_comment(c_id, v):
-
 	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
 	if not comment:
 		abort(404)
@@ -1310,7 +1309,7 @@ def api_ban_comment(c_id, v):
 	comment.is_banned = True
 	comment.is_approved = None
 	comment.ban_reason = v.username
-	g.db.add(comment)
+	comment_on_unpublish(comment) # XXX: can cause discrepancies if removal state ≠ filter state
 	ma=ModAction(
 		kind="ban_comment",
 		user_id=v.id,
@@ -1325,7 +1324,6 @@ def api_ban_comment(c_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def api_unban_comment(c_id, v):
-
 	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
 	if not comment: abort(404)
 	
@@ -1340,6 +1338,7 @@ def api_unban_comment(c_id, v):
 	comment.is_banned = False
 	comment.ban_reason = None
 	comment.is_approved = v.id
+	comment_on_publish(comment) # XXX: can cause discrepancies if removal state ≠ filter state
 
 	g.db.add(comment)
 

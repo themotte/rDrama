@@ -331,17 +331,13 @@ def edit_comment(cid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def delete_comment(cid, v):
-
 	c = get_comment(cid, v=v)
-
-	if not c.deleted_utc:
-
-		if c.author_id != v.id: abort(403)
-
-		c.deleted_utc = int(time.time())
-
-		g.db.add(c)
-		g.db.commit()
+	if c.deleted_utc: abort(409)
+	if c.author_id != v.id: abort(403)
+	c.deleted_utc = int(time.time())
+	# TODO: update stateful counters
+	g.db.add(c)
+	g.db.commit()
 
 	return {"message": "Comment deleted!"}
 
@@ -349,16 +345,13 @@ def delete_comment(cid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def undelete_comment(cid, v):
-
 	c = get_comment(cid, v=v)
-
-	if c.deleted_utc:
-		if c.author_id != v.id: abort(403)
-
-		c.deleted_utc = 0
-
-		g.db.add(c)
-		g.db.commit()
+	if not c.deleted_utc: abort(409)
+	if c.author_id != v.id: abort(403)
+	c.deleted_utc = 0
+	# TODO: update stateful counters
+	g.db.add(c)
+	g.db.commit()
 
 	return {"message": "Comment undeleted!"}
 
@@ -366,7 +359,6 @@ def undelete_comment(cid, v):
 @app.post("/pin_comment/<cid>")
 @auth_required
 def pin_comment(cid, v):
-	
 	comment = get_comment(cid, v=v)
 	
 	if not comment.is_pinned:

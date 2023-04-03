@@ -10,11 +10,10 @@
 	{%- set score = c.score_str(render_ctx) -%}
 	{%- set downs = c.downvotes_str(render_ctx) -%}
 
-{%- set replies = c.replies(v) -%}
-{%- set is_notification_page = request.path.startswith('/notifications') -%}
+	{% set replies = c.replies(v) %}
 
-{% if (c.is_banned or c.deleted_utc or c.is_blocking) and not (v and v.admin_level >= 2) and not (v and v.id==c.author_id) %}
-
+{% if not c.visibility_state(v)[0] %}
+{% if c.show_descendants(v) %}
 <div id="comment-{{c.id}}" class="comment">
 		<div class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement)"></div>
 		<div class="comment-collapse-bar-click" onclick="collapse_comment('{{c.id}}', this.parentElement)">
@@ -23,7 +22,7 @@
 
 		<div class="comment-user-info">
 			{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span>{% endif %}
-			{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author_name}}{% endif %}
+			{{c.visibility_state(v)[1]}}
 		</div>
 		
 		<div class="comment-body">
@@ -54,6 +53,7 @@
 		{% endif %}
 	{% endif %}
 </div>
+{% endif %}
 </div>
 
 {% else %}

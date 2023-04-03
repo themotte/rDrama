@@ -517,7 +517,7 @@ def messagereply(v):
 	g.db.add(c)
 	g.db.flush()
 
-	if user_id and user_id != v.id and user_id != 2:
+	if user_id and user_id != v.id and user_id != MODMAIL_ID:
 		notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=user_id).one_or_none()
 		if not notif:
 			notif = Notification(comment_id=c.id, user_id=user_id)
