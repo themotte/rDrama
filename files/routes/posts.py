@@ -15,7 +15,6 @@ from files.__main__ import app, db_session, limiter
 from files.classes import *
 from files.helpers.alerts import *
 from files.helpers.caching import invalidate_cache
-from files.helpers.comments import comment_filter_moderated
 from files.helpers.config.const import *
 from files.helpers.content import canonicalize_url2
 from files.helpers.contentsorting import sort_objects
@@ -94,7 +93,6 @@ def post_id(pid, anything=None, v=None):
 		Comment.parent_submission == post.id,
 		Comment.level == 1,
 	).order_by(Comment.is_pinned.desc().nulls_last())
-	top_comments = comment_filter_moderated(top_comments, v)
 	top_comments = sort_objects(top_comments, sort, Comment)
 
 	pg_top_comment_ids = []
@@ -108,7 +106,6 @@ def post_id(pid, anything=None, v=None):
 
 	def comment_tree_filter(q: Query) -> Query:
 		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
-		q = comment_filter_moderated(q, v)
 		return q
 
 	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
@@ -160,7 +157,6 @@ def viewmore(v, pid, sort, offset):
 		# `NOT IN :ids` in top_comments.
 		top_comments = top_comments.filter(Comment.created_utc <= newest_created_utc)
 
-	top_comments = comment_filter_moderated(top_comments, v)
 	top_comments = sort_objects(top_comments, sort, Comment)
 
 	pg_top_comment_ids = []
@@ -174,7 +170,6 @@ def viewmore(v, pid, sort, offset):
 
 	def comment_tree_filter(q: Query) -> Query:
 		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
-		q = comment_filter_moderated(q, v)
 		return q
 
 	_, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
