@@ -164,7 +164,7 @@ class Submission(CreatedBase):
 	@property
 	@lazy
 	def fullname(self):
-		return f"t2_{self.id}"	
+		return f"post_{self.id}"	
 
 	@property
 	@lazy

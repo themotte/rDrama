@@ -114,10 +114,10 @@ def api_comment(v):
 	parent_post = None
 	parent_comment_id = None
 
-	if parent_fullname.startswith("t2_"):
+	if parent_fullname.startswith("post_"):
 		parent = get_post(id, v=v)
 		parent_post = parent
-	elif parent_fullname.startswith("t3_"):
+	elif parent_fullname.startswith("comment_"):
 		parent = get_comment(id, v=v)
 		parent_post = get_post(parent.parent_submission, v=v) if parent.parent_submission else None
 		parent_comment_id = parent.id

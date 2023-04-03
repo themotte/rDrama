@@ -114,19 +114,19 @@ def test_comment_descendant_count(accounts, submissions, comments):
 
 	reply1 = comments.comment_for_client(alice_client, post.id, {
 		'body': 'You\'re wrong, this isn\'t contentious',
-		'parent_fullname': f't3_{root.id}',
+		'parent_fullname': f'comment_{root.id}',
 		'parent_level': root.level,
 	})
 
 	rereply1 = comments.comment_for_client(alice_client, post.id, {
 		'body': 'no u',
-		'parent_fullname': f't3_{reply1.id}',
+		'parent_fullname': f'comment_{reply1.id}',
 		'parent_level': reply1.level,
 	})
 
 	reply2 = comments.comment_for_client(alice_client, post.id, {
 		'body': 'Good poast',
-		'parent_fullname': f't3_{root.id}',
+		'parent_fullname': f'comment_{root.id}',
 		'parent_level': root.level,
 	})
 
@@ -152,7 +152,7 @@ def test_more_button_label_in_deep_threads(accounts, submissions, comments):
 	for i in range(1, 25 + 1):
 		c = comments.comment_for_client(alice_client, post.id, {
 			'body': str(i),
-			'parent_fullname': f't3_{c.id}',
+			'parent_fullname': f'comment_{c.id}',
 			'parent_level': c.level,
 		})
 		if i % 5 == 0:

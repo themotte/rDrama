@@ -24,7 +24,7 @@ class SubmissionsFixture:
 		assert post_body in submit_post_response.text
 		post_info = util.ItemData.from_html(submit_post_response.text)
 		post_id_full = post_info.id_full
-		assert post_id_full.startswith('t2_')
+		assert post_id_full.startswith('post_')
 
 		post_id = int(post_id_full[3:])
 

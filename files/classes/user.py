@@ -243,7 +243,7 @@ class User(CreatedBase):
 	@property
 	@lazy
 	def fullname(self):
-		return f"t1_{self.id}"
+		return f"user_{self.id}"
 
 	@property
 	@lazy
