@@ -1302,7 +1302,6 @@ def unsticky_comment(cid, v):
 @limiter.exempt
 @admin_level_required(2)
 def api_ban_comment(c_id, v):
-
 	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
 	if not comment:
 		abort(404)
@@ -1310,7 +1309,7 @@ def api_ban_comment(c_id, v):
 	comment.is_banned = True
 	comment.is_approved = None
 	comment.ban_reason = v.username
-	g.db.add(comment)
+	comment_on_unpublish(comment)
 	ma=ModAction(
 		kind="ban_comment",
 		user_id=v.id,
