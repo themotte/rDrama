@@ -8,10 +8,8 @@ from sqlalchemy.sql.sqltypes import Boolean, Integer, String, Text
 from files.classes.cron.tasks import (RepeatableTask, ScheduledTaskType,
                                       TaskRunContext)
 from files.classes.submission import Submission
-from files.helpers.config.const import (RENDER_DEPTH_LIMIT,
-                                        SUBMISSION_TITLE_LENGTH_MAXIMUM)
-from files.helpers.config.environment import SITE_FULL
-from files.helpers.content import body_displayed
+from files.helpers.config.const import SUBMISSION_TITLE_LENGTH_MAXIMUM
+from files.helpers.content import ModerationState, body_displayed
 from files.helpers.lazy import lazy
 from files.helpers.sanitize import filter_emojis_only
 
@@ -172,3 +170,16 @@ class ScheduledSubmissionTask(RepeatableTask):
 	@property
 	def edit_url(self) -> str:
 		return f"/tasks/scheduled_posts/{self.id}/content"
+	
+	@property
+	def moderation_state(self) -> ModerationState:
+		return ModerationState(
+			removed=False,
+			removed_by_name=None,
+			deleted=False, # we only want to show deleted UI color if disabled
+			reports_ignored=False,
+			filtered=False,
+			op_shadowbanned=False,
+			op_id=self.author_id_submission,
+			op_name_safe=self.author_name
+		)

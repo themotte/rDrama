@@ -3,7 +3,7 @@ from __future__ import annotations
 import random
 import urllib.parse
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional
 
 from sqlalchemy.orm import Session
 
@@ -11,7 +11,7 @@ from files.helpers.config.const import PERMS
 
 if TYPE_CHECKING:
 	from files.classes import Comment, Submission, User
-	Submittable = Union[Submission, Comment]
+	Submittable = Comment | Submission
 else:
 	Submittable = Any
 
