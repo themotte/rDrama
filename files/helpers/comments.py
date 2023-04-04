@@ -223,7 +223,7 @@ def comment_on_unpublish(comment:Comment):
 
 
 def comment_filter_moderated(q: Query, v: Optional[User]) -> Query:
-	if not (v and v.shadowbanned) and not (v and v.admin_level > 2):
+	if not (v and v.shadowbanned) and not (v and v.admin_level >= 3):
 		q = q.join(User, User.id == Comment.author_id) \
 		     .filter(User.shadowbanned == None)
 	if not v or v.admin_level < 2:

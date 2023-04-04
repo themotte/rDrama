@@ -101,11 +101,11 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 
 @cache.memoize(timeout=USERPAGELISTING_TIMEOUT_SECS)
 def userpagelisting(u:User, v=None, page=1, sort="new", t="all"):
-	if u.shadowbanned and not (v and (v.admin_level > 1 or v.id == u.id)): return []
+	if u.shadowbanned and not (v and (v.admin_level >= 2 or v.id == u.id)): return []
 
 	posts = g.db.query(Submission.id).filter_by(author_id=u.id, is_pinned=False)
 
-	if not (v and (v.admin_level > 1 or v.id == u.id)):
+	if not (v and (v.admin_level >= 2 or v.id == u.id)):
 		posts = posts.filter_by(deleted_utc=0, is_banned=False, private=False, ghost=False)
 
 	posts = apply_time_filter(posts, t, Submission)

@@ -232,7 +232,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 			if not u: continue
 			m = [ m for m in matches if u.username == m.group(2) or u.original_username == m.group(2) ]
 			for i in m:
-				if not (g.v and g.v.any_block_exists(u)) or g.v.admin_level > 1:
+				if not (g.v and g.v.any_block_exists(u)) or g.v.admin_level >= 2:
 					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''', 1)
 
 	soup = BeautifulSoup(sanitized, 'lxml')

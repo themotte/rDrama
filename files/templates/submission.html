@@ -120,7 +120,7 @@
 	</div>
 {% endif %}
 
-{% if v and v.admin_level > 1 %}
+{% if v and v.admin_level >= 2 %}
 	{% include "component/post/actions_admin_mobile.html" %}
 {% endif %}
 
@@ -146,7 +146,7 @@
 							<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
 						{% endfor %}
 
-						{% if v and v.admin_level > 1 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{p.author.shadowbanned}}"></i>{% endif %}
+						{% if v and v.admin_level >= 2 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{p.author.shadowbanned}}"></i>{% endif %}
 
 						{% if p.stickied %}
 							<i id='pinned-{{p.id}}' class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned by @{{p.stickied}}" {% if p.stickied_utc %}onmouseover="pinned_timestamp('pinned-{{p.id}}')" data-timestamp={{p.stickied_utc}} {% endif %}></i>
@@ -167,7 +167,7 @@
 							{% endif %}
 
 							<a href="/@{{p.author_name}}" class="user-name" onclick='popclick({{p.author.json_popover(v) | tojson}}); return false' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="font-weight: bold"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-20 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level %}class="mod"{% endif %}>{{p.author_name}}</span></a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
-							{% if v and v.admin_level > 1 %}
+							{% if v and v.admin_level >= 2 %}
 								<span 
 									class="usernote-link" 
 									data-micromodal-trigger="modal-1" 
@@ -368,7 +368,7 @@
 						<span class="text-info d-none {{p.id}}-new-comments"></span>
 					</a>
 
-					{% if v and v.admin_level > 1 %}
+					{% if v and v.admin_level >= 2 %}
 						<a class="ml-2" role="button" data-bs-toggle="modal" data-bs-target="#adminModal-{{p.id}}">
 							<i class="fas fa-broom"></i>
 						</a>
@@ -546,7 +546,7 @@
 	{% include "component/modal/report_post.html" %}
 {% endif %}
 
-{% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
+{% if v and (v.id == p.author_id or v.admin_level >= 2 and v.admin_level >= 3) %}
 	<script src="{{ 'js/togglePostEdit.js' | asset }}"></script>
 {% endif %}
 

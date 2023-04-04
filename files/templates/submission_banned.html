@@ -41,7 +41,7 @@
 														</div>
 
 												</div>
-			{% if v and v.admin_level > 1 and p.body_html %}
+			{% if v and v.admin_level >= 2 and p.body_html %}
 												<div class="post-body mt-4 mb-2"> 
 				{{p.body_html | safe}}
 			</div>
