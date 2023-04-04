@@ -23,9 +23,9 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	if comment.post and comment.post.club and not (v and (v.paid_dues or v.id in [comment.author_id, comment.post.author_id])): abort(403)
 
-	if comment.post and comment.post.private and not (v and (v.admin_level > 1 or v.id == comment.post.author.id)): abort(403)
+	if comment.post and comment.post.private and not (v and (v.admin_level >= 2 or v.id == comment.post.author.id)): abort(403)
 
-	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level > 1) : abort(403)
+	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level >= 2) : abort(403)
 	
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
@@ -65,7 +65,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			blocked.c.target_id,
 		)
 
-		if not (v and v.shadowbanned) and not (v and v.admin_level > 2):
+		if not (v and v.shadowbanned) and not (v and v.admin_level >= 3):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
 		 
 		comments=comments.filter(
@@ -96,7 +96,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			
 	if request.headers.get("Authorization"): return top_comment.json
 	else: 
-		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
+		if post.is_banned and not (v and (v.admin_level >= 2 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
 		return render_template(template, v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True)
 

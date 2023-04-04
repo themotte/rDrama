@@ -142,7 +142,7 @@ class Submission(CreatedBase):
 	@lazy
 	def flags(self, v):
 		flags = g.db.query(Flag).filter_by(post_id=self.id).order_by(Flag.created_utc).all()
-		if not (v and (v.shadowbanned or v.admin_level > 2)):
+		if not (v and (v.shadowbanned or v.admin_level >= 3)):
 			for flag in flags:
 				if flag.user.shadowbanned:
 					flags.remove(flag)

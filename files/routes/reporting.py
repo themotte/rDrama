@@ -14,7 +14,7 @@ def api_flag_post(pid, v):
 	reason = request.values.get("reason", "").strip()[:100]
 	reason = filter_emojis_only(reason)
 
-	if reason.startswith('!') and v.admin_level > 1:
+	if reason.startswith('!') and v.admin_level >= 2:
 		post.flair = reason[1:]
 		g.db.add(post)
 		ma=ModAction(

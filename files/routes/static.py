@@ -197,7 +197,7 @@ def patrons(v):
 @app.get("/admins")
 @auth_desired
 def admins(v):
-	if v and v.admin_level > 2:
+	if v and v.admin_level >= 3:
 		admins = g.db.query(User).filter(User.admin_level>1).order_by(User.truecoins.desc()).all()
 		admins += g.db.query(User).filter(User.admin_level==1).order_by(User.truecoins.desc()).all()
 	else: admins = g.db.query(User).filter(User.admin_level>0).order_by(User.truecoins.desc()).all()
@@ -217,7 +217,7 @@ def log(v):
 
 	kind = request.values.get("kind")
 
-	if v and v.admin_level > 1:
+	if v and v.admin_level >= 2:
 		types = ACTIONTYPES
 	else:
 		types = ACTIONTYPES2
@@ -225,7 +225,7 @@ def log(v):
 	if kind not in types: kind = None
 
 	actions = g.db.query(ModAction)
-	if not (v and v.admin_level > 1): 
+	if not (v and v.admin_level >= 2): 
 		actions = actions.filter(ModAction.kind.notin_(["shadowban","unshadowban","flair_post","edit_post"]))
 	
 	if admin_id:
@@ -258,7 +258,7 @@ def log_item(v, id):
 
 	admins = [x[0] for x in g.db.query(User.username).filter(User.admin_level > 1).all()]
 
-	if v and v.admin_level > 1: types = ACTIONTYPES
+	if v and v.admin_level >= 2: types = ACTIONTYPES
 	else: types = ACTIONTYPES2
 
 	return render_template("log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=types)

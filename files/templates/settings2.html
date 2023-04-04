@@ -53,7 +53,7 @@
 <body id="settings2">
 {% include "header.html" %}
 {% block subNav %}
-{% set mod = (v and v.admin_level > 1) %}
+{% set mod = (v and v.admin_level >= 2) %}
 <div class="container-fluid bg-white d-none d-md-block" style="padding-top: 50px; padding-bottom: 0 !important;">
 	<div class="row box-shadow-bottom">
 			<div class="col">

@@ -115,7 +115,7 @@ class Comment(CreatedBase):
 	@lazy
 	def flags(self, v):
 		flags = self.reports
-		if not (v and (v.shadowbanned or v.admin_level > 2)):
+		if not (v and (v.shadowbanned or v.admin_level >= 3)):
 			for flag in flags:
 				if flag.user.shadowbanned:
 					flags.remove(flag)

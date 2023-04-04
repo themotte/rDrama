@@ -27,7 +27,7 @@
 								</div>
 						</a>
 				</button>
-				{% if v and v.admin_level > 1 %}
+				{% if v and v.admin_level >= 2 %}
 				<button class="col px-0 btn btn-dead m-0" style="background: None !important; border: None;">
 						<a href="/leaderboard" class="text-decoration-none" role="button">
 								<div class="text-center {% if request.path=='/leaderboard' %}text-primary{% else %}text-muted{% endif %}">
