@@ -415,11 +415,6 @@
 	<div class="col border-top">
 		<div class="comments-count py-3">
 			{{sorting_time.sort_dropdown(sort, none, SORTS_COMMENTS)}}
-			{% if comment_info and p.comment_count >= 2 %}
-			<div class="total mt-3">
-				<a href="{{p.permalink}}">View entire discussion</a>
-			</div>
-			{% endif %}
 		</div>
 
 	{% if v %}
