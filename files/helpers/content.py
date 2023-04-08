@@ -148,7 +148,7 @@ class ModerationState:
 				msg = f'Removed by @{self.removed_by_name}'
 			return False, msg
 		if self.filtered and not can_moderate:
-			return False, 'Filtered, please go kick a mod in the ass to fix this'
+			return False, 'Filtered'
 		if self.deleted and not can_moderate:
 			return False, 'Deleted by author'
 		if is_blocking:
