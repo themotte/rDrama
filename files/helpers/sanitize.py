@@ -230,8 +230,8 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 		for u in users:
 			if not u: continue
-			m = [ m for m in matches if u.username == m.group(2) or u.original_username == m.group(2) ]
-			for i in m:
+			mention_is_u = lambda m: m.group(2).lower() in (u.username.lower(), u.original_username.lower())
+			for i in filter(mention_is_u, matches):
 				if not (g.v and g.v.any_block_exists(u)) or g.v.admin_level >= 2:
 					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''', 1)
 
