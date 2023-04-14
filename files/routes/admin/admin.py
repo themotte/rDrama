@@ -222,7 +222,7 @@ def club_ban(v, username):
 @limiter.exempt
 @auth_required
 def shadowbanned(v):
-	if not (v and v.admin_level > 1): abort(404)
+	if not (v and v.admin_level >= 2): abort(404)
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).order_by(User.shadowbanned).all()]
 	return render_template("shadowbanned.html", v=v, users=users)
 
@@ -1189,7 +1189,7 @@ def sticky_post(post_id, v):
 	if post and not post.stickied:
 		pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.is_banned == False).count()
 		if pins > 2:
-			if v.admin_level > 1:
+			if v.admin_level >= 2:
 				post.stickied = v.username
 				post.stickied_utc = int(time.time()) + 3600
 			else: abort(403, "Can't exceed 3 pinned posts limit!")

@@ -63,7 +63,7 @@
 									<span><i class="fas fa-badge-check align-middle ml-2 {% if u.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if u.verifiedcolor %}#{{u.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{u.verified}}"></i></span>
 								{% endif %}
 
-								{% if u.admin_level > 1 or (u.admin_level == 1 and not(v and v.admin_level > 1)) %}
+								{% if u.admin_level > 1 or (u.admin_level == 1 and not(v and v.admin_level >= 2)) %}
 								<span>
 									<i class="fas fa-broom text-admin align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Admin"></i>
 								</span>
@@ -150,7 +150,7 @@
 						<a id="button-sub" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" role="button" onclick="post_toast2(this,'/follow/{{u.username}}','button-unsub','button-sub')">Follow</a>						
 						<a class="btn btn-primary" role="button" onclick="toggleElement('message', 'input-message')">Message</a>
 
-						{% if v and v.admin_level > 2 %}
+						{% if v and v.admin_level >= 3 %}
 							<a id="admin" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2(this,'/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
 							<a id="unadmin" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2(this,'/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
 							{% if u.admin_level > 1 %}
@@ -179,7 +179,7 @@
 						<a href="/views" class="btn btn-secondary">Profile views</a>
 					{% endif %}
 
-					{% if v and v.id != u.id and v.admin_level > 1 %}
+					{% if v and v.id != u.id and v.admin_level >= 2 %}
 						<br><br>
 						<div class="body d-lg-flex border-bottom">
 							<div class="w-lg-100">
@@ -229,7 +229,7 @@
 
 						<pre></pre>
 						
-						{% if v and v.admin_level > 2 %}
+						{% if v and v.admin_level >= 3 %}
 							<a id="verify" class="{% if u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2(this,'/admin/verify/{{u.id}}','verify','unverify')">Verify</a>
 							<a id="unverify" class="{% if not u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2(this,'/admin/unverify/{{u.id}}','verify','unverify')">Unverify</a>
 						{% endif %}
@@ -322,7 +322,7 @@
 					<span><i class="fas fa-badge-check align-middle ml-2 {% if u.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if u.verifiedcolor %}#{{u.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{u.verified}}"></i></span>&nbsp;
 				{% endif %}
 
-				{% if u.admin_level > 1 or (u.admin_level == 1 and not(v and v.admin_level > 1)) %}
+				{% if u.admin_level > 1 or (u.admin_level == 1 and not(v and v.admin_level >= 2)) %}
 				<span>
 					<i class="fas fa-broom text-admin align-middle ml-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Admin"></i>
 				</span>
@@ -396,7 +396,7 @@
 					<a id="button-sub2" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" role="button" onclick="post_toast2(this,'/follow/{{u.username}}','button-unsub2','button-sub2')">Follow</a>						
 					<a class="btn btn-primary" role="button" onclick="toggleElement('message-mobile', 'input-message-mobile')">Message</a>
 
-					{% if v and v.admin_level > 2 %} 
+					{% if v and v.admin_level >= 3 %} 
 						<a id="admin2" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2(this,'/@{{u.username}}/make_admin','admin2','unadmin2')">Make admin</a>
 						<a id="unadmin2" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2(this,'/@{{u.username}}/remove_admin','admin2','unadmin2')">Remove admin</a>
 						{% if u.admin_level > 1 %}
@@ -420,7 +420,7 @@
 
 					<div id="message-preview-mobile" class="preview my-3"></div>
 
-					{% if v and v.admin_level > 1 %}
+					{% if v and v.admin_level >= 2 %}
 
 					<button id="grant" class="{% if u.paid_dues %}d-none{% endif %} btn btn-success" onclick="post_toast2(this,'/@{{u.username}}/club_allow','grant','bar')">Grant club access</button>
 					<button id="bar" class="{% if u.club_allowed == False %}d-none{% endif %} btn btn-danger" onclick="post_toast2(this,'/@{{u.username}}/club_ban','grant','bar')">Bar from club</button>
@@ -477,7 +477,7 @@
 
 						<pre></pre>
 
-						{% if v and v.admin_level > 2 %}
+						{% if v and v.admin_level >= 3 %}
 							<a id="verify2" class="{% if u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2(this,'/admin/verify/{{u.id}}','verify2','unverify2')">Verify</a>
 							<a id="unverify2" class="{% if not u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2(this,'/admin/unverify/{{u.id}}','verify2','unverify2')">Unverify</a>
 						{% endif %}
