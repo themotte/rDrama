@@ -144,7 +144,6 @@
 			{% endif %}
 
 			{% if is_notification_page and c.level == 1 and c.is_strict_message and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
-				<a class="btn btn-primary mt-2" role="button" onclick="openReplyBox('reply-message-{{c.id}}')">Reply</a>
 				{%- include 'component/comment/replybox_message.html' -%}
 			{% endif %}
 		{% else %}
