@@ -9,8 +9,8 @@
 	{%- set ups = c.upvotes_str(render_ctx) -%}
 	{%- set score = c.score_str(render_ctx) -%}
 	{%- set downs = c.downvotes_str(render_ctx) -%}
-
 	{% set replies = c.replies(v) %}
+	{%- set is_notification_page = request.path.startswith('/notifications') -%}
 
 {% if not c.visibility_state(v)[0] %}
 {% if c.show_descendants(v) %}
@@ -120,36 +120,35 @@
 						</li>
 					</ul>
 				</div>
-				{% endif %}
+			{% endif %}
+		</div>
+
+		{% if v and v.id != c.author_id and c.body %}
+			<textarea autocomplete="off" class="d-none card border my-2 p-3 comment-box form-control rounded" id="markdown-{{c.id}}" readonly>{{c.body.strip()}}</textarea> 
+		{% endif %}
+
+		{%- include 'component/comment/replybox_comment.html' -%}
+
+		{% if render_replies %} 
+			{% if level <= RENDER_DEPTH_LIMIT - 1 or is_notification_page %}
+				<div id="replies-of-{{c.id}}">
+					{% for reply in replies %}
+						{{single_comment(reply, level=level+1)}}
+					{% endfor %}
 				</div>
+			{% elif replies %}
+				<div id="morecomments-{{c.id}}" class="mt-2 more-comments">
+					<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments ({{c.descendant_count}})</button>
+					<a class="d-md-none" href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+				</div>
+			{% endif %}
 
-				{% if v and v.id != c.author_id and c.body %}
-					<textarea autocomplete="off" class="d-none card border my-2 p-3 comment-box form-control rounded" id="markdown-{{c.id}}" readonly>{{c.body.strip()}}</textarea> 
-				{% endif %}
-
-				{%- include 'component/comment/replybox_comment.html' -%}
-
-			{% if render_replies %} 
-				{% if level <= RENDER_DEPTH_LIMIT - 1 or is_notification_page %}
-					<div id="replies-of-{{c.id}}">
-						{% for reply in replies %}
-							{{single_comment(reply, level=level+1)}}
-						{% endfor %}
-					</div>
-				{% elif replies %}
-					<div id="morecomments-{{c.id}}" class="mt-2 more-comments">
-						<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments ({{c.descendant_count}})</button>
-						<a class="d-md-none" href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
-					</div>
-				{% endif %}
-
-			{% if is_notification_page and c.level == 1 and c.sentto and not c.parent_submission and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
-				<a class="btn btn-primary mt-2" role="button" onclick="openReplyBox('reply-message-{{c.id}}')">Reply</a>
+			{% if is_notification_page and c.level == 1 and c.is_strict_message and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
 				{%- include 'component/comment/replybox_message.html' -%}
 			{% endif %}
-	{% else %}
-		<div id="replies-of-{{c.id}}"></div>
-	{% endif %}
+		{% else %}
+			<div id="replies-of-{{c.id}}"></div>
+		{% endif %}
 	</div>
 
 {%- include 'component/comment/actions_mobile.html' -%}
