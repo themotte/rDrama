@@ -111,6 +111,7 @@ class User(CreatedBase):
 	original_username = deferred(Column(String))
 	referred_by = Column(Integer, ForeignKey("users.id"))
 	volunteer_last_started_utc = Column(DateTime, nullable=True)
+	volunteer_janitor_correctness = Column(Float, default=0, nullable=False)
 
 	Index(
 		'users_original_username_trgm_idx',
