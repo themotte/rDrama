@@ -39,12 +39,14 @@ yattag = "*"
 webptools = "*"
 supervisor = "*"
 superlance = "*"
+alive-progress = "*"
 
 [tool.poetry.group.dev]
 optional = true
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
+tabulate = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

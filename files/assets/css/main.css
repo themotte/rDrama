@@ -5325,3 +5325,41 @@ div[id^="reply-edit-"] li > p:first-child {
 .volunteer_janitor .choices {
 	margin-top: 1rem;
 }
+
+.volunteer_janitor_result {
+	border-radius: 1rem;
+	padding: 0.2rem;
+	color: var(--primary-dark1);
+}
+
+.volunteer_janitor_result_notbad_0 {
+	background-color: hsl(240, 100%, 99%);
+}
+
+.volunteer_janitor_result_notbad_1 {
+	background-color: hsl(240, 100%, 98%);
+}
+
+.volunteer_janitor_result_notbad_2 {
+	background-color: hsl(240, 100%, 94%);
+}
+
+.volunteer_janitor_result_notbad_3 {
+	background-color: hsl(240, 100%, 90%);
+}
+
+.volunteer_janitor_result_bad_0 {
+	background-color: hsl(0, 100%, 98%);
+}
+
+.volunteer_janitor_result_bad_1 {
+	background-color: hsl(0, 100%, 94%);
+}
+
+.volunteer_janitor_result_bad_2 {
+	background-color: hsl(0, 100%, 88%);
+}
+
+.volunteer_janitor_result_bad_3 {
+	background-color: hsl(0, 100%, 80%);
+}

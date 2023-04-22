@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, Literal, Optional
 from urllib.parse import parse_qs, urlencode, urlparse
 
 from flask import g
+import math
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
@@ -11,6 +12,7 @@ from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS, SITE_FULL
 from files.helpers.content import (ModerationState, body_displayed,
                                    execute_shadowbanned_fake_votes)
 from files.helpers.lazy import lazy
+from files.helpers.math import clamp
 from files.helpers.time import format_age
 
 if TYPE_CHECKING:
@@ -48,6 +50,7 @@ class Comment(CreatedBase):
 	body_html = Column(Text, nullable=False)
 	ban_reason = Column(String)
 	filter_state = Column(String, nullable=False)
+	volunteer_janitor_badness = Column(Float, default=0.5, nullable=False)
 
 	Index('comment_parent_index', parent_comment_id)
 	Index('comment_post_id_index', parent_submission)
@@ -441,3 +444,30 @@ class Comment(CreatedBase):
 	@property
 	def moderation_state(self) -> ModerationState:
 		return ModerationState.from_submittable(self)
+	
+	def volunteer_janitor_is_unknown(self):
+		return self.volunteer_janitor_badness > 0.4 and self.volunteer_janitor_badness < 0.6
+
+	def volunteer_janitor_is_bad(self):
+		return self.volunteer_janitor_badness >= 0.6
+	
+	def volunteer_janitor_is_notbad(self):
+		return self.volunteer_janitor_badness <= 0.4
+
+	def volunteer_janitor_confidence(self):
+		unitconfidence = (abs(self.volunteer_janitor_badness - 0.5) * 2)
+		unitanticonfidence = 1 - unitconfidence
+		logconfidence = -math.log(unitanticonfidence, 2)
+		return round(logconfidence * 10)
+
+	def volunteer_janitor_css(self):
+		if self.volunteer_janitor_is_unknown():
+			category = "unknown"
+		elif self.volunteer_janitor_is_bad():
+			category = "bad"
+		elif self.volunteer_janitor_is_notbad():
+			category = "notbad"
+		
+		strength = clamp(math.trunc(self.volunteer_janitor_confidence() / 10), 0, 3)
+
+		return f"{category}_{strength}"

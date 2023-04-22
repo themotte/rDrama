@@ -5,6 +5,7 @@ from files.classes.comment import Comment
 from files.classes.flags import CommentFlag
 from files.classes.user import User
 from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
+from files.helpers.volunteer_janitor import update_comment_badness
 from files.routes.volunteer_common import VolunteerDuty
 from flask import g
 import pprint
@@ -93,4 +94,7 @@ def submitted(v: User, key: str, val: str) -> None:
     record.recorded_utc = sqlalchemy.func.now()
     record.result = VolunteerJanitorResult(int(val))
     g.db.add(record)
+
+    update_comment_badness(g.db, key)
+
     g.db.commit()
