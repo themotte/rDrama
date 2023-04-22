@@ -40,13 +40,14 @@ def cron_setup():
     
     for label, ref in hardcoded_cron_jobs.items():
         print(f"Cron: Creating {label}")
-        task = PythonCodeTask()
-        task.label = label
-        task.author_id = AUTOJANNY_ID
-        task.frequency_day = ref["frequency_day"]
-        task.time_of_day_utc = ref["time_of_day_utc"]
-        task.import_path = ref["import_path"]
-        task.callable = ref["callable"]
+        task: PythonCodeTask = PythonCodeTask(
+            label = label,
+            author_id = AUTOJANNY_ID,
+            frequency_day = ref["frequency_day"],
+            time_of_day_utc = ref["time_of_day_utc"],
+            import_path = ref["import_path"],
+            callable = ref["callable"],
+        )
         db.add(task)
 
     db.commit()
