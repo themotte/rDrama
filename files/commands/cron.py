@@ -34,6 +34,10 @@ def cron_app_worker():
 	'''
 	The "worker" process task. This actually executes tasks.
 	'''
+
+	# someday we'll clean this up further, for now I need debug info
+	logging.basicConfig(level=logging.INFO)
+
 	logging.info("Starting scheduler worker process")
 	while True:
 		try:
@@ -114,16 +118,19 @@ def _run_tasks(db_session_factory: scoped_session):
 
 		db.begin()
 		run: RepeatableTaskRun = task.run(db, task.run_time_last_or_created_utc)
+		task_debug_identifier = f"(ID {run.task_id}:{task.label}, run ID {run.id})"
+		logging.info(f"Running task {task_debug_identifier}")
 		if run.exception:
 			# TODO: collect errors somewhere other than just here and in the 
 			# task run object itself (see #220).
 			logging.exception(
-				f"Exception running task (ID {run.task_id}, run ID {run.id})", 
+				f"Exception running task {task_debug_identifier}", 
 				exc_info=run.exception
 			)
 			db.rollback()
 		else:
 			db.commit()
+			logging.info(f"Finished task {task_debug_identifier}")
 
 		with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
 			task.run_state_enum = ScheduledTaskState.WAITING
