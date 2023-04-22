@@ -13,7 +13,7 @@ import redis
 from sqlalchemy.orm import relationship, Session
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.sql.sqltypes import (Boolean, DateTime, Integer, SmallInteger,
-                                     Text, Time)
+                                     Text, Time, String)
 
 from files.classes.base import CreatedBase
 from files.helpers.time import format_age, format_datetime
@@ -246,6 +246,9 @@ class RepeatableTask(CreatedBase):
 	
 	frequency_day = Column(SmallInteger, nullable=False)
 	time_of_day_utc = Column(Time, nullable=False)
+
+	# used for the cron hardcoding system
+	label = Column(String, nullable=True, unique=True)
 
 	runs = relationship("RepeatableTaskRun", back_populates="task")
 
