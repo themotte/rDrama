@@ -116,10 +116,12 @@ def _run_tasks(db_session_factory: scoped_session):
 			task.run_time_last = now
 			task.run_state_enum = ScheduledTaskState.RUNNING
 
+		task_debug_identifier = f"(ID {task.id}:{task.label})"
+		logging.info(f"Running task {task_debug_identifier}")
+
 		db.begin()
 		run: RepeatableTaskRun = task.run(db, task.run_time_last_or_created_utc)
-		task_debug_identifier = f"(ID {run.task_id}:{task.label}, run ID {run.id})"
-		logging.info(f"Running task {task_debug_identifier}")
+
 		if run.exception:
 			# TODO: collect errors somewhere other than just here and in the 
 			# task run object itself (see #220).
