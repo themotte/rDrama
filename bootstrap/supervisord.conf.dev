@@ -12,7 +12,7 @@ supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 
 [program:service]
 directory=/service
-command=sh -c 'python3 -m flask db upgrade && WERKZEUG_DEBUG_PIN=off ENABLE_SERVICES=true python3 -m flask --debug run --host=0.0.0.0 --port=80'
+command=sh -c 'WERKZEUG_DEBUG_PIN=off ENABLE_SERVICES=true python3 -m flask --debug run --host=0.0.0.0 --port=80'
 stdout_logfile=/dev/stdout
 stdout_logfile_maxbytes=0
 stderr_logfile=/dev/stderr

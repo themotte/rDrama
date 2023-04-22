@@ -19,13 +19,14 @@ EXPOSE 80/tcp
 
 ENV FLASK_APP=files/cli:app
 
+CMD [ "bootstrap/init.sh" ]
+
 
 ###################################################################
 # Release container
 FROM base AS release
 
 COPY bootstrap/supervisord.conf.release /etc/supervisord.conf
-CMD [ "/usr/local/bin/supervisord", "-c", "/etc/supervisord.conf" ]
 
 
 ###################################################################
@@ -37,7 +38,6 @@ COPY thirdparty/sqlalchemy-easy-profile sqlalchemy-easy-profile
 RUN cd sqlalchemy-easy-profile && python3 setup.py install
 
 COPY bootstrap/supervisord.conf.dev /etc/supervisord.conf
-CMD [ "/usr/local/bin/supervisord", "-c", "/etc/supervisord.conf" ]
 
 
 ###################################################################
