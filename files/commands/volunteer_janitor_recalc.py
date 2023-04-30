@@ -14,7 +14,6 @@ from files.helpers.math import saturate, remap, lerp
 
 import logging
 import random
-from tabulate import tabulate
 
 from files.__main__ import app, db_session
 
@@ -89,6 +88,8 @@ def _compile_records(db):
 def dbg_commentdump(cid, records_compiled, users, user_accuracy):
     print(f"Dump for comment {cid}")
 
+    from tabulate import tabulate
+
     dats = []
     for key, value in [(key, value) for key, value in records_compiled.items() if key[1] == cid]:
         uid = key[0]
@@ -101,6 +102,8 @@ def dbg_commentdump(cid, records_compiled, users, user_accuracy):
 
 def dbg_userdump(uid, records_compiled, users, comment_calculated_badness_user):
     print(f"Dump for user {users[uid]['username']}")
+
+    from tabulate import tabulate
 
     dats = []
     for key, value in [(key, value) for key, value in records_compiled.items() if key[0] == uid]:
@@ -305,6 +308,9 @@ def volunteer_janitor_recalc(db: Session, diagnostics: bool = False):
 
     if diagnostics:
         # debug print
+
+        from tabulate import tabulate
+        
         commentscores = [{
             "link": f"https://themotte.org/comment/{cid}",
             "badness": comment_calculated_badness_admin[cid],
