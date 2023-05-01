@@ -87,52 +87,54 @@ def _run_tasks(db_session_factory: scoped_session):
 	running task does not lock the entire table for its entire run, which would
 	for example, prevent any statistics about status from being gathered.
 	'''
-	db: Session = db_session_factory()
 
-	with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
-		now: datetime = datetime.now(tz=timezone.utc)
-
-		tasks: list[RepeatableTask] = db.query(RepeatableTask).filter(
-			RepeatableTask.enabled == True,
-			RepeatableTask.frequency_day != int(DayOfWeek.NONE),
-			RepeatableTask.run_state != int(ScheduledTaskState.RUNNING),
-			(RepeatableTask.run_time_last <= now)
-				| (RepeatableTask.run_time_last == None),
-		).all()
-
-		# SQLA needs to query again for the inherited object info anyway
-		# so it's fine that objects in the list get expired on txn end.
-		# Prefer more queries to risk of task run duplication.
-		tasks_to_run: list[RepeatableTask] = list(filter(
-			lambda task: task.can_run(now),	tasks))
-
-	for task in tasks_to_run:
-		now = datetime.now(tz=timezone.utc)
+	db: Session
+	with db_session_factory() as db:
 		with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
-			# We need to check for runnability again because we don't mutex
-			# the RepeatableTask.run_state until now.
-			if not task.can_run(now):
-				continue
-			task.run_time_last = now
-			task.run_state_enum = ScheduledTaskState.RUNNING
+			now: datetime = datetime.now(tz=timezone.utc)
 
-		task_debug_identifier = f"(ID {task.id}:{task.label})"
-		logging.info(f"Running task {task_debug_identifier}")
+			tasks: list[RepeatableTask] = db.query(RepeatableTask).filter(
+				RepeatableTask.enabled == True,
+				RepeatableTask.frequency_day != int(DayOfWeek.NONE),
+				RepeatableTask.run_state != int(ScheduledTaskState.RUNNING),
+				(RepeatableTask.run_time_last <= now)
+					| (RepeatableTask.run_time_last == None),
+			).all()
 
-		db.begin()
-		run: RepeatableTaskRun = task.run(db, task.run_time_last_or_created_utc)
+			# SQLA needs to query again for the inherited object info anyway
+			# so it's fine that objects in the list get expired on txn end.
+			# Prefer more queries to risk of task run duplication.
+			tasks_to_run: list[RepeatableTask] = list(filter(
+				lambda task: task.can_run(now),	tasks))
 
-		if run.exception:
-			# TODO: collect errors somewhere other than just here and in the 
-			# task run object itself (see #220).
-			logging.exception(
-				f"Exception running task {task_debug_identifier}", 
-				exc_info=run.exception
-			)
-			db.rollback()
-		else:
-			db.commit()
-			logging.info(f"Finished task {task_debug_identifier}")
+		for task in tasks_to_run:
+			now = datetime.now(tz=timezone.utc)
+			with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
+				# We need to check for runnability again because we don't mutex
+				# the RepeatableTask.run_state until now.
+				if not task.can_run(now):
+					continue
+				task.run_time_last = now
+				task.run_state_enum = ScheduledTaskState.RUNNING
 
-		with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
-			task.run_state_enum = ScheduledTaskState.WAITING
+			# This *must* happen before we start doing db queries, including sqlalchemy db queries
+			db.begin()
+			task_debug_identifier = f"(ID {task.id}:{task.label})"
+			logging.info(f"Running task {task_debug_identifier}")
+			
+			run: RepeatableTaskRun = task.run(db, task.run_time_last_or_created_utc)
+
+			if run.exception:
+				# TODO: collect errors somewhere other than just here and in the 
+				# task run object itself (see #220).
+				logging.exception(
+					f"Exception running task {task_debug_identifier}", 
+					exc_info=run.exception
+				)
+				db.rollback()
+			else:
+				db.commit()
+				logging.info(f"Finished task {task_debug_identifier}")
+
+			with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
+				task.run_state_enum = ScheduledTaskState.WAITING
