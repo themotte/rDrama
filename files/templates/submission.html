@@ -494,7 +494,18 @@
 						{% for c in p.comments %}
 							{% if not (v and v.id==c.author_id) and not c.voted %}
 								if ({{c.created_utc*1000}} > lastCount.t) 
-								try {document.getElementById("comment-{{c.id}}-only").classList.add('unread')}
+								try {
+									document.getElementById("comment-{{c.id}}-only").classList.add('unread')
+<<<<<<< HEAD
+<<<<<<< HEAD
+									document.getElementById("comment-{{c.id}}").querySelector(".comment-user-info").innerHTML += "<span>~new~</span>";
+=======
+									document.getElementById("comment-user-info").innerHTML += "<span class='new'>~new~</span>";
+>>>>>>> parent of 58053d818 (previously it didn't display at all this makes it actually work it does look ugly though)
+=======
+									document.getElementById("comment-{{c.id}}-only").innerHTML += "<span class='new'>~new~</span>";
+>>>>>>> parent of 9e499c42f (~new~ test thingy for searching unread comments.)
+								}
 								catch(e) {}
 							{% endif %}
 						{% endfor %}
