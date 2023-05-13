@@ -497,8 +497,6 @@
 								try {
 									document.getElementById("comment-{{c.id}}-only").classList.add('unread')
 									document.getElementById("comment-{{c.id}}").querySelector(".comment-user-info").innerHTML += "<span>~new~</span>";
-									document.getElementById("comment-user-info").innerHTML += "<span class='new'>~new~</span>";
-									document.getElementById("comment-{{c.id}}-only").innerHTML += "<span class='new'>~new~</span>";
 								}
 								catch(e) {}
 							{% endif %}
