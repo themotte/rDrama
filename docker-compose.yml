@@ -27,7 +27,7 @@ services:
       - "6379:6379"
 
   postgres:
-    image: postgres:12.3
+    image: postgres:12.14
     # command: ["postgres", "-c", "log_statement=all"]
     # uncomment this if u wanna output all SQL queries to the console
     volumes:
