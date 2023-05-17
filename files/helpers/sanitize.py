@@ -184,9 +184,6 @@ def sanitize_raw(sanitized:Optional[str], allow_newlines:bool, length_limit:Opti
 
 @with_gevent_timeout(2)
 def sanitize(sanitized, alert=False, comment=False, edit=False):
-	# double newlines, eg. hello\nworld becomes hello\n\nworld, which later becomes <p>hello</p><p>world</p>
-	sanitized = linefeeds_regex.sub(r'\1\n\n\2', sanitized)
-
 	if MULTIMEDIA_EMBEDDING_ENABLED:
 		# turn eg. https://wikipedia.org/someimage.jpg into ![](https://wikipedia.org/someimage.jpg)
 		sanitized = image_regex.sub(r'\1![](\2)\4', sanitized)
