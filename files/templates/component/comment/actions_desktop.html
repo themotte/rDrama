@@ -47,11 +47,11 @@
 
 	{% if v.admin_level >= 2 %}
 		{% if "/reported/" in request.path %}
-			<button class="dropdown-item list-inline-item text-success" onclick="approveComment('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
-			<button class="dropdown-item list-inline-item text-danger" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
+			<button class="dropdown-item list-inline-item text-success" onclick="approveCommentDesktop('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
+			<button class="dropdown-item list-inline-item text-danger" onclick="removeCommentDesktop('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
 		{% else %}
-			<button id="approve-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.is_banned %}d-md-block{% endif %} text-success" onclick="approveComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
-			<button id="remove-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.is_banned %}d-md-block{% endif %} text-danger" onclick="removeComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
+			<button id="approve-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.is_banned %}d-md-block{% endif %} text-success" onclick="approveCommentDesktop('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
+			<button id="remove-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.is_banned %}d-md-block{% endif %} text-danger" onclick="removeCommentDesktop('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
 		{% endif %}
 	{% endif %}
 
