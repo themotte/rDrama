@@ -7,6 +7,7 @@ from typing import Final
 
 from flask import g
 from sqlalchemy.sql.expression import not_
+from sqlalchemy import func
 
 from files.__main__ import cache
 from files.classes.submission import Submission
@@ -43,7 +44,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 	if (ccmode == "true"):
 		posts = posts.filter(Submission.club == True)
 
-	posts = posts.filter_by(is_banned=False, private=False, deleted_utc = 0)
+	posts = posts.filter_by(is_banned=False, private=False, state_user_deleted_utc=None)
 
 	if ccmode == "false" and not gt and not lt:
 		posts = posts.filter_by(stickied=None)
@@ -106,7 +107,7 @@ def userpagelisting(u:User, v=None, page=1, sort="new", t="all"):
 	posts = g.db.query(Submission.id).filter_by(author_id=u.id, is_pinned=False)
 
 	if not (v and (v.admin_level >= 2 or v.id == u.id)):
-		posts = posts.filter_by(deleted_utc=0, is_banned=False, private=False, ghost=False)
+		posts = posts.filter_by(state_user_deleted_utc=None, is_banned=False, private=False, ghost=False)
 
 	posts = apply_time_filter(posts, t, Submission)
 	posts = sort_objects(posts, sort, Submission)
@@ -118,7 +119,7 @@ def userpagelisting(u:User, v=None, page=1, sort="new", t="all"):
 
 @cache.memoize(timeout=CHANGELOGLIST_TIMEOUT_SECS)
 def changeloglist(v=None, sort="new", page=1, t="all"):
-	posts = g.db.query(Submission.id).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
+	posts = g.db.query(Submission.id).filter_by(is_banned=False, private=False,).filter(Submission.state_user_deleted_utc == None)
 
 	if v.admin_level < 2:
 		posts = posts.filter(Submission.author_id.notin_(v.userblocks))

@@ -428,7 +428,7 @@ def api_is_repost():
 	search_url = sql_ilike_clean(url)
 	repost = g.db.query(Submission).filter(
 		Submission.url.ilike(search_url),
-		Submission.deleted_utc == 0,
+		Submission.state_user_deleted_utc == None,
 		Submission.is_banned == False
 	).first()
 	if repost: return {'permalink': repost.permalink}
@@ -494,7 +494,7 @@ def _duplicate_check(search_url:Optional[str]) -> Optional[werkzeug.wrappers.Res
 	if not search_url: return None
 	repost = g.db.query(Submission).filter(
 		func.lower(Submission.url) == search_url.lower(),
-		Submission.deleted_utc == 0,
+		Submission.state_user_deleted_utc == None,
 		Submission.is_banned == False
 	).first()
 	if repost and SITE != 'localhost': 
@@ -507,7 +507,7 @@ def _duplicate_check2(
 		validated_post:validators.ValidatedSubmissionLike) -> Optional[werkzeug.wrappers.Response]:
 	dup = g.db.query(Submission).filter(
 		Submission.author_id == user_id,
-		Submission.deleted_utc == 0,
+		Submission.state_user_deleted_utc == None,
 		Submission.title == validated_post.title,
 		Submission.url == validated_post.url,
 		Submission.body == validated_post.body
@@ -603,7 +603,7 @@ def delete_post_pid(pid, v):
 	if post.author_id != v.id:
 		abort(403)
 
-	post.deleted_utc = int(time.time())
+	post.state_user_deleted_utc = datetime.now()
 	post.is_pinned = False
 	post.stickied = None
 
@@ -621,7 +621,7 @@ def delete_post_pid(pid, v):
 def undelete_post_pid(pid, v):
 	post = get_post(pid)
 	if post.author_id != v.id: abort(403)
-	post.deleted_utc = 0
+	post.state_user_deleted_utc = None
 
 	g.db.add(post)
 

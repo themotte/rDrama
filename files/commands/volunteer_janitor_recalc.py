@@ -28,14 +28,14 @@ def _compile_records(db):
 
     # get the info we need for all mentioned posts
     reported_comment_ids = {record.comment_id for record in vrecords}
-    reported_comments = db.query(Comment).where(Comment.id.in_(reported_comment_ids)).options(sqlalchemy.orm.load_only('id', 'deleted_utc'))
+    reported_comments = db.query(Comment).where(Comment.id.in_(reported_comment_ids)).options(sqlalchemy.orm.load_only('id', 'state_user_deleted_utc'))
     reported_comments = {comment.id: comment for comment in reported_comments}
 
     # get our compiled data
     records_compiled = {}
     for record in vrecords:
         # we're just going to ignore deleted comments entirely
-        if reported_comments[record.comment_id].deleted_utc != 0:
+        if reported_comments[record.comment_id].state_user_deleted_utc != None:
             continue
 
         # unique identifier for user/comment report pair

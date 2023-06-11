@@ -27,7 +27,6 @@ class Submission(CreatedBase):
 	bannedfor = Column(Boolean)
 	ghost = Column(Boolean, default=False, nullable=False)
 	views = Column(Integer, default=0, nullable=False)
-	deleted_utc = Column(Integer, default=0, nullable=False)
 	distinguish_level = Column(Integer, default=0, nullable=False)
 	stickied = Column(String)
 	stickied_utc = Column(Integer)
@@ -53,15 +52,21 @@ class Submission(CreatedBase):
 	filter_state = Column(String, nullable=False)
 	task_id = Column(Integer, ForeignKey("tasks_repeatable_scheduled_submissions.id"))
 
+	# Visibility states here
+	state_user_deleted_utc = Column(DateTime, nullable=True) # null if it hasn't been deleted by the user
+	# TBD: state_mod
+	# TBD: state_mod_set_by
+	# TBD: state_report
+
 	Index('fki_submissions_approver_fkey', is_approved)
 	Index('post_app_id_idx', app_id)
-	Index('subimssion_binary_group_idx', is_banned, deleted_utc, over_18)
+	Index('subimssion_binary_group_idx', is_banned, state_user_deleted_utc, over_18)
 	Index('submission_isbanned_idx', is_banned)
-	Index('submission_isdeleted_idx', deleted_utc)
+	Index('submission_isdeleted_idx', state_user_deleted_utc)
 
 	@declared_attr
 	def submission_new_sort_idx(self):
-		return Index('submission_new_sort_idx', self.is_banned, self.deleted_utc, self.created_utc.desc(), self.over_18)
+		return Index('submission_new_sort_idx', self.is_banned, self.state_user_deleted_utc, self.created_utc.desc(), self.over_18)
 
 	Index('submission_pinned_idx', is_pinned)
 	Index('submissions_author_index', author_id)
@@ -103,7 +108,7 @@ class Submission(CreatedBase):
 		author.post_count = db.query(Submission.id).filter_by(
 			author_id=self.author_id, 
 			is_banned=False, 
-			deleted_utc=0).count()
+			state_user_deleted_utc=None).count()
 		db.add(author)
 
 	def publish(self):
@@ -231,7 +236,7 @@ class Submission(CreatedBase):
 				'permalink': self.permalink,
 				'shortlink': self.shortlink,
 				'is_banned': bool(self.is_banned),
-				'deleted_utc': self.deleted_utc,
+				'state_user_deleted_utc': self.state_user_deleted_utc,
 				'created_utc': self.created_utc,
 				'id': self.id,
 				'title': self.title,
@@ -266,15 +271,15 @@ class Submission(CreatedBase):
 	def json_core(self):
 		if self.is_banned:
 			return {'is_banned': True,
-					'deleted_utc': self.deleted_utc,
+					'state_user_deleted_utc': self.state_user_deleted_utc,
 					'ban_reason': self.ban_reason,
 					'id': self.id,
 					'title': self.title,
 					'permalink': self.permalink,
 					}
-		elif self.deleted_utc:
+		elif self.state_user_deleted_utc:
 			return {'is_banned': bool(self.is_banned),
-					'deleted_utc': True,
+					'state_user_deleted_utc': self.state_user_deleted_utc,
 					'id': self.id,
 					'title': self.title,
 					'permalink': self.permalink,
@@ -287,7 +292,7 @@ class Submission(CreatedBase):
 	def json(self):
 		data=self.json_core
 		
-		if self.deleted_utc or self.is_banned:
+		if self.state_user_deleted_utc or self.is_banned:
 			return data
 
 		data["author"]='👻' if self.ghost else self.author.json_core

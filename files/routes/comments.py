@@ -149,7 +149,7 @@ def api_comment(v):
 
 	existing = g.db.query(Comment.id).filter(
 		Comment.author_id == v.id,
-		Comment.deleted_utc == 0,
+		Comment.state_user_deleted_utc == None,
 		Comment.parent_comment_id == parent_comment_id,
 		Comment.parent_submission == parent_post.id,
 		Comment.body_html == body_html
@@ -332,9 +332,9 @@ def edit_comment(cid, v):
 @auth_required
 def delete_comment(cid, v):
 	c = get_comment(cid, v=v)
-	if c.deleted_utc: abort(409)
+	if c.state_user_deleted_utc: abort(409)
 	if c.author_id != v.id: abort(403)
-	c.deleted_utc = int(time.time())
+	c.state_user_deleted_utc = time.time()
 	# TODO: update stateful counters
 	g.db.add(c)
 	g.db.commit()
@@ -346,9 +346,9 @@ def delete_comment(cid, v):
 @auth_required
 def undelete_comment(cid, v):
 	c = get_comment(cid, v=v)
-	if not c.deleted_utc: abort(409)
+	if not c.state_user_deleted_utc: abort(409)
 	if c.author_id != v.id: abort(403)
-	c.deleted_utc = 0
+	c.state_user_deleted_utc = None
 	# TODO: update stateful counters
 	g.db.add(c)
 	g.db.commit()

@@ -80,8 +80,8 @@ class ScheduledSubmissionTask(RepeatableTask):
 	# HTML template for previewing a submitted task
 
 	@property
-	def deleted_utc(self) -> int:
-		return int(not self.task.enabled)
+	def state_user_deleted_utc(self) -> int:
+		return self.task.enabled and 1 or None
 
 	@functools.cached_property
 	def title_html(self) -> str:

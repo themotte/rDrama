@@ -31,7 +31,6 @@ class Comment(CreatedBase):
 	ghost = Column(Boolean, default=False, nullable=False)
 	bannedfor = Column(Boolean)
 	distinguish_level = Column(Integer, default=0, nullable=False)
-	deleted_utc = Column(Integer, default=0, nullable=False)
 	is_approved = Column(Integer, ForeignKey("users.id"))
 	level = Column(Integer, default=1, nullable=False)
 	parent_comment_id = Column(Integer, ForeignKey("comments.id"))
@@ -51,6 +50,12 @@ class Comment(CreatedBase):
 	ban_reason = Column(String)
 	filter_state = Column(String, nullable=False)
 	volunteer_janitor_badness = Column(Float, default=0.5, nullable=False)
+
+	# Visibility states here
+	state_user_deleted_utc = Column(DateTime, nullable=True) # null if it hasn't been deleted by the user
+	# TBD: state_mod
+	# TBD: state_mod_set_by
+	# TBD: state_report
 
 	Index('comment_parent_index', parent_comment_id)
 	Index('comment_post_id_index', parent_submission)
@@ -230,7 +235,7 @@ class Comment(CreatedBase):
 			'created_utc': self.created_utc,
 			'edited_utc': self.edited_utc or 0,
 			'is_banned': bool(self.is_banned),
-			'deleted_utc': self.deleted_utc,
+			'state_user_deleted_utc': self.state_user_deleted_utc,
 			'is_nsfw': self.over_18,
 			'permalink': f'/comment/{self.id}',
 			'is_pinned': self.is_pinned,
@@ -263,8 +268,8 @@ class Comment(CreatedBase):
 					'level': self.level,
 					'parent': self.parent_fullname
 					}
-		elif self.deleted_utc:
-			data = {'deleted_utc': self.deleted_utc,
+		elif self.state_user_deleted_utc:
+			data = {'state_user_deleted_utc': self.state_user_deleted_utc,
 					'id': self.id,
 					'post': self.post.id if self.post else 0,
 					'level': self.level,
@@ -282,7 +287,7 @@ class Comment(CreatedBase):
 	@lazy
 	def json(self):
 		data = self.json_core
-		if self.deleted_utc or self.is_banned: return data
+		if self.state_user_deleted_utc or self.is_banned: return data
 		data["author"] = '👻' if self.ghost else self.author.json_core
 		data["post"] = self.post.json_core if self.post else ''
 		return data

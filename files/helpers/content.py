@@ -110,7 +110,7 @@ class ModerationState:
 		return cls(
 			removed=bool(target.is_banned or target.filter_state == 'removed'),
 			removed_by_name=target.ban_reason,  # type: ignore
-			deleted=bool(target.deleted_utc != 0),
+			deleted=bool(target.state_user_deleted_utc != None),
 			reports_ignored=bool(target.filter_state == 'ignored'),
 			filtered=bool(target.filter_state == 'filtered'),
 			op_shadowbanned=bool(target.author.shadowbanned),

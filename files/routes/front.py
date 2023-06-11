@@ -27,7 +27,7 @@ def unread(v):
 		Notification.read == False,
 		Notification.user_id == v.id,
 		Comment.is_banned == False,
-		Comment.deleted_utc == 0,
+		Comment.state_user_deleted_utc == None,
 		Comment.author_id != AUTOJANNY_ID,
 	).order_by(Notification.created_utc.desc()).all()
 
@@ -101,7 +101,7 @@ def notifications(v):
 		comments = g.db.query(Comment, Notification).join(Notification, Notification.comment_id == Comment.id).filter(
 			Notification.user_id == v.id,
 			Comment.is_banned == False,
-			Comment.deleted_utc == 0,
+			Comment.state_user_deleted_utc == None,
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('%<p>New site mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Notification.created_utc.desc())
@@ -250,7 +250,7 @@ def changelog(v):
 
 @app.get("/random_post")
 def random_post():
-	p = g.db.query(Submission.id).filter(Submission.deleted_utc == 0, Submission.is_banned == False, Submission.private == False).order_by(func.random()).first()
+	p = g.db.query(Submission.id).filter(Submission.state_user_deleted_utc == None, Submission.is_banned == False, Submission.private == False).order_by(func.random()).first()
 
 	if p: p = p[0]
 	else: abort(404)
@@ -308,7 +308,7 @@ def get_comments_idlist(page=1, v=None, sort="new", t="all", gt=0, lt=0):
 		comments = comments.filter(
 			Comment.author_id.notin_(v.userblocks),
 			Comment.is_banned == False,
-			Comment.deleted_utc == 0,
+			Comment.state_user_deleted_utc == None,
 			Submission.private == False, # comment parent post not private
 			User.shadowbanned == None, # comment author not shadowbanned
 			Comment.filter_state.notin_(('filtered', 'removed')),
