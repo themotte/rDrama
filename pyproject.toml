@@ -47,6 +47,8 @@ optional = true
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
 tabulate = "*"
+pandas = "*"
+matplotlib = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

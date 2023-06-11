@@ -18,3 +18,6 @@ video.webm
 
 # Optional env file for some environments
 env
+
+# Diagnostic output
+output.svg
