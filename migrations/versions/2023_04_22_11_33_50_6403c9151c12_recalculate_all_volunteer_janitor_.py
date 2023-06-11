@@ -19,7 +19,9 @@ depends_on = None
 
 
 def upgrade():
-    volunteer_janitor_recalc_all_comments(Session(bind=op.get_bind()))
+    # this is now disabled because this code is no longer compatible with this version of the DB
+    #volunteer_janitor_recalc_all_comments(Session(bind=op.get_bind()))
+    pass
 
 
 def downgrade():

@@ -66,7 +66,7 @@ def update_author_comment_count(comment, delta):
 		Comment.author_id == comment.author_id,
 		Comment.parent_submission != None,
 		Comment.is_banned == False,
-		Comment.deleted_utc == 0,
+		Comment.state_user_deleted_utc == None,
 	).count()
 	g.db.add(comment.author)
 

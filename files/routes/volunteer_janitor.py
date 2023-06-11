@@ -44,8 +44,7 @@ def get_duty(u: User) -> Optional[VolunteerDutyJanitor]:
     # find reported not-deleted comments not made by the current user
     reported_comments = g.db.query(Comment) \
         .where(Comment.filter_state == 'reported') \
-        .where(Comment.deleted_utc == 0) \
-        .where(Comment.is_approved == None) \
+        .where(Comment.state_user_deleted_utc == None) \
         .where(Comment.author_id != u.id) \
         .with_entities(Comment.id)
 
