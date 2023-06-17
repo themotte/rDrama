@@ -52,7 +52,7 @@ class Comment(CreatedBase):
 	volunteer_janitor_badness = Column(Float, default=0.5, nullable=False)
 
 	# Visibility states here
-	state_user_deleted_utc = Column(DateTime, nullable=True) # null if it hasn't been deleted by the user
+	state_user_deleted_utc = Column(DateTime(timezone=True), nullable=True) # null if it hasn't been deleted by the user
 	# TBD: state_mod
 	# TBD: state_mod_set_by
 	# TBD: state_report
