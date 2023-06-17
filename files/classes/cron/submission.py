@@ -1,5 +1,5 @@
 import functools
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import Column, ForeignKey
@@ -80,8 +80,8 @@ class ScheduledSubmissionTask(RepeatableTask):
 	# HTML template for previewing a submitted task
 
 	@property
-	def state_user_deleted_utc(self) -> int:
-		return self.task.enabled and 1 or None
+	def state_user_deleted_utc(self) -> datetime | None:
+		return datetime.now(tz=timezone.utc) if not self.task.enabled else None
 
 	@functools.cached_property
 	def title_html(self) -> str:

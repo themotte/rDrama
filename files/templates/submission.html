@@ -512,7 +512,7 @@
 	</script>
 {% endif %}
 
-{% elif not p.replies and p.state_user_deleted_utc == None %}
+{% elif not p.replies and p.state_user_deleted_utc is none %}
 	<div class="comment-section text-center py-7" id="replies-of-{{p.id}}">
 		<div class="row no-gutters" id="placeholder-comment">	
 			<div class="col">			
