@@ -7,6 +7,7 @@ from files.helpers.media import process_image
 from files.helpers.wrappers import *
 from files.routes.importstar import *
 
+from datetime import datetime, timezone
 
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
@@ -334,7 +335,7 @@ def delete_comment(cid, v):
 	c = get_comment(cid, v=v)
 	if c.state_user_deleted_utc: abort(409)
 	if c.author_id != v.id: abort(403)
-	c.state_user_deleted_utc = time.time()
+	c.state_user_deleted_utc = datetime.now(tz=timezone.utc)
 	# TODO: update stateful counters
 	g.db.add(c)
 	g.db.commit()

@@ -4,6 +4,8 @@ import urllib.parse
 from io import BytesIO
 from urllib.parse import ParseResult, urlparse
 
+from datetime import datetime, timezone
+
 import gevent
 import requests
 import werkzeug.wrappers
@@ -603,7 +605,7 @@ def delete_post_pid(pid, v):
 	if post.author_id != v.id:
 		abort(403)
 
-	post.state_user_deleted_utc = datetime.now()
+	post.state_user_deleted_utc = datetime.now(tz=timezone.utc)
 	post.is_pinned = False
 	post.stickied = None
 
