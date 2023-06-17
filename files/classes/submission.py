@@ -53,7 +53,7 @@ class Submission(CreatedBase):
 	task_id = Column(Integer, ForeignKey("tasks_repeatable_scheduled_submissions.id"))
 
 	# Visibility states here
-	state_user_deleted_utc = Column(DateTime, nullable=True) # null if it hasn't been deleted by the user
+	state_user_deleted_utc = Column(DateTime(timezone=True), nullable=True) # null if it hasn't been deleted by the user
 	# TBD: state_mod
 	# TBD: state_mod_set_by
 	# TBD: state_report
