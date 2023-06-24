@@ -194,7 +194,7 @@ def api_comment(v):
 				ma=ModAction(
 					user_id=AUTOJANNY_ID,
 					target_comment_id=comment.id,
-					kind="ban_comment",
+					kind="remove_comment",
 					_note="spam"
 					)
 				g.db.add(ma)

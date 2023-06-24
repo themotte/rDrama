@@ -475,7 +475,7 @@ def _do_antispam_submission_check(v:User, validated:validators.ValidatedSubmissi
 		ma=ModAction(
 				user_id=AUTOJANNY_ID,
 				target_submission_id=post.id,
-				kind="ban_post",
+				kind="remove_post",
 				_note="spam"
 		)
 		g.db.add(ma)

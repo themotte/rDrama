@@ -1,11 +1,11 @@
 function removeCommentBackend(post_id) {
-	url="/ban_comment/"+post_id
+	url="/remove_comment/"+post_id
 
 	post(url)
 }
 
 function approveCommentBackend(post_id) {
-	url="/unban_comment/"+post_id
+	url="/unremove_comment/"+post_id
 
 	post(url)
 }

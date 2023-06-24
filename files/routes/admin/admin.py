@@ -129,10 +129,10 @@ def revert_actions(v, username):
 
 	cutoff = int(time.time()) - 86400
 
-	posts = [x[0] for x in g.db.query(ModAction.target_submission_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind == 'ban_post').all()]
+	posts = [x[0] for x in g.db.query(ModAction.target_submission_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind == 'remove_post').all()]
 	posts = g.db.query(Submission).filter(Submission.id.in_(posts)).all()
 
-	comments = [x[0] for x in g.db.query(ModAction.target_comment_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind == 'ban_comment').all()]
+	comments = [x[0] for x in g.db.query(ModAction.target_comment_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind == 'remove_comment').all()]
 	comments = g.db.query(Comment).filter(Comment.id.in_(comments)).all()
 	
 	for item in posts + comments:
@@ -1079,10 +1079,10 @@ def unban_user(user_id, v):
 	else: return {"message": f"@{user.username} was unbanned!"}
 
 
-@app.post("/ban_post/<post_id>")
+@app.post("/remove_post/<post_id>")
 @limiter.exempt
 @admin_level_required(2)
-def ban_post(post_id, v):
+def remove_post(post_id, v):
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 
 	if not post:
@@ -1098,7 +1098,7 @@ def ban_post(post_id, v):
 	
 
 	ma=ModAction(
-		kind="ban_post",
+		kind="remove_post",
 		user_id=v.id,
 		target_submission_id=post.id,
 		)
@@ -1116,10 +1116,10 @@ def ban_post(post_id, v):
 	return {"message": "Post removed!"}
 
 
-@app.post("/unban_post/<post_id>")
+@app.post("/unremove_post/<post_id>")
 @limiter.exempt
 @admin_level_required(2)
-def unban_post(post_id, v):
+def unremove_post(post_id, v):
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 
 	if not post:
@@ -1127,7 +1127,7 @@ def unban_post(post_id, v):
 
 	if post.is_banned:
 		ma=ModAction(
-			kind="unban_post",
+			kind="unremove_post",
 			user_id=v.id,
 			target_submission_id=post.id,
 		)
@@ -1288,10 +1288,10 @@ def unsticky_comment(cid, v):
 	return {"message": "Comment unpinned!"}
 
 
-@app.post("/ban_comment/<c_id>")
+@app.post("/remove_comment/<c_id>")
 @limiter.exempt
 @admin_level_required(2)
-def api_ban_comment(c_id, v):
+def api_remove_comment(c_id, v):
 	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
 	if not comment:
 		abort(404)
@@ -1301,7 +1301,7 @@ def api_ban_comment(c_id, v):
 	comment.ban_reason = v.username
 	comment_on_unpublish(comment) # XXX: can cause discrepancies if removal state ≠ filter state
 	ma=ModAction(
-		kind="ban_comment",
+		kind="remove_comment",
 		user_id=v.id,
 		target_comment_id=comment.id,
 		)
@@ -1310,16 +1310,16 @@ def api_ban_comment(c_id, v):
 	return {"message": "Comment removed!"}
 
 
-@app.post("/unban_comment/<c_id>")
+@app.post("/unremove_comment/<c_id>")
 @limiter.exempt
 @admin_level_required(2)
-def api_unban_comment(c_id, v):
+def api_unremove_comment(c_id, v):
 	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
 	if not comment: abort(404)
 	
 	if comment.is_banned:
 		ma=ModAction(
-			kind="unban_comment",
+			kind="unremove_comment",
 			user_id=v.id,
 			target_comment_id=comment.id,
 			)

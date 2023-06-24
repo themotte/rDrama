@@ -60,11 +60,11 @@
 
 			{% if v.admin_level > 1 %}
 				{% if "/reported/" in request.path %}
-					{% if v.id != p.author.id %}<a class="dropdown-item list-inline-item text-danger" role="button" onclick="post_toast(this,'/ban_post/{{p.id}}')"><i class="fas fa-ban"></i>Remove</a>{% endif %}
-					<a class="dropdown-item list-inline-item text-success" role="button" onclick="post_toast(this,'/unban_post/{{p.id}}')"><i class="fas fa-check"></i>Approve</a>
+					{% if v.id != p.author.id %}<a class="dropdown-item list-inline-item text-danger" role="button" onclick="post_toast(this,'/remove_post/{{p.id}}')"><i class="fas fa-ban"></i>Remove</a>{% endif %}
+					<a class="dropdown-item list-inline-item text-success" role="button" onclick="post_toast(this,'/unremove_post/{{p.id}}')"><i class="fas fa-check"></i>Approve</a>
 				{% else %}
-					{% if v.id != p.author.id %}<a id="remove-{{p.id}}" class="dropdown-item {% if p.is_banned %}d-none{% endif %} list-inline-item text-danger" role="button" onclick="post_toast2(this,'/ban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-ban"></i>Remove</a>{% endif %}
-					<a id="approve-{{p.id}}" class="dropdown-item {% if not p.is_banned %}d-none{% endif %} list-inline-item text-success" role="button" onclick="post_toast2(this,'/unban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-check"></i>Approve</a>
+					{% if v.id != p.author.id %}<a id="remove-{{p.id}}" class="dropdown-item {% if p.is_banned %}d-none{% endif %} list-inline-item text-danger" role="button" onclick="post_toast2(this,'/remove_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-ban"></i>Remove</a>{% endif %}
+					<a id="approve-{{p.id}}" class="dropdown-item {% if not p.is_banned %}d-none{% endif %} list-inline-item text-success" role="button" onclick="post_toast2(this,'/unremove_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-check"></i>Approve</a>
 				{% endif %}
 
 				{% if p.oauth_app %}
