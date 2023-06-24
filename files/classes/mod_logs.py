@@ -100,7 +100,7 @@ ACTIONTYPES = {
 		"icon": 'fa-badge', 
 		"color": 'bg-danger'
 	},
-	'ban_comment': {
+	'remove_comment': {
 		"str": 'removed {self.target_link}', 
 		"icon": 'fa-comment', 
 		"color": 'bg-danger'
@@ -110,7 +110,7 @@ ACTIONTYPES = {
 		"icon": 'fa-globe', 
 		"color": 'bg-danger'
 	},
-	'ban_post': {
+	'remove_post': {
 		"str": 'removed post {self.target_link}', 
 		"icon": 'fa-feather-alt', 
 		"color": 'bg-danger'
@@ -300,7 +300,7 @@ ACTIONTYPES = {
 		"icon": 'fa-eye-slash', 
 		"color": 'bg-danger'
 	},
-	'unban_comment': {
+	'unremove_comment': {
 		"str": 'reinstated {self.target_link}', 
 		"icon": 'fa-comment', 
 		"color": 'bg-success'
@@ -310,7 +310,7 @@ ACTIONTYPES = {
 		"icon": 'fa-globe', 
 		"color": 'bg-success'
 	},
-	'unban_post': {
+	'unremove_post': {
 		"str": 'reinstated post {self.target_link}', 
 		"icon": 'fa-feather-alt', 
 		"color": 'bg-success'
