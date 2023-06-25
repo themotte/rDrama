@@ -200,8 +200,11 @@ def comment_on_publish(comment:Comment):
 		to_notify.add(parent.author_id)
 
 	for uid in to_notify:
-		notif = Notification(comment_id=comment.id, user_id=uid)
-		g.db.add(notif)
+		notif = g.db.query(Notification) \
+					.filter_by(comment_id=comment.id, user_id=uid).one_or_none()
+		if not notif:
+			notif = Notification(comment_id=comment.id, user_id=uid)
+			g.db.add(notif)
 
 	update_stateful_counters(comment, +1)
 
