@@ -38,7 +38,7 @@
 <meta charset="utf-8">
 <meta property="og:type" content="article">
 
-{% if comment_info and not comment_info.is_banned and not comment_info.state_user_deleted_utc %}
+{% if comment_info and comment_info.state_mod == StateMod.VISIBLE and not comment_info.state_user_deleted_utc %}
 <title>{{'@'+comment_info.author_name}} comments on "{{p.plaintitle(v)}} - {{SITE_TITLE}}"</title>
 
 
@@ -132,7 +132,7 @@
 
 <div class="row mb-3" style="background-color:var(--gray-600)">
 	<div id="post-root" class="col-12">
-		<div class="card border-0 mt-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+		<div class="card border-0 mt-3{% if p.state_mod == StateMod.REMOVED %} removed{% endif %}{% if p.state_mod == StateMod.FILTERED %} filtered{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 			<div id="post-{{p.id}}" class="{% if p.state_user_deleted_utc %}deleted {% endif %}d-flex flex-row-reverse flex-nowrap justify-content-end">
 
 				<div id="post-content" class="{% if p.state_user_deleted_utc %}deleted {% endif %}card-block w-100 my-md-auto">
@@ -157,7 +157,7 @@
 						{% if p.is_bot %} <i class="fas fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom"	title="Bot"></i>{% endif %}
 						{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
-						{% if v and p.filter_state == 'reported' and v.can_manage_reports() %}
+						{% if v and p.state_report == StateReport.REPORTED and v.can_manage_reports() %}
 							<a class="btn btn-primary" id="submission-report-button" role="button" style="padding:1px 5px; font-size:10px"onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags(v)}} Reports</a>
 						{% endif %}
 						{% if p.ghost %}
@@ -183,7 +183,7 @@
 						{% endif %}
 						&nbsp;&nbsp;{{p.views}} thread views
 					</div>
-					{% if v and p.filter_state == 'reported' and v.can_manage_reports() %}
+					{% if v and p.state_report == StateReport.REPORTED and v.can_manage_reports() %}
 					<div id="flaggers" class="flaggers d-none">
 						<strong><i class="far fa-fw fa-flag"></i> Reports:</strong>
 						<a class="btn btn-primary" style="margin:1px 5px" onclick="filter_new_status({{p.id}}, 'normal')">Approve</a>
@@ -257,8 +257,8 @@
 							{% endif %}
 							{{p.realbody(v) | safe}}
 
-							{% if p.is_banned and p.ban_reason %}
-								<div class="text-removed mb-0">removed by @{{p.ban_reason}}</div>
+							{% if p.state_mod == StateMod.REMOVED and p.state_mod_set_by %}
+								<div class="text-removed mb-0">removed by @{{p.state_mod_set_by}}</div>
 							{% endif %}
 
 						</div>
@@ -341,7 +341,7 @@
 					<div id="voting" class="voting d-none d-md-block mb-auto">
 						<div  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1')" class="post-{{p.id}}-up arrow-up mx-auto" onclick="location.href='/login?redirect={{request.path | urlencode}}';">
 						</div>
-						<span  class="post-{{p.id}}-score-none score text-muted{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+						<span  class="post-{{p.id}}-score-none score text-muted{% if p.controversial %} controversial{% endif %}"{% if p.state_mod == StateMod.VISIBLE %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 						<div {% if not ENABLE_DOWNVOTES %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1')" class="post-{{p.id}}-down arrow-down mx-auto" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></div>
 					</div>
 					{% endif %}

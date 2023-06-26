@@ -12,6 +12,7 @@ from sqlalchemy import func
 from files.__main__ import cache
 from files.classes.submission import Submission
 from files.classes.user import User
+from files.classes.visstate import StateMod
 from files.classes.votes import Vote
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.strings import sql_ilike_clean
@@ -30,7 +31,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 		posts = posts.filter(Submission.id.notin_(voted))
 
 	if not v or v.admin_level < 2:
-		filter_clause = (Submission.filter_state != 'filtered') & (Submission.filter_state != 'removed')
+		filter_clause = Submission.state_mod == StateMod.VISIBLE
 		if v:
 			filter_clause = filter_clause | (Submission.author_id == v.id)
 		posts = posts.filter(filter_clause)
@@ -44,7 +45,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 	if (ccmode == "true"):
 		posts = posts.filter(Submission.club == True)
 
-	posts = posts.filter_by(is_banned=False, private=False, state_user_deleted_utc=None)
+	posts = posts.filter_by(state_mod=StateMod.VISIBLE, private=False, state_user_deleted_utc=None)
 
 	if ccmode == "false" and not gt and not lt:
 		posts = posts.filter_by(stickied=None)
@@ -77,7 +78,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 	posts = posts[:size]
 
 	if page == 1 and ccmode == "false" and not gt and not lt:
-		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
+		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.state_mod == StateMod.VISIBLE)
 		if v:
 			if v.admin_level < 2:
 				pins = pins.filter(Submission.author_id.notin_(v.userblocks))
@@ -107,7 +108,7 @@ def userpagelisting(u:User, v=None, page=1, sort="new", t="all"):
 	posts = g.db.query(Submission.id).filter_by(author_id=u.id, is_pinned=False)
 
 	if not (v and (v.admin_level >= 2 or v.id == u.id)):
-		posts = posts.filter_by(state_user_deleted_utc=None, is_banned=False, private=False, ghost=False)
+		posts = posts.filter_by(state_user_deleted_utc=None, state_mod=StateMod.VISIBLE, private=False, ghost=False)
 
 	posts = apply_time_filter(posts, t, Submission)
 	posts = sort_objects(posts, sort, Submission)
@@ -119,7 +120,7 @@ def userpagelisting(u:User, v=None, page=1, sort="new", t="all"):
 
 @cache.memoize(timeout=CHANGELOGLIST_TIMEOUT_SECS)
 def changeloglist(v=None, sort="new", page=1, t="all"):
-	posts = g.db.query(Submission.id).filter_by(is_banned=False, private=False,).filter(Submission.state_user_deleted_utc == None)
+	posts = g.db.query(Submission.id).filter_by(state_mod=StateMod.VISIBLE, private=False,).filter(Submission.state_user_deleted_utc == None)
 
 	if v.admin_level < 2:
 		posts = posts.filter(Submission.author_id.notin_(v.userblocks))

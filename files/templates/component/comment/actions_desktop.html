@@ -19,7 +19,7 @@
 {% endif %}
 {% endif %}
 
-{% if v and v.admin_level >= 2 and c.filter_state == 'filtered' %}
+{% if v and v.admin_level >= 2 and c.state_mod == StateMod.FILTERED %}
 	<button class="btn" role="button" id="filter-approve" onclick="filter_new_comment_status({{ c.id }}, 'normal')"><span>Approve</span></button>
 	<button class="btn" role="button" id="filter-remove" onclick="filter_new_comment_status({{ c.id }}, 'removed')"><span>Remove</span></button>
 {% endif %}
@@ -50,8 +50,8 @@
 			<button class="dropdown-item list-inline-item text-success" onclick="approveCommentDesktop('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
 			<button class="dropdown-item list-inline-item text-danger" onclick="removeCommentDesktop('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
 		{% else %}
-			<button id="approve-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.is_banned %}d-md-block{% endif %} text-success" onclick="approveCommentDesktop('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
-			<button id="remove-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.is_banned %}d-md-block{% endif %} text-danger" onclick="removeCommentDesktop('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
+			<button id="approve-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.state_mod != StateMod.VISIBLE %}d-md-block{% endif %} text-success" onclick="approveCommentDesktop('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
+			<button id="remove-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.state_mod != StateMod.REMOVED %}d-md-block{% endif %} text-danger" onclick="removeCommentDesktop('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
 		{% endif %}
 	{% endif %}
 

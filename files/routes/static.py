@@ -6,6 +6,7 @@ from sqlalchemy import func
 from files.classes.award import AWARDS
 from files.classes.badges import BadgeDef
 from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
+from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.captcha import validate_captcha
 from files.helpers.config.const import *
@@ -77,13 +78,13 @@ def participation_stats(v):
 		"signups last 24h": users.filter(User.created_utc > day).count(),
 		"total posts": submissions.count(),
 		"posting users": g.db.query(Submission.author_id).distinct().count(),
-		"listed posts": submissions.filter_by(is_banned=False).filter(Submission.state_user_deleted_utc == None).count(),
-		"removed posts (by admins)": submissions.filter_by(is_banned=True).count(),
+		"listed posts": submissions.filter_by(Submission.state_mod == StateMod.VISIBLE).filter(Submission.state_user_deleted_utc == None).count(),
+		"removed posts (by admins)": submissions.filter_by(Submission.state_mod != StateMod.VISIBLE).count(),
 		"deleted posts (by author)": submissions.filter(Submission.state_user_deleted_utc != None).count(),
 		"posts last 24h": submissions.filter(Submission.created_utc > day).count(),
 		"total comments": comments.filter(Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count(),
 		"commenting users": g.db.query(Comment.author_id).distinct().count(),
-		"removed comments (by admins)": comments.filter_by(is_banned=True).count(),
+		"removed comments (by admins)": comments.filter_by(Comment.state_mod != StateMod.VISIBLE).count(),
 		"deleted comments (by author)": comments.filter(Comment.state_user_deleted_utc != None).count(),
 		"comments last_24h": comments.filter(Comment.created_utc > day, Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count(),
 		"post votes": g.db.query(Vote.submission_id).count(),
@@ -142,9 +143,9 @@ def cached_chart(kind, site):
 
 	daily_signups = [g.db.query(User.id).filter(User.created_utc < day_cutoffs[i], User.created_utc > day_cutoffs[i + 1]).count() for i in range(len(day_cutoffs) - 1)][::-1]
 
-	post_stats = [g.db.query(Submission.id).filter(Submission.created_utc < day_cutoffs[i], Submission.created_utc > day_cutoffs[i + 1], Submission.is_banned == False).count() for i in range(len(day_cutoffs) - 1)][::-1]
+	post_stats = [g.db.query(Submission.id).filter(Submission.created_utc < day_cutoffs[i], Submission.created_utc > day_cutoffs[i + 1], Submission.state_mod == StateMod.VISIBLE).count() for i in range(len(day_cutoffs) - 1)][::-1]
 
-	comment_stats = [g.db.query(Comment.id).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.is_banned == False, Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count() for i in range(len(day_cutoffs) - 1)][::-1]
+	comment_stats = [g.db.query(Comment.id).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.state_mod == StateMod.VISIBLE, Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count() for i in range(len(day_cutoffs) - 1)][::-1]
 
 	plt.rcParams["figure.figsize"] = (30, 20)
 
@@ -310,6 +311,7 @@ def submit_contact(v: Optional[User]):
 		level=1,
 		body_html=html,
 		sentto=MODMAIL_ID,
+		state_mod=StateMod.VISIBLE,
 	)
 	g.db.add(new_comment)
 	g.db.flush()

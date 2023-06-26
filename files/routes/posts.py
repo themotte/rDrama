@@ -15,6 +15,7 @@ from sqlalchemy.orm import Query
 import files.helpers.validators as validators
 from files.__main__ import app, db_session, limiter
 from files.classes import *
+from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.caching import invalidate_cache
 from files.helpers.config.const import *
@@ -120,7 +121,7 @@ def post_id(pid, anything=None, v=None):
 
 	if request.headers.get("Authorization"): return post.json
 	else:
-		if post.is_banned and not (v and (v.admin_level >= 2 or post.author_id == v.id)): template = "submission_banned.html"
+		if post.state_mod != StateMod.VISIBLE and not (v and (v.admin_level >= 2 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
 		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset)
 
@@ -431,7 +432,7 @@ def api_is_repost():
 	repost = g.db.query(Submission).filter(
 		Submission.url.ilike(search_url),
 		Submission.state_user_deleted_utc == None,
-		Submission.is_banned == False
+		Submission.state_mod == StateMod.VISIBLE
 	).first()
 	if repost: return {'permalink': repost.permalink}
 	else: return {'permalink': ''}
@@ -468,9 +469,9 @@ def _do_antispam_submission_check(v:User, validated:validators.ValidatedSubmissi
 
 	v.ban(reason="Spamming.", days=1)
 	for post in similar_posts + similar_urls:
-		post.is_banned = True
+		post.state_mod = StateMod.REMOVED
+		post.state_mod_set_by = "AutoJanny"
 		post.is_pinned = False
-		post.ban_reason = "AutoJanny"
 		g.db.add(post)
 		ma=ModAction(
 				user_id=AUTOJANNY_ID,
@@ -497,7 +498,7 @@ def _duplicate_check(search_url:Optional[str]) -> Optional[werkzeug.wrappers.Res
 	repost = g.db.query(Submission).filter(
 		func.lower(Submission.url) == search_url.lower(),
 		Submission.state_user_deleted_utc == None,
-		Submission.is_banned == False
+		Submission.state_mod == StateMod.VISIBLE
 	).first()
 	if repost and SITE != 'localhost': 
 		return redirect(repost.permalink)
@@ -577,7 +578,7 @@ def submit_post(v):
 		title=validated_post.title,
 		title_html=validated_post.title_html,
 		ghost=False,
-		filter_state='filtered' if v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts'] else 'normal',
+		state_mod=StateMod.FILTERED if v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts'] else StateMod.VISIBLE,
 		thumburl=validated_post.thumburl
 	)
 	post.submit(g.db)

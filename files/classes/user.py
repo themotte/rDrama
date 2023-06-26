@@ -18,6 +18,7 @@ from files.classes.notifications import Notification
 from files.classes.saves import CommentSaveRelationship, SaveRelationship
 from files.classes.subscriptions import Subscription
 from files.classes.userblock import UserBlock
+from files.classes.visstate import StateMod
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.const import *
 from files.helpers.config.environment import (CARD_VIEW,
@@ -335,7 +336,7 @@ class User(CreatedBase):
 	@property
 	@lazy
 	def notifications_count(self):
-		notifs = g.db.query(Notification.user_id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.is_banned == False, Comment.state_user_deleted_utc == None)
+		notifs = g.db.query(Notification.user_id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None)
 		
 		if not self.shadowbanned and self.admin_level < 3:
 			notifs = notifs.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
@@ -350,7 +351,7 @@ class User(CreatedBase):
 	@property
 	@lazy
 	def reddit_notifications_count(self):
-		return g.db.query(Notification.user_id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.is_banned == False, Comment.state_user_deleted_utc == None, Comment.body_html.like('%<p>New site mention: <a href="https://old.reddit.com/r/%'), Comment.parent_submission == None, Comment.author_id == NOTIFICATIONS_ID).count()
+		return g.db.query(Notification.user_id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, Comment.body_html.like('%<p>New site mention: <a href="https://old.reddit.com/r/%'), Comment.parent_submission == None, Comment.author_id == NOTIFICATIONS_ID).count()
 
 	@property
 	@lazy
@@ -528,7 +529,7 @@ class User(CreatedBase):
 	@lazy
 	def saved_idlist(self, page=1):
 		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).filter_by(user_id=self.id).all()]
-		posts = g.db.query(Submission.id).filter(Submission.id.in_(saved), Submission.is_banned == False, Submission.state_user_deleted_utc == None)
+		posts = g.db.query(Submission.id).filter(Submission.id.in_(saved), Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None)
 
 		if self.admin_level < 2:
 			posts = posts.filter(Submission.author_id.notin_(self.userblocks))
@@ -538,7 +539,7 @@ class User(CreatedBase):
 	@lazy
 	def saved_comment_idlist(self, page=1):
 		saved = [x[0] for x in g.db.query(CommentSaveRelationship.comment_id).filter_by(user_id=self.id).all()]
-		comments = g.db.query(Comment.id).filter(Comment.id.in_(saved), Comment.is_banned == False, Comment.state_user_deleted_utc == None)
+		comments = g.db.query(Comment.id).filter(Comment.id.in_(saved), Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None)
 
 		if self.admin_level < 2:
 			comments = comments.filter(Comment.author_id.notin_(self.userblocks))

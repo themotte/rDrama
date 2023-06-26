@@ -1,6 +1,7 @@
 from flask import g
 
 from files.__main__ import app, limiter
+from files.classes.visstate import StateReport
 from files.helpers.get import *
 from files.helpers.sanitize import filter_emojis_only
 from files.helpers.wrappers import *
@@ -31,8 +32,8 @@ def api_flag_post(pid, v):
 		# We only want to notify if the user is not permabanned
 		if not v.is_suspended_permanently:
 			g.db.query(Submission) \
-				.where(Submission.id == post.id, Submission.filter_state != 'ignored') \
-				.update({Submission.filter_state: 'reported'})
+				.where(Submission.id == post.id, Submission.state_report != StateReport.IGNORED) \
+				.update({Submission.state_report: StateReport.REPORTED})
 
 	g.db.commit()
 
@@ -53,8 +54,9 @@ def api_flag_comment(cid, v):
 	# We only want to notify if the user is not permabanned
 	if not v.is_suspended_permanently:
 		g.db.query(Comment) \
-				.where(Comment.id == comment.id, Comment.filter_state != 'ignored') \
-				.update({Comment.filter_state: 'reported'})
+				.where(Comment.id == comment.id, Comment.state_report != StateReport.IGNORED) \
+				.update({Comment.state_report: StateReport.REPORTED})
+
 	
 	g.db.commit()
 

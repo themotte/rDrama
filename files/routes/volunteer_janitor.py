@@ -4,6 +4,7 @@ from files.__main__ import app
 from files.classes.comment import Comment
 from files.classes.flags import CommentFlag
 from files.classes.user import User
+from files.classes.visstate import StateReport
 from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
 from files.helpers.volunteer_janitor import update_comment_badness
 from files.routes.volunteer_common import VolunteerDuty
@@ -43,7 +44,7 @@ def get_duty(u: User) -> Optional[VolunteerDutyJanitor]:
 
     # find reported not-deleted comments not made by the current user
     reported_comments = g.db.query(Comment) \
-        .where(Comment.filter_state == 'reported') \
+        .where(Comment.state_report == StateReport.REPORTED) \
         .where(Comment.state_user_deleted_utc == None) \
         .where(Comment.author_id != u.id) \
         .with_entities(Comment.id)
