@@ -1478,7 +1478,7 @@ def admin_nuke_user(v):
 @app.post("/admin/unnuke_user")
 @limiter.exempt
 @admin_level_required(3)
-def admin_nunuke_user(v):
+def admin_unnuke_user(v):
 	user=get_user(request.values.get("user"))
 
 	for post in g.db.query(Submission).filter_by(author_id=user.id).all():
