@@ -27,11 +27,11 @@
 						<button class="nobackground btn btn-link btn-block btn-lg text-danger text-left" role="button" onclick="post_toast(this,'/remove_post/{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-ban text-center mr-3"></i>Remove</button>
 						<button class="nobackground btn btn-link btn-block btn-lg text-success text-left" role="button" onclick="post_toast(this,'/unremove_post/{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-check text-center mr-3"></i>Approve</button>
 					{% else %}
-						<button id="remove2-{{p.id}}" class="{% if p.is_banned %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" role="button" onclick="post_toast2(this,'/remove_post/{{p.id}}','remove2-{{p.id}}','approve2-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-ban text-center mr-3"></i>Remove</button>
-						<button id="approve2-{{p.id}}" class="{% if not p.is_banned %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-success text-left"  role="button" onclick="post_toast2(this,'/unremove_post/{{p.id}}','remove2-{{p.id}}','approve2-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-check text-center mr-3"></i>Approve</button>
+						<button id="remove2-{{p.id}}" class="{% if p.state_mod == StateMod.Removed %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" role="button" onclick="post_toast2(this,'/remove_post/{{p.id}}','remove2-{{p.id}}','approve2-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-ban text-center mr-3"></i>Remove</button>
+						<button id="approve2-{{p.id}}" class="{% if p.state_mod == StateMod.Visible %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-success text-left"  role="button" onclick="post_toast2(this,'/unremove_post/{{p.id}}','remove2-{{p.id}}','approve2-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-check text-center mr-3"></i>Approve</button>
 					{% endif %}
 
-					{% if v and v.admin_level >= 2 and p.filter_state == 'filtered' %}
+					{% if v and v.admin_level >= 2 and p.state_mod == StateMod.Filtered %}
 						<button id="mobile-filter-approve-{{p.id}}" class="nobackground btn btn-link btn-block btn-lg text-success text-left" role="button" onclick="filter_new_status({{p.id}}, 'normal')"><i class="far fa-check text-center mr-3"></i>Filter Approve</a>
 						<button id="mobile-filter-remove-{{p.id}}" class="nobackground btn btn-link btn-block btn-lg text-danger text-left" role="button" onclick="filter_new_status({{p.id}}, 'removed')"><i class="far fa-ban text-center mr-3"></i>Filter Remove</a>
 					{% endif %}

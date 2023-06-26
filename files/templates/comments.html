@@ -81,10 +81,10 @@
 	{%- include 'component/comment/user_info.html' -%}
 
 	<div class="comment-body">
-		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if c.unread %}unread{% endif %} comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.state_user_deleted_utc %} deleted{% endif %}">
+		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if c.unread %}unread{% endif %} comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.state_mod == StateMod.Removed %} removed{% endif %}{% if c.state_mod == StateMod.Filtered %} filtered{% endif %}{% if c.state_user_deleted_utc %} deleted{% endif %}">
 			{%- include 'component/comment/reports.html'-%}
-			{% if c.is_banned and c.ban_reason %} {# TODO: shouldn't be visible. See #359 #}
-				<div id="comment-banned-warning" class="comment-text text-removed mb-0">removed by @{{c.ban_reason}}</div>
+			{% if c.state_mod == StateMod.Removed and c.state_mod_set_by and v and v.admin_level >= 2 %}
+				<div id="comment-banned-warning" class="comment-text text-removed mb-0">removed by @{{c.state_mod_set_by}}</div>
 			{% endif %}
 
 			<div id="comment-text-{{c.id}}" class="comment-text mb-0">

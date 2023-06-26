@@ -4336,6 +4336,9 @@ div.deleted {
 div.deleted.banned {
 	background-color: #964000 !important;
 }
+div.deleted.removed {
+	background-color: #964000 !important;
+}
 .text-admin {
 	color: var(--primary);
 }

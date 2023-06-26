@@ -1,5 +1,6 @@
 from files.__main__ import app, limiter
 from files.classes import *
+from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.comments import comment_on_publish
 from files.helpers.config.const import *
@@ -97,7 +98,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			
 	if request.headers.get("Authorization"): return top_comment.json
 	else: 
-		if post.is_banned and not (v and (v.admin_level >= 2 or post.author_id == v.id)): template = "submission_banned.html"
+		if post.state_mod != StateMod.Visible and not (v and (v.admin_level >= 2 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
 		return render_template(template, v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True)
 
@@ -188,8 +189,8 @@ def api_comment(v):
 					days=1)
 
 			for comment in similar_comments:
-				comment.is_banned = True
-				comment.ban_reason = "AutoJanny"
+				comment.state_mod = StateMod.Removed
+				comment.state_mod_set_by = "AutoJanny"
 				g.db.add(comment)
 				ma=ModAction(
 					user_id=AUTOJANNY_ID,
@@ -213,7 +214,7 @@ def api_comment(v):
 				body_html=body_html,
 				body=body[:COMMENT_BODY_LENGTH_MAXIMUM],
 				ghost=parent_post.ghost,
-				filter_state='filtered' if is_filtered else 'normal'
+				state_mod=StateMod.Filtered if is_filtered else StateMod.Visible,
 				)
 
 	c.upvotes = 1
@@ -287,8 +288,8 @@ def edit_comment(cid, v):
 					days=1)
 
 			for comment in similar_comments:
-				comment.is_banned = True
-				comment.ban_reason = "AutoJanny"
+				comment.state_mod = StateMod.Removed
+				comment.state_mod_set_by = "AutoJanny"
 				g.db.add(comment)
 
 			abort(403, "Too much spam!")
@@ -313,7 +314,7 @@ def edit_comment(cid, v):
 
 		g.db.add(c)
 		
-		if c.filter_state != 'filtered':
+		if c.state_mod == StateMod.Visible:
 			notify_users = NOTIFY_USERS(body, v)
 
 			for x in notify_users:

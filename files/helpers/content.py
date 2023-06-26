@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any, Optional
 from sqlalchemy.orm import Session
 
 from files.helpers.config.const import PERMS
+from files.classes.visstate import StateMod, StateReport
 
 if TYPE_CHECKING:
 	from files.classes import Comment, Submission, User
@@ -108,11 +109,11 @@ class ModerationState:
 	@classmethod
 	def from_submittable(cls, target: Submittable) -> "ModerationState":
 		return cls(
-			removed=bool(target.is_banned or target.filter_state == 'removed'),
-			removed_by_name=target.ban_reason,  # type: ignore
+			removed=bool(target.state_mod != StateMod.Visible),
+			removed_by_name=target.state_mod_set_by,  # type: ignore
 			deleted=bool(target.state_user_deleted_utc != None),
-			reports_ignored=bool(target.filter_state == 'ignored'),
-			filtered=bool(target.filter_state == 'filtered'),
+			reports_ignored=bool(target.state_report == StateReport.Ignored),
+			filtered=bool(target.state_mod == StateMod.Filtered),
 			op_shadowbanned=bool(target.author.shadowbanned),
 			op_id=target.author_id,  # type: ignore
 			op_name_safe=target.author_name

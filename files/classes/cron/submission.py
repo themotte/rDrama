@@ -8,6 +8,7 @@ from sqlalchemy.sql.sqltypes import Boolean, Integer, String, Text
 from files.classes.cron.tasks import (RepeatableTask, ScheduledTaskType,
                                       TaskRunContext)
 from files.classes.submission import Submission
+from files.classes.visstate import StateMod
 from files.helpers.config.const import SUBMISSION_TITLE_LENGTH_MAXIMUM
 from files.helpers.content import ModerationState, body_displayed
 from files.helpers.lazy import lazy
@@ -68,7 +69,7 @@ class ScheduledSubmissionTask(RepeatableTask):
 			body_html=self.body_html,
 			flair=self.flair,
 			ghost=self.ghost,
-			filter_state='normal',
+			state_mod=StateMod.Visible,
 			embed_url=self.embed_url,
 			task_id=self.id,
 		)
@@ -127,8 +128,8 @@ class ScheduledSubmissionTask(RepeatableTask):
 		return 0
 	
 	@property
-	def filter_state(self) -> str:
-		return 'normal'
+	def state_mod(self) -> StateMod:
+		return StateMod.Visible
 
 	def award_count(self, kind):
 		return 0

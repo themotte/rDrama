@@ -12,6 +12,7 @@ from files.__main__ import app, cache, limiter
 from files.classes.leaderboard import (BadgeMarseyLeaderboard, LeaderboardMeta,
                                        SimpleLeaderboard, UserBlockLeaderboard)
 from files.classes.views import ViewerRelationship
+from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.const import *
@@ -39,7 +40,7 @@ def upvoters_posts(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Submission.author_id==id, Vote.user_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.Visible, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Submission.author_id==id, Vote.user_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [p.id for p in listing]
 	next_exists = len(listing) > 25
@@ -60,7 +61,7 @@ def upvoters_comments(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, Comment.author_id==id, CommentVote.user_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.Visible, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, Comment.author_id==id, CommentVote.user_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [c.id for c in listing]
 	next_exists = len(listing) > 25
@@ -81,7 +82,7 @@ def downvoters_posts(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Submission.author_id==id, Vote.user_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.Visible, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Submission.author_id==id, Vote.user_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [p.id for p in listing]
 	next_exists = len(listing) > 25
@@ -102,7 +103,7 @@ def downvoters_comments(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, Comment.author_id==id, CommentVote.user_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.Visible, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, Comment.author_id==id, CommentVote.user_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [c.id for c in listing]
 	next_exists = len(listing) > 25
@@ -122,7 +123,7 @@ def upvoting_posts(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Vote.user_id==id, Submission.author_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.Visible, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Vote.user_id==id, Submission.author_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [p.id for p in listing]
 	next_exists = len(listing) > 25
@@ -143,7 +144,7 @@ def upvoting_comments(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, CommentVote.user_id==id, Comment.author_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.Visible, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, CommentVote.user_id==id, Comment.author_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [c.id for c in listing]
 	next_exists = len(listing) > 25
@@ -164,7 +165,7 @@ def downvoting_posts(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Vote.user_id==id, Submission.author_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.Visible, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Vote.user_id==id, Submission.author_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [p.id for p in listing]
 	next_exists = len(listing) > 25
@@ -185,7 +186,7 @@ def downvoting_comments(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, CommentVote.user_id==id, Comment.author_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.Visible, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, CommentVote.user_id==id, Comment.author_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [c.id for c in listing]
 	next_exists = len(listing) > 25
@@ -200,9 +201,9 @@ def downvoting_comments(v, username, uid):
 def upvoters(v, username):
 	id = get_user(username).id
 
-	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
+	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.Visible, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
 
-	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
+	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.Visible, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
 
 	votes = Counter(dict(votes)) + Counter(dict(votes2))
 
@@ -226,9 +227,9 @@ def upvoters(v, username):
 def downvoters(v, username):
 	id = get_user(username).id
 
-	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
+	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.Visible, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
 
-	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
+	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.Visible, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
 
 	votes = Counter(dict(votes)) + Counter(dict(votes2))
 
@@ -250,9 +251,9 @@ def downvoters(v, username):
 def upvoting(v, username):
 	id = get_user(username).id
 
-	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
+	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.Visible, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
 
-	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
+	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.Visible, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
 
 	votes = Counter(dict(votes)) + Counter(dict(votes2))
 
@@ -274,9 +275,9 @@ def upvoting(v, username):
 def downvoting(v, username):
 	id = get_user(username).id
 
-	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
+	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.Visible, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
 
-	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
+	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.Visible, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
 
 	votes = Counter(dict(votes)) + Counter(dict(votes2))
 
@@ -454,7 +455,8 @@ def message2(v, username):
 						  parent_submission=None,
 						  level=1,
 						  sentto=user.id,
-						  body_html=body_html
+						  body_html=body_html,
+						  state_mod=StateMod.Visible,
 						  )
 	g.db.add(c)
 	g.db.flush()
@@ -512,6 +514,7 @@ def messagereply(v):
 							level=parent.level + 1,
 							sentto=user_id,
 							body_html=body_html,
+							state_mod=StateMod.Visible,
 							)
 	g.db.add(c)
 	g.db.flush()
@@ -755,9 +758,8 @@ def u_username_comments(username, v=None):
 	if not v or (v.id != u.id and v.admin_level < 2):
 		comments = comments.filter(
 				Comment.state_user_deleted_utc == None,
-				Comment.is_banned == False,
+				Comment.state_mod == StateMod.Visible,
 				Comment.ghost == False,
-				(Comment.filter_state != 'filtered') & (Comment.filter_state != 'removed')
 				)
 
 	comments = apply_time_filter(comments, t, Comment)

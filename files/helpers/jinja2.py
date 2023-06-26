@@ -5,6 +5,7 @@ from jinja2 import pass_context
 
 from files.__main__ import app
 from files.classes.cron.tasks import ScheduledTaskType
+from files.classes.visstate import StateMod, StateReport
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.environment import (CARD_VIEW, DEFAULT_COLOR,
 	ENABLE_DOWNVOTES, FINGERPRINT_TOKEN, PUSHER_ID, SITE, SITE_FULL, SITE_ID,
@@ -84,6 +85,8 @@ def inject_constants():
 		"SORTS_POSTS":SORTS_POSTS,
 		"CSS_LENGTH_MAXIMUM":CSS_LENGTH_MAXIMUM,
 		"ScheduledTaskType":ScheduledTaskType,
+		"StateMod": StateMod,
+		"StateReport": StateReport,
 	}
 
 

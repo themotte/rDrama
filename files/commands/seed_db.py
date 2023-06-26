@@ -8,6 +8,7 @@ from werkzeug.security import generate_password_hash
 
 from files.__main__ import app, db_session
 from files.classes import Comment, CommentVote, Submission, User, Vote
+from files.classes.visstate import StateMod
 from files.helpers.comments import bulk_recompute_descendant_counts
 
 
@@ -104,7 +105,7 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 			title=f'Clever unique post title number {i}',
 			title_html=f'Clever unique post title number {i}',
 			ghost=False,
-			filter_state='normal'
+			state_mod=StateMod.Visible,
 		)
 		db.add(post)
 		posts.append(post)
@@ -127,7 +128,8 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 			app_id=None,
 			body_html=f'toplevel {i}',
 			body=f'toplevel {i}',
-			ghost=False
+			ghost=False,
+			state_mod=StateMod.Visible,
 		)
 		db.add(comment)
 		comments.append(comment)
@@ -156,7 +158,8 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 			app_id=None,
 			body_html=f'reply {i}',
 			body=f'reply {i}',
-			ghost=False
+			ghost=False,
+			state_mod=StateMod.Visible,
 		)
 		db.add(comment)
 		comments.append(comment)

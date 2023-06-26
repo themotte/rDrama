@@ -6,6 +6,7 @@ from . import util
 from flask import g
 from files.__main__ import app, db_session
 from files.classes import Submission, Comment, User
+from files.classes.visstate import StateMod
 from files.helpers.comments import bulk_recompute_descendant_counts
 import json
 import random
@@ -203,7 +204,7 @@ def test_bulk_update_descendant_count_quick(accounts, submissions, comments):
 				'title': f'Clever unique post title number {i}',
 				'title_html': f'Clever unique post title number {i}',
 				'ghost': False,
-				'filter_state': 'normal'
+				'state_mod': StateMod.Visible,
 			})
 			db.add(post)
 			db.commit()
@@ -222,7 +223,8 @@ def test_bulk_update_descendant_count_quick(accounts, submissions, comments):
 					'app_id': None,
 					'body_html': f'reply {i} {j}',
 					'body': f'reply {i} {j}',
-					'ghost': False
+					'ghost': False,
+					'state_mod': StateMod.Visible,
 				})
 				if parent_comment is None:
 					top_comment = comment

@@ -3,6 +3,7 @@ from flask import g
 
 from .sanitize import *
 from .config.const import *
+from files.classes.visstate import StateMod
 
 def create_comment(text_html, autojanny=False):
 	if autojanny: author_id = AUTOJANNY_ID
@@ -11,7 +12,8 @@ def create_comment(text_html, autojanny=False):
 	new_comment = Comment(author_id=author_id,
 							parent_submission=None,
 							body_html=text_html,
-							distinguish_level=6)
+							distinguish_level=6,
+							state_mod=StateMod.Visible,)
 	g.db.add(new_comment)
 	g.db.flush()
 
