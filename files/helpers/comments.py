@@ -232,7 +232,7 @@ def comment_filter_moderated(q: Query, v: Optional[User]) -> Query:
 		     .filter(User.shadowbanned == None)
 	if not v or v.admin_level < 2:
 		q = q.filter(
-			Comment.state_mod == StateMod.Visible
+			(Comment.state_mod == StateMod.Visible)
 			| (Comment.author_id == ((v and v.id) or 0))
 		)
 	return q
