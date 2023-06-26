@@ -296,7 +296,7 @@ def update_filter_status(v):
 		old_status = target.state_mod
 
 		# this could totally be one query but it would be kinda ugly
-		if state_mod_new:
+		if state_mod_new is not None:
 			g.db.query(Submission).where(Submission.id == post_id) \
 								.update({Submission.state_mod: state_mod_new, Submission.state_mod_set_by: v.username})
 		g.db.query(Submission).where(Submission.id == post_id) \
@@ -305,7 +305,7 @@ def update_filter_status(v):
 		target = g.db.get(Comment, comment_id)
 		old_status = target.state_mod
 		
-		if state_mod_new:
+		if state_mod_new is not None:
 			g.db.query(Comment).where(Comment.id == comment_id) \
 								.update({Comment.state_mod: state_mod_new, Comment.state_mod_set_by: v.username})
 		g.db.query(Comment).where(Comment.id == comment_id) \
