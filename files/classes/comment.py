@@ -243,9 +243,6 @@ class Comment(CreatedBase):
 		if not FEATURES['AWARDS']: return 0
 		return len([x for x in self.awards if x.kind == kind])
 
-	def is_visible(self):
-		return self.state_mod == StateMod.Visible
-	
 	@property
 	@lazy
 	def json_core(self):
