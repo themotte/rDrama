@@ -69,7 +69,7 @@ class ScheduledSubmissionTask(RepeatableTask):
 			body_html=self.body_html,
 			flair=self.flair,
 			ghost=self.ghost,
-			state_mod=StateMod.Visible,
+			state_mod=StateMod.VISIBLE,
 			embed_url=self.embed_url,
 			task_id=self.id,
 		)
@@ -129,7 +129,7 @@ class ScheduledSubmissionTask(RepeatableTask):
 	
 	@property
 	def state_mod(self) -> StateMod:
-		return StateMod.Visible
+		return StateMod.VISIBLE
 
 	def award_count(self, kind):
 		return 0

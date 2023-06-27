@@ -13,7 +13,7 @@ def create_comment(text_html, autojanny=False):
 							parent_submission=None,
 							body_html=text_html,
 							distinguish_level=6,
-							state_mod=StateMod.Visible,)
+							state_mod=StateMod.VISIBLE,)
 	g.db.add(new_comment)
 	g.db.flush()
 

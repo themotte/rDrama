@@ -137,7 +137,7 @@ def revert_actions(v, username):
 	comments = g.db.query(Comment).filter(Comment.id.in_(comments)).all()
 	
 	for item in posts + comments:
-		item.state_mod = StateMod.Visible
+		item.state_mod = StateMod.VISIBLE
 		item.state_mod_set_by = v.username
 		g.db.add(item)
 
@@ -236,7 +236,7 @@ def filtered_submissions(v):
 
 	posts_just_ids = g.db.query(Submission) \
 		.order_by(Submission.id.desc()) \
-		.filter(Submission.state_mod == StateMod.Filtered) \
+		.filter(Submission.state_mod == StateMod.FILTERED) \
 		.limit(26) \
 		.offset(25 * (page - 1)) \
 		.with_entities(Submission.id)
@@ -256,7 +256,7 @@ def filtered_comments(v):
 
 	comments_just_ids = g.db.query(Comment) \
 		.order_by(Comment.id.desc()) \
-		.filter(Comment.state_mod == StateMod.Filtered) \
+		.filter(Comment.state_mod == StateMod.FILTERED) \
 		.limit(26) \
 		.offset(25 * (page - 1)) \
 		.with_entities(Comment.id)
@@ -282,14 +282,14 @@ def update_filter_status(v):
 		return { 'result': f'Status of {new_status} is not permitted' }
 
 	if new_status == 'normal':
-		state_mod_new = StateMod.Visible
-		state_report_new = StateReport.Resolved
+		state_mod_new = StateMod.VISIBLE
+		state_report_new = StateReport.RESOLVED
 	elif new_status == 'removed':
-		state_mod_new = StateMod.Removed
-		state_report_new = StateReport.Resolved
+		state_mod_new = StateMod.REMOVED
+		state_report_new = StateReport.RESOLVED
 	elif new_status == 'ignored':
 		state_mod_new = None	# we just leave this as-is
-		state_report_new = StateReport.Ignored
+		state_report_new = StateReport.IGNORED
 
 	if post_id:
 		target = g.db.get(Submission, post_id)
@@ -316,13 +316,13 @@ def update_filter_status(v):
 	if target is not None:
 		# If comment now visible, update state to reflect publication.
 		if (isinstance(target, Comment)
-				and old_status != StateMod.Visible
-				and state_mod_new == StateMod.Visible):
+				and old_status != StateMod.VISIBLE
+				and state_mod_new == StateMod.VISIBLE):
 			comment_on_publish(target) # XXX: can cause discrepancies if removal state ≠ filter state
 
 		if (isinstance(target, Comment)
-				and old_status == StateMod.Visible
-				and state_mod_new != StateMod.Visible and state_mod_new is not None):
+				and old_status == StateMod.VISIBLE
+				and state_mod_new != StateMod.VISIBLE and state_mod_new is not None):
 			comment_on_unpublish(target) # XXX: can cause discrepancies if removal state ≠ filter state
 
 		g.db.commit()
@@ -355,7 +355,7 @@ def reported_posts(v):
 	page = max(1, int(request.values.get("page", 1)))
 
 	subs_just_ids = g.db.query(Submission) \
-		.filter(Submission.state_report == StateReport.Reported) \
+		.filter(Submission.state_report == StateReport.REPORTED) \
 		.order_by(Submission.id.desc()) \
 		.offset(25 * (page - 1)) \
 		.limit(26) \
@@ -375,7 +375,7 @@ def reported_comments(v):
 	page = max(1, int(request.values.get("page", 1)))
 
 	comments_just_ids = g.db.query(Comment) \
-			.filter(Comment.state_report == StateReport.Reported) \
+			.filter(Comment.state_report == StateReport.REPORTED) \
 			.order_by(Comment.id.desc()) \
 			.offset(25 * (page - 1)) \
 			.limit(26) \
@@ -434,7 +434,7 @@ def change_settings(v, setting):
 						  body_html=body_html,
 						  sentto=MODMAIL_ID,
 						  distinguish_level=6,
-						  state_mod=StateMod.Visible,
+						  state_mod=StateMod.VISIBLE,
 						  )
 	g.db.add(new_comment)
 	g.db.flush()
@@ -784,7 +784,7 @@ def admin_removed(v):
 
 	if page < 1: abort(400)
 	
-	ids = g.db.query(Submission.id).join(User, User.id == Submission.author_id).filter(or_(Submission.state_mod == StateMod.Removed, User.shadowbanned != None)).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	ids = g.db.query(Submission.id).join(User, User.id == Submission.author_id).filter(or_(Submission.state_mod == StateMod.REMOVED, User.shadowbanned != None)).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	ids=[x[0] for x in ids]
 
@@ -809,7 +809,7 @@ def admin_removed_comments(v):
 	try: page = int(request.values.get("page", 1))
 	except: page = 1
 	
-	ids = g.db.query(Comment.id).join(User, User.id == Comment.author_id).filter(or_(Comment.state_mode == StateMod.Removed, User.shadowbanned != None)).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	ids = g.db.query(Comment.id).join(User, User.id == Comment.author_id).filter(or_(Comment.state_mode == StateMod.REMOVED, User.shadowbanned != None)).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	ids=[x[0] for x in ids]
 
@@ -860,7 +860,7 @@ def shadowban(user_id, v):
 						  level=1,
 						  body_html=body_html,
 						  distinguish_level=6,
-						  state_mod=StateMod.Visible,
+						  state_mod=StateMod.VISIBLE,
 						  )
 	g.db.add(new_comment)
 	g.db.flush()
@@ -1046,7 +1046,7 @@ def ban_user(user_id, v):
 						  level=1,
 						  body_html=body_html,
 						  distinguish_level=6,
-						  state_mod=StateMod.Visible,
+						  state_mod=StateMod.VISIBLE,
 						  )
 	g.db.add(new_comment)
 	g.db.flush()
@@ -1109,7 +1109,7 @@ def remove_post(post_id, v):
 	if not post:
 		abort(400)
 
-	post.state_mod = StateMod.Removed
+	post.state_mod = StateMod.REMOVED
 	post.state_mod_set_by = v.username
 	post.stickied = None
 	post.is_pinned = False
@@ -1145,7 +1145,7 @@ def unremove_post(post_id, v):
 	if not post:
 		abort(400)
 
-	if post.state_mod != StateMod.Visible:
+	if post.state_mod != StateMod.VISIBLE:
 		ma=ModAction(
 			kind="unremove_post",
 			user_id=v.id,
@@ -1153,7 +1153,7 @@ def unremove_post(post_id, v):
 		)
 		g.db.add(ma)
 
-	post.state_mod = StateMod.Visible
+	post.state_mod = StateMod.VISIBLE
 	post.state_mod_set_by = v.username
 
 	g.db.add(post)
@@ -1206,7 +1206,7 @@ def api_distinguish_post(post_id, v):
 def sticky_post(post_id, v):
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 	if post and not post.stickied:
-		pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.state_mod == StateMod.Visible).count()
+		pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.state_mod == StateMod.VISIBLE).count()
 		if pins > 2:
 			if v.admin_level >= 2:
 				post.stickied = v.username
@@ -1315,7 +1315,7 @@ def api_remove_comment(c_id, v):
 	if not comment:
 		abort(404)
 
-	comment.state_mod = StateMod.Removed
+	comment.state_mod = StateMod.REMOVED
 	comment.state_mod_set_by = v.username
 	comment_on_unpublish(comment) # XXX: can cause discrepancies if removal state ≠ filter state
 	ma=ModAction(
@@ -1335,7 +1335,7 @@ def api_unremove_comment(c_id, v):
 	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
 	if not comment: abort(404)
 	
-	if comment.state_mod == StateMod.Removed:
+	if comment.state_mod == StateMod.REMOVED:
 		ma=ModAction(
 			kind="unremove_comment",
 			user_id=v.id,
@@ -1343,7 +1343,7 @@ def api_unremove_comment(c_id, v):
 			)
 		g.db.add(ma)
 
-	comment.state_mod = StateMod.Visible
+	comment.state_mod = StateMod.VISIBLE
 	comment.state_mod_set_by = v.username
 	comment_on_publish(comment) # XXX: can cause discrepancies if removal state ≠ filter state
 
@@ -1448,18 +1448,18 @@ def admin_nuke_user(v):
 	user=get_user(request.values.get("user"))
 
 	for post in g.db.query(Submission).filter_by(author_id=user.id).all():
-		if post.state_mod != StateMod.Removed:
+		if post.state_mod != StateMod.REMOVED:
 			continue
 			
-		post.state_mod == StateMod.Removed
+		post.state_mod == StateMod.REMOVED
 		post.state_mod_set_by = v.username
 		g.db.add(post)
 
 	for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
-		if comment.state_mod != StateMod.Removed:
+		if comment.state_mod != StateMod.REMOVED:
 			continue
 
-		comment.state_mod == StateMod.Removed
+		comment.state_mod == StateMod.REMOVED
 		comment.state_mod_set_by = v.username
 		g.db.add(comment)
 
@@ -1482,18 +1482,18 @@ def admin_unnuke_user(v):
 	user=get_user(request.values.get("user"))
 
 	for post in g.db.query(Submission).filter_by(author_id=user.id).all():
-		if post.state_mod == StateMod.Visible:
+		if post.state_mod == StateMod.VISIBLE:
 			continue
 			
-		post.state_mod == StateMod.Visible
+		post.state_mod == StateMod.VISIBLE
 		post.state_mod_set_by = v.username
 		g.db.add(post)
 
 	for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
-		if comment.state_mod == StateMod.Visible:
+		if comment.state_mod == StateMod.VISIBLE:
 			continue
 
-		comment.state_mod == StateMod.Visible
+		comment.state_mod == StateMod.VISIBLE
 		comment.state_mod_set_by = v.username
 		g.db.add(comment)
 

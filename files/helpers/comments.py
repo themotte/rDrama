@@ -66,7 +66,7 @@ def update_author_comment_count(comment, delta):
 	comment.author.comment_count = g.db.query(Comment).filter(
 		Comment.author_id == comment.author_id,
 		Comment.parent_submission != None,
-		Comment.state_mod == StateMod.Visible,
+		Comment.state_mod == StateMod.VISIBLE,
 		Comment.state_user_deleted_utc == None,
 	).count()
 	g.db.add(comment.author)
@@ -232,7 +232,7 @@ def comment_filter_moderated(q: Query, v: Optional[User]) -> Query:
 		     .filter(User.shadowbanned == None)
 	if not v or v.admin_level < 2:
 		q = q.filter(
-			(Comment.state_mod == StateMod.Visible)
+			(Comment.state_mod == StateMod.VISIBLE)
 			| (Comment.author_id == ((v and v.id) or 0))
 		)
 	return q

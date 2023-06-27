@@ -32,8 +32,8 @@ def api_flag_post(pid, v):
 		# We only want to notify if the user is not permabanned
 		if not v.is_suspended_permanently:
 			g.db.query(Submission) \
-				.where(Submission.id == post.id, Submission.state_report != StateReport.Ignored) \
-				.update({Submission.state_report: StateReport.Reported})
+				.where(Submission.id == post.id, Submission.state_report != StateReport.IGNORED) \
+				.update({Submission.state_report: StateReport.REPORTED})
 
 	g.db.commit()
 
@@ -54,8 +54,8 @@ def api_flag_comment(cid, v):
 	# We only want to notify if the user is not permabanned
 	if not v.is_suspended_permanently:
 		g.db.query(Comment) \
-				.where(Comment.id == comment.id, Comment.state_report != StateReport.Ignored) \
-				.update({Comment.state_report: StateReport.Reported})
+				.where(Comment.id == comment.id, Comment.state_report != StateReport.IGNORED) \
+				.update({Comment.state_report: StateReport.REPORTED})
 
 	
 	g.db.commit()

@@ -51,9 +51,9 @@ class Submission(CreatedBase):
 
 	# Visibility states here
 	state_user_deleted_utc = Column(DateTime(timezone=True), nullable=True) # null if it hasn't been deleted by the user
-	state_mod = Column(Enum(StateMod), default=StateMod.Filtered, nullable=False) # default to Filtered just to partially neuter possible exploits
+	state_mod = Column(Enum(StateMod), default=StateMod.FILTERED, nullable=False) # default to Filtered just to partially neuter possible exploits
 	state_mod_set_by = Column(String, nullable=True) # This should *really* be a User.id, but I don't want to mess with the required refactoring at the moment - it's extra hard because it could potentially be a lot of extra either data or queries
-	state_report = Column(Enum(StateReport), default=StateReport.Unreported, nullable=False)
+	state_report = Column(Enum(StateReport), default=StateReport.UNREPORTED, nullable=False)
 
 	Index('post_app_id_idx', app_id)
 	Index('subimssion_binary_group_idx', state_mod, state_user_deleted_utc, over_18)
@@ -102,7 +102,7 @@ class Submission(CreatedBase):
 		author = self.author
 		author.post_count = db.query(Submission.id).filter_by(
 			author_id=self.author_id, 
-			state_mod=StateMod.Visible,
+			state_mod=StateMod.VISIBLE,
 			state_user_deleted_utc=None).count()
 		db.add(author)
 
@@ -259,7 +259,7 @@ class Submission(CreatedBase):
 	@property
 	@lazy
 	def json_core(self):
-		if self.state_mod != StateMod.Visible:
+		if self.state_mod != StateMod.VISIBLE:
 			return {
 					'state_user_deleted_utc': self.state_user_deleted_utc,
 					'state_mod_set_by': self.state_mod_set_by,
@@ -282,7 +282,7 @@ class Submission(CreatedBase):
 	def json(self):
 		data=self.json_core
 		
-		if self.state_user_deleted_utc or self.state_mod != StateMod.Visible:
+		if self.state_user_deleted_utc or self.state_mod != StateMod.VISIBLE:
 			return data
 
 		data["author"]='👻' if self.ghost else self.author.json_core

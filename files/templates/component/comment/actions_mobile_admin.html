@@ -31,8 +31,8 @@
 						<a class="list-group-item text-danger" role="button" onclick="removeCommentMobile('{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-ban text-danger mr-2"></i>Remove</a>
 						<a class="list-group-item text-success" role="button" onclick="approveCommentMobile('{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-check text-success mr-2"></i>Approve</a>
 					{% else %}
-						<a id="remove2-{{c.id}}" class="{% if c.state_mod != StateMod.Visible %}d-none{% endif %} list-group-item text-danger" role="button" onclick="removeCommentMobile('{{c.id}}','approve2-{{c.id}}','remove2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-ban text-danger mr-2"></i>Remove</a>
-						<a id="approve2-{{c.id}}" class="{% if c.state_mod != StateMod.Removed %}d-none{% endif %} list-group-item text-success" role="button" onclick="approveCommentMobile('{{c.id}}','approve2-{{c.id}}','remove2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-check text-success mr-2"></i>Approve</a>
+						<a id="remove2-{{c.id}}" class="{% if c.state_mod != StateMod.VISIBLE %}d-none{% endif %} list-group-item text-danger" role="button" onclick="removeCommentMobile('{{c.id}}','approve2-{{c.id}}','remove2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-ban text-danger mr-2"></i>Remove</a>
+						<a id="approve2-{{c.id}}" class="{% if c.state_mod != StateMod.REMOVED %}d-none{% endif %} list-group-item text-success" role="button" onclick="approveCommentMobile('{{c.id}}','approve2-{{c.id}}','remove2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-check text-success mr-2"></i>Approve</a>
 					{% endif %}
 
 					{% if c.oauth_app %}

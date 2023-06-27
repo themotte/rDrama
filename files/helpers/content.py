@@ -109,11 +109,11 @@ class ModerationState:
 	@classmethod
 	def from_submittable(cls, target: Submittable) -> "ModerationState":
 		return cls(
-			removed=bool(target.state_mod != StateMod.Visible),
+			removed=bool(target.state_mod != StateMod.VISIBLE),
 			removed_by_name=target.state_mod_set_by,  # type: ignore
 			deleted=bool(target.state_user_deleted_utc != None),
-			reports_ignored=bool(target.state_report == StateReport.Ignored),
-			filtered=bool(target.state_mod == StateMod.Filtered),
+			reports_ignored=bool(target.state_report == StateReport.IGNORED),
+			filtered=bool(target.state_mod == StateMod.FILTERED),
 			op_shadowbanned=bool(target.author.shadowbanned),
 			op_id=target.author_id,  # type: ignore
 			op_name_safe=target.author_name

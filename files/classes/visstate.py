@@ -2,12 +2,12 @@
 import enum
 
 class StateMod(enum.Enum):
-    Visible = 0
-    Filtered = 1
-    Removed = 2
+    VISIBLE = 0
+    FILTERED = 1
+    REMOVED = 2
 
 class StateReport(enum.Enum):
-    Unreported = 0
-    Resolved = 1
-    Reported = 2
-    Ignored = 3
+    UNREPORTED = 0
+    RESOLVED = 1
+    REPORTED = 2
+    IGNORED = 3

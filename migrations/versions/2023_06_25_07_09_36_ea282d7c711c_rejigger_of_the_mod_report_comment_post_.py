@@ -17,8 +17,8 @@ depends_on = None
 
 
 def upgrade():
-    state_mod_enum = sa.Enum('Visible', 'Filtered', 'Removed', name='statemod', create_type=False)
-    state_report_enum = sa.Enum('Unreported', 'Resolved', 'Reported', 'Ignored', name='statereport', create_type=False)
+    state_mod_enum = sa.Enum('VISIBLE', 'FILTERED', 'REMOVED', name='statemod', create_type=False)
+    state_report_enum = sa.Enum('UNREPORTED', 'RESOLVED', 'REPORTED', 'IGNORED', name='statereport', create_type=False)
 
     state_mod_enum.create(op.get_bind(), checkfirst=True)
     state_report_enum.create(op.get_bind(), checkfirst=True)
@@ -29,39 +29,39 @@ def upgrade():
     op.drop_index('fki_comment_approver_fkey', table_name='comments')
     op.drop_constraint('comment_approver_fkey', 'comments', type_='foreignkey')
 
-    # If `is_banned`, set `state_mod` to the `Removed` enum
-    # otherwise, if `filter_state` is `filtered`, set `state_mod` to the `Filtered` enum
-    # otherwise, set `state_mod` to the `Visible` enum
+    # If `is_banned`, set `state_mod` to the `REMOVED` enum
+    # otherwise, if `filter_state` is `FILTERED`, set `state_mod` to the `FILTERED` enum
+    # otherwise, set `state_mod` to the `VISIBLE` enum
     op.execute("""
         UPDATE comments 
         SET state_mod = CASE 
-            WHEN is_banned THEN 'Removed'::statemod
-            WHEN filter_state = 'filtered' THEN 'Filtered'::statemod
-            ELSE 'Visible'::statemod
+            WHEN is_banned THEN 'REMOVED'::statemod
+            WHEN filter_state = 'FILTERED' THEN 'FILTERED'::statemod
+            ELSE 'VISIBLE'::statemod
         END
     """)
 
-    # if `state_mod` is `Removed`, set `state_mod_set_by` to `ban_reason`
-    # otherwise, if `state_mod` is `Visible`, set `state_mod_set_by` to the `username` of the `users` table, indexed by `is_approved == users.id`
+    # if `state_mod` is `REMOVED`, set `state_mod_set_by` to `ban_reason`
+    # otherwise, if `state_mod` is `VISIBLE`, set `state_mod_set_by` to the `username` of the `users` table, indexed by `is_approved == users.id`
     op.execute("""
         UPDATE comments
         SET state_mod_set_by = CASE
-            WHEN state_mod = 'Removed' THEN ban_reason
-            WHEN state_mod = 'Visible' THEN (SELECT username FROM users WHERE id = is_approved)
+            WHEN state_mod = 'REMOVED' THEN ban_reason
+            WHEN state_mod = 'VISIBLE' THEN (SELECT username FROM users WHERE id = is_approved)
         END
     """)
 
-    # if `filter_state` is `ignored`, set `state_report` to the `Ignored` enum
-    # otherwise, if `filter_state` is `reported`, set `state_report` to the `Reported` enum
-    # otherwise, if `state_mod_set_by` is non-NULL, set `state_report` to the `Resolved` enum
-    # otherwise, set `state_report` to the `Unreported` enum
+    # if `filter_state` is `IGNORED`, set `state_report` to the `IGNORED` enum
+    # otherwise, if `filter_state` is `REPORTED`, set `state_report` to the `REPORTED` enum
+    # otherwise, if `state_mod_set_by` is non-NULL, set `state_report` to the `RESOLVED` enum
+    # otherwise, set `state_report` to the `UNREPORTED` enum
     op.execute("""
         UPDATE comments
         SET state_report = CASE
-            WHEN filter_state = 'ignored' THEN 'Ignored'::statereport
-            WHEN filter_state = 'reported' THEN 'Reported'::statereport
-            WHEN state_mod_set_by IS NOT NULL THEN 'Resolved'::statereport
-            ELSE 'Unreported'::statereport
+            WHEN filter_state = 'IGNORED' THEN 'IGNORED'::statereport
+            WHEN filter_state = 'REPORTED' THEN 'REPORTED'::statereport
+            WHEN state_mod_set_by IS NOT NULL THEN 'RESOLVED'::statereport
+            ELSE 'UNREPORTED'::statereport
         END
     """)
 
@@ -87,39 +87,39 @@ def upgrade():
     op.create_index('submission_state_mod_idx', 'submissions', ['state_mod'], unique=False)
     op.drop_constraint('submissions_approver_fkey', 'submissions', type_='foreignkey')
 
-    # If `is_banned`, set `state_mod` to the `Removed` enum
-    # otherwise, if `filter_state` is `filtered`, set `state_mod` to the `Filtered` enum
-    # otherwise, set `state_mod` to the `Visible` enum
+    # If `is_banned`, set `state_mod` to the `REMOVED` enum
+    # otherwise, if `filter_state` is `FILTERED`, set `state_mod` to the `FILTERED` enum
+    # otherwise, set `state_mod` to the `VISIBLE` enum
     op.execute("""
         UPDATE submissions 
         SET state_mod = CASE 
-            WHEN is_banned THEN 'Removed'::statemod
-            WHEN filter_state = 'filtered' THEN 'Filtered'::statemod
-            ELSE 'Visible'::statemod
+            WHEN is_banned THEN 'REMOVED'::statemod
+            WHEN filter_state = 'FILTERED' THEN 'FILTERED'::statemod
+            ELSE 'VISIBLE'::statemod
         END
     """)
 
-    # if `state_mod` is `Removed`, set `state_mod_set_by` to `ban_reason`
-    # otherwise, if `state_mod` is `Visible`, set `state_mod_set_by` to the `username` of the `users` table, indexed by `is_approved == users.id`
+    # if `state_mod` is `REMOVED`, set `state_mod_set_by` to `ban_reason`
+    # otherwise, if `state_mod` is `VISIBLE`, set `state_mod_set_by` to the `username` of the `users` table, indexed by `is_approved == users.id`
     op.execute("""
         UPDATE submissions
         SET state_mod_set_by = CASE
-            WHEN state_mod = 'Removed' THEN ban_reason
-            WHEN state_mod = 'Visible' THEN (SELECT username FROM users WHERE id = is_approved)
+            WHEN state_mod = 'REMOVED' THEN ban_reason
+            WHEN state_mod = 'VISIBLE' THEN (SELECT username FROM users WHERE id = is_approved)
         END
     """)
 
-    # if `filter_state` is `ignored`, set `state_report` to the `Ignored` enum
-    # otherwise, if `filter_state` is `reported`, set `state_report` to the `Reported` enum
-    # otherwise, if `state_mod_set_by` is non-NULL, set `state_report` to the `Resolved` enum
-    # otherwise, set `state_report` to the `Unreported` enum
+    # if `filter_state` is `IGNORED`, set `state_report` to the `IGNORED` enum
+    # otherwise, if `filter_state` is `REPORTED`, set `state_report` to the `REPORTED` enum
+    # otherwise, if `state_mod_set_by` is non-NULL, set `state_report` to the `RESOLVED` enum
+    # otherwise, set `state_report` to the `UNREPORTED` enum
     op.execute("""
         UPDATE submissions
         SET state_report = CASE
-            WHEN filter_state = 'ignored' THEN 'Ignored'::statereport
-            WHEN filter_state = 'reported' THEN 'Reported'::statereport
-            WHEN state_mod_set_by IS NOT NULL THEN 'Resolved'::statereport
-            ELSE 'Unreported'::statereport
+            WHEN filter_state = 'IGNORED' THEN 'IGNORED'::statereport
+            WHEN filter_state = 'REPORTED' THEN 'REPORTED'::statereport
+            WHEN state_mod_set_by IS NOT NULL THEN 'RESOLVED'::statereport
+            ELSE 'UNREPORTED'::statereport
         END
     """)
 
@@ -143,7 +143,7 @@ def downgrade():
     op.execute("""
         UPDATE comments 
         SET is_banned = CASE 
-            WHEN state_mod = 'Removed' THEN TRUE
+            WHEN state_mod = 'REMOVED' THEN TRUE
             ELSE FALSE
         END
     """)
@@ -151,13 +151,13 @@ def downgrade():
     op.execute("""
         UPDATE comments 
         SET is_approved = (SELECT id FROM users WHERE username = state_mod_set_by)
-        WHERE state_mod = 'Visible' AND (state_report = 'Resolved' OR state_report = 'Ignored')
+        WHERE state_mod = 'VISIBLE' AND (state_report = 'RESOLVED' OR state_report = 'IGNORED')
     """)
 
     op.execute("""
         UPDATE comments
         SET ban_reason = CASE
-            WHEN state_mod = 'Removed' THEN state_mod_set_by
+            WHEN state_mod = 'REMOVED' THEN state_mod_set_by
             ELSE NULL
         END
     """)
@@ -165,9 +165,9 @@ def downgrade():
     op.execute("""
         UPDATE comments
         SET filter_state = CASE
-            WHEN state_report = 'Ignored' THEN 'ignored'
-            WHEN state_report = 'Reported' THEN 'reported'
-            WHEN state_mod = 'Filtered' THEN 'filtered'
+            WHEN state_report = 'IGNORED' THEN 'IGNORED'
+            WHEN state_report = 'REPORTED' THEN 'REPORTED'
+            WHEN state_mod = 'FILTERED' THEN 'FILTERED'
             ELSE NULL
         END
     """)
@@ -195,7 +195,7 @@ def downgrade():
     op.execute("""
         UPDATE submissions 
         SET is_banned = CASE 
-            WHEN state_mod = 'Removed' THEN TRUE
+            WHEN state_mod = 'REMOVED' THEN TRUE
             ELSE FALSE
         END
     """)
@@ -203,13 +203,13 @@ def downgrade():
     op.execute("""
         UPDATE submissions 
         SET is_approved = (SELECT id FROM users WHERE username = state_mod_set_by)
-        WHERE state_mod = 'Visible' AND (state_report = 'Resolved' OR state_report = 'Ignored')
+        WHERE state_mod = 'VISIBLE' AND (state_report = 'RESOLVED' OR state_report = 'IGNORED')
     """)
 
     op.execute("""
         UPDATE submissions
         SET ban_reason = CASE
-            WHEN state_mod = 'Removed' THEN state_mod_set_by
+            WHEN state_mod = 'REMOVED' THEN state_mod_set_by
             ELSE NULL
         END
     """)
@@ -217,9 +217,9 @@ def downgrade():
     op.execute("""
         UPDATE submissions
         SET filter_state = CASE
-            WHEN state_report = 'Ignored' THEN 'ignored'
-            WHEN state_report = 'Reported' THEN 'reported'
-            WHEN state_mod = 'Filtered' THEN 'filtered'
+            WHEN state_report = 'IGNORED' THEN 'IGNORED'
+            WHEN state_report = 'REPORTED' THEN 'REPORTED'
+            WHEN state_mod = 'FILTERED' THEN 'FILTERED'
             ELSE NULL
         END
     """)

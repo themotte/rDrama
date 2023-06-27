@@ -105,7 +105,7 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 			title=f'Clever unique post title number {i}',
 			title_html=f'Clever unique post title number {i}',
 			ghost=False,
-			state_mod=StateMod.Visible,
+			state_mod=StateMod.VISIBLE,
 		)
 		db.add(post)
 		posts.append(post)
@@ -129,7 +129,7 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 			body_html=f'toplevel {i}',
 			body=f'toplevel {i}',
 			ghost=False,
-			state_mod=StateMod.Visible,
+			state_mod=StateMod.VISIBLE,
 		)
 		db.add(comment)
 		comments.append(comment)
@@ -159,7 +159,7 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 			body_html=f'reply {i}',
 			body=f'reply {i}',
 			ghost=False,
-			state_mod=StateMod.Visible,
+			state_mod=StateMod.VISIBLE,
 		)
 		db.add(comment)
 		comments.append(comment)

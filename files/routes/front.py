@@ -27,7 +27,7 @@ def unread(v):
 	listing = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(
 		Notification.read == False,
 		Notification.user_id == v.id,
-		Comment.state_mod == StateMod.Visible,
+		Comment.state_mod == StateMod.VISIBLE,
 		Comment.state_user_deleted_utc == None,
 		Comment.author_id != AUTOJANNY_ID,
 	).order_by(Notification.created_utc.desc()).all()
@@ -101,7 +101,7 @@ def notifications(v):
 	else:		
 		comments = g.db.query(Comment, Notification).join(Notification, Notification.comment_id == Comment.id).filter(
 			Notification.user_id == v.id,
-			Comment.state_mod == StateMod.Visible,
+			Comment.state_mod == StateMod.VISIBLE,
 			Comment.state_user_deleted_utc == None,
 			Comment.author_id != AUTOJANNY_ID,
 			Comment.body_html.notlike('%<p>New site mention: <a href="https://old.reddit.com/r/%')
@@ -251,7 +251,7 @@ def changelog(v):
 
 @app.get("/random_post")
 def random_post():
-	p = g.db.query(Submission.id).filter(Submission.state_user_deleted_utc == None, Submission.state_mod == StateMod.Visible, Submission.private == False).order_by(func.random()).first()
+	p = g.db.query(Submission.id).filter(Submission.state_user_deleted_utc == None, Submission.state_mod == StateMod.VISIBLE, Submission.private == False).order_by(func.random()).first()
 
 	if p: p = p[0]
 	else: abort(404)
@@ -308,7 +308,7 @@ def get_comments_idlist(page=1, v=None, sort="new", t="all", gt=0, lt=0):
 	if v.admin_level < 2:
 		comments = comments.filter(
 			Comment.author_id.notin_(v.userblocks),
-			Comment.state_mod == StateMod.Visible,
+			Comment.state_mod == StateMod.VISIBLE,
 			Comment.state_user_deleted_utc == None,
 			Submission.private == False, # comment parent post not private
 			User.shadowbanned == None, # comment author not shadowbanned

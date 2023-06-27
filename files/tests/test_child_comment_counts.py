@@ -204,7 +204,7 @@ def test_bulk_update_descendant_count_quick(accounts, submissions, comments):
 				'title': f'Clever unique post title number {i}',
 				'title_html': f'Clever unique post title number {i}',
 				'ghost': False,
-				'state_mod': StateMod.Visible,
+				'state_mod': StateMod.VISIBLE,
 			})
 			db.add(post)
 			db.commit()
@@ -224,7 +224,7 @@ def test_bulk_update_descendant_count_quick(accounts, submissions, comments):
 					'body_html': f'reply {i} {j}',
 					'body': f'reply {i} {j}',
 					'ghost': False,
-					'state_mod': StateMod.Visible,
+					'state_mod': StateMod.VISIBLE,
 				})
 				if parent_comment is None:
 					top_comment = comment

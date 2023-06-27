@@ -98,7 +98,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			
 	if request.headers.get("Authorization"): return top_comment.json
 	else: 
-		if post.state_mod != StateMod.Visible and not (v and (v.admin_level >= 2 or post.author_id == v.id)): template = "submission_banned.html"
+		if post.state_mod != StateMod.VISIBLE and not (v and (v.admin_level >= 2 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
 		return render_template(template, v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True)
 
@@ -189,7 +189,7 @@ def api_comment(v):
 					days=1)
 
 			for comment in similar_comments:
-				comment.state_mod = StateMod.Removed
+				comment.state_mod = StateMod.REMOVED
 				comment.state_mod_set_by = "AutoJanny"
 				g.db.add(comment)
 				ma=ModAction(
@@ -214,7 +214,7 @@ def api_comment(v):
 				body_html=body_html,
 				body=body[:COMMENT_BODY_LENGTH_MAXIMUM],
 				ghost=parent_post.ghost,
-				state_mod=StateMod.Filtered if is_filtered else StateMod.Visible,
+				state_mod=StateMod.FILTERED if is_filtered else StateMod.VISIBLE,
 				)
 
 	c.upvotes = 1
@@ -288,7 +288,7 @@ def edit_comment(cid, v):
 					days=1)
 
 			for comment in similar_comments:
-				comment.state_mod = StateMod.Removed
+				comment.state_mod = StateMod.REMOVED
 				comment.state_mod_set_by = "AutoJanny"
 				g.db.add(comment)
 
@@ -314,7 +314,7 @@ def edit_comment(cid, v):
 
 		g.db.add(c)
 		
-		if c.state_mod == StateMod.Visible:
+		if c.state_mod == StateMod.VISIBLE:
 			notify_users = NOTIFY_USERS(body, v)
 
 			for x in notify_users:

@@ -121,7 +121,7 @@ def post_id(pid, anything=None, v=None):
 
 	if request.headers.get("Authorization"): return post.json
 	else:
-		if post.state_mod != StateMod.Visible and not (v and (v.admin_level >= 2 or post.author_id == v.id)): template = "submission_banned.html"
+		if post.state_mod != StateMod.VISIBLE and not (v and (v.admin_level >= 2 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
 		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset)
 
@@ -432,7 +432,7 @@ def api_is_repost():
 	repost = g.db.query(Submission).filter(
 		Submission.url.ilike(search_url),
 		Submission.state_user_deleted_utc == None,
-		Submission.state_mod == StateMod.Visible
+		Submission.state_mod == StateMod.VISIBLE
 	).first()
 	if repost: return {'permalink': repost.permalink}
 	else: return {'permalink': ''}
@@ -469,7 +469,7 @@ def _do_antispam_submission_check(v:User, validated:validators.ValidatedSubmissi
 
 	v.ban(reason="Spamming.", days=1)
 	for post in similar_posts + similar_urls:
-		post.state_mod = StateMod.Removed
+		post.state_mod = StateMod.REMOVED
 		post.state_mod_set_by = "AutoJanny"
 		post.is_pinned = False
 		g.db.add(post)
@@ -498,7 +498,7 @@ def _duplicate_check(search_url:Optional[str]) -> Optional[werkzeug.wrappers.Res
 	repost = g.db.query(Submission).filter(
 		func.lower(Submission.url) == search_url.lower(),
 		Submission.state_user_deleted_utc == None,
-		Submission.state_mod == StateMod.Visible
+		Submission.state_mod == StateMod.VISIBLE
 	).first()
 	if repost and SITE != 'localhost': 
 		return redirect(repost.permalink)
@@ -578,7 +578,7 @@ def submit_post(v):
 		title=validated_post.title,
 		title_html=validated_post.title_html,
 		ghost=False,
-		state_mod=StateMod.Filtered if v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts'] else StateMod.Visible,
+		state_mod=StateMod.FILTERED if v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts'] else StateMod.VISIBLE,
 		thumburl=validated_post.thumburl
 	)
 	post.submit(g.db)

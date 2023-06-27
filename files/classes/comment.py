@@ -50,9 +50,9 @@ class Comment(CreatedBase):
 
 	# Visibility states here
 	state_user_deleted_utc = Column(DateTime(timezone=True), nullable=True) # null if it hasn't been deleted by the user
-	state_mod = Column(Enum(StateMod), default=StateMod.Filtered, nullable=False) # default to Filtered just to partially neuter possible exploits
+	state_mod = Column(Enum(StateMod), default=StateMod.FILTERED, nullable=False) # default to Filtered just to partially neuter possible exploits
 	state_mod_set_by = Column(String, nullable=True) # This should *really* be a User.id, but I don't want to mess with the required refactoring at the moment - it's extra hard because it could potentially be a lot of extra either data or queries
-	state_report = Column(Enum(StateReport), default=StateReport.Unreported, nullable=False)
+	state_report = Column(Enum(StateReport), default=StateReport.UNREPORTED, nullable=False)
 
 	Index('comment_parent_index', parent_comment_id)
 	Index('comment_post_id_index', parent_submission)
@@ -162,13 +162,13 @@ class Comment(CreatedBase):
 		if not self.parent_submission:
 			return sorted((x for x in self.child_comments
 				if x.author
-					and (x.state_mod == StateMod.Visible or x.author_id == author_id)
+					and (x.state_mod == StateMod.VISIBLE or x.author_id == author_id)
 					and not x.author.shadowbanned),
 				key=lambda x: x.created_utc)
 		return sorted((x for x in self.child_comments
 			if x.author
 				and not x.author.shadowbanned
-				and (x.state_mod == StateMod.Visible or x.author_id == author_id)),
+				and (x.state_mod == StateMod.VISIBLE or x.author_id == author_id)),
 			key=lambda x: x.created_utc, reverse=True)
 
 	@property
@@ -246,7 +246,7 @@ class Comment(CreatedBase):
 	@property
 	@lazy
 	def json_core(self):
-		if self.state_mod != StateMod.Visible:
+		if self.state_mod != StateMod.VISIBLE:
 			data = {
 					'state_mod_set_by': self.state_mod_set_by,
 					'id': self.id,
@@ -274,7 +274,7 @@ class Comment(CreatedBase):
 	@lazy
 	def json(self):
 		data = self.json_core
-		if self.state_user_deleted_utc or self.state_mod != StateMod.Visible: return data
+		if self.state_user_deleted_utc or self.state_mod != StateMod.VISIBLE: return data
 		data["author"] = '👻' if self.ghost else self.author.json_core
 		data["post"] = self.post.json_core if self.post else ''
 		return data

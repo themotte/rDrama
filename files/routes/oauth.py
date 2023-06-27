@@ -63,7 +63,7 @@ def request_api_keys(v):
 						  body_html=body_html,
 						  sentto=MODMAIL_ID,
 						  distinguish_level=6,
-						  state_mod=StateMod.Visible,
+						  state_mod=StateMod.VISIBLE,
 						  )
 	g.db.add(new_comment)
 	g.db.flush()
