@@ -247,20 +247,21 @@ class Comment(CreatedBase):
 	@lazy
 	def json_core(self):
 		if self.state_mod != StateMod.Visible:
-			data = {'state_mod_not_visible': True,
+			data = {
 					'state_mod_set_by': self.state_mod_set_by,
 					'id': self.id,
 					'post': self.post.id if self.post else 0,
 					'level': self.level,
 					'parent': self.parent_fullname
-					}
+				}
 		elif self.state_user_deleted_utc:
-			data = {'state_user_deleted_utc': self.state_user_deleted_utc,
+			data = {
+					'state_user_deleted_utc': self.state_user_deleted_utc,
 					'id': self.id,
 					'post': self.post.id if self.post else 0,
 					'level': self.level,
 					'parent': self.parent_fullname
-					}
+				}
 		else:
 			data = self.json_raw
 			if self.level >= 2: data['parent_comment_id']= self.parent_comment_id

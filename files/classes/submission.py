@@ -260,7 +260,7 @@ class Submission(CreatedBase):
 	@lazy
 	def json_core(self):
 		if self.state_mod != StateMod.Visible:
-			return {'state_mod_not_visible': True,
+			return {
 					'state_user_deleted_utc': self.state_user_deleted_utc,
 					'state_mod_set_by': self.state_mod_set_by,
 					'id': self.id,
@@ -268,7 +268,7 @@ class Submission(CreatedBase):
 					'permalink': self.permalink,
 					}
 		elif self.state_user_deleted_utc:
-			return {'state_mod_not_visible': False,
+			return {
 					'state_user_deleted_utc': self.state_user_deleted_utc,
 					'id': self.id,
 					'title': self.title,
