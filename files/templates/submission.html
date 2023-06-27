@@ -183,7 +183,7 @@
 						{% endif %}
 						&nbsp;&nbsp;{{p.views}} thread views
 					</div>
-					{% if v and p.state_mod_reported and v.can_manage_reports() %}
+					{% if v and p.state_report == StateReport.Reported and v.can_manage_reports() %}
 					<div id="flaggers" class="flaggers d-none">
 						<strong><i class="far fa-fw fa-flag"></i> Reports:</strong>
 						<a class="btn btn-primary" style="margin:1px 5px" onclick="filter_new_status({{p.id}}, 'normal')">Approve</a>
