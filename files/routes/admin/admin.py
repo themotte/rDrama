@@ -1451,7 +1451,7 @@ def admin_nuke_user(v):
 		if post.state_mod != StateMod.REMOVED:
 			continue
 			
-		post.state_mod == StateMod.REMOVED
+		post.state_mod = StateMod.REMOVED
 		post.state_mod_set_by = v.username
 		g.db.add(post)
 
@@ -1459,7 +1459,7 @@ def admin_nuke_user(v):
 		if comment.state_mod != StateMod.REMOVED:
 			continue
 
-		comment.state_mod == StateMod.REMOVED
+		comment.state_mod = StateMod.REMOVED
 		comment.state_mod_set_by = v.username
 		g.db.add(comment)
 
@@ -1485,7 +1485,7 @@ def admin_unnuke_user(v):
 		if post.state_mod == StateMod.VISIBLE:
 			continue
 			
-		post.state_mod == StateMod.VISIBLE
+		post.state_mod = StateMod.VISIBLE
 		post.state_mod_set_by = v.username
 		g.db.add(post)
 
@@ -1493,7 +1493,7 @@ def admin_unnuke_user(v):
 		if comment.state_mod == StateMod.VISIBLE:
 			continue
 
-		comment.state_mod == StateMod.VISIBLE
+		comment.state_mod = StateMod.VISIBLE
 		comment.state_mod_set_by = v.username
 		g.db.add(comment)
 
