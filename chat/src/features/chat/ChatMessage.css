@@ -1,0 +1,125 @@
+.ChatMessage {
+  position: relative;
+  padding-right: 1.5rem;
+  max-height: 300px;
+}
+
+.ChatMessage__isDm {
+  background: var(--gray-800);
+  border-top: 1px dashed var(--primary);
+  border-bottom: 1px dashed var(--primary);
+}
+
+.ChatMessage__isOptimistic {
+  opacity: 0.5;
+}
+
+.ChatMessage p {
+  margin: 0;
+}
+
+.ChatMessage .btn {
+  border: none !important;
+}
+
+.ChatMessage-top {
+  display: flex;
+  align-items: center;
+}
+
+.ChatMessage-timestamp {
+  margin-left: 0.5rem;
+  opacity: 0.5;
+  font-size: 10px;
+}
+
+.ChatMessage-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 30px;
+  overflow: hidden;
+}
+
+.ChatMessage-content {
+  margin-right: 0.5rem;
+  word-wrap: break-word;
+  display: inline-block;
+}
+
+.ChatMessage-button {
+  margin: 0 0.5rem;
+}
+
+.ChatMessage-button i {
+  margin-right: 0.5rem;
+}
+
+.ChatMessage-button__confirmed {
+  color: red !important;
+}
+
+.ChatMessage-quoted-link {
+  padding-left: 2rem;
+}
+
+.ChatMessage-actions-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  z-index: 5;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  display: flex;
+  align-items: center;
+}
+
+.ChatMessage-actions-button button {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.ChatMessage-actions-button button i {
+  position: relative;
+  top: 3px;
+  margin-right: 1rem;
+}
+
+.ChatMessage-actions {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(20, 20, 20, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1rem;
+  padding-right: 3rem;
+  animation: fading-in 0.3s ease-in-out forwards;
+}
+
+.ChatMessage-actions button {
+  font-size: 10px;
+  background: none !important;
+}
+
+/* List */
+.ChatMessageList {
+  flex: 1;
+}
+
+.ChatMessageList-group {
+  margin-bottom: 1rem;
+  padding: 0.3rem;
+  border-radius: 8px;
+}
+
+.ChatMessageList-group:nth-child(even) {
+  background: rgba(255, 255, 255, 0.025);
+}

@@ -1,0 +1,5 @@
+.BaseDrawer {
+  flex: 1;
+  padding-right: 2rem;
+  overflow: hidden;
+}
