@@ -1,0 +1,9 @@
+.Username {
+  display: inline-flex;
+  align-items: center;
+}
+
+.Username > a {
+  font-weight: bold;
+  margin-left: 8px;
+}
