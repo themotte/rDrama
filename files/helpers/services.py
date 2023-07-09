@@ -26,7 +26,7 @@ def pusher_thread2(interests, notifbody, username):
 				'notification': {
 					'title': f'New message from @{username}',
 					'body': notifbody,
-					'deep_link': f'{SITE_FULL}/notifications?messages=true',
+					'deep_link': f'{SITE_FULL}/notifications/messages',
 					'icon': SITE_FULL + assetcache_path(f'images/{SITE_ID}/icon.webp'),
 				}
 			},
@@ -36,7 +36,7 @@ def pusher_thread2(interests, notifbody, username):
 					'body': notifbody,
 				},
 				'data': {
-					'url': '/notifications?messages=true',
+					'url': '/notifications/messages',
 				}
 			}
 		},
