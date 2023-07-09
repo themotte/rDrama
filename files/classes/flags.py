@@ -31,6 +31,7 @@ class CommentFlag(CreatedBase):
 	comment_id = Column(Integer, ForeignKey("comments.id"), nullable=False)
 	user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 	reason = Column(String)
+	created_timestampz = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
 
 	Index('cflag_user_idx', user_id)
 
