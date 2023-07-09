@@ -19,18 +19,18 @@
 		</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link py-3{% if '/notifications?posts=true' in request.full_path %} active{% endif %}" href="/notifications?posts=true">
+		<a class="nav-link py-3{% if '/notifications/posts' in request.full_path %} active{% endif %}" href="/notifications/posts">
 		Posts {% if v.post_notifications_count %}<span class="font-weight-bold" style="color:blue">({{v.post_notifications_count}})</span>{% endif %}
 		</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link py-3{% if '/notifications?messages=true' in request.full_path %} active{% endif %}" href="/notifications?messages=true">
+		<a class="nav-link py-3{% if '/notifications/messages' in request.full_path %} active{% endif %}" href="/notifications/messages">
 		Messages
 		</a>
 	</li>
 	{% if v.admin_level >= 2 %}
 		<li class="nav-item">
-			<a class="nav-link py-3{% if '/notifications?modmail=true' in request.full_path %} active{% endif %}" href="/notifications?modmail=true">
+			<a class="nav-link py-3{% if '/notifications/modmail' in request.full_path %} active{% endif %}" href="/notifications/modmail">
 			Modmail
 			</a>
 		</li>

@@ -42,104 +42,175 @@ def unread(v):
 
 @app.get("/notifications")
 @auth_required
-def notifications(v):
-	try: page = max(int(request.values.get("page", 1)), 1)
-	except: page = 1
+def notifications_main(v: User):
+	page: int = max(request.values.get("page", 1, int) or 1, 1)
 
-	messages = request.values.get('messages')
-	modmail = request.values.get('modmail')
-	posts = request.values.get('posts')
-	if modmail and v.admin_level >= 2:
-		comments = g.db.query(Comment).filter(Comment.sentto == MODMAIL_ID).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
-		next_exists = (len(comments) > 25)
-		listing = comments[:25]
-	elif messages:
-		if v and (v.shadowbanned or v.admin_level >= 3):
-			comments = g.db.query(Comment).filter(Comment.sentto != None, or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None, Comment.level == 1).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
-		else:
-			comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.sentto != None, or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None, Comment.level == 1).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
-
-		next_exists = (len(comments) > 25)
-		listing = comments[:25]
-	elif posts:
-		notifications = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(Notification.user_id == v.id, Comment.author_id == AUTOJANNY_ID).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
-
-		listing = []
-
-		for index, x in enumerate(notifications[:100]):
-			n, c = x
-			if n.read and index > 24: break
-			elif not n.read:
-				n.read = True
-				c.unread = True
-				g.db.add(n)
-			if n.created_utc > 1620391248: c.notif_utc = n.created_utc
-			listing.append(c)
-
-		g.db.commit()
-
-		next_exists = (len(notifications) > len(listing))
-	else:		
-		comments = g.db.query(Comment, Notification).join(Notification, Notification.comment_id == Comment.id).filter(
+	comments = (g.db.query(Comment, Notification)
+		.join(Notification.comment)
+		.filter(
 			Notification.user_id == v.id,
 			Comment.state_mod == StateMod.VISIBLE,
 			Comment.state_user_deleted_utc == None,
 			Comment.author_id != AUTOJANNY_ID,
-		).order_by(Notification.created_utc.desc())
+		).order_by(Notification.created_utc.desc()))
 
-		if not (v and (v.shadowbanned or v.admin_level >= 3)):
-			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
+	if not v.shadowbanned and v.admin_level < 3:
+		comments = comments.join(Comment.author).filter(User.shadowbanned == None)
 
-		comments = comments.offset(25 * (page - 1)).limit(26).all()
+	comments = comments.offset(25 * (page - 1)).limit(26).all()
 
-		next_exists = (len(comments) > 25)
-		comments = comments[:25]
+	next_exists = (len(comments) > 25)
+	comments = comments[:25]
 
-		cids = [x[0].id for x in comments]
+	cids = [x[0].id for x in comments]
 
-		comms = get_comments(cids, v=v)
+	comms = get_comments(cids, v=v)
 
-		listing = []
-		for c, n in comments:
-			if n.created_utc > 1620391248: c.notif_utc = n.created_utc
-			if not n.read:
-				n.read = True
-				c.unread = True
-				g.db.add(n)
+	listing = []
+	for c, n in comments:
+		if n.created_utc > 1620391248: c.notif_utc = n.created_utc
+		if not n.read:
+			n.read = True
+			c.unread = True
+			g.db.add(n)
 
-			if c.parent_submission:
+		if c.parent_submission:
+			if c.replies2 == None:
+				c.replies2 = (c.child_comments
+					.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids)))
+					.order_by(Comment.created_utc.desc()).all())
+				for x in c.replies2:
+					if x.replies2 == None: x.replies2 = []
+			count = 0
+			while (count < 50 and c.parent_comment
+					and (c.parent_comment.author_id == v.id or c.parent_comment.id in cids)):
+				count += 1
+				c = c.parent_comment
 				if c.replies2 == None:
-					c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
+					c.replies2 = (c.child_comments
+						.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids)))
+						.order_by(Comment.created_utc.desc()).all())
 					for x in c.replies2:
-						if x.replies2 == None: x.replies2 = []
-				count = 0
-				while count < 50 and c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment.id in cids):
-					count += 1
-					c = c.parent_comment
-					if c.replies2 == None:
-						c.replies2 = c.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
-						for x in c.replies2:
-							if x.replies2 == None:
-								x.replies2 = x.child_comments.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids))).all()
-			else:
-				while c.parent_comment:
-					c = c.parent_comment
-				c.replies2 = g.db.query(Comment).filter_by(parent_comment_id=c.id).order_by(Comment.id).all()
+						if x.replies2 == None:
+							x.replies2 = (x.child_comments
+								.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids)))
+								.order_by(Comment.created_utc.desc()).all())
+		else:
+			while c.parent_comment:
+				c = c.parent_comment
+			c.replies2 = c.child_comments.order_by(Comment.id).all()
 
-			if c not in listing: listing.append(c)
+		if c not in listing: listing.append(c)
 
 	g.db.commit()
 
-	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
+	if request.headers.get("Authorization"):
+		return {"data": [x.json for x in listing]}
 
 	return render_template("notifications.html",
-							v=v,
-							notifications=listing,
-							next_exists=next_exists,
-							page=page,
-							standalone=True,
-							render_replies=True
-						   )
+		v=v,
+		notifications=listing,
+		next_exists=next_exists,
+		page=page,
+		standalone=True,
+		render_replies=True,
+	)
+
+
+@app.get("/notifications/posts")
+@auth_required
+def notifications_posts(v: User):
+	page: int = max(request.values.get("page", 1, int) or 1, 1)
+
+	notifications = (g.db.query(Notification, Comment)
+		.join(Comment, Notification.comment_id == Comment.id)
+		.filter(Notification.user_id == v.id, Comment.author_id == AUTOJANNY_ID)
+		.order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all())
+
+	listing = []
+
+	for index, x in enumerate(notifications[:100]):
+		n, c = x
+		if n.read and index > 24: break
+		elif not n.read:
+			n.read = True
+			c.unread = True
+			g.db.add(n)
+		if n.created_utc > 1620391248: c.notif_utc = n.created_utc
+		listing.append(c)
+
+	next_exists = (len(notifications) > len(listing))
+
+	g.db.commit()
+
+	if request.headers.get("Authorization"):
+		return {"data": [x.json for x in listing]}
+
+	return render_template("notifications.html",
+		v=v,
+		notifications=listing,
+		next_exists=next_exists,
+		page=page,
+		standalone=True,
+		render_replies=True,
+	)
+
+
+@app.get("/notifications/modmail")
+@admin_level_required(2)
+def notifications_modmail(v: User):
+	page: int = max(request.values.get("page", 1, int) or 1, 1)
+
+	comments = (g.db.query(Comment)
+		.filter(Comment.sentto == MODMAIL_ID)
+		.order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all())
+	next_exists = (len(comments) > 25)
+	listing = comments[:25]
+
+	if request.headers.get("Authorization"):
+		return {"data": [x.json for x in listing]}
+
+	return render_template("notifications.html",
+		v=v,
+		notifications=listing,
+		next_exists=next_exists,
+		page=page,
+		standalone=True,
+		render_replies=True,
+	)
+
+
+@app.get("/notifications/messages")
+@auth_required
+def notifications_messages(v: User):
+	page: int = max(request.values.get("page", 1, int) or 1, 1)
+
+	comments = g.db.query(Comment).filter(
+		Comment.sentto != None,
+		or_(Comment.author_id==v.id, Comment.sentto==v.id),
+		Comment.parent_submission == None,
+		Comment.level == 1,
+	)
+
+	if not v.shadowbanned and v.admin_level < 3:
+		comments = comments.join(Comment.author).filter(User.shadowbanned == None)
+
+	comments = comments.order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
+
+	next_exists = (len(comments) > 25)
+	listing = comments[:25]
+
+	if request.headers.get("Authorization"):
+		return {"data": [x.json for x in listing]}
+
+	return render_template("notifications.html",
+		v=v,
+		notifications=listing,
+		next_exists=next_exists,
+		page=page,
+		standalone=True,
+		render_replies=True,
+	)
 
 
 @app.get("/")
