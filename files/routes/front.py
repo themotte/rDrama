@@ -49,7 +49,6 @@ def notifications(v):
 	messages = request.values.get('messages')
 	modmail = request.values.get('modmail')
 	posts = request.values.get('posts')
-	reddit = request.values.get('reddit')
 	if modmail and v.admin_level >= 2:
 		comments = g.db.query(Comment).filter(Comment.sentto == MODMAIL_ID).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
@@ -80,31 +79,12 @@ def notifications(v):
 		g.db.commit()
 
 		next_exists = (len(notifications) > len(listing))
-	elif reddit:
-		notifications = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(Notification.user_id == v.id, Comment.body_html.like('%<p>New site mention: <a href="https://old.reddit.com/r/%'), Comment.parent_submission == None, Comment.author_id == NOTIFICATIONS_ID).order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all()
-
-		listing = []
-
-		for index, x in enumerate(notifications[:100]):
-			n, c = x
-			if n.read and index > 24: break
-			elif not n.read:
-				n.read = True
-				c.unread = True
-				g.db.add(n)
-			if n.created_utc > 1620391248: c.notif_utc = n.created_utc
-			listing.append(c)
-
-		g.db.commit()
-
-		next_exists = (len(notifications) > len(listing))
 	else:		
 		comments = g.db.query(Comment, Notification).join(Notification, Notification.comment_id == Comment.id).filter(
 			Notification.user_id == v.id,
 			Comment.state_mod == StateMod.VISIBLE,
 			Comment.state_user_deleted_utc == None,
 			Comment.author_id != AUTOJANNY_ID,
-			Comment.body_html.notlike('%<p>New site mention: <a href="https://old.reddit.com/r/%')
 		).order_by(Notification.created_utc.desc())
 
 		if not (v and (v.shadowbanned or v.admin_level >= 3)):
