@@ -6,8 +6,8 @@
 				<img alt="header icon" height=33 width=80 src="{{ ('images/'~SITE_ID~'/headericon.webp') | asset }}">
 			</a>
 			
-			<a href="/" class="flex-grow-1">
-				<img id="logo" alt="logo" src="{{ ('images/'~SITE_ID~'/logo.webp') | asset }}" width="100" height="20">
+			<a href="/" id="logo" class="flex-grow-1 logo-text">
+				{{SITE_TITLE}}
 			</a>
 
 			<div class="flex-grow-1 d-fl d-none d-md-block {% if not v %}pad{% endif %}">
