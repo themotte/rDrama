@@ -17,7 +17,7 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column('commentflags', sa.Column('created_timestampz', sa.DateTime(timezone=True), nullable=False, server_default=sa.text('NOW()')))
+    op.add_column('commentflags', sa.Column('created_timestampz', sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.text('NOW()')))
     op.execute("""
         UPDATE commentflags 
         SET created_timestampz = 
