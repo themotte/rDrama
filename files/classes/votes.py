@@ -50,6 +50,7 @@ class CommentVote(CreatedBase):
 	vote_type = Column(Integer, nullable=False)
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	real = Column(Boolean, default=True, nullable=False)
+	created_timestampz = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
 
 	Index('cvote_user_index', user_id)
 	Index('commentvotes_comments_type_index', vote_type)
