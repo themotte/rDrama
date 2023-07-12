@@ -1,161 +1,56 @@
+{%- block content -%}
+	<div id="register-form" class="">
+		{% if ref_user %}
+		<h1 class="h2">@{{ref_user.username}} has invited you!</h1>
+		<p class="text-muted mb-md-2">Looks like someone wants you to join {{SITE_TITLE}}.</p>
+		{% else %}
+		<h1 class="h2">Create your account.</h1>
+		<p class="text-muted mb-md-2">No email address required.</p>
+		{% endif %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	{% include "analytics.html" %}
-	
-	<meta name="description" content="{{config('DESCRIPTION')}}">
-	{% include "csp.html" %}
+		<form action="/signup" method="post" class="mt-md-3" id="signup">
+			{% if error %}<span class="text-danger">{{error}}</span><br>{% endif %}
 
-		<script src="{{ 'js/bootstrap.js' | asset }}"></script>
+			<input type="hidden" name="formkey" value="{{formkey}}">
+			<input type="hidden" name="now" value="{{now}}">
 
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+			{% if redirect %}<input type="hidden" name="redirect" value="{{redirect}}">{% endif %}
+			{% if ref_user %}<input type="hidden" name="referred_by" value="{{ref_user.id}}">{% endif %}
+			<label for="username-register" class="mt-3">Username</label>
+			<input autocomplete="off" class="form-control" id="username-register" aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" min="3" max="25" required autofocus tabindex="1">
+			<small id="usernameHelpRegister"></small>
 
-		<meta name="author" content="">
-		<meta property="og:type" content="article">
-		<meta property="og:title" content="{{SITE_TITLE}}">
-		<meta property="og:site_name" content="{{request.host}}">
-		<meta property="og:image" content="{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}">
-		<meta property="og:url" content="{{request.host}}">
-		<meta property="og:description" name="description" content="{{config('DESCRIPTION')}}">
-		<meta property="og:author" name="author" content="{{SITE_FULL}}">
-		<meta property="og:site_name" content="{{request.host}}">
+			<label for="email-register" class="mt-3">Email Address</label> <small class="d-inline-block text-muted ml-1">(optional)</small>
+			<input style="background-color: var(--gray-800)" autocomplete="off" class="form-control" id="email-register" aria-describedby="emailHelpRegister" type="email" pattern='[^@]+@[^@]+\.[^@]+' name="email" tabindex="2">
 
-		<meta name="twitter:card" content="summary_large_image">
-		<meta name="twitter:site" content="{{SITE_FULL}}">
-		<meta name="twitter:title" content="{{SITE_TITLE}}">
-		<meta name="twitter:creator" content="{{SITE_FULL}}">
-		<meta name="twitter:description" content="{{config('DESCRIPTION')}}">
-		<meta name="twitter:image" content="{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}">
-		<meta name="twitter:url" content="{{request.host}}">
+			<label for="password-register" class="mt-3">Password</label>
+			<input autocomplete="off" class="form-control" id="password-register" aria-describedby="passwordHelpReigster" type="password" name="password" required tabindex="4">
+			<small id="passwordHelpRegister" class="form-text font-weight-bold text-muted d-none mt-1">Minimum of 8 characters required.</small>
+			<small id="passwordHelpSuccess" class="form-text font-weight-bold text-success d-none mt-1">Your password meets the requirements.</small>
 
-		<title>{% if ref_user %}{{ref_user.username}} invites you to {{SITE_TITLE}}{% else %}Sign up - {{SITE_TITLE}}{% endif %}</title>
+			<label for="password_confirm" class="mt-3">Confirm Password</label>
+			<input autocomplete="off" class="form-control" id="password_confirm" aria-describedby="passwordConfirmHelp" type="password" name="password_confirm" required tabindex="5">
+			
+			<div class="custom-control custom-checkbox mt-4">
+				<input autocomplete="off" type="checkbox" class="custom-control-input" id="termsCheck" required tabindex="6">
+				<label class="custom-control-label terms" for="termsCheck">I accept the <a href="/rules" tabindex="8">rules</a></label>
+			</div>
 
-		<style>:root{--primary:#{{config('DEFAULT_COLOR')}}</style>
-		<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
-		<link rel="stylesheet" href="{{ ('css/'~config('DEFAULT_THEME')~'.css') | asset }}">
+			{% if hcaptcha %}
+				<div class="h-captcha" data-sitekey="{{hcaptcha}}"></div>
+			{% endif %}
 
-</head>
+			<button class="btn btn-primary login w-100 mt-3" id="register_button" tabindex="7">Register</button>
 
-<body id="login">
-
-	<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top border-0">
-		<div class="container-fluid d-none">
-				<button class="navbar-toggler d-none" role="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
-				aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-		</button>
-</div>
-</nav>
-
-<div class="container-fluid position-absolute h-100 p-0 overflow-auto">
-		<div class="row no-gutters h-100">
-
-				<div class="col-12 col-md-6 my-auto p-3">
-
-						<div class="row justify-content-center">
-
-								<div class="col-10 col-md-7">
-
-										<div class="mb-3">
-												<a href="/" class="text-decoration-none"><span class="h3 text-primary">‎</span></a>
-										</div>
-
-										<div id="register-form" class="">
-
-											{% if ref_user %}
-											<h1 class="h2">@{{ref_user.username}} has invited you!</h1>
-											<p class="text-muted mb-md-2">Looks like someone wants you to join {{SITE_TITLE}}.</p>
-											{% else %}
-											<h1 class="h2">Create your account.</h1>
-											<p class="text-muted mb-md-2">No email address required.</p>
-											{% endif %}
-
-											<form action="/signup" method="post" class="mt-md-3" id="signup">
-
-												{% if error %}<span class="text-danger">{{error}}</span><br>{% endif %}
-
-												<input type="hidden" name="formkey" value="{{formkey}}">
-												<input type="hidden" name="now" value="{{now}}">
-
-												{% if redirect %}<input type="hidden" name="redirect" value="{{redirect}}">{% endif %}
-												{% if ref_user %}
-												<input type="hidden" name="referred_by" value="{{ref_user.id}}">{% endif %}
-
-												<label for="username-register" class="mt-3">Username</label>
-
-												<input autocomplete="off" class="form-control" id="username-register"
-												aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" min="3" max="25" required autofocus tabindex="1">
-												<small id="usernameHelpRegister"></small>
-
-												<label for="email-register" class="mt-3">Email Address</label>
-
-												<small class="d-inline-block text-muted ml-1">(optional)</small>
-
-												<input style="background-color: var(--gray-800)" autocomplete="off" class="form-control" id="email-register"
-												aria-describedby="emailHelpRegister" type="email" pattern='[^@]+@[^@]+\.[^@]+' name="email" tabindex="2">
-
-												<label for="password-register" class="mt-3">Password</label>
-
-												<input autocomplete="off" class="form-control" id="password-register"
-												aria-describedby="passwordHelpReigster" type="password" name="password" required tabindex="4">
-												<small id="passwordHelpRegister" class="form-text font-weight-bold text-muted d-none mt-1">Minimum of 8
-														characters
-												required.</small>
-												<small id="passwordHelpSuccess" class="form-text font-weight-bold text-success d-none mt-1">Your password meets the requirements.
-												</small>
-
-												<label for="password_confirm" class="mt-3">Confirm Password</label>
-
-												<input autocomplete="off" class="form-control" id="password_confirm"
-												aria-describedby="passwordConfirmHelp" type="password" name="password_confirm"
-												required tabindex="5">
-												<div class="custom-control custom-checkbox mt-4">
-														<input autocomplete="off" type="checkbox" class="custom-control-input" id="termsCheck" required tabindex="6">
-														<label class="custom-control-label terms" for="termsCheck">I accept the <a href="/rules" tabindex="8">rules</a></label>
-												</div>
-
-												{% if hcaptcha %}
-													<div class="h-captcha" data-sitekey="{{hcaptcha}}"></div>
-												{% endif %}
-
-												<button class="btn btn-primary login w-100 mt-3" id="register_button" tabindex="7">Register</button>
-
-												<div class="text-center text-muted text-small mt-2 mb-0">
-																Already have an account? <a href="/login{{'?redirect='+redirect if redirect else ''}}" class="font-weight-bold toggle-login" tabindex="9">Log in</a>
-												</div>
-
-											</form>
-
-										</div>
-
-								</div>
-
-						</div>
-
-				</div>
-
-				<div class="col-12 col-md-6 d-none d-md-block">
-
-						<div class="splash-wrapper">
-
-								<div class="splash-overlay"></div>
-
-								<img alt="cover" loading="lazy" class="splash-img" src="{{ ('images/'~SITE_ID~'/cover.webp') | asset }}"></img>
-						</div>
-
-				</div>
-
-		</div>
-</div>
+			<div class="text-center text-muted text-small mt-2 mb-0">
+				Already have an account? <a href="/login{{'?redirect='+redirect if redirect else ''}}" class="font-weight-bold toggle-login" tabindex="9">Log in</a>
+			</div>
+		</form>
+	</div>
+{%- endblock -%}
 
 <script src="{{ 'js/signup.js' | asset }}"></script>
 
 {% if hcaptcha %}
 	<script src="{{ 'js/hcaptcha.js' | asset }}"></script>
 {% endif %}
-
-</body>
-
-</html>
