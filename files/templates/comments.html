@@ -10,7 +10,6 @@
 	{%- set score = c.score_str(render_ctx) -%}
 	{%- set downs = c.downvotes_str(render_ctx) -%}
 	{% set replies = c.replies(v) %}
-	{%- set is_notification_page = request.path.startswith('/notifications') -%}
 
 {% if not c.visibility_state(v)[0] %}
 {% if c.show_descendants(v) %}
@@ -61,10 +60,10 @@
 {%- set voted = c.voted_display(v) -%}
 
 {% if standalone and level==1 %}
-<div class="post-info post-row-cid-{{c.id}} mb-1 mr-2 {% if is_notification_page %}mt-5{% else %}mt-3{% endif %}">
+<div class="post-info post-row-cid-{{c.id}} mb-1 mr-2 mt-3">
 	{% if c.post and c.post.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 	<span class="align-top">
-		<span class="font-weight-bold">{{c.header_msg(v, is_notification_page, replies | length) | safe}}</span>
+		<span class="font-weight-bold">{{c.header_msg(v, is_notification_page) | safe}}</span>
 	</span>
 </div>
 {% endif %}
