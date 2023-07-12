@@ -4933,7 +4933,7 @@ html {
 	display: block;
 }
 .comment-anchor:target, .unread {
-	background: #ffffff22 !important;
+	background: #ffffff22;
 	padding: 12px;
 	padding-bottom: 4px;
 }
