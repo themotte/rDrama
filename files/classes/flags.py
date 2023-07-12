@@ -1,5 +1,5 @@
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, declarative_base
+from sqlalchemy.orm import relationship
 from files.classes.base import CreatedBase, Base
 from files.helpers.lazy import lazy
 from files.helpers.config.const import *
