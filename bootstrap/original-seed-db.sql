@@ -53,5 +53,4 @@ INSERT INTO public.badge_defs VALUES
 (24,'Patron IV','Contributed at least $50'),
 (25,'Patron V','Contributed at least $100'),
 (26,'Patron VI','Contributed at least $250'),
-(27,'Patron VII','Contributed at least $500'),
-(61,'Lab Rat','Helped test features in development');
+(27,'Patron VII','Contributed at least $500');
