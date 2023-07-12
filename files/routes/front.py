@@ -62,47 +62,17 @@ def notifications_main(v: User):
 	next_exists = (len(comments) > 25)
 	comments = comments[:25]
 
-	cids = [x[0].id for x in comments]
-
-	comms = get_comments(cids, v=v)
-
-	listing = []
 	for c, n in comments:
-		if n.created_utc > 1620391248: c.notif_utc = n.created_utc
-		if not n.read:
-			n.read = True
-			c.unread = True
-			g.db.add(n)
+		c.notif_utc = n.created_utc
+		c.unread = not n.read
+		n.read = True
 
-		if c.parent_submission:
-			if c.replies2 == None:
-				c.replies2 = (c.child_comments
-					.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids)))
-					.order_by(Comment.created_utc.desc()).all())
-				for x in c.replies2:
-					if x.replies2 == None: x.replies2 = []
-			count = 0
-			while (count < 50 and c.parent_comment
-					and (c.parent_comment.author_id == v.id or c.parent_comment.id in cids)):
-				count += 1
-				c = c.parent_comment
-				if c.replies2 == None:
-					c.replies2 = (c.child_comments
-						.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids)))
-						.order_by(Comment.created_utc.desc()).all())
-					for x in c.replies2:
-						if x.replies2 == None:
-							x.replies2 = (x.child_comments
-								.filter(or_(Comment.author_id == v.id, Comment.id.in_(cids)))
-								.order_by(Comment.created_utc.desc()).all())
-		else:
-			while c.parent_comment:
-				c = c.parent_comment
-			c.replies2 = c.child_comments.order_by(Comment.id).all()
+	listing: list[Comment] = [c for c, _ in comments]
 
-		if c not in listing: listing.append(c)
-
+	# TODO: commit after request rendered, then default session expiry is fine
+	g.db.expire_on_commit = False
 	g.db.commit()
+	g.db.expire_on_commit = True
 
 	if request.headers.get("Authorization"):
 		return {"data": [x.json for x in listing]}
@@ -113,7 +83,8 @@ def notifications_main(v: User):
 		next_exists=next_exists,
 		page=page,
 		standalone=True,
-		render_replies=True,
+		render_replies=False,
+		is_notification_page=True,
 	)
 
 
@@ -153,6 +124,7 @@ def notifications_posts(v: User):
 		page=page,
 		standalone=True,
 		render_replies=True,
+		is_notification_page=True,
 	)
 
 
@@ -177,6 +149,7 @@ def notifications_modmail(v: User):
 		page=page,
 		standalone=True,
 		render_replies=True,
+		is_notification_page=True,
 	)
 
 
@@ -210,6 +183,7 @@ def notifications_messages(v: User):
 		page=page,
 		standalone=True,
 		render_replies=True,
+		is_notification_page=True,
 	)
 
 

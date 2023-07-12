@@ -359,7 +359,7 @@ class Comment(CreatedBase):
 		return self.is_message and not self.sentto
 
 	@lazy
-	def header_msg(self, v, is_notification_page:bool, reply_count:int) -> str:
+	def header_msg(self, v, is_notification_page: bool) -> str:
 		'''
 		Returns a message that is in the header for a comment, usually for
 		display on a notification page.
@@ -367,9 +367,9 @@ class Comment(CreatedBase):
 		if self.post:
 			post_html:str = f"<a href=\"{self.post.permalink}\">{self.post.realtitle(v)}</a>"
 			if v:
-				if v.id == self.author_id and reply_count:
-					text = f"Comment {'Replies' if reply_count != 1 else 'Reply'}"
-				elif v.id == self.post.author_id and self.level == 1:
+				if self.level > 1 and v.id == self.parent_comment.author_id:
+					text = "Comment Reply"
+				elif self.level == 1 and v.id == self.post.author_id:
 					text = "Post Reply"
 				elif self.parent_submission in v.subscribed_idlist():
 					text = "Subscribed Thread"
