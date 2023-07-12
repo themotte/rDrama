@@ -6,13 +6,13 @@ from sqlalchemy.orm import Session, declared_attr, deferred, relationship
 
 from files.classes.base import CreatedBase
 from files.classes.flags import Flag
-from files.classes.visstate import StateMod, StateReport
+from files.classes.visstate import StateMod, StateReport, VisibilityState
 from files.classes.votes import Vote
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.const import *
 from files.helpers.config.environment import (SCORE_HIDING_TIME_HOURS, SITE,
                                               SITE_FULL, SITE_ID)
-from files.helpers.content import ModerationState, body_displayed
+from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy
 from files.helpers.time import format_age, format_datetime
 
@@ -357,5 +357,5 @@ class Submission(CreatedBase):
 		return f"/edit_post/{self.id}"
 	
 	@property
-	def moderation_state(self) -> ModerationState:
-		return ModerationState.from_submittable(self)
+	def visibility_state(self) -> VisibilityState:
+		return VisibilityState.from_submittable(self)

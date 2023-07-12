@@ -11,7 +11,7 @@
 	{%- set downs = c.downvotes_str(render_ctx) -%}
 	{% set replies = c.replies(v) %}
 
-{% if not c.visibility_state(v)[0] %}
+{% if not c.visibility_and_message(v)[0] %}
 {% if c.show_descendants(v) %}
 <div id="comment-{{c.id}}" class="comment">
 		<div class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement)"></div>
@@ -21,7 +21,7 @@
 
 		<div class="comment-user-info">
 			{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span>{% endif %}
-			{{c.visibility_state(v)[1]}}
+			{{c.visibility_and_message(v)[1]}}
 		</div>
 		
 		<div class="comment-body">
