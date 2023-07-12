@@ -13,6 +13,7 @@
 	--gray-800: #1e293b;
 	--gray-900: #0f172a;
 	--background: #2d3c50;
+	--white: #fff;
 }
 
 body, .container.transparent, .card {
@@ -140,4 +141,12 @@ color: var(--gray-700);
 
 #frontpage .post-title a:visited, .visited {
 	color: #6e6e6e !important;
+}
+
+.custom-switch .custom-control-label::after {
+	background-color: var(--white);
+}
+
+.bg-white {
+	background-color: var(--background) !important;
 }
