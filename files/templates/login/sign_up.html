@@ -8,10 +8,8 @@
 	{% set login_namespace.authtitle = "Create your account." %}
 	{% set login_namespace.authtext = "No email address required." %}
 {% endif %}
-{% if ref_user or not site_settings['login_required'] %}
-	{% block authtitle %}{{login_namespace.authtitle}}{% endblock %}
-	{% block authtext %}{{login_namespace.authtext}}{% endblock %}
-{% endif %}
+{% block authtitle %}{{login_namespace.authtitle}}{% endblock %}
+{% block authtext %}{{login_namespace.authtext}}{% endblock %}
 
 {%- block content -%}
 	<div id="register-form" class="">
