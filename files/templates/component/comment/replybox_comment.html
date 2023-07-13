@@ -1,10 +1,10 @@
 <div id="reply-to-{{c.id}}" class="d-none">
 	<div id="comment-form-space-{{c.fullname}}" class="comment-write collapsed child">
-		<form id="reply-to-t3_{{c.id}}" action="/comment" method="post" enctype="multipart/form-data"> 
+		<form id="reply-to-{{c.fullname}}" action="/comment" method="post" enctype="multipart/form-data">
 			<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 			<input type="hidden" name="parent_fullname" value="{{c.fullname}}"> 
 			<input autocomplete="off" id="reply-form-submission-{{c.fullname}}" type="hidden" name="submission" value="{{c.post.id}}"> 
-			<textarea required autocomplete="off" minlength="1" maxlength="{{COMMENT_BODY_LENGTH_MAXIMUM}}" oninput="markdown('reply-form-body-{{c.fullname}}', 'reply-edit-{{c.id}}');charLimit('reply-form-body-{{c.fullname}}','charcount-{{c.id}}')" id="reply-form-body-{{c.fullname}}" data-fullname="{{c.fullname}}" name="body" form="reply-to-t3_{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> 
+			<textarea required autocomplete="off" minlength="1" maxlength="{{COMMENT_BODY_LENGTH_MAXIMUM}}" oninput="markdown('reply-form-body-{{c.fullname}}', 'reply-edit-{{c.id}}');charLimit('reply-form-body-{{c.fullname}}','charcount-{{c.id}}')" id="reply-form-body-{{c.fullname}}" data-fullname="{{c.fullname}}" name="body" form="reply-to-{{c.fullname}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
 	
 			<div class="text-small font-weight-bold mt-1" id="charcount-{{c.id}}" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
