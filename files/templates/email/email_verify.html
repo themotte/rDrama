@@ -5,12 +5,12 @@
 {% block content %}
 	<p>Thanks for joining {{SITE_TITLE}}. We’re happy to have you on board. Please click the button below to verify your email address:</p>
 	<div class="button-container">
-			<a href="{{action_url}}" class="button" target="_blank">Verify Email</a>
+		<a href="{{action_url}}" class="button" target="_blank">Verify Email</a>
 	</div>
 	<p class="reference-text">For reference, here's your username:</p>
 	<div class="user-info">
-			<p><strong>Username:</strong> {{v.email}}</p>
-			<p><strong>Email:</strong> {{v.username}}</p>
+		<p><strong>Username:</strong> {{v.username}}</p>
+		<p><strong>Email:</strong> {{v.email}}</p>
 	</div>
 	<p class="user-info">Please note that {{SITE_TITLE}} will never ask you for your email, password, or two-factor token via email, text, or phone.</p>
 	<hr />
