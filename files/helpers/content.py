@@ -2,15 +2,19 @@ from __future__ import annotations
 
 import random
 import urllib.parse
-from typing import TYPE_CHECKING, Optional, Union
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any, Optional
 
 from sqlalchemy.orm import Session
 
 from files.helpers.config.const import PERMS
+from files.classes.visstate import StateMod, StateReport
 
 if TYPE_CHECKING:
 	from files.classes import Comment, Submission, User
-	Submittable = Union[Submission, Comment]
+	Submittable = Comment | Submission
+else:
+	Submittable = Any
 
 
 def _replace_urls(url:str) -> str:
@@ -86,18 +90,100 @@ def canonicalize_url2(url:str, *, httpsify:bool=False) -> urllib.parse.ParseResu
 	return url_parsed
 
 
-def moderated_body(target:Submittable, v:Optional[User]) -> Optional[str]:
-	if v and (v.admin_level >= PERMS['POST_COMMENT_MODERATION'] \
-			or v.id == target.author_id):
+@dataclass(frozen=True, kw_only=True, slots=True)
+class ModerationState:
+	'''
+	The moderation state machine. This holds moderation state information,
+	including whether this was removed, deleted, filtered, whether OP was 
+	shadowbanned, etc
+	'''
+	removed: bool
+	removed_by_name: str | None
+	deleted: bool
+	reports_ignored: bool
+	filtered: bool
+	op_shadowbanned: bool
+	op_id: int
+	op_name_safe: str
+
+	@classmethod
+	def from_submittable(cls, target: Submittable) -> "ModerationState":
+		return cls(
+			removed=bool(target.state_mod != StateMod.VISIBLE),
+			removed_by_name=target.state_mod_set_by,  # type: ignore
+			deleted=bool(target.state_user_deleted_utc != None),
+			reports_ignored=bool(target.state_report == StateReport.IGNORED),
+			filtered=bool(target.state_mod == StateMod.FILTERED),
+			op_shadowbanned=bool(target.author.shadowbanned),
+			op_id=target.author_id,  # type: ignore
+			op_name_safe=target.author_name
+		)
+
+	def moderated_body(self, v: User | None) -> str | None:
+		if v and (v.admin_level >= PERMS['POST_COMMENT_MODERATION'] \
+			or v.id == self.op_id):
+			return None
+		if self.deleted: return 'Deleted'
+		if self.appear_removed(v): return 'Removed'
+		if self.filtered: return 'Filtered'
 		return None
-	if target.deleted_utc: return 'Deleted by author'
-	if target.is_banned or target.filter_state == 'removed': return 'Removed'
-	if target.filter_state == 'filtered': return 'Filtered'
-	return None
+	
+	def visibility_state(self, v: User | None, is_blocking: bool) -> tuple[bool, str]:
+		'''
+		Returns a tuple of whether this content is visible and a publicly 
+		visible message to accompany it. The visibility state machine is
+		a slight mess but... this should at least unify the state checks.
+		'''
+		def can(v: User | None, perm_level: int) -> bool:
+			return v and v.admin_level >= perm_level
+
+		can_moderate: bool = can(v, PERMS['POST_COMMENT_MODERATION'])
+		can_shadowban: bool = can(v, PERMS['USER_SHADOWBAN'])
+
+		if v and v.id == self.op_id:
+			return True, "This shouldn't be here, please report it!"
+		if (self.removed and not can_moderate) or \
+				(self.op_shadowbanned and not can_shadowban):
+			msg: str = 'Removed'
+			if self.removed_by_name:
+				msg = f'Removed by @{self.removed_by_name}'
+			return False, msg
+		if self.filtered and not can_moderate:
+			return False, 'Filtered'
+		if self.deleted and not can_moderate:
+			return False, 'Deleted by author'
+		if is_blocking:
+			return False, f'You are blocking @{self.op_name_safe}'
+		return True, "This shouldn't be here, please report it!"
+	
+	def is_visible_to(self, v: User | None, is_blocking: bool) -> bool:
+		return self.visibility_state(v, is_blocking)[0]
+	
+	def replacement_message(self, v: User | None, is_blocking: bool) -> str:
+		return self.visibility_state(v, is_blocking)[1]
+	
+	def appear_removed(self, v: User | None) -> bool:
+		if self.removed: return True
+		if not self.op_shadowbanned: return False
+		return (not v) or bool(v.admin_level < PERMS['USER_SHADOWBAN'])
+	
+	@property
+	def publicly_visible(self) -> bool:
+		return all(
+			not state for state in 
+			[self.deleted, self.removed, self.filtered, self.op_shadowbanned]
+		)
+	
+	@property
+	def explicitly_moderated(self) -> bool:
+		'''
+		Whether this was removed or filtered and not as the result of a shadowban
+		'''
+		return self.removed or self.filtered
 
 
 def body_displayed(target:Submittable, v:Optional[User], is_html:bool) -> str:
-	moderated:Optional[str] = moderated_body(target, v)
+	moderated:Optional[str] = target.moderation_state.moderated_body(v)
 	if moderated: return moderated
 
 	body = target.body_html if is_html else target.body

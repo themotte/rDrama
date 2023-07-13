@@ -11,21 +11,16 @@
 
 {% block title %}
 <title>{{p.plaintitle(v)}}</title>
-{% if p.is_banned %}
-
-{% else %}
-
-{% endif %}
 {% endblock %}
 
 {% block content %}
 <div class="mb-2 p-3">
 										<div class="col-12">
 												<div id="post-{{p.id}}" class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-														<div class="card-block my-md-auto{% if p.is_banned %} banned{% endif %}">
-																<div class="post-meta text-left d-md-none mb-1">{% if p.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}{% if p.is_banned %}removed by @{{p.ban_reason}}{% else %}[Deleted by user]{% endif %}</div>
+														<div class="card-block my-md-auto{% if p.state_mod == StateMod.REMOVED %} banned{% endif %}">
+																<div class="post-meta text-left d-md-none mb-1">{% if p.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}{% if p.state_mod == StateMod.REMOVED %}removed by @{{p.state_mod_set_by}}{% else %}[Deleted by user]{% endif %}</div>
 																<h5 class="card-title post-title text-left mb-0 mb-md-1">{{p.plaintitle(v)}}</h5>
-																<div class="post-meta text-left d-none d-md-block">{% if p.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}{% if p.is_banned %}removed by @{{p.ban_reason}}{% else %}[Deleted by user]{% endif %}</div>
+																<div class="post-meta text-left d-none d-md-block">{% if p.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}{% if p.state_mod == StateMod.REMOVED %}removed by @{{p.state_mod_set_by}}{% else %}[Deleted by user]{% endif %}</div>
 
 														</div>
 
@@ -41,7 +36,7 @@
 														</div>
 
 												</div>
-			{% if v and v.admin_level > 1 and p.body_html %}
+			{% if v and v.admin_level >= 2 and p.body_html %}
 												<div class="post-body mt-4 mb-2"> 
 				{{p.body_html | safe}}
 			</div>

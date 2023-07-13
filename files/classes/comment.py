@@ -1,18 +1,23 @@
-import time
-from typing import Literal, Optional
+from typing import TYPE_CHECKING, Literal, Optional
 from urllib.parse import parse_qs, urlencode, urlparse
 
 from flask import g
+import math
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
 from files.classes.base import CreatedBase
+from files.classes.visstate import StateMod, StateReport
 from files.helpers.config.const import *
 from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS, SITE_FULL
-from files.helpers.content import (body_displayed,
+from files.helpers.content import (ModerationState, body_displayed,
                                    execute_shadowbanned_fake_votes)
 from files.helpers.lazy import lazy
+from files.helpers.math import clamp
 from files.helpers.time import format_age
+
+if TYPE_CHECKING:
+	from files.classes.user import User
 
 CommentRenderContext = Literal['comments', 'volunteer']
 
@@ -23,12 +28,9 @@ class Comment(CreatedBase):
 	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 	parent_submission = Column(Integer, ForeignKey("submissions.id"))
 	edited_utc = Column(Integer, default=0, nullable=False)
-	is_banned = Column(Boolean, default=False, nullable=False)
 	ghost = Column(Boolean, default=False, nullable=False)
 	bannedfor = Column(Boolean)
 	distinguish_level = Column(Integer, default=0, nullable=False)
-	deleted_utc = Column(Integer, default=0, nullable=False)
-	is_approved = Column(Integer, ForeignKey("users.id"))
 	level = Column(Integer, default=1, nullable=False)
 	parent_comment_id = Column(Integer, ForeignKey("comments.id"))
 	top_comment_id = Column(Integer)
@@ -44,13 +46,17 @@ class Comment(CreatedBase):
 	descendant_count = Column(Integer, default=0, nullable=False)
 	body = Column(Text)
 	body_html = Column(Text, nullable=False)
-	ban_reason = Column(String)
-	filter_state = Column(String, nullable=False)
+	volunteer_janitor_badness = Column(Float, default=0.5, nullable=False)
+
+	# Visibility states here
+	state_user_deleted_utc = Column(DateTime(timezone=True), nullable=True) # null if it hasn't been deleted by the user
+	state_mod = Column(Enum(StateMod), default=StateMod.FILTERED, nullable=False) # default to Filtered just to partially neuter possible exploits
+	state_mod_set_by = Column(String, nullable=True) # This should *really* be a User.id, but I don't want to mess with the required refactoring at the moment - it's extra hard because it could potentially be a lot of extra either data or queries
+	state_report = Column(Enum(StateReport), default=StateReport.UNREPORTED, nullable=False)
 
 	Index('comment_parent_index', parent_comment_id)
 	Index('comment_post_id_index', parent_submission)
 	Index('comments_user_index', author_id)
-	Index('fki_comment_approver_fkey', is_approved)
 	Index('fki_comment_sentto_fkey', sentto)
 
 	oauth_app = relationship("OauthApp", viewonly=True)
@@ -68,11 +74,6 @@ class Comment(CreatedBase):
 		order_by="CommentFlag.created_utc",
 		viewonly=True)
 	notes = relationship("UserNote", back_populates="comment")
-	
-	def __init__(self, *args, **kwargs):
-		if 'filter_state' not in kwargs:
-			kwargs['filter_state'] = 'normal'
-		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
 		return f"<{self.__class__.__name__}(id={self.id})>"
@@ -113,7 +114,7 @@ class Comment(CreatedBase):
 	@lazy
 	def flags(self, v):
 		flags = self.reports
-		if not (v and (v.shadowbanned or v.admin_level > 2)):
+		if not (v and (v.shadowbanned or v.admin_level >= 3)):
 			for flag in flags:
 				if flag.user.shadowbanned:
 					flags.remove(flag)
@@ -161,13 +162,13 @@ class Comment(CreatedBase):
 		if not self.parent_submission:
 			return sorted((x for x in self.child_comments
 				if x.author
-					and (x.filter_state not in ('filtered', 'removed') or x.author_id == author_id)
+					and (x.state_mod == StateMod.VISIBLE or x.author_id == author_id)
 					and not x.author.shadowbanned),
 				key=lambda x: x.created_utc)
 		return sorted((x for x in self.child_comments
 			if x.author
 				and not x.author.shadowbanned
-				and (x.filter_state not in ('filtered', 'removed') or x.author_id == author_id)),
+				and (x.state_mod == StateMod.VISIBLE or x.author_id == author_id)),
 			key=lambda x: x.created_utc, reverse=True)
 
 	@property
@@ -224,8 +225,6 @@ class Comment(CreatedBase):
 			'is_bot': self.is_bot,
 			'created_utc': self.created_utc,
 			'edited_utc': self.edited_utc or 0,
-			'is_banned': bool(self.is_banned),
-			'deleted_utc': self.deleted_utc,
 			'is_nsfw': self.over_18,
 			'permalink': f'/comment/{self.id}',
 			'is_pinned': self.is_pinned,
@@ -238,9 +237,6 @@ class Comment(CreatedBase):
 			'flags': flags,
 			}
 
-		if self.ban_reason:
-			data["ban_reason"]=self.ban_reason
-
 		return data
 
 	def award_count(self, kind):
@@ -250,21 +246,22 @@ class Comment(CreatedBase):
 	@property
 	@lazy
 	def json_core(self):
-		if self.is_banned:
-			data = {'is_banned': True,
-					'ban_reason': self.ban_reason,
+		if self.state_mod != StateMod.VISIBLE:
+			data = {
+					'state_mod_set_by': self.state_mod_set_by,
 					'id': self.id,
 					'post': self.post.id if self.post else 0,
 					'level': self.level,
 					'parent': self.parent_fullname
-					}
-		elif self.deleted_utc:
-			data = {'deleted_utc': self.deleted_utc,
+				}
+		elif self.state_user_deleted_utc:
+			data = {
+					'state_user_deleted_utc': self.state_user_deleted_utc,
 					'id': self.id,
 					'post': self.post.id if self.post else 0,
 					'level': self.level,
 					'parent': self.parent_fullname
-					}
+				}
 		else:
 			data = self.json_raw
 			if self.level >= 2: data['parent_comment_id']= self.parent_comment_id
@@ -277,7 +274,7 @@ class Comment(CreatedBase):
 	@lazy
 	def json(self):
 		data = self.json_core
-		if self.deleted_utc or self.is_banned: return data
+		if self.state_user_deleted_utc or self.state_mod != StateMod.VISIBLE: return data
 		data["author"] = '👻' if self.ghost else self.author.json_core
 		data["post"] = self.post.json_core if self.post else ''
 		return data
@@ -307,7 +304,7 @@ class Comment(CreatedBase):
 		if v and self.author_id == v.id: return False
 		if path == '/admin/removed/comments': return False
 		if self.over_18 and not (v and v.over_18) and not (self.post and self.post.over_18): return True
-		if self.is_banned: return True
+		# we no longer collapse removed things; the mods want to see them, non-mods see a placeholder anyway
 		if v and v.filter_words and self.body and any(x in self.body for x in v.filter_words): return True
 		return False
 
@@ -362,7 +359,7 @@ class Comment(CreatedBase):
 		return self.is_message and not self.sentto
 
 	@lazy
-	def header_msg(self, v, is_notification_page:bool, reply_count:int) -> str:
+	def header_msg(self, v, is_notification_page: bool) -> str:
 		'''
 		Returns a message that is in the header for a comment, usually for
 		display on a notification page.
@@ -370,9 +367,9 @@ class Comment(CreatedBase):
 		if self.post:
 			post_html:str = f"<a href=\"{self.post.permalink}\">{self.post.realtitle(v)}</a>"
 			if v:
-				if v.id == self.author_id and reply_count:
-					text = f"Comment {'Replies' if reply_count != 1 else 'Reply'}"
-				elif v.id == self.post.author_id and self.level == 1:
+				if self.level > 1 and v.id == self.parent_comment.author_id:
+					text = "Comment Reply"
+				elif self.level == 1 and v.id == self.post.author_id:
 					text = "Post Reply"
 				elif self.parent_submission in v.subscribed_idlist():
 					text = "Subscribed Thread"
@@ -402,7 +399,6 @@ class Comment(CreatedBase):
 		if v.id == self.author_id: return 1
 		return getattr(self, 'voted', 0)
 
-
 	def sticky_api_url(self, v) -> str | None:
 		'''
 		Returns the API URL used to sticky this comment.
@@ -418,7 +414,52 @@ class Comment(CreatedBase):
 			return 'pin_comment'
 		return None
 
-
 	@lazy
 	def active_flags(self, v): 
 		return len(self.flags(v))
+
+	@lazy
+	def show_descendants(self, v:"User | None") -> bool:
+		if self.moderation_state.is_visible_to(v, getattr(self, 'is_blocking', False)):
+			return True
+		return bool(self.descendant_count)
+
+	@lazy
+	def visibility_state(self, v:"User | None") -> tuple[bool, str]:
+		'''
+		Returns a tuple of whether this content is visible and a publicly 
+		visible message to accompany it. The visibility state machine is
+		a slight mess but... this should at least unify the state checks.
+		'''
+		return self.moderation_state.visibility_state(v, getattr(self, 'is_blocking', False))
+
+	@property
+	def moderation_state(self) -> ModerationState:
+		return ModerationState.from_submittable(self)
+	
+	def volunteer_janitor_is_unknown(self):
+		return self.volunteer_janitor_badness > 0.4 and self.volunteer_janitor_badness < 0.6
+
+	def volunteer_janitor_is_bad(self):
+		return self.volunteer_janitor_badness >= 0.6
+	
+	def volunteer_janitor_is_notbad(self):
+		return self.volunteer_janitor_badness <= 0.4
+
+	def volunteer_janitor_confidence(self):
+		unitconfidence = (abs(self.volunteer_janitor_badness - 0.5) * 2)
+		unitanticonfidence = 1 - unitconfidence
+		logconfidence = -math.log(unitanticonfidence, 2)
+		return round(logconfidence * 10)
+
+	def volunteer_janitor_css(self):
+		if self.volunteer_janitor_is_unknown():
+			category = "unknown"
+		elif self.volunteer_janitor_is_bad():
+			category = "bad"
+		elif self.volunteer_janitor_is_notbad():
+			category = "notbad"
+		
+		strength = clamp(math.trunc(self.volunteer_janitor_confidence() / 10), 0, 3)
+
+		return f"{category}_{strength}"

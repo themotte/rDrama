@@ -12,14 +12,14 @@
 {% if c.parent_submission %}
 {% if v and c.author_id == v.id %}
 	<button class="btn caction py-0 nobackground px-1 text-muted" onclick="toggleEdit('{{c.id}}')"><i class="fas fa-edit fa-fw"></i>Edit</button>
-	<button id="undelete-{{c.id}}" class="btn caction py-0 nobackground px-1 text-muted {% if not c.deleted_utc %}d-none{% endif %}" onclick="post_toast2(this,'/undelete/comment/{{c.id}}','delete-{{c.id}}','undelete-{{c.id}}');document.getElementById('comment-{{c.id}}').classList.remove('deleted')"><i class="fas fa-trash-alt fa-fw"></i>Undelete</button>
-	<button id="delete-{{c.id}}" class="btn caction py-0 nobackground px-1 text-muted {% if c.deleted_utc %}d-none{% endif %}" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Delete</button>
+	<button id="undelete-{{c.id}}" class="btn caction py-0 nobackground px-1 text-muted {% if not c.state_user_deleted_utc %}d-none{% endif %}" onclick="post_toast2(this,'/undelete/comment/{{c.id}}','delete-{{c.id}}','undelete-{{c.id}}');document.getElementById('comment-{{c.id}}').classList.remove('deleted')"><i class="fas fa-trash-alt fa-fw"></i>Undelete</button>
+	<button id="delete-{{c.id}}" class="btn caction py-0 nobackground px-1 text-muted {% if c.state_user_deleted_utc %}d-none{% endif %}" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Delete</button>
 {% elif v and c.body %}
 	<button class="btn caction py-0 nobackground px-1 text-muted" onclick="expandMarkdown(this,'{{c.id}}')"><i class="fas text-expand-icon-{{c.id}} fa-expand-alt"></i><span>View source</span></button>
 {% endif %}
 {% endif %}
 
-{% if v and v.admin_level >= 2 and c.filter_state == 'filtered' %}
+{% if v and v.admin_level >= 2 and c.state_mod == StateMod.FILTERED %}
 	<button class="btn" role="button" id="filter-approve" onclick="filter_new_comment_status({{ c.id }}, 'normal')"><span>Approve</span></button>
 	<button class="btn" role="button" id="filter-remove" onclick="filter_new_comment_status({{ c.id }}, 'removed')"><span>Remove</span></button>
 {% endif %}
@@ -47,11 +47,11 @@
 
 	{% if v.admin_level >= 2 %}
 		{% if "/reported/" in request.path %}
-			<button class="dropdown-item list-inline-item text-success" onclick="approveComment('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
-			<button class="dropdown-item list-inline-item text-danger" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
+			<button class="dropdown-item list-inline-item text-success" onclick="approveCommentDesktop('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
+			<button class="dropdown-item list-inline-item text-danger" onclick="removeCommentDesktop('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
 		{% else %}
-			<button id="approve-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.is_banned %}d-md-block{% endif %} text-success" onclick="approveComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
-			<button id="remove-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.is_banned %}d-md-block{% endif %} text-danger" onclick="removeComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
+			<button id="approve-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.state_mod != StateMod.VISIBLE %}d-md-block{% endif %} text-success" onclick="approveCommentDesktop('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</button>
+			<button id="remove-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.state_mod != StateMod.REMOVED %}d-md-block{% endif %} text-danger" onclick="removeCommentDesktop('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</button>
 		{% endif %}
 	{% endif %}
 

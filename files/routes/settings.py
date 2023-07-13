@@ -403,7 +403,6 @@ def settings_security_post(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_log_out_others(v):
-
 	submitted_password = request.values.get("password", "").strip()
 
 	if not v.verifyPass(submitted_password):
@@ -575,7 +574,6 @@ def settings_content_get(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def settings_name_change(v):
-
 	new_name=request.values.get("name").strip()
 
 	if new_name==v.username:
@@ -613,7 +611,6 @@ def settings_name_change(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_title_change(v):
-
 	if v.flairchanged: abort(403)
 	
 	new_name=request.values.get("title").strip()[:100].replace("𒐪","")

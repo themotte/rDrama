@@ -1,5 +1,6 @@
 from files.__main__ import app, limiter
 from files.classes import *
+from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.comments import comment_on_publish
 from files.helpers.config.const import *
@@ -7,6 +8,7 @@ from files.helpers.media import process_image
 from files.helpers.wrappers import *
 from files.routes.importstar import *
 
+from datetime import datetime, timezone
 
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
@@ -23,9 +25,9 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	if comment.post and comment.post.club and not (v and (v.paid_dues or v.id in [comment.author_id, comment.post.author_id])): abort(403)
 
-	if comment.post and comment.post.private and not (v and (v.admin_level > 1 or v.id == comment.post.author.id)): abort(403)
+	if comment.post and comment.post.private and not (v and (v.admin_level >= 2 or v.id == comment.post.author.id)): abort(403)
 
-	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level > 1) : abort(403)
+	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level >= 2) : abort(403)
 	
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
@@ -65,7 +67,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			blocked.c.target_id,
 		)
 
-		if not (v and v.shadowbanned) and not (v and v.admin_level > 2):
+		if not (v and v.shadowbanned) and not (v and v.admin_level >= 3):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
 		 
 		comments=comments.filter(
@@ -96,7 +98,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			
 	if request.headers.get("Authorization"): return top_comment.json
 	else: 
-		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
+		if post.state_mod != StateMod.VISIBLE and not (v and (v.admin_level >= 2 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
 		return render_template(template, v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True)
 
@@ -149,7 +151,7 @@ def api_comment(v):
 
 	existing = g.db.query(Comment.id).filter(
 		Comment.author_id == v.id,
-		Comment.deleted_utc == 0,
+		Comment.state_user_deleted_utc == None,
 		Comment.parent_comment_id == parent_comment_id,
 		Comment.parent_submission == parent_post.id,
 		Comment.body_html == body_html
@@ -187,13 +189,13 @@ def api_comment(v):
 					days=1)
 
 			for comment in similar_comments:
-				comment.is_banned = True
-				comment.ban_reason = "AutoJanny"
+				comment.state_mod = StateMod.REMOVED
+				comment.state_mod_set_by = "AutoJanny"
 				g.db.add(comment)
 				ma=ModAction(
 					user_id=AUTOJANNY_ID,
 					target_comment_id=comment.id,
-					kind="ban_comment",
+					kind="remove_comment",
 					_note="spam"
 					)
 				g.db.add(ma)
@@ -212,7 +214,7 @@ def api_comment(v):
 				body_html=body_html,
 				body=body[:COMMENT_BODY_LENGTH_MAXIMUM],
 				ghost=parent_post.ghost,
-				filter_state='filtered' if is_filtered else 'normal'
+				state_mod=StateMod.FILTERED if is_filtered else StateMod.VISIBLE,
 				)
 
 	c.upvotes = 1
@@ -286,8 +288,8 @@ def edit_comment(cid, v):
 					days=1)
 
 			for comment in similar_comments:
-				comment.is_banned = True
-				comment.ban_reason = "AutoJanny"
+				comment.state_mod = StateMod.REMOVED
+				comment.state_mod_set_by = "AutoJanny"
 				g.db.add(comment)
 
 			abort(403, "Too much spam!")
@@ -312,7 +314,7 @@ def edit_comment(cid, v):
 
 		g.db.add(c)
 		
-		if c.filter_state != 'filtered':
+		if c.state_mod == StateMod.VISIBLE:
 			notify_users = NOTIFY_USERS(body, v)
 
 			for x in notify_users:
@@ -331,17 +333,13 @@ def edit_comment(cid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def delete_comment(cid, v):
-
 	c = get_comment(cid, v=v)
-
-	if not c.deleted_utc:
-
-		if c.author_id != v.id: abort(403)
-
-		c.deleted_utc = int(time.time())
-
-		g.db.add(c)
-		g.db.commit()
+	if c.state_user_deleted_utc: abort(409)
+	if c.author_id != v.id: abort(403)
+	c.state_user_deleted_utc = datetime.now(tz=timezone.utc)
+	# TODO: update stateful counters
+	g.db.add(c)
+	g.db.commit()
 
 	return {"message": "Comment deleted!"}
 
@@ -349,16 +347,13 @@ def delete_comment(cid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def undelete_comment(cid, v):
-
 	c = get_comment(cid, v=v)
-
-	if c.deleted_utc:
-		if c.author_id != v.id: abort(403)
-
-		c.deleted_utc = 0
-
-		g.db.add(c)
-		g.db.commit()
+	if not c.state_user_deleted_utc: abort(409)
+	if c.author_id != v.id: abort(403)
+	c.state_user_deleted_utc = None
+	# TODO: update stateful counters
+	g.db.add(c)
+	g.db.commit()
 
 	return {"message": "Comment undeleted!"}
 
@@ -366,7 +361,6 @@ def undelete_comment(cid, v):
 @app.post("/pin_comment/<cid>")
 @auth_required
 def pin_comment(cid, v):
-	
 	comment = get_comment(cid, v=v)
 	
 	if not comment.is_pinned:
@@ -412,7 +406,6 @@ def unpin_comment(cid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def save_comment(cid, v):
-
 	comment=get_comment(cid)
 
 	save=g.db.query(CommentSaveRelationship).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
@@ -429,7 +422,6 @@ def save_comment(cid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def unsave_comment(cid, v):
-
 	comment=get_comment(cid)
 
 	save=g.db.query(CommentSaveRelationship).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()

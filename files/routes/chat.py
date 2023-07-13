@@ -70,7 +70,7 @@ def speak(data, v):
 
 	total += 1
 
-	if v.admin_level > 1:
+	if v.admin_level >= 2:
 		text = text.lower()
 		for i in mute_regex.finditer(text):
 			username = i.group(1)
@@ -103,7 +103,6 @@ def disconnect(v):
 @socketio.on('typing')
 @auth_required
 def typing_indicator(data, v):
-
 	if data and v.username not in typing: typing.append(v.username)
 	elif not data and v.username in typing: typing.remove(v.username)
 

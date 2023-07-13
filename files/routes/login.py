@@ -167,7 +167,6 @@ def me(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def logout(v):
-
 	session.pop("session_id", None)
 	session.pop("lo_user", None)
 
@@ -209,13 +208,14 @@ def sign_up_get(v):
 
 	error = request.values.get("error")
 
-	return render_template("sign_up.html",
-						   formkey=formkey,
-						   now=now,
-						   ref_user=ref_user,
-						   hcaptcha=HCAPTCHA_SITEKEY,
-						   error=error
-						   )
+	return render_template(
+		"sign_up.html",
+		formkey=formkey,
+		now=now,
+		ref_user=ref_user,
+		hcaptcha=HCAPTCHA_SITEKEY,
+		error=error
+	)
 
 
 @app.post("/signup")
@@ -364,7 +364,6 @@ def get_forgot():
 @app.post("/forgot")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 def post_forgot():
-
 	username = request.values.get("username")
 	if not username: abort(400)
 
@@ -397,7 +396,6 @@ def post_forgot():
 
 @app.get("/reset")
 def get_reset():
-
 	user_id = request.values.get("id")
 
 	timestamp = int(request.values.get("time",0))
@@ -476,7 +474,6 @@ def post_reset(v):
 @app.get("/lost_2fa")
 @auth_desired
 def lost_2fa(v):
-
 	return render_template(
 		"lost_2fa.html",
 		v=v
@@ -485,7 +482,6 @@ def lost_2fa(v):
 @app.post("/request_2fa_disable")
 @limiter.limit("1/second;6/minute;200/hour;1000/day")
 def request_2fa_disable():
-
 	username=request.values.get("username")
 	user=get_user(username, graceful=True)
 	if not user or not user.email or not user.mfa_secret:
@@ -523,7 +519,6 @@ def request_2fa_disable():
 
 @app.get("/reset_2fa")
 def reset_2fa():
-
 	now=int(time.time())
 	t = request.values.get("t")
 	if not t: abort(400)

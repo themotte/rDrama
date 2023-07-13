@@ -1,5 +1,5 @@
 import functools
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import Column, ForeignKey
@@ -8,10 +8,9 @@ from sqlalchemy.sql.sqltypes import Boolean, Integer, String, Text
 from files.classes.cron.tasks import (RepeatableTask, ScheduledTaskType,
                                       TaskRunContext)
 from files.classes.submission import Submission
-from files.helpers.config.const import (RENDER_DEPTH_LIMIT,
-                                        SUBMISSION_TITLE_LENGTH_MAXIMUM)
-from files.helpers.config.environment import SITE_FULL
-from files.helpers.content import body_displayed
+from files.classes.visstate import StateMod
+from files.helpers.config.const import SUBMISSION_TITLE_LENGTH_MAXIMUM
+from files.helpers.content import ModerationState, body_displayed
 from files.helpers.lazy import lazy
 from files.helpers.sanitize import filter_emojis_only
 
@@ -70,7 +69,7 @@ class ScheduledSubmissionTask(RepeatableTask):
 			body_html=self.body_html,
 			flair=self.flair,
 			ghost=self.ghost,
-			filter_state='normal',
+			state_mod=StateMod.VISIBLE,
 			embed_url=self.embed_url,
 			task_id=self.id,
 		)
@@ -82,8 +81,8 @@ class ScheduledSubmissionTask(RepeatableTask):
 	# HTML template for previewing a submitted task
 
 	@property
-	def deleted_utc(self) -> int:
-		return int(not self.task.enabled)
+	def state_user_deleted_utc(self) -> datetime | None:
+		return datetime.now(tz=timezone.utc) if not self.task.enabled else None
 
 	@functools.cached_property
 	def title_html(self) -> str:
@@ -129,8 +128,8 @@ class ScheduledSubmissionTask(RepeatableTask):
 		return 0
 	
 	@property
-	def filter_state(self) -> str:
-		return 'normal'
+	def state_mod(self) -> StateMod:
+		return StateMod.VISIBLE
 
 	def award_count(self, kind):
 		return 0
@@ -172,3 +171,16 @@ class ScheduledSubmissionTask(RepeatableTask):
 	@property
 	def edit_url(self) -> str:
 		return f"/tasks/scheduled_posts/{self.id}/content"
+	
+	@property
+	def moderation_state(self) -> ModerationState:
+		return ModerationState(
+			removed=False,
+			removed_by_name=None,
+			deleted=False, # we only want to show deleted UI color if disabled
+			reports_ignored=False,
+			filtered=False,
+			op_shadowbanned=False,
+			op_id=self.author_id_submission,
+			op_name_safe=self.author_name
+		)

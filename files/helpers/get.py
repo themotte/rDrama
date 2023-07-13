@@ -262,7 +262,7 @@ def get_comments(
 			blocked.c.target_id,
 		).filter(Comment.id.in_(cids))
  
-		if not (v and (v.shadowbanned or v.admin_level > 1)):
+		if not (v and (v.shadowbanned or v.admin_level >= 2)):
 			comments = comments.join(User, User.id == Comment.author_id) \
 				.filter(User.shadowbanned == None)
 
@@ -302,7 +302,6 @@ def get_comment_trees_eager(
 		query_filter_callable: Callable[[Query], Query],
 		sort: str="old",
 		v: Optional[User]=None) -> tuple[list[Comment], defaultdict[Comment, list[Comment]]]:
-
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 		blocking = v.blocking.subquery()

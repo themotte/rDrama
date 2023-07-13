@@ -19,7 +19,7 @@ class PythonCodeTask(RepeatableTask):
 
 	```py
 	from files.classes.user import User
-	from files.classes.cron.scheduler import TaskRunContext
+	from files.classes.cron.tasks import TaskRunContext
 	from files.helpers.get import get_account
 	
 	def spam_task(ctx:TaskRunContext):

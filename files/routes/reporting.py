@@ -1,6 +1,7 @@
 from flask import g
 
 from files.__main__ import app, limiter
+from files.classes.visstate import StateReport
 from files.helpers.get import *
 from files.helpers.sanitize import filter_emojis_only
 from files.helpers.wrappers import *
@@ -10,12 +11,11 @@ from files.helpers.wrappers import *
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def api_flag_post(pid, v):
-
 	post = get_post(pid)
 	reason = request.values.get("reason", "").strip()[:100]
 	reason = filter_emojis_only(reason)
 
-	if reason.startswith('!') and v.admin_level > 1:
+	if reason.startswith('!') and v.admin_level >= 2:
 		post.flair = reason[1:]
 		g.db.add(post)
 		ma=ModAction(
@@ -28,9 +28,12 @@ def api_flag_post(pid, v):
 	else:
 		flag = Flag(post_id=post.id, user_id=v.id, reason=reason)
 		g.db.add(flag)
-		g.db.query(Submission) \
-			.where(Submission.id == post.id, Submission.filter_state != 'ignored') \
-			.update({Submission.filter_state: 'reported'})
+
+		# We only want to notify if the user is not permabanned
+		if not v.is_suspended_permanently:
+			g.db.query(Submission) \
+				.where(Submission.id == post.id, Submission.state_report != StateReport.IGNORED) \
+				.update({Submission.state_report: StateReport.REPORTED})
 
 	g.db.commit()
 
@@ -41,16 +44,20 @@ def api_flag_post(pid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def api_flag_comment(cid, v):
-
 	comment = get_comment(cid)
 	reason = request.values.get("reason", "").strip()[:100]
 	reason = filter_emojis_only(reason)
 
 	flag = CommentFlag(comment_id=comment.id, user_id=v.id, reason=reason)
 	g.db.add(flag)
-	g.db.query(Comment) \
-			.where(Comment.id == comment.id, Comment.filter_state != 'ignored') \
-			.update({Comment.filter_state: 'reported'})
+
+	# We only want to notify if the user is not permabanned
+	if not v.is_suspended_permanently:
+		g.db.query(Comment) \
+				.where(Comment.id == comment.id, Comment.state_report != StateReport.IGNORED) \
+				.update({Comment.state_report: StateReport.REPORTED})
+
+	
 	g.db.commit()
 
 	return {"message": "Comment reported!"}

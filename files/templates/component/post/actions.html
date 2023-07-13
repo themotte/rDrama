@@ -30,12 +30,12 @@
 		<a id="unpin-profile-{{p.id}}" class="{% if not p.is_pinned %}d-none{% endif %} list-inline-item text-muted" role="button" onclick="post_toast2(this,'/pin/{{p.id}}','unpin-profile-{{p.id}}','pin-profile-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin from profile</a>
 	{% endif %}
 
-		<a id="undelete2-{{p.id}}" class="{% if not p.deleted_utc %}d-none{% endif %} list-inline-item" role="button" onclick="post_toast2(this,'/undelete_post/{{p.id}}', 'delete2-{{p.id}}', 'undelete2-{{p.id}}');document.getElementById('post-{{p.id}}').classList.remove('deleted')"><i class="fas fa-trash-alt"></i>Undelete</a>
+		<a id="undelete2-{{p.id}}" class="{% if not p.state_user_deleted_utc %}d-none{% endif %} list-inline-item" role="button" onclick="post_toast2(this,'/undelete_post/{{p.id}}', 'delete2-{{p.id}}', 'undelete2-{{p.id}}');document.getElementById('post-{{p.id}}').classList.remove('deleted')"><i class="fas fa-trash-alt"></i>Undelete</a>
 
-		<a id="delete2-{{p.id}}" class="{% if p.deleted_utc %}d-none{% endif %} list-inline-item" role="button" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')"><i class="fas fa-trash-alt"></i>Delete</a>
+		<a id="delete2-{{p.id}}" class="{% if p.state_user_deleted_utc %}d-none{% endif %} list-inline-item" role="button" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')"><i class="fas fa-trash-alt"></i>Delete</a>
 	{% endif %}
 
-	{% if v and v.admin_level > 1 and p.filter_state == 'filtered' %}
+	{% if v and v.admin_level >= 2 and p.state_mod == StateMod.FILTERED %}
 		<a id="filter-approve" class="list-inline-item" role="button" onclick="filter_new_status({{p.id}}, 'normal')">Approve</a>
 		<a id="filter-remove" class="list-inline-item" role="button" onclick="filter_new_status({{p.id}}, 'removed')">Remove</a>
 	{% endif %}
@@ -60,11 +60,11 @@
 
 			{% if v.admin_level > 1 %}
 				{% if "/reported/" in request.path %}
-					{% if v.id != p.author.id %}<a class="dropdown-item list-inline-item text-danger" role="button" onclick="post_toast(this,'/ban_post/{{p.id}}')"><i class="fas fa-ban"></i>Remove</a>{% endif %}
-					<a class="dropdown-item list-inline-item text-success" role="button" onclick="post_toast(this,'/unban_post/{{p.id}}')"><i class="fas fa-check"></i>Approve</a>
+					{% if v.id != p.author.id %}<a class="dropdown-item list-inline-item text-danger" role="button" onclick="post_toast(this,'/remove_post/{{p.id}}')"><i class="fas fa-ban"></i>Remove</a>{% endif %}
+					<a class="dropdown-item list-inline-item text-success" role="button" onclick="post_toast(this,'/unremove_post/{{p.id}}')"><i class="fas fa-check"></i>Approve</a>
 				{% else %}
-					{% if v.id != p.author.id %}<a id="remove-{{p.id}}" class="dropdown-item {% if p.is_banned %}d-none{% endif %} list-inline-item text-danger" role="button" onclick="post_toast2(this,'/ban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-ban"></i>Remove</a>{% endif %}
-					<a id="approve-{{p.id}}" class="dropdown-item {% if not p.is_banned %}d-none{% endif %} list-inline-item text-success" role="button" onclick="post_toast2(this,'/unban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-check"></i>Approve</a>
+					{% if v.id != p.author.id %}<a id="remove-{{p.id}}" class="dropdown-item {% if p.state_mod == StateMod.REMOVED %}d-none{% endif %} list-inline-item text-danger" role="button" onclick="post_toast2(this,'/remove_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-ban"></i>Remove</a>{% endif %}
+					<a id="approve-{{p.id}}" class="dropdown-item {% if p.state_mod == StateMod.VISIBLE %}d-none{% endif %} list-inline-item text-success" role="button" onclick="post_toast2(this,'/unremove_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-check"></i>Approve</a>
 				{% endif %}
 
 				{% if p.oauth_app %}

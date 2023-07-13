@@ -5,6 +5,7 @@ from datetime import datetime
 import requests
 
 from files.classes import *
+from files.classes.visstate import StateMod, StateReport
 from files.helpers.alerts import *
 from files.helpers.caching import invalidate_cache
 from files.helpers.comments import comment_on_publish, comment_on_unpublish
@@ -59,6 +60,7 @@ def remove_admin(v, username):
 	g.db.commit()
 	return {"message": "Admin removed!"}
 
+
 @app.post("/@<username>/delete_note/<id>")
 @limiter.exempt
 @admin_level_required(2)
@@ -70,11 +72,11 @@ def delete_note(v,username,id):
 		'success':True, 'message': 'Note deleted', 'note': id
 	}), 200)
 
+
 @app.post("/@<username>/create_note")
 @limiter.exempt
 @admin_level_required(2)
 def create_note(v,username):
-
 	def result(msg,succ,note):
 		return make_response(jsonify({
 			'success':succ, 'message': msg, 'note': note
@@ -111,6 +113,7 @@ def create_note(v,username):
 
 	return result('Note saved',True,note.json())
 
+
 @app.post("/@<username>/revert_actions")
 @limiter.exempt
 @admin_level_required(3)
@@ -127,15 +130,15 @@ def revert_actions(v, username):
 
 	cutoff = int(time.time()) - 86400
 
-	posts = [x[0] for x in g.db.query(ModAction.target_submission_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind == 'ban_post').all()]
+	posts = [x[0] for x in g.db.query(ModAction.target_submission_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind == 'remove_post').all()]
 	posts = g.db.query(Submission).filter(Submission.id.in_(posts)).all()
 
-	comments = [x[0] for x in g.db.query(ModAction.target_comment_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind == 'ban_comment').all()]
+	comments = [x[0] for x in g.db.query(ModAction.target_comment_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind == 'remove_comment').all()]
 	comments = g.db.query(Comment).filter(Comment.id.in_(comments)).all()
 	
 	for item in posts + comments:
-		item.is_banned = False
-		item.ban_reason = None
+		item.state_mod = StateMod.VISIBLE
+		item.state_mod_set_by = v.username
 		g.db.add(item)
 
 	users = (x[0] for x in g.db.query(ModAction.target_user_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind.in_(('shadowban', 'ban_user'))).all())
@@ -159,11 +162,11 @@ def revert_actions(v, username):
 	g.db.commit()
 	return {"message": "Admin actions reverted!"}
 
+
 @app.post("/@<username>/club_allow")
 @limiter.exempt
 @admin_level_required(2)
 def club_allow(v, username):
-
 	u = get_user(username, v=v)
 
 	if not u: abort(404)
@@ -188,11 +191,11 @@ def club_allow(v, username):
 	g.db.commit()
 	return {"message": f"@{username} has been allowed into the {CC_TITLE}!"}
 
+
 @app.post("/@<username>/club_ban")
 @limiter.exempt
 @admin_level_required(2)
 def club_ban(v, username):
-
 	u = get_user(username, v=v)
 
 	if not u: abort(404)
@@ -220,7 +223,7 @@ def club_ban(v, username):
 @limiter.exempt
 @auth_required
 def shadowbanned(v):
-	if not (v and v.admin_level > 1): abort(404)
+	if not (v and v.admin_level >= 2): abort(404)
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).order_by(User.shadowbanned).all()]
 	return render_template("shadowbanned.html", v=v, users=users)
 
@@ -233,7 +236,7 @@ def filtered_submissions(v):
 
 	posts_just_ids = g.db.query(Submission) \
 		.order_by(Submission.id.desc()) \
-		.filter(Submission.filter_state == 'filtered') \
+		.filter(Submission.state_mod == StateMod.FILTERED) \
 		.limit(26) \
 		.offset(25 * (page - 1)) \
 		.with_entities(Submission.id)
@@ -253,7 +256,7 @@ def filtered_comments(v):
 
 	comments_just_ids = g.db.query(Comment) \
 		.order_by(Comment.id.desc()) \
-		.filter(Comment.filter_state == 'filtered') \
+		.filter(Comment.state_mod == StateMod.FILTERED) \
 		.limit(26) \
 		.offset(25 * (page - 1)) \
 		.with_entities(Comment.id)
@@ -264,6 +267,9 @@ def filtered_comments(v):
 
 	return render_template("admin/filtered_comments.html", v=v, listing=comments, next_exists=next_exists, page=page, sort="new")
 
+# NOTE:
+# This function is pretty grimy and should be rolled into the Remove/Unremove functions.
+# (also rename Unremove to Approve, sigh)
 @app.post("/admin/update_filter_status")
 @limiter.exempt
 @admin_level_required(2)
@@ -275,30 +281,49 @@ def update_filter_status(v):
 	if new_status not in ['normal', 'removed', 'ignored']:
 		return { 'result': f'Status of {new_status} is not permitted' }
 
+	if new_status == 'normal':
+		state_mod_new = StateMod.VISIBLE
+		state_report_new = StateReport.RESOLVED
+	elif new_status == 'removed':
+		state_mod_new = StateMod.REMOVED
+		state_report_new = StateReport.RESOLVED
+	elif new_status == 'ignored':
+		state_mod_new = None	# we just leave this as-is
+		state_report_new = StateReport.IGNORED
+
 	if post_id:
-		p = g.db.get(Submission, post_id)
-		old_status = p.filter_state
-		rows_updated = g.db.query(Submission).where(Submission.id == post_id) \
-							.update({Submission.filter_state: new_status})
+		target = g.db.get(Submission, post_id)
+		old_status = target.state_mod
+
+		# this could totally be one query but it would be kinda ugly
+		if state_mod_new is not None:
+			g.db.query(Submission).where(Submission.id == post_id) \
+								.update({Submission.state_mod: state_mod_new, Submission.state_mod_set_by: v.username})
+		g.db.query(Submission).where(Submission.id == post_id) \
+								.update({Submission.state_report: state_report_new})
 	elif comment_id:
-		c = g.db.get(Comment, comment_id)
-		old_status = c.filter_state
-		rows_updated = g.db.query(Comment).where(Comment.id == comment_id) \
-							.update({Comment.filter_state: new_status})
+		target = g.db.get(Comment, comment_id)
+		old_status = target.state_mod
+		
+		if state_mod_new is not None:
+			g.db.query(Comment).where(Comment.id == comment_id) \
+								.update({Comment.state_mod: state_mod_new, Comment.state_mod_set_by: v.username})
+		g.db.query(Comment).where(Comment.id == comment_id) \
+								.update({Comment.state_report: state_report_new})
 	else:
 		return { 'result': f'No valid item ID provided' }
 
-	if rows_updated == 1:
+	if target is not None:
 		# If comment now visible, update state to reflect publication.
-		if (comment_id
-				and old_status in ['filtered', 'removed']
-				and new_status in ['normal', 'ignored']):
-			comment_on_publish(c)
+		if (isinstance(target, Comment)
+				and old_status != StateMod.VISIBLE
+				and state_mod_new == StateMod.VISIBLE):
+			comment_on_publish(target) # XXX: can cause discrepancies if removal state ≠ filter state
 
-		if (comment_id
-				and old_status in ['normal', 'ignored']
-				and new_status in ['filtered', 'removed']):
-			comment_on_unpublish(c)
+		if (isinstance(target, Comment)
+				and old_status == StateMod.VISIBLE
+				and state_mod_new != StateMod.VISIBLE and state_mod_new is not None):
+			comment_on_unpublish(target) # XXX: can cause discrepancies if removal state ≠ filter state
 
 		g.db.commit()
 		return { 'result': 'Update successful' }
@@ -309,7 +334,6 @@ def update_filter_status(v):
 @limiter.exempt
 @admin_level_required(2)
 def image_posts_listing(v):
-
 	try: page = int(request.values.get('page', 1))
 	except: page = 1
 
@@ -331,7 +355,7 @@ def reported_posts(v):
 	page = max(1, int(request.values.get("page", 1)))
 
 	subs_just_ids = g.db.query(Submission) \
-		.filter(Submission.filter_state == 'reported') \
+		.filter(Submission.state_report == StateReport.REPORTED) \
 		.order_by(Submission.id.desc()) \
 		.offset(25 * (page - 1)) \
 		.limit(26) \
@@ -348,16 +372,10 @@ def reported_posts(v):
 @limiter.exempt
 @admin_level_required(2)
 def reported_comments(v):
-
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Comment
-					   ).filter_by(
-		is_approved=None,
-		is_banned=False
-	).join(Comment.reports).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 	comments_just_ids = g.db.query(Comment) \
-			.filter(Comment.filter_state == 'reported') \
+			.filter(Comment.state_report == StateReport.REPORTED) \
 			.order_by(Comment.id.desc()) \
 			.offset(25 * (page - 1)) \
 			.limit(26) \
@@ -415,7 +433,8 @@ def change_settings(v, setting):
 						  level=1,
 						  body_html=body_html,
 						  sentto=MODMAIL_ID,
-						  distinguish_level=6
+						  distinguish_level=6,
+						  state_mod=StateMod.VISIBLE,
 						  )
 	g.db.add(new_comment)
 	g.db.flush()
@@ -583,7 +602,6 @@ def badge_remove_post(v):
 @limiter.exempt
 @admin_level_required(2)
 def users_list(v):
-
 	try: page = int(request.values.get("page", 1))
 	except: page = 1
 
@@ -628,7 +646,6 @@ def loggedout_list(v):
 @limiter.exempt
 @admin_level_required(2)
 def alt_votes_get(v):
-
 	u1 = request.values.get("u1")
 	u2 = request.values.get("u2")
 
@@ -762,13 +779,12 @@ def admin_link_accounts(v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_removed(v):
-
 	try: page = int(request.values.get("page", 1))
 	except: page = 1
 
 	if page < 1: abort(400)
 	
-	ids = g.db.query(Submission.id).join(User, User.id == Submission.author_id).filter(or_(Submission.is_banned==True, User.shadowbanned != None)).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	ids = g.db.query(Submission.id).join(User, User.id == Submission.author_id).filter(or_(Submission.state_mod == StateMod.REMOVED, User.shadowbanned != None)).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	ids=[x[0] for x in ids]
 
@@ -790,11 +806,10 @@ def admin_removed(v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_removed_comments(v):
-
 	try: page = int(request.values.get("page", 1))
 	except: page = 1
 	
-	ids = g.db.query(Comment.id).join(User, User.id == Comment.author_id).filter(or_(Comment.is_banned==True, User.shadowbanned != None)).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	ids = g.db.query(Comment.id).join(User, User.id == Comment.author_id).filter(or_(Comment.state_mode == StateMod.REMOVED, User.shadowbanned != None)).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	ids=[x[0] for x in ids]
 
@@ -844,7 +859,8 @@ def shadowban(user_id, v):
 						  parent_submission=None,
 						  level=1,
 						  body_html=body_html,
-						  distinguish_level=6
+						  distinguish_level=6,
+						  state_mod=StateMod.VISIBLE,
 						  )
 	g.db.add(new_comment)
 	g.db.flush()
@@ -927,7 +943,6 @@ def unverify(user_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_title_change(user_id, v):
-
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
 	new_name=request.values.get("title").strip()[:256]
@@ -1030,7 +1045,8 @@ def ban_user(user_id, v):
 						  parent_submission=None,
 						  level=1,
 						  body_html=body_html,
-						  distinguish_level=6
+						  distinguish_level=6,
+						  state_mod=StateMod.VISIBLE,
 						  )
 	g.db.add(new_comment)
 	g.db.flush()
@@ -1052,7 +1068,6 @@ def ban_user(user_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def unban_user(user_id, v):
-
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
 	if not user or not user.is_banned: abort(400)
@@ -1085,27 +1100,25 @@ def unban_user(user_id, v):
 	else: return {"message": f"@{user.username} was unbanned!"}
 
 
-@app.post("/ban_post/<post_id>")
+@app.post("/remove_post/<post_id>")
 @limiter.exempt
 @admin_level_required(2)
-def ban_post(post_id, v):
-
+def remove_post(post_id, v):
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 
 	if not post:
 		abort(400)
 
-	post.is_banned = True
-	post.is_approved = None
+	post.state_mod = StateMod.REMOVED
+	post.state_mod_set_by = v.username
 	post.stickied = None
 	post.is_pinned = False
-	post.ban_reason = v.username
 	g.db.add(post)
 
 	
 
 	ma=ModAction(
-		kind="ban_post",
+		kind="remove_post",
 		user_id=v.id,
 		target_submission_id=post.id,
 		)
@@ -1123,27 +1136,25 @@ def ban_post(post_id, v):
 	return {"message": "Post removed!"}
 
 
-@app.post("/unban_post/<post_id>")
+@app.post("/unremove_post/<post_id>")
 @limiter.exempt
 @admin_level_required(2)
-def unban_post(post_id, v):
-
+def unremove_post(post_id, v):
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 
 	if not post:
 		abort(400)
 
-	if post.is_banned:
+	if post.state_mod != StateMod.VISIBLE:
 		ma=ModAction(
-			kind="unban_post",
+			kind="unremove_post",
 			user_id=v.id,
 			target_submission_id=post.id,
 		)
 		g.db.add(ma)
 
-	post.is_banned = False
-	post.ban_reason = None
-	post.is_approved = v.id
+	post.state_mod = StateMod.VISIBLE
+	post.state_mod_set_by = v.username
 
 	g.db.add(post)
 
@@ -1161,7 +1172,6 @@ def unban_post(post_id, v):
 @limiter.exempt
 @admin_level_required(1)
 def api_distinguish_post(post_id, v):
-
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 
 	if not post: abort(404)
@@ -1194,12 +1204,11 @@ def api_distinguish_post(post_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def sticky_post(post_id, v):
-
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 	if post and not post.stickied:
-		pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.is_banned == False).count()
+		pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.state_mod == StateMod.VISIBLE).count()
 		if pins > 2:
-			if v.admin_level > 1:
+			if v.admin_level >= 2:
 				post.stickied = v.username
 				post.stickied_utc = int(time.time()) + 3600
 			else: abort(403, "Can't exceed 3 pinned posts limit!")
@@ -1298,21 +1307,19 @@ def unsticky_comment(cid, v):
 	return {"message": "Comment unpinned!"}
 
 
-@app.post("/ban_comment/<c_id>")
+@app.post("/remove_comment/<c_id>")
 @limiter.exempt
 @admin_level_required(2)
-def api_ban_comment(c_id, v):
-
+def api_remove_comment(c_id, v):
 	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
 	if not comment:
 		abort(404)
 
-	comment.is_banned = True
-	comment.is_approved = None
-	comment.ban_reason = v.username
-	g.db.add(comment)
+	comment.state_mod = StateMod.REMOVED
+	comment.state_mod_set_by = v.username
+	comment_on_unpublish(comment) # XXX: can cause discrepancies if removal state ≠ filter state
 	ma=ModAction(
-		kind="ban_comment",
+		kind="remove_comment",
 		user_id=v.id,
 		target_comment_id=comment.id,
 		)
@@ -1321,25 +1328,24 @@ def api_ban_comment(c_id, v):
 	return {"message": "Comment removed!"}
 
 
-@app.post("/unban_comment/<c_id>")
+@app.post("/unremove_comment/<c_id>")
 @limiter.exempt
 @admin_level_required(2)
-def api_unban_comment(c_id, v):
-
+def api_unremove_comment(c_id, v):
 	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
 	if not comment: abort(404)
 	
-	if comment.is_banned:
+	if comment.state_mod == StateMod.REMOVED:
 		ma=ModAction(
-			kind="unban_comment",
+			kind="unremove_comment",
 			user_id=v.id,
 			target_comment_id=comment.id,
 			)
 		g.db.add(ma)
 
-	comment.is_banned = False
-	comment.ban_reason = None
-	comment.is_approved = v.id
+	comment.state_mod = StateMod.VISIBLE
+	comment.state_mod_set_by = v.username
+	comment_on_publish(comment) # XXX: can cause discrepancies if removal state ≠ filter state
 
 	g.db.add(comment)
 
@@ -1398,7 +1404,6 @@ def admin_dump_cache(v):
 @limiter.exempt
 @admin_level_required(3)
 def admin_banned_domains(v):
-
 	banned_domains = g.db.query(BannedDomain).all()
 	return render_template("admin/banned_domains.html", v=v, banned_domains=banned_domains)
 
@@ -1406,7 +1411,6 @@ def admin_banned_domains(v):
 @limiter.exempt
 @admin_level_required(3)
 def admin_toggle_ban_domain(v):
-
 	domain=request.values.get("domain", "").strip()
 	if not domain: abort(400)
 
@@ -1439,25 +1443,24 @@ def admin_toggle_ban_domain(v):
 
 @app.post("/admin/nuke_user")
 @limiter.exempt
-@admin_level_required(2)
+@admin_level_required(3)
 def admin_nuke_user(v):
-
 	user=get_user(request.values.get("user"))
 
 	for post in g.db.query(Submission).filter_by(author_id=user.id).all():
-		if post.is_banned:
+		if post.state_mod != StateMod.REMOVED:
 			continue
 			
-		post.is_banned = True
-		post.ban_reason = v.username
+		post.state_mod = StateMod.REMOVED
+		post.state_mod_set_by = v.username
 		g.db.add(post)
 
 	for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
-		if comment.is_banned:
+		if comment.state_mod != StateMod.REMOVED:
 			continue
 
-		comment.is_banned = True
-		comment.ban_reason = v.username
+		comment.state_mod = StateMod.REMOVED
+		comment.state_mod_set_by = v.username
 		g.db.add(comment)
 
 	ma=ModAction(
@@ -1474,25 +1477,24 @@ def admin_nuke_user(v):
 
 @app.post("/admin/unnuke_user")
 @limiter.exempt
-@admin_level_required(2)
-def admin_nunuke_user(v):
-
+@admin_level_required(3)
+def admin_unnuke_user(v):
 	user=get_user(request.values.get("user"))
 
 	for post in g.db.query(Submission).filter_by(author_id=user.id).all():
-		if not post.is_banned:
+		if post.state_mod == StateMod.VISIBLE:
 			continue
 			
-		post.is_banned = False
-		post.ban_reason = None
+		post.state_mod = StateMod.VISIBLE
+		post.state_mod_set_by = v.username
 		g.db.add(post)
 
 	for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
-		if not comment.is_banned:
+		if comment.state_mod == StateMod.VISIBLE:
 			continue
 
-		comment.is_banned = False
-		comment.ban_reason = None
+		comment.state_mod = StateMod.VISIBLE
+		comment.state_mod_set_by = v.username
 		g.db.add(comment)
 
 	ma=ModAction(

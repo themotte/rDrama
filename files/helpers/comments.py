@@ -9,6 +9,7 @@ from sqlalchemy.orm import Query, aliased
 from sqlalchemy.sql.expression import alias, func, text
 
 from files.classes import Comment, Notification, Subscription, User
+from files.classes.visstate import StateMod
 from files.helpers.alerts import NOTIFY_USERS
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.environment import (PUSHER_ID, PUSHER_KEY, SITE_FULL,
@@ -65,8 +66,8 @@ def update_author_comment_count(comment, delta):
 	comment.author.comment_count = g.db.query(Comment).filter(
 		Comment.author_id == comment.author_id,
 		Comment.parent_submission != None,
-		Comment.is_banned == False,
-		Comment.deleted_utc == 0,
+		Comment.state_mod == StateMod.VISIBLE,
+		Comment.state_user_deleted_utc == None,
 	).count()
 	g.db.add(comment.author)
 
@@ -200,8 +201,11 @@ def comment_on_publish(comment:Comment):
 		to_notify.add(parent.author_id)
 
 	for uid in to_notify:
-		notif = Notification(comment_id=comment.id, user_id=uid)
-		g.db.add(notif)
+		notif = g.db.query(Notification) \
+					.filter_by(comment_id=comment.id, user_id=uid).one_or_none()
+		if not notif:
+			notif = Notification(comment_id=comment.id, user_id=uid)
+			g.db.add(notif)
 
 	update_stateful_counters(comment, +1)
 
@@ -215,7 +219,7 @@ def comment_on_publish(comment:Comment):
 def comment_on_unpublish(comment:Comment):
 	"""
 	Run when a comment becomes invisible: when a moderator makes the comment non-visible
-	by changing the filter_state to "removed", or when the user deletes the comment.
+	by changing the state_mod to "removed", or when the user deletes the comment.
 	Should be used to update stateful counters, notifications, etc. that
 	reflect the comments users will actually see.
 	"""
@@ -223,13 +227,12 @@ def comment_on_unpublish(comment:Comment):
 
 
 def comment_filter_moderated(q: Query, v: Optional[User]) -> Query:
-	if not (v and v.shadowbanned) and not (v and v.admin_level > 2):
+	if not (v and v.shadowbanned) and not (v and v.admin_level >= 3):
 		q = q.join(User, User.id == Comment.author_id) \
 		     .filter(User.shadowbanned == None)
 	if not v or v.admin_level < 2:
 		q = q.filter(
-			((Comment.filter_state != 'filtered')
-				& (Comment.filter_state != 'removed'))
+			(Comment.state_mod == StateMod.VISIBLE)
 			| (Comment.author_id == ((v and v.id) or 0))
 		)
 	return q

@@ -11,7 +11,7 @@ WORKDIR /service
 COPY pyproject.toml .
 COPY poetry.lock .
 RUN pip install 'poetry==1.2.2'
-RUN poetry config virtualenvs.create false && poetry install
+RUN poetry config virtualenvs.create false
 
 RUN mkdir /images
 
@@ -19,30 +19,34 @@ EXPOSE 80/tcp
 
 ENV FLASK_APP=files/cli:app
 
+CMD [ "bootstrap/init.sh" ]
+
 
 ###################################################################
 # Release container
 FROM base AS release
 
+RUN poetry install --without dev
+
 COPY bootstrap/supervisord.conf.release /etc/supervisord.conf
-CMD [ "/usr/local/bin/supervisord", "-c", "/etc/supervisord.conf" ]
 
 
 ###################################################################
 # Dev container
 FROM release AS dev
 
+RUN poetry install --with dev
+
 # Install our tweaked sqlalchemy-easy-profile
 COPY thirdparty/sqlalchemy-easy-profile sqlalchemy-easy-profile
 RUN cd sqlalchemy-easy-profile && python3 setup.py install
 
 COPY bootstrap/supervisord.conf.dev /etc/supervisord.conf
-CMD [ "/usr/local/bin/supervisord", "-c", "/etc/supervisord.conf" ]
 
 
 ###################################################################
 # Utility container for running commands (tests, most notably)
-FROM release AS operation
+FROM dev AS operation
 
 # don't run the server itself, just start up the environment and assume we'll exec things from the outside
 CMD sleep infinity

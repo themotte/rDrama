@@ -4,6 +4,8 @@ import urllib.parse
 from io import BytesIO
 from urllib.parse import ParseResult, urlparse
 
+from datetime import datetime, timezone
+
 import gevent
 import requests
 import werkzeug.wrappers
@@ -13,9 +15,9 @@ from sqlalchemy.orm import Query
 import files.helpers.validators as validators
 from files.__main__ import app, db_session, limiter
 from files.classes import *
+from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.caching import invalidate_cache
-from files.helpers.comments import comment_filter_moderated
 from files.helpers.config.const import *
 from files.helpers.content import canonicalize_url2
 from files.helpers.contentsorting import sort_objects
@@ -24,7 +26,6 @@ from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import *
 from files.routes.importstar import *
-
 
 titleheaders = {
 	"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"
@@ -37,7 +38,6 @@ MAX_URL_LENGTH = 2048
 @app.post("/toggle_club/<pid>")
 @auth_required
 def toggle_club(pid, v):
-
 	post = get_post(pid)
 	if post.author_id != v.id and v.admin_level < 2: abort(403)
 
@@ -94,7 +94,6 @@ def post_id(pid, anything=None, v=None):
 		Comment.parent_submission == post.id,
 		Comment.level == 1,
 	).order_by(Comment.is_pinned.desc().nulls_last())
-	top_comments = comment_filter_moderated(top_comments, v)
 	top_comments = sort_objects(top_comments, sort, Comment)
 
 	pg_top_comment_ids = []
@@ -108,7 +107,6 @@ def post_id(pid, anything=None, v=None):
 
 	def comment_tree_filter(q: Query) -> Query:
 		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
-		q = comment_filter_moderated(q, v)
 		return q
 
 	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
@@ -123,7 +121,7 @@ def post_id(pid, anything=None, v=None):
 
 	if request.headers.get("Authorization"): return post.json
 	else:
-		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
+		if post.state_mod != StateMod.VISIBLE and not (v and (v.admin_level >= 2 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
 		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset)
 
@@ -160,7 +158,6 @@ def viewmore(v, pid, sort, offset):
 		# `NOT IN :ids` in top_comments.
 		top_comments = top_comments.filter(Comment.created_utc <= newest_created_utc)
 
-	top_comments = comment_filter_moderated(top_comments, v)
 	top_comments = sort_objects(top_comments, sort, Comment)
 
 	pg_top_comment_ids = []
@@ -174,7 +171,6 @@ def viewmore(v, pid, sort, offset):
 
 	def comment_tree_filter(q: Query) -> Query:
 		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
-		q = comment_filter_moderated(q, v)
 		return q
 
 	_, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
@@ -435,8 +431,8 @@ def api_is_repost():
 	search_url = sql_ilike_clean(url)
 	repost = g.db.query(Submission).filter(
 		Submission.url.ilike(search_url),
-		Submission.deleted_utc == 0,
-		Submission.is_banned == False
+		Submission.state_user_deleted_utc == None,
+		Submission.state_mod == StateMod.VISIBLE
 	).first()
 	if repost: return {'permalink': repost.permalink}
 	else: return {'permalink': ''}
@@ -473,14 +469,14 @@ def _do_antispam_submission_check(v:User, validated:validators.ValidatedSubmissi
 
 	v.ban(reason="Spamming.", days=1)
 	for post in similar_posts + similar_urls:
-		post.is_banned = True
+		post.state_mod = StateMod.REMOVED
+		post.state_mod_set_by = "AutoJanny"
 		post.is_pinned = False
-		post.ban_reason = "AutoJanny"
 		g.db.add(post)
 		ma=ModAction(
 				user_id=AUTOJANNY_ID,
 				target_submission_id=post.id,
-				kind="ban_post",
+				kind="remove_post",
 				_note="spam"
 		)
 		g.db.add(ma)
@@ -501,8 +497,8 @@ def _duplicate_check(search_url:Optional[str]) -> Optional[werkzeug.wrappers.Res
 	if not search_url: return None
 	repost = g.db.query(Submission).filter(
 		func.lower(Submission.url) == search_url.lower(),
-		Submission.deleted_utc == 0,
-		Submission.is_banned == False
+		Submission.state_user_deleted_utc == None,
+		Submission.state_mod == StateMod.VISIBLE
 	).first()
 	if repost and SITE != 'localhost': 
 		return redirect(repost.permalink)
@@ -514,7 +510,7 @@ def _duplicate_check2(
 		validated_post:validators.ValidatedSubmissionLike) -> Optional[werkzeug.wrappers.Response]:
 	dup = g.db.query(Submission).filter(
 		Submission.author_id == user_id,
-		Submission.deleted_utc == 0,
+		Submission.state_user_deleted_utc == None,
 		Submission.title == validated_post.title,
 		Submission.url == validated_post.url,
 		Submission.body == validated_post.body
@@ -582,7 +578,7 @@ def submit_post(v):
 		title=validated_post.title,
 		title_html=validated_post.title_html,
 		ghost=False,
-		filter_state='filtered' if v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts'] else 'normal',
+		state_mod=StateMod.FILTERED if v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts'] else StateMod.VISIBLE,
 		thumburl=validated_post.thumburl
 	)
 	post.submit(g.db)
@@ -610,7 +606,7 @@ def delete_post_pid(pid, v):
 	if post.author_id != v.id:
 		abort(403)
 
-	post.deleted_utc = int(time.time())
+	post.state_user_deleted_utc = datetime.now(tz=timezone.utc)
 	post.is_pinned = False
 	post.stickied = None
 
@@ -628,7 +624,7 @@ def delete_post_pid(pid, v):
 def undelete_post_pid(pid, v):
 	post = get_post(pid)
 	if post.author_id != v.id: abort(403)
-	post.deleted_utc = 0
+	post.state_user_deleted_utc = None
 
 	g.db.add(post)
 
@@ -643,7 +639,7 @@ def undelete_post_pid(pid, v):
 @auth_required
 def toggle_comment_nsfw(cid, v):
 	comment = g.db.query(Comment).filter_by(id=cid).one_or_none()
-	if comment.author_id != v.id and not v.admin_level > 1: abort(403)
+	if comment.author_id != v.id and not v.admin_level >= 2: abort(403)
 	comment.over_18 = not comment.over_18
 	g.db.add(comment)
 
@@ -657,7 +653,7 @@ def toggle_comment_nsfw(cid, v):
 def toggle_post_nsfw(pid, v):
 	post = get_post(pid)
 
-	if post.author_id != v.id and not v.admin_level > 1:
+	if post.author_id != v.id and not v.admin_level >= 2:
 		abort(403)
 
 	post.over_18 = not post.over_18

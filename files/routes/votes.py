@@ -56,7 +56,6 @@ def admin_vote_info_get(v):
 @limiter.limit("5/second;60/minute;600/hour;1000/day")
 @is_not_permabanned
 def api_vote_post(post_id, new, v):
-
 	# make sure this account is not a bot
 	if request.headers.get("Authorization"): abort(403)
 
@@ -124,7 +123,6 @@ def api_vote_post(post_id, new, v):
 @limiter.limit("5/second;60/minute;600/hour;1000/day")
 @is_not_permabanned
 def api_vote_comment(comment_id, new, v):
-
 	# make sure this account is not a bot
 	if request.headers.get("Authorization"): abort(403)
 

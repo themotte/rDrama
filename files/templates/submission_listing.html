@@ -4,7 +4,7 @@
 	<script src="{{ 'js/new_comments_count.js' | asset }}"></script>
 {% endif %}
 
-{% if v and v.admin_level > 1 %}
+{% if v and v.admin_level >= 2 %}
 	<script src="{{ 'js/filter_actions.js' | asset }}"></script>
 {% endif %}
 
@@ -63,7 +63,7 @@
 		{% set voted=-2 %}
 	{% endif %}
 
-	{% if v and p.filter_state == 'reported' and v.can_manage_reports() %}
+	{% if v and p.state_report == StateReport.REPORTED and v.can_manage_reports() %}
 		<div id="flaggers-{{p.id}}" class="flaggers d-none">
 			<strong><i class="far fa-fw fa-flag"></i> Reports:</strong>
 			<a class="btn btn-primary" style="margin:1px 5px" onclick="filter_new_status({{p.id}}, 'normal')">Approve</a>
@@ -78,7 +78,7 @@
 		</div>
 	{% endif %}
 
-	<div id="post-{{p.id}}" class="card{% if p.is_banned %} banned{% endif %}{% if p.deleted_utc %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}">
+	<div id="post-{{p.id}}" class="card{% if p.state_mod == StateMod.REMOVED %} removed{% endif %}{% if p.state_mod == StateMod.FILTERED %} filtered{% endif %}{% if p.state_user_deleted_utc %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}">
 
 		<div class="d-flex flex-row flex-nowrap justify-content-end align-items-center">
 
@@ -90,7 +90,7 @@
 						<div class="mx-auto arrow-up post-{{p.id}}-up active"></div>
 						{% endif %}
 
-						<span class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+						<span class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if p.state_mod == StateMod.VISIBLE %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
 						{% if voted==-1 %}
 							<div class="text-muted mx-auto arrow-down post-{{p.id}}-down active"></div>
@@ -100,7 +100,7 @@
 
 					<div tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1', '{{v.id}}')" class="post-{{p.id}}-up mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
 
-					<span class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+					<span class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}"{% if p.state_mod == StateMod.VISIBLE %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
 					<div {% if not ENABLE_DOWNVOTES %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1', '{{v.id}}')" class="post-{{p.id}}-down text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
 
@@ -108,7 +108,7 @@
 
 					<div tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1', '{{v.id}}')" class="post-{{p.id}}-up mx-auto arrow-up" onclick="location.href='/login';"></div>
 
-					<span class="post-{{p.id}}-score-none score{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+					<span class="post-{{p.id}}-score-none score{% if p.controversial %} controversial{% endif %}"{% if p.state_mod == StateMod.VISIBLE %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
 					<div {% if not ENABLE_DOWNVOTES %}style="display:None!important"{% endif %} tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1', '{{v.id}}')" class="post-{{p.id}}-down text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
 
@@ -168,7 +168,7 @@
 							{% endfor %}
 						{% endif %}
 
-						{% if v and v.admin_level > 1 and p.author.shadowbanned %}
+						{% if v and v.admin_level >= 2 and p.author.shadowbanned %}
 							<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{p.author.shadowbanned}}"></i>
 						{% endif %}
 
@@ -183,7 +183,7 @@
 						{% if p.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You're blocking this user, but you can see this post because you're an admin."></i>{% endif %}
 						{% if p.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="This user is blocking you."></i>{% endif %}
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
-						{% if v and p.filter_state == 'reported' and v.can_manage_reports() %}
+						{% if v and p.state_report == StateReport.REPORTED and v.can_manage_reports() %}
 						<a class="btn btn-primary" id="report-btn-{{p.id}}" role="button" style="padding:1px 5px; font-size:10px"onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags(v)}} Reports</a>
 						{% endif %}
 							
@@ -213,7 +213,7 @@
 												class="mod"
 											{% endif %}>{{p.author_name}}</span>
 								</a>{% if p.author.customtitle %}<bdi style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
-								{% if v and v.admin_level > 1 %}
+								{% if v and v.admin_level >= 2 %}
 									<span 
 										class="usernote-link" 
 										data-micromodal-trigger="modal-1" 
@@ -249,7 +249,7 @@
 									<span class="text-info d-none {{p.id}}-new-comments"></span>
 								</a>
 			
-								{% if v and v.admin_level > 1 %}
+								{% if v and v.admin_level >= 2 %}
 									<a class="ml-2" role="button" data-bs-toggle="modal" data-bs-target="#adminModal-{{p.id}}">
 										<i class="fas fa-broom"></i>
 									</a>
@@ -301,11 +301,9 @@
 		{% endif %}
 	</script>
 
-
-	{% if v and v.admin_level > 1 %}
+	{% if v and v.admin_level >= 2 %}
 		{% include "component/post/actions_admin_mobile.html" %}
 	{% endif %}
-
 
 	{% if not p.club or v and (v.paid_dues or v.id == p.author_id) %}
 		{% if p.realbody(v) %}
@@ -335,19 +333,7 @@
 
 </div>
 {% else %}
-
-	{% if request.path.endswith('/admin/queue') %}
-
-	<div class="row no-gutters">	
-		<div class="col">			
-			<div class="text-center py-7">
-				<div class="h4 p-2">This queue is empty. (That's a good thing.)</div>
-			</div>			
-		</div>	
-	</div>
-
-
-	{% elif u %}
+	{% if u %}
 		{% if v and v.id == u.id %}
 		<div class="row no-gutters">	
 			<div class="col">			
@@ -362,8 +348,6 @@
 				</div>			
 			</div>	
 		</div>
-
-
 		{% else %}
 		<div class="row no-gutters">	
 			<div class="col">			
@@ -380,7 +364,6 @@
 			</div>	
 		</div>
 		{% endif %}
-
 	{% else %}
 		<div class="row no-gutters">	
 			<div class="col">			
@@ -401,7 +384,7 @@
 {% if v %}
 	{% include "component/modal/delete_post.html" %}
 	{% include "component/modal/report_post.html" %}
-	{% if v.admin_level > 1 %}
+	{% if v.admin_level >= 2 %}
 		{% include "component/modal/ban.html" %}
 	{% endif %}
 {% endif %}

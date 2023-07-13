@@ -6,12 +6,13 @@ from sqlalchemy.orm import Session, declared_attr, deferred, relationship
 
 from files.classes.base import CreatedBase
 from files.classes.flags import Flag
+from files.classes.visstate import StateMod, StateReport
 from files.classes.votes import Vote
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.const import *
 from files.helpers.config.environment import (SCORE_HIDING_TIME_HOURS, SITE,
                                               SITE_FULL, SITE_ID)
-from files.helpers.content import body_displayed
+from files.helpers.content import ModerationState, body_displayed
 from files.helpers.lazy import lazy
 from files.helpers.time import format_age, format_datetime
 
@@ -23,11 +24,9 @@ class Submission(CreatedBase):
 	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 	edited_utc = Column(Integer, default=0, nullable=False)
 	thumburl = Column(String)
-	is_banned = Column(Boolean, default=False, nullable=False)
 	bannedfor = Column(Boolean)
 	ghost = Column(Boolean, default=False, nullable=False)
 	views = Column(Integer, default=0, nullable=False)
-	deleted_utc = Column(Integer, default=0, nullable=False)
 	distinguish_level = Column(Integer, default=0, nullable=False)
 	stickied = Column(String)
 	stickied_utc = Column(Integer)
@@ -35,7 +34,6 @@ class Submission(CreatedBase):
 	private = Column(Boolean, default=False, nullable=False)
 	club = Column(Boolean, default=False, nullable=False)
 	comment_count = Column(Integer, default=0, nullable=False)
-	is_approved = Column(Integer, ForeignKey("users.id"))
 	over_18 = Column(Boolean, default=False, nullable=False)
 	is_bot = Column(Boolean, default=False, nullable=False)
 	upvotes = Column(Integer, default=1, nullable=False)
@@ -48,20 +46,23 @@ class Submission(CreatedBase):
 	body = Column(Text)
 	body_html = Column(Text)
 	flair = Column(String)
-	ban_reason = Column(String)
 	embed_url = Column(String)
-	filter_state = Column(String, nullable=False)
 	task_id = Column(Integer, ForeignKey("tasks_repeatable_scheduled_submissions.id"))
 
-	Index('fki_submissions_approver_fkey', is_approved)
+	# Visibility states here
+	state_user_deleted_utc = Column(DateTime(timezone=True), nullable=True) # null if it hasn't been deleted by the user
+	state_mod = Column(Enum(StateMod), default=StateMod.FILTERED, nullable=False) # default to Filtered just to partially neuter possible exploits
+	state_mod_set_by = Column(String, nullable=True) # This should *really* be a User.id, but I don't want to mess with the required refactoring at the moment - it's extra hard because it could potentially be a lot of extra either data or queries
+	state_report = Column(Enum(StateReport), default=StateReport.UNREPORTED, nullable=False)
+
 	Index('post_app_id_idx', app_id)
-	Index('subimssion_binary_group_idx', is_banned, deleted_utc, over_18)
-	Index('submission_isbanned_idx', is_banned)
-	Index('submission_isdeleted_idx', deleted_utc)
+	Index('subimssion_binary_group_idx', state_mod, state_user_deleted_utc, over_18)
+	Index('submission_state_mod_idx', state_mod)
+	Index('submission_isdeleted_idx', state_user_deleted_utc)
 
 	@declared_attr
 	def submission_new_sort_idx(self):
-		return Index('submission_new_sort_idx', self.is_banned, self.deleted_utc, self.created_utc.desc(), self.over_18)
+		return Index('submission_new_sort_idx', self.state_mod, self.state_user_deleted_utc, self.created_utc.desc(), self.over_18)
 
 	Index('submission_pinned_idx', is_pinned)
 	Index('submissions_author_index', author_id)
@@ -78,7 +79,6 @@ class Submission(CreatedBase):
 
 	author = relationship("User", primaryjoin="Submission.author_id==User.id")
 	oauth_app = relationship("OauthApp", viewonly=True)
-	approved_by = relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id", viewonly=True)
 	awards = relationship("AwardRelationship", viewonly=True)
 	reports = relationship("Flag", viewonly=True)
 	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
@@ -102,8 +102,8 @@ class Submission(CreatedBase):
 		author = self.author
 		author.post_count = db.query(Submission.id).filter_by(
 			author_id=self.author_id, 
-			is_banned=False, 
-			deleted_utc=0).count()
+			state_mod=StateMod.VISIBLE,
+			state_user_deleted_utc=None).count()
 		db.add(author)
 
 	def publish(self):
@@ -142,7 +142,7 @@ class Submission(CreatedBase):
 	@lazy
 	def flags(self, v):
 		flags = g.db.query(Flag).filter_by(post_id=self.id).order_by(Flag.created_utc).all()
-		if not (v and (v.shadowbanned or v.admin_level > 2)):
+		if not (v and (v.shadowbanned or v.admin_level >= 3)):
 			for flag in flags:
 				if flag.user.shadowbanned:
 					flags.remove(flag)
@@ -230,8 +230,6 @@ class Submission(CreatedBase):
 		data = {'author_name': self.author_name if self.author else '',
 				'permalink': self.permalink,
 				'shortlink': self.shortlink,
-				'is_banned': bool(self.is_banned),
-				'deleted_utc': self.deleted_utc,
 				'created_utc': self.created_utc,
 				'id': self.id,
 				'title': self.title,
@@ -256,25 +254,22 @@ class Submission(CreatedBase):
 				'club': self.club,
 				}
 
-		if self.ban_reason:
-			data["ban_reason"]=self.ban_reason
-
 		return data
 
 	@property
 	@lazy
 	def json_core(self):
-		if self.is_banned:
-			return {'is_banned': True,
-					'deleted_utc': self.deleted_utc,
-					'ban_reason': self.ban_reason,
+		if self.state_mod != StateMod.VISIBLE:
+			return {
+					'state_user_deleted_utc': self.state_user_deleted_utc,
+					'state_mod_set_by': self.state_mod_set_by,
 					'id': self.id,
 					'title': self.title,
 					'permalink': self.permalink,
 					}
-		elif self.deleted_utc:
-			return {'is_banned': bool(self.is_banned),
-					'deleted_utc': True,
+		elif self.state_user_deleted_utc:
+			return {
+					'state_user_deleted_utc': self.state_user_deleted_utc,
 					'id': self.id,
 					'title': self.title,
 					'permalink': self.permalink,
@@ -287,7 +282,7 @@ class Submission(CreatedBase):
 	def json(self):
 		data=self.json_core
 		
-		if self.deleted_utc or self.is_banned:
+		if self.state_user_deleted_utc or self.state_mod != StateMod.VISIBLE:
 			return data
 
 		data["author"]='👻' if self.ghost else self.author.json_core
@@ -360,3 +355,7 @@ class Submission(CreatedBase):
 	@property
 	def edit_url(self) -> str:
 		return f"/edit_post/{self.id}"
+	
+	@property
+	def moderation_state(self) -> ModerationState:
+		return ModerationState.from_submittable(self)
