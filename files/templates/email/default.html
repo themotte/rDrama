@@ -1,14 +1,13 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-	<head>
-	<meta name="description" content="{{config('DESCRIPTION')}}">
-		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
-
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title></title>
-		<style type="text/css" rel="stylesheet" media="all">
+  <head>
+    <meta name="description" content="{{config('DESCRIPTION')}}">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <style type="text/css" rel="stylesheet" media="all">
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -51,7 +50,7 @@
             font-size: 14px;
             text-align: left;
             color: #777777;
-			word-wrap: break-word;
+            word-wrap: break-word;
         }
         .reference-text {
             margin-top: 20px;
@@ -102,13 +101,12 @@
             }
         }
     </style>
-	</head>
-	<body>
-		<div class="container">
-			<h1>{% block title %}{% endblock %}</h1>
-
-			{% block content %}
-			{% endblock %}
-		</div>
-	</body>
+  </head>
+  <body>
+    <div class="container">
+    <h1>{% block title %}{% endblock %}</h1>
+      {% block content %}
+      {% endblock %}
+    </div>
+  </body>
 </html>
