@@ -17,8 +17,8 @@ def admin_vote_info_get(v):
 	if not link: return render_template("votes.html", v=v)
 
 	try:
-		if "t2_" in link: thing = get_post(link.split("t2_")[1], v=v)
-		elif "t3_" in link: thing = get_comment(link.split("t3_")[1], v=v)
+		if "post_" in link: thing = get_post(link.split("post_")[1], v=v)
+		elif "comment_" in link: thing = get_comment(link.split("comment_")[1], v=v)
 		else: abort(400)
 	except: abort(400)
 

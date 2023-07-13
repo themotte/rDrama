@@ -37,9 +37,9 @@ def no_rate_limit(test_function):
 # this is meant to be a utility class that stores post and comment references so you can use them in other calls
 # it's pretty barebones and will probably be fleshed out
 class ItemData:
-    id = None
-    id_full = None
-    url = None
+    id: str | None = None
+    id_full: str | None = None
+    url: str | None = None
 
     @staticmethod
     def from_html(text):
@@ -52,7 +52,7 @@ class ItemData:
         
         result = ItemData()
         result.id = match.group(1)  	# this really should get yanked out of the JS, not the URL
-        result.id_full = f"t2_{result.id}"
+        result.id_full = f"post_{result.id}"
         result.url = url
         return result
 
@@ -69,6 +69,6 @@ class ItemData:
         
         result = ItemData()
         result.id = match.group(1)  	# this really should get yanked out of the JS, not the HTML
-        result.id_full = f"t3_{result.id}"
+        result.id_full = f"comment_{result.id}"
         result.url = f"/comment/{result.id}"
         return result
