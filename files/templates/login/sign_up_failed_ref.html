@@ -1,17 +1,17 @@
 {%- extends "login/authforms.html" -%}
+{%- block authtitle -%}Whoops! You can't refer yourself!{%- endblock -%}
+{%- block authtext -%}Send this link to a friend instead :){%- endblock -%}
 {%- block content -%}
-<div id="register-form" class="">
-	<h1 class="h4 font-weight-normal text-center">Whoops! You can't refer yourself!</h1>
-	<p class="text-center text-muted mb-md-5">Send this link to a friend instead :)</p>
-	<label>Referral code</label>
-	<input autocomplete="off" type="text" class="form-control copy-link" readonly value="{{SITE_FULL}}/signup?ref={{request.values.get('ref')}}" data-clipboard-text="{{SITE_FULL}}/signup?ref={{request.values.get('ref')}}">
+	<div id="register-form" class="">
+		<label>Referral code</label>
+		<input autocomplete="off" type="text" class="form-control copy-link" readonly value="{{SITE_FULL}}/signup?ref={{request.values.get('ref')}}" data-clipboard-text="{{SITE_FULL}}/signup?ref={{request.values.get('ref')}}">
 
-	<div class="text-center mt-5 mb-3">
-		Already have an account? <a href="/login" class="font-weight-bold text-small toggle-login">Log in.</a>
+		<div class="text-center mt-5 mb-3">
+			Already have an account? <a href="/login" class="font-weight-bold text-small toggle-login">Log in.</a>
+		</div>
 	</div>
-</div>
-<div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
-	<div class="toast-body text-center">
-	<i class="fas fa-check-circle text-success mr-2"></i>Link copied to clipboard
-</div>
+	<div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
+		<div class="toast-body text-center">
+		<i class="fas fa-check-circle text-success mr-2"></i>Link copied to clipboard
+	</div>
 {%- endblock -%}

@@ -21,24 +21,13 @@
 		{% endif %}
 	</head>
 
-<body id="login">
-	<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top border-0">
-		<div class="container-fluid">
-			<button class="navbar-toggler d-none" role="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
-					aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-			</button>
-		</div>
-	</nav>
-	<div class="container-fluid position-absolute h-100 p-0">
-		<div class="row no-gutters h-100">
+	<body id="login">
+		<div class="container-fluid position-absolute h-100 p-0">
+			<div class="row no-gutters h-100">
 				<div class="col-12 col-md-6 my-auto p-3">
 					<div class="row justify-content-center">
 						<div class="col-10 col-md-7">
-							<div class="mb-5">
-								<a href="/" class="text-decoration-none"><span class="h3 text-primary">‎</span></a>
-							</div>
-							<h1 class="h2">{% block authtitle %}{% endblock %}</h1>
+							<h2>{% block authtitle %}{% endblock %}</h2>
 							<p class="text-muted mb-md-5">{% block authtext %}{% endblock %}</p>
 							{% if error %}
 								<div class="alert alert-danger alert-dismissible fade show d-flex my-3" role="alert">

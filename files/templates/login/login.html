@@ -1,9 +1,8 @@
 {%- extends 'login/authforms.html' -%}
+{% block authtitle %}Welcome back.{% endblock %}
+{% block authtext %}Glad to have you back!{% endblock %}
 {% block content %}
 	<div id="login-form" class="">
-		<h1 class="h2">Welcome back.</h1>
-		<p class="text-muted mb-md-5">Glad to have you back!</p>
-
 		{% if failed %}
 		<div class="alert alert-danger alert-dismissible fade show d-flex my-3" role="alert">
 			<i class="fas fa-exclamation-circle my-auto"></i>

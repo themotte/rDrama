@@ -1,8 +1,8 @@
 {%- extends "login/authforms.html" -%}
+{% block authtitle %}Two-step login{% endblock %}
+{% block authtext %}To login, please enter the 6-digit verification code generated in your authenticator app.{% endblock %}
 {%- block content -%}
 <div id="login-form" class="">
-	<h1 class="h2">Two-step login</h1>
-	<p class="text-muted mb-md-5">To login, please enter the 6-digit verification code generated in your authenticator app.</p>
 	{% if failed %}
 		<div class="alert alert-danger alert-dismissible fade show d-flex my-3" role="alert">
 			<i class="fas fa-exclamation-circle my-auto"></i>
