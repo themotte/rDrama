@@ -1,54 +1,18 @@
 {% extends "email/default.html" %}
 
-{% block title %}Verify Your Email{% endblock %}</h1>
-
-{% block preheader %}Verify your new {{SITE_TITLE}} email.{% endblock %}
+{% block title %}Verify your new {{SITE_TITLE}} email.{% endblock %}</h1>
 
 {% block content %}
-												<p>You told us you wanted to change your {{SITE_TITLE}} account email. To finish this process, please verify your new email address:</p>
-																								<div class="overflow-x-auto"><table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-													<tr>
-														<td align="center">
-															<div class="overflow-x-auto><table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
-																<tr>
-																	<td align="center">
-																		<a href="{{action_url}}" class="f-fallback button" target="_blank">Verify email</a>
-																	</td>
-																</tr>
-															</table>
-														</td>
-													</tr>
-												</table>
-												<p>For reference, here's your current information:</p>
-												<div class="overflow-x-auto"><table class="attributes" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-													<tr>
-														<td class="attributes_content">
-															<div class="overflow-x-auto><table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-																<tr>
-																	<td class="attributes_item">
-																		<span class="f-fallback">
-							<strong>Email:</strong> {{v.email}}
-						</span>
-																	</td>
-																</tr>
-																<tr>
-																	<td class="attributes_item">
-																		<span class="f-fallback">
-							<strong>Username:</strong> {{v.username}}
-						</span>
-																	</td>
-																</tr>
-															</table>
-														</td>
-													</tr>
-												</table>
-												<p>Please note that {{SITE_TITLE}} will never ask you for your email, password, or two-factor token via email, text, or phone.</p>
-												<div class="overflow-x-auto"><table class="body-sub" role="presentation">
-													<tr>
-														<td>
-															<p class="f-fallback sub">If you’re having trouble with the button above, copy and paste the URL below into your web browser.</p>
-															<p class="f-fallback sub">{{action_url}}</p>
-														</td>
-													</tr>
-												</table>
+	<p>You told us you wanted to change your {{SITE_TITLE}} account email. To finish this process, please verify your new email address:</p>
+	<div class="button-container">
+			<a href="{{action_url}}" class="button" target="_blank">Verify Email</a>
+	</div>
+	<p class="reference-text">For reference, here's your current information:</p>
+	<div class="user-info">
+			<p><strong>Username:</strong> {{v.email}}</p>
+			<p><strong>Email:</strong> {{v.username}}</p>
+	</div>
+	<p class="user-info">Please note that {{SITE_TITLE}} will never ask you for your email, password, or two-factor token via email, text, or phone.</p>
+	<hr />
+	<p class="raw-link">If the button doesn't work, you can copy and paste this link into your browser: <br>{{action_url}}</p>
 {% endblock %}
