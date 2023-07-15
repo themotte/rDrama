@@ -71,7 +71,7 @@ class Comment(CreatedBase):
 		viewonly=True)
 	reports = relationship("CommentFlag",
 		primaryjoin="CommentFlag.comment_id == Comment.id",
-		order_by="CommentFlag.created_timestampz",
+		order_by="CommentFlag.created_datetimez",
 		viewonly=True)
 	notes = relationship("UserNote", back_populates="comment")
 
