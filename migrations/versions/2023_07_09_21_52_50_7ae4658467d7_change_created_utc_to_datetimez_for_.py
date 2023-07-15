@@ -32,6 +32,9 @@ def upgrade():
 
 
 def downgrade():
+    """
+    Downgrade will truncate the milliseconds.
+    """
     op.add_column('commentflags', sa.Column('created_utc', sa.INTEGER(), server_default=sa.text('0'), nullable=True))
     op.execute("""
         UPDATE commentflags 
