@@ -68,6 +68,8 @@ class CreatedDateTimeBase(Base):
 	@declared_attr
 	def created_datetimez(self):
 		"""
+		Declare default column for classes/tables inheriting `CreatedDateTimeBase`.
+		
 		Retrieving `created_datetimez` will return a `datetime` object with `tzinfo` for UTC.
 		"""
 		return Column(DateTime(timezone=True), nullable=False, server_default=text("now()"))
