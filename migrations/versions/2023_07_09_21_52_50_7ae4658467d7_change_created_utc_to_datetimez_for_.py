@@ -1,4 +1,4 @@
-"""Change created_utc to timestampz for commentflags
+"""Change created_utc to datetimez for commentflags
 
 Revision ID: 7ae4658467d7
 Revises: ea282d7c711c
@@ -17,17 +17,17 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column('commentflags', sa.Column('created_timestampz', sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.text('NOW()')))
+    op.add_column('commentflags', sa.Column('created_datetimez', sa.DateTime(timezone=True), nullable=True, server_default=sa.text('NOW()')))
     op.execute("""
         UPDATE commentflags 
-        SET created_timestampz = 
+        SET created_datetimez = 
             CASE 
                 WHEN created_utc > 0 THEN 
                     (timestamp 'epoch' + created_utc * interval '1 second') at time zone 'utc' 
                 ELSE NULL 
             END
     """)
-
+    op.alter_column('commentflags', 'created_datetimez', nullable=False)
     op.drop_column('commentflags', 'created_utc')
 
 
@@ -37,9 +37,9 @@ def downgrade():
         UPDATE commentflags 
         SET created_utc = 
             COALESCE(
-                EXTRACT(EPOCH FROM created_timestampz)::integer,
+                EXTRACT(EPOCH FROM created_datetimez)::integer,
                 0
             )
         """)
     op.alter_column('commentflags', 'created_utc', nullable=False)
-    op.drop_column('commentflags', 'created_timestampz')
+    op.drop_column('commentflags', 'created_datetimez')
