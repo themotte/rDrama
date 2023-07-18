@@ -82,7 +82,7 @@
 	<div class="comment-body">
 		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if c.unread %}unread{% endif %} comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.state_mod == StateMod.REMOVED %} removed{% endif %}{% if c.state_mod == StateMod.FILTERED %} filtered{% endif %}{% if c.state_user_deleted_utc %} deleted{% endif %}">
 			{%- include 'component/comment/reports.html'-%}
-			{% if c.state_mod == StateMod.REMOVED and c.state_mod_set_by and v and v.admin_level >= 2 %}
+			{% if c.state_mod == StateMod.REMOVED and c.state_mod_set_by and v and v.admin_level >= PERMS['POST_COMMENT_MODERATION'] %}
 				<div id="comment-banned-warning" class="comment-text text-removed mb-0">removed by @{{c.state_mod_set_by}}</div>
 			{% endif %}
 
