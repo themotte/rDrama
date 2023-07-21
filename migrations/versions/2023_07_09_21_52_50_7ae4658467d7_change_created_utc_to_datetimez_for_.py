@@ -7,6 +7,7 @@ Create Date: 2023-07-09 21:52:50.386177+00:00
 """
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy.sql.functions import now
 
 
 # revision identifiers, used by Alembic.
@@ -21,7 +22,7 @@ to_column = 'created_datetimez'
 
 
 def upgrade():
-    op.add_column(table_name, sa.Column(to_column, sa.DateTime(timezone=True), nullable=True, server_default=sa.text('NOW()')))
+    op.add_column(table_name, sa.Column(to_column, sa.DateTime(timezone=True), nullable=True, server_default=now()))
     op.execute(f"""
         UPDATE {table_name} 
         SET {to_column} = 
