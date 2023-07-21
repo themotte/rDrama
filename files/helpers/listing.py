@@ -45,7 +45,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, ccmode="false"
 	if (ccmode == "true"):
 		posts = posts.filter(Submission.club == True)
 
-	posts = posts.filter_by(state_mod=StateMod.VISIBLE, private=False, state_user_deleted_utc=None)
+	posts = posts.filter_by(private=False, state_user_deleted_utc=None)
 
 	if ccmode == "false" and not gt and not lt:
 		posts = posts.filter_by(stickied=None)
