@@ -1,7 +1,7 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
-from files.classes.base import CreatedBase
+from files.classes.base import CreatedBase, CreatedDateTimeBase
 from files.helpers.lazy import lazy
 
 
@@ -42,7 +42,7 @@ class Vote(CreatedBase):
 		return data
 
 
-class CommentVote(CreatedBase):
+class CommentVote(CreatedDateTimeBase):
 	__tablename__ = "commentvotes"
 
 	comment_id = Column(Integer, ForeignKey("comments.id"), primary_key=True)
@@ -50,7 +50,6 @@ class CommentVote(CreatedBase):
 	vote_type = Column(Integer, nullable=False)
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	real = Column(Boolean, default=True, nullable=False)
-	created_timestampz = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
 
 	Index('cvote_user_index', user_id)
 	Index('commentvotes_comments_type_index', vote_type)

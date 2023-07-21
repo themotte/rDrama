@@ -7,6 +7,7 @@ Create Date: 2023-07-11 03:27:11.520264+00:00
 """
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy.sql.functions import now
 
 
 # revision identifiers, used by Alembic.
@@ -15,31 +16,35 @@ down_revision = '7ae4658467d7'
 branch_labels = None
 depends_on = None
 
+table_name = 'commentvotes'
+from_column = 'created_utc'
+to_column = 'created_datetimez'
 
 def upgrade():
-    op.add_column('commentvotes', sa.Column('created_timestampz', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False))
-    op.execute("""
-        UPDATE commentvotes 
-        SET created_timestampz = 
+    op.add_column(table_name, sa.Column(to_column, sa.DateTime(timezone=True), server_default=now(), nullable=True))
+    op.execute(f"""
+        UPDATE {table_name} 
+        SET {to_column} = 
             CASE 
-                WHEN created_utc > 0 THEN 
-                    (timestamp 'epoch' + created_utc * interval '1 second') at time zone 'utc' 
+                WHEN {from_column} > 0 THEN 
+                    (timestamp 'epoch' + {from_column} * interval '1 second') at time zone 'utc' 
                 ELSE NULL 
             END
     """)
 
-    op.drop_column('commentvotes', 'created_utc')
+    op.alter_column(table_name, to_column, nullable=False)
+    op.drop_column(table_name, from_column)
 
 
 def downgrade():
-    op.add_column('commentvotes', sa.Column('created_utc', sa.INTEGER(), server_default=sa.text('0'), nullable=True))
-    op.execute("""
-        UPDATE commentvotes 
-        SET created_utc = 
+    op.add_column(table_name, sa.Column(from_column, sa.INTEGER(), server_default=sa.text('0'), nullable=True))
+    op.execute(f"""
+        UPDATE {table_name} 
+        SET {from_column} = 
             COALESCE(
-                EXTRACT(EPOCH FROM created_timestampz)::integer,
+                EXTRACT(EPOCH FROM {to_column})::integer,
                 0
             )
         """)
-    op.alter_column('commentvotes', 'created_utc', nullable=False)
-    op.drop_column('commentvotes', 'created_timestampz')
+    op.alter_column(table_name, from_column, nullable=False)
+    op.drop_column(table_name, to_column)
