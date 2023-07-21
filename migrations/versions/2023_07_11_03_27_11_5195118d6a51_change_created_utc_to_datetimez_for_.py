@@ -37,7 +37,7 @@ def upgrade():
 
 
 def downgrade():
-    op.add_column(table_name, sa.Column(from_column, sa.INTEGER(), server_default=sa.text('0'), nullable=True))
+    op.add_column(table_name, sa.Column(from_column, sa.Integer(), server_default=sa.text('0'), nullable=True))
     op.execute(f"""
         UPDATE {table_name} 
         SET {from_column} = 
