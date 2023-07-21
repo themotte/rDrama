@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy import text
 from sqlalchemy.orm import declarative_base, declared_attr
 from sqlalchemy.schema import Column
+from sqlalchemy.sql.functions import now
 from sqlalchemy.sql.sqltypes import Integer, DateTime
 
 from files.helpers.time import format_age, format_datetime
@@ -72,7 +73,7 @@ class CreatedDateTimeBase(Base):
 		
 		Retrieving `created_datetimez` will return a `datetime` object with `tzinfo` for UTC.
 		"""
-		return Column(DateTime(timezone=True), nullable=False, server_default=text("now()"))
+		return Column(DateTime(timezone=True), nullable=False, server_default=now())
 
 	@property
 	def created_utc(self):

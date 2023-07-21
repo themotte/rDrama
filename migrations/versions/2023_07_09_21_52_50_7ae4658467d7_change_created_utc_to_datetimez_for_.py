@@ -15,34 +15,38 @@ down_revision = 'ea282d7c711c'
 branch_labels = None
 depends_on = None
 
+table_name = 'commentflags'
+from_column = 'created_utc'
+to_column = 'created_datetimez'
+
 
 def upgrade():
-    op.add_column('commentflags', sa.Column('created_datetimez', sa.DateTime(timezone=True), nullable=True, server_default=sa.text('NOW()')))
-    op.execute("""
-        UPDATE commentflags 
-        SET created_datetimez = 
+    op.add_column(table_name, sa.Column(to_column, sa.DateTime(timezone=True), nullable=True, server_default=sa.text('NOW()')))
+    op.execute(f"""
+        UPDATE {table_name} 
+        SET {to_column} = 
             CASE 
-                WHEN created_utc > 0 THEN 
-                    (timestamp 'epoch' + created_utc * interval '1 second') at time zone 'utc' 
+                WHEN {from_column} > 0 THEN 
+                    (timestamp 'epoch' + {from_column} * interval '1 second') at time zone 'utc' 
                 ELSE NULL 
             END
     """)
-    op.alter_column('commentflags', 'created_datetimez', nullable=False)
-    op.drop_column('commentflags', 'created_utc')
+    op.alter_column(table_name, to_column, nullable=False)
+    op.drop_column(table_name, from_column)
 
 
 def downgrade():
     """
     Downgrade will truncate the milliseconds.
     """
-    op.add_column('commentflags', sa.Column('created_utc', sa.INTEGER(), server_default=sa.text('0'), nullable=True))
-    op.execute("""
-        UPDATE commentflags 
+    op.add_column(table_name, sa.Column('created_utc', sa.INTEGER(), server_default=sa.text('0'), nullable=True))
+    op.execute(f"""
+        UPDATE {table_name} 
         SET created_utc = 
             COALESCE(
-                EXTRACT(EPOCH FROM created_datetimez)::integer,
+                EXTRACT(EPOCH FROM {to_column})::integer,
                 0
             )
         """)
-    op.alter_column('commentflags', 'created_utc', nullable=False)
-    op.drop_column('commentflags', 'created_datetimez')
+    op.alter_column(table_name, from_column, nullable=False)
+    op.drop_column(table_name, to_column)

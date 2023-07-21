@@ -33,7 +33,7 @@ class CommentFlag(CreatedDateTimeBase):
 	comment_id = Column(Integer, ForeignKey("comments.id"), nullable=False)
 	user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 	reason = Column(String)
-	
+
 	Index('cflag_user_idx', user_id)
 
 	user = relationship("User", primaryjoin = "CommentFlag.user_id == User.id", uselist = False, viewonly=True)
