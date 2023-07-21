@@ -1,8 +1,10 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.classes.base import CreatedBase
+from files.classes.base import CreatedBase, CreatedDateTimeBase, Base
 from files.helpers.lazy import lazy
 from files.helpers.config.const import *
+
+
 
 class Flag(CreatedBase):
 	__tablename__ = "flags"
@@ -24,7 +26,7 @@ class Flag(CreatedBase):
 		return self.reason
 
 
-class CommentFlag(CreatedBase):
+class CommentFlag(CreatedDateTimeBase):
 	__tablename__ = "commentflags"
 
 	id = Column(Integer, primary_key=True)
