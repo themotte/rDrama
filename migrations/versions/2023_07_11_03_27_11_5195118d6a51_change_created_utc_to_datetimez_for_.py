@@ -1,4 +1,4 @@
-"""Change created_utc to timestampz for commentvotes
+"""Change created_utc to datetimez for commentvotes
 
 Revision ID: 5195118d6a51
 Revises: 7ae4658467d7
