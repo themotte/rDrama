@@ -19,7 +19,7 @@
 {% endif %}
 {% endif %}
 
-{%- if v.admin_level >= PERMS['POST_COMMENT_MODERATION'] -%}
+{%- if v and v.admin_level >= PERMS['POST_COMMENT_MODERATION'] -%}
 	{%- set show_approve = c.state_mod != StateMod.VISIBLE or "/reported/" in request.path -%}
 	{%- set show_remove = c.state_mod != StateMod.REMOVED -%}
 	<button id="remove-{{c.id}}" class="btn caction py-0 nobackground px-1 text-danger{% if not show_remove %} d-none{% endif %}" role="button" onclick="moderate(false, {{c.id}}, true, 'remove-{{c.id}}', 'remove2-{{c.id}}', 'approve-{{c.id}}', 'approve2-{{c.id}}');"><i class="fas fa-ban"></i>Remove</a>

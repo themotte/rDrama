@@ -22,7 +22,7 @@
 					<button id="pin2-{{p.id}}" class="{% if p.stickied %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-primary" role="button" onclick="post_toast2(this,'/sticky/{{p.id}}','pin2-{{p.id}}','unpin2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center text-primary mr-3"></i>Pin</button>
 					<button id="unpin2-{{p.id}}" class="{% if not p.stickied %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-primary" role="button" onclick="post_toast2(this,'/unsticky/{{p.id}}','pin2-{{p.id}}','unpin2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center  text-primary mr-3"></i>Unpin</button>
 
-					{%- if v.admin_level >= PERMS['POST_COMMENT_MODERATION'] -%}
+					{%- if v and v.admin_level >= PERMS['POST_COMMENT_MODERATION'] -%}
 						{%- set show_approve = p.state_mod != StateMod.VISIBLE or "/reported/" in request.path -%}
 						{%- set show_remove = p.state_mod == StateMod.VISIBLE -%}
 						<a id="remove2-{{p.id}}" class="dropdown-item list-inline-item text-danger{% if not show_remove %} d-none{% endif %}" role="button" onclick="moderate(true, {{p.id}}, true, 'remove-{{p.id}}', 'remove2-{{p.id}}', 'approve-{{p.id}}', 'approve2-{{p.id}}');"><i class="fas fa-ban"></i>Remove</a>

@@ -58,7 +58,7 @@
 				<a id="unclub-{{p.id}}" class="dropdown-item {% if not p.club %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2(this,'/toggle_club/{{p.id}}','club-{{p.id}}','unclub-{{p.id}}')"><i class="fas fa-eye"></i>Unmark club</a>
 			{% endif %} #}
 
-			{%- if v.admin_level >= PERMS['POST_COMMENT_MODERATION'] -%}
+			{%- if v and v.admin_level >= PERMS['POST_COMMENT_MODERATION'] -%}
 				{%- set show_approve = p.state_mod != StateMod.VISIBLE or "/reported/" in request.path -%}
 				{%- set show_remove = p.state_mod == StateMod.VISIBLE -%}
 				<a id="remove-{{p.id}}" class="dropdown-item list-inline-item text-danger{% if not show_remove %} d-none{% endif %}" role="button" onclick="moderate(true, {{p.id}}, true, 'remove-{{p.id}}', 'remove2-{{p.id}}', 'approve-{{p.id}}', 'approve2-{{p.id}}');"><i class="fas fa-ban"></i>Remove</a>

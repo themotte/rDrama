@@ -27,7 +27,7 @@
 						<a id="unban2-{{c.id}}" class="{% if not c.author.is_banned %}d-none{% endif %} list-group-item text-success" role="button" onclick="post_toast2(this,'/unban_user/{{c.author_id}}','ban2-{{c.id}}','unban2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-user-minus fa-fw text-success mr-2"></i>Unban user</a>
 					{% endif %}
 
-					{%- if v.admin_level >= PERMS['POST_COMMENT_MODERATION'] -%}
+					{%- if v and v.admin_level >= PERMS['POST_COMMENT_MODERATION'] -%}
 						{%- set show_approve = c.state_mod != StateMod.VISIBLE or "/reported/" in request.path -%}
 						{%- set show_remove = c.state_mod == StateMod.VISIBLE -%}
 						<a id="remove2-{{c.id}}" class="dropdown-item list-inline-item text-danger{% if not show_remove %} d-none{% endif %}" role="button" onclick="moderate(false, {{c.id}}, true, 'remove-{{c.id}}', 'remove2-{{c.id}}', 'approve-{{c.id}}', 'approve2-{{c.id}}');"><i class="fas fa-ban"></i>Remove</a>
