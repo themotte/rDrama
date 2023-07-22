@@ -6,7 +6,7 @@ from files.helpers.config.const import *
 
 
 
-class Flag(CreatedBase):
+class Flag(CreatedDateTimeBase):
 	__tablename__ = "flags"
 
 	id = Column(Integer, primary_key=True)
