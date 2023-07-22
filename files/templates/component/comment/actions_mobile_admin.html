@@ -27,13 +27,12 @@
 						<a id="unban2-{{c.id}}" class="{% if not c.author.is_banned %}d-none{% endif %} list-group-item text-success" role="button" onclick="post_toast2(this,'/unban_user/{{c.author_id}}','ban2-{{c.id}}','unban2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-user-minus fa-fw text-success mr-2"></i>Unban user</a>
 					{% endif %}
 
-					{% if "/reported/" in request.path %}
-						<a class="list-group-item text-danger" role="button" onclick="removeCommentMobile('{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-ban text-danger mr-2"></i>Remove</a>
-						<a class="list-group-item text-success" role="button" onclick="approveCommentMobile('{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-check text-success mr-2"></i>Approve</a>
-					{% else %}
-						<a id="remove2-{{c.id}}" class="{% if c.state_mod != StateMod.VISIBLE %}d-none{% endif %} list-group-item text-danger" role="button" onclick="removeCommentMobile('{{c.id}}','approve2-{{c.id}}','remove2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-ban text-danger mr-2"></i>Remove</a>
-						<a id="approve2-{{c.id}}" class="{% if c.state_mod != StateMod.REMOVED %}d-none{% endif %} list-group-item text-success" role="button" onclick="approveCommentMobile('{{c.id}}','approve2-{{c.id}}','remove2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-check text-success mr-2"></i>Approve</a>
-					{% endif %}
+					{%- if v.admin_level >= PERMS['POST_COMMENT_MODERATION'] -%}
+						{%- set show_approve = p.state_mod != StateMod.VISIBLE or "/reported/" in request.path -%}
+						{%- set show_remove = p.state_mod == StateMod.VISIBLE -%}
+						<a id="remove2-{{c.id}}" class="dropdown-item list-inline-item text-danger{% if not show_remove %} d-none{% endif %}" role="button" onclick="removeCommentMobile('{{c.id}}','approve2-{{c.id}}','remove2-{{c.id}}');"><i class="fas fa-ban"></i>Remove</a>
+						<a id="approve2-{{c.id}}" class="dropdown-item list-inline-item text-success{% if not show_approve %} d-none{% endif %}" role="button" onclick="approveCommentMobile('{{c.id}}','approve2-{{c.id}}','remove2-{{c.id}}');"><i class="fas fa-check"></i>Approve</a>
+					{%- endif -%}
 
 					{% if c.oauth_app %}
 						<a href="{{c.oauth_app.permalink}}/comments" class="list-group-item text-info"><i class="fas fa-code text-info mr-2"></i>API App</a>

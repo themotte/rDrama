@@ -1,22 +1,18 @@
 function removeCommentBackend(post_id) {
-	url="/remove_comment/"+post_id
-
-	post(url)
+	filter_new_comment_status(post_id, "removed");
 }
 
 function approveCommentBackend(post_id) {
-	url="/unremove_comment/"+post_id
-
-	post(url)
+	filter_new_comment_status(post_id, "normal");
 }
 
 function removeCommentDesktop(post_id,button1,button2) {
-	removeCommentBackend(post_id)
+	removeCommentBackend(post_id);
 
 	try {
-		document.getElementById("comment-"+post_id+"-only").classList.add("banned");
+		document.getElementById("comment-"+post_id+"-only").classList.add("removed");
 	} catch(e) {
-		document.getElementById("context").classList.add("banned");
+		document.getElementById("context").classList.add("removed");
 	}
 
 	var button=document.getElementById("remove-"+post_id);
@@ -33,9 +29,9 @@ function approveCommentDesktop(post_id,button1,button2) {
 	approveCommentBackend(post_id)
 
 	try {
-		document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
+		document.getElementById("comment-"+post_id+"-only").classList.remove("removed");
 	} catch(e) {
-		document.getElementById("context").classList.remove("banned");
+		document.getElementById("context").classList.remove("removed");
 	}
 	
 	var button=document.getElementById("remove-"+post_id);

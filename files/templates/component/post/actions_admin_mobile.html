@@ -20,21 +20,14 @@
 					<button id="undistinguish2-{{p.id}}" class="{% if not p.distinguish_level %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-primary" role="button" onclick="post_toast2(this,'/distinguish/{{p.id}}','distinguish2-{{p.id}}','undistinguish2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-crown text-center text-primary mr-3"></i>Undistinguish</button> #}
 
 					<button id="pin2-{{p.id}}" class="{% if p.stickied %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-primary" role="button" onclick="post_toast2(this,'/sticky/{{p.id}}','pin2-{{p.id}}','unpin2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center text-primary mr-3"></i>Pin</button>
-
 					<button id="unpin2-{{p.id}}" class="{% if not p.stickied %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-primary" role="button" onclick="post_toast2(this,'/unsticky/{{p.id}}','pin2-{{p.id}}','unpin2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center  text-primary mr-3"></i>Unpin</button>
 
-					{% if "/reported/" in request.path %}
-						<button class="nobackground btn btn-link btn-block btn-lg text-danger text-left" role="button" onclick="post_toast(this,'/remove_post/{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-ban text-center mr-3"></i>Remove</button>
-						<button class="nobackground btn btn-link btn-block btn-lg text-success text-left" role="button" onclick="post_toast(this,'/unremove_post/{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-check text-center mr-3"></i>Approve</button>
-					{% else %}
-						<button id="remove2-{{p.id}}" class="{% if p.state_mod == StateMod.REMOVED %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" role="button" onclick="post_toast2(this,'/remove_post/{{p.id}}','remove2-{{p.id}}','approve2-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-ban text-center mr-3"></i>Remove</button>
-						<button id="approve2-{{p.id}}" class="{% if p.state_mod == StateMod.VISIBLE %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-success text-left"  role="button" onclick="post_toast2(this,'/unremove_post/{{p.id}}','remove2-{{p.id}}','approve2-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-check text-center mr-3"></i>Approve</button>
-					{% endif %}
-
-					{% if v and v.admin_level >= 2 and p.state_mod == StateMod.FILTERED %}
-						<button id="mobile-filter-approve-{{p.id}}" class="nobackground btn btn-link btn-block btn-lg text-success text-left" role="button" onclick="filter_new_status({{p.id}}, 'normal')"><i class="far fa-check text-center mr-3"></i>Filter Approve</a>
-						<button id="mobile-filter-remove-{{p.id}}" class="nobackground btn btn-link btn-block btn-lg text-danger text-left" role="button" onclick="filter_new_status({{p.id}}, 'removed')"><i class="far fa-ban text-center mr-3"></i>Filter Remove</a>
-					{% endif %}
+					{%- if v.admin_level >= PERMS['POST_COMMENT_MODERATION'] -%}
+						{%- set show_approve = p.state_mod != StateMod.VISIBLE or "/reported/" in request.path -%}
+						{%- set show_remove = p.state_mod == StateMod.VISIBLE -%}
+						<a id="remove2-{{p.id}}" class="dropdown-item list-inline-item text-danger{% if not show_remove %} d-none{% endif %}" role="button" onclick="filter_new_status({{p.id}}, 'removed');"><i class="fas fa-ban"></i>Remove</a>
+						<a id="approve2-{{p.id}}" class="dropdown-item list-inline-item text-success{% if not show_approve %} d-none{% endif %}" role="button" onclick="filter_new_status({{p.id}}, 'normal');"><i class="fas fa-check"></i>Approve</a>
+					{%- endif -%}
 
 					{% if p.oauth_app %}
 						<a href="{{p.oauth_app.permalink}}"><button class="nobackground btn btn-link btn-block btn-lg text-muted text-left"><i class="far fa-code text-center text-info mr-3"></i>API App</button></a>
@@ -47,7 +40,6 @@
 						<button id="ban2-{{p.id}}" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/post/{{p.id}}', '{{p.author.id}}', '{{p.author_name}}')" class="{% if p.author.is_suspended %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" role="button"><i class="fas fa-user-minus mr-3"></i>Ban user</button>
 						<button id="unban2-{{p.id}}" class="{% if not p.author.is_suspended %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-success text-left" role="button" onclick="post_toast2(this,'/unban_user/{{p.author_id}}','ban2-{{p.id}}','unban2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-user-minus mr-3"></i>Unban user</button>
 					{% endif %}
-
 				</ul>
 			</div>
 		</div>
