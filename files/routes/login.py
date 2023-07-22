@@ -17,7 +17,7 @@ def login_get(v):
 		if redir.startswith(f'{SITE_FULL}/'): return redirect(redir)
 		elif redir.startswith('/'): return redirect(f'{SITE_FULL}{redir}')
 
-	return render_template("login.html", failed=False, redirect=redir)
+	return render_template("login/login.html", failed=False, redirect=redir)
 
 
 def check_for_alts(current_id):
@@ -95,18 +95,18 @@ def login_post():
 
 	if not account:
 		time.sleep(random.uniform(0, 2))
-		return render_template("login.html", failed=True)
+		return render_template("login/login.html", failed=True)
 
 	if request.values.get("password"):
 
 		if not account.verifyPass(request.values.get("password")):
 			time.sleep(random.uniform(0, 2))
-			return render_template("login.html", failed=True)
+			return render_template("login/login.html", failed=True)
 
 		if account.mfa_secret:
 			now = int(time.time())
 			hash = generate_hash(f"{account.id}+{now}+2fachallenge")
-			return render_template("login_2fa.html",
+			return render_template("login/login_2fa.html",
 								   v=account,
 								   time=now,
 								   hash=hash,
@@ -124,7 +124,7 @@ def login_post():
 
 		if not account.validate_2fa(request.values.get("2fa_token", "").strip()):
 			hash = generate_hash(f"{account.id}+{time}+2fachallenge")
-			return render_template("login_2fa.html",
+			return render_template("login/login_2fa.html",
 								   v=account,
 								   time=now,
 								   hash=hash,
@@ -193,7 +193,7 @@ def sign_up_get(v):
 		ref_user = None
 
 	if ref_user and (ref_user.id in session.get("history", [])):
-		return render_template("sign_up_failed_ref.html")
+		return render_template("login/sign_up_failed_ref.html")
 
 	now = int(time.time())
 	token = token_hex(16)
@@ -209,7 +209,7 @@ def sign_up_get(v):
 	error = request.values.get("error")
 
 	return render_template(
-		"sign_up.html",
+		"login/sign_up.html",
 		formkey=formkey,
 		now=now,
 		ref_user=ref_user,
@@ -358,7 +358,7 @@ def sign_up_post(v):
 
 @app.get("/forgot")
 def get_forgot():
-	return render_template("forgot_password.html")
+	return render_template("login/forgot_password.html")
 
 
 @app.post("/forgot")
@@ -370,7 +370,7 @@ def post_forgot():
 	email = request.values.get("email",'').strip().lower()
 
 	if not email_regex.fullmatch(email):
-		return render_template("forgot_password.html", error="Invalid email.")
+		return render_template("login/forgot_password.html", error="Invalid email.")
 
 	username  = username.lstrip('@')
 
@@ -390,7 +390,7 @@ def post_forgot():
 									   v=user)
 				  )
 
-	return render_template("forgot_password.html",
+	return render_template("login/forgot_password.html",
 						   msg="If the username and email matches an account, you will be sent a password reset email. You have ten minutes to complete the password reset process.")
 
 
@@ -420,7 +420,7 @@ def get_reset():
 
 	reset_token = generate_hash(f"{user.id}+{timestamp}+reset+{user.login_nonce}")
 
-	return render_template("reset_password.html",
+	return render_template("login/reset_password.html",
 						   v=user,
 						   token=reset_token,
 						   time=timestamp,
@@ -456,7 +456,7 @@ def post_reset(v):
 		abort(404)
 
 	if password != confirm_password:
-		return render_template("reset_password.html",
+		return render_template("login/reset_password.html",
 							   v=user,
 							   token=token,
 							   time=timestamp,
@@ -475,7 +475,7 @@ def post_reset(v):
 @auth_desired
 def lost_2fa(v):
 	return render_template(
-		"lost_2fa.html",
+		"login/lost_2fa.html",
 		v=v
 		)
 

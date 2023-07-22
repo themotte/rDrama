@@ -1,16 +1,16 @@
+import math
 from typing import TYPE_CHECKING, Literal, Optional
 from urllib.parse import parse_qs, urlencode, urlparse
 
 from flask import g
-import math
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
 from files.classes.base import CreatedBase
-from files.classes.visstate import StateMod, StateReport
+from files.classes.visstate import StateMod, StateReport, VisibilityState
 from files.helpers.config.const import *
 from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS, SITE_FULL
-from files.helpers.content import (ModerationState, body_displayed,
+from files.helpers.content import (body_displayed,
                                    execute_shadowbanned_fake_votes)
 from files.helpers.lazy import lazy
 from files.helpers.math import clamp
@@ -139,7 +139,7 @@ class Comment(CreatedBase):
 	@property
 	@lazy
 	def fullname(self):
-		return f"t3_{self.id}"
+		return f"comment_{self.id}"
 
 	@property
 	@lazy
@@ -151,8 +151,8 @@ class Comment(CreatedBase):
 	@property
 	@lazy
 	def parent_fullname(self):
-		if self.parent_comment_id: return f"t3_{self.parent_comment_id}"
-		elif self.parent_submission: return f"t2_{self.parent_submission}"
+		if self.parent_comment_id: return f"comment_{self.parent_comment_id}"
+		elif self.parent_submission: return f"post_{self.parent_submission}"
 
 	def replies(self, user):
 		if self.replies2 != None: return [x for x in self.replies2 if not x.author.shadowbanned]
@@ -359,7 +359,7 @@ class Comment(CreatedBase):
 		return self.is_message and not self.sentto
 
 	@lazy
-	def header_msg(self, v, is_notification_page:bool, reply_count:int) -> str:
+	def header_msg(self, v, is_notification_page: bool) -> str:
 		'''
 		Returns a message that is in the header for a comment, usually for
 		display on a notification page.
@@ -367,9 +367,9 @@ class Comment(CreatedBase):
 		if self.post:
 			post_html:str = f"<a href=\"{self.post.permalink}\">{self.post.realtitle(v)}</a>"
 			if v:
-				if v.id == self.author_id and reply_count:
-					text = f"Comment {'Replies' if reply_count != 1 else 'Reply'}"
-				elif v.id == self.post.author_id and self.level == 1:
+				if self.level > 1 and v.id == self.parent_comment.author_id:
+					text = "Comment Reply"
+				elif self.level == 1 and v.id == self.post.author_id:
 					text = "Post Reply"
 				elif self.parent_submission in v.subscribed_idlist():
 					text = "Subscribed Thread"
@@ -420,22 +420,23 @@ class Comment(CreatedBase):
 
 	@lazy
 	def show_descendants(self, v:"User | None") -> bool:
-		if self.moderation_state.is_visible_to(v, getattr(self, 'is_blocking', False)):
+		if self.visibility_state.is_visible_to(v, getattr(self, 'is_blocking', False)):
 			return True
 		return bool(self.descendant_count)
 
 	@lazy
-	def visibility_state(self, v:"User | None") -> tuple[bool, str]:
+	def visibility_and_message(self, v:"User | None") -> tuple[bool, str]:
 		'''
 		Returns a tuple of whether this content is visible and a publicly 
 		visible message to accompany it. The visibility state machine is
 		a slight mess but... this should at least unify the state checks.
 		'''
-		return self.moderation_state.visibility_state(v, getattr(self, 'is_blocking', False))
+		return self.visibility_state.visibility_and_message(
+			v, getattr(self, 'is_blocking', False))
 
 	@property
-	def moderation_state(self) -> ModerationState:
-		return ModerationState.from_submittable(self)
+	def visibility_state(self) -> VisibilityState:
+		return VisibilityState.from_submittable(self)
 	
 	def volunteer_janitor_is_unknown(self):
 		return self.volunteer_janitor_badness > 0.4 and self.volunteer_janitor_badness < 0.6

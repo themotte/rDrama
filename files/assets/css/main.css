@@ -2785,6 +2785,15 @@ ol > li::before {
 #logo {
 	margin-left: 0.5rem;
 }
+.logo-text {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: var(--black)
+}
+.logo-text:hover {
+	text-decoration: none;
+	color: var(--black)
+}
 .navbar-brand, .navbar-light .navbar-brand {
 	color: var(--primary);
 	font-weight: 600;
@@ -4924,7 +4933,7 @@ html {
 	display: block;
 }
 .comment-anchor:target, .unread {
-	background: #ffffff22 !important;
+	background: #ffffff22;
 	padding: 12px;
 	padding-bottom: 4px;
 }

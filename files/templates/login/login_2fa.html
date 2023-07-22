@@ -1,0 +1,29 @@
+{%- extends "login/authforms.html" -%}
+{% block authtitle %}Two-step login{% endblock %}
+{% block authtext %}To login, please enter the 6-digit verification code generated in your authenticator app.{% endblock %}
+{%- block content -%}
+<div id="login-form" class="">
+	{% if failed %}
+		<div class="alert alert-danger alert-dismissible fade show d-flex my-3" role="alert">
+			<i class="fas fa-exclamation-circle my-auto"></i>
+			<div>
+					Invalid verification code. Please try again.
+			</div>
+			<button class="close" data-bs-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+	{% endif %}
+
+	<form action="/login" method="post" class="mt-md-3" id="login">
+		<input type="hidden" name="username" value="{{v.username}}">
+		<input type="hidden" name="redirect" value="{{redirect}}">
+		<input type="hidden" name="time" value="{{time}}">
+		<input type="hidden" name="hash" value="{{hash}}">
+		<label for="2fa_token" class="mt-3">Your verification code</label>
+		<input autocomplete="off" class="form-control" id="2fa_token" name="2fa_token" type="text" placeholder="6-digit code">
+		<small><a href="/lost_2fa">Lost your 2FA device?</a></small>
+		<button class="btn btn-primary login w-100 mt-3" id="login_button">Sign in</button>
+	</form>
+</div>
+{%- endblock -%}

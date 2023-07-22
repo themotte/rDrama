@@ -14,91 +14,73 @@
 {% endblock %}
 
 {% block content %}
-<div class="mb-2 p-3">
-										<div class="col-12">
-												<div id="post-{{p.id}}" class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-														<div class="card-block my-md-auto{% if p.state_mod == StateMod.REMOVED %} banned{% endif %}">
-																<div class="post-meta text-left d-md-none mb-1">{% if p.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}{% if p.state_mod == StateMod.REMOVED %}removed by @{{p.state_mod_set_by}}{% else %}[Deleted by user]{% endif %}</div>
-																<h5 class="card-title post-title text-left mb-0 mb-md-1">{{p.plaintitle(v)}}</h5>
-																<div class="post-meta text-left d-none d-md-block">{% if p.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}{% if p.state_mod == StateMod.REMOVED %}removed by @{{p.state_mod_set_by}}{% else %}[Deleted by user]{% endif %}</div>
-
-														</div>
-
-														
-														<div id="voting" class="d-md-block my-auto mr-3 text-center">
-																<div  class="post-{{p.id}}-up arrow-up mx-auto">
-																</div>
-																<span  class="post-{{p.id}}-score-up score-up text-muted{% if voted!=1 %} d-none{% endif %}">✖</span>
-					<span  class="post-{{p.id}}-score-none score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">✖</span>
-					<span  class="post-{{p.id}}-score-down score-down text-muted{% if voted!=-1 %} d-none{% endif %}">✖</span>
-																<div  class="post-{{p.id}}-down arrow-down mx-auto">
-																</div>
-														</div>
-
-												</div>
-			{% if v and v.admin_level >= 2 and p.body_html %}
-												<div class="post-body mt-4 mb-2"> 
-				{{p.body_html | safe}}
+	<div class="mb-2 p-3">
+		<div class="col-12">
+			<div id="post-{{p.id}}" class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+				<div class="card-block my-md-auto{% if p.state_mod == StateMod.REMOVED %} banned{% endif %}">
+					<div class="post-meta text-left d-md-none mb-1">
+						{% if p.over_18 %}<span class="badge badge-danger">+18</span>{% endif %}
+						{% if p.state_mod == StateMod.REMOVED %}removed by @{{p.state_mod_set_by}}{% else %}[Deleted by user]{% endif %}</div>
+					<h5 class="card-title post-title text-left mb-0 mb-md-1">{{p.plaintitle(v)}}</h5>
+					<div class="post-meta text-left d-none d-md-block">
+						{% if p.over_18 %}<span class="badge badge-danger">+18</span>{% endif %}
+						{% if p.state_mod == StateMod.REMOVED %}removed by @{{p.state_mod_set_by}}{% else %}[Deleted by user]{% endif %}
+					</div>
+				</div>
+				<div id="voting" class="d-md-block my-auto mr-3 text-center">
+					<div class="post-{{p.id}}-up arrow-up mx-auto">
+					</div>
+					<span class="post-{{p.id}}-score-up score-up text-muted{% if voted!=1 %} d-none{% endif %}">✖</span>
+					<span class="post-{{p.id}}-score-none score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">✖</span>
+					<span class="post-{{p.id}}-score-down score-down text-muted{% if voted!=-1 %} d-none{% endif %}">✖</span>
+					<div class="post-{{p.id}}-down arrow-down mx-auto">
+					</div>
+				</div>
 			</div>
+			{% if v and v.admin_level >= 2 and p.body_html %}
+				<div class="post-body mt-4 mb-2"> 
+					{{p.realbody(v) | safe}}
+				</div>
 			{% endif %}
-
-										</div>
-								</div>
-
-								<div class="row mb-2 p-3">
-										<div class="col-12">
-
-												<div class="post-actions d-none d-md-block">
-														<ul class="list-inline text-left mb-2">
-																<li class="list-inline-item"><a href="{{p.permalink}}"><i
-																						class="fas fa-comment-dots"></i>{{p.comment_count}} Comment{{'s' if p.comment_count != 1 else ''}}</a>
-																</li>
-
-														</ul>
-												</div>
-
-										</div>
-
-								</div>
-
-		{% include "volunteer_teaser.html" %}
-
-		<div class="comment-section">
+		</div>
+	</div>
+	<div class="row mb-2 p-3">
+		<div class="col-12">
+			<div class="post-actions d-none d-md-block">
+				<ul class="list-inline text-left mb-2">
+					<li class="list-inline-item"><a href="{{p.permalink}}">
+						<i class="fas fa-comment-dots"></i>{{p.comment_count}} Comment{{'s' if p.comment_count != 1 else ''}}</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	{% include "volunteer_teaser.html" %}
+	<div class="comment-section">
 		{% with comments=p.replies %}
 			{% include "comments.html" %}
 		{% endwith %}
 	</div>
-
-
-
-
 {% endblock %}
 
 {% block mobileactions %}
-
-				<div class="row fixed-top bg-white shadow d-inline-flex d-md-none p-3" id="footer-actions" style="z-index: 3; top: 48px; transition: top cubic-bezier(0, 0, 0.2, 1) 220ms;">
-						<div class="col text-center">
-								<div class="post-actions mx-auto">
-										<ul class="list-inline">
-												<li id="voting-mobile" class="voting list-inline-item{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-														<span  class="arrow-mobile-up mr-2 arrow-mobile-up">
-																<i class="fas fa-arrow-alt-up mx-0"></i>
-														</span>
-
-
-				<span  class="post-{{p.id}}-score-mobile-up score-up text-muted{% if voted!=1 %} d-none{% endif %}">✖</span>
-					<span  class="post-{{p.id}}-score-mobile-none score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">✖</span>
-					<span  class="post-{{p.id}}-score-mobile-down score-down text-muted{% if voted!=-1 %} d-none{% endif %}">✖</span>
-
-
-														<span  class="arrow-mobile-down arrow-mobile-down ml-2 my-0">
-																<i class="fas fa-arrow-alt-down mx-0"></i>
-														</span>
-												</li>
-
-										</ul>
-								</div>
-						</div>
-				</div>
-
+	<div class="row fixed-top bg-white shadow d-inline-flex d-md-none p-3" id="footer-actions" style="z-index: 3; top: 48px; transition: top cubic-bezier(0, 0, 0.2, 1) 220ms;">
+		<div class="col text-center">
+			<div class="post-actions mx-auto">
+			<ul class="list-inline">
+				<li id="voting-mobile" class="voting list-inline-item{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+				<span class="arrow-mobile-up mr-2 arrow-mobile-up">
+					<i class="fas fa-arrow-alt-up mx-0"></i>
+				</span>
+				<span class="post-{{p.id}}-score-mobile-up score-up text-muted{% if voted!=1 %} d-none{% endif %}">✖</span>
+				<span class="post-{{p.id}}-score-mobile-none score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">✖</span>
+				<span class="post-{{p.id}}-score-mobile-down score-down text-muted{% if voted!=-1 %} d-none{% endif %}">✖</span>
+				<span class="arrow-mobile-down arrow-mobile-down ml-2 my-0">
+					<i class="fas fa-arrow-alt-down mx-0"></i>
+				</span>
+				</li>
+			</ul>
+			</div>
+		</div>
+	</div>
 {% endblock %}

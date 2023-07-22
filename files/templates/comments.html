@@ -10,9 +10,8 @@
 	{%- set score = c.score_str(render_ctx) -%}
 	{%- set downs = c.downvotes_str(render_ctx) -%}
 	{% set replies = c.replies(v) %}
-	{%- set is_notification_page = request.path.startswith('/notifications') -%}
 
-{% if not c.visibility_state(v)[0] %}
+{% if not c.visibility_and_message(v)[0] %}
 {% if c.show_descendants(v) %}
 <div id="comment-{{c.id}}" class="comment">
 		<div class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement)"></div>
@@ -22,7 +21,7 @@
 
 		<div class="comment-user-info">
 			{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span>{% endif %}
-			{{c.visibility_state(v)[1]}}
+			{{c.visibility_and_message(v)[1]}}
 		</div>
 		
 		<div class="comment-body">
@@ -61,10 +60,10 @@
 {%- set voted = c.voted_display(v) -%}
 
 {% if standalone and level==1 %}
-<div class="post-info post-row-cid-{{c.id}} mb-1 mr-2 {% if is_notification_page %}mt-5{% else %}mt-3{% endif %}">
+<div class="post-info post-row-cid-{{c.id}} mb-1 mr-2 mt-3">
 	{% if c.post and c.post.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 	<span class="align-top">
-		<span class="font-weight-bold">{{c.header_msg(v, is_notification_page, replies | length) | safe}}</span>
+		<span class="font-weight-bold">{{c.header_msg(v, is_notification_page) | safe}}</span>
 	</span>
 </div>
 {% endif %}
@@ -83,7 +82,7 @@
 	<div class="comment-body">
 		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if c.unread %}unread{% endif %} comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.state_mod == StateMod.REMOVED %} removed{% endif %}{% if c.state_mod == StateMod.FILTERED %} filtered{% endif %}{% if c.state_user_deleted_utc %} deleted{% endif %}">
 			{%- include 'component/comment/reports.html'-%}
-			{% if c.state_mod == StateMod.REMOVED and c.state_mod_set_by and v and v.admin_level >= 2 %}
+			{% if c.state_mod == StateMod.REMOVED and c.state_mod_set_by and v and v.admin_level >= PERMS['POST_COMMENT_MODERATION'] %}
 				<div id="comment-banned-warning" class="comment-text text-removed mb-0">removed by @{{c.state_mod_set_by}}</div>
 			{% endif %}
 

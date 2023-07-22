@@ -540,7 +540,7 @@ def messagereply(v):
 						'notification': {
 							'title': f'New message from @{v.username}',
 							'body': notifbody,
-							'deep_link': f'{SITE_FULL}/notifications?messages=true',
+							'deep_link': f'{SITE_FULL}/notifications/messages',
 							'icon': SITE_FULL + assetcache_path(f'images/{SITE_ID}/icon.webp'),
 						}
 					},
@@ -550,7 +550,7 @@ def messagereply(v):
 							'body': notifbody,
 						},
 						'data': {
-							'url': '/notifications?messages=true',
+							'url': '/notifications/messages',
 						}
 					}
 				},

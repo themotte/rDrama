@@ -421,7 +421,7 @@
 		<div id="comment-form-space-{{p.fullname}}" class="comment-write mb-3">
 			<form id="reply-to-{{p.fullname}}" action="/comment" method="post">
 				{{forms.formkey(v)}}
-				<input type="hidden" name="parent_fullname" value="t2_{{p.id}}">
+				<input type="hidden" name="parent_fullname" value="{{p.fullname}}">
 				<input autocomplete="off" id="reply-form-submission-{{p.fullname}}" type="hidden" name="submission" value="{{p.id}}">
 				<textarea required autocomplete="off" minlength="1" maxlength="{{COMMENT_BODY_LENGTH_MAXIMUM}}" oninput="markdown('reply-form-body-{{p.fullname}}', 'form-preview-{{p.id}}');charLimit('reply-form-body-{{p.fullname}}','charcount-reply')" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
 

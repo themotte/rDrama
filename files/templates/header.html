@@ -6,8 +6,8 @@
 				<img alt="header icon" height=33 width=80 src="{{ ('images/'~SITE_ID~'/headericon.webp') | asset }}">
 			</a>
 			
-			<a href="/" class="flex-grow-1">
-				<img id="logo" alt="logo" src="{{ ('images/'~SITE_ID~'/logo.webp') | asset }}" width="100" height="20">
+			<a href="/" id="logo" class="flex-grow-1 logo-text">
+				{{SITE_TITLE}}
 			</a>
 
 			<div class="flex-grow-1 d-fl d-none d-md-block {% if not v %}pad{% endif %}">
@@ -27,7 +27,7 @@
 
 			{% if v %}
 				{% if v.notifications_count %}
-					<a class="mobile-nav-icon d-md-none pl-0" href="/notifications{% if v.do_posts %}?posts=true{% elif v.do_reddit %}?reddit=true{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notifications"><i class="fas fa-bell align-middle text-danger" {% if v.do_posts %}style="color:blue!important"{% elif v.do_reddit %}style="color:#805ad5!important"{% endif %}></i><span class="notif-count ml-1" style="padding-left: 4.5px;{% if v.do_posts %}background:blue{% elif v.do_reddit %}background:#805ad5{% endif %}">{{v.notifications_count}}</span></a>
+					<a class="mobile-nav-icon d-md-none pl-0" href="/notifications{% if v.do_posts %}/posts{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notifications"><i class="fas fa-bell align-middle text-danger" {% if v.do_posts %}style="color:blue!important"{% endif %}></i><span class="notif-count ml-1" style="padding-left: 4.5px;{% if v.do_posts %}background:blue{% endif %}">{{v.notifications_count}}</span></a>
 				{% else %}
 					<a class="mobile-nav-icon d-md-none" href="/notifications" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notifications"><i class="fas fa-bell  align-middle text-gray-500 black"></i></a>
 				{% endif %}
@@ -57,7 +57,7 @@
 				{% if v.notifications_count %}
 
 				<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-					<a class="nav-link position-relative" href="/notifications{% if v.do_posts %}?posts=true{% elif v.do_reddit %}?reddit=true{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger" {% if v.do_posts %}style="color:blue!important"{% elif v.do_reddit %}style="color:#805ad5!important"{% endif %}></i><span class="notif-count ml-1" style="padding-left: 4.5px;{% if v.do_posts %}background:blue{% elif v.do_reddit %}background:#805ad5{% endif %}">{{v.notifications_count}}</span></a>
+					<a class="nav-link position-relative" href="/notifications{% if v.do_posts %}/posts{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger" {% if v.do_posts %}style="color:blue!important"{% endif %}></i><span class="notif-count ml-1" style="padding-left: 4.5px;{% if v.do_posts %}background:blue{% endif %}">{{v.notifications_count}}</span></a>
 				</li>
 
 				{% else %}

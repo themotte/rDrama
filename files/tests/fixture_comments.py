@@ -15,7 +15,7 @@ class CommentsFixture:
 		assert submit_get_response.status_code == 200
 		comment_body = data.get('body', util.generate_text())
 		submit_comment_response = client.post("/comment", data={
-			"parent_fullname": f't2_{post_id}',
+			"parent_fullname": f'post_{post_id}',
 			'parent_level': 1,
 			'submission': post_id,
 			"body": comment_body,
