@@ -30,8 +30,8 @@
 					{%- if v.admin_level >= PERMS['POST_COMMENT_MODERATION'] -%}
 						{%- set show_approve = c.state_mod != StateMod.VISIBLE or "/reported/" in request.path -%}
 						{%- set show_remove = c.state_mod == StateMod.VISIBLE -%}
-						<a id="remove2-{{c.id}}" class="dropdown-item list-inline-item text-danger{% if not show_remove %} d-none{% endif %}" role="button" onclick="removeCommentMobile('{{c.id}}','approve2-{{c.id}}','remove2-{{c.id}}');"><i class="fas fa-ban"></i>Remove</a>
-						<a id="approve2-{{c.id}}" class="dropdown-item list-inline-item text-success{% if not show_approve %} d-none{% endif %}" role="button" onclick="approveCommentMobile('{{c.id}}','approve2-{{c.id}}','remove2-{{c.id}}');"><i class="fas fa-check"></i>Approve</a>
+						<a id="remove2-{{c.id}}" class="dropdown-item list-inline-item text-danger{% if not show_remove %} d-none{% endif %}" role="button" onclick="moderate(false, {{c.id}}, true, 'remove-{{c.id}}', 'remove2-{{c.id}}', 'approve-{{c.id}}', 'approve2-{{c.id}}');"><i class="fas fa-ban"></i>Remove</a>
+						<a id="approve2-{{c.id}}" class="dropdown-item list-inline-item text-success{% if not show_approve %} d-none{% endif %}" role="button" onclick="moderate(false, {{c.id}}, false, 'remove-{{c.id}}', 'remove2-{{c.id}}', 'approve-{{c.id}}', 'approve2-{{c.id}}');"></i>Approve</a>
 					{%- endif -%}
 
 					{% if c.oauth_app %}
