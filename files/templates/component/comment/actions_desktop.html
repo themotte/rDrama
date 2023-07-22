@@ -20,8 +20,8 @@
 {% endif %}
 
 {%- if v.admin_level >= PERMS['POST_COMMENT_MODERATION'] -%}
-	{%- set show_approve = p.state_mod != StateMod.VISIBLE or "/reported/" in request.path -%}
-	{%- set show_remove = p.state_mod != StateMod.REMOVED -%}
+	{%- set show_approve = c.state_mod != StateMod.VISIBLE or "/reported/" in request.path -%}
+	{%- set show_remove = c.state_mod != StateMod.REMOVED -%}
 	<button id="remove-{{c.id}}" class="btn caction py-0 nobackground px-1 text-danger{% if not show_remove %} d-none{% endif %}" role="button" onclick="removeCommentDesktop('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}');"><i class="fas fa-ban"></i>Remove</a>
 	<button id="approve-{{c.id}}" class="btn caction py-0 nobackground px-1 text-success{% if not show_approve %} d-none{% endif %}" role="button" onclick="approveCommentDesktop('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}');"><i class="fas fa-check"></i>Approve</a>
 {%- endif -%}
