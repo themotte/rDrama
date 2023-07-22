@@ -25,8 +25,8 @@
 					{%- if v.admin_level >= PERMS['POST_COMMENT_MODERATION'] -%}
 						{%- set show_approve = p.state_mod != StateMod.VISIBLE or "/reported/" in request.path -%}
 						{%- set show_remove = p.state_mod == StateMod.VISIBLE -%}
-						<a id="remove2-{{p.id}}" class="dropdown-item list-inline-item text-danger{% if not show_remove %} d-none{% endif %}" role="button" onclick="moderate(true, {{c.id}}, true, 'remove-{{p.id}}', 'remove2-{{p.id}}', 'approve-{{p.id}}', 'approve2-{{p.id}}');"><i class="fas fa-ban"></i>Remove</a>
-						<a id="approve2-{{p.id}}" class="dropdown-item list-inline-item text-success{% if not show_approve %} d-none{% endif %}" role="button" onclick="moderate(true, {{c.id}}, false, 'remove-{{p.id}}', 'remove2-{{p.id}}', 'approve-{{p.id}}', 'approve2-{{p.id}}');"><i class="fas fa-check"></i>Approve</a>
+						<a id="remove2-{{p.id}}" class="dropdown-item list-inline-item text-danger{% if not show_remove %} d-none{% endif %}" role="button" onclick="moderate(true, {{p.id}}, true, 'remove-{{p.id}}', 'remove2-{{p.id}}', 'approve-{{p.id}}', 'approve2-{{p.id}}');"><i class="fas fa-ban"></i>Remove</a>
+						<a id="approve2-{{p.id}}" class="dropdown-item list-inline-item text-success{% if not show_approve %} d-none{% endif %}" role="button" onclick="moderate(true, {{p.id}}, false, 'remove-{{p.id}}', 'remove2-{{p.id}}', 'approve-{{p.id}}', 'approve2-{{p.id}}');"><i class="fas fa-check"></i>Approve</a>
 					{%- endif -%}
 
 					{% if p.oauth_app %}
