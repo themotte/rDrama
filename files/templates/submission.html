@@ -494,7 +494,7 @@
 						{% for c in p.comments -%}
 							{% if not (v and v.id==c.author_id) and not c.voted %}
 							[{{c.id}}, {{c.created_utc * 1000}}],
-							{% endif %}
+							{%- endif -%}
 						{% endfor %}
 					];
 
