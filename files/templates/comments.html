@@ -201,7 +201,7 @@
 	<script src="{{ 'js/comments+submission_listing.js' | asset }}"></script>
 	<script src="{{ 'js/comments.js' | asset }}"></script>
 
-	{# See #}
+	{# See https://github.com/themotte/rDrama/pull/642#issuecomment-1646649781 for info on this section of the code #}
 	<script>
 		{% if p and (not v or v.highlightcomments) %}
 			comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
