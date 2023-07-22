@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "jsx": "react",
+    "lib": ["es2015", "dom", "ESNext"],
+    "noEmit": true
+  }
+}

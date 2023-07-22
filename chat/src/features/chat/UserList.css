@@ -1,0 +1,23 @@
+.UserList {
+  padding: 1rem;
+  flex: 1;
+}
+
+.UserList-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.UserList-heading h5 {
+  margin-right: 2rem;
+}
+
+.UserList ul {
+  max-height: calc(var(--vh, 1vh) * 50);
+  overflow: auto;
+}
+
+.UserList ul::-webkit-scrollbar {
+  display: none;
+}

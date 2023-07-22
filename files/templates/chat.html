@@ -1,197 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	{% include "analytics.html" %}
-	
-	<meta name="description" content="{{config('DESCRIPTION')}}">
-	{% include "csp.html" %}
+{% extends "default.html" %}
+{% block pagetype %}chat{% endblock %}
 
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% block fixedMobileBarJS %}
+<link rel="stylesheet" href="{{'css/chat_done.css' | asset}}">
+{% endblock %}
 
-	<meta name="author" content="">
+{% block Banner %}{% endblock %}
+{% block mobilenavbar %}{% endblock %}
 
-	<link id="favicon" rel="icon" type="image/png" href="{{ ('images/'~SITE_ID~'/icon.webp') | asset }}">
-
-	<title>Chat</title>
-
-	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="{{ 'css/main.css' | asset }}">
-	<link rel="stylesheet" href="{{ ('css/'~v.theme~'.css') | asset }}">
-	{% if v.css %}
-		<style>{{v.css | safe}}</style>
-	{% endif %}
-
-	<style>
-		#chat-window {
-			max-height: calc(100vh - 220px);
-			overflow-y: scroll;
-			background-color: transparent !important;
-		}
-
-		#chat-window .chat-profile {
-			min-width: 42px;
-			width: 42px;
-			height: 42px;
-		}
-
-		#chat-window::-webkit-scrollbar {
-			display: none;
-		}
-
-		#chat-window {
-			-ms-overflow-style: none;
-			scrollbar-width: none;
-		}
-
-		.chat-mention {
-			background-color: #{{v.themecolor}}55;
-			border-radius: 3px;
-		}
-
-		.chat-message p {
-			display: inline-block;
-		}
-
-		.diff {
-			margin-top: 1rem;
-		}
-
-		@media (max-width: 768px) {
-			#shrink * {
-				font-size: 10px !important;
-			}
-			.fa-reply:before {
-				font-size: 9px;
-			}
-			.diff {
-				margin-top: 0.5rem;
-			}
-			#chat-window {
-				max-height: calc(100vh - 180px);
-			}
-		}
-
-		p {
-			display: inline !important;
-		}
-
-		blockquote {
-			margin: 5px 0 5px 0;
-			padding: 0.3rem 1rem;
-		}
-
-		#online {
-			background-color: var(--background) !important;
-		}
-
-		.chat-line .btn {
-			background-color: transparent !important;
-		}
-
-		.cdiv {
-			overflow: hidden;
-			margin-left: 27px;
-		}
-
-		.quote {
-			display: inline-block !important;
-			padding: 0 0.5rem !important;
-			margin-bottom: 0.25rem !important;
-		}
-	</style>
-</head>
-
-<body>
-	<script src="{{ 'js/bootstrap.js' | asset }}"></script>
-
-	{% include "header.html" %}
-	
-	<div class="container pb-4">
-		<div class="row justify-content-around" id="main-content-row">
-			<div class="col h-100 {% block customPadding %}{% if request.path.startswith('/@') %}user-gutters{% else %}custom-gutters{% endif %}{% endblock %}" id="main-content-col">	
-
-			<div class="border-right pb-1 pt-2 px-3">
-				<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Users online right now" class="text-muted">
-					<i class="far fa-user fa-sm mr-1"></i>
-					<span class="board-chat-count">0</span>
-				</span>
-			</div>
-
-			<div id="chat-line-template" class="d-none">
-				<div class="chat-line">
-					<div class="d-flex align-items-center">
-						<div class="pl-md-3 text-muted">
-							<div>
-								<img class="avatar pp20 mr-1" data-toggle="tooltip" data-placement="right">
-								<a href="" class="font-weight-bold text-black userlink" target="_blank"></a>
-								<div class="cdiv">
-									<span class="chat-message text-black text-break"></span>
-									<span class="text d-none"></span>
-									<button class="quote btn" onclick="quote(this)"><i class="fas fa-reply" aria-hidden="true"></i></button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div id="shrink">
-				<div id="chat-window" class="container pl-0 py-0">
-					{% for m in messages %}
-						{% set text_html = m['text_censored'] if v.slurreplacer else m['text_html'] %}
-						{% set link = '<a href="/id/' + v.id|string + '">' %}
-						{% set same = loop.index > 1 and m['username'] == messages[loop.index-2]['username'] %}
-						<div class="chat-line {% if link in text_html %}chat-mention{% endif %} {% if not same %}diff{% endif %}">
-							<div class="d-flex align-items-center">
-								<div class="pl-md-3 text-muted">
-									<div>
-										{% if not same %}
-											<img src="{{m['avatar']}}" class="avatar pp20 mr-1" data-toggle="tooltip" data-placement="right">
-										{% endif %}
-
-										<a class="{% if same %}d-none{% endif %} font-weight-bold text-black userlink" style="color:#{{m['namecolor']}}" target="_blank" href="/@{{m['username']}}">{{m['username']}}</a>
-
-										{% if not same %}
-											<span class="text-black time ml-2">{{m['time'] | agestamp}}</a>
-										{% endif %}
-
-										<div class="cdiv">
-											<span class="chat-message text-black text-break">{{text_html | safe}}</span>
-											<span class="d-none">{{m['text']}}</span>
-											<button class="quote btn" onclick="quote(this)"><i class="fas fa-reply" aria-hidden="true"></i></button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					{% endfor %}
-				</div>
-
-				<div id='message' class="d-none position-relative form-group d-flex mt-3">
-					<div class="position-absolute text-muted text-small ml-1" style="bottom: -1.5rem; line-height: 1;">
-						<span id="typing-indicator"></span>
-						<span id="loading-indicator" class="d-none"></span>
-					</div>
-					<textarea id="input-text" minlength="1" maxlength="1000" type="text" class="form-control" placeholder="Message" autocomplete="off" autofocus rows="1"></textarea>
-					<button id="chatsend" onclick="send()" class="btn btn-primary ml-3" type="submit">Send</button>
-				</div>
-			</div>
-		</div>
-
-		<div id="online" class="col sidebar text-left d-none d-lg-block pt-3 bg-white" style="max-width:300px">
-		</div>
-
+{% block defaultContainer %}
+	{% include "component/modal/expanded_image.html" %}
+	<div
+		id="root"
+		data-id="{{v.id}}"
+		data-username="{{v.username}}"
+		data-admin="{{v.admin_level >= PERMS['CHAT_MODERATION']}}"
+		data-sitename="{{SITE_ID}}"
+		data-themecolor="{{v.themecolor}}"
+		data-avatar="{{v.profile_url}}">
 	</div>
-
-</div>
-
-<input id="vid" type="hidden" value="{{v.id}}">
-<input id="site_id" type="hidden" value="{{SITE_ID}}">
-<input id="slurreplacer" type="hidden" value="{{v.slurreplacer}}">
-
-<script src="/chat.js?v=16"></script>
-
-<script src="{{ 'js/lozad.js' | asset }}"></script>
-<script src="{{ 'js/lite-youtube.js' | asset }}"></script>
-
-</body>
+	<script>window.global = window</script>
+	<script defer src="{{'js/chat_done.js' | asset}}"></script>
+{% endblock %}

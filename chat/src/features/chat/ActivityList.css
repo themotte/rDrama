@@ -1,0 +1,35 @@
+.ActivityList {
+  margin-left: 2rem;
+}
+
+.ActivityList h4 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ActivityList h4 hr {
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.ActivityList-activity {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.ActivityList-activity-icon {
+  margin-right: 1rem;
+}
+
+.ActivityList-activity {
+  transition: background 0.4s ease-in-out;
+  padding: 0 1rem;
+}
+
+.ActivityList-activity:hover {
+  cursor: pointer;
+  background: #ffffff05;
+}

@@ -1,0 +1,28 @@
+.UserInput {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+@media screen and (max-width: 1100px) {
+  .UserInput-input__large {
+    min-height: 100px !important;
+    height: 100px !important;
+    max-height: 100px !important;
+  }
+}
+
+.UserInput-input {
+  flex: 1;
+  margin-right: 2rem;
+  min-height: 50px;
+  height: 50px;
+  max-height: 50px;
+}
+
+.UserInput-emoji {
+  cursor: pointer;
+  font-size: 20px;
+  transform: rotateY(180deg);
+  margin-right: 1rem;
+}

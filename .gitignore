@@ -21,3 +21,11 @@ env
 
 # Diagnostic output
 output.svg
+
+# Chat environment
+chat/node_modules
+chat/build
+
+# Chat artefacts
+files/assets/css/chat_done.css
+files/assets/js/chat_done.js
