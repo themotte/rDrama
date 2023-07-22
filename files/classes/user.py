@@ -86,7 +86,6 @@ class User(CreatedBase):
 	controversial = Column(Boolean, default=False, nullable=False)
 	bio = deferred(Column(String))
 	bio_html = Column(String)
-	fp = Column(String)
 	friends = deferred(Column(String))
 	friends_html = deferred(Column(String))
 	enemies = deferred(Column(String))

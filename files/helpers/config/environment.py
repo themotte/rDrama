@@ -90,7 +90,6 @@ RATE_LIMITER_ENABLED = not bool_from_string(environ.get('DBG_LIMITER_DISABLED', 
 
 ENABLE_DOWNVOTES = not bool_from_string(environ.get('DISABLE_DOWNVOTES', False))
 CARD_VIEW = bool_from_string(environ.get("CARD_VIEW", True))
-FINGERPRINT_TOKEN = environ.get("FP", None)
 
 # other stuff from const.py that aren't constants
 CLUB_TRUESCORE_MINIMUM = int(environ.get("DUES").strip())
