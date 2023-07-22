@@ -201,6 +201,7 @@
 	<script src="{{ 'js/comments+submission_listing.js' | asset }}"></script>
 	<script src="{{ 'js/comments.js' | asset }}"></script>
 
+	{# See #}
 	<script>
 		{% if p and (not v or v.highlightcomments) %}
 			comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
@@ -213,9 +214,8 @@
 				{% endfor %}
 			];
 
-			commentsToCheck = commentsToCheck.filter(comment => {
-				return comment[1] > lastCount.t
-			}).map(comment => comment[0]);
+			commentsToCheck = commentsToCheck.filter(comment => comment[1] > lastCount.t)
+			                                 .map(comment => comment[0]);
 
 			if (lastCount) commentsAddUnreadIndicator(commentsToCheck);
 		{% endif %}
@@ -259,9 +259,8 @@
 							{% endfor %}
 						];
 
-						commentsToCheck = commentsToCheck.filter(comment => {
-							return comment[1] > lastCount.t
-						}).map(comment => comment[0]);
+						commentsToCheck = commentsToCheck.filter(comment => comment[1] > lastCount.t)
+						                                 .map(comment => comment[0]);
 						
 						if (lastCount) commentsAddUnreadIndicator(commentsToCheck);
 					{% endif %}
