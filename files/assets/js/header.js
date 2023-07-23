@@ -165,10 +165,6 @@ function post_toast2(t, url, button1, button2) {
 	postToastSwitch(t, url, "POST", button1, button2, "d-none");
 }
 
-function post_toast3(t, url, button1, button2) {
-	postToastSwitch(t, url, "POST", button1, button2, "d-md-inline-block");
-}
-
 function escapeHTML(unsafe) {
 	return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
