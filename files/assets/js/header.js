@@ -142,6 +142,17 @@ function postToastCallback2(targetElement, url, method, data, callbackFn) {
 	xhr.send(form);
 }
 
+function postToastReload(t, url, method, data) {
+	postToastCallback2(t, url, method, data, (xhr) => location.reload());
+}
+
+function postToastSwitch(t, url, method, button1, button2, cssClass="d-none") {
+	postToastCallback2(t, url, method, data, (xhr) => {
+		document.getElementById(button1).classList.toggle(cssClass);
+		document.getElementById(button2).classList.toggle(cssClass);
+	})
+}
+
 function post_toast(t, url, reload, data) {
 	postToastCallback2(t, url, "POST", data, (xhr) => {
 		if (reload) {
@@ -151,17 +162,11 @@ function post_toast(t, url, reload, data) {
 }
 
 function post_toast2(t, url, button1, button2) {
-	postToastCallback2(t, url, "POST", null, (xhr) => {
-		document.getElementById(button1).classList.toggle("d-none");
-		document.getElementById(button2).classList.toggle("d-none");
-	});
+	postToastSwitch(t, url, "POST", button1, button2, "d-none");
 }
 
 function post_toast3(t, url, button1, button2) {
-	postToastCallback2(t, url, "POST", null, (xhr) => {
-		document.getElementById(button1).classList.toggle("d-md-inline-block");
-		document.getElementById(button2).classList.toggle("d-md-inline-block");
-	});
+	postToastSwitch(t, url, "POST", button1, button2, "d-md-inline-block");
 }
 
 function post_toast_callback(url, data, callback) {
