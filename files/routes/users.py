@@ -697,7 +697,7 @@ def u_username(username, v=None):
 
 	if u.unban_utc:
 		if request.headers.get("Authorization"): {"data": [x.json for x in listing]}
-		return render_template("userpage.html",
+		return render_template("userpage_submissions.html",
 												unban=u.unban_string,
 												u=u,
 												v=v,
@@ -711,7 +711,7 @@ def u_username(username, v=None):
 
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
-	return render_template("userpage.html",
+	return render_template("userpage_submissions.html",
 									u=u,
 									v=v,
 									listing=listing,
@@ -727,8 +727,8 @@ def u_username(username, v=None):
 def u_username_comments(username, v=None):
 	user = get_user(username, v=v, include_blocks=True)
 
-	if username != u.username:
-		return redirect(SITE_FULL + request.full_path.replace(username, u.username)[:-1])
+	if username != user.username:
+		return redirect(SITE_FULL + request.full_path.replace(username, user.username)[:-1])
 	u = user
 
 	if u.reserved:
@@ -776,7 +776,7 @@ def u_username_comments(username, v=None):
 	is_following = (v and user.has_follower(v))
 
 	if request.headers.get("Authorization"): return {"data": [c.json for c in listing]}
-	return render_template("userpage_comments.html", u=user, v=v, listing=listing, page=page, sort=sort, t=t,next_exists=next_exists, is_following=is_following, standalone=True)
+	return render_template("userpage.html", u=user, v=v, listing=listing, page=page, sort=sort, t=t,next_exists=next_exists, is_following=is_following, standalone=True)
 
 
 @app.get("/@<username>/info")
