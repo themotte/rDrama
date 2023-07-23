@@ -87,7 +87,7 @@ function toggleEdit(id){
 
 
 function delete_commentModal(id) {
-	postToast(null, `/delete/comment/${id}`, 'POST', null, (xhr) => {
+	document.getElementById("deleteCommentButton").onclick = postToast(null, `/delete/comment/${id}`, 'POST', null, (xhr) => {
 		if (xhr.status >= 200 && xhr.status < 300) {
 			document.getElementsByClassName(`comment-${id}-only`)[0].classList.add('deleted');
 			document.getElementById(`delete-${id}`).classList.add('d-none');
