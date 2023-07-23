@@ -89,7 +89,12 @@ function postToast(targetElement, url, method, data, callbackFn) {
 	const xhr = new XMLHttpRequest(); // set up the request now
 	xhr.open(method, url);
 	xhr.setRequestHeader("xhr", "xhr");
-	var form = new FormData();
+
+	var formData = null;
+	if (data instanceof HTMLFormElement) {
+		formData = data;
+	}
+	var form = new FormData(formData);
 	form.append("formkey", formkey());
 
 	if (typeof data === 'object' && data !== null) {
