@@ -81,45 +81,91 @@ function expandDesktopImage(image) {
 	document.getElementById("desktop-expanded-image-wrap-link").href = image;
 };
 
-function post_toast(t, url, reload, data) {
-	if (t) {
+function postToastCallback2(targetElement, url, method, data, callbackFn) {
+	if (targetElement) { // disable element to avoid repeated requests
 		t.disabled = true;
 		t.classList.add("disabled");
 	}
-	const xhr = new XMLHttpRequest();
-	xhr.open("POST", url);
-	xhr.setRequestHeader('xhr', 'xhr');
-	var form = new FormData()
+	const xhr = new XMLHttpRequest(); // set up the request now
+	xhr.open(method, url);
+	xhr.setRequestHeader("xhr", "xhr");
+	var form = new FormData();
 	form.append("formkey", formkey());
 
-	if(typeof data === 'object' && data !== null) {
-		for(let k of Object.keys(data)) {
+	if (typeof data === 'object' && data !== null) {
+		for (let k of Object.keys(data)) {
 			form.append(k, data[k]);
 		}
 	}
 
 	xhr.onload = function() {
-		let data
-		try {data = JSON.parse(xhr.response)}
-		catch(e) {console.log(e)}
-		if (xhr.status >= 200 && xhr.status < 300 && data && data['message']) {
-			document.getElementById('toast-post-success-text').innerText = data["message"];
-			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success')).show();
-			if (reload == 1) {location.reload()}
+		let data;
+		try {
+			data = JSON.parse(xhr.response);
+		} catch (e) {
+			console.error("Failed to parse response as JSON", e);
+		}
+
+		try {
+			var result = callbackFn(xhr);
+		} catch (e) {
+			console.error("Failed to run callback function for postToast", e, xhr);
+			var result = null;
+		}
+		if (typeof result === 'string' && result !== null) {
+			var messageOverride = result;
 		} else {
-			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
-			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
-			if (data && data["details"]) document.getElementById('toast-post-error-text').innerText = data["details"];
+			var messageOverride = null;
+		}
+
+		if (xhr.status >= 200 && xhr.status < 300 && data && data['message']) {
+			const toastPostSuccessTextElement = document.getElementById("toast-post-success-text");
+			toastPostSuccessTextElement.innerText = data["message"];
+			if (messageOverride) toastPostSuccessTextElement.innerText = messageOverride;
+			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success')).show();
+			callbackFn(xhr);
+		} else {
+			const toastPostErrorTextElement = document.getElementById('toast-post-error-text');
+			toastPostErrorTextElement.innerText = "Error, please try again later."
+			if (data && data["error"]) toastPostErrorTextElement.innerText = data["error"];
+			if (data && data["details"]) toastPostErrorTextElement.innerText = data["details"];
+			if (messageOverride) toastPostErrorTextElement.innerText = messageOverride;
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
-		setTimeout(() => {
-			t.disabled = false;
-			t.classList.remove("disabled");
-		}, 2000);
-	};
+	}
+
+	setTimeout(() => {
+		t.disabled = false;
+		t.classList.remove("disabled");
+	}, 1500);
 
 	xhr.send(form);
+}
 
+function post_toast(t, url, reload, data) {
+	postToastCallback2(t, url, "POST", data, (xhr) => {
+		if (reload) {
+			location.reload();
+		}
+	});
+}
+
+function post_toast2(t, url, button1, button2) {
+	postToastCallback2(t, url, "POST", null, (xhr) => {
+		document.getElementById(button1).classList.toggle("d-none");
+		document.getElementById(button2).classList.toggle("d-none");
+	});
+}
+
+function post_toast3(t, url, button1, button2) {
+	postToastCallback2(t, url, "POST", null, (xhr) => {
+		document.getElementById(button1).classList.toggle("d-md-inline-block");
+		document.getElementById(button2).classList.toggle("d-md-inline-block");
+	});
+}
+
+function post_toast_callback(url, data, callback) {
+	postToastCallback2(null, url, "POST", data, (xhr) => callback(xhr));
 }
 
 function escapeHTML(unsafe) {
