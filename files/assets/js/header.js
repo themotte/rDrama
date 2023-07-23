@@ -146,6 +146,10 @@ function postToast(targetElement, url, method, data, callbackFn) {
 	xhr.send(form);
 }
 
+function postToastSimple(t, url, method="POST", data=null) {
+	postToast(t, url, method, data, null);
+}
+
 function postToastReload(t, url, method, data) {
 	postToast(t, url, method, data, (xhr) => location.reload());
 }
@@ -155,14 +159,6 @@ function postToastSwitch(t, url, method, button1, button2, cssClass="d-none") {
 		document.getElementById(button1).classList.toggle(cssClass);
 		document.getElementById(button2).classList.toggle(cssClass);
 	})
-}
-
-function postToastSimple(t, url, method="POST", data=null) {
-	postToast(t, url, method, data, null);
-}
-
-function post_toast2(t, url, button1, button2) {
-	postToastSwitch(t, url, "POST", button1, button2, "d-none");
 }
 
 function escapeHTML(unsafe) {

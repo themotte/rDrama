@@ -12,7 +12,7 @@
 {% if c.parent_submission %}
 {% if v and c.author_id == v.id %}
 	<button class="btn caction py-0 nobackground px-1 text-muted" onclick="toggleEdit('{{c.id}}')"><i class="fas fa-edit fa-fw"></i>Edit</button>
-	<button id="undelete-{{c.id}}" class="btn caction py-0 nobackground px-1 text-muted {% if not c.state_user_deleted_utc %}d-none{% endif %}" onclick="post_toast2(this,'/undelete/comment/{{c.id}}','delete-{{c.id}}','undelete-{{c.id}}');document.getElementById('comment-{{c.id}}').classList.remove('deleted')"><i class="fas fa-trash-alt fa-fw"></i>Undelete</button>
+	<button id="undelete-{{c.id}}" class="btn caction py-0 nobackground px-1 text-muted {% if not c.state_user_deleted_utc %}d-none{% endif %}" onclick="postToastSwitch(this,'/undelete/comment/{{c.id}}','POST','delete-{{c.id}}','undelete-{{c.id}}');document.getElementById('comment-{{c.id}}').classList.remove('deleted');)"><i class="fas fa-trash-alt fa-fw"></i>Undelete</button>
 	<button id="delete-{{c.id}}" class="btn caction py-0 nobackground px-1 text-muted {% if c.state_user_deleted_utc %}d-none{% endif %}" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Delete</button>
 {% elif v and c.body %}
 	<button class="btn caction py-0 nobackground px-1 text-muted" onclick="expandMarkdown(this,'{{c.id}}')"><i class="fas text-expand-icon-{{c.id}} fa-expand-alt"></i><span>View source</span></button>
@@ -35,8 +35,8 @@
 	{% endif %}
 
 	{% if v.id != c.author_id and not c.ghost %}
-		<a id="unblock-{{c.id}}" class="dropdown-item text-success list-inline-item {% if not c.is_blocking %}d-none{% endif %}" role="button" onclick="post_toast2(this,'/settings/unblock?username={{c.author_name}}','block-{{c.id}}','unblock-{{c.id}}')"><i class="fas fa-eye text-success"></i>Unblock user</a>
-		<a id="block-{{c.id}}" class="dropdown-item list-inline-item text-danger {% if c.is_blocking %}d-none{% endif %}" role="button" onclick="post_toast2(this,'/settings/block?username={{c.author_name}}','block-{{c.id}}','unblock-{{c.id}}')"><i class="fas fa-eye-slash text-danger"></i>Block user</a>
+		<a id="unblock-{{c.id}}" class="dropdown-item text-success list-inline-item {% if not c.is_blocking %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/settings/unblock?username={{c.author_name}}','POST','block-{{c.id}}','unblock-{{c.id}}');)"><i class="fas fa-eye text-success"></i>Unblock user</a>
+		<a id="block-{{c.id}}" class="dropdown-item list-inline-item text-danger {% if c.is_blocking %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/settings/block?username={{c.author_name}}','POST','block-{{c.id}}','unblock-{{c.id}}');)"><i class="fas fa-eye-slash text-danger"></i>Block user</a>
 	{% endif %}
 
 	{% if c.post %}
