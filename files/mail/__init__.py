@@ -77,7 +77,7 @@ def activate(v):
 	user.is_activated = True
 
 	if not any(b.badge_id == 2 for b in user.badges):
-		mail_badge = Badge(user_id=user.id, badge_id=2)
+		mail_badge = Badge(user_id=user.id, badge_id="verified_email")
 		g.db.add(mail_badge)
 		g.db.flush()
 		send_notification(user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({mail_badge.path})\n\n{mail_badge.name}")
