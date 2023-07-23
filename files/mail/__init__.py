@@ -76,7 +76,7 @@ def activate(v):
 	user.email = email
 	user.is_activated = True
 
-	if not any(b.badge_id == 2 for b in user.badges):
+	if not user.has_badge("verified_email"):
 		mail_badge = Badge(user_id=user.id, badge_id="verified_email")
 		g.db.add(mail_badge)
 		g.db.flush()
