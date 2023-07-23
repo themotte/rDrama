@@ -75,6 +75,7 @@ function transferBux(mobile=false) {
 }
 
 function submitFormAjax(e) {
+	e.preventDefault();
 	document.getElementById('message').classList.add('d-none');
 	document.getElementById('message-mobile').classList.add('d-none');
 	document.getElementById('message-preview').classList.add('d-none');
@@ -82,7 +83,7 @@ function submitFormAjax(e) {
 	
 	const form = e.target;
 	const xhr = new XMLHttpRequest();
-	e.preventDefault();
+	// TODO: partially combine with postToast?
 
 	formData = new FormData(form);
 
@@ -98,34 +99,9 @@ function submitFormAjax(e) {
 	xhr.setRequestHeader('xhr', 'xhr');
 
 	xhr.onload = function() {
-		if (xhr.status >= 200 && xhr.status < 300) {
-			let data = JSON.parse(xhr.response);
-			try {
-				document.getElementById('toast-post-success-text').innerText = data["message"];
-			} catch(e) {
-				document.getElementById('toast-post-success-text').innerText = "Action successful!";
-			}
-			var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success'));
-			myToast.show();
-			return true
-		} else {
-			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
-			try {
-				let data=JSON.parse(xhr.response);
-				var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error'));
-				myToast.show();
-				if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
-				if (data && data["details"]) document.getElementById('toast-post-error-text').innerText = data["details"];
-			} catch(e) {
-				var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success'));
-				myToast.hide();
-				var myToast = bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error'));
-				myToast.show();
-			}
-		}
+		showToastFromXhr(xhr, null);
 	};
 
 	xhr.send(formData);
-
-	return false
+	return false;
 }

@@ -81,6 +81,56 @@ function expandDesktopImage(image) {
 	document.getElementById("desktop-expanded-image-wrap-link").href = image;
 };
 
+
+function showToastFromXhr(xhr, callbackFn) { // If callbackFn is specified, we'll try to use that first
+	var message = null;
+
+	if (callbackFn !== null) {
+		try {
+			const result = callbackFn(xhr);
+			if (typeof result === 'string' && result !== null) {
+				message = result;
+			}
+		} catch (e) {
+			console.error("Failed to run callback function for postToast", e, xhr);
+		}
+	}
+
+	let data;
+	try {
+		data = JSON.parse(xhr.response);
+	} catch (e) {
+		console.error("Failed to parse response as JSON", e);
+		if (message === null) return;
+	}
+
+	if (xhr.status >= 200 && xhr.status < 300 && data && data['message']) {
+		const toastPostSuccessTextElement = document.getElementById("toast-post-success-text");
+		if (message !== null) {
+			message = data["message"];
+		}
+		if (message === null) {
+			message = "Success!";
+		}
+		toastPostSuccessTextElement.innerText = message;
+		bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success')).show();
+		callbackFn(xhr);
+	} else {
+		const toastPostErrorTextElement = document.getElementById('toast-post-error-text');
+		if (message != null && data) {
+			if (data["details"]) {
+				message = data["details"];
+			} else if (data["error"]) {
+				message = data["error"];
+			} else {
+				message = "Error, please try again later.";
+			}
+		}
+		if (messageOverride) toastPostErrorTextElement.innerText = message;
+		bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
+	}
+}
+
 function postToast(targetElement, url, method, data, callbackFn) {
 	if (targetElement) { // disable element to avoid repeated requests
 		t.disabled = true;
@@ -99,51 +149,7 @@ function postToast(targetElement, url, method, data, callbackFn) {
 	}
 
 	xhr.onload = function() {
-		let data;
-		try {
-			data = JSON.parse(xhr.response);
-		} catch (e) {
-			console.error("Failed to parse response as JSON", e);
-		}
-
-		var message = null;
-
-		if (callbackFn !== null) {
-			try {
-				const result = callbackFn(xhr);
-				if (typeof result === 'string' && result !== null) {
-					message = result;
-				}
-			} catch (e) {
-				console.error("Failed to run callback function for postToast", e, xhr);
-			}
-		}
-
-		if (xhr.status >= 200 && xhr.status < 300 && data && data['message']) {
-			const toastPostSuccessTextElement = document.getElementById("toast-post-success-text");
-			if (message !== null) {
-				message = data["message"];
-			}
-			if (message === null) {
-				message = "Success!";
-			}
-			toastPostSuccessTextElement.innerText = message;
-			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success')).show();
-			callbackFn(xhr);
-		} else {
-			const toastPostErrorTextElement = document.getElementById('toast-post-error-text');
-			if (message != null && data) {
-				if (data["details"]) {
-					message = data["details"];
-				} else if (data["error"]) {
-					message = data["error"];
-				} else {
-					message = "Error, please try again later.";
-				}
-			}
-			if (messageOverride) toastPostErrorTextElement.innerText = message;
-			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
-		}
+		showToastFromXhr(xhr, callbackFn);
 	}
 
 	setTimeout(() => {
