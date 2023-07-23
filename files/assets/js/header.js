@@ -106,34 +106,42 @@ function postToast(targetElement, url, method, data, callbackFn) {
 			console.error("Failed to parse response as JSON", e);
 		}
 
+		var message = null;
+
 		if (callbackFn !== null) {
 			try {
-			var result = callbackFn(xhr);
+				const result = callbackFn(xhr);
+				if (typeof result === 'string' && result !== null) {
+					message = result;
+				}
 			} catch (e) {
 				console.error("Failed to run callback function for postToast", e, xhr);
-				var result = null;
 			}
-		} else {
-			var result = null;
-		}
-		if (typeof result === 'string' && result !== null) {
-			var messageOverride = result;
-		} else {
-			var messageOverride = null;
 		}
 
 		if (xhr.status >= 200 && xhr.status < 300 && data && data['message']) {
 			const toastPostSuccessTextElement = document.getElementById("toast-post-success-text");
-			toastPostSuccessTextElement.innerText = data["message"];
-			if (messageOverride) toastPostSuccessTextElement.innerText = messageOverride;
+			if (message !== null) {
+				message = data["message"];
+			}
+			if (message === null) {
+				message = "Success!";
+			}
+			toastPostSuccessTextElement.innerText = message;
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success')).show();
 			callbackFn(xhr);
 		} else {
 			const toastPostErrorTextElement = document.getElementById('toast-post-error-text');
-			toastPostErrorTextElement.innerText = "Error, please try again later."
-			if (data && data["error"]) toastPostErrorTextElement.innerText = data["error"];
-			if (data && data["details"]) toastPostErrorTextElement.innerText = data["details"];
-			if (messageOverride) toastPostErrorTextElement.innerText = messageOverride;
+			if (message != null && data) {
+				if (data["details"]) {
+					message = data["details"];
+				} else if (data["error"]) {
+					message = data["error"];
+				} else {
+					message = "Error, please try again later.";
+				}
+			}
+			if (messageOverride) toastPostErrorTextElement.innerText = message;
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
 	}
