@@ -646,13 +646,12 @@ def visitors(v):
 	return render_template("viewers.html", v=v, viewers=viewers)
 
 
-@app.get("/@<username>")
+@app.get("/@<username>/posts")
 @auth_desired
 def u_username(username, v=None):
 	u = get_user(username, v=v, include_blocks=True)
 
-	if username != u.username:
-		return redirect(SITE_FULL + request.full_path.replace(username, u.username)[:-1])
+	if username != user.username: return redirect(f'/@{user.username}/posts')
 
 	if u.reserved:
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"That username is reserved for: {u.reserved}")
@@ -723,12 +722,13 @@ def u_username(username, v=None):
 									is_following=(v and u.has_follower(v)))
 
 
-@app.get("/@<username>/comments")
+@app.get("/@<username>/posts")
 @auth_desired
 def u_username_comments(username, v=None):
 	user = get_user(username, v=v, include_blocks=True)
 
-	if username != user.username: return redirect(f'/@{user.username}/comments')
+	if username != u.username:
+		return redirect(SITE_FULL + request.full_path.replace(username, u.username)[:-1])
 	u = user
 
 	if u.reserved:
