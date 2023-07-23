@@ -169,10 +169,6 @@ function post_toast3(t, url, button1, button2) {
 	postToastSwitch(t, url, "POST", button1, button2, "d-md-inline-block");
 }
 
-function post_toast_callback(url, data, callback) {
-	postToastCallback2(null, url, "POST", data, (xhr) => callback(xhr));
-}
-
 function escapeHTML(unsafe) {
 	return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
