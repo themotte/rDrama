@@ -1,7 +1,7 @@
 {%- extends 'default.html' -%}
 {% block content %}
 {%- macro post_toast_button(text, url, css_class) -%}
-<button class="btn{% if css_class %} {{css_class}}{% endif %}" onclick="post_toast(this, '{{url}}')">{{text}}</button>
+<button class="btn{% if css_class %} {{css_class}}{% endif %}" onclick="postToastSimple(this, '{{url}}')">{{text}}</button>
 {%- endmacro -%}
 <h5 class="mt-3">System Info</h5>
 <section class="system-resource-usage">

@@ -106,10 +106,14 @@ function postToastCallback2(targetElement, url, method, data, callbackFn) {
 			console.error("Failed to parse response as JSON", e);
 		}
 
-		try {
+		if (callbackFn !== null) {
+			try {
 			var result = callbackFn(xhr);
-		} catch (e) {
-			console.error("Failed to run callback function for postToast", e, xhr);
+			} catch (e) {
+				console.error("Failed to run callback function for postToast", e, xhr);
+				var result = null;
+			}
+		} else {
 			var result = null;
 		}
 		if (typeof result === 'string' && result !== null) {
@@ -153,12 +157,8 @@ function postToastSwitch(t, url, method, button1, button2, cssClass="d-none") {
 	})
 }
 
-function post_toast(t, url, reload, data) {
-	postToastCallback2(t, url, "POST", data, (xhr) => {
-		if (reload) {
-			location.reload();
-		}
-	});
+function postToastSimple(t, url, method="POST", data=null) {
+	postToastCallback2(t, url, method, data, null);
 }
 
 function post_toast2(t, url, button1, button2) {

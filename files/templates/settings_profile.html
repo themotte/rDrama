@@ -13,7 +13,7 @@
 					</div>
 					<div class="body w-lg-100">
 						<div class="custom-control custom-switch">
-							<input autocomplete="off" type="checkbox" class="custom-control-input" id="cardview" name="cardview"{% if v.cardview %} checked{% endif %} onchange="post_toast(this,'/settings/profile?cardview='+document.getElementById('cardview').checked);">
+							<input autocomplete="off" type="checkbox" class="custom-control-input" id="cardview" name="cardview"{% if v.cardview %} checked{% endif %} onchange="postToastSimple(this,'/settings/profile?cardview='+document.getElementById('cardview').checked);">
 							<label class="custom-control-label" for="cardview"></label>
 						</div>
 						<span class="text-small-extra text-muted">Enable if you would like to display images and videos in full size on the frontpage.</span>
@@ -27,7 +27,7 @@
 
 					<div class="body w-lg-100">
 						<div class="custom-control custom-switch">
-							<input autocomplete="off" type="checkbox" class="custom-control-input" id="highlightcomments" name="highlightcomments"{% if v.highlightcomments %} checked{% endif %} onchange="post_toast(this,'/settings/profile?highlightcomments='+document.getElementById('highlightcomments').checked);">
+							<input autocomplete="off" type="checkbox" class="custom-control-input" id="highlightcomments" name="highlightcomments"{% if v.highlightcomments %} checked{% endif %} onchange="postToastSimple(this,'/settings/profile?highlightcomments='+document.getElementById('highlightcomments').checked);">
 							<label class="custom-control-label" for="highlightcomments"></label>
 						</div>
 						<span class="text-small-extra text-muted">Enable if you would like to highlight comments made after the last time you visited a thread.</span>
@@ -41,7 +41,7 @@
 					<div class="body w-lg-100">
 						<p>Change the theme for the website.</p>
 						<div class="input-group mb2">
-							<select autocomplete="off" id='theme' class="form-control" form="profile-settings" name="theme" onchange="post_toast(this,'/settings/profile?theme='+document.getElementById('theme').value, '1')">
+							<select autocomplete="off" id='theme' class="form-control" form="profile-settings" name="theme" onchange="postToastReload(this,'/settings/profile?theme='+document.getElementById('theme').value, 'POST')">
 							{% for entry in THEMES %}
 								<option value="{{entry}}" {% if v.theme==entry %} selected {% endif %}>
 									{{entry}}
@@ -280,7 +280,7 @@
 					</div>
 					<div class="body w-lg-100">
 						<div class="custom-control custom-switch">
-							<input autocomplete="off" type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="post_toast(this,'/settings/profile?private='+document.getElementById('privateswitch').checked)">
+							<input autocomplete="off" type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="postToastSimple(this,'/settings/profile?private='+document.getElementById('privateswitch').checked)">
 							<label class="custom-control-label" for="privateswitch"></label>
 						</div>
 						<span class="text-small-extra text-muted">This will hide your post and comment history from others. We will also ask search engines to not index your profile page. (Your content will still be accessible via direct link.)</span>
@@ -292,7 +292,7 @@
 					</div>
 					<div class="body w-lg-100">
 						<div class="custom-control custom-switch">
-							<input autocomplete="off" type="checkbox" class="custom-control-input" id="nofollowswitch" name="nofollow"{% if v.is_nofollow%} checked{% endif %} onchange="post_toast(this,'/settings/profile?nofollow='+document.getElementById('nofollowswitch').checked)">
+							<input autocomplete="off" type="checkbox" class="custom-control-input" id="nofollowswitch" name="nofollow"{% if v.is_nofollow%} checked{% endif %} onchange="postToastSimple(this,'/settings/profile?nofollow='+document.getElementById('nofollowswitch').checked)">
 							<label class="custom-control-label" for="nofollowswitch"></label>
 						</div>
 						<span class="text-small-extra text-muted">Prevent other users from following you.</span>
