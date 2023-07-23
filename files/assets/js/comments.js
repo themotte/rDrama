@@ -57,3 +57,21 @@ function expandMarkdown(t,id) {
 	if (val.innerHTML == 'View source') val.innerHTML = 'Hide source'
 	else val.innerHTML = 'View source'
 };
+
+function commentsAddUnreadIndicator(commentIds) {
+	commentIds.forEach(element => {
+		const commentOnly = document.getElementById(`comment-${element}-only`);
+		if (!commentOnly) { 
+			console.warn(`Couldn't find comment (comment ID ${element}) in page while attempting to add an unread indicator.`);
+			return;
+		}
+		if (commentOnly.classList.contains("unread")) return;
+		commentOnly.classList.add("unread");
+		const commentUserInfo = document.getElementById(`comment-${element}`)?.querySelector(".comment-user-info");
+		if (!commentUserInfo) {
+			console.warn(`Couldn't find comment user info (comment ID ${element}) in page while attempting to add an unread indicator.`);
+			return;
+		}
+		commentUserInfo.innerHTML += "<span class=\"new-indicator\">~new~</span>";
+	});
+}

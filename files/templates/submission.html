@@ -489,19 +489,19 @@
 
 					comments = JSON.parse(localStorage.getItem("old-comment-counts")) || {}
 					lastCount = comments['{{p.id}}']
-					if (lastCount)
-					{
-						{% for c in p.comments %}
+
+					var commentsToCheck = [
+						{% for c in p.comments -%}
 							{% if not (v and v.id==c.author_id) and not c.voted %}
-								if ({{c.created_utc*1000}} > lastCount.t) 
-								try {
-									document.getElementById("comment-{{c.id}}-only").classList.add('unread')
-									document.getElementById("comment-{{c.id}}").querySelector(".comment-user-info").innerHTML += "<span>~new~</span>";
-								}
-								catch(e) {}
-							{% endif %}
+							[{{c.id}}, {{c.created_utc * 1000}}],
+							{%- endif -%}
 						{% endfor %}
-					}
+					];
+
+					commentsToCheck = commentsToCheck.filter(comment => comment[1] > lastCount.t)
+					                                 .map(comment => comment[0]);
+					
+					if (lastCount) commentsAddUnreadIndicator(commentsToCheck);
 
 					collapsedCommentStorageApply();
 				}
