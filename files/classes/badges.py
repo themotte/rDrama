@@ -1,38 +1,49 @@
-from sqlalchemy import *
+from dataclasses import dataclass
+
+from sqlalchemy.sql.schema import Column, ForeignKey, Index
+from sqlalchemy.sql.sqltypes import Integer, String
 from sqlalchemy.orm import relationship
 from files.classes.base import Base
 from files.helpers.lazy import lazy
 from files.helpers.config.const import *
 from files.helpers.assetcache import assetcache_path
 
-class BadgeDef(Base):
-	__tablename__ = "badge_defs"
-	__table_args__ = (
-		UniqueConstraint('name', name='badge_def_name_unique'),
-	)
+@dataclass(frozen=True, kw_only=True, slots=True)
+class BadgeDef:
+	id: str
+	name: str
+	description: str
 
-	id = Column(Integer, primary_key=True, autoincrement=True)
-	name = Column(String, nullable=False)
-	description = Column(String)
+BADGES: list[BadgeDef] = [
+	BadgeDef(
+		id="unknown",
+		name="Unkown Badge",
+		description="Please report this if you see it! :x"
+	),
+	BadgeDef(
+		id="verified_email",
+		name="Verified Email",
+		description="Verified Email"
+	),
+]
 
-	def __repr__(self):
-		return f"<{self.__class__.__name__}(id={self.id})>"
+BADGES_DICT: dict[str, BadgeDef] = {badge.id:badge for badge in BADGES}
 
 class Badge(Base):
-
 	__tablename__ = "badges"
 
 	user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
-	badge_id = Column(Integer,  ForeignKey('badge_defs.id'), primary_key=True)
+	badge_id = Column(String, nullable=False)
 	description = Column(String)
 	url = Column(String)
 
 	Index('badges_badge_id_idx', badge_id)
 
 	user = relationship("User", viewonly=True)
-	badge = relationship("BadgeDef",
-		primaryjoin="foreign(Badge.badge_id) == remote(BadgeDef.id)",
-		lazy="joined", innerjoin=True, viewonly=True)
+	
+	@property
+	def badge(self) -> BadgeDef:
+		return BADGES_DICT.get(self.badge_id, BADGES_DICT['unknown'])
 
 	def __repr__(self):
 		return f"<{self.__class__.__name__}(user_id={self.user_id}, badge_id={self.badge_id})>"
