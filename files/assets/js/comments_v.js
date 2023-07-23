@@ -216,7 +216,7 @@ function post_comment(fullname,id,level = 1){
 	catch(e) {}
 
 	const xhr = new XMLHttpRequest();
-	xhr.open("post", "/comment");
+	xhr.open("post", "/comment"); // TODO: use postToast for this?
 	xhr.setRequestHeader('xhr', 'xhr');
 	xhr.onload=function(){
 		let data
