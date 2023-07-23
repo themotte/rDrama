@@ -935,13 +935,14 @@ def saved_posts(v, username):
 	listing = get_posts(ids, v=v, eager=True)
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
-	return render_template("userpage.html",
-											u=v,
-											v=v,
-											listing=listing,
-											page=page,
-											next_exists=next_exists,
-											)
+	return render_template(
+		"userpage_submissions.html",
+		u=v,
+		v=v,
+		listing=listing,
+		page=page,
+		next_exists=next_exists,
+	)
 
 
 @app.get("/@<username>/saved/comments")
@@ -959,13 +960,15 @@ def saved_comments(v, username):
 
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
-	return render_template("userpage_comments.html",
-											u=v,
-											v=v,
-											listing=listing,
-											page=page,
-											next_exists=next_exists,
-											standalone=True)
+	return render_template(
+		"userpage.html",
+		u=v,
+		v=v,
+		listing=listing,
+		page=page,
+		next_exists=next_exists,
+		standalone=True
+	)
 
 
 @app.post("/fp/<fp>")
