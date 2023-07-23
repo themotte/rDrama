@@ -34,7 +34,7 @@ function transferCoins(mobile=false) {
 	let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
 	let username = document.getElementById('username').innerHTML
 
-	postToastCallback2(null, `/@${username}/transfer_coins`, "POST",
+	postToast(null, `/@${username}/transfer_coins`, "POST",
 		{
 			"amount": document.getElementById(mobile ? "coin-transfer-amount-mobile" : "coin-transfer-amount").value
 		},
@@ -60,7 +60,7 @@ function transferBux(mobile=false) {
 	let amount = parseInt(document.getElementById("bux-transfer-amount").value);
 	let username = document.getElementById('username').innerHTML
 
-	postToastCallback2(null, `/@${username}/transfer_bux`, "POST",
+	postToast(null, `/@${username}/transfer_bux`, "POST",
 		{"amount": document.getElementById(mobile ? "bux-transfer-amount-mobile" : "bux-transfer-amount").value},
 		(xhr) => {
 		if(xhr.status == 200) {
