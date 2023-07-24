@@ -17,7 +17,7 @@ class BadgeDef:
 BADGES: list[BadgeDef] = [
 	BadgeDef(
 		id="unknown",
-		name="Unkown Badge",
+		name="Unknown Badge",
 		description="Please report this if you see it! :x"
 	),
 	BadgeDef(
