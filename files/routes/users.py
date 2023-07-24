@@ -776,7 +776,7 @@ def u_username_comments(username, v=None):
 	is_following = (v and user.has_follower(v))
 
 	if request.headers.get("Authorization"): return {"data": [c.json for c in listing]}
-	return render_template("userpage.html", u=user, v=v, listing=listing, page=page, sort=sort, t=t,next_exists=next_exists, is_following=is_following, standalone=True)
+	return render_template("userpage_comments.html", u=user, v=v, listing=listing, page=page, sort=sort, t=t,next_exists=next_exists, is_following=is_following, standalone=True)
 
 
 @app.get("/@<username>/info")
@@ -961,7 +961,7 @@ def saved_comments(v, username):
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
 	return render_template(
-		"userpage.html",
+		"userpage_comments.html",
 		u=v,
 		v=v,
 		listing=listing,
