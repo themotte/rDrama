@@ -134,7 +134,6 @@ function postToast(targetElement, url, method, data, callbackFn) {
 			}
 			toastPostSuccessTextElement.innerText = message;
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success')).show();
-			callbackFn(xhr);
 		} else {
 			const toastPostErrorTextElement = document.getElementById('toast-post-error-text');
 			if (message != null && data) {
