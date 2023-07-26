@@ -94,7 +94,7 @@ function postToast(targetElement, url, method, data, callbackFn) {
 	if (data instanceof HTMLFormElement) {
 		formData = data;
 	}
-	var form = new FormData(formData);
+	var form = new FormData(formData ?? undefined);
 	form.append("formkey", formkey());
 
 	if (typeof data === 'object' && data !== null) {
