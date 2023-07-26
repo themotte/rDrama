@@ -151,8 +151,10 @@ function postToast(targetElement, url, method, data, callbackFn) {
 	}
 
 	setTimeout(() => {
-		targetElement.disabled = false;
-		targetElement.classList.remove("disabled");
+		if (targetElement !== null) {
+			targetElement.disabled = false;
+			targetElement.classList.remove("disabled");
+		}
 	}, 1500);
 
 	xhr.send(form);
