@@ -7,5 +7,5 @@ function delete_postModal(id) {
 			document.getElementById(`delete2-${id}`).classList.add('d-none');
 			document.getElementById(`undelete2-${id}`).classList.remove('d-none');
 		}
-	})};
+	});
 }
