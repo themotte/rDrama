@@ -35,8 +35,8 @@
 	{% endif %}
 
 	{% if v.id != c.author_id and not c.ghost %}
-		<a id="unblock-{{c.id}}" class="dropdown-item text-success list-inline-item {% if not c.is_blocking %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/settings/unblock?username={{c.author_name}}','POST','block-{{c.id}}','unblock-{{c.id}}');)"><i class="fas fa-eye text-success"></i>Unblock user</a>
-		<a id="block-{{c.id}}" class="dropdown-item list-inline-item text-danger {% if c.is_blocking %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/settings/block?username={{c.author_name}}','POST','block-{{c.id}}','unblock-{{c.id}}');)"><i class="fas fa-eye-slash text-danger"></i>Block user</a>
+		<a id="unblock-{{c.id}}" class="dropdown-item text-success list-inline-item {% if not c.is_blocking %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/settings/unblock?username={{c.author_name}}','POST','block-{{c.id}}','unblock-{{c.id}}');"><i class="fas fa-eye text-success"></i>Unblock user</a>
+		<a id="block-{{c.id}}" class="dropdown-item list-inline-item text-danger {% if c.is_blocking %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/settings/block?username={{c.author_name}}','POST','block-{{c.id}}','unblock-{{c.id}}');"><i class="fas fa-eye-slash text-danger"></i>Block user</a>
 	{% endif %}
 
 	{% if c.post %}

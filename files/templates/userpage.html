@@ -145,14 +145,14 @@
 				<div class="d-flex justify-content-between align-items-center">
 					<div>
 					{% if v and v.id != u.id %}
-						<a id="button-unsub" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/unfollow/{{u.username}}','POST','button-unsub','button-sub');)">Unfollow</a>
+						<a id="button-unsub" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/unfollow/{{u.username}}','POST','button-unsub','button-sub');">Unfollow</a>
 
-						<a id="button-sub" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/follow/{{u.username}}','POST','button-unsub','button-sub');)">Follow</a>						
+						<a id="button-sub" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/follow/{{u.username}}','POST','button-unsub','button-sub');">Follow</a>						
 						<a class="btn btn-primary" role="button" onclick="toggleElement('message', 'input-message')">Message</a>
 
 						{% if v and v.admin_level >= 3 %}
-							<a id="admin" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/make_admin','POST','admin','unadmin');)">Make admin</a>
-							<a id="unadmin" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/remove_admin','POST','admin','unadmin');)">Remove admin</a>
+							<a id="admin" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/make_admin','POST','admin','unadmin');">Make admin</a>
+							<a id="unadmin" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/remove_admin','POST','admin','unadmin');">Remove admin</a>
 							{% if u.admin_level > 1 %}
 								<a class="btn btn-primary" role="button" onclick="postToastSimple(this,'/@{{u.username}}/revert_actions')">Revert admin actions</a>
 							{% endif %}
@@ -222,16 +222,16 @@
 						<pre></pre>
 						<pre></pre>
 
-						<a id="shadowban" class="{% if u.shadowbanned %}d-none{% endif %} btn btn-danger" role="button" onclick="postToastSwitch(this,'/shadowban/{{u.id}}','POST','shadowban','unshadowban');)">Shadowban</a>
+						<a id="shadowban" class="{% if u.shadowbanned %}d-none{% endif %} btn btn-danger" role="button" onclick="postToastSwitch(this,'/shadowban/{{u.id}}','POST','shadowban','unshadowban');">Shadowban</a>
 
-						<a id="unshadowban" class="{% if not u.shadowbanned %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/unshadowban/{{u.id}}','POST','shadowban','unshadowban');)">Unshadowban</a>
+						<a id="unshadowban" class="{% if not u.shadowbanned %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/unshadowban/{{u.id}}','POST','shadowban','unshadowban');">Unshadowban</a>
 
 
 						<pre></pre>
 						
 						{% if v and v.admin_level >= 3 %}
-							<a id="verify" class="{% if u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/admin/verify/{{u.id}}','POST','verify','unverify');)">Verify</a>
-							<a id="unverify" class="{% if not u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/admin/unverify/{{u.id}}','POST','verify','unverify');)">Unverify</a>
+							<a id="verify" class="{% if u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/admin/verify/{{u.id}}','POST','verify','unverify');">Verify</a>
+							<a id="unverify" class="{% if not u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/admin/unverify/{{u.id}}','POST','verify','unverify');">Unverify</a>
 						{% endif %}
 
 						<pre></pre>
@@ -247,8 +247,8 @@
 							<input type="submit" class="btn btn-danger" value="Remove User's Content">
 						</form>
 						<pre></pre>
-						<button id="grant2" class="{% if u.paid_dues %}d-none{% endif %} btn btn-success" onclick="postToastSwitch(this,'/@{{u.username}}/club_allow','POST','grant2','bar2');)">Grant club access</button>
-						<button id="bar2" class="{% if u.club_allowed == False %}d-none{% endif %} btn btn-danger" onclick="postToastSwitch(this,'/@{{u.username}}/club_ban','POST','grant2','bar2');)">Bar from club</button>
+						<button id="grant2" class="{% if u.paid_dues %}d-none{% endif %} btn btn-success" onclick="postToastSwitch(this,'/@{{u.username}}/club_allow','POST','grant2','bar2');">Grant club access</button>
+						<button id="bar2" class="{% if u.club_allowed == False %}d-none{% endif %} btn btn-danger" onclick="postToastSwitch(this,'/@{{u.username}}/club_ban','POST','grant2','bar2');">Bar from club</button>
 						{% endif %}
 					<pre></pre>
 					<p>User ID: {{u.id}}</p>
@@ -391,14 +391,14 @@
 				{% endif %}
 
 				{% if v and v.id != u.id %}
-					<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/unfollow/{{u.username}}','POST','button-unsub2','button-sub2');)">Unfollow</a>
+					<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/unfollow/{{u.username}}','POST','button-unsub2','button-sub2');">Unfollow</a>
 
-					<a id="button-sub2" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/follow/{{u.username}}','POST','button-unsub2','button-sub2');)">Follow</a>						
+					<a id="button-sub2" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/follow/{{u.username}}','POST','button-unsub2','button-sub2');">Follow</a>						
 					<a class="btn btn-primary" role="button" onclick="toggleElement('message-mobile', 'input-message-mobile')">Message</a>
 
 					{% if v and v.admin_level >= 3 %} 
-						<a id="admin2" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/make_admin','POST','admin2','unadmin2');)">Make admin</a>
-						<a id="unadmin2" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/remove_admin','POST','admin2','unadmin2');)">Remove admin</a>
+						<a id="admin2" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/make_admin','POST','admin2','unadmin2');">Make admin</a>
+						<a id="unadmin2" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/remove_admin','POST','admin2','unadmin2');">Remove admin</a>
 						{% if u.admin_level > 1 %}
 							<a class="btn btn-primary" role="button" onclick="postToastSimple(this,'/@{{u.username}}/revert_actions')">Revert admin actions</a>
 						{% endif %}
@@ -422,8 +422,8 @@
 
 					{% if v and v.admin_level >= 2 %}
 
-					<button id="grant" class="{% if u.paid_dues %}d-none{% endif %} btn btn-success" onclick="postToastSwitch(this,'/@{{u.username}}/club_allow','POST','grant','bar');)">Grant club access</button>
-					<button id="bar" class="{% if u.club_allowed == False %}d-none{% endif %} btn btn-danger" onclick="postToastSwitch(this,'/@{{u.username}}/club_ban','POST','grant','bar');)">Bar from club</button>
+					<button id="grant" class="{% if u.paid_dues %}d-none{% endif %} btn btn-success" onclick="postToastSwitch(this,'/@{{u.username}}/club_allow','POST','grant','bar');">Grant club access</button>
+					<button id="bar" class="{% if u.club_allowed == False %}d-none{% endif %} btn btn-danger" onclick="postToastSwitch(this,'/@{{u.username}}/club_ban','POST','grant','bar');">Bar from club</button>
 
 						<br><br>
 						<div class="body d-lg-flex border-bottom">
@@ -470,16 +470,16 @@
 						<pre></pre>
 						<pre></pre>
 
-						<a id="shadowban2" class="{% if u.shadowbanned %}d-none{% endif %} btn btn-danger" role="button" onclick="postToastSwitch(this,'/shadowban/{{u.id}}','POST','shadowban2','unshadowban2');)">Shadowban</a>
+						<a id="shadowban2" class="{% if u.shadowbanned %}d-none{% endif %} btn btn-danger" role="button" onclick="postToastSwitch(this,'/shadowban/{{u.id}}','POST','shadowban2','unshadowban2');">Shadowban</a>
 
-						<a id="unshadowban2" class="{% if not u.shadowbanned %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/unshadowban/{{u.id}}','POST','shadowban2','unshadowban2');)">Unshadowban</a>
+						<a id="unshadowban2" class="{% if not u.shadowbanned %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/unshadowban/{{u.id}}','POST','shadowban2','unshadowban2');">Unshadowban</a>
 
 
 						<pre></pre>
 
 						{% if v and v.admin_level >= 3 %}
-							<a id="verify2" class="{% if u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/admin/verify/{{u.id}}','POST','verify2','unverify2');)">Verify</a>
-							<a id="unverify2" class="{% if not u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/admin/unverify/{{u.id}}','POST','verify2','unverify2');)">Unverify</a>
+							<a id="verify2" class="{% if u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/admin/verify/{{u.id}}','POST','verify2','unverify2');">Verify</a>
+							<a id="unverify2" class="{% if not u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/admin/unverify/{{u.id}}','POST','verify2','unverify2');">Unverify</a>
 						{% endif %}
 
 						<pre></pre>

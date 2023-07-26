@@ -48,8 +48,8 @@
 {% block content %}
 
 {% if v %}
-	<a id="subscribe" class="{% if v.changelogsub %}d-none{% endif %} btn btn-primary followbutton" role="button" onclick="postToastSwitch(this,'/changelogsub','POST','subscribe','unsubscribe');)">Subscribe</a>
-	<a id="unsubscribe" class="{% if not v.changelogsub %}d-none{% endif %} btn btn-primary followbutton" role="button" onclick="postToastSwitch(this,'/changelogsub','POST','subscribe','unsubscribe');)">Unsubscribe</a>
+	<a id="subscribe" class="{% if v.changelogsub %}d-none{% endif %} btn btn-primary followbutton" role="button" onclick="postToastSwitch(this,'/changelogsub','POST','subscribe','unsubscribe');">Subscribe</a>
+	<a id="unsubscribe" class="{% if not v.changelogsub %}d-none{% endif %} btn btn-primary followbutton" role="button" onclick="postToastSwitch(this,'/changelogsub','POST','subscribe','unsubscribe');">Unsubscribe</a>
 {% endif %}
 
 <div class="row no-gutters {% if listing %}mt-md-3{% elif not listing %}my-md-3{% endif %}">
