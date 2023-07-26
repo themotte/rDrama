@@ -103,6 +103,11 @@
 	{{site_setting_int('FilterCommentsMinKarma', 'Minimum Karma')}}
 	{{site_setting_int('FilterCommentsMinAgeDays', 'Minimum Account Age (Days)')}}
 
+	<h4>Private Mode Requirements</h4>
+	{{site_setting_int('min_comments_private_profile', 'Minimum Comments')}}
+	{{site_setting_int('min_truescore_private_profile', 'Minimum Karma')}}
+	{{site_setting_int('min_age_days_private_profile', 'Minimum Account Age (Days)')}}
+
 	<button class="btn btn-primary mt-3" onclick="post_toast(this,'/admin/purge_cache');">PURGE CDN CACHE</button>
 	<button class="btn btn-primary mt-3" onclick="post_toast(this,'/admin/dump_cache');">DUMP INTERNAL CACHE</button>
 {% endif %}

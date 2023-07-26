@@ -274,16 +274,22 @@
 						</form>
 					</div>							
 				</div>
+				{%- set can_change_profile_privacy = v.can_change_user_privacy(v) -%}
 				<div class="d-lg-flex border-bottom">
 					<div class="title w-lg-25">
-						<label for="privateswitch">Private Mode</label>
+						<label for="privateswitch">{{title}}</label>
 					</div>
 					<div class="body w-lg-100">
 						<div class="custom-control custom-switch">
-							<input autocomplete="off" type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="post_toast(this,'/settings/profile?private='+document.getElementById('privateswitch').checked)">
-							<label class="custom-control-label" for="privateswitch"></label>
+							<input autocomplete="off" type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private %} checked{% endif %}{% if not can_change_profile_privacy %} disabled{% endif %} onchange="post_toast(this,'/id/{{v.id}}/private/' + (this.checked ? '1' : '0'));">
 						</div>
-						<span class="text-small-extra text-muted">This will hide your post and comment history from others. We will also ask search engines to not index your profile page. (Your content will still be accessible via direct link.)</span>
+						<span class="text-small-extra text-muted">
+							{%- if can_change_profile_privacy -%}
+								This will hide your post and comment history from others. We will also ask search engines to not index your profile page. (Your content will still be accessible via direct link.)
+							{%- else -%}
+								If you want to hide your post and comment history from others, please <a href="/contact">contact us</a> and we'll review your request. (Your content will still be accessible via direct link.)
+							{%- endif -%}
+						</span>
 					</div>
 				</div>
 				<div class="d-lg-flex border-bottom">
