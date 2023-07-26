@@ -64,13 +64,14 @@ class VisibilityState:
 			op_name_safe=target.author_name
 		)
 
-	def moderated_body(self, v: User | None) -> str | None:
+	def moderated_body(self, v: User | None, is_blocking: bool=False) -> str | None:
 		if v and (v.admin_level >= PERMS['POST_COMMENT_MODERATION'] \
 			or v.id == self.op_id):
 			return None
 		if self.deleted: return 'Deleted'
 		if self.appear_removed(v): return 'Removed'
 		if self.filtered: return 'Filtered'
+		if is_blocking: return f'You are blocking @{self.op_name_safe}'
 		return None
 	
 	def visibility_and_message(self, v: User | None, is_blocking: bool) -> tuple[bool, str]:
