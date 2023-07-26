@@ -83,8 +83,8 @@ function expandDesktopImage(image) {
 
 function postToast(targetElement, url, method, data, callbackFn) {
 	if (targetElement) { // disable element to avoid repeated requests
-		t.disabled = true;
-		t.classList.add("disabled");
+		targetElement.disabled = true;
+		targetElement.classList.add("disabled");
 	}
 	const xhr = new XMLHttpRequest(); // set up the request now
 	xhr.open(method, url);
@@ -152,8 +152,8 @@ function postToast(targetElement, url, method, data, callbackFn) {
 	}
 
 	setTimeout(() => {
-		t.disabled = false;
-		t.classList.remove("disabled");
+		targetElement.disabled = false;
+		targetElement.classList.remove("disabled");
 	}, 1500);
 
 	xhr.send(form);
