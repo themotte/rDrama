@@ -126,7 +126,7 @@ function postToast(targetElement, url, method, data, callbackFn) {
 
 		if (xhr.status >= 200 && xhr.status < 300 && data && data['message']) {
 			const toastPostSuccessTextElement = document.getElementById("toast-post-success-text");
-			if (message !== null) {
+			if (message === null) {
 				message = data["message"];
 			}
 			if (message === null) {
