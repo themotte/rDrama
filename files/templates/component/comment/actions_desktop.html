@@ -12,7 +12,7 @@
 {% if c.parent_submission %}
 {% if v and c.author_id == v.id %}
 	<button class="btn caction py-0 nobackground px-1 text-muted" onclick="toggleEdit('{{c.id}}')"><i class="fas fa-edit fa-fw"></i>Edit</button>
-	<button id="undelete-{{c.id}}" class="btn caction py-0 nobackground px-1 text-muted {% if not c.state_user_deleted_utc %}d-none{% endif %}" onclick="postToastSwitch(this,'/undelete/comment/{{c.id}}','POST','delete-{{c.id}}','undelete-{{c.id}}');document.getElementById('comment-{{c.id}}').classList.remove('deleted');)"><i class="fas fa-trash-alt fa-fw"></i>Undelete</button>
+	<button id="undelete-{{c.id}}" class="btn caction py-0 nobackground px-1 text-muted {% if not c.state_user_deleted_utc %}d-none{% endif %}" onclick="postToastSwitch(this,'/undelete/comment/{{c.id}}','POST','delete-{{c.id}}','undelete-{{c.id}}');document.getElementById('comment-{{c.id}}').classList.remove('deleted');"><i class="fas fa-trash-alt fa-fw"></i>Undelete</button>
 	<button id="delete-{{c.id}}" class="btn caction py-0 nobackground px-1 text-muted {% if c.state_user_deleted_utc %}d-none{% endif %}" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Delete</button>
 {% elif v and c.body %}
 	<button class="btn caction py-0 nobackground px-1 text-muted" onclick="expandMarkdown(this,'{{c.id}}')"><i class="fas text-expand-icon-{{c.id}} fa-expand-alt"></i><span>View source</span></button>

@@ -30,7 +30,7 @@
 		<a id="unpin-profile-{{p.id}}" class="{% if not p.is_pinned %}d-none{% endif %} list-inline-item text-muted" role="button" onclick="postToastSwitch(this,'/pin/{{p.id}}','POST','unpin-profile-{{p.id}}','pin-profile-{{p.id}}');)"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin from profile</a>
 	{% endif %}
 
-		<a id="undelete2-{{p.id}}" class="{% if not p.state_user_deleted_utc %}d-none{% endif %} list-inline-item" role="button" onclick="postToastSwitch(this,'/undelete_post/{{p.id}}','POST','delete2-{{p.id}}','undelete2-{{p.id}}');document.getElementById('post-{{p.id}}').classList.remove('deleted');)"><i class="fas fa-trash-alt"></i>Undelete</a>
+		<a id="undelete2-{{p.id}}" class="{% if not p.state_user_deleted_utc %}d-none{% endif %} list-inline-item" role="button" onclick="postToastSwitch(this,'/undelete_post/{{p.id}}','POST','delete2-{{p.id}}','undelete2-{{p.id}}');document.getElementById('post-{{p.id}}').classList.remove('deleted');"><i class="fas fa-trash-alt"></i>Undelete</a>
 
 		<a id="delete2-{{p.id}}" class="{% if p.state_user_deleted_utc %}d-none{% endif %} list-inline-item" role="button" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')"><i class="fas fa-trash-alt"></i>Delete</a>
 	{% endif %}

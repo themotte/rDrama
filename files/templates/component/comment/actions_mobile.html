@@ -28,7 +28,7 @@
 								<a id="undistinguish2-{{c.id}}" class="list-group-item {% if not c.distinguish_level %}d-none{% endif %} text-info" role="button" onclick="postToastSwitch(this,'/distinguish_comment/{{c.id}}','POST','distinguish2-{{c.id}}','undistinguish2-{{c.id}}');)" data-bs-dismiss="modal"><i class="fas fa-id-badge text-info mr-2"></i>Undistinguish</a>
 							{% endif %}
 							
-							<a id="undelete2-{{c.id}}" class="{% if not c.state_user_deleted_utc %}d-none{% endif %} list-group-item text-success" role="button" onclick="postToastSwitch(this,'/undelete/comment/{{c.id}}','POST','delete2-{{c.id}}','undelete2-{{c.id}}');document.getElementById('comment-{{c.id}}').classList.remove('deleted');)" data-bs-dismiss="modal"><i class="far fa-trash-alt text-success mr-2"></i>Undelete</a>
+							<a id="undelete2-{{c.id}}" class="{% if not c.state_user_deleted_utc %}d-none{% endif %} list-group-item text-success" role="button" onclick="postToastSwitch(this,'/undelete/comment/{{c.id}}','POST','delete2-{{c.id}}','undelete2-{{c.id}}');document.getElementById('comment-{{c.id}}').classList.remove('deleted');" data-bs-dismiss="modal"><i class="far fa-trash-alt text-success mr-2"></i>Undelete</a>
 
 							<a id="delete2-{{c.id}}" class="{% if c.state_user_deleted_utc %}d-none{% endif %} list-group-item text-danger" role="button" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')"><i class="far fa-trash-alt text-danger mr-2"></i>Delete</a>
 
