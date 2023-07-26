@@ -168,7 +168,7 @@ function postToastReload(t, url, method, data) {
 }
 
 function postToastSwitch(t, url, method, button1, button2, cssClass="d-none") {
-	postToast(t, url, method, data, (xhr) => {
+	postToast(t, url, method, null, (xhr) => {
 		document.getElementById(button1).classList.toggle(cssClass);
 		document.getElementById(button2).classList.toggle(cssClass);
 	})
