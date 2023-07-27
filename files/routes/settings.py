@@ -640,7 +640,7 @@ def settings_profile(v):
 
 # other settings i guess
 
-@app.post("/id/<int:id>/privateprofile/<int:enabled>")
+@app.post("/id/<int:id>/private/<int:enabled>")
 @auth_required
 def post_set_user_profile_privacy(v: User, id: int, enabled: int):
 	if enabled != 0 and enabled != 1: abort(400, "'enabled' must be '0' or '1'")
