@@ -53,9 +53,9 @@
 		</form>
 	</div>
 {%- endblock -%}
-
+{%- block scripts -%}
 <script src="{{ 'js/signup.js' | asset }}"></script>
-
 {% if hcaptcha %}
 	<script src="{{ 'js/hcaptcha.js' | asset }}"></script>
 {% endif %}
+{%- endblock -%}
