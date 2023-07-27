@@ -203,6 +203,10 @@ def api_comment(v):
 
 	is_filtered = v.should_comments_be_filtered
 
+	if (v.admin_level <= PERMS['POST_COMMENT_MODERATION'] 
+		and len(body) > COMMENT_BODY_LENGTH_MAXIMUM_UNFILTERED):
+		is_filtered = True
+
 	c = Comment(author_id=v.id,
 				parent_submission=parent_post.id,
 				parent_comment_id=parent_comment_id,
@@ -241,6 +245,9 @@ def api_comment(v):
 	if replying_to_blocked:
 		message = "This user has blocked you. You are still welcome to reply " \
 				  "but you will be held to a higher standard of civility than you would be otherwise"
+	elif (v.admin_level <= PERMS['POST_COMMENT_MODERATION'] 
+			and len(body) > COMMENT_BODY_LENGTH_MAXIMUM_UNFILTERED):
+		message = "Your comment has been submitted but is a bit long, so it's pending approval."
 	else:
 		message = None
 	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True, parent_level=level), "message": message}
