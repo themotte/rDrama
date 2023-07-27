@@ -17,13 +17,13 @@
 <h3>Content</h3>
 <ul>
 	<li><a href="/admin/image_posts">Image Posts</a></li>
-	<li><a href="/admin/reported/posts">Reported Posts/Comments</a></li>
-	<li><a href="/admin/removed/posts">Removed Posts/Comments</a></li>
+	<li><a href="/admin/reported/comments">Reported Comments/Posts</a></li>
+	<li><a href="/admin/removed/comments">Removed Comments/Posts</a></li>
 </ul>
 
 <h3>Filtering</h3>
 <ul>
-	<li><a href="/admin/filtered/posts">Filtered Posts/Comments</a></li>
+	<li><a href="/admin/filtered/comments">Filtered Comments/Posts</a></li>
 </ul>
 
 <h3>Users</h3>
@@ -102,6 +102,11 @@
 	{{site_setting_int('FilterCommentsMinComments', 'Minimum Comments')}}
 	{{site_setting_int('FilterCommentsMinKarma', 'Minimum Karma')}}
 	{{site_setting_int('FilterCommentsMinAgeDays', 'Minimum Account Age (Days)')}}
+
+	<h4>Private Mode Requirements</h4>
+	{{site_setting_int('min_comments_private_profile', 'Minimum Comments')}}
+	{{site_setting_int('min_truescore_private_profile', 'Minimum Karma')}}
+	{{site_setting_int('min_age_days_private_profile', 'Minimum Account Age (Days)')}}
 
 	<button class="btn btn-primary mt-3" onclick="postToastSimple(this,'/admin/purge_cache');">PURGE CDN CACHE</button>
 	<button class="btn btn-primary mt-3" onclick="postToastSimple(this,'/admin/dump_cache');">DUMP INTERNAL CACHE</button>

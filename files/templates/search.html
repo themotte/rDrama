@@ -61,10 +61,10 @@
 		<div class="flex-row box-shadow-bottom d-flex justify-content-center justify-content-md-between align-items-center">
 			<ul class="nav settings-nav">
 				<li class="nav-item">
-					<a class="nav-link{% if '/posts/' in request.path %} active{% endif %}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Posts</a>
+					<a class="nav-link{% if '/comments/' in request.path %} active{% endif %}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Comments</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link{% if '/comments/' in request.path %} active{% endif %}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Comments</a>
+					<a class="nav-link{% if '/posts/' in request.path %} active{% endif %}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Posts</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link{% if '/users/' in request.path %} active{% endif %}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Users</a>
