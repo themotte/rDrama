@@ -136,16 +136,17 @@ function postToast(targetElement, url, method, data, callbackFn) {
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success')).show();
 		} else {
 			const toastPostErrorTextElement = document.getElementById('toast-post-error-text');
-			if (message != null && data) {
+			if (message === null && data) {
 				if (data["details"]) {
 					message = data["details"];
 				} else if (data["error"]) {
 					message = data["error"];
-				} else {
-					message = "Error, please try again later.";
 				}
 			}
-			if (messageOverride) toastPostErrorTextElement.innerText = message;
+			if (message === null) {
+				message = "Error, please try again later.";
+			}
+			toastPostErrorTextElement.innerText = message;
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
 	}
