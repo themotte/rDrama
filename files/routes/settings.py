@@ -647,4 +647,5 @@ def post_set_user_profile_privacy(v: User, id: int, enabled: int):
 	user: User = get_account(id)
 	if not user.can_change_user_privacy(v): abort(403)
 	user.is_private = bool(enabled)
+	g.db.commit()
 	return {"message": f"{'Enabled' if user.is_private else 'Disabled'} private mode successfully!"}
