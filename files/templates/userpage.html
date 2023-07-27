@@ -251,8 +251,8 @@
 						<button id="bar2" class="{% if u.club_allowed == False %}d-none{% endif %} btn btn-danger" onclick="post_toast2(this,'/@{{u.username}}/club_ban','grant2','bar2')">Bar from club</button>
 						{% endif %}
 					{% if v and v.admin_level >= PERMS['USER_SET_PROFILE_PRIVACY'] %}
-						<a id="private-desktop" class="{% if u.is_private %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2(this,'/id/{{u.id}}/private/1','private-desktop','unprivate-desktop')">Set Private Mode</a>
-						<a id="unprivate-desktop" class="{% if not u.is_private %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2(this,'/id/{{u.id}}/private/0','private-desktop','unprivate-desktop')">Unset Private Mode</a>
+						<a id="private-desktop" class="{% if u.is_private %}d-none{% endif %} btn btn-danger" role="button" onclick="post_toast2(this,'/id/{{u.id}}/private/1','private-desktop','unprivate-desktop')">Set Private Mode</a>
+						<a id="unprivate-desktop" class="{% if not u.is_private %}d-none{% endif %} btn btn-danger" role="button" onclick="post_toast2(this,'/id/{{u.id}}/private/0','private-desktop','unprivate-desktop')">Unset Private Mode</a>
 					{% endif %}
 					<pre></pre>
 					<p>User ID: {{u.id}}</p>
@@ -501,8 +501,8 @@
 					{% endif %}
 				{% endif %}
 				{% if v and v.admin_level >= PERMS['USER_SET_PROFILE_PRIVACY'] %}
-					<a id="private-mobile" class="{% if u.is_private %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2(this,'/id/{{u.id}}/private/1','private-mobile','unprivate-mobile')">Set Private Mode</a>
-					<a id="unprivate-mobile" class="{% if not u.is_private %}d-none{% endif %} btn btn-success" role="button" onclick="post_toast2(this,'/id/{{u.id}}/private/0','private-mobile','unprivate-mobile')">Unset Private Mode</a>
+					<a id="private-mobile" class="{% if u.is_private %}d-none{% endif %} btn btn-danger" role="button" onclick="post_toast2(this,'/id/{{u.id}}/private/1','private-mobile','unprivate-mobile')">Set Private Mode</a>
+					<a id="unprivate-mobile" class="{% if not u.is_private %}d-none{% endif %} btn btn-danger" role="button" onclick="post_toast2(this,'/id/{{u.id}}/private/0','private-mobile','unprivate-mobile')">Unset Private Mode</a>
 				{% endif %}
 				<pre></pre>
 				<p>User ID: {{u.id}}</p>

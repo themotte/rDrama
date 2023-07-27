@@ -282,6 +282,7 @@
 					<div class="body w-lg-100">
 						<div class="custom-control custom-switch">
 							<input autocomplete="off" type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private %} checked{% endif %}{% if not can_change_profile_privacy %} disabled{% endif %} onchange="post_toast(this,'/id/{{v.id}}/private/' + (this.checked ? '1' : '0'));">
+							<label class="custom-control-label" for="privateswitch"></label>
 						</div>
 						<span class="text-small-extra text-muted">
 							{%- if can_change_profile_privacy -%}
