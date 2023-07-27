@@ -619,7 +619,7 @@ def api_is_available(name):
 def user_id(id:int):
 	user = get_account(id)
 	return redirect(user.url)
-		
+
 @app.get("/u/<username>")
 def redditor_moment_redirect(username:str):
 	return redirect(f"/@{username}")
@@ -802,6 +802,7 @@ def u_user_id_info(id, v=None):
 		abort(403, "This user is blocking you.")
 
 	return user.json
+
 
 @app.post("/follow/<username>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")

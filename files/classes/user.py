@@ -171,6 +171,25 @@ class User(CreatedBase):
 		accountAgeDays = self.age_timedelta.days
 		return self.comment_count < minComments or accountAgeDays < minAge or self.truecoins < minKarma
 
+
+	def can_change_user_privacy(self, v: "User") -> bool:
+		from files.__main__ import app  # avoiding import loop
+		if v.admin_level >= PERMS['USER_SET_PROFILE_PRIVACY']: return True
+		if self.id != v.id: return False # non-admin changing someone else's things, hmm...
+
+		# TODO: move settings out of app.config
+		site_settings = app.config['SETTINGS']
+		min_comments: int = site_settings.get('min_comments_private_profile', 0)
+		min_truescore: int = site_settings.get('min_truescore_private_profile', 0)
+		min_age_days: int = site_settings.get('min_age_days_private_profile', 0)
+		user_age_days: int = self.age_timedelta.days
+
+		return (
+			self.comment_count >= min_comments
+			and self.truecoins >= min_truescore
+			and user_age_days  >= min_age_days)
+	
+
 	@property
 	@lazy
 	def csslazy(self):
