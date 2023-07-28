@@ -1,11 +1,16 @@
+from __future__ import annotations
+
 import json
 import sys
 import time
+from typing import TYPE_CHECKING
 
 from flask import abort, g, request
 
 from files.__main__ import app, db_session, limiter
 
+if TYPE_CHECKING:
+	from flask.wrappers import Response
 
 @app.before_request
 def before_request():
@@ -45,7 +50,13 @@ def teardown_request(error):
 	sys.stdout.flush()
 
 @app.after_request
-def after_request(response):
+def after_request(response: Response):
+	response.headers.add("Content-Security-Policy", (
+		"script-src 'self' 'unsafe-inline';"
+		" connect-src 'self' *.google-analytics.com *.analytics.google.com;"
+		" object-src 'none';"
+		" img-src 'self' *.google-analytics.com *.analytics.google.com"
+	))
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("X-Frame-Options", "deny")
 	return response

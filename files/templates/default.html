@@ -3,11 +3,8 @@
 <html lang="en">
 <head>
 	{% include "analytics.html" %}
-	
 	<link rel="alternate" type="application/rss+xml" title="The Motte RSS" href="/rss">
 	<meta name="description" content="{{config('DESCRIPTION')}}">
-	{% include "csp.html" %}
-
 	<script src="{{ 'js/bootstrap.js' | asset }}"></script>
 	<script src="{{ 'js/micromodal.js' | asset }}"></script>
 	{% if v %}
