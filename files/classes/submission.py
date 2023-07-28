@@ -32,7 +32,6 @@ class Submission(CreatedBase):
 	stickied_utc = Column(Integer)
 	is_pinned = Column(Boolean, default=False, nullable=False)
 	private = Column(Boolean, default=False, nullable=False)
-	club = Column(Boolean, default=False, nullable=False)
 	comment_count = Column(Integer, default=0, nullable=False)
 	over_18 = Column(Boolean, default=False, nullable=False)
 	is_bot = Column(Boolean, default=False, nullable=False)
@@ -170,7 +169,6 @@ class Submission(CreatedBase):
 	@lazy
 	def shortlink(self):
 		link = f"/post/{self.id}"
-		if self.club: return link + '/-'
 
 		output = title_regex.sub('', self.title.lower())
 		output = output.split()[:6]
@@ -251,7 +249,6 @@ class Submission(CreatedBase):
 				'distinguish_level': self.distinguish_level,
 				'voted': self.voted if hasattr(self, 'voted') else 0,
 				'flags': flags,
-				'club': self.club,
 				}
 
 		return data

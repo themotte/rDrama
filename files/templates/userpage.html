@@ -246,9 +246,6 @@
 							<input type="hidden" name="user" value="{{u.username}}">
 							<input type="submit" class="btn btn-danger" value="Remove User's Content">
 						</form>
-						<pre></pre>
-						<button id="grant2" class="{% if u.paid_dues %}d-none{% endif %} btn btn-success" onclick="postToastSwitch(this,'/@{{u.username}}/club_allow','POST','grant2','bar2');">Grant club access</button>
-						<button id="bar2" class="{% if u.club_allowed == False %}d-none{% endif %} btn btn-danger" onclick="postToastSwitch(this,'/@{{u.username}}/club_ban','POST','grant2','bar2');">Bar from club</button>
 						{% endif %}
 					{% if v and v.admin_level >= PERMS['USER_SET_PROFILE_PRIVACY'] %}
 						<a id="private-desktop" class="{% if u.is_private %}d-none{% endif %} btn btn-danger" role="button" onclick="postToastSwitch(this,'/id/{{u.id}}/private/1','POST','private-desktop','unprivate-desktop');">Set Private Mode</a>
@@ -425,15 +422,8 @@
 					<div id="message-preview-mobile" class="preview my-3"></div>
 
 					{% if v and v.admin_level >= 2 %}
-
-					<button id="grant" class="{% if u.paid_dues %}d-none{% endif %} btn btn-success" onclick="postToastSwitch(this,'/@{{u.username}}/club_allow','POST','grant','bar');">Grant club access</button>
-					<button id="bar" class="{% if u.club_allowed == False %}d-none{% endif %} btn btn-danger" onclick="postToastSwitch(this,'/@{{u.username}}/club_ban','POST','grant','bar');">Bar from club</button>
-
-						<br><br>
 						<div class="body d-lg-flex border-bottom">
-
 							<div class="w-lg-100">
-
 								<form action="/admin/title_change/{{u.id}}" method="post">
 									{{forms.formkey(v)}}
 									<input maxlength=100 autocomplete="off" id="customtitlebody-mobile" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitleplain %}{{u.customtitleplain}}{% endif %}">
@@ -447,7 +437,6 @@
 									</div>
 								</form>
 							</div>
-
 						</div>
 						<pre></pre>
 						{% if u.is_suspended %}

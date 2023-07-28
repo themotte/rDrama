@@ -42,8 +42,6 @@ def searchposts(v):
 
 	posts = g.db.query(Submission.id)
 	
-	if not (v and v.paid_dues): posts = posts.filter_by(club=False)
-	
 	if v and v.admin_level < 2:
 		posts = posts.filter(Submission.state_user_deleted_utc == None, Submission.state_mod == StateMod.VISIBLE, Submission.private == False, Submission.author_id.notin_(v.userblocks))
 	elif not v:
@@ -174,15 +172,8 @@ def searchcomments(v):
 		private = [x[0] for x in g.db.query(Submission.id).filter(Submission.private == True).all()]
 		comments = comments.filter(Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, Comment.parent_submission.notin_(private))
 
-
-	if not (v and v.paid_dues):
-		club = [x[0] for x in g.db.query(Submission.id).filter(Submission.club == True).all()]
-		comments = comments.filter(Comment.parent_submission.notin_(club))
-
 	comments = sort_objects(comments, sort, Comment)
-
 	total = comments.count()
-
 	comments = comments.offset(25 * (page - 1)).limit(26).all()
 
 	ids = [x[0] for x in comments]

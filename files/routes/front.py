@@ -207,7 +207,6 @@ def front_all(v, subdomain=None):
 
 	sort=request.values.get("sort", defaultsorting)
 	t=request.values.get('t', defaulttime)
-	ccmode=request.values.get('ccmode', "false").lower()
 
 	if sort == 'bump': t='all'
 	
@@ -221,7 +220,6 @@ def front_all(v, subdomain=None):
 					page=page,
 					t=t,
 					v=v,
-					ccmode=ccmode,
 					filter_words=v.filter_words if v else [],
 					gt=gt,
 					lt=lt,
@@ -247,7 +245,7 @@ def front_all(v, subdomain=None):
 			g.db.commit()
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
-	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, ccmode=ccmode, home=True)
+	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, home=True)
 
 
 @app.get("/changelog")

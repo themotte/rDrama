@@ -163,62 +163,6 @@ def revert_actions(v, username):
 	return {"message": "Admin actions reverted!"}
 
 
-@app.post("/@<username>/club_allow")
-@limiter.exempt
-@admin_level_required(2)
-def club_allow(v, username):
-	u = get_user(username, v=v)
-
-	if not u: abort(404)
-
-	if u.admin_level >= v.admin_level: 
-		abort(403, "Can't target users with admin level higher than you")
-
-	u.club_allowed = True
-	g.db.add(u)
-
-	for x in u.alts_unique:
-		x.club_allowed = True
-		g.db.add(x)
-
-	ma = ModAction(
-		kind="club_allow",
-		user_id=v.id,
-		target_user_id=u.id
-	)
-	g.db.add(ma)
-
-	g.db.commit()
-	return {"message": f"@{username} has been allowed into the {CC_TITLE}!"}
-
-
-@app.post("/@<username>/club_ban")
-@limiter.exempt
-@admin_level_required(2)
-def club_ban(v, username):
-	u = get_user(username, v=v)
-
-	if not u: abort(404)
-
-	if u.admin_level >= v.admin_level:
-		abort(403, "Can't target users with admin level higher than you")
-
-	u.club_allowed = False
-
-	for x in u.alts_unique:
-		u.club_allowed = False
-		g.db.add(x)
-
-	ma = ModAction(
-		kind="club_ban",
-		user_id=v.id,
-		target_user_id=u.id
-	)
-	g.db.add(ma)
-
-	g.db.commit()
-	return {"message": f"@{username} has been kicked from the {CC_TITLE}. Deserved."}
-
 @app.get("/admin/shadowbanned")
 @limiter.exempt
 @auth_required

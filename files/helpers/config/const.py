@@ -43,9 +43,6 @@ class Service(IntEnum):
 	def enable_services(self) -> bool:
 		return self not in {self.CRON, self.MIGRATION}
 
-CC = "COUNTRY CLUB"
-CC_TITLE = CC.title()
-
 NOTIFICATIONS_ID = 1
 AUTOJANNY_ID = 2
 MODMAIL_ID = 2
