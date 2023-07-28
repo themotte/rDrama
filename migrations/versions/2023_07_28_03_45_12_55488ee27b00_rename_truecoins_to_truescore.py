@@ -1,7 +1,7 @@
 """rename truecoins to truescore
 
 Revision ID: 55488ee27b00
-Revises: a23fe2f1515c
+Revises: 5195118d6a51
 Create Date: 2023-07-28 03:45:12.251007+00:00
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '55488ee27b00'
-down_revision = 'a23fe2f1515c'
+down_revision = '5195118d6a51'
 branch_labels = None
 depends_on = None
 
