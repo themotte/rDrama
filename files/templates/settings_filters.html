@@ -13,7 +13,7 @@
 					<div class="body w-lg-100">
 						<p>Change how many posts appear on every page.</p>
 						<div class="input-group mb2">
-							<select autocomplete="off" id='frontsize' class="form-control" form="profile-settings" name="frontsize" onchange="post_toast(this,'/settings/profile?frontsize='+document.getElementById('frontsize').value)">
+							<select autocomplete="off" id='frontsize' class="form-control" form="profile-settings" name="frontsize" onchange="postToastSimple(this,'/settings/profile?frontsize='+document.getElementById('frontsize').value)">
 							{% for entry in [15, 25, 50, 100] %}
 								<option value="{{entry}}"{{' selected' if v.frontsize==entry}}>{{entry}}</option>
 							{% endfor %}
@@ -36,7 +36,7 @@
 						<div class="body w-lg-100">
 							<p>Change the default sorting for comments.</p>
 							<div class="input-group mb2">
-								<select autocomplete="off" id='defaultsortingcomments' class="form-control" form="profile-settings" name="defaultsortingcomments" onchange="post_toast(this,'/settings/profile?defaultsortingcomments='+document.getElementById('defaultsortingcomments').value)">
+								<select autocomplete="off" id='defaultsortingcomments' class="form-control" form="profile-settings" name="defaultsortingcomments" onchange="postToastSimple(this,'/settings/profile?defaultsortingcomments='+document.getElementById('defaultsortingcomments').value)">
 								{% for entry in SORTS_COMMENTS %}
 									<option value="{{entry}}"{{' selected' if v.defaultsortingcomments==entry}}>{{entry}}</option>
 								{% endfor %}
@@ -53,7 +53,7 @@
 						<div class="body w-lg-100">
 							<p>Change the default sorting for posts.</p>
 							<div class="input-group mb2">
-								<select autocomplete="off" id='defaultsorting' class="form-control" form="profile-settings" name="defaultsorting" onchange="post_toast(this,'/settings/profile?defaultsorting='+document.getElementById('defaultsorting').value)">
+								<select autocomplete="off" id='defaultsorting' class="form-control" form="profile-settings" name="defaultsorting" onchange="postToastSimple(this,'/settings/profile?defaultsorting='+document.getElementById('defaultsorting').value)">
 								{% for entry in SORTS_POSTS %}
 								<option value="{{entry}}"{{' selected' if v.defaultsorting==entry}}>{{entry}}</option>
 								{% endfor %}
@@ -68,7 +68,7 @@
 						<div class="body w-lg-100">
 							<p>Change the default time filter for posts.</p>
 							<div class="input-group mb2">
-								<select autocomplete="off" id='defaulttime' class="form-control" form="profile-settings" name="defaulttime" onchange="post_toast(this,'/settings/profile?defaulttime='+document.getElementById('defaulttime').value)">
+								<select autocomplete="off" id='defaulttime' class="form-control" form="profile-settings" name="defaulttime" onchange="postToastSimple(this,'/settings/profile?defaulttime='+document.getElementById('defaulttime').value)">
 								{% for entry in ["hour", "day", "week", "month", "year", "all"] %}
 									<option value="{{entry}}"{{' selected' if v.defaulttime==entry}}>{{entry}}</option>
 								{% endfor %}
@@ -87,7 +87,7 @@
 					</div>
 					<div class="body w-lg-100">
 						<div class="custom-control custom-switch">
-							<input autocomplete="off" type="checkbox" class="custom-control-input" id="newtab" name="newtab"{% if v.newtab %} checked{% endif %} onchange="post_toast(this,'/settings/profile?newtab='+document.getElementById('newtab').checked);">
+							<input autocomplete="off" type="checkbox" class="custom-control-input" id="newtab" name="newtab"{% if v.newtab %} checked{% endif %} onchange="postToastSimple(this,'/settings/profile?newtab='+document.getElementById('newtab').checked);">
 							<label class="custom-control-label" for="newtab"></label>
 						</div>
 						<span class="text-small-extra text-muted">Enable if you would like to automatically open links to other pages in the site in new tabs.</span>
@@ -104,7 +104,7 @@
 					<div class="body w-lg-100">
 
 						<div class="custom-control custom-switch">
-							<input autocomplete="off" type="checkbox" class="custom-control-input" id="newtabexternal" name="newtabexternal"{% if v.newtabexternal %} checked{% endif %} onchange="post_toast(this,'/settings/profile?newtabexternal='+document.getElementById('newtabexternal').checked);">
+							<input autocomplete="off" type="checkbox" class="custom-control-input" id="newtabexternal" name="newtabexternal"{% if v.newtabexternal %} checked{% endif %} onchange="postToastSimple(this,'/settings/profile?newtabexternal='+document.getElementById('newtabexternal').checked);">
 							<label class="custom-control-label" for="newtabexternal"></label>
 						</div>
 
@@ -123,7 +123,7 @@
 
 					<div class="body w-lg-100">
 						<div class="custom-control custom-switch">
-							<input autocomplete="off" type="checkbox" class="custom-control-input" id="nitter" name="nitter"{% if v.nitter %} checked{% endif %} onchange="post_toast(this,'/settings/profile?nitter='+document.getElementById('nitter').checked);">
+							<input autocomplete="off" type="checkbox" class="custom-control-input" id="nitter" name="nitter"{% if v.nitter %} checked{% endif %} onchange="postToastSimple(this,'/settings/profile?nitter='+document.getElementById('nitter').checked);">
 							<label class="custom-control-label" for="nitter"></label>
 						</div>
 						<span class="text-small-extra text-muted">Enable if you would like to automatically convert twitter.com links to nitter.net links.</span>
@@ -140,7 +140,7 @@
 					<div class="body w-lg-100">
 						<p>Change the domain you would like to view reddit posts in.</p>
 						<div class="input-group mb2">
-							<select autocomplete="off" id='reddit' class="form-control" form="profile-settings" name="reddit" onchange="post_toast(this,'/settings/profile?reddit='+document.getElementById('reddit').value)">
+							<select autocomplete="off" id='reddit' class="form-control" form="profile-settings" name="reddit" onchange="postToastSimple(this,'/settings/profile?reddit='+document.getElementById('reddit').value)">
 							{% for entry in ['old.reddit.com', 'reddit.com', 'i.reddit.com', 'unddit.com', 'teddit.net', 'libredd.it'] %}
 								<option value="{{entry}}"{{' selected' if v.reddit==entry}}>{{entry}}</option>
 							{% endfor %}
@@ -156,7 +156,7 @@
 					<div class="body w-lg-100">
 
 						<div class="custom-control custom-switch">
-							<input autocomplete="off" type="checkbox" class="custom-control-input" id="controversial" name="controversial"{% if v.controversial %} checked{% endif %} onchange="post_toast(this,'/settings/profile?controversial='+document.getElementById('controversial').checked);">
+							<input autocomplete="off" type="checkbox" class="custom-control-input" id="controversial" name="controversial"{% if v.controversial %} checked{% endif %} onchange="postToastSimple(this,'/settings/profile?controversial='+document.getElementById('controversial').checked);">
 							<label class="custom-control-label" for="controversial"></label>
 						</div>
 						<span class="text-small-extra text-muted">Enable if you would like to automatically sort reddit.com links by controversial.</span>
@@ -177,7 +177,7 @@
 						<div class="body w-lg-100">
 
 							<div class="custom-control custom-switch">
-								<input autocomplete="off" type="checkbox" class="custom-control-input" id="over18" name="over18"{% if v.over_18 %} checked{% endif %} onchange="post_toast(this,'/settings/profile?over18='+document.getElementById('over18').checked);">
+								<input autocomplete="off" type="checkbox" class="custom-control-input" id="over18" name="over18"{% if v.over_18 %} checked{% endif %} onchange="postToastSimple(this,'/settings/profile?over18='+document.getElementById('over18').checked);">
 								<label class="custom-control-label" for="over18"></label>
 							</div>
 
@@ -196,7 +196,7 @@
 						<div class="body w-lg-100">
 
 							<div class="custom-control custom-switch">
-								<input autocomplete="off" type="checkbox" class="custom-control-input" id="hidevotedon" name="hidevotedon"{% if v.hidevotedon %} checked{% endif %} onchange="post_toast(this,'/settings/profile?hidevotedon='+document.getElementById('hidevotedon').checked);">
+								<input autocomplete="off" type="checkbox" class="custom-control-input" id="hidevotedon" name="hidevotedon"{% if v.hidevotedon %} checked{% endif %} onchange="postToastSimple(this,'/settings/profile?hidevotedon='+document.getElementById('hidevotedon').checked);">
 								<label class="custom-control-label" for="hidevotedon"></label>
 							</div>
 
