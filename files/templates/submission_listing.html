@@ -387,6 +387,9 @@
 	{% if v.admin_level >= 2 %}
 		{% include "component/modal/ban.html" %}
 	{% endif %}
+	{% if v.admin_level >= PERMS['POST_COMMENT_MODERATION'] %}
+		<script src="{{ 'js/comments+submission_admin.js' | asset }}"></script>
+	{% endif %}
 {% endif %}
 {% include "component/modal/expanded_image.html" %}
 
