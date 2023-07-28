@@ -192,7 +192,7 @@ class User(CreatedBase):
 
 		return (
 			self.comment_count >= min_comments
-			and self.truecoins >= min_truescore
+			and self.truescore >= min_truescore
 			and user_age_days  >= min_age_days)
 	
 
