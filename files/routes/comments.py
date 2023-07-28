@@ -201,7 +201,7 @@ def api_comment(v):
 
 			abort(403, "Too much spam!")
 
-	is_filtered = v.should_comments_be_filtered()
+	is_filtered = v.should_comments_be_filtered
 
 	c = Comment(author_id=v.id,
 				parent_submission=parent_post.id,
