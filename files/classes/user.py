@@ -1,35 +1,39 @@
-from sqlalchemy.orm import deferred, aliased
-from secrets import token_hex
-import pyotp
-from files.helpers.media import *
-from files.helpers.const import *
-from .alts import Alt
-from .saves import *
-from .notifications import Notification
-from .award import AwardRelationship
-from .follows import *
-from .subscriptions import *
-from .userblock import *
-from .badges import *
-from .clients import *
-from .mod_logs import *
-from .mod import *
-from .exiles import *
-from .sub_block import *
-from files.__main__ import app, Base, cache
-from files.helpers.security import *
-from files.helpers.assetcache import assetcache_path
-from files.helpers.contentsorting import apply_time_filter, sort_objects
-import random
-from datetime import datetime
-from os import environ, remove, path
+from __future__ import annotations
 
+import time
+from typing import TYPE_CHECKING, Union
+
+import pyotp
+from flask import g, session
+from sqlalchemy.orm import aliased, declared_attr, deferred, relationship
+
+from files.classes.alts import Alt
+from files.classes.award import AwardRelationship
+from files.classes.badges import Badge
+from files.classes.base import CreatedBase
+from files.classes.clients import *  # note: imports Comment and Submission
+from files.classes.follows import Follow
+from files.classes.mod_logs import ModAction
+from files.classes.notifications import Notification
+from files.classes.saves import CommentSaveRelationship, SaveRelationship
+from files.classes.subscriptions import Subscription
+from files.classes.userblock import UserBlock
+from files.classes.visstate import StateMod
+from files.helpers.assetcache import assetcache_path
+from files.helpers.config.const import *
+from files.helpers.config.environment import (CARD_VIEW,
+                                              CLUB_TRUESCORE_MINIMUM,
+                                              DEFAULT_COLOR,
+                                              DEFAULT_TIME_FILTER, SITE_FULL,
+                                              SITE_ID)
+from files.helpers.security import *
+
+if TYPE_CHECKING:
+	from files.classes.cron.submission import ScheduledSubmissionTask
 
 defaulttheme = "TheMotte"
-defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
-cardview = bool(int(environ.get("CARD_VIEW", 1)))
 
-class User(Base):
+class User(CreatedBase):
 	__tablename__ = "users"
 	__table_args__ = (
 		UniqueConstraint('bannerurl', name='one_banner'),
@@ -40,13 +44,12 @@ class User(Base):
 	id = Column(Integer, primary_key=True)
 	username = Column(String(length=255), nullable=False)
 	namecolor = Column(String(length=6), default=DEFAULT_COLOR, nullable=False)
-	background = Column(String)
 	customtitle = Column(String)
 	customtitleplain = deferred(Column(String))
 	titlecolor = Column(String(length=6), default=DEFAULT_COLOR, nullable=False)
 	theme = Column(String, default=defaulttheme, nullable=False)
 	themecolor = Column(String, default=DEFAULT_COLOR, nullable=False)
-	cardview = Column(Boolean, default=cardview, nullable=False)
+	cardview = Column(Boolean, default=CARD_VIEW, nullable=False)
 	highres = Column(String)
 	profileurl = Column(String)
 	bannerurl = Column(String)
@@ -63,7 +66,6 @@ class User(Base):
 	post_count = Column(Integer, default=0, nullable=False)
 	comment_count = Column(Integer, default=0, nullable=False)
 	received_award_count = Column(Integer, default=0, nullable=False)
-	created_utc = Column(Integer, nullable=False)
 	admin_level = Column(Integer, default=0, nullable=False)
 	coins_spent = Column(Integer, default=0, nullable=False)
 	lootboxes_bought = Column(Integer, default=0, nullable=False)
@@ -103,14 +105,14 @@ class User(Base):
 	stored_subscriber_count = Column(Integer, default=0, nullable=False)
 	defaultsortingcomments = Column(String, default="new", nullable=False)
 	defaultsorting = Column(String, default="new", nullable=False)
-	defaulttime = Column(String, default=defaulttimefilter, nullable=False)
+	defaulttime = Column(String, default=DEFAULT_TIME_FILTER, nullable=False)
 	is_nofollow = Column(Boolean, default=False, nullable=False)
 	custom_filter_list = Column(String)
 	ban_evade = Column(Integer, default=0, nullable=False)
 	original_username = deferred(Column(String))
 	referred_by = Column(Integer, ForeignKey("users.id"))
-	subs_created = Column(Integer, default=0, nullable=False)
 	volunteer_last_started_utc = Column(DateTime, nullable=True)
+	volunteer_janitor_correctness = Column(Float, default=0, nullable=False)
 
 	Index(
 		'users_original_username_trgm_idx',
@@ -128,7 +130,11 @@ class User(Base):
 	Index('fki_user_referrer_fkey', referred_by)
 	Index('user_banned_idx', is_banned)
 	Index('user_private_idx', is_private)
-	Index('users_created_utc_index', created_utc)
+
+	@declared_attr
+	def users_created_utc_index(self):
+		return Index('users_created_utc_index', self.created_utc)
+
 	Index('users_subs_idx', stored_subscriber_count)
 	Index('users_unbanutc_idx', unban_utc.desc())
 
@@ -148,11 +154,7 @@ class User(Base):
 		if "password" in kwargs:
 			kwargs["passhash"] = self.hash_password(kwargs["password"])
 			kwargs.pop("password")
-
-		if "created_utc" not in kwargs: kwargs["created_utc"] = int(time.time())
-
 		super().__init__(**kwargs)
-
 
 	def can_manage_reports(self):
 		return self.admin_level > 1
@@ -163,8 +165,10 @@ class User(Base):
 
 	@property
 	def should_comments_be_filtered(self):
+		from files.__main__ import app  # avoiding import loop
 		if self.admin_level > 0:
 			return False
+		# TODO: move settings out of app.config
 		site_settings = app.config['SETTINGS']
 		min_comments = site_settings.get('FilterCommentsMinComments', 0)
 		min_karma = site_settings.get('FilterCommentsMinKarma', 0)
@@ -173,57 +177,29 @@ class User(Base):
 			or self.age_days < min_age \
 			or self.truescore < min_karma
 
-	@lazy
-	def mods(self, sub):
-		return self.admin_level == 3 or bool(g.db.query(Mod.user_id).filter_by(user_id=self.id, sub=sub).one_or_none())
 
-	@lazy
-	def exiled_from(self, sub):
-		return self.admin_level < 2 and bool(g.db.query(Exile.user_id).filter_by(user_id=self.id, sub=sub).one_or_none())
+	def can_change_user_privacy(self, v: "User") -> bool:
+		from files.__main__ import app  # avoiding import loop
+		if v.admin_level >= PERMS['USER_SET_PROFILE_PRIVACY']: return True
+		if self.id != v.id: return False # non-admin changing someone else's things, hmm...
 
-	@property
-	@lazy
-	def all_blocks(self):
-		return [x[0] for x in g.db.query(SubBlock.sub).filter_by(user_id=self.id).all()]
+		# TODO: move settings out of app.config
+		site_settings = app.config['SETTINGS']
+		min_comments: int = site_settings.get('min_comments_private_profile', 0)
+		min_truescore: int = site_settings.get('min_truescore_private_profile', 0)
+		min_age_days: int = site_settings.get('min_age_days_private_profile', 0)
+		user_age_days: int = self.age_timedelta.days
 
-	@lazy
-	def blocks(self, sub):
-		return g.db.query(SubBlock).filter_by(user_id=self.id, sub=sub).one_or_none()
-
-	@lazy
-	def mod_date(self, sub):
-		if self.id == OWNER_ID: return 1
-		mod = g.db.query(Mod).filter_by(user_id=self.id, sub=sub).one_or_none()
-		if not mod: return None
-		return mod.created_utc
+		return (
+			self.comment_count >= min_comments
+			and self.truecoins >= min_truescore
+			and user_age_days  >= min_age_days)
+	
 
 	@property
 	@lazy
 	def csslazy(self):
 		return self.css
-
-	@property
-	@lazy
-	def created_date(self):
-
-		return time.strftime("%d %b %Y", time.gmtime(self.created_utc))
-
-	@property
-	@lazy
-	def discount(self):
-		if self.patron == 1: discount = 0.90
-		elif self.patron == 2: discount = 0.85
-		elif self.patron == 3: discount = 0.80
-		elif self.patron == 4: discount = 0.75
-		elif self.patron == 5: discount = 0.70
-		elif self.patron == 6: discount = 0.65
-		else: discount = 1
-
-		for badge in [69,70,71,72,73]:
-			if self.has_badge(badge): discount -= discounts[badge]
-
-		return discount
-		
 
 	@property
 	@lazy
@@ -244,24 +220,17 @@ class User(Base):
 	@property
 	@lazy
 	def paid_dues(self):
-		return not self.shadowbanned and not (self.is_banned and not self.unban_utc) and (self.admin_level or self.club_allowed or (self.club_allowed != False and self.truescore > dues))
+		return not self.shadowbanned and not (self.is_banned and not self.unban_utc) and (self.admin_level or self.club_allowed or (self.club_allowed != False and self.truescore > CLUB_TRUESCORE_MINIMUM))
 
 	@lazy
 	def any_block_exists(self, other):
-
 		return g.db.query(UserBlock).filter(
 			or_(and_(UserBlock.user_id == self.id, UserBlock.target_id == other.id), and_(
 				UserBlock.user_id == other.id, UserBlock.target_id == self.id))).first()
 
 	def validate_2fa(self, token):
-
 		x = pyotp.TOTP(self.mfa_secret)
 		return x.verify(token, valid_window=1)
-
-	@property
-	@lazy
-	def age(self):
-		return int(time.time()) - self.created_utc
 
 	@property
 	@lazy
@@ -285,22 +254,6 @@ class User(Base):
 			if u.patron: return True
 		return False
 
-	@cache.memoize(timeout=86400)
-	def userpagelisting(self, site=None, v=None, page=1, sort="new", t="all"):
-		if self.shadowbanned and not (v and (v.admin_level > 1 or v.id == self.id)): return []
-
-		posts = g.db.query(Submission.id).filter_by(author_id=self.id, is_pinned=False)
-
-		if not (v and (v.admin_level > 1 or v.id == self.id)):
-			posts = posts.filter_by(deleted_utc=0, is_banned=False, private=False, ghost=False)
-
-		posts = apply_time_filter(posts, t, Submission)
-		posts = sort_objects(posts, sort, Submission)
-
-		posts = posts.offset(25 * (page - 1)).limit(26).all()
-
-		return [x[0] for x in posts]
-
 	@property
 	@lazy
 	def follow_count(self):
@@ -315,7 +268,7 @@ class User(Base):
 	@property
 	@lazy
 	def fullname(self):
-		return f"t1_{self.id}"
+		return f"user_{self.id}"
 
 	@property
 	@lazy
@@ -336,7 +289,6 @@ class User(Base):
 	@property
 	@lazy
 	def formkey(self):
-
 		msg = f"{session['session_id']}+{self.id}+{self.login_nonce}"
 
 		return generate_hash(msg)
@@ -409,7 +361,7 @@ class User(Base):
 	@property
 	@lazy
 	def notifications_count(self):
-		notifs = g.db.query(Notification.user_id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.is_banned == False, Comment.deleted_utc == 0)
+		notifs = g.db.query(Notification.user_id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None)
 		
 		if not self.shadowbanned and self.admin_level < 3:
 			notifs = notifs.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
@@ -423,28 +375,17 @@ class User(Base):
 
 	@property
 	@lazy
-	def reddit_notifications_count(self):
-		return g.db.query(Notification.user_id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.is_banned == False, Comment.deleted_utc == 0, Comment.body_html.like('%<p>New site mention: <a href="https://old.reddit.com/r/%'), Comment.parent_submission == None, Comment.author_id == NOTIFICATIONS_ID).count()
-
-	@property
-	@lazy
 	def normal_count(self):
-		return self.notifications_count - self.post_notifications_count - self.reddit_notifications_count
+		return self.notifications_count - self.post_notifications_count
 
 	@property
 	@lazy
 	def do_posts(self):
-		return self.post_notifications_count and self.notifications_count-self.reddit_notifications_count == self.post_notifications_count
-
-	@property
-	@lazy
-	def do_reddit(self):
-		return self.notifications_count == self.reddit_notifications_count
+		return self.post_notifications_count and self.notifications_count == self.post_notifications_count
 
 	@property
 	@lazy
 	def alts(self):
-
 		subq = g.db.query(Alt).filter(
 			or_(
 				Alt.user1 == self.id,
@@ -474,14 +415,7 @@ class User(Base):
 
 		return output
 
-	@property
-	@lazy
-	def moderated_subs(self):
-		modded_subs = g.db.query(Mod.sub).filter_by(user_id=self.id).all()
-		return modded_subs
-
 	def has_follower(self, user):
-
 		return g.db.query(Follow).filter_by(target_id=self.id, user_id=user.id).one_or_none()
 
 	@property
@@ -508,8 +442,8 @@ class User(Base):
 				'profile_url': self.profile_url,
 				'bannerurl': self.banner_url,
 				'bio_html': self.bio_html_eager,
-				'post_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level > 1)) else self.post_count,
-				'comment_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level > 1)) else self.comment_count,
+				'post_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level >= 2)) else self.post_count,
+				'comment_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level >= 2)) else self.comment_count,
 				'badges': [x.path for x in self.badges],
 				}
 
@@ -546,8 +480,6 @@ class User(Base):
 	@property
 	@lazy
 	def json_core(self):
-
-		now = int(time.time())
 		if self.is_suspended:
 			return {'username': self.username,
 					'url': self.url,
@@ -579,8 +511,6 @@ class User(Base):
 		self.is_banned = admin.id if admin else AUTOJANNY_ID
 		if reason: self.ban_reason = reason
 
-
-
 	@property
 	def is_suspended(self):
 		return (self.is_banned and (self.unban_utc == 0 or self.unban_utc > time.time()))
@@ -593,11 +523,6 @@ class User(Base):
 	@lazy
 	def applications(self):
 		return g.db.query(OauthApp).filter_by(author_id=self.id).order_by(OauthApp.id)
-
-	@property
-	@lazy
-	def created_datetime(self):
-		return time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc))
 
 	@lazy
 	def subscribed_idlist(self, page=1):
@@ -618,9 +543,8 @@ class User(Base):
 
 	@lazy
 	def saved_idlist(self, page=1):
-
 		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).filter_by(user_id=self.id).all()]
-		posts = g.db.query(Submission.id).filter(Submission.id.in_(saved), Submission.is_banned == False, Submission.deleted_utc == 0)
+		posts = g.db.query(Submission.id).filter(Submission.id.in_(saved), Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None)
 
 		if self.admin_level < 2:
 			posts = posts.filter(Submission.author_id.notin_(self.userblocks))
@@ -629,9 +553,8 @@ class User(Base):
 
 	@lazy
 	def saved_comment_idlist(self, page=1):
-
 		saved = [x[0] for x in g.db.query(CommentSaveRelationship.comment_id).filter_by(user_id=self.id).all()]
-		comments = g.db.query(Comment.id).filter(Comment.id.in_(saved), Comment.is_banned == False, Comment.deleted_utc == 0)
+		comments = g.db.query(Comment.id).filter(Comment.id.in_(saved), Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None)
 
 		if self.admin_level < 2:
 			comments = comments.filter(Comment.author_id.notin_(self.userblocks))
@@ -656,6 +579,14 @@ class User(Base):
 		return l
 	
 	# Permissions
+
+	def can_edit(self, target:Union[Submission, ScheduledSubmissionTask]):
+		if isinstance(target, Submission):
+			if self.id == target.author_id: return True
+			return self.admin_level >= PERMS['POST_EDITING']
+		if target.__class__.__name__ == "ScheduledSubmissionTask": 
+			# XXX: avoiding import loop. should be fixed someday.
+			return self.admin_level >= PERMS['SCHEDULER_POSTS']
 
 	@property
 	def can_see_shadowbanned(self):

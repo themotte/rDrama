@@ -108,7 +108,6 @@ pre, code, kbd, samp {
 pre {
 	margin-top: 0;
 	margin-bottom: 1rem;
-	overflow: auto;
 }
 figure {
 	margin: 0 0 1rem;
@@ -2786,6 +2785,15 @@ ol > li::before {
 #logo {
 	margin-left: 0.5rem;
 }
+.logo-text {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: var(--black)
+}
+.logo-text:hover {
+	text-decoration: none;
+	color: var(--black)
+}
 .navbar-brand, .navbar-light .navbar-brand {
 	color: var(--primary);
 	font-weight: 600;
@@ -4337,6 +4345,9 @@ div.deleted {
 div.deleted.banned {
 	background-color: #964000 !important;
 }
+div.deleted.removed {
+	background-color: #964000 !important;
+}
 .text-admin {
 	color: var(--primary);
 }
@@ -4922,7 +4933,7 @@ html {
 	display: block;
 }
 .comment-anchor:target, .unread {
-	background: #ffffff22 !important;
+	background: #ffffff22;
 	padding: 12px;
 	padding-bottom: 4px;
 }
@@ -5123,7 +5134,7 @@ th, td {
 }
 
 #account-menu-header, #account-menu {
-	min-width: 10em;
+	min-width: 13em;
 }
 
 .navigation-secondary-link {
@@ -5169,6 +5180,12 @@ th, td {
 div[id^="form-preview-"] li > p:first-child,
 div[id^="reply-edit-"] li > p:first-child {
 	display: inline;
+}
+
+/* settings, etc */
+.bordered-section {
+	border: 1px black solid;
+	padding: 1em;
 }
 
 
@@ -5318,4 +5335,46 @@ div[id^="reply-edit-"] li > p:first-child {
 
 .volunteer_janitor .choices {
 	margin-top: 1rem;
+}
+
+.volunteer_janitor_result {
+	border-radius: 1rem;
+	padding: 0.2rem;
+	color: var(--primary-dark1);
+}
+
+.volunteer_janitor_result_notbad_0 {
+	background-color: hsl(240, 100%, 99%);
+}
+
+.volunteer_janitor_result_notbad_1 {
+	background-color: hsl(240, 100%, 98%);
+}
+
+.volunteer_janitor_result_notbad_2 {
+	background-color: hsl(240, 100%, 94%);
+}
+
+.volunteer_janitor_result_notbad_3 {
+	background-color: hsl(240, 100%, 90%);
+}
+
+.volunteer_janitor_result_bad_0 {
+	background-color: hsl(0, 100%, 98%);
+}
+
+.volunteer_janitor_result_bad_1 {
+	background-color: hsl(0, 100%, 94%);
+}
+
+.volunteer_janitor_result_bad_2 {
+	background-color: hsl(0, 100%, 88%);
+}
+
+.volunteer_janitor_result_bad_3 {
+	background-color: hsl(0, 100%, 80%);
+}
+
+pre {
+	line-height: .5rem;
 }

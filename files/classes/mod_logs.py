@@ -1,14 +1,15 @@
+import logging
+from copy import deepcopy
+
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.__main__ import Base
-import time
-from files.helpers.lazy import lazy
-from os import environ
-from copy import deepcopy
-from files.helpers.const import *
-import logging
 
-class ModAction(Base):
+from files.classes.base import CreatedBase
+from files.helpers.config.const import *
+from files.helpers.lazy import lazy
+
+
+class ModAction(CreatedBase):
 	__tablename__ = "modactions"
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"))
@@ -17,7 +18,6 @@ class ModAction(Base):
 	target_submission_id = Column(Integer, ForeignKey("submissions.id"))
 	target_comment_id = Column(Integer, ForeignKey("comments.id"))
 	_note=Column(String)
-	created_utc = Column(Integer, nullable=False)
 
 	Index('fki_modactions_user_fkey', target_user_id)
 	Index('modaction_action_idx', kind)
@@ -29,49 +29,12 @@ class ModAction(Base):
 	target_user = relationship("User", primaryjoin="User.id==ModAction.target_user_id", viewonly=True)
 	target_post = relationship("Submission", viewonly=True)
 
-	def __init__(self, *args, **kwargs):
-		if "created_utc" not in kwargs: kwargs["created_utc"] = int(time.time())
-		super().__init__(*args, **kwargs)
-
 	def __repr__(self):
 		return f"<{self.__class__.__name__}(id={self.id})>"
 
 	@property
-	@lazy
-	def age_string(self):
-
-		age = int(time.time()) - self.created_utc
-
-		if age < 60:
-			return "just now"
-		elif age < 3600:
-			minutes = int(age / 60)
-			return f"{minutes}m ago"
-		elif age < 86400:
-			hours = int(age / 3600)
-			return f"{hours}hr ago"
-		elif age < 2678400:
-			days = int(age / 86400)
-			return f"{days}d ago"
-
-		now = time.gmtime()
-		ctd = time.gmtime(self.created_utc)
-
-		months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
-		if now.tm_mday < ctd.tm_mday:
-			months -= 1
-
-		if months < 12:
-			return f"{months}mo ago"
-		else:
-			years = int(months / 12)
-			return f"{years}yr ago"
-
-
-	@property
 	def note(self):
-
-		if self.kind=="ban_user":
+		if self.kind == "ban_user":
 			if self.target_post: return f'for <a href="{self.target_post.permalink}">post</a>'
 			elif self.target_comment_id: return f'for <a href="/comment/{self.target_comment_id}">comment</a>'
 			else: return self._note
@@ -92,11 +55,9 @@ class ModAction(Base):
 	@property
 	@lazy
 	def string(self):
-
 		output = self.lookup_action_type()["str"].format(self=self, cc=CC_TITLE)
-
-		if self.note: output += f" <i>({self.note})</i>"
-
+		if not self.note: return output
+		output += f" <i>({self.note})</i>"
 		return output
 
 	@property
@@ -124,6 +85,26 @@ class ModAction(Base):
 		return f"/log/{self.id}"	
 
 ACTIONTYPES = {
+	'approve_post': {
+		"str": 'approved post {self.target_link}', 
+		"icon": 'fa-feather-alt', 
+		"color": 'bg-success'
+	},
+	'approve_comment': {
+		"str": 'approved {self.target_link}', 
+		"icon": 'fa-comment', 
+		"color": 'bg-success'
+	},
+	'remove_post': {
+		"str": 'removed post {self.target_link}', 
+		"icon": 'fa-feather-alt', 
+		"color": 'bg-danger'
+	},
+	'remove_comment': {
+		"str": 'removed {self.target_link}', 
+		"icon": 'fa-comment', 
+		"color": 'bg-danger'
+	},
 	'approve_app': {
 		"str": 'approved an application by {self.target_link}', 
 		"icon": 'fa-robot', 
@@ -139,19 +120,9 @@ ACTIONTYPES = {
 		"icon": 'fa-badge', 
 		"color": 'bg-danger'
 	},
-	'ban_comment': {
-		"str": 'removed {self.target_link}', 
-		"icon": 'fa-comment', 
-		"color": 'bg-danger'
-	},
 	'ban_domain': {
 		"str": 'banned a domain', 
 		"icon": 'fa-globe', 
-		"color": 'bg-danger'
-	},
-	'ban_post': {
-		"str": 'removed post {self.target_link}', 
-		"icon": 'fa-feather-alt', 
 		"color": 'bg-danger'
 	},
 	'ban_user': {
@@ -279,11 +250,6 @@ ACTIONTYPES = {
 		"icon": 'fa-sack-dollar', 
 		"color": 'bg-success'
 	},
-	'move_hole': {
-		"str": 'moved {self.target_link} to <a href="/h/{self.target_post.sub}">/h/{self.target_post.sub}</a>', 
-		"icon": 'fa-manhole', 
-		"color": 'bg-primary'
-	},
 	'nuke_user': {
 		"str": 'removed all content of {self.target_link}', 
 		"icon": 'fa-radiation-alt', 
@@ -344,19 +310,9 @@ ACTIONTYPES = {
 		"icon": 'fa-eye-slash', 
 		"color": 'bg-danger'
 	},
-	'unban_comment': {
-		"str": 'reinstated {self.target_link}', 
-		"icon": 'fa-comment', 
-		"color": 'bg-success'
-	},
 	'unban_domain': {
 		"str": 'unbanned a domain', 
 		"icon": 'fa-globe', 
-		"color": 'bg-success'
-	},
-	'unban_post': {
-		"str": 'reinstated post {self.target_link}', 
-		"icon": 'fa-feather-alt', 
 		"color": 'bg-success'
 	},
 	'unban_user': {

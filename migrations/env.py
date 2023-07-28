@@ -1,12 +1,10 @@
-from __future__ import with_statement
-
-from files.classes import *
 import logging
 from logging.config import fileConfig
 
+from alembic import context
 from flask import current_app
 
-from alembic import context
+from files.classes import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -22,7 +20,8 @@ logger = logging.getLogger('alembic.env')
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from files.__main__ import Base
+from files.classes.base import Base
+
 target_metadata = Base.metadata
 
 config.set_main_option(

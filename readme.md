@@ -27,7 +27,11 @@ docker-compose up --build
 
 The first time you do this, it will take a while. It'll be (much) faster next time.
 
-4 - That's it! Visit `localhost` in your browser.
+4 - Visit `localhost` in your browser.
+
+5 - Make an account. The first account made will have admin power.
+
+6 - That's it!
 
 Code edits will be reflected (almost) immediately. If you make any setup changes or database changes, you'll need to ctrl-C the docker-compose status log and run `docker-compose up --build` again.
 
@@ -53,7 +57,7 @@ As an example, let's say we want to add a column `is_flagged` to the `comments` 
 
 1. Update the `Comment` model in `files/classes/comment.py`
 ```python
-	from files.__main__ import Base
+	from files.classes.base import Base
 	class Comment(Base):
 		__tablename__ = "comments"
 		id = Column(Integer, primary_key=True)

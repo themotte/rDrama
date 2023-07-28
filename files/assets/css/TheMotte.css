@@ -174,8 +174,11 @@ div.deleted {
 div.deleted.banned {
 	background-color: var(--gray) !important;
 }
+div.deleted.removed {
+	background-color: var(--gray) !important;
+}
 .comment-anchor:target, .unread {
-	background: #2280B310 !important;
+	background: #2280B310;
 }
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card {
 	border: none;

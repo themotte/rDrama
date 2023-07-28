@@ -1,6 +1,6 @@
 
 import enum
-from files.__main__ import Base
+from files.classes.base import Base
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
@@ -14,7 +14,6 @@ class VolunteerJanitorResult(enum.Enum):
     Ban = 6
 
 class VolunteerJanitorRecord(Base):
-
     __tablename__ = "volunteer_janitor"
 
     id = Column(Integer, primary_key=True)

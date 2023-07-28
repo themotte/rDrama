@@ -1,17 +1,20 @@
+import calendar
+
+import matplotlib.pyplot as plt
+from sqlalchemy import func
+
+from files.classes.award import AWARDS
+from files.classes.badges import BadgeDef
+from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
+from files.classes.visstate import StateMod
+from files.helpers.alerts import *
+from files.helpers.captcha import validate_captcha
+from files.helpers.config.const import *
+from files.helpers.config.environment import HCAPTCHA_SECRET, HCAPTCHA_SITEKEY
 from files.helpers.media import process_image
 from files.mail import *
-from files.__main__ import app, limiter, mail
-from files.helpers.alerts import *
-from files.helpers.const import *
-from files.helpers.captcha import validate_captcha
-from files.classes.award import AWARDS
-from sqlalchemy import func
-from os import path
-import calendar
-import matplotlib.pyplot as plt
-from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
-from files.classes.badges import BadgeDef
-import logging
+from files.__main__ import app, cache, limiter # violates isort but used to prevent getting shadowed
+
 
 @app.get('/logged_out/')
 @app.get('/logged_out/<path:old>')
@@ -30,13 +33,6 @@ def logged_out(old = ""):
 		abort(400)
 
 	return redirect(redirect_url)
-
-@app.get("/marsey_list")
-@cache.memoize(timeout=600, make_name=make_name)
-def marsey_list():
-	marseys = [f"{x.name} : {x.tags}" for x in g.db.query(Marsey).order_by(Marsey.count.desc())]
-
-	return str(marseys).replace("'",'"')
 
 @app.get('/sidebar')
 @auth_desired
@@ -57,8 +53,6 @@ def support(v):
 @auth_desired
 @cache.memoize(timeout=86400, make_name=make_name)
 def participation_stats(v):
-
-
 	day = int(time.time()) - 86400
 
 	week = int(time.time()) - 604800
@@ -69,38 +63,40 @@ def participation_stats(v):
 
 	active_users = set(posters) | set(commenters) | set(voters) | set(commentvoters)
 
-	stats = {"marseys": g.db.query(Marsey.name).count(),
-			"users": g.db.query(User.id).count(),
-			"private users": g.db.query(User.id).filter_by(is_private=True).count(),
-			"banned users": g.db.query(User.id).filter(User.is_banned > 0).count(),
-			"verified email users": g.db.query(User.id).filter_by(is_activated=True).count(),
-			"coins in circulation": g.db.query(func.sum(User.coins)).scalar(),
-			"total shop sales": g.db.query(func.sum(User.coins_spent)).scalar(),
-			"signups last 24h": g.db.query(User.id).filter(User.created_utc > day).count(),
-			"total posts": g.db.query(Submission.id).count(),
-			"posting users": g.db.query(Submission.author_id).distinct().count(),
-			"listed posts": g.db.query(Submission.id).filter_by(is_banned=False).filter(Submission.deleted_utc == 0).count(),
-			"removed posts (by admins)": g.db.query(Submission.id).filter_by(is_banned=True).count(),
-			"deleted posts (by author)": g.db.query(Submission.id).filter(Submission.deleted_utc > 0).count(),
-			"posts last 24h": g.db.query(Submission.id).filter(Submission.created_utc > day).count(),
-			"total comments": g.db.query(Comment.id).filter(Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count(),
-			"commenting users": g.db.query(Comment.author_id).distinct().count(),
-			"removed comments (by admins)": g.db.query(Comment.id).filter_by(is_banned=True).count(),
-			"deleted comments (by author)": g.db.query(Comment.id).filter(Comment.deleted_utc > 0).count(),
-			"comments last_24h": g.db.query(Comment.id).filter(Comment.created_utc > day, Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count(),
-			"post votes": g.db.query(Vote.submission_id).count(),
-			"post voting users": g.db.query(Vote.user_id).distinct().count(),
-			"comment votes": g.db.query(CommentVote.comment_id).count(),
-			"comment voting users": g.db.query(CommentVote.user_id).distinct().count(),
-			"total upvotes": g.db.query(Vote.submission_id).filter_by(vote_type=1).count() + g.db.query(CommentVote.comment_id).filter_by(vote_type=1).count(),
-			"total downvotes": g.db.query(Vote.submission_id).filter_by(vote_type=-1).count() + g.db.query(CommentVote.comment_id).filter_by(vote_type=-1).count(),
-			"total awards": g.db.query(AwardRelationship.id).count(),
-			"awards given": g.db.query(AwardRelationship.id).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count(),
-			"users who posted, commented, or voted in the past 7 days": len(active_users),
-			}
+	users: Query = g.db.query(User.id)
+	submissions: Query = g.db.query(Submission.id)
+	comments: Query = g.db.query(Comment.id)
 
-	g.db.commit()
-
+	stats = {
+		"marseys": g.db.query(Marsey.name).count(),
+		"users": users.count(),
+		"private users": users.filter_by(is_private=True).count(),
+		"banned users": users.filter(User.is_banned > 0).count(),
+		"verified email users": users.filter_by(is_activated=True).count(),
+		"coins in circulation": g.db.query(func.sum(User.coins)).scalar(),
+		"total shop sales": g.db.query(func.sum(User.coins_spent)).scalar(),
+		"signups last 24h": users.filter(User.created_utc > day).count(),
+		"total posts": submissions.count(),
+		"posting users": g.db.query(Submission.author_id).distinct().count(),
+		"listed posts": submissions.filter(Submission.state_mod == StateMod.VISIBLE).filter(Submission.state_user_deleted_utc == None).count(),
+		"removed posts (by admins)": submissions.filter(Submission.state_mod != StateMod.VISIBLE).count(),
+		"deleted posts (by author)": submissions.filter(Submission.state_user_deleted_utc != None).count(),
+		"posts last 24h": submissions.filter(Submission.created_utc > day).count(),
+		"total comments": comments.filter(Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count(),
+		"commenting users": g.db.query(Comment.author_id).distinct().count(),
+		"removed comments (by admins)": comments.filter(Comment.state_mod != StateMod.VISIBLE).count(),
+		"deleted comments (by author)": comments.filter(Comment.state_user_deleted_utc != None).count(),
+		"comments last_24h": comments.filter(Comment.created_utc > day, Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count(),
+		"post votes": g.db.query(Vote.submission_id).count(),
+		"post voting users": g.db.query(Vote.user_id).distinct().count(),
+		"comment votes": g.db.query(CommentVote.comment_id).count(),
+		"comment voting users": g.db.query(CommentVote.user_id).distinct().count(),
+		"total upvotes": g.db.query(Vote.submission_id).filter_by(vote_type=1).count() + g.db.query(CommentVote.comment_id).filter_by(vote_type=1).count(),
+		"total downvotes": g.db.query(Vote.submission_id).filter_by(vote_type=-1).count() + g.db.query(CommentVote.comment_id).filter_by(vote_type=-1).count(),
+		"total awards": g.db.query(AwardRelationship.id).count(),
+		"awards given": g.db.query(AwardRelationship.id).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count(),
+		"users who posted, commented, or voted in the past 7 days": len(active_users),
+	}
 	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=stats)
 
 
@@ -114,6 +110,7 @@ def weekly_chart():
 	file = cached_chart(kind="weekly", site=SITE)
 	f = send_file(file)
 	return f
+
 
 @app.get("/daily_chart")
 def daily_chart():
@@ -146,9 +143,9 @@ def cached_chart(kind, site):
 
 	daily_signups = [g.db.query(User.id).filter(User.created_utc < day_cutoffs[i], User.created_utc > day_cutoffs[i + 1]).count() for i in range(len(day_cutoffs) - 1)][::-1]
 
-	post_stats = [g.db.query(Submission.id).filter(Submission.created_utc < day_cutoffs[i], Submission.created_utc > day_cutoffs[i + 1], Submission.is_banned == False).count() for i in range(len(day_cutoffs) - 1)][::-1]
+	post_stats = [g.db.query(Submission.id).filter(Submission.created_utc < day_cutoffs[i], Submission.created_utc > day_cutoffs[i + 1], Submission.state_mod == StateMod.VISIBLE).count() for i in range(len(day_cutoffs) - 1)][::-1]
 
-	comment_stats = [g.db.query(Comment.id).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.is_banned == False, Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count() for i in range(len(day_cutoffs) - 1)][::-1]
+	comment_stats = [g.db.query(Comment.id).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.state_mod == StateMod.VISIBLE, Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count() for i in range(len(day_cutoffs) - 1)][::-1]
 
 	plt.rcParams["figure.figsize"] = (30, 20)
 
@@ -156,7 +153,7 @@ def cached_chart(kind, site):
 	posts_chart = plt.subplot2grid((30, 20), (10, 0), rowspan=6, colspan=30)
 	comments_chart = plt.subplot2grid((30, 20), (20, 0), rowspan=6, colspan=30)
 
-	signup_chart.grid(), posts_chart.grid(), comments_chart.grid()
+	_ = signup_chart.grid(), posts_chart.grid(), comments_chart.grid()
 
 	signup_chart.plot(
 		daily_times,
@@ -201,7 +198,7 @@ def patrons(v):
 @app.get("/admins")
 @auth_desired
 def admins(v):
-	if v and v.admin_level > 2:
+	if v and v.admin_level >= 3:
 		admins = g.db.query(User).filter(User.admin_level>1).order_by(User.truescore.desc()).all()
 		admins += g.db.query(User).filter(User.admin_level==1).order_by(User.truescore.desc()).all()
 	else: admins = g.db.query(User).filter(User.admin_level>0).order_by(User.truescore.desc()).all()
@@ -212,7 +209,6 @@ def admins(v):
 @app.get("/modlog")
 @auth_desired
 def log(v):
-
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
@@ -222,7 +218,7 @@ def log(v):
 
 	kind = request.values.get("kind")
 
-	if v and v.admin_level > 1:
+	if v and v.admin_level >= 2:
 		types = ACTIONTYPES
 	else:
 		types = ACTIONTYPES2
@@ -230,7 +226,7 @@ def log(v):
 	if kind not in types: kind = None
 
 	actions = g.db.query(ModAction)
-	if not (v and v.admin_level > 1): 
+	if not (v and v.admin_level >= 2): 
 		actions = actions.filter(ModAction.kind.notin_(["shadowban","unshadowban","flair_post","edit_post"]))
 	
 	if admin_id:
@@ -254,7 +250,6 @@ def log(v):
 @app.get("/log/<id>")
 @auth_desired
 def log_item(v, id):
-
 	try: id = int(id)
 	except: abort(404)
 
@@ -264,7 +259,7 @@ def log_item(v, id):
 
 	admins = [x[0] for x in g.db.query(User.username).filter(User.admin_level > 1).all()]
 
-	if v and v.admin_level > 1: types = ACTIONTYPES
+	if v and v.admin_level >= 2: types = ACTIONTYPES
 	else: types = ACTIONTYPES2
 
 	return render_template("log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=types)
@@ -280,22 +275,20 @@ def api(v):
 @app.get("/media")
 @auth_desired
 def contact(v):
-	return render_template("contact.html", v=v,
-			               hcaptcha=app.config.get("HCAPTCHA_SITEKEY", ""))
+	return render_template("contact.html", v=v, hcaptcha=HCAPTCHA_SITEKEY)
 
 @app.post("/send_admin")
 @limiter.limit("1/second;2/minute;6/hour;10/day")
 @auth_desired
 def submit_contact(v: Optional[User]):
-	if not v and not validate_captcha(app.config.get("HCAPTCHA_SECRET", ""),
-	                                  app.config.get("HCAPTCHA_SITEKEY", ""),
+	if not v and not validate_captcha(HCAPTCHA_SECRET, HCAPTCHA_SITEKEY,
 	                                  request.values.get("h-captcha-response", "")):
 		abort(403, "CAPTCHA provided was not correct. Please try it again")
 	body = request.values.get("message")
 	email = request.values.get("email")
 	if not body: abort(400)
 
-	header  = "This message has been sent automatically to all admins via [/contact](/contact)\n"
+	header = "This message has been sent automatically to all admins via [/contact](/contact)\n"
 	if not email:
 		email = ""
 	else:
@@ -312,12 +305,14 @@ def submit_contact(v: Optional[User]):
 			html += f'<img data-bs-target="#expandImageModal" data-bs-toggle="modal" onclick="expandDesktopImage(this.src)" class="img" src="{url}" loading="lazy">'
 		else: abort(400, "Image files only")
 
-	new_comment = Comment(author_id=v.id if v else NOTIFICATIONS_ID,
-						  parent_submission=None,
-						  level=1,
-						  body_html=html,
-						  sentto=MODMAIL_ID,
-						  )
+	new_comment = Comment(
+		author_id=v.id if v else NOTIFICATIONS_ID,
+		parent_submission=None,
+		level=1,
+		body_html=html,
+		sentto=MODMAIL_ID,
+		state_mod=StateMod.VISIBLE,
+	)
 	g.db.add(new_comment)
 	g.db.flush()
 	new_comment.top_comment_id = new_comment.id
@@ -407,14 +402,12 @@ def blocks(v):
 @app.get("/banned")
 @auth_desired
 def banned(v):
-
 	users = [x for x in g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).all()]
 	return render_template("banned.html", v=v, users=users)
 
 @app.get("/formatting")
 @auth_desired
 def formatting(v):
-
 	return render_template("formatting.html", v=v)
 
 @app.get("/service-worker.js")
@@ -424,7 +417,6 @@ def serviceworker():
 @app.get("/settings/security")
 @auth_required
 def settings_security(v):
-
 	return render_template("settings_security.html",
 						   v=v,
 						   mfa_secret=pyotp.random_base32() if not v.mfa_secret else None

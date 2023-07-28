@@ -1,4 +1,4 @@
-
+{%- import "util/forms.html" as forms -%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,15 +43,11 @@
 	{% endif %}
 </head>
 
-<body id="settings" {% if v and v.background %}style="overflow-x: hidden;background:url(/assets/images/backgrounds/{{v.background}}?v=3) center center fixed; background-color: var(--background){% if 'anime' not in v.background %};background-size: cover{% endif %}"{% endif %}>
-
+<body id="settings">
 	{% include "header.html" %}
 		<div class="container">
-
 		<div class="row justify-content-around">
-
 	<div class="col h-100">
-
 		{% if error %}
 		<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
 			<i class="fas fa-exclamation-circle my-auto"></i>
@@ -162,7 +158,7 @@
 				{% if mfa_secret %}
 				<div>
 					<form action="/settings/security" method="post">
-						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						{{forms.formkey(v)}}
 						<input type="hidden" name="2fa_secret" value="{{mfa_secret}}">
 						<div class="modal-body">
 							<p>
@@ -191,7 +187,7 @@
 				{% else %}
 				<div>
 					<form action="/settings/security" method="post">
-						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						{{forms.formkey(v)}}
 						<input type="hidden" name="2fa_secret" value="{{mfa_secret}}">
 						<div class="modal-body">
 
@@ -228,12 +224,12 @@
 {% endblock %}
 
 
-<div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
+<div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px;" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body bg-success text-center text-white">
 		<i class="fas fa-comment-alt-smile mr-2"></i><span id="toast-post-success-text">Action successful!</span>
 	</div>
 </div>
-<div class="toast" id="toast-post-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
+<div class="toast" id="toast-post-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px;" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body bg-danger text-center text-white">
 		<i class="fas fa-exclamation-circle mr-2"></i><span id="toast-post-error-text">Error, please try again later.</span>
 	</div>

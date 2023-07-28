@@ -22,9 +22,9 @@ branch_labels = None
 depends_on = None
 
 def upgrade():
-	db =Session(bind=op.get_bind())
+	db: Session = Session(bind=op.get_bind())
 	bulk_recompute_descendant_counts(lambda q: q, db)
 
 def downgrade():
-	db =Session(bind=op.get_bind())
+	db: Session = Session(bind=op.get_bind())
 	db.execute(update(Comment).values(descendant_count=0))

@@ -19,7 +19,7 @@
 				<div class="body w-lg-100">
 			<label for="edit-{{app.id}}-author" class="mb-0 w-lg-25">User</label>
 			<input autocomplete="off" id="edit-{{app.id}}-author" class="form-control" type="text" name="name" value="{{app.author.username}}" readonly=readonly>
-			<input type="hidden" name="formkey" value="{{v.formkey}}">
+			{{forms.formkey(v)}}
 			<label for="edit-{{app.id}}-name" class="mb-0 w-lg-25">App Name</label>
 			<input autocomplete="off" id="edit-{{app.id}}-name" class="form-control" type="text" name="name" value="{{app.app_name}}" readonly=readonly>
 
@@ -56,12 +56,12 @@
 </div>
 </div>
 
-<div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
+<div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px;" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body bg-success text-center text-white">
 		<i class="fas fa-comment-alt-smile mr-2"></i><span id="toast-post-success-text">Action successful!</span>
 	</div>
 </div>
-<div class="toast" id="toast-post-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
+<div class="toast" id="toast-post-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px;" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body bg-danger text-center text-white">
 		<i class="fas fa-exclamation-circle mr-2"></i><span id="toast-post-error-text">Error, please try again later.</span>
 	</div>

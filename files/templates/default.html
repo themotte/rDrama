@@ -1,3 +1,4 @@
+{%- import "util/forms.html" as forms -%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,10 +25,6 @@
 
 	{% if request.path == '/catalog' %}
 		<link rel="stylesheet" href="{{ 'css/catalog.css' | asset }}">
-	{% endif %}
-
-	{% if sub and sub.css and not request.path.endswith('settings') %}
-		<link rel="stylesheet" href="/h/{{sub.name}}/css" type="text/css">
 	{% endif %}
 
 	{% if v and v.themecolor == '30409f' %}
@@ -213,19 +210,14 @@
 
  </head>
 
- <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" {% if v and v.background %}style="{% if path != '/formatting' %}overflow-x: hidden; {% endif %} background:url(/assets/images/backgrounds/{{v.background}}?v=3) center center fixed; background-color: var(--background){% if 'anime' not in v.background %};background-size: cover{% endif %}"{% endif %}>
-
+<body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}">
 {% include "header.html" %}
 
 {% block Banner %}
-	{% if '@' not in request.path %}		
-		{% if sub %}
-			<img alt="/h/{{sub.name}} banner" class="primary_banner" role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" onclick="expandDesktopImage('{{sub.banner_url}}')" loading="lazy" src="{{sub.banner_url}}" width=100% style="object-fit:cover;max-height:25vw">
-		{% else %}
-			<a href="/">
-				<img alt="site banner" class="primary_banner" src="{{ ('images/'~SITE_ID~'/banner.webp') | asset }}" width="100%">
-			</a>	
-		{% endif %}
+	{% if '@' not in request.path %}
+		<a href="/">
+			<img alt="site banner" class="primary_banner" src="{{ ('images/'~SITE_ID~'/banner.webp') | asset }}" width="100%">
+		</a>
 	{% endif %}
 {% endblock %}
 
@@ -290,12 +282,12 @@
 	</div>
 </div>
 
-<div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
+<div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px;" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body bg-success text-center text-white">
 		<i class="fas fa-comment-alt-smile mr-2"></i><span id="toast-post-success-text">Action successful!</span>
 	</div>
 </div>
-<div class="toast" id="toast-post-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
+<div class="toast" id="toast-post-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px;" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body bg-danger text-center text-white">
 		<i class="fas fa-exclamation-circle mr-2"></i><span id="toast-post-error-text">Error, please try again later.</span>
 	</div>

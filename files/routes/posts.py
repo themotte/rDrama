@@ -1,65 +1,43 @@
+import sys
 import time
-import gevent
-from files.helpers.wrappers import *
-from files.helpers.sanitize import *
-from files.helpers.alerts import *
-from files.helpers.comments import comment_filter_moderated
-from files.helpers.contentsorting import sort_objects
-from files.helpers.const import *
-from files.helpers.media import process_image
-from files.helpers.strings import sql_ilike_clean
-from files.classes import *
-from flask import *
+import urllib.parse
 from io import BytesIO
-from files.__main__ import app, limiter, cache, db_session
-from PIL import Image as PILimage
-from .front import frontlist, changeloglist
-from urllib.parse import ParseResult, urlunparse, urlparse, quote, unquote
-from os import path
+from urllib.parse import ParseResult, urlparse
+
+from datetime import datetime, timezone
+
+import gevent
 import requests
-from shutil import copyfile
-from sys import stdout
+import werkzeug.wrappers
+from PIL import Image as PILimage
 from sqlalchemy.orm import Query
 
+import files.helpers.validators as validators
+from files.__main__ import app, db_session, limiter
+from files.classes import *
+from files.classes.visstate import StateMod
+from files.helpers.alerts import *
+from files.helpers.caching import invalidate_cache
+from files.helpers.config.const import *
+from files.helpers.content import canonicalize_url2
+from files.helpers.contentsorting import sort_objects
+from files.helpers.media import process_image
+from files.helpers.sanitize import *
+from files.helpers.strings import sql_ilike_clean
+from files.helpers.wrappers import *
+from files.routes.importstar import *
 
-snappyquotes = [f':#{x}:' for x in marseys_const2]
-
-if path.exists(f'snappy_{SITE_ID}.txt'):
-	with open(f'snappy_{SITE_ID}.txt', "r", encoding="utf-8") as f:
-		snappyquotes += f.read().split("\n{[para]}\n")
-
-discounts = {
-	69: 0.02,
-	70: 0.04,
-	71: 0.06,
-	72: 0.08,
-	73: 0.10,
+titleheaders = {
+	"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"
 }
-
-titleheaders = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
 MAX_TITLE_LENGTH = 500
 MAX_URL_LENGTH = 2048
-MAX_BODY_LENGTH = SUBMISSION_BODY_LENGTH_MAXIMUM
 
-
-def guarded_value(val, min_len, max_len) -> str:
-	'''
-	Get request value `val` and ensure it is within length constraints
-	Requires a request context and either aborts early or returns a good value
-	'''
-	raw = request.values.get(val, '').strip()
-	raw = raw.replace('\u200e', '')
-
-	if len(raw) < min_len: abort(400, f"Minimum length for {val} is {min_len}")
-	if len(raw) > max_len: abort(400, f"Maximum length for {val} is {max_len}")
-	# TODO: it may make sense to do more sanitisation here
-	return raw
 
 @app.post("/toggle_club/<pid>")
 @auth_required
 def toggle_club(pid, v):
-
 	post = get_post(pid)
 	if post.author_id != v.id and v.admin_level < 2: abort(403)
 
@@ -84,52 +62,19 @@ def publish(pid, v):
 	post.created_utc = int(time.time())
 	g.db.add(post)
 	
-	if not post.ghost:
-		notify_users = NOTIFY_USERS(f'{post.title} {post.body}', v)
-
-		if notify_users:
-			cid = notif_comment2(post)
-			for x in notify_users:
-				add_notif(cid, x)
-
-		if v.followers:
-			text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
-			if post.sub: text += f" in <a href='/h/{post.sub}'>/h/{post.sub}"
-
-			cid = notif_comment(text, autojanny=True)
-			for follow in v.followers:
-				user = get_account(follow.user_id)
-				if post.club and not user.paid_dues: continue
-				add_notif(cid, user.id)
-
+	post.publish()
 	g.db.commit()
-
-	cache.delete_memoized(frontlist)
-	cache.delete_memoized(User.userpagelisting)
-
-	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()):
-		cache.delete_memoized(changeloglist)
-
 	return redirect(post.permalink)
 
 @app.get("/submit")
-# @app.get("/h/<sub>/submit")
 @auth_required
-def submit_get(v, sub=None):
-	if sub: sub = g.db.query(Sub.name).filter_by(name=sub.strip().lower()).one_or_none()
-	
-	if request.path.startswith('/h/') and not sub: abort(404)
-
-	SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
-
-	return render_template("submit.html", SUBS=SUBS, v=v, sub=sub)
+def submit_get(v):
+	return render_template("submit.html", v=v)
 
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
-# @app.get("/h/<sub>/post/<pid>")
-# @app.get("/h/<sub>/post/<pid>/<anything>")
 @auth_desired
-def post_id(pid, anything=None, v=None, sub=None):
+def post_id(pid, anything=None, v=None):
 	post = get_post(pid, v=v)
 
 	if post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
@@ -149,7 +94,6 @@ def post_id(pid, anything=None, v=None, sub=None):
 		Comment.parent_submission == post.id,
 		Comment.level == 1,
 	).order_by(Comment.is_pinned.desc().nulls_last())
-	top_comments = comment_filter_moderated(top_comments, v)
 	top_comments = sort_objects(top_comments, sort, Comment)
 
 	pg_top_comment_ids = []
@@ -163,7 +107,6 @@ def post_id(pid, anything=None, v=None, sub=None):
 
 	def comment_tree_filter(q: Query) -> Query:
 		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
-		q = comment_filter_moderated(q, v)
 		return q
 
 	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
@@ -178,9 +121,9 @@ def post_id(pid, anything=None, v=None, sub=None):
 
 	if request.headers.get("Authorization"): return post.json
 	else:
-		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
+		if post.state_mod != StateMod.VISIBLE and not (v and (v.admin_level >= 2 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
-		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset, sub=post.subr)
+		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset)
 
 @app.get("/viewmore/<pid>/<sort>/<offset>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -215,7 +158,6 @@ def viewmore(v, pid, sort, offset):
 		# `NOT IN :ids` in top_comments.
 		top_comments = top_comments.filter(Comment.created_utc <= newest_created_utc)
 
-	top_comments = comment_filter_moderated(top_comments, v)
 	top_comments = sort_objects(top_comments, sort, Comment)
 
 	pg_top_comment_ids = []
@@ -229,7 +171,6 @@ def viewmore(v, pid, sort, offset):
 
 	def comment_tree_filter(q: Query) -> Query:
 		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
-		q = comment_filter_moderated(q, v)
 		return q
 
 	_, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
@@ -294,49 +235,37 @@ def morecomments(v, cid):
 	return render_template("comments.html", v=v, comments=comments, p=p, render_replies=True, ajax=True)
 
 
-@app.post("/edit_post/<pid>")
+@app.post("/edit_post/<int:pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def edit_post(pid, v):
 	p = get_post(pid)
+	if not v.can_edit(p): abort(403)
 
-	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
+	validated_post: validators.ValidatedSubmissionLike = \
+		validators.ValidatedSubmissionLike.from_flask_request(
+			request,
+			allow_embedding=MULTIMEDIA_EMBEDDING_ENABLED,
+			allow_media_url_upload=False,
+			embed_url_file_key="file",
+			edit=True
+		)
+	changed:bool=False
 
-	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
-	title = sanitize_raw(title, allow_newlines=False, length_limit=MAX_TITLE_LENGTH)
+	if validated_post.title != p.title:
+		p.title = validated_post.title
+		p.title_html = validated_post.title_html
+		changed = True
 
-	body = guarded_value("body", 0, MAX_BODY_LENGTH)
-	body = sanitize_raw(body, allow_newlines=True, length_limit=MAX_BODY_LENGTH)
+	if validated_post.body != p.body:
+		p.body = validated_post.body
+		p.body_html = validated_post.body_html
+		changed = True
 
-	if title != p.title:
-		p.title = title
-		title_html = filter_emojis_only(title, edit=True)
-		p.title_html = title_html
+	if not changed:
+		abort(400, "You need to change something")
 
-	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
-		files = request.files.getlist('file')[:4]
-		for file in files:
-			if file.content_type.startswith('image/'):
-				name = f'/images/{time.time()}'.replace('.','') + '.webp'
-				file.save(name)
-				url = process_image(name)
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
-					body += f"\n\n![]({url})"
-				else:
-					body += f'\n\n<a href="{url}">{url}</a>'
-			else: abort(400, "Image files only")
-
-	body_html = sanitize(body, edit=True)
-
-	p.body = body
-	p.body_html = body_html
-
-	if not p.private and not p.ghost:
-		notify_users = NOTIFY_USERS(f'{p.title} {p.body}', v)
-		if notify_users:
-			cid = notif_comment2(p)
-			for x in notify_users:
-				add_notif(cid, x)
+	p.publish()
 
 	if v.id == p.author_id:
 		if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
@@ -353,17 +282,16 @@ def edit_post(pid, v):
 
 	return redirect(p.permalink)
 
+
 def archiveorg(url):
 	try: requests.get(f'https://web.archive.org/save/{url}', headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}, timeout=100)
 	except: pass
 
 
 def thumbnail_thread(pid):
-
 	db = db_session()
 
 	def expand_url(post_url, fragment_url):
-
 		if fragment_url.startswith("https://"):
 			return fragment_url
 		elif fragment_url.startswith("https://"):
@@ -399,8 +327,6 @@ def thumbnail_thread(pid):
 	if x.status_code != 200:
 		db.close()
 		return
-	
-
 
 	if x.headers.get("Content-Type","").startswith("text/html"):
 		soup=BeautifulSoup(x.content, 'lxml')
@@ -408,15 +334,13 @@ def thumbnail_thread(pid):
 		thumb_candidate_urls=[]
 
 		meta_tags = [
-			"drama:thumbnail",
+			"themotte:thumbnail",
 			"twitter:image",
 			"og:image",
 			"thumbnail"
 			]
 
 		for tag_name in meta_tags:
-			
-
 			tag = soup.find(
 				'meta', 
 				attrs={
@@ -492,7 +416,7 @@ def thumbnail_thread(pid):
 
 	db.commit()
 	db.close()
-	stdout.flush()
+	sys.stdout.flush()
 	return
 
 
@@ -501,248 +425,144 @@ def api_is_repost():
 	url = request.values.get('url')
 	if not url: abort(400)
 
-	for rd in ("://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it", "://teddit.net"):
-		url = url.replace(rd, "://old.reddit.com")
-
-	url = url.replace("nitter.net", "twitter.com").replace("old.reddit.com/gallery", "reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube").replace("https://www.twitter", "https://twitter").replace("https://www.instagram", "https://instagram").replace("https://www.tiktok", "https://tiktok")
-
-	if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
-	elif "/media.giphy.com/" in url or "/c.tenor.com/" in url: url = url.replace(".gif", ".webp")
-	elif "/i.ibb.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp").replace(".gif", ".webp")
-
-	if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): url = url.replace("https://streamable.com/", "https://streamable.com/e/")
-
-	parsed_url = urlparse(url)
-
-	domain = parsed_url.netloc
-	if domain in ('old.reddit.com','twitter.com','instagram.com','tiktok.com'):
-		new_url = ParseResult(scheme="https",
-				netloc=parsed_url.netloc,
-				path=parsed_url.path,
-				params=parsed_url.params,
-				query=None,
-				fragment=parsed_url.fragment)
-	else:
-		qd = parse_qs(parsed_url.query)
-		filtered = {k: val for k, val in qd.items() if not k.startswith('utm_') and not k.startswith('ref_')}
-
-		new_url = ParseResult(scheme="https",
-							netloc=parsed_url.netloc,
-							path=parsed_url.path,
-							params=parsed_url.params,
-							query=urlencode(filtered, doseq=True),
-							fragment=parsed_url.fragment)
-	
-	url = urlunparse(new_url)
-
+	url = canonicalize_url2(url, httpsify=True).geturl()
 	if url.endswith('/'): url = url[:-1]
 
 	search_url = sql_ilike_clean(url)
 	repost = g.db.query(Submission).filter(
 		Submission.url.ilike(search_url),
-		Submission.deleted_utc == 0,
-		Submission.is_banned == False
+		Submission.state_user_deleted_utc == None,
+		Submission.state_mod == StateMod.VISIBLE
 	).first()
 	if repost: return {'permalink': repost.permalink}
 	else: return {'permalink': ''}
 
-@app.post("/submit")
-# @app.post("/h/<sub>/submit")
-@limiter.limit("1/second;2/minute;10/hour;50/day")
-@auth_required
-def submit_post(v, sub=None):
 
-	def error(error):
-		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, error)
-	
-		SUBS = [x[0] for x in g.db.query(Sub.name).order_by(Sub.name).all()]
-		return render_template("submit.html", SUBS=SUBS, v=v, error=error, title=title, url=url, body=body), 400
-
-	if v.is_suspended: return error("You can't perform this action while banned.")
-
-	title = guarded_value("title", 1, MAX_TITLE_LENGTH)
-	title = sanitize_raw(title, allow_newlines=False, length_limit=MAX_TITLE_LENGTH)
-
-	url = guarded_value("url", 0, MAX_URL_LENGTH)
-	
-	body = guarded_value("body", 0, MAX_BODY_LENGTH)
-	body = sanitize_raw(body, allow_newlines=True, length_limit=MAX_BODY_LENGTH)
-
-	sub = request.values.get("sub")
-	if sub: sub = sub.replace('/h/','').replace('s/','')
-
-	if sub and sub != 'none':
-		sname = sub.strip().lower()
-		sub = g.db.query(Sub.name).filter_by(name=sname).one_or_none()
-		if not sub: return error(f"/h/{sname} not found!")
-		sub = sub[0]
-		if v.exiled_from(sub): return error(f"You're exiled from /h/{sub}")
-	else: sub = None
-	
-	title_html = filter_emojis_only(title, graceful=True)
-
-	if len(title_html) > 1500: return error("Rendered title is too big!")
-
-	embed = None
-
-	if url:
-		for rd in ("://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it", "://teddit.net"):
-			url = url.replace(rd, "://old.reddit.com")
-
-		url = url.replace("nitter.net", "twitter.com").replace("old.reddit.com/gallery", "reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube").replace("https://www.twitter", "https://twitter").replace("https://www.instagram", "https://instagram").replace("https://www.tiktok", "https://tiktok")
-
-		if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
-		elif "/media.giphy.com/" in url or "/c.tenor.com/" in url: url = url.replace(".gif", ".webp")
-		elif "/i.ibb.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp").replace(".gif", ".webp")
-
-		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): url = url.replace("https://streamable.com/", "https://streamable.com/e/")
-
-		parsed_url = urlparse(url)
-
-		domain = parsed_url.netloc
-		if domain in ('old.reddit.com','twitter.com','instagram.com','tiktok.com'):
-			new_url = ParseResult(scheme="https",
-					netloc=parsed_url.netloc,
-					path=parsed_url.path,
-					params=parsed_url.params,
-					query=None,
-					fragment=parsed_url.fragment)
-		else:
-			qd = parse_qs(parsed_url.query)
-			filtered = {k: val for k, val in qd.items() if not k.startswith('utm_') and not k.startswith('ref_')}
-
-			new_url = ParseResult(scheme="https",
-								netloc=parsed_url.netloc,
-								path=parsed_url.path,
-								params=parsed_url.params,
-								query=urlencode(filtered, doseq=True),
-								fragment=parsed_url.fragment)
-		
-		search_url = urlunparse(new_url)
-
-		if search_url.endswith('/'): url = url[:-1]
-
-		repost = g.db.query(Submission).filter(
-			func.lower(Submission.url) == search_url.lower(),
-			Submission.deleted_utc == 0,
-			Submission.is_banned == False
-		).first()
-		if repost and SITE != 'localhost': return redirect(repost.permalink)
-
-		domain_obj = get_domain(domain)
-		if not domain_obj: domain_obj = get_domain(domain+parsed_url.path)
-
-		if domain_obj:
-			reason = f"Remove the {domain_obj.domain} link from your post and try again. {domain_obj.reason}"
-			return error(reason)
-		elif "twitter.com" == domain:
-			try: embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}, timeout=5).json()["html"]
-			except: pass
-		elif url.startswith('https://youtube.com/watch?v='):
-			url = unquote(url).replace('?t', '&t')
-			yt_id = url.split('https://youtube.com/watch?v=')[1].split('&')[0].split('%')[0]
-
-			if yt_id_regex.fullmatch(yt_id):
-				req = requests.get(f"https://www.googleapis.com/youtube/v3/videos?id={yt_id}&key={YOUTUBE_KEY}&part=contentDetails", timeout=5).json()
-				if req.get('items'):
-					params = parse_qs(urlparse(url).query)
-					t = params.get('t', params.get('start', [0]))[0]
-					if isinstance(t, str): t = t.replace('s','')
-
-					embed = f'<lite-youtube videoid="{yt_id}" params="autoplay=1&modestbranding=1'
-					if t:
-						try: embed += f'&start={int(t)}'
-						except: pass
-					embed += '"></lite-youtube>'
-			
-		elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
-			id = url.split("/post/")[1]
-			if "/" in id: id = id.split("/")[0]
-			embed = str(int(id))
-
-
-	if not url and not body and not request.files.get("file") and not request.files.get("file2"):
-		return error("Please enter a url or some text.")
-
-	dup = g.db.query(Submission).filter(
-		Submission.author_id == v.id,
-		Submission.deleted_utc == 0,
-		Submission.title == title,
-		Submission.url == url,
-		Submission.body == body
-	).one_or_none()
-
-	if dup and SITE != 'localhost': return redirect(dup.permalink)
-
+def _do_antispam_submission_check(v:User, validated:validators.ValidatedSubmissionLike):
 	now = int(time.time())
 	cutoff = now - 60 * 60 * 24
 
-
 	similar_posts = g.db.query(Submission).filter(
-					Submission.author_id == v.id,
-					Submission.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
-					Submission.created_utc > cutoff
+		Submission.author_id == v.id,
+		Submission.title.op('<->')(validated.title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+		Submission.created_utc > cutoff
 	).all()
 
-	if url:
+	if validated.url:
 		similar_urls = g.db.query(Submission).filter(
-					Submission.author_id == v.id,
-					Submission.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
-					Submission.created_utc > cutoff
+			Submission.author_id == v.id,
+			Submission.url.op('<->')(validated.url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
+			Submission.created_utc > cutoff
 		).all()
-	else: similar_urls = []
+	else: 
+		similar_urls = []
 
 	threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
-	if v.age >= (60 * 60 * 24 * 7): threshold *= 3
-	elif v.age >= (60 * 60 * 24): threshold *= 2
+	if v.age_seconds >= (60 * 60 * 24 * 7): threshold *= 3
+	elif v.age_seconds >= (60 * 60 * 24): threshold *= 2
 
-	if max(len(similar_urls), len(similar_posts)) >= threshold:
+	if max(len(similar_urls), len(similar_posts)) < threshold:
+		return
 
-		text = "Your account has been banned for **1 day** for the following reason:\n\n> Too much spam!"
-		send_repeatable_notification(v.id, text)
+	text = "Your account has been banned for **1 day** for the following reason:\n\n> Too much spam!"
+	send_repeatable_notification(v.id, text)
 
-		v.ban(reason="Spamming.",
-			  days=1)
+	v.ban(reason="Spamming.", days=1)
+	for post in similar_posts + similar_urls:
+		post.state_mod = StateMod.REMOVED
+		post.state_mod_set_by = "AutoJanny"
+		post.is_pinned = False
+		g.db.add(post)
+		ma=ModAction(
+				user_id=AUTOJANNY_ID,
+				target_submission_id=post.id,
+				kind="remove_post",
+				_note="spam"
+		)
+		g.db.add(ma)
+	g.db.commit()
+	abort(403)
 
-		for post in similar_posts + similar_urls:
-			post.is_banned = True
-			post.is_pinned = False
-			post.ban_reason = "AutoJanny"
-			g.db.add(post)
-			ma=ModAction(
-					user_id=AUTOJANNY_ID,
-					target_submission_id=post.id,
-					kind="ban_post",
-					_note="spam"
-					)
-			g.db.add(ma)
-		return redirect("/notifications")
 
-	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
-		files = request.files.getlist('file2')[:4]
-		for file in files:
-			if file.content_type.startswith('image/'):
-				name = f'/images/{time.time()}'.replace('.','') + '.webp'
-				file.save(name)
-				image = process_image(name)
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
-					body += f"\n\n![]({image})"
-				else:
-					body += f'\n\n<a href="{image}">{image}</a>'
-			else:
-				return error("Image files only")
+def _execute_domain_ban_check(parsed_url:ParseResult):
+	domain:str = parsed_url.netloc
+	domain_obj = get_domain(domain)
+	if not domain_obj: 
+		domain_obj = get_domain(domain+parsed_url.path)
+	if not domain_obj: return
+	abort(403, f"Remove the {domain_obj.domain} link from your post and try again. {domain_obj.reason}")
 
-	body_html = sanitize(body)
+
+def _duplicate_check(search_url:Optional[str]) -> Optional[werkzeug.wrappers.Response]:
+	if not search_url: return None
+	repost = g.db.query(Submission).filter(
+		func.lower(Submission.url) == search_url.lower(),
+		Submission.state_user_deleted_utc == None,
+		Submission.state_mod == StateMod.VISIBLE
+	).first()
+	if repost and SITE != 'localhost': 
+		return redirect(repost.permalink)
+	return None
+
+
+def _duplicate_check2(
+		user_id:int, 
+		validated_post:validators.ValidatedSubmissionLike) -> Optional[werkzeug.wrappers.Response]:
+	dup = g.db.query(Submission).filter(
+		Submission.author_id == user_id,
+		Submission.state_user_deleted_utc == None,
+		Submission.title == validated_post.title,
+		Submission.url == validated_post.url,
+		Submission.body == validated_post.body
+	).one_or_none()
+
+	if dup and SITE != 'localhost': 
+		return redirect(dup.permalink)
+	return None
+
+
+@app.post("/submit")
+@limiter.limit("1/second;2/minute;10/hour;50/day")
+@auth_required
+def submit_post(v):
+	def error(error):
+		title:str = request.values.get("title", "")
+		body:str = request.values.get("body", "")
+		url:str = request.values.get("url", "")
+
+		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, error)
+		return render_template("submit.html", v=v, error=error, title=title, url=url, body=body), 400
+
+	if v.is_suspended: return error("You can't perform this action while banned.")
+
+	try:
+		validated_post: validators.ValidatedSubmissionLike = \
+			validators.ValidatedSubmissionLike.from_flask_request(request,
+				allow_embedding=MULTIMEDIA_EMBEDDING_ENABLED,
+			)
+	except ValueError as e:
+		return error(str(e))
+
+	duplicate:Optional[werkzeug.wrappers.Response] = \
+		_duplicate_check(validated_post.repost_search_url)
+	if duplicate: return duplicate
+
+	parsed_url:Optional[ParseResult] = validated_post.url_canonical
+	if parsed_url:
+		_execute_domain_ban_check(parsed_url)
+
+	duplicate:Optional[werkzeug.wrappers.Response] = \
+		_duplicate_check2(v.id, validated_post)
+	if duplicate: return duplicate
+
+	_do_antispam_submission_check(v, validated_post)
 
 	club = bool(request.values.get("club",""))
-	
-	if embed and len(embed) > 1500: embed = None
-
 	is_bot = bool(request.headers.get("Authorization"))
 
 	# Invariant: these values are guarded and obey the length bound
-	assert len(title) <= MAX_TITLE_LENGTH
-	assert len(body) <= MAX_BODY_LENGTH
+	assert len(validated_post.title) <= MAX_TITLE_LENGTH
+	assert len(validated_post.body) <= SUBMISSION_BODY_LENGTH_MAXIMUM
 
 	post = Submission(
 		private=bool(request.values.get("private","")),
@@ -750,98 +570,49 @@ def submit_post(v, sub=None):
 		author_id=v.id,
 		over_18=bool(request.values.get("over_18","")),
 		app_id=v.client.application.id if v.client else None,
-		is_bot = is_bot,
-		url=url,
-		body=body,
-		body_html=body_html,
-		embed_url=embed,
-		title=title,
-		title_html=title_html,
-		sub=sub,
+		is_bot=is_bot,
+		url=validated_post.url,
+		body=validated_post.body,
+		body_html=validated_post.body_html,
+		embed_url=validated_post.embed_slow,
+		title=validated_post.title,
+		title_html=validated_post.title_html,
 		ghost=False,
-		filter_state='filtered' if v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts'] else 'normal'
+		state_mod=StateMod.FILTERED if v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts'] else StateMod.VISIBLE,
+		thumburl=validated_post.thumburl
 	)
-
-	g.db.add(post)
-	g.db.flush()
-
-	vote = Vote(user_id=v.id,
-				vote_type=1,
-				submission_id=post.id
-				)
-	g.db.add(vote)
-	
-	if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
-
-		file = request.files['file']
-
-		if file.content_type.startswith('image/'):
-			name = f'/images/{time.time()}'.replace('.','') + '.webp'
-			file.save(name)
-			post.url = process_image(name)
-
-			name2 = name.replace('.webp', 'r.webp')
-			copyfile(name, name2)
-			post.thumburl = process_image(name2, resize=100)
-		else:
-			return error("Image files only")
+	post.submit(g.db)
 		
 	if not post.thumburl and post.url:
 		gevent.spawn(thumbnail_thread, post.id)
 
-	if not post.private and not post.ghost:
-
-		notify_users = NOTIFY_USERS(f'{title} {body}', v)
-
-		if notify_users:
-			cid = notif_comment2(post)
-			for x in notify_users:
-				add_notif(cid, x)
-
-		if (request.values.get('followers') or is_bot) and v.followers:
-			text = f"@{v.username} has made a new post: [{post.title}]({post.shortlink})"
-			if post.sub: text += f" in <a href='/h/{post.sub}'>/h/{post.sub}"
-
-			cid = notif_comment(text, autojanny=True)
-			for follow in v.followers:
-				user = get_account(follow.user_id)
-				if post.club and not user.paid_dues: continue
-				add_notif(cid, user.id)
-
-	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
-	g.db.add(v)
+	post.publish()
 	g.db.commit()
 
-	cache.delete_memoized(frontlist)
-	cache.delete_memoized(User.userpagelisting)
-
-	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()) and not post.private:
-		cache.delete_memoized(changeloglist)
-
-	if request.headers.get("Authorization"): return post.json
+	if request.headers.get("Authorization"): 
+		return post.json
 	else:
 		post.voted = 1
 		if 'megathread' in post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
-		return render_template('submission.html', v=v, p=post, sort=sort, render_replies=True, offset=0, success=True, sub=post.subr)
+		return render_template('submission.html', v=v, p=post, sort=sort, render_replies=True, offset=0, success=True)
 
 
 @app.post("/delete_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def delete_post_pid(pid, v):
-
 	post = get_post(pid)
 	if post.author_id != v.id:
 		abort(403)
 
-	post.deleted_utc = int(time.time())
+	post.state_user_deleted_utc = datetime.now(tz=timezone.utc)
 	post.is_pinned = False
 	post.stickied = None
 
 	g.db.add(post)
 
-	cache.delete_memoized(frontlist)
+	invalidate_cache(frontlist=True)
 
 	g.db.commit()
 
@@ -853,10 +624,11 @@ def delete_post_pid(pid, v):
 def undelete_post_pid(pid, v):
 	post = get_post(pid)
 	if post.author_id != v.id: abort(403)
-	post.deleted_utc =0
+	post.state_user_deleted_utc = None
+
 	g.db.add(post)
 
-	cache.delete_memoized(frontlist)
+	invalidate_cache(frontlist=True)
 
 	g.db.commit()
 
@@ -866,9 +638,8 @@ def undelete_post_pid(pid, v):
 @app.post("/toggle_comment_nsfw/<cid>")
 @auth_required
 def toggle_comment_nsfw(cid, v):
-
 	comment = g.db.query(Comment).filter_by(id=cid).one_or_none()
-	if comment.author_id != v.id and not v.admin_level > 1: abort(403)
+	if comment.author_id != v.id and not v.admin_level >= 2: abort(403)
 	comment.over_18 = not comment.over_18
 	g.db.add(comment)
 
@@ -880,10 +651,9 @@ def toggle_comment_nsfw(cid, v):
 @app.post("/toggle_post_nsfw/<pid>")
 @auth_required
 def toggle_post_nsfw(pid, v):
-
 	post = get_post(pid)
 
-	if post.author_id != v.id and not v.admin_level > 1:
+	if post.author_id != v.id and not v.admin_level >= 2:
 		abort(403)
 
 	post.over_18 = not post.over_18
@@ -906,7 +676,6 @@ def toggle_post_nsfw(pid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def save_post(pid, v):
-
 	post=get_post(pid)
 
 	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
@@ -922,7 +691,6 @@ def save_post(pid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def unsave_post(pid, v):
-
 	post=get_post(pid)
 
 	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
@@ -941,7 +709,7 @@ def api_pin_post(post_id, v):
 	post.is_pinned = not post.is_pinned
 	g.db.add(post)
 
-	cache.delete_memoized(User.userpagelisting)
+	invalidate_cache(userpagelisting=True)
 
 	g.db.commit()
 	if post.is_pinned: return {"message": "Post pinned!"}

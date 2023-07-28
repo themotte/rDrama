@@ -1,67 +1,7 @@
 {% extends "userpage.html" %}
-{%- import 'component/sorting_time.html' as sorting_time -%}
-
-{% block content %}
-
-<div class="row no-gutters">
-	<div class="col">
-		<div class="flex-row box-shadow-bottom d-flex justify-content-center justify-content-md-between align-items-center">
-			<ul class="nav settings-nav">
-				<li class="nav-item">
-					<a class="nav-link" style="font-size: .9rem !important; padding: .75rem .4rem !important" href="/@{{u.username}}">Posts <span class="count">({{u.post_count}})</span></a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link {% if not 'saved' in request.path %}active{% endif %}" style="font-size: .9rem !important; padding: .75rem .4rem !important" href="/@{{u.username}}/comments">Comments <span class="count">({{u.comment_count}})</span></a>
-				</li>
-				{% if u.id == v.id %}
-				<li class="nav-item">
-					<a class="nav-link" style="font-size: .9rem !important; padding: .75rem .4rem !important" href="/@{{u.username}}/saved/posts">Saved Posts <span class="count">({{u.saved_count}})</span></a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link {% if 'saved' in request.path %}active{% endif %}" style="font-size: .9rem !important; padding: .75rem .4rem !important" href="/@{{u.username}}/saved/comments">Saved Comments <span class="count">({{u.saved_comment_count}})</span></a>
-				</li>
-				{% endif %}
-			</ul>
-		</div>
-	</div>
-</div>
-
-{% if not "saved" in request.full_path %}
-	<div class="d-flex justify-content-between align-items-center" style="padding-top:10px">
-
-		<div class="d-flex align-items-center">
-			<div class="text-small font-weight-bold mr-2">‎</div>
-			<div class="dropdown dropdown-actions">
-				<button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					{% if t=="hour" %}<i class="fas fa-clock mr-1"></i>
-					{% elif t=="day" %}<i class="fas fa-calendar-day mr-1"></i>
-					{% elif t=="week" %}<i class="fas fa-calendar-week mr-1"></i>
-					{% elif t=="month" %}<i class="fas fa-calendar-alt mr-1"></i>
-					{% elif t=="year" %}<i class="fas fa-calendar mr-1"></i>
-					{% elif t=="all" %}<i class="fas fa-infinity mr-1"></i>
-					{% endif %}
-				{{t | capitalize}}
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-					{% if t != "hour" %}<a class="dropdown-item" href="?sort={{sort}}&t=hour"><i class="fas fa-clock mr-2"></i>Hour</a>{% endif %}
-					{% if t != "day" %}<a class="dropdown-item" href="?sort={{sort}}&t=day"><i class="fas fa-calendar-day mr-2"></i>Day</a>{% endif %}
-					{% if t != "week" %}<a class="dropdown-item" href="?sort={{sort}}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
-					{% if t != "month" %}<a class="dropdown-item" href="?sort={{sort}}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
-					{% if t != "year" %}<a class="dropdown-item" href="?sort={{sort}}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
-					{% if t != "all" %}<a class="dropdown-item" href="?sort={{sort}}&t=all"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
-				</div>
-			</div>
-
-			<div class="text-small font-weight-bold ml-3 mr-2">‎</div>
-			{{sorting_time.sort_dropdown(sort, t, SORTS_COMMENTS)}}
-		</div>
-	</div>
-{% endif %}
-
+{% block userpage_content %}
 <div class="row no-gutters {% if listing %}mt-md-3{% elif not listing %}my-md-3{% endif %}" style="margin-top: 10px;">
-
 	<div class="col">
-
 		{% if listing %}
 		<div class="posts p-3 p-md-0">
 		{% with comments=listing %}
@@ -86,13 +26,6 @@
 		</div>
 
 	{% endif %}
+	</div>
 </div>
-</div>
-
-{% if v %}
-<div id='tax' class="d-none">{% if v.patron or u.patron %}0{% else %}0.03{% endif %}</div>
-<script src="{{ 'js/userpage_v.js' | asset }}"></script>
-<div id="username" class="d-none">{{u.username}}</div>
-{% endif %}
-
 {% endblock %}

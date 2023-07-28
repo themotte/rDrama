@@ -1,27 +1,34 @@
-import qrcode
 import io
-import time
 import math
+import time
+from collections import Counter
+from urllib.parse import urlparse
 
-from files.classes.leaderboard import SimpleLeaderboard, BadgeMarseyLeaderboard, UserBlockLeaderboard, LeaderboardMeta
+import gevent
+import qrcode
+
+import files.helpers.listing as listings
+from files.__main__ import app, cache, limiter
+from files.classes.leaderboard import (BadgeMarseyLeaderboard, LeaderboardMeta,
+                                       SimpleLeaderboard, UserBlockLeaderboard)
 from files.classes.views import ViewerRelationship
+from files.classes.visstate import StateMod
 from files.helpers.alerts import *
+from files.helpers.assetcache import assetcache_path
+from files.helpers.config.const import *
+from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.media import process_image
 from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
-from files.helpers.const import *
-from files.helpers.assetcache import assetcache_path
-from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.mail import *
-from flask import *
-from files.__main__ import app, limiter
-from collections import Counter
-import gevent
+from files.routes.importstar import *
+
 
 # warning: do not move currently. these have import-time side effects but 
 # until this is refactored to be not completely awful, there's not really
 # a better option.
-from files.helpers.services import * 
+from files.helpers.services import *
+
 
 @app.get("/@<username>/upvoters/<uid>/posts")
 @admin_level_required(3)
@@ -33,7 +40,7 @@ def upvoters_posts(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==1, Submission.author_id==id, Vote.user_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Submission.author_id==id, Vote.user_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [p.id for p in listing]
 	next_exists = len(listing) > 25
@@ -54,7 +61,7 @@ def upvoters_comments(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.deleted_utc == 0, CommentVote.vote_type==1, Comment.author_id==id, CommentVote.user_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, Comment.author_id==id, CommentVote.user_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [c.id for c in listing]
 	next_exists = len(listing) > 25
@@ -75,7 +82,7 @@ def downvoters_posts(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==-1, Submission.author_id==id, Vote.user_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Submission.author_id==id, Vote.user_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [p.id for p in listing]
 	next_exists = len(listing) > 25
@@ -96,7 +103,7 @@ def downvoters_comments(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.deleted_utc == 0, CommentVote.vote_type==-1, Comment.author_id==id, CommentVote.user_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, Comment.author_id==id, CommentVote.user_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [c.id for c in listing]
 	next_exists = len(listing) > 25
@@ -116,7 +123,7 @@ def upvoting_posts(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==1, Vote.user_id==id, Submission.author_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Vote.user_id==id, Submission.author_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [p.id for p in listing]
 	next_exists = len(listing) > 25
@@ -137,7 +144,7 @@ def upvoting_comments(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.deleted_utc == 0, CommentVote.vote_type==1, CommentVote.user_id==id, Comment.author_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, CommentVote.user_id==id, Comment.author_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [c.id for c in listing]
 	next_exists = len(listing) > 25
@@ -158,7 +165,7 @@ def downvoting_posts(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==-1, Vote.user_id==id, Submission.author_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Vote.user_id==id, Submission.author_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [p.id for p in listing]
 	next_exists = len(listing) > 25
@@ -179,7 +186,7 @@ def downvoting_comments(v, username, uid):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.deleted_utc == 0, CommentVote.vote_type==-1, CommentVote.user_id==id, Comment.author_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, CommentVote.user_id==id, Comment.author_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [c.id for c in listing]
 	next_exists = len(listing) > 25
@@ -194,9 +201,9 @@ def downvoting_comments(v, username, uid):
 def upvoters(v, username):
 	id = get_user(username).id
 
-	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
+	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
 
-	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.deleted_utc == 0, CommentVote.vote_type==1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
+	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
 
 	votes = Counter(dict(votes)) + Counter(dict(votes2))
 
@@ -220,9 +227,9 @@ def upvoters(v, username):
 def downvoters(v, username):
 	id = get_user(username).id
 
-	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==-1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
+	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
 
-	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.deleted_utc == 0, CommentVote.vote_type==-1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
+	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
 
 	votes = Counter(dict(votes)) + Counter(dict(votes2))
 
@@ -244,9 +251,9 @@ def downvoters(v, username):
 def upvoting(v, username):
 	id = get_user(username).id
 
-	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
+	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
 
-	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.deleted_utc == 0, CommentVote.vote_type==1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
+	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
 
 	votes = Counter(dict(votes)) + Counter(dict(votes2))
 
@@ -268,9 +275,9 @@ def upvoting(v, username):
 def downvoting(v, username):
 	id = get_user(username).id
 
-	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.is_banned == False, Submission.deleted_utc == 0, Vote.vote_type==-1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
+	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
 
-	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.is_banned == False, Comment.deleted_utc == 0, CommentVote.vote_type==-1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
+	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
 
 	votes = Counter(dict(votes)) + Counter(dict(votes2))
 
@@ -376,7 +383,9 @@ def leaderboard(v:User):
 
 	# note: lb_downvotes_received and lb_upvotes_given are global variables
 	# that are populated by leaderboard_thread() in files.helpers.services
-	leaderboards = [coins, coins_spent, truescore, subscribers, posts, comments, received_awards, badges, blocks, lb_downvotes_received, lb_upvotes_given]
+	leaderboards = [coins, coins_spent, truescore, subscribers, posts, comments, received_awards, badges, blocks]
+	if lb_downvotes_received is not None and lb_upvotes_given is not None:
+		leaderboards.extend([lb_downvotes_received, lb_upvotes_given])
 
 	return render_template("leaderboard.html", v=v, leaderboards=leaderboards)
 
@@ -446,7 +455,8 @@ def message2(v, username):
 						  parent_submission=None,
 						  level=1,
 						  sentto=user.id,
-						  body_html=body_html
+						  body_html=body_html,
+						  state_mod=StateMod.VISIBLE,
 						  )
 	g.db.add(c)
 	g.db.flush()
@@ -474,7 +484,6 @@ def message2(v, username):
 @limiter.limit("1/second;6/minute;50/hour;200/day")
 @auth_required
 def messagereply(v):
-
 	message = request.values.get("body", "").strip()[:MESSAGE_BODY_LENGTH_MAXIMUM].strip()
 
 	if not message and not request.files.get("file"): abort(400, "Message is empty!")
@@ -505,11 +514,12 @@ def messagereply(v):
 							level=parent.level + 1,
 							sentto=user_id,
 							body_html=body_html,
+							state_mod=StateMod.VISIBLE,
 							)
 	g.db.add(c)
 	g.db.flush()
 
-	if user_id and user_id != v.id and user_id != 2:
+	if user_id and user_id != v.id and user_id != MODMAIL_ID:
 		notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=user_id).one_or_none()
 		if not notif:
 			notif = Notification(comment_id=c.id, user_id=user_id)
@@ -530,7 +540,7 @@ def messagereply(v):
 						'notification': {
 							'title': f'New message from @{v.username}',
 							'body': notifbody,
-							'deep_link': f'{SITE_FULL}/notifications?messages=true',
+							'deep_link': f'{SITE_FULL}/notifications/messages',
 							'icon': SITE_FULL + assetcache_path(f'images/{SITE_ID}/icon.webp'),
 						}
 					},
@@ -540,7 +550,7 @@ def messagereply(v):
 							'body': notifbody,
 						},
 						'data': {
-							'url': '/notifications?messages=true',
+							'url': '/notifications/messages',
 						}
 					}
 				},
@@ -586,7 +596,6 @@ def mfa_qr(secret, v):
 
 @app.get("/is_available/<name>")
 def api_is_available(name):
-
 	name=name.strip()
 
 	if len(name)<3 or len(name)>25:
@@ -610,7 +619,7 @@ def api_is_available(name):
 def user_id(id:int):
 	user = get_account(id)
 	return redirect(user.url)
-		
+
 @app.get("/u/<username>")
 def redditor_moment_redirect(username:str):
 	return redirect(f"/@{username}")
@@ -637,13 +646,12 @@ def visitors(v):
 	return render_template("viewers.html", v=v, viewers=viewers)
 
 
-@app.get("/@<username>")
+@app.get("/@<username>/posts")
 @auth_desired
 def u_username(username, v=None):
 	u = get_user(username, v=v, include_blocks=True)
 
-	if username != u.username:
-		return redirect(SITE_FULL + request.full_path.replace(username, u.username)[:-1])
+	if username != u.username: return redirect(f'/@{u.username}/posts')
 
 	if u.reserved:
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"That username is reserved for: {u.reserved}")
@@ -673,7 +681,7 @@ def u_username(username, v=None):
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
-	ids = u.userpagelisting(site=SITE, v=v, page=page, sort=sort, t=t)
+	ids = listings.userpagelisting(u, v=v, page=page, sort=sort, t=t)
 
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
@@ -689,7 +697,7 @@ def u_username(username, v=None):
 
 	if u.unban_utc:
 		if request.headers.get("Authorization"): {"data": [x.json for x in listing]}
-		return render_template("userpage.html",
+		return render_template("userpage_submissions.html",
 												unban=u.unban_string,
 												u=u,
 												v=v,
@@ -703,7 +711,7 @@ def u_username(username, v=None):
 
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
-	return render_template("userpage.html",
+	return render_template("userpage_submissions.html",
 									u=u,
 									v=v,
 									listing=listing,
@@ -714,12 +722,13 @@ def u_username(username, v=None):
 									is_following=(v and u.has_follower(v)))
 
 
-@app.get("/@<username>/comments")
+@app.get("/@<username>/")
 @auth_desired
 def u_username_comments(username, v=None):
 	user = get_user(username, v=v, include_blocks=True)
 
-	if username != user.username: return redirect(f'/@{user.username}/comments')
+	if username != user.username:
+		return redirect(SITE_FULL + request.full_path.replace(username, user.username)[:-1])
 	u = user
 
 	if u.reserved:
@@ -748,10 +757,9 @@ def u_username_comments(username, v=None):
 
 	if not v or (v.id != u.id and v.admin_level < 2):
 		comments = comments.filter(
-				Comment.deleted_utc == 0,
-				Comment.is_banned == False,
+				Comment.state_user_deleted_utc == None,
+				Comment.state_mod == StateMod.VISIBLE,
 				Comment.ghost == False,
-				(Comment.filter_state != 'filtered') & (Comment.filter_state != 'removed')
 				)
 
 	comments = apply_time_filter(comments, t, Comment)
@@ -795,11 +803,11 @@ def u_user_id_info(id, v=None):
 
 	return user.json
 
+
 @app.post("/follow/<username>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def follow_user(username, v):
-
 	target = get_user(username)
 
 	if target.id==v.id: abort(400, "You can't follow yourself!")
@@ -862,19 +870,11 @@ def remove_follow(username, v):
 
 	return {"message": "Follower removed!"}
 
-from urllib.parse import urlparse
-import re
-
-@app.get("/pp/<id>")
-@app.get("/uid/<id>/pic")
-@app.get("/uid/<id>/pic/profile")
+@app.get("/pp/<int:id>")
+@app.get("/uid/<int:id>/pic")
+@app.get("/uid/<int:id>/pic/profile")
 @limiter.exempt
-def user_profile_uid(v, id):
-	try: id = int(id)
-	except:
-		try: id = int(id, 36)
-		except: abort(404)
-
+def user_profile_uid(id:int):
 	name = f"/pp/{id}"
 	path = cache.get(name)
 	tout = 5 * 60 # 5 min
@@ -900,7 +900,6 @@ def user_profile_uid(v, id):
 @app.get("/@<username>/pic")
 @limiter.exempt
 def user_profile_name(username:str):
-
 	name = f"/@{username}/pic"
 	path = cache.get(name)
 	tout = 5 * 60 # 5 min
@@ -926,7 +925,6 @@ def user_profile_name(username:str):
 @app.get("/@<username>/saved/posts")
 @auth_required
 def saved_posts(v, username):
-
 	page=int(request.values.get("page",1))
 
 	ids=v.saved_idlist(page=page)
@@ -938,19 +936,19 @@ def saved_posts(v, username):
 	listing = get_posts(ids, v=v, eager=True)
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
-	return render_template("userpage.html",
-											u=v,
-											v=v,
-											listing=listing,
-											page=page,
-											next_exists=next_exists,
-											)
+	return render_template(
+		"userpage_submissions.html",
+		u=v,
+		v=v,
+		listing=listing,
+		page=page,
+		next_exists=next_exists,
+	)
 
 
 @app.get("/@<username>/saved/comments")
 @auth_required
 def saved_comments(v, username):
-
 	page=int(request.values.get("page",1))
 
 	ids=v.saved_comment_idlist(page=page)
@@ -963,13 +961,15 @@ def saved_comments(v, username):
 
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
-	return render_template("userpage_comments.html",
-											u=v,
-											v=v,
-											listing=listing,
-											page=page,
-											next_exists=next_exists,
-											standalone=True)
+	return render_template(
+		"userpage_comments.html",
+		u=v,
+		v=v,
+		listing=listing,
+		page=page,
+		next_exists=next_exists,
+		standalone=True
+	)
 
 
 @app.post("/fp/<fp>")

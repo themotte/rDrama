@@ -13,5 +13,5 @@ def run_command(argv):
 
     sys.exit(result.returncode)
 
-if __name__=='__main__':
+if __name__ == '__main__':
     run_command(sys.argv)

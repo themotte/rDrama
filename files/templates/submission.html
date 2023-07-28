@@ -32,14 +32,13 @@
 		localStorage.setItem("post_title", "")
 		localStorage.setItem("post_text", "")
 		localStorage.setItem("post_url", "")
-		localStorage.setItem("sub", "")
 	</script>
 {% endif %}
 
 <meta charset="utf-8">
 <meta property="og:type" content="article">
 
-{% if comment_info and not comment_info.is_banned and not comment_info.deleted_utc %}
+{% if comment_info and comment_info.state_mod == StateMod.VISIBLE and not comment_info.state_user_deleted_utc %}
 <title>{{'@'+comment_info.author_name}} comments on "{{p.plaintitle(v)}} - {{SITE_TITLE}}"</title>
 
 
@@ -113,8 +112,7 @@
 						{% elif p.body %}
 							<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-dismiss="modal" onclick="expandMarkdown(this,'{{p.id}}')"><i class="fas text-expand-icon-{{p.id}} fa-expand-alt text-center mr-3"></i><span>View source</span></button>
 						{% endif %}
-
-						{% include "post_actions_mobile.html" %}
+						{% include "component/post/actions_mobile.html" %}
 					</ul>
 				</div>
 			</div>
@@ -122,8 +120,8 @@
 	</div>
 {% endif %}
 
-{% if v and v.admin_level > 1 %}
-	{% include "post_admin_actions_mobile.html" %}
+{% if v and v.admin_level >= 2 %}
+	{% include "component/post/actions_admin_mobile.html" %}
 {% endif %}
 
 {% endblock %}
@@ -133,23 +131,13 @@
 {% set cc='COUNTRY CLUB' %}
 
 <div class="row mb-3" style="background-color:var(--gray-600)">
-
 	<div id="post-root" class="col-12">
+		<div class="card border-0 mt-3{% if p.state_mod == StateMod.REMOVED %} removed{% endif %}{% if p.state_mod == StateMod.FILTERED %} filtered{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+			<div id="post-{{p.id}}" class="{% if p.state_user_deleted_utc %}deleted {% endif %}d-flex flex-row-reverse flex-nowrap justify-content-end">
 
-		<div class="card border-0 mt-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-			<div id="post-{{p.id}}" class="{% if p.deleted_utc %}deleted {% endif %}d-flex flex-row-reverse flex-nowrap justify-content-end">
-
-				<div id="post-content" class="{% if p.deleted_utc %}deleted {% endif %}card-block w-100 my-md-auto">
+				<div id="post-content" class="{% if p.state_user_deleted_utc %}deleted {% endif %}card-block w-100 my-md-auto">
 
 					<div class="post-meta text-left mb-2">
-						{% if p.sub %}
-							<a href='/h/{{p.sub}}'>/h/{{p.sub}}</a>&nbsp;&nbsp;
-						{% endif %}
-
-						{% if p.sub and p.author.exiled_from(p.sub) %}
-							<a role="button"><i class="fas fa-campfire text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User has been exiled from /h/{{p.sub}}"></i></a>
-						{% endif %}
-				
 						{% if p.bannedfor %}
 							<a role="button"><i class="fas fa-hammer-crash text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this post{% if p.author.banned_by %} by @{{p.author.banned_by.username}}{% endif %}"></i></a>
 						{% endif %}	
@@ -158,7 +146,7 @@
 							<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
 						{% endfor %}
 
-						{% if v and v.admin_level > 1 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{p.author.shadowbanned}}"></i>{% endif %}
+						{% if v and v.admin_level >= 2 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{p.author.shadowbanned}}"></i>{% endif %}
 
 						{% if p.stickied %}
 							<i id='pinned-{{p.id}}' class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned by @{{p.stickied}}" {% if p.stickied_utc %}onmouseover="pinned_timestamp('pinned-{{p.id}}')" data-timestamp={{p.stickied_utc}} {% endif %}></i>
@@ -169,7 +157,7 @@
 						{% if p.is_bot %} <i class="fas fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom"	title="Bot"></i>{% endif %}
 						{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
-						{% if v and p.filter_state == 'reported' and v.can_manage_reports() %}
+						{% if v and p.state_report == StateReport.REPORTED and v.can_manage_reports() %}
 							<a class="btn btn-primary" id="submission-report-button" role="button" style="padding:1px 5px; font-size:10px"onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags(v)}} Reports</a>
 						{% endif %}
 						{% if p.ghost %}
@@ -179,7 +167,7 @@
 							{% endif %}
 
 							<a href="/@{{p.author_name}}" class="user-name" onclick='popclick({{p.author.json_popover(v) | tojson}}); return false' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="font-weight: bold"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-20 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level %}class="mod"{% endif %}>{{p.author_name}}</span></a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
-							{% if v and v.admin_level > 1 %}
+							{% if v and v.admin_level >= 2 %}
 								<span 
 									class="usernote-link" 
 									data-micromodal-trigger="modal-1" 
@@ -195,7 +183,7 @@
 						{% endif %}
 						&nbsp;&nbsp;{{p.views}} thread views
 					</div>
-					{% if v and p.filter_state == 'reported' and v.can_manage_reports() %}
+					{% if v and p.state_report == StateReport.REPORTED and v.can_manage_reports() %}
 					<div id="flaggers" class="flaggers d-none">
 						<strong><i class="far fa-fw fa-flag"></i> Reports:</strong>
 						<a class="btn btn-primary" style="margin:1px 5px" onclick="filter_new_status({{p.id}}, 'normal')">Approve</a>
@@ -214,7 +202,7 @@
 							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
 							{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
 							{{p.realtitle(v) | safe}}
-						</a></h1>					
+						</a></h1>
 					{% else %}
 						<h1 id="post-title" class="card-title post-title text-left mb-md-3">
 							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
@@ -269,20 +257,20 @@
 							{% endif %}
 							{{p.realbody(v) | safe}}
 
-							{% if p.is_banned and p.ban_reason %}
-								<div class="text-removed mb-0">removed by @{{p.ban_reason}}</div>
+							{% if p.state_mod == StateMod.REMOVED and p.state_mod_set_by %}
+								<div class="text-removed mb-0">removed by @{{p.state_mod_set_by}}</div>
 							{% endif %}
 
 						</div>
 					</div>
 
-					{% if v and (v.id==p.author_id or v.admin_level > 2) and not v.is_suspended %}
+					{% if v and v.can_edit(p) %}
 						<div id="edit-post-body-{{p.id}}" class="d-none comment-write collapsed child">
-							<form id="post-edit-form-{{p.id}}" action="/edit_post/{{p.id}}" method="post" enctype="multipart/form-data">
+							<form id="post-edit-form-{{p.id}}" action="{{p.edit_url}}" method="post" enctype="multipart/form-data">
 								<div class="d-flex flex-column">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
+									{{forms.formkey(v)}}
 									<input type="hidden" name="current_page" value="{{request.path}}">
-									<input type="text" autocomplete="off" maxlength="500" name="title" class="comment-box form-control rounded" required placeholder="title" value="{{p.title}}"\>
+									<input type="text" autocomplete="off" maxlength="{{SUBMISSION_TITLE_LENGTH_MAXIMUM}}" name="title" class="comment-box form-control rounded" required placeholder="title" value="{{p.title}}"\>
 									<textarea autocomplete="off" name="body" maxlength="{{SUBMISSION_BODY_LENGTH_MAXIMUM}}" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10" data-id="{{p.id}}">{{p.body}}</textarea> 
 									
 									<div class="text-small font-weight-bold mt-1" id="charcount-post-edit" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
@@ -307,7 +295,6 @@
 							<div class="form-text text-small p-0 m-0"><a href="/formatting" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>Formatting help</a></div>
 						</div>
 					{% endif %}
-
 							{% if p.embed_url and "http" not in p.embed_url and "<" not in p.embed_url %}
 							<div id="crosspost-embed">
 							<div class="row no-gutters">
@@ -330,15 +317,14 @@
 							</a>
 						</li>
 
-						{% if v and (v.id==p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
+						{% if v and v.can_edit(p) %}
 							<a class="list-inline-item" role="button" onclick="togglePostEdit('{{p.id}}')"><i class="fas fa-edit"></i>Edit</a>
 						{% endif %}
 
-						{% if v and v.id != p.author_id and p.body %}
+						{% if v and not v.can_edit(p) and p.body %}
 							<a class="list-inline-item" role="button" onclick="expandMarkdown(this,'{{p.id}}')"><i class="fas text-expand-icon-{{p.id}} fa-expand-alt"></i><span>View source</span></a>
 						{% endif %}
-
-						{% include 'post_actions.html' %}
+						{% include 'component/post/actions.html' %}
 					</ul>
 						</div>
 						</div>
@@ -347,7 +333,7 @@
 					<div id="voting" class="voting d-none d-md-block mb-auto">
 						<div tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1')" class="post-{{p.id}}-up mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
 						<span  class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}" data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}">{{score}}</span>
-						<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1')" class="post-{{p.id}}-down text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
+						<div {% if not ENABLE_DOWNVOTES %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1')" class="post-{{p.id}}-down text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
 					</div>
 
 					{% else %}
@@ -355,8 +341,8 @@
 					<div id="voting" class="voting d-none d-md-block mb-auto">
 						<div  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1')" class="post-{{p.id}}-up arrow-up mx-auto" onclick="location.href='/login?redirect={{request.path | urlencode}}';">
 						</div>
-						<span  class="post-{{p.id}}-score-none score text-muted{% if p.controversial %} controversial{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
-						<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1')" class="post-{{p.id}}-down arrow-down mx-auto" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></div>
+						<span  class="post-{{p.id}}-score-none score text-muted{% if p.controversial %} controversial{% endif %}"{% if p.state_mod == StateMod.VISIBLE %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+						<div {% if not ENABLE_DOWNVOTES %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1')" class="post-{{p.id}}-down arrow-down mx-auto" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></div>
 					</div>
 					{% endif %}
 				</div>
@@ -382,7 +368,7 @@
 						<span class="text-info d-none {{p.id}}-new-comments"></span>
 					</a>
 
-					{% if v and v.admin_level > 1 %}
+					{% if v and v.admin_level >= 2 %}
 						<a class="ml-2" role="button" data-bs-toggle="modal" data-bs-target="#adminModal-{{p.id}}">
 							<i class="fas fa-broom"></i>
 						</a>
@@ -409,9 +395,9 @@
 					<span  class="post-mobile-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}">{{score}}</span>
 
 					{% if v %}
-						<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post-mobile', '{{p.id}}', '-1')" class="post-mobile-{{p.id}}-down mx-0 pl-1 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></span>
+						<span {% if not ENABLE_DOWNVOTES %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post-mobile', '{{p.id}}', '-1')" class="post-mobile-{{p.id}}-down mx-0 pl-1 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></span>
 					{% else %}
-						<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %}  tabindex="0" class="arrow-{{p.id}}-mobile-down arrow-mobile-down mx-0 pl-1 my-0" onclick="location.href='/login?redirect={{request.path | urlencode}}';">
+						<span {% if not ENABLE_DOWNVOTES %}style="display:None!important"{% endif %}  tabindex="0" class="arrow-{{p.id}}-mobile-down arrow-mobile-down mx-0 pl-1 my-0" onclick="location.href='/login?redirect={{request.path | urlencode}}';">
 							<i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
 						</span>
 					{% endif %}
@@ -424,23 +410,18 @@
 {% if v and v.id != p.author_id and p.body %}
 	<textarea autocomplete="off" class="d-none card border my-2 p-3 comment-box form-control rounded" id="markdown-{{p.id}}" readonly>{{p.body.strip()}}</textarea> 
 {% endif %}
-
+{%- block comment_section -%}
 <div class="row border-md-0 comment-section pb-3">
 	<div class="col border-top">
 		<div class="comments-count py-3">
 			{{sorting_time.sort_dropdown(sort, none, SORTS_COMMENTS)}}
-			{% if comment_info and p.comment_count >= 2 %}
-			<div class="total mt-3">
-				<a href="{{p.permalink}}">View entire discussion</a>
-			</div>
-			{% endif %}
 		</div>
 
 	{% if v %}
 		<div id="comment-form-space-{{p.fullname}}" class="comment-write mb-3">
 			<form id="reply-to-{{p.fullname}}" action="/comment" method="post">
-				<input type="hidden" name="formkey" value="{{v.formkey}}">
-				<input type="hidden" name="parent_fullname" value="t2_{{p.id}}">
+				{{forms.formkey(v)}}
+				<input type="hidden" name="parent_fullname" value="{{p.fullname}}">
 				<input autocomplete="off" id="reply-form-submission-{{p.fullname}}" type="hidden" name="submission" value="{{p.id}}">
 				<textarea required autocomplete="off" minlength="1" maxlength="{{COMMENT_BODY_LENGTH_MAXIMUM}}" oninput="markdown('reply-form-body-{{p.fullname}}', 'form-preview-{{p.id}}');charLimit('reply-form-body-{{p.fullname}}','charcount-reply')" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
 
@@ -488,7 +469,6 @@
 		{% include "comments.html" %}
 	{% endwith %}
  </div>
- 
 {% if offset %}
 	<script>
 		function viewmore(pid,sort,offset,ids) {
@@ -509,16 +489,19 @@
 
 					comments = JSON.parse(localStorage.getItem("old-comment-counts")) || {}
 					lastCount = comments['{{p.id}}']
-					if (lastCount)
-					{
-						{% for c in p.comments %}
+
+					var commentsToCheck = [
+						{% for c in p.comments -%}
 							{% if not (v and v.id==c.author_id) and not c.voted %}
-								if ({{c.created_utc*1000}} > lastCount.t) 
-								try {document.getElementById("comment-{{c.id}}-only").classList.add('unread')}
-								catch(e) {}
-							{% endif %}
+							[{{c.id}}, {{c.created_utc * 1000}}],
+							{%- endif -%}
 						{% endfor %}
-					}
+					];
+
+					commentsToCheck = commentsToCheck.filter(comment => comment[1] > lastCount.t)
+					                                 .map(comment => comment[0]);
+					
+					if (lastCount) commentsAddUnreadIndicator(commentsToCheck);
 
 					collapsedCommentStorageApply();
 				}
@@ -529,7 +512,7 @@
 	</script>
 {% endif %}
 
-{% elif not p.replies and p.deleted_utc == 0 %}
+{% elif not p.replies and p.state_user_deleted_utc is none %}
 	<div class="comment-section text-center py-7" id="replies-of-{{p.id}}">
 		<div class="row no-gutters" id="placeholder-comment">	
 			<div class="col">			
@@ -547,20 +530,21 @@
 		</div>
 	</div>
 {% endif %}
-
 </div>
 
 </div>
+
+{%- endblock -%}
 
 {% if v and v.id==p.author_id %}
-	{% include "delete_post_modal.html" %}
+	{% include "component/modal/delete_post.html" %}
 {% endif %}
 
 {% if v %}
-	{% include "report_post_modal.html" %}
+	{% include "component/modal/report_post.html" %}
 {% endif %}
 
-{% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
+{% if v and (v.id == p.author_id or v.admin_level >= 2 and v.admin_level >= 3) %}
 	<script src="{{ 'js/togglePostEdit.js' | asset }}"></script>
 {% endif %}
 
@@ -570,9 +554,11 @@
 
 <script src="{{ 'js/clipboard.js' | asset }}"></script>
 
+{%- block comment_section2 -%} {# why is this here -- looks like to get the JS scripts from comments.html if a post has no replies. #}
 {% if not p.replies %}
 	{% include "comments.html" %}
 {% endif %}
+{%- endblock -%}
 
 <script>
 	(() => {

@@ -6,16 +6,12 @@
 				<img alt="header icon" height=33 width=80 src="{{ ('images/'~SITE_ID~'/headericon.webp') | asset }}">
 			</a>
 			
-			{% if sub %}
-				<a href="/h/{{sub.name}}" class="font-weight-bold ml-1 flex-grow-1 mt-1" style="font-size:max(14px,1.2vw)">/h/{{sub.name}}</a>
-			{% else %}
-				<a href="/" class="flex-grow-1">
-					<img id="logo" alt="logo" src="{{ ('images/'~SITE_ID~'/logo.webp') | asset }}" width="100" height="20">
-				</a>
-			{% endif %}
+			<a href="/" id="logo" class="flex-grow-1 logo-text">
+				{{SITE_TITLE}}
+			</a>
 
 			<div class="flex-grow-1 d-fl d-none d-md-block {% if not v %}pad{% endif %}">
-				<form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" {% if err %}style="margin-right:40rem!important"{% endif %} action="{% if request.path.startswith('/search') %}{{request.path}}{% else %}/search/posts/{% endif %}" method="get">
+				<form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" {% if err %}style="margin-right:40rem!important"{% endif %} action="{% if request.path.startswith('/search') %}{{request.path}}{% else %}/search/comments/{% endif %}" method="get">
 					<input autocomplete="off" class="form-control w-100" placeholder="Search" aria-label="Search" name="q" value="{{request.values.get('q', '')}}">
 					<span class="input-group-append"> 
 						<span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem; cursor: pointer;" onclick="document.getElementById('searchform').submit()">
@@ -31,7 +27,7 @@
 
 			{% if v %}
 				{% if v.notifications_count %}
-					<a class="mobile-nav-icon d-md-none pl-0" href="/notifications{% if v.do_posts %}?posts=true{% elif v.do_reddit %}?reddit=true{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notifications"><i class="fas fa-bell align-middle text-danger" {% if v.do_posts %}style="color:blue!important"{% elif v.do_reddit %}style="color:#805ad5!important"{% endif %}></i><span class="notif-count ml-1" style="padding-left: 4.5px;{% if v.do_posts %}background:blue{% elif v.do_reddit %}background:#805ad5{% endif %}">{{v.notifications_count}}</span></a>
+					<a class="mobile-nav-icon d-md-none pl-0" href="/notifications{% if v.do_posts %}/posts{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notifications"><i class="fas fa-bell align-middle text-danger" {% if v.do_posts %}style="color:blue!important"{% endif %}></i><span class="notif-count ml-1" style="padding-left: 4.5px;{% if v.do_posts %}background:blue{% endif %}">{{v.notifications_count}}</span></a>
 				{% else %}
 					<a class="mobile-nav-icon d-md-none" href="/notifications" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notifications"><i class="fas fa-bell  align-middle text-gray-500 black"></i></a>
 				{% endif %}
@@ -44,7 +40,7 @@
 			{% endif %}
 
 			{% if v %}
-				<a class="mobile-nav-icon d-md-none" href="{% if sub %}/h/{{sub.name}}{% endif %}/submit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="New Post"><i class="fas fa-edit align-middle text-gray-500 black"></i></a>
+				<a class="mobile-nav-icon d-md-none" href="/submit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="New Post"><i class="fas fa-edit align-middle text-gray-500 black"></i></a>
 			{% else %}
 				<a class="mobile-nav-icon d-md-none" href="/login" data-bs-toggle="tooltip" data-bs-placement="bottom" title="New Post"><i class="fas fa-edit align-middle text-gray-500 black"></i></a>
 			{% endif %}
@@ -61,7 +57,7 @@
 				{% if v.notifications_count %}
 
 				<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-					<a class="nav-link position-relative" href="/notifications{% if v.do_posts %}?posts=true{% elif v.do_reddit %}?reddit=true{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger" {% if v.do_posts %}style="color:blue!important"{% elif v.do_reddit %}style="color:#805ad5!important"{% endif %}></i><span class="notif-count ml-1" style="padding-left: 4.5px;{% if v.do_posts %}background:blue{% elif v.do_reddit %}background:#805ad5{% endif %}">{{v.notifications_count}}</span></a>
+					<a class="nav-link position-relative" href="/notifications{% if v.do_posts %}/posts{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger" {% if v.do_posts %}style="color:blue!important"{% endif %}></i><span class="notif-count ml-1" style="padding-left: 4.5px;{% if v.do_posts %}background:blue{% endif %}">{{v.notifications_count}}</span></a>
 				</li>
 
 				{% else %}
@@ -91,7 +87,7 @@
 			
 			{% if v %}
 				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-					<a class="nav-link" href="{% if sub %}/h/{{sub.name}}{% endif %}/submit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="New Post"><i class="fas fa-edit"></i></a>
+					<a class="nav-link" href="/submit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="New Post"><i class="fas fa-edit"></i></a>
 				</li>
 
 				<li class="nav-item d-flex align-items-center justify-content-center text-center">

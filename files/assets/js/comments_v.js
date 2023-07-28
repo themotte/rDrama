@@ -290,9 +290,9 @@ function post_comment(fullname,id,level = 1){
 			let comments = document.getElementById('replies-of-' + id);
 			let comment = data["comment"].replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
 
-			comments.innerHTML = comment + comments.innerHTML;
+			comments.insertAdjacentHTML('afterbegin', comment);
 
-			bs_trigger(commentForm);
+			bs_trigger(comments);
 
 			// remove the placeholder if it exists
 			let placeholder = document.getElementById("placeholder-comment");

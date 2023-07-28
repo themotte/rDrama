@@ -1,4 +1,5 @@
 from files.__main__ import app
+from files.helpers.config.const import FEATURES
 
 from .admin import *
 from .comments import *
@@ -19,4 +20,3 @@ if FEATURES['AWARDS']:
 from .volunteer import *
 if app.debug:
 	from .dev import *
-# from .subs import *

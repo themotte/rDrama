@@ -1,0 +1,64 @@
+<div class="comment-user-info">
+	{% if c.ghost %}
+		👻
+	{% else %}
+		{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1 {% if c.author.verified=='Glowiefied' %}glow{% endif %}" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{c.author.verified}}"></i>
+		{% endif %}
+		{% if not should_hide_username %}
+			<a href="/@{{c.author_name}}" class="user-name" onclick='popclick({{c.author.json_popover(v) | tojson}}); return false' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="click" data-content-id="popover" role="button" tabindex="0" style="font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-20 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level %}class="mod"{% endif %}>{{c.author_name}}</span></a>
+		{% endif %}
+		{% if v and v.admin_level >= 2 %}
+		<span 
+			class="usernote-link" 
+			data-micromodal-trigger="modal-1" 
+			onclick='fillnote( {{c.author.json_notes(v) | tojson}}, null, {{c.id}} )'>U</span>
+		{% endif %}
+		{% if c.author.customtitle and not should_hide_username -%}
+			&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>
+		{%- endif %}
+	{% endif %}
+
+	{% if FEATURES['AWARDS'] %}
+		{% for a in c.awards|reverse %}
+			<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
+		{% endfor %}
+	{% endif %}
+
+	{% if c.bannedfor %}
+		<a role="button"><i class="fas fa-hammer-crash text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}"></i></a>
+	{% endif %}
+	{% if v and c.state_report == StateReport.REPORTED and v.can_manage_reports() %}
+		<a class="btn btn-primary" id="report-btn-{{c.id}}" style="padding:1px 5px; font-size:10px" role="button" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('d-none')">{{c.active_flags(v)}} Reports</a>
+		<span class="volunteer_janitor_result_{{c.volunteer_janitor_css()}} volunteer_janitor_result">
+			{% if c.volunteer_janitor_is_unknown() %}
+				Unknown
+			{% elif c.volunteer_janitor_is_notbad() %}
+				Not-Bad (confidence {{c.volunteer_janitor_confidence()}})
+			{% elif c.volunteer_janitor_is_bad() %}
+				Bad (confidence {{c.volunteer_janitor_confidence()}})
+			{% endif %}
+		</span>
+	{% endif %}
+	{% if c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
+	{% if v and v.admin_level >= 2 and c.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{c.author.shadowbanned}}"></i>{% endif %}
+	{% if c.is_pinned %}
+		<i id='pinned-{{c.id}}'class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned by @{{c.is_pinned}}" {% if c.is_pinned_utc %}onmouseover="pinned_timestamp('pinned-{{c.id}}')" data-timestamp={{c.is_pinned_utc}} {% endif %}></i>
+	{% endif %}
+	{% if c.distinguish_level and not c.ghost %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{SITE_TITLE}} Admin, speaking officially"></i>{% endif %}
+	{% if c.is_op %}<i class="fas fa-microphone-stand text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="OP"></i>{% endif %}
+	{% if c.is_bot %}<i class="fas fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Bot"></i>{% endif %}
+	{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You're blocking this user, but you can see this comment because you're an admin"></i>{% endif %}
+	{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="This user is blocking you."></i>{% endif %}
+
+	{% if c.parent_comment_id and not standalone and level != 1 %}<a href="#comment-{{c.parent_comment_id}}-only" class="text-muted ml-2"><i class="fas fa-reply fa-sm fa-fw fa-flip-horizontal mr-1"></i>{{c.parent_comment.author_name}}</a>{% endif %}
+
+	{% if c.notif_utc %}
+		<span id="timestamp-{{c.id}}" onmouseover="timestamp('timestamp-{{c.id}}','{{c.notif_utc}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" class="time-stamp">&nbsp;{{c.age_string}}</span>
+	{% elif c.created_utc %}
+		<span id="timestamp-{{c.id}}" onmouseover="timestamp('timestamp-{{c.id}}','{{c.created_utc}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" class="time-stamp">&nbsp;{{c.age_string}}</span>
+	{% endif %}
+	
+	{% if c.edited_utc %}
+	<span class="time-edited" id="time-edit-{{c.id}}" onmouseover="timestamp('time-edit-{{c.id}}','{{c.edited_utc}}')"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
+	{% endif %}
+</div>

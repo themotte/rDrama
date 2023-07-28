@@ -3,10 +3,29 @@ nodaemon=true
 pidfile=/tmp/supervisord.pid
 logfile=/tmp/supervisord.log
 
+[unix_http_server]
+file = /run/supervisor.sock
+# complains about no authentication on startup, but it's 0700 root:root by default
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
 [program:service]
 directory=/service
-command=sh -c 'python3 -m flask db upgrade && WERKZEUG_DEBUG_PIN=off ENABLE_SERVICES=true python3 -m flask --debug run --host=0.0.0.0 --port=80'
+command=sh -c 'WERKZEUG_DEBUG_PIN=off ENABLE_SERVICES=true python3 -m flask --debug run --host=0.0.0.0 --port=80'
 stdout_logfile=/dev/stdout
 stdout_logfile_maxbytes=0
 stderr_logfile=/dev/stderr
 stderr_logfile_maxbytes=0
+
+[program:cron]
+directory=/service
+command=sh -c 'python3 -m flask cron'
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+
+[eventlistener:memmon]
+command=memmon -p cron=300MB
+events=TICK_60

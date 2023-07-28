@@ -1,11 +1,13 @@
-from files.helpers.wrappers import *
-from files.helpers.alerts import *
-from files.helpers.get import *
-from files.helpers.const import *
-from files.classes import *
-from flask import *
-from files.__main__ import app, limiter
 import sqlalchemy.exc
+
+from files.__main__ import app, limiter
+from files.classes import *
+from files.helpers.alerts import *
+from files.helpers.config.const import *
+from files.helpers.get import *
+from files.helpers.wrappers import *
+from files.routes.importstar import *
+
 
 @app.get("/authorize")
 @auth_required
@@ -20,7 +22,6 @@ def authorize_prompt(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def authorize(v):
-
 	client_id = request.values.get("client_id")
 	application = g.db.query(OauthApp).filter_by(client_id=client_id).one_or_none()
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
@@ -42,7 +43,6 @@ def authorize(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def request_api_keys(v):
-
 	new_app = OauthApp(
 		app_name=request.values.get('name').replace('<','').replace('>',''),
 		redirect_uri=request.values.get('redirect_uri'),
@@ -62,7 +62,8 @@ def request_api_keys(v):
 						  level=1,
 						  body_html=body_html,
 						  sentto=MODMAIL_ID,
-						  distinguish_level=6
+						  distinguish_level=6,
+						  state_mod=StateMod.VISIBLE,
 						  )
 	g.db.add(new_comment)
 	g.db.flush()
@@ -83,7 +84,6 @@ def request_api_keys(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def delete_oauth_app(v, aid):
-
 	aid = int(aid)
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
@@ -103,7 +103,6 @@ def delete_oauth_app(v, aid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def edit_oauth_app(v, aid):
-
 	aid = int(aid)
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
@@ -124,7 +123,6 @@ def edit_oauth_app(v, aid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def admin_app_approve(v, aid):
-
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 	user = app.author
 
@@ -158,7 +156,6 @@ def admin_app_approve(v, aid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_app_revoke(v, aid):
-
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 	if app:
 		for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
@@ -183,7 +180,6 @@ def admin_app_revoke(v, aid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_app_reject(v, aid):
-
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
 	if app:
@@ -208,9 +204,6 @@ def admin_app_reject(v, aid):
 @app.get("/admin/app/<aid>")
 @admin_level_required(2)
 def admin_app_id(v, aid):
-
-	aid=aid
-
 	oauth = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
 	pids=oauth.idlist(page=int(request.values.get("page",1)))
@@ -230,13 +223,9 @@ def admin_app_id(v, aid):
 @app.get("/admin/app/<aid>/comments")
 @admin_level_required(2)
 def admin_app_id_comments(v, aid):
-
-	aid=aid
-
 	oauth = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
-	cids=oauth.comments_idlist(page=int(request.values.get("page",1)),
-		)
+	cids=oauth.comments_idlist(page=int(request.values.get("page",1)))
 
 	next_exists=len(cids)==101
 	cids=cids[:100]
@@ -256,7 +245,6 @@ def admin_app_id_comments(v, aid):
 @app.get("/admin/apps")
 @admin_level_required(2)
 def admin_apps_list(v):
-
 	apps = g.db.query(OauthApp).order_by(OauthApp.id.desc()).all()
 
 	return render_template("admin/apps.html", v=v, apps=apps)
@@ -266,7 +254,6 @@ def admin_apps_list(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def reroll_oauth_tokens(aid, v):
-
 	aid = aid
 
 	a = g.db.query(OauthApp).filter_by(id=aid).one_or_none()

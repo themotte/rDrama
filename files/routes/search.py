@@ -1,11 +1,11 @@
-from files.helpers.wrappers import *
-import re
 from sqlalchemy import *
-from flask import *
+
 from files.__main__ import app
+from files.classes.visstate import StateMod
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.strings import sql_ilike_clean
-
+from files.helpers.wrappers import *
+from files.routes.importstar import *
 
 valid_params=[
 	'author',
@@ -45,9 +45,9 @@ def searchposts(v):
 	if not (v and v.paid_dues): posts = posts.filter_by(club=False)
 	
 	if v and v.admin_level < 2:
-		posts = posts.filter(Submission.deleted_utc == 0, Submission.is_banned == False, Submission.private == False, Submission.author_id.notin_(v.userblocks))
+		posts = posts.filter(Submission.state_user_deleted_utc == None, Submission.state_mod == StateMod.VISIBLE, Submission.private == False, Submission.author_id.notin_(v.userblocks))
 	elif not v:
-		posts = posts.filter(Submission.deleted_utc == 0, Submission.is_banned == False, Submission.private == False)
+		posts = posts.filter(Submission.state_user_deleted_utc == None, Submission.state_mod == StateMod.VISIBLE, Submission.private == False)
 	
 
 	if 'author' in criteria:
@@ -169,10 +169,10 @@ def searchcomments(v):
 
 	if v and v.admin_level < 2:
 		private = [x[0] for x in g.db.query(Submission.id).filter(Submission.private == True).all()]
-		comments = comments.filter(Comment.author_id.notin_(v.userblocks), Comment.is_banned==False, Comment.deleted_utc == 0, Comment.parent_submission.notin_(private))
+		comments = comments.filter(Comment.author_id.notin_(v.userblocks), Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, Comment.parent_submission.notin_(private))
 	elif not v:
 		private = [x[0] for x in g.db.query(Submission.id).filter(Submission.private == True).all()]
-		comments = comments.filter(Comment.is_banned==False, Comment.deleted_utc == 0, Comment.parent_submission.notin_(private))
+		comments = comments.filter(Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, Comment.parent_submission.notin_(private))
 
 
 	if not (v and v.paid_dues):

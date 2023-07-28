@@ -1,14 +1,16 @@
 import hashlib
 import math
 from typing import Optional
-import sqlalchemy
-from sqlalchemy.orm import scoped_session
 
+import sqlalchemy
+from sqlalchemy.orm import Session
 from werkzeug.security import generate_password_hash
 
 from files.__main__ import app, db_session
-from files.classes import User, Submission, Comment, Vote, CommentVote
+from files.classes import Comment, CommentVote, Submission, User, Vote
+from files.classes.visstate import StateMod
 from files.helpers.comments import bulk_recompute_descendant_counts
+
 
 @app.cli.command('seed_db')
 def seed_db():
@@ -23,7 +25,7 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 	COMMENT_UPVOTE_PROB   = 0.0008
 	COMMENT_DOWNVOTE_PROB = 0.0003
 
-	db: scoped_session = db_session()
+	db: Session = db_session()
 
 	def detrand():
 		detrand.randstate = bytes(hashlib.sha256(detrand.randstate).hexdigest(), 'utf-8')
@@ -102,9 +104,8 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 			embed_url=None,
 			title=f'Clever unique post title number {i}',
 			title_html=f'Clever unique post title number {i}',
-			sub=None,
 			ghost=False,
-			filter_state='normal'
+			state_mod=StateMod.VISIBLE,
 		)
 		db.add(post)
 		posts.append(post)
@@ -127,7 +128,8 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 			app_id=None,
 			body_html=f'toplevel {i}',
 			body=f'toplevel {i}',
-			ghost=False
+			ghost=False,
+			state_mod=StateMod.VISIBLE,
 		)
 		db.add(comment)
 		comments.append(comment)
@@ -156,7 +158,8 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 			app_id=None,
 			body_html=f'reply {i}',
 			body=f'reply {i}',
-			ghost=False
+			ghost=False,
+			state_mod=StateMod.VISIBLE,
 		)
 		db.add(comment)
 		comments.append(comment)

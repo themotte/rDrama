@@ -1,0 +1,30 @@
+{%- extends "default.html" -%}
+{%- block content -%}
+<h1 class="mt-3">Scheduled Tasks</h1>
+<section class="task-list-section mt-3" id="task-list-section">
+	<div class="overflow-x-auto">
+		<table class="table table-striped mb-5">
+			<thead>
+				<tr>
+					<td>Task</td>
+					<td>Created</td>
+					<td>Type</td>
+					<td>Status</td>
+					<td>Enabled</td>
+				</tr>
+			</thead>
+			<tbody>
+				{%- for task in listing -%}
+				<tr>
+					<td><a href="/tasks/{{task.id}}">Task {{task.id}}</a></td>
+					<td>{{task.age_string}}</td>
+					<td>{{task.type}}</td>
+					<td>{{task.run_state_enum.name.title()}}</td>
+					<td>{{task.enabled}}</td>
+				</tr>
+				{%- endfor -%}
+			</tbody>
+		</table>
+	</div>
+</section>
+{%- endblock -%}

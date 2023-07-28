@@ -1,7 +1,8 @@
 from urllib.parse import urlencode
+from files.helpers.config.environment import HCAPTCHA_SECRET, HCAPTCHA_SITEKEY, WELCOME_MSG
 from files.mail import *
 from files.__main__ import app, limiter
-from files.helpers.const import *
+from files.helpers.config.const import *
 from files.helpers.captcha import validate_captcha
 
 @app.get("/login")
@@ -16,7 +17,7 @@ def login_get(v):
 		if redir.startswith(f'{SITE_FULL}/'): return redirect(redir)
 		elif redir.startswith('/'): return redirect(f'{SITE_FULL}{redir}')
 
-	return render_template("login.html", failed=False, redirect=redir)
+	return render_template("login/login.html", failed=False, redirect=redir)
 
 
 def check_for_alts(current_id):
@@ -94,18 +95,18 @@ def login_post():
 
 	if not account:
 		time.sleep(random.uniform(0, 2))
-		return render_template("login.html", failed=True)
+		return render_template("login/login.html", failed=True)
 
 	if request.values.get("password"):
 
 		if not account.verifyPass(request.values.get("password")):
 			time.sleep(random.uniform(0, 2))
-			return render_template("login.html", failed=True)
+			return render_template("login/login.html", failed=True)
 
 		if account.mfa_secret:
 			now = int(time.time())
 			hash = generate_hash(f"{account.id}+{now}+2fachallenge")
-			return render_template("login_2fa.html",
+			return render_template("login/login_2fa.html",
 								   v=account,
 								   time=now,
 								   hash=hash,
@@ -123,7 +124,7 @@ def login_post():
 
 		if not account.validate_2fa(request.values.get("2fa_token", "").strip()):
 			hash = generate_hash(f"{account.id}+{time}+2fachallenge")
-			return render_template("login_2fa.html",
+			return render_template("login/login_2fa.html",
 								   v=account,
 								   time=now,
 								   hash=hash,
@@ -166,7 +167,6 @@ def me(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def logout(v):
-
 	session.pop("session_id", None)
 	session.pop("lo_user", None)
 
@@ -193,7 +193,7 @@ def sign_up_get(v):
 		ref_user = None
 
 	if ref_user and (ref_user.id in session.get("history", [])):
-		return render_template("sign_up_failed_ref.html")
+		return render_template("login/sign_up_failed_ref.html")
 
 	now = int(time.time())
 	token = token_hex(16)
@@ -201,20 +201,21 @@ def sign_up_get(v):
 
 	formkey_hashstr = str(now) + token + agent
 
-	formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
+	formkey = hmac.new(key=bytes(SECRET_KEY, "utf-16"),
 					   msg=bytes(formkey_hashstr, "utf-16"),
 					   digestmod='md5'
 					   ).hexdigest()
 
 	error = request.values.get("error")
 
-	return render_template("sign_up.html",
-						   formkey=formkey,
-						   now=now,
-						   ref_user=ref_user,
-						   hcaptcha=app.config["HCAPTCHA_SITEKEY"],
-						   error=error
-						   )
+	return render_template(
+		"login/sign_up.html",
+		formkey=formkey,
+		now=now,
+		ref_user=ref_user,
+		hcaptcha=HCAPTCHA_SITEKEY,
+		error=error
+	)
 
 
 @app.post("/signup")
@@ -237,7 +238,7 @@ def sign_up_post(v):
 
 	correct_formkey_hashstr = form_timestamp + submitted_token + agent
 
-	correct_formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
+	correct_formkey = hmac.new(key=bytes(SECRET_KEY, "utf-16"),
 								msg=bytes(correct_formkey_hashstr, "utf-16"),
 								digestmod='md5'
 							   ).hexdigest()
@@ -289,8 +290,7 @@ def sign_up_post(v):
 	if existing_account:
 		return signup_error("An account with that username already exists.")
 	
-	if not validate_captcha(app.config.get("HCAPTCHA_SECRET", ""), 
-	                        app.config.get("HCAPTCHA_SITEKEY", ""), 
+	if not validate_captcha(HCAPTCHA_SECRET, HCAPTCHA_SITEKEY,
 	                        request.values.get("h-captcha-response", "")):
 		return signup_error("Unable to verify CAPTCHA")
 
@@ -358,20 +358,19 @@ def sign_up_post(v):
 
 @app.get("/forgot")
 def get_forgot():
-	return render_template("forgot_password.html")
+	return render_template("login/forgot_password.html")
 
 
 @app.post("/forgot")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 def post_forgot():
-
 	username = request.values.get("username")
 	if not username: abort(400)
 
 	email = request.values.get("email",'').strip().lower()
 
 	if not email_regex.fullmatch(email):
-		return render_template("forgot_password.html", error="Invalid email.")
+		return render_template("login/forgot_password.html", error="Invalid email.")
 
 	username  = username.lstrip('@')
 
@@ -391,13 +390,12 @@ def post_forgot():
 									   v=user)
 				  )
 
-	return render_template("forgot_password.html",
+	return render_template("login/forgot_password.html",
 						   msg="If the username and email matches an account, you will be sent a password reset email. You have ten minutes to complete the password reset process.")
 
 
 @app.get("/reset")
 def get_reset():
-
 	user_id = request.values.get("id")
 
 	timestamp = int(request.values.get("time",0))
@@ -422,7 +420,7 @@ def get_reset():
 
 	reset_token = generate_hash(f"{user.id}+{timestamp}+reset+{user.login_nonce}")
 
-	return render_template("reset_password.html",
+	return render_template("login/reset_password.html",
 						   v=user,
 						   token=reset_token,
 						   time=timestamp,
@@ -458,7 +456,7 @@ def post_reset(v):
 		abort(404)
 
 	if password != confirm_password:
-		return render_template("reset_password.html",
+		return render_template("login/reset_password.html",
 							   v=user,
 							   token=token,
 							   time=timestamp,
@@ -476,16 +474,14 @@ def post_reset(v):
 @app.get("/lost_2fa")
 @auth_desired
 def lost_2fa(v):
-
 	return render_template(
-		"lost_2fa.html",
+		"login/lost_2fa.html",
 		v=v
 		)
 
 @app.post("/request_2fa_disable")
 @limiter.limit("1/second;6/minute;200/hour;1000/day")
 def request_2fa_disable():
-
 	username=request.values.get("username")
 	user=get_user(username, graceful=True)
 	if not user or not user.email or not user.mfa_secret:
@@ -523,7 +519,6 @@ def request_2fa_disable():
 
 @app.get("/reset_2fa")
 def reset_2fa():
-
 	now=int(time.time())
 	t = request.values.get("t")
 	if not t: abort(400)

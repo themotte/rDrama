@@ -2,15 +2,17 @@ import sys
 
 import gevent
 from pusher_push_notifications import PushNotifications
-from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import Session
 
-from files.classes.leaderboard import (LeaderboardMeta, ReceivedDownvotesLeaderboard, 
-				       					GivenUpvotesLeaderboard)
+from files.__main__ import db_session, service
+from files.classes.leaderboard import (GivenUpvotesLeaderboard,
+                                       LeaderboardMeta,
+                                       ReceivedDownvotesLeaderboard)
 from files.helpers.assetcache import assetcache_path
-from files.helpers.const import PUSHER_ID, PUSHER_KEY, SITE_FULL, SITE_ID
-from files.__main__ import app, db_session
+from files.helpers.config.environment import (ENABLE_SERVICES, PUSHER_ID,
+                                              PUSHER_KEY, SITE_FULL, SITE_ID)
 
-if PUSHER_ID != 'blahblahblah':
+if service.enable_services and ENABLE_SERVICES and PUSHER_ID != 'blahblahblah':
 	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 else:
 	beams_client = None
@@ -24,7 +26,7 @@ def pusher_thread2(interests, notifbody, username):
 				'notification': {
 					'title': f'New message from @{username}',
 					'body': notifbody,
-					'deep_link': f'{SITE_FULL}/notifications?messages=true',
+					'deep_link': f'{SITE_FULL}/notifications/messages',
 					'icon': SITE_FULL + assetcache_path(f'images/{SITE_ID}/icon.webp'),
 				}
 			},
@@ -34,7 +36,7 @@ def pusher_thread2(interests, notifbody, username):
 					'body': notifbody,
 				},
 				'data': {
-					'url': '/notifications?messages=true',
+					'url': '/notifications/messages',
 				}
 			}
 		},
@@ -44,10 +46,13 @@ def pusher_thread2(interests, notifbody, username):
 _lb_received_downvotes_meta = LeaderboardMeta("Downvotes", "received downvotes", "received-downvotes", "downvotes", "downvoted")
 _lb_given_upvotes_meta = LeaderboardMeta("Upvotes", "given upvotes", "given-upvotes", "upvotes", "upvoting")
 
+lb_downvotes_received: ReceivedDownvotesLeaderboard | None = None
+lb_upvotes_given: GivenUpvotesLeaderboard | None = None
+
 def leaderboard_thread():
 	global lb_downvotes_received, lb_upvotes_given
 
-	db:scoped_session = db_session() # type: ignore
+	db: Session = db_session()
 
 	lb_downvotes_received = ReceivedDownvotesLeaderboard(_lb_received_downvotes_meta, db)
 	lb_upvotes_given = GivenUpvotesLeaderboard(_lb_given_upvotes_meta, db)
@@ -55,5 +60,5 @@ def leaderboard_thread():
 	db.close()
 	sys.stdout.flush()
 
-if app.config["ENABLE_SERVICES"]:
+if service.enable_services and ENABLE_SERVICES:
 	gevent.spawn(leaderboard_thread())

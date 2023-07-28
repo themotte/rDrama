@@ -4,130 +4,113 @@
 		{% include "nav_secondary.html" %}
 	</div>
 
-	{% if sub %}
-		{% if sub.sidebar_html %}
-			<div class="mb-4">{{sub.sidebar_html|safe}}</div>
-		{% endif %}
-		{% if v %}
-			{% if v.admin_level > 2 %}
-				<a class="btn btn-primary btn-block mb-3" href="/create_sub">CREATE HOLE</a>
-			{% endif %}
-			{% if v.mods(sub.name) %}
-				<a class="btn btn-primary btn-block mb-3" href="/h/{{sub.name}}/settings">HOLE SETTINGS</a>
-			{% endif %}
-		{% endif %}
-		<a class="btn btn-primary btn-block mb-3" href="/h/{{sub.name}}/mods">HOLE MODS</a>
-		<a class="btn btn-primary btn-block mb-3" href="/h/{{sub.name}}/exilees">HOLE EXILEES</a>
-		<a class="btn btn-primary btn-block mb-3" href="/h/{{sub.name}}/blockers">HOLE BLOCKERS</a>
-	{% else %}
-		<div class="rules mt-4">
+	<div class="rules mt-4">
 
-			<h4>What is this place?</h4>
-			<p>
-				This website is a place for people who want to move past shady thinking and test their ideas in a 
-				court of people who don't all share the same biases. Our goal is to <a href="https://slatestarcodex.com/2014/12/03/framing-for-light-instead-of-heat/">
-				optimize for light, not heat</a>; this is a group effort, and all commentators are asked to do their part.<br/><br/>
+		<h4>What is this place?</h4>
+		<p>
+			This website is a place for people who want to move past shady thinking and test their ideas in a 
+			court of people who don't all share the same biases. Our goal is to <a href="https://slatestarcodex.com/2014/12/03/framing-for-light-instead-of-heat/">
+			optimize for light, not heat</a>; this is a group effort, and all commentators are asked to do their part.<br/><br/>
 
-				The weekly <a href="https://en.wikipedia.org/wiki/Culture_war">Culture War</a> threads host the most 
-				controversial topics and are the most visible aspect of The Motte. However, many other topics are 
-				appropriate here. We encourage people to post anything related to science, politics, or philosophy; 
-				if in doubt, post!<br/><br/>
-				
-				Check out <a href="https://www.vault.themotte.org/">The Vault</a> for an archive of old quality posts. 
-				You are encouraged to crosspost these elsewhere.
-			</p>
+			The weekly <a href="https://en.wikipedia.org/wiki/Culture_war">Culture War</a> threads host the most 
+			controversial topics and are the most visible aspect of The Motte. However, many other topics are 
+			appropriate here. We encourage people to post anything related to science, politics, or philosophy; 
+			if in doubt, post!<br/><br/>
+			
+			Check out <a href="https://www.vault.themotte.org/">The Vault</a> for an archive of old quality posts. 
+			You are encouraged to crosspost these elsewhere.
+		</p>
 
-			<br/>
-			<h4>Why are you called The Motte?</h4>
-			<p>
-				A motte is a stone keep on a raised earthwork common in early medieval fortifications. More pertinently, 
-				it's an element in a rhetorical move called a "<a href="https://slatestarcodex.com/2014/11/03/all-in-all-another-brick-in-the-motte/">Motte-and-Bailey</a>",
-				originally <a href="https://philpapers.org/archive/SHATVO-2.pdf">identified by</a> 
-				philosopher Nicholas Shackel. It describes the tendency in discourse for people to move from a controversial 
-				but high value claim to a defensible but less exciting one upon any resistance to the former. He likens 
-				this to the medieval fortification, where a desirable land (the bailey) is abandoned when in danger for 
-				the more easily defended motte. In Shackel's words, "The Motte represents the defensible but undesired 
-				propositions to which one retreats when hard pressed."<br/><br/>
+		<br/>
+		<h4>Why are you called The Motte?</h4>
+		<p>
+			A motte is a stone keep on a raised earthwork common in early medieval fortifications. More pertinently, 
+			it's an element in a rhetorical move called a "<a href="https://slatestarcodex.com/2014/11/03/all-in-all-another-brick-in-the-motte/">Motte-and-Bailey</a>",
+			originally <a href="https://philpapers.org/archive/SHATVO-2.pdf">identified by</a> 
+			philosopher Nicholas Shackel. It describes the tendency in discourse for people to move from a controversial 
+			but high value claim to a defensible but less exciting one upon any resistance to the former. He likens 
+			this to the medieval fortification, where a desirable land (the bailey) is abandoned when in danger for 
+			the more easily defended motte. In Shackel's words, "The Motte represents the defensible but undesired 
+			propositions to which one retreats when hard pressed."<br/><br/>
 
-				On The Motte, always attempt to remain inside your defensible territory, even if you are not being pressed.
-				
-			</p>
+			On The Motte, always attempt to remain inside your defensible territory, even if you are not being pressed.
+			
+		</p>
 
-			<br/>
-			<h4>New post guidelines</h4>
+		<br/>
+		<h4>New post guidelines</h4>
 
-			<p>
-				If you're posting something that isn't related to the culture war, we encourage you to post a thread for it.
-				A submission statement is <strong>highly appreciated</strong>, but isn't necessary for text posts or links to largely-text posts
-				such as blogs or news articles; if we're unsure of the value of your post, we might remove it until you add a
-				submission statement. A submission statement is required for non-text sources (videos, podcasts, images).<br/><br/>
+		<p>
+			If you're posting something that isn't related to the culture war, we encourage you to post a thread for it.
+			A submission statement is <strong>highly appreciated</strong>, but isn't necessary for text posts or links to largely-text posts
+			such as blogs or news articles; if we're unsure of the value of your post, we might remove it until you add a
+			submission statement. A submission statement is required for non-text sources (videos, podcasts, images).<br/><br/>
 
-				Culture war posts go in the culture war thread; all links must either include a submission statement or
-				significant commentary. Bare links without those will be removed.<br/><br/>
+			Culture war posts go in the culture war thread; all links must either include a submission statement or
+			significant commentary. Bare links without those will be removed.<br/><br/>
 
-				If in doubt, please post it!
-			</p>
+			If in doubt, please post it!
+		</p>
 
-			<br/>
-            <h4><a href="/rules">Rules</a></h4>
-			<ul>
-				<li><a href="/rules#Courtesy">Courtesy</a>
-					<ul>
-						<li><a href="/rules#Kindness">Be Kind</a></li>
-						<li><a href="/rules#Clarity">Make your point reasonably clear and plain. Try to assume other people are doing the same.</a></li>
-						<li><a href="/rules#Antagonism">Be no more antagonistic than is absolutely necessary for your argument.</a></li>
-						<li><a href="/rules#Charity">Be charitable.</a></li>
-					</ul>
-				</li>
-				<li><a href="/rules#Content">Content</a>
-					<ul>
-						<li><a href="/rules#Effort">Avoid low-effort participation</a></li>
-						<li><a href="/rules#Weakman">Do not weakman in order to show how bad a group is</a></li>
-						<li><a href="/rules#Culture">Keep culture war in the culture war thread</a></li>
-						<li><a href="/rules#Leave">Leave the rest of the internet at the door</a></li>
-					</ul>
-				</li>
-				<li><a href="/rules#Engagement">Engagement</a>
-					<ul>
-						<li><a href="/rules#Disagreement">When disagreeing with someone, state your objections explicitly.</a></li>
-						<li><a href="/rules#Evidence">Proactively provide evidence in proportion to how partisan and inflammatory your claim might be.</a></li>
-						<li><a href="/rules#Timeouts">Accept temporary bans as a time-out, and don't attempt to rejoin the conversation until it's lifted.</a></li>
-						<li><a href="/rules#Consensus">Don't attempt to build consensus or enforce ideological conformity.</a></li>
-						<li><a href="/rules#Inclusion">Write like everyone is reading and you want them to be included in the discussion.</a></li>
-					</ul>
-				</li>
-				<li><a href="/rules#The_Wildcard_Rule">The Wildcard Rule</a>
-					<ul>
-						<li><a href="/rules#Obnoxious">Don't be egregiously obnoxious</a></li>
-					</ul>
-				</li>
-				<li><a href="/rules#The_Metarule">The Metarule</a>
-					<ul>
-						<li><a href="/rules#Sentiment">Moderation is very much driven by user sentiment. Feel free to report comments or message the mods with your thoughts.</a></li>
-					</ul>
-				</li>
-			</ul>
+		<br/>
+        <h4><a href="/rules">Rules</a></h4>
+		<ul>
+			<li><a href="/rules#Courtesy">Courtesy</a>
+				<ul>
+					<li><a href="/rules#Kindness">Be Kind</a></li>
+					<li><a href="/rules#Clarity">Make your point reasonably clear and plain. Try to assume other people are doing the same.</a></li>
+					<li><a href="/rules#Antagonism">Be no more antagonistic than is absolutely necessary for your argument.</a></li>
+					<li><a href="/rules#Charity">Be charitable.</a></li>
+				</ul>
+			</li>
+			<li><a href="/rules#Content">Content</a>
+				<ul>
+					<li><a href="/rules#Effort">Avoid low-effort participation</a></li>
+					<li><a href="/rules#Weakman">Do not weakman in order to show how bad a group is</a></li>
+					<li><a href="/rules#Culture">Keep culture war in the culture war thread</a></li>
+					<li><a href="/rules#Leave">Leave the rest of the internet at the door</a></li>
+				</ul>
+			</li>
+			<li><a href="/rules#Engagement">Engagement</a>
+				<ul>
+					<li><a href="/rules#Disagreement">When disagreeing with someone, state your objections explicitly.</a></li>
+					<li><a href="/rules#Evidence">Proactively provide evidence in proportion to how partisan and inflammatory your claim might be.</a></li>
+					<li><a href="/rules#Timeouts">Accept temporary bans as a time-out, and don't attempt to rejoin the conversation until it's lifted.</a></li>
+					<li><a href="/rules#Consensus">Don't attempt to build consensus or enforce ideological conformity.</a></li>
+					<li><a href="/rules#Inclusion">Write like everyone is reading and you want them to be included in the discussion.</a></li>
+				</ul>
+			</li>
+			<li><a href="/rules#The_Wildcard_Rule">The Wildcard Rule</a>
+				<ul>
+					<li><a href="/rules#Obnoxious">Don't be egregiously obnoxious</a></li>
+				</ul>
+			</li>
+			<li><a href="/rules#The_Metarule">The Metarule</a>
+				<ul>
+					<li><a href="/rules#Sentiment">Moderation is very much driven by user sentiment. Feel free to report comments or message the mods with your thoughts.</a></li>
+				</ul>
+			</li>
+		</ul>
 
-			<br/>
+		<br/>
 
-			<h4>Recommended Posts And Communities</h4>
-			<ul>
-				{{[
-				'<li><a href="https://www.vault.themotte.org/">The Vault</a></li>',
-				'<li><a href="https://www.lesswrong.com/">Lesswrong</a></li>',
-				'<li><a href="https://astralcodexten.substack.com/">Astral Codex Ten</a></li>',
-				'<li><a href="https://www.slatestarcodex.com/">Slate Star Codex</a></li>',
-				'<li><a href="https://www.reddit.com/r/FeMRADebates/">FeMRA Debates</a></li>',
-				]|shuffle|join('\n')|safe}}
-			</ul>
+		<h4>Recommended Posts And Communities</h4>
+		<ul>
+			{{[
+			'<li><a href="https://www.vault.themotte.org/">The Vault</a></li>',
+			'<li><a href="https://www.lesswrong.com/">Lesswrong</a></li>',
+			'<li><a href="https://astralcodexten.substack.com/">Astral Codex Ten</a></li>',
+			'<li><a href="https://www.slatestarcodex.com/">Slate Star Codex</a></li>',
+			'<li><a href="https://www.reddit.com/r/FeMRADebates/">FeMRA Debates</a></li>',
+			]|shuffle|join('\n')|safe}}
+		</ul>
 
-			<h4>Recommended Realtime Chats</h4>
-			<ul>
-				{{[
-				'<li><a href="https://discord.gg/Hkyq5eN">Astral Codex Ten Discord</a></li>',
-				'<li><a href="https://t.me/quokkas_den">Quokka\'s Den Telegram</a></li>',
-				]|shuffle|join('\n')|safe}}
-			</ul>
-		</div>
-	{% endif %}
+		<h4>Recommended Realtime Chats</h4>
+		<ul>
+			{{[
+			'<li><a href="https://discord.gg/Hkyq5eN">Astral Codex Ten Discord</a></li>',
+			'<li><a href="https://t.me/quokkas_den">Quokka\'s Den Telegram</a></li>',
+			]|shuffle|join('\n')|safe}}
+		</ul>
+	</div>
 </div>
