@@ -67,7 +67,12 @@ function commentsAddUnreadIndicator(commentIds) {
 		}
 		if (commentOnly.classList.contains("unread")) return;
 		commentOnly.classList.add("unread");
-		const commentUserInfo = document.getElementById(`comment-${element}`)?.querySelector(".comment-user-info");
+		const commentElement = document.getElementById(`comment-${element}`);
+		if (!commentElement) {
+			console.warn(`Couldn't find comment (ID ${element}) in page while attempting to add an unread indicator.`);
+			return;
+		}
+		const commentUserInfo = commentElement.querySelector(".comment-user-info");
 		if (!commentUserInfo) {
 			console.warn(`Couldn't find comment user info (comment ID ${element}) in page while attempting to add an unread indicator.`);
 			return;

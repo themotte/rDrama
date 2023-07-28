@@ -15,7 +15,7 @@
 <p><a href="{{thing.permalink}}">{{thing.permalink}}</a></p>
 <p><b>Author:</b> <a href="{{thing.author.url}}">@{{thing.author.username}}</a></p>
 <p><b>Author Created At:</b> {{thing.author.created_datetime}}</p>
-<p><b>Author Truescore:</b> {{thing.author.truecoins}}</p>
+<p><b>Author Truescore:</b> {{thing.author.truescore}}</p>
 <p><b>Upvotes: </b>{{ups | length}}</p>
 <p><b>Downvotes: </b>{{downs | length}}</p>
 
@@ -29,7 +29,7 @@
 	{% for vote in ups %}
 		<tr>
 			<td><a style="color:#{{vote.user.namecolor}};font-weight:bold" href="/@{{vote.user.username}}"><img loading="lazy" src="{{vote.user.profile_url}}" class="pp20"><span {% if vote.user.patron %}class="patron" style="background-color:#{{vote.user.namecolor}}"{% endif %}>{{vote.user.username}}</span></a></td>
-			<td>{{vote.user.truecoins}}</td>
+			<td>{{vote.user.truescore}}</td>
 		</tr>
 	{% endfor %}
 </table>
@@ -44,14 +44,9 @@
 	{% for vote in downs %}
 		<tr>
 			<td><a style="color:#{{vote.user.namecolor}};font-weight:bold" href="/@{{vote.user.username}}"><img loading="lazy" src="{{vote.user.profile_url}}" class="pp20"><span {% if vote.user.patron %}class="patron" style="background-color:#{{vote.user.namecolor}}"{% endif %}>{{vote.user.username}}</span></a></td>
-			<td>{{vote.user.truecoins}}</td>
+			<td>{{vote.user.truescore}}</td>
 		</tr>
 	{% endfor %}
 </table>
-
-
-
 {% endif %}
-
-
 {% endblock %}

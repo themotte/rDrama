@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import time
+from datetime import datetime
 from typing import TYPE_CHECKING, Union
 
 import pyotp
@@ -98,7 +99,7 @@ class User(CreatedBase):
 	login_nonce = Column(Integer, default=0, nullable=False)
 	reserved = deferred(Column(String))
 	coins = Column(Integer, default=0, nullable=False)
-	truecoins = Column(Integer, default=0, nullable=False)
+	truescore = Column(Integer, default=0, nullable=False)
 	procoins = Column(Integer, default=0, nullable=False)
 	mfa_secret = deferred(Column(String))
 	is_private = Column(Boolean, default=False, nullable=False)
@@ -158,18 +159,43 @@ class User(CreatedBase):
 
 	def can_manage_reports(self):
 		return self.admin_level > 1
+	
+	@property
+	def age_days(self):
+		return (datetime.now() - datetime.fromtimestamp(self.created_utc)).days
 
+	@property
 	def should_comments_be_filtered(self):
 		from files.__main__ import app  # avoiding import loop
 		if self.admin_level > 0:
 			return False
 		# TODO: move settings out of app.config
 		site_settings = app.config['SETTINGS']
-		minComments = site_settings.get('FilterCommentsMinComments', 0)
-		minKarma = site_settings.get('FilterCommentsMinKarma', 0)
-		minAge = site_settings.get('FilterCommentsMinAgeDays', 0)
-		accountAgeDays = self.age_timedelta.days
-		return self.comment_count < minComments or accountAgeDays < minAge or self.truecoins < minKarma
+		min_comments = site_settings.get('FilterCommentsMinComments', 0)
+		min_karma = site_settings.get('FilterCommentsMinKarma', 0)
+		min_age = site_settings.get('FilterCommentsMinAgeDays', 0)
+		return self.comment_count < min_comments \
+			or self.age_days < min_age \
+			or self.truescore < min_karma
+
+
+	def can_change_user_privacy(self, v: "User") -> bool:
+		from files.__main__ import app  # avoiding import loop
+		if v.admin_level >= PERMS['USER_SET_PROFILE_PRIVACY']: return True
+		if self.id != v.id: return False # non-admin changing someone else's things, hmm...
+
+		# TODO: move settings out of app.config
+		site_settings = app.config['SETTINGS']
+		min_comments: int = site_settings.get('min_comments_private_profile', 0)
+		min_truescore: int = site_settings.get('min_truescore_private_profile', 0)
+		min_age_days: int = site_settings.get('min_age_days_private_profile', 0)
+		user_age_days: int = self.age_timedelta.days
+
+		return (
+			self.comment_count >= min_comments
+			and self.truescore >= min_truescore
+			and user_age_days  >= min_age_days)
+	
 
 	@property
 	@lazy
@@ -195,7 +221,7 @@ class User(CreatedBase):
 	@property
 	@lazy
 	def paid_dues(self):
-		return not self.shadowbanned and not (self.is_banned and not self.unban_utc) and (self.admin_level or self.club_allowed or (self.club_allowed != False and self.truecoins > CLUB_TRUESCORE_MINIMUM))
+		return not self.shadowbanned and not (self.is_banned and not self.unban_utc) and (self.admin_level or self.club_allowed or (self.club_allowed != False and self.truescore > CLUB_TRUESCORE_MINIMUM))
 
 	@lazy
 	def any_block_exists(self, other):

@@ -3,7 +3,6 @@
 	<head>
 		<meta charset="utf-8">
 		{% include "analytics.html" %}
-		{% include "csp.html" %}
 		<meta name="description" content="{{config('DESCRIPTION')}}">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<title>{% block pagetitle %}{{SITE_TITLE}}{% endblock %}</title>
@@ -47,7 +46,7 @@
 									</button>
 								</div>
 							{% endif %}
-							{% block content %}{% endblock %}
+							{% block content required %}{% endblock %}
 						</div>
 					</div>
 				</div>
@@ -59,5 +58,6 @@
 				</div>
 			</div>
 		</div>
+		{% block scripts %}{% endblock %}
 	</body>
 </html>

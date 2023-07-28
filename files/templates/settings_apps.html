@@ -43,7 +43,7 @@
 		</div>
 		<div class="footer">
 			<div class="d-flex">
-				<a role="button" class="btn btn-secondary ml-auto" onclick="post_toast(this,'/oauth/reroll/{{app.id}}','1')">Reroll Client ID</a>
+				<a role="button" class="btn btn-secondary ml-auto" onclick="postToastReload(this,'/oauth/reroll/{{app.id}}','POST')">Reroll Client ID</a>
 				<input type="submit" class="btn btn-primary ml-2" value="Save Changes">
 			</div>
 		</div>
@@ -109,7 +109,7 @@
 		</div>
 		<div class="footer">
 			<div class="d-flex">
-				<a role="button" class="btn btn-primary ml-auto text-white" onclick="post_toast(this,'/oauth/rescind/{{auth.id}}')">Revoke</a>
+				<a role="button" class="btn btn-primary ml-auto text-white" onclick="postToastSimple(this,'/oauth/rescind/{{auth.id}}')">Revoke</a>
 			</div>
 		</div>
 	</div>

@@ -1,44 +1,3 @@
-function post_toast3(t, url, button1, button2) {
-	t.disabled=true;
-	t.classList.add("disabled");
-	const xhr = new XMLHttpRequest();
-	xhr.open("POST", url);
-	xhr.setRequestHeader('xhr', 'xhr');
-	var form = new FormData()
-	form.append("formkey", formkey());
-
-	if(typeof data === 'object' && data !== null) {
-		for(let k of Object.keys(data)) {
-				form.append(k, data[k]);
-		}
-	}
-
-	xhr.onload = function() {
-		let data
-		try {data = JSON.parse(xhr.response)}
-		catch(e) {console.log(e)}
-		if (xhr.status >= 200 && xhr.status < 300 && data && data["message"]) {
-			document.getElementById('toast-post-success-text').innerText = data["message"];
-			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success')).show();
-
-			document.getElementById(button1).classList.toggle("d-md-inline-block");
-			document.getElementById(button2).classList.toggle("d-md-inline-block");
-		
-		} else {
-			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
-			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
-			if (data && data["details"]) document.getElementById('toast-post-error-text').innerText = data["details"];
-			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
-		}
-		setTimeout(() => {
-			t.disabled = false;
-			t.classList.remove("disabled");
-		}, 2000);
-	};
-
-	xhr.send(form);
-}
-
 function report_commentModal(id, author) {
 	document.getElementById("comment-author").textContent = author;
 
@@ -128,33 +87,15 @@ function toggleEdit(id){
 
 
 function delete_commentModal(id) {
-	document.getElementById("deleteCommentButton").onclick =  function() {
-		const xhr = new XMLHttpRequest();
-		xhr.open("POST", `/delete/comment/${id}`);
-		xhr.setRequestHeader('xhr', 'xhr');
-		var form = new FormData()
-		form.append("formkey", formkey());
-		xhr.onload = function() {
-			let data
-			try {data = JSON.parse(xhr.response)}
-			catch(e) {console.log(e)}
-			if (xhr.status >= 200 && xhr.status < 300 && data && data['message']) {
-				document.getElementsByClassName(`comment-${id}-only`)[0].classList.add('deleted');
-				document.getElementById(`delete-${id}`).classList.add('d-none');
-				document.getElementById(`undelete-${id}`).classList.remove('d-none');
-				document.getElementById(`delete2-${id}`).classList.add('d-none');
-				document.getElementById(`undelete2-${id}`).classList.remove('d-none');
-				document.getElementById('toast-post-success-text').innerText = data["message"];
-				bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success')).show();
-			} else {
-				document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
-				if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
-			if (data && data["details"]) document.getElementById('toast-post-error-text').innerText = data["details"];
-				bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
-			}
-		};
-		xhr.send(form);
-	};
+	document.getElementById("deleteCommentButton").onclick = () => postToast(null, `/delete/comment/${id}`, 'POST', null, (xhr) => {
+		if (xhr.status >= 200 && xhr.status < 300) {
+			document.getElementsByClassName(`comment-${id}-only`)[0].classList.add('deleted');
+			document.getElementById(`delete-${id}`).classList.add('d-none');
+			document.getElementById(`undelete-${id}`).classList.remove('d-none');
+			document.getElementById(`delete2-${id}`).classList.add('d-none');
+			document.getElementById(`undelete2-${id}`).classList.remove('d-none');
+		}
+	});
 }
 
 function post_reply(id){
@@ -275,7 +216,7 @@ function post_comment(fullname,id,level = 1){
 	catch(e) {}
 
 	const xhr = new XMLHttpRequest();
-	xhr.open("post", "/comment");
+	xhr.open("post", "/comment"); // TODO: use postToast for this?
 	xhr.setRequestHeader('xhr', 'xhr');
 	xhr.onload=function(){
 		let data

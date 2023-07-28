@@ -1,7 +1,7 @@
 """Change created_utc to datetimez for commentvotes
 
 Revision ID: 5195118d6a51
-Revises: 55488ee27b00
+Revises: 7ae4658467d7
 Create Date: 2023-07-11 03:27:11.520264+00:00
 
 """
@@ -12,7 +12,7 @@ from sqlalchemy.sql.functions import now
 
 # revision identifiers, used by Alembic.
 revision = '5195118d6a51'
-down_revision = '55488ee27b00'
+down_revision = 'a23fe2f1515c'
 branch_labels = None
 depends_on = None
 
