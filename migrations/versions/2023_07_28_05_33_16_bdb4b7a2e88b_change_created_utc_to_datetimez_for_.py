@@ -1,8 +1,8 @@
 """Change created_utc to datetimez for flags
 
 Revision ID: bdb4b7a2e88b
-Revises: 5195118d6a51
-Create Date: 2023-07-25 03:05:16.984823+00:00
+Revises: 55488ee27b00
+Create Date: 2023-07-28 05:33:16.984823+00:00
 
 """
 from alembic import op
@@ -12,7 +12,7 @@ from sqlalchemy.sql.functions import now
 
 # revision identifiers, used by Alembic.
 revision = 'bdb4b7a2e88b'
-down_revision = '5195118d6a51'
+down_revision = '55488ee27b00'
 branch_labels = None
 depends_on = None
 
