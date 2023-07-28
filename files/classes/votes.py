@@ -1,7 +1,7 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
-from files.classes.base import CreatedBase
+from files.classes.base import CreatedBase, CreatedDateTimeBase
 from files.helpers.lazy import lazy
 
 
@@ -42,7 +42,7 @@ class Vote(CreatedBase):
 		return data
 
 
-class CommentVote(CreatedBase):
+class CommentVote(CreatedDateTimeBase):
 	__tablename__ = "commentvotes"
 
 	comment_id = Column(Integer, ForeignKey("comments.id"), primary_key=True)
