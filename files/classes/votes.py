@@ -1,11 +1,11 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
-from files.classes.base import CreatedBase, CreatedDateTimeBase
+from files.classes.base import CreatedDateTimeBase
 from files.helpers.lazy import lazy
 
 
-class Vote(CreatedBase):
+class Vote(CreatedDateTimeBase):
 	__tablename__ = "votes"
 
 	submission_id = Column(Integer, ForeignKey("submissions.id"), primary_key=True)
