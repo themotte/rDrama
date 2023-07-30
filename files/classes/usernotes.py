@@ -1,6 +1,6 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.classes.base import CreatedBase
+from files.classes.base import CreatedDateTimeBase
 from files.helpers.config.const import *
 from enum import Enum
 from sqlalchemy import Enum as EnumType
@@ -15,7 +15,7 @@ class UserTag(Enum):
     Spam    = 6
     Bot     = 7
 
-class UserNote(CreatedBase):
+class UserNote(CreatedDateTimeBase):
 	__tablename__ = "usernotes"
 
 	id = Column(Integer, primary_key=True)
