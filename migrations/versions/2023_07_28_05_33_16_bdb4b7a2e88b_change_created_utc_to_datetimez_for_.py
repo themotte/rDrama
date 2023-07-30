@@ -1,8 +1,8 @@
-"""Change to datetimez table follows
+"""Change created_utc to datetimez for flags
 
-Revision ID: 1ffc63ebd8bc
-Revises: 7ae4658467d7
-Create Date: 2023-07-30 00:46:35.798549+00:00
+Revision ID: bdb4b7a2e88b
+Revises: 55488ee27b00
+Create Date: 2023-07-28 05:33:16.984823+00:00
 
 """
 from alembic import op
@@ -11,18 +11,18 @@ from sqlalchemy.sql.functions import now
 
 
 # revision identifiers, used by Alembic.
-revision = '1ffc63ebd8bc'
-down_revision = 'bdb4b7a2e88b'
+revision = 'bdb4b7a2e88b'
+down_revision = '55488ee27b00'
 branch_labels = None
 depends_on = None
 
-table_name = 'follows'
+
+table_name = 'flags'
 from_column = 'created_utc'
 to_column = 'created_datetimez'
 
-
 def upgrade():
-    op.add_column(table_name, sa.Column(to_column, sa.DateTime(timezone=True), nullable=True, server_default=now()))
+    op.add_column(table_name, sa.Column(to_column, sa.DateTime(timezone=True), server_default=now(), nullable=True))
     op.execute(f"""
         UPDATE {table_name} 
         SET {to_column} = 
@@ -32,18 +32,16 @@ def upgrade():
                 ELSE NULL 
             END
     """)
+
     op.alter_column(table_name, to_column, nullable=False)
     op.drop_column(table_name, from_column)
 
 
 def downgrade():
-    """
-    Downgrade will truncate the milliseconds.
-    """
-    op.add_column(table_name, sa.Column('created_utc', sa.Integer(), server_default=sa.text('0'), nullable=True))
+    op.add_column(table_name, sa.Column(from_column, sa.Integer(), server_default=sa.text('0'), nullable=True))
     op.execute(f"""
         UPDATE {table_name} 
-        SET created_utc = 
+        SET {from_column} = 
             COALESCE(
                 EXTRACT(EPOCH FROM {to_column})::integer,
                 0

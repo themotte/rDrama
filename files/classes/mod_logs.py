@@ -85,6 +85,26 @@ class ModAction(CreatedDateTimeBase):
 		return f"/log/{self.id}"	
 
 ACTIONTYPES = {
+	'approve_post': {
+		"str": 'approved post {self.target_link}', 
+		"icon": 'fa-feather-alt', 
+		"color": 'bg-success'
+	},
+	'approve_comment': {
+		"str": 'approved {self.target_link}', 
+		"icon": 'fa-comment', 
+		"color": 'bg-success'
+	},
+	'remove_post': {
+		"str": 'removed post {self.target_link}', 
+		"icon": 'fa-feather-alt', 
+		"color": 'bg-danger'
+	},
+	'remove_comment': {
+		"str": 'removed {self.target_link}', 
+		"icon": 'fa-comment', 
+		"color": 'bg-danger'
+	},
 	'approve_app': {
 		"str": 'approved an application by {self.target_link}', 
 		"icon": 'fa-robot', 
@@ -100,19 +120,9 @@ ACTIONTYPES = {
 		"icon": 'fa-badge', 
 		"color": 'bg-danger'
 	},
-	'remove_comment': {
-		"str": 'removed {self.target_link}', 
-		"icon": 'fa-comment', 
-		"color": 'bg-danger'
-	},
 	'ban_domain': {
 		"str": 'banned a domain', 
 		"icon": 'fa-globe', 
-		"color": 'bg-danger'
-	},
-	'remove_post': {
-		"str": 'removed post {self.target_link}', 
-		"icon": 'fa-feather-alt', 
 		"color": 'bg-danger'
 	},
 	'ban_user': {
@@ -300,19 +310,9 @@ ACTIONTYPES = {
 		"icon": 'fa-eye-slash', 
 		"color": 'bg-danger'
 	},
-	'unremove_comment': {
-		"str": 'reinstated {self.target_link}', 
-		"icon": 'fa-comment', 
-		"color": 'bg-success'
-	},
 	'unban_domain': {
 		"str": 'unbanned a domain', 
 		"icon": 'fa-globe', 
-		"color": 'bg-success'
-	},
-	'unremove_post': {
-		"str": 'reinstated post {self.target_link}', 
-		"icon": 'fa-feather-alt', 
 		"color": 'bg-success'
 	},
 	'unban_user': {

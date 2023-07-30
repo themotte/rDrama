@@ -64,10 +64,6 @@ def settings_profile_post(v):
 	elif request.values.get("over18", v.over_18) != v.over_18:
 		updated = True
 		v.over_18 = request.values.get("over18") == 'true'
-		
-	elif request.values.get("private", v.is_private) != v.is_private:
-		updated = True
-		v.is_private = request.values.get("private") == 'true'
 
 	elif request.values.get("nofollow", v.is_nofollow) != v.is_nofollow:
 		updated = True
@@ -640,3 +636,16 @@ def settings_profile(v):
 	if v.flairchanged: ti = datetime.utcfromtimestamp(v.flairchanged).strftime('%Y-%m-%d %H:%M:%S')
 	else: ti = ''
 	return render_template("settings_profile.html", v=v, ti=ti)
+
+
+# other settings i guess
+
+@app.post("/id/<int:id>/private/<int:enabled>")
+@auth_required
+def post_set_user_profile_privacy(v: User, id: int, enabled: int):
+	if enabled != 0 and enabled != 1: abort(400, "'enabled' must be '0' or '1'")
+	user: User = get_account(id)
+	if not user.can_change_user_privacy(v): abort(403)
+	user.is_private = bool(enabled)
+	g.db.commit()
+	return {"message": f"{'Enabled' if user.is_private else 'Disabled'} private mode successfully!"}

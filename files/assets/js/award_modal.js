@@ -27,41 +27,10 @@ function pick(kind, canbuy1, canbuy2) {
 }
 
 function buy(mb) {
-	const kind = document.getElementById('kind').value;
-	const xhr = new XMLHttpRequest();
-	url = `/buy/${kind}`
-	if (mb) url += "?mb=true"
-	xhr.open("POST", url);
-	xhr.setRequestHeader('xhr', 'xhr');
-	var form = new FormData()
-	form.append("formkey", formkey());
-
-	if(typeof data === 'object' && data !== null) {
-		for(let k of Object.keys(data)) {
-				form.append(k, data[k]);
-		}
-	}
-
-
-	form.append("formkey", formkey());
-	xhr.onload = function() {
-		let data
-		try {data = JSON.parse(xhr.response)}
-		catch(e) {console.log(e)}
-		if (xhr.status >= 200 && xhr.status < 300 && data && data["message"]) {
-			document.getElementById('toast-post-success-text2').innerText = data["message"];
-			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success2')).show();
-			document.getElementById('giveaward').disabled=false;
-			let owned = document.getElementById(`${kind}-owned`)
-			let ownednum = Number(owned.textContent);
-			owned.textContent = ownednum + 1
-		} else {
-			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
-			if (data && data["error"]) document.getElementById('toast-post-error-text2').innerText = data["error"];
-			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error2')).show();
-		}
-	};
-
-	xhr.send(form);
-
+	postToast(null, `/buy/${kind}${mb ? '?mb=true' : ''}`, 'POST', null, (xhr) => {
+		document.getElementById('giveaward').disabled = false;
+		let owned = document.getElementById(`${kind}-owned`);
+		const ownednum = Number(owned.textContent);
+		owned.textContent = ownednum + 1;
+	});
 }

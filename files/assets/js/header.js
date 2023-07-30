@@ -81,45 +81,99 @@ function expandDesktopImage(image) {
 	document.getElementById("desktop-expanded-image-wrap-link").href = image;
 };
 
-function post_toast(t, url, reload, data) {
-	if (t) {
-		t.disabled = true;
-		t.classList.add("disabled");
+function postToast(targetElement, url, method, data, callbackFn) {
+	if (targetElement) { // disable element to avoid repeated requests
+		targetElement.disabled = true;
+		targetElement.classList.add("disabled");
 	}
-	const xhr = new XMLHttpRequest();
-	xhr.open("POST", url);
-	xhr.setRequestHeader('xhr', 'xhr');
-	var form = new FormData()
+	const xhr = new XMLHttpRequest(); // set up the request now
+	xhr.open(method, url);
+	xhr.setRequestHeader("xhr", "xhr");
+
+	var formData = null;
+	if (data instanceof HTMLFormElement) {
+		formData = data;
+	}
+	var form = new FormData(formData ?? undefined);
 	form.append("formkey", formkey());
 
-	if(typeof data === 'object' && data !== null) {
-		for(let k of Object.keys(data)) {
+	if (typeof data === 'object' && data !== null) {
+		for (let k of Object.keys(data)) {
 			form.append(k, data[k]);
 		}
 	}
 
 	xhr.onload = function() {
-		let data
-		try {data = JSON.parse(xhr.response)}
-		catch(e) {console.log(e)}
+		let data;
+		try {
+			data = JSON.parse(xhr.response);
+		} catch (e) {
+			console.error("Failed to parse response as JSON", e);
+		}
+
+		var message = null;
+
+		if (callbackFn !== null) {
+			try {
+				const result = callbackFn(xhr);
+				if (typeof result === 'string' && result !== null) {
+					message = result;
+				}
+			} catch (e) {
+				console.error("Failed to run callback function for postToast", e, xhr);
+			}
+		}
+
 		if (xhr.status >= 200 && xhr.status < 300 && data && data['message']) {
-			document.getElementById('toast-post-success-text').innerText = data["message"];
+			const toastPostSuccessTextElement = document.getElementById("toast-post-success-text");
+			if (message === null) {
+				message = data["message"];
+			}
+			if (message === null) {
+				message = "Success!";
+			}
+			toastPostSuccessTextElement.innerText = message;
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success')).show();
-			if (reload == 1) {location.reload()}
 		} else {
-			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
-			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
-			if (data && data["details"]) document.getElementById('toast-post-error-text').innerText = data["details"];
+			const toastPostErrorTextElement = document.getElementById('toast-post-error-text');
+			if (message === null && data) {
+				if (data["details"]) {
+					message = data["details"];
+				} else if (data["error"]) {
+					message = data["error"];
+				}
+			}
+			if (message === null) {
+				message = "Error, please try again later.";
+			}
+			toastPostErrorTextElement.innerText = message;
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
 		}
-		setTimeout(() => {
-			t.disabled = false;
-			t.classList.remove("disabled");
-		}, 2000);
-	};
+	}
+
+	setTimeout(() => {
+		if (targetElement !== null) {
+			targetElement.disabled = false;
+			targetElement.classList.remove("disabled");
+		}
+	}, 1500);
 
 	xhr.send(form);
+}
 
+function postToastSimple(t, url, method="POST", data=null) {
+	postToast(t, url, method, data, null);
+}
+
+function postToastReload(t, url, method, data) {
+	postToast(t, url, method, data, (xhr) => location.reload());
+}
+
+function postToastSwitch(t, url, method, button1, button2, cssClass="d-none") {
+	postToast(t, url, method, null, (xhr) => {
+		document.getElementById(button1).classList.toggle(cssClass);
+		document.getElementById(button2).classList.toggle(cssClass);
+	})
 }
 
 function escapeHTML(unsafe) {
