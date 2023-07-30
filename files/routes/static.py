@@ -199,9 +199,9 @@ def patrons(v):
 @auth_desired
 def admins(v):
 	if v and v.admin_level >= 3:
-		admins = g.db.query(User).filter(User.admin_level>1).order_by(User.truecoins.desc()).all()
-		admins += g.db.query(User).filter(User.admin_level==1).order_by(User.truecoins.desc()).all()
-	else: admins = g.db.query(User).filter(User.admin_level>0).order_by(User.truecoins.desc()).all()
+		admins = g.db.query(User).filter(User.admin_level>1).order_by(User.truescore.desc()).all()
+		admins += g.db.query(User).filter(User.admin_level==1).order_by(User.truescore.desc()).all()
+	else: admins = g.db.query(User).filter(User.admin_level>0).order_by(User.truescore.desc()).all()
 	return render_template("admins.html", v=v, admins=admins)
 
 

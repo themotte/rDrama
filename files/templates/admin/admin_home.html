@@ -17,13 +17,13 @@
 <h3>Content</h3>
 <ul>
 	<li><a href="/admin/image_posts">Image Posts</a></li>
-	<li><a href="/admin/reported/posts">Reported Posts/Comments</a></li>
-	<li><a href="/admin/removed/posts">Removed Posts/Comments</a></li>
+	<li><a href="/admin/reported/comments">Reported Comments/Posts</a></li>
+	<li><a href="/admin/removed/comments">Removed Comments/Posts</a></li>
 </ul>
 
 <h3>Filtering</h3>
 <ul>
-	<li><a href="/admin/filtered/posts">Filtered Posts/Comments</a></li>
+	<li><a href="/admin/filtered/comments">Filtered Comments/Posts</a></li>
 </ul>
 
 <h3>Users</h3>
@@ -78,14 +78,14 @@
 	<h3>Site Settings</h3>
 	{%- macro site_setting_bool(name, label) -%}
 		<div class="custom-control custom-switch">
-			<input autocomplete="off" type="checkbox" class="custom-control-input" id="site-setting-{{name}}" {% if site_settings[name] %}checked{% endif %} onchange="post_toast(this,'/admin/site_settings/{{name}}');">
+			<input autocomplete="off" type="checkbox" class="custom-control-input" id="site-setting-{{name}}" {% if site_settings[name] %}checked{% endif %} onchange="postToastSimple(this,'/admin/site_settings/{{name}}');">
 			<label class="custom-control-label" for="site-setting-{{name}}">{{label}}</label>
 		</div>
 	{%- endmacro -%}
 	{%- macro site_setting_int(name, label) -%}
 		<div class="custom-control custom-switch">
 			<input type="number" class="" id="site-setting-{{name}}" name="{{name}}" value="{{ site_settings[name] }}" 
-				onblur="post_toast(null, '/admin/site_settings/{{name}}', false, { new_value: this.value })"/>
+				onblur="postToastSimple(null, '/admin/site_settings/{{name}}', 'POST', { new_value: this.value })"/>
 			<label for="site-setting-{{name}}">{{label}}</label>
 		</div>
 	{%- endmacro -%}
@@ -94,7 +94,7 @@
 	{{site_setting_bool('FilterNewPosts', 'Filter New Posts')}}
 	{{site_setting_bool('Read-only mode', 'Read-Only Mode')}}
 	<div class="custom-control custom-switch">
-		<input autocomplete="off" type="checkbox" class="custom-control-input" id="under_attack" name="under_attack" {% if under_attack%}checked{% endif %} onchange="post_toast(this,'/admin/under_attack');">
+		<input autocomplete="off" type="checkbox" class="custom-control-input" id="under_attack" name="under_attack" {% if under_attack%}checked{% endif %} onchange="postToastSimple(this,'/admin/under_attack');">
 		<label class="custom-control-label" for="under_attack">Under attack mode</label>
 	</div>
 
@@ -103,8 +103,13 @@
 	{{site_setting_int('FilterCommentsMinKarma', 'Minimum Karma')}}
 	{{site_setting_int('FilterCommentsMinAgeDays', 'Minimum Account Age (Days)')}}
 
-	<button class="btn btn-primary mt-3" onclick="post_toast(this,'/admin/purge_cache');">PURGE CDN CACHE</button>
-	<button class="btn btn-primary mt-3" onclick="post_toast(this,'/admin/dump_cache');">DUMP INTERNAL CACHE</button>
+	<h4>Private Mode Requirements</h4>
+	{{site_setting_int('min_comments_private_profile', 'Minimum Comments')}}
+	{{site_setting_int('min_truescore_private_profile', 'Minimum Karma')}}
+	{{site_setting_int('min_age_days_private_profile', 'Minimum Account Age (Days)')}}
+
+	<button class="btn btn-primary mt-3" onclick="postToastSimple(this,'/admin/purge_cache');">PURGE CDN CACHE</button>
+	<button class="btn btn-primary mt-3" onclick="postToastSimple(this,'/admin/dump_cache');">DUMP INTERNAL CACHE</button>
 {% endif %}
 {% if g.debug %}
 <section id="admin-section-debug" class="admin-section mt-3">

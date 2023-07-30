@@ -87,7 +87,10 @@ def canonicalize_url2(url:str, *, httpsify:bool=False) -> urllib.parse.ParseResu
 
 
 def body_displayed(target:Submittable, v:Optional[User], is_html:bool) -> str:
-	moderated:Optional[str] = target.visibility_state.moderated_body(v)
+	moderated:Optional[str] = target.visibility_state.moderated_body(
+		v=v, 
+		is_blocking=getattr(target, 'is_blocking', False)
+	)
 	if moderated: return moderated
 
 	body = target.body_html if is_html else target.body

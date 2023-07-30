@@ -65,7 +65,8 @@ def api_vote_post(post_id, new, v):
 	new = int(new)
 
 	# get the post
-	post = get_post(post_id)
+	post = get_post(post_id, v=v)
+	if getattr(post, 'is_blocking', False): abort(403, "Can't vote on things from users you've blocked")
 
 	# get the old vote, if we have one
 	vote = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
@@ -82,7 +83,7 @@ def api_vote_post(post_id, new, v):
 		# remove the old score data
 		if points_matter:
 			post.author.coins -= vote.vote_type
-			post.author.truecoins -= vote.vote_type
+			post.author.truescore -= vote.vote_type
 			# we'll be saving later anyway, so don't bother doing so here
 	else:
 		# create new vote data
@@ -104,7 +105,7 @@ def api_vote_post(post_id, new, v):
 	# add relevant points
 	if points_matter:
 		post.author.coins += vote.vote_type
-		post.author.truecoins += vote.vote_type
+		post.author.truescore += vote.vote_type
 	
 	# database it up
 	g.db.add(post.author)
@@ -132,7 +133,8 @@ def api_vote_comment(comment_id, new, v):
 	new = int(new)
 
 	# get the comment
-	comment = get_comment(comment_id)
+	comment = get_comment(comment_id, v=v)
+	if getattr(comment, 'is_blocking', False): abort(403, "Can't vote on things from users you've blocked")
 
 	# get the old vote, if we have one
 	vote = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
@@ -149,7 +151,7 @@ def api_vote_comment(comment_id, new, v):
 		# remove the old score data
 		if points_matter:
 			comment.author.coins -= vote.vote_type
-			comment.author.truecoins -= vote.vote_type
+			comment.author.truescore -= vote.vote_type
 			# we'll be saving later anyway, so don't bother doing so here
 	else:
 		# create new vote data
@@ -171,7 +173,7 @@ def api_vote_comment(comment_id, new, v):
 	# add relevant points
 	if points_matter:
 		comment.author.coins += vote.vote_type
-		comment.author.truecoins += vote.vote_type
+		comment.author.truescore += vote.vote_type
 	
 	# database it up
 	g.db.add(comment.author)

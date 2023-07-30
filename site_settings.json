@@ -1,1 +1,12 @@
-{"Bots": true, "Read-only mode": false, "Signups": true, "FilterNewPosts": false, "FilterCommentsMinComments": 0, "FilterCommentsMinKarma": 0, "FilterCommentsMinAgeDays": 0}
+{
+    "Bots": true, 
+    "Read-only mode": false, 
+    "Signups": true, 
+    "FilterNewPosts": false, 
+    "FilterCommentsMinComments": 0, 
+    "FilterCommentsMinKarma": 0, 
+    "FilterCommentsMinAgeDays": 0,
+    "min_comments_private_profile": 0,
+    "min_truescore_private_profile": 0,
+    "min_age_days_private_profile": 0
+}

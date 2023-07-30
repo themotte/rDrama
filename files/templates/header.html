@@ -11,7 +11,7 @@
 			</a>
 
 			<div class="flex-grow-1 d-fl d-none d-md-block {% if not v %}pad{% endif %}">
-				<form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" {% if err %}style="margin-right:40rem!important"{% endif %} action="{% if request.path.startswith('/search') %}{{request.path}}{% else %}/search/posts/{% endif %}" method="get">
+				<form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" {% if err %}style="margin-right:40rem!important"{% endif %} action="{% if request.path.startswith('/search') %}{{request.path}}{% else %}/search/comments/{% endif %}" method="get">
 					<input autocomplete="off" class="form-control w-100" placeholder="Search" aria-label="Search" name="q" value="{{request.values.get('q', '')}}">
 					<span class="input-group-append"> 
 						<span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem; cursor: pointer;" onclick="document.getElementById('searchform').submit()">

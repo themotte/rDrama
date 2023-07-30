@@ -272,14 +272,14 @@ def filtered_comments(v):
 # (also rename Unremove to Approve, sigh)
 @app.post("/admin/update_filter_status")
 @limiter.exempt
-@admin_level_required(2)
+@admin_level_required(PERMS['POST_COMMENT_MODERATION'])
 def update_filter_status(v):
 	update_body = request.get_json()
 	new_status = update_body.get('new_status')
 	post_id = update_body.get('post_id')
 	comment_id = update_body.get('comment_id')
 	if new_status not in ['normal', 'removed', 'ignored']:
-		return { 'result': f'Status of {new_status} is not permitted' }
+		return {'result': f'Status of {new_status} is not permitted'}, 403
 
 	if new_status == 'normal':
 		state_mod_new = StateMod.VISIBLE
@@ -292,43 +292,45 @@ def update_filter_status(v):
 		state_report_new = StateReport.IGNORED
 
 	if post_id:
-		target = g.db.get(Submission, post_id)
-		old_status = target.state_mod
-
-		# this could totally be one query but it would be kinda ugly
-		if state_mod_new is not None:
-			g.db.query(Submission).where(Submission.id == post_id) \
-								.update({Submission.state_mod: state_mod_new, Submission.state_mod_set_by: v.username})
-		g.db.query(Submission).where(Submission.id == post_id) \
-								.update({Submission.state_report: state_report_new})
+		target: Submission = get_post(post_id, graceful=True)
+		modlog_target_type: str = 'post'
 	elif comment_id:
-		target = g.db.get(Comment, comment_id)
-		old_status = target.state_mod
-		
-		if state_mod_new is not None:
-			g.db.query(Comment).where(Comment.id == comment_id) \
-								.update({Comment.state_mod: state_mod_new, Comment.state_mod_set_by: v.username})
-		g.db.query(Comment).where(Comment.id == comment_id) \
-								.update({Comment.state_report: state_report_new})
+		target: Comment = get_comment(comment_id, graceful=True)
+		modlog_target_type: str = 'comment'
 	else:
-		return { 'result': f'No valid item ID provided' }
+		return {"result": "No valid item ID provided"}, 404
+	
+	if not target:
+		return {"result": "Item ID does not exist"}, 404
 
-	if target is not None:
-		# If comment now visible, update state to reflect publication.
-		if (isinstance(target, Comment)
-				and old_status != StateMod.VISIBLE
-				and state_mod_new == StateMod.VISIBLE):
-			comment_on_publish(target) # XXX: can cause discrepancies if removal state ≠ filter state
+	old_status = target.state_mod
 
-		if (isinstance(target, Comment)
-				and old_status == StateMod.VISIBLE
-				and state_mod_new != StateMod.VISIBLE and state_mod_new is not None):
-			comment_on_unpublish(target) # XXX: can cause discrepancies if removal state ≠ filter state
+	if state_mod_new is not None:
+		target.state_mod = state_mod_new
+		target.state_mod_set_by = v.username
+	target.state_report = state_report_new
 
-		g.db.commit()
-		return { 'result': 'Update successful' }
-	else:
-		return { 'result': 'Item ID does not exist' }
+	making_visible: bool = old_status != StateMod.VISIBLE and state_mod_new == StateMod.VISIBLE
+	making_invisible: bool = old_status == StateMod.VISIBLE and state_mod_new != StateMod.VISIBLE and state_mod_new is not None
+
+	if making_visible:
+		modlog_action: str = "approve"
+		if isinstance(target, Comment): comment_on_publish(target)
+	elif making_invisible:
+		modlog_action: str = "remove"
+		if isinstance(target, Comment): comment_on_unpublish(target)
+
+	if making_visible or making_invisible:
+		g.db.add(ModAction(
+			kind=f"{modlog_action}_{modlog_target_type}",
+			user_id=v.id,
+			target_submission_id=target.id if isinstance(target, Submission) else None,
+			target_comment_id=target.id if isinstance(target, Comment) else None
+		))
+
+	g.db.commit()
+	invalidate_cache(frontlist=True)
+	return { 'result': 'Update successful' }
 
 @app.get("/admin/image_posts")
 @limiter.exempt
@@ -629,7 +631,7 @@ def loggedin_list(v):
 	ids = [x for x, val in cache.get(f'{SITE}_loggedin').items() \
 		if (time.time() - val) < LOGGEDIN_ACTIVE_TIME]
 	users = g.db.query(User).filter(User.id.in_(ids)) \
-		.order_by(User.admin_level.desc(), User.truecoins.desc()).all()
+		.order_by(User.admin_level.desc(), User.truescore.desc()).all()
 	return render_template("admin/loggedin.html", v=v, users=users)
 
 
@@ -809,7 +811,7 @@ def admin_removed_comments(v):
 	try: page = int(request.values.get("page", 1))
 	except: page = 1
 	
-	ids = g.db.query(Comment.id).join(User, User.id == Comment.author_id).filter(or_(Comment.state_mode == StateMod.REMOVED, User.shadowbanned != None)).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	ids = g.db.query(Comment.id).join(User, User.id == Comment.author_id).filter(or_(Comment.state_mod == StateMod.REMOVED, User.shadowbanned != None)).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	ids=[x[0] for x in ids]
 
@@ -1100,74 +1102,6 @@ def unban_user(user_id, v):
 	else: return {"message": f"@{user.username} was unbanned!"}
 
 
-@app.post("/remove_post/<post_id>")
-@limiter.exempt
-@admin_level_required(2)
-def remove_post(post_id, v):
-	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
-
-	if not post:
-		abort(400)
-
-	post.state_mod = StateMod.REMOVED
-	post.state_mod_set_by = v.username
-	post.stickied = None
-	post.is_pinned = False
-	g.db.add(post)
-
-	
-
-	ma=ModAction(
-		kind="remove_post",
-		user_id=v.id,
-		target_submission_id=post.id,
-		)
-	g.db.add(ma)
-
-	invalidate_cache(frontlist=True)
-
-	v.coins += 1
-	g.db.add(v)
-
-	requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, json={'files': [f"{SITE_FULL}/logged_out/"]}, timeout=5)
-
-	g.db.commit()
-
-	return {"message": "Post removed!"}
-
-
-@app.post("/unremove_post/<post_id>")
-@limiter.exempt
-@admin_level_required(2)
-def unremove_post(post_id, v):
-	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
-
-	if not post:
-		abort(400)
-
-	if post.state_mod != StateMod.VISIBLE:
-		ma=ModAction(
-			kind="unremove_post",
-			user_id=v.id,
-			target_submission_id=post.id,
-		)
-		g.db.add(ma)
-
-	post.state_mod = StateMod.VISIBLE
-	post.state_mod_set_by = v.username
-
-	g.db.add(post)
-
-	invalidate_cache(frontlist=True)
-
-	v.coins -= 1
-	g.db.add(v)
-
-	g.db.commit()
-
-	return {"message": "Post approved!"}
-
-
 @app.post("/distinguish/<post_id>")
 @limiter.exempt
 @admin_level_required(1)
@@ -1307,59 +1241,10 @@ def unsticky_comment(cid, v):
 	return {"message": "Comment unpinned!"}
 
 
-@app.post("/remove_comment/<c_id>")
-@limiter.exempt
-@admin_level_required(2)
-def api_remove_comment(c_id, v):
-	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
-	if not comment:
-		abort(404)
-
-	comment.state_mod = StateMod.REMOVED
-	comment.state_mod_set_by = v.username
-	comment_on_unpublish(comment) # XXX: can cause discrepancies if removal state ≠ filter state
-	ma=ModAction(
-		kind="remove_comment",
-		user_id=v.id,
-		target_comment_id=comment.id,
-		)
-	g.db.add(ma)
-	g.db.commit()
-	return {"message": "Comment removed!"}
-
-
-@app.post("/unremove_comment/<c_id>")
-@limiter.exempt
-@admin_level_required(2)
-def api_unremove_comment(c_id, v):
-	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
-	if not comment: abort(404)
-	
-	if comment.state_mod == StateMod.REMOVED:
-		ma=ModAction(
-			kind="unremove_comment",
-			user_id=v.id,
-			target_comment_id=comment.id,
-			)
-		g.db.add(ma)
-
-	comment.state_mod = StateMod.VISIBLE
-	comment.state_mod_set_by = v.username
-	comment_on_publish(comment) # XXX: can cause discrepancies if removal state ≠ filter state
-
-	g.db.add(comment)
-
-	g.db.commit()
-
-	return {"message": "Comment approved!"}
-
-
 @app.post("/distinguish_comment/<c_id>")
 @limiter.exempt
 @admin_level_required(1)
 def admin_distinguish_comment(c_id, v):
-	
-	
 	comment = get_comment(c_id, v=v)
 
 	if comment.author_id != v.id: abort(403)
