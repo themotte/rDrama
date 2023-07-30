@@ -129,7 +129,6 @@ def revert_actions(v, username):
 	g.db.add(ma)
 
 	cutoff = datetime.now(tz=timezone.utc) - timedelta(1)
-	# cutoff = int(time.time()) - 86400 # might not need this as
 
 	posts = [x[0] for x in g.db.query(ModAction.target_submission_id).filter(ModAction.user_id == user.id, ModAction.created_datetimez > cutoff, ModAction.kind == 'remove_post').all()]
 	posts = g.db.query(Submission).filter(Submission.id.in_(posts)).all()
