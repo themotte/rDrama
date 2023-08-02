@@ -1,6 +1,6 @@
 import json
 import time
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 import requests
 
@@ -128,12 +128,12 @@ def revert_actions(v, username):
 	)
 	g.db.add(ma)
 
-	cutoff = int(time.time()) - 86400
+	cutoff = datetime.now(tz=timezone.utc) - timedelta(1)
 
-	posts = [x[0] for x in g.db.query(ModAction.target_submission_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind == 'remove_post').all()]
+	posts = [x[0] for x in g.db.query(ModAction.target_submission_id).filter(ModAction.user_id == user.id, ModAction.created_datetimez > cutoff, ModAction.kind == 'remove_post').all()]
 	posts = g.db.query(Submission).filter(Submission.id.in_(posts)).all()
 
-	comments = [x[0] for x in g.db.query(ModAction.target_comment_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind == 'remove_comment').all()]
+	comments = [x[0] for x in g.db.query(ModAction.target_comment_id).filter(ModAction.user_id == user.id, ModAction.created_datetimez > cutoff, ModAction.kind == 'remove_comment').all()]
 	comments = g.db.query(Comment).filter(Comment.id.in_(comments)).all()
 	
 	for item in posts + comments:
@@ -141,7 +141,7 @@ def revert_actions(v, username):
 		item.state_mod_set_by = v.username
 		g.db.add(item)
 
-	users = (x[0] for x in g.db.query(ModAction.target_user_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind.in_(('shadowban', 'ban_user'))).all())
+	users = (x[0] for x in g.db.query(ModAction.target_user_id).filter(ModAction.user_id == user.id, ModAction.created_datetimez > cutoff, ModAction.kind.in_(('shadowban', 'ban_user'))).all())
 	users = g.db.query(User).filter(User.id.in_(users)).all()
 
 	for user in users:
