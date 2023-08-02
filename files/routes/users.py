@@ -628,14 +628,14 @@ def redditor_moment_redirect(username:str):
 @auth_desired
 def followers(v, username):
 	u = get_user(username, v=v)
-	users = g.db.query(User).join(Follow, Follow.target_id == u.id).filter(Follow.user_id == User.id).order_by(Follow.created_utc).all()
+	users = g.db.query(User).join(Follow, Follow.target_id == u.id).filter(Follow.user_id == User.id).order_by(Follow.created_datetimez).all()
 	return render_template("followers.html", v=v, u=u, users=users)
 
 @app.get("/@<username>/following")
 @auth_desired
 def following(v, username):
 	u = get_user(username, v=v)
-	users = g.db.query(User).join(Follow, Follow.user_id == u.id).filter(Follow.target_id == User.id).order_by(Follow.created_utc).all()
+	users = g.db.query(User).join(Follow, Follow.user_id == u.id).filter(Follow.target_id == User.id).order_by(Follow.created_datetimez).all()
 	return render_template("following.html", v=v, u=u, users=users)
 
 @app.get("/views")
