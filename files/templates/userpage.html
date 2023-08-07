@@ -158,7 +158,7 @@
 							{% endif %}
 						{% endif %}
 
-						<form class="d-none toggleable" id="message" action="/@{{u.username}}/message" onsubmit="submitFormAjax(event)">
+						<form class="d-none toggleable" id="message" action="/@{{u.username}}/message" onsubmit="return submitFormAjax(event)">
 							{{forms.formkey(v)}} 
 							<pre></pre>
 							<textarea autocomplete="off" id="input-message" form="message" name="message" rows="3" minlength="1" maxlength="{{MESSAGE_BODY_LENGTH_MAXIMUM}}" class="form-control b2" oninput="markdown('input-message', 'message-preview')" required></textarea>
@@ -408,7 +408,7 @@
 						{% endif %}
 					{% endif %}
 
-					<form class="d-none toggleable" id='message-mobile' action="/@{{u.username}}/message" onsubmit="submitFormAjax(event)">
+					<form class="d-none toggleable" id='message-mobile' action="/@{{u.username}}/message" onsubmit="return submitFormAjax(event)">
 						<pre></pre>
 						{{forms.formkey(v)}} 
 						<textarea autocomplete="off" id="input-message-mobile" form="message-mobile" name="message" rows="3" minlength="1" maxlength="{{MESSAGE_BODY_LENGTH_MAXIMUM}}" class="form-control" oninput="markdown('input-message-mobile', 'message-preview-mobile')" required></textarea>
