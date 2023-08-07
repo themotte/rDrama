@@ -76,7 +76,10 @@ function transferBux(mobile=false) {
 
 function submitFormAjax(e) {
 	for (elementId in ['message', 'message-mobile', 'message-preview', 'message-preview-mobile']) {
-		document.getElementById(elementId).classList.add("d-none");
+		const element = document.getElementById(elementId);
+		if (element !== null) {
+			element.classList.add("d-none");
+		}
 	}
 	
 	const form = e.target;
