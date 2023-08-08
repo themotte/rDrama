@@ -132,12 +132,12 @@
 					<a class="d-md-none" href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 				</div>
 			{% endif %}
-
-			{% if is_notification_page and c.level == 1 and c.is_strict_message and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
-				{%- include 'component/comment/replybox_message.html' -%}
-			{% endif %}
 		{% else %}
 			<div id="replies-of-{{c.id}}"></div>
+		{% endif %}
+
+		{% if is_notification_page and c.level == 1 and c.is_strict_message and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
+			{%- include 'component/comment/replybox_message.html' -%}
 		{% endif %}
 	</div>
 
