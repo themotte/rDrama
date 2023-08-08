@@ -1,8 +1,8 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from files.classes.base import CreatedBase
+from files.classes.base import CreatedDateTimeBase
 
-class Notification(CreatedBase):
+class Notification(CreatedDateTimeBase):
 	__tablename__ = "notifications"
 
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)

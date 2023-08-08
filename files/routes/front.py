@@ -30,7 +30,7 @@ def unread(v):
 		Comment.state_mod == StateMod.VISIBLE,
 		Comment.state_user_deleted_utc == None,
 		Comment.author_id != AUTOJANNY_ID,
-	).order_by(Notification.created_utc.desc()).all()
+	).order_by(Notification.created_datetimez.desc()).all()
 
 	for n, c in listing:
 		n.read = True
@@ -52,7 +52,7 @@ def notifications_main(v: User):
 			Comment.state_mod == StateMod.VISIBLE,
 			Comment.state_user_deleted_utc == None,
 			Comment.author_id != AUTOJANNY_ID,
-		).order_by(Notification.created_utc.desc()))
+		).order_by(Notification.created_datetimez.desc()))
 
 	if not v.shadowbanned and v.admin_level < 3:
 		comments = comments.join(Comment.author).filter(User.shadowbanned == None)
@@ -96,7 +96,7 @@ def notifications_posts(v: User):
 	notifications = (g.db.query(Notification, Comment)
 		.join(Comment, Notification.comment_id == Comment.id)
 		.filter(Notification.user_id == v.id, Comment.author_id == AUTOJANNY_ID)
-		.order_by(Notification.created_utc.desc()).offset(25 * (page - 1)).limit(101).all())
+		.order_by(Notification.created_datetimez.desc()).offset(25 * (page - 1)).limit(101).all())
 
 	listing = []
 

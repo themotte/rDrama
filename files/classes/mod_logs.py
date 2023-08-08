@@ -4,12 +4,12 @@ from copy import deepcopy
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
-from files.classes.base import CreatedBase
+from files.classes.base import CreatedDateTimeBase
 from files.helpers.config.const import *
 from files.helpers.lazy import lazy
 
 
-class ModAction(CreatedBase):
+class ModAction(CreatedDateTimeBase):
 	__tablename__ = "modactions"
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"))

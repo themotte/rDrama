@@ -55,7 +55,7 @@ def support(v):
 def participation_stats(v):
 	day = int(time.time()) - 86400
 
-	week = int(time.time()) - 604800
+	week = int(time.time()) - 604800 # TODO themotte#601 use created_datetimez once all is converted
 	posters = g.db.query(Submission.author_id).distinct(Submission.author_id).filter(Submission.created_utc > week).all()
 	commenters = g.db.query(Comment.author_id).distinct(Comment.author_id).filter(Comment.created_utc > week).all()
 	voters = g.db.query(Vote.user_id).distinct(Vote.user_id).filter(Vote.created_utc > week).all()
