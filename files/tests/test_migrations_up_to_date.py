@@ -27,26 +27,32 @@ def test_migrations_up_to_date():
 		return [l.strip() for l in method_lines if not l.strip().startswith('#')][1:]
 
 	versions_before = get_versions()
-	result = subprocess.run(
-		[
-			'python3',
-			'-m',
-			'flask',
-			'db',
-			'revision',
-			'--autogenerate',
-			'--rev-id=ci_verify_empty_revision',
-			'--message=should_be_empty',
-		],
-		cwd=BASE_PATH,
-		env={
-			**os.environ,
-			'FLASK_APP': 'files/cli:app',
-		},
-		capture_output=True,
-		text=True,
-		check=True
-	)
+	try:
+		result = subprocess.run(
+			[
+				'python3',
+				'-m',
+				'flask',
+				'db',
+				'revision',
+				'--autogenerate',
+				'--rev-id=ci_verify_empty_revision',
+				'--message=should_be_empty',
+			],
+			cwd=BASE_PATH,
+			env={
+				**os.environ,
+				'FLASK_APP': 'files/cli:app',
+			},
+			capture_output=True,
+			text=True,
+			check=True
+		)
+	except subprocess.CalledProcessError as e:
+		print("Failed to run migrations...")
+		print(e.stderr)
+		raise
+
 	versions_after = get_versions()
 	new_versions = [v for v in versions_after if v not in versions_before]
 	try:
