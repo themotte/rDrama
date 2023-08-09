@@ -4,7 +4,7 @@ import contextlib
 import dataclasses
 from datetime import date, datetime, timedelta, timezone
 from enum import IntEnum, IntFlag
-from typing import TYPE_CHECKING, Final, Optional, Union
+from typing import TYPE_CHECKING, ClassVar, Final, Optional, Union
 
 import flask
 import flask_caching
@@ -360,7 +360,7 @@ class RepeatableTaskRun(CreatedBase):
 
 	task = relationship(RepeatableTask, back_populates="runs")
 
-	_exception: Optional[Exception] = None # not part of the db model
+	_exception: ClassVar[Exception | None] = None # not part of the db model
 
 	@property
 	def completed_datetime_py(self) -> datetime | None:
