@@ -72,43 +72,44 @@ if environ.get("FLASK_PROFILER_ENDPOINT"):
 	profiler = flask_profiler.Profiler()
 	profiler.init_app(app)
 
-# ...and then let's install code to unmangle jinja2 stacktraces for easy_profile...
+# ...and then let's set up the easy_profile analysis if it's enabled...
 
-try:
-	import inspect as inspectlib
-	import linecache
+if bool_from_string(environ.get('DBG_SQL_ANALYSIS', False)):
+	try:
+		import inspect as inspectlib
+		import linecache
 
-	from easy_profile import EasyProfileMiddleware
-	from jinja2.utils import internal_code
-	
-	def jinja_unmangle_stacktrace():
-		rewritten_frames = []
+		from easy_profile import EasyProfileMiddleware
+		from jinja2.utils import internal_code
+		
+		def jinja_unmangle_stacktrace():
+			rewritten_frames = []
 
-		for record in inspectlib.stack():
-			# Skip jinja internalcode frames
-			if record.frame.f_code in internal_code:
-				continue
-			
-			filename = record.frame.f_code.co_filename
-			lineno = record.frame.f_lineno
-			name = record.frame.f_code.co_name
+			for record in inspectlib.stack():
+				# Skip jinja internalcode frames
+				if record.frame.f_code in internal_code:
+					continue
+				
+				filename = record.frame.f_code.co_filename
+				lineno = record.frame.f_lineno
+				name = record.frame.f_code.co_name
 
-			template = record.frame.f_globals.get("__jinja_template__")
-			if template is not None:
-				lineno = template.get_corresponding_lineno(lineno)
+				template = record.frame.f_globals.get("__jinja_template__")
+				if template is not None:
+					lineno = template.get_corresponding_lineno(lineno)
 
-			line = linecache.getline(filename, lineno).strip()
+				line = linecache.getline(filename, lineno).strip()
 
-			rewritten_frames.append(f'  File "{filename}", line {lineno}, {name}\n    {line}\n')
+				rewritten_frames.append(f'  File "{filename}", line {lineno}, {name}\n    {line}\n')
 
-		return "".join(rewritten_frames)
+			return "".join(rewritten_frames)
 
-	app.wsgi_app = EasyProfileMiddleware(
-		app.wsgi_app,
-		stack_callback = jinja_unmangle_stacktrace)
-except ModuleNotFoundError:
-	# failed to import, just keep on going
-	pass
+		app.wsgi_app = EasyProfileMiddleware(
+			app.wsgi_app,
+			stack_callback = jinja_unmangle_stacktrace)
+	except ModuleNotFoundError:
+		# failed to import, just keep on going
+		pass
 
 # ...and let's load up app config...
 
