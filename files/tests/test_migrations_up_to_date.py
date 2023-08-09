@@ -7,7 +7,7 @@ from files.__main__ import app
 
 APP_PATH = app.root_path
 BASE_PATH = os.path.join(*os.path.split(APP_PATH)[:-1])
-VERSIONS_PATH = migrations.versions.__path__._path[0];
+VERSIONS_PATH = migrations.versions.__path__._path[0]
 
 def test_migrations_up_to_date():
 	def get_versions():
