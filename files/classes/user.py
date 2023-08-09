@@ -8,6 +8,7 @@ import pyotp
 from flask import g, session
 from sqlalchemy.orm import (Mapped, aliased, declared_attr, mapped_column,
                             relationship)
+from sqlalchemy.sql.operators import and_, or_
 from sqlalchemy.sql.schema import ForeignKey, Index
 from sqlalchemy.sql.sqltypes import Boolean, DateTime, Float, Integer, String
 
