@@ -142,7 +142,7 @@ def bulk_recompute_descendant_counts(predicate = None, db=None):
 				.join(
 					child_comments,
 					parent_comments.corresponding_column(Comment.id) == child_comments.corresponding_column(Comment.parent_comment_id),
-					True
+					isouter=True
 				)
 				.group_by(parent_comments.corresponding_column(Comment.id))
 				.with_only_columns(
