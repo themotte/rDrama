@@ -25,7 +25,7 @@ class UserNote(CreatedDateTimeBase):
 	reference_comment: Mapped[int | None] = mapped_column(Integer, ForeignKey("comments.id", ondelete='SET NULL'))
 	reference_post: Mapped[int | None] = mapped_column(Integer, ForeignKey("submissions.id", ondelete='SET NULL'))
 	note: Mapped[str] = mapped_column(String, nullable=False)
-	tag: Mapped[str] = mapped_column(EnumType(UserTag), nullable=False)
+	tag: Mapped[UserTag] = mapped_column(EnumType(UserTag), nullable=False)
 
 	author = relationship("User", foreign_keys='UserNote.author_id')
 	user = relationship("User", foreign_keys='UserNote.reference_user', back_populates="notes")
