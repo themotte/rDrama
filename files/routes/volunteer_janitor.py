@@ -4,7 +4,7 @@ from files.__main__ import app
 from files.classes.comment import Comment
 from files.classes.flags import CommentFlag
 from files.classes.user import User
-from files.classes.visstate import StateReport
+from files.classes.visstate import StateReport, StateMod
 from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
 from files.helpers.volunteer_janitor import update_comment_badness
 from files.routes.volunteer_common import VolunteerDuty
@@ -12,6 +12,7 @@ from flask import g
 import pprint
 import random
 import sqlalchemy
+from sqlalchemy.orm import aliased
 
 class VolunteerDutyJanitor(VolunteerDuty):
 
@@ -31,7 +32,7 @@ class VolunteerDutyJanitor(VolunteerDuty):
 
     def embed_template(self) -> str:
         return "volunteer_janitor.html"
-    
+
     def comments(self) -> list[Comment]:
         return g.db.query(Comment).where(Comment.id.in_(self.choices))
 
@@ -42,11 +43,15 @@ def get_duty(u: User) -> Optional[VolunteerDutyJanitor]:
 
     # these could probably be combined into one query somehow
 
-    # find reported not-deleted comments not made by the current user
+    # find reported visible comments not made by the current user or in reply to the current user
+    ParentComment = aliased(Comment)
     reported_comments = g.db.query(Comment) \
         .where(Comment.state_report == StateReport.REPORTED) \
+        .where(Comment.state_mod == StateMod.VISIBLE) \
         .where(Comment.state_user_deleted_utc == None) \
         .where(Comment.author_id != u.id) \
+        .outerjoin(ParentComment, ParentComment.id == Comment.parent_comment_id) \
+        .where(sqlalchemy.or_(ParentComment.author_id != u.id, ParentComment.author_id == None)) \
         .with_entities(Comment.id)
 
     reported_ids = [reported.id for reported in reported_comments]
