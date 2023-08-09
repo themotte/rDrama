@@ -35,21 +35,6 @@ MAX_TITLE_LENGTH = 500
 MAX_URL_LENGTH = 2048
 
 
-@app.post("/toggle_club/<pid>")
-@auth_required
-def toggle_club(pid, v):
-	post = get_post(pid)
-	if post.author_id != v.id and v.admin_level < 2: abort(403)
-
-	post.club = not post.club
-	g.db.add(post)
-
-	g.db.commit()
-
-	if post.club: return {"message": "Post has been marked as club-only!"}
-	else: return {"message": "Post has been unmarked as club-only!"}
-
-
 @app.post("/publish/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
@@ -84,8 +69,6 @@ def post_id(pid, anything=None, v=None):
 	if v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "new"
 	sort = request.values.get("sort", defaultsortingcomments)
-
-	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
 
 	limit = app.config['RESULTS_PER_PAGE_COMMENTS']
 	offset = 0
@@ -130,8 +113,6 @@ def post_id(pid, anything=None, v=None):
 @auth_desired
 def viewmore(v, pid, sort, offset):
 	post = get_post(pid, v=v)
-	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
-
 	offset_prev = int(offset)
 	try: ids = set(int(x) for x in request.values.get("ids").split(','))
 	except: abort(400)
@@ -557,7 +538,6 @@ def submit_post(v):
 
 	_do_antispam_submission_check(v, validated_post)
 
-	club = bool(request.values.get("club",""))
 	is_bot = bool(request.headers.get("Authorization"))
 
 	# Invariant: these values are guarded and obey the length bound
@@ -566,7 +546,6 @@ def submit_post(v):
 
 	post = Submission(
 		private=bool(request.values.get("private","")),
-		club=club,
 		author_id=v.id,
 		over_18=bool(request.values.get("over_18","")),
 		app_id=v.client.application.id if v.client else None,

@@ -54,16 +54,15 @@
 						{{t | capitalize}}
 					</button>
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-						{% if t != "hour" %}<a class="dropdown-item" href="?sort={{sort}}&t=hour&ccmode={{ccmode}}"><i class="fas fa-clock mr-2 "></i>Hour</a>{% endif %}
-						{% if t != "day" %}<a class="dropdown-item" href="?sort={{sort}}&t=day&ccmode={{ccmode}}"><i class="fas fa-calendar-day mr-2 "></i>Day</a>{% endif %}
-						{% if t != "week" %}<a class="dropdown-item" href="?sort={{sort}}&t=week&ccmode={{ccmode}}"><i class="fas fa-calendar-week mr-2 "></i>Week</a>{% endif %}
-						{% if t != "month" %}<a class="dropdown-item" href="?sort={{sort}}&t=month&ccmode={{ccmode}}"><i class="fas fa-calendar-alt mr-2 "></i>Month</a>{% endif %}
-						{% if t != "year" %}<a class="dropdown-item" href="?sort={{sort}}&t=year&ccmode={{ccmode}}"><i class="fas fa-calendar mr-2 "></i>Year</a>{% endif %}
-						{% if t != "all" %}<a class="dropdown-item" href="?sort={{sort}}&t=all&ccmode={{ccmode}}"><i class="fas fa-infinity mr-2 "></i>All</a>{% endif %}
+						{% if t != "hour" %}<a class="dropdown-item" href="?sort={{sort}}&t=hour"><i class="fas fa-clock mr-2 "></i>Hour</a>{% endif %}
+						{% if t != "day" %}<a class="dropdown-item" href="?sort={{sort}}&t=day"><i class="fas fa-calendar-day mr-2 "></i>Day</a>{% endif %}
+						{% if t != "week" %}<a class="dropdown-item" href="?sort={{sort}}&t=week"><i class="fas fa-calendar-week mr-2 "></i>Week</a>{% endif %}
+						{% if t != "month" %}<a class="dropdown-item" href="?sort={{sort}}&t=month"><i class="fas fa-calendar-alt mr-2 "></i>Month</a>{% endif %}
+						{% if t != "year" %}<a class="dropdown-item" href="?sort={{sort}}&t=year"><i class="fas fa-calendar mr-2 "></i>Year</a>{% endif %}
+						{% if t != "all" %}<a class="dropdown-item" href="?sort={{sort}}&t=all"><i class="fas fa-infinity mr-2 "></i>All</a>{% endif %}
 					</div>
 				</div>
-				{% set ccmode_text = 'ccmode=' ~ ccmode %}
-				{{sorting_time.sort_dropdown(sort, t, SORTS_POSTS, ccmode_text)}}
+				{{sorting_time.sort_dropdown(sort, t, SORTS_POSTS)}}
 			</div>
 			{% endblock %}
 		</div>
@@ -87,14 +86,14 @@
 	<ul class="pagination pagination-sm mb-0">
 		{% if page>1 %}
 		<li class="page-item">
-			<small><a class="page-link" href="?sort={{sort}}&page={{page-1}}&t={{t}}&ccmode={{ccmode}}" tabindex="-1">Prev</a></small>
+			<small><a class="page-link" href="?sort={{sort}}&page={{page-1}}&t={{t}}" tabindex="-1">Prev</a></small>
 		</li>
 		{% else %}
 		<li class="page-item disabled"><span class="page-link">Prev</span></li>
 		{% endif %}
 		{% if next_exists %}
 		<li class="page-item">
-			<small><a class="page-link" href="?sort={{sort}}&page={{page+1}}&t={{t}}&ccmode={{ccmode}}">Next</a></small>
+			<small><a class="page-link" href="?sort={{sort}}&page={{page+1}}&t={{t}}">Next</a></small>
 		</li>
 		{% else %}
 		<li class="page-item disabled"><span class="page-link">Next</span></li>

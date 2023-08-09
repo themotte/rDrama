@@ -93,8 +93,6 @@ CARD_VIEW = bool_from_string(environ.get("CARD_VIEW", True))
 FINGERPRINT_TOKEN = environ.get("FP", None)
 
 # other stuff from const.py that aren't constants
-CLUB_TRUESCORE_MINIMUM = int(environ.get("DUES").strip())
-
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 PUSHER_ID = environ.get("PUSHER_ID", "").strip()
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
