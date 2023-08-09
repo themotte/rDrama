@@ -1,10 +1,12 @@
+from enum import Enum
+
+from sqlalchemy import Enum as EnumType
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from files.classes.base import CreatedDateTimeBase
 from files.helpers.config.const import *
-from enum import Enum
-from sqlalchemy import Enum as EnumType
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 
 class UserTag(Enum):
     Quality = 0
@@ -25,7 +27,7 @@ class UserNote(CreatedDateTimeBase):
 	reference_comment: Mapped[int | None] = mapped_column(Integer, ForeignKey("comments.id", ondelete='SET NULL'))
 	reference_post: Mapped[int | None] = mapped_column(Integer, ForeignKey("submissions.id", ondelete='SET NULL'))
 	note: Mapped[str] = mapped_column(String, nullable=False)
-	tag: Mapped[UserTag] = mapped_column(EnumType(UserTag), nullable=False)
+	tag = mapped_column(EnumType(UserTag), nullable=False) # XXX: Needs migration, see #524
 
 	author = relationship("User", foreign_keys='UserNote.author_id')
 	user = relationship("User", foreign_keys='UserNote.reference_user', back_populates="notes")
