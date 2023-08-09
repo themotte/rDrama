@@ -119,6 +119,10 @@
 
 		{%- include 'component/comment/replybox_comment.html' -%}
 
+		{% if is_notification_page and c.is_strict_message and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
+			{%- include 'component/comment/replybox_message.html' -%}
+		{% endif %}
+		
 		{% if render_replies %} 
 			{% if level <= RENDER_DEPTH_LIMIT - 1 or is_notification_page %}
 				<div id="replies-of-{{c.id}}">
@@ -134,10 +138,6 @@
 			{% endif %}
 		{% else %}
 			<div id="replies-of-{{c.id}}"></div>
-		{% endif %}
-
-		{% if is_notification_page and c.level == 1 and c.is_strict_message and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
-			{%- include 'component/comment/replybox_message.html' -%}
 		{% endif %}
 	</div>
 
