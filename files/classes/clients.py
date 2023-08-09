@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 from flask import g
-from sqlalchemy import *
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.sql.schema import ForeignKey, UniqueConstraint
+from sqlalchemy.sql.sqltypes import CHAR, Integer, String
 
 from files.classes.base import Base
 from files.helpers.config.const import *
@@ -18,7 +21,7 @@ class OauthApp(Base):
 	)
 
 	id: Mapped[int] = mapped_column(Integer, primary_key=True)
-	client_id: Mapped[str | None] = mapped_column(String(length=64))
+	client_id: Mapped[str | None] = mapped_column(CHAR(length=64))
 	app_name: Mapped[str] = mapped_column(String(length=50), nullable=False)
 	redirect_uri: Mapped[str] = mapped_column(String(length=4096), nullable=False)
 	description: Mapped[str] = mapped_column(String(length=256), nullable=False)
@@ -56,7 +59,7 @@ class ClientAuth(Base):
 
 	user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), primary_key=True)
 	oauth_client: Mapped[int] = mapped_column(Integer, ForeignKey("oauth_apps.id"), primary_key=True)
-	access_token: Mapped[str] = mapped_column(String(128), nullable=False)
+	access_token: Mapped[str] = mapped_column(CHAR(128), nullable=False)
 	
 	user = relationship("User", viewonly=True)
 	application = relationship("OauthApp", viewonly=True)
