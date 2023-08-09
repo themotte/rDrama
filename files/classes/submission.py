@@ -1,8 +1,10 @@
+from datetime import datetime
 from urllib.parse import urlparse
 
 from flask import g
 from sqlalchemy import *
-from sqlalchemy.orm import Session, declared_attr, deferred, relationship
+from sqlalchemy.orm import (Mapped, Session, declared_attr, deferred,
+                            mapped_column, relationship)
 
 from files.classes.base import CreatedBase
 from files.classes.flags import Flag
@@ -20,40 +22,40 @@ from files.helpers.time import format_age, format_datetime
 class Submission(CreatedBase):
 	__tablename__ = "submissions"
 
-	id = Column(Integer, primary_key=True)
-	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-	edited_utc = Column(Integer, default=0, nullable=False)
-	thumburl = Column(String)
-	bannedfor = Column(Boolean)
-	ghost = Column(Boolean, default=False, nullable=False)
-	views = Column(Integer, default=0, nullable=False)
-	distinguish_level = Column(Integer, default=0, nullable=False)
-	stickied = Column(String)
-	stickied_utc = Column(Integer)
-	is_pinned = Column(Boolean, default=False, nullable=False)
-	private = Column(Boolean, default=False, nullable=False)
+	id: Mapped[int] = mapped_column(Integer, primary_key=True)
+	author_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
+	edited_utc: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+	thumburl = mapped_column(String)
+	bannedfor: Mapped[bool] = mapped_column(Boolean)
+	ghost: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+	views: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+	distinguish_level: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+	stickied: Mapped[str | None] = mapped_column(String)
+	stickied_utc: Mapped[int | None] = mapped_column(Integer)
+	is_pinned: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+	private: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 	club = Column(Boolean, default=False, nullable=False)
-	comment_count = Column(Integer, default=0, nullable=False)
-	over_18 = Column(Boolean, default=False, nullable=False)
-	is_bot = Column(Boolean, default=False, nullable=False)
-	upvotes = Column(Integer, default=1, nullable=False)
-	downvotes = Column(Integer, default=0, nullable=False)
-	realupvotes = Column(Integer, default=1)
-	app_id=Column(Integer, ForeignKey("oauth_apps.id"))
-	title = Column(String, nullable=False)
-	title_html = Column(String, nullable=False)
-	url = Column(String)
-	body = Column(Text)
-	body_html = Column(Text)
-	flair = Column(String)
-	embed_url = Column(String)
-	task_id = Column(Integer, ForeignKey("tasks_repeatable_scheduled_submissions.id"))
+	comment_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+	over_18: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+	is_bot: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+	upvotes: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+	downvotes: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+	realupvotes: Mapped[int] = mapped_column(Integer, default=1)
+	app_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("oauth_apps.id"))
+	title: Mapped[str] = mapped_column(String, nullable=False)
+	title_html: Mapped[str] = mapped_column(String, nullable=False)
+	url: Mapped[str | None] = mapped_column(String)
+	body: Mapped[str | None] = mapped_column(Text)
+	body_html: Mapped[str | None] = mapped_column(Text)
+	flair: Mapped[str | None] = mapped_column(String)
+	embed_url: Mapped[str | None] = mapped_column(String)
+	task_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("tasks_repeatable_scheduled_submissions.id"))
 
 	# Visibility states here
-	state_user_deleted_utc = Column(DateTime(timezone=True), nullable=True) # null if it hasn't been deleted by the user
-	state_mod = Column(Enum(StateMod), default=StateMod.FILTERED, nullable=False) # default to Filtered just to partially neuter possible exploits
-	state_mod_set_by = Column(String, nullable=True) # This should *really* be a User.id, but I don't want to mess with the required refactoring at the moment - it's extra hard because it could potentially be a lot of extra either data or queries
-	state_report = Column(Enum(StateReport), default=StateReport.UNREPORTED, nullable=False)
+	state_user_deleted_utc: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True) # null if it hasn't been deleted by the user
+	state_mod: Mapped[StateMod] = mapped_column(Enum(StateMod), default=StateMod.FILTERED, nullable=False) # default to Filtered just to partially neuter possible exploits
+	state_mod_set_by: Mapped[str | None] = mapped_column(String, nullable=True) # This should *really* be a User.id, but I don't want to mess with the required refactoring at the moment - it's extra hard because it could potentially be a lot of extra either data or queries
+	state_report: Mapped[StateReport] = mapped_column(Enum(StateReport), default=StateReport.UNREPORTED, nullable=False)
 
 	Index('post_app_id_idx', app_id)
 	Index('subimssion_binary_group_idx', state_mod, state_user_deleted_utc, over_18)
@@ -85,7 +87,7 @@ class Submission(CreatedBase):
 	notes = relationship("UserNote", back_populates="post")
 	task = relationship("ScheduledSubmissionTask", back_populates="submissions")
 
-	bump_utc = deferred(Column(Integer, server_default=FetchedValue()))
+	bump_utc = deferred(mapped_column(Integer, server_default=FetchedValue()))
 
 	def submit(self, db: Session):
 		# create submission...

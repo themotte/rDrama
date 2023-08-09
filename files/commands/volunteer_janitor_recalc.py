@@ -2,6 +2,7 @@
 import pprint
 
 import sqlalchemy
+import sqlalchemy.orm
 from sqlalchemy.orm import Session
 
 from alive_progress import alive_it

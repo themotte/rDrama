@@ -1,8 +1,10 @@
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from files.classes.base import Base
 from files.helpers.config.const import AWARDS
 from files.helpers.lazy import lazy
+
 
 class AwardRelationship(Base):
 
@@ -11,11 +13,11 @@ class AwardRelationship(Base):
 		UniqueConstraint('user_id', 'submission_id', 'comment_id', name='award_constraint'),
 	)
 
-	id = Column(Integer, primary_key=True)
-	user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-	submission_id = Column(Integer, ForeignKey("submissions.id"))
-	comment_id = Column(Integer, ForeignKey("comments.id"))
-	kind = Column(String, nullable=False)
+	id: Mapped[int] = mapped_column(Integer, primary_key=True)
+	user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
+	submission_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("submissions.id"))
+	comment_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("comments.id"))
+	kind: Mapped[str] = mapped_column(String, nullable=False)
 
 	user = relationship("User", primaryjoin="AwardRelationship.user_id==User.id", viewonly=True)
 	post = relationship("Submission", primaryjoin="AwardRelationship.submission_id==Submission.id", viewonly=True)

@@ -2,14 +2,16 @@ import time
 from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import text
-from sqlalchemy.orm import declarative_base, declared_attr
-from sqlalchemy.schema import Column
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm.decl_api import DeclarativeBase, declared_attr
 from sqlalchemy.sql.functions import now
-from sqlalchemy.sql.sqltypes import Integer, DateTime
+from sqlalchemy.sql.sqltypes import DateTime, Integer
 
 from files.helpers.time import format_age, format_datetime
 
-Base = declarative_base()
+
+class Base(DeclarativeBase):
+	pass
 
 
 class CreatedBase(Base):
@@ -21,8 +23,8 @@ class CreatedBase(Base):
 		super().__init__(*args, **kwargs)
 	
 	@declared_attr
-	def created_utc(self):
-		return Column(Integer, nullable=False)
+	def created_utc(self) -> Mapped[int]:
+		return mapped_column(Integer, nullable=False)
 	
 	@property
 	def created_date(self) -> str:
@@ -67,13 +69,13 @@ class CreatedDateTimeBase(Base):
 		super().__init__(*args, **kwargs)
 	
 	@declared_attr
-	def created_datetimez(self):
+	def created_datetimez(self) -> Mapped[datetime]:
 		"""
 		Declare default column for classes/tables inheriting `CreatedDateTimeBase`.
 		
 		Retrieving `created_datetimez` will return a `datetime` object with `tzinfo` for UTC.
 		"""
-		return Column(DateTime(timezone=True), nullable=False, server_default=now())
+		return mapped_column(DateTime(timezone=True), nullable=False, server_default=now())
 
 	@property
 	def created_utc(self):

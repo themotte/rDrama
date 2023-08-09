@@ -1,8 +1,8 @@
 import functools
 from datetime import datetime, timezone
 
-from sqlalchemy.orm import relationship
-from sqlalchemy.schema import Column, ForeignKey
+from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
+from sqlalchemy.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import Boolean, Integer, String, Text
 
 from files.classes.cron.tasks import (RepeatableTask, ScheduledTaskType,
@@ -24,18 +24,18 @@ class ScheduledSubmissionTask(RepeatableTask):
 		"polymorphic_identity": int(ScheduledTaskType.SCHEDULED_SUBMISSION),
 	}
 
-	id = Column(Integer, ForeignKey(RepeatableTask.id), primary_key=True)
-	author_id_submission = Column(Integer, ForeignKey("users.id"), nullable=False)
-	ghost = Column(Boolean, default=False, nullable=False)
-	private = Column(Boolean, default=False, nullable=False)
-	over_18 = Column(Boolean, default=False, nullable=False)
-	is_bot = Column(Boolean, default=False, nullable=False)
-	title = Column(String(SUBMISSION_TITLE_LENGTH_MAXIMUM), nullable=False)
-	url = Column(String)
-	body = Column(Text)
-	body_html = Column(Text)
-	flair = Column(String)
-	embed_url = Column(String)
+	id: Mapped[int] = mapped_column(Integer, ForeignKey(RepeatableTask.id), primary_key=True)
+	author_id_submission: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
+	ghost: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+	private: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+	over_18: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+	is_bot: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+	title: Mapped[str] = mapped_column(String(SUBMISSION_TITLE_LENGTH_MAXIMUM), nullable=False)
+	url: Mapped[str | None] = mapped_column(String)
+	body: Mapped[str | None] = mapped_column(Text)
+	body_html: Mapped[str | None] = mapped_column(Text)
+	flair: Mapped[str | None] = mapped_column(String)
+	embed_url: Mapped[str | None] = mapped_column(String)
 
 	author = relationship("User", foreign_keys=author_id_submission)
 	task = relationship(RepeatableTask)

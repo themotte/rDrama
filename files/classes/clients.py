@@ -1,11 +1,14 @@
 from flask import g
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
-from .submission import Submission
-from .comment import Comment
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from files.classes.base import Base
-from files.helpers.lazy import lazy
 from files.helpers.config.const import *
+from files.helpers.lazy import lazy
+
+from .comment import Comment
+from .submission import Submission
+
 
 class OauthApp(Base):
 
@@ -14,12 +17,12 @@ class OauthApp(Base):
 		UniqueConstraint('client_id', name='unique_id'),
 	)
 
-	id = Column(Integer, primary_key=True)
-	client_id = Column(String(length=64))
-	app_name = Column(String(length=50), nullable=False)
-	redirect_uri = Column(String(length=50), nullable=False)
-	description = Column(String(length=256), nullable=False)
-	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+	id: Mapped[int] = mapped_column(Integer, primary_key=True)
+	client_id: Mapped[str | None] = mapped_column(String(length=64))
+	app_name: Mapped[str] = mapped_column(String(length=50), nullable=False)
+	redirect_uri: Mapped[str] = mapped_column(String(length=50), nullable=False)
+	description: Mapped[str] = mapped_column(String(length=256), nullable=False)
+	author_id: Mapped[str] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
 
 	author = relationship("User", viewonly=True)
 
@@ -51,9 +54,9 @@ class ClientAuth(Base):
 		UniqueConstraint('access_token', name='unique_access'),
 	)
 
-	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-	oauth_client = Column(Integer, ForeignKey("oauth_apps.id"), primary_key=True)
-	access_token = Column(String(128), nullable=False)
+	user_id = mapped_column(Integer, ForeignKey("users.id"), primary_key=True)
+	oauth_client = mapped_column(Integer, ForeignKey("oauth_apps.id"), primary_key=True)
+	access_token = mapped_column(String(128), nullable=False)
 	
 	user = relationship("User", viewonly=True)
 	application = relationship("OauthApp", viewonly=True)

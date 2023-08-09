@@ -4,6 +4,7 @@ from files.classes.base import CreatedDateTimeBase
 from files.helpers.config.const import *
 from enum import Enum
 from sqlalchemy import Enum as EnumType
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 class UserTag(Enum):
     Quality = 0
@@ -18,13 +19,13 @@ class UserTag(Enum):
 class UserNote(CreatedDateTimeBase):
 	__tablename__ = "usernotes"
 
-	id = Column(Integer, primary_key=True)
-	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-	reference_user = Column(Integer, ForeignKey("users.id", ondelete='CASCADE'), nullable=False)
-	reference_comment = Column(Integer, ForeignKey("comments.id", ondelete='SET NULL'))
-	reference_post = Column(Integer, ForeignKey("submissions.id", ondelete='SET NULL'))
-	note = Column(String, nullable=False)
-	tag = Column(EnumType(UserTag), nullable=False)
+	id: Mapped[int] = mapped_column(Integer, primary_key=True)
+	author_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
+	reference_user: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete='CASCADE'), nullable=False)
+	reference_comment: Mapped[int | None] = mapped_column(Integer, ForeignKey("comments.id", ondelete='SET NULL'))
+	reference_post: Mapped[int | None] = mapped_column(Integer, ForeignKey("submissions.id", ondelete='SET NULL'))
+	note: Mapped[str] = mapped_column(String, nullable=False)
+	tag: Mapped[str] = mapped_column(EnumType(UserTag), nullable=False)
 
 	author = relationship("User", foreign_keys='UserNote.author_id')
 	user = relationship("User", foreign_keys='UserNote.reference_user', back_populates="notes")

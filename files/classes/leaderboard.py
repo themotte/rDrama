@@ -3,6 +3,7 @@ from typing import Any, Callable, Final, Optional
 
 from sqlalchemy import Column, func
 from sqlalchemy.orm import Session, Query
+from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 from files.helpers.config.const import LEADERBOARD_LIMIT
 
@@ -51,11 +52,11 @@ class Leaderboard:
 		raise NotImplementedError()
 
 class SimpleLeaderboard(Leaderboard):
-	def __init__(self, v:User, meta:LeaderboardMeta, db:Session, users_query:Query, column:Column):
+	def __init__(self, v:User, meta:LeaderboardMeta, db:Session, users_query:Query, column: InstrumentedAttribute):
 		super().__init__(v, meta)
 		self.db:Session = db
 		self.users_query:Query = users_query
-		self.column:Column = column
+		self.column: InstrumentedAttribute = column
 		self._calculate()
 
 	def _calculate(self) -> None:
@@ -101,9 +102,9 @@ class BadgeMarseyLeaderboard(_CountedAndRankedLeaderboard):
 	def _calculate(self):
 		sq = self.db.query(self.column, self.count_and_label(self.column), self.rank_filtered_rank_label_by_desc(self.column)).group_by(self.column).subquery()
 		sq_criteria = None
-		if self.column == Badge.user_id:
+		if self.column is Badge.user_id:
 			sq_criteria = User.id == sq.c.user_id
-		elif self.column == Marsey.author_id:
+		elif self.column is Marsey.author_id:
 			sq_criteria = User.id == sq.c.author_id
 		else:
 			raise ValueError("This leaderboard function only supports Badge.user_id and Marsey.author_id")
@@ -142,7 +143,7 @@ class UserBlockLeaderboard(_CountedAndRankedLeaderboard):
 		self._calculate()
 	
 	def _calculate(self):
-		if self.column != UserBlock.target_id:
+		if self.column is not UserBlock.target_id:
 			raise ValueError("This leaderboard function only supports UserBlock.target_id")
 		sq = self.db.query(self.column, self.count_and_label(self.column)).group_by(self.column).subquery()
 		leaderboard = self.db.query(User, sq.c.count).join(User, User.id == sq.c.target_id).order_by(sq.c.count.desc())

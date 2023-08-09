@@ -5,7 +5,8 @@ from typing import Callable, Iterable, List, Optional, Type, Union
 
 from flask import abort, g
 from sqlalchemy import and_, or_, func
-from sqlalchemy.orm import Query, scoped_session, selectinload
+from sqlalchemy.orm import Query, selectinload
+from sqlalchemy.orm.session import Session
 
 from files.classes import *
 from files.helpers.config.const import AUTOJANNY_ID
@@ -81,7 +82,7 @@ def get_account(
 		v:Optional[User]=None,
 		graceful:bool=False,
 		include_blocks:bool=False,
-		db:Optional[scoped_session]=None) -> Optional[User]:
+		db:Optional[Session]=None) -> Optional[User]:
 	try:
 		id = int(id)
 	except:
@@ -102,7 +103,7 @@ def get_account(
 def get_accounts_dict(ids:Union[Iterable[str], Iterable[int]], 
 		      			v:Optional[User]=None, graceful=False, 
 						include_shadowbanned=True, 
-						db:Optional[scoped_session]=None) -> Optional[dict[int, User]]:
+						db:Optional[Session]=None) -> Optional[dict[int, User]]:
 	if not db: db = g.db
 	if not ids: return {}
 	try: 

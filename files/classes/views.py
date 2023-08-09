@@ -1,7 +1,7 @@
 import time
 
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from files.classes.base import Base
 from files.helpers.lazy import lazy
@@ -11,9 +11,9 @@ from files.helpers.time import format_age
 class ViewerRelationship(Base):
 	__tablename__ = "viewers"
 
-	user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
-	viewer_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
-	last_view_utc = Column(Integer, nullable=False)
+	user_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'), primary_key=True)
+	viewer_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'), primary_key=True)
+	last_view_utc: Mapped[int] = mapped_column(Integer, nullable=False)
 
 	Index('fki_view_viewer_fkey', viewer_id)
 
