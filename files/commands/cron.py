@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from typing import Final
 
 from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.sql.expression import text
 
 from files.__main__ import app, db_session_factory
 from files.classes.cron.tasks import (DayOfWeek, RepeatableTask,
@@ -59,7 +60,7 @@ def _acquire_lock_exclusive(db: Session, table: str):
 	''' 
 	# TODO: make `table` the type LiteralString once we upgrade to python 3.11
 	db.begin() # we want to raise an exception if there's a txn in progress
-	db.execute(f"LOCK TABLE {table} IN ACCESS EXCLUSIVE MODE")
+	db.execute(text(f"LOCK TABLE {table} IN ACCESS EXCLUSIVE MODE"))
 	try:
 		yield
 		db.commit()
