@@ -2,16 +2,17 @@ from dataclasses import dataclass
 from typing import Any, Callable, Final, Optional
 
 from sqlalchemy import Column, func
-from sqlalchemy.orm import Session, Query
+from sqlalchemy.orm import Query, Session
 from sqlalchemy.orm.attributes import InstrumentedAttribute
-
-from files.helpers.config.const import LEADERBOARD_LIMIT
+from sqlalchemy.sql.expression import text
 
 from files.classes.badges import Badge
 from files.classes.marsey import Marsey
 from files.classes.user import User
 from files.classes.userblock import UserBlock
+from files.helpers.config.const import LEADERBOARD_LIMIT
 from files.helpers.get import get_accounts_dict
+
 
 @dataclass(frozen=True, slots=True)
 class LeaderboardMeta:
@@ -180,7 +181,7 @@ class RawSqlLeaderboard(Leaderboard):
 		self._calculate(query)
 
 	def _calculate(self, query:str):
-		self.result = {result[0]:list(result) for result in self.db.execute(query).all()}
+		self.result = {result[0]:list(result) for result in self.db.execute(text(query)).all()}
 		users = get_accounts_dict(self.result.keys(), db=self.db)
 		if users is None:
 			raise Exception("Some users don't exist when they should (was a user deleted?)")
