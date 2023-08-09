@@ -29,7 +29,7 @@ class Comment(CreatedBase):
 	parent_submission = mapped_column(Integer, ForeignKey("submissions.id"))
 	edited_utc: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 	ghost: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-	bannedfor = mapped_column(Boolean)
+	bannedfor: Mapped[bool | None] = mapped_column(Boolean)
 	distinguish_level = mapped_column(Integer, default=0, nullable=False)
 	level = mapped_column(Integer, default=1, nullable=False)
 	parent_comment_id = mapped_column(Integer, ForeignKey("comments.id"))

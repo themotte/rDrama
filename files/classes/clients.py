@@ -20,7 +20,7 @@ class OauthApp(Base):
 	id: Mapped[int] = mapped_column(Integer, primary_key=True)
 	client_id: Mapped[str | None] = mapped_column(String(length=64))
 	app_name: Mapped[str] = mapped_column(String(length=50), nullable=False)
-	redirect_uri: Mapped[str] = mapped_column(String(length=50), nullable=False)
+	redirect_uri: Mapped[str] = mapped_column(String(length=4096), nullable=False)
 	description: Mapped[str] = mapped_column(String(length=256), nullable=False)
 	author_id: Mapped[str] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
 
@@ -54,9 +54,9 @@ class ClientAuth(Base):
 		UniqueConstraint('access_token', name='unique_access'),
 	)
 
-	user_id = mapped_column(Integer, ForeignKey("users.id"), primary_key=True)
-	oauth_client = mapped_column(Integer, ForeignKey("oauth_apps.id"), primary_key=True)
-	access_token = mapped_column(String(128), nullable=False)
+	user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), primary_key=True)
+	oauth_client: Mapped[int] = mapped_column(Integer, ForeignKey("oauth_apps.id"), primary_key=True)
+	access_token: Mapped[str] = mapped_column(String(128), nullable=False)
 	
 	user = relationship("User", viewonly=True)
 	application = relationship("OauthApp", viewonly=True)

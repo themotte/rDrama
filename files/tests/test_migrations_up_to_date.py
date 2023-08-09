@@ -49,7 +49,7 @@ def test_migrations_up_to_date():
 			check=True
 		)
 	except subprocess.CalledProcessError as e:
-		print("Failed to run migrations...")
+		print("Failed to run migration test...")
 		print(e.stderr)
 		raise
 

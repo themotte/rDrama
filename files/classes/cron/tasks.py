@@ -242,7 +242,7 @@ class RepeatableTask(CreatedBase):
 	type_id: Mapped[int] = mapped_column(SmallInteger, nullable=False)
 	enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 	run_state: Mapped[int] = mapped_column(SmallInteger, default=int(ScheduledTaskState.WAITING), nullable=False)
-	run_time_last: Mapped[datetime] = mapped_column(DateTime, default=None)
+	run_time_last: Mapped[datetime | None] = mapped_column(DateTime, default=None)
 	
 	frequency_day: Mapped[int] = mapped_column(SmallInteger, nullable=False)
 	time_of_day_utc = mapped_column(Time, nullable=False)
@@ -351,12 +351,12 @@ class RepeatableTask(CreatedBase):
 class RepeatableTaskRun(CreatedBase):
 	__tablename__ = "tasks_repeatable_runs"
 	
-	id = mapped_column(Integer, primary_key=True)
-	task_id = mapped_column(Integer, ForeignKey(RepeatableTask.id), nullable=False)
-	manual = mapped_column(Boolean, default=False, nullable=False)
-	traceback_str = mapped_column(Text, nullable=True)
+	id: Mapped[int] = mapped_column(Integer, primary_key=True)
+	task_id: Mapped[int] = mapped_column(Integer, ForeignKey(RepeatableTask.id), nullable=False)
+	manual: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+	traceback_str: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-	completed_utc = mapped_column(DateTime)
+	completed_utc: Mapped[datetime | None] = mapped_column(DateTime)
 
 	task = relationship(RepeatableTask, back_populates="runs")
 
