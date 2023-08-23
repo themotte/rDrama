@@ -21,6 +21,7 @@ class VolunteerJanitorRecord(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     comment_id = Column(Integer, ForeignKey("comments.id"), nullable=False)
     recorded_datetimez = Column(DateTime(timezone=True), default=0, nullable=False, server_default=now())
+    """new rows have a default recorded_datetimez of the database server's `now()`"""
     result = Column(Enum(VolunteerJanitorResult), default=VolunteerJanitorResult.Pending, nullable=False)
 
     Index('volunteer_comment_index', user_id, comment_id)

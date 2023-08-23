@@ -72,6 +72,8 @@ class CreatedDateTimeBase(Base):
 		Declare default column for classes/tables inheriting `CreatedDateTimeBase`.
 		
 		Retrieving `created_datetimez` will return a `datetime` object with `tzinfo` for UTC.
+
+		New rows have a default created_datetimez of the database server's `now()`
 		"""
 		return Column(DateTime(timezone=True), nullable=False, server_default=now())
 
