@@ -3,6 +3,8 @@
 
 This code runs https://www.themotte.org .
 
+Join [the Dev Discord](https://discord.gg/KChpcdaNJC) for help.
+
 # Installation (Windows/Linux/MacOS)
 
 1 - Install [a container runtime and the Docker commandline tools](https://docs.docker.com/get-docker/) on your machine.
