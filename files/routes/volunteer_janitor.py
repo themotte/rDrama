@@ -24,7 +24,6 @@ class VolunteerDutyJanitor(VolunteerDuty):
             record = VolunteerJanitorRecord()
             record.user_id = v.id
             record.comment_id = item
-            record.recorded_datetimez = sqlalchemy.func.now()
             record.result = VolunteerJanitorResult.Pending
             g.db.add(record)
         
@@ -96,7 +95,6 @@ def submitted(v: User, key: str, val: str) -> None:
     record = VolunteerJanitorRecord()
     record.user_id = v.id
     record.comment_id = key
-    record.recorded_datetimez = sqlalchemy.func.now()
     record.result = VolunteerJanitorResult(int(val))
     g.db.add(record)
 
