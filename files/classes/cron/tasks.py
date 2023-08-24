@@ -4,16 +4,16 @@ import contextlib
 import dataclasses
 from datetime import date, datetime, timedelta, timezone
 from enum import IntEnum, IntFlag
-from typing import TYPE_CHECKING, Final, Optional, Union
+from typing import TYPE_CHECKING, ClassVar, Final, Optional, Union
 
 import flask
 import flask_caching
 import flask_mail
 import redis
-from sqlalchemy.orm import relationship, Session
-from sqlalchemy.schema import Column, ForeignKey
+from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
+from sqlalchemy.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import (Boolean, DateTime, Integer, SmallInteger,
-                                     Text, Time, String)
+                                     String, Text, Time)
 
 from files.classes.base import CreatedBase
 from files.helpers.time import format_age, format_datetime
@@ -237,18 +237,18 @@ _TABLE_NAME: Final[str] = "tasks_repeatable"
 class RepeatableTask(CreatedBase):
 	__tablename__ = _TABLE_NAME
 
-	id = Column(Integer, primary_key=True, nullable=False)
-	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-	type_id = Column(SmallInteger, nullable=False)
-	enabled = Column(Boolean, default=True, nullable=False)
-	run_state = Column(SmallInteger, default=int(ScheduledTaskState.WAITING), nullable=False)
-	run_time_last = Column(DateTime, default=None)
+	id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
+	author_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
+	type_id: Mapped[int] = mapped_column(SmallInteger, nullable=False)
+	enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+	run_state: Mapped[int] = mapped_column(SmallInteger, default=int(ScheduledTaskState.WAITING), nullable=False)
+	run_time_last: Mapped[datetime | None] = mapped_column(DateTime, default=None)
 	
-	frequency_day = Column(SmallInteger, nullable=False)
-	time_of_day_utc = Column(Time, nullable=False)
+	frequency_day: Mapped[int] = mapped_column(SmallInteger, nullable=False)
+	time_of_day_utc = mapped_column(Time, nullable=False)
 
 	# used for the cron hardcoding system
-	label = Column(String, nullable=True, unique=True)
+	label = mapped_column(String, nullable=True, unique=True)
 
 	runs = relationship("RepeatableTaskRun", back_populates="task")
 
@@ -351,16 +351,16 @@ class RepeatableTask(CreatedBase):
 class RepeatableTaskRun(CreatedBase):
 	__tablename__ = "tasks_repeatable_runs"
 	
-	id = Column(Integer, primary_key=True)
-	task_id = Column(Integer, ForeignKey(RepeatableTask.id), nullable=False)
-	manual = Column(Boolean, default=False, nullable=False)
-	traceback_str = Column(Text, nullable=True)
+	id: Mapped[int] = mapped_column(Integer, primary_key=True)
+	task_id: Mapped[int] = mapped_column(Integer, ForeignKey(RepeatableTask.id), nullable=False)
+	manual: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+	traceback_str: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-	completed_utc = Column(DateTime)
+	completed_utc: Mapped[datetime | None] = mapped_column(DateTime)
 
 	task = relationship(RepeatableTask, back_populates="runs")
 
-	_exception: Optional[Exception] = None # not part of the db model
+	_exception: ClassVar[Exception | None] = None # not part of the db model
 
 	@property
 	def completed_datetime_py(self) -> datetime | None:

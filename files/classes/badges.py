@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from files.classes.base import Base
 from files.helpers.lazy import lazy
 from files.helpers.config.const import *
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from files.helpers.assetcache import assetcache_path
 
 class BadgeDef(Base):
@@ -11,9 +12,9 @@ class BadgeDef(Base):
 		UniqueConstraint('name', name='badge_def_name_unique'),
 	)
 
-	id = Column(Integer, primary_key=True, autoincrement=True)
-	name = Column(String, nullable=False)
-	description = Column(String)
+	id = mapped_column(Integer, primary_key=True, autoincrement=True)
+	name = mapped_column(String, nullable=False)
+	description = mapped_column(String)
 
 	def __repr__(self):
 		return f"<{self.__class__.__name__}(id={self.id})>"
@@ -22,10 +23,10 @@ class Badge(Base):
 
 	__tablename__ = "badges"
 
-	user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
-	badge_id = Column(Integer,  ForeignKey('badge_defs.id'), primary_key=True)
-	description = Column(String)
-	url = Column(String)
+	user_id = mapped_column(Integer, ForeignKey('users.id'), primary_key=True)
+	badge_id = mapped_column(Integer,  ForeignKey('badge_defs.id'), primary_key=True)
+	description = mapped_column(String)
+	url = mapped_column(String)
 
 	Index('badges_badge_id_idx', badge_id)
 

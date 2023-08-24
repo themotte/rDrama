@@ -1,13 +1,15 @@
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from files.classes.base import CreatedDateTimeBase
+
 
 class Notification(CreatedDateTimeBase):
 	__tablename__ = "notifications"
 
-	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-	comment_id = Column(Integer, ForeignKey("comments.id"), primary_key=True)
-	read = Column(Boolean, default=False, nullable=False)
+	user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), primary_key=True)
+	comment_id: Mapped[int] = mapped_column(Integer, ForeignKey("comments.id"), primary_key=True)
+	read: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
 	Index('notification_read_idx', read)
 	Index('notifications_comment_idx', comment_id)

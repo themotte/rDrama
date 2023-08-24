@@ -2,7 +2,8 @@ import importlib
 from types import ModuleType
 from typing import Callable
 
-from sqlalchemy.schema import Column, ForeignKey
+from sqlalchemy.schema import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql.sqltypes import Integer, String
 
 from files.classes.cron.tasks import (RepeatableTask, ScheduledTaskType,
@@ -40,9 +41,9 @@ class PythonCodeTask(RepeatableTask):
 		"polymorphic_identity": int(ScheduledTaskType.PYTHON_CALLABLE),
 	}
 
-	id = Column(Integer, ForeignKey(RepeatableTask.id), primary_key=True)
-	import_path = Column(String, nullable=False)
-	callable = Column(String, nullable=False)
+	id: Mapped[int] = mapped_column(Integer, ForeignKey(RepeatableTask.id), primary_key=True)
+	import_path: Mapped[str] = mapped_column(String, nullable=False)
+	callable: Mapped[str] = mapped_column(String, nullable=False)
 	
 	def run_task(self, ctx:TaskRunContext):
 		self.get_function()(ctx)

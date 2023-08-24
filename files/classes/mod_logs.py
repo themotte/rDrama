@@ -2,7 +2,7 @@ import logging
 from copy import deepcopy
 
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from files.classes.base import CreatedDateTimeBase
 from files.helpers.config.const import *
@@ -11,13 +11,13 @@ from files.helpers.lazy import lazy
 
 class ModAction(CreatedDateTimeBase):
 	__tablename__ = "modactions"
-	id = Column(Integer, primary_key=True)
-	user_id = Column(Integer, ForeignKey("users.id"))
-	kind = Column(String)
-	target_user_id = Column(Integer, ForeignKey("users.id"))
-	target_submission_id = Column(Integer, ForeignKey("submissions.id"))
-	target_comment_id = Column(Integer, ForeignKey("comments.id"))
-	_note=Column(String)
+	id: Mapped[int] = mapped_column(Integer, primary_key=True)
+	user_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("users.id"))
+	kind: Mapped[str | None] = mapped_column(String)
+	target_user_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("users.id"))
+	target_submission_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("submissions.id"))
+	target_comment_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("comments.id"))
+	_note: Mapped[str | None] = mapped_column(String)
 
 	Index('fki_modactions_user_fkey', target_user_id)
 	Index('modaction_action_idx', kind)

@@ -1,11 +1,12 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from files.classes.base import Base
 
 class Subscription(Base):
 	__tablename__ = "subscriptions"
-	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-	submission_id = Column(Integer, ForeignKey("submissions.id"), primary_key=True)
+	user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), primary_key=True)
+	submission_id: Mapped[int] = mapped_column(Integer, ForeignKey("submissions.id"), primary_key=True)
 	
 	Index('subscription_user_index', user_id)
 

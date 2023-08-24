@@ -198,7 +198,6 @@ engine: Engine = create_engine(DATABASE_URL)
 db_session_factory: sessionmaker = sessionmaker(
 	bind=engine,
 	autoflush=False,
-	future=True,
 )
 db_session: scoped_session = scoped_session(db_session_factory)
 

@@ -4,7 +4,7 @@ from urllib.parse import parse_qs, urlencode, urlparse
 
 from flask import g
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from files.classes.base import CreatedBase
 from files.classes.visstate import StateMod, StateReport, VisibilityState
@@ -24,35 +24,35 @@ CommentRenderContext = Literal['comments', 'volunteer']
 class Comment(CreatedBase):
 	__tablename__ = "comments"
 
-	id = Column(Integer, primary_key=True)
-	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-	parent_submission = Column(Integer, ForeignKey("submissions.id"))
-	edited_utc = Column(Integer, default=0, nullable=False)
-	ghost = Column(Boolean, default=False, nullable=False)
-	bannedfor = Column(Boolean)
-	distinguish_level = Column(Integer, default=0, nullable=False)
-	level = Column(Integer, default=1, nullable=False)
-	parent_comment_id = Column(Integer, ForeignKey("comments.id"))
-	top_comment_id = Column(Integer)
-	over_18 = Column(Boolean, default=False, nullable=False)
-	is_bot = Column(Boolean, default=False, nullable=False)
-	is_pinned = Column(String)
-	is_pinned_utc = Column(Integer)
-	sentto = Column(Integer, ForeignKey("users.id"))
-	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
-	upvotes = Column(Integer, default=1, nullable=False)
-	downvotes = Column(Integer, default=0, nullable=False)
-	realupvotes = Column(Integer, default=1, nullable=False)
-	descendant_count = Column(Integer, default=0, nullable=False)
-	body = Column(Text)
-	body_html = Column(Text, nullable=False)
-	volunteer_janitor_badness = Column(Float, default=0.5, nullable=False)
+	id: Mapped[int] = mapped_column(Integer, primary_key=True)
+	author_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
+	parent_submission = mapped_column(Integer, ForeignKey("submissions.id"))
+	edited_utc: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+	ghost: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+	bannedfor: Mapped[bool | None] = mapped_column(Boolean)
+	distinguish_level: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+	level: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+	parent_comment_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("comments.id"))
+	top_comment_id: Mapped[int | None] = mapped_column(Integer)
+	over_18: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+	is_bot: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+	is_pinned: Mapped[str | None] = mapped_column(String)
+	is_pinned_utc: Mapped[int | None] = mapped_column(Integer)
+	sentto: Mapped[int | None] = mapped_column(Integer, ForeignKey("users.id"))
+	app_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("oauth_apps.id"))
+	upvotes: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+	downvotes: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+	realupvotes: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+	descendant_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+	body: Mapped[str | None] = mapped_column(Text)
+	body_html: Mapped[str] = mapped_column(Text, nullable=False)
+	volunteer_janitor_badness: Mapped[float] = mapped_column(Float, default=0.5, nullable=False)
 
 	# Visibility states here
-	state_user_deleted_utc = Column(DateTime(timezone=True), nullable=True) # null if it hasn't been deleted by the user
-	state_mod = Column(Enum(StateMod), default=StateMod.FILTERED, nullable=False) # default to Filtered just to partially neuter possible exploits
-	state_mod_set_by = Column(String, nullable=True) # This should *really* be a User.id, but I don't want to mess with the required refactoring at the moment - it's extra hard because it could potentially be a lot of extra either data or queries
-	state_report = Column(Enum(StateReport), default=StateReport.UNREPORTED, nullable=False)
+	state_user_deleted_utc = mapped_column(DateTime(timezone=True), nullable=True) # null if it hasn't been deleted by the user
+	state_mod = mapped_column(Enum(StateMod), default=StateMod.FILTERED, nullable=False) # default to Filtered just to partially neuter possible exploits
+	state_mod_set_by = mapped_column(String, nullable=True) # This should *really* be a User.id, but I don't want to mess with the required refactoring at the moment - it's extra hard because it could potentially be a lot of extra either data or queries
+	state_report = mapped_column(Enum(StateReport), default=StateReport.UNREPORTED, nullable=False)
 
 	Index('comment_parent_index', parent_comment_id)
 	Index('comment_post_id_index', parent_submission)
@@ -61,11 +61,11 @@ class Comment(CreatedBase):
 
 	oauth_app = relationship("OauthApp", viewonly=True)
 	post = relationship("Submission", viewonly=True)
-	author = relationship("User", primaryjoin="User.id==Comment.author_id")
+	author: Mapped["User"] = relationship("User", primaryjoin="User.id==Comment.author_id")
 	senttouser = relationship("User", primaryjoin="User.id==Comment.sentto", viewonly=True)
-	parent_comment = relationship("Comment", remote_side=[id], viewonly=True)
-	parent_comment_writable = relationship("Comment", remote_side=[id])
-	child_comments = relationship("Comment", lazy="dynamic", remote_side=[parent_comment_id], viewonly=True)
+	parent_comment: Mapped["Comment"] = relationship("Comment", remote_side=[id], viewonly=True)
+	parent_comment_writable: Mapped["Comment"] = relationship("Comment", remote_side=[id])
+	child_comments: Mapped[list["Comment"]] = relationship("Comment", lazy="dynamic", remote_side=[parent_comment_id], viewonly=True)
 	awards = relationship("AwardRelationship",
 		primaryjoin="AwardRelationship.comment_id == Comment.id",
 		viewonly=True)

@@ -1,8 +1,12 @@
 
+from datetime import datetime
 import enum
-from files.classes.base import Base
+
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from files.classes.base import Base
+
 
 class VolunteerJanitorResult(enum.Enum):
     Pending = 0
@@ -16,11 +20,11 @@ class VolunteerJanitorResult(enum.Enum):
 class VolunteerJanitorRecord(Base):
     __tablename__ = "volunteer_janitor"
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    comment_id = Column(Integer, ForeignKey("comments.id"), nullable=False)
-    recorded_utc = Column(DateTime, default=0, nullable=False)
-    result = Column(Enum(VolunteerJanitorResult), default=VolunteerJanitorResult.Pending, nullable=False)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
+    comment_id: Mapped[int] = mapped_column(Integer, ForeignKey("comments.id"), nullable=False)
+    recorded_utc: Mapped[datetime] = mapped_column(DateTime, default=0, nullable=False)
+    result: Mapped[VolunteerJanitorResult] = mapped_column(Enum(VolunteerJanitorResult), default=VolunteerJanitorResult.Pending, nullable=False)
 
     Index('volunteer_comment_index', user_id, comment_id)
 
