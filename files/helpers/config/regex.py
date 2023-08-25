@@ -25,7 +25,7 @@ controversial_regex = re.compile('["> ](https:\\/\\/old\\.reddit\\.com/r/[a-zA-Z
 
 fishylinks_regex = re.compile("https?://\\S+", flags=re.A)
 
-spoiler_regex = re.compile('''\\|\\|(.+)\\|\\|''', flags=re.A)
+spoiler_regex = re.compile('''\\|\\|(.+?)\\|\\|''', flags=re.A)
 reddit_regex = re.compile('(^|\\s|<p>)\\/?((r|u)\\/(\\w|-){3,25})(?![^<]*<\\/(code|pre|a)>)', flags=re.A)
 sub_regex = re.compile('(^|\\s|<p>)\\/?(h\\/(\\w|-){3,25})', flags=re.A)
 
