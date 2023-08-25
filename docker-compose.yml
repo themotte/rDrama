@@ -33,6 +33,8 @@ services:
     volumes:
       - "./bootstrap/original-schema.sql:/docker-entrypoint-initdb.d/00-schema.sql"
       - "./bootstrap/original-seed-db.sql:/docker-entrypoint-initdb.d/10-seed-db.sql"
+      # uncomment this if you want to explicitly set a DB
+      #- "./postgres_db:/var/lib/postgresql/data"
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
