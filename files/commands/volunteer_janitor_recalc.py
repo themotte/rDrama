@@ -24,7 +24,7 @@ CONFIG_default_user_accuracy = 0.2
 CONFIG_user_correctness_lerp = 0.2
 
 def _compile_records(db):
-    vrecords = db.query(VolunteerJanitorRecord).order_by(VolunteerJanitorRecord.recorded_utc).all()
+    vrecords = db.query(VolunteerJanitorRecord).order_by(VolunteerJanitorRecord.recorded_datetimez).all()
 
     # get the info we need for all mentioned posts
     reported_comment_ids = {record.comment_id for record in vrecords}

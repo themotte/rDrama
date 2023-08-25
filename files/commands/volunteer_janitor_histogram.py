@@ -10,16 +10,16 @@ def volunteer_janitor_histogram_cmd():
     import pandas as pd
     import matplotlib.pyplot as plt
 
-    result_set = db_session().query(VolunteerJanitorRecord.recorded_utc).all()
+    result_set = db_session().query(VolunteerJanitorRecord.recorded_datetimez).all()
 
     # convert the result into a pandas DataFrame
-    df = pd.DataFrame(result_set, columns=['recorded_utc'])
+    df = pd.DataFrame(result_set, columns=['recorded_datetimez'])
 
     # convert the date column to datetime
-    df['recorded_utc'] = pd.to_datetime(df['recorded_utc'])
+    df['recorded_datetimez'] = pd.to_datetime(df['recorded_datetimez'])
 
-    # set 'recorded_utc' as the index of the DataFrame
-    df.set_index('recorded_utc', inplace=True)
+    # set 'recorded_datetimez' as the index of the DataFrame
+    df.set_index('recorded_datetimez', inplace=True)
 
     # resample the data to daily frequency
     df_resampled = df.resample('D').size()

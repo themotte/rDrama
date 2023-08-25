@@ -51,7 +51,7 @@ def update_comment_badness(db, cid, diagnostics: bool = False):
     # This probably does more SQL queries than it should
     records = db.query(VolunteerJanitorRecord) \
         .where(VolunteerJanitorRecord.comment_id == cid) \
-        .order_by(VolunteerJanitorRecord.recorded_utc)
+        .order_by(VolunteerJanitorRecord.recorded_datetimez)
 
     user_has_pending = {}
     earliest_submission = {}
@@ -61,7 +61,7 @@ def update_comment_badness(db, cid, diagnostics: bool = False):
             user_has_pending[rec.user_id] = True
         else:
             if rec.user_id in user_has_pending:
-                if rec.user_id not in earliest_submission or earliest_submission[rec.user_id].recorded_utc > rec.recorded_utc:
+                if rec.user_id not in earliest_submission or earliest_submission[rec.user_id].recorded_datetimez > rec.recorded_datetimez:
                     earliest_submission[rec.user_id] = rec
     
     badness = 0
