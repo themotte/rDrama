@@ -12,6 +12,9 @@ services:
       - DATABASE_URL=postgresql://postgres@postgres:5432
       - REDIS_URL=redis://redis
       - ENFORCE_PRODUCTION=False
+
+      # Debug option to relax many of the volunteer limits.
+      #- DBG_VOLUNTEER_PERMISSIVE=True
     links:
       - "redis"
       - "postgres"
