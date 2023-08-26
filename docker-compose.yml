@@ -15,8 +15,6 @@ services:
     links:
       - "redis"
       - "postgres"
-    ports:
-      - "80:80"
     depends_on:
       - redis
       - postgres
@@ -39,3 +37,13 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
       - "5432:5432"
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./bootstrap/nginx_dev.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - site
+    
