@@ -447,7 +447,7 @@ class User(CreatedBase):
 		data = {'username': self.username,
 				'url': self.url,
 				'id': self.id,
-				'notes': [x.json() for x in self.notes]
+				'notes': [x.json() for x in sorted(self.notes, key=lambda x: x.created_utc)]
 				}
 
 		return data
