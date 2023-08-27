@@ -196,7 +196,6 @@ def read(data, v):
 	timestamp = datetime.fromtimestamp(int(data) + 1)
 
 	v.chat_lastseen = timestamp
-	g.db.add(v)
 	g.db.commit()
 
 
