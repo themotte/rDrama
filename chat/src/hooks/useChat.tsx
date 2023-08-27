@@ -100,13 +100,11 @@ export function ChatProvider({ children }: PropsWithChildren) {
       addMessage({
         id: OPTIMISTIC_MESSAGE_ID,
         username,
-        user_id: id,
         avatar,
         text: draft,
         text_html: draft,
         time: new Date().getTime() / 1000,
         quotes: null,
-        dm: false,
       });
     }
 
