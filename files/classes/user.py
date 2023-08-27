@@ -178,7 +178,7 @@ class User(CreatedBase):
 	@lazy
 	def unread_chat_messages_count(self):
 		if not self.can_access_chat:
-			return 0  # return 0 if the user can't access chat
+			return 0
 
 		# Query for all chat messages that are newer than the user's last seen timestamp
 		unread_messages_count = g.db.query(ChatMessage)\
