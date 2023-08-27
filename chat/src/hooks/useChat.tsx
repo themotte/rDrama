@@ -102,7 +102,9 @@ export function ChatProvider({ children }: PropsWithChildren) {
     }
   }, []);
   const sendMessage = useCallback(() => {
-    if (userToDm) {
+    if (draft.startsWith("/")) {
+      // this is a command; just skip posting stuff
+    } else if (userToDm) {
       const directMessage = `<small class="text-primary"><em>(Sent to @${userToDm.username}):</em></small> ${draft}`;
 
       addMessage({
