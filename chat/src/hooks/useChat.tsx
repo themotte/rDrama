@@ -74,6 +74,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
   const [userToDm, setUserToDm] = useState<null | UserToDM>(null);
   const [notifications, setNotifications] = useState<number>(0);
   const [messageLookup, setMessageLookup] = useState({});
+
   const addMessage = useCallback((message: IChatMessage) => {
     if (message.id === OPTIMISTIC_MESSAGE_ID) {
       setMessages((prev) => prev.concat(message));
@@ -101,6 +102,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
       setNotifications((prev) => prev + 1);
     }
   }, []);
+
   const sendMessage = useCallback(() => {
     if (draft.startsWith("/")) {
       // this is a command; just skip posting stuff
@@ -142,9 +144,11 @@ export function ChatProvider({ children }: PropsWithChildren) {
     setDraft("");
     setUserToDm(null);
   }, [draft, quote, userToDm]);
+
   const requestDeleteMessage = useCallback((withText: string) => {
     socket.current?.emit(ChatHandlers.DELETE, withText);
   }, []);
+  
   const deleteMessage = useCallback((withText: string) => {
     setMessages((prev) =>
       prev.filter((prevMessage) => prevMessage.text !== withText)
@@ -154,6 +158,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
       setQuote(null);
     }
   }, []);
+
   const quoteMessage = useCallback((message: IChatMessage) => {
     setQuote(message);
 
@@ -161,6 +166,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
       document.getElementById("builtChatInput").focus();
     } catch (error) {}
   }, []);
+
   const context = useMemo<ChatProviderContext>(
     () => ({
       online,
