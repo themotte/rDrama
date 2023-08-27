@@ -18,10 +18,12 @@ def chat_is_allowed(perm_level: int=0):
 		@functools.wraps(func)
 		def wrapper(*args: Any, **kwargs: Any) -> bool | None:
 			v = get_logged_in_user()
-			# TODO: access control to specific small-groups
 			if not v or v.is_suspended_permanently or v.admin_level < perm_level:
-				return False
-			return func(*args, v=v, **kwargs)
+				return abort(403)
+			if v.admin_level < PERMS['CHAT_FULL_CONTROL'] and not v.chat_authorized:
+				return abort(403)
+			kwargs['v'] = v
+			return func(*args, **kwargs)
 		return wrapper
 	return wrapper_maker
 
@@ -51,6 +53,7 @@ user_ids_to_socket_ids = {}
 
 @app.get("/chat")
 @is_not_permabanned
+@chat_is_allowed()
 def chat(v):
 	return render_template("chat.html", v=v, messages=messages)
 
