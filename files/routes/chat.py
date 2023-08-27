@@ -3,7 +3,7 @@ import time
 import uuid
 from typing import Any, Final
 
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, disconnect
 
 from files.__main__ import app, cache, limiter
 from files.helpers.alerts import *
@@ -64,8 +64,7 @@ CHAT_SCROLLBACK_ITEMS: Final[int] = 500
 
 typing: list[str] = []
 online: list[str] = []	# right now we maintain this but don't actually use it anywhere
-socket_ids_to_user_ids = {}
-user_ids_to_socket_ids = {}
+connected_users = set()
 
 def send_system_reply(text):
 	data = {
@@ -151,13 +150,11 @@ def speak(data, v):
 
 @socketio.on('connect')
 @chat_is_allowed()
-def connect(v):
+def onConnect(v):
 	if v.username not in online:
 		online.append(v.username)
 
-	if not socket_ids_to_user_ids.get(request.sid):
-		socket_ids_to_user_ids[request.sid] = v.id
-		user_ids_to_socket_ids[v.id] = request.sid
+	connected_users.add(request.sid)
 
 	emit('online', get_chat_userlist())
 	emit('catchup', get_chat_messages())
@@ -166,15 +163,13 @@ def connect(v):
 
 @socketio.on('disconnect')
 @chat_is_allowed()
-def disconnect(v):
+def onDisconnect(v):
 	if v.username in online:
 		online.remove(v.username)
 
 	if v.username in typing: typing.remove(v.username)
 
-	if socket_ids_to_user_ids.get(request.sid):
-		del socket_ids_to_user_ids[request.sid]
-		del user_ids_to_socket_ids[v.id]
+	connected_users.remove(request.sid)
 
 	emit('typing', typing, broadcast=True)
 
@@ -257,3 +252,20 @@ def remove(user):
 			send_system_reply(f"Removed {user} from chat.")
 	else:
 		send_system_reply(f"Could not find user {user}.")
+
+
+@register_command('reset_everything_seriously', PERMS['CHAT_FULL_CONTROL'])
+def reset_everything_seriously(_):
+	# Boot everyone
+	for user_sid in list(connected_users):  # Loop through a shallow copy to avoid modification issues
+		disconnect(sid=user_sid)
+
+	# Set chat_authorized to False for all users
+	g.db.query(User).update({User.chat_authorized: False})
+
+	# Delete all ChatMessage entries
+	g.db.query(ChatMessage).delete()
+
+    # Commit the changes to the database
+	g.db.commit()
+
