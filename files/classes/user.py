@@ -112,6 +112,9 @@ class User(CreatedBase):
 	volunteer_last_started_utc = Column(DateTime, nullable=True)
 	volunteer_janitor_correctness = Column(Float, default=0, nullable=False)
 
+	chat_authorized = Column(Boolean, default=False, nullable=False)
+	chat_lastseen = Column(DateTime(timezone=True), default=datetime(1970, 1, 1), nullable=False)
+
 	Index(
 		'users_original_username_trgm_idx',
 		original_username,
