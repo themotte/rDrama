@@ -109,7 +109,7 @@ def chat(v):
 
 
 @socketio.on('speak')
-@limiter.limit("3/second;10/minute")
+@limiter.limit("3/second")
 @chat_is_allowed()
 def speak(data, v):
 	limiter.check()
