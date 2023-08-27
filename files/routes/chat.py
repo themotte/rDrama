@@ -61,7 +61,7 @@ else:
 CHAT_SCROLLBACK_ITEMS: Final[int] = 500
 
 typing: list[str] = []
-online: list[str] = []
+online: list[str] = []	# right now we maintain this but don't actually use it anywhere
 muted: dict[str, int] = cache.get(f'{SITE}_muted') or {}
 messages: list[dict[str, Any]] = cache.get(f'{SITE}_chat') or []
 total: int = cache.get(f'{SITE}_total') or 0
@@ -81,6 +81,15 @@ def send_system_reply(text):
 		"time": int(time.time()),
 	}
 	emit('speak', data)
+
+def get_chat_userlist():
+	# Query for the User.username column for users with chat_authorized == True
+    result = g.db.query(User.username).filter(User.chat_authorized == True).all()
+    
+    # Convert the list of tuples into a flat list of usernames
+    userlist = [item[0] for item in result]
+    
+    return userlist
 
 @app.get("/chat")
 @is_not_permabanned
@@ -152,13 +161,12 @@ def speak(data, v):
 def connect(v):
 	if v.username not in online:
 		online.append(v.username)
-		emit("online", online, broadcast=True)
 
 	if not socket_ids_to_user_ids.get(request.sid):
 		socket_ids_to_user_ids[request.sid] = v.id
 		user_ids_to_socket_ids[v.id] = request.sid
 
-	emit('online', online)
+	emit('online', get_chat_userlist())
 	emit('catchup', messages)
 	emit('typing', typing)
 
@@ -168,7 +176,6 @@ def connect(v):
 def disconnect(v):
 	if v.username in online:
 		online.remove(v.username)
-		emit("online", online, broadcast=True)
 
 	if v.username in typing: typing.remove(v.username)
 
@@ -216,6 +223,8 @@ def add(user):
 			user_instance.chat_authorized = True
 			g.db.commit()
 
+			emit('online', get_chat_userlist(), broadcast=True)
+
 			send_system_reply(f"Added {user} to chat.")
 	else:
 		send_system_reply(f"Could not find user {user}.")
@@ -231,6 +240,8 @@ def remove(user):
 		else:
 			user_instance.chat_authorized = False
 			g.db.commit()
+
+			emit('online', get_chat_userlist(), broadcast=True)
 
 			send_system_reply(f"Removed {user} from chat.")
 	else:

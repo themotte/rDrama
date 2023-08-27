@@ -139,6 +139,8 @@ class User(CreatedBase):
 	Index('users_subs_idx', stored_subscriber_count)
 	Index('users_unbanutc_idx', unban_utc.desc())
 
+	Index('chat_auth_index', chat_authorized)
+
 	badges = relationship("Badge", viewonly=True)
 	subscriptions = relationship("Subscription", viewonly=True)
 	following = relationship("Follow", primaryjoin="Follow.user_id==User.id", viewonly=True)

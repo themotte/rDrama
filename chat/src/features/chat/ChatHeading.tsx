@@ -33,7 +33,7 @@ export function ChatHeading() {
               className="far fa-user"
               onClick={handleToggleUserListDrawer}
             />
-            <em>{online.length} users online</em>
+            <em>{online.length} users</em>
           </>
         )}
       </div>
