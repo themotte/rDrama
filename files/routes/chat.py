@@ -11,7 +11,7 @@ from files.helpers.config.const import *
 from files.helpers.config.environment import *
 from files.helpers.config.regex import *
 from files.helpers.sanitize import sanitize
-from files.helpers.wrappers import get_logged_in_user, is_not_permabanned
+from files.helpers.wrappers import get_logged_in_user, is_not_permabanned, admin_level_required
 
 def chat_is_allowed(perm_level: int=0):
 	def wrapper_maker(func):
@@ -26,6 +26,23 @@ def chat_is_allowed(perm_level: int=0):
 			return func(*args, **kwargs)
 		return wrapper
 	return wrapper_maker
+
+commands = {}
+
+def register_command(cmd_name, permission_level = 0):
+	def decorator(func):
+		@functools.wraps(func)
+		def wrapper(*args: Any, **kwargs: Any) -> bool | None:
+			v = get_logged_in_user()
+			if v.admin_level < permission_level:
+				send_system_reply(f"Unknown command: {cmd_name}")
+				return False
+			return func(*args, **kwargs)
+    
+		commands[cmd_name] = wrapper
+		
+		return wrapper
+	return decorator
 
 if app.debug:
 	socketio = SocketIO(
@@ -50,6 +67,20 @@ messages: list[dict[str, Any]] = cache.get(f'{SITE}_chat') or []
 total: int = cache.get(f'{SITE}_total') or 0
 socket_ids_to_user_ids = {}
 user_ids_to_socket_ids = {}
+
+def send_system_reply(text):
+	data = {
+		"id": str(uuid.uuid4()),
+		"quotes": [],
+		"avatar": g.db.query(User).filter(User.id == NOTIFICATIONS_ID).one().profile_url,
+		"user_id": NOTIFICATIONS_ID,
+		"dm": False,
+		"username": "System",
+		"text": text,
+		"text_html": sanitize(text),
+		"time": int(time.time()),
+	}
+	emit('speak', data)
 
 @app.get("/chat")
 @is_not_permabanned
@@ -79,6 +110,18 @@ def speak(data, v):
 	)
 	if not text: return '', 400
 
+	command = chat_command_regex.match(text)
+	if command:
+		command_name = command.group(1).lower()
+		command_parameters = command.group(2)
+		
+		if command_name in commands:
+			commands[command_name](command_parameters)
+		else:
+			send_system_reply(f"Unknown command: {command_name}")
+
+		return
+
 	text_html = sanitize(text)
 	quotes = data['quotes']
 	recipient = data['recipient']
@@ -106,13 +149,6 @@ def speak(data, v):
 		messages = messages[-CHAT_SCROLLBACK_ITEMS:]
 
 	total += 1
-
-	if v.admin_level >= PERMS['CHAT_MODERATION']:
-		text = text.lower()
-		for i in mute_regex.finditer(text):
-			username = i.group(1).lower()
-			duration = int(int(i.group(2)) * 60 + time.time())
-			muted[username] = duration
 
 	chat_save()
 
@@ -169,8 +205,39 @@ def delete(text, v):
 
 	emit('delete', text, broadcast=True)
 
-
 def chat_save():
 	cache.set(f'{SITE}_chat', messages)
 	cache.set(f'{SITE}_total', total)
 	cache.set(f'{SITE}_muted', muted)
+
+@register_command('add', PERMS['CHAT_FULL_CONTROL'])
+def add(user):
+	print("Adding user", user)
+	user_instance = g.db.query(User).filter(func.lower(User.username) == user.lower()).one_or_none()
+
+	if user_instance:
+		if user_instance.chat_authorized:
+			send_system_reply(f"{user} already in this chat.")
+		else:
+			user_instance.chat_authorized = True
+			g.db.commit()
+
+			send_system_reply(f"Added {user} to chat.")
+	else:
+		send_system_reply(f"Could not find user {user}.")
+
+@register_command('remove', PERMS['CHAT_FULL_CONTROL'])
+def remove(user):
+	print("Removing user", user)
+	user_instance = g.db.query(User).filter(func.lower(User.username) == user.lower()).one_or_none()
+
+	if user_instance:
+		if not user_instance.chat_authorized:
+			send_system_reply(f"{user} already not in this chat.")
+		else:
+			user_instance.chat_authorized = False
+			g.db.commit()
+
+			send_system_reply(f"Removed {user} from chat.")
+	else:
+		send_system_reply(f"Could not find user {user}.")

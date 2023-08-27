@@ -41,7 +41,7 @@ whitespace_regex = re.compile('\\s+')
 
 strikethrough_regex = re.compile('''~{1,2}([^~]+)~{1,2}''', flags=re.A)
 
-mute_regex = re.compile("/mute @([a-z0-9_\\-]{3,25}) ([0-9])+", flags=re.A)
+chat_command_regex = re.compile(r"^/(\w+)\s?(.*)", flags=re.A)
 
 emoji_regex = re.compile(f"[^a]>\\s*(:[!#@]{{0,3}}[{valid_username_chars}]+:\\s*)+<\\/", flags=re.A)
 emoji_regex2 = re.compile(f"(?<!\"):([!#@{valid_username_chars}]{{1,31}}?):", flags=re.A)
