@@ -18,9 +18,11 @@ def chat_is_allowed(perm_level: int=0):
 		@functools.wraps(func)
 		def wrapper(*args: Any, **kwargs: Any) -> bool | None:
 			v = get_logged_in_user()
-			if not v or v.is_suspended_permanently or v.admin_level < perm_level:
+			if not v:
 				return abort(403)
-			if v.admin_level < PERMS['CHAT_FULL_CONTROL'] and not v.chat_authorized:
+			if not v.can_access_chat:
+				return abort(403)
+			if v.admin_level < perm_level:
 				return abort(403)
 			kwargs['v'] = v
 			return func(*args, **kwargs)
@@ -73,7 +75,7 @@ def send_system_reply(text):
 		"username": "System",
 		"text": text,
 		"text_html": sanitize(text),
-		'time': int(self.created_datetimez.timestamp()),
+		'time': time.time(),
 	}
 	emit('speak', data)
 
@@ -186,6 +188,21 @@ def typing_indicator(data, v):
 		typing.remove(v.username)
 
 	emit('typing', typing, broadcast=True)
+
+
+@socketio.on('read')
+@chat_is_allowed()
+def read(data, v):
+	limiter.check()
+	if v.is_banned: return '', 403
+
+	# This value gets truncated at some point in the pipeline and I haven't really spent time to figure out where.
+	# Instead, we just bump it by one.
+	timestamp = datetime.fromtimestamp(int(data) + 1)
+
+	v.chat_lastseen = timestamp
+	g.db.add(v)
+	g.db.commit()
 
 
 @socketio.on('delete')

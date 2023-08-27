@@ -12,6 +12,7 @@ from files.classes.alts import Alt
 from files.classes.award import AwardRelationship
 from files.classes.badges import Badge
 from files.classes.base import CreatedBase
+from files.classes.chat_message import ChatMessage
 from files.classes.clients import *  # note: imports Comment and Submission
 from files.classes.follows import Follow
 from files.classes.mod_logs import ModAction
@@ -161,6 +162,30 @@ class User(CreatedBase):
 
 	def can_manage_reports(self):
 		return self.admin_level > 1
+	
+	@property
+	@lazy
+	def can_access_chat(self):
+		if self.is_suspended_permanently:
+			return False
+		if self.admin_level >= PERMS['CHAT_FULL_CONTROL']:
+			return True
+		if self.chat_authorized:
+			return True
+		return False
+	
+	@property
+	@lazy
+	def unread_chat_messages_count(self):
+		if not self.can_access_chat:
+			return 0  # return 0 if the user can't access chat
+
+		# Query for all chat messages that are newer than the user's last seen timestamp
+		unread_messages_count = g.db.query(ChatMessage)\
+			.filter(ChatMessage.created_datetimez > self.chat_lastseen)\
+			.count()
+
+		return unread_messages_count
 	
 	@property
 	def age_days(self):

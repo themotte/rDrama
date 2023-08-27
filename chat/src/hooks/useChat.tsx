@@ -20,6 +20,7 @@ enum ChatHandlers {
   TYPING = "typing",
   DELETE = "delete",
   SPEAK = "speak",
+  READ = "read",
 }
 
 interface ChatProviderContext {
@@ -64,6 +65,11 @@ export function ChatProvider({ children }: PropsWithChildren) {
   const focused = useWindowFocus();
   const [notifications, setNotifications] = useState<number>(0);
   const [messageLookup, setMessageLookup] = useState({});
+
+  const setMessagesAndRead = useCallback((messages: IChatMessage[]) => {
+    setMessages(messages);
+    trySendReadMessage();
+  }, []);
 
   const addMessage = useCallback((message: IChatMessage) => {
     if (message.id === OPTIMISTIC_MESSAGE_ID) {
@@ -139,6 +145,23 @@ export function ChatProvider({ children }: PropsWithChildren) {
     } catch (error) {}
   }, []);
 
+  const [lastMaxTime, setLastMaxTime] = useState<number | null>(null);
+  const trySendReadMessage = useCallback(() => {
+      if (messages.length === 0) {
+        return; // Exit if the messages array is empty
+      }
+
+      if (document.hasFocus()) {
+        const maxTime = Math.max(...messages.map(msg => msg.time));
+
+        if (maxTime !== lastMaxTime) { // Only emit if there's a new maxTime
+          setLastMaxTime(maxTime); // Update the stored maxTime
+          socket.current?.emit(ChatHandlers.READ, maxTime);
+        }
+      }
+  }, [messages, lastMaxTime]);
+
+
   const context = useMemo<ChatProviderContext>(
     () => ({
       online,
@@ -170,7 +193,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
       socket.current = io();
 
       socket.current
-        .on(ChatHandlers.CATCHUP, setMessages)
+        .on(ChatHandlers.CATCHUP, setMessagesAndRead)
         .on(ChatHandlers.ONLINE, setOnline)
         .on(ChatHandlers.TYPING, setTyping)
         .on(ChatHandlers.SPEAK, addMessage)
@@ -193,6 +216,8 @@ export function ChatProvider({ children }: PropsWithChildren) {
   }, [draft]);
 
   useEffect(() => {
+    trySendReadMessage();
+
     if (focused || document.hasFocus()) {
       setNotifications(0);
     }
