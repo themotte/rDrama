@@ -19,7 +19,7 @@ interface Props {
 }
 
 export function UserInput({ large = false, onFocus, onBlur }: Props) {
-  const { draft, userToDm, sendMessage, updateDraft } = useChat();
+  const { draft, sendMessage, updateDraft } = useChat();
   const builtChatInput = useRef<HTMLTextAreaElement>(null);
   const form = useRef<HTMLFormElement>(null);
   const [typingOffset, setTypingOffset] = useState(0);
@@ -49,12 +49,6 @@ export function UserInput({ large = false, onFocus, onBlur }: Props) {
     builtChatInput.current?.scrollIntoView({ behavior: "smooth" });
     onFocus();
   }, [onFocus]);
-
-  useEffect(() => {
-    if (userToDm) {
-      builtChatInput.current?.focus();
-    }
-  }, [userToDm])
 
   return (
     <form ref={form} className="UserInput" onSubmit={handleSendMessage}>

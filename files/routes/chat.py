@@ -124,13 +124,11 @@ def speak(data, v):
 
 	text_html = sanitize(text)
 	quotes = data['quotes']
-	recipient = data['recipient']
 	data = {
 		"id": str(uuid.uuid4()),
 		"quotes": quotes,
 		"avatar": v.profile_url,
 		"user_id": v.id,
-		"dm": bool(recipient and recipient != ""),
 		"username": v.username,
 		"text": text,
 		"text_html": text_html,
@@ -139,10 +137,6 @@ def speak(data, v):
 	
 	if v.shadowbanned:
 		emit('speak', data)
-	elif recipient:
-		if user_ids_to_socket_ids.get(recipient):
-			recipient_sid = user_ids_to_socket_ids[recipient]
-			emit('speak', data, broadcast=False, to=recipient_sid)
 	else:
 		emit('speak', data, broadcast=True)
 		messages.append(data)

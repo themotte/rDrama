@@ -56,11 +56,9 @@ export function ChatMessage({
   } = useRootContext();
   const {
     messageLookup,
-    userToDm,
     quote,
     deleteMessage,
     quoteMessage,
-    updateUserToDm,
   } = useChat();
   const [confirmedDelete, setConfirmedDelete] = useState(false);
   const quotedMessage = messageLookup[quotes];
@@ -72,10 +70,12 @@ export function ChatMessage({
       username !== userUsername);
   const isDirect = id === DIRECT_MESSAGE_ID;
   const isOptimistic = id === OPTIMISTIC_MESSAGE_ID;
+  
   const timestamp = useMemo(
     () => formatTimeAgo(time),
     [time, timestampUpdates]
   );
+
   const handleDeleteMessage = useCallback(() => {
     if (confirmedDelete) {
       deleteMessage(text);
@@ -83,32 +83,11 @@ export function ChatMessage({
       setConfirmedDelete(true);
     }
   }, [text, confirmedDelete]);
+
   const handleQuoteMessageAction = useCallback(() => {
-    updateUserToDm(null);
     quoteMessage(message);
     onToggleActions(message.id);
   }, [message, onToggleActions]);
-  const handleDirectMessage = useCallback(
-    (toggle?: boolean) => {
-      const userId = message.user_id ?? "";
-
-      if (userToDm && userToDm.id === userId) {
-        updateUserToDm(null);
-      } else if (userId) {
-        updateUserToDm({
-          id: userId,
-          username: message.username,
-        });
-
-        quoteMessage(null);
-
-        if (toggle) {
-          onToggleActions(message.id);
-        }
-      }
-    },
-    [userToDm, message.id, message.user_id, message.username]
-  );
 
   useEffect(() => {
     if (!actionsOpen) {
@@ -137,7 +116,6 @@ export function ChatMessage({
           <button
             className="btn btn-secondary"
             onClick={() => {
-              updateUserToDm(null);
               quoteMessage(quote ? null : message);
             }}
           >
@@ -153,14 +131,6 @@ export function ChatMessage({
       )}
       {!isDirect && !isOptimistic && actionsOpen && (
         <div className="ChatMessage-actions">
-          {userId && parseInt(userId) !== parseInt(user_id) && (
-            <button
-              className="btn btn-secondary ChatMessage-button"
-              onClick={() => handleDirectMessage(true)}
-            >
-              📨 DM @{message.username}
-            </button>
-          )}
           <button
             className="btn btn-secondary ChatMessage-button"
             onClick={handleQuoteMessageAction}
