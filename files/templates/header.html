@@ -25,15 +25,15 @@
 				<a class="mobile-nav-icon d-md-none" onclick="location.reload()"><i class="fas fa-arrow-rotate-right align-middle text-gray-500 black"></i></a>
 			{% endif %}
 
-			{% if v.can_access_chat %}
-				{% if v.unread_chat_messages_count > 0 %}
-					<a class="mobile-nav-icon d-md-none pl-0" href="/chat" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Voting Booth"><i class="fas fa-booth align-middle text-danger"></i><span class="notif-count ml-1" style="padding-left: 4.5px;">{{v.unread_chat_messages_count}}</span></a>
-				{% else %}
-					<a class="mobile-nav-icon d-md-none" href="/chat" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Voting Booth"><i class="fas fa-booth align-middle text-gray-500 black"></i></a>
-				{% endif %}
-			{% endif %}
-
 			{% if v %}
+				{% if v.can_access_chat %}
+					{% if v.unread_chat_messages_count > 0 %}
+						<a class="mobile-nav-icon d-md-none pl-0" href="/chat" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Voting Booth"><i class="fas fa-booth align-middle text-danger"></i><span class="notif-count ml-1" style="padding-left: 4.5px;">{{v.unread_chat_messages_count}}</span></a>
+					{% else %}
+						<a class="mobile-nav-icon d-md-none" href="/chat" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Voting Booth"><i class="fas fa-booth align-middle text-gray-500 black"></i></a>
+					{% endif %}
+				{% endif %}
+
 				{% if v.notifications_count %}
 					<a class="mobile-nav-icon d-md-none pl-0" href="/notifications{% if v.do_posts %}/posts{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notifications"><i class="fas fa-bell align-middle text-danger" {% if v.do_posts %}style="color:blue!important"{% endif %}></i><span class="notif-count ml-1" style="padding-left: 4.5px;{% if v.do_posts %}background:blue{% endif %}">{{v.notifications_count}}</span></a>
 				{% else %}
@@ -61,19 +61,19 @@
 		<div class="collapse navbar-collapse" id="navbarResponsive">
 			<ul class="navbar-nav ml-auto d-none d-md-flex">
 
-			{% if v.can_access_chat %}
-				{% if v.unread_chat_messages_count > 0 %}
-					<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-						<a class="nav-link position-relative" href="/chat" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Voting Booth"><i class="fas fa-booth text-danger"></i><span class="notif-count ml-1" style="padding-left: 4.5px;">{{v.unread_chat_messages_count}}</span></a>
-					</li>
-				{% else %}
-					<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-						<a class="nav-link" href="/chat" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Voting Booth"><i class="fas fa-booth"></i></a>
-					</li>
-				{% endif %}
-			{% endif %}
-
 			{% if v %}
+				{% if v.can_access_chat %}
+					{% if v.unread_chat_messages_count > 0 %}
+						<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
+							<a class="nav-link position-relative" href="/chat" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Voting Booth"><i class="fas fa-booth text-danger"></i><span class="notif-count ml-1" style="padding-left: 4.5px;">{{v.unread_chat_messages_count}}</span></a>
+						</li>
+					{% else %}
+						<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
+							<a class="nav-link" href="/chat" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Voting Booth"><i class="fas fa-booth"></i></a>
+						</li>
+					{% endif %}
+				{% endif %}
+				
 				{% if v.notifications_count %}
 
 				<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
