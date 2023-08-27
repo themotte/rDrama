@@ -11,5 +11,4 @@ declare interface IChatMessage {
   text_html: string;
   time: number;
   quotes: null | string;
-  dm: boolean;
 }

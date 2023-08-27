@@ -74,7 +74,6 @@ def send_system_reply(text):
 		"quotes": [],
 		"avatar": g.db.query(User).filter(User.id == NOTIFICATIONS_ID).one().profile_url,
 		"user_id": NOTIFICATIONS_ID,
-		"dm": False,
 		"username": "System",
 		"text": text,
 		"text_html": sanitize(text),

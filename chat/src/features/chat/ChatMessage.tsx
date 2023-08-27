@@ -46,7 +46,6 @@ export function ChatMessage({
     text_html,
     time,
     quotes,
-    dm,
   } = message;
   const {
     id: userId,
@@ -98,12 +97,11 @@ export function ChatMessage({
   return (
     <div
       className={cx("ChatMessage", {
-        ChatMessage__isDm: dm,
         ChatMessage__isOptimistic: isOptimistic,
       })}
       id={id}
       style={
-        isMention && !dm
+        isMention
           ? {
               background: `#${themeColor}25`,
               borderLeft: `1px solid #${themeColor}`,
@@ -170,11 +168,6 @@ export function ChatMessage({
         <div className="ChatMessage-quoted-link">
           <QuotedMessageLink message={quotedMessage} />
         </div>
-      )}
-      {!isDirect && dm && (
-        <small className="ChatMessage-quoted-link text-primary">
-          <em>(Sent only to you)</em>
-        </small>
       )}
       <div className="ChatMessage-bottom">
         <div>
