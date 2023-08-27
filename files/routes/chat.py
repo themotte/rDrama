@@ -104,7 +104,7 @@ def get_chat_userlist():
 @is_not_permabanned
 @chat_is_allowed()
 def chat(v):
-	return render_template("chat.html", v=v, messages=get_chat_messages())
+	return render_template("chat.html", v=v)
 
 
 @socketio.on('speak')
