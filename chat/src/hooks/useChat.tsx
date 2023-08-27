@@ -68,7 +68,10 @@ export function ChatProvider({ children }: PropsWithChildren) {
 
   const setMessagesAndRead = useCallback((messages: IChatMessage[]) => {
     setMessages(messages);
-    trySendReadMessage();
+    console.log("TSRM begin");
+    console.log(messages);
+    trySendReadMessage(messages);
+    console.log("TSRM end")
   }, []);
 
   const addMessage = useCallback((message: IChatMessage) => {
@@ -146,20 +149,22 @@ export function ChatProvider({ children }: PropsWithChildren) {
   }, []);
 
   const [lastMaxTime, setLastMaxTime] = useState<number | null>(null);
-  const trySendReadMessage = useCallback(() => {
+  const trySendReadMessage = useCallback((messages: IChatMessage[]) => {
       if (messages.length === 0) {
+        console.log("Early abort");
         return; // Exit if the messages array is empty
       }
 
-      if (document.hasFocus()) {
-        const maxTime = Math.max(...messages.map(msg => msg.time));
+      const maxTime = Math.max(...messages.map(msg => msg.time));
 
-        if (maxTime !== lastMaxTime) { // Only emit if there's a new maxTime
-          setLastMaxTime(maxTime); // Update the stored maxTime
-          socket.current?.emit(ChatHandlers.READ, maxTime);
-        }
+      if (maxTime !== lastMaxTime) { // Only emit if there's a new maxTime
+        setLastMaxTime(maxTime); // Update the stored maxTime
+        socket.current?.emit(ChatHandlers.READ, maxTime);
+        console.log("Smaxy");
       }
-  }, [messages, lastMaxTime]);
+
+      console.log("duvo");
+  }, [lastMaxTime]);
 
 
   const context = useMemo<ChatProviderContext>(
@@ -216,12 +221,12 @@ export function ChatProvider({ children }: PropsWithChildren) {
   }, [draft]);
 
   useEffect(() => {
-    trySendReadMessage();
+    trySendReadMessage(messages);
 
     if (focused || document.hasFocus()) {
       setNotifications(0);
     }
-  }, [focused]);
+  }, [focused, messages]);
 
   useEffect(() => {
     setMessageLookup(
