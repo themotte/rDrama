@@ -32,7 +32,7 @@ interface ChatProviderContext {
   updateDraft: React.Dispatch<React.SetStateAction<string>>;
   sendMessage(): void;
   quoteMessage(message: null | IChatMessage): void;
-  deleteMessage(withText: string): void;
+  deleteMessage(withId: string): void;
 }
 
 const ChatContext = createContext<ChatProviderContext>({
@@ -119,16 +119,16 @@ export function ChatProvider({ children }: PropsWithChildren) {
     setDraft("");
   }, [draft, quote]);
 
-  const requestDeleteMessage = useCallback((withText: string) => {
-    socket.current?.emit(ChatHandlers.DELETE, withText);
+  const requestDeleteMessage = useCallback((withId: string) => {
+    socket.current?.emit(ChatHandlers.DELETE, withId);
   }, []);
 
-  const deleteMessage = useCallback((withText: string) => {
+  const deleteMessage = useCallback((withId: string) => {
     setMessages((prev) =>
-      prev.filter((prevMessage) => prevMessage.text !== withText)
+      prev.filter((prevMessage) => prevMessage.id !== withId)
     );
 
-    if (quote?.text === withText) {
+    if (quote?.id === withId) {
       setQuote(null);
     }
   }, []);

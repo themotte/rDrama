@@ -39,7 +39,6 @@ export function ChatMessage({
 }: ChatMessageProps) {
   const {
     id,
-    user_id,
     avatar,
     username,
     text,
@@ -69,7 +68,7 @@ export function ChatMessage({
       username !== userUsername);
   const isDirect = id === DIRECT_MESSAGE_ID;
   const isOptimistic = id === OPTIMISTIC_MESSAGE_ID;
-  
+
   const timestamp = useMemo(
     () => formatTimeAgo(time),
     [time, timestampUpdates]
@@ -77,11 +76,11 @@ export function ChatMessage({
 
   const handleDeleteMessage = useCallback(() => {
     if (confirmedDelete) {
-      deleteMessage(text);
+      deleteMessage(id);
     } else {
       setConfirmedDelete(true);
     }
-  }, [text, confirmedDelete]);
+  }, [id, confirmedDelete]);
 
   const handleQuoteMessageAction = useCallback(() => {
     quoteMessage(message);

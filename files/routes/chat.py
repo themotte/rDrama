@@ -62,24 +62,34 @@ CHAT_SCROLLBACK_ITEMS: Final[int] = 500
 
 typing: list[str] = []
 online: list[str] = []	# right now we maintain this but don't actually use it anywhere
-muted: dict[str, int] = cache.get(f'{SITE}_muted') or {}
-messages: list[dict[str, Any]] = cache.get(f'{SITE}_chat') or []
-total: int = cache.get(f'{SITE}_total') or 0
 socket_ids_to_user_ids = {}
 user_ids_to_socket_ids = {}
 
 def send_system_reply(text):
 	data = {
 		"id": str(uuid.uuid4()),
-		"quotes": [],
 		"avatar": g.db.query(User).filter(User.id == NOTIFICATIONS_ID).one().profile_url,
 		"user_id": NOTIFICATIONS_ID,
 		"username": "System",
 		"text": text,
 		"text_html": sanitize(text),
-		"time": int(time.time()),
+		'time': int(self.created_datetimez.timestamp()),
 	}
 	emit('speak', data)
+
+def get_chat_messages():
+	# Query for the last visible chat messages
+	result = (g.db.query(ChatMessage)
+          .join(User, User.id == ChatMessage.author_id)  # Join with the User table to fetch related user data
+          .order_by(ChatMessage.created_datetimez.desc())
+          .limit(CHAT_SCROLLBACK_ITEMS)
+          .all())
+	
+	# Convert the list of ChatMessage objects into a list of dictionaries
+	# Also, most recent at the bottom, not the top.
+	messages = [item.json_speak() for item in result[::-1]]
+	
+	return messages
 
 def get_chat_userlist():
 	# Query for the User.username column for users with chat_authorized == True
@@ -94,7 +104,7 @@ def get_chat_userlist():
 @is_not_permabanned
 @chat_is_allowed()
 def chat(v):
-	return render_template("chat.html", v=v, messages=messages)
+	return render_template("chat.html", v=v, messages=get_chat_messages())
 
 
 @socketio.on('speak')
@@ -103,13 +113,6 @@ def chat(v):
 def speak(data, v):
 	limiter.check()
 	if v.is_banned: return '', 403
-
-	vname = v.username.lower()
-	if vname in muted and not v.admin_level >= PERMS['CHAT_BYPASS_MUTE']:
-		if time.time() < muted[vname]: return '', 403
-		else: del muted[vname]
-
-	global messages, total
 
 	text = sanitize_raw(
 		data['message'],
@@ -132,27 +135,16 @@ def speak(data, v):
 
 	text_html = sanitize(text)
 	quotes = data['quotes']
-	data = {
-		"id": str(uuid.uuid4()),
-		"quotes": quotes,
-		"avatar": v.profile_url,
-		"user_id": v.id,
-		"username": v.username,
-		"text": text,
-		"text_html": text_html,
-		"time": int(time.time()),
-	}
 	
-	if v.shadowbanned:
-		emit('speak', data)
-	else:
-		emit('speak', data, broadcast=True)
-		messages.append(data)
-		messages = messages[-CHAT_SCROLLBACK_ITEMS:]
+	chat_message = ChatMessage()
+	chat_message.author_id = v.id
+	chat_message.quote_id = quotes
+	chat_message.text = text
+	chat_message.text_html = text_html
+	g.db.add(chat_message)
+	g.db.commit()
 
-	total += 1
-
-	chat_save()
+	emit('speak', chat_message.json_speak(), broadcast=True)
 
 
 @socketio.on('connect')
@@ -166,7 +158,7 @@ def connect(v):
 		user_ids_to_socket_ids[v.id] = request.sid
 
 	emit('online', get_chat_userlist())
-	emit('catchup', messages)
+	emit('catchup', get_chat_messages())
 	emit('typing', typing)
 
 
@@ -198,17 +190,19 @@ def typing_indicator(data, v):
 
 @socketio.on('delete')
 @chat_is_allowed(PERMS['CHAT_MODERATION'])
-def delete(text, v):
-	for message in messages:
-		if message['text'] == text:
-			messages.remove(message)
+def delete(id, v):
+    chat_message = g.db.query(ChatMessage).filter(ChatMessage.id == id).one_or_none()
+    if chat_message:
+        # Zero out all the quote_id references to this message
+        messages_quoting_this = g.db.query(ChatMessage).filter(ChatMessage.quote_id == id).all()
+        for message in messages_quoting_this:
+            message.quote_id = None 
 
-	emit('delete', text, broadcast=True)
+        # Now, delete the chat_message
+        g.db.delete(chat_message)
+        g.db.commit()
 
-def chat_save():
-	cache.set(f'{SITE}_chat', messages)
-	cache.set(f'{SITE}_total', total)
-	cache.set(f'{SITE}_muted', muted)
+        emit('delete', id, broadcast=True)
 
 @register_command('add', PERMS['CHAT_FULL_CONTROL'])
 def add(user):
@@ -227,6 +221,7 @@ def add(user):
 			send_system_reply(f"Added {user} to chat.")
 	else:
 		send_system_reply(f"Could not find user {user}.")
+
 
 @register_command('remove', PERMS['CHAT_FULL_CONTROL'])
 def remove(user):

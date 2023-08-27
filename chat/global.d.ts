@@ -5,7 +5,6 @@ declare const process: {
 declare interface IChatMessage {
   id: string;
   username: string;
-  user_id?: string;
   avatar: string;
   text: string;
   text_html: string;

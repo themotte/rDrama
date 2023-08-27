@@ -56,6 +56,7 @@ from urllib.parse import urlencode, urlparse, parse_qs
 from .alts import Alt
 from .award import AwardRelationship
 from .badges import BadgeDef, Badge
+from .chat_message import ChatMessage
 from .clients import OauthApp, ClientAuth
 from .comment import Comment
 from .domains import BannedDomain
