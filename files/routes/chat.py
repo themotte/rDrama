@@ -19,11 +19,11 @@ def chat_is_allowed(perm_level: int=0):
 		def wrapper(*args: Any, **kwargs: Any) -> bool | None:
 			v = get_logged_in_user()
 			if not v:
-				return abort(403)
+				abort(403)
 			if not v.can_access_chat:
-				return abort(403)
+				abort(403)
 			if v.admin_level < perm_level:
-				return abort(403)
+				abort(403)
 			kwargs['v'] = v
 			return func(*args, **kwargs)
 		return wrapper
