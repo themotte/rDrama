@@ -150,7 +150,7 @@ def speak(data, v):
 
 @socketio.on('connect')
 @chat_is_allowed()
-def onConnect(v):
+def on_connect(v):
 	if v.username not in online:
 		online.append(v.username)
 
@@ -163,7 +163,7 @@ def onConnect(v):
 
 @socketio.on('disconnect')
 @chat_is_allowed()
-def onDisconnect(v):
+def on_disconnect(v):
 	if v.username in online:
 		online.remove(v.username)
 
@@ -267,4 +267,3 @@ def reset_everything_seriously(_):
 
     # Commit the changes to the database
 	g.db.commit()
-

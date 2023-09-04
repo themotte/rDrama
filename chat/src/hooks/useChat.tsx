@@ -68,10 +68,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
 
   const setMessagesAndRead = useCallback((messages: IChatMessage[]) => {
     setMessages(messages);
-    console.log("TSRM begin");
-    console.log(messages);
     trySendReadMessage(messages);
-    console.log("TSRM end")
   }, []);
 
   const addMessage = useCallback((message: IChatMessage) => {
@@ -151,7 +148,6 @@ export function ChatProvider({ children }: PropsWithChildren) {
   const [lastMaxTime, setLastMaxTime] = useState<number | null>(null);
   const trySendReadMessage = useCallback((messages: IChatMessage[]) => {
       if (messages.length === 0) {
-        console.log("Early abort");
         return; // Exit if the messages array is empty
       }
 
@@ -160,10 +156,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
       if (maxTime !== lastMaxTime) { // Only emit if there's a new maxTime
         setLastMaxTime(maxTime); // Update the stored maxTime
         socket.current?.emit(ChatHandlers.READ, maxTime);
-        console.log("Smaxy");
       }
-
-      console.log("duvo");
   }, [lastMaxTime]);
 
 

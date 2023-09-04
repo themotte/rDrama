@@ -37,7 +37,7 @@ The first time you do this, it will take a while. It'll be (much) faster next ti
 
 Most code edits will be reflected (almost) immediately. If you make any setup changes or database changes, you'll need to ctrl-C the docker-compose status log and run `docker-compose up --build` again.
 
-Chat-related code edits will take a minute to update (if it's in Python) or won't be reflected automatically at all (if it's in Flask). Improvements welcome! But almost nobody touches these systems, so it hasn't been a priority.
+Chat-related code edits will take a minute to update (if it's in Python) or won't be reflected automatically at all (if it's in React). Improvements welcome! But almost nobody touches these systems, so it hasn't been a priority.
 
 # Run the E2E tests:
 
