@@ -12,6 +12,7 @@ from files.classes.alts import Alt
 from files.classes.award import AwardRelationship
 from files.classes.badges import Badge
 from files.classes.base import CreatedBase
+from files.classes.chat_message import ChatMessage
 from files.classes.clients import *  # note: imports Comment and Submission
 from files.classes.follows import Follow
 from files.classes.mod_logs import ModAction
@@ -112,6 +113,9 @@ class User(CreatedBase):
 	volunteer_last_started_utc = Column(DateTime, nullable=True)
 	volunteer_janitor_correctness = Column(Float, default=0, nullable=False)
 
+	chat_authorized = Column(Boolean, default=False, nullable=False)
+	chat_lastseen = Column(DateTime(timezone=True), default=datetime(1970, 1, 1), nullable=False)
+
 	Index(
 		'users_original_username_trgm_idx',
 		original_username,
@@ -136,6 +140,8 @@ class User(CreatedBase):
 	Index('users_subs_idx', stored_subscriber_count)
 	Index('users_unbanutc_idx', unban_utc.desc())
 
+	Index('chat_auth_index', chat_authorized)
+
 	badges = relationship("Badge", viewonly=True)
 	subscriptions = relationship("Subscription", viewonly=True)
 	following = relationship("Follow", primaryjoin="Follow.user_id==User.id", viewonly=True)
@@ -156,6 +162,30 @@ class User(CreatedBase):
 
 	def can_manage_reports(self):
 		return self.admin_level > 1
+	
+	@property
+	@lazy
+	def can_access_chat(self):
+		if self.is_suspended_permanently:
+			return False
+		if self.admin_level >= PERMS['CHAT_FULL_CONTROL']:
+			return True
+		if self.chat_authorized:
+			return True
+		return False
+	
+	@property
+	@lazy
+	def unread_chat_messages_count(self):
+		if not self.can_access_chat:
+			return 0
+
+		# Query for all chat messages that are newer than the user's last seen timestamp
+		unread_messages_count = g.db.query(ChatMessage)\
+			.filter(ChatMessage.created_datetimez > self.chat_lastseen)\
+			.count()
+
+		return unread_messages_count
 	
 	@property
 	def age_days(self):

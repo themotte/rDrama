@@ -1,0 +1,15 @@
+.QuotedMessage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.QuotedMessage-content {
+  margin-left: 1rem;
+  flex: 1;
+  max-width: 420px;
+  max-height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 1rem;
+}
