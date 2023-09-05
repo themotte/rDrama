@@ -222,9 +222,6 @@ class Submission(CreatedBase):
 	@property
 	@lazy
 	def json_raw(self):
-		flags = {}
-		for f in self.flags(None): flags[f.user.username] = f.reason
-
 		data = {'author_name': self.author_name if self.author else '',
 				'permalink': self.permalink,
 				'shortlink': self.shortlink,

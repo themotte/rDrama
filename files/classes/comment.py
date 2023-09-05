@@ -213,9 +213,6 @@ class Comment(CreatedBase):
 	@property
 	@lazy
 	def json_raw(self):
-		flags = {}
-		for f in self.flags(None): flags[f.user.username] = f.reason
-
 		data= {
 			'id': self.id,
 			'level': self.level,
