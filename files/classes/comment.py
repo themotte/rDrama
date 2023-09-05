@@ -230,12 +230,13 @@ class Comment(CreatedBase):
 			'is_pinned': self.is_pinned,
 			'distinguish_level': self.distinguish_level,
 			'post_id': self.post.id if self.post else 0,
-			'score': self.score,
-			'upvotes': self.upvotes,
-			'downvotes': self.downvotes,
 			'is_bot': self.is_bot,
-			'flags': flags,
 			}
+		
+		if not self.should_hide_score:
+			data['score'] = self.score
+			data['upvotes'] = self.upvotes
+			data['downvotes'] = self.downvotes
 
 		return data
 

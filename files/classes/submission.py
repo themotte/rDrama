@@ -241,15 +241,16 @@ class Submission(CreatedBase):
 				'created_utc': self.created_utc,
 				'edited_utc': self.edited_utc or 0,
 				'comment_count': self.comment_count,
-				'score': self.score,
-				'upvotes': self.upvotes,
-				'downvotes': self.downvotes,
 				'stickied': self.stickied,
 				'private' : self.private,
 				'distinguish_level': self.distinguish_level,
 				'voted': self.voted if hasattr(self, 'voted') else 0,
-				'flags': flags,
 				}
+		
+		if not self.should_hide_score:
+			data['score'] = self.score
+			data['upvotes'] = self.upvotes
+			data['downvotes'] = self.downvotes
 
 		return data
 
