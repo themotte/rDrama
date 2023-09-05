@@ -222,9 +222,6 @@ class Submission(CreatedBase):
 	@property
 	@lazy
 	def json_raw(self):
-		flags = {}
-		for f in self.flags(None): flags[f.user.username] = f.reason
-
 		data = {'author_name': self.author_name if self.author else '',
 				'permalink': self.permalink,
 				'shortlink': self.shortlink,
@@ -241,15 +238,16 @@ class Submission(CreatedBase):
 				'created_utc': self.created_utc,
 				'edited_utc': self.edited_utc or 0,
 				'comment_count': self.comment_count,
-				'score': self.score,
-				'upvotes': self.upvotes,
-				'downvotes': self.downvotes,
 				'stickied': self.stickied,
 				'private' : self.private,
 				'distinguish_level': self.distinguish_level,
 				'voted': self.voted if hasattr(self, 'voted') else 0,
-				'flags': flags,
 				}
+		
+		if not self.should_hide_score:
+			data['score'] = self.score
+			data['upvotes'] = self.upvotes
+			data['downvotes'] = self.downvotes
 
 		return data
 
