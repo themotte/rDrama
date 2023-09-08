@@ -40,10 +40,10 @@ def downgrade():
     """
     Downgrade will truncate the milliseconds.
     """
-    op.add_column(table_name, sa.Column('created_utc', sa.Integer(), server_default=sa.text('0'), nullable=True))
+    op.add_column(table_name, sa.Column(from_column, sa.Integer(), server_default=sa.text('0'), nullable=True))
     op.execute(f"""
         UPDATE {table_name} 
-        SET created_utc = 
+        SET {from_column} = 
             COALESCE(
                 EXTRACT(EPOCH FROM {to_column})::integer,
                 0
