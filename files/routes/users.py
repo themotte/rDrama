@@ -2,6 +2,7 @@ import io
 import math
 import time
 from collections import Counter
+from datetime import datetime
 from urllib.parse import urlparse
 
 import gevent
@@ -633,7 +634,7 @@ def following(v, username):
 @auth_required
 def visitors(v):
 	if v.admin_level < 2 and not v.patron: return render_template("errors/patron.html", v=v)
-	viewers=sorted(v.viewers, key = lambda x: x.last_view_utc, reverse=True)
+	viewers=sorted(v.viewers, key = lambda x: x.last_view_datetimez, reverse=True)
 	return render_template("viewers.html", v=v, viewers=viewers)
 
 
@@ -651,7 +652,8 @@ def u_username(username, v=None):
 	if v and v.id != u.id and (u.patron or u.admin_level > 1):
 		view = g.db.query(ViewerRelationship).filter_by(viewer_id=v.id, user_id=u.id).one_or_none()
 
-		if view: view.last_view_utc = int(time.time())
+		# if view: view.last_view_datetimez = int(time.time())
+		if view: view.last_view_datetimez = datetime.utcnow()
 		else: view = ViewerRelationship(viewer_id=v.id, user_id=u.id)
 
 		g.db.add(view)
