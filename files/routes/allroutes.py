@@ -56,7 +56,7 @@ def after_request(response: Response):
 		img-src 'self' https://*.google-analytics.com https://*.googletagmanager.com;
 		connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com;
 		object-src 'none';
-	""".replace('\n', '')))
+	""".replace('\n', '').replace('\t', ' ')))
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("X-Frame-Options", "deny")
 	return response
