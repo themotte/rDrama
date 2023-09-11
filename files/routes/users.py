@@ -652,7 +652,6 @@ def u_username(username, v=None):
 	if v and v.id != u.id and (u.patron or u.admin_level > 1):
 		view = g.db.query(ViewerRelationship).filter_by(viewer_id=v.id, user_id=u.id).one_or_none()
 
-		# if view: view.last_view_datetimez = int(time.time())
 		if view: view.last_view_datetimez = datetime.utcnow()
 		else: view = ViewerRelationship(viewer_id=v.id, user_id=u.id)
 
