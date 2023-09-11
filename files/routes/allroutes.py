@@ -53,9 +53,9 @@ def teardown_request(error):
 def after_request(response: Response):
 	response.headers.add("Content-Security-Policy", (
 		"script-src 'self' 'unsafe-inline';"
-		" connect-src 'self' *.google-analytics.com *.analytics.google.com;"
-		" object-src 'none';"
-		" img-src 'self' *.google-analytics.com *.analytics.google.com"
+		" script-src:  'self' https://*.googletagmanager.com"
+		" img-src:     https://*.google-analytics.com https://*.googletagmanager.com"
+		" connect-src: 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com"
 	))
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("X-Frame-Options", "deny")
