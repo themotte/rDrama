@@ -20,12 +20,6 @@ class ViewerRelationship(Base):
 
 	viewer = relationship("User", primaryjoin="ViewerRelationship.viewer_id == User.id", viewonly=True)
 
-	# def __init__(self, **kwargs):
-	# 	if 'last_view_utc' not in kwargs:
-	# 		kwargs['last_view_utc'] = int(time.time())
-
-	# 	super().__init__(**kwargs)
-
 	@property
 	def last_view_utc(self):
 		"""
