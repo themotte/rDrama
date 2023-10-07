@@ -1,5 +1,5 @@
 alert.webp:        https://unsplash.com/photos/RBwBmTOkNlc
-banner.webp:       https://pyxis.nymag.com/v1/imgs/b57/8a0/19221248c00e63667a31aa14467bbc4c7e-Red-Scare-horizontal.rhorizontal.w1100.jpg
+banner.webp:       https://unsplash.com/photos/j-eOUoVUmQQ
 cover.webp:        https://unsplash.com/photos/1JBOZwuW7sI
 default_text.webp: https://unsplash.com/photos/xG8IQMqMITM
 headericon.webp:   https://unsplash.com/photos/RBwBmTOkNlc
