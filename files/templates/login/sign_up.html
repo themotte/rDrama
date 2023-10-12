@@ -56,6 +56,6 @@
 {%- block scripts -%}
 <script src="{{ 'js/signup.js' | asset }}"></script>
 {% if hcaptcha %}
-	<script src="{{ 'js/hcaptcha.js' | asset }}"></script>
+	<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 {% endif %}
 {%- endblock -%}
