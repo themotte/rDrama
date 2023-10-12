@@ -40,6 +40,6 @@
 		<p>If you can see this line, we haven't been contacted by any law enforcement or governmental organizations in 2023 yet.</p>
 	</section>
 	{% if hcaptcha %}
-		<script src="{{ 'js/hcaptcha.js' | asset }}"></script>
+		<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 	{% endif %}
 {% endblock %}
