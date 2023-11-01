@@ -1,0 +1,1 @@
+globalThis.TRANSPILED_PACKAGES_WORK = true;
