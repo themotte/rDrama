@@ -40,7 +40,7 @@
 							{% if not is_notification_page %}<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments ({{c.descendant_count}})</button>{% endif %}
 							<a {% if not is_notification_page %}class="d-md-none" {% endif %}href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 						</div>
-					{% endif %}
+					{%- endif %}
 				{% endif %}
 			</div>
 		</div>
