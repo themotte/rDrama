@@ -12,141 +12,141 @@
 	{% set replies = c.replies(v) %}
 
 {% if not c.visibility_and_message(v)[0] %}
-{% if c.show_descendants(v) %}
-<div id="comment-{{c.id}}" class="comment">
-		<div class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement)"></div>
-		<div class="comment-collapse-bar-click" onclick="collapse_comment('{{c.id}}', this.parentElement)">
-			<div class="comment-collapse-bar"></div>
-		</div>
-
-		<div class="comment-user-info">
-			{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span>{% endif %}
-			{{c.visibility_and_message(v)[1]}}
-		</div>
-		
-		<div class="comment-body">
-				<div id="comment-{{c.id}}-only" class="comment-{{c.id}}-only"></div>
-	{% if render_replies %}
-		<div id="replies-of-{{c.id}}" class="{% if replies and is_notification_page %}d-none d-md-block{% endif %}">
-			{% if level <= RENDER_DEPTH_LIMIT - 1 %}
-				{% set standalone=false %}
-				{% for reply in replies %}
-					{{single_comment(reply, level=level+1)}}
-				{% endfor %}
-			{% endif %}
-		</div>
-		{% if replies and level >= RENDER_DEPTH_LIMIT -%}
-			<div id="morecomment-{{c.id}}" class="{% if is_notification_page %}d-md-none {% endif %}mt-2 more-comments">
-				{% if not is_notification_page %}<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments ({{c.descendant_count}})</button>{% endif %}
-				<a {% if not is_notification_page %}class="d-md-none" {% endif %}href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+	{% if c.show_descendants(v) or is_notification_page %}
+		<div id="comment-{{c.id}}" class="comment">
+			<div class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement)"></div>
+			<div class="comment-collapse-bar-click" onclick="collapse_comment('{{c.id}}', this.parentElement)">
+				<div class="comment-collapse-bar"></div>
 			</div>
-		{%- endif %}
-	{% endif %}
+
+			<div class="comment-user-info">
+				{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span>{% endif %}
+				{{c.visibility_and_message(v)[1]}}
+			</div>
+			
+			<div class="comment-body">
+				<div id="comment-{{c.id}}-only" class="comment-{{c.id}}-only"></div>
+				{% if render_replies %}
+					<div id="replies-of-{{c.id}}" class="{% if replies and is_notification_page %}d-none d-md-block{% endif %}">
+						{% if level <= RENDER_DEPTH_LIMIT - 1 %}
+							{% set standalone=false %}
+							{% for reply in replies %}
+								{{single_comment(reply, level=level+1)}}
+							{% endfor %}
+						{% endif %}
+					</div>
+					{% if replies and level >= RENDER_DEPTH_LIMIT -%}
+						<div id="morecomment-{{c.id}}" class="{% if is_notification_page %}d-md-none {% endif %}mt-2 more-comments">
+							{% if not is_notification_page %}<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments ({{c.descendant_count}})</button>{% endif %}
+							<a {% if not is_notification_page %}class="d-md-none" {% endif %}href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+						</div>
+					{% endif %}
+				{% endif %}
+			</div>
 		</div>
-</div>
-{% endif %}
+	{% endif %}
 
 {% else %}
 
-{%- set voted = c.voted_display(v) -%}
+	{%- set voted = c.voted_display(v) -%}
 
-{% if standalone and level==1 %}
-<div class="post-info post-row-cid-{{c.id}} mb-1 mr-2 mt-3">
-	{% if c.post and c.post.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
-	<span class="align-top">
-		<span class="font-weight-bold">{{c.header_msg(v, is_notification_page) | safe}}</span>
-	</span>
-</div>
-{% endif %}
-
-{% set isreply = not standalone and c.parent_comment and c.parent_comment.sentto %}
-
-<div id="comment-{{c.id}}" class="anchor comment {% if standalone and level==1 %} mt-0{% endif %} {% if c.collapse_for_user(v,request.path) %}collapsed{% endif %}">
-	{% if not isreply %}
-		<div class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement)"></div>
-		<div class="comment-collapse-bar-click" onclick="collapse_comment('{{c.id}}', this.parentElement)">
-			<div class="comment-collapse-bar collapse-bar-{{(c.level + 6) % 8 + 1}}"></div>
+	{% if standalone and level==1 %}
+		<div class="post-info post-row-cid-{{c.id}} mb-1 mr-2 mt-3">
+			{% if c.post and c.post.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
+			<span class="align-top">
+				<span class="font-weight-bold">{{c.header_msg(v, is_notification_page) | safe}}</span>
+			</span>
 		</div>
 	{% endif %}
-	{%- include 'component/comment/user_info.html' -%}
 
-	<div class="comment-body">
-		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if c.unread %}unread{% endif %} comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.state_mod == StateMod.REMOVED %} removed{% endif %}{% if c.state_mod == StateMod.FILTERED %} filtered{% endif %}{% if c.state_user_deleted_utc %} deleted{% endif %}">
-			{%- include 'component/comment/reports.html'-%}
-			{% if c.state_mod == StateMod.REMOVED and c.state_mod_set_by and v and v.admin_level >= PERMS['POST_COMMENT_MODERATION'] %}
-				<div id="comment-banned-warning" class="comment-text text-removed mb-0">removed by @{{c.state_mod_set_by}}</div>
+	{% set isreply = not standalone and c.parent_comment and c.parent_comment.sentto %}
+
+	<div id="comment-{{c.id}}" class="anchor comment {% if standalone and level==1 %} mt-0{% endif %} {% if c.collapse_for_user(v,request.path) %}collapsed{% endif %}">
+		{% if not isreply %}
+			<div class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement)"></div>
+			<div class="comment-collapse-bar-click" onclick="collapse_comment('{{c.id}}', this.parentElement)">
+				<div class="comment-collapse-bar collapse-bar-{{(c.level + 6) % 8 + 1}}"></div>
+			</div>
+		{% endif %}
+		{%- include 'component/comment/user_info.html' -%}
+
+		<div class="comment-body">
+			<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if c.unread %}unread{% endif %} comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.state_mod == StateMod.REMOVED %} removed{% endif %}{% if c.state_mod == StateMod.FILTERED %} filtered{% endif %}{% if c.state_user_deleted_utc %} deleted{% endif %}">
+				{%- include 'component/comment/reports.html'-%}
+				{% if c.state_mod == StateMod.REMOVED and c.state_mod_set_by and v and v.admin_level >= PERMS['POST_COMMENT_MODERATION'] %}
+					<div id="comment-banned-warning" class="comment-text text-removed mb-0">removed by @{{c.state_mod_set_by}}</div>
+				{% endif %}
+
+				<div id="comment-text-{{c.id}}" class="comment-text mb-0">
+					{{c.realbody(v) | safe}}
+				</div>
+				{% if c.parent_submission %}
+					{%- include 'component/comment/editbox_comment.html' -%}
+					<div id="comment-{{c.id}}-actions" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+						<div class="d-md-none mt-2">
+							<div class="post-actions">
+								<ul class="list-inline text-right d-flex">
+									{% if v and v.admin_level >= 2 %}
+										<li class="list-inline-item mr-auto">
+											<a role="button" data-bs-toggle="modal" data-bs-target="#adminModal-{{c.id}}"> <i class="fas fa-broom"></i></a>
+										</li>
+									{% endif %}
+									{% if v %}
+										<a class="list-inline-item mr-3" role="button" onclick="openReplyBox('reply-to-{{c.id}}')"><i class="fas fa-reply" style="margin-top:0.35rem"></i></a>
+									{% endif %}
+									
+									<li class="list-inline-item">
+										<a role="button" data-bs-toggle="modal" data-bs-target="#actionsModal-{{c.id}}"> <i class="fas fa-ellipsis-h mt-1"></i></a>
+									</li>
+									{%- include 'component/comment/voting_mobile.html' -%}
+								</ul>
+							</div>
+						</div>
+
+						<ul class="d-none d-md-flex list-inline text-right text-md-left">
+							<li>
+								{%- include 'component/comment/voting_desktop.html' -%}
+								{%- include 'component/comment/actions_desktop.html' -%}
+							</li>
+						</ul>
+					</div>
+				{% endif %}
+			</div>
+
+			{% if v and v.id != c.author_id and c.body %}
+				<textarea autocomplete="off" class="d-none card border my-2 p-3 comment-box form-control rounded" id="markdown-{{c.id}}" readonly>{{c.body.strip()}}</textarea> 
 			{% endif %}
 
-			<div id="comment-text-{{c.id}}" class="comment-text mb-0">
-				{{c.realbody(v) | safe}}
-			</div>
-			{% if c.parent_submission %}
-				{%- include 'component/comment/editbox_comment.html' -%}
-				<div id="comment-{{c.id}}-actions" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-					<div class="d-md-none mt-2">
-						<div class="post-actions">
-							<ul class="list-inline text-right d-flex">
-								{% if v and v.admin_level >= 2 %}
-									<li class="list-inline-item mr-auto">
-										<a role="button" data-bs-toggle="modal" data-bs-target="#adminModal-{{c.id}}"> <i class="fas fa-broom"></i></a>
-									</li>
-								{% endif %}
-								{% if v %}
-									<a class="list-inline-item mr-3" role="button" onclick="openReplyBox('reply-to-{{c.id}}')"><i class="fas fa-reply" style="margin-top:0.35rem"></i></a>
-								{% endif %}
-								
-								<li class="list-inline-item">
-									<a role="button" data-bs-toggle="modal" data-bs-target="#actionsModal-{{c.id}}"> <i class="fas fa-ellipsis-h mt-1"></i></a>
-								</li>
-								{%- include 'component/comment/voting_mobile.html' -%}
-							</ul>
-						</div>
-					</div>
+			{%- include 'component/comment/replybox_comment.html' -%}
 
-					<ul class="d-none d-md-flex list-inline text-right text-md-left">
-						<li>
-							{%- include 'component/comment/voting_desktop.html' -%}
-							{%- include 'component/comment/actions_desktop.html' -%}
-						</li>
-					</ul>
-				</div>
+			{% if is_notification_page and c.is_strict_message and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
+				{%- include 'component/comment/replybox_message.html' -%}
+			{% endif %}
+			
+			{% if render_replies %} 
+				{% if level <= RENDER_DEPTH_LIMIT - 1 or is_notification_page %}
+					<div id="replies-of-{{c.id}}">
+						{% for reply in replies %}
+							{{single_comment(reply, level=level+1)}}
+						{% endfor %}
+					</div>
+				{% elif replies %}
+					<div id="morecomments-{{c.id}}" class="mt-2 more-comments">
+						<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments ({{c.descendant_count}})</button>
+						<a class="d-md-none" href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+					</div>
+				{% endif %}
+			{% else %}
+				<div id="replies-of-{{c.id}}"></div>
 			{% endif %}
 		</div>
 
-		{% if v and v.id != c.author_id and c.body %}
-			<textarea autocomplete="off" class="d-none card border my-2 p-3 comment-box form-control rounded" id="markdown-{{c.id}}" readonly>{{c.body.strip()}}</textarea> 
-		{% endif %}
+	{%- include 'component/comment/actions_mobile.html' -%}
 
-		{%- include 'component/comment/replybox_comment.html' -%}
-
-		{% if is_notification_page and c.is_strict_message and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
-			{%- include 'component/comment/replybox_message.html' -%}
-		{% endif %}
-		
-		{% if render_replies %} 
-			{% if level <= RENDER_DEPTH_LIMIT - 1 or is_notification_page %}
-				<div id="replies-of-{{c.id}}">
-					{% for reply in replies %}
-						{{single_comment(reply, level=level+1)}}
-					{% endfor %}
-				</div>
-			{% elif replies %}
-				<div id="morecomments-{{c.id}}" class="mt-2 more-comments">
-					<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments ({{c.descendant_count}})</button>
-					<a class="d-md-none" href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
-				</div>
-			{% endif %}
-		{% else %}
-			<div id="replies-of-{{c.id}}"></div>
-		{% endif %}
+	{% if v and v.admin_level >= 2 %}
+		{%- include 'component/comment/actions_mobile_admin.html' -%}
+	{% endif %}
 	</div>
-
-{%- include 'component/comment/actions_mobile.html' -%}
-
-{% if v and v.admin_level >= 2 %}
-	{%- include 'component/comment/actions_mobile_admin.html' -%}
-{% endif %}
-</div>
 {% endif %}
 {% endmacro %}
 
