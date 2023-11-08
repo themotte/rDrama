@@ -62,10 +62,13 @@ def notifications_main(v: User):
 	next_exists = (len(comments) > 25)
 	comments = comments[:25]
 
+	user_blocking = [row.target_id for row in g.db.query(UserBlock).filter_by(user_id=v.id)]
+
 	for c, n in comments:
 		c.notif_utc = n.created_utc
 		c.unread = not n.read
 		n.read = True
+		c.is_blocking = c.author_id in user_blocking
 
 	listing: list[Comment] = [c for c, _ in comments]
 

@@ -83,6 +83,9 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			blocked.c.user_id == Comment.author_id,
 			isouter=True
 		)
+  
+		# TODO (wmill) This looks wrong to me. It adds on new properties to all comments to use voted/blocked/blocking status in rendering.
+		# But it needs to be repeated if you ever want to render comments anywhere else.
 
 		output = []
 		for c in comments:
