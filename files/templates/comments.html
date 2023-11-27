@@ -36,7 +36,7 @@
 						{% endif %}
 					</div>
 					{% if replies and level >= RENDER_DEPTH_LIMIT -%}
-						<div id="morecomment-{{c.id}}" class="{% if is_notification_page %}d-md-none {% endif %}mt-2 more-comments">
+						<div id="morecomments-{{c.id}}" class="{% if is_notification_page %}d-md-none {% endif %}mt-2 more-comments">
 							{% if not is_notification_page %}<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments ({{c.descendant_count}})</button>{% endif %}
 							<a {% if not is_notification_page %}class="d-md-none" {% endif %}href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 						</div>
