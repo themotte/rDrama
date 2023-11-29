@@ -32,10 +32,17 @@
 		};
 	};
 	var enclose = function(mark) {
-		var re = new RegExp(escape(mark) + '(\\S[^]*?\\S|\\S)' + escape(mark), 'g');
+		var re = (function() {
+			var pat = escape(mark);
+			return new RegExp(pat + '(\\S([^](?!\\s' + pat + '\\S))*?\\S|\\S)' + pat, 'g');
+		})();
 		return select(function(selection) {
 			return selection.replace(/[^]*?(?=\n{2,})|[^]*/g, function(selection) {
 				var replacement = selection.replace(re, '$1');
+				for (var old = Infinity;
+				     replacement.length < old;
+				     replacement = replacement.replace(re, '$1'))
+					old = replacement.length;
 				if (replacement.length == selection.length)
 					replacement = replacement.replace(/\S[^]*\S|\S/, function (str) {
 						return mark + str + mark;
