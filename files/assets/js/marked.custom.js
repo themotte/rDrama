@@ -60,7 +60,7 @@ marked.use({
 function markdown(first, second) {
 	var input = document.getElementById(first);
 	var dest = document.getElementById(second);
-	if(dest && input && input.value.trim() !== ''){
+	if(dest && input){
 		for (var i = 0; i < dest.children.length; i++) {
 			dest.removeChild(dest.children[i]);
 		}
