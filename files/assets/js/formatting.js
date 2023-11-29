@@ -34,12 +34,14 @@
 	var enclose = function(mark) {
 		var re = new RegExp(escape(mark) + '(\\S[^]*?\\S|\\S)' + escape(mark), 'g');
 		return select(function(selection) {
-			var replacement = selection.replace(re, '$1');
-			if (replacement.length == selection.length)
-				replacement = replacement.replace(/\S[^]*\S|\S/, function (str) {
-					return mark + str + mark;
-				});
-			return replacement;
+			return selection.replace(/[^]*?(?=\n{2,})|[^]*/g, function(selection) {
+				var replacement = selection.replace(re, '$1');
+				if (replacement.length == selection.length)
+					replacement = replacement.replace(/\S[^]*\S|\S/, function (str) {
+						return mark + str + mark;
+					});
+				return replacement;
+			});
 		});
 	};
 	var quote = select(function(selection) {
