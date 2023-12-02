@@ -25,6 +25,7 @@ import gevent
 import redis
 from sqlalchemy.engine import Engine, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+from flask_assets import Environment, Bundle
 
 from files.helpers.config.const import Service
 from files.helpers.strings import bool_from_string
@@ -39,6 +40,11 @@ app = flask.app.Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
 app.jinja_env.cache = {}
 app.jinja_env.auto_reload = True
+
+# set up assets
+assets = Environment(app)
+assets.from_yaml('files/bundles.yaml')
+
 faulthandler.enable()
 
 # ...then check that debug mode was not accidentally enabled...
