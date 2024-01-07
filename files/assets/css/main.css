@@ -5375,7 +5375,3 @@ div[id^="reply-edit-"] li > p:first-child {
 .volunteer_janitor_result_bad_3 {
 	background-color: hsl(0, 100%, 80%);
 }
-
-pre {
-	line-height: .5rem;
-}
