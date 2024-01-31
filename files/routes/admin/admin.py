@@ -1277,7 +1277,7 @@ def admin_nuke_user(v):
 	user=get_user(request.values.get("user"))
 
 	for post in g.db.query(Submission).filter_by(author_id=user.id).all():
-		if post.state_mod != StateMod.REMOVED:
+		if post.state_mod == StateMod.REMOVED:
 			continue
 			
 		post.state_mod = StateMod.REMOVED
@@ -1285,7 +1285,7 @@ def admin_nuke_user(v):
 		g.db.add(post)
 
 	for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
-		if comment.state_mod != StateMod.REMOVED:
+		if comment.state_mod == StateMod.REMOVED:
 			continue
 
 		comment.state_mod = StateMod.REMOVED
