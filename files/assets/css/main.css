@@ -5375,3 +5375,14 @@ div[id^="reply-edit-"] li > p:first-child {
 .volunteer_janitor_result_bad_3 {
 	background-color: hsl(0, 100%, 80%);
 }
+
+
+
+/***********************
+  Reports
+************************/
+
+.flaggers .flaggers-timestamp {
+	font-size: 0.8rem;
+	font-color: var(--gray-500);
+}

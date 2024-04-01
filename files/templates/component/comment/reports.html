@@ -7,7 +7,7 @@
 		<pre></pre>
 		<ul style="padding-left:20px; margin-bottom: 0;word-wrap:break-word">
 			{% for f in c.flags(v) %}
-				<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %}</li>
+				<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: <span data-bs-toggle="tooltip" data-bs-placement="bottom" id="report_timestamp_{{f.id}}" onmouseover="timestamp('report_timestamp_{{f.id}}','{{f.created_utc}}')">{{f.realreason(v) | safe}}{% endif %}</span></li>
 			{% endfor %}
 		</ul>
 	</div>
