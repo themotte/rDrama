@@ -151,13 +151,6 @@ def revert_actions(v, username):
 		user.ban_evade = 0
 		send_repeatable_notification(user.id, f"@{v.username} has unbanned you!")
 		g.db.add(user)
-		for u in user.alts:
-			u.shadowbanned = None
-			u.is_banned = 0
-			u.unban_utc = 0
-			u.ban_evade = 0
-			send_repeatable_notification(u.id, f"@{v.username} has unbanned you!")
-			g.db.add(u)
 
 	g.db.commit()
 	return {"message": "Admin actions reverted!"}
@@ -782,11 +775,6 @@ def shadowban(user_id, v):
 	user.shadowbanned = v.username
 	g.db.add(user)
 
-	for alt in user.alts:
-		if alt.admin_level: break
-		alt.shadowbanned = v.username
-		g.db.add(alt)
-
 	ma = ModAction(
 		kind="shadowban",
 		user_id=v.id,
@@ -831,10 +819,6 @@ def unshadowban(user_id, v):
 	user.shadowbanned = None
 	user.ban_evade = 0
 	g.db.add(user)
-	for alt in user.alts:
-		alt.shadowbanned = None
-		alt.ban_evade = 0
-		g.db.add(alt)
 
 	ma = ModAction(
 		kind="unshadowban",
