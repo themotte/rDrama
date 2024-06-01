@@ -155,7 +155,7 @@ class Comment(CreatedBase):
 		elif self.parent_submission: return f"post_{self.parent_submission}"
 
 	def replies(self, user):
-		if self.replies2 != None: return [x for x in self.replies2 if not x.author.shadowbanned]
+		if self.replies2 != None: return [x for x in self.replies2 if not x.author.shadowbanned or x.descendant_count > 0]
 		author_id = None
 		if user:
 			author_id = user.id
