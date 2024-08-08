@@ -52,7 +52,8 @@ def api_flag_comment(cid, v):
 	g.db.add(flag)
 
 	# We only want to notify if the user is not permabanned
-	if not v.is_suspended_permanently:
+	# this should probably be a "reportbanned" flag that's applied manually that also clears their reports, but that's a lot more work
+	if not v.is_suspended_permanently and not v.shadowbanned:
 		g.db.query(Comment) \
 				.where(Comment.id == comment.id, Comment.state_report != StateReport.IGNORED) \
 				.update({Comment.state_report: StateReport.REPORTED})
