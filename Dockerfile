@@ -6,7 +6,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt update && apt -y upgrade
 
-# we'll end up blowing away this directory via docker-compose
+# we'll end up blowing away this directory via docker compose
 WORKDIR /service
 COPY pyproject.toml .
 COPY poetry.lock .

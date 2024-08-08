@@ -44,21 +44,20 @@ def api_flag_post(pid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def api_flag_comment(cid, v):
-	comment = get_comment(cid)
-	reason = request.values.get("reason", "").strip()[:100]
-	reason = filter_emojis_only(reason)
 
-	flag = CommentFlag(comment_id=comment.id, user_id=v.id, reason=reason)
-	g.db.add(flag)
-
-	# We only want to notify if the user is not permabanned
-	# this should probably be a "reportbanned" flag that's applied manually that also clears their reports, but that's a lot more work
+	# I'm not hugely into blocking this entirely, really we should be recording it and then mostly ignoring it, but whatever
 	if not v.is_suspended_permanently and not v.shadowbanned:
+		comment = get_comment(cid)
+		reason = request.values.get("reason", "").strip()[:100]
+		reason = filter_emojis_only(reason)
+
+		flag = CommentFlag(comment_id=comment.id, user_id=v.id, reason=reason)
+		g.db.add(flag)
+
 		g.db.query(Comment) \
 				.where(Comment.id == comment.id, Comment.state_report != StateReport.IGNORED) \
 				.update({Comment.state_report: StateReport.REPORTED})
-
-	
-	g.db.commit()
+		
+		g.db.commit()
 
 	return {"message": "Comment reported!"}
