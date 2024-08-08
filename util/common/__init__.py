@@ -54,7 +54,8 @@ def _execute(command,**kwargs):
 
 def _docker(command, **kwargs):
     return _execute([
-        "docker-compose",
+        "docker",
+        "compose",
         "exec", '-T',
         "site",
     ] + command,
@@ -64,7 +65,8 @@ def _start():
     print("Starting containers in operation mode . . .")
     print("  If this takes a while, it's probably building the container.")
     command = [
-        'docker-compose',
+        'docker',
+        'compose',
         '-f', 'docker-compose.yml',
         '-f', 'docker-compose-operation.yml',
         'up',
@@ -83,16 +85,16 @@ def _start():
 
     # previous versions of this code also had a check to see if the containers started up properly
     # but this is surprisingly annoying to do if we don't know the containers' names
-    # docker-compose *can* do it, but you either have to use very new features that aren't supported on Ubuntu 22.04, or you have to go through a bunch of parsing pain
+    # docker compose *can* do it, but you either have to use very new features that aren't supported on Ubuntu 22.04, or you have to go through a bunch of parsing pain
     # and it kind of doesn't seem necessary
 
-    # see, docker-compose in this form *will* wait until it's *attempted* to start each container.
+    # see, docker compose in this form *will* wait until it's *attempted* to start each container.
     # so at this point in execution, either the containers are running, or they're crashed
     # if they're running, hey, problem solved, we're good
     # if they're crashed, y'know what, problem still solved! because our next command will fail
 
     # maybe there's still a race condition? I dunno! Keep an eye on this.
-    # If there is a race condition then you're stuck doing something gnarly with `docker-compose ps`. Good luck!
+    # If there is a race condition then you're stuck doing something gnarly with `docker compose ps`. Good luck!
 
     print("  Containers started!")
 
@@ -100,7 +102,7 @@ def _start():
 
 def _stop():
     # use "stop" instead of "down" to avoid killing all stored data
-    command = ['docker-compose','stop']
+    command = ['docker', 'compose', 'stop']
     print("Stopping containers . . .")
     result = _execute(command)
     return result

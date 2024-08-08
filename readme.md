@@ -24,7 +24,7 @@ cd rDrama
 4 - Run the following command to start the site:
 
 ```sh
-docker-compose up --build
+docker compose up --build
 ```
 
 The first time you do this, it will take a while. It'll be (much) faster next time.
@@ -35,7 +35,7 @@ The first time you do this, it will take a while. It'll be (much) faster next ti
 
 6 - That's it!
 
-Most code edits will be reflected (almost) immediately. If you make any setup changes or database changes, you'll need to ctrl-C the docker-compose status log and run `docker-compose up --build` again.
+Most code edits will be reflected (almost) immediately. If you make any setup changes or database changes, you'll need to ctrl-C the docker status log and run `docker compose up --build` again.
 
 Chat-related code edits will take a minute to update (if it's in Python) or won't be reflected automatically at all (if it's in React). Improvements welcome! But almost nobody touches these systems, so it hasn't been a priority.
 
@@ -99,7 +99,7 @@ def downgrade():
 4. Restart the Docker container to make sure it works.
 
 ```sh
-docker-compose up --build
+docker compose up --build
 ```
 
 ## So what's up with original-schema.sql, can I just change that?
