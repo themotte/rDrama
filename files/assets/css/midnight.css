@@ -49,3 +49,17 @@ body, .navbar-light, .navbar-dark, .card, .modal-content, .comment-write textare
 .comment .comment-collapse-desktop {
 	border-left: 2px solid var(--black);
 }
+
+/* requested by https://github.com/themotte/rDrama/issues/738 */
+
+.volunteer_teaser {background-color: transparent;}
+html{overflow-x:hidden;}
+
+img[src^="https://www.themotte.org/assets/images/TheMotte/default"],
+img[src^="https://www.themotte.org/assets/images/default_"]{
+	filter: invert(1);
+}
+
+.container{
+	margin: 10px!important;
+}
