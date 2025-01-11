@@ -245,7 +245,7 @@ def sign_up_post(v):
 
 	now = int(time.time())
 
-	username = request.values.get("username")
+	username = request.values.get("usernametwo")
 	
 	if not username: abort(400)
 
