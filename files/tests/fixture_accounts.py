@@ -25,7 +25,7 @@ class AccountsFixture:
 		print(f"Signing up as {username}")
 
 		signup_post_response = client.post("/signup", data={
-			"username": username,
+			"usernametwo": username,
 			"password": "password",
 			"password_confirm": "password",
 			"email": "",
