@@ -349,6 +349,21 @@ ACTIONTYPES = {
 		"icon": 'fa-eye', 
 		"color": 'bg-success'
 	},
+	'filter_on': {
+		"str": 'force-filtered {self.target_link}', 
+		"icon": 'fa-user', 
+		"color": 'bg-success'
+	},
+	'filter_off': {
+		"str": 'unfiltered {self.target_link}', 
+		"icon": 'fa-user', 
+		"color": 'bg-success'
+	},
+	'filter_auto': {
+		"str": 'autofiltered {self.target_link}', 
+		"icon": 'fa-user', 
+		"color": 'bg-success'
+	},
 	'fallback': {
 		"str": 'unfamiliar action type, please report', 
 		"icon": 'fa-robot', 

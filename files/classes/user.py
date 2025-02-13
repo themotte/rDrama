@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import enum
 import time
 from datetime import datetime
 from typing import TYPE_CHECKING, Union
@@ -32,6 +33,11 @@ if TYPE_CHECKING:
 	from files.classes.cron.submission import ScheduledSubmissionTask
 
 defaulttheme = "TheMotte"
+
+class FilterBehavior(enum.Enum):
+    AUTOMATIC = 0
+    UNFILTERED = 1
+    FILTERED = 2
 
 class User(CreatedBase):
 	__tablename__ = "users"
@@ -116,6 +122,8 @@ class User(CreatedBase):
 	chat_authorized = Column(Boolean, default=False, nullable=False)
 	chat_lastseen = Column(DateTime(timezone=True), default=datetime(1970, 1, 1), nullable=False)
 
+	filter_behavior = Column(Enum(FilterBehavior), default=FilterBehavior.AUTOMATIC, nullable=False)
+
 	Index(
 		'users_original_username_trgm_idx',
 		original_username,
@@ -196,6 +204,10 @@ class User(CreatedBase):
 		from files.__main__ import app  # avoiding import loop
 		if self.admin_level > 0:
 			return False
+		if self.filter_behavior != FilterBehavior.AUTOMATIC:
+			return self.filter_behavior == FilterBehavior.FILTERED
+		
+		# Automatic path here
 		# TODO: move settings out of app.config
 		site_settings = app.config['SETTINGS']
 		min_comments = site_settings.get('FilterCommentsMinComments', 0)

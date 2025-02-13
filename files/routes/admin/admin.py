@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 import requests
 
 from files.classes import *
+from files.classes.user import FilterBehavior
 from files.classes.visstate import StateMod, StateReport
 from files.helpers.alerts import *
 from files.helpers.caching import invalidate_cache
@@ -831,6 +832,66 @@ def unshadowban(user_id, v):
 
 	g.db.commit()
 	return {"message": "User unshadowbanned!"}
+
+@app.post("/filter_automatic/<user_id>")
+@limiter.exempt
+@admin_level_required(2)
+def filter_automatic(user_id, v):
+	user = g.db.query(User).filter_by(id=user_id).one_or_none()
+	user.filter_behavior = FilterBehavior.AUTOMATIC
+	g.db.add(user)
+
+	ma = ModAction(
+		kind="filter_auto",
+		user_id=v.id,
+		target_user_id=user.id,
+	)
+	g.db.add(ma)
+	
+	invalidate_cache(frontlist=True)
+
+	g.db.commit()
+	return {"message": "User autofiltered!"}
+
+@app.post("/filter_unfiltered/<user_id>")
+@limiter.exempt
+@admin_level_required(2)
+def filter_unfiltered(user_id, v):
+	user = g.db.query(User).filter_by(id=user_id).one_or_none()
+	user.filter_behavior = FilterBehavior.UNFILTERED
+	g.db.add(user)
+
+	ma = ModAction(
+		kind="filter_off",
+		user_id=v.id,
+		target_user_id=user.id,
+	)
+	g.db.add(ma)
+	
+	invalidate_cache(frontlist=True)
+
+	g.db.commit()
+	return {"message": "User unfiltered!"}
+
+@app.post("/filter_filtered/<user_id>")
+@limiter.exempt
+@admin_level_required(2)
+def filter_filtered(user_id, v):
+	user = g.db.query(User).filter_by(id=user_id).one_or_none()
+	user.filter_behavior = FilterBehavior.FILTERED
+	g.db.add(user)
+
+	ma = ModAction(
+		kind="filter_on",
+		user_id=v.id,
+		target_user_id=user.id,
+	)
+	g.db.add(ma)
+	
+	invalidate_cache(frontlist=True)
+
+	g.db.commit()
+	return {"message": "User always filtered!"}
 
 @app.post("/admin/verify/<user_id>")
 @limiter.exempt
