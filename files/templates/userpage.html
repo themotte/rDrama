@@ -226,6 +226,11 @@
 
 						<a id="unshadowban" class="{% if not u.shadowbanned %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/unshadowban/{{u.id}}','POST','shadowban','unshadowban');">Unshadowban</a>
 
+						<div>Current filter mode: {{u.filter_behavior}} (actual filter decision resolves as filter={{u.should_comments_be_filtered}})</div>
+
+						<a id="filter_auto" class="btn btn-success" role="button" onclick="postToast(this,'/filter_automatic/{{u.id}}','POST');">Autofilter</a>
+						<a id="filter_off" class="btn btn-success" role="button" onclick="postToast(this,'/filter_unfiltered/{{u.id}}','POST');">Unfiltered</a>
+						<a id="filter_on" class="btn btn-success" role="button" onclick="postToast(this,'/filter_filtered/{{u.id}}','POST');">Always Filter</a>
 
 						<pre></pre>
 						
