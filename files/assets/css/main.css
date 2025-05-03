@@ -4926,9 +4926,6 @@ toast {
 	}
 }
 
-html {
-	scroll-padding-top: 100px;
-}
 .comment-anchor::before {
 	content: '';
 	display: block;
