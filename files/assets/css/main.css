@@ -3650,7 +3650,7 @@ small, .small {
 	padding-bottom: 5px !important;
 	max-width: var(--text-width, 60em);
 }
-.comment .comment-body .comment-text p:last-child {
+.comment .comment-body .comment-text>p:last-child {
 	margin-bottom: 0;
 }
 .modal .comment-actions .list-group-item {
@@ -4537,7 +4537,6 @@ blockquote + p {
 	margin-top: 1rem;
 }
 blockquote p {
-	margin-bottom: 0;
 	padding-bottom: 0.7rem;
 	padding-top: 0.7rem;
 }
