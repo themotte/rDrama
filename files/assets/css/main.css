@@ -4536,10 +4536,6 @@ blockquote + blockquote, blockquote:last-child {
 blockquote + p {
 	margin-top: 1rem;
 }
-blockquote p {
-	padding-bottom: 0.7rem;
-	padding-top: 0.7rem;
-}
 @media (min-width: 576px) {
 	.modal-dialog {
 		max-width: 50% !important;
