@@ -1,7 +1,7 @@
 {% extends "default.html" %}
 
 {% block title %}
-<title>+18</title>
+<title>18+</title>
 {% endblock %}
 
 {% block pagetype %}error-451{% endblock %}
@@ -12,11 +12,11 @@
 		<div class="text-center px-3 mt-5">
 			<h1>NSFW</h1>
 			<h5>Are you over 18?</h5>
-			<p class="mb-5">This post is rated +18 (Adult-Only). You must be 18 or older to continue. Are you sure you want to proceed?</p>
+			<p class="mb-5">This post is rated 18+ (Adult-Only). You must be 18 or older to continue. Are you sure you want to proceed?</p>
 			<div class="btn-toolbar justify-content-center mb-4">
 				<form action="/allow_nsfw" method="post">
 					<input type="hidden" name="redir" value="{{request.path}}">
-					<input type="submit" class="btn btn-danger mr-2" value="Yes, I am +18">
+					<input type="submit" class="btn btn-danger mr-2" value="Yes, I am 18+">
 				</form>
 				<div><a href="/" class="btn btn-secondary">No</a></div>
 			</div>
