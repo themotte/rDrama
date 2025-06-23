@@ -48,8 +48,8 @@
 	{% endif %}
 
 	{% if c.parent_submission and (c.author_id==v.id or v.admin_level >= 2) %}
-		<button id="unmark-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.over_18 %}d-md-block{% endif %} text-danger" onclick="postToastSwitch(this,'/toggle_comment_nsfw/{{c.id}}','POST','mark-{{c.id}}','unmark-{{c.id}}', 'd-md-inline-block')"><i class="fas fa-eye-evil text-danger fa-fw"></i>Unmark +18</button>
-		<button id="mark-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.over_18 %}d-md-block{% endif %} text-danger" onclick="postToastSwitch(this,'/toggle_comment_nsfw/{{c.id}}','POST','mark-{{c.id}}','unmark-{{c.id}}', 'd-md-inline-block')"><i class="fas fa-eye-evil text-danger fa-fw"></i>Mark +18</button>
+		<button id="unmark-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.over_18 %}d-md-block{% endif %} text-danger" onclick="postToastSwitch(this,'/toggle_comment_nsfw/{{c.id}}','POST','mark-{{c.id}}','unmark-{{c.id}}', 'd-md-inline-block')"><i class="fas fa-eye-evil text-danger fa-fw"></i>Unmark 18+</button>
+		<button id="mark-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.over_18 %}d-md-block{% endif %} text-danger" onclick="postToastSwitch(this,'/toggle_comment_nsfw/{{c.id}}','POST','mark-{{c.id}}','unmark-{{c.id}}', 'd-md-inline-block')"><i class="fas fa-eye-evil text-danger fa-fw"></i>Mark 18+</button>
 	{% endif %}
 
 	{% if v.admin_level >= 2 and v.id != c.author_id %}
