@@ -87,15 +87,22 @@ def canonicalize_url2(url:str, *, httpsify:bool=False) -> urllib.parse.ParseResu
 
 
 def body_displayed(target:Submittable, v:Optional[User], is_html:bool) -> str:
-	moderated:Optional[str] = target.visibility_state.moderated_body(
-		v=v, 
-		is_blocking=getattr(target, 'is_blocking', False)
-	)
-	if moderated: return moderated
+	added_message = target.visibility_state.added_message(v)
 
-	body = target.body_html if is_html else target.body
-	if not body: return ""
-	if not v: return body
+	if is_html:
+		body = target.body_html
+		if not body: return ""
+		if not v: return body
+
+		if added_message:
+			body = f'{body}<div class="visibility-message">{added_message}</div>'
+	else:
+		body = target.body
+		if not body: return ""
+		if not v: return body
+
+		if added_message:
+			body = f'{body}\n\n{added_message}'
 
 	body = body.replace("old.reddit.com", v.reddit)
 	if v.nitter and '/i/' not in body and '/retweets' not in body: 

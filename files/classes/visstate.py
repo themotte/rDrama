@@ -39,6 +39,8 @@ class VisibilityState:
 	op_shadowbanned: bool
 	op_id: int
 	op_name_safe: str
+	distinguished: bool
+	is_blocking: bool
 
 	@property
 	def removed(self) -> bool:
@@ -61,20 +63,12 @@ class VisibilityState:
 			deleted=bool(target.state_user_deleted_utc != None),
 			op_shadowbanned=bool(target.author.shadowbanned),
 			op_id=target.author_id,  # type: ignore
-			op_name_safe=target.author_name
+			op_name_safe=target.author_name,
+			distinguished=bool(getattr(target, 'distinguish_level', 0)),
+			is_blocking=bool(getattr(target, 'is_blocking', False)),
 		)
-
-	def moderated_body(self, v: User | None, is_blocking: bool=False) -> str | None:
-		if v and (v.admin_level >= PERMS['POST_COMMENT_MODERATION'] \
-			or v.id == self.op_id):
-			return None
-		if self.deleted: return 'Deleted'
-		if self.appear_removed(v): return 'Removed'
-		if self.filtered: return 'Filtered'
-		if is_blocking: return f'You are blocking @{self.op_name_safe}'
-		return None
 	
-	def visibility_and_message(self, v: User | None, is_blocking: bool) -> tuple[bool, str]:
+	def visibility_and_message(self, v: User | None) -> tuple[bool, str | None]:
 		'''
 		Returns a tuple of whether this content is visible and a publicly 
 		visible message to accompany it. The visibility state machine is
@@ -86,8 +80,10 @@ class VisibilityState:
 		can_moderate: bool = can(v, PERMS['POST_COMMENT_MODERATION'])
 		can_shadowban: bool = can(v, PERMS['USER_SHADOWBAN'])
 
+		is_blocking = self.is_blocking
+		
 		if v and v.id == self.op_id:
-			return True, "This shouldn't be here, please report it!"
+			return True, None
 		if (self.removed and not can_moderate) or \
 				(self.op_shadowbanned and not can_shadowban):
 			msg: str = 'Removed'
@@ -99,19 +95,16 @@ class VisibilityState:
 		if self.deleted and not can_moderate:
 			return False, 'Deleted by author'
 		if is_blocking:
+			if self.distinguished:
+				return True, f'(You are blocking @{self.op_name_safe}, but this is an official post and cannot be blocked)'
 			return False, f'You are blocking @{self.op_name_safe}'
-		return True, "This shouldn't be here, please report it!"
+		return True, None
 	
-	def is_visible_to(self, v: User | None, is_blocking: bool) -> bool:
-		return self.visibility_and_message(v, is_blocking)[0]
+	def is_visible_to(self, v: User | None) -> bool:
+		return self.visibility_and_message(v)[0]
 	
-	def replacement_message(self, v: User | None, is_blocking: bool) -> str:
-		return self.visibility_and_message(v, is_blocking)[1]
-	
-	def appear_removed(self, v: User | None) -> bool:
-		if self.removed: return True
-		if not self.op_shadowbanned: return False
-		return (not v) or bool(v.admin_level < PERMS['USER_SHADOWBAN'])
+	def added_message(self, v: User | None) -> str:
+		return self.visibility_and_message(v)[1]
 	
 	@property
 	def publicly_visible(self) -> bool:
