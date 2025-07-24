@@ -624,8 +624,8 @@ def toggle_comment_nsfw(cid, v):
 
 	g.db.commit()
 
-	if comment.over_18: return {"message": "Comment has been marked as +18!"}
-	else: return {"message": "Comment has been unmarked as +18!"}
+	if comment.over_18: return {"message": "Comment has been marked as 18+!"}
+	else: return {"message": "Comment has been unmarked as 18+!"}
 	
 @app.post("/toggle_post_nsfw/<pid>")
 @auth_required
@@ -648,8 +648,8 @@ def toggle_post_nsfw(pid, v):
 
 	g.db.commit()
 
-	if post.over_18: return {"message": "Post has been marked as +18!"}
-	else: return {"message": "Post has been unmarked as +18!"}
+	if post.over_18: return {"message": "Post has been marked as 18+!"}
+	else: return {"message": "Post has been unmarked as 18+!"}
 
 @app.post("/save_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")

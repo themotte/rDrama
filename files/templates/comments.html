@@ -20,7 +20,7 @@
 			</div>
 
 			<div class="comment-user-info">
-				{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span>{% endif %}
+				{% if standalone and c.over_18 %}<span class="badge badge-danger">18+</span>{% endif %}
 				{{c.visibility_and_message(v)[1]}}
 			</div>
 			
@@ -52,7 +52,7 @@
 
 	{% if standalone and level==1 %}
 		<div class="post-info post-row-cid-{{c.id}} mb-1 mr-2 mt-3">
-			{% if c.post and c.post.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
+			{% if c.post and c.post.over_18 %}<span class="badge badge-danger text-small-extra mr-1">18+</span>{% endif %}
 			<span class="align-top">
 				<span class="font-weight-bold">{{c.header_msg(v, is_notification_page) | safe}}</span>
 			</span>
