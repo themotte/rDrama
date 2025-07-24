@@ -103,7 +103,7 @@ class VisibilityState:
 	def is_visible_to(self, v: User | None) -> bool:
 		return self.visibility_and_message(v)[0]
 	
-	def added_message(self, v: User | None) -> str:
+	def added_message(self, v: User | None) -> str | None:
 		return self.visibility_and_message(v)[1]
 	
 	@property
