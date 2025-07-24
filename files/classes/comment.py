@@ -421,19 +421,13 @@ class Comment(CreatedBase):
 
 	@lazy
 	def show_descendants(self, v:"User | None") -> bool:
-		if self.visibility_state.is_visible_to(v, getattr(self, 'is_blocking', False)):
+		if self.visibility_state.is_visible_to(v):
 			return True
 		return bool(self.descendant_count)
 
 	@lazy
-	def visibility_and_message(self, v:"User | None") -> tuple[bool, str]:
-		'''
-		Returns a tuple of whether this content is visible and a publicly 
-		visible message to accompany it. The visibility state machine is
-		a slight mess but... this should at least unify the state checks.
-		'''
-		return self.visibility_state.visibility_and_message(
-			v, getattr(self, 'is_blocking', False))
+	def visibility_and_message(self, v:"User | None") -> tuple[bool, str | None]:
+		return self.visibility_state.visibility_and_message(v)
 
 	@property
 	def visibility_state(self) -> VisibilityState:

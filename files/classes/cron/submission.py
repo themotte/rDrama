@@ -181,5 +181,7 @@ class ScheduledSubmissionTask(RepeatableTask):
 			deleted=False, # we only want to show deleted UI color if disabled
 			op_shadowbanned=False,
 			op_id=self.author_id_submission,
-			op_name_safe=self.author_name
+			op_name_safe=self.author_name,
+			distinguished=False,
+			is_blocking=False
 		)

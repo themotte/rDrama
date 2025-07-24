@@ -5181,6 +5181,10 @@ div[id^="reply-edit-"] li > p:first-child {
 	padding: 1em;
 }
 
+.visibility-message {
+	font-size: 0.9rem;
+	color: var(--dark);
+}
 
 /***********************
   Volunteer Teaser 
