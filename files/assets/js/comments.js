@@ -47,13 +47,13 @@ function collapse_comment(id, element) {
 };
 
 function expandMarkdown(t,id) {
-	let ta = document.getElementById('markdown-'+id);
+	const ta = document.getElementById('markdown-'+id);
 	ta.classList.toggle('d-none');
 	autoExpand(ta);
 	document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-expand-alt');
 	document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-compress-alt');
 
-	let val = t.getElementsByTagName('span')[0]
+	const val = t.getElementsByTagName('span')[0]
 	if (val.innerHTML == 'View source') val.innerHTML = 'Hide source'
 	else val.innerHTML = 'View source'
 };
@@ -62,21 +62,16 @@ function commentsAddUnreadIndicator(commentIds) {
 	commentIds.forEach(element => {
 		const commentOnly = document.getElementById(`comment-${element}-only`);
 		if (!commentOnly) { 
-			console.warn(`Couldn't find comment (comment ID ${element}) in page while attempting to add an unread indicator.`);
+			// Comment not visible
 			return;
 		}
 		if (commentOnly.classList.contains("unread")) return;
 		commentOnly.classList.add("unread");
-		const commentElement = document.getElementById(`comment-${element}`);
-		if (!commentElement) {
-			console.warn(`Couldn't find comment (ID ${element}) in page while attempting to add an unread indicator.`);
-			return;
-		}
-		const commentUserInfo = commentElement.querySelector(".comment-user-info");
+		const commentUserInfo = document.querySelector(`#comment-${element} .comment-user-info`);
 		if (!commentUserInfo) {
 			console.warn(`Couldn't find comment user info (comment ID ${element}) in page while attempting to add an unread indicator.`);
 			return;
 		}
-		commentUserInfo.innerHTML += "<span class=\"new-indicator\">~new~</span>";
+		commentUserInfo.insertAdjacentHTML('beforeend', '<span class="new-indicator">~new~</span>');
 	});
 }
