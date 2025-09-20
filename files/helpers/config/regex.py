@@ -61,8 +61,8 @@ Regex to use for email addresses.
    what we accept here.
 '''
 
-utm_regex = re.compile('utm_[a-z]+=[a-z0-9_]+&', flags=re.A)
-utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_]+', flags=re.A)
+utm_regex = re.compile('utm_[a-z]+=[a-z0-9_-]+&', flags=re.A)
+utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_-]+', flags=re.A)
 
 
 # urls
