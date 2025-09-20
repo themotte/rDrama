@@ -30,7 +30,7 @@ python3 -m flask db upgrade
 # Run flask commands
 python3 -m flask [command]
 # OR
-./util/command.py [command]
+./util/command_flask.py [command]
 ```
 
 ## Architecture Overview

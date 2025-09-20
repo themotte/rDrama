@@ -3,7 +3,7 @@
 import sys
 from common import error, run_help
 
-from .command import run_command
+from .command_flask import run_command
 from .test import run_test
 
 if __name__ == '__main__':

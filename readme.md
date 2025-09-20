@@ -71,7 +71,7 @@ As an example, let's say we want to add a column `is_flagged` to the `comments` 
 
 2. Autogenerate a migration with a descriptive message. To do this, run
 ```sh
-./util/command.py db revision --autogenerate --message="add is_flagged field to comments"
+./util/command_flask.py db revision --autogenerate --message="add is_flagged field to comments"
 ```
 
 This will create a migration in the `migrations/versions` directory with a name like `migrations/versions/2022_05_23_05_38_40_9c27db0b3918_add_is_flagged_field_to_comments.py` and content like
