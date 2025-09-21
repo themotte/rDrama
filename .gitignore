@@ -29,3 +29,7 @@ chat/build
 # Chat artefacts
 files/assets/css/chat_done.css
 files/assets/js/chat_done.js
+
+# coverage
+/.coverage
+/htmlcov

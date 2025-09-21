@@ -46,6 +46,7 @@ optional = true
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
+pytest-cov = "*"
 tabulate = "*"
 pandas = "*"
 matplotlib = "*"
@@ -58,3 +59,30 @@ build-backend = "poetry.core.masonry.api"
 norecursedirs = [
     "thirdparty/*",
 ]
+
+[tool.coverage.run]
+source = ["files"]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__pycache__/*",
+    "*/migrations/*",
+    "*/thirdparty/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "if typing.TYPE_CHECKING:",
+]
+skip_covered = false
+show_missing = true
+precision = 2
+
+[tool.coverage.html]
+directory = "htmlcov"

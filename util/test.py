@@ -9,6 +9,9 @@ def run_test(args):
             "python3",
             "-m", "pytest",
             "-s",
+            "--cov=files",
+            "--cov-report=term-missing",
+            "--cov-report=html",
         ]
     ])
 
