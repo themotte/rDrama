@@ -10,18 +10,16 @@ def test_rules():
 def test_post_and_comment():
 	client, user = util_accounts.create_test_client_and_user("default")
 
-	# get our formkey
-	submit_get_response = client.get("/submit")
-	assert submit_get_response.status_code == 200
-
 	# make the post
 	post_title = util.generate_text()
 	post_body = util.generate_text()
-	submit_post_response = client.post("/submit", data={
-		"title": post_title,
-		"body": post_body,
-		"formkey": util.formkey_from(submit_get_response.text),
-	})
+	submit_post_response, submit_get_response = util.post_with_formkey(
+		client, "/submit", "/submit",
+		data={
+			"title": post_title,
+			"body": post_body,
+		}
+	)
 
 	assert submit_post_response.status_code == 200
 	assert post_title in submit_post_response.text
@@ -38,13 +36,15 @@ def test_post_and_comment():
 	
 	# post a comment child
 	comment_body = util.generate_text()
-	submit_comment_response = client.post("/comment", data={
-		"parent_fullname": post.id_full,
-		"parent_level": 1,
-		"submission": post.id,
-		"body": comment_body,
-		"formkey": util.formkey_from(submit_post_response.text),
-	})
+	submit_comment_response, _ = util.post_with_formkey(
+		client, "/submit", "/comment",
+		data={
+			"parent_fullname": post.id_full,
+			"parent_level": 1,
+			"submission": post.id,
+			"body": comment_body,
+		}
+	)
 	assert submit_comment_response.status_code == 200
 
 	# verify it actually got posted
@@ -57,13 +57,15 @@ def test_post_and_comment():
 
 	# post a comment grandchild!
 	grandcomment_body = util.generate_text()
-	submit_grandcomment_response = client.post("/comment", data={
-		"parent_fullname": comment.id_full,
-		"parent_level": 1,
-		"submission": comment.id,
-		"body": grandcomment_body,
-		"formkey": util.formkey_from(submit_post_response.text),
-	})
+	submit_grandcomment_response, _ = util.post_with_formkey(
+		client, "/submit", "/comment",
+		data={
+			"parent_fullname": comment.id_full,
+			"parent_level": 1,
+			"submission": comment.id,
+			"body": grandcomment_body,
+		}
+	)
 	assert submit_grandcomment_response.status_code == 200
 
 	# verify it actually got posted

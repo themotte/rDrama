@@ -64,15 +64,12 @@ def test_submission_comment_count():
 		'guest': (logged_off_client, True),
 	})
 
-	alice_formkey = util.formkey_from(alice_client.get(f'/post/{post.id}').text)
-	response = alice_client.post(
-		'/admin/update_filter_status',
-		data=json.dumps({
+	response, _ = util.post_json_with_formkey(
+		alice_client, f'/post/{post.id}', '/admin/update_filter_status',
+		json_data={
 			'comment_id': comment.id,
 			'new_status': 'removed',
-			"formkey": alice_formkey,
-		}),
-		content_type='application/json'
+		}
 	)
 	assert 200 == response.status_code
 

@@ -1,6 +1,5 @@
 from . import util
 
-from bs4 import BeautifulSoup
 from files.__main__ import app, db_session
 from files.classes import Comment
 import json
@@ -13,17 +12,18 @@ def create_comment_for_client(client, post_id, data=None):
 	if data is None:
 		data = {}
 
-	submit_get_response = client.get("/submit")
-	assert submit_get_response.status_code == 200
 	comment_body = data.get('body', util.generate_text())
-	submit_comment_response = client.post("/comment", data={
-		"parent_fullname": f'post_{post_id}',
-		'parent_level': 1,
-		'submission': post_id,
-		"body": comment_body,
-		"formkey": util.formkey_from(submit_get_response.text),
-		**data,
-	})
+
+	submit_comment_response, submit_get_response = util.post_with_formkey(
+		client, "/submit", "/comment",
+		data={
+			"parent_fullname": f'post_{post_id}',
+			'parent_level': 1,
+			'submission': post_id,
+			"body": comment_body,
+			**data,
+		}
+	)
 	assert submit_comment_response.status_code == 200
 	submit_comment_data = json.loads(submit_comment_response.text)
 	assert 'comment' in submit_comment_data

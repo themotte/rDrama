@@ -5,30 +5,29 @@ from . import util
 def test_no_content_submissions():
 	client, user = util_accounts.create_test_client_and_user("default")
 
-	# get our formkey
-	submit_get_response = client.get("/submit")
-	assert submit_get_response.status_code == 200
-
 	title = '\u200e\u200e\u200e\u200e\u200e\u200e'
 	body = util.generate_text()
-	formkey = util.formkey_from(submit_get_response.text)
 
 	# test bad title against good content
-	submit_post_response = client.post("/submit", data={
-		"title": title,
-		"body": body,
-		"formkey": formkey,
-	})
+	submit_post_response, _ = util.post_with_formkey(
+		client, "/submit", "/submit",
+		data={
+			"title": title,
+			"body": body,
+		}
+	)
 
 	assert submit_post_response.status_code == 400
 
 	title, body = body, title
 	# test good title against bad content
-	submit_post_response = client.post("/submit", data={
-		"title": title,
-		"body": body,
-		"formkey": formkey,
-	})
+	submit_post_response, _ = util.post_with_formkey(
+		client, "/submit", "/submit",
+		data={
+			"title": title,
+			"body": body,
+		}
+	)
 
 	assert submit_post_response.status_code == 400
 
@@ -36,18 +35,16 @@ def test_no_content_submissions():
 def test_no_content_comments():
 	client, user = util_accounts.create_test_client_and_user("default")
 
-	# get our formkey
-	submit_get_response = client.get("/submit")
-	assert submit_get_response.status_code == 200
-
 	# make the post
 	post_title = util.generate_text()
 	post_body = util.generate_text()
-	submit_post_response = client.post("/submit", data={
-		"title": post_title,
-		"body": post_body,
-		"formkey": util.formkey_from(submit_get_response.text),
-	})
+	submit_post_response, _ = util.post_with_formkey(
+		client, "/submit", "/submit",
+		data={
+			"title": post_title,
+			"body": post_body,
+		}
+	)
 
 	assert submit_post_response.status_code == 200
 	assert post_title in submit_post_response.text
@@ -64,11 +61,13 @@ def test_no_content_comments():
 	
 	# post a comment child
 	comment_body = '\ufeff\ufeff\ufeff\ufeff\ufeff'
-	submit_comment_response = client.post("/comment", data={
-		"parent_fullname": post.id_full,
-		"parent_level": 1,
-		"submission": post.id,
-		"body": comment_body,
-		"formkey": util.formkey_from(submit_post_response.text),
-	})
+	submit_comment_response, _ = util.post_with_formkey(
+		client, "/submit", "/comment",
+		data={
+			"parent_fullname": post.id_full,
+			"parent_level": 1,
+			"submission": post.id,
+			"body": comment_body,
+		}
+	)
 	assert submit_comment_response.status_code == 400

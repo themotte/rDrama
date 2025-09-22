@@ -11,6 +11,66 @@ def formkey_from(text):
     formkey = next(tag for tag in soup.find_all("input") if tag.get("name") == "formkey").get("value")
     return formkey
 
+def post_with_formkey(client, get_url, post_url, data):
+    """
+    Helper function to GET a page for formkey, then POST with that formkey.
+    Also extracts timestamp field if present (for anti-bot protection).
+
+    Args:
+        client: The test client to use
+        get_url: URL to GET for extracting the formkey
+        post_url: URL to POST to with the formkey
+        data: Dict of POST data (formkey will be added automatically)
+
+    Returns:
+        Tuple of (post_response, get_response)
+    """
+    # GET the page to extract formkey
+    get_response = client.get(get_url)
+    assert get_response.status_code == 200, f"Failed to GET {get_url}: {get_response.status_code}"
+
+    # Extract and add formkey to POST data
+    data['formkey'] = formkey_from(get_response.text)
+
+    # Also extract timestamp field if present (for anti-bot protection)
+    soup = BeautifulSoup(get_response.text, 'html.parser')
+    timestamp_input = soup.find("input", attrs={"name": "now"})
+    if timestamp_input and timestamp_input.get("value"):
+        data['now'] = timestamp_input.get("value")
+
+    # Make the POST request
+    post_response = client.post(post_url, data=data)
+
+    return post_response, get_response
+
+def post_json_with_formkey(client, get_url, post_url, json_data):
+    """
+    Helper function to GET a page for formkey, then POST JSON with that formkey.
+
+    Args:
+        client: The test client to use
+        get_url: URL to GET for extracting the formkey
+        post_url: URL to POST to with the formkey
+        json_data: Dict that will be JSON-serialized (formkey will be added automatically)
+
+    Returns:
+        Tuple of (post_response, get_response)
+    """
+    # GET the page to extract formkey
+    get_response = client.get(get_url)
+    assert get_response.status_code == 200, f"Failed to GET {get_url}: {get_response.status_code}"
+
+    # Extract and add formkey to JSON data
+    json_data['formkey'] = formkey_from(get_response.text)
+
+    # Make the POST request with JSON
+    import json
+    post_response = client.post(post_url,
+                               data=json.dumps(json_data),
+                               content_type='application/json')
+
+    return post_response, get_response
+
 # not cryptographically secure, deal with it
 def generate_text():
     return ''.join(random.choices(string.ascii_lowercase, k=40))
