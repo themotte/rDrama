@@ -4,6 +4,9 @@ import sys
 from common import _operation
 
 def run_test(args):
+    # Skip the script name (first argument) and pass the rest to pytest
+    pytest_args = args[1:] if len(args) > 1 else []
+
     result = _operation("tests", [
         [
             "python3",
@@ -12,7 +15,7 @@ def run_test(args):
             "--cov=files",
             "--cov-report=term-missing",
             "--cov-report=html",
-        ]
+        ] + pytest_args
     ])
 
     sys.exit(result.returncode)
