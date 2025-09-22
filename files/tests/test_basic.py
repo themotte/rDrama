@@ -1,14 +1,14 @@
-from . import fixture_accounts
+from . import util_accounts
 from . import util
 
-def test_rules(accounts):
-	response = accounts.logged_off().get("/rules")
+def test_rules():
+	response = util_accounts.create_logged_off_client().get("/rules")
 	assert response.status_code == 200
 	assert response.text.startswith("<!DOCTYPE html>")
 
 @util.no_rate_limit
-def test_post_and_comment(accounts):
-	client = accounts.client_for_account()
+def test_post_and_comment():
+	client, user = util_accounts.create_test_client_and_user("default")
 
 	# get our formkey
 	submit_get_response = client.get("/submit")

@@ -1,7 +1,7 @@
 from files.helpers.config.const import RENDER_DEPTH_LIMIT
-from . import fixture_accounts
-from . import fixture_submissions
-from . import fixture_comments
+from . import util_accounts
+from . import util_submissions
+from . import util_comments
 from . import util
 from flask import g
 from files.__main__ import app, db_session
@@ -21,7 +21,7 @@ def assert_comment_visibility(post, comment_body, clients):
 			assert comment_body not in response.text, f'{client_name} should not see comment'
 
 @util.no_rate_limit
-def test_submission_comment_count(accounts, submissions, comments):
+def test_submission_comment_count():
 	"""
 	Scenario:
 		1. There is a submission
@@ -31,16 +31,16 @@ def test_submission_comment_count(accounts, submissions, comments):
 		5. submission.comment_count goes down by 1. Only Bob and admins can see the comment.
 	"""
 	db = db_session()
-	alice_client, alice = accounts.client_and_user_for_account('Alice')
+	alice_client, alice = util_accounts.create_test_client_and_user('Alice')
 	alice.admin_level = 2
 	db.add(alice)
 	db.commit()
 
-	bob_client, bob = accounts.client_and_user_for_account('Bob')
-	carol_client, carol = accounts.client_and_user_for_account('Carol')
-	logged_off_client = accounts.logged_off()
+	bob_client, bob = util_accounts.create_test_client_and_user('Bob')
+	carol_client, carol = util_accounts.create_test_client_and_user('Carol')
+	logged_off_client = util_accounts.create_logged_off_client()
 	
-	post = submissions.submission_for_client(alice_client, {
+	post = util_submissions.create_submission_for_client(alice_client, {
 		'title': 'Weekly Takes',
 		'body': 'Post your takes. Bad takes will be removed',
 	})
@@ -50,7 +50,7 @@ def test_submission_comment_count(accounts, submissions, comments):
 	assert 0 == post.comment_count
 
 	comment_body = 'The sun is a social construct.'
-	comment = comments.comment_for_client(bob_client, post.id, {
+	comment = util_comments.create_comment_for_client(bob_client, post.id, {
 		'body': comment_body,
 	})
 
@@ -91,7 +91,7 @@ def test_submission_comment_count(accounts, submissions, comments):
 	assert 0 == post.comment_count
 
 @util.no_rate_limit
-def test_comment_descendant_count(accounts, submissions, comments):
+def test_comment_descendant_count():
 	"""
 		Here is a contentious top-level comment
 			You're wrong, this isn't contentious
@@ -99,33 +99,33 @@ def test_comment_descendant_count(accounts, submissions, comments):
 			Good poast
 	"""
 	db = db_session()
-	alice_client, alice = accounts.client_and_user_for_account('Alice')
+	alice_client, alice = util_accounts.create_test_client_and_user('Alice')
 
-	post = submissions.submission_for_client(alice_client, {
+	post = util_submissions.create_submission_for_client(alice_client, {
 		'title': 'Discussion',
 		'body': 'Discuss stuff',
 	})
 	post_id = post.id
 
-	root = comments.comment_for_client(alice_client, post.id, {
+	root = util_comments.create_comment_for_client(alice_client, post.id, {
 		'body': 'Here is a contentious top-level comment',
 	})
 
 	assert 0 == db.query(Comment).filter_by(id=root.id).first().descendant_count
 
-	reply1 = comments.comment_for_client(alice_client, post.id, {
+	reply1 = util_comments.create_comment_for_client(alice_client, post.id, {
 		'body': 'You\'re wrong, this isn\'t contentious',
 		'parent_fullname': f'comment_{root.id}',
 		'parent_level': root.level,
 	})
 
-	rereply1 = comments.comment_for_client(alice_client, post.id, {
+	rereply1 = util_comments.create_comment_for_client(alice_client, post.id, {
 		'body': 'no u',
 		'parent_fullname': f'comment_{reply1.id}',
 		'parent_level': reply1.level,
 	})
 
-	reply2 = comments.comment_for_client(alice_client, post.id, {
+	reply2 = util_comments.create_comment_for_client(alice_client, post.id, {
 		'body': 'Good poast',
 		'parent_fullname': f'comment_{root.id}',
 		'parent_level': root.level,
@@ -137,21 +137,21 @@ def test_comment_descendant_count(accounts, submissions, comments):
 	assert 0 == db.query(Comment).filter_by(id=rereply1.id).first().descendant_count
 
 @util.no_rate_limit
-def test_more_button_label_in_deep_threads(accounts, submissions, comments):
+def test_more_button_label_in_deep_threads():
 	db = db_session()
-	alice_client, alice = accounts.client_and_user_for_account('Alice')
+	alice_client, alice = util_accounts.create_test_client_and_user('Alice')
 
-	post = submissions.submission_for_client(alice_client, {
+	post = util_submissions.create_submission_for_client(alice_client, {
 		'title': 'Counting thread',
 		'body': 'Count to 25',
 	})
 	post_id = post.id
 
-	c = comments.comment_for_client(alice_client, post.id, {
+	c = util_comments.create_comment_for_client(alice_client, post.id, {
 		'body': '1',
 	})
 	for i in range(1, 25 + 1):
-		c = comments.comment_for_client(alice_client, post.id, {
+		c = util_comments.create_comment_for_client(alice_client, post.id, {
 			'body': str(i),
 			'parent_fullname': f'comment_{c.id}',
 			'parent_level': c.level,
@@ -166,7 +166,7 @@ def test_more_button_label_in_deep_threads(accounts, submissions, comments):
 				assert f'More comments ({i - RENDER_DEPTH_LIMIT + 1})' in view_post_response.text
 
 @util.no_rate_limit
-def test_bulk_update_descendant_count_quick(accounts, submissions, comments):
+def test_bulk_update_descendant_count_quick():
 	"""
 	1. Add two thin/non-robust posts with 20 nested comments each. Do not properly set descendant_count
 	2. Do the descendant_count bulk update thing

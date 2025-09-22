@@ -1,9 +1,9 @@
-from . import fixture_accounts
+from . import util_accounts
 from . import util
 
 @util.no_rate_limit
-def test_no_content_submissions(accounts):
-	client = accounts.client_for_account()
+def test_no_content_submissions():
+	client, user = util_accounts.create_test_client_and_user("default")
 
 	# get our formkey
 	submit_get_response = client.get("/submit")
@@ -33,8 +33,8 @@ def test_no_content_submissions(accounts):
 	assert submit_post_response.status_code == 400
 
 @util.no_rate_limit
-def test_no_content_comments(accounts):
-	client = accounts.client_for_account()
+def test_no_content_comments():
+	client, user = util_accounts.create_test_client_and_user("default")
 
 	# get our formkey
 	submit_get_response = client.get("/submit")
