@@ -25,6 +25,12 @@ def create_test_client_and_user(name="user"):
 	)
 
 	assert signup_post_response.status_code == 302
+	if "error" in signup_post_response.location:
+		# Extract and print the error message for debugging
+		from urllib.parse import parse_qs, urlparse
+		parsed_url = urlparse(signup_post_response.location)
+		error_message = parse_qs(parsed_url.query).get('error', ['Unknown error'])[0]
+		print(f"Signup failed for user '{username}': {error_message}")
 	assert "error" not in signup_post_response.location
 
 	db = db_session
