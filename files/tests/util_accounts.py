@@ -22,6 +22,16 @@ def create_test_client_and_user(name="user"):
 		return result or "0"
 
 	timestamp_b36 = to_base36(round(time()))
+
+	# Validate name parameter length to ensure username fits within username length limit
+	from files.helpers.config.regex import USERNAME_LENGTH_MAX
+	# Format: t-{name}-{timestamp_b36} (3 chars overhead + timestamp length)
+	max_name_length = USERNAME_LENGTH_MAX - 3 - len(timestamp_b36)  # 3 = len("t-") + len("-")
+	if len(name) > max_name_length:
+		raise ValueError(f"name parameter '{name}' is too long ({len(name)} chars). "
+						f"Maximum length is {max_name_length} chars to fit within {USERNAME_LENGTH_MAX} char username limit. "
+						f"Current timestamp part uses {len(timestamp_b36)} chars.")
+
 	username = f"t-{name}-{timestamp_b36}"
 	print(f"Signing up as {username}")
 

@@ -2,10 +2,13 @@ import re
 
 # usernames
 
+USERNAME_LENGTH_MIN = 3
+USERNAME_LENGTH_MAX = 25
+
 valid_username_chars = 'a-zA-Z0-9_\\-'
-valid_username_regex = re.compile("^[a-zA-Z0-9_\\-]{3,25}$", flags=re.A)
-mention_regex = re.compile('(^|\\s|<p>)@(([a-zA-Z0-9_\\-]){1,25})', flags=re.A)
-mention_regex2 = re.compile('<p>@(([a-zA-Z0-9_\\-]){1,25})', flags=re.A)
+valid_username_regex = re.compile(f"^[a-zA-Z0-9_\\-]{{{USERNAME_LENGTH_MIN},{USERNAME_LENGTH_MAX}}}$", flags=re.A)
+mention_regex = re.compile(f'(^|\\s|<p>)@(([a-zA-Z0-9_\\-]){{1,{USERNAME_LENGTH_MAX}}})', flags=re.A)
+mention_regex2 = re.compile(f'<p>@(([a-zA-Z0-9_\\-]){{1,{USERNAME_LENGTH_MAX}}})', flags=re.A)
 
 valid_password_regex = re.compile("^.{8,100}$", flags=re.A)
 
