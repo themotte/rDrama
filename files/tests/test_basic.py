@@ -8,7 +8,7 @@ def test_rules():
 
 @util.no_rate_limit
 def test_post_and_comment():
-	client, user = util_accounts.create_test_client_and_user("default")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# make the post
 	post_title = util.generate_text()

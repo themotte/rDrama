@@ -7,7 +7,7 @@ from time import time, sleep
 
 
 @lru_cache(maxsize=None)
-def create_test_client_and_user(name):
+def create_test_client_and_user(name="user"):
 	"""Create a test client with a newly registered user account."""
 	client = app.test_client()
 

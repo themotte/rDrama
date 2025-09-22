@@ -3,7 +3,7 @@ from . import util
 
 @util.no_rate_limit
 def test_no_content_submissions():
-	client, user = util_accounts.create_test_client_and_user("default")
+	client, user = util_accounts.create_test_client_and_user()
 
 	title = '\u200e\u200e\u200e\u200e\u200e\u200e'
 	body = util.generate_text()
@@ -33,7 +33,7 @@ def test_no_content_submissions():
 
 @util.no_rate_limit
 def test_no_content_comments():
-	client, user = util_accounts.create_test_client_and_user("default")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# make the post
 	post_title = util.generate_text()

@@ -33,7 +33,7 @@ def test_rss_feed_with_sort_and_time():
 @util.no_rate_limit
 def test_rss_feed_contains_new_post():
 	"""Test that a newly created post appears in the RSS feed"""
-	client, user = util_accounts.create_test_client_and_user("rss_test")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a unique post
 	post_title = f"RSS Test Post {util.generate_text()}"
