@@ -11,7 +11,18 @@ def create_test_client_and_user(name="user"):
 	"""Create a test client with a newly registered user account."""
 	client = app.test_client()
 
-	username = f"test-{name}-{str(round(time()))}"
+	# Convert timestamp to base36 for shorter usernames
+	import string
+	def to_base36(num):
+		alphabet = string.digits + string.ascii_lowercase
+		result = ""
+		while num > 0:
+			result = alphabet[num % 36] + result
+			num //= 36
+		return result or "0"
+
+	timestamp_b36 = to_base36(round(time()))
+	username = f"t-{name}-{timestamp_b36}"
 	print(f"Signing up as {username}")
 
 	signup_post_response, signup_get_response = util.post_with_formkey(
