@@ -220,3 +220,306 @@ def test_settings_all_pages_require_auth():
 		response = client.get(page)
 		assert response.status_code == 302, f"{page} should redirect when not authenticated"
 		assert "/login" in response.location, f"{page} should redirect to login"
+
+
+def test_settings_profile_post_reddit():
+	"""Test updating reddit preference"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Set initial reddit preference first
+	from files.__main__ import db_session
+	from files.classes import User
+	user.reddit = "reddit.com"
+	db_session.add(user)
+	db_session.commit()
+
+	# Update reddit preference to a different value
+	response, _ = util.post_with_formkey(
+		client, "/settings/profile",
+		data={"reddit": "old.reddit.com"}
+	)
+	assert response.status_code == 200
+
+	# Verify the setting was saved
+	db_session.expire_all()
+	user_updated = db_session.query(User).filter_by(id=user.id).first()
+	assert user_updated.reddit == "old.reddit.com"
+
+
+def test_settings_profile_post_hidevotedon():
+	"""Test updating hidevotedon preference"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Update hidevotedon preference
+	response, _ = util.post_with_formkey(
+		client, "/settings/profile",
+		data={"hidevotedon": "true"}
+	)
+	assert response.status_code == 200
+
+	# Verify the setting was saved
+	from files.__main__ import db_session
+	from files.classes import User
+	user_updated = db_session.query(User).filter_by(id=user.id).first()
+	assert user_updated.hidevotedon is True
+
+
+def test_settings_profile_post_cardview():
+	"""Test updating cardview preference"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/profile",
+		data={"cardview": "true"}
+	)
+	assert response.status_code == 200
+
+	from files.__main__ import db_session
+	from files.classes import User
+	user_updated = db_session.query(User).filter_by(id=user.id).first()
+	assert user_updated.cardview is True
+
+
+def test_settings_profile_post_newtab():
+	"""Test updating newtab preference"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/profile",
+		data={"newtab": "true"}
+	)
+	assert response.status_code == 200
+
+	from files.__main__ import db_session
+	from files.classes import User
+	user_updated = db_session.query(User).filter_by(id=user.id).first()
+	assert user_updated.newtab is True
+
+
+def test_settings_profile_post_over18():
+	"""Test updating over18 preference"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/profile",
+		data={"over18": "true"}
+	)
+	assert response.status_code == 200
+
+	from files.__main__ import db_session
+	from files.classes import User
+	user_updated = db_session.query(User).filter_by(id=user.id).first()
+	assert user_updated.over_18 is True
+
+
+def test_settings_profile_post_bio():
+	"""Test updating user bio"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	bio = "This is my test bio"
+	response, _ = util.post_with_formkey(
+		client, "/settings/profile",
+		data={"bio": bio}
+	)
+	assert response.status_code == 200
+
+	from files.__main__ import db_session
+	from files.classes import User
+	user_updated = db_session.query(User).filter_by(id=user.id).first()
+	assert user_updated.bio == bio
+
+
+def test_settings_profile_post_bio_clear():
+	"""Test clearing user bio"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Set a bio first
+	response, _ = util.post_with_formkey(
+		client, "/settings/profile",
+		data={"bio": "Some bio"}
+	)
+	assert response.status_code == 200
+
+	# Clear the bio
+	response, _ = util.post_with_formkey(
+		client, "/settings/profile",
+		data={"bio": ""}
+	)
+	assert response.status_code == 200
+
+	from files.__main__ import db_session
+	from files.classes import User
+	user_updated = db_session.query(User).filter_by(id=user.id).first()
+	assert user_updated.bio is None
+
+
+def test_settings_profile_post_frontsize():
+	"""Test updating frontsize preference"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/profile",
+		data={"frontsize": "50"}
+	)
+	assert response.status_code == 200
+
+	from files.__main__ import db_session
+	from files.classes import User
+	user_updated = db_session.query(User).filter_by(id=user.id).first()
+	assert user_updated.frontsize == 50
+
+
+def test_settings_profile_post_frontsize_invalid():
+	"""Test that invalid frontsize values are rejected"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/profile",
+		data={"frontsize": "999"}
+	)
+	assert response.status_code == 400
+
+
+def test_settings_profile_post_theme():
+	"""Test updating theme preference"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/profile",
+		data={"theme": "light"}
+	)
+	assert response.status_code == 200
+
+	from files.__main__ import db_session
+	from files.classes import User
+	user_updated = db_session.query(User).filter_by(id=user.id).first()
+	assert user_updated.theme == "light"
+
+
+def test_settings_profile_post_no_changes():
+	"""Test that posting without changes returns error"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/profile",
+		data={}
+	)
+	assert response.status_code == 400
+
+
+def test_settings_filters_post():
+	"""Test updating custom filters"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	filters = "word1\nword2\nword3"
+	response, _ = util.post_with_formkey(
+		client, "/settings/filters",
+		data={"filters": filters}
+	)
+	assert response.status_code == 200
+
+	from files.__main__ import db_session
+	from files.classes import User
+	user_updated = db_session.query(User).filter_by(id=user.id).first()
+	assert user_updated.custom_filter_list == filters
+
+
+def test_settings_filters_post_no_change():
+	"""Test that posting same filters returns error"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Set some initial filters
+	from files.__main__ import db_session
+	from files.classes import User
+	initial_filters = "word1\nword2"
+	user.custom_filter_list = initial_filters
+	db_session.add(user)
+	db_session.commit()
+
+	# Post the same filters again
+	response, _ = util.post_with_formkey(
+		client, "/settings/filters",
+		data={"filters": initial_filters}
+	)
+	assert response.status_code == 200
+	assert "didn't change" in response.text.lower() or "error" in response.text.lower()
+
+
+def test_changelogsub_toggle():
+	"""Test toggling changelog subscription"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Get initial state
+	from files.__main__ import db_session
+	from files.classes import User
+	user_obj = db_session.query(User).filter_by(id=user.id).first()
+	initial_state = user_obj.changelogsub
+
+	# Toggle the setting
+	response, _ = util.post_with_formkey(client, "/changelogsub", data={})
+	assert response.status_code == 200
+
+	# Verify it changed
+	db_session.expire_all()
+	user_updated = db_session.query(User).filter_by(id=user.id).first()
+	assert user_updated.changelogsub != initial_state
+
+
+def test_settings_namecolor_post():
+	"""Test updating name color"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/namecolor",
+		data={"color": "#ff0000"}
+	)
+	assert response.status_code == 302  # Redirects to profile
+
+	from files.__main__ import db_session
+	from files.classes import User
+	user_updated = db_session.query(User).filter_by(id=user.id).first()
+	assert user_updated.namecolor == "ff0000"
+
+
+def test_settings_namecolor_post_invalid():
+	"""Test that invalid color codes are rejected"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/namecolor",
+		data={"color": "invalid"}
+	)
+	assert response.status_code == 200
+	assert "invalid" in response.text.lower()
+
+
+def test_settings_themecolor_post():
+	"""Test updating theme color"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/themecolor",
+		data={"themecolor": "#0000ff"}
+	)
+	assert response.status_code == 302  # Redirects to profile
+
+	from files.__main__ import db_session
+	from files.classes import User
+	user_updated = db_session.query(User).filter_by(id=user.id).first()
+	assert user_updated.themecolor == "0000ff"
+
+
+def test_settings_titlecolor_post():
+	"""Test updating title color"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/titlecolor",
+		data={"titlecolor": "#00ff00"}
+	)
+	assert response.status_code == 302  # Redirects to profile
+
+	from files.__main__ import db_session
+	from files.classes import User
+	user_updated = db_session.query(User).filter_by(id=user.id).first()
+	assert user_updated.titlecolor == "00ff00"
