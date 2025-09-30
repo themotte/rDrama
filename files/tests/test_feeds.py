@@ -1,7 +1,6 @@
 from . import util_accounts
 from . import util
 
-@util.no_rate_limit
 def test_rss_feed():
 	"""Test that the RSS feed endpoint returns valid XML"""
 	client = util_accounts.create_logged_off_client()
@@ -30,7 +29,6 @@ def test_rss_feed_with_sort_and_time():
 	assert response.text.startswith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
 	assert 'xmlns="http://www.w3.org/2005/Atom"' in response.text
 
-@util.no_rate_limit
 def test_rss_feed_contains_new_post():
 	"""Test that a newly created post appears in the RSS feed"""
 	client, user = util_accounts.create_test_client_and_user()

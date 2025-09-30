@@ -6,7 +6,6 @@ def test_rules():
 	assert response.status_code == 200
 	assert response.text.startswith("<!DOCTYPE html>")
 
-@util.no_rate_limit
 def test_post_and_comment():
 	client, user = util_accounts.create_test_client_and_user()
 

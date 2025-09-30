@@ -1,7 +1,6 @@
 from . import util_accounts
 from . import util
 
-@util.no_rate_limit
 def test_no_content_submissions():
 	client, user = util_accounts.create_test_client_and_user()
 
@@ -31,7 +30,6 @@ def test_no_content_submissions():
 
 	assert submit_post_response.status_code == 400
 
-@util.no_rate_limit
 def test_no_content_comments():
 	client, user = util_accounts.create_test_client_and_user()
 

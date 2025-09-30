@@ -20,7 +20,6 @@ def assert_comment_visibility(post, comment_body, clients):
 		else:
 			assert comment_body not in response.text, f'{client_name} should not see comment'
 
-@util.no_rate_limit
 def test_submission_comment_count():
 	"""
 	Scenario:
@@ -87,7 +86,6 @@ def test_submission_comment_count():
 
 	assert 0 == post.comment_count
 
-@util.no_rate_limit
 def test_comment_descendant_count():
 	"""
 		Here is a contentious top-level comment
@@ -133,7 +131,6 @@ def test_comment_descendant_count():
 	assert 0 == db.query(Comment).filter_by(id=reply2.id).first().descendant_count
 	assert 0 == db.query(Comment).filter_by(id=rereply1.id).first().descendant_count
 
-@util.no_rate_limit
 def test_more_button_label_in_deep_threads():
 	db = db_session()
 	alice_client, alice = util_accounts.create_test_client_and_user('Alice')
@@ -162,7 +159,6 @@ def test_more_button_label_in_deep_threads():
 			else:
 				assert f'More comments ({i - RENDER_DEPTH_LIMIT + 1})' in view_post_response.text
 
-@util.no_rate_limit
 def test_bulk_update_descendant_count_quick():
 	"""
 	1. Add two thin/non-robust posts with 20 nested comments each. Do not properly set descendant_count

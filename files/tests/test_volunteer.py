@@ -4,7 +4,6 @@ from . import util_submissions
 from . import util_comments
 
 
-@util.no_rate_limit
 def test_volunteer_page_no_duty():
 	"""Test accessing volunteer page when no duty is available"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -15,7 +14,6 @@ def test_volunteer_page_no_duty():
 	assert "volunteer" in response.text.lower()
 
 
-@util.no_rate_limit
 def test_volunteer_page_with_duty():
 	"""Test volunteer page when a duty is available"""
 	# Create two users: one to report, one to volunteer
@@ -41,7 +39,6 @@ def test_volunteer_page_with_duty():
 	# (exact content depends on whether a duty was assigned)
 
 
-@util.no_rate_limit
 def test_volunteer_cooldown():
 	"""Test that volunteer cooldown prevents repeated volunteering"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -60,7 +57,6 @@ def test_volunteer_cooldown():
 	# This test verifies the endpoint is accessible regardless
 
 
-@util.no_rate_limit
 def test_volunteer_submit_empty():
 	"""Test submitting volunteer form with no volunteer data"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -74,7 +70,6 @@ def test_volunteer_submit_empty():
 	assert submit_response.status_code == 200
 
 
-@util.no_rate_limit
 def test_volunteer_submit_invalid_key():
 	"""Test submitting volunteer form with invalid key format"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -88,7 +83,6 @@ def test_volunteer_submit_invalid_key():
 	assert submit_response.status_code == 200
 
 
-@util.no_rate_limit
 def test_volunteer_submit_unknown_type():
 	"""Test submitting volunteer form with unknown volunteer type"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -103,7 +97,6 @@ def test_volunteer_submit_unknown_type():
 	assert submit_response.status_code == 400
 
 
-@util.no_rate_limit
 def test_volunteer_not_own_comment():
 	"""Test that users don't see their own comments as volunteer duties"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -127,7 +120,6 @@ def test_volunteer_not_own_comment():
 	# (This is implementation-dependent, just verify the page loads)
 
 
-@util.no_rate_limit
 def test_volunteer_janitor_with_reported_comment():
 	"""Test the full volunteer janitor flow with a reported comment"""
 	# Create author, reporter, and volunteer users
@@ -158,7 +150,6 @@ def test_volunteer_janitor_with_reported_comment():
 	# Just verify the query doesn't fail
 
 
-@util.no_rate_limit
 def test_volunteer_logged_out():
 	"""Test that logged-out users cannot access volunteer endpoints"""
 	client = util_accounts.create_logged_off_client()
@@ -169,7 +160,6 @@ def test_volunteer_logged_out():
 	assert response.status_code in [302, 401, 403]
 
 
-@util.no_rate_limit
 def test_volunteer_submit_logged_out():
 	"""Test that logged-out users cannot submit volunteer responses"""
 	client = util_accounts.create_logged_off_client()

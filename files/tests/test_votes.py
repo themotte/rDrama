@@ -3,7 +3,6 @@ from . import util
 from . import util_submissions
 from . import util_comments
 
-@util.no_rate_limit
 def test_vote_post_upvote():
 	"""Test upvoting a post"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -34,7 +33,6 @@ def test_vote_post_upvote():
 	post_updated = db_session.query(Submission).filter_by(id=post.id).first()
 	assert post_updated.upvotes == 1
 
-@util.no_rate_limit
 def test_vote_post_downvote():
 	"""Test downvoting a post (if downvotes are enabled)"""
 	from files.helpers.config.environment import ENABLE_DOWNVOTES
@@ -67,7 +65,6 @@ def test_vote_post_downvote():
 	assert post_updated.upvotes == 0
 	assert post_updated.downvotes == 1
 
-@util.no_rate_limit
 def test_vote_post_remove_vote():
 	"""Test removing a vote from a post"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -94,7 +91,6 @@ def test_vote_post_remove_vote():
 	post_updated = db_session.query(Submission).filter_by(id=post.id).first()
 	assert post_updated.upvotes == 0
 
-@util.no_rate_limit
 def test_vote_post_change_vote():
 	"""Test changing a vote on a post"""
 	from files.helpers.config.environment import ENABLE_DOWNVOTES
@@ -127,7 +123,6 @@ def test_vote_post_change_vote():
 	assert post_updated.upvotes == 0
 	assert post_updated.downvotes == 1
 
-@util.no_rate_limit
 def test_vote_post_same_vote_twice():
 	"""Test that voting the same way twice is idempotent"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -149,7 +144,6 @@ def test_vote_post_same_vote_twice():
 	post_updated = db_session.query(Submission).filter_by(id=post.id).first()
 	assert post_updated.upvotes == 1
 
-@util.no_rate_limit
 def test_vote_post_invalid_value():
 	"""Test that invalid vote values are rejected"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -162,7 +156,6 @@ def test_vote_post_invalid_value():
 
 	assert vote_response.status_code == 400
 
-@util.no_rate_limit
 def test_vote_post_nonexistent():
 	"""Test voting on a nonexistent post returns 404"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -172,7 +165,6 @@ def test_vote_post_nonexistent():
 
 	assert vote_response.status_code == 404
 
-@util.no_rate_limit
 def test_vote_comment_upvote():
 	"""Test upvoting a comment"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -203,7 +195,6 @@ def test_vote_comment_upvote():
 	comment_updated = db_session.query(Comment).filter_by(id=comment.id).first()
 	assert comment_updated.upvotes == 1
 
-@util.no_rate_limit
 def test_vote_comment_downvote():
 	"""Test downvoting a comment (if downvotes are enabled)"""
 	from files.helpers.config.environment import ENABLE_DOWNVOTES
@@ -237,7 +228,6 @@ def test_vote_comment_downvote():
 	assert comment_updated.upvotes == 0
 	assert comment_updated.downvotes == 1
 
-@util.no_rate_limit
 def test_vote_comment_remove_vote():
 	"""Test removing a vote from a comment"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -265,7 +255,6 @@ def test_vote_comment_remove_vote():
 	comment_updated = db_session.query(Comment).filter_by(id=comment.id).first()
 	assert comment_updated.upvotes == 0
 
-@util.no_rate_limit
 def test_vote_comment_change_vote():
 	"""Test changing a vote on a comment"""
 	from files.helpers.config.environment import ENABLE_DOWNVOTES
@@ -299,7 +288,6 @@ def test_vote_comment_change_vote():
 	assert comment_updated.upvotes == 0
 	assert comment_updated.downvotes == 1
 
-@util.no_rate_limit
 def test_vote_comment_same_vote_twice():
 	"""Test that voting the same way twice on a comment is idempotent"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -322,7 +310,6 @@ def test_vote_comment_same_vote_twice():
 	comment_updated = db_session.query(Comment).filter_by(id=comment.id).first()
 	assert comment_updated.upvotes == 1
 
-@util.no_rate_limit
 def test_vote_comment_invalid_value():
 	"""Test that invalid vote values are rejected for comments"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -336,7 +323,6 @@ def test_vote_comment_invalid_value():
 
 	assert vote_response.status_code == 400
 
-@util.no_rate_limit
 def test_vote_comment_nonexistent():
 	"""Test voting on a nonexistent comment returns 404"""
 	client, user = util_accounts.create_test_client_and_user()

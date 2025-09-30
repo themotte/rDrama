@@ -5,7 +5,6 @@ from . import util_comments
 import time
 import json
 
-@util.no_rate_limit
 def test_basic_comment_on_post():
 	"""Test basic comment creation on a post"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -43,7 +42,6 @@ def test_basic_comment_on_post():
 	assert comment.level == 1
 	assert comment.parent_comment_id is None
 
-@util.no_rate_limit
 def test_reply_to_comment():
 	"""Test replying to an existing comment"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -75,7 +73,6 @@ def test_reply_to_comment():
 	assert reply.level == 2
 	assert reply.parent_submission == post.id
 
-@util.no_rate_limit
 def test_duplicate_comment_prevention():
 	"""Test that duplicate comments are prevented"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -111,7 +108,6 @@ def test_duplicate_comment_prevention():
 	assert comment_response2.status_code == 409
 	assert "already made that comment" in comment_response2.text
 
-@util.no_rate_limit
 def test_empty_comment_rejection():
 	"""Test that empty comments are rejected"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -133,7 +129,6 @@ def test_empty_comment_rejection():
 	assert comment_response.status_code == 400
 	assert "actually write something" in comment_response.text
 
-@util.no_rate_limit
 def test_invalid_parent_rejection():
 	"""Test that invalid parent references are rejected"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -150,7 +145,6 @@ def test_invalid_parent_rejection():
 
 	assert comment_response.status_code == 400
 
-@util.no_rate_limit
 def test_comment_auto_upvote():
 	"""Test that comments automatically get upvoted by their author"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -182,7 +176,6 @@ def test_comment_auto_upvote():
 	assert vote.vote_type == 1  # upvote
 	assert comment.upvotes == 1
 
-@util.no_rate_limit
 def test_suspended_user_comment_blocked():
 	"""Test that suspended users cannot comment"""
 	# Just use the default user approach but with a different variable name to avoid test interference
@@ -211,7 +204,6 @@ def test_suspended_user_comment_blocked():
 
 	assert comment_response.status_code == 403
 
-@util.no_rate_limit
 def test_comment_with_over18_flag():
 	"""Test comment with over_18 flag inheritance"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -244,7 +236,6 @@ def test_comment_with_over18_flag():
 	assert comment is not None
 	assert comment.over_18 == True
 
-@util.no_rate_limit
 def test_long_comment_filtering():
 	"""Test that very long comments get filtered"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -278,7 +269,6 @@ def test_long_comment_filtering():
 	assert comment is not None
 	assert comment.state_mod == StateMod.FILTERED
 
-@util.no_rate_limit
 def test_nonexistent_parent_post():
 	"""Test commenting on nonexistent post returns 404"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -296,7 +286,6 @@ def test_nonexistent_parent_post():
 
 	assert comment_response.status_code == 404
 
-@util.no_rate_limit
 def test_nonexistent_parent_comment():
 	"""Test replying to nonexistent comment returns 404"""
 	client, user = util_accounts.create_test_client_and_user()

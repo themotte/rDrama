@@ -3,7 +3,6 @@ from . import util
 from . import util_submissions
 from . import util_comments
 
-@util.no_rate_limit
 def test_report_post():
 	"""Test reporting a post"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -33,7 +32,6 @@ def test_report_post():
 	assert len(flags) == 1
 	assert flags[0].reason == "Test report reason"
 
-@util.no_rate_limit
 def test_report_post_with_admin_flair():
 	"""Test that admin users can set flair when reporting with ! prefix"""
 	client, user = util_accounts.create_test_client_and_user("admin")
@@ -74,7 +72,6 @@ def test_report_post_with_admin_flair():
 	assert mod_actions[-1].user_id == user.id
 	assert f'"{flair_text}"' in mod_actions[-1]._note
 
-@util.no_rate_limit
 def test_report_comment():
 	"""Test reporting a comment"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -105,7 +102,6 @@ def test_report_comment():
 	assert len(flags) == 1
 	assert flags[0].reason == "Test comment report"
 
-@util.no_rate_limit
 def test_report_nonexistent_post():
 	"""Test reporting a nonexistent post returns 404"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -120,7 +116,6 @@ def test_report_nonexistent_post():
 
 	assert report_response.status_code == 404
 
-@util.no_rate_limit
 def test_report_nonexistent_comment():
 	"""Test reporting a nonexistent comment returns 404"""
 	client, user = util_accounts.create_test_client_and_user()

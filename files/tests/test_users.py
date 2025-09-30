@@ -2,7 +2,6 @@ from . import util_accounts
 from . import util
 from . import util_submissions
 
-@util.no_rate_limit
 def test_profilecss_endpoint():
 	"""Test the /@<username>/profilecss endpoint"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -24,7 +23,6 @@ def test_profilecss_endpoint():
 	assert response.status_code == 200
 	assert response.text == "body { background-color: red; }"
 
-@util.no_rate_limit
 def test_profilecss_nonexistent_user():
 	"""Test profilecss endpoint with nonexistent user"""
 	client = util_accounts.create_logged_off_client()
@@ -32,7 +30,6 @@ def test_profilecss_nonexistent_user():
 	response = client.get("/@nonexistentuser/profilecss")
 	assert response.status_code == 404
 
-@util.no_rate_limit
 def test_subscribe_unsubscribe_post():
 	"""Test subscribing and unsubscribing to posts"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -72,7 +69,6 @@ def test_subscribe_unsubscribe_post():
 	subs = db_session.query(Subscription).filter_by(user_id=user.id, submission_id=post.id).all()
 	assert len(subs) == 0
 
-@util.no_rate_limit
 def test_unsubscribe_nonexistent_subscription():
 	"""Test unsubscribing from a post when no subscription exists"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -89,7 +85,6 @@ def test_unsubscribe_nonexistent_subscription():
 	assert unsubscribe_response.status_code == 200
 	assert "Post unsubscribed!" in unsubscribe_response.text
 
-@util.no_rate_limit
 def test_user_info_endpoint():
 	"""Test the /@<username>/info endpoint"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -107,7 +102,6 @@ def test_user_info_endpoint():
 	assert "id" in user_info
 	assert user_info["id"] == user.id
 
-@util.no_rate_limit
 def test_user_info_nonexistent_user():
 	"""Test user info endpoint with nonexistent user"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -115,7 +109,6 @@ def test_user_info_nonexistent_user():
 	response = client.get("/@nonexistentuser/info")
 	assert response.status_code == 404
 
-@util.no_rate_limit
 def test_follow_user():
 	"""Test following another user"""
 	client, user1 = util_accounts.create_test_client_and_user("user1")
@@ -140,7 +133,6 @@ def test_follow_user():
 	follows = db_session.query(Follow).filter_by(user_id=user1.id, target_id=user2.id).all()
 	assert len(follows) == 1
 
-@util.no_rate_limit
 def test_follow_self():
 	"""Test that users cannot follow themselves"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -153,7 +145,6 @@ def test_follow_self():
 
 	assert follow_response.status_code == 400
 
-@util.no_rate_limit
 def test_follow_already_following():
 	"""Test following a user you're already following"""
 	client, user1 = util_accounts.create_test_client_and_user("user1")

@@ -4,7 +4,6 @@ from . import util_submissions
 from . import util_comments
 
 
-@util.no_rate_limit
 def test_search_posts_basic():
 	"""Test basic post search functionality"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -26,7 +25,6 @@ def test_search_posts_basic():
 	assert post_title in response.text
 
 
-@util.no_rate_limit
 def test_search_posts_with_author():
 	"""Test post search with author filter"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -46,7 +44,6 @@ def test_search_posts_with_author():
 	assert post_title in response.text
 
 
-@util.no_rate_limit
 def test_search_posts_pagination():
 	"""Test post search pagination"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -68,7 +65,6 @@ def test_search_posts_pagination():
 	assert response.status_code == 200
 
 
-@util.no_rate_limit
 def test_search_posts_sort_and_time():
 	"""Test post search with sort and time filters"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -90,7 +86,6 @@ def test_search_posts_sort_and_time():
 	assert response.status_code == 200
 
 
-@util.no_rate_limit
 def test_search_comments_basic():
 	"""Test basic comment search functionality"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -114,7 +109,6 @@ def test_search_comments_basic():
 	assert unique_comment_text in response.text
 
 
-@util.no_rate_limit
 def test_search_comments_with_author():
 	"""Test comment search with author filter"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -138,7 +132,6 @@ def test_search_comments_with_author():
 	assert unique_comment_text in response.text
 
 
-@util.no_rate_limit
 def test_search_comments_pagination():
 	"""Test comment search pagination"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -166,7 +159,6 @@ def test_search_comments_pagination():
 	assert response.status_code == 200
 
 
-@util.no_rate_limit
 def test_search_users_basic():
 	"""Test basic user search functionality"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -177,7 +169,6 @@ def test_search_users_basic():
 	assert user.username in response.text
 
 
-@util.no_rate_limit
 def test_search_users_partial_match():
 	"""Test user search with partial username"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -192,7 +183,6 @@ def test_search_users_partial_match():
 	assert user.username in response.text
 
 
-@util.no_rate_limit
 def test_search_users_with_at_symbol():
 	"""Test user search with @ prefix"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -203,7 +193,6 @@ def test_search_users_with_at_symbol():
 	assert user.username in response.text
 
 
-@util.no_rate_limit
 def test_search_users_pagination():
 	"""Test user search pagination"""
 	client, user = util_accounts.create_test_client_and_user()
