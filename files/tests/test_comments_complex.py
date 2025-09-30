@@ -259,7 +259,11 @@ def test_long_comment_filtering():
 	# Should succeed but with a message about pending approval
 	assert comment_response.status_code == 200
 	response_data = json.loads(comment_response.text)
-	assert "pending approval" in response_data.get("message", "")
+	# The message field should contain "pending approval" for long comments
+	# Use 'or ""' to handle None values (which can happen if message is explicitly None)
+	message = response_data.get("message") or ""
+	assert "pending approval" in message, \
+		f"Expected 'pending approval' in message for {len(long_body)} char comment, but got: {repr(message)}"
 
 	# Verify comment was created but filtered
 	from files.__main__ import db_session
