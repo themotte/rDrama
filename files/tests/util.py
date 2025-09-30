@@ -1,6 +1,5 @@
 
 from bs4 import BeautifulSoup
-import functools
 import json
 import random
 import re
