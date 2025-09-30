@@ -331,3 +331,202 @@ def test_vote_comment_nonexistent():
 	vote_response, _ = util.post_with_formkey(client, "/vote/comment/999999/1", data={})
 
 	assert vote_response.status_code == 404
+
+
+def test_vote_post_by_other_user():
+	"""Test voting on another user's post updates their coins and truescore"""
+	# Create two users
+	client1, user1 = util_accounts.create_test_client_and_user(name="voter1")
+	client2, user2 = util_accounts.create_test_client_and_user(name="author1")
+
+	# User2 creates a post
+	post = util_submissions.create_submission_for_client(client2)
+
+	from files.__main__ import db_session
+	from files.classes import User, Submission
+
+	# Get user2's initial coins and truescore
+	db_session.expire_all()
+	user2_before = db_session.query(User).filter_by(id=user2.id).first()
+	initial_coins = user2_before.coins
+	initial_truescore = user2_before.truescore
+
+	# User1 upvotes user2's post
+	vote_response, _ = util.post_with_formkey(client1, f"/vote/post/{post.id}/1", data={})
+	assert vote_response.status_code == 204
+
+	# Verify user2's coins and truescore increased by 1
+	db_session.expire_all()
+	user2_after = db_session.query(User).filter_by(id=user2.id).first()
+	assert user2_after.coins == initial_coins + 1
+	assert user2_after.truescore == initial_truescore + 1
+
+	# User1 changes to downvote (if enabled)
+	from files.helpers.config.environment import ENABLE_DOWNVOTES
+	if ENABLE_DOWNVOTES:
+		vote_response, _ = util.post_with_formkey(client1, f"/vote/post/{post.id}/-1", data={})
+		assert vote_response.status_code == 204
+
+		# Verify user2's coins and truescore decreased by 2 (removed +1, added -1)
+		db_session.expire_all()
+		user2_after = db_session.query(User).filter_by(id=user2.id).first()
+		assert user2_after.coins == initial_coins - 1
+		assert user2_after.truescore == initial_truescore - 1
+
+
+def test_vote_comment_by_other_user():
+	"""Test voting on another user's comment updates their coins and truescore"""
+	# Create two users
+	client1, user1 = util_accounts.create_test_client_and_user(name="voter2")
+	client2, user2 = util_accounts.create_test_client_and_user(name="author2")
+
+	# User2 creates a post and comment
+	post = util_submissions.create_submission_for_client(client2)
+	comment = util_comments.create_comment_for_client(client2, post.id)
+
+	from files.__main__ import db_session
+	from files.classes import User, Comment
+
+	# Get user2's initial coins and truescore
+	db_session.expire_all()
+	user2_before = db_session.query(User).filter_by(id=user2.id).first()
+	initial_coins = user2_before.coins
+	initial_truescore = user2_before.truescore
+
+	# User1 upvotes user2's comment
+	vote_response, _ = util.post_with_formkey(client1, f"/vote/comment/{comment.id}/1", data={})
+	assert vote_response.status_code == 204
+
+	# Verify user2's coins and truescore increased by 1
+	db_session.expire_all()
+	user2_after = db_session.query(User).filter_by(id=user2.id).first()
+	assert user2_after.coins == initial_coins + 1
+	assert user2_after.truescore == initial_truescore + 1
+
+	# User1 changes to downvote (if enabled)
+	from files.helpers.config.environment import ENABLE_DOWNVOTES
+	if ENABLE_DOWNVOTES:
+		vote_response, _ = util.post_with_formkey(client1, f"/vote/comment/{comment.id}/-1", data={})
+		assert vote_response.status_code == 204
+
+		# Verify user2's coins and truescore decreased by 2 (removed +1, added -1)
+		db_session.expire_all()
+		user2_after = db_session.query(User).filter_by(id=user2.id).first()
+		assert user2_after.coins == initial_coins - 1
+		assert user2_after.truescore == initial_truescore - 1
+
+
+def test_admin_vote_info_get_no_link():
+	"""Test admin vote info page without link parameter"""
+	from files.__main__ import db_session
+	from files.classes import User
+
+	# Create an admin user (admin_level >= 3)
+	client, user = util_accounts.create_test_client_and_user(name="admin1")
+	user_obj = db_session.query(User).filter_by(id=user.id).first()
+	user_obj.admin_level = 3
+	db_session.commit()
+
+	# Access the vote info page without a link
+	response = client.get("/votes")
+	assert response.status_code == 200
+
+
+def test_admin_vote_info_get_with_post():
+	"""Test admin vote info page with post link"""
+	from files.__main__ import db_session
+	from files.classes import User
+
+	# Create an admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user(name="admin2")
+	admin_obj = db_session.query(User).filter_by(id=admin_user.id).first()
+	admin_obj.admin_level = 3
+	db_session.commit()
+
+	# Create a regular user and a post
+	client, user = util_accounts.create_test_client_and_user(name="poster1")
+	post = util_submissions.create_submission_for_client(client)
+
+	# Access the vote info page with post link
+	response = admin_client.get(f"/votes?link=post_{post.id}")
+	assert response.status_code == 200
+
+
+def test_admin_vote_info_get_with_comment():
+	"""Test admin vote info page with comment link"""
+	from files.__main__ import db_session
+	from files.classes import User
+
+	# Create an admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user(name="admin3")
+	admin_obj = db_session.query(User).filter_by(id=admin_user.id).first()
+	admin_obj.admin_level = 3
+	db_session.commit()
+
+	# Create a regular user, post, and comment
+	client, user = util_accounts.create_test_client_and_user(name="commenter1")
+	post = util_submissions.create_submission_for_client(client)
+	comment = util_comments.create_comment_for_client(client, post.id)
+
+	# Access the vote info page with comment link
+	response = admin_client.get(f"/votes?link=comment_{comment.id}")
+	assert response.status_code == 200
+
+
+def test_admin_vote_info_invalid_link():
+	"""Test admin vote info page with invalid link format"""
+	from files.__main__ import db_session
+	from files.classes import User
+
+	# Create an admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user(name="admin4")
+	admin_obj = db_session.query(User).filter_by(id=admin_user.id).first()
+	admin_obj.admin_level = 3
+	db_session.commit()
+
+	# Access with invalid link format
+	response = admin_client.get("/votes?link=invalid_format")
+	assert response.status_code == 400
+
+
+def test_admin_vote_info_nonexistent_post():
+	"""Test admin vote info page with nonexistent post"""
+	from files.__main__ import db_session
+	from files.classes import User
+
+	# Create an admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user(name="admin5")
+	admin_obj = db_session.query(User).filter_by(id=admin_user.id).first()
+	admin_obj.admin_level = 3
+	db_session.commit()
+
+	# Access with nonexistent post (get_post raises exception, caught and returns 400)
+	response = admin_client.get("/votes?link=post_999999")
+	assert response.status_code == 400
+
+
+def test_admin_vote_info_nonexistent_comment():
+	"""Test admin vote info page with nonexistent comment"""
+	from files.__main__ import db_session
+	from files.classes import User
+
+	# Create an admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user(name="admin6")
+	admin_obj = db_session.query(User).filter_by(id=admin_user.id).first()
+	admin_obj.admin_level = 3
+	db_session.commit()
+
+	# Access with nonexistent comment (get_comment raises exception, caught and returns 400)
+	response = admin_client.get("/votes?link=comment_999999")
+	assert response.status_code == 400
+
+
+def test_admin_vote_info_requires_admin():
+	"""Test that vote info page requires admin access"""
+	# Create a regular user (not admin)
+	client, user = util_accounts.create_test_client_and_user(name="regular1")
+
+	# Try to access the vote info page
+	response = client.get("/votes")
+	# Should redirect to login or show 403
+	assert response.status_code in [302, 403]
