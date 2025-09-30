@@ -242,14 +242,17 @@ def api_comment(v):
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
-	
+
 	if replying_to_blocked:
 		message = "This user has blocked you. You are still welcome to reply " \
 				  "but you will be held to a higher standard of civility than you would be otherwise"
-	elif (v.admin_level <= PERMS['POST_COMMENT_MODERATION'] 
+	elif (v.admin_level <= PERMS['POST_COMMENT_MODERATION']
 			and len(body) > COMMENT_BODY_LENGTH_MAXIMUM_UNFILTERED):
 		message = "Your comment has been submitted but is a bit long, so it's pending approval."
 	else:
+		# DEBUG: Log why message is None
+		import sys
+		print(f"DEBUG: message=None because: replying_to_blocked={replying_to_blocked}, v.admin_level={v.admin_level}, PERMS['POST_COMMENT_MODERATION']={PERMS['POST_COMMENT_MODERATION']}, len(body)={len(body)}, COMMENT_BODY_LENGTH_MAXIMUM_UNFILTERED={COMMENT_BODY_LENGTH_MAXIMUM_UNFILTERED}", file=sys.stderr)
 		message = None
 	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True, parent_level=level), "message": message}
 
