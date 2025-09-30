@@ -1,0 +1,223 @@
+from . import util_accounts
+from . import util
+
+
+def test_login_get():
+	"""Test accessing the login page"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/login")
+	assert response.status_code == 200
+	assert "login" in response.text.lower()
+
+
+def test_login_get_with_redirect():
+	"""Test login page preserves redirect parameter"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/login?redirect=/rules")
+	assert response.status_code == 200
+	assert "redirect" in response.text.lower() or "/rules" in response.text
+
+
+def test_login_post_successful():
+	"""Test successful login with valid credentials"""
+	# Create a user first
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Log out
+	client.get("/logout")
+
+	# Now try to log in
+	response = client.post("/login", data={
+		"username": user.username,
+		"password": "password"
+	})
+
+	# Should redirect on success
+	assert response.status_code == 302
+	assert response.location == "/"
+
+
+def test_login_post_successful_with_redirect():
+	"""Test successful login redirects to specified page"""
+	# Create a user first
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Log out
+	client.get("/logout")
+
+	# Now try to log in with redirect
+	response = client.post("/login", data={
+		"username": user.username,
+		"password": "password",
+		"redirect": "/rules"
+	})
+
+	# Should redirect to the specified page
+	assert response.status_code == 302
+	assert "/rules" in response.location
+
+
+def test_login_post_with_at_prefix():
+	"""Test login handles @username format"""
+	# Create a user first
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Log out
+	client.get("/logout")
+
+	# Try to log in with @ prefix
+	response = client.post("/login", data={
+		"username": f"@{user.username}",
+		"password": "password"
+	})
+
+	# Should redirect on success
+	assert response.status_code == 302
+	assert response.location == "/"
+
+
+def test_login_post_wrong_password():
+	"""Test login with wrong password fails"""
+	# Create a user first
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Log out
+	client.get("/logout")
+
+	# Try to log in with wrong password
+	response = client.post("/login", data={
+		"username": user.username,
+		"password": "wrongpassword"
+	})
+
+	# Should show failed login page
+	assert response.status_code == 200
+	assert "failed" in response.text.lower() or "incorrect" in response.text.lower()
+
+
+def test_login_post_nonexistent_user():
+	"""Test login with nonexistent username fails"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.post("/login", data={
+		"username": "nonexistent_user_12345",
+		"password": "password"
+	})
+
+	# Should show failed login page
+	assert response.status_code == 200
+	assert "failed" in response.text.lower() or "incorrect" in response.text.lower()
+
+
+def test_login_post_missing_username():
+	"""Test login without username returns 400"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.post("/login", data={
+		"password": "password"
+	})
+
+	assert response.status_code == 400
+
+
+
+
+def test_logout_requires_auth():
+	"""Test logout endpoint requires authentication"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/logout")
+	assert response.status_code == 302
+	assert "/login" in response.location
+
+
+def test_logout():
+	"""Test logout endpoint logs user out"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Logout
+	response = client.get("/logout")
+	assert response.status_code == 302
+
+	# Verify we're logged out by trying to access a protected page
+	response = client.get("/submit")
+	assert response.status_code == 302
+	assert "/login" in response.location
+
+
+def test_me_requires_auth():
+	"""Test /me endpoint requires authentication"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/me")
+	assert response.status_code == 302
+	assert "/login" in response.location
+
+
+def test_me_endpoint_exists():
+	"""Test /me endpoint exists"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# The endpoint requires auth and will either return JSON or redirect
+	response = client.get("/me")
+	# Should not be 404
+	assert response.status_code != 404
+
+
+def test_at_me_requires_auth():
+	"""Test /@me endpoint requires authentication"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/@me")
+	assert response.status_code == 302
+	assert "/login" in response.location
+
+
+def test_at_me_endpoint_exists():
+	"""Test /@me endpoint exists"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response = client.get("/@me")
+	# Should not be 404
+	assert response.status_code != 404
+
+
+def test_signup_get():
+	"""Test accessing the signup page"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/signup")
+	# Could be 200 (signups enabled) or 403 (signups disabled)
+	assert response.status_code in [200, 403]
+
+	if response.status_code == 200:
+		assert "sign" in response.text.lower() and "up" in response.text.lower()
+
+
+def test_signup_get_with_ref():
+	"""Test signup page with referral parameter"""
+	# Create a user to be the referrer
+	_, referrer = util_accounts.create_test_client_and_user()
+
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get(f"/signup?ref={referrer.username}")
+	# Could be 200 (signups enabled) or 403 (signups disabled)
+	assert response.status_code in [200, 403]
+
+	if response.status_code == 200:
+		# Referrer username should appear in the page
+		assert referrer.username in response.text
+
+
+def test_signup_with_logged_in_user():
+	"""Test signup page behavior when user is already logged in"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response = client.get("/signup")
+	# Behavior depends on whether signups are enabled:
+	# - If enabled and user is logged in: redirects (302) or shows page (200)
+	# - If disabled: 403
+	assert response.status_code in [200, 302, 403]
