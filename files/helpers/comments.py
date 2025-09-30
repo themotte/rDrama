@@ -123,11 +123,11 @@ def bulk_recompute_descendant_counts(predicate = None, db=None):
 			<predicate goes here>
 	"""
 	db = db if db is not None else g.db
-	max_level_query = db.query(func.max(Comment.level))
+	max_level_query = select(func.max(Comment.level))
 	if predicate:
 		max_level_query = predicate(max_level_query)
 
-	max_level = max_level_query.scalar()
+	max_level = db.execute(max_level_query).scalar()
 
 	if max_level is None:
 		max_level = 0
@@ -139,10 +139,9 @@ def bulk_recompute_descendant_counts(predicate = None, db=None):
 			Comment,
 			(
 				select(parent_comments)
-				.join(
+				.outerjoin(
 					child_comments,
-					parent_comments.corresponding_column(Comment.id) == child_comments.corresponding_column(Comment.parent_comment_id),
-					True
+					parent_comments.corresponding_column(Comment.id) == child_comments.corresponding_column(Comment.parent_comment_id)
 				)
 				.group_by(parent_comments.corresponding_column(Comment.id))
 				.with_only_columns(
