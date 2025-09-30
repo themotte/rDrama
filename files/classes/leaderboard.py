@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any, Callable, Final, Optional
 
-from sqlalchemy import Column, func
+from sqlalchemy import Column, func, text
 from sqlalchemy.orm import Session, Query
 
 from files.helpers.config.const import LEADERBOARD_LIMIT
@@ -179,7 +179,7 @@ class RawSqlLeaderboard(Leaderboard):
 		self._calculate(query)
 
 	def _calculate(self, query:str):
-		self.result = {result[0]:list(result) for result in self.db.execute(query).all()}
+		self.result = {result[0]:list(result) for result in self.db.execute(text(query)).all()}
 		users = get_accounts_dict(self.result.keys(), db=self.db)
 		if users is None:
 			raise Exception("Some users don't exist when they should (was a user deleted?)")
