@@ -22,8 +22,8 @@ def test_login_get_with_redirect():
 
 def test_login_post_successful():
 	"""Test successful login with valid credentials"""
-	# Create a user first
-	client, user = util_accounts.create_test_client_and_user()
+	# Create a user first (use unique name to avoid affecting cached fixtures)
+	client, user = util_accounts.create_test_client_and_user(name="login-test-1")
 
 	# Log out
 	client.get("/logout")
@@ -41,8 +41,8 @@ def test_login_post_successful():
 
 def test_login_post_successful_with_redirect():
 	"""Test successful login redirects to specified page"""
-	# Create a user first
-	client, user = util_accounts.create_test_client_and_user()
+	# Create a user first (use unique name to avoid affecting cached fixtures)
+	client, user = util_accounts.create_test_client_and_user(name="login-test-2")
 
 	# Log out
 	client.get("/logout")
@@ -61,8 +61,8 @@ def test_login_post_successful_with_redirect():
 
 def test_login_post_with_at_prefix():
 	"""Test login handles @username format"""
-	# Create a user first
-	client, user = util_accounts.create_test_client_and_user()
+	# Create a user first (use unique name to avoid affecting cached fixtures)
+	client, user = util_accounts.create_test_client_and_user(name="login-test-3")
 
 	# Log out
 	client.get("/logout")
@@ -80,8 +80,8 @@ def test_login_post_with_at_prefix():
 
 def test_login_post_wrong_password():
 	"""Test login with wrong password fails"""
-	# Create a user first
-	client, user = util_accounts.create_test_client_and_user()
+	# Create a user first (use unique name to avoid affecting cached fixtures)
+	client, user = util_accounts.create_test_client_and_user(name="login-test-4")
 
 	# Log out
 	client.get("/logout")
@@ -135,7 +135,8 @@ def test_logout_requires_auth():
 
 def test_logout():
 	"""Test logout endpoint logs user out"""
-	client, user = util_accounts.create_test_client_and_user()
+	# Use a unique name to avoid affecting cached fixtures
+	client, user = util_accounts.create_test_client_and_user(name="logout-test")
 
 	# Logout
 	response = client.get("/logout")
