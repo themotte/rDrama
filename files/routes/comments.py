@@ -250,9 +250,6 @@ def api_comment(v):
 			and len(body) > COMMENT_BODY_LENGTH_MAXIMUM_UNFILTERED):
 		message = "Your comment has been submitted but is a bit long, so it's pending approval."
 	else:
-		# DEBUG: Log why message is None
-		import sys
-		print(f"DEBUG: message=None because: replying_to_blocked={replying_to_blocked}, v.admin_level={v.admin_level}, PERMS['POST_COMMENT_MODERATION']={PERMS['POST_COMMENT_MODERATION']}, len(body)={len(body)}, COMMENT_BODY_LENGTH_MAXIMUM_UNFILTERED={COMMENT_BODY_LENGTH_MAXIMUM_UNFILTERED}", file=sys.stderr)
 		message = None
 	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True, parent_level=level), "message": message}
 
