@@ -11,20 +11,31 @@ def formkey_from(text):
     formkey = next(tag for tag in soup.find_all("input") if tag.get("name") == "formkey").get("value")
     return formkey
 
-def post_with_formkey(client, get_url, post_url, data):
+def post_with_formkey(client, post_url, data):
     """
     Helper function to GET a page for formkey, then POST with that formkey.
     Also extracts timestamp field if present (for anti-bot protection).
 
+    The formkey is session-based (not page-specific), so any authenticated page
+    will return the same formkey for the session. This automatically determines
+    which page to GET based on the POST URL.
+
     Args:
         client: The test client to use
-        get_url: URL to GET for extracting the formkey
         post_url: URL to POST to with the formkey
         data: Dict of POST data (formkey will be added automatically)
 
     Returns:
         Tuple of (post_response, get_response)
     """
+    # Determine which page to GET for the formkey
+    # For signup, we need the signup page (has special formkey with timestamp)
+    # For everything else, use /submit (requires auth, returns session formkey)
+    if post_url == "/signup":
+        get_url = "/signup"
+    else:
+        get_url = "/submit"
+
     # GET the page to extract formkey
     get_response = client.get(get_url)
     assert get_response.status_code == 200, f"Failed to GET {get_url}: {get_response.status_code}"

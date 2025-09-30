@@ -41,7 +41,7 @@ def test_rss_feed_contains_new_post():
 
 	# Submit the post
 	submit_post_response, submit_get_response = util.post_with_formkey(
-		client, "/submit", "/submit",
+		client, "/submit",
 		data={
 			"title": post_title,
 			"body": post_body,

@@ -15,7 +15,7 @@ def create_comment_for_client(client, post_id, data=None):
 	comment_body = data.get('body', util.generate_text())
 
 	submit_comment_response, submit_get_response = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": f'post_{post_id}',
 			'parent_level': 1,

@@ -22,7 +22,7 @@ def test_basic_comment_on_post():
 	# Create a comment
 	comment_body = util.generate_text()
 	comment_response, _ = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": f"post_{post.id}",
 			"body": comment_body,
@@ -55,7 +55,7 @@ def test_reply_to_comment():
 	# Reply to the comment
 	reply_body = util.generate_text()
 	reply_response, _ = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": f"comment_{parent_comment.id}",
 			"body": reply_body,
@@ -86,7 +86,7 @@ def test_duplicate_comment_prevention():
 	# Create a comment
 	comment_body = util.generate_text()
 	comment_response1, _ = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": f"post_{post.id}",
 			"body": comment_body,
@@ -98,7 +98,7 @@ def test_duplicate_comment_prevention():
 
 	# Try to create the exact same comment again
 	comment_response2, _ = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": f"post_{post.id}",
 			"body": comment_body,
@@ -121,7 +121,7 @@ def test_empty_comment_rejection():
 
 	# Try to create an empty comment
 	comment_response, _ = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": f"post_{post.id}",
 			"body": "",
@@ -140,7 +140,7 @@ def test_invalid_parent_rejection():
 
 	# Try to comment on invalid parent
 	comment_response, _ = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": "invalid_format",
 			"body": "test comment",
@@ -160,7 +160,7 @@ def test_comment_auto_upvote():
 	comment_body = util.generate_text()
 
 	comment_response, _ = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": f"post_{post.id}",
 			"body": comment_body,
@@ -200,7 +200,7 @@ def test_suspended_user_comment_blocked():
 
 	# Try to comment while suspended
 	comment_response, _ = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": f"post_{post.id}",
 			"body": "test comment",
@@ -228,7 +228,7 @@ def test_comment_with_over18_flag():
 	# Create a comment on the NSFW post
 	comment_body = util.generate_text()
 	comment_response, _ = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": f"post_{post.id}",
 			"body": comment_body,
@@ -256,7 +256,7 @@ def test_long_comment_filtering():
 	long_body = "x" * 60000  # 60k characters, longer than 50k limit
 
 	comment_response, _ = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": f"post_{post.id}",
 			"body": long_body,
@@ -285,7 +285,7 @@ def test_nonexistent_parent_post():
 
 	# Try to comment on nonexistent post - use high ID that won't exist
 	comment_response, _ = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": "post_99999999",
 			"body": "test comment",
@@ -303,7 +303,7 @@ def test_nonexistent_parent_comment():
 
 	# Try to reply to nonexistent comment - use high ID that won't exist
 	comment_response, _ = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": "comment_99999999",
 			"body": "test reply",

@@ -14,7 +14,7 @@ def create_submission_for_client(client, data=None):
 	post_body = data.get('body', util.generate_text())
 
 	submit_post_response, submit_get_response = util.post_with_formkey(
-		client, "/submit", "/submit",
+		client, "/submit",
 		data={
 			"title": post_title,
 			"body": post_body,

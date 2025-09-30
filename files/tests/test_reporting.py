@@ -17,9 +17,9 @@ def test_report_post():
 	initial_flags = db_session.query(Flag).filter_by(post_id=post.id, user_id=user.id).count()
 	assert initial_flags == 0
 
-	# Report the post - use submit page for formkey since it has forms
+	# Report the post
 	report_response, _ = util.post_with_formkey(
-		client, "/submit", f"/report/post/{post.id}",
+		client, f"/report/post/{post.id}",
 		data={
 			"reason": "Test report reason"
 		}
@@ -55,7 +55,7 @@ def test_report_post_with_admin_flair():
 	# Report with flair (! prefix)
 	flair_text = "test-flair"
 	report_response, _ = util.post_with_formkey(
-		client, "/submit", f"/report/post/{post.id}",
+		client, f"/report/post/{post.id}",
 		data={
 			"reason": f"!{flair_text}"
 		}
@@ -91,7 +91,7 @@ def test_report_comment():
 
 	# Report the comment
 	report_response, _ = util.post_with_formkey(
-		client, "/submit", f"/report/comment/{comment.id}",
+		client, f"/report/comment/{comment.id}",
 		data={
 			"reason": "Test comment report"
 		}
@@ -112,7 +112,7 @@ def test_report_nonexistent_post():
 
 	# Try to report a nonexistent post
 	report_response, _ = util.post_with_formkey(
-		client, "/submit", "/report/post/999999",
+		client, "/report/post/999999",
 		data={
 			"reason": "Test report"
 		}
@@ -127,7 +127,7 @@ def test_report_nonexistent_comment():
 
 	# Try to report a nonexistent comment
 	report_response, _ = util.post_with_formkey(
-		client, "/submit", "/report/comment/999999",
+		client, "/report/comment/999999",
 		data={
 			"reason": "Test report"
 		}

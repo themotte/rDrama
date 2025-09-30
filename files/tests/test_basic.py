@@ -14,7 +14,7 @@ def test_post_and_comment():
 	post_title = util.generate_text()
 	post_body = util.generate_text()
 	submit_post_response, submit_get_response = util.post_with_formkey(
-		client, "/submit", "/submit",
+		client, "/submit",
 		data={
 			"title": post_title,
 			"body": post_body,
@@ -37,7 +37,7 @@ def test_post_and_comment():
 	# post a comment child
 	comment_body = util.generate_text()
 	submit_comment_response, _ = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": post.id_full,
 			"parent_level": 1,
@@ -58,7 +58,7 @@ def test_post_and_comment():
 	# post a comment grandchild!
 	grandcomment_body = util.generate_text()
 	submit_grandcomment_response, _ = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": comment.id_full,
 			"parent_level": 1,

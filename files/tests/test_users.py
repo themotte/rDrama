@@ -48,7 +48,7 @@ def test_subscribe_unsubscribe_post():
 
 	# Subscribe to the post
 	subscribe_response, _ = util.post_with_formkey(
-		client, "/submit", f"/subscribe/{post.id}",
+		client, f"/subscribe/{post.id}",
 		data={}
 	)
 
@@ -61,7 +61,7 @@ def test_subscribe_unsubscribe_post():
 
 	# Unsubscribe from the post
 	unsubscribe_response, _ = util.post_with_formkey(
-		client, "/submit", f"/unsubscribe/{post.id}",
+		client, f"/unsubscribe/{post.id}",
 		data={}
 	)
 
@@ -82,7 +82,7 @@ def test_unsubscribe_nonexistent_subscription():
 
 	# Try to unsubscribe (should not fail)
 	unsubscribe_response, _ = util.post_with_formkey(
-		client, "/submit", f"/unsubscribe/{post.id}",
+		client, f"/unsubscribe/{post.id}",
 		data={}
 	)
 
@@ -129,7 +129,7 @@ def test_follow_user():
 
 	# Follow user2
 	follow_response, _ = util.post_with_formkey(
-		client, "/submit", f"/follow/{user2.username}",
+		client, f"/follow/{user2.username}",
 		data={}
 	)
 
@@ -147,7 +147,7 @@ def test_follow_self():
 
 	# Try to follow self
 	follow_response, _ = util.post_with_formkey(
-		client, "/submit", f"/follow/{user.username}",
+		client, f"/follow/{user.username}",
 		data={}
 	)
 
@@ -161,14 +161,14 @@ def test_follow_already_following():
 
 	# Follow user2 first time
 	follow_response1, _ = util.post_with_formkey(
-		client, "/submit", f"/follow/{user2.username}",
+		client, f"/follow/{user2.username}",
 		data={}
 	)
 	assert follow_response1.status_code == 200
 
 	# Follow user2 second time (should still return success)
 	follow_response2, _ = util.post_with_formkey(
-		client, "/submit", f"/follow/{user2.username}",
+		client, f"/follow/{user2.username}",
 		data={}
 	)
 	assert follow_response2.status_code == 200

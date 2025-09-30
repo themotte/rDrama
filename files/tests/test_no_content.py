@@ -10,7 +10,7 @@ def test_no_content_submissions():
 
 	# test bad title against good content
 	submit_post_response, _ = util.post_with_formkey(
-		client, "/submit", "/submit",
+		client, "/submit",
 		data={
 			"title": title,
 			"body": body,
@@ -22,7 +22,7 @@ def test_no_content_submissions():
 	title, body = body, title
 	# test good title against bad content
 	submit_post_response, _ = util.post_with_formkey(
-		client, "/submit", "/submit",
+		client, "/submit",
 		data={
 			"title": title,
 			"body": body,
@@ -39,7 +39,7 @@ def test_no_content_comments():
 	post_title = util.generate_text()
 	post_body = util.generate_text()
 	submit_post_response, _ = util.post_with_formkey(
-		client, "/submit", "/submit",
+		client, "/submit",
 		data={
 			"title": post_title,
 			"body": post_body,
@@ -62,7 +62,7 @@ def test_no_content_comments():
 	# post a comment child
 	comment_body = '\ufeff\ufeff\ufeff\ufeff\ufeff'
 	submit_comment_response, _ = util.post_with_formkey(
-		client, "/submit", "/comment",
+		client, "/comment",
 		data={
 			"parent_fullname": post.id_full,
 			"parent_level": 1,

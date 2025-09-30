@@ -19,7 +19,7 @@ def test_vote_post_upvote():
 	assert post.upvotes == 1
 
 	# Upvote the post (should be idempotent since already upvoted)
-	vote_response, _ = util.post_with_formkey(client, "/submit", f"/vote/post/{post.id}/1", data={})
+	vote_response, _ = util.post_with_formkey(client, f"/vote/post/{post.id}/1", data={})
 
 	assert vote_response.status_code == 204
 
@@ -52,7 +52,7 @@ def test_vote_post_downvote():
 	assert post.downvotes == 0
 
 	# Downvote the post (changes from upvote to downvote)
-	vote_response, _ = util.post_with_formkey(client, "/submit", f"/vote/post/{post.id}/-1", data={})
+	vote_response, _ = util.post_with_formkey(client, f"/vote/post/{post.id}/-1", data={})
 
 	assert vote_response.status_code == 204
 
@@ -80,7 +80,7 @@ def test_vote_post_remove_vote():
 	assert post.upvotes == 1
 
 	# Remove the vote (set to 0)
-	vote_response, _ = util.post_with_formkey(client, "/submit", f"/vote/post/{post.id}/0", data={})
+	vote_response, _ = util.post_with_formkey(client, f"/vote/post/{post.id}/0", data={})
 
 	assert vote_response.status_code == 204
 
@@ -112,7 +112,7 @@ def test_vote_post_change_vote():
 	assert post.downvotes == 0
 
 	# Change to downvote
-	vote_response, _ = util.post_with_formkey(client, "/submit", f"/vote/post/{post.id}/-1", data={})
+	vote_response, _ = util.post_with_formkey(client, f"/vote/post/{post.id}/-1", data={})
 
 	assert vote_response.status_code == 204
 
@@ -140,7 +140,7 @@ def test_vote_post_same_vote_twice():
 	assert post.upvotes == 1
 
 	# Try to upvote again (should be idempotent)
-	vote_response, _ = util.post_with_formkey(client, "/submit", f"/vote/post/{post.id}/1", data={})
+	vote_response, _ = util.post_with_formkey(client, f"/vote/post/{post.id}/1", data={})
 
 	assert vote_response.status_code == 204
 
@@ -158,7 +158,7 @@ def test_vote_post_invalid_value():
 	post = util_submissions.create_submission_for_client(client)
 
 	# Try to vote with invalid value
-	vote_response, _ = util.post_with_formkey(client, "/submit", f"/vote/post/{post.id}/5", data={})
+	vote_response, _ = util.post_with_formkey(client, f"/vote/post/{post.id}/5", data={})
 
 	assert vote_response.status_code == 400
 
@@ -168,7 +168,7 @@ def test_vote_post_nonexistent():
 	client, user = util_accounts.create_test_client_and_user()
 
 	# Try to vote on a nonexistent post
-	vote_response, _ = util.post_with_formkey(client, "/submit", "/vote/post/999999/1", data={})
+	vote_response, _ = util.post_with_formkey(client, "/vote/post/999999/1", data={})
 
 	assert vote_response.status_code == 404
 
@@ -189,7 +189,7 @@ def test_vote_comment_upvote():
 	assert comment.upvotes == 1
 
 	# Upvote the comment (should be idempotent since already upvoted)
-	vote_response, _ = util.post_with_formkey(client, "/submit", f"/vote/comment/{comment.id}/1", data={})
+	vote_response, _ = util.post_with_formkey(client, f"/vote/comment/{comment.id}/1", data={})
 
 	assert vote_response.status_code == 204
 
@@ -222,7 +222,7 @@ def test_vote_comment_downvote():
 	assert comment.downvotes == 0
 
 	# Downvote the comment (changes from upvote to downvote)
-	vote_response, _ = util.post_with_formkey(client, "/submit", f"/vote/comment/{comment.id}/-1", data={})
+	vote_response, _ = util.post_with_formkey(client, f"/vote/comment/{comment.id}/-1", data={})
 
 	assert vote_response.status_code == 204
 
@@ -251,7 +251,7 @@ def test_vote_comment_remove_vote():
 	assert comment.upvotes == 1
 
 	# Remove the vote (set to 0)
-	vote_response, _ = util.post_with_formkey(client, "/submit", f"/vote/comment/{comment.id}/0", data={})
+	vote_response, _ = util.post_with_formkey(client, f"/vote/comment/{comment.id}/0", data={})
 
 	assert vote_response.status_code == 204
 
@@ -284,7 +284,7 @@ def test_vote_comment_change_vote():
 	assert comment.downvotes == 0
 
 	# Change to downvote
-	vote_response, _ = util.post_with_formkey(client, "/submit", f"/vote/comment/{comment.id}/-1", data={})
+	vote_response, _ = util.post_with_formkey(client, f"/vote/comment/{comment.id}/-1", data={})
 
 	assert vote_response.status_code == 204
 
@@ -313,7 +313,7 @@ def test_vote_comment_same_vote_twice():
 	assert comment.upvotes == 1
 
 	# Try to upvote again (should be idempotent)
-	vote_response, _ = util.post_with_formkey(client, "/submit", f"/vote/comment/{comment.id}/1", data={})
+	vote_response, _ = util.post_with_formkey(client, f"/vote/comment/{comment.id}/1", data={})
 
 	assert vote_response.status_code == 204
 
@@ -332,7 +332,7 @@ def test_vote_comment_invalid_value():
 	comment = util_comments.create_comment_for_client(client, post.id)
 
 	# Try to vote with invalid value
-	vote_response, _ = util.post_with_formkey(client, "/submit", f"/vote/comment/{comment.id}/5", data={})
+	vote_response, _ = util.post_with_formkey(client, f"/vote/comment/{comment.id}/5", data={})
 
 	assert vote_response.status_code == 400
 
@@ -342,6 +342,6 @@ def test_vote_comment_nonexistent():
 	client, user = util_accounts.create_test_client_and_user()
 
 	# Try to vote on a nonexistent comment
-	vote_response, _ = util.post_with_formkey(client, "/submit", "/vote/comment/999999/1", data={})
+	vote_response, _ = util.post_with_formkey(client, "/vote/comment/999999/1", data={})
 
 	assert vote_response.status_code == 404

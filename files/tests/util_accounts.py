@@ -36,7 +36,7 @@ def create_test_client_and_user(name="user"):
 	print(f"Signing up as {username}")
 
 	signup_post_response, signup_get_response = util.post_with_formkey(
-		client, "/signup", "/signup",
+		client, "/signup",
 		data={
 			"usernametwo": username,
 			"password": "password",
