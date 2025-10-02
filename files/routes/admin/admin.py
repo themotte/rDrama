@@ -1070,14 +1070,6 @@ def unban_user(user_id, v):
 	send_repeatable_notification(user.id, f"@{v.username} has unbanned you!")
 	g.db.add(user)
 
-	for x in user.alts:
-		if x.is_banned: send_repeatable_notification(x.id, f"@{v.username} has unbanned you!")
-		x.is_banned = 0
-		x.unban_utc = 0
-		x.ban_evade = 0
-		x.ban_reason = None
-		g.db.add(x)
-
 	ma=ModAction(
 		kind="unban_user",
 		user_id=v.id,
