@@ -724,3 +724,141 @@ def test_admin_downvoting_comments_drilldown():
 	response = admin_client.get(f"/@{voter_user.username}/downvoting/{author_user.id}/comments")
 	assert response.status_code == 200
 	assert comment.body in response.text
+
+def test_subscribe_to_post():
+	"""Test subscribing to a post"""
+	client, user = util_accounts.create_test_client_and_user("sub-post")
+
+	# Create a post
+	post = util_submissions.create_submission_for_client(client)
+
+	# Subscribe to the post
+	response, _ = util.post_with_formkey(
+		client, f"/subscribe/{post.id}",
+		data={}
+	)
+
+	assert response.status_code == 200
+	assert "subscribed" in response.text.lower()
+
+	# Verify subscription exists in database
+	from files.__main__ import db_session
+	from files.classes import Subscription
+	sub = db_session.query(Subscription).filter_by(
+		user_id=user.id,
+		submission_id=post.id
+	).one_or_none()
+
+	assert sub is not None
+
+def test_unsubscribe_from_post():
+	"""Test unsubscribing from a post"""
+	client, user = util_accounts.create_test_client_and_user("unsub-post")
+
+	# Create a post
+	post = util_submissions.create_submission_for_client(client)
+
+	# Subscribe to the post first
+	from files.__main__ import db_session
+	from files.classes import Subscription
+	sub = Subscription(user_id=user.id, submission_id=post.id)
+	db_session.add(sub)
+	db_session.commit()
+
+	# Unsubscribe from the post
+	response, _ = util.post_with_formkey(
+		client, f"/unsubscribe/{post.id}",
+		data={}
+	)
+
+	assert response.status_code == 200
+	assert "unsubscribed" in response.text.lower()
+
+	# Verify subscription no longer exists
+	sub = db_session.query(Subscription).filter_by(
+		user_id=user.id,
+		submission_id=post.id
+	).one_or_none()
+
+	assert sub is None
+
+def test_unsubscribe_when_not_subscribed():
+	"""Test unsubscribing when not subscribed is idempotent"""
+	client, user = util_accounts.create_test_client_and_user("unsub-nosub")
+
+	# Create a post
+	post = util_submissions.create_submission_for_client(client)
+
+	# Try to unsubscribe without being subscribed
+	response, _ = util.post_with_formkey(
+		client, f"/unsubscribe/{post.id}",
+		data={}
+	)
+
+	# Should still succeed (idempotent)
+	assert response.status_code == 200
+
+def test_send_message_to_user():
+	"""Test sending a message to another user"""
+	sender_client, sender_user = util_accounts.create_test_client_and_user("sender")
+	receiver_client, receiver_user = util_accounts.create_test_client_and_user("receiver")
+
+	message_text = util.generate_text()
+
+	# Send message
+	response, _ = util.post_with_formkey(
+		sender_client, f"/@{receiver_user.username}/message",
+		data={"message": message_text}
+	)
+
+	assert response.status_code == 200
+	assert "sent" in response.text.lower()
+
+	# Verify message exists in database as a comment
+	from files.__main__ import db_session
+	from files.classes import Comment
+	message = db_session.query(Comment).filter_by(
+		author_id=sender_user.id,
+		sentto=receiver_user.id
+	).first()
+
+	assert message is not None
+	# Message body is stored in body_html after sanitization
+	assert message.body_html is not None
+
+def test_send_empty_message_rejected():
+	"""Test that sending an empty message is rejected"""
+	sender_client, sender_user = util_accounts.create_test_client_and_user("sender-empty")
+	receiver_client, receiver_user = util_accounts.create_test_client_and_user("receiver-empty")
+
+	# Try to send empty message
+	response, _ = util.post_with_formkey(
+		sender_client, f"/@{receiver_user.username}/message",
+		data={"message": ""}
+	)
+
+	assert response.status_code == 400
+	assert "empty" in response.text.lower()
+
+def test_send_duplicate_message_rejected():
+	"""Test that sending duplicate messages is prevented"""
+	sender_client, sender_user = util_accounts.create_test_client_and_user("sender-dup")
+	receiver_client, receiver_user = util_accounts.create_test_client_and_user("receiver-dup")
+
+	message_text = util.generate_text()
+
+	# Send message first time
+	response1, _ = util.post_with_formkey(
+		sender_client, f"/@{receiver_user.username}/message",
+		data={"message": message_text}
+	)
+	assert response1.status_code == 200
+
+	# Try to send exact same message again
+	response2, _ = util.post_with_formkey(
+		sender_client, f"/@{receiver_user.username}/message",
+		data={"message": message_text}
+	)
+
+	assert response2.status_code == 403
+	assert "already exists" in response2.text.lower()
