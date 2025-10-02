@@ -160,15 +160,18 @@ def cached_chart(kind, site):
 	signup_chart.plot(
 		daily_times,
 		daily_signups,
-		color='red')
+		color='red',
+		label='Signups')
 	posts_chart.plot(
 		daily_times,
 		post_stats,
-		color='blue')
+		color='blue',
+		label='Posts')
 	comments_chart.plot(
 		daily_times,
 		comment_stats,
-		color='purple')
+		color='purple',
+		label='Comments')
 
 	signup_chart.set_ylim(ymin=0)
 	posts_chart.set_ylim(ymin=0)
