@@ -29,7 +29,7 @@ def test_delete_comment():
 	assert "deleted" in delete_response.text.lower()
 
 	# Verify comment is marked as deleted in database
-	comment_after = db_session.query(Comment).get(comment.id)
+	comment_after = db_session.get(Comment, comment.id)
 	assert comment_after.state_user_deleted_utc is not None
 
 
@@ -100,7 +100,7 @@ def test_undelete_comment():
 	assert "undeleted" in undelete_response.text.lower()
 
 	# Verify comment is no longer deleted
-	comment_after = db_session.query(Comment).get(comment.id)
+	comment_after = db_session.get(Comment, comment.id)
 	assert comment_after.state_user_deleted_utc is None
 
 
@@ -141,7 +141,7 @@ def test_edit_comment():
 	assert edit_response.status_code == 200
 
 	# Verify comment body was updated
-	comment_after = db_session.query(Comment).get(comment.id)
+	comment_after = db_session.get(Comment, comment.id)
 	assert comment_after.body == new_body
 	assert comment_after.body != original_body
 
@@ -203,7 +203,7 @@ def test_pin_comment():
 	assert "pinned" in pin_response.text.lower()
 
 	# Verify comment is pinned
-	comment_after = db_session.query(Comment).get(comment.id)
+	comment_after = db_session.get(Comment, comment.id)
 	assert comment_after.is_pinned is not None
 	assert "(OP)" in comment_after.is_pinned or user.username in comment_after.is_pinned
 
@@ -253,7 +253,7 @@ def test_unpin_comment():
 	assert "unpinned" in unpin_response.text.lower()
 
 	# Verify comment is no longer pinned
-	comment_after = db_session.query(Comment).get(comment.id)
+	comment_after = db_session.get(Comment, comment.id)
 	assert comment_after.is_pinned is None
 
 
