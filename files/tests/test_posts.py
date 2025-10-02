@@ -372,3 +372,39 @@ def test_edit_post_route():
 	)
 	# Route exists and processes the request (200 success or 400 bad request)
 	assert edit_response.status_code in [200, 400]
+
+
+def test_viewmore_route():
+	"""Test GET /viewmore/<pid>/<sort>/<offset> route"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Create a post
+	post = util_submissions.create_submission_for_client(client)
+
+	response = client.get(f"/viewmore/{post.id}/new/0")
+	assert response.status_code in [200, 400]
+
+
+def test_morecomments_route():
+	"""Test GET /morecomments/<cid> route"""
+	from . import util_comments
+
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Create a post and comment
+	post = util_submissions.create_submission_for_client(client)
+	comment = util_comments.create_comment_for_client(client, post.id)
+
+	response = client.get(f"/morecomments/{comment.id}")
+	assert response.status_code == 200
+
+
+def test_is_repost_route():
+	"""Test POST /is_repost route"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/is_repost",
+		data={"url": "https://example.com/test"}
+	)
+	assert response.status_code in [200, 400]

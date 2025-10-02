@@ -233,3 +233,41 @@ def test_service_worker_route():
 	response = client.get("/service-worker.js")
 	assert response.status_code == 200
 	assert "javascript" in response.content_type or response.status_code == 200
+
+
+def test_logged_out_with_path():
+	"""Test /logged_out/<path:old> route"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/logged_out/submit", follow_redirects=False)
+	assert response.status_code == 302
+	assert response.location == "/submit"
+
+
+def test_patrons_route():
+	"""Test GET /patrons route requires admin level 3"""
+	from files.__main__ import db_session
+	client, admin = util_accounts.create_test_client_and_user("patrons-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	response = client.get("/patrons")
+	assert response.status_code == 200
+
+
+def test_log_id_route():
+	"""Test GET /log/<id> route"""
+	client = util_accounts.create_logged_off_client()
+
+	# Try to view a log entry (may not exist)
+	response = client.get("/log/1")
+	assert response.status_code in [200, 404]
+
+
+def test_settings_security_get():
+	"""Test GET /settings/security route"""
+	client, user = util_accounts.create_test_client_and_user("sec-user")
+
+	response = client.get("/settings/security")
+	assert response.status_code == 200

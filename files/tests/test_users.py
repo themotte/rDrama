@@ -1035,3 +1035,53 @@ def test_views_route():
 
 	response = client.get("/views")
 	assert response.status_code == 200
+
+
+def test_follow_user():
+	"""Test POST /follow/<username> route"""
+	client1, user1 = util_accounts.create_test_client_and_user("follower")
+	client2, user2 = util_accounts.create_test_client_and_user("followee")
+
+	response, _ = util.post_with_formkey(client1, f"/follow/{user2.username}", data={})
+	assert response.status_code in [200, 302]
+
+
+def test_unfollow_user():
+	"""Test POST /unfollow/<username> route"""
+	client1, user1 = util_accounts.create_test_client_and_user("unfollower")
+	client2, user2 = util_accounts.create_test_client_and_user("unfollowee")
+
+	# First follow
+	util.post_with_formkey(client1, f"/follow/{user2.username}", data={})
+
+	# Then unfollow
+	response, _ = util.post_with_formkey(client1, f"/unfollow/{user2.username}", data={})
+	assert response.status_code in [200, 302]
+
+
+def test_user_message_route():
+	"""Test POST /@<username>/message route"""
+	client1, sender = util_accounts.create_test_client_and_user("sender")
+	client2, recipient = util_accounts.create_test_client_and_user("recipient")
+
+	response, _ = util.post_with_formkey(
+		client1, f"/@{recipient.username}/message",
+		data={"message": "Test message"}
+	)
+	assert response.status_code in [200, 302, 400]
+
+
+def test_user_saved_posts():
+	"""Test GET /@<username>/saved/posts route"""
+	client, user = util_accounts.create_test_client_and_user("saved-user")
+
+	response = client.get(f"/@{user.username}/saved/posts")
+	assert response.status_code == 200
+
+
+def test_user_saved_comments():
+	"""Test GET /@<username>/saved/comments route"""
+	client, user = util_accounts.create_test_client_and_user("saved-comm-user")
+
+	response = client.get(f"/@{user.username}/saved/comments")
+	assert response.status_code == 200
