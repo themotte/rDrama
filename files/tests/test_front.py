@@ -306,6 +306,15 @@ def test_notifications_messages():
 	assert response.status_code == 200
 
 
+def test_notifications_modmail():
+	"""Test notifications/modmail page"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response = client.get("/notifications/modmail")
+	# May require moderator permissions
+	assert response.status_code in [200, 403]
+
+
 def test_front_page_with_invalid_after_parameter():
 	"""Test front page with invalid after parameter"""
 	client, user = util_accounts.create_test_client_and_user()

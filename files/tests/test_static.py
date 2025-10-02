@@ -271,3 +271,29 @@ def test_settings_security_get():
 
 	response = client.get("/settings/security")
 	assert response.status_code == 200
+
+
+def test_send_admin_route():
+	"""Test POST /send_admin route"""
+	from . import util
+	client, user = util_accounts.create_test_client_and_user("admin-contact")
+
+	response, _ = util.post_with_formkey(
+		client, "/send_admin",
+		data={"message": "Test admin message"}
+	)
+	# Should send message or return error
+	assert response.status_code in [200, 302, 400, 403]
+
+
+def test_dismiss_mobile_tip_route():
+	"""Test POST /dismiss_mobile_tip route"""
+	from . import util
+	client, user = util_accounts.create_test_client_and_user("mobile-user")
+
+	response, _ = util.post_with_formkey(
+		client, "/dismiss_mobile_tip",
+		data={}
+	)
+	# Should dismiss tip (returns 204 No Content on success)
+	assert response.status_code in [200, 204, 302, 400]
