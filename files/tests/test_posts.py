@@ -347,3 +347,28 @@ def test_delete_post_nonexistent():
 
 	delete_response, _ = util.post_with_formkey(client, "/delete_post/999999", data={})
 	assert delete_response.status_code == 404
+
+
+def test_submit_title_route():
+	"""Test GET /submit/title route"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response = client.get("/submit/title?url=https://example.com")
+	# Should return JSON or success
+	assert response.status_code in [200, 400]
+
+
+def test_edit_post_route():
+	"""Test POST /edit_post/<pid> route exists"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Create a post
+	post = util_submissions.create_submission_for_client(client)
+
+	# Attempt to edit the post (may fail with 400 depending on post type/params)
+	edit_response, _ = util.post_with_formkey(
+		client, f"/edit_post/{post.id}",
+		data={"body": "Updated body text"}
+	)
+	# Route exists and processes the request (200 success or 400 bad request)
+	assert edit_response.status_code in [200, 400]

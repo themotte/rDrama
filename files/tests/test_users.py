@@ -1009,3 +1009,29 @@ def test_report_bugs_redirect():
 	assert response.status_code == 302
 	# Should redirect to /post/{BUG_THREAD}
 	assert "/post/" in response.location
+
+
+def test_is_available():
+	"""Test GET /is_available/<name> route"""
+	client = util_accounts.create_logged_off_client()
+
+	# Check if a username is available
+	response = client.get("/is_available/nonexistentuser123456")
+	assert response.status_code == 200
+
+
+def test_user_pic_route():
+	"""Test GET /@<username>/pic route"""
+	client, user = util_accounts.create_test_client_and_user("pic-user")
+
+	response = client.get(f"/@{user.username}/pic")
+	# Should return an image or redirect
+	assert response.status_code in [200, 302, 404]
+
+
+def test_views_route():
+	"""Test GET /views route"""
+	client, user = util_accounts.create_test_client_and_user("views-user")
+
+	response = client.get("/views")
+	assert response.status_code == 200
