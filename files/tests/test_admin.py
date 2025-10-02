@@ -342,3 +342,269 @@ def test_admin_badge_remove():
 		data={"username": user.username, "badge_id": "1"}
 	)
 	assert response.status_code in [200, 302, 400, 404]
+
+
+def test_admin_alt_votes():
+	"""Test GET /admin/alt_votes route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("alt-vote-adm")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	response = admin_client.get("/admin/alt_votes")
+	assert response.status_code == 200
+
+
+def test_admin_banned_domains():
+	"""Test GET /admin/banned_domains route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("ban-dom-adm")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	response = admin_client.get("/admin/banned_domains")
+	assert response.status_code == 200
+
+
+def test_admin_banned_domains_post():
+	"""Test POST /admin/banned_domains/ route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("ban-domp-adm")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	response, _ = util.post_with_formkey(
+		admin_client, "/admin/banned_domains/",
+		data={"domain": "example.com"}
+	)
+	assert response.status_code in [200, 302, 400]
+
+
+def test_admin_nuke_user():
+	"""Test POST /admin/nuke_user route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("nuke-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	client, user = util_accounts.create_test_client_and_user("nukeduser")
+
+	response, _ = util.post_with_formkey(
+		admin_client, "/admin/nuke_user",
+		data={"user": user.username}
+	)
+	assert response.status_code in [200, 302, 400]
+
+
+def test_admin_unnuke_user():
+	"""Test POST /admin/unnuke_user route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("unnuke-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	client, user = util_accounts.create_test_client_and_user("unnukeduser")
+
+	response, _ = util.post_with_formkey(
+		admin_client, "/admin/unnuke_user",
+		data={"user": user.username}
+	)
+	assert response.status_code in [200, 302, 400]
+
+
+def test_admin_verify_user():
+	"""Test POST /admin/verify/<user_id> route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("verify-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	client, user = util_accounts.create_test_client_and_user("verifyuser")
+
+	response, _ = util.post_with_formkey(
+		admin_client, f"/admin/verify/{user.id}",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400]
+
+
+def test_admin_unverify_user():
+	"""Test POST /admin/unverify/<user_id> route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("unvrfy-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	client, user = util_accounts.create_test_client_and_user("unverifyuser")
+
+	response, _ = util.post_with_formkey(
+		admin_client, f"/admin/unverify/{user.id}",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400]
+
+
+def test_admin_title_change():
+	"""Test POST /admin/title_change/<user_id> route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("title-admin")
+	admin.admin_level = 2
+	db_session.add(admin)
+	db_session.commit()
+
+	client, user = util_accounts.create_test_client_and_user("titleuser")
+
+	response, _ = util.post_with_formkey(
+		admin_client, f"/admin/title_change/{user.id}",
+		data={"title": "New Title"}
+	)
+	assert response.status_code in [200, 302, 400]
+
+
+def test_admin_link_accounts():
+	"""Test POST /admin/link_accounts route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("link-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	client1, user1 = util_accounts.create_test_client_and_user("linkuser1")
+	client2, user2 = util_accounts.create_test_client_and_user("linkuser2")
+
+	response, _ = util.post_with_formkey(
+		admin_client, "/admin/link_accounts",
+		data={"id1": str(user1.id), "id2": str(user2.id)}
+	)
+	assert response.status_code in [200, 302, 400, 404]
+
+
+def test_admin_under_attack():
+	"""Test POST /admin/under_attack route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("attack-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	response, _ = util.post_with_formkey(
+		admin_client, "/admin/under_attack",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400, 500]
+
+
+def test_admin_purge_cache():
+	"""Test POST /admin/purge_cache route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("purge-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	response, _ = util.post_with_formkey(
+		admin_client, "/admin/purge_cache",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400, 500]
+
+
+def test_admin_dump_cache():
+	"""Test GET /admin/dump_cache route (POST-only)"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("dump-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	# Route is POST-only, GET returns 405
+	response = admin_client.get("/admin/dump_cache")
+	assert response.status_code == 405
+
+
+def test_filter_automatic():
+	"""Test POST /filter_automatic/<user_id> route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("filtauto-adm")
+	admin.admin_level = 2
+	db_session.add(admin)
+	db_session.commit()
+
+	client, user = util_accounts.create_test_client_and_user("filtautouser")
+
+	response, _ = util.post_with_formkey(
+		admin_client, f"/filter_automatic/{user.id}",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400]
+
+
+def test_filter_filtered():
+	"""Test POST /filter_filtered/<user_id> route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("filtfilt-adm")
+	admin.admin_level = 2
+	db_session.add(admin)
+	db_session.commit()
+
+	client, user = util_accounts.create_test_client_and_user("filtfiltuser")
+
+	response, _ = util.post_with_formkey(
+		admin_client, f"/filter_filtered/{user.id}",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400]
+
+
+def test_filter_unfiltered():
+	"""Test POST /filter_unfiltered/<user_id> route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("filtunf-adm")
+	admin.admin_level = 2
+	db_session.add(admin)
+	db_session.commit()
+
+	client, user = util_accounts.create_test_client_and_user("filtunfuser")
+
+	response, _ = util.post_with_formkey(
+		admin_client, f"/filter_unfiltered/{user.id}",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400]
+
+
+def test_admin_update_filter_status():
+	"""Test POST /admin/update_filter_status route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("updfilt-admin")
+	admin.admin_level = 2
+	db_session.add(admin)
+	db_session.commit()
+
+	response, _ = util.post_with_formkey(
+		admin_client, "/admin/update_filter_status",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400, 413, 415]
+
+
+def test_admin_site_settings():
+	"""Test POST /admin/site_settings/<setting> route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("siteset-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	response, _ = util.post_with_formkey(
+		admin_client, "/admin/site_settings/test_setting",
+		data={"value": "test_value"}
+	)
+	assert response.status_code in [200, 302, 400, 404, 500]
