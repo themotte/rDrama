@@ -13,7 +13,6 @@ def run_test(args):
             "-m", "pytest",
             "-s",
             "--cov=files",
-            "--cov-report=term-missing",
             "--cov-report=html",
         ] + pytest_args
     ])
