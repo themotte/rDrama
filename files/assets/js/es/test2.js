@@ -1,0 +1,1 @@
+globalThis.MULTIPLE_FILES_WORK = true;

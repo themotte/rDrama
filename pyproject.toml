@@ -40,6 +40,8 @@ webptools = "*"
 supervisor = "*"
 superlance = "*"
 alive-progress = "*"
+flask-assets = "^2.1.0"
+pyyaml = "^6.0.1"
 
 [tool.poetry.group.dev]
 optional = true

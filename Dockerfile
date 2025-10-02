@@ -1,6 +1,6 @@
 ###################################################################
 # Base container
-FROM python:3.10 AS base
+FROM nikolaik/python-nodejs:python3.10-nodejs20 AS base
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -10,6 +10,7 @@ RUN apt update && apt -y upgrade
 WORKDIR /service
 COPY pyproject.toml .
 COPY poetry.lock .
+COPY package.json .
 RUN pip install 'poetry==1.2.2'
 RUN poetry config virtualenvs.create false
 
@@ -27,14 +28,11 @@ CMD [ "bootstrap/init.sh" ]
 FROM base AS build
 
 # Chat compilation framework
-ENV NODE_VERSION=16.13.0
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-ENV NVM_DIRECTORY=/root/.nvm
-RUN . "$NVM_DIRECTORY/nvm.sh" && nvm install ${NODE_VERSION}
-RUN . "$NVM_DIRECTORY/nvm.sh" && nvm use v${NODE_VERSION}
-RUN . "$NVM_DIRECTORY/nvm.sh" && nvm alias default v${NODE_VERSION}
-ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
-RUN npm i -g yarn
+# We're using an image that comes with node and yarn installed
+
+# needed for ES2015 transpilation
+RUN npm install --global @babel/cli
+RUN yarn install
 
 
 ###################################################################

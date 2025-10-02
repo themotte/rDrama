@@ -10,6 +10,11 @@ flask_session/
 .DS_Store
 .venv
 *.pyc
+.webassets-cache
+files/static/gen/
+
+# nodejs
+node_modules
 
 # rdrama Media Runtime Artifacts
 image.*

@@ -1,0 +1,7 @@
+es5-bundle:
+    # paths are relative to "files/static"
+    output: gen/es5.js
+    config:
+        BABEL_PRESETS: "@babel/preset-env"
+    filters: babel
+    contents: "../assets/js/es/*.js"

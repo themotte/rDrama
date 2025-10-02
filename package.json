@@ -1,0 +1,16 @@
+{
+  "name": "rdrama",
+  "version": "1.0.0",
+  "description": "[![Build status](https://img.shields.io/github/actions/workflow/status/TheMotte/rDrama/test.yml?branch=frost)](https://github.com/TheMotte/rDrama/actions?query=workflow%3AE2ETests+branch%3Afrost)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.2",
+    "@babel/preset-env": "^7.23.2"
+  }
+}
