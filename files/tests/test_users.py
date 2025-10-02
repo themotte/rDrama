@@ -170,3 +170,178 @@ def test_follow_already_following():
 	from files.classes import Follow
 	follows = db_session.query(Follow).filter_by(user_id=user1.id, target_id=user2.id).all()
 	assert len(follows) == 1
+
+def test_unfollow_user():
+	"""Test unfollowing a user"""
+	client, user1 = util_accounts.create_test_client_and_user("user1")
+	_, user2 = util_accounts.create_test_client_and_user("user2")
+
+	# Follow user2 first
+	follow_response, _ = util.post_with_formkey(
+		client, f"/follow/{user2.username}",
+		data={}
+	)
+	assert follow_response.status_code == 200
+
+	# Verify follow relationship exists
+	from files.__main__ import db_session
+	from files.classes import Follow
+	follows = db_session.query(Follow).filter_by(user_id=user1.id, target_id=user2.id).all()
+	assert len(follows) == 1
+
+	# Unfollow user2
+	unfollow_response, _ = util.post_with_formkey(
+		client, f"/unfollow/{user2.username}",
+		data={}
+	)
+	assert unfollow_response.status_code == 200
+	assert "User unfollowed!" in unfollow_response.text
+
+	# Verify follow relationship was removed
+	follows = db_session.query(Follow).filter_by(user_id=user1.id, target_id=user2.id).all()
+	assert len(follows) == 0
+
+def test_unfollow_not_following():
+	"""Test unfollowing a user you're not following"""
+	client, user1 = util_accounts.create_test_client_and_user("user1")
+	_, user2 = util_accounts.create_test_client_and_user("user2")
+
+	# Try to unfollow without following first
+	unfollow_response, _ = util.post_with_formkey(
+		client, f"/unfollow/{user2.username}",
+		data={}
+	)
+
+	# Should still return 200 (idempotent)
+	assert unfollow_response.status_code == 200
+
+def test_remove_follower():
+	"""Test removing a follower"""
+	client1, user1 = util_accounts.create_test_client_and_user("user1")
+	client2, user2 = util_accounts.create_test_client_and_user("user2")
+
+	# User2 follows user1
+	follow_response, _ = util.post_with_formkey(
+		client2, f"/follow/{user1.username}",
+		data={}
+	)
+	assert follow_response.status_code == 200
+
+	# Verify follow relationship exists
+	from files.__main__ import db_session
+	from files.classes import Follow
+	follows = db_session.query(Follow).filter_by(user_id=user2.id, target_id=user1.id).all()
+	assert len(follows) == 1
+
+	# User1 removes user2 as a follower
+	remove_response, _ = util.post_with_formkey(
+		client1, f"/remove_follow/{user2.username}",
+		data={}
+	)
+	assert remove_response.status_code == 200
+	assert "Follower removed!" in remove_response.text
+
+	# Verify follow relationship was removed
+	follows = db_session.query(Follow).filter_by(user_id=user2.id, target_id=user1.id).all()
+	assert len(follows) == 0
+
+def test_is_available_valid_name():
+	"""Test username availability check for an available name"""
+	client = util_accounts.create_logged_off_client()
+
+	# Check an available name
+	response = client.get("/is_available/newusername123")
+	assert response.status_code == 200
+
+	import json
+	data = json.loads(response.text)
+	assert data["newusername123"] == True
+
+def test_is_available_taken_name():
+	"""Test username availability check for a taken name"""
+	client, user = util_accounts.create_test_client_and_user("testuser")
+
+	# Check the taken username
+	response = client.get(f"/is_available/{user.username}")
+	assert response.status_code == 200
+
+	import json
+	data = json.loads(response.text)
+	assert data[user.username] == False
+
+def test_is_available_too_short():
+	"""Test username availability check for a name that's too short"""
+	client = util_accounts.create_logged_off_client()
+
+	# Check a name that's too short (less than 3 chars)
+	response = client.get("/is_available/ab")
+	assert response.status_code == 200
+
+	import json
+	data = json.loads(response.text)
+	assert data["ab"] == False
+
+def test_is_available_too_long():
+	"""Test username availability check for a name that's too long"""
+	client = util_accounts.create_logged_off_client()
+
+	# Check a name that's too long (more than 25 chars)
+	long_name = "a" * 26
+	response = client.get(f"/is_available/{long_name}")
+	assert response.status_code == 200
+
+	import json
+	data = json.loads(response.text)
+	assert data[long_name] == False
+
+def test_user_id_redirect():
+	"""Test /id/<int:id> redirects to user profile"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Test redirect to user profile
+	response = client.get(f"/id/{user.id}", follow_redirects=False)
+	assert response.status_code == 302
+	assert f"/@{user.username}" in response.location
+
+def test_redditor_redirect():
+	"""Test /u/<username> redirects to /@<username>"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Test Reddit-style redirect
+	response = client.get(f"/u/{user.username}", follow_redirects=False)
+	assert response.status_code == 302
+	assert f"/@{user.username}" in response.location
+
+def test_followers_list():
+	"""Test /@<username>/followers endpoint"""
+	client1, user1 = util_accounts.create_test_client_and_user("user1")
+	client2, user2 = util_accounts.create_test_client_and_user("user2")
+
+	# User2 follows user1
+	follow_response, _ = util.post_with_formkey(
+		client2, f"/follow/{user1.username}",
+		data={}
+	)
+	assert follow_response.status_code == 200
+
+	# Check user1's followers list
+	response = client1.get(f"/@{user1.username}/followers")
+	assert response.status_code == 200
+	assert user2.username in response.text
+
+def test_following_list():
+	"""Test /@<username>/following endpoint"""
+	client1, user1 = util_accounts.create_test_client_and_user("user1")
+	_, user2 = util_accounts.create_test_client_and_user("user2")
+
+	# User1 follows user2
+	follow_response, _ = util.post_with_formkey(
+		client1, f"/follow/{user2.username}",
+		data={}
+	)
+	assert follow_response.status_code == 200
+
+	# Check user1's following list
+	response = client1.get(f"/@{user1.username}/following")
+	assert response.status_code == 200
+	assert user2.username in response.text
