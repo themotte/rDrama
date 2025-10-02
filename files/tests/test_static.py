@@ -143,3 +143,40 @@ def test_modlog_route():
 
 	response = client.get("/modlog")
 	assert response.status_code == 200
+
+
+def test_api_route():
+	"""Test /api route returns API documentation"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/api")
+	assert response.status_code == 200
+
+
+def test_badges_route():
+	"""Test /badges route requires admin level 2"""
+	from files.__main__ import db_session
+	client, admin = util_accounts.create_test_client_and_user("badges-admin")
+	admin.admin_level = 2
+	db_session.add(admin)
+	db_session.commit()
+
+	response = client.get("/badges")
+	assert response.status_code == 200
+
+
+def test_formatting_route():
+	"""Test /formatting route"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/formatting")
+	assert response.status_code == 200
+
+
+def test_robots_txt_route():
+	"""Test /robots.txt route"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/robots.txt")
+	assert response.status_code == 200
+	assert response.content_type.startswith("text/plain")
