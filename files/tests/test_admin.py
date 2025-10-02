@@ -619,3 +619,41 @@ def test_revert_actions():
 		data={}
 	)
 	assert response.status_code in [200, 302, 400, 403]
+
+
+def test_admin_badge_grant_get():
+	"""Test GET /admin/badge_grant route"""
+	client, admin = util_accounts.create_test_client_and_admin(2)
+
+	response = client.get("/admin/badge_grant")
+	assert response.status_code == 200
+
+
+def test_admin_badge_remove_get():
+	"""Test GET /admin/badge_remove route"""
+	client, admin = util_accounts.create_test_client_and_admin(2)
+
+	response = client.get("/admin/badge_remove")
+	assert response.status_code == 200
+
+
+def test_unsticky_post():
+	"""Test POST /unsticky/<post_id> route"""
+	admin_client, admin = util_accounts.create_test_client_and_admin(2, "unsticky-admin")
+
+	client, user = util_accounts.create_test_client_and_user("unstickypost")
+	post = util_submissions.create_submission_for_client(client)
+
+	# First sticky the post
+	response, _ = util.post_with_formkey(
+		admin_client, f"/sticky/{post.id}",
+		data={}
+	)
+	assert response.status_code == 200
+
+	# Then unsticky it
+	response, _ = util.post_with_formkey(
+		admin_client, f"/unsticky/{post.id}",
+		data={}
+	)
+	assert response.status_code == 200
