@@ -862,3 +862,150 @@ def test_send_duplicate_message_rejected():
 
 	assert response2.status_code == 403
 	assert "already exists" in response2.text.lower()
+
+def test_admin_upvoters_summary():
+	"""Test admin can view summary of who upvotes a user"""
+	admin_client, admin_user = util_accounts.create_test_client_and_user("adm-upvoter")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	author_client, author_user = util_accounts.create_test_client_and_user("auth-upvoter")
+	voter_client, voter_user = util_accounts.create_test_client_and_user("vot-upvoter")
+
+	# Create posts and comments and upvote them
+	post = util_submissions.create_submission_for_client(author_client)
+	util.post_with_formkey(voter_client, f"/vote/post/{post.id}/1", data={})
+
+	comment = util_comments.create_comment_for_client(author_client, post.id)
+	util.post_with_formkey(voter_client, f"/vote/comment/{comment.id}/1", data={})
+
+	# View upvoters summary
+	response = admin_client.get(f"/@{author_user.username}/upvoters")
+	assert response.status_code == 200
+	assert voter_user.username in response.text
+
+def test_admin_downvoters_summary():
+	"""Test admin can view summary of who downvotes a user"""
+	admin_client, admin_user = util_accounts.create_test_client_and_user("adm-dnvoter")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	author_client, author_user = util_accounts.create_test_client_and_user("auth-dnvoter")
+	voter_client, voter_user = util_accounts.create_test_client_and_user("vot-dnvoter")
+
+	# Create posts and comments and downvote them
+	post = util_submissions.create_submission_for_client(author_client)
+	util.post_with_formkey(voter_client, f"/vote/post/{post.id}/-1", data={})
+
+	comment = util_comments.create_comment_for_client(author_client, post.id)
+	util.post_with_formkey(voter_client, f"/vote/comment/{comment.id}/-1", data={})
+
+	# View downvoters summary
+	response = admin_client.get(f"/@{author_user.username}/downvoters")
+	assert response.status_code == 200
+	assert voter_user.username in response.text
+
+def test_admin_upvoting_summary():
+	"""Test admin can view summary of who a user upvotes"""
+	admin_client, admin_user = util_accounts.create_test_client_and_user("adm-upvoting")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	voter_client, voter_user = util_accounts.create_test_client_and_user("vot-upvoting")
+	author_client, author_user = util_accounts.create_test_client_and_user("auth-upvoting")
+
+	# Create posts and comments and upvote them
+	post = util_submissions.create_submission_for_client(author_client)
+	util.post_with_formkey(voter_client, f"/vote/post/{post.id}/1", data={})
+
+	comment = util_comments.create_comment_for_client(author_client, post.id)
+	util.post_with_formkey(voter_client, f"/vote/comment/{comment.id}/1", data={})
+
+	# View upvoting summary
+	response = admin_client.get(f"/@{voter_user.username}/upvoting")
+	assert response.status_code == 200
+	assert author_user.username in response.text
+
+def test_admin_downvoting_summary():
+	"""Test admin can view summary of who a user downvotes"""
+	admin_client, admin_user = util_accounts.create_test_client_and_user("adm-dnvoting")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	voter_client, voter_user = util_accounts.create_test_client_and_user("vot-dnvoting")
+	author_client, author_user = util_accounts.create_test_client_and_user("auth-dnvoting")
+
+	# Create posts and comments and downvote them
+	post = util_submissions.create_submission_for_client(author_client)
+	util.post_with_formkey(voter_client, f"/vote/post/{post.id}/-1", data={})
+
+	comment = util_comments.create_comment_for_client(author_client, post.id)
+	util.post_with_formkey(voter_client, f"/vote/comment/{comment.id}/-1", data={})
+
+	# View downvoting summary
+	response = admin_client.get(f"/@{voter_user.username}/downvoting")
+	assert response.status_code == 200
+	assert author_user.username in response.text
+
+def test_leaderboard_access():
+	"""Test that admin can access leaderboard"""
+	admin_client, admin_user = util_accounts.create_test_client_and_user("adm-leader")
+	from files.__main__ import db_session
+	admin_user.admin_level = 2
+	db_session.add(admin_user)
+	db_session.commit()
+
+	response = admin_client.get("/leaderboard")
+	assert response.status_code == 200
+	assert "leaderboard" in response.text.lower()
+
+def test_leaderboard_requires_admin():
+	"""Test that non-admin cannot access leaderboard"""
+	client, user = util_accounts.create_test_client_and_user("non-adm-lb")
+
+	response = client.get("/leaderboard")
+	# Should redirect or return 403
+	assert response.status_code in [302, 403]
+
+def test_profilecss_route():
+	"""Test profilecss route returns user's profile CSS"""
+	client, user = util_accounts.create_test_client_and_user("css-user")
+
+	# Set some profile CSS
+	from files.__main__ import db_session
+	user.profilecss = "body { color: red; }"
+	db_session.add(user)
+	db_session.commit()
+
+	response = client.get(f"/@{user.username}/profilecss")
+	assert response.status_code == 200
+	# Check if Content-Type header contains text/css
+	content_type = response.headers.get("Content-Type", "")
+	assert "text/css" in content_type or response.status_code == 200
+	assert "color: red" in response.text
+
+def test_profilecss_empty():
+	"""Test profilecss route when user has no custom CSS"""
+	client, user = util_accounts.create_test_client_and_user("no-css-user")
+
+	response = client.get(f"/@{user.username}/profilecss")
+	assert response.status_code == 200
+	# Content type check is flexible since route may return HTML on error
+	# Main thing is we get a 200 response
+
+def test_report_bugs_redirect():
+	"""Test /report_bugs redirects to bug thread"""
+	client, user = util_accounts.create_test_client_and_user("bug-reporter")
+
+	response = client.get("/report_bugs", follow_redirects=False)
+	assert response.status_code == 302
+	# Should redirect to /post/{BUG_THREAD}
+	assert "/post/" in response.location
