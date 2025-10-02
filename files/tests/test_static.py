@@ -28,6 +28,16 @@ def test_logged_out_prevents_loop():
 	assert response.status_code == 400
 
 
+def test_logged_out_with_query_no_path():
+	"""Test /logged_out with query params but no path adds leading slash"""
+	client = util_accounts.create_logged_off_client()
+
+	# /logged_out?redirect=submit should redirect to /?redirect=submit
+	response = client.get("/logged_out?redirect=submit", follow_redirects=False)
+	assert response.status_code == 302
+	assert response.location == "/?redirect=submit"
+
+
 def test_sidebar_route():
 	"""Test /sidebar route returns sidebar template"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -94,4 +104,42 @@ def test_stats_route():
 	response = client.get("/stats")
 	assert response.status_code == 200
 	# Should contain stats content
+	assert response.status_code == 200
+
+
+def test_admins_route():
+	"""Test /admins route returns list of admins"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/admins")
+	assert response.status_code == 200
+	# Should contain admins content
+	assert response.status_code == 200
+
+
+def test_admins_route_as_admin():
+	"""Test /admins route shows different view for level 3+ admins"""
+	client, admin = util_accounts.create_test_client_and_user("adm-test")
+	from files.__main__ import db_session
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	response = client.get("/admins")
+	assert response.status_code == 200
+
+
+def test_log_route():
+	"""Test /log (modlog) route"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/log")
+	assert response.status_code == 200
+
+
+def test_modlog_route():
+	"""Test /modlog route (alias for /log)"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/modlog")
 	assert response.status_code == 200
