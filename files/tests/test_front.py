@@ -237,3 +237,97 @@ def test_all_comments_with_before_and_after():
 
 	response = client.get("/comments?before=9999999999")
 	assert response.status_code == 200
+
+
+def test_notifications_clear():
+	"""Test clearing notifications"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Create a post and comment to generate a notification
+	post = util_submissions.create_submission_for_client(client)
+	util_comments.create_comment_for_client(client, post.id)
+
+	# Clear notifications - use formkey for POST request
+	response, _ = util.post_with_formkey(client, "/clear", data={})
+	assert response.status_code == 200
+
+
+def test_unread_notifications():
+	"""Test getting unread notifications"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Get unread notifications
+	response = client.get("/unread")
+	assert response.status_code == 200
+	assert "data" in response.json
+
+
+def test_notifications_page():
+	"""Test notifications page"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response = client.get("/notifications")
+	assert response.status_code == 200
+
+
+def test_notifications_page_with_pagination():
+	"""Test notifications page with pagination"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response = client.get("/notifications?page=2")
+	assert response.status_code == 200
+
+
+def test_notifications_posts_page():
+	"""Test notifications/posts page"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response = client.get("/notifications/posts")
+	assert response.status_code == 200
+
+
+def test_notifications_posts_with_pagination():
+	"""Test notifications/posts page with pagination to hit read status tracking"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Test pagination
+	response = client.get("/notifications/posts?page=1")
+	assert response.status_code == 200
+
+	response = client.get("/notifications/posts?page=2")
+	assert response.status_code == 200
+
+
+def test_notifications_messages():
+	"""Test notifications/messages page"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response = client.get("/notifications/messages")
+	assert response.status_code == 200
+
+
+def test_front_page_with_invalid_after_parameter():
+	"""Test front page with invalid after parameter"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Invalid after parameter should be handled gracefully
+	response = client.get("/?after=invalid")
+	assert response.status_code == 200  # Should default to 0
+
+
+def test_front_page_with_invalid_before_parameter():
+	"""Test front page with invalid before parameter"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Invalid before parameter should be handled gracefully
+	response = client.get("/?before=invalid")
+	assert response.status_code == 200  # Should default to 0
+
+
+def test_changelog_invalid_page():
+	"""Test changelog with invalid page parameter"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Invalid page should default to 1
+	response = client.get("/changelog?page=invalid")
+	assert response.status_code == 200
