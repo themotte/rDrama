@@ -422,10 +422,7 @@ def test_admin_vote_info_get_no_link():
 	from files.classes import User
 
 	# Create an admin user (admin_level >= 3)
-	client, user = util_accounts.create_test_client_and_user(name="admin1")
-	user_obj = db_session.query(User).filter_by(id=user.id).first()
-	user_obj.admin_level = 3
-	db_session.commit()
+	client, user = util_accounts.create_test_client_and_admin(3, name="admin1")
 
 	# Access the vote info page without a link
 	response = client.get("/votes")
@@ -438,10 +435,7 @@ def test_admin_vote_info_get_with_post():
 	from files.classes import User
 
 	# Create an admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user(name="admin2")
-	admin_obj = db_session.query(User).filter_by(id=admin_user.id).first()
-	admin_obj.admin_level = 3
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, name="admin2")
 
 	# Create a regular user and a post
 	client, user = util_accounts.create_test_client_and_user(name="poster1")
@@ -458,10 +452,7 @@ def test_admin_vote_info_get_with_comment():
 	from files.classes import User
 
 	# Create an admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user(name="admin3")
-	admin_obj = db_session.query(User).filter_by(id=admin_user.id).first()
-	admin_obj.admin_level = 3
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, name="admin3")
 
 	# Create a regular user, post, and comment
 	client, user = util_accounts.create_test_client_and_user(name="commenter1")
@@ -479,10 +470,7 @@ def test_admin_vote_info_invalid_link():
 	from files.classes import User
 
 	# Create an admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user(name="admin4")
-	admin_obj = db_session.query(User).filter_by(id=admin_user.id).first()
-	admin_obj.admin_level = 3
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, name="admin4")
 
 	# Access with invalid link format
 	response = admin_client.get("/votes?link=invalid_format")
@@ -495,10 +483,7 @@ def test_admin_vote_info_nonexistent_post():
 	from files.classes import User
 
 	# Create an admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user(name="admin5")
-	admin_obj = db_session.query(User).filter_by(id=admin_user.id).first()
-	admin_obj.admin_level = 3
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, name="admin5")
 
 	# Access with nonexistent post (get_post raises exception, caught and returns 400)
 	response = admin_client.get("/votes?link=post_999999")
@@ -511,10 +496,7 @@ def test_admin_vote_info_nonexistent_comment():
 	from files.classes import User
 
 	# Create an admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user(name="admin6")
-	admin_obj = db_session.query(User).filter_by(id=admin_user.id).first()
-	admin_obj.admin_level = 3
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, name="admin6")
 
 	# Access with nonexistent comment (get_comment raises exception, caught and returns 400)
 	response = admin_client.get("/votes?link=comment_999999")

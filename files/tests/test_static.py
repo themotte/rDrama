@@ -119,11 +119,7 @@ def test_admins_route():
 
 def test_admins_route_as_admin():
 	"""Test /admins route shows different view for level 3+ admins"""
-	client, admin = util_accounts.create_test_client_and_user("adm-test")
-	from files.__main__ import db_session
-	admin.admin_level = 3
-	db_session.add(admin)
-	db_session.commit()
+	client, admin = util_accounts.create_test_client_and_admin(3, "adm-test")
 
 	response = client.get("/admins")
 	assert response.status_code == 200
@@ -155,11 +151,7 @@ def test_api_route():
 
 def test_badges_route():
 	"""Test /badges route requires admin level 2"""
-	from files.__main__ import db_session
-	client, admin = util_accounts.create_test_client_and_user("badges-admin")
-	admin.admin_level = 2
-	db_session.add(admin)
-	db_session.commit()
+	client, admin = util_accounts.create_test_client_and_admin(2, "badges-admin")
 
 	response = client.get("/badges")
 	assert response.status_code == 200
@@ -216,11 +208,7 @@ def test_banned_route():
 
 def test_blocks_route():
 	"""Test /blocks route requires admin level 2"""
-	from files.__main__ import db_session
-	client, admin = util_accounts.create_test_client_and_user("blocks-admin")
-	admin.admin_level = 2
-	db_session.add(admin)
-	db_session.commit()
+	client, admin = util_accounts.create_test_client_and_admin(2, "blocks-admin")
 
 	response = client.get("/blocks")
 	assert response.status_code == 200
@@ -246,11 +234,7 @@ def test_logged_out_with_path():
 
 def test_patrons_route():
 	"""Test GET /patrons route requires admin level 3"""
-	from files.__main__ import db_session
-	client, admin = util_accounts.create_test_client_and_user("patrons-admin")
-	admin.admin_level = 3
-	db_session.add(admin)
-	db_session.commit()
+	client, admin = util_accounts.create_test_client_and_admin(3, "patrons-admin")
 
 	response = client.get("/patrons")
 	assert response.status_code == 200

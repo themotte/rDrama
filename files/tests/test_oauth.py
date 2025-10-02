@@ -333,12 +333,7 @@ def test_edit_oauth_app_forbidden_for_non_author():
 def test_admin_app_approve():
 	"""Test POST /admin/app/approve/<aid> approves app and generates client_id"""
 	client_user, user = util_accounts.create_test_client_and_user("oauth-user-15")
-	client_admin, admin = util_accounts.create_test_client_and_user("oauth-admin-1")
-
-	# Make admin user an admin
-	admin.admin_level = 3
-	db_session.add(admin)
-	db_session.commit()
+	client_admin, admin = util_accounts.create_test_client_and_admin(3, "oauth-admin-1")
 
 	# User creates an app
 	app = OauthApp(
@@ -373,12 +368,7 @@ def test_admin_app_approve():
 def test_admin_app_revoke():
 	"""Test POST /admin/app/revoke/<aid> revokes and deletes app"""
 	client_user, user = util_accounts.create_test_client_and_user("oauth-user-16")
-	client_admin, admin = util_accounts.create_test_client_and_user("oauth-admin-2")
-
-	# Make admin user an admin
-	admin.admin_level = 2
-	db_session.add(admin)
-	db_session.commit()
+	client_admin, admin = util_accounts.create_test_client_and_admin(2, "oauth-admin-2")
 
 	# User creates an app
 	app = OauthApp(
@@ -409,12 +399,7 @@ def test_admin_app_revoke():
 def test_admin_app_reject():
 	"""Test POST /admin/app/reject/<aid> rejects and deletes app"""
 	client_user, user = util_accounts.create_test_client_and_user("oauth-user-17")
-	client_admin, admin = util_accounts.create_test_client_and_user("oauth-admin-3")
-
-	# Make admin user an admin
-	admin.admin_level = 2
-	db_session.add(admin)
-	db_session.commit()
+	client_admin, admin = util_accounts.create_test_client_and_admin(2, "oauth-admin-3")
 
 	# User creates an app
 	app = OauthApp(
@@ -444,12 +429,7 @@ def test_admin_app_reject():
 def test_admin_apps_list():
 	"""Test GET /admin/apps shows all apps"""
 	client_user, user = util_accounts.create_test_client_and_user("oauth-user-18")
-	client_admin, admin = util_accounts.create_test_client_and_user("oauth-admin-4")
-
-	# Make admin user an admin
-	admin.admin_level = 2
-	db_session.add(admin)
-	db_session.commit()
+	client_admin, admin = util_accounts.create_test_client_and_admin(2, "oauth-admin-4")
 
 	# Create a couple apps
 	app1 = OauthApp(
@@ -546,10 +526,7 @@ def test_admin_app_view():
 	from files.__main__ import db_session
 	from files.classes import OauthApp
 
-	client, admin = util_accounts.create_test_client_and_user("oauth-admin")
-	admin.admin_level = 2
-	db_session.add(admin)
-	db_session.commit()
+	client, admin = util_accounts.create_test_client_and_admin(2, "oauth-admin")
 
 	# Create an app
 	_, user = util_accounts.create_test_client_and_user("app-owner")
@@ -573,10 +550,7 @@ def test_admin_app_comments():
 	from files.__main__ import db_session
 	from files.classes import OauthApp
 
-	client, admin = util_accounts.create_test_client_and_user("oauth-admin2")
-	admin.admin_level = 2
-	db_session.add(admin)
-	db_session.commit()
+	client, admin = util_accounts.create_test_client_and_admin(2, "oauth-admin2")
 
 	# Create an app
 	_, user = util_accounts.create_test_client_and_user("app-owner2")

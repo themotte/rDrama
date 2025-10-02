@@ -25,11 +25,7 @@ def ensure_admin_account(setup_test_environment):
 	# Create admin account if none exists
 	if not admin:
 		# Use the standard account creation function
-		client, user = util_accounts.create_test_client_and_user(name="admin")
-		# Promote to admin
-		user.admin_level = 3
-		db_session.add(user)
-		db_session.commit()
+		client, user = util_accounts.create_test_client_and_admin(3, name="admin")
 
 	yield
 

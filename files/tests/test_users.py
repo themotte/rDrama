@@ -426,11 +426,7 @@ def test_user_posts_page_pagination():
 def test_admin_upvoters_page():
 	"""Test admin can view /@<username>/upvoters page"""
 	# Create admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "admin")
 
 	# Create regular user with a post
 	client, user = util_accounts.create_test_client_and_user("regular")
@@ -451,11 +447,7 @@ def test_admin_upvoters_page():
 def test_admin_downvoters_page():
 	"""Test admin can view /@<username>/downvoters page"""
 	# Create admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "admin")
 
 	# Create regular user with a post
 	client, user = util_accounts.create_test_client_and_user("regular")
@@ -477,11 +469,7 @@ def test_admin_downvoters_page():
 def test_admin_upvoting_page():
 	"""Test admin can view /@<username>/upvoting page (who user upvotes)"""
 	# Create admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "admin")
 
 	# Create user who will upvote something
 	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
@@ -504,11 +492,7 @@ def test_admin_upvoting_page():
 def test_admin_downvoting_page():
 	"""Test admin can view /@<username>/downvoting page (who user downvotes)"""
 	# Create admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "admin")
 
 	# Create user who will downvote something
 	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
@@ -540,11 +524,7 @@ def test_non_admin_cannot_view_upvoters():
 def test_admin_upvoters_posts_drilldown():
 	"""Test admin can drill down into specific posts upvoted by a user"""
 	# Create admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "admin")
 
 	# Create author with a post
 	author_client, author_user = util_accounts.create_test_client_and_user("author")
@@ -562,11 +542,7 @@ def test_admin_upvoters_posts_drilldown():
 def test_admin_upvoters_comments_drilldown():
 	"""Test admin can drill down into specific comments upvoted by a user"""
 	# Create admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "admin")
 
 	# Create author with a post and comment
 	author_client, author_user = util_accounts.create_test_client_and_user("author")
@@ -585,11 +561,7 @@ def test_admin_upvoters_comments_drilldown():
 def test_admin_upvoting_posts_drilldown():
 	"""Test admin can drill down into specific posts a user upvoted"""
 	# Create admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "admin")
 
 	# Create voter user
 	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
@@ -609,11 +581,7 @@ def test_admin_upvoting_posts_drilldown():
 def test_admin_upvoting_comments_drilldown():
 	"""Test admin can drill down into specific comments a user upvoted"""
 	# Create admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "admin")
 
 	# Create voter user
 	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
@@ -634,11 +602,7 @@ def test_admin_upvoting_comments_drilldown():
 def test_admin_downvoters_posts_drilldown():
 	"""Test admin can drill down into specific posts downvoted by a user"""
 	# Create admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "admin")
 
 	# Create author with a post
 	author_client, author_user = util_accounts.create_test_client_and_user("author")
@@ -656,11 +620,7 @@ def test_admin_downvoters_posts_drilldown():
 def test_admin_downvoters_comments_drilldown():
 	"""Test admin can drill down into specific comments downvoted by a user"""
 	# Create admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "admin")
 
 	# Create author with a post and comment
 	author_client, author_user = util_accounts.create_test_client_and_user("author")
@@ -679,11 +639,7 @@ def test_admin_downvoters_comments_drilldown():
 def test_admin_downvoting_posts_drilldown():
 	"""Test admin can drill down into specific posts a user downvoted"""
 	# Create admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "admin")
 
 	# Create voter user
 	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
@@ -703,11 +659,7 @@ def test_admin_downvoting_posts_drilldown():
 def test_admin_downvoting_comments_drilldown():
 	"""Test admin can drill down into specific comments a user downvoted"""
 	# Create admin user
-	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "admin")
 
 	# Create voter user
 	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
@@ -865,11 +817,7 @@ def test_send_duplicate_message_rejected():
 
 def test_admin_upvoters_summary():
 	"""Test admin can view summary of who upvotes a user"""
-	admin_client, admin_user = util_accounts.create_test_client_and_user("adm-upvoter")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "adm-upvoter")
 
 	author_client, author_user = util_accounts.create_test_client_and_user("auth-upvoter")
 	voter_client, voter_user = util_accounts.create_test_client_and_user("vot-upvoter")
@@ -888,11 +836,7 @@ def test_admin_upvoters_summary():
 
 def test_admin_downvoters_summary():
 	"""Test admin can view summary of who downvotes a user"""
-	admin_client, admin_user = util_accounts.create_test_client_and_user("adm-dnvoter")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "adm-dnvoter")
 
 	author_client, author_user = util_accounts.create_test_client_and_user("auth-dnvoter")
 	voter_client, voter_user = util_accounts.create_test_client_and_user("vot-dnvoter")
@@ -911,11 +855,7 @@ def test_admin_downvoters_summary():
 
 def test_admin_upvoting_summary():
 	"""Test admin can view summary of who a user upvotes"""
-	admin_client, admin_user = util_accounts.create_test_client_and_user("adm-upvoting")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "adm-upvoting")
 
 	voter_client, voter_user = util_accounts.create_test_client_and_user("vot-upvoting")
 	author_client, author_user = util_accounts.create_test_client_and_user("auth-upvoting")
@@ -934,11 +874,7 @@ def test_admin_upvoting_summary():
 
 def test_admin_downvoting_summary():
 	"""Test admin can view summary of who a user downvotes"""
-	admin_client, admin_user = util_accounts.create_test_client_and_user("adm-dnvoting")
-	from files.__main__ import db_session
-	admin_user.admin_level = 3
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(3, "adm-dnvoting")
 
 	voter_client, voter_user = util_accounts.create_test_client_and_user("vot-dnvoting")
 	author_client, author_user = util_accounts.create_test_client_and_user("auth-dnvoting")
@@ -957,11 +893,7 @@ def test_admin_downvoting_summary():
 
 def test_leaderboard_access():
 	"""Test that admin can access leaderboard"""
-	admin_client, admin_user = util_accounts.create_test_client_and_user("adm-leader")
-	from files.__main__ import db_session
-	admin_user.admin_level = 2
-	db_session.add(admin_user)
-	db_session.commit()
+	admin_client, admin_user = util_accounts.create_test_client_and_admin(2, "adm-leader")
 
 	response = admin_client.get("/leaderboard")
 	assert response.status_code == 200

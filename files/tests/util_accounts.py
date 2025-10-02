@@ -62,6 +62,27 @@ def create_test_client_and_user(name="user"):
 	return client, user
 
 
+@lru_cache(maxsize=None)
+def create_test_client_and_admin(admin_level, name="admin"):
+	"""Create a test client with a newly registered admin user account.
+
+	Args:
+		admin_level: Admin level to set (1-3, required)
+		name: Base name for the admin user (default: "admin")
+
+	Returns:
+		Tuple of (client, admin_user) where admin_user has admin_level set
+	"""
+	client, user = create_test_client_and_user(name)
+
+	# Set admin level
+	user.admin_level = admin_level
+	db_session.add(user)
+	db_session.commit()
+
+	return client, user
+
+
 def create_logged_off_client():
 	"""Create a test client without authentication."""
 	return app.test_client()

@@ -30,10 +30,7 @@ def test_submission_comment_count():
 		5. submission.comment_count goes down by 1. Only Bob and admins can see the comment.
 	"""
 	db = db_session()
-	alice_client, alice = util_accounts.create_test_client_and_user('Alice')
-	alice.admin_level = 2
-	db.add(alice)
-	db.commit()
+	alice_client, alice = util_accounts.create_test_client_and_admin(2, 'Alice')
 
 	bob_client, bob = util_accounts.create_test_client_and_user('Bob')
 	carol_client, carol = util_accounts.create_test_client_and_user('Carol')
