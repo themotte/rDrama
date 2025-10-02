@@ -87,6 +87,33 @@ Tests are located in `files/tests/` and use pytest. Run all tests with:
 
 Key test fixtures are defined in `files/tests/fixture_*.py` files.
 
+### Important Testing Patterns
+
+1. **SQLAlchemy Session Expiration**: After making HTTP requests in tests, database objects become detached from the session. To verify database changes after an HTTP request, **re-query the object** using `db_session.query(Model).get(id)` or `db_session.query(Model).filter_by(...).first()` instead of using `db_session.refresh(obj)`.
+
+   ```python
+   # ❌ WRONG - object is detached after HTTP request
+   response, _ = util.post_with_formkey(client, f"/delete/comment/{comment.id}", data={})
+   db_session.refresh(comment)  # This will fail with InvalidRequestError
+
+   # ✅ CORRECT - re-query the object
+   response, _ = util.post_with_formkey(client, f"/delete/comment/{comment.id}", data={})
+   comment_after = db_session.query(Comment).get(comment.id)
+   assert comment_after.state_user_deleted_utc is not None
+   ```
+
+2. **CSRF Protection (formkey)**: All POST requests in the application require a CSRF token called `formkey`. In tests, use `util.post_with_formkey()` helper function instead of `client.post()` directly:
+
+   ```python
+   # ❌ WRONG - missing formkey, will return 302 redirect
+   response = client.post("/delete/comment/123", data={})
+
+   # ✅ CORRECT - automatically fetches and includes formkey
+   response, _ = util.post_with_formkey(client, "/delete/comment/123", data={})
+   ```
+
+   The `post_with_formkey()` helper automatically fetches a page (typically `/submit`) to extract the session's formkey, then includes it in the POST request data.
+
 ## Development Environment
 
 The application uses environment variables for configuration. These can be set in:
