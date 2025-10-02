@@ -536,3 +536,191 @@ def test_non_admin_cannot_view_upvoters():
 	# Try to view upvoters page
 	response = client.get(f"/@{user.username}/upvoters")
 	assert response.status_code == 403
+
+def test_admin_upvoters_posts_drilldown():
+	"""Test admin can drill down into specific posts upvoted by a user"""
+	# Create admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	# Create author with a post
+	author_client, author_user = util_accounts.create_test_client_and_user("author")
+	post = util_submissions.create_submission_for_client(author_client)
+
+	# Create voter who upvotes the post
+	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
+	util.post_with_formkey(voter_client, f"/vote/post/{post.id}/1", data={})
+
+	# Admin drills down to see specific posts by author that voter upvoted
+	response = admin_client.get(f"/@{author_user.username}/upvoters/{voter_user.id}/posts")
+	assert response.status_code == 200
+	assert post.title in response.text
+
+def test_admin_upvoters_comments_drilldown():
+	"""Test admin can drill down into specific comments upvoted by a user"""
+	# Create admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	# Create author with a post and comment
+	author_client, author_user = util_accounts.create_test_client_and_user("author")
+	post = util_submissions.create_submission_for_client(author_client)
+	comment = util_comments.create_comment_for_client(author_client, post.id)
+
+	# Create voter who upvotes the comment
+	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
+	util.post_with_formkey(voter_client, f"/vote/comment/{comment.id}/1", data={})
+
+	# Admin drills down to see specific comments by author that voter upvoted
+	response = admin_client.get(f"/@{author_user.username}/upvoters/{voter_user.id}/comments")
+	assert response.status_code == 200
+	assert comment.body in response.text
+
+def test_admin_upvoting_posts_drilldown():
+	"""Test admin can drill down into specific posts a user upvoted"""
+	# Create admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	# Create voter user
+	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
+
+	# Create author with a post
+	author_client, author_user = util_accounts.create_test_client_and_user("author")
+	post = util_submissions.create_submission_for_client(author_client)
+
+	# Voter upvotes the post
+	util.post_with_formkey(voter_client, f"/vote/post/{post.id}/1", data={})
+
+	# Admin drills down to see specific posts by author that voter upvoted
+	response = admin_client.get(f"/@{voter_user.username}/upvoting/{author_user.id}/posts")
+	assert response.status_code == 200
+	assert post.title in response.text
+
+def test_admin_upvoting_comments_drilldown():
+	"""Test admin can drill down into specific comments a user upvoted"""
+	# Create admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	# Create voter user
+	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
+
+	# Create author with a post and comment
+	author_client, author_user = util_accounts.create_test_client_and_user("author")
+	post = util_submissions.create_submission_for_client(author_client)
+	comment = util_comments.create_comment_for_client(author_client, post.id)
+
+	# Voter upvotes the comment
+	util.post_with_formkey(voter_client, f"/vote/comment/{comment.id}/1", data={})
+
+	# Admin drills down to see specific comments by author that voter upvoted
+	response = admin_client.get(f"/@{voter_user.username}/upvoting/{author_user.id}/comments")
+	assert response.status_code == 200
+	assert comment.body in response.text
+
+def test_admin_downvoters_posts_drilldown():
+	"""Test admin can drill down into specific posts downvoted by a user"""
+	# Create admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	# Create author with a post
+	author_client, author_user = util_accounts.create_test_client_and_user("author")
+	post = util_submissions.create_submission_for_client(author_client)
+
+	# Create voter who downvotes the post
+	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
+	util.post_with_formkey(voter_client, f"/vote/post/{post.id}/-1", data={})
+
+	# Admin drills down to see specific posts by author that voter downvoted
+	response = admin_client.get(f"/@{author_user.username}/downvoters/{voter_user.id}/posts")
+	assert response.status_code == 200
+	assert post.title in response.text
+
+def test_admin_downvoters_comments_drilldown():
+	"""Test admin can drill down into specific comments downvoted by a user"""
+	# Create admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	# Create author with a post and comment
+	author_client, author_user = util_accounts.create_test_client_and_user("author")
+	post = util_submissions.create_submission_for_client(author_client)
+	comment = util_comments.create_comment_for_client(author_client, post.id)
+
+	# Create voter who downvotes the comment
+	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
+	util.post_with_formkey(voter_client, f"/vote/comment/{comment.id}/-1", data={})
+
+	# Admin drills down to see specific comments by author that voter downvoted
+	response = admin_client.get(f"/@{author_user.username}/downvoters/{voter_user.id}/comments")
+	assert response.status_code == 200
+	assert comment.body in response.text
+
+def test_admin_downvoting_posts_drilldown():
+	"""Test admin can drill down into specific posts a user downvoted"""
+	# Create admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	# Create voter user
+	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
+
+	# Create author with a post
+	author_client, author_user = util_accounts.create_test_client_and_user("author")
+	post = util_submissions.create_submission_for_client(author_client)
+
+	# Voter downvotes the post
+	util.post_with_formkey(voter_client, f"/vote/post/{post.id}/-1", data={})
+
+	# Admin drills down to see specific posts by author that voter downvoted
+	response = admin_client.get(f"/@{voter_user.username}/downvoting/{author_user.id}/posts")
+	assert response.status_code == 200
+	assert post.title in response.text
+
+def test_admin_downvoting_comments_drilldown():
+	"""Test admin can drill down into specific comments a user downvoted"""
+	# Create admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	# Create voter user
+	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
+
+	# Create author with a post and comment
+	author_client, author_user = util_accounts.create_test_client_and_user("author")
+	post = util_submissions.create_submission_for_client(author_client)
+	comment = util_comments.create_comment_for_client(author_client, post.id)
+
+	# Voter downvotes the comment
+	util.post_with_formkey(voter_client, f"/vote/comment/{comment.id}/-1", data={})
+
+	# Admin drills down to see specific comments by author that voter downvoted
+	response = admin_client.get(f"/@{voter_user.username}/downvoting/{author_user.id}/comments")
+	assert response.status_code == 200
+	assert comment.body in response.text
