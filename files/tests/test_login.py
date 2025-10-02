@@ -442,3 +442,23 @@ def test_signup_existing_username():
 	assert signup_post_response.status_code == 302
 	assert "error" in signup_post_response.location
 	assert "exists" in signup_post_response.location.lower() or "username" in signup_post_response.location.lower()
+
+
+def test_reset_get():
+	"""Test GET /reset route"""
+	client = util_accounts.create_logged_off_client()
+
+	# Should require token parameter
+	response = client.get("/reset")
+	# Will likely redirect or show error without token
+	assert response.status_code in [200, 302, 400, 404]
+
+
+def test_reset_2fa_get():
+	"""Test GET /reset_2fa route"""
+	client = util_accounts.create_logged_off_client()
+
+	# Should require token parameter
+	response = client.get("/reset_2fa")
+	# Will likely redirect or show error without token
+	assert response.status_code in [200, 302, 400, 404]

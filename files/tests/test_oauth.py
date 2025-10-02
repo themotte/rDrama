@@ -538,3 +538,57 @@ def test_reroll_oauth_tokens_forbidden_for_non_author():
 	# Verify client_id did not change
 	app = db_session.query(OauthApp).filter_by(id=app_id).first()
 	assert app.client_id == original_client_id
+
+
+def test_admin_app_view():
+	"""Test GET /admin/app/<aid> route"""
+	import secrets
+	from files.__main__ import db_session
+	from files.classes import OauthApp
+
+	client, admin = util_accounts.create_test_client_and_user("oauth-admin")
+	admin.admin_level = 2
+	db_session.add(admin)
+	db_session.commit()
+
+	# Create an app
+	_, user = util_accounts.create_test_client_and_user("app-owner")
+	app = OauthApp(
+		app_name="Admin Test App",
+		redirect_uri="http://localhost/callback",
+		author_id=user.id,
+		description="Test app for admin view",
+		client_id=secrets.token_urlsafe(64)[:64]
+	)
+	db_session.add(app)
+	db_session.commit()
+
+	response = client.get(f"/admin/app/{app.id}")
+	assert response.status_code == 200
+
+
+def test_admin_app_comments():
+	"""Test GET /admin/app/<aid>/comments route"""
+	import secrets
+	from files.__main__ import db_session
+	from files.classes import OauthApp
+
+	client, admin = util_accounts.create_test_client_and_user("oauth-admin2")
+	admin.admin_level = 2
+	db_session.add(admin)
+	db_session.commit()
+
+	# Create an app
+	_, user = util_accounts.create_test_client_and_user("app-owner2")
+	app = OauthApp(
+		app_name="Admin Test App 2",
+		redirect_uri="http://localhost/callback",
+		author_id=user.id,
+		description="Test app 2 for admin comments",
+		client_id=secrets.token_urlsafe(64)[:64]
+	)
+	db_session.add(app)
+	db_session.commit()
+
+	response = client.get(f"/admin/app/{app.id}/comments")
+	assert response.status_code == 200

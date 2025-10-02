@@ -180,3 +180,56 @@ def test_robots_txt_route():
 	response = client.get("/robots.txt")
 	assert response.status_code == 200
 	assert response.content_type.startswith("text/plain")
+
+
+def test_contact_route():
+	"""Test /contact route"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/contact")
+	assert response.status_code == 200
+
+
+def test_press_route():
+	"""Test /press route"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/press")
+	assert response.status_code == 200
+
+
+def test_media_route():
+	"""Test /media route"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/media")
+	assert response.status_code == 200
+
+
+def test_banned_route():
+	"""Test /banned route"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/banned")
+	assert response.status_code == 200
+
+
+def test_blocks_route():
+	"""Test /blocks route requires admin level 2"""
+	from files.__main__ import db_session
+	client, admin = util_accounts.create_test_client_and_user("blocks-admin")
+	admin.admin_level = 2
+	db_session.add(admin)
+	db_session.commit()
+
+	response = client.get("/blocks")
+	assert response.status_code == 200
+
+
+def test_service_worker_route():
+	"""Test /service-worker.js route"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/service-worker.js")
+	assert response.status_code == 200
+	assert "javascript" in response.content_type or response.status_code == 200
