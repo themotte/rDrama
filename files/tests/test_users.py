@@ -1,6 +1,7 @@
 from . import util_accounts
 from . import util
 from . import util_submissions
+from . import util_comments
 
 def test_profilecss_endpoint():
 	"""Test the /@<username>/profilecss endpoint"""
@@ -345,3 +346,79 @@ def test_following_list():
 	response = client1.get(f"/@{user1.username}/following")
 	assert response.status_code == 200
 	assert user2.username in response.text
+
+def test_saved_posts_view():
+	"""Test viewing saved posts"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Create and save a post
+	post = util_submissions.create_submission_for_client(client)
+
+	# Save the post
+	from files.__main__ import db_session
+	from files.classes import SaveRelationship
+	save = SaveRelationship(user_id=user.id, submission_id=post.id)
+	db_session.add(save)
+	db_session.commit()
+
+	# View saved posts
+	response = client.get(f"/@{user.username}/saved/posts")
+	assert response.status_code == 200
+	assert post.title in response.text
+
+def test_saved_comments_view():
+	"""Test viewing saved comments"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Create a post and comment
+	post = util_submissions.create_submission_for_client(client)
+	comment = util_comments.create_comment_for_client(client, post.id)
+
+	# Save the comment
+	from files.__main__ import db_session
+	from files.classes import CommentSaveRelationship
+	save = CommentSaveRelationship(user_id=user.id, comment_id=comment.id)
+	db_session.add(save)
+	db_session.commit()
+
+	# View saved comments
+	response = client.get(f"/@{user.username}/saved/comments")
+	assert response.status_code == 200
+	assert comment.body in response.text
+
+def test_user_posts_page():
+	"""Test /@<username>/posts endpoint"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Create a post
+	post = util_submissions.create_submission_for_client(client)
+
+	# View user's posts page
+	response = client.get(f"/@{user.username}/posts")
+	assert response.status_code == 200
+	assert post.title in response.text
+
+def test_user_comments_page():
+	"""Test /@<username>/ endpoint (comments page)"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Create a post and comment
+	post = util_submissions.create_submission_for_client(client)
+	comment = util_comments.create_comment_for_client(client, post.id)
+
+	# View user's comments page
+	response = client.get(f"/@{user.username}/")
+	assert response.status_code == 200
+	assert comment.body in response.text
+
+def test_user_posts_page_pagination():
+	"""Test /@<username>/posts pagination"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Create a post
+	post = util_submissions.create_submission_for_client(client)
+
+	# View user's posts page with pagination
+	response = client.get(f"/@{user.username}/posts?page=1")
+	assert response.status_code == 200
+	assert post.title in response.text
