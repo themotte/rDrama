@@ -315,8 +315,16 @@ class User(CreatedBase):
 		return g.db.query(Badge).filter_by(user_id=self.id, badge_id=badge_id).one_or_none()
 
 	def hash_password(self, password):
-		return generate_password_hash(
-			password, method='pbkdf2:sha512', salt_length=8)
+		# Use faster hashing with fewer iterations during tests
+		# PBKDF2 default is 260000 iterations, we use 1000 for tests
+		import os
+		if os.environ.get('RDRAMA_TESTING') == '1':
+			# Fast hashing for tests (~2ms instead of ~390ms)
+			method = 'pbkdf2:sha512:1000'
+		else:
+			# Secure hashing for production (default 260000 iterations)
+			method = 'pbkdf2:sha512'
+		return generate_password_hash(password, method=method, salt_length=8)
 
 	def verifyPass(self, password):
 		return check_password_hash(self.passhash, password)

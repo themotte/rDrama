@@ -1,8 +1,19 @@
 import pytest
+import os
 
 
 @pytest.fixture(scope="session", autouse=True)
-def ensure_admin_account():
+def setup_test_environment():
+	"""Set up test environment before any tests run"""
+	# Mark that we're in test mode so password hashing can be faster
+	os.environ['RDRAMA_TESTING'] = '1'
+	yield
+	# Clean up after all tests
+	os.environ.pop('RDRAMA_TESTING', None)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def ensure_admin_account(setup_test_environment):
 	"""Ensure an admin account exists before any tests run"""
 	from files.__main__ import db_session, app
 	from files.classes import User
