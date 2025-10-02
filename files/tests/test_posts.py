@@ -408,3 +408,42 @@ def test_is_repost_route():
 		data={"url": "https://example.com/test"}
 	)
 	assert response.status_code in [200, 400]
+
+
+def test_view_post_route():
+	"""Test GET /post/<pid> route"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Create a post
+	post = util_submissions.create_submission_for_client(client)
+
+	# View the post
+	response = client.get(f"/post/{post.id}")
+	assert response.status_code == 200
+	assert post.title in response.text
+
+
+def test_view_post_with_slug_route():
+	"""Test GET /post/<pid>/<anything> route"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Create a post
+	post = util_submissions.create_submission_for_client(client)
+
+	# View the post with a slug
+	response = client.get(f"/post/{post.id}/some-slug-here")
+	assert response.status_code == 200
+	assert post.title in response.text
+
+
+def test_publish_post_route():
+	"""Test POST /publish/<pid> route"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Create a post
+	post = util_submissions.create_submission_for_client(client)
+
+	# Try to publish it (may require specific conditions/draft state)
+	response, _ = util.post_with_formkey(client, f"/publish/{post.id}", data={})
+	# Route exists, may return various status codes depending on post state
+	assert response.status_code in [200, 302, 400, 403]

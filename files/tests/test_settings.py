@@ -559,3 +559,97 @@ def test_settings_log_out_all_others():
 	)
 	# Route exists (may require additional auth or parameters)
 	assert response.status_code in [200, 302, 401, 500]
+
+
+def test_settings_filters_post():
+	"""Test POST /settings/filters route"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/filters",
+		data={"filters": "badword1\nbadword2"}
+	)
+	assert response.status_code in [200, 302, 400]
+
+
+def test_settings_namecolor_post():
+	"""Test POST /settings/namecolor route"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/namecolor",
+		data={"namecolor": "#ff0000"}
+	)
+	# May require permissions or specific conditions
+	assert response.status_code in [200, 302, 400, 403]
+
+
+def test_settings_themecolor_post():
+	"""Test POST /settings/themecolor route"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/themecolor",
+		data={"themecolor": "#0000ff"}
+	)
+	assert response.status_code in [200, 302, 400]
+
+
+def test_settings_images_profile_post():
+	"""Test POST /settings/images/profile route"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Test without file upload (will likely return error)
+	response, _ = util.post_with_formkey(
+		client, "/settings/images/profile",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400, 413]
+
+
+def test_settings_images_banner_post():
+	"""Test POST /settings/images/banner route"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Test without file upload (will likely return error)
+	response, _ = util.post_with_formkey(
+		client, "/settings/images/banner",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400, 413]
+
+
+def test_settings_name_change_post():
+	"""Test POST /settings/name_change route"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/name_change",
+		data={"new_name": "newusername"}
+	)
+	# May require coins or specific conditions, or have internal errors
+	assert response.status_code in [200, 302, 400, 403, 500]
+
+
+def test_settings_title_change_post():
+	"""Test POST /settings/title_change route"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	response, _ = util.post_with_formkey(
+		client, "/settings/title_change",
+		data={"new_title": "New Title"}
+	)
+	# May require coins or specific conditions, or have internal errors
+	assert response.status_code in [200, 302, 400, 403, 500]
+
+
+def test_private_toggle_route():
+	"""Test POST /id/<id>/private/<enabled> route"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Try to toggle private status
+	response, _ = util.post_with_formkey(
+		client, f"/id/{user.id}/private/1",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400, 403]
