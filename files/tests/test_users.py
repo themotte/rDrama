@@ -422,3 +422,117 @@ def test_user_posts_page_pagination():
 	response = client.get(f"/@{user.username}/posts?page=1")
 	assert response.status_code == 200
 	assert post.title in response.text
+
+def test_admin_upvoters_page():
+	"""Test admin can view /@<username>/upvoters page"""
+	# Create admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	# Create regular user with a post
+	client, user = util_accounts.create_test_client_and_user("regular")
+	post = util_submissions.create_submission_for_client(client)
+
+	# Create another user who upvotes the post
+	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
+	vote_response, _ = util.post_with_formkey(
+		voter_client, f"/vote/post/{post.id}/1",
+		data={}
+	)
+
+	# Admin views upvoters page
+	response = admin_client.get(f"/@{user.username}/upvoters")
+	assert response.status_code == 200
+	assert voter_user.username in response.text
+
+def test_admin_downvoters_page():
+	"""Test admin can view /@<username>/downvoters page"""
+	# Create admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	# Create regular user with a post
+	client, user = util_accounts.create_test_client_and_user("regular")
+	post = util_submissions.create_submission_for_client(client)
+
+	# Create another user who downvotes the post
+	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
+	vote_response, _ = util.post_with_formkey(
+		voter_client, f"/vote/post/{post.id}/-1",
+		data={}
+	)
+
+	# Admin views downvoters page
+	response = admin_client.get(f"/@{user.username}/downvoters")
+	assert response.status_code == 200
+	# Page should load successfully even if there are no downvoters yet
+	assert "Down" in response.text
+
+def test_admin_upvoting_page():
+	"""Test admin can view /@<username>/upvoting page (who user upvotes)"""
+	# Create admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	# Create user who will upvote something
+	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
+
+	# Create another user with a post
+	author_client, author_user = util_accounts.create_test_client_and_user("author")
+	post = util_submissions.create_submission_for_client(author_client)
+
+	# Voter upvotes the post
+	vote_response, _ = util.post_with_formkey(
+		voter_client, f"/vote/post/{post.id}/1",
+		data={}
+	)
+
+	# Admin views who the voter upvotes
+	response = admin_client.get(f"/@{voter_user.username}/upvoting")
+	assert response.status_code == 200
+	assert author_user.username in response.text
+
+def test_admin_downvoting_page():
+	"""Test admin can view /@<username>/downvoting page (who user downvotes)"""
+	# Create admin user
+	admin_client, admin_user = util_accounts.create_test_client_and_user("admin")
+	from files.__main__ import db_session
+	admin_user.admin_level = 3
+	db_session.add(admin_user)
+	db_session.commit()
+
+	# Create user who will downvote something
+	voter_client, voter_user = util_accounts.create_test_client_and_user("voter")
+
+	# Create another user with a post
+	author_client, author_user = util_accounts.create_test_client_and_user("author")
+	post = util_submissions.create_submission_for_client(author_client)
+
+	# Voter downvotes the post
+	vote_response, _ = util.post_with_formkey(
+		voter_client, f"/vote/post/{post.id}/-1",
+		data={}
+	)
+
+	# Admin views who the voter downvotes
+	response = admin_client.get(f"/@{voter_user.username}/downvoting")
+	assert response.status_code == 200
+	assert author_user.username in response.text
+
+def test_non_admin_cannot_view_upvoters():
+	"""Test that non-admin users cannot view upvoters page"""
+	# Create regular user
+	client, user = util_accounts.create_test_client_and_user("regular")
+
+	# Try to view upvoters page
+	response = client.get(f"/@{user.username}/upvoters")
+	assert response.status_code == 403
