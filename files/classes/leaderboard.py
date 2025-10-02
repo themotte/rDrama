@@ -65,19 +65,22 @@ class SimpleLeaderboard(Leaderboard):
 			sq_data = self.db.query(sq.c.id, sq.c[self.column.name], sq.c.rank).filter(sq.c.id == self.v.id).limit(1).one()
 			self._v_value:int = sq_data[1]
 			self._v_position:int = sq_data[2]
+		else:
+			self._v_value = None
+			self._v_position = None
 
 	@property
 	def all_users(self) -> list[User]:
 		return self._all_users
-	
+
 	@property
-	def v_position(self) -> int:
+	def v_position(self) -> Optional[int]:
 		return self._v_position
-	
+
 	@property
-	def v_value(self) -> int:
+	def v_value(self) -> Optional[int]:
 		return self._v_value
-	
+
 	@property
 	def value_func(self) -> Callable[[User], int]:
 		return lambda u:getattr(u, self.column.name)
