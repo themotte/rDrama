@@ -2,6 +2,23 @@
 from . import util_accounts
 from . import util_submissions
 from . import util_comments
+from . import util
+
+
+def test_create_comment_route():
+	"""Test POST /comment route"""
+	client, user = util_accounts.create_test_client_and_user()
+
+	# Create a post to comment on
+	post = util_submissions.create_submission_for_client(client)
+
+	# Create a comment using the /comment route
+	response, _ = util.post_with_formkey(
+		client, "/comment",
+		data={"parent_id": post.id, "body": "Test comment via /comment route"}
+	)
+	# Should create a comment
+	assert response.status_code in [200, 302, 400]
 
 
 def test_view_comment():

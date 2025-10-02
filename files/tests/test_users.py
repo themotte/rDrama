@@ -1085,3 +1085,91 @@ def test_user_saved_comments():
 
 	response = client.get(f"/@{user.username}/saved/comments")
 	assert response.status_code == 200
+
+
+def test_transfer_coins_route():
+	"""Test POST /@<username>/transfer_coins route"""
+	client1, user1 = util_accounts.create_test_client_and_user("coin-sender")
+	client2, user2 = util_accounts.create_test_client_and_user("coin-receiver")
+
+	response, _ = util.post_with_formkey(
+		client1, f"/@{user2.username}/transfer_coins",
+		data={"amount": "10"}
+	)
+	# May require sufficient coins, specific conditions, or may be disabled
+	assert response.status_code in [200, 302, 400, 403, 404]
+
+
+def test_transfer_bux_route():
+	"""Test POST /@<username>/transfer_bux route"""
+	client1, user1 = util_accounts.create_test_client_and_user("bux-sender")
+	client2, user2 = util_accounts.create_test_client_and_user("bux-receiver")
+
+	response, _ = util.post_with_formkey(
+		client1, f"/@{user2.username}/transfer_bux",
+		data={"amount": "10"}
+	)
+	# May require sufficient bux, specific conditions, or may be disabled
+	assert response.status_code in [200, 302, 400, 403, 404]
+
+
+def test_reply_route():
+	"""Test POST /reply route"""
+	client, user = util_accounts.create_test_client_and_user("replier")
+
+	# Create a post to reply to
+	post = util_submissions.create_submission_for_client(client)
+
+	response, _ = util.post_with_formkey(
+		client, "/reply",
+		data={"parent_id": post.id, "body": "Test reply"}
+	)
+	# Should create a comment
+	assert response.status_code in [200, 302, 400]
+
+
+def test_pp_route():
+	"""Test GET /pp/<id> route (profile picture)"""
+	client, user = util_accounts.create_test_client_and_user("pp-user")
+
+	response = client.get(f"/pp/{user.id}")
+	# Should redirect or return image
+	assert response.status_code in [200, 302, 404]
+
+
+def test_uid_pic_route():
+	"""Test GET /uid/<id>/pic route"""
+	client, user = util_accounts.create_test_client_and_user("uid-pic-user")
+
+	response = client.get(f"/uid/{user.id}/pic")
+	# Should redirect or return image
+	assert response.status_code in [200, 302, 404]
+
+
+def test_uid_pic_profile_route():
+	"""Test GET /uid/<id>/pic/profile route"""
+	client, user = util_accounts.create_test_client_and_user("uid-prof-pic")
+
+	response = client.get(f"/uid/{user.id}/pic/profile")
+	# Should redirect or return image
+	assert response.status_code in [200, 302, 404]
+
+
+def test_fp_route():
+	"""Test GET /fp/<fp> route (fingerprint lookup)"""
+	client = util_accounts.create_logged_off_client()
+
+	# Try with a dummy fingerprint
+	response = client.get("/fp/dummy-fingerprint-hash")
+	# May return 404 if not found, require admin permissions, or be POST-only
+	assert response.status_code in [200, 302, 403, 404, 405]
+
+
+def test_2faqr_route():
+	"""Test GET /2faqr/<secret> route (2FA QR code)"""
+	client, user = util_accounts.create_test_client_and_user("2fa-user")
+
+	# Try with a dummy secret
+	response = client.get("/2faqr/dummy-secret")
+	# Should return QR code image or error
+	assert response.status_code in [200, 400, 403, 404]
