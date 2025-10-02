@@ -61,10 +61,13 @@ def test_simple_leaderboard_user_not_in_top():
 
 def test_simple_leaderboard_user_in_top():
 	"""Test SimpleLeaderboard when viewing user is in top rankings."""
+	from sqlalchemy import func
+
 	client, user = util_accounts.create_test_client_and_user("lb-top-user")
 
-	# Give user lots of coins to be in top
-	user.coins = 999999
+	# Give user more coins than anyone else to ensure they're #1
+	max_coins = db_session.query(func.max(User.coins)).scalar() or 0
+	user.coins = max_coins + 1000000
 	db_session.commit()
 
 	# Create leaderboard
@@ -72,8 +75,11 @@ def test_simple_leaderboard_user_in_top():
 	users_query = db_session.query(User)
 	lb = SimpleLeaderboard(user, meta, db_session, users_query, User.coins)
 
-	# User should be in all_users
+	# User should be in all_users (top 25) since they have the most coins
 	assert user in lb.all_users
+	# When user is in top rankings, v_position and v_value should be None
+	assert lb.v_position is None
+	assert lb.v_value is None
 
 def test_badge_marsey_leaderboard_badges():
 	"""Test BadgeMarseyLeaderboard with Badge.user_id."""
