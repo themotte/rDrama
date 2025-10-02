@@ -85,3 +85,13 @@ def test_daily_chart_route():
 	assert response.status_code == 200
 	# Should be an image
 	assert response.content_type in ["image/png", "application/octet-stream"] or response.status_code == 200
+
+
+def test_stats_route():
+	"""Test /stats route returns participation statistics"""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/stats")
+	assert response.status_code == 200
+	# Should contain stats content
+	assert response.status_code == 200

@@ -1,4 +1,5 @@
 import calendar
+from datetime import datetime, timezone
 
 import matplotlib.pyplot as plt
 from sqlalchemy import func
@@ -56,10 +57,11 @@ def participation_stats(v):
 	day = int(time.time()) - 86400
 
 	week = int(time.time()) - 604800 # TODO themotte#601 use created_datetimez once all is converted
+	week_datetime = datetime.fromtimestamp(week, tz=timezone.utc)
 	posters = g.db.query(Submission.author_id).distinct(Submission.author_id).filter(Submission.created_utc > week).all()
 	commenters = g.db.query(Comment.author_id).distinct(Comment.author_id).filter(Comment.created_utc > week).all()
-	voters = g.db.query(Vote.user_id).distinct(Vote.user_id).filter(Vote.created_utc > week).all()
-	commentvoters = g.db.query(CommentVote.user_id).distinct(CommentVote.user_id).filter(CommentVote.created_utc > week).all()
+	voters = g.db.query(Vote.user_id).distinct(Vote.user_id).filter(Vote.created_datetimez > week_datetime).all()
+	commentvoters = g.db.query(CommentVote.user_id).distinct(CommentVote.user_id).filter(CommentVote.created_datetimez > week_datetime).all()
 
 	active_users = set(posters) | set(commenters) | set(voters) | set(commentvoters)
 
