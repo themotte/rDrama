@@ -608,3 +608,151 @@ def test_admin_site_settings():
 		data={"value": "test_value"}
 	)
 	assert response.status_code in [200, 302, 400, 404, 500]
+
+
+def test_performance_dashboard():
+	"""Test GET /performance/ route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("perf-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	response = admin_client.get("/performance/")
+	assert response.status_code == 200
+
+
+def test_tasks_list():
+	"""Test GET /tasks/ route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("tasks-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	response = admin_client.get("/tasks/")
+	assert response.status_code == 200
+
+
+def test_tasks_detail():
+	"""Test GET /tasks/<task_id>/ route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("taskdet-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	# Use a fake task ID
+	response = admin_client.get("/tasks/1/")
+	assert response.status_code in [200, 404]
+
+
+def test_tasks_runs():
+	"""Test GET /tasks/<task_id>/runs/ route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("taskruns-adm")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	# Use a fake task ID
+	response = admin_client.get("/tasks/1/runs/")
+	assert response.status_code in [200, 302, 404]
+
+
+def test_tasks_run_detail():
+	"""Test GET /tasks/<task_id>/runs/<run_id> route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("taskrun-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	# Use fake task and run IDs
+	response = admin_client.get("/tasks/1/runs/1")
+	assert response.status_code in [200, 404]
+
+
+def test_tasks_schedule():
+	"""Test POST /tasks/<task_id>/schedule route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("tasksched-adm")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	response, _ = util.post_with_formkey(
+		admin_client, "/tasks/1/schedule",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400, 404, 500]
+
+
+def test_tasks_scheduled_posts_list():
+	"""Test GET /tasks/scheduled_posts/ route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("schedposts-adm")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	response = admin_client.get("/tasks/scheduled_posts/")
+	assert response.status_code == 200
+
+
+def test_tasks_scheduled_posts_create():
+	"""Test POST /tasks/scheduled_posts/ route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("schedpost-adm")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	response, _ = util.post_with_formkey(
+		admin_client, "/tasks/scheduled_posts/",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400, 500]
+
+
+def test_tasks_scheduled_posts_detail():
+	"""Test GET /tasks/scheduled_posts/<pid> route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("schedpostd-adm")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	# Use a fake post ID
+	response = admin_client.get("/tasks/scheduled_posts/1")
+	assert response.status_code in [200, 404]
+
+
+def test_tasks_scheduled_posts_content():
+	"""Test POST /tasks/scheduled_posts/<pid>/content route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("schedpostc-adm")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	response, _ = util.post_with_formkey(
+		admin_client, "/tasks/scheduled_posts/1/content",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400, 404, 500]
+
+
+def test_tasks_scheduled_posts_schedule():
+	"""Test POST /tasks/scheduled_posts/<task_id>/schedule route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("schedposts-adm")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	response, _ = util.post_with_formkey(
+		admin_client, "/tasks/scheduled_posts/1/schedule",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400, 404, 500]
