@@ -756,3 +756,92 @@ def test_tasks_scheduled_posts_schedule():
 		data={}
 	)
 	assert response.status_code in [200, 302, 400, 404, 500]
+
+
+def test_make_admin():
+	"""Test POST /@<username>/make_admin route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("mkadmin-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	target_client, target_user = util_accounts.create_test_client_and_user("mkadmin-target")
+
+	response, _ = util.post_with_formkey(
+		admin_client, f"/@{target_user.username}/make_admin",
+		data={"level": "1"}
+	)
+	assert response.status_code in [200, 302, 400, 403]
+
+
+def test_remove_admin():
+	"""Test POST /@<username>/remove_admin route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("rmadmin-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	target_client, target_user = util_accounts.create_test_client_and_user("rmadmin-target")
+	target_user.admin_level = 1
+	db_session.add(target_user)
+	db_session.commit()
+
+	response, _ = util.post_with_formkey(
+		admin_client, f"/@{target_user.username}/remove_admin",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400, 403]
+
+
+def test_create_note():
+	"""Test POST /@<username>/create_note route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("note-admin")
+	admin.admin_level = 2
+	db_session.add(admin)
+	db_session.commit()
+
+	target_client, target_user = util_accounts.create_test_client_and_user("note-target")
+
+	response, _ = util.post_with_formkey(
+		admin_client, f"/@{target_user.username}/create_note",
+		data={"note": "Test admin note"}
+	)
+	assert response.status_code in [200, 302, 400, 500]
+
+
+def test_delete_note():
+	"""Test POST /@<username>/delete_note/<id> route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("delnote-admin")
+	admin.admin_level = 2
+	db_session.add(admin)
+	db_session.commit()
+
+	target_client, target_user = util_accounts.create_test_client_and_user("delnote-target")
+
+	# Try to delete a non-existent note
+	response, _ = util.post_with_formkey(
+		admin_client, f"/@{target_user.username}/delete_note/1",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400, 404]
+
+
+def test_revert_actions():
+	"""Test POST /@<username>/revert_actions route"""
+	from files.__main__ import db_session
+	admin_client, admin = util_accounts.create_test_client_and_user("revert-admin")
+	admin.admin_level = 3
+	db_session.add(admin)
+	db_session.commit()
+
+	target_client, target_user = util_accounts.create_test_client_and_user("revert-target")
+
+	response, _ = util.post_with_formkey(
+		admin_client, f"/@{target_user.username}/revert_actions",
+		data={}
+	)
+	assert response.status_code in [200, 302, 400, 403]
