@@ -119,7 +119,7 @@ def test_admins_route():
 
 def test_admins_route_as_admin():
 	"""Test /admins route shows different view for level 3+ admins"""
-	client, admin = util_accounts.create_test_client_and_admin(3, "adm-test")
+	client, admin = util_accounts.create_test_client_and_admin(3)
 
 	response = client.get("/admins")
 	assert response.status_code == 200
@@ -151,7 +151,7 @@ def test_api_route():
 
 def test_badges_route():
 	"""Test /badges route requires admin level 2"""
-	client, admin = util_accounts.create_test_client_and_admin(2, "badges-admin")
+	client, admin = util_accounts.create_test_client_and_admin(2)
 
 	response = client.get("/badges")
 	assert response.status_code == 200
@@ -208,7 +208,7 @@ def test_banned_route():
 
 def test_blocks_route():
 	"""Test /blocks route requires admin level 2"""
-	client, admin = util_accounts.create_test_client_and_admin(2, "blocks-admin")
+	client, admin = util_accounts.create_test_client_and_admin(2)
 
 	response = client.get("/blocks")
 	assert response.status_code == 200
@@ -234,7 +234,7 @@ def test_logged_out_with_path():
 
 def test_patrons_route():
 	"""Test GET /patrons route requires admin level 3"""
-	client, admin = util_accounts.create_test_client_and_admin(3, "patrons-admin")
+	client, admin = util_accounts.create_test_client_and_admin(3)
 
 	response = client.get("/patrons")
 	assert response.status_code == 200
@@ -251,7 +251,7 @@ def test_log_id_route():
 
 def test_settings_security_get():
 	"""Test GET /settings/security route"""
-	client, user = util_accounts.create_test_client_and_user("sec-user")
+	client, user = util_accounts.create_test_client_and_user()
 
 	response = client.get("/settings/security")
 	assert response.status_code == 200
@@ -260,7 +260,7 @@ def test_settings_security_get():
 def test_send_admin_route():
 	"""Test POST /send_admin route"""
 	from . import util
-	client, user = util_accounts.create_test_client_and_user("admin-contact")
+	client, user = util_accounts.create_test_client_and_user()
 
 	response, _ = util.post_with_formkey(
 		client, "/send_admin",

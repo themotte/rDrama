@@ -149,7 +149,7 @@ def test_userblock_leaderboard_basic():
 
 def test_userblock_leaderboard_user_not_blocked():
 	"""Test UserBlockLeaderboard when viewing user has no blocks."""
-	client, user = util_accounts.create_test_client_and_user("unblocked-user")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Don't create any blocks for this user
 

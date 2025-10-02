@@ -7,7 +7,7 @@ from . import util_comments
 
 def test_admin_dashboard():
 	"""Test GET /admin route (admin dashboard)"""
-	client, admin = util_accounts.create_test_client_and_admin(2, "admin-dash")
+	client, admin = util_accounts.create_test_client_and_admin(2)
 
 	response = client.get("/admin")
 	assert response.status_code == 200
@@ -15,7 +15,7 @@ def test_admin_dashboard():
 
 def test_admin_reported_posts():
 	"""Test GET /admin/reported/posts route"""
-	client, admin = util_accounts.create_test_client_and_admin(2, "admin-reports")
+	client, admin = util_accounts.create_test_client_and_admin(2)
 
 	response = client.get("/admin/reported/posts")
 	assert response.status_code == 200
@@ -23,7 +23,7 @@ def test_admin_reported_posts():
 
 def test_admin_reported_comments():
 	"""Test GET /admin/reported/comments route"""
-	client, admin = util_accounts.create_test_client_and_admin(2, "admin-rep-com")
+	client, admin = util_accounts.create_test_client_and_admin(2)
 
 	response = client.get("/admin/reported/comments")
 	assert response.status_code == 200
@@ -31,7 +31,7 @@ def test_admin_reported_comments():
 
 def test_admin_removed_posts():
 	"""Test GET /admin/removed/posts route"""
-	client, admin = util_accounts.create_test_client_and_admin(2, "admin-rem-post")
+	client, admin = util_accounts.create_test_client_and_admin(2)
 
 	response = client.get("/admin/removed/posts")
 	assert response.status_code == 200
@@ -39,7 +39,7 @@ def test_admin_removed_posts():
 
 def test_admin_removed_comments():
 	"""Test GET /admin/removed/comments route"""
-	client, admin = util_accounts.create_test_client_and_admin(2, "admin-rem-com")
+	client, admin = util_accounts.create_test_client_and_admin(2)
 
 	response = client.get("/admin/removed/comments")
 	assert response.status_code == 200
@@ -47,7 +47,7 @@ def test_admin_removed_comments():
 
 def test_admin_filtered_posts():
 	"""Test GET /admin/filtered/posts route"""
-	client, admin = util_accounts.create_test_client_and_admin(2, "admin-filt-pst")
+	client, admin = util_accounts.create_test_client_and_admin(2)
 
 	response = client.get("/admin/filtered/posts")
 	assert response.status_code == 200
@@ -55,7 +55,7 @@ def test_admin_filtered_posts():
 
 def test_admin_filtered_comments():
 	"""Test GET /admin/filtered/comments route"""
-	client, admin = util_accounts.create_test_client_and_admin(2, "admin-filt-com")
+	client, admin = util_accounts.create_test_client_and_admin(2)
 
 	response = client.get("/admin/filtered/comments")
 	assert response.status_code == 200
@@ -63,7 +63,7 @@ def test_admin_filtered_comments():
 
 def test_admin_users():
 	"""Test GET /admin/users route"""
-	client, admin = util_accounts.create_test_client_and_admin(2, "admin-users")
+	client, admin = util_accounts.create_test_client_and_admin(2)
 
 	response = client.get("/admin/users")
 	assert response.status_code == 200
@@ -71,7 +71,7 @@ def test_admin_users():
 
 def test_admin_shadowbanned():
 	"""Test GET /admin/shadowbanned route"""
-	client, admin = util_accounts.create_test_client_and_admin(2, "admin-shadow")
+	client, admin = util_accounts.create_test_client_and_admin(2)
 
 	response = client.get("/admin/shadowbanned")
 	assert response.status_code == 200
@@ -79,7 +79,7 @@ def test_admin_shadowbanned():
 
 def test_admin_image_posts():
 	"""Test GET /admin/image_posts route"""
-	client, admin = util_accounts.create_test_client_and_admin(2, "admin-images")
+	client, admin = util_accounts.create_test_client_and_admin(2)
 
 	response = client.get("/admin/image_posts")
 	assert response.status_code == 200
@@ -87,7 +87,7 @@ def test_admin_image_posts():
 
 def test_admin_loggedin():
 	"""Test GET /admin/loggedin route"""
-	client, admin = util_accounts.create_test_client_and_admin(3, "admin-loggedin")
+	client, admin = util_accounts.create_test_client_and_admin(3)
 
 	response = client.get("/admin/loggedin")
 	assert response.status_code == 200
@@ -95,7 +95,7 @@ def test_admin_loggedin():
 
 def test_admin_loggedout():
 	"""Test GET /admin/loggedout route"""
-	client, admin = util_accounts.create_test_client_and_admin(3, "admin-loggedout")
+	client, admin = util_accounts.create_test_client_and_admin(3)
 
 	response = client.get("/admin/loggedout")
 	assert response.status_code == 200
@@ -254,7 +254,7 @@ def test_admin_badge_remove():
 
 def test_admin_alt_votes():
 	"""Test GET /admin/alt_votes route"""
-	admin_client, admin = util_accounts.create_test_client_and_admin(3, "alt-vote-adm")
+	admin_client, admin = util_accounts.create_test_client_and_admin(3)
 
 	response = admin_client.get("/admin/alt_votes")
 	assert response.status_code == 200
@@ -262,7 +262,7 @@ def test_admin_alt_votes():
 
 def test_admin_banned_domains():
 	"""Test GET /admin/banned_domains route"""
-	admin_client, admin = util_accounts.create_test_client_and_admin(3, "ban-dom-adm")
+	admin_client, admin = util_accounts.create_test_client_and_admin(3)
 
 	response = admin_client.get("/admin/banned_domains")
 	assert response.status_code == 200
@@ -452,7 +452,7 @@ def test_admin_site_settings():
 
 def test_performance_dashboard():
 	"""Test GET /performance/ route"""
-	admin_client, admin = util_accounts.create_test_client_and_admin(3, "perf-admin")
+	admin_client, admin = util_accounts.create_test_client_and_admin(3)
 
 	response = admin_client.get("/performance/")
 	assert response.status_code == 200
@@ -460,7 +460,7 @@ def test_performance_dashboard():
 
 def test_tasks_list():
 	"""Test GET /tasks/ route"""
-	admin_client, admin = util_accounts.create_test_client_and_admin(3, "tasks-admin")
+	admin_client, admin = util_accounts.create_test_client_and_admin(3)
 
 	response = admin_client.get("/tasks/")
 	assert response.status_code == 200
@@ -468,7 +468,7 @@ def test_tasks_list():
 
 def test_tasks_detail():
 	"""Test GET /tasks/<task_id>/ route"""
-	admin_client, admin = util_accounts.create_test_client_and_admin(3, "taskdet-admin")
+	admin_client, admin = util_accounts.create_test_client_and_admin(3)
 
 	# Use a fake task ID
 	response = admin_client.get("/tasks/1/")
@@ -477,7 +477,7 @@ def test_tasks_detail():
 
 def test_tasks_runs():
 	"""Test GET /tasks/<task_id>/runs/ route"""
-	admin_client, admin = util_accounts.create_test_client_and_admin(3, "taskruns-adm")
+	admin_client, admin = util_accounts.create_test_client_and_admin(3)
 
 	# Use a fake task ID
 	response = admin_client.get("/tasks/1/runs/")
@@ -486,7 +486,7 @@ def test_tasks_runs():
 
 def test_tasks_run_detail():
 	"""Test GET /tasks/<task_id>/runs/<run_id> route"""
-	admin_client, admin = util_accounts.create_test_client_and_admin(3, "taskrun-admin")
+	admin_client, admin = util_accounts.create_test_client_and_admin(3)
 
 	# Use fake task and run IDs
 	response = admin_client.get("/tasks/1/runs/1")
@@ -506,7 +506,7 @@ def test_tasks_schedule():
 
 def test_tasks_scheduled_posts_list():
 	"""Test GET /tasks/scheduled_posts/ route"""
-	admin_client, admin = util_accounts.create_test_client_and_admin(3, "schedposts-adm")
+	admin_client, admin = util_accounts.create_test_client_and_admin(3)
 
 	response = admin_client.get("/tasks/scheduled_posts/")
 	assert response.status_code == 200

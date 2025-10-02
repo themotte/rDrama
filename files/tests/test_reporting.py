@@ -34,7 +34,7 @@ def test_report_post():
 
 def test_report_post_with_admin_flair():
 	"""Test that admin users can set flair when reporting with ! prefix"""
-	client, user = util_accounts.create_test_client_and_admin(2, "admin")
+	client, user = util_accounts.create_test_client_and_admin(2)
 
 	# Make user an admin (admin_level >= 2)
 	from files.__main__ import db_session

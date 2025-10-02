@@ -10,7 +10,7 @@ from files.classes import Comment
 
 def test_delete_comment():
 	"""Test deleting a comment"""
-	client, user = util_accounts.create_test_client_and_user("del-comment")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post and comment
 	post = util_submissions.create_submission_for_client(client)
@@ -53,7 +53,7 @@ def test_delete_comment_not_author():
 
 def test_delete_already_deleted_comment():
 	"""Test that deleting an already deleted comment returns 409"""
-	client, user = util_accounts.create_test_client_and_user("double-del")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post and comment
 	post = util_submissions.create_submission_for_client(client)
@@ -77,7 +77,7 @@ def test_delete_already_deleted_comment():
 
 def test_undelete_comment():
 	"""Test undeleting a deleted comment"""
-	client, user = util_accounts.create_test_client_and_user("undel-comment")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post and comment
 	post = util_submissions.create_submission_for_client(client)
@@ -106,7 +106,7 @@ def test_undelete_comment():
 
 def test_undelete_not_deleted_comment():
 	"""Test that undeleting a non-deleted comment returns 409"""
-	client, user = util_accounts.create_test_client_and_user("undel-notdel")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post and comment
 	post = util_submissions.create_submission_for_client(client)
@@ -123,7 +123,7 @@ def test_undelete_not_deleted_comment():
 
 def test_edit_comment():
 	"""Test editing a comment"""
-	client, user = util_accounts.create_test_client_and_user("edit-comment")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post and comment
 	post = util_submissions.create_submission_for_client(client)
@@ -166,7 +166,7 @@ def test_edit_comment_not_author():
 
 def test_edit_comment_empty_body():
 	"""Test that editing to empty body is rejected"""
-	client, user = util_accounts.create_test_client_and_user("edit-empty-test")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post and comment
 	post = util_submissions.create_submission_for_client(client)
@@ -184,7 +184,7 @@ def test_edit_comment_empty_body():
 
 def test_pin_comment():
 	"""Test pinning a comment on your own post"""
-	client, user = util_accounts.create_test_client_and_user("pin-comment")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post and comment on it
 	post = util_submissions.create_submission_for_client(client)
@@ -230,7 +230,7 @@ def test_pin_comment_not_op():
 
 def test_unpin_comment():
 	"""Test unpinning a pinned comment"""
-	client, user = util_accounts.create_test_client_and_user("unpin-comment")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post and comment
 	post = util_submissions.create_submission_for_client(client)
@@ -259,7 +259,7 @@ def test_unpin_comment():
 
 def test_save_comment():
 	"""Test saving a comment"""
-	client, user = util_accounts.create_test_client_and_user("save-comment")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post and comment
 	post = util_submissions.create_submission_for_client(client)
@@ -286,7 +286,7 @@ def test_save_comment():
 
 def test_save_already_saved_comment():
 	"""Test that saving an already saved comment is idempotent"""
-	client, user = util_accounts.create_test_client_and_user("double-save")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post and comment
 	post = util_submissions.create_submission_for_client(client)
@@ -310,7 +310,7 @@ def test_save_already_saved_comment():
 
 def test_unsave_comment():
 	"""Test unsaving a saved comment"""
-	client, user = util_accounts.create_test_client_and_user("unsave-comment")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post and comment
 	post = util_submissions.create_submission_for_client(client)
@@ -344,7 +344,7 @@ def test_unsave_comment():
 
 def test_unsave_not_saved_comment():
 	"""Test that unsaving a non-saved comment is idempotent"""
-	client, user = util_accounts.create_test_client_and_user("unsave-notsav")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post and comment
 	post = util_submissions.create_submission_for_client(client)

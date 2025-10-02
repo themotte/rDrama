@@ -116,7 +116,7 @@ def test_notifications_main_page():
 
 def test_notifications_pagination():
 	"""Test notifications page pagination"""
-	client, user = util_accounts.create_test_client_and_user(name="notif-page")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Get page 1
 	response = client.get("/notifications?page=1")
@@ -136,7 +136,7 @@ def test_notifications_requires_auth():
 
 def test_notifications_posts_page():
 	"""Test the post notifications page (AUTOJANNY messages)"""
-	client, user = util_accounts.create_test_client_and_user(name="notif-posts")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# This page shows notifications from AUTOJANNY only
 	response = client.get("/notifications/posts")
@@ -152,7 +152,7 @@ def test_notifications_posts_requires_auth():
 
 def test_notifications_modmail_requires_admin():
 	"""Test that modmail notifications require admin level 2+"""
-	client, user = util_accounts.create_test_client_and_user(name="notif-modmail")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Regular user should not have access
 	response = client.get("/notifications/modmail")
@@ -172,7 +172,7 @@ def test_notifications_messages_page():
 
 def test_notifications_messages_pagination():
 	"""Test messages page pagination"""
-	client, user = util_accounts.create_test_client_and_user(name="msg-page")
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Get page 1
 	response = client.get("/notifications/messages?page=1")

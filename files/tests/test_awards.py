@@ -7,7 +7,7 @@ from . import util_comments
 
 def test_shop_route_disabled():
 	"""Test /shop route is disabled (returns 404)"""
-	client, user = util_accounts.create_test_client_and_admin(2, "shop-admin")
+	client, user = util_accounts.create_test_client_and_admin(2)
 
 	response = client.get("/shop")
 	assert response.status_code == 404
@@ -15,7 +15,7 @@ def test_shop_route_disabled():
 
 def test_settings_shop_route_disabled():
 	"""Test /settings/shop route is disabled (returns 404)"""
-	client, user = util_accounts.create_test_client_and_admin(2, "shop-set-admin")
+	client, user = util_accounts.create_test_client_and_admin(2)
 
 	response = client.get("/settings/shop")
 	assert response.status_code == 404
@@ -59,7 +59,7 @@ def test_award_comment_route_disabled():
 
 def test_admin_awards_get_route_disabled():
 	"""Test GET /admin/awards route is disabled (returns 404)"""
-	client, user = util_accounts.create_test_client_and_admin(2, "awards-admin-g")
+	client, user = util_accounts.create_test_client_and_admin(2)
 
 	response = client.get("/admin/awards")
 	assert response.status_code == 404
@@ -67,7 +67,7 @@ def test_admin_awards_get_route_disabled():
 
 def test_admin_awards_post_route_disabled():
 	"""Test POST /admin/awards route is disabled (returns 404)"""
-	client, user = util_accounts.create_test_client_and_admin(2, "awards-admin-p")
+	client, user = util_accounts.create_test_client_and_admin(2)
 
 	response, _ = util.post_with_formkey(
 		client, "/admin/awards",
