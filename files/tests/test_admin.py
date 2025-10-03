@@ -119,7 +119,7 @@ def test_ban_user():
 	assert response.status_code in [200, 302]
 
 	# Verify user is actually banned in database
-	user_after = db_session().query(User).get(user_id)
+	user_after = db_session().get(User, user_id)
 	assert user_after.is_banned != 0
 	assert user_after.ban_reason == "Test ban"
 
@@ -148,7 +148,7 @@ def test_unban_user():
 	assert response.status_code in [200, 302]
 
 	# Verify user is actually unbanned in database
-	user_after = db_session().query(User).get(user_id)
+	user_after = db_session().get(User, user_id)
 	assert user_after.is_banned == 0
 
 
@@ -169,7 +169,7 @@ def test_shadowban_user():
 	assert response.status_code in [200, 302]
 
 	# Verify user is actually shadowbanned in database
-	user_after = db_session().query(User).get(user_id)
+	user_after = db_session().get(User, user_id)
 	assert user_after.shadowbanned is not None
 
 
@@ -197,7 +197,7 @@ def test_unshadowban_user():
 	assert response.status_code in [200, 302]
 
 	# Verify user is actually unshadowbanned in database
-	user_after = db_session().query(User).get(user_id)
+	user_after = db_session().get(User, user_id)
 	assert user_after.shadowbanned is None
 
 
@@ -219,7 +219,7 @@ def test_distinguish_post():
 	assert response.status_code in [200, 302]
 
 	# Verify post is actually distinguished in database
-	post_after = db_session().query(Submission).get(post_id)
+	post_after = db_session().get(Submission, post_id)
 	assert post_after.distinguish_level > 0
 
 
@@ -242,7 +242,7 @@ def test_distinguish_comment():
 	assert response.status_code in [200, 302]
 
 	# Verify comment is actually distinguished in database
-	comment_after = db_session().query(Comment).get(comment_id)
+	comment_after = db_session().get(Comment, comment_id)
 	assert comment_after.distinguish_level > 0
 
 
@@ -264,7 +264,7 @@ def test_sticky_post():
 	assert response.status_code in [200, 302]
 
 	# Verify post is actually stickied in database
-	post_after = db_session().query(Submission).get(post_id)
+	post_after = db_session().get(Submission, post_id)
 	assert post_after.stickied is not None
 
 
@@ -287,7 +287,7 @@ def test_sticky_comment():
 	assert response.status_code in [200, 302]
 
 	# Verify comment is actually stickied in database
-	comment_after = db_session().query(Comment).get(comment_id)
+	comment_after = db_session().get(Comment, comment_id)
 	assert comment_after.is_pinned is not None
 
 
@@ -317,7 +317,7 @@ def test_unsticky_comment():
 	assert response.status_code in [200, 302]
 
 	# Verify comment is actually unstickied in database
-	comment_after = db_session().query(Comment).get(comment_id)
+	comment_after = db_session().get(Comment, comment_id)
 	assert comment_after.is_pinned is None
 
 
@@ -781,5 +781,5 @@ def test_unsticky_post():
 	assert response.status_code in [200, 302]
 
 	# Verify post is actually unstickied in database
-	post_after = db_session().query(Submission).get(post_id)
+	post_after = db_session().get(Submission, post_id)
 	assert post_after.stickied is None

@@ -576,7 +576,7 @@ def test_settings_filters_post():
 	assert response.status_code in [200, 302]
 
 	# Verify filters were saved
-	user_after = db_session().query(User).get(user_id)
+	user_after = db_session().get(User, user_id)
 	assert user_after.custom_filter_list == "badword1\nbadword2"
 
 
