@@ -6,28 +6,11 @@ from gunicorn import glogging
 _request_context = threading.local()
 
 
-def set_current_request(environ):
-	"""Store current request info in thread-local storage"""
-	try:
-		method = environ.get('REQUEST_METHOD', '')
-		path = environ.get('PATH_INFO', '')
-		query = environ.get('QUERY_STRING', '')
-		url = f"{path}?{query}" if query else path
-		_request_context.current_request = f"{method} {url}"
-	except Exception:
-		_request_context.current_request = None
-
-
-def get_current_request():
-	"""Get current request from thread-local storage"""
-	return getattr(_request_context, 'current_request', None)
-
-
 class CustomLogger(glogging.Logger):
 	def critical(self, msg, *args, **kwargs):
 		# If this is a worker timeout, append request info
 		if 'WORKER TIMEOUT' in str(msg):
-			current_request = get_current_request()
+			current_request = getattr(_request_context, 'current_request', None)
 			if current_request:
 				msg = f"{msg} - Request: {current_request}"
 
@@ -41,7 +24,15 @@ logger_class = CustomLogger
 # Middleware to track requests
 def pre_request(worker, req):
 	"""Called just before a worker processes the request"""
-	set_current_request(req.environ)
+	try:
+		# Extract request info from the req object
+		method = req.method if hasattr(req, 'method') else 'UNKNOWN'
+		path = req.path if hasattr(req, 'path') else 'UNKNOWN'
+		query = req.query if hasattr(req, 'query') else ''
+		url = f"{path}?{query}" if query else path
+		_request_context.current_request = f"{method} {url}"
+	except Exception:
+		_request_context.current_request = None
 
 
 def post_request(worker, req, environ, resp):
