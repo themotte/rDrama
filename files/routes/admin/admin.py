@@ -706,8 +706,8 @@ def admin_link_accounts(v):
 	ma = ModAction(
 		kind="link_accounts",
 		user_id=v.id,
-		target_user_id=u1,
-		_note=f'with {u2}'
+		target_user_id=u1.id,
+		_note=f'with {u2.id}'
 	)
 	g.db.add(ma)
 

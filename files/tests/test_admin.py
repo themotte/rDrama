@@ -387,114 +387,210 @@ def test_admin_banned_domains():
 
 
 def test_admin_banned_domains_post():
-	"""Test POST /admin/banned_domains/ route"""
+	"""Test POST /admin/banned_domains route"""
+	import time
+	from files.__main__ import db_session
+	from files.classes import BannedDomain
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(3, "ban-domp-adm")
 
+	# Use a unique domain name to avoid conflicts with other tests
+	test_domain = f"test-banned-domain-{int(time.time())}.com"
 	response, _ = util.post_with_formkey(
-		admin_client, "/admin/banned_domains/",
-		data={"domain": "example.com"}
+		admin_client, "/admin/banned_domains",
+		data={"domain": test_domain, "reason": "Test ban reason"}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify domain was banned in database (re-query after HTTP request)
+	banned = db_session().query(BannedDomain).filter_by(domain=test_domain).first()
+	assert banned is not None
+	assert banned.domain == test_domain
+	assert banned.reason == "Test ban reason"
 
 
 def test_admin_nuke_user():
 	"""Test POST /admin/nuke_user route"""
+	from files.__main__ import db_session
+	from files.classes import Submission, Comment
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(3, "nuke-admin")
 
 	client, user = util_accounts.create_test_client_and_user("nukeduser")
+
+	# Create a post and comment by the user
+	post = util_submissions.create_submission_for_client(client)
+	comment = util_comments.create_comment_for_client(client, post.id)
+	post_id = post.id
+	comment_id = comment.id
 
 	response, _ = util.post_with_formkey(
 		admin_client, "/admin/nuke_user",
 		data={"user": user.username}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify all user's posts and comments are removed in database
+	post_after = db_session().get(Submission, post_id)
+	comment_after = db_session().get(Comment, comment_id)
+	assert post_after.state_mod.name == "REMOVED"
+	assert comment_after.state_mod.name == "REMOVED"
 
 
 def test_admin_unnuke_user():
 	"""Test POST /admin/unnuke_user route"""
+	from files.__main__ import db_session
+	from files.classes import Submission, Comment
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(3, "unnuke-admin")
 
 	client, user = util_accounts.create_test_client_and_user("unnukeduser")
 
+	# Create a post and comment by the user
+	post = util_submissions.create_submission_for_client(client)
+	comment = util_comments.create_comment_for_client(client, post.id)
+	post_id = post.id
+	comment_id = comment.id
+
+	# First nuke the user
+	util.post_with_formkey(
+		admin_client, "/admin/nuke_user",
+		data={"user": user.username}
+	)
+
+	# Then unnuke them
 	response, _ = util.post_with_formkey(
 		admin_client, "/admin/unnuke_user",
 		data={"user": user.username}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify all user's posts and comments are restored in database
+	post_after = db_session().get(Submission, post_id)
+	comment_after = db_session().get(Comment, comment_id)
+	assert post_after.state_mod.name == "VISIBLE"
+	assert comment_after.state_mod.name == "VISIBLE"
 
 
 def test_admin_verify_user():
 	"""Test POST /admin/verify/<user_id> route"""
+	from files.__main__ import db_session
+	from files.classes import User
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(3, "verify-admin")
 
 	client, user = util_accounts.create_test_client_and_user("verifyuser")
+	user_id = user.id
 
 	response, _ = util.post_with_formkey(
-		admin_client, f"/admin/verify/{user.id}",
+		admin_client, f"/admin/verify/{user_id}",
 		data={}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify user is actually verified in database
+	user_after = db_session().get(User, user_id)
+	assert user_after.verified == "Verified"
 
 
 def test_admin_unverify_user():
 	"""Test POST /admin/unverify/<user_id> route"""
+	from files.__main__ import db_session
+	from files.classes import User
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(3, "unvrfy-admin")
 
 	client, user = util_accounts.create_test_client_and_user("unverifyuser")
+	user_id = user.id
 
-	response, _ = util.post_with_formkey(
-		admin_client, f"/admin/unverify/{user.id}",
+	# First verify the user
+	util.post_with_formkey(
+		admin_client, f"/admin/verify/{user_id}",
 		data={}
 	)
-	assert response.status_code in [200, 302, 400]
+
+	# Then unverify them
+	response, _ = util.post_with_formkey(
+		admin_client, f"/admin/unverify/{user_id}",
+		data={}
+	)
+	assert response.status_code in [200, 302]
+
+	# Verify user is actually unverified in database
+	user_after = db_session().get(User, user_id)
+	assert user_after.verified is None
 
 
 def test_admin_title_change():
 	"""Test POST /admin/title_change/<user_id> route"""
+	from files.__main__ import db_session
+	from files.classes import User
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "title-admin")
 
 	client, user = util_accounts.create_test_client_and_user("titleuser")
+	user_id = user.id
 
 	response, _ = util.post_with_formkey(
-		admin_client, f"/admin/title_change/{user.id}",
+		admin_client, f"/admin/title_change/{user_id}",
 		data={"title": "New Title"}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify title was changed in database
+	user_after = db_session().get(User, user_id)
+	assert user_after.customtitleplain == "New Title"
 
 
 def test_admin_link_accounts():
 	"""Test POST /admin/link_accounts route"""
+	from files.__main__ import db_session
+	from files.classes import Alt
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(3, "link-admin")
 
 	client1, user1 = util_accounts.create_test_client_and_user("linkuser1")
 	client2, user2 = util_accounts.create_test_client_and_user("linkuser2")
+	user1_id = user1.id
+	user2_id = user2.id
 
 	response, _ = util.post_with_formkey(
 		admin_client, "/admin/link_accounts",
-		data={"id1": str(user1.id), "id2": str(user2.id)}
+		data={"u1": str(user1_id), "u2": str(user2_id)}
 	)
-	assert response.status_code in [200, 302, 400, 404]
+	assert response.status_code in [200, 302]
+
+	# Verify alt link was created in database
+	alt = db_session().query(Alt).filter_by(user1=user1_id, user2=user2_id).first()
+	assert alt is not None
+	assert alt.is_manual == True
 
 
 def test_admin_under_attack():
 	"""Test POST /admin/under_attack route"""
+	# This route makes external Cloudflare API calls which will fail in test environment
+	# We just verify the route is accessible and handles the error gracefully
 	admin_client, admin = util_accounts.create_test_client_and_admin(3, "attack-admin")
 
 	response, _ = util.post_with_formkey(
 		admin_client, "/admin/under_attack",
 		data={}
 	)
+	# Will return 500 because Cloudflare API call fails in test environment
 	assert response.status_code in [200, 302, 400, 500]
 
 
 def test_admin_purge_cache():
 	"""Test POST /admin/purge_cache route"""
+	# This route makes external Cloudflare API calls which will fail in test environment
+	# We just verify the route is accessible and handles the error gracefully
 	admin_client, admin = util_accounts.create_test_client_and_admin(3, "purge-admin")
 
 	response, _ = util.post_with_formkey(
 		admin_client, "/admin/purge_cache",
 		data={}
 	)
+	# Will return 500 because Cloudflare API call fails in test environment
 	assert response.status_code in [200, 302, 400, 500]
 
 
@@ -509,52 +605,109 @@ def test_admin_dump_cache():
 
 def test_filter_automatic():
 	"""Test POST /filter_automatic/<user_id> route"""
+	from files.__main__ import db_session
+	from files.classes import User
+	from files.classes.user import FilterBehavior
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "filtauto-adm")
 
 	client, user = util_accounts.create_test_client_and_user("filtautouser")
+	user_id = user.id
 
 	response, _ = util.post_with_formkey(
-		admin_client, f"/filter_automatic/{user.id}",
+		admin_client, f"/filter_automatic/{user_id}",
 		data={}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify user filter behavior was set to automatic in database
+	user_after = db_session().get(User, user_id)
+	assert user_after.filter_behavior == FilterBehavior.AUTOMATIC
 
 
 def test_filter_filtered():
 	"""Test POST /filter_filtered/<user_id> route"""
+	from files.__main__ import db_session
+	from files.classes import User
+	from files.classes.user import FilterBehavior
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "filtfilt-adm")
 
 	client, user = util_accounts.create_test_client_and_user("filtfiltuser")
+	user_id = user.id
 
 	response, _ = util.post_with_formkey(
-		admin_client, f"/filter_filtered/{user.id}",
+		admin_client, f"/filter_filtered/{user_id}",
 		data={}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify user filter behavior was set to filtered in database
+	user_after = db_session().get(User, user_id)
+	assert user_after.filter_behavior == FilterBehavior.FILTERED
 
 
 def test_filter_unfiltered():
 	"""Test POST /filter_unfiltered/<user_id> route"""
+	from files.__main__ import db_session
+	from files.classes import User
+	from files.classes.user import FilterBehavior
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "filtunf-adm")
 
 	client, user = util_accounts.create_test_client_and_user("filtunfuser")
+	user_id = user.id
 
 	response, _ = util.post_with_formkey(
-		admin_client, f"/filter_unfiltered/{user.id}",
+		admin_client, f"/filter_unfiltered/{user_id}",
 		data={}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify user filter behavior was set to unfiltered in database
+	user_after = db_session().get(User, user_id)
+	assert user_after.filter_behavior == FilterBehavior.UNFILTERED
 
 
 def test_admin_update_filter_status():
 	"""Test POST /admin/update_filter_status route"""
+	from files.__main__ import db_session
+	from files.classes import Submission
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "updfilt-admin")
 
-	response, _ = util.post_with_formkey(
-		admin_client, "/admin/update_filter_status",
-		data={}
+	# Create a post to filter
+	client, user = util_accounts.create_test_client_and_user("filtstatuser")
+	post = util_submissions.create_submission_for_client(client)
+	post_id = post.id
+
+	# Remove the post
+	response, _ = util.post_json_with_formkey(
+		admin_client, f"/post/{post_id}", "/admin/update_filter_status",
+		json_data={
+			"post_id": post_id,
+			"new_status": "removed"
+		}
 	)
-	assert response.status_code in [200, 302, 400, 413, 415]
+	assert response.status_code == 200
+
+	# Verify post is actually removed in database
+	post_after = db_session().get(Submission, post_id)
+	assert post_after.state_mod.name == "REMOVED"
+
+	# Test restoring the post to normal
+	response, _ = util.post_json_with_formkey(
+		admin_client, f"/post/{post_id}", "/admin/update_filter_status",
+		json_data={
+			"post_id": post_id,
+			"new_status": "normal"
+		}
+	)
+	assert response.status_code == 200
+
+	# Verify post is restored in database
+	post_after = db_session().get(Submission, post_id)
+	assert post_after.state_mod.name == "VISIBLE"
 
 
 def test_admin_site_settings():
@@ -674,42 +827,83 @@ def test_tasks_scheduled_posts_schedule():
 
 def test_make_admin():
 	"""Test POST /@<username>/make_admin route"""
+	from files.__main__ import db_session
+	from files.classes import User
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(3, "mkadmin-admin")
 
 	target_client, target_user = util_accounts.create_test_client_and_user("mkadmin-target")
+	target_user_id = target_user.id
 
 	response, _ = util.post_with_formkey(
 		admin_client, f"/@{target_user.username}/make_admin",
 		data={"level": "1"}
 	)
-	assert response.status_code in [200, 302, 400, 403]
+	assert response.status_code in [200, 302]
+
+	# Verify user is now an admin in database
+	user_after = db_session().get(User, target_user_id)
+	assert user_after.admin_level == 2
 
 
 def test_remove_admin():
 	"""Test POST /@<username>/remove_admin route"""
 	from files.__main__ import db_session
+	from files.classes import User
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(3, "rmadmin-admin")
 
 	target_client, target_user = util_accounts.create_test_client_and_admin(1, "rmadmin-target")
+	target_user_id = target_user.id
 
 	response, _ = util.post_with_formkey(
 		admin_client, f"/@{target_user.username}/remove_admin",
 		data={}
 	)
-	assert response.status_code in [200, 302, 400, 403]
+	assert response.status_code in [200, 302]
+
+	# Verify user is no longer an admin in database
+	user_after = db_session().get(User, target_user_id)
+	assert user_after.admin_level == 0
 
 
 def test_create_note():
 	"""Test POST /@<username>/create_note route"""
+	import json as json_module
+	from files.__main__ import db_session
+	from files.classes import UserNote
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "note-admin")
+	# Extract admin_id immediately before admin object becomes detached
+	db_session().refresh(admin)
+	admin_id = admin.id
 
 	target_client, target_user = util_accounts.create_test_client_and_user("note-target")
+	# Extract user data immediately before objects become detached
+	db_session().refresh(target_user)
+	user_id = target_user.id
+	target_username = target_user.username
+
+	# Route expects 'data' parameter containing JSON with 'note' and 'tag' fields
+	note_data = json_module.dumps({
+		"note": "Test admin note",
+		"tag": 2  # UserTag.Comment
+	})
 
 	response, _ = util.post_with_formkey(
-		admin_client, f"/@{target_user.username}/create_note",
-		data={"note": "Test admin note"}
+		admin_client, f"/@{target_username}/create_note",
+		data={"data": note_data}
 	)
-	assert response.status_code in [200, 302, 400, 500]
+	assert response.status_code == 200
+
+	# Verify note was created in database (re-query after HTTP request)
+	note = db_session().query(UserNote).filter_by(
+		author_id=admin_id,
+		reference_user=user_id
+	).first()
+	assert note is not None
+	assert note.note == "Test admin note"
+	assert note.tag.value == 2
 
 
 def test_delete_note():
@@ -728,15 +922,50 @@ def test_delete_note():
 
 def test_revert_actions():
 	"""Test POST /@<username>/revert_actions route"""
+	from files.__main__ import db_session
+	from files.classes import Submission, Comment
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(3, "revert-admin")
 
-	target_client, target_user = util_accounts.create_test_client_and_user("revert-target")
+	# Create a mod who will perform actions that we'll revert
+	mod_client, mod_user = util_accounts.create_test_client_and_admin(2, "revert-mod")
+	mod_username = mod_user.username
 
+	# Create a regular user and their content
+	user_client, user = util_accounts.create_test_client_and_user("revert-content")
+	post = util_submissions.create_submission_for_client(user_client)
+	comment = util_comments.create_comment_for_client(user_client, post.id)
+	post_id = post.id
+	comment_id = comment.id
+
+	# Have the mod remove the post and comment
+	util.post_json_with_formkey(
+		mod_client, f"/post/{post_id}", "/admin/update_filter_status",
+		json_data={"post_id": post_id, "new_status": "removed"}
+	)
+	util.post_json_with_formkey(
+		mod_client, f"/post/{post_id}", "/admin/update_filter_status",
+		json_data={"comment_id": comment_id, "new_status": "removed"}
+	)
+
+	# Verify they're removed (re-query after HTTP requests)
+	post_before = db_session().get(Submission, post_id)
+	comment_before = db_session().get(Comment, comment_id)
+	assert post_before.state_mod.name == "REMOVED"
+	assert comment_before.state_mod.name == "REMOVED"
+
+	# Now revert all of the mod's actions
 	response, _ = util.post_with_formkey(
-		admin_client, f"/@{target_user.username}/revert_actions",
+		admin_client, f"/@{mod_username}/revert_actions",
 		data={}
 	)
-	assert response.status_code in [200, 302, 400, 403]
+	assert response.status_code in [200, 302]
+
+	# Verify the removals were reverted (re-query after HTTP request)
+	post_after = db_session().get(Submission, post_id)
+	comment_after = db_session().get(Comment, comment_id)
+	assert post_after.state_mod.name == "VISIBLE"
+	assert comment_after.state_mod.name == "VISIBLE"
 
 
 def test_admin_badge_grant_get():
