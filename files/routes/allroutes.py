@@ -41,6 +41,7 @@ def before_request():
 	limiter.check()
 
 	g.db = db_session()
+	g.start_time = time.time()
 
 
 @app.teardown_appcontext
@@ -51,6 +52,11 @@ def teardown_request(error):
 
 @app.after_request
 def after_request(response: Response):
+	if hasattr(g, 'start_time'):
+		elapsed = time.time() - g.start_time
+		if elapsed > 15:
+			app.logger.warning(f"Slow request ({elapsed:.2f}s): {request.method} {request.url}")
+
 	response.headers.add("Content-Security-Policy", ("""
 		script-src 'self' 'unsafe-inline' https://*.googletagmanager.com https://hcaptcha.com https://*.hcaptcha.com;
 		img-src 'self' https://*.google-analytics.com https://*.googletagmanager.com;
