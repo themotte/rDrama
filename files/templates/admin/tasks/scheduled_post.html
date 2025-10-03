@@ -8,7 +8,7 @@
 <section class="scheduled-post-edit scheduler-edit mt-3">
 	<h5 class="mb-2">Edit Scheduled Post</h5>
 	<form action="/tasks/scheduled_posts/{{p.id}}/schedule" method="post">
-		{{forms.scheduled_post_time_selection_form(v, p)}}
+		{{forms.scheduled_post_time_selection_form(v, p.task)}}
 	</form>
 </section>
 {%- endif -%}
