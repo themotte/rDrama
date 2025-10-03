@@ -12,23 +12,14 @@ graceful_timeout = 5  # Grace period for workers to finish after receiving SIGTE
 _current_request = threading.local()
 
 
-class CustomLogger(glogging.Logger):
-	"""Custom logger - currently just passes through to base class"""
-	pass
-
-
-# Set the custom logger class
-logger_class = CustomLogger
-
-
 def when_ready(server):
 	"""Called just after the server is started"""
-	server.log.info("Server is ready. Spawning workers")
+	print("Server is ready. Spawning workers")
 
 
 def worker_int(worker):
 	"""Called just after a worker exited on SIGINT or SIGQUIT"""
-	worker.log.info(f"Worker {worker.pid} received SIGINT or SIGQUIT")
+	print(f"Worker {worker.pid} received SIGINT or SIGQUIT")
 
 
 def pre_request(worker, req):
@@ -43,6 +34,7 @@ def pre_request(worker, req):
 		_current_request.value = f"{method} {url}"
 		_current_request.worker = worker
 	except Exception:
+		print("Failed to extract request")
 		pass
 
 
@@ -58,20 +50,26 @@ def worker_abort(worker):
 	# This is called BEFORE the worker is killed, so we can log the current request
 	request_info = getattr(_current_request, 'value', None)
 	if request_info:
-		worker.log.critical(f"WORKER TIMEOUT on request: {request_info}")
+		print(f"WORKER TIMEOUT on request: {request_info}")
 	else:
-		worker.log.critical("WORKER TIMEOUT (no request info available)")
-
+		print("WORKER TIMEOUT (no request info available)")
 
 def post_worker_init(worker):
 	"""Called just after a worker has initialized the application"""
+	print(f"Worker {worker.pid} initialized")
+
 	# Install custom signal handler to catch timeout before death
 	def timeout_handler(signum, frame):
 		"""Handle timeout signal by logging current request"""
 		request_info = getattr(_current_request, 'value', None)
+
 		if request_info:
 			print(f"[TIMEOUT] Worker {worker.pid} timing out on request: {request_info}", file=sys.stderr)
 			sys.stderr.flush()
+		else:
+			print(f"[TIMEOUT] Worker {worker.pid} timing out (no request info available)", file=sys.stderr)
+			sys.stderr.flush()
+
 		# Re-raise the signal to continue normal handling
 		signal.signal(signal.SIGABRT, signal.SIG_DFL)
 		# Use os.kill instead of raise_signal for Python 3.8+ compatibility
