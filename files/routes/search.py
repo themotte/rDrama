@@ -33,7 +33,8 @@ def searchparse(text):
 def searchposts(v):
 	query = request.values.get("q", '').strip()
 
-	page = max(1, int(request.values.get("page", 1)))
+	try: page = max(1, int(request.values.get("page", 1)))
+	except: page = 1
 
 	sort = request.values.get("sort", "new").lower()
 	t = request.values.get('t', 'all').lower()
@@ -192,7 +193,8 @@ def searchcomments(v):
 def searchusers(v):
 	query = request.values.get("q", '').strip()
 
-	page = max(1, int(request.values.get("page", 1)))
+	try: page = max(1, int(request.values.get("page", 1)))
+	except: page = 1
 	sort = request.values.get("sort", "new").lower()
 	t = request.values.get('t', 'all').lower()
 	term=query.lstrip('@')

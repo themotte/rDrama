@@ -232,3 +232,33 @@ def test_search_users_logged_out():
 	# Basic search should work without authentication
 	response = client.get("/search/users?q=test")
 	assert response.status_code == 200
+
+
+def test_search_posts_malformed_page_parameter():
+	"""Test that malformed page parameter doesn't cause 500 error"""
+	client = util_accounts.create_logged_off_client()
+
+	# Malformed page parameter (simulates the bug from the error log)
+	response = client.get("/search/posts?q=test&page=0?sort=bottom")
+	# Should return 200 with page defaulting to 1, not 500 error
+	assert response.status_code == 200
+
+
+def test_search_comments_malformed_page_parameter():
+	"""Test that malformed page parameter doesn't cause 500 error for comments"""
+	client = util_accounts.create_logged_off_client()
+
+	# Malformed page parameter
+	response = client.get("/search/comments?q=test&page=invalid")
+	# Should return 200 with page defaulting to 1, not 500 error
+	assert response.status_code == 200
+
+
+def test_search_users_malformed_page_parameter():
+	"""Test that malformed page parameter doesn't cause 500 error for users"""
+	client = util_accounts.create_logged_off_client()
+
+	# Malformed page parameter
+	response = client.get("/search/users?q=test&page=abc123")
+	# Should return 200 with page defaulting to 1, not 500 error
+	assert response.status_code == 200
