@@ -166,11 +166,11 @@ def searchcomments(v):
 		comments = apply_time_filter(comments, t, Comment)
 
 	if v and v.admin_level < 2:
-		private = [x[0] for x in g.db.query(Submission.id).filter(Submission.private == True).all()]
-		comments = comments.filter(Comment.author_id.notin_(v.userblocks), Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, Comment.parent_submission.notin_(private))
+		comments = comments.join(Submission, Comment.parent_submission == Submission.id)
+		comments = comments.filter(Comment.author_id.notin_(v.userblocks), Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, Submission.private == False)
 	elif not v:
-		private = [x[0] for x in g.db.query(Submission.id).filter(Submission.private == True).all()]
-		comments = comments.filter(Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, Comment.parent_submission.notin_(private))
+		comments = comments.join(Submission, Comment.parent_submission == Submission.id)
+		comments = comments.filter(Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, Submission.private == False)
 
 	comments = sort_objects(comments, sort, Comment)
 	total = comments.count()
