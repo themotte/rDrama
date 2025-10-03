@@ -1,14 +1,20 @@
 '''
-Main entry point for the application. Global state among other things are 
+Main entry point for the application. Global state among other things are
 stored here.
 '''
 
-import gevent.monkey
+import sys
 
-gevent.monkey.patch_all()
+# Only apply gevent monkey patching for chat service (which uses gevent workers)
+# The main service now uses gthread workers which don't need/want monkey patching
+is_chat = 'load_chat' in ' '.join(sys.argv)
+
+if is_chat:
+	import gevent.monkey
+	gevent.monkey.patch_all()
 
 # ^ special case: in general imports should go
-# stdlib - externals - internals, but gevent does monkey patching for stdlib 
+# stdlib - externals - internals, but gevent does monkey patching for stdlib
 # functions so we want to monkey patch before importing other things
 
 import faulthandler
