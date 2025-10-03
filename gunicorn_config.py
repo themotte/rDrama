@@ -15,6 +15,8 @@ _current_worker = None
 def when_ready(server):
 	"""Called just after the server is started"""
 	print("Server is ready. Spawning workers")
+	print("Server is ready. Spawning workers (STDERR)", file=sys.stderr)
+	sys.stderr.flush()
 
 
 def worker_int(worker):
@@ -61,7 +63,7 @@ def worker_abort(worker):
 
 def post_worker_init(worker):
 	"""Called just after a worker has initialized the application"""
-	print(f"Worker {worker.pid} initialized")
+	import os
 
 	# Install custom signal handler to catch timeout before death
 	def timeout_handler(signum, frame):
@@ -81,9 +83,15 @@ def post_worker_init(worker):
 
 		# Re-raise the signal to continue normal handling
 		signal.signal(signal.SIGABRT, signal.SIG_DFL)
-		# Use os.kill instead of raise_signal for Python 3.8+ compatibility
-		import os
 		os.kill(os.getpid(), signal.SIGABRT)
 
 	# Install our handler for SIGABRT (Gunicorn's timeout signal)
 	signal.signal(signal.SIGABRT, timeout_handler)
+
+	print(f"Worker {worker.pid} initialized - SIGABRT handler installed", file=sys.stderr)
+	sys.stderr.flush()
+
+	# Verify the handler is installed
+	current_handler = signal.getsignal(signal.SIGABRT)
+	print(f"Worker {worker.pid} SIGABRT handler check: {current_handler}", file=sys.stderr)
+	sys.stderr.flush()
