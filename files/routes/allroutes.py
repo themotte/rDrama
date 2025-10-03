@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+import threading
 import time
 from typing import TYPE_CHECKING
 
@@ -11,6 +12,37 @@ from files.__main__ import app, db_session, limiter
 
 if TYPE_CHECKING:
 	from flask.wrappers import Response
+
+# Track active requests for timeout monitoring
+_active_requests = {}
+_active_requests_lock = threading.Lock()
+_monitor_thread = None
+
+def start_request_monitor():
+	"""Start a background thread to monitor for slow requests"""
+	global _monitor_thread
+	if _monitor_thread is None or not _monitor_thread.is_alive():
+		_monitor_thread = threading.Thread(target=monitor_slow_requests, daemon=True)
+		_monitor_thread.start()
+
+def monitor_slow_requests():
+	"""Background thread that checks for slow requests every 5 seconds"""
+	while True:
+		try:
+			time.sleep(5)
+			current_time = time.time()
+			with _active_requests_lock:
+				for request_id, info in list(_active_requests.items()):
+					elapsed = current_time - info['start_time']
+					# Log at 15 seconds (well before 30s timeout)
+					if elapsed > 15 and not info.get('logged'):
+						app.logger.warning(f"Slow request ({elapsed:.1f}s): {info['method']} {info['url']}")
+						info['logged'] = True
+		except Exception as e:
+			app.logger.error(f"Error in request monitor: {e}")
+
+# Start the monitor when the module loads
+start_request_monitor()
 
 @app.before_request
 def before_request():
@@ -43,19 +75,34 @@ def before_request():
 	g.db = db_session()
 	g.start_time = time.time()
 
+	# Track this request for monitoring
+	g.request_id = id(g)
+	with _active_requests_lock:
+		_active_requests[g.request_id] = {
+			'start_time': g.start_time,
+			'method': request.method,
+			'url': request.url,
+			'logged': False
+		}
+
 
 @app.teardown_appcontext
 def teardown_request(error):
+	# Clean up request tracking
+	if hasattr(g, 'request_id'):
+		with _active_requests_lock:
+			_active_requests.pop(g.request_id, None)
+
 	if hasattr(g, 'db') and g.db:
 		g.db.close()
 	sys.stdout.flush()
 
 @app.after_request
 def after_request(response: Response):
-	if hasattr(g, 'start_time'):
-		elapsed = time.time() - g.start_time
-		if elapsed > 15:
-			app.logger.warning(f"Slow request ({elapsed:.2f}s): {request.method} {request.url}")
+	# Remove from active requests (in case teardown doesn't run)
+	if hasattr(g, 'request_id'):
+		with _active_requests_lock:
+			_active_requests.pop(g.request_id, None)
 
 	response.headers.add("Content-Security-Policy", ("""
 		script-src 'self' 'unsafe-inline' https://*.googletagmanager.com https://hcaptcha.com https://*.hcaptcha.com;
