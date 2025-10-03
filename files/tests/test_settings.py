@@ -563,13 +563,21 @@ def test_settings_log_out_all_others():
 
 def test_settings_filters_post():
 	"""Test POST /settings/filters route"""
+	from files.__main__ import db_session
+	from files.classes import User
+
 	client, user = util_accounts.create_test_client_and_user()
+	user_id = user.id
 
 	response, _ = util.post_with_formkey(
 		client, "/settings/filters",
 		data={"filters": "badword1\nbadword2"}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify filters were saved
+	user_after = db_session().query(User).get(user_id)
+	assert user_after.custom_filter_list == "badword1\nbadword2"
 
 
 def test_settings_namecolor_post():
