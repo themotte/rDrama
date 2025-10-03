@@ -11,6 +11,7 @@ def test_admin_dashboard():
 
 	response = client.get("/admin")
 	assert response.status_code == 200
+	assert "admin" in response.text.lower() or "dashboard" in response.text.lower()
 
 
 def test_admin_reported_posts():
@@ -103,15 +104,24 @@ def test_admin_loggedout():
 
 def test_ban_user():
 	"""Test POST /ban_user/<user_id> route"""
+	from files.__main__ import db_session
+	from files.classes import User
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "ban-admin")
 
 	client, user = util_accounts.create_test_client_and_user("banneduser")
+	user_id = user.id
 
 	response, _ = util.post_with_formkey(
-		admin_client, f"/ban_user/{user.id}",
+		admin_client, f"/ban_user/{user_id}",
 		data={"reason": "Test ban"}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify user is actually banned in database
+	user_after = db_session().query(User).get(user_id)
+	assert user_after.is_banned != 0
+	assert user_after.ban_reason == "Test ban"
 
 
 def test_unban_user():
@@ -144,127 +154,220 @@ def test_unban_user():
 
 def test_shadowban_user():
 	"""Test POST /shadowban/<user_id> route"""
+	from files.__main__ import db_session
+	from files.classes import User
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "sb-admin")
 
 	client, user = util_accounts.create_test_client_and_user("sbuser")
+	user_id = user.id
 
 	response, _ = util.post_with_formkey(
-		admin_client, f"/shadowban/{user.id}",
+		admin_client, f"/shadowban/{user_id}",
 		data={"reason": "Test shadowban"}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify user is actually shadowbanned in database
+	user_after = db_session().query(User).get(user_id)
+	assert user_after.shadowbanned is not None
 
 
 def test_unshadowban_user():
 	"""Test POST /unshadowban/<user_id> route"""
+	from files.__main__ import db_session
+	from files.classes import User
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "usb-admin")
 
 	client, user = util_accounts.create_test_client_and_user("usbuser")
+	user_id = user.id
 
+	# First shadowban the user
+	util.post_with_formkey(
+		admin_client, f"/shadowban/{user_id}",
+		data={"reason": "Test shadowban"}
+	)
+
+	# Then unshadowban them
 	response, _ = util.post_with_formkey(
-		admin_client, f"/unshadowban/{user.id}",
+		admin_client, f"/unshadowban/{user_id}",
 		data={}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify user is actually unshadowbanned in database
+	user_after = db_session().query(User).get(user_id)
+	assert user_after.shadowbanned is None
 
 
 def test_distinguish_post():
 	"""Test POST /distinguish/<post_id> route"""
+	from files.__main__ import db_session
+	from files.classes import Submission
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(1, "dist-admin")
 
 	# Create a post by admin
 	post = util_submissions.create_submission_for_client(admin_client)
+	post_id = post.id
 
 	response, _ = util.post_with_formkey(
-		admin_client, f"/distinguish/{post.id}",
+		admin_client, f"/distinguish/{post_id}",
 		data={}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify post is actually distinguished in database
+	post_after = db_session().query(Submission).get(post_id)
+	assert post_after.distinguish_level > 0
 
 
 def test_distinguish_comment():
 	"""Test POST /distinguish_comment/<c_id> route"""
+	from files.__main__ import db_session
+	from files.classes import Comment
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(1, "distc-admin")
 
 	# Create a post and comment by admin
 	post = util_submissions.create_submission_for_client(admin_client)
 	comment = util_comments.create_comment_for_client(admin_client, post.id)
+	comment_id = comment.id
 
 	response, _ = util.post_with_formkey(
-		admin_client, f"/distinguish_comment/{comment.id}",
+		admin_client, f"/distinguish_comment/{comment_id}",
 		data={}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify comment is actually distinguished in database
+	comment_after = db_session().query(Comment).get(comment_id)
+	assert comment_after.distinguish_level > 0
 
 
 def test_sticky_post():
 	"""Test POST /sticky/<post_id> route"""
+	from files.__main__ import db_session
+	from files.classes import Submission
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "sticky-admin")
 
 	client, user = util_accounts.create_test_client_and_user("stickypost")
 	post = util_submissions.create_submission_for_client(client)
+	post_id = post.id
 
 	response, _ = util.post_with_formkey(
-		admin_client, f"/sticky/{post.id}",
+		admin_client, f"/sticky/{post_id}",
 		data={}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify post is actually stickied in database
+	post_after = db_session().query(Submission).get(post_id)
+	assert post_after.stickied is not None
 
 
 def test_sticky_comment():
 	"""Test POST /sticky_comment/<cid> route"""
+	from files.__main__ import db_session
+	from files.classes import Comment
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "stickyc-admin")
 
 	client, user = util_accounts.create_test_client_and_user("stickycomment")
 	post = util_submissions.create_submission_for_client(client)
 	comment = util_comments.create_comment_for_client(client, post.id)
+	comment_id = comment.id
 
 	response, _ = util.post_with_formkey(
-		admin_client, f"/sticky_comment/{comment.id}",
+		admin_client, f"/sticky_comment/{comment_id}",
 		data={}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify comment is actually stickied in database
+	comment_after = db_session().query(Comment).get(comment_id)
+	assert comment_after.is_pinned is not None
 
 
 def test_unsticky_comment():
 	"""Test POST /unsticky_comment/<cid> route"""
+	from files.__main__ import db_session
+	from files.classes import Comment
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "unstickyc-adm")
 
 	client, user = util_accounts.create_test_client_and_user("unstickycom")
 	post = util_submissions.create_submission_for_client(client)
 	comment = util_comments.create_comment_for_client(client, post.id)
+	comment_id = comment.id
 
-	response, _ = util.post_with_formkey(
-		admin_client, f"/unsticky_comment/{comment.id}",
+	# First sticky the comment
+	util.post_with_formkey(
+		admin_client, f"/sticky_comment/{comment_id}",
 		data={}
 	)
-	assert response.status_code in [200, 302, 400]
+
+	# Then unsticky it
+	response, _ = util.post_with_formkey(
+		admin_client, f"/unsticky_comment/{comment_id}",
+		data={}
+	)
+	assert response.status_code in [200, 302]
+
+	# Verify comment is actually unstickied in database
+	comment_after = db_session().query(Comment).get(comment_id)
+	assert comment_after.is_pinned is None
 
 
 def test_admin_badge_grant():
 	"""Test POST /admin/badge_grant route"""
+	from files.__main__ import db_session
+	from files.classes import Badge
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "badge-admin")
 
 	client, user = util_accounts.create_test_client_and_user("badgeuser")
+	user_id = user.id
 
 	response, _ = util.post_with_formkey(
 		admin_client, "/admin/badge_grant",
-		data={"username": user.username, "badge_id": "1"}
+		data={"username": user.username, "badge_id": "1", "description": "Test badge"}
 	)
-	assert response.status_code in [200, 302, 400, 404]
+	assert response.status_code in [200, 302]
+
+	# Verify badge was granted in database
+	badge = db_session().query(Badge).filter_by(user_id=user_id, badge_id=1).first()
+	assert badge is not None
 
 
 def test_admin_badge_remove():
 	"""Test POST /admin/badge_remove route"""
+	from files.__main__ import db_session
+	from files.classes import Badge
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "badgerm-admin")
 
 	client, user = util_accounts.create_test_client_and_user("badgermuser")
+	user_id = user.id
 
+	# First grant a badge
+	util.post_with_formkey(
+		admin_client, "/admin/badge_grant",
+		data={"username": user.username, "badge_id": "1", "description": "Test badge"}
+	)
+
+	# Then remove it
 	response, _ = util.post_with_formkey(
 		admin_client, "/admin/badge_remove",
 		data={"username": user.username, "badge_id": "1"}
 	)
-	assert response.status_code in [200, 302, 400, 404]
+	assert response.status_code in [200, 302]
+
+	# Verify badge was removed from database
+	badge = db_session().query(Badge).filter_by(user_id=user_id, badge_id=1).first()
+	assert badge is None
 
 
 def test_admin_alt_votes():
@@ -654,21 +757,29 @@ def test_admin_badge_remove_get():
 
 def test_unsticky_post():
 	"""Test POST /unsticky/<post_id> route"""
+	from files.__main__ import db_session
+	from files.classes import Submission
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "unsticky-admin")
 
 	client, user = util_accounts.create_test_client_and_user("unstickypost")
 	post = util_submissions.create_submission_for_client(client)
+	post_id = post.id
 
 	# First sticky the post
 	response, _ = util.post_with_formkey(
-		admin_client, f"/sticky/{post.id}",
+		admin_client, f"/sticky/{post_id}",
 		data={}
 	)
-	assert response.status_code == 200
+	assert response.status_code in [200, 302]
 
 	# Then unsticky it
 	response, _ = util.post_with_formkey(
-		admin_client, f"/unsticky/{post.id}",
+		admin_client, f"/unsticky/{post_id}",
 		data={}
 	)
-	assert response.status_code == 200
+	assert response.status_code in [200, 302]
+
+	# Verify post is actually unstickied in database
+	post_after = db_session().query(Submission).get(post_id)
+	assert post_after.stickied is None
