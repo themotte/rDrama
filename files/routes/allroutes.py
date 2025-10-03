@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import signal
 import sys
 import time
 from typing import TYPE_CHECKING
@@ -12,26 +11,6 @@ from files.__main__ import app, db_session, limiter
 
 if TYPE_CHECKING:
 	from flask.wrappers import Response
-
-# Track current request for timeout monitoring (single-threaded sync workers)
-_current_request_info = None
-
-def setup_slow_request_alarm():
-	"""Set up SIGALRM handler to log slow requests before timeout"""
-	def alarm_handler(signum, frame):
-		"""Called when alarm goes off - logs slow request"""
-		if _current_request_info:
-			print(f"[SLOW REQUEST] 15s alarm: {_current_request_info['method']} {_current_request_info['url']}", file=sys.stderr)
-			sys.stderr.flush()
-			app.logger.warning(f"Slow request (15s): {_current_request_info['method']} {_current_request_info['url']}")
-		else:
-			print(f"[SLOW REQUEST] 15s alarm: no request info", file=sys.stderr)
-			sys.stderr.flush()
-
-	signal.signal(signal.SIGALRM, alarm_handler)
-
-# Set up the alarm handler when module loads
-setup_slow_request_alarm()
 
 @app.before_request
 def before_request():
@@ -64,40 +43,15 @@ def before_request():
 	g.db = db_session()
 	g.start_time = time.time()
 
-	# Track this request and set alarm for 15 seconds
-	global _current_request_info
-	_current_request_info = {
-		'start_time': g.start_time,
-		'method': request.method,
-		'url': request.url,
-	}
-
-	# Set alarm for 15 seconds (before the 30s gunicorn timeout)
-	signal.alarm(15)
-
 
 @app.teardown_appcontext
 def teardown_request(error):
-	# Cancel the alarm since request is done
-	signal.alarm(0)
-
-	# Clean up request tracking
-	global _current_request_info
-	_current_request_info = None
-
 	if hasattr(g, 'db') and g.db:
 		g.db.close()
 	sys.stdout.flush()
 
 @app.after_request
 def after_request(response: Response):
-	# Cancel the alarm since request completed successfully
-	signal.alarm(0)
-
-	# Clean up request tracking
-	global _current_request_info
-	_current_request_info = None
-
 	response.headers.add("Content-Security-Policy", ("""
 		script-src 'self' 'unsafe-inline' https://*.googletagmanager.com https://hcaptcha.com https://*.hcaptcha.com;
 		img-src 'self' https://*.google-analytics.com https://*.googletagmanager.com;
