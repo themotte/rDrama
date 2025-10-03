@@ -14,6 +14,7 @@ def run_test(args):
             "-s",
             "--cov=files",
             "--cov-report=html",
+            "--cov-report=term",
         ] + pytest_args
     ])
 
