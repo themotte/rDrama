@@ -1079,7 +1079,7 @@ def unban_user(user_id, v):
 
 	g.db.commit()
 
-	if "@" in request.referrer: return redirect(user.url)
+	if request.referrer and "@" in request.referrer: return redirect(user.url)
 	else: return {"message": f"@{user.username} was unbanned!"}
 
 

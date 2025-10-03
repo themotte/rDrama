@@ -116,15 +116,30 @@ def test_ban_user():
 
 def test_unban_user():
 	"""Test POST /unban_user/<user_id> route"""
+	from files.__main__ import db_session
+	from files.classes import User
+
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "unban-admin")
 
 	client, user = util_accounts.create_test_client_and_user("unbanneduser")
+	user_id = user.id
 
+	# First ban the user
+	util.post_with_formkey(
+		admin_client, f"/ban_user/{user_id}",
+		data={"reason": "Test ban"}
+	)
+
+	# Then unban them
 	response, _ = util.post_with_formkey(
-		admin_client, f"/unban_user/{user.id}",
+		admin_client, f"/unban_user/{user_id}",
 		data={}
 	)
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code in [200, 302]
+
+	# Verify user is actually unbanned in database
+	user_after = db_session().query(User).get(user_id)
+	assert user_after.is_banned == 0
 
 
 def test_shadowban_user():
