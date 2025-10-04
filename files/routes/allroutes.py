@@ -38,8 +38,6 @@ def before_request():
 		' firefox/' in ua)
 	g.timestamp = int(time.time())
 
-	limiter.check()
-
 	# Create a new session instead of reusing the thread-local scoped session
 	# This prevents thread safety issues with Gunicorn's gthread workers
 	g.db = db_session.session_factory()

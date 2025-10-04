@@ -112,7 +112,6 @@ def chat(v):
 @limiter.limit("3/second")
 @chat_is_allowed()
 def speak(data, v):
-	limiter.check()
 	if v.is_banned: return '', 403
 
 	text = sanitize_raw(
@@ -188,7 +187,6 @@ def typing_indicator(data, v):
 @socketio.on('read')
 @chat_is_allowed()
 def read(data, v):
-	limiter.check()
 	if v.is_banned: return '', 403
 
 	# This value gets truncated at some point in the pipeline and I haven't really spent time to figure out where.

@@ -180,7 +180,6 @@ limiter = flask_limiter.Limiter(
 	default_limits=["3/second;30/minute;200/hour;1000/day"],
 	application_limits=["10/second;200/minute;5000/hour;10000/day"],
 	storage_uri=CACHE_REDIS_URL,
-	auto_check=False,
 	enabled=RATE_LIMITER_ENABLED,
 )
 
