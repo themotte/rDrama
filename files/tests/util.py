@@ -1,5 +1,6 @@
 
 from bs4 import BeautifulSoup
+from contextlib import contextmanager
 import json
 import random
 import re
@@ -80,6 +81,24 @@ def post_json_with_formkey(client, get_url, post_url, json_data):
                                content_type='application/json')
 
     return post_response, get_response
+
+@contextmanager
+def test_db_session():
+    """
+    Context manager for creating a test database session.
+    Automatically closes the session when done.
+
+    Usage:
+        with test_db_session() as session:
+            user = session.get(User, user_id)
+            assert user.is_banned != 0
+    """
+    from files.__main__ import db_session
+    session = db_session.session_factory()
+    try:
+        yield session
+    finally:
+        session.close()
 
 # not cryptographically secure, deal with it
 def generate_text():

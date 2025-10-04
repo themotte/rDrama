@@ -28,9 +28,10 @@ def test_report_post():
 	assert "Post reported!" in report_response.text
 
 	# Verify the flag was created in the database
-	flags = db_session.query(Flag).filter_by(post_id=post.id, user_id=user.id).all()
-	assert len(flags) == 1
-	assert flags[0].reason == "Test report reason"
+	with util.test_db_session() as session:
+		flags = session.query(Flag).filter_by(post_id=post.id, user_id=user.id).all()
+		assert len(flags) == 1
+		assert flags[0].reason == "Test report reason"
 
 def test_report_post_with_admin_flair():
 	"""Test that admin users can set flair when reporting with ! prefix"""
@@ -60,14 +61,15 @@ def test_report_post_with_admin_flair():
 	assert "Post reported!" in report_response.text
 
 	# Verify the flair was set in the database
-	updated_post = db_session.query(Submission).filter_by(id=post.id).first()
-	assert updated_post.flair == flair_text
+	with util.test_db_session() as session:
+		updated_post = session.query(Submission).filter_by(id=post.id).first()
+		assert updated_post.flair == flair_text
 
-	# Verify a mod action was created
-	mod_actions = db_session.query(ModAction).filter_by(target_submission_id=post.id, kind="flair_post").all()
-	assert len(mod_actions) == initial_mod_actions + 1
-	assert mod_actions[-1].user_id == user.id
-	assert f'"{flair_text}"' in mod_actions[-1]._note
+		# Verify a mod action was created
+		mod_actions = session.query(ModAction).filter_by(target_submission_id=post.id, kind="flair_post").all()
+		assert len(mod_actions) == initial_mod_actions + 1
+		assert mod_actions[-1].user_id == user.id
+		assert f'"{flair_text}"' in mod_actions[-1]._note
 
 def test_report_comment():
 	"""Test reporting a comment"""
@@ -95,9 +97,10 @@ def test_report_comment():
 	assert "Comment reported!" in report_response.text
 
 	# Verify the flag was created in the database
-	flags = db_session.query(CommentFlag).filter_by(comment_id=comment.id, user_id=user.id).all()
-	assert len(flags) == 1
-	assert flags[0].reason == "Test comment report"
+	with util.test_db_session() as session:
+		flags = session.query(CommentFlag).filter_by(comment_id=comment.id, user_id=user.id).all()
+		assert len(flags) == 1
+		assert flags[0].reason == "Test comment report"
 
 def test_report_nonexistent_post():
 	"""Test reporting a nonexistent post returns 404"""

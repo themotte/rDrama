@@ -61,8 +61,9 @@ def test_settings_css_post():
 	# Verify the CSS was saved
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.css == css
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.css == css
 
 
 def test_settings_css_post_empty():
@@ -80,8 +81,9 @@ def test_settings_css_post_empty():
 	# Verify the CSS was saved as empty
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.css == ""
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.css == ""
 
 
 def test_settings_profilecss_get():
@@ -107,8 +109,9 @@ def test_settings_profilecss_post():
 	# Verify the CSS was saved
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.profilecss == css
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.profilecss == css
 
 
 def test_settings_profilecss_post_empty():
@@ -126,8 +129,9 @@ def test_settings_profilecss_post_empty():
 	# Verify the CSS was saved as empty
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.profilecss == ""
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.profilecss == ""
 
 
 def test_settings_apps_get():
@@ -242,8 +246,9 @@ def test_settings_profile_post_reddit():
 
 	# Verify the setting was saved
 	db_session.expire_all()
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.reddit == "old.reddit.com"
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.reddit == "old.reddit.com"
 
 
 def test_settings_profile_post_hidevotedon():
@@ -260,8 +265,9 @@ def test_settings_profile_post_hidevotedon():
 	# Verify the setting was saved
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.hidevotedon is True
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.hidevotedon is True
 
 
 def test_settings_profile_post_cardview():
@@ -276,8 +282,9 @@ def test_settings_profile_post_cardview():
 
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.cardview is True
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.cardview is True
 
 
 def test_settings_profile_post_newtab():
@@ -292,8 +299,9 @@ def test_settings_profile_post_newtab():
 
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.newtab is True
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.newtab is True
 
 
 def test_settings_profile_post_over18():
@@ -308,8 +316,9 @@ def test_settings_profile_post_over18():
 
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.over_18 is True
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.over_18 is True
 
 
 def test_settings_profile_post_bio():
@@ -325,8 +334,9 @@ def test_settings_profile_post_bio():
 
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.bio == bio
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.bio == bio
 
 
 def test_settings_profile_post_bio_clear():
@@ -349,8 +359,9 @@ def test_settings_profile_post_bio_clear():
 
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.bio is None
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.bio is None
 
 
 def test_settings_profile_post_frontsize():
@@ -365,8 +376,9 @@ def test_settings_profile_post_frontsize():
 
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.frontsize == 50
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.frontsize == 50
 
 
 def test_settings_profile_post_frontsize_invalid():
@@ -392,8 +404,9 @@ def test_settings_profile_post_theme():
 
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.theme == "light"
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.theme == "light"
 
 
 def test_settings_profile_post_no_changes():
@@ -420,8 +433,9 @@ def test_settings_filters_post():
 
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.custom_filter_list == filters
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.custom_filter_list == filters
 
 
 def test_settings_filters_post_no_change():
@@ -461,8 +475,9 @@ def test_changelogsub_toggle():
 
 	# Verify it changed
 	db_session.expire_all()
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.changelogsub != initial_state
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.changelogsub != initial_state
 
 
 def test_settings_namecolor_post():
@@ -477,8 +492,9 @@ def test_settings_namecolor_post():
 
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.namecolor == "ff0000"
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.namecolor == "ff0000"
 
 
 def test_settings_namecolor_post_invalid():
@@ -505,8 +521,9 @@ def test_settings_themecolor_post():
 
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.themecolor == "0000ff"
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.themecolor == "0000ff"
 
 
 def test_settings_titlecolor_post():
@@ -521,8 +538,9 @@ def test_settings_titlecolor_post():
 
 	from files.__main__ import db_session
 	from files.classes import User
-	user_updated = db_session.query(User).filter_by(id=user.id).first()
-	assert user_updated.titlecolor == "00ff00"
+	with util.test_db_session() as session:
+		user_updated = session.query(User).filter_by(id=user.id).first()
+		assert user_updated.titlecolor == "00ff00"
 
 
 def test_settings_verifiedcolor_post():
@@ -576,8 +594,9 @@ def test_settings_filters_post():
 	assert response.status_code in [200, 302]
 
 	# Verify filters were saved
-	user_after = db_session().get(User, user_id)
-	assert user_after.custom_filter_list == "badword1\nbadword2"
+	with util.test_db_session() as session:
+		user_after = session.get(User, user_id)
+		assert user_after.custom_filter_list == "badword1\nbadword2"
 
 
 def test_settings_namecolor_post():

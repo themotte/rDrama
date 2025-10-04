@@ -29,8 +29,9 @@ def test_delete_comment():
 	assert "deleted" in delete_response.text.lower()
 
 	# Verify comment is marked as deleted in database
-	comment_after = db_session.get(Comment, comment.id)
-	assert comment_after.state_user_deleted_utc is not None
+	with util.test_db_session() as session:
+		comment_after = session.get(Comment, comment.id)
+		assert comment_after.state_user_deleted_utc is not None
 
 
 def test_delete_comment_not_author():
@@ -100,8 +101,9 @@ def test_undelete_comment():
 	assert "undeleted" in undelete_response.text.lower()
 
 	# Verify comment is no longer deleted
-	comment_after = db_session.get(Comment, comment.id)
-	assert comment_after.state_user_deleted_utc is None
+	with util.test_db_session() as session:
+		comment_after = session.get(Comment, comment.id)
+		assert comment_after.state_user_deleted_utc is None
 
 
 def test_undelete_not_deleted_comment():
@@ -141,9 +143,10 @@ def test_edit_comment():
 	assert edit_response.status_code == 200
 
 	# Verify comment body was updated
-	comment_after = db_session.get(Comment, comment.id)
-	assert comment_after.body == new_body
-	assert comment_after.body != original_body
+	with util.test_db_session() as session:
+		comment_after = session.get(Comment, comment.id)
+		assert comment_after.body == new_body
+		assert comment_after.body != original_body
 
 
 def test_edit_comment_not_author():
@@ -203,9 +206,10 @@ def test_pin_comment():
 	assert "pinned" in pin_response.text.lower()
 
 	# Verify comment is pinned
-	comment_after = db_session.get(Comment, comment.id)
-	assert comment_after.is_pinned is not None
-	assert "(OP)" in comment_after.is_pinned or user.username in comment_after.is_pinned
+	with util.test_db_session() as session:
+		comment_after = session.get(Comment, comment.id)
+		assert comment_after.is_pinned is not None
+		assert "(OP)" in comment_after.is_pinned or user.username in comment_after.is_pinned
 
 
 def test_pin_comment_not_op():
@@ -253,8 +257,9 @@ def test_unpin_comment():
 	assert "unpinned" in unpin_response.text.lower()
 
 	# Verify comment is no longer pinned
-	comment_after = db_session.get(Comment, comment.id)
-	assert comment_after.is_pinned is None
+	with util.test_db_session() as session:
+		comment_after = session.get(Comment, comment.id)
+		assert comment_after.is_pinned is None
 
 
 def test_save_comment():
@@ -276,12 +281,13 @@ def test_save_comment():
 
 	# Verify save relationship exists in database
 	from files.classes import CommentSaveRelationship
-	save_rel = db_session.query(CommentSaveRelationship).filter_by(
-		user_id=user.id,
-		comment_id=comment.id
-	).one_or_none()
+	with util.test_db_session() as session:
+		save_rel = session.query(CommentSaveRelationship).filter_by(
+			user_id=user.id,
+			comment_id=comment.id
+		).one_or_none()
 
-	assert save_rel is not None
+		assert save_rel is not None
 
 
 def test_save_already_saved_comment():
@@ -334,12 +340,13 @@ def test_unsave_comment():
 
 	# Verify save relationship no longer exists
 	from files.classes import CommentSaveRelationship
-	save_rel = db_session.query(CommentSaveRelationship).filter_by(
-		user_id=user.id,
-		comment_id=comment.id
-	).one_or_none()
+	with util.test_db_session() as session:
+		save_rel = session.query(CommentSaveRelationship).filter_by(
+			user_id=user.id,
+			comment_id=comment.id
+		).one_or_none()
 
-	assert save_rel is None
+		assert save_rel is None
 
 
 def test_unsave_not_saved_comment():

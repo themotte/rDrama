@@ -119,9 +119,10 @@ def test_ban_user():
 	assert response.status_code in [200, 302]
 
 	# Verify user is actually banned in database
-	user_after = db_session().get(User, user_id)
-	assert user_after.is_banned != 0
-	assert user_after.ban_reason == "Test ban"
+	with util.test_db_session() as session:
+		user_after = session.get(User, user_id)
+		assert user_after.is_banned != 0
+		assert user_after.ban_reason == "Test ban"
 
 
 def test_unban_user():
@@ -148,8 +149,9 @@ def test_unban_user():
 	assert response.status_code in [200, 302]
 
 	# Verify user is actually unbanned in database
-	user_after = db_session().get(User, user_id)
-	assert user_after.is_banned == 0
+	with util.test_db_session() as session:
+		user_after = session.get(User, user_id)
+		assert user_after.is_banned == 0
 
 
 def test_shadowban_user():
@@ -169,8 +171,9 @@ def test_shadowban_user():
 	assert response.status_code in [200, 302]
 
 	# Verify user is actually shadowbanned in database
-	user_after = db_session().get(User, user_id)
-	assert user_after.shadowbanned is not None
+	with util.test_db_session() as session:
+		user_after = session.get(User, user_id)
+		assert user_after.shadowbanned is not None
 
 
 def test_unshadowban_user():
@@ -197,8 +200,9 @@ def test_unshadowban_user():
 	assert response.status_code in [200, 302]
 
 	# Verify user is actually unshadowbanned in database
-	user_after = db_session().get(User, user_id)
-	assert user_after.shadowbanned is None
+	with util.test_db_session() as session:
+		user_after = session.get(User, user_id)
+		assert user_after.shadowbanned is None
 
 
 def test_distinguish_post():
@@ -219,8 +223,9 @@ def test_distinguish_post():
 	assert response.status_code in [200, 302]
 
 	# Verify post is actually distinguished in database
-	post_after = db_session().get(Submission, post_id)
-	assert post_after.distinguish_level > 0
+	with util.test_db_session() as session:
+		post_after = session.get(Submission, post_id)
+		assert post_after.distinguish_level > 0
 
 
 def test_distinguish_comment():
@@ -242,8 +247,9 @@ def test_distinguish_comment():
 	assert response.status_code in [200, 302]
 
 	# Verify comment is actually distinguished in database
-	comment_after = db_session().get(Comment, comment_id)
-	assert comment_after.distinguish_level > 0
+	with util.test_db_session() as session:
+		comment_after = session.get(Comment, comment_id)
+		assert comment_after.distinguish_level > 0
 
 
 def test_sticky_post():
@@ -264,8 +270,9 @@ def test_sticky_post():
 	assert response.status_code in [200, 302]
 
 	# Verify post is actually stickied in database
-	post_after = db_session().get(Submission, post_id)
-	assert post_after.stickied is not None
+	with util.test_db_session() as session:
+		post_after = session.get(Submission, post_id)
+		assert post_after.stickied is not None
 
 
 def test_sticky_comment():
@@ -287,8 +294,9 @@ def test_sticky_comment():
 	assert response.status_code in [200, 302]
 
 	# Verify comment is actually stickied in database
-	comment_after = db_session().get(Comment, comment_id)
-	assert comment_after.is_pinned is not None
+	with util.test_db_session() as session:
+		comment_after = session.get(Comment, comment_id)
+		assert comment_after.is_pinned is not None
 
 
 def test_unsticky_comment():
@@ -317,8 +325,9 @@ def test_unsticky_comment():
 	assert response.status_code in [200, 302]
 
 	# Verify comment is actually unstickied in database
-	comment_after = db_session().get(Comment, comment_id)
-	assert comment_after.is_pinned is None
+	with util.test_db_session() as session:
+		comment_after = session.get(Comment, comment_id)
+		assert comment_after.is_pinned is None
 
 
 def test_admin_badge_grant():
@@ -338,8 +347,9 @@ def test_admin_badge_grant():
 	assert response.status_code in [200, 302]
 
 	# Verify badge was granted in database
-	badge = db_session().query(Badge).filter_by(user_id=user_id, badge_id=1).first()
-	assert badge is not None
+	with util.test_db_session() as session:
+		badge = session.query(Badge).filter_by(user_id=user_id, badge_id=1).first()
+		assert badge is not None
 
 
 def test_admin_badge_remove():
@@ -366,8 +376,9 @@ def test_admin_badge_remove():
 	assert response.status_code in [200, 302]
 
 	# Verify badge was removed from database
-	badge = db_session().query(Badge).filter_by(user_id=user_id, badge_id=1).first()
-	assert badge is None
+	with util.test_db_session() as session:
+		badge = session.query(Badge).filter_by(user_id=user_id, badge_id=1).first()
+		assert badge is None
 
 
 def test_admin_alt_votes():
@@ -403,10 +414,11 @@ def test_admin_banned_domains_post():
 	assert response.status_code in [200, 302]
 
 	# Verify domain was banned in database (re-query after HTTP request)
-	banned = db_session().query(BannedDomain).filter_by(domain=test_domain).first()
-	assert banned is not None
-	assert banned.domain == test_domain
-	assert banned.reason == "Test ban reason"
+	with util.test_db_session() as session:
+		banned = session.query(BannedDomain).filter_by(domain=test_domain).first()
+		assert banned is not None
+		assert banned.domain == test_domain
+		assert banned.reason == "Test ban reason"
 
 
 def test_admin_nuke_user():
@@ -431,10 +443,11 @@ def test_admin_nuke_user():
 	assert response.status_code in [200, 302]
 
 	# Verify all user's posts and comments are removed in database
-	post_after = db_session().get(Submission, post_id)
-	comment_after = db_session().get(Comment, comment_id)
-	assert post_after.state_mod.name == "REMOVED"
-	assert comment_after.state_mod.name == "REMOVED"
+	with util.test_db_session() as session:
+		post_after = session.get(Submission, post_id)
+		comment_after = session.get(Comment, comment_id)
+		assert post_after.state_mod.name == "REMOVED"
+		assert comment_after.state_mod.name == "REMOVED"
 
 
 def test_admin_unnuke_user():
@@ -466,10 +479,11 @@ def test_admin_unnuke_user():
 	assert response.status_code in [200, 302]
 
 	# Verify all user's posts and comments are restored in database
-	post_after = db_session().get(Submission, post_id)
-	comment_after = db_session().get(Comment, comment_id)
-	assert post_after.state_mod.name == "VISIBLE"
-	assert comment_after.state_mod.name == "VISIBLE"
+	with util.test_db_session() as session:
+		post_after = session.get(Submission, post_id)
+		comment_after = session.get(Comment, comment_id)
+		assert post_after.state_mod.name == "VISIBLE"
+		assert comment_after.state_mod.name == "VISIBLE"
 
 
 def test_admin_verify_user():
@@ -489,8 +503,9 @@ def test_admin_verify_user():
 	assert response.status_code in [200, 302]
 
 	# Verify user is actually verified in database
-	user_after = db_session().get(User, user_id)
-	assert user_after.verified == "Verified"
+	with util.test_db_session() as session:
+		user_after = session.get(User, user_id)
+		assert user_after.verified == "Verified"
 
 
 def test_admin_unverify_user():
@@ -517,8 +532,9 @@ def test_admin_unverify_user():
 	assert response.status_code in [200, 302]
 
 	# Verify user is actually unverified in database
-	user_after = db_session().get(User, user_id)
-	assert user_after.verified is None
+	with util.test_db_session() as session:
+		user_after = session.get(User, user_id)
+		assert user_after.verified is None
 
 
 def test_admin_title_change():
@@ -538,8 +554,9 @@ def test_admin_title_change():
 	assert response.status_code in [200, 302]
 
 	# Verify title was changed in database
-	user_after = db_session().get(User, user_id)
-	assert user_after.customtitleplain == "New Title"
+	with util.test_db_session() as session:
+		user_after = session.get(User, user_id)
+		assert user_after.customtitleplain == "New Title"
 
 
 def test_admin_link_accounts():
@@ -561,9 +578,10 @@ def test_admin_link_accounts():
 	assert response.status_code in [200, 302]
 
 	# Verify alt link was created in database
-	alt = db_session().query(Alt).filter_by(user1=user1_id, user2=user2_id).first()
-	assert alt is not None
-	assert alt.is_manual == True
+	with util.test_db_session() as session:
+		alt = session.query(Alt).filter_by(user1=user1_id, user2=user2_id).first()
+		assert alt is not None
+		assert alt.is_manual == True
 
 
 def test_admin_under_attack():
@@ -621,8 +639,9 @@ def test_filter_automatic():
 	assert response.status_code in [200, 302]
 
 	# Verify user filter behavior was set to automatic in database
-	user_after = db_session().get(User, user_id)
-	assert user_after.filter_behavior == FilterBehavior.AUTOMATIC
+	with util.test_db_session() as session:
+		user_after = session.get(User, user_id)
+		assert user_after.filter_behavior == FilterBehavior.AUTOMATIC
 
 
 def test_filter_filtered():
@@ -643,8 +662,9 @@ def test_filter_filtered():
 	assert response.status_code in [200, 302]
 
 	# Verify user filter behavior was set to filtered in database
-	user_after = db_session().get(User, user_id)
-	assert user_after.filter_behavior == FilterBehavior.FILTERED
+	with util.test_db_session() as session:
+		user_after = session.get(User, user_id)
+		assert user_after.filter_behavior == FilterBehavior.FILTERED
 
 
 def test_filter_unfiltered():
@@ -665,8 +685,9 @@ def test_filter_unfiltered():
 	assert response.status_code in [200, 302]
 
 	# Verify user filter behavior was set to unfiltered in database
-	user_after = db_session().get(User, user_id)
-	assert user_after.filter_behavior == FilterBehavior.UNFILTERED
+	with util.test_db_session() as session:
+		user_after = session.get(User, user_id)
+		assert user_after.filter_behavior == FilterBehavior.UNFILTERED
 
 
 def test_admin_update_filter_status():
@@ -692,8 +713,9 @@ def test_admin_update_filter_status():
 	assert response.status_code == 200
 
 	# Verify post is actually removed in database
-	post_after = db_session().get(Submission, post_id)
-	assert post_after.state_mod.name == "REMOVED"
+	with util.test_db_session() as session:
+		post_after = session.get(Submission, post_id)
+		assert post_after.state_mod.name == "REMOVED"
 
 	# Test restoring the post to normal
 	response, _ = util.post_json_with_formkey(
@@ -706,8 +728,9 @@ def test_admin_update_filter_status():
 	assert response.status_code == 200
 
 	# Verify post is restored in database
-	post_after = db_session().get(Submission, post_id)
-	assert post_after.state_mod.name == "VISIBLE"
+	with util.test_db_session() as session:
+		post_after = session.get(Submission, post_id)
+		assert post_after.state_mod.name == "VISIBLE"
 
 
 def test_admin_site_settings():
@@ -842,8 +865,9 @@ def test_make_admin():
 	assert response.status_code in [200, 302]
 
 	# Verify user is now an admin in database
-	user_after = db_session().get(User, target_user_id)
-	assert user_after.admin_level == 2
+	with util.test_db_session() as session:
+		user_after = session.get(User, target_user_id)
+		assert user_after.admin_level == 2
 
 
 def test_remove_admin():
@@ -863,8 +887,9 @@ def test_remove_admin():
 	assert response.status_code in [200, 302]
 
 	# Verify user is no longer an admin in database
-	user_after = db_session().get(User, target_user_id)
-	assert user_after.admin_level == 0
+	with util.test_db_session() as session:
+		user_after = session.get(User, target_user_id)
+		assert user_after.admin_level == 0
 
 
 def test_create_note():
@@ -897,13 +922,14 @@ def test_create_note():
 	assert response.status_code == 200
 
 	# Verify note was created in database (re-query after HTTP request)
-	note = db_session().query(UserNote).filter_by(
-		author_id=admin_id,
-		reference_user=user_id
-	).first()
-	assert note is not None
-	assert note.note == "Test admin note"
-	assert note.tag.value == 2
+	with util.test_db_session() as session:
+		note = session.query(UserNote).filter_by(
+			author_id=admin_id,
+			reference_user=user_id
+		).first()
+		assert note is not None
+		assert note.note == "Test admin note"
+		assert note.tag.value == 2
 
 
 def test_delete_note():
@@ -949,10 +975,11 @@ def test_revert_actions():
 	)
 
 	# Verify they're removed (re-query after HTTP requests)
-	post_before = db_session().get(Submission, post_id)
-	comment_before = db_session().get(Comment, comment_id)
-	assert post_before.state_mod.name == "REMOVED"
-	assert comment_before.state_mod.name == "REMOVED"
+	with util.test_db_session() as session:
+		post_before = session.get(Submission, post_id)
+		comment_before = session.get(Comment, comment_id)
+		assert post_before.state_mod.name == "REMOVED"
+		assert comment_before.state_mod.name == "REMOVED"
 
 	# Now revert all of the mod's actions
 	response, _ = util.post_with_formkey(
@@ -962,10 +989,11 @@ def test_revert_actions():
 	assert response.status_code in [200, 302]
 
 	# Verify the removals were reverted (re-query after HTTP request)
-	post_after = db_session().get(Submission, post_id)
-	comment_after = db_session().get(Comment, comment_id)
-	assert post_after.state_mod.name == "VISIBLE"
-	assert comment_after.state_mod.name == "VISIBLE"
+	with util.test_db_session() as session:
+		post_after = session.get(Submission, post_id)
+		comment_after = session.get(Comment, comment_id)
+		assert post_after.state_mod.name == "VISIBLE"
+		assert comment_after.state_mod.name == "VISIBLE"
 
 
 def test_admin_badge_grant_get():
@@ -1010,5 +1038,6 @@ def test_unsticky_post():
 	assert response.status_code in [200, 302]
 
 	# Verify post is actually unstickied in database
-	post_after = db_session().get(Submission, post_id)
-	assert post_after.stickied is None
+	with util.test_db_session() as session:
+		post_after = session.get(Submission, post_id)
+		assert post_after.stickied is None

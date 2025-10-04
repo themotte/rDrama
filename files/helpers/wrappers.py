@@ -16,7 +16,8 @@ def get_logged_in_user():
 		return g.v
 
 	if not (hasattr(g, 'db') and g.db):
-		g.db = db_session()
+		# Create a new session instead of reusing the thread-local scoped session
+		g.db = db_session.session_factory()
 
 	v = None
 

@@ -40,7 +40,9 @@ def before_request():
 
 	limiter.check()
 
-	g.db = db_session()
+	# Create a new session instead of reusing the thread-local scoped session
+	# This prevents thread safety issues with Gunicorn's gthread workers
+	g.db = db_session.session_factory()
 	g.start_time = time.time()
 
 

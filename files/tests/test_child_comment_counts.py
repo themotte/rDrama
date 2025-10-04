@@ -29,29 +29,30 @@ def test_submission_comment_count():
 		4. Alice the admin removes the comment
 		5. submission.comment_count goes down by 1. Only Bob and admins can see the comment.
 	"""
-	db = db_session()
 	alice_client, alice = util_accounts.create_test_client_and_admin(2, 'Alice')
 
 	bob_client, bob = util_accounts.create_test_client_and_user('Bob')
 	carol_client, carol = util_accounts.create_test_client_and_user('Carol')
 	logged_off_client = util_accounts.create_logged_off_client()
-	
+
 	post = util_submissions.create_submission_for_client(alice_client, {
 		'title': 'Weekly Takes',
 		'body': 'Post your takes. Bad takes will be removed',
 	})
 	post_id = post.id
 
-	post = db.query(Submission).filter_by(id=post_id).first()
-	assert 0 == post.comment_count
+	with util.test_db_session() as db:
+		post = db.query(Submission).filter_by(id=post_id).first()
+		assert 0 == post.comment_count
 
 	comment_body = 'The sun is a social construct.'
 	comment = util_comments.create_comment_for_client(bob_client, post.id, {
 		'body': comment_body,
 	})
 
-	post = db.query(Submission).filter_by(id=post_id).first()
-	assert 1 == post.comment_count
+	with util.test_db_session() as db:
+		post = db.query(Submission).filter_by(id=post_id).first()
+		assert 1 == post.comment_count
 
 	assert_comment_visibility(post, comment_body, {
 		'alice': (alice_client, True),
@@ -69,19 +70,20 @@ def test_submission_comment_count():
 	)
 	assert 200 == response.status_code
 
-	post = db.query(Submission).filter_by(id=post_id).first()
+	with util.test_db_session() as db:
+		post = db.query(Submission).filter_by(id=post_id).first()
 
-	assert_comment_visibility(post, comment_body, {
-		# Alice should see the comment because she is an admin, level >= 2
-		'alice': (alice_client, True),
-		# Bob should see the comment because he wrote the comment
-		'bob': (bob_client, True),
-		# Other users, and guests, should NOT see the comment, since it has been removed
-		'carol': (carol_client, False),
-		'guest': (logged_off_client, False),
-	})
+		assert_comment_visibility(post, comment_body, {
+			# Alice should see the comment because she is an admin, level >= 2
+			'alice': (alice_client, True),
+			# Bob should see the comment because he wrote the comment
+			'bob': (bob_client, True),
+			# Other users, and guests, should NOT see the comment, since it has been removed
+			'carol': (carol_client, False),
+			'guest': (logged_off_client, False),
+		})
 
-	assert 0 == post.comment_count
+		assert 0 == post.comment_count
 
 def test_comment_descendant_count():
 	"""
@@ -90,7 +92,6 @@ def test_comment_descendant_count():
 				no u
 			Good poast
 	"""
-	db = db_session()
 	alice_client, alice = util_accounts.create_test_client_and_user('Alice')
 
 	post = util_submissions.create_submission_for_client(alice_client, {
@@ -103,7 +104,8 @@ def test_comment_descendant_count():
 		'body': 'Here is a contentious top-level comment',
 	})
 
-	assert 0 == db.query(Comment).filter_by(id=root.id).first().descendant_count
+	with util.test_db_session() as db:
+		assert 0 == db.query(Comment).filter_by(id=root.id).first().descendant_count
 
 	reply1 = util_comments.create_comment_for_client(alice_client, post.id, {
 		'body': 'You\'re wrong, this isn\'t contentious',
@@ -123,13 +125,13 @@ def test_comment_descendant_count():
 		'parent_level': root.level,
 	})
 
-	assert 3 == db.query(Comment).filter_by(id=root.id).first().descendant_count
-	assert 1 == db.query(Comment).filter_by(id=reply1.id).first().descendant_count
-	assert 0 == db.query(Comment).filter_by(id=reply2.id).first().descendant_count
-	assert 0 == db.query(Comment).filter_by(id=rereply1.id).first().descendant_count
+	with util.test_db_session() as db:
+		assert 3 == db.query(Comment).filter_by(id=root.id).first().descendant_count
+		assert 1 == db.query(Comment).filter_by(id=reply1.id).first().descendant_count
+		assert 0 == db.query(Comment).filter_by(id=reply2.id).first().descendant_count
+		assert 0 == db.query(Comment).filter_by(id=rereply1.id).first().descendant_count
 
 def test_more_button_label_in_deep_threads():
-	db = db_session()
 	alice_client, alice = util_accounts.create_test_client_and_user('Alice')
 
 	post = util_submissions.create_submission_for_client(alice_client, {

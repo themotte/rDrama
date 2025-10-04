@@ -62,9 +62,10 @@ def test_authorize_post_creates_auth():
 	assert "token=" in auth_response.location
 
 	# Verify ClientAuth was created
-	auth = db_session.query(ClientAuth).filter_by(oauth_client=app.id, user_id=user.id).first()
-	assert auth is not None
-	assert auth.access_token is not None
+	with util.test_db_session() as session:
+		auth = session.query(ClientAuth).filter_by(oauth_client=app.id, user_id=user.id).first()
+		assert auth is not None
+		assert auth.access_token is not None
 
 
 def test_authorize_post_reuses_existing_auth():
@@ -107,8 +108,9 @@ def test_authorize_post_reuses_existing_auth():
 	assert token1 == token2
 
 	# Should only have one ClientAuth
-	auths = db_session.query(ClientAuth).filter_by(oauth_client=app.id, user_id=user.id).all()
-	assert len(auths) == 1
+	with util.test_db_session() as session:
+		auths = session.query(ClientAuth).filter_by(oauth_client=app.id, user_id=user.id).all()
+		assert len(auths) == 1
 
 
 def test_authorize_post_invalid_client():
@@ -141,10 +143,11 @@ def test_request_api_keys():
 	assert "/settings/apps" in response.location
 
 	# Verify app was created
-	app = db_session.query(OauthApp).filter_by(app_name="My Test App", author_id=user.id).first()
-	assert app is not None
-	assert app.redirect_uri == "http://localhost/callback"
-	assert app.description == "Test application description"
+	with util.test_db_session() as session:
+		app = session.query(OauthApp).filter_by(app_name="My Test App", author_id=user.id).first()
+		assert app is not None
+		assert app.redirect_uri == "http://localhost/callback"
+		assert app.description == "Test application description"
 
 
 def test_request_api_keys_sanitizes_name():
@@ -164,10 +167,11 @@ def test_request_api_keys_sanitizes_name():
 	assert response.status_code == 302
 
 	# Verify app name was sanitized (< and > removed)
-	app = db_session.query(OauthApp).filter_by(author_id=user.id).order_by(OauthApp.id.desc()).first()
-	assert app is not None
-	assert "<" not in app.app_name
-	assert ">" not in app.app_name
+	with util.test_db_session() as session:
+		app = session.query(OauthApp).filter_by(author_id=user.id).order_by(OauthApp.id.desc()).first()
+		assert app is not None
+		assert "<" not in app.app_name
+		assert ">" not in app.app_name
 
 
 def test_delete_oauth_app():
@@ -195,8 +199,9 @@ def test_delete_oauth_app():
 	assert "/apps" in response.location
 
 	# Verify app was deleted
-	app = db_session.query(OauthApp).filter_by(id=app_id).first()
-	assert app is None
+	with util.test_db_session() as session:
+		app = session.query(OauthApp).filter_by(id=app_id).first()
+		assert app is None
 
 
 def test_delete_oauth_app_deletes_auths():
@@ -229,8 +234,9 @@ def test_delete_oauth_app_deletes_auths():
 	assert response.status_code == 302
 
 	# Verify ClientAuth was also deleted
-	auth = db_session.query(ClientAuth).filter_by(oauth_client=app_id).first()
-	assert auth is None
+	with util.test_db_session() as session:
+		auth = session.query(ClientAuth).filter_by(oauth_client=app_id).first()
+		assert auth is None
 
 
 def test_delete_oauth_app_forbidden_for_non_author():
@@ -258,8 +264,9 @@ def test_delete_oauth_app_forbidden_for_non_author():
 	assert response.status_code == 403
 
 	# Verify app was not deleted
-	app = db_session.query(OauthApp).filter_by(id=app_id).first()
-	assert app is not None
+	with util.test_db_session() as session:
+		app = session.query(OauthApp).filter_by(id=app_id).first()
+		assert app is not None
 
 
 def test_edit_oauth_app():
@@ -291,10 +298,11 @@ def test_edit_oauth_app():
 	assert "/settings/apps" in response.location
 
 	# Verify app was updated
-	app = db_session.query(OauthApp).filter_by(id=app_id).first()
-	assert app.app_name == "Updated Name"
-	assert app.redirect_uri == "http://localhost/updated"
-	assert app.description == "Updated description"
+	with util.test_db_session() as session:
+		app = session.query(OauthApp).filter_by(id=app_id).first()
+		assert app.app_name == "Updated Name"
+		assert app.redirect_uri == "http://localhost/updated"
+		assert app.description == "Updated description"
 
 
 def test_edit_oauth_app_forbidden_for_non_author():
@@ -326,8 +334,9 @@ def test_edit_oauth_app_forbidden_for_non_author():
 	assert response.status_code == 403
 
 	# Verify app was not updated
-	app = db_session.query(OauthApp).filter_by(id=app_id).first()
-	assert app.app_name == "User 1 App"
+	with util.test_db_session() as session:
+		app = session.query(OauthApp).filter_by(id=app_id).first()
+		assert app.app_name == "User 1 App"
 
 
 def test_admin_app_approve():
@@ -356,13 +365,14 @@ def test_admin_app_approve():
 	assert "approved" in response.text.lower()
 
 	# Verify app has client_id
-	app = db_session.query(OauthApp).filter_by(id=app_id).first()
-	assert app.client_id is not None
+	with util.test_db_session() as session:
+		app = session.query(OauthApp).filter_by(id=app_id).first()
+		assert app.client_id is not None
 
-	# Verify ClientAuth was created
-	auth = db_session.query(ClientAuth).filter_by(oauth_client=app.id, user_id=user.id).first()
-	assert auth is not None
-	assert auth.access_token is not None
+		# Verify ClientAuth was created
+		auth = session.query(ClientAuth).filter_by(oauth_client=app.id, user_id=user.id).first()
+		assert auth is not None
+		assert auth.access_token is not None
 
 
 def test_admin_app_revoke():
@@ -392,8 +402,9 @@ def test_admin_app_revoke():
 	assert "revoked" in response.text.lower()
 
 	# Verify app was deleted
-	app = db_session.query(OauthApp).filter_by(id=app_id).first()
-	assert app is None
+	with util.test_db_session() as session:
+		app = session.query(OauthApp).filter_by(id=app_id).first()
+		assert app is None
 
 
 def test_admin_app_reject():
@@ -422,8 +433,9 @@ def test_admin_app_reject():
 	assert "rejected" in response.text.lower()
 
 	# Verify app was deleted
-	app = db_session.query(OauthApp).filter_by(id=app_id).first()
-	assert app is None
+	with util.test_db_session() as session:
+		app = session.query(OauthApp).filter_by(id=app_id).first()
+		assert app is None
 
 
 def test_admin_apps_list():
@@ -483,9 +495,10 @@ def test_reroll_oauth_tokens():
 	assert "reroll" in response.text.lower()
 
 	# Verify client_id changed
-	app = db_session.query(OauthApp).filter_by(id=app_id).first()
-	assert app.client_id != original_client_id
-	assert app.client_id is not None
+	with util.test_db_session() as session:
+		app = session.query(OauthApp).filter_by(id=app_id).first()
+		assert app.client_id != original_client_id
+		assert app.client_id is not None
 
 
 def test_reroll_oauth_tokens_forbidden_for_non_author():
@@ -516,8 +529,9 @@ def test_reroll_oauth_tokens_forbidden_for_non_author():
 	assert response.status_code == 403
 
 	# Verify client_id did not change
-	app = db_session.query(OauthApp).filter_by(id=app_id).first()
-	assert app.client_id == original_client_id
+	with util.test_db_session() as session:
+		app = session.query(OauthApp).filter_by(id=app_id).first()
+		assert app.client_id == original_client_id
 
 
 def test_admin_app_view():
