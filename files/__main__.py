@@ -4,19 +4,6 @@ stored here.
 '''
 
 import sys
-
-# Only apply gevent monkey patching for chat service (which uses gevent workers)
-# The main service now uses gthread workers which don't need/want monkey patching
-is_chat = 'load_chat' in ' '.join(sys.argv)
-
-if is_chat:
-	import gevent.monkey
-	gevent.monkey.patch_all()
-
-# ^ special case: in general imports should go
-# stdlib - externals - internals, but gevent does monkey patching for stdlib
-# functions so we want to monkey patch before importing other things
-
 import faulthandler
 from os import environ
 from pathlib import Path
@@ -30,10 +17,6 @@ import flask_profiler
 import redis
 from sqlalchemy.engine import Engine, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-
-# Only import gevent for chat service
-if is_chat:
-	import gevent
 
 from files.helpers.config.const import Service
 from files.helpers.strings import bool_from_string

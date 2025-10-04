@@ -49,7 +49,7 @@ def register_command(cmd_name, permission_level = 0):
 if app.debug:
 	socketio = SocketIO(
 		app,
-		async_mode='gevent',
+		async_mode='eventlet',
 		logger=True,
 		engineio_logger=True,
 		debug=True,
@@ -57,7 +57,7 @@ if app.debug:
 else:
 	socketio = SocketIO(
 		app,
-		async_mode='gevent',
+		async_mode='eventlet',
 	)
 
 CHAT_SCROLLBACK_ITEMS: Final[int] = 500
