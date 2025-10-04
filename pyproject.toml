@@ -49,7 +49,6 @@ pytest = "*"
 pytest-cov = "*"
 tabulate = "*"
 pandas = "*"
-matplotlib = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
