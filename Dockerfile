@@ -8,9 +8,11 @@ RUN apt update && apt -y upgrade
 
 # we'll end up blowing away this directory via docker compose
 WORKDIR /service
+
+RUN pip install 'poetry==2.2.1'
+
 COPY pyproject.toml .
 COPY poetry.lock .
-RUN pip install 'poetry==2.2.1'
 RUN poetry config virtualenvs.create false
 
 RUN mkdir /images
