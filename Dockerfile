@@ -10,7 +10,7 @@ RUN apt update && apt -y upgrade
 WORKDIR /service
 COPY pyproject.toml .
 COPY poetry.lock .
-RUN pip install 'poetry==1.2.2'
+RUN pip install 'poetry==2.2.1'
 RUN poetry config virtualenvs.create false
 
 RUN mkdir /images

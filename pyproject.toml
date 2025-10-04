@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Your Name <you@example.com>"]
 license = "AGPL"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "~3.10"    # updating to 3.11 causes instability; see https://github.com/themotte/rDrama/issues/446
