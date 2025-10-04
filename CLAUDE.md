@@ -8,7 +8,7 @@ This is rDrama, a Reddit-like discussion forum application built with Flask and 
 
 ## Tech Stack
 
-- **Backend**: Python 3.10, Flask, SQLAlchemy, Redis, PostgreSQL
+- **Backend**: Python, Flask, SQLAlchemy, Redis, PostgreSQL
 - **Frontend**: Jinja2 templates, vanilla JavaScript, React (chat component only)
 - **Package Management**: Poetry (Python), Yarn (JavaScript/chat)
 - **Database**: PostgreSQL with Alembic migrations
