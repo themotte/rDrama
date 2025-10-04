@@ -39,6 +39,7 @@ webptools = "*"
 supervisor = "*"
 superlance = "*"
 alive-progress = "*"
+setuptools = "*"
 
 [tool.poetry.group.dev]
 optional = true
