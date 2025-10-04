@@ -1,11 +1,11 @@
 import io
 import math
+import threading
 import time
 from collections import Counter
 from datetime import datetime
 from urllib.parse import urlparse
 
-import gevent
 import qrcode
 
 import files.helpers.listing as listings
@@ -475,7 +475,13 @@ def message2(v, username):
 		if len(message) > 500: notifbody = message[:500] + '...'
 		else: notifbody = message
 
-		try: gevent.spawn(pusher_thread2, f'{request.host}{user.id}', notifbody, v.username)
+		try:
+			thread = threading.Thread(
+				target=pusher_thread2,
+				args=(f'{request.host}{user.id}', notifbody, v.username),
+				daemon=True
+			)
+			thread.start()
 		except: pass
 
 	return {"message": "Message sent!"}

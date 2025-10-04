@@ -7,7 +7,6 @@ from os import path
 from typing import Optional
 
 import bleach
-import gevent
 from bleach.linkifier import LinkifyFilter, build_url_re
 from bs4 import BeautifulSoup
 from flask import abort, g
@@ -151,19 +150,6 @@ def render_emoji(html, regexp, edit, marseys_used=set(), b=False):
 	return html
 
 
-def with_gevent_timeout(timeout: int):
-	'''
-	Use gevent to raise an exception if the function executes for longer than timeout seconds
-	Using gevent instead of a signal based approach allows for proper async and avoids some
-	worker crashes
-	'''
-	def inner(func):
-		@functools.wraps(func)
-		def wrapped(*args, **kwargs):
-			return gevent.with_timeout(timeout, func, *args, **kwargs)
-		return wrapped
-	return inner
-
 REMOVED_CHARACTERS = ['\u200e', '\u200b', '\ufeff']
 """
 Characters which are removed from content
@@ -182,7 +168,6 @@ def sanitize_raw(sanitized:Optional[str], allow_newlines:bool, length_limit:Opti
 		sanitized = sanitized[:length_limit]
 	return sanitized
 
-@with_gevent_timeout(2)
 def sanitize(sanitized, alert=False, comment=False, edit=False):
 	if MULTIMEDIA_EMBEDDING_ENABLED:
 		# turn eg. https://wikipedia.org/someimage.jpg into ![](https://wikipedia.org/someimage.jpg)
@@ -356,7 +341,6 @@ def allowed_attributes_emojis(tag, name, value):
 	return False
 
 
-@with_gevent_timeout(1)
 def filter_emojis_only(title, edit=False, graceful=False):
 	title = unwanted_bytes_regex.sub('', title)
 	title = whitespace_regex.sub(' ', title)

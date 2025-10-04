@@ -27,10 +27,13 @@ import flask_compress
 import flask_limiter
 import flask_mail
 import flask_profiler
-import gevent
 import redis
 from sqlalchemy.engine import Engine, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+
+# Only import gevent for chat service
+if is_chat:
+	import gevent
 
 from files.helpers.config.const import Service
 from files.helpers.strings import bool_from_string

@@ -1,6 +1,6 @@
 import sys
+import threading
 
-import gevent
 from pusher_push_notifications import PushNotifications
 from sqlalchemy.orm import Session
 
@@ -61,4 +61,5 @@ def leaderboard_thread():
 	sys.stdout.flush()
 
 if service.enable_services and ENABLE_SERVICES:
-	gevent.spawn(leaderboard_thread())
+	thread = threading.Thread(target=leaderboard_thread, daemon=True)
+	thread.start()

@@ -1,4 +1,5 @@
 import sys
+import threading
 import time
 import urllib.parse
 from io import BytesIO
@@ -6,7 +7,6 @@ from urllib.parse import ParseResult, urlparse
 
 from datetime import datetime, timezone
 
-import gevent
 import requests
 import werkzeug.wrappers
 from PIL import Image as PILimage
@@ -561,9 +561,10 @@ def submit_post(v):
 		thumburl=validated_post.thumburl
 	)
 	post.submit(g.db)
-		
+
 	if not post.thumburl and post.url:
-		gevent.spawn(thumbnail_thread, post.id)
+		thread = threading.Thread(target=thumbnail_thread, args=(post.id,), daemon=True)
+		thread.start()
 
 	post.publish()
 	g.db.commit()
@@ -708,9 +709,7 @@ def get_post_title(v):
 		abort(400)
 
 	try:
-		x = gevent.with_timeout(POST_TITLE_TIMEOUT, requests.get, 
-			                    url, headers=titleheaders, timeout=POST_TITLE_TIMEOUT, 
-							    proxies=proxies)
+		x = requests.get(url, headers=titleheaders, timeout=POST_TITLE_TIMEOUT, proxies=proxies)
 	except: abort(400)
 		
 	content_type = x.headers.get("Content-Type")

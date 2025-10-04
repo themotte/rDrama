@@ -1,7 +1,7 @@
 from sys import stdout
+import threading
 from typing import Optional
 
-import gevent
 from flask import g, request
 from pusher_push_notifications import PushNotifications
 from sqlalchemy import select, update
@@ -211,8 +211,12 @@ def comment_on_publish(comment:Comment):
 	# Generate push notifications if enabled.
 	if PUSHER_ID != 'blahblahblah' and comment.author_id != parent.author_id:
 		try:
-			gevent.spawn(pusher_thread, f'{request.host}{parent.author.id}',
-				comment, comment.author_name)
+			thread = threading.Thread(
+				target=pusher_thread,
+				args=(f'{request.host}{parent.author.id}', comment, comment.author_name),
+				daemon=True
+			)
+			thread.start()
 		except: pass
 
 def comment_on_unpublish(comment:Comment):
