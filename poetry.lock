@@ -49,19 +49,6 @@ about-time = "4.2.1"
 graphemeu = "0.7.2"
 
 [[package]]
-name = "async-timeout"
-version = "5.0.1"
-description = "Timeout context manager for asyncio programs"
-optional = false
-python-versions = ">=3.8"
-groups = ["main"]
-markers = "python_full_version < \"3.11.3\""
-files = [
-    {file = "async_timeout-5.0.1-py3-none-any.whl", hash = "sha256:39e3809566ff85354557ec2398b55e096c8364bacac9405a7a1fa429e77fe76c"},
-    {file = "async_timeout-5.0.1.tar.gz", hash = "sha256:d9321a7a3d5a6a5e187e824d2fa0793ce379a202935782d555d6e9d2735677d3"},
-]
-
-[[package]]
 name = "beautifulsoup4"
 version = "4.13.5"
 description = "Screen-scraping library"
@@ -1849,7 +1836,7 @@ files = [
 ]
 
 [package.dependencies]
-numpy = {version = ">=1.23.2", markers = "python_version == \"3.11\""}
+numpy = {version = ">=1.26.0", markers = "python_version >= \"3.12\""}
 python-dateutil = ">=2.8.2"
 pytz = ">=2020.1"
 tzdata = ">=2022.7"
@@ -2385,9 +2372,6 @@ files = [
     {file = "pyzstd-0.17.0.tar.gz", hash = "sha256:d84271f8baa66c419204c1dd115a4dec8b266f8a2921da21b81764fa208c1db6"},
 ]
 
-[package.dependencies]
-typing-extensions = {version = ">=4.13.2", markers = "python_version < \"3.13\""}
-
 [[package]]
 name = "qrcode"
 version = "8.2"
@@ -2419,9 +2403,6 @@ files = [
     {file = "redis-6.4.0-py3-none-any.whl", hash = "sha256:f0544fa9604264e9464cdf4814e7d4830f74b165d52f2a330a760a88dd248b7f"},
     {file = "redis-6.4.0.tar.gz", hash = "sha256:b01bc7282b8444e28ec36b261df5375183bb47a07eb9c603f284e89cbc5ef010"},
 ]
-
-[package.dependencies]
-async-timeout = {version = ">=4.0.3", markers = "python_full_version < \"3.11.3\""}
 
 [package.extras]
 hiredis = ["hiredis (>=3.2.0)"]
@@ -3035,5 +3016,5 @@ files = [
 
 [metadata]
 lock-version = "2.1"
-python-versions = "~3.11"
-content-hash = "8152e6213bd3e3c745207b37bac53d26f71ce6233c703da77c49a13a820f7fe0"
+python-versions = "~3.13"
+content-hash = "6ce5fde95795d583d1fedf3337068646f2a0e2dc8b443554e920412b7ff67863"
