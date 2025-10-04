@@ -1,7 +1,7 @@
 """Tests for files/helpers/time.py utility functions."""
 
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from files.helpers.time import format_datetime, format_date, format_age
 
@@ -156,7 +156,7 @@ def test_format_age_years():
 
 def test_format_age_with_datetime():
 	"""Test format_age with datetime object."""
-	now = datetime.utcnow()
+	now = datetime.now(timezone.utc)
 	# 5 minutes ago
 	past = now - timedelta(minutes=5)
 	result = format_age(past)

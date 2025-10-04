@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from yattag import Doc
 
@@ -47,12 +47,12 @@ def feeds_front(sort='new', t='all'):
 
 				with tag("updated"):
 					if (post.edited_utc):
-						text(datetime.utcfromtimestamp(post.edited_utc).isoformat()+"Z")
+						text(datetime.fromtimestamp(post.edited_utc, timezone.utc).isoformat()+"Z")
 					else:
-						text(datetime.utcfromtimestamp(post.created_utc).isoformat()+"Z")
+						text(datetime.fromtimestamp(post.created_utc, timezone.utc).isoformat()+"Z")
 
 				with tag("published"):
-					text(datetime.utcfromtimestamp(post.created_utc).isoformat()+"Z")
+					text(datetime.fromtimestamp(post.created_utc, timezone.utc).isoformat()+"Z")
 				
 				with tag("author"):
 					with tag("name"):
