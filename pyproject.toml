@@ -9,7 +9,8 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "~3.13"
 beautifulsoup4 = "*"
-bleach = "4.1.0"
+bleach = "*"
+tinycss2 = "*"
 Flask = "*"
 Flask-Caching = "*"
 Flask-Compress = "*"

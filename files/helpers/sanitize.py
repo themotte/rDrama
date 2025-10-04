@@ -7,6 +7,7 @@ from os import path
 from typing import Optional
 
 import bleach
+from bleach.css_sanitizer import CSSSanitizer
 from bleach.linkifier import LinkifyFilter, build_url_re
 from bs4 import BeautifulSoup
 from flask import abort, g
@@ -101,6 +102,8 @@ def allowed_attributes(tag, name, value):
 
 
 url_re = build_url_re(tlds=TLDS, protocols=['http', 'https'])
+
+css_sanitizer = CSSSanitizer(allowed_css_properties=['color', 'background-color', 'font-weight', 'text-align'])
 
 def callback(attrs, new=False):
 	href = attrs.get((None, "href"), None)
@@ -300,7 +303,7 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 	sanitized = bleach.Cleaner(tags=allowed_tags,
 								attributes=allowed_attributes,
 								protocols=['http', 'https'],
-								styles=['color', 'background-color', 'font-weight', 'text-align'],
+								css_sanitizer=css_sanitizer,
 								filters=[partial(LinkifyFilter, skip_tags=["pre"], parse_email=False, callbacks=[callback], url_re=url_re)],
 								strip=True,
 								).clean(sanitized)
