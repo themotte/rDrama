@@ -29,9 +29,10 @@ def searchparse(text):
 
 
 @app.get("/search/posts")
-@limiter.limit("12/minute", deduct_when=is_known_bot, key_func=lambda: f"bot-search-{request.headers.get('X-Real-IP', '127.0.0.1')}")
 @auth_desired
 def searchposts(v):
+	if is_known_bot():
+		abort(403)
 	query = request.values.get("q", '').strip()
 
 	try: page = max(1, int(request.values.get("page", 1)))
@@ -131,9 +132,10 @@ def searchposts(v):
 
 
 @app.get("/search/comments")
-@limiter.limit("12/minute", deduct_when=is_known_bot, key_func=lambda: f"bot-search-{request.headers.get('X-Real-IP', '127.0.0.1')}")
 @auth_desired
 def searchcomments(v):
+	if is_known_bot():
+		abort(403)
 	query = request.values.get("q", '').strip()
 
 	try: page = max(1, int(request.values.get("page", 1)))
@@ -191,9 +193,10 @@ def searchcomments(v):
 
 
 @app.get("/search/users")
-@limiter.limit("12/minute", deduct_when=is_known_bot, key_func=lambda: f"bot-search-{request.headers.get('X-Real-IP', '127.0.0.1')}")
 @auth_desired
 def searchusers(v):
+	if is_known_bot():
+		abort(403)
 	query = request.values.get("q", '').strip()
 
 	try: page = max(1, int(request.values.get("page", 1)))

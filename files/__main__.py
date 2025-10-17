@@ -187,7 +187,8 @@ def is_known_bot(response=None):
 			'semrushbot', 'bytespider', 'dataforseobot', 'mj12bot',
 			'oai-searchbot', 'chatgpt-user', 'claudebot'
 		]
-		return any(bot in user_agent for bot in bot_patterns)
+		# Check specific bot patterns or generic 'bot' in user agent
+		return any(bot in user_agent for bot in bot_patterns) or 'bot' in user_agent
 
 if service.enable_services and not RATE_LIMITER_ENABLED:
 	print("Rate limiter disabled in debug mode!")
