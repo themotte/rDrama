@@ -41,7 +41,7 @@ def before_request():
 	# Apply stricter rate limits for known bots (12 requests/minute ~= 1 every 5s)
 	if is_known_bot():
 		try:
-			with limiter.limit("12/minute"):
+			with limiter.limit("12/minute", key_func=lambda: f"bot-{request.headers.get('User-Agent', 'unknown')}"):
 				pass  # Just enforce the limit check
 		except Exception:
 			abort(429, "Rate limit exceeded for bots")
