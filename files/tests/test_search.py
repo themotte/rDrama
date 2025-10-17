@@ -262,3 +262,57 @@ def test_search_users_malformed_page_parameter():
 	response = client.get("/search/users?q=test&page=abc123")
 	# Should return 200 with page defaulting to 1, not 500 error
 	assert response.status_code == 200
+
+
+def test_search_posts_blocks_bots():
+	"""Test that search posts endpoint blocks bots with 403"""
+	client = util_accounts.create_logged_off_client()
+
+	# Test with specific known bot
+	response = client.get("/search/posts?q=test", headers={"User-Agent": "Googlebot/2.1"})
+	assert response.status_code == 403
+
+	# Test with generic bot string (case-insensitive)
+	response = client.get("/search/posts?q=test", headers={"User-Agent": "MyCustomBot/1.0"})
+	assert response.status_code == 403
+
+	response = client.get("/search/posts?q=test", headers={"User-Agent": "SomeRobot"})
+	assert response.status_code == 403
+
+	# Test that normal user agents still work
+	response = client.get("/search/posts?q=test", headers={"User-Agent": "Mozilla/5.0"})
+	assert response.status_code == 200
+
+
+def test_search_comments_blocks_bots():
+	"""Test that search comments endpoint blocks bots with 403"""
+	client = util_accounts.create_logged_off_client()
+
+	# Test with specific known bot
+	response = client.get("/search/comments?q=test", headers={"User-Agent": "Bingbot/2.0"})
+	assert response.status_code == 403
+
+	# Test with generic bot string
+	response = client.get("/search/comments?q=test", headers={"User-Agent": "TestBot"})
+	assert response.status_code == 403
+
+	# Test that normal user agents still work
+	response = client.get("/search/comments?q=test", headers={"User-Agent": "Mozilla/5.0 Firefox/100.0"})
+	assert response.status_code == 200
+
+
+def test_search_users_blocks_bots():
+	"""Test that search users endpoint blocks bots with 403"""
+	client = util_accounts.create_logged_off_client()
+
+	# Test with specific known bot
+	response = client.get("/search/users?q=test", headers={"User-Agent": "ClaudeBot/1.0"})
+	assert response.status_code == 403
+
+	# Test with generic bot string
+	response = client.get("/search/users?q=test", headers={"User-Agent": "crawlerbot"})
+	assert response.status_code == 403
+
+	# Test that normal user agents still work
+	response = client.get("/search/users?q=test", headers={"User-Agent": "Chrome/120.0"})
+	assert response.status_code == 200
