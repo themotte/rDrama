@@ -171,8 +171,15 @@ def get_remote_addr():
 	with app.app_context():
 		return request.headers.get('X-Real-IP', default='127.0.0.1')
 
-def is_known_bot():
-	"""Detect common bots based on User-Agent string."""
+def is_known_bot(response=None):
+	"""Detect common bots based on User-Agent string.
+
+	Args:
+		response: Optional response object (required by flask-limiter's deduct_when)
+
+	Returns:
+		True if the user agent matches a known bot pattern
+	"""
 	with app.app_context():
 		user_agent = request.headers.get('User-Agent', '').lower()
 		bot_patterns = [
