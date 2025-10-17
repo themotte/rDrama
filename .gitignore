@@ -33,3 +33,7 @@ files/assets/js/chat_done.js
 # coverage
 /.coverage
 /htmlcov
+
+# logs
+/logs/*
+!/logs/.gitkeep
