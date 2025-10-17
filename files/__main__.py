@@ -171,6 +171,17 @@ def get_remote_addr():
 	with app.app_context():
 		return request.headers.get('X-Real-IP', default='127.0.0.1')
 
+def is_known_bot():
+	"""Detect common bots based on User-Agent string."""
+	with app.app_context():
+		user_agent = request.headers.get('User-Agent', '').lower()
+		bot_patterns = [
+			'googlebot', 'bingbot', 'amazonbot', 'applebot', 'petalbot',
+			'semrushbot', 'bytespider', 'dataforseobot', 'mj12bot',
+			'oai-searchbot', 'chatgpt-user', 'claudebot'
+		]
+		return any(bot in user_agent for bot in bot_patterns)
+
 if service.enable_services and not RATE_LIMITER_ENABLED:
 	print("Rate limiter disabled in debug mode!")
 

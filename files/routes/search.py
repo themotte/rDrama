@@ -1,6 +1,6 @@
 from sqlalchemy import *
 
-from files.__main__ import app
+from files.__main__ import app, limiter, is_known_bot
 from files.classes.visstate import StateMod
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.strings import sql_ilike_clean
@@ -29,6 +29,7 @@ def searchparse(text):
 
 
 @app.get("/search/posts")
+@limiter.limit("12/minute", deduct_when=is_known_bot, key_func=lambda: f"bot-search-{request.headers.get('X-Real-IP', '127.0.0.1')}")
 @auth_desired
 def searchposts(v):
 	query = request.values.get("q", '').strip()
@@ -130,6 +131,7 @@ def searchposts(v):
 
 
 @app.get("/search/comments")
+@limiter.limit("12/minute", deduct_when=is_known_bot, key_func=lambda: f"bot-search-{request.headers.get('X-Real-IP', '127.0.0.1')}")
 @auth_desired
 def searchcomments(v):
 	query = request.values.get("q", '').strip()
@@ -189,6 +191,7 @@ def searchcomments(v):
 
 
 @app.get("/search/users")
+@limiter.limit("12/minute", deduct_when=is_known_bot, key_func=lambda: f"bot-search-{request.headers.get('X-Real-IP', '127.0.0.1')}")
 @auth_desired
 def searchusers(v):
 	query = request.values.get("q", '').strip()
