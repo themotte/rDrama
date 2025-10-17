@@ -9,9 +9,9 @@ graceful_timeout = 5  # Grace period for workers to finish after receiving SIGTE
 
 # Access logging configuration
 accesslog = 'logs/access.log'
-access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s" %(D)s'
+access_log_format = '%({X-Real-IP}i)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s" %(D)s'
 # Format explanation:
-# %(h)s - Remote address
+# %({X-Real-IP}i)s - Real client IP from X-Real-IP header (set by nginx proxy)
 # %(l)s - '-' (remote log name, usually just a dash)
 # %(u)s - User name (from HTTP auth, usually just a dash)
 # %(t)s - Date/time of request
