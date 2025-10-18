@@ -6,8 +6,7 @@ import sqlalchemy
 from sqlalchemy.orm import Session
 
 from files.__main__ import app, db_session
-from files.classes.cron.pycallable import PythonCodeTask
-from files.classes.cron.tasks import DayOfWeek
+from files.classes.cron.tasks import DayOfWeek, RepeatableTask
 from files.helpers.config.const import AUTOJANNY_ID
 
 
@@ -15,7 +14,7 @@ from files.helpers.config.const import AUTOJANNY_ID
 def cron_setup():
     db: Session = db_session()
 
-    tasklist = db.query(PythonCodeTask)
+    tasklist = db.query(RepeatableTask)
 
     # I guess in theory we should load this from a file or something, but, ehhhh
     hardcoded_cron_jobs = {
