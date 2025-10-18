@@ -103,10 +103,10 @@ def searchposts(v):
 
 	if t:
 		posts = apply_time_filter(posts, t, Submission)
-	posts = sort_objects(posts, sort, Submission)
 
 	total = posts.count()
 
+	posts = sort_objects(posts, sort, Submission)
 	posts = posts.offset(25 * (page - 1)).limit(26).all()
 
 	ids = [x[0] for x in posts]
@@ -177,8 +177,9 @@ def searchcomments(v):
 		comments = comments.join(Submission, Comment.parent_submission == Submission.id)
 		comments = comments.filter(Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, Submission.private == False)
 
-	comments = sort_objects(comments, sort, Comment)
 	total = comments.count()
+
+	comments = sort_objects(comments, sort, Comment)
 	comments = comments.offset(25 * (page - 1)).limit(26).all()
 
 	ids = [x[0] for x in comments]
