@@ -208,35 +208,38 @@ def test_search_users_pagination():
 
 
 def test_search_posts_logged_out():
-	"""Test that logged-out users can search posts"""
+	"""Test that logged-out users cannot search posts"""
 	client = util_accounts.create_logged_off_client()
 
-	# Basic search should work without authentication
+	# Search should require authentication and redirect to login
 	response = client.get("/search/posts?q=test")
-	assert response.status_code == 200
+	assert response.status_code == 302
+	assert response.location.startswith("/login")
 
 
 def test_search_comments_logged_out():
-	"""Test that logged-out users can search comments"""
+	"""Test that logged-out users cannot search comments"""
 	client = util_accounts.create_logged_off_client()
 
-	# Basic search should work without authentication
+	# Search should require authentication and redirect to login
 	response = client.get("/search/comments?q=test")
-	assert response.status_code == 200
+	assert response.status_code == 302
+	assert response.location.startswith("/login")
 
 
 def test_search_users_logged_out():
-	"""Test that logged-out users can search users"""
+	"""Test that logged-out users cannot search users"""
 	client = util_accounts.create_logged_off_client()
 
-	# Basic search should work without authentication
+	# Search should require authentication and redirect to login
 	response = client.get("/search/users?q=test")
-	assert response.status_code == 200
+	assert response.status_code == 302
+	assert response.location.startswith("/login")
 
 
 def test_search_posts_malformed_page_parameter():
 	"""Test that malformed page parameter doesn't cause 500 error"""
-	client = util_accounts.create_logged_off_client()
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Malformed page parameter (simulates the bug from the error log)
 	response = client.get("/search/posts?q=test&page=0?sort=bottom")
@@ -246,7 +249,7 @@ def test_search_posts_malformed_page_parameter():
 
 def test_search_comments_malformed_page_parameter():
 	"""Test that malformed page parameter doesn't cause 500 error for comments"""
-	client = util_accounts.create_logged_off_client()
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Malformed page parameter
 	response = client.get("/search/comments?q=test&page=invalid")
@@ -256,7 +259,7 @@ def test_search_comments_malformed_page_parameter():
 
 def test_search_users_malformed_page_parameter():
 	"""Test that malformed page parameter doesn't cause 500 error for users"""
-	client = util_accounts.create_logged_off_client()
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Malformed page parameter
 	response = client.get("/search/users?q=test&page=abc123")
@@ -266,7 +269,7 @@ def test_search_users_malformed_page_parameter():
 
 def test_search_posts_blocks_bots():
 	"""Test that search posts endpoint blocks bots with 403"""
-	client = util_accounts.create_logged_off_client()
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Test with specific known bot
 	response = client.get("/search/posts?q=test", headers={"User-Agent": "Googlebot/2.1"})
@@ -286,7 +289,7 @@ def test_search_posts_blocks_bots():
 
 def test_search_comments_blocks_bots():
 	"""Test that search comments endpoint blocks bots with 403"""
-	client = util_accounts.create_logged_off_client()
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Test with specific known bot
 	response = client.get("/search/comments?q=test", headers={"User-Agent": "Bingbot/2.0"})
@@ -303,7 +306,7 @@ def test_search_comments_blocks_bots():
 
 def test_search_users_blocks_bots():
 	"""Test that search users endpoint blocks bots with 403"""
-	client = util_accounts.create_logged_off_client()
+	client, user = util_accounts.create_test_client_and_user()
 
 	# Test with specific known bot
 	response = client.get("/search/users?q=test", headers={"User-Agent": "ClaudeBot/1.0"})
