@@ -29,7 +29,7 @@ def searchparse(text):
 
 
 @app.get("/search/posts")
-@auth_desired
+@auth_required
 def searchposts(v):
 	if is_known_bot():
 		abort(403)
@@ -132,7 +132,7 @@ def searchposts(v):
 
 
 @app.get("/search/comments")
-@auth_desired
+@auth_required
 def searchcomments(v):
 	if is_known_bot():
 		abort(403)
@@ -194,7 +194,7 @@ def searchcomments(v):
 
 
 @app.get("/search/users")
-@auth_desired
+@auth_required
 def searchusers(v):
 	if is_known_bot():
 		abort(403)
