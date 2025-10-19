@@ -350,6 +350,11 @@ def static_service(path):
 	if request.path.endswith('.webp') or request.path.endswith('.gif') or request.path.endswith('.ttf') or request.path.endswith('.woff2'):
 		resp.headers.remove("Cache-Control")
 		resp.headers.add("Cache-Control", "public, max-age=3153600")
+	
+	# Cache CSS and JS files with version parameter
+	if (request.path.endswith('.css') or request.path.endswith('.js')) and request.args.get('v'):
+		resp.headers.remove("Cache-Control")
+		resp.headers.add("Cache-Control", "public, max-age=3153600")
 
 	if request.path.endswith('.webp'):
 		resp.headers.remove("Content-Type")
