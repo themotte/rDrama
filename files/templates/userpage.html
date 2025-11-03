@@ -222,7 +222,7 @@
 						<pre></pre>
 						<pre></pre>
 
-						<a id="shadowban" class="{% if u.shadowbanned %}d-none{% endif %} btn btn-danger" role="button" onclick="postToastSwitch(this,'/shadowban/{{u.id}}','POST','shadowban','unshadowban');">Shadowban</a>
+						<a id="shadowban" class="{% if u.shadowbanned %}d-none{% endif %} btn btn-danger" role="button" onclick="showShadowbanModal('{{u.username}}', '{{u.id}}', 'shadowban', 'unshadowban')">Shadowban</a>
 
 						<a id="unshadowban" class="{% if not u.shadowbanned %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/unshadowban/{{u.id}}','POST','shadowban','unshadowban');">Unshadowban</a>
 
@@ -468,7 +468,7 @@
 						<pre></pre>
 						<pre></pre>
 
-						<a id="shadowban2" class="{% if u.shadowbanned %}d-none{% endif %} btn btn-danger" role="button" onclick="postToastSwitch(this,'/shadowban/{{u.id}}','POST','shadowban2','unshadowban2');">Shadowban</a>
+						<a id="shadowban2" class="{% if u.shadowbanned %}d-none{% endif %} btn btn-danger" role="button" onclick="showShadowbanModal('{{u.username}}', '{{u.id}}', 'shadowban2', 'unshadowban2')">Shadowban</a>
 
 						<a id="unshadowban2" class="{% if not u.shadowbanned %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/unshadowban/{{u.id}}','POST','shadowban2','unshadowban2');">Unshadowban</a>
 
@@ -616,6 +616,8 @@
 <script src="{{ 'js/marked.custom.js' | asset }}"></script>
 
 {% endblock %}
+
+{% include "component/modal/shadowban_confirm.html" %}
 
 {% block GIFpicker %}
 {% endblock %}

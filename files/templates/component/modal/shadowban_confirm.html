@@ -1,0 +1,20 @@
+<div class="modal fade" id="shadowbanModal" tabindex="-1" role="dialog" aria-labelledby="shadowbanModalTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="shadowbanModalTitle">Confirm Shadowban</h5>
+				<button class="close" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true"><i class="far fa-times"></i></span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to shadowban <strong id="shadowbanUsername"></strong>?</p>
+				<p class="text-muted">Shadowbanned users can still post and comment, but their content will be hidden from other users.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-danger" id="confirmShadowban">Shadowban User</button>
+			</div>
+		</div>
+	</div>
+</div>
