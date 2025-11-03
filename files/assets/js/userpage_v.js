@@ -86,3 +86,21 @@ function submitFormAjax(e) {
 	postToast(null, form.getAttribute("action"), "POST", form, null);
 	return false;
 }
+
+function showShadowbanModal(username, userId, shadowbanId, unshadowbanId) {
+	document.getElementById('shadowbanUsername').textContent = username;
+	
+	const confirmButton = document.getElementById('confirmShadowban');
+	confirmButton.onclick = function() {
+		const shadowbanButton = document.getElementById(shadowbanId);
+		postToastSwitch(shadowbanButton, `/shadowban/${userId}`, 'POST', shadowbanId, unshadowbanId);
+		
+		const modal = bootstrap.Modal.getInstance(document.getElementById('shadowbanModal'));
+		if (modal) {
+			modal.hide();
+		}
+	};
+	
+	const modal = new bootstrap.Modal(document.getElementById('shadowbanModal'));
+	modal.show();
+}
