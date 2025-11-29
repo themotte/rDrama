@@ -3611,6 +3611,7 @@ small, .small {
 }
 .comment-body {
 	grid-area: comment-body;
+	height: fit-content;
 }
 #notifications .comment, #userpage .comment {
 	margin-top: 0.25rem;
