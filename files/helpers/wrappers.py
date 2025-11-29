@@ -63,25 +63,27 @@ def get_logged_in_user():
 		session["session_id"] = secrets.token_hex(49)
 
 	# Active User Counters
-	loggedin = cache.get(f'{SITE}_loggedin') or {}
-	loggedout = cache.get(f'{SITE}_loggedout') or {}
+	# disabled for now because of perf problems
+	if False:
+		loggedin = cache.get(f'{SITE}_loggedin') or {}
+		loggedout = cache.get(f'{SITE}_loggedout') or {}
 
-	timestamp = int(time.time())
-	if v:
-		if session["session_id"] in loggedout:
-			del loggedout[session["session_id"]]
-		loggedin[v.id] = timestamp
-	else:
-		ua = str(user_agents.parse(g.agent))
-		if 'spider' not in ua.lower() and 'bot' not in ua.lower():
-			loggedout[session["session_id"]] = (timestamp, ua)
+		timestamp = int(time.time())
+		if v:
+			if session["session_id"] in loggedout:
+				del loggedout[session["session_id"]]
+			loggedin[v.id] = timestamp
+		else:
+			ua = str(user_agents.parse(g.agent))
+			if 'spider' not in ua.lower() and 'bot' not in ua.lower():
+				loggedout[session["session_id"]] = (timestamp, ua)
 
-	g.loggedin_counter = len([x for x in loggedin.values() \
-		if (timestamp - x) < LOGGEDIN_ACTIVE_TIME])
-	g.loggedout_counter = len([x for x in loggedout.values() \
-		if (timestamp - x[0]) < LOGGEDIN_ACTIVE_TIME])
-	cache.set(f'{SITE}_loggedin', loggedin)
-	cache.set(f'{SITE}_loggedout', loggedout)
+		g.loggedin_counter = len([x for x in loggedin.values() \
+			if (timestamp - x) < LOGGEDIN_ACTIVE_TIME])
+		g.loggedout_counter = len([x for x in loggedout.values() \
+			if (timestamp - x[0]) < LOGGEDIN_ACTIVE_TIME])
+		cache.set(f'{SITE}_loggedin', loggedin)
+		cache.set(f'{SITE}_loggedout', loggedout)
 
 	g.v = v
 	return v
