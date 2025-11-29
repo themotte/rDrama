@@ -8,11 +8,17 @@
 {% block content %}
 <h2 class="mt-2">Admin Tools</h2>
 
+{% if g.loggedin_counter is not none and g.loggedout_counter is not none %}
 <div class="mb-3">
-	<strong>Users Here Now:</strong> {{g.loggedin_counter + g.loggedout_counter}} &mdash; 
-	<a href="/admin/loggedin">{{g.loggedin_counter}} Logged-In</a> | 
+	<strong>Users Here Now:</strong> {{g.loggedin_counter + g.loggedout_counter}} &mdash;
+	<a href="/admin/loggedin">{{g.loggedin_counter}} Logged-In</a> |
 	<a href="/admin/loggedout">{{g.loggedout_counter}} Logged-Out</a>
 </div>
+{% else %}
+<div class="mb-3">
+	<strong>Users Here Now:</strong> (tracking disabled)
+</div>
+{% endif %}
 
 <h3>Content</h3>
 <ul>

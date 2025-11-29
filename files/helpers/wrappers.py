@@ -84,6 +84,9 @@ def get_logged_in_user():
 			if (timestamp - x[0]) < LOGGEDIN_ACTIVE_TIME])
 		cache.set(f'{SITE}_loggedin', loggedin)
 		cache.set(f'{SITE}_loggedout', loggedout)
+	else:
+		g.loggedin_counter = None
+		g.loggedout_counter = None
 
 	g.v = v
 	return v
