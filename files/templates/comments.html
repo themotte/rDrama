@@ -85,9 +85,9 @@
 					<div id="comment-{{c.id}}-actions" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 						<div class="d-md-none mt-2">
 							<div class="post-actions">
-								<ul class="list-inline text-right d-flex">
+								<ul class="list-inline d-flex justify-content-end">
 									{% if v and v.admin_level >= 2 %}
-										<li class="list-inline-item mr-auto">
+										<li class="list-inline-item">
 											<a role="button" data-bs-toggle="modal" data-bs-target="#adminModal-{{c.id}}"> <i class="fas fa-broom"></i></a>
 										</li>
 									{% endif %}
