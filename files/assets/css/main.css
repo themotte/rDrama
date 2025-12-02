@@ -3422,9 +3422,9 @@ small, .small {
 #frontpage .post-actions {
 	margin-left:auto;
 }
-#search .post-actions .list-inline,
-#userpage .post-actions .list-inline,
-#frontpage .post-actions .list-inline {
+#search .card .post-actions .list-inline,
+#userpage .card .post-actions .list-inline,
+#frontpage .card .post-actions .list-inline {
 	align-items: center;
 	height:100%;
 }
