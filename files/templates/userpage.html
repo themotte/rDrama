@@ -617,7 +617,9 @@
 
 {% endblock %}
 
+{% if v and v.admin_level >= PERMS['USER_SHADOWBAN'] %}
 {% include "component/modal/shadowban_confirm.html" %}
+{% endif %}
 
 {% block GIFpicker %}
 {% endblock %}
