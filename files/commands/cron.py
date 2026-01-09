@@ -13,14 +13,14 @@ from files.classes.cron.tasks import (DayOfWeek, RepeatableTask,
 
 CRON_SLEEP_SECONDS: Final[int] = 15
 '''
-How long the app will sleep for between runs. Lower values give better 
+How long the app will sleep for between runs. Lower values give better
 resolution, but will hit the database more.
 
 The cost of a lower value is potentially higher lock contention. A value below
 `0` will raise a `ValueError` (on call to `time.sleep`). A value of `0` is
 possible but not recommended.
 
-The sleep time is not guaranteed to be exactly this value (notably, it may be 
+The sleep time is not guaranteed to be exactly this value (notably, it may be
 slightly longer if the system is very busy)
 
 This value is passed to `time.sleep()`. For more information on that, see
@@ -28,6 +28,43 @@ the Python documentation: https://docs.python.org/3/library/time.html
 '''
 
 _CRON_COMMAND_NAME = "cron"
+
+
+def _recover_stuck_tasks(db_session_factory: sessionmaker):
+	'''
+	Recovers tasks that are stuck in RUNNING state (e.g., due to server crash).
+	Also marks any orphaned task runs (with no completed_utc) as failed.
+
+	This should be called once at startup before the main loop begins.
+	No exclusive lock is needed since this runs before the main loop starts.
+	'''
+	db: Session = db_session_factory()
+
+	# Reset any tasks stuck in RUNNING state using a bulk update
+	stuck_count = db.query(RepeatableTask).filter(
+		RepeatableTask.run_state == int(ScheduledTaskState.RUNNING)
+	).update({RepeatableTask.run_state: int(ScheduledTaskState.WAITING)})
+
+	if stuck_count:
+		logging.warning(
+			f"Reset {stuck_count} task(s) stuck in RUNNING state to WAITING."
+		)
+
+	# Mark orphaned runs as failed (runs that never completed)
+	now = datetime.now(tz=timezone.utc)
+	orphan_count = db.query(RepeatableTaskRun).filter(
+		RepeatableTaskRun.completed_utc == None
+	).update({
+		RepeatableTaskRun.completed_utc: now,
+		RepeatableTaskRun.traceback_str: "Task was interrupted by server shutdown"
+	})
+
+	if orphan_count:
+		logging.warning(
+			f"Marked {orphan_count} orphaned task run(s) as failed."
+		)
+
+	db.commit()
 
 
 @app.cli.command(_CRON_COMMAND_NAME)
@@ -40,6 +77,13 @@ def cron_app_worker():
 	logging.basicConfig(level=logging.INFO)
 
 	logging.info("Starting scheduler worker process")
+
+	# Recover any tasks stuck from a previous crash
+	try:
+		_recover_stuck_tasks(db_session_factory)
+	except Exception as e:
+		logging.exception("Failed to recover stuck tasks", exc_info=e)
+
 	while True:
 		try:
 			_run_tasks(db_session_factory)

@@ -185,3 +185,129 @@ def test_cron_constants():
     assert isinstance(CRON_SLEEP_SECONDS, int)
     assert CRON_SLEEP_SECONDS > 0
     assert CRON_SLEEP_SECONDS < 60
+
+
+# Tests for _recover_stuck_tasks
+
+from files.commands.cron import _recover_stuck_tasks
+
+
+def test_recover_stuck_tasks_resets_running_state():
+    """Test that tasks stuck in RUNNING state are reset to WAITING."""
+    client, user = util_accounts.create_test_client_and_user()
+
+    # Create a task stuck in RUNNING state (simulating a crash)
+    task = PythonCodeTask(
+        author_id=user.id,
+        import_path="test",
+        callable="stuck_function",
+        frequency_day=int(DayOfWeek.ALL),
+        time_of_day_utc=datetime_time(0, 0),
+    )
+    task.run_time_last = None
+    task.enabled = True
+    task.run_state_enum = ScheduledTaskState.RUNNING  # Stuck in RUNNING
+    db_session.add(task)
+    db_session.commit()
+    task_id = task.id
+
+    # Ensure no open transaction before acquiring exclusive lock
+    db_session.rollback()
+
+    # Run recovery
+    _recover_stuck_tasks(db_session_factory)
+
+    # Re-query the task to verify it was reset
+    recovered_task = db_session.query(RepeatableTask).get(task_id)
+    assert recovered_task.run_state_enum == ScheduledTaskState.WAITING
+
+    # Clean up
+    db_session.delete(recovered_task)
+    db_session.commit()
+
+
+def test_recover_stuck_tasks_marks_orphaned_runs_failed():
+    """Test that orphaned runs (no completed_utc) are marked as failed."""
+    client, user = util_accounts.create_test_client_and_user()
+
+    # Create a task
+    task = PythonCodeTask(
+        author_id=user.id,
+        import_path="test",
+        callable="orphan_function",
+        frequency_day=int(DayOfWeek.ALL),
+        time_of_day_utc=datetime_time(0, 0),
+    )
+    task.enabled = True
+    task.run_state_enum = ScheduledTaskState.WAITING
+    db_session.add(task)
+    db_session.commit()
+
+    # Create an orphaned run (simulating a crash during execution)
+    orphaned_run = RepeatableTaskRun(task_id=task.id)
+    orphaned_run.completed_utc = None  # Never completed
+    db_session.add(orphaned_run)
+    db_session.commit()
+    run_id = orphaned_run.id
+
+    # Ensure no open transaction before acquiring exclusive lock
+    db_session.rollback()
+
+    # Run recovery
+    _recover_stuck_tasks(db_session_factory)
+
+    # Re-query the run to verify it was marked as failed
+    recovered_run = db_session.query(RepeatableTaskRun).get(run_id)
+    assert recovered_run.completed_utc is not None
+    assert recovered_run.traceback_str == "Task was interrupted by server shutdown"
+    assert recovered_run.status_text == "Failed"
+
+    # Clean up
+    db_session.delete(recovered_run)
+    db_session.delete(task)
+    db_session.commit()
+
+
+def test_recover_stuck_tasks_no_stuck_tasks():
+    """Test that recovery works correctly when no tasks are stuck."""
+    # Ensure no open transaction before acquiring exclusive lock
+    db_session.rollback()
+
+    # Just verify no exception is raised
+    _recover_stuck_tasks(db_session_factory)
+
+
+def test_recover_stuck_tasks_multiple_stuck():
+    """Test that multiple stuck tasks are all recovered."""
+    client, user = util_accounts.create_test_client_and_user()
+
+    # Create multiple stuck tasks
+    task_ids = []
+    for i in range(3):
+        task = PythonCodeTask(
+            author_id=user.id,
+            import_path="test",
+            callable=f"stuck_function_{i}",
+            frequency_day=int(DayOfWeek.ALL),
+            time_of_day_utc=datetime_time(0, 0),
+        )
+        task.run_time_last = None
+        task.enabled = True
+        task.run_state_enum = ScheduledTaskState.RUNNING
+        db_session.add(task)
+        db_session.commit()
+        task_ids.append(task.id)
+
+    # Ensure no open transaction before acquiring exclusive lock
+    db_session.rollback()
+
+    # Run recovery
+    _recover_stuck_tasks(db_session_factory)
+
+    # Verify all tasks were reset
+    for task_id in task_ids:
+        recovered_task = db_session.query(RepeatableTask).get(task_id)
+        assert recovered_task.run_state_enum == ScheduledTaskState.WAITING
+        db_session.delete(recovered_task)
+
+    db_session.commit()
