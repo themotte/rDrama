@@ -30,7 +30,7 @@ service:Service = Service.from_argv()
 app = flask.app.Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
 app.jinja_env.cache = {}
-app.jinja_env.auto_reload = True
+app.jinja_env.auto_reload = app.debug
 faulthandler.enable()
 
 # ...then check that debug mode was not accidentally enabled...
