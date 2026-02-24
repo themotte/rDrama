@@ -108,6 +108,7 @@ class User(CreatedBase):
 	mfa_secret = deferred(Column(String))
 	is_private = Column(Boolean, default=False, nullable=False)
 	stored_subscriber_count = Column(Integer, default=0, nullable=False)
+	stored_following_count = Column(Integer, default=0, nullable=False)
 	defaultsortingcomments = Column(String, default="new", nullable=False)
 	defaultsorting = Column(String, default="new", nullable=False)
 	defaulttime = Column(String, default=DEFAULT_TIME_FILTER, nullable=False)
@@ -292,7 +293,7 @@ class User(CreatedBase):
 	@property
 	@lazy
 	def follow_count(self):
-		return g.db.query(Follow.target_id).filter_by(user_id=self.id).count()
+		return self.stored_following_count
 
 	@property
 	@lazy
