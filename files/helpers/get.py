@@ -335,7 +335,10 @@ def get_comment_trees_eager(
 		selectinload(Comment.reports).options(
 			selectinload(CommentFlag.user),
 		),
-		selectinload(Comment.awards),
+		selectinload(Comment.awards).options(
+			selectinload(AwardRelationship.user),
+		),
+		selectinload(Comment.parent_comment),
 	)
 	results = query.all()
 
