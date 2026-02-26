@@ -271,6 +271,7 @@ class LazyLoadReporter:
 			f for f in frames
 			if '/files/' in f.filename
 			and '/site-packages/' not in f.filename
+			and '/__main__.py' not in f.filename
 		]
 		if app_frames:
 			f = app_frames[-1]

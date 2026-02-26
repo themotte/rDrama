@@ -52,7 +52,16 @@ def notifications_main(v: User):
 			Comment.state_mod == StateMod.VISIBLE,
 			Comment.state_user_deleted_utc == None,
 			Comment.author_id != AUTOJANNY_ID,
-		).order_by(Notification.created_datetimez.desc()))
+		).order_by(Notification.created_datetimez.desc())
+		.options(
+			selectinload(Comment.author).options(
+				selectinload(User.badges),
+			),
+			selectinload(Comment.post).options(
+				selectinload(Submission.author),
+			),
+			selectinload(Comment.parent_comment),
+		))
 
 	if not v.shadowbanned and v.admin_level < 3:
 		comments = comments.join(Comment.author).filter(User.shadowbanned == None)

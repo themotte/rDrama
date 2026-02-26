@@ -1,6 +1,9 @@
+import warnings
+
 from . import util_accounts
 from . import util_submissions
 from . import util_comments
+from .conftest import LazyLoadWarning
 from files.__main__ import db_session
 from files.classes import Notification, Comment, User
 
@@ -112,6 +115,31 @@ def test_notifications_main_page():
 	response = client1.get("/notifications")
 	assert response.status_code == 200
 	assert "notification" in response.text.lower()
+
+
+def test_notifications_no_lazy_loads():
+	"""Test GET /notifications doesn't trigger lazy loads."""
+	client1, user1 = util_accounts.create_test_client_and_user(name="notif-nll1")
+	client2, user2 = util_accounts.create_test_client_and_user(name="notif-nll2")
+
+	# User1 creates a post and comment
+	post = util_submissions.create_submission_for_client(client1)
+	comment = util_comments.create_comment_for_client(client1, post.id)
+
+	# User2 replies to user1's comment (creates a notification for user1)
+	util_comments.create_comment_for_client(client2, post.id, data={
+		'parent_fullname': f'comment_{comment.id}',
+		'parent_level': 2,
+	})
+
+	# User1 views notifications page — capture lazy load warnings
+	with warnings.catch_warnings(record=True) as w:
+		warnings.simplefilter("always")
+		response = client1.get("/notifications")
+		assert response.status_code == 200
+		lazy_loads = [x for x in w if issubclass(x.category, LazyLoadWarning)]
+		assert len(lazy_loads) == 0, \
+			f"Lazy loads detected: {[str(x.message) for x in lazy_loads]}"
 
 
 def test_notifications_pagination():
