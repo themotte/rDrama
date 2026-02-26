@@ -5,6 +5,9 @@ stored here.
 
 import sys
 import faulthandler
+import threading
+import time
+import traceback
 from os import environ
 from pathlib import Path
 
@@ -211,6 +214,83 @@ db_session_factory: sessionmaker = sessionmaker(
 	future=True,
 )
 db_session: scoped_session = scoped_session(db_session_factory)
+
+# ...and set up lazy load detection so we can spot N+1 issues in production...
+
+class LazyLoadReporter:
+	"""Rate-limited reporter for SQLAlchemy lazy loads.
+
+	Detects lazy loads via the do_orm_execute event and prints one detailed
+	report per `interval` seconds, along with a count of suppressed lazy
+	loads since the last report.
+	"""
+
+	def __init__(self, interval:float=5.0):
+		self.interval = interval
+		self._lock = threading.Lock()
+		self._last_report: float = 0.0
+		self._suppressed: int = 0
+
+	def on_orm_execute(self, orm_execute_state):
+		if not orm_execute_state.is_select:
+			return
+		if orm_execute_state.lazy_loaded_from is None:
+			return
+
+		now = time.monotonic()
+		with self._lock:
+			elapsed = now - self._last_report
+			if elapsed < self.interval:
+				self._suppressed += 1
+				return
+			suppressed = self._suppressed
+			self._suppressed = 0
+			self._last_report = now
+
+		state = orm_execute_state.lazy_loaded_from
+		parent_cls = state.class_.__name__
+
+		# Infer the relationship name from the target entity
+		attr_name = "?"
+		bind_mapper = orm_execute_state.bind_mapper
+		if bind_mapper:
+			candidates = [
+				prop.key for prop in state.mapper.iterate_properties
+				if hasattr(prop, 'mapper')
+				and prop.mapper.class_ is bind_mapper.class_
+			]
+			if len(candidates) == 1:
+				attr_name = candidates[0]
+			elif candidates:
+				attr_name = "|".join(candidates)
+			else:
+				attr_name = bind_mapper.class_.__name__
+
+		frames = traceback.extract_stack()
+		app_frames = [
+			f for f in frames
+			if '/files/' in f.filename
+			and '/site-packages/' not in f.filename
+		]
+		if app_frames:
+			f = app_frames[-1]
+			location = f"{f.filename}:{f.lineno} in {f.name}"
+		else:
+			location = "(no application frame)"
+
+		suppressed_msg = ""
+		if suppressed:
+			suppressed_msg = f" ({suppressed} unreported since last)"
+		print(f"[lazy-load] {parent_cls}.{attr_name} at {location}{suppressed_msg}",
+			file=sys.stderr, flush=True)
+
+
+if not app.debug:
+	from sqlalchemy import event
+	from sqlalchemy.orm import Session
+
+	_lazy_load_reporter = LazyLoadReporter()
+	event.listen(Session, "do_orm_execute", _lazy_load_reporter.on_orm_execute)
 
 # now that we've that, let's add the cache, compression, and mail extensions to our app...
 
