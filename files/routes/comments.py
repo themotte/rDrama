@@ -1,3 +1,5 @@
+from sqlalchemy.orm import selectinload
+
 from files.__main__ import app, limiter
 from files.classes import *
 from files.classes.visstate import StateMod
@@ -82,6 +84,18 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			blocked,
 			blocked.c.user_id == Comment.author_id,
 			isouter=True
+		).options(
+			selectinload(Comment.author).options(
+				selectinload(User.badges),
+				selectinload(User.notes),
+			),
+			selectinload(Comment.reports).options(
+				selectinload(CommentFlag.user),
+			),
+			selectinload(Comment.awards).options(
+				selectinload(AwardRelationship.user),
+			),
+			selectinload(Comment.parent_comment),
 		)
   
 		# TODO (wmill) This looks wrong to me. It adds on new properties to all comments to use voted/blocked/blocking status in rendering.
