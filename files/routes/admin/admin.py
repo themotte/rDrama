@@ -778,6 +778,8 @@ def admin_removed_comments(v):
 @admin_level_required(2)
 def shadowban(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
+	if not user: abort(404)
+	if user.id in SYSTEM_ACCOUNT_IDS: abort(403)
 	if user.admin_level != 0: abort(403)
 	user.shadowbanned = v.username
 	g.db.add(user)
@@ -977,6 +979,8 @@ def ban_user(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
 	if not user: abort(404)
+
+	if user.id in SYSTEM_ACCOUNT_IDS: abort(403)
 
 	if user.admin_level >= v.admin_level: abort(403)
 
