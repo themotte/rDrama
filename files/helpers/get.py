@@ -44,6 +44,8 @@ def get_user(
 			func.lower(User.username) == username.lower(),
 			func.lower(User.original_username) == username.lower()
 			)
+		).options(
+			selectinload(User.badges),
 		).one_or_none()
 
 	if not user:
