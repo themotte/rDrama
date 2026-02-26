@@ -1,4 +1,4 @@
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm.attributes import set_committed_value
 
 from files.__main__ import app, limiter
 from files.classes import *
@@ -28,16 +28,29 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	if comment.post and comment.post.private and not (v and (v.admin_level >= 2 or v.id == comment.post.author.id)): abort(403)
 
 	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level >= 2) : abort(403)
-	
+
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
 		else: pid = 1
 
 	post = get_post(pid, v=v)
-	
+
 	if post.over_18 and not (v and v.over_18) and not session.get('over_18', 0) >= int(time.time()):
 		if request.headers.get("Authorization"): return {'error': 'This content is not suitable for some users and situations.'}
 		else: return render_template("errors/nsfw.html", v=v)
+
+	if v: defaultsortingcomments = v.defaultsortingcomments
+	else: defaultsortingcomments = "new"
+	sort=request.values.get("sort", defaultsortingcomments)
+
+	def comment_tree_filter(q):
+		q = q.filter(Comment.parent_submission == post.id)
+		if not (v and v.shadowbanned) and not (v and v.admin_level >= 3):
+			q = q.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
+		return q
+
+	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort=sort, v=v)
+	set_committed_value(post, 'comments', comments)
 
 	try: context = min(int(request.values.get("context", 0)), 8)
 	except: context = 0
@@ -48,67 +61,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 		c = c.parent_comment
 		context -= 1
 	top_comment = c
-
-	if v: defaultsortingcomments = v.defaultsortingcomments
-	else: defaultsortingcomments = "new"
-	sort=request.values.get("sort", defaultsortingcomments)
-
-	if v:
-		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
-
-		blocking = v.blocking.subquery()
-
-		blocked = v.blocked.subquery()
-
-		comments = g.db.query(
-			Comment,
-			votes.c.vote_type,
-			blocking.c.target_id,
-			blocked.c.target_id,
-		)
-
-		if not (v and v.shadowbanned) and not (v and v.admin_level >= 3):
-			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
-		 
-		comments=comments.filter(
-			Comment.parent_submission == post.id
-		).join(
-			votes,
-			votes.c.comment_id == Comment.id,
-			isouter=True
-		).join(
-			blocking,
-			blocking.c.target_id == Comment.author_id,
-			isouter=True
-		).join(
-			blocked,
-			blocked.c.user_id == Comment.author_id,
-			isouter=True
-		).options(
-			selectinload(Comment.author).options(
-				selectinload(User.badges),
-				selectinload(User.notes),
-			),
-			selectinload(Comment.reports).options(
-				selectinload(CommentFlag.user),
-			),
-			selectinload(Comment.awards).options(
-				selectinload(AwardRelationship.user),
-			),
-			selectinload(Comment.parent_comment),
-			selectinload(Comment.post),
-		)
-  
-		# TODO (wmill) This looks wrong to me. It adds on new properties to all comments to use voted/blocked/blocking status in rendering.
-		# But it needs to be repeated if you ever want to render comments anywhere else.
-
-		output = []
-		for c in comments:
-			comment = c[0]
-			comment.voted = c[1] or 0
-			comment.is_blocking = c[2] or 0
-			comment.is_blocked = c[3] or 0
-			output.append(comment)
 
 	post.replies=[top_comment]
 			
