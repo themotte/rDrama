@@ -4,7 +4,7 @@ from gunicorn import glogging
 
 
 # Gunicorn configuration
-timeout = 30  # Worker timeout in seconds
+timeout = 90  # Worker heartbeat timeout - must exceed max request duration
 graceful_timeout = 60  # Grace period for workers to finish after receiving SIGTERM
 
 # Access logging configuration
