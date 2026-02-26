@@ -438,8 +438,3 @@ def settings_security(v):
 						   v=v,
 						   mfa_secret=pyotp.random_base32() if not v.mfa_secret else None
 						   )
-
-@app.post("/dismiss_mobile_tip")
-def dismiss_mobile_tip():
-	session["tooltip_last_dismissed"] = int(time.time())
-	return "", 204
