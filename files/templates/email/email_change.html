@@ -1,18 +1,18 @@
 {% extends "email/default.html" %}
 
-{% block title %}Verify your new {{SITE_TITLE}} email.{% endblock %}</h1>
+{% block title %}Verify your new {{SITE_TITLE}} email.{% endblock %}
 
 {% block content %}
-	<p>You told us you wanted to change your {{SITE_TITLE}} account email. To finish this process, please verify your new email address:</p>
-	<div class="button-container">
-			<a href="{{action_url}}" class="button" target="_blank" rel="noopener">Verify Email</a>
+	<p style="margin: 0 0 10px 0; color: #333333; line-height: 1.5; font-size: 15px;">You told us you wanted to change your {{SITE_TITLE}} account email. To finish this process, please verify your new email address:</p>
+	<div style="text-align: center; margin: 30px 0 40px 0;">
+		<a href="{{action_url}}" style="display: inline-block; background-color: #1a6187; color: #ffffff; padding: 12px 28px; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold;" target="_blank" rel="noopener">Verify Email</a>
 	</div>
-	<p class="reference-text">For reference, here's your current information:</p>
-	<div class="user-info">
-		<p><strong>Username:</strong> {{v.username}}</p>
-		<p><strong>Email:</strong> {{v.email}}</p>
+	<p style="margin: 20px 0 10px 0; color: #333333; font-size: 14px; line-height: 1.4;">For reference, here's your current information:</p>
+	<div style="font-size: 14px; color: #333333; padding: 12px 20px; background-color: #f9f9f9; border-radius: 4px; margin-bottom: 16px;">
+		<p style="margin: 4px 0; color: #333333; line-height: 1.4;"><strong>Username:</strong> {{v.username}}</p>
+		<p style="margin: 4px 0; color: #333333; line-height: 1.4;"><strong>Email:</strong> {{v.email}}</p>
 	</div>
-	<p class="user-info">Please note that {{SITE_TITLE}} will never ask you for your email, password, or two-factor token via email, text, or phone.</p>
-	<hr />
-	<p class="raw-link">If the button doesn't work, you can copy and paste this link into your browser: <br>{{action_url}}</p>
+	<p style="font-size: 13px; color: #777777; margin: 16px 0; line-height: 1.4;">Please note that {{SITE_TITLE}} will never ask you for your email, password, or two-factor token via email, text, or phone.</p>
+	<hr style="border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;" />
+	<p style="display: block; margin-top: 10px; font-size: 13px; text-align: left; color: #999999; word-wrap: break-word; line-height: 1.4;">If the button doesn't work, you can copy and paste this link into your browser: <br />{{action_url}}</p>
 {% endblock %}
