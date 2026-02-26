@@ -1,3 +1,5 @@
+import secrets
+
 from . import util_accounts
 from . import util
 from files.__main__ import db_session
@@ -386,7 +388,7 @@ def test_admin_app_revoke():
 		redirect_uri="http://localhost/callback",
 		author_id=user.id,
 		description="Will be revoked",
-		client_id="revoke_test_client_id"
+		client_id=secrets.token_hex(16)
 	)
 	db_session.add(app)
 	db_session.commit()
@@ -478,7 +480,7 @@ def test_reroll_oauth_tokens():
 		redirect_uri="http://localhost/callback",
 		author_id=user.id,
 		description="Will reroll",
-		client_id="original_client_id"
+		client_id=secrets.token_hex(16)
 	)
 	db_session.add(app)
 	db_session.commit()
