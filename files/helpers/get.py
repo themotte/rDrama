@@ -279,18 +279,18 @@ def get_comments(
 
 		blocked = v.blocked.subquery()
 
-		comments = g.db.query(
+		query = g.db.query(
 			Comment,
 			votes.c.vote_type,
 			blocking.c.target_id,
 			blocked.c.target_id,
 		).filter(Comment.id.in_(cids))
- 
+
 		if not (v and (v.shadowbanned or v.admin_level >= 2)):
-			comments = comments.join(User, User.id == Comment.author_id) \
+			query = query.join(User, User.id == Comment.author_id) \
 				.filter(User.shadowbanned == None)
 
-		comments = comments.join(
+		query = query.join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
@@ -302,20 +302,38 @@ def get_comments(
 			blocked,
 			blocked.c.user_id == Comment.author_id,
 			isouter=True
-		).all()
+		)
+	else:
+		query = g.db.query(Comment) \
+			.join(User, User.id == Comment.author_id) \
+			.filter(User.shadowbanned == None, Comment.id.in_(cids))
 
+	query = query.options(
+		selectinload(Comment.author).options(
+			selectinload(User.badges),
+			selectinload(User.notes),
+		),
+		selectinload(Comment.reports).options(
+			selectinload(CommentFlag.user),
+		),
+		selectinload(Comment.awards).options(
+			selectinload(AwardRelationship.user),
+		),
+		selectinload(Comment.parent_comment),
+	)
+
+	results = query.all()
+
+	if v:
 		output = []
-		for c in comments:
+		for c in results:
 			comment = c[0]
 			comment.voted = c[1] or 0
 			comment.is_blocking = c[2] or 0
 			comment.is_blocked = c[3] or 0
 			output.append(comment)
 	else:
-		output = g.db.query(Comment) \
-			.join(User, User.id == Comment.author_id) \
-			.filter(User.shadowbanned == None, Comment.id.in_(cids)) \
-			.all()
+		output = results
 
 	return sorted(output, key=lambda x: cids.index(x.id))
 
