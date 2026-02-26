@@ -30,6 +30,7 @@ def unread(v):
 		Comment.state_mod == StateMod.VISIBLE,
 		Comment.state_user_deleted_utc == None,
 		Comment.author_id != AUTOJANNY_ID,
+		Comment.author_id.notin_(v.userblocks),
 	).order_by(Notification.created_datetimez.desc()).all()
 
 	for n, c in listing:
@@ -52,6 +53,7 @@ def notifications_main(v: User):
 			Comment.state_mod == StateMod.VISIBLE,
 			Comment.state_user_deleted_utc == None,
 			Comment.author_id != AUTOJANNY_ID,
+			Comment.author_id.notin_(v.userblocks),
 		).order_by(Notification.created_datetimez.desc())
 		.options(
 			selectinload(Comment.author).options(
@@ -175,6 +177,7 @@ def notifications_messages(v: User):
 		or_(Comment.author_id==v.id, Comment.sentto==v.id),
 		Comment.parent_submission == None,
 		Comment.level == 1,
+		Comment.author_id.notin_(v.userblocks),
 	)
 
 	if not v.shadowbanned and v.admin_level < 3:
