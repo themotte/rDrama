@@ -237,7 +237,7 @@ def front_all(v, subdomain=None):
 					lt=lt,
 					)
 
-	posts = get_posts(ids, v=v, eager=True)
+	posts = get_posts(ids, v=v)
 	
 	if v:
 		if v.hidevotedon: posts = [x for x in posts if not hasattr(x, 'voted') or not x.voted]

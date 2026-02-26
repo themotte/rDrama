@@ -182,13 +182,12 @@ def get_post(
 
 def get_posts(
 		pids:Iterable[int],
-		v:Optional[User]=None,
-		eager:bool=False) -> List[Submission]:
+		v:Optional[User]=None) -> List[Submission]:
 	if not pids: return []
 
 	if v:
 		vt = g.db.query(Vote.vote_type, Vote.submission_id).filter(
-			Vote.submission_id.in_(pids), 
+			Vote.submission_id.in_(pids),
 			Vote.user_id==v.id
 			).subquery()
 
@@ -212,15 +211,14 @@ def get_posts(
 	else:
 		query = g.db.query(Submission).filter(Submission.id.in_(pids))
 
-	if eager:
-		query = query.options(
-			selectinload(Submission.author).options(
-				selectinload(User.badges),
-				selectinload(User.notes),
-			),
-			selectinload(Submission.reports),
-			selectinload(Submission.awards),
-		)
+	query = query.options(
+		selectinload(Submission.author).options(
+			selectinload(User.badges),
+			selectinload(User.notes),
+		),
+		selectinload(Submission.reports),
+		selectinload(Submission.awards),
+	)
 
 	results = query.all()
 

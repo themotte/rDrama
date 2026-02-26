@@ -115,7 +115,7 @@ def searchposts(v):
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
 
-	posts = get_posts(ids, v=v, eager=True)
+	posts = get_posts(ids, v=v)
 
 	if request.headers.get("Authorization"): return {"total":total, "data":[x.json for x in posts]}
 
