@@ -101,6 +101,17 @@ def allowed_attributes(tag, name, value):
 		return False
 
 
+_tag_or_strikethrough_regex = re.compile(r'(<[^>]+>)|(~{1,2})([^~]+?)\2', flags=re.A)
+
+def _strikethrough_replace(m):
+	if m.group(1):  # matched an HTML tag — return unchanged
+		return m.group(1)
+	return '<del>' + m.group(3) + '</del>'
+
+def _apply_strikethrough(text):
+	"""Apply strikethrough formatting only to text outside HTML tags."""
+	return _tag_or_strikethrough_regex.sub(_strikethrough_replace, text)
+
 url_re = build_url_re(tlds=TLDS, protocols=['http', 'https'])
 
 css_sanitizer = CSSSanitizer(allowed_css_properties=['color', 'background-color', 'font-weight', 'text-align'])
@@ -186,7 +197,8 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 	sanitized = markdown(sanitized)
 
 	# turn ~something~ or ~~something~~  into <del>something</del>
-	sanitized = strikethrough_regex.sub(r'<del>\1</del>', sanitized)
+	# skip text inside HTML tags so tildes in URLs aren't mangled (fixes #737)
+	sanitized = _apply_strikethrough(sanitized)
 
 	# remove left-to-right mark; remove zero width space; remove zero width no-break space; remove Cuneiform Numeric Sign Eight;
 	sanitized = unwanted_bytes_regex.sub('', sanitized)
