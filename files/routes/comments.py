@@ -96,6 +96,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 				selectinload(AwardRelationship.user),
 			),
 			selectinload(Comment.parent_comment),
+			selectinload(Comment.post),
 		)
   
 		# TODO (wmill) This looks wrong to me. It adds on new properties to all comments to use voted/blocked/blocking status in rendering.

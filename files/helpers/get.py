@@ -147,6 +147,13 @@ def get_post(
 			blocking,
 			blocking.c.target_id == Submission.author_id,
 			isouter=True
+		).options(
+			selectinload(Submission.author).options(
+				selectinload(User.badges),
+				selectinload(User.notes),
+			),
+			selectinload(Submission.reports),
+			selectinload(Submission.awards),
 		)
 		post = post.one_or_none()
 		
@@ -158,11 +165,17 @@ def get_post(
 		x.voted = post[1] or 0
 		x.is_blocking = post[2] or 0
 	else:
-		post = g.db.get(Submission, i)
-		if not post:
+		x = g.db.query(Submission).filter_by(id=i).options(
+			selectinload(Submission.author).options(
+				selectinload(User.badges),
+				selectinload(User.notes),
+			),
+			selectinload(Submission.reports),
+			selectinload(Submission.awards),
+		).one_or_none()
+		if not x:
 			if graceful: return None
 			else: abort(404)
-		x = post
 
 	return x
 
@@ -235,7 +248,20 @@ def get_comment(
 		if graceful: return None
 		else: abort(404)
 
-	comment = g.db.get(Comment, i)
+	comment = g.db.query(Comment).filter_by(id=i).options(
+		selectinload(Comment.author).options(
+			selectinload(User.badges),
+			selectinload(User.notes),
+		),
+		selectinload(Comment.post).options(
+			selectinload(Submission.author).options(
+				selectinload(User.badges),
+				selectinload(User.notes),
+			),
+			selectinload(Submission.reports),
+			selectinload(Submission.awards),
+		),
+	).one_or_none()
 	if not comment:
 		if graceful: return None
 		else: abort(404)
