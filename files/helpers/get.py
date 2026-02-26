@@ -315,6 +315,7 @@ def get_comments(
 			selectinload(User.badges),
 			selectinload(User.notes),
 		),
+		selectinload(Comment.post),
 		selectinload(Comment.reports).options(
 			selectinload(CommentFlag.user),
 		),

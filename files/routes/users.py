@@ -7,7 +7,7 @@ from datetime import datetime
 from urllib.parse import urlparse
 
 import qrcode
-from sqlalchemy.orm import Query, selectinload
+from sqlalchemy.orm import Query
 
 import files.helpers.listing as listings
 from files.__main__ import app, cache, limiter
@@ -18,8 +18,7 @@ from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.const import *
-from files.helpers.contentsorting import (apply_time_filter,
-                                          sort_comment_results, sort_objects)
+from files.helpers.contentsorting import (apply_time_filter, sort_objects)
 from files.helpers.media import process_image
 from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
@@ -771,15 +770,7 @@ def u_username_comments(username, v=None):
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
 
-	def comment_tree_filter(q: Query) -> Query:
-		q = q.filter(Comment.id.in_(ids))
-		if not v or (v.id != u.id and v.admin_level < 2):
-			q = q.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
-		q = q.options(selectinload(Comment.post))
-		return q
-
-	listing, _ = get_comment_trees_eager(comment_tree_filter, sort=sort, v=v)
-	listing = sort_comment_results(listing, sort=sort, pins=False)
+	listing = get_comments(ids, v=v)
 
 	is_following = (v and user.has_follower(v))
 
