@@ -62,6 +62,111 @@ def test_admin_filtered_comments():
 	assert response.status_code == 200
 
 
+def test_filtered_posts_hides_shadowbanned_users():
+	"""Test that shadowbanned user posts do not appear in the filtered posts list.
+
+	Fixes issue #255: Shadowbanned user posts still show up in the Filtered
+	Posts list. Their posts should be excluded since moderators should not
+	need to review content from shadowbanned users.
+	"""
+	from files.__main__ import db_session
+	from files.classes import Submission, User
+	from files.classes.visstate import StateMod
+
+	admin_client, admin = util_accounts.create_test_client_and_admin(2, "filtrsb-admin")
+
+	# Create a regular user whose post will be filtered
+	regular_client, regular_user = util_accounts.create_test_client_and_user("filtrsb-reg")
+	regular_post = util_submissions.create_submission_for_client(regular_client)
+	regular_post_id = regular_post.id
+
+	# Create a shadowbanned user whose post will also be filtered
+	sb_client, sb_user = util_accounts.create_test_client_and_user("filtrsb-sb")
+	sb_post = util_submissions.create_submission_for_client(sb_client)
+	sb_post_id = sb_post.id
+	sb_user_id = sb_user.id
+
+	# Set both posts to FILTERED state, and shadowban the second user
+	with util.test_db_session() as session:
+		post1 = session.get(Submission, regular_post_id)
+		post1.state_mod = StateMod.FILTERED
+		session.add(post1)
+
+		post2 = session.get(Submission, sb_post_id)
+		post2.state_mod = StateMod.FILTERED
+		session.add(post2)
+
+		sb = session.get(User, sb_user_id)
+		sb.shadowbanned = "admin"
+		session.add(sb)
+
+		session.commit()
+
+	# Fetch the filtered posts page as admin
+	response = admin_client.get("/admin/filtered/posts")
+	assert response.status_code == 200
+
+	# The regular user's filtered post should be visible
+	assert f"post-{regular_post_id}" in response.text or str(regular_post_id) in response.text
+
+	# The shadowbanned user's filtered post should NOT be visible
+	assert f"post-{sb_post_id}" not in response.text
+
+
+def test_filtered_comments_hides_shadowbanned_users():
+	"""Test that shadowbanned user comments do not appear in the filtered comments list.
+
+	Same principle as test_filtered_posts_hides_shadowbanned_users but for
+	the comments endpoint.
+	"""
+	from files.__main__ import db_session
+	from files.classes import Comment, User
+	from files.classes.visstate import StateMod
+
+	admin_client, admin = util_accounts.create_test_client_and_admin(2, "filtcsb-admin")
+
+	# Create a post to attach comments to
+	regular_client, regular_user = util_accounts.create_test_client_and_user("filtcsb-reg")
+	post = util_submissions.create_submission_for_client(regular_client)
+	post_id = post.id
+
+	# Create a comment from the regular user
+	regular_comment = util_comments.create_comment_for_client(regular_client, post_id)
+	regular_comment_id = regular_comment.id
+
+	# Create a shadowbanned user and a comment from them
+	sb_client, sb_user = util_accounts.create_test_client_and_user("filtcsb-sb")
+	sb_comment = util_comments.create_comment_for_client(sb_client, post_id)
+	sb_comment_id = sb_comment.id
+	sb_user_id = sb_user.id
+
+	# Set both comments to FILTERED state, and shadowban the second user
+	with util.test_db_session() as session:
+		c1 = session.get(Comment, regular_comment_id)
+		c1.state_mod = StateMod.FILTERED
+		session.add(c1)
+
+		c2 = session.get(Comment, sb_comment_id)
+		c2.state_mod = StateMod.FILTERED
+		session.add(c2)
+
+		sb = session.get(User, sb_user_id)
+		sb.shadowbanned = "admin"
+		session.add(sb)
+
+		session.commit()
+
+	# Fetch the filtered comments page as admin
+	response = admin_client.get("/admin/filtered/comments")
+	assert response.status_code == 200
+
+	# The regular user's filtered comment should be visible
+	assert f"comment-{regular_comment_id}" in response.text or str(regular_comment_id) in response.text
+
+	# The shadowbanned user's filtered comment should NOT be visible
+	assert f"comment-{sb_comment_id}" not in response.text
+
+
 def test_admin_users():
 	"""Test GET /admin/users route"""
 	client, admin = util_accounts.create_test_client_and_admin(2)
