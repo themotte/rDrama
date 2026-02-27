@@ -70,7 +70,6 @@
 <meta property="article:published_time" content="{{p.created_datetime}}">
 {% if p.edited_utc %}<meta property="article:modified_time" content="{{p.edited_string}}">{% endif %}
 <meta property="og:description" name="description" content="{{p.plainbody(v)}}">
-{% if p.author %}<meta property="og:author" name="author" content="{{'@'+p.author_name}}">{% endif %}
 <meta property="og:title" content="{{p.plaintitle(v)}} - {{SITE_TITLE}}">
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% endif %}">
 {% if p.url and p.is_video %}
