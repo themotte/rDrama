@@ -365,11 +365,7 @@ if not app.debug:
 				s += ")"
 				parts.append(s)
 			if http_count:
-				s = f"{http_count} requests (max {http_max:.1f}s"
-				if http_max >= SLOW_THRESHOLD:
-					s += f": {http_max_route}"
-				s += ")"
-				parts.append(s)
+				parts.append(f"{http_count} requests (max {http_max:.1f}s: {http_max_route})")
 			if parts:
 				print(f"[perf] {', '.join(parts)}",
 					file=sys.stderr, flush=True)
