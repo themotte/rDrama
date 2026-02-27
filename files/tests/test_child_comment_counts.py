@@ -9,7 +9,7 @@ from files.classes import Submission, Comment, User
 from files.classes.visstate import StateMod
 from files.helpers.comments import bulk_recompute_descendant_counts
 import json
-import random
+import time as _time
 
 
 def assert_comment_visibility(post, comment_body, clients):
@@ -168,10 +168,10 @@ def test_bulk_update_descendant_count_quick():
 	with app.app_context():
 		db = db_session()
 
-		lastname = ''.join(random.choice('aio') + random.choice('bfkmprst') for i in range(3))
+		suffix = str(int(_time.time() * 1000))[-10:]
 		alice = User(**{
-			"username": f"alice_{lastname}",
-			"original_username": f"alice_{lastname}",
+			"username": f"a_{suffix}",
+			"original_username": f"a_{suffix}",
 			"admin_level": 0,
 			"password":"themotteuser",
 			"email":None,

@@ -93,6 +93,20 @@ def warn_on_lazy_loads(setup_test_environment):
 
 
 @pytest.fixture(autouse=True)
+def rollback_dirty_session():
+	"""Roll back the shared db_session after each test if it's dirty.
+
+	Tests that manipulate db_session directly (outside of Flask request
+	context) can leave it in a "needs rollback" state on failure, which
+	cascades PendingRollbackError into every subsequent test.
+	"""
+	yield
+	from files.__main__ import db_session
+	if db_session.registry.has():
+		db_session.rollback()
+
+
+@pytest.fixture(autouse=True)
 def disable_rate_limiting():
 	"""Automatically disable rate limiting for all tests"""
 	from files.__main__ import app, limiter
