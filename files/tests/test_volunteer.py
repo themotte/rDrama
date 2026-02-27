@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from . import util_accounts
 from . import util
 from . import util_submissions
@@ -168,3 +169,24 @@ def test_volunteer_submit_logged_out():
 	response = client.post("/volunteer/submit", data={})
 	# Should redirect to login or return 401/403
 	assert response.status_code in [302, 401, 403]
+
+
+def test_volunteer_teaser_open_in_new_tab():
+	"""Test that the volunteer teaser has an 'open in new tab' link (#460)"""
+	import os
+	template_path = os.path.join(
+		os.path.dirname(os.path.dirname(__file__)),
+		"templates", "volunteer_teaser.html"
+	)
+	with open(template_path, "r") as f:
+		html = f.read()
+
+	soup = BeautifulSoup(html, "html.parser")
+
+	# Find the nested link with target="_blank"
+	new_tab_link = soup.find("a", attrs={"target": "_blank"})
+	assert new_tab_link is not None, "Expected a link with target='_blank' in volunteer teaser"
+	assert new_tab_link.get("href") == "/volunteer"
+	assert "noopener" in new_tab_link.get("rel", [])
+	assert "noreferrer" in new_tab_link.get("rel", [])
+	assert "open in new tab" in new_tab_link.get_text().lower()
