@@ -3,9 +3,11 @@ import warnings
 from . import util_accounts
 from . import util_submissions
 from . import util_comments
+from . import util
 from .conftest import LazyLoadWarning
 from files.__main__ import db_session
 from files.classes import Notification, Comment, User
+from files.helpers.config.const import MODMAIL_ID
 
 
 def test_clear_notifications():
@@ -227,3 +229,101 @@ def test_notifications_messages_requires_auth():
 	client = util_accounts.create_logged_off_client()
 	response = client.get("/notifications/messages")
 	assert response.status_code == 302  # Redirect to login
+
+
+def test_reply_to_own_pm_notifications_no_crash():
+	"""Test that replying to your own PM doesn't crash notifications (#683).
+
+	When a user sends a PM and then replies to their own message,
+	the notifications page should still load without error.
+	"""
+	client1, user1 = util_accounts.create_test_client_and_user(name="pm-self1")
+	client2, user2 = util_accounts.create_test_client_and_user(name="pm-self2")
+
+	# User1 sends a PM to user2
+	response, _ = util.post_with_formkey(
+		client1, f"/@{user2.username}/message",
+		data={"message": util.generate_text()}
+	)
+	assert response.status_code == 200
+
+	# Find the PM in the database
+	db = db_session()
+	pm = db.query(Comment).filter_by(
+		author_id=user1.id,
+		sentto=user2.id,
+		parent_submission=None,
+		level=1,
+	).first()
+	assert pm is not None
+
+	# User1 replies to their own PM
+	reply_response, _ = util.post_with_formkey(
+		client1, "/reply",
+		data={"parent_id": pm.id, "body": util.generate_text()}
+	)
+	assert reply_response.status_code == 200
+
+	# Verify user2's notifications page loads without crashing
+	response = client2.get("/notifications")
+	assert response.status_code == 200
+
+	# Verify user2's messages page loads without crashing
+	response = client2.get("/notifications/messages")
+	assert response.status_code == 200
+
+	# Verify user1's notifications page also loads without crashing
+	response = client1.get("/notifications")
+	assert response.status_code == 200
+
+
+def test_reply_to_own_modmail_sets_sentto_correctly():
+	"""Test that replying to your own modmail keeps sentto=MODMAIL_ID (#683).
+
+	When a user sends modmail and then replies to their own modmail message,
+	the reply should have sentto=MODMAIL_ID so it stays in the modmail thread
+	and doesn't end up with sentto=None (which caused the original crash).
+	"""
+	client1, user1 = util_accounts.create_test_client_and_user(name="mm-self")
+
+	# User1 sends modmail via /send_admin
+	response, _ = util.post_with_formkey(
+		client1, "/send_admin",
+		data={"message": util.generate_text()}
+	)
+	assert response.status_code == 200
+
+	# Find the modmail in the database
+	db = db_session()
+	modmail = db.query(Comment).filter_by(
+		author_id=user1.id,
+		sentto=MODMAIL_ID,
+		parent_submission=None,
+		level=1,
+	).first()
+	assert modmail is not None
+
+	# User1 replies to their own modmail
+	reply_response, _ = util.post_with_formkey(
+		client1, "/reply",
+		data={"parent_id": modmail.id, "body": util.generate_text()}
+	)
+	assert reply_response.status_code == 200
+
+	# Find the reply in the database
+	db.expire_all()
+	reply = db.query(Comment).filter_by(
+		author_id=user1.id,
+		parent_comment_id=modmail.id,
+	).first()
+	assert reply is not None
+	# The reply should have sentto=MODMAIL_ID, not None
+	assert reply.sentto == MODMAIL_ID, \
+		f"Reply sentto should be MODMAIL_ID ({MODMAIL_ID}), got {reply.sentto}"
+
+	# Verify notifications pages load without crashing
+	response = client1.get("/notifications")
+	assert response.status_code == 200
+
+	response = client1.get("/notifications/messages")
+	assert response.status_code == 200
