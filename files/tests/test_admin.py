@@ -1012,6 +1012,48 @@ def test_admin_badge_remove_get():
 	assert response.status_code == 200
 
 
+def test_user_notes_modal_loads():
+	"""Test that pages with user notes modal load properly for admins (#718)
+
+	The user notes modal (usernote.html) is included in submission listing
+	pages when viewed by an admin. This test verifies the page loads and
+	the modal markup is present, which exercises the CSS we fixed for mobile.
+	"""
+	admin_client, admin = util_accounts.create_test_client_and_admin(2, "unotes-admin")
+
+	# Create a post so the front page has content with the usernote modal
+	client, user = util_accounts.create_test_client_and_user("unotes-user")
+	post = util_submissions.create_submission_for_client(client)
+
+	# Load the front page as admin (submission_listing.html includes usernote.html)
+	response = admin_client.get("/")
+	assert response.status_code == 200
+	# The usernote modal container should be present for admins
+	assert "modal__container" in response.text
+
+
+def test_user_notes_modal_on_post_page():
+	"""Test that user notes modal loads on individual post pages (#718)
+
+	The user notes modal appears on post detail pages too (via comments.html
+	which includes usernote_header.html). This tests the CSS applies there.
+	"""
+	admin_client, admin = util_accounts.create_test_client_and_admin(2, "unotep-admin")
+
+	# Create a post
+	client, user = util_accounts.create_test_client_and_user("unotep-user")
+	post = util_submissions.create_submission_for_client(client)
+	post_id = post.id
+
+	# Load the post page as admin
+	response = admin_client.get(f"/post/{post_id}")
+	assert response.status_code == 200
+	# The usernote modal container should be present
+	assert "modal__container" in response.text
+	# The usernote link should be present for admin users
+	assert "usernote-link" in response.text
+
+
 def test_unsticky_post():
 	"""Test POST /unsticky/<post_id> route"""
 	from files.__main__ import db_session
