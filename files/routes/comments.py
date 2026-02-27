@@ -44,7 +44,8 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	sort=request.values.get("sort", defaultsortingcomments)
 
 	def comment_tree_filter(q):
-		q = q.filter(Comment.parent_submission == post.id)
+		# Only load the specific thread, not every comment on the post
+		q = q.filter(Comment.top_comment_id == comment.top_comment_id)
 		if not (v and v.shadowbanned) and not (v and v.admin_level >= 3):
 			q = q.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
 		return q
