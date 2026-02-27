@@ -321,6 +321,7 @@ if not app.debug:
 			self._http_count: int = 0
 			self._http_max: float = 0.0
 			self._http_max_route: str = ""
+			self._http_max_ua: str = ""
 
 		def record_sql(self, elapsed, statement):
 			with self._lock:
@@ -330,12 +331,13 @@ if not app.debug:
 					self._sql_max_stmt = statement[:200]
 				self._maybe_report()
 
-		def record_http(self, elapsed, route):
+		def record_http(self, elapsed, route, user_agent=""):
 			with self._lock:
 				self._http_count += 1
 				if elapsed > self._http_max:
 					self._http_max = elapsed
 					self._http_max_route = route
+					self._http_max_ua = user_agent[:200]
 				self._maybe_report()
 
 		def _maybe_report(self):
@@ -349,12 +351,14 @@ if not app.debug:
 			http_count = self._http_count
 			http_max = self._http_max
 			http_max_route = self._http_max_route
+			http_max_ua = self._http_max_ua
 			self._sql_count = 0
 			self._sql_max = 0.0
 			self._sql_max_stmt = ""
 			self._http_count = 0
 			self._http_max = 0.0
 			self._http_max_route = ""
+			self._http_max_ua = ""
 			self._last_report = now
 
 			parts = []
@@ -365,7 +369,10 @@ if not app.debug:
 				s += ")"
 				parts.append(s)
 			if http_count:
-				parts.append(f"{http_count} requests (max {http_max:.1f}s: {http_max_route})")
+				s = f"{http_count} requests (max {http_max:.1f}s: {http_max_route})"
+				if http_max_ua:
+					s += f" ua={http_max_ua}"
+				parts.append(s)
 			if parts:
 				print(f"[perf] {', '.join(parts)}",
 					file=sys.stderr, flush=True)

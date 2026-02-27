@@ -74,7 +74,7 @@ def after_request(response: Response):
 				if k.lower() not in ('password', 'secret', 'formkey')}
 			if safe_form:
 				detail += f" form={safe_form}"
-		_perf.record_http(elapsed, detail)
+		_perf.record_http(elapsed, detail, request.headers.get("User-Agent", ""))
 		if elapsed >= SLOW_THRESHOLD:
 			detail = route
 			if request.form:
