@@ -406,7 +406,11 @@ def api_is_repost():
 	url = request.values.get('url')
 	if not url: abort(400)
 
-	url = canonicalize_url2(url, httpsify=True).geturl()
+	canonical = canonicalize_url2(url, httpsify=True)
+	if canonical is None:
+		return {'permalink': ''}
+
+	url = canonical.geturl()
 	if url.endswith('/'): url = url[:-1]
 
 	search_url = sql_ilike_clean(url)
@@ -699,11 +703,13 @@ def api_pin_post(post_id, v):
 @limiter.limit("6/minute")
 @auth_required
 def get_post_title(v):
+	from files.helpers.content import has_valid_domain
 	POST_TITLE_TIMEOUT = 5
 	url = request.values.get("url")
 	if not url or '\\' in url: abort(400)
 	url = url.strip()
 	if not url.startswith('http'): abort(400)
+	if not has_valid_domain(url): abort(400)
 	checking_url = url.lower().split('?')[0].split('%3F')[0]
 	if any((checking_url.endswith(f'.{x}') for x in NO_TITLE_EXTENSIONS)):
 		abort(400)
