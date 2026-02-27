@@ -39,9 +39,6 @@ def upgrade():
     # these are root-level messages, set path = id
     op.execute("UPDATE comments SET path = id::text::ltree WHERE path IS NULL")
 
-    # Make path NOT NULL now that all rows are populated
-    op.execute("ALTER TABLE comments ALTER COLUMN path SET NOT NULL")
-
     # Drop the now-redundant top_comment_id column
     op.drop_column('comments', 'top_comment_id')
 
@@ -52,4 +49,3 @@ def downgrade():
     op.execute(
         "UPDATE comments SET top_comment_id = subpath(path, 0, 1)::text::int"
     )
-    op.execute("ALTER TABLE comments ALTER COLUMN path DROP NOT NULL")

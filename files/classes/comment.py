@@ -33,7 +33,7 @@ class Comment(CreatedBase):
 	distinguish_level = Column(Integer, default=0, nullable=False)
 	level = Column(Integer, default=1, nullable=False)
 	parent_comment_id = Column(Integer, ForeignKey("comments.id"))
-	path = Column(Text, nullable=False, default='')
+	path = Column(Text, nullable=True)
 	over_18 = Column(Boolean, default=False, nullable=False)
 	is_bot = Column(Boolean, default=False, nullable=False)
 	is_pinned = Column(String)
