@@ -52,7 +52,7 @@ def before_request():
 	# This prevents thread safety issues with Gunicorn's gthread workers
 	g.db = db_session.session_factory()
 	g.start_time = time.time()
-	active_requests[threading.get_ident()] = (request.method, request.path, g.start_time)
+	active_requests[threading.get_ident()] = (request.method, request.full_path, g.start_time)
 
 
 @app.teardown_appcontext
@@ -67,10 +67,21 @@ def after_request(response: Response):
 	if not app.debug and hasattr(g, 'start_time'):
 		from files.__main__ import _perf, SLOW_THRESHOLD
 		elapsed = time.time() - g.start_time
-		route = f"{request.method} {request.path}"
-		_perf.record_http(elapsed, route)
+		route = f"{request.method} {request.full_path}"
+		detail = route
+		if request.form:
+			safe_form = {k: v for k, v in request.form.items()
+				if k.lower() not in ('password', 'secret', 'formkey')}
+			if safe_form:
+				detail += f" form={safe_form}"
+		_perf.record_http(elapsed, detail)
 		if elapsed >= SLOW_THRESHOLD:
-			print(f"[slow-request] {elapsed:.1f}s: {route}",
+			detail = route
+			if request.form:
+				safe_form = {k: v for k, v in request.form.items()
+					if k.lower() not in ('password', 'secret', 'formkey')}
+				detail += f" form={safe_form}"
+			print(f"[slow-request] {elapsed:.1f}s: {detail}",
 				file=sys.stderr, flush=True)
 
 	response.headers.add("Content-Security-Policy", ("""
