@@ -308,7 +308,7 @@ if not app.debug:
 	event.listen(Session, "do_orm_execute", _lazy_load_reporter.on_orm_execute)
 
 	# Performance reporter: logs slow SQL/HTTP and periodic throughput stats
-	SLOW_THRESHOLD = 5.0  # seconds
+	SLOW_THRESHOLD = 2.0  # seconds
 
 	class PerfReporter:
 		def __init__(self, interval:float=5.0):
