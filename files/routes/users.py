@@ -500,7 +500,7 @@ def messagereply(v):
 	parent = get_comment(id, v=v)
 	user_id = parent.author.id
 
-	if parent.sentto == MODMAIL_ID: user_id = None
+	if parent.sentto == MODMAIL_ID: user_id = MODMAIL_ID
 	elif v.id == user_id: user_id = parent.sentto
 
 	body_html = sanitize(message)

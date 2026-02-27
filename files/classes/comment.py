@@ -381,11 +381,12 @@ class Comment(CreatedBase):
 			return "Notification"
 		elif self.sentto == MODMAIL_ID:
 			return "Sent to admins"
-		elif self.senttouser is not None:
-			return f"Sent to @{self.senttouser.username}"
+		elif self.sentto is not None:
+			if self.senttouser is not None:
+				return f"Sent to @{self.senttouser.username}"
+			return "Message"
 		else:
-			# This shouldn't actually be possible.
-			return ""
+			return "Message"
 		
 	@lazy
 	def voted_display(self, v) -> int:
