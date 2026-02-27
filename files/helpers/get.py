@@ -6,6 +6,7 @@ from typing import Callable, Iterable, List, Optional, Type, Union
 from flask import abort, g
 from sqlalchemy import and_, or_, func
 from sqlalchemy.orm import Query, scoped_session, selectinload
+from sqlalchemy.orm.attributes import set_committed_value
 
 from files.classes import *
 from files.helpers.config.const import AUTOJANNY_ID
@@ -383,7 +384,7 @@ def get_comment_trees_eager(
 		selectinload(Comment.awards).options(
 			selectinload(AwardRelationship.user),
 		),
-		selectinload(Comment.parent_comment),
+		selectinload(Comment.senttouser),
 	)
 	results = query.all()
 
@@ -402,6 +403,14 @@ def get_comment_trees_eager(
 		c.replies2 = []
 		comments_map[c.id] = c
 		comments_map_parent[c.parent_comment_id].append(c)
+
+	# Manually wire parent_comment from the loaded set instead of a
+	# separate selectinload query. All parents are already present
+	# because callers filter by top_comment_id.
+	for c in comments:
+		parent = comments_map.get(c.parent_comment_id)
+		if parent is not None:
+			set_committed_value(c, 'parent_comment', parent)
 
 	for parent_id in comments_map_parent:
 		comments_map_parent[parent_id] = sort_comment_results(

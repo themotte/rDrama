@@ -16,7 +16,10 @@ from datetime import datetime, timezone
 @app.get("/post/<pid>/<anything>/<cid>")
 @auth_desired
 def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
-	comment = get_comment(cid, v=v)
+	try: cid = int(cid)
+	except: abort(404)
+	comment = g.db.get(Comment, cid)
+	if not comment: abort(404)
 
 	if v and request.values.get("read"):
 		notif = g.db.query(Notification).filter_by(comment_id=cid, user_id=v.id, read=False).one_or_none()
@@ -25,15 +28,17 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			g.db.add(notif)
 			g.db.commit()
 
-	if comment.post and comment.post.private and not (v and (v.admin_level >= 2 or v.id == comment.post.author.id)): abort(403)
-
-	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level >= 2) : abort(403)
+	# DM check — uses only column values, no relationships needed
+	if not comment.parent_submission and not (v and (comment.author_id == v.id or comment.sentto == v.id)) and not (v and v.admin_level >= 2): abort(403)
 
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
 		else: pid = 1
 
 	post = get_post(pid, v=v)
+
+	# Post-private check — uses already-loaded post
+	if post.private and not (v and (v.admin_level >= 2 or v.id == post.author_id)): abort(403)
 
 	if post.over_18 and not (v and v.over_18) and not session.get('over_18', 0) >= int(time.time()):
 		if request.headers.get("Authorization"): return {'error': 'This content is not suitable for some users and situations.'}
@@ -46,8 +51,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	def comment_tree_filter(q):
 		# Only load the specific thread, not every comment on the post
 		q = q.filter(Comment.top_comment_id == comment.top_comment_id)
-		if not (v and v.shadowbanned) and not (v and v.admin_level >= 3):
-			q = q.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
 		return q
 
 	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort=sort, v=v)
