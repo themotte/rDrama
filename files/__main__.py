@@ -233,7 +233,7 @@ class LazyLoadReporter:
 	def __init__(self, interval:float=5.0):
 		self.interval = interval
 		self._lock = threading.Lock()
-		self._last_report: float = 0.0
+		self._last_report: float = float('-inf')
 		self._suppressed: int = 0
 
 	def on_orm_execute(self, orm_execute_state):
