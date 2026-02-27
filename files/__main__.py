@@ -293,6 +293,25 @@ if not app.debug:
 	_lazy_load_reporter = LazyLoadReporter()
 	event.listen(Session, "do_orm_execute", _lazy_load_reporter.on_orm_execute)
 
+	# Log queries that take longer than a threshold
+	SLOW_QUERY_THRESHOLD = 5.0  # seconds
+
+	@event.listens_for(engine, "before_cursor_execute")
+	def _before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
+		conn.info["_query_start"] = time.monotonic()
+
+	@event.listens_for(engine, "after_cursor_execute")
+	def _after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
+		start = conn.info.pop("_query_start", None)
+		if start is None:
+			return
+		elapsed = time.monotonic() - start
+		if elapsed >= SLOW_QUERY_THRESHOLD:
+			# Truncate long statements for readability
+			stmt = statement[:500] + "..." if len(statement) > 500 else statement
+			print(f"[slow-query] {elapsed:.1f}s: {stmt}",
+				file=sys.stderr, flush=True)
+
 # now that we've that, let's add the cache, compression, and mail extensions to our app...
 
 cache = flask_caching.Cache(app)
