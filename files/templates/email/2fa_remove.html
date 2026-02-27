@@ -3,13 +3,12 @@
 {% block title %}Remove Two-Factor Authentication{% endblock %}
 
 {% block content %}
-	<p>We received a request to remove two-factor authentication from your account. In 72 hours, click the link below.</p>
-	<p>If you didn't make this request, change your password and use the Log Out Everywhere feature in your <a href="/settings/security">Security Settings</a> to permanently invalidate the link.</p>
-	<div class="button-container">
-		<a href="{{action_url}}" class="button" target="_blank" rel="noopener">Remove 2FA</a>
+	<p style="margin: 0 0 10px 0; color: #333333; line-height: 1.5; font-size: 15px;">We received a request to remove two-factor authentication from your account. In 72 hours, click the link below.</p>
+	<p style="margin: 0 0 10px 0; color: #333333; line-height: 1.5; font-size: 15px;">If you didn't make this request, change your password and use the Log Out Everywhere feature in your <a href="/settings/security">Security Settings</a> to permanently invalidate the link.</p>
+	<div style="text-align: center; margin: 30px 0 40px 0;">
+		<a href="{{action_url}}" style="display: inline-block; background-color: #1a6187; color: #ffffff; padding: 12px 28px; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold;" target="_blank" rel="noopener">Remove 2FA</a>
 	</div>
-
-	<p class="user-info">Please note that {{SITE_TITLE}} will never ask you for your email, password, or two-factor token via email, text, or phone.</p>
-	<hr />
-	<p class="raw-link">If the button doesn't work, you can copy and paste this link into your browser: <br>{{action_url}}</p>
+	<p style="font-size: 13px; color: #777777; margin: 16px 0; line-height: 1.4;">Please note that {{SITE_TITLE}} will never ask you for your email, password, or two-factor token via email, text, or phone.</p>
+	<hr style="border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;" />
+	<p style="display: block; margin-top: 10px; font-size: 13px; text-align: left; color: #999999; word-wrap: break-word; line-height: 1.4;">If the button doesn't work, you can copy and paste this link into your browser: <br />{{action_url}}</p>
 {% endblock %}
