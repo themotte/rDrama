@@ -36,6 +36,11 @@ app.jinja_env.cache = {}
 app.jinja_env.auto_reload = app.debug
 faulthandler.enable()
 
+# Active requests per thread, so we can report what was running on worker timeout.
+# Each thread only writes/deletes its own key; the worker_abort hook only reads.
+# Key: threading.get_ident(), Value: (method, path, start_time)
+active_requests: dict[int, tuple[str, str, float]] = {}
+
 # ...then check that debug mode was not accidentally enabled...
 
 if bool_from_string(environ.get("ENFORCE_PRODUCTION", True)) and app.debug:
@@ -279,10 +284,19 @@ class LazyLoadReporter:
 		else:
 			location = "(no application frame)"
 
+		# Include the current HTTP route if we're in a request context
+		route_msg = ""
+		try:
+			from flask import request as _req
+			if _req:
+				route_msg = f" [{_req.method} {_req.path}]"
+		except RuntimeError:
+			pass  # outside request context
+
 		suppressed_msg = ""
 		if suppressed:
 			suppressed_msg = f" ({suppressed} unreported since last)"
-		print(f"[lazy-load] {parent_cls}.{attr_name} at {location}{suppressed_msg}",
+		print(f"[lazy-load] {parent_cls}.{attr_name} at {location}{route_msg}{suppressed_msg}",
 			file=sys.stderr, flush=True)
 
 
@@ -293,8 +307,74 @@ if not app.debug:
 	_lazy_load_reporter = LazyLoadReporter()
 	event.listen(Session, "do_orm_execute", _lazy_load_reporter.on_orm_execute)
 
-	# Log queries that take longer than a threshold
-	SLOW_QUERY_THRESHOLD = 5.0  # seconds
+	# Performance reporter: logs slow SQL/HTTP and periodic throughput stats
+	SLOW_THRESHOLD = 5.0  # seconds
+
+	class PerfReporter:
+		def __init__(self, interval:float=5.0):
+			self.interval = interval
+			self._lock = threading.Lock()
+			self._last_report: float = time.monotonic()
+			self._sql_count: int = 0
+			self._sql_max: float = 0.0
+			self._sql_max_stmt: str = ""
+			self._http_count: int = 0
+			self._http_max: float = 0.0
+			self._http_max_route: str = ""
+
+		def record_sql(self, elapsed, statement):
+			with self._lock:
+				self._sql_count += 1
+				if elapsed > self._sql_max:
+					self._sql_max = elapsed
+					self._sql_max_stmt = statement[:200]
+				self._maybe_report()
+
+		def record_http(self, elapsed, route):
+			with self._lock:
+				self._http_count += 1
+				if elapsed > self._http_max:
+					self._http_max = elapsed
+					self._http_max_route = route
+				self._maybe_report()
+
+		def _maybe_report(self):
+			"""Call with lock held."""
+			now = time.monotonic()
+			if now - self._last_report < self.interval:
+				return
+			sql_count = self._sql_count
+			sql_max = self._sql_max
+			sql_max_stmt = self._sql_max_stmt
+			http_count = self._http_count
+			http_max = self._http_max
+			http_max_route = self._http_max_route
+			self._sql_count = 0
+			self._sql_max = 0.0
+			self._sql_max_stmt = ""
+			self._http_count = 0
+			self._http_max = 0.0
+			self._http_max_route = ""
+			self._last_report = now
+
+			parts = []
+			if sql_count:
+				s = f"{sql_count} queries (max {sql_max:.1f}s"
+				if sql_max >= SLOW_THRESHOLD:
+					s += f": {sql_max_stmt}"
+				s += ")"
+				parts.append(s)
+			if http_count:
+				s = f"{http_count} requests (max {http_max:.1f}s"
+				if http_max >= SLOW_THRESHOLD:
+					s += f": {http_max_route}"
+				s += ")"
+				parts.append(s)
+			if parts:
+				print(f"[perf] {', '.join(parts)}",
+					file=sys.stderr, flush=True)
+
+	_perf = PerfReporter()
 
 	@event.listens_for(engine, "before_cursor_execute")
 	def _before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
@@ -306,8 +386,8 @@ if not app.debug:
 		if start is None:
 			return
 		elapsed = time.monotonic() - start
-		if elapsed >= SLOW_QUERY_THRESHOLD:
-			# Truncate long statements for readability
+		_perf.record_sql(elapsed, statement)
+		if elapsed >= SLOW_THRESHOLD:
 			stmt = statement[:500] + "..." if len(statement) > 500 else statement
 			print(f"[slow-query] {elapsed:.1f}s: {stmt}",
 				file=sys.stderr, flush=True)
