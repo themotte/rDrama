@@ -26,6 +26,12 @@ function filter_new_status(id, new_status) {
 						approveLink.parentElement.removeChild(approveLink);
 						removeLink.parentElement.removeChild(removeLink);
 					}
+					const approveLinkMobile = postRow.querySelector('a#filter-approve-mobile')
+					const removeLinkMobile = postRow.querySelector('a#filter-remove-mobile')
+					if(approveLinkMobile && removeLinkMobile) {
+						approveLinkMobile.parentElement.removeChild(approveLinkMobile);
+						removeLinkMobile.parentElement.removeChild(removeLinkMobile);
+					}
 
 					const reportButtonCell = document.getElementById(`flaggers-${id}`);
 					if(reportButtonCell) {
