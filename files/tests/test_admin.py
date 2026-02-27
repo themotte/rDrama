@@ -1012,6 +1012,86 @@ def test_admin_badge_remove_get():
 	assert response.status_code == 200
 
 
+def test_filtered_post_has_approve_button():
+	"""Test that a filtered post shows Approve/Remove buttons for admins (#720)"""
+	from files.__main__ import db_session
+	from files.classes import Submission
+	from files.classes.visstate import StateMod
+
+	admin_client, admin = util_accounts.create_test_client_and_admin(2, "fltappr-admin")
+
+	# Create a post as a regular user
+	client, user = util_accounts.create_test_client_and_user("fltappr-user")
+	post = util_submissions.create_submission_for_client(client)
+	post_id = post.id
+
+	# Set the post to FILTERED state
+	with util.test_db_session() as session:
+		post_obj = session.get(Submission, post_id)
+		post_obj.state_mod = StateMod.FILTERED
+		session.commit()
+
+	# Load the individual post page as admin
+	response = admin_client.get(f"/post/{post_id}")
+	assert response.status_code == 200
+	assert "filter-approve" in response.text
+	assert "filter-remove" in response.text
+
+
+def test_filtered_post_listing_has_approve_button():
+	"""Test that filtered posts listing shows Approve/Remove buttons (#720)"""
+	from files.__main__ import db_session
+	from files.classes import Submission
+	from files.classes.visstate import StateMod
+
+	admin_client, admin = util_accounts.create_test_client_and_admin(2, "fltlst-admin")
+
+	# Create a post as a regular user
+	client, user = util_accounts.create_test_client_and_user("fltlst-user")
+	post = util_submissions.create_submission_for_client(client)
+	post_id = post.id
+
+	# Set the post to FILTERED state
+	with util.test_db_session() as session:
+		post_obj = session.get(Submission, post_id)
+		post_obj.state_mod = StateMod.FILTERED
+		session.commit()
+
+	# Load the filtered posts admin page
+	response = admin_client.get("/admin/filtered/posts")
+	assert response.status_code == 200
+	assert "filter-approve" in response.text
+	assert "filter-remove" in response.text
+
+
+def test_filtered_post_mobile_actions_load():
+	"""Test that the mobile admin actions modal loads for filtered posts (#720)"""
+	from files.__main__ import db_session
+	from files.classes import Submission
+	from files.classes.visstate import StateMod
+
+	admin_client, admin = util_accounts.create_test_client_and_admin(2, "fltmob-admin")
+
+	# Create a post as a regular user
+	client, user = util_accounts.create_test_client_and_user("fltmob-user")
+	post = util_submissions.create_submission_for_client(client)
+	post_id = post.id
+
+	# Set the post to FILTERED state
+	with util.test_db_session() as session:
+		post_obj = session.get(Submission, post_id)
+		post_obj.state_mod = StateMod.FILTERED
+		session.commit()
+
+	# Load the individual post page as admin and check mobile admin actions exist
+	response = admin_client.get(f"/post/{post_id}")
+	assert response.status_code == 200
+	# The mobile actions template should include the list-group-item styled buttons
+	assert "list-group-item" in response.text
+	assert f"approve2-{post_id}" in response.text
+	assert f"remove2-{post_id}" in response.text
+
+
 def test_unsticky_post():
 	"""Test POST /unsticky/<post_id> route"""
 	from files.__main__ import db_session
