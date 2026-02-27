@@ -1041,3 +1041,114 @@ def test_unsticky_post():
 	with util.test_db_session() as session:
 		post_after = session.get(Submission, post_id)
 		assert post_after.stickied is None
+
+
+def test_ban_system_account_returns_403():
+	"""Test that banning a system account (e.g. AutoJanny) returns 403."""
+	from files.helpers.config.const import AUTOJANNY_ID
+
+	admin_client, admin = util_accounts.create_test_client_and_admin(2, "bansys-admin")
+
+	response, _ = util.post_with_formkey(
+		admin_client, f"/ban_user/{AUTOJANNY_ID}",
+		data={"reason": "Should not work"}
+	)
+	assert response.status_code == 403
+
+
+def test_shadowban_system_account_returns_403():
+	"""Test that shadowbanning a system account (e.g. Snappy) returns 403."""
+	from files.helpers.config.const import SNAPPY_ID
+
+	admin_client, admin = util_accounts.create_test_client_and_admin(2, "sbsys-admin")
+
+	response, _ = util.post_with_formkey(
+		admin_client, f"/shadowban/{SNAPPY_ID}",
+		data={"reason": "Should not work"}
+	)
+	assert response.status_code == 403
+
+
+def test_ban_system_account_does_not_modify_user():
+	"""Test that a failed ban on a system account leaves the account unchanged."""
+	from files.__main__ import db_session
+	from files.classes import User
+	from files.helpers.config.const import NOTIFICATIONS_ID
+
+	admin_client, admin = util_accounts.create_test_client_and_admin(2, "bansysdb-adm")
+
+	util.post_with_formkey(
+		admin_client, f"/ban_user/{NOTIFICATIONS_ID}",
+		data={"reason": "Should not work"}
+	)
+
+	# Verify system account is NOT banned in database
+	with util.test_db_session() as session:
+		user_after = session.get(User, NOTIFICATIONS_ID)
+		assert user_after is not None
+		assert user_after.is_banned == 0
+
+
+def test_shadowban_system_account_does_not_modify_user():
+	"""Test that a failed shadowban on a system account leaves the account unchanged."""
+	from files.__main__ import db_session
+	from files.classes import User
+	from files.helpers.config.const import AUTOJANNY_ID
+
+	admin_client, admin = util_accounts.create_test_client_and_admin(2, "sbsysdb-admin")
+
+	util.post_with_formkey(
+		admin_client, f"/shadowban/{AUTOJANNY_ID}",
+		data={"reason": "Should not work"}
+	)
+
+	# Verify system account is NOT shadowbanned in database
+	with util.test_db_session() as session:
+		user_after = session.get(User, AUTOJANNY_ID)
+		assert user_after is not None
+		assert user_after.shadowbanned is None
+
+
+def test_ban_normal_user_still_works():
+	"""Regression test: banning a normal user still works after system account protection."""
+	from files.__main__ import db_session
+	from files.classes import User
+
+	admin_client, admin = util_accounts.create_test_client_and_admin(2, "banreg-admin")
+
+	client, user = util_accounts.create_test_client_and_user("banreguser")
+	user_id = user.id
+
+	response, _ = util.post_with_formkey(
+		admin_client, f"/ban_user/{user_id}",
+		data={"reason": "Regression test ban"}
+	)
+	assert response.status_code in [200, 302]
+
+	# Verify user is actually banned in database
+	with util.test_db_session() as session:
+		user_after = session.get(User, user_id)
+		assert user_after.is_banned != 0
+		assert user_after.ban_reason == "Regression test ban"
+
+
+def test_shadowban_normal_user_still_works():
+	"""Regression test: shadowbanning a normal user still works after system account protection."""
+	from files.__main__ import db_session
+	from files.classes import User
+
+	admin_client, admin = util_accounts.create_test_client_and_admin(2, "sbreg-admin")
+
+	client, user = util_accounts.create_test_client_and_user("sbreguser")
+	user_id = user.id
+
+	response, _ = util.post_with_formkey(
+		admin_client, f"/shadowban/{user_id}",
+		data={"reason": "Regression test shadowban"}
+	)
+	assert response.status_code in [200, 302]
+
+	# Verify user is actually shadowbanned in database
+	with util.test_db_session() as session:
+		user_after = session.get(User, user_id)
+		assert user_after.shadowbanned is not None
