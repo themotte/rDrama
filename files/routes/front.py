@@ -185,6 +185,10 @@ def notifications_messages(v: User):
 	next_exists = (len(comments) > 25)
 	listing = comments[:25]
 
+	user_blocking = {row.target_id for row in g.db.query(UserBlock).filter_by(user_id=v.id)}
+	for c in listing:
+		c.is_blocking = c.author_id in user_blocking
+
 	if request.headers.get("Authorization"):
 		return {"data": [x.json for x in listing]}
 
