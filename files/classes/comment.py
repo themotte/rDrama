@@ -33,7 +33,7 @@ class Comment(CreatedBase):
 	distinguish_level = Column(Integer, default=0, nullable=False)
 	level = Column(Integer, default=1, nullable=False)
 	parent_comment_id = Column(Integer, ForeignKey("comments.id"))
-	top_comment_id = Column(Integer)
+	path = Column(Text, nullable=False, default='')
 	over_18 = Column(Boolean, default=False, nullable=False)
 	is_bot = Column(Boolean, default=False, nullable=False)
 	is_pinned = Column(String)
@@ -109,7 +109,12 @@ class Comment(CreatedBase):
 	@property
 	@lazy
 	def top_comment(self) -> Optional["Comment"]:
-		return g.db.query(Comment).filter_by(id=self.top_comment_id).one_or_none()
+		if not self.path:
+			return None
+		root_id = int(self.path.split('.')[0])
+		if root_id == self.id:
+			return self
+		return g.db.query(Comment).filter_by(id=root_id).one_or_none()
 
 	@lazy
 	def flags(self, v):

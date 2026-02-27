@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 import requests
 import werkzeug.wrappers
 from PIL import Image as PILimage
+from sqlalchemy import text
 from sqlalchemy.orm import Query
 
 import files.helpers.validators as validators
@@ -89,7 +90,11 @@ def post_id(pid, anything=None, v=None):
 		pg_top_comment_ids.append(tc_id)
 
 	def comment_tree_filter(q: Query) -> Query:
-		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
+		if pg_top_comment_ids:
+			paths_array = "ARRAY[" + ",".join(f"'{i}'::ltree" for i in pg_top_comment_ids) + "]"
+			q = q.filter(text(f"comments.path <@ ANY({paths_array})"))
+		else:
+			q = q.filter(text("false"))
 		return q
 
 	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
@@ -151,7 +156,11 @@ def viewmore(v, pid, sort, offset):
 		pg_top_comment_ids.append(tc_id)
 
 	def comment_tree_filter(q: Query) -> Query:
-		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
+		if pg_top_comment_ids:
+			paths_array = "ARRAY[" + ",".join(f"'{i}'::ltree" for i in pg_top_comment_ids) + "]"
+			q = q.filter(text(f"comments.path <@ ANY({paths_array})"))
+		else:
+			q = q.filter(text("false"))
 		return q
 
 	_, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
@@ -168,7 +177,10 @@ def morecomments(v, cid):
 	try: cid = int(cid)
 	except: abort(400)
 
-	tcid = g.db.query(Comment.top_comment_id).filter_by(id=cid).one_or_none()[0]
+	comment_path = g.db.query(Comment.path).filter_by(id=cid).one_or_none()
+	if comment_path is None:
+		abort(404)
+	root_path = comment_path[0].split('.')[0]
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -182,7 +194,10 @@ def morecomments(v, cid):
 			votes.c.vote_type,
 			blocking.c.target_id,
 			blocked.c.target_id,
-		).filter(Comment.top_comment_id == tcid, Comment.level > RENDER_DEPTH_LIMIT).join(
+		).filter(
+			text(f"comments.path <@ '{root_path}'::ltree"),
+			Comment.level > RENDER_DEPTH_LIMIT,
+		).join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
