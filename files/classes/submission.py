@@ -80,6 +80,7 @@ class Submission(CreatedBase):
 	oauth_app = relationship("OauthApp", viewonly=True)
 	awards = relationship("AwardRelationship", viewonly=True)
 	reports = relationship("Flag", viewonly=True)
+	saves = relationship("SaveRelationship", viewonly=True)
 	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
 	notes = relationship("UserNote", back_populates="post")
 	task = relationship("ScheduledSubmissionTask", back_populates="submissions")
