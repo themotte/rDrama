@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 
 import matplotlib.pyplot as plt
 from sqlalchemy import func
+from sqlalchemy.orm import selectinload
 
 from files.classes.award import AWARDS
 from files.classes.badges import BadgeDef
@@ -244,7 +245,10 @@ def log(v):
 		types = types2
 	if kind: actions = actions.filter_by(kind=kind)
 
-	actions = actions.order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
+	actions = actions.options(
+		selectinload(ModAction.user),
+		selectinload(ModAction.target_user),
+	).order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
 	next_exists=len(actions)>25
 	actions=actions[:25]
 
@@ -258,7 +262,10 @@ def log_item(v, id):
 	try: id = int(id)
 	except: abort(404)
 
-	action=g.db.query(ModAction).filter_by(id=id).one_or_none()
+	action=g.db.query(ModAction).options(
+		selectinload(ModAction.user),
+		selectinload(ModAction.target_user),
+	).filter_by(id=id).one_or_none()
 
 	if not action: abort(404)
 

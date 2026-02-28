@@ -118,18 +118,29 @@ def test_notifications_main_page():
 
 
 def test_notifications_no_lazy_loads():
-	"""Test GET /notifications doesn't trigger lazy loads."""
+	"""Test GET /notifications doesn't trigger lazy loads.
+
+	Creates a comment tree so that the notification comment has children,
+	which would trigger lazy loads in replies() if not properly handled.
+	"""
 	client1, user1 = util_accounts.create_test_client_and_user(name="notif-nll1")
 	client2, user2 = util_accounts.create_test_client_and_user(name="notif-nll2")
+	client3, user3 = util_accounts.create_test_client_and_user(name="notif-nll3")
 
 	# User1 creates a post and comment
 	post = util_submissions.create_submission_for_client(client1)
 	comment = util_comments.create_comment_for_client(client1, post.id)
 
 	# User2 replies to user1's comment (creates a notification for user1)
-	util_comments.create_comment_for_client(client2, post.id, data={
+	reply = util_comments.create_comment_for_client(client2, post.id, data={
 		'parent_fullname': f'comment_{comment.id}',
 		'parent_level': 2,
+	})
+
+	# User3 replies to user2's reply (so the notification comment has children)
+	util_comments.create_comment_for_client(client3, post.id, data={
+		'parent_fullname': f'comment_{reply.id}',
+		'parent_level': 3,
 	})
 
 	# User1 views notifications page — capture lazy load warnings

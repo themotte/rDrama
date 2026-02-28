@@ -72,12 +72,27 @@ def update_author_comment_count(comment, delta):
 	g.db.add(comment.author)
 
 def update_ancestor_descendant_counts(comment, delta):
-	parent = comment.parent_comment_writable
-	if parent is None:
+	if comment.parent_comment_id is None:
 		return
-	parent.descendant_count += delta
-	g.db.add(parent)
-	update_ancestor_descendant_counts(parent, delta)
+
+	# Use a recursive CTE to find all ancestors and update in one query,
+	# instead of walking the parent chain one lazy load at a time.
+	base = select(Comment.id, Comment.parent_comment_id).where(
+		Comment.id == comment.parent_comment_id
+	).cte(name='ancestors', recursive=True)
+
+	base = base.union_all(
+		select(Comment.id, Comment.parent_comment_id).where(
+			Comment.id == base.c.parent_comment_id
+		)
+	)
+
+	g.db.execute(
+		update(Comment)
+		.where(Comment.id.in_(select(base.c.id)))
+		.values(descendant_count=Comment.descendant_count + delta)
+		.execution_options(synchronize_session=False)
+	)
 
 def bulk_recompute_descendant_counts(predicate = None, db=None):
 	"""

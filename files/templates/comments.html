@@ -9,7 +9,7 @@
 	{%- set ups = c.upvotes_str(render_ctx) -%}
 	{%- set score = c.score_str(render_ctx) -%}
 	{%- set downs = c.downvotes_str(render_ctx) -%}
-	{% set replies = c.replies(v) %}
+	{% set replies = c.replies(v) if render_replies else [] %}
 
 {% if not c.visibility_and_message(v)[0] %}
 	{% if c.show_descendants(v) %}

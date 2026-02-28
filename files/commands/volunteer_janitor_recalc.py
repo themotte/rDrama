@@ -28,7 +28,7 @@ def _compile_records(db):
 
     # get the info we need for all mentioned posts
     reported_comment_ids = {record.comment_id for record in vrecords}
-    reported_comments = db.query(Comment).where(Comment.id.in_(reported_comment_ids)).options(sqlalchemy.orm.load_only('id', 'state_user_deleted_utc'))
+    reported_comments = db.query(Comment).where(Comment.id.in_(reported_comment_ids)).options(sqlalchemy.orm.load_only(Comment.id, Comment.state_user_deleted_utc))
     reported_comments = {comment.id: comment for comment in reported_comments}
 
     # get our compiled data
@@ -151,7 +151,7 @@ def volunteer_janitor_recalc(db: Session, diagnostics: bool = False):
     # Get some metadata for all reported comments
     comments = db.query(Comment) \
         .where(Comment.id.in_(reported_comment_ids)) \
-        .options(sqlalchemy.orm.load_only('id', 'created_utc', 'author_id'))
+        .options(sqlalchemy.orm.load_only(Comment.id, Comment.created_utc, Comment.author_id))
     comments = {comment.id: comment for comment in comments}
 
     reported_user_ids = {comment.author_id for comment in comments.values()}
@@ -160,7 +160,7 @@ def volunteer_janitor_recalc(db: Session, diagnostics: bool = False):
     modhats_raw = db.query(Comment) \
         .where(Comment.parent_comment_id.in_(reported_comment_ids)) \
         .where(Comment.distinguish_level > 0) \
-        .options(sqlalchemy.orm.load_only('parent_comment_id', 'created_utc'))
+        .options(sqlalchemy.orm.load_only(Comment.parent_comment_id, Comment.created_utc))
 
     modhats = {}
     # we jump through some hoops to deduplicate this; I guess we just pick the last one in our list for now
@@ -169,7 +169,7 @@ def volunteer_janitor_recalc(db: Session, diagnostics: bool = False):
 
     usernotes_raw = db.query(UserNote) \
         .where(UserNote.tag.in_([UserTag.Warning, UserTag.Tempban, UserTag.Permban, UserTag.Spam, UserTag.Bot])) \
-        .options(sqlalchemy.orm.load_only('reference_user', 'created_datetimez', 'tag'))
+        .options(sqlalchemy.orm.load_only(UserNote.reference_user, UserNote.created_datetimez, UserNote.tag))
 
     # Here we're trying to figure out whether modhats are actually warnings/bans
     # We don't have a formal connection between "a comment is bad" and "the user got a warning", so we're kind of awkwardly trying to derive it from our database
@@ -219,7 +219,7 @@ def volunteer_janitor_recalc(db: Session, diagnostics: bool = False):
     # get per-user metadata
     users = db.query(User) \
         .where(User.id.in_(reporting_user_ids)) \
-        .options(sqlalchemy.orm.load_only('id', 'username', 'admin_level'))
+        .options(sqlalchemy.orm.load_only(User.id, User.username, User.admin_level))
     users = {user.id: {"username": user.username, "admin": user.admin_level != 0} for user in users}
 
     user_accuracy = defaultdict(lambda: CONFIG_default_user_accuracy)

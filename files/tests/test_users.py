@@ -1049,15 +1049,15 @@ def test_reply_route():
 	"""Test POST /reply route"""
 	client, user = util_accounts.create_test_client_and_user("replier")
 
-	# Create a post to reply to
+	# Create a post and comment; /reply expects a comment ID (not a post ID)
 	post = util_submissions.create_submission_for_client(client)
+	comment = util_comments.create_comment_for_client(client, post.id)
 
 	response, _ = util.post_with_formkey(
 		client, "/reply",
-		data={"parent_id": post.id, "body": "Test reply"}
+		data={"parent_id": comment.id, "body": "Test reply"}
 	)
-	# Should create a comment
-	assert response.status_code in [200, 302, 400]
+	assert response.status_code == 200
 
 
 def test_pp_route():

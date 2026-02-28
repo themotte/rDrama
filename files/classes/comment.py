@@ -58,6 +58,7 @@ class Comment(CreatedBase):
 	Index('comment_post_id_index', parent_submission)
 	Index('comments_user_index', author_id)
 	Index('fki_comment_sentto_fkey', sentto)
+	Index('comment_top_comment_id_index', top_comment_id)
 
 	oauth_app = relationship("OauthApp", viewonly=True)
 	post = relationship("Submission", viewonly=True)

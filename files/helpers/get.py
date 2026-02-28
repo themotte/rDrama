@@ -6,6 +6,7 @@ from typing import Callable, Iterable, List, Optional, Type, Union
 from flask import abort, g
 from sqlalchemy import and_, or_, func
 from sqlalchemy.orm import Query, scoped_session, selectinload
+from sqlalchemy.orm.attributes import set_committed_value
 
 from files.classes import *
 from files.helpers.config.const import AUTOJANNY_ID
@@ -44,6 +45,8 @@ def get_user(
 			func.lower(User.username) == username.lower(),
 			func.lower(User.original_username) == username.lower()
 			)
+		).options(
+			selectinload(User.badges),
 		).one_or_none()
 
 	if not user:
@@ -182,13 +185,12 @@ def get_post(
 
 def get_posts(
 		pids:Iterable[int],
-		v:Optional[User]=None,
-		eager:bool=False) -> List[Submission]:
+		v:Optional[User]=None) -> List[Submission]:
 	if not pids: return []
 
 	if v:
 		vt = g.db.query(Vote.vote_type, Vote.submission_id).filter(
-			Vote.submission_id.in_(pids), 
+			Vote.submission_id.in_(pids),
 			Vote.user_id==v.id
 			).subquery()
 
@@ -212,15 +214,14 @@ def get_posts(
 	else:
 		query = g.db.query(Submission).filter(Submission.id.in_(pids))
 
-	if eager:
-		query = query.options(
-			selectinload(Submission.author).options(
-				selectinload(User.badges),
-				selectinload(User.notes),
-			),
-			selectinload(Submission.reports),
-			selectinload(Submission.awards),
-		)
+	query = query.options(
+		selectinload(Submission.author).options(
+			selectinload(User.badges),
+			selectinload(User.notes),
+		),
+		selectinload(Submission.reports),
+		selectinload(Submission.awards),
+	)
 
 	results = query.all()
 
@@ -281,18 +282,18 @@ def get_comments(
 
 		blocked = v.blocked.subquery()
 
-		comments = g.db.query(
+		query = g.db.query(
 			Comment,
 			votes.c.vote_type,
 			blocking.c.target_id,
 			blocked.c.target_id,
 		).filter(Comment.id.in_(cids))
- 
+
 		if not (v and (v.shadowbanned or v.admin_level >= 2)):
-			comments = comments.join(User, User.id == Comment.author_id) \
+			query = query.join(User, User.id == Comment.author_id) \
 				.filter(User.shadowbanned == None)
 
-		comments = comments.join(
+		query = query.join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
@@ -304,20 +305,39 @@ def get_comments(
 			blocked,
 			blocked.c.user_id == Comment.author_id,
 			isouter=True
-		).all()
+		)
+	else:
+		query = g.db.query(Comment) \
+			.join(User, User.id == Comment.author_id) \
+			.filter(User.shadowbanned == None, Comment.id.in_(cids))
 
+	query = query.options(
+		selectinload(Comment.author).options(
+			selectinload(User.badges),
+			selectinload(User.notes),
+		),
+		selectinload(Comment.post),
+		selectinload(Comment.reports).options(
+			selectinload(CommentFlag.user),
+		),
+		selectinload(Comment.awards).options(
+			selectinload(AwardRelationship.user),
+		),
+		selectinload(Comment.parent_comment),
+	)
+
+	results = query.all()
+
+	if v:
 		output = []
-		for c in comments:
+		for c in results:
 			comment = c[0]
 			comment.voted = c[1] or 0
 			comment.is_blocking = c[2] or 0
 			comment.is_blocked = c[3] or 0
 			output.append(comment)
 	else:
-		output = g.db.query(Comment) \
-			.join(User, User.id == Comment.author_id) \
-			.filter(User.shadowbanned == None, Comment.id.in_(cids)) \
-			.all()
+		output = results
 
 	return sorted(output, key=lambda x: cids.index(x.id))
 
@@ -364,7 +384,7 @@ def get_comment_trees_eager(
 		selectinload(Comment.awards).options(
 			selectinload(AwardRelationship.user),
 		),
-		selectinload(Comment.parent_comment),
+		selectinload(Comment.senttouser),
 	)
 	results = query.all()
 
@@ -383,6 +403,14 @@ def get_comment_trees_eager(
 		c.replies2 = []
 		comments_map[c.id] = c
 		comments_map_parent[c.parent_comment_id].append(c)
+
+	# Manually wire parent_comment from the loaded set instead of a
+	# separate selectinload query. All parents are already present
+	# because callers filter by top_comment_id.
+	for c in comments:
+		parent = comments_map.get(c.parent_comment_id)
+		if parent is not None:
+			set_committed_value(c, 'parent_comment', parent)
 
 	for parent_id in comments_map_parent:
 		comments_map_parent[parent_id] = sort_comment_results(
