@@ -60,7 +60,13 @@
 				return line.substring(line.indexOf('>') + 1);
 			}).join('\n');
 	});
+	var link = select(function(selection) {
+		return `[${selection}]()`;
+	});
+
 	makeItalics = wrap(enclose('*'));
 	makeBold = wrap(enclose('**'));
 	makeQuote = wrap(quote);
+	makeLink = wrap(link);
+
 })()
