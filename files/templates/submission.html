@@ -275,11 +275,11 @@
 										<a class="format btn btn-secondary" role="button" onclick="makeItalics('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Italicize"><i class="fas fa-italic" aria-hidden="true"></i></a> 
 										<a class="format btn btn-secondary" role="button" onclick="makeQuote('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote"><i class="fas fa-quote-right" aria-hidden="true"></i></a>
 										<a class="format btn btn-secondary" role="button" onclick="commentForm('post-edit-box-{{p.id}}');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Add GIF"><span class="font-weight-bolder text-uppercase">GIF</span></a>
-										<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-edit-{{p.id}}">
+										<a class="format btn btn-secondary" role="button" onclick="makeLink('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Link"><i class="fas fa-link" aria-hidden="true"></i></a>
+										<label class="format btn btn-secondary m-0 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-edit-{{p.id}}">
 											<div id="filename-show-edit-{{p.id}}"><i class="far fa-image"></i></div>
 											<input autocomplete="off" id="file-upload-edit-{{p.id}}" type="file" multiple="multiple" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-edit-{{p.id}}','file-upload-edit-{{p.id}}')" hidden>
 										</label>
-										<a class="format btn btn-secondary" role="button" onclick="makeLink('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Link"><i class="fas fa-link" aria-hidden="true"></i></a>
 									</div>
 								</div>
 								<button form="post-edit-form-{{p.id}}" class="btn btn-primary ml-2 fl-r">Save Edit</button>
@@ -423,17 +423,13 @@
 
 				<div class="comment-format">
 					<a class="btn btn-secondary format d-inline-block m-0" role="button" onclick="makeBold('reply-form-body-{{p.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Bold"><i class="fas fa-bold"></i></a>
-					&nbsp;
 					<a class="btn btn-secondary format d-inline-block m-0" role="button" onclick="makeItalics('reply-form-body-{{p.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Italicize"><i class="fas fa-italic"></i></a>
-					&nbsp;
 					<a class="btn btn-secondary format d-inline-block m-0" role="button" onclick="makeQuote('reply-form-body-{{p.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Quote"><i class="fas fa-quote-right"></i></a>
-					&nbsp;
-					<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-reply-{{p.fullname}}">
+					<a class="btn btn-secondary format d-inline-block m-0" role="button" onclick="makeLink('reply-form-body-{{p.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Link"><i class="fas fa-link"></i></a>
+					<label class="format btn btn-secondary m-0 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-reply-{{p.fullname}}">
 						<div id="filename-show-reply-{{p.fullname}}"><i class="far fa-image"></i></div>
 						<input autocomplete="off" id="file-upload-reply-{{p.fullname}}" type="file" multiple="multiple" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-reply-{{p.fullname}}','file-upload-reply-{{p.fullname}}')" hidden>
 					</label>
-					&nbsp;
-					<a class="btn btn-secondary format m-0" role="button" onclick="makeLink('reply-form-body-{{p.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Link"><i class="fas fa-link"></i></a>
 				</div>
 				<a id="save-reply-to-{{p.fullname}}" role="button" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto fl-r" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>
 			</form>
