@@ -79,20 +79,19 @@
 												<small class="btn btn-secondary format d-inline-block m-0" onclick="makeBold('post-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Bold">
 												<i class="fas fa-bold" aria-hidden="true"></i>
 												</small>
-												&nbsp; 
 												<small class="btn btn-secondary format d-inline-block m-0" onclick="makeItalics('post-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Italicize">
 												<i class="fas fa-italic" aria-hidden="true"></i>
 												</small>
-												&nbsp; 
 												<small class="btn btn-secondary format d-inline-block m-0" onclick="makeQuote('post-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote">
 												<i class="fas fa-quote-right" aria-hidden="true"></i>
 												</small>
-												&nbsp;
-			
-												<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-submit">
+												<small class="btn btn-secondary format d-inline-block m-0" onclick="makeLink('post-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Link">
+													<i class="fas fa-link" aria-hidden="true"></i>
+												</small>
+												<label class="format btn btn-secondary m-0 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-submit">
 													<div id="filename-show-submit"><i class="far fa-image"></i></div>
 													<input autocomplete="off" id="file-upload-submit" multiple="multiple" type="file" name="file2" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-submit','file-upload-submit');checkForRequired()" hidden>
-												</label>		
+												</label>	
 
 												<div id="preview" class="preview my-3"></div>
 

@@ -3751,6 +3751,7 @@ ul.comment-section {
 }
 .comment-format {
 	display: flex;
+	gap: 4px;
 	align-items: center;
 	bottom: 0;
 	left: 0;
