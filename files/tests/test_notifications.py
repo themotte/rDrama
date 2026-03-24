@@ -227,3 +227,85 @@ def test_notifications_messages_requires_auth():
 	client = util_accounts.create_logged_off_client()
 	response = client.get("/notifications/messages")
 	assert response.status_code == 302  # Redirect to login
+
+
+def test_messages_show_block_button_for_other_user():
+	"""Test that PM messages from other users show a Block button"""
+	client1, user1 = util_accounts.create_test_client_and_user(name="blk-msg1")
+	client2, user2 = util_accounts.create_test_client_and_user(name="blk-msg2")
+
+	# User2 sends a PM to user1
+	from . import util
+	response, _ = util.post_with_formkey(
+		client2, f"/@{user1.username}/message",
+		data={"message": "Hello from user2"}
+	)
+	assert response.status_code == 200
+
+	# User1 views their messages page
+	response = client1.get("/notifications/messages")
+	assert response.status_code == 200
+
+	# The block button should be present for this message
+	assert "Block user" in response.text
+	assert "/settings/block" in response.text
+
+
+def test_messages_no_block_button_for_own_messages():
+	"""Test that PM messages sent by the current user do NOT show a Block button"""
+	client1, user1 = util_accounts.create_test_client_and_user(name="blk-own1")
+	client2, user2 = util_accounts.create_test_client_and_user(name="blk-own2")
+
+	# User1 sends a PM to user2
+	from . import util
+	response, _ = util.post_with_formkey(
+		client1, f"/@{user2.username}/message",
+		data={"message": "Hello from user1"}
+	)
+	assert response.status_code == 200
+
+	# User1 views their messages page (sees their own sent message)
+	response = client1.get("/notifications/messages")
+	assert response.status_code == 200
+
+	# The block button should NOT appear for user1's own messages
+	# (There should be no block button at all since the only message is from self)
+	assert "/settings/block" not in response.text
+
+
+def test_messages_block_user_from_pm():
+	"""Test that blocking a user from the PM page actually blocks them"""
+	client1, user1 = util_accounts.create_test_client_and_user(name="blk-act1")
+	client2, user2 = util_accounts.create_test_client_and_user(name="blk-act2")
+
+	# User2 sends a PM to user1
+	from . import util
+	response, _ = util.post_with_formkey(
+		client2, f"/@{user1.username}/message",
+		data={"message": "Hello from user2 to block"}
+	)
+	assert response.status_code == 200
+
+	# User1 blocks user2 via the settings block endpoint (same as the button calls)
+	response, _ = util.post_with_formkey(
+		client1, "/settings/block",
+		data={"username": user2.username}
+	)
+	assert response.status_code == 200
+	assert "blocked" in response.text.lower()
+
+	# Verify the block is recorded in the database
+	from files.classes.userblock import UserBlock
+	with util.test_db_session() as session:
+		block = session.query(UserBlock).filter_by(
+			user_id=user1.id, target_id=user2.id
+		).one_or_none()
+		assert block is not None
+
+	# User1 views messages page - blocked message shows "You are blocking"
+	# with an Unblock button
+	response = client1.get("/notifications/messages")
+	assert response.status_code == 200
+	assert "Unblock user" in response.text
+	assert "/settings/unblock" in response.text
+	assert f"You are blocking @{user2.username}" in response.text

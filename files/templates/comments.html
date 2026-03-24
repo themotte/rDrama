@@ -12,7 +12,7 @@
 	{% set replies = c.replies(v) if render_replies else [] %}
 
 {% if not c.visibility_and_message(v)[0] %}
-	{% if c.show_descendants(v) %}
+	{% if c.show_descendants(v) or (is_notification_page and c.is_blocking and c.sentto) %}
 		<div id="comment-{{c.id}}" class="comment">
 			<div class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement)"></div>
 			<div class="comment-collapse-bar-click" onclick="collapse_comment('{{c.id}}', this.parentElement)">
@@ -22,6 +22,9 @@
 			<div class="comment-user-info">
 				{% if standalone and c.over_18 %}<span class="badge badge-danger">18+</span>{% endif %}
 				{{c.visibility_and_message(v)[1]}}
+				{% if is_notification_page and c.is_blocking and c.sentto and v and v.id != c.author_id and not c.ghost %}
+					<a class="btn btn-sm btn-success ml-2" role="button" onclick="postToastReload(this,'/settings/unblock?username={{c.author_name}}','POST')"><i class="fas fa-eye mr-1"></i>Unblock user</a>
+				{% endif %}
 			</div>
 			
 			<div class="comment-body">
@@ -121,6 +124,12 @@
 
 			{% if is_notification_page and c.is_strict_message and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
 				{%- include 'component/comment/replybox_message.html' -%}
+				{% if v and v.id != c.author_id and not c.ghost %}
+				<div class="mt-2">
+					<a id="unblock-msg-{{c.id}}" class="btn btn-success {% if not c.is_blocking %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/settings/unblock?username={{c.author_name}}','POST','block-msg-{{c.id}}','unblock-msg-{{c.id}}');"><i class="fas fa-eye mr-1"></i>Unblock user</a>
+					<a id="block-msg-{{c.id}}" class="btn btn-danger {% if c.is_blocking %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/settings/block?username={{c.author_name}}','POST','block-msg-{{c.id}}','unblock-msg-{{c.id}}');"><i class="fas fa-eye-slash mr-1"></i>Block user</a>
+				</div>
+				{% endif %}
 			{% endif %}
 			
 			{% if render_replies %} 
