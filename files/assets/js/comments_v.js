@@ -283,14 +283,19 @@ document.onpaste = function(event) {
 		'post-edit-box-'
 	];
 
+	const files = event.clipboardData.files;
+	if (!files.length) {
+		return;
+	}
+
 	for (const bodyId of relevantBodyIds) {
 		if (focused.id.includes(bodyId)) {
 			const idForFileInput = focused.dataset.idForFileInput;
 			const fileInput = document.getElementById(`file-reply-${idForFileInput}`);
 			const filenameContainer = document.getElementById(`filename-reply-${idForFileInput}`);
-			files = event.clipboardData.files
+
 			try {
-				filename = files[0].name.toLowerCase()
+				const filename = files[0].name.toLowerCase();
 				const allowedExtensions = [".jpg", ".jpeg", ".png", ".webp", ".gif"];
 				if (allowedExtensions.some(extension => filename.endsWith(extension)))
 				{

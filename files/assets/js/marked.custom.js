@@ -68,20 +68,20 @@ function markdown(input) {
 	}
 }
 
-function charLimit(form, content) {
-	let input = document.getElementById(form);
-	let text = document.getElementById(content);
-	let length = input.value.length;
-	let maxLength = input.getAttribute("maxlength");
-
-	if (length >= maxLength) {
-		text.style.color = "#E53E3E";
+function charLimit(input) {
+	const display = input.parentElement.querySelector('.charcount');
+	if (display) {
+		const length = input.value.length;
+		const maxLength = input.getAttribute("maxlength");
+		display.innerText = `${length} / ${maxLength}`;
+		if (length >= maxLength) {
+			display.style.color = "#E53E3E";
+		}
+		else if (length >= maxLength * .72) {
+			display.style.color = "#FFC107";
+		}
+		else {
+			display.style.color = "#A0AEC0";
+		}
 	}
-	else if (length >= maxLength * .72){
-		text.style.color = "#FFC107";
-	}
-	else {
-		text.style.color = "#A0AEC0";
-	}
-	text.innerText = length + ' / ' + maxLength;
 }

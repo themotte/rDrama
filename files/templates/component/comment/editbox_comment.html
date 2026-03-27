@@ -2,8 +2,8 @@
 	<div id="comment-edit-{{c.id}}" class="d-none comment-write collapsed child">
 		<form id="comment-edit-form-{{c.id}}" action="/edit_comment/{{c.id}}" method="post" enctype="multipart/form-data"> 
 			<input type="hidden" name="formkey" value="{{v.formkey}}">
-			<textarea autocomplete="off" maxlength="{{COMMENT_BODY_LENGTH_MAXIMUM}}" oninput="markdown(this);charLimit('comment-edit-body-{{c.id}}','charcount-edit-{{c.id}}')" id="comment-edit-body-{{c.id}}" data-id-for-file-input="comment-{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
-			<div class="text-small font-weight-bold mt-1" id="charcount-edit-{{c.id}}" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
+			<textarea autocomplete="off" maxlength="{{COMMENT_BODY_LENGTH_MAXIMUM}}" oninput="markdown(this);charLimit(this)" id="comment-edit-body-{{c.id}}" data-id-for-file-input="comment-{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
+			<div class="charcount text-small font-weight-bold mt-1" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 			
 			{% from 'component/comment/_editor_buttons.html' import editor_buttons %}
 			{{ editor_buttons('comment-' ~ c.id, 'comment-edit-body-' ~ c.id) }}
