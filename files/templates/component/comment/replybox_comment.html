@@ -4,7 +4,7 @@
 			<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 			<input type="hidden" name="parent_fullname" value="{{c.fullname}}"> 
 			<input autocomplete="off" id="reply-form-submission-{{c.fullname}}" type="hidden" name="submission" value="{{c.post.id}}"> 
-			<textarea required autocomplete="off" minlength="1" maxlength="{{COMMENT_BODY_LENGTH_MAXIMUM}}" oninput="markdown('reply-form-body-{{c.fullname}}', 'reply-edit-{{c.id}}');charLimit('reply-form-body-{{c.fullname}}','charcount-{{c.id}}')" id="reply-form-body-{{c.fullname}}" data-id-for-file-input="comment-{{c.fullname}}" name="body" form="reply-to-{{c.fullname}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
+			<textarea required autocomplete="off" minlength="1" maxlength="{{COMMENT_BODY_LENGTH_MAXIMUM}}" oninput="markdown(this);charLimit('reply-form-body-{{c.fullname}}','charcount-{{c.id}}')" id="reply-form-body-{{c.fullname}}" data-id-for-file-input="comment-{{c.fullname}}" name="body" form="reply-to-{{c.fullname}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
 	
 			<div class="text-small font-weight-bold mt-1" id="charcount-{{c.id}}" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
@@ -14,7 +14,7 @@
 			<a id="save-reply-to-{{c.fullname}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}', {{level}})"role="button">Comment</a>
 			<a role="button" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form fl-r commentmob">Cancel</a> 
 		</form>
-		<div id="reply-edit-{{c.id}}" class="preview mb-3 mt-5"><p class="preview-msg">Comment preview</p></div>
+		<div class="preview mb-3 mt-5"><p class="preview-msg">Comment preview</p></div>
 		<div class="form-text text-small p-0 m-0"><a href="/formatting" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>Formatting help</a></div>
 	</div>
 </div>

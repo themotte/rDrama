@@ -57,13 +57,10 @@ marked.use({
 	]
 });
 
-function markdown(first, second) {
-	var input = document.getElementById(first);
-	var dest = document.getElementById(second);
-	if(dest && input){
-		for (var i = 0; i < dest.children.length; i++) {
-			dest.removeChild(dest.children[i]);
-		}
+function markdown(input) {
+	const dest = input.parentElement.parentElement.querySelector('.preview');
+	if (dest) {
+		dest.innerHTML = '';
 		const html = marked.parse(input.value);
 		// https://github.com/themotte/rDrama/issues/139
 		// Remove disallowed tags completely.
@@ -88,5 +85,3 @@ function charLimit(form, content) {
 	}
 	text.innerText = length + ' / ' + maxLength;
 }
-
-setTimeout(() => markdown('post-text','preview'), 200);
