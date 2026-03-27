@@ -46,12 +46,11 @@ function hide_image() {
 }
 
 document.onpaste = function(event) {
-	files = event.clipboardData.files
+	const files = event.clipboardData.files
 
-	filename = files[0]
+	const filename = files[0]
 
-	if (filename)
-	{
+	if (filename) {
 		filename = filename.name.toLowerCase()
 		if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
 		{
