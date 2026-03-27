@@ -59,25 +59,30 @@ function report_commentModal(id, author) {
 	}
 };
 
-function openReplyBox(id) {
+const openReplyBox = (id) => {
 	const element = document.getElementById(id);
-	const textarea = element.getElementsByTagName('textarea')[0]
-	let text = getSelection().toString()
+	const textarea = element.getElementsByTagName('textarea')[0];
+	const text = getSelection().toString();
 	if (text)
 	{
 		textarea.value = '>' + text
 		textarea.value = textarea.value.replace(/\n\n([^$])/g,"\n\n>$1")
-		if (!textarea.value.endsWith('\n\n')) textarea.value += '\n\n'
+		if (!textarea.value.endsWith('\n\n')) textarea.value += '\n\n';
+		markdown(textarea);
 	}
+	charLimit(textarea);
 	element.classList.remove('d-none')
-	textarea.focus()
+	textarea.focus();
 }
 
-function toggleEdit(id){
-	comment=document.getElementById("comment-text-"+id);
-	form=document.getElementById("comment-edit-"+id);
-	box=document.getElementById('comment-edit-body-'+id);
-	actions = document.getElementById('comment-' + id +'-actions');
+const toggleEdit = (id) =>{
+	const comment = document.getElementById(`comment-text-${id}`);
+	const form = document.getElementById(`comment-edit-${id}`);
+	const box = document.getElementById(`comment-edit-body-${id}`);
+	const actions = document.getElementById(`comment-${id}-actions`);
+
+	// Init preview and char count
+	box.oninput();
 
 	comment.classList.toggle("d-none");
 	form.classList.toggle("d-none");
