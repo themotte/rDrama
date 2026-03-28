@@ -261,20 +261,21 @@
 
 					{% if v and v.can_edit(p) %}
 						<div id="edit-post-body-{{p.id}}" class="d-none comment-write collapsed child">
-							<form id="post-edit-form-{{p.id}}" action="{{p.edit_url}}" method="post" enctype="multipart/form-data">
-								<div class="d-flex flex-column">
-									{{forms.formkey(v)}}
-									<input type="hidden" name="current_page" value="{{request.path}}">
-									<input type="text" autocomplete="off" maxlength="{{SUBMISSION_TITLE_LENGTH_MAXIMUM}}" name="title" class="comment-box form-control rounded" required placeholder="title" value="{{p.title}}"\>
-									<textarea autocomplete="off" name="body" maxlength="{{SUBMISSION_BODY_LENGTH_MAXIMUM}}" oninput="markdown(this);charLimit(this)" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10" data-id-for-file-input="post-{{p.id}}">{{p.body}}</textarea> 
-									
-									<div class="charcount text-small font-weight-bold mt-1" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
+							<form class="d-flex flex-column" id="post-edit-form-{{p.id}}" action="{{p.edit_url}}" method="post" enctype="multipart/form-data">
+								{{forms.formkey(v)}}
+								<input type="hidden" name="current_page" value="{{request.path}}">
+								<input type="text" autocomplete="off" maxlength="{{SUBMISSION_TITLE_LENGTH_MAXIMUM}}" name="title" class="comment-box form-control rounded" required placeholder="title" value="{{p.title}}"\>
+								<textarea autocomplete="off" name="body" maxlength="{{SUBMISSION_BODY_LENGTH_MAXIMUM}}" oninput="markdown(this);charLimit(this)" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10" data-id-for-file-input="post-{{p.id}}">{{p.body}}</textarea> 
+								
+								<div class="charcount text-small font-weight-bold mt-1" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
+								<div class="d-flex justify-content-between">
 									{% from 'component/comment/_editor_buttons.html' import editor_buttons %}
 									{{ editor_buttons('post-' ~ p.id, 'post-edit-box-' ~ p.id) }}
+
+									<a role="button" onclick="togglePostEdit('{{p.id}}')" class="btn btn-link mt-2 text-muted ml-auto cancel-form">Cancel</a>
+									<button form="post-edit-form-{{p.id}}" class="btn btn-primary mt-2">Save Edit</button>
 								</div>
-								<button form="post-edit-form-{{p.id}}" class="btn btn-primary ml-2 fl-r">Save Edit</button>
-								<a role="button" onclick="togglePostEdit('{{p.id}}')" class="btn btn-link text-muted ml-auto cancel-form fl-r">Cancel</a> 
 							</form>
 							<div class="preview mb-3 mt-5"></div>
 							<div class="form-text text-small p-0 m-0"><a href="/formatting" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>Formatting help</a></div>
@@ -410,12 +411,14 @@
 				<input autocomplete="off" id="reply-form-submission-{{p.fullname}}" type="hidden" name="submission" value="{{p.id}}">
 				<textarea required autocomplete="off" minlength="1" maxlength="{{COMMENT_BODY_LENGTH_MAXIMUM}}" oninput="markdown(this);charLimit(this)" id="reply-form-body-{{p.fullname}}" data-id-for-file-input="post-{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
 
-				<div class="charcount text-small font-weight-bold mt-1" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
+				<div class="charcount text-small font-weight-bold mt-1" style="right: 1rem; bottom: 0.5rem; z-index: 3; color: #A0AEC0;">0 / {{COMMENT_BODY_LENGTH_MAXIMUM}}</div>
 
-				{% from 'component/comment/_editor_buttons.html' import editor_buttons %}
-				{{ editor_buttons('post-' ~ p.fullname, 'reply-form-body-' ~ p.fullname) }}
+				<div class="d-flex justify-content-between">
+					{% from 'component/comment/_editor_buttons.html' import editor_buttons %}
+					{{ editor_buttons('post-' ~ p.fullname, 'reply-form-body-' ~ p.fullname) }}
 
-				<a id="save-reply-to-{{p.fullname}}" role="button" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto fl-r" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>
+					<a id="save-reply-to-{{p.fullname}}" role="button" form="reply-to-{{p.fullname}}" class="btn btn-primary mt-2" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>
+				</div>
 			</form>
 			<div class="preview text-small mb-3 mt-5"><p class="preview-msg">Comment preview</p></div>
 			<div class="form-text text-small p-0 m-0"><a href="/formatting" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>Formatting help</a></div>
