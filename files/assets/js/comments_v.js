@@ -289,28 +289,22 @@ document.onpaste = function(event) {
 	];
 
 	const files = event.clipboardData.files;
-	if (!files.length) {
-		return;
-	}
+	if (files.length && relevantBodyIds.some((bodyId) => focused.id.includes(bodyId))) {
+		const idForFileInput = focused.dataset.idForFileInput;
+		const fileInput = document.getElementById(`file-reply-${idForFileInput}`);
+		const filenameContainer = document.getElementById(`filename-reply-${idForFileInput}`);
 
-	for (const bodyId of relevantBodyIds) {
-		if (focused.id.includes(bodyId)) {
-			const idForFileInput = focused.dataset.idForFileInput;
-			const fileInput = document.getElementById(`file-reply-${idForFileInput}`);
-			const filenameContainer = document.getElementById(`filename-reply-${idForFileInput}`);
-
-			try {
-				const filename = files[0].name.toLowerCase();
-				const allowedExtensions = [".jpg", ".jpeg", ".png", ".webp", ".gif"];
-				if (allowedExtensions.some(extension => filename.endsWith(extension)))
-				{
-					fileInput.files = files;
-					filenameContainer.textContent = filename;
-				}
-				return;
+		try {
+			const filename = files[0].name.toLowerCase();
+			const allowedExtensions = [".jpg", ".jpeg", ".png", ".webp", ".gif"];
+			if (allowedExtensions.some(extension => filename.endsWith(extension)))
+			{
+				fileInput.files = files;
+				filenameContainer.textContent = filename;
 			}
-			catch(e) {console.log(e)}
+			return;
 		}
+		catch(e) {console.log(e)}
 	}
 }
 
