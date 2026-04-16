@@ -573,10 +573,16 @@ def submit_post(v):
 	post.publish()
 	g.db.commit()
 
-	if request.headers.get("Authorization"): 
+	if request.headers.get("Authorization"):
 		return post.json
 	else:
-		post.voted = 1
+		# Re-fetch via get_post so relationships (awards/reports/author) are
+		# eagerly loaded; rendering submission.html against the raw freshly-
+		# constructed Submission triggers lazy loads in the template.
+		post = get_post(post.id, v=v)
+		# A freshly-published post has no comments. Pre-set the relationship
+		# so the highlight-unread JS in comments.html doesn't lazy-load them.
+		set_committed_value(post, 'comments', [])
 		if 'megathread' in post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
 		return render_template('submission.html', v=v, p=post, sort=sort, render_replies=True, offset=0, success=True)
