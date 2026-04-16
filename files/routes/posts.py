@@ -11,6 +11,7 @@ import requests
 import werkzeug.wrappers
 from PIL import Image as PILimage
 from sqlalchemy.orm import Query
+from sqlalchemy.orm.attributes import set_committed_value
 
 import files.helpers.validators as validators
 from files.__main__ import app, db_session, limiter
@@ -93,6 +94,9 @@ def post_id(pid, anything=None, v=None):
 		return q
 
 	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
+	# Pre-set p.comments to the eagerly-loaded set so template iteration in the
+	# highlight-unread JS doesn't trigger a lazy load of every comment on the post.
+	set_committed_value(post, 'comments', comments)
 	post.replies = comment_tree[None] # parent=None -> top-level comments
 	ids = {c.id for c in post.replies}
 
