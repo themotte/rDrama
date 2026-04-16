@@ -81,7 +81,10 @@ def after_request(response: Response):
 				safe_form = {k: v for k, v in request.form.items()
 					if k.lower() not in ('password', 'secret', 'formkey')}
 				detail += f" form={safe_form}"
-			print(f"[slow-request] {elapsed:.1f}s: {detail}",
+			queries = getattr(g, 'query_count', 0)
+			query_time = getattr(g, 'query_time', 0.0)
+			ip = request.headers.get('X-Real-IP', request.remote_addr or '-')
+			print(f"[slow-request] {elapsed:.1f}s ({queries} queries, {query_time:.1f}s in sql) ip={ip}: {detail}",
 				file=sys.stderr, flush=True)
 
 	response.headers.add("Content-Security-Policy", ("""
