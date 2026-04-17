@@ -54,7 +54,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 		q = q.filter(Comment.top_comment_id == comment.top_comment_id)
 		return q
 
-	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort=sort, v=v)
+	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort=sort, v=v, post=post)
 	set_committed_value(post, 'comments', comments)
 
 	try: context = min(int(request.values.get("context", 0)), 8)
@@ -222,6 +222,7 @@ def api_comment(v):
 			selectinload(User.badges),
 			selectinload(User.notes),
 		),
+		selectinload(Comment.post),
 		selectinload(Comment.reports).options(
 			selectinload(CommentFlag.user),
 		),

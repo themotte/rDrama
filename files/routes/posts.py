@@ -93,7 +93,7 @@ def post_id(pid, anything=None, v=None):
 		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
 		return q
 
-	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
+	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v, post=post)
 	# Pre-set p.comments to the eagerly-loaded set so template iteration in the
 	# highlight-unread JS doesn't trigger a lazy load of every comment on the post.
 	set_committed_value(post, 'comments', comments)
@@ -158,7 +158,7 @@ def viewmore(v, pid, sort, offset):
 		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
 		return q
 
-	_, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
+	_, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v, post=post)
 	comments = comment_tree[None] # parent=None -> top-level comments
 	ids |= {c.id for c in comments}
 

@@ -347,7 +347,8 @@ def get_comments(
 def get_comment_trees_eager(
 		query_filter_callable: Callable[[Query], Query],
 		sort: str="old",
-		v: Optional[User]=None) -> tuple[list[Comment], defaultdict[Comment, list[Comment]]]:
+		v: Optional[User]=None,
+		post: Optional[Submission]=None) -> tuple[list[Comment], defaultdict[Comment, list[Comment]]]:
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 		blocking = v.blocking.subquery()
@@ -404,13 +405,15 @@ def get_comment_trees_eager(
 		comments_map[c.id] = c
 		comments_map_parent[c.parent_comment_id].append(c)
 
-	# Manually wire parent_comment from the loaded set instead of a
-	# separate selectinload query. All parents are already present
-	# because callers filter by top_comment_id.
+	# Manually wire parent_comment (and post, if provided) from the
+	# loaded set instead of separate selectinload queries.  All parents
+	# are already present because callers filter by top_comment_id.
 	for c in comments:
 		parent = comments_map.get(c.parent_comment_id)
 		if parent is not None:
 			set_committed_value(c, 'parent_comment', parent)
+		if post is not None:
+			set_committed_value(c, 'post', post)
 
 	for parent_id in comments_map_parent:
 		comments_map_parent[parent_id] = sort_comment_results(
