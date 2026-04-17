@@ -324,7 +324,10 @@ def all_comments(v):
 	def comment_tree_filter(q: Query) -> Query:
 		q = q.filter(Comment.id.in_(idlist))
 		q = comment_filter_moderated(q, v)
-		q = q.options(selectinload(Comment.post)) # used for post titles
+		q = q.options(
+			selectinload(Comment.post),         # post titles, is_op
+			selectinload(Comment.parent_comment), # header_msg "Comment Reply"
+		)
 		return q
 
 	comments, _ = get_comment_trees_eager(comment_tree_filter, sort=sort, v=v)
