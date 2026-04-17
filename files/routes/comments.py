@@ -1,3 +1,4 @@
+from sqlalchemy.orm import selectinload
 from sqlalchemy.orm.attributes import set_committed_value
 
 from files.__main__ import app, limiter
@@ -213,11 +214,28 @@ def api_comment(v):
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
-	
+
+	# Re-fetch with eager-loaded relationships so the comment template
+	# (author popover/badges, awards, reports) doesn't lazy-load per-field.
+	c = g.db.query(Comment).filter_by(id=c.id).options(
+		selectinload(Comment.author).options(
+			selectinload(User.badges),
+			selectinload(User.notes),
+		),
+		selectinload(Comment.reports).options(
+			selectinload(CommentFlag.user),
+		),
+		selectinload(Comment.awards).options(
+			selectinload(AwardRelationship.user),
+		),
+		selectinload(Comment.senttouser),
+	).one()
+	c.voted = 1
+
 	if replying_to_blocked:
 		message = "This user has blocked you. You are still welcome to reply " \
 				  "but you will be held to a higher standard of civility than you would be otherwise"
-	elif (v.admin_level <= PERMS['POST_COMMENT_MODERATION'] 
+	elif (v.admin_level <= PERMS['POST_COMMENT_MODERATION']
 			and len(body) > COMMENT_BODY_LENGTH_MAXIMUM_UNFILTERED):
 		message = "Your comment has been submitted but is a bit long, so it's pending approval."
 	else:

@@ -2,6 +2,7 @@ import io
 import re
 from contextlib import redirect_stderr
 
+import pytest
 from sqlalchemy import event
 from sqlalchemy.orm import Session
 
@@ -10,21 +11,23 @@ from files.classes import Submission, User
 
 from . import util_accounts, util
 
+pytestmark = pytest.mark.filterwarnings(
+	"ignore::files.tests.conftest.LazyLoadWarning"
+)
+
 
 def _trigger_lazy_load():
-	"""Create a post, expire it from the session, then access .author
-	to force a lazy load on Submission.author specifically."""
-	client, user = util_accounts.create_test_client_and_user()
-	response, _ = util.post_with_formkey(
-		client, "/submit",
-		data={"title": util.generate_text(), "body": util.generate_text()},
-	)
-	assert response.status_code == 200
-
-	post = util.ItemData.from_html(response.text)
-	# Use Session.get to avoid deprecation warning, then expire just the
-	# author relationship so the next access triggers a lazy load.
-	sub = db_session.get(Submission, post.id)
+	"""Load any Submission, expire its author, then access it to force a
+	lazy load on Submission.author.  Uses a direct ORM query so it doesn't
+	depend on any particular route's eager-loading behavior."""
+	sub = db_session.query(Submission).first()
+	if sub is None:
+		client, _ = util_accounts.create_test_client_and_user()
+		util.post_with_formkey(
+			client, "/submit",
+			data={"title": util.generate_text(), "body": util.generate_text()},
+		)
+		sub = db_session.query(Submission).first()
 	db_session.expire(sub, ['author'])
 	_ = sub.author
 
