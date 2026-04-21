@@ -7,8 +7,8 @@ from sqlalchemy import event
 from sqlalchemy.orm import Session
 
 from files import __main__ as main
-from files.__main__ import LazyLoadReporter, db_session
-from files.classes import Submission, User
+from files.__main__ import LazyLoadReporter
+from files.classes import Submission
 
 from . import util_accounts, util
 
@@ -18,8 +18,8 @@ pytestmark = pytest.mark.filterwarnings(
 
 
 def _trigger_lazy_load():
-	"""Create a fresh submission, reload it from the session, then access
-	.author after expiring that relationship to force a lazy load."""
+	"""Create a fresh submission, reload it in an isolated session, then
+	access .author after expiring that relationship to force a lazy load."""
 	client, _ = util_accounts.create_test_client_and_user()
 	response, _ = util.post_with_formkey(
 		client, "/submit",
@@ -28,10 +28,13 @@ def _trigger_lazy_load():
 	assert response.status_code == 200
 
 	post = util.ItemData.from_html(response.text)
-	db_session.expunge_all()
-	sub = db_session.get(Submission, post.id)
-	db_session.expire(sub, ['author'])
-	_ = sub.author
+	session = main.db_session_factory()
+	try:
+		sub = session.get(Submission, post.id)
+		session.expire(sub, ['author'])
+		_ = sub.author
+	finally:
+		session.close()
 
 
 def _set_global_reporter_enabled(enabled: bool):
