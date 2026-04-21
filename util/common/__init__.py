@@ -39,8 +39,8 @@ def _execute(command,**kwargs):
             print(stderr)
             
             raise subprocess.CalledProcessError(
-                    command,
                     proc.returncode,
+                    command,
                     stdout or None,
                     stderr or None
             )
