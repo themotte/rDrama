@@ -390,6 +390,15 @@ if not app.debug:
 			return
 		elapsed = time.monotonic() - start
 		_perf.record_sql(elapsed, statement)
+		# Tally query count and cumulative SQL time on the current request so the
+		# slow-request log can attribute queries/db-time to specific URLs.
+		try:
+			from flask import g as _g, has_request_context
+			if has_request_context():
+				_g.query_count = getattr(_g, 'query_count', 0) + 1
+				_g.query_time = getattr(_g, 'query_time', 0.0) + elapsed
+		except RuntimeError:
+			pass
 		if elapsed >= SLOW_THRESHOLD:
 			stmt = statement[:500] + "..." if len(statement) > 500 else statement
 			print(f"[slow-query] {elapsed:.1f}s: {stmt}",

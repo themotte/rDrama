@@ -12,6 +12,7 @@ import werkzeug.wrappers
 from PIL import Image as PILimage
 from sqlalchemy import text
 from sqlalchemy.orm import Query
+from sqlalchemy.orm.attributes import set_committed_value
 
 import files.helpers.validators as validators
 from files.__main__ import app, db_session, limiter
@@ -97,7 +98,10 @@ def post_id(pid, anything=None, v=None):
 			q = q.filter(text("false"))
 		return q
 
-	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
+	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v, post=post)
+	# Pre-set p.comments to the eagerly-loaded set so template iteration in the
+	# highlight-unread JS doesn't trigger a lazy load of every comment on the post.
+	set_committed_value(post, 'comments', comments)
 	post.replies = comment_tree[None] # parent=None -> top-level comments
 	ids = {c.id for c in post.replies}
 
@@ -163,7 +167,7 @@ def viewmore(v, pid, sort, offset):
 			q = q.filter(text("false"))
 		return q
 
-	_, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v)
+	_, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v, post=post)
 	comments = comment_tree[None] # parent=None -> top-level comments
 	ids |= {c.id for c in comments}
 
@@ -584,10 +588,16 @@ def submit_post(v):
 	post.publish()
 	g.db.commit()
 
-	if request.headers.get("Authorization"): 
+	if request.headers.get("Authorization"):
 		return post.json
 	else:
-		post.voted = 1
+		# Re-fetch via get_post so relationships (awards/reports/author) are
+		# eagerly loaded; rendering submission.html against the raw freshly-
+		# constructed Submission triggers lazy loads in the template.
+		post = get_post(post.id, v=v)
+		# A freshly-published post has no comments. Pre-set the relationship
+		# so the highlight-unread JS in comments.html doesn't lazy-load them.
+		set_committed_value(post, 'comments', [])
 		if 'megathread' in post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
 		return render_template('submission.html', v=v, p=post, sort=sort, render_replies=True, offset=0, success=True)

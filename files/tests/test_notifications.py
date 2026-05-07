@@ -227,3 +227,176 @@ def test_notifications_messages_requires_auth():
 	client = util_accounts.create_logged_off_client()
 	response = client.get("/notifications/messages")
 	assert response.status_code == 302  # Redirect to login
+
+
+# ---- Blocked user notification filtering tests (#640) ----
+
+import json
+from . import util
+
+
+def test_blocked_user_not_in_unread():
+	"""Notifications from blocked users should not appear in /unread"""
+	client1, user1 = util_accounts.create_test_client_and_user(name="blk-unrd1")
+	client2, user2 = util_accounts.create_test_client_and_user(name="blk-unrd2")
+
+	# User1 creates a post and comment
+	post = util_submissions.create_submission_for_client(client1)
+	comment = util_comments.create_comment_for_client(client1, post.id)
+
+	# User1 blocks User2
+	response, _ = util.post_with_formkey(
+		client1, "/settings/block",
+		data={"username": user2.username}
+	)
+	assert response.status_code == 200
+
+	# User2 replies to User1's comment (creates a notification)
+	util_comments.create_comment_for_client(client2, post.id, data={
+		'parent_fullname': f'comment_{comment.id}',
+		'parent_level': 2,
+	})
+
+	# Verify a notification was created in the database
+	db = db_session()
+	db.expire_all()
+	notif_count = db.query(Notification).filter(
+		Notification.user_id == user1.id,
+		Notification.read == False,
+	).count()
+	assert notif_count > 0, "Notification should exist in DB even from blocked user"
+
+	# User1 checks /unread -- blocked user's notification should be filtered
+	response = client1.get("/unread")
+	assert response.status_code == 200
+	data = json.loads(response.text)
+	assert "data" in data
+
+	# None of the returned notifications should be from the blocked user
+	for notif in data["data"]:
+		assert notif.get("author_id") != user2.id, \
+			"Notification from blocked user should not appear in /unread"
+
+
+def test_unblocked_user_appears_in_unread():
+	"""Notifications from non-blocked users should still appear in /unread"""
+	client1, user1 = util_accounts.create_test_client_and_user(name="nblk-unrd1")
+	client2, user2 = util_accounts.create_test_client_and_user(name="nblk-unrd2")
+
+	# User1 creates a post and comment (no blocking)
+	post = util_submissions.create_submission_for_client(client1)
+	comment = util_comments.create_comment_for_client(client1, post.id)
+
+	# User2 replies to User1's comment
+	util_comments.create_comment_for_client(client2, post.id, data={
+		'parent_fullname': f'comment_{comment.id}',
+		'parent_level': 2,
+	})
+
+	# User1 checks /unread -- should see the notification
+	response = client1.get("/unread")
+	assert response.status_code == 200
+	data = json.loads(response.text)
+	assert "data" in data
+	assert len(data["data"]) > 0, \
+		"Notification from non-blocked user should appear in /unread"
+
+
+def test_blocked_user_not_in_notifications_page():
+	"""Notifications from blocked users should not appear on /notifications page"""
+	client1, user1 = util_accounts.create_test_client_and_user(name="blk-noti1")
+	client2, user2 = util_accounts.create_test_client_and_user(name="blk-noti2")
+
+	# User1 creates a post and comment
+	post = util_submissions.create_submission_for_client(client1)
+	comment = util_comments.create_comment_for_client(client1, post.id)
+
+	# User1 blocks User2
+	response, _ = util.post_with_formkey(
+		client1, "/settings/block",
+		data={"username": user2.username}
+	)
+	assert response.status_code == 200
+
+	# User2 replies to User1's comment
+	util_comments.create_comment_for_client(client2, post.id, data={
+		'parent_fullname': f'comment_{comment.id}',
+		'parent_level': 2,
+	})
+
+	# User1 checks /notifications page (HTML)
+	response = client1.get("/notifications")
+	assert response.status_code == 200
+
+	# The blocked user's username should not appear as a comment author
+	# in the notifications page. Use a targeted check: the username
+	# appears in a user profile link like /@username in notifications.
+	assert f"/@{user2.username}" not in response.text, \
+		"Blocked user's profile link should not appear in /notifications"
+
+
+def test_blocking_after_notification_hides_it():
+	"""Blocking a user after receiving a notification should hide that notification"""
+	client1, user1 = util_accounts.create_test_client_and_user(name="blkaft1")
+	client2, user2 = util_accounts.create_test_client_and_user(name="blkaft2")
+
+	# User1 creates a post and comment
+	post = util_submissions.create_submission_for_client(client1)
+	comment = util_comments.create_comment_for_client(client1, post.id)
+
+	# User2 replies to User1's comment (creates notification BEFORE block)
+	util_comments.create_comment_for_client(client2, post.id, data={
+		'parent_fullname': f'comment_{comment.id}',
+		'parent_level': 2,
+	})
+
+	# Verify User1 can see the notification on /notifications page before blocking
+	response = client1.get("/notifications")
+	assert response.status_code == 200
+	assert f"/@{user2.username}" in response.text, \
+		"Should see notification from user2 before blocking"
+
+	# Now User1 blocks User2
+	response, _ = util.post_with_formkey(
+		client1, "/settings/block",
+		data={"username": user2.username}
+	)
+	assert response.status_code == 200
+
+	# User1 checks /notifications page -- notification should be hidden now
+	response = client1.get("/notifications")
+	assert response.status_code == 200
+	assert f"/@{user2.username}" not in response.text, \
+		"Notification should be hidden after blocking the author"
+
+
+def test_blocked_user_not_in_messages():
+	"""Messages from blocked users should not appear in /notifications/messages"""
+	client1, user1 = util_accounts.create_test_client_and_user(name="blk-msg1")
+	client2, user2 = util_accounts.create_test_client_and_user(name="blk-msg2")
+
+	# User2 sends a direct message to User1 (before being blocked)
+	response, _ = util.post_with_formkey(
+		client2, f"/@{user1.username}/message",
+		data={"message": "Hello from a soon-to-be-blocked user"}
+	)
+	assert response.status_code == 200
+
+	# Verify message exists by checking User1's messages page before blocking
+	response = client1.get("/notifications/messages")
+	assert response.status_code == 200
+	assert f"/@{user2.username}" in response.text, \
+		"Message sender's profile link should appear before blocking"
+
+	# User1 blocks User2
+	response, _ = util.post_with_formkey(
+		client1, "/settings/block",
+		data={"username": user2.username}
+	)
+	assert response.status_code == 200
+
+	# User1 checks /notifications/messages -- blocked user's message should be filtered
+	response = client1.get("/notifications/messages")
+	assert response.status_code == 200
+	assert f"/@{user2.username}" not in response.text, \
+		"Blocked user's profile link should not appear in /notifications/messages"

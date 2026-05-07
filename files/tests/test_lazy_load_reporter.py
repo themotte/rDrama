@@ -2,19 +2,25 @@ import io
 import re
 from contextlib import redirect_stderr
 
+import pytest
 from sqlalchemy import event
 from sqlalchemy.orm import Session
 
-from files.__main__ import LazyLoadReporter, db_session
-from files.classes import Submission, User
+from files import __main__ as main
+from files.__main__ import LazyLoadReporter
+from files.classes import Submission
 
 from . import util_accounts, util
 
+pytestmark = pytest.mark.filterwarnings(
+	"ignore::files.tests.conftest.LazyLoadWarning"
+)
+
 
 def _trigger_lazy_load():
-	"""Create a post, expire it from the session, then access .author
-	to force a lazy load on Submission.author specifically."""
-	client, user = util_accounts.create_test_client_and_user()
+	"""Create a fresh submission, reload it in an isolated session, then
+	access .author after expiring that relationship to force a lazy load."""
+	client, _ = util_accounts.create_test_client_and_user()
 	response, _ = util.post_with_formkey(
 		client, "/submit",
 		data={"title": util.generate_text(), "body": util.generate_text()},
@@ -22,11 +28,30 @@ def _trigger_lazy_load():
 	assert response.status_code == 200
 
 	post = util.ItemData.from_html(response.text)
-	# Use Session.get to avoid deprecation warning, then expire just the
-	# author relationship so the next access triggers a lazy load.
-	sub = db_session.get(Submission, post.id)
-	db_session.expire(sub, ['author'])
-	_ = sub.author
+	session = main.db_session_factory()
+	try:
+		sub = session.get(Submission, post.id)
+		session.expire(sub, ['author'])
+		_ = sub.author
+	finally:
+		session.close()
+
+
+def _set_global_reporter_enabled(enabled: bool):
+	"""Temporarily disable the app-level reporter so tests only observe
+	the reporter instance they register themselves."""
+	reporter = getattr(main, "_lazy_load_reporter", None)
+	if reporter is None:
+		return None
+
+	listener = reporter.on_orm_execute
+	is_registered = event.contains(Session, "do_orm_execute", listener)
+	if enabled and not is_registered:
+		event.listen(Session, "do_orm_execute", listener)
+	elif not enabled and is_registered:
+		event.remove(Session, "do_orm_execute", listener)
+
+	return is_registered
 
 
 def test_reports_lazy_load_with_field_name():
@@ -35,6 +60,7 @@ def test_reports_lazy_load_with_field_name():
 	reporter = LazyLoadReporter(interval=0)
 	listener = reporter.on_orm_execute
 	event.listen(Session, "do_orm_execute", listener)
+	global_reporter_was_enabled = _set_global_reporter_enabled(False)
 	try:
 		buf = io.StringIO()
 		with redirect_stderr(buf):
@@ -45,6 +71,8 @@ def test_reports_lazy_load_with_field_name():
 		assert re.search(r"\[lazy-load\] \w+\.\w+", output), \
 			f"Expected Class.field format in: {output}"
 	finally:
+		if global_reporter_was_enabled:
+			_set_global_reporter_enabled(True)
 		event.remove(Session, "do_orm_execute", listener)
 
 
@@ -54,6 +82,7 @@ def test_suppresses_within_interval():
 	reporter = LazyLoadReporter(interval=9999)
 	listener = reporter.on_orm_execute
 	event.listen(Session, "do_orm_execute", listener)
+	global_reporter_was_enabled = _set_global_reporter_enabled(False)
 	try:
 		buf = io.StringIO()
 		with redirect_stderr(buf):
@@ -66,6 +95,8 @@ def test_suppresses_within_interval():
 		assert len(lines) == 1, f"Expected 1 report, got {len(lines)}: {lines}"
 		assert reporter._suppressed >= 1
 	finally:
+		if global_reporter_was_enabled:
+			_set_global_reporter_enabled(True)
 		event.remove(Session, "do_orm_execute", listener)
 
 
@@ -75,6 +106,7 @@ def test_reports_suppressed_count():
 	reporter = LazyLoadReporter(interval=0)
 	listener = reporter.on_orm_execute
 	event.listen(Session, "do_orm_execute", listener)
+	global_reporter_was_enabled = _set_global_reporter_enabled(False)
 	try:
 		# First: fill up suppressed count by using a long interval
 		reporter.interval = 9999
@@ -90,4 +122,6 @@ def test_reports_suppressed_count():
 		output = buf.getvalue()
 		assert "unreported since last" in output
 	finally:
+		if global_reporter_was_enabled:
+			_set_global_reporter_enabled(True)
 		event.remove(Session, "do_orm_execute", listener)

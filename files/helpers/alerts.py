@@ -109,11 +109,13 @@ def notify_submission_publish(target: Submission):
 			add_notif(comment_id, user_id)
 
 	# Submission author followers
-	if target.author.followers:
+	follower_ids = [uid for (uid,) in g.db.query(Follow.user_id).filter(
+		Follow.target_id == target.author_id).all()]
+	if follower_ids:
 		message: str = (
 			f"@{target.author.username} has made a new post: "
 			f"[{target.title}]({target.shortlink})"
 		)
 		cid = notif_comment(message, autojanny=True)
-		for follow in target.author.followers:
-			add_notif(cid, follow.user_id)
+		for user_id in follower_ids:
+			add_notif(cid, user_id)

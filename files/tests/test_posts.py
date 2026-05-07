@@ -1,6 +1,9 @@
+import warnings
+
 from . import util_accounts
 from . import util
 from . import util_submissions
+from .conftest import LazyLoadWarning
 
 
 def test_submit_get():
@@ -434,6 +437,54 @@ def test_view_post_with_slug_route():
 	response = client.get(f"/post/{post.id}/some-slug-here")
 	assert response.status_code == 200
 	assert post.title in response.text
+
+
+def test_view_post_no_lazy_loads():
+	"""Test GET /post/<pid> doesn't trigger lazy loads (logged in).
+
+	Regression test: the highlight-unread JS in comments.html iterates
+	p.comments. The post_id route must pre-set that relationship so
+	rendering doesn't lazy-load every comment on the submission.
+	"""
+	from . import util_comments
+
+	client, user = util_accounts.create_test_client_and_user("vpnll")
+
+	post = util_submissions.create_submission_for_client(client)
+	parent = util_comments.create_comment_for_client(client, post.id)
+	util_comments.create_comment_for_client(client, post.id, data={
+		"parent_fullname": f"comment_{parent.id}",
+	})
+
+	with warnings.catch_warnings(record=True) as w:
+		warnings.simplefilter("always")
+		response = client.get(f"/post/{post.id}")
+		assert response.status_code == 200
+		lazy_loads = [x for x in w if issubclass(x.category, LazyLoadWarning)]
+		assert len(lazy_loads) == 0, \
+			f"Lazy loads detected: {[str(x.message) for x in lazy_loads]}"
+
+
+def test_view_post_logged_out_no_lazy_loads():
+	"""Test GET /post/<pid> doesn't trigger lazy loads (logged out)."""
+	from . import util_comments
+
+	client, user = util_accounts.create_test_client_and_user("vpllo")
+
+	post = util_submissions.create_submission_for_client(client)
+	parent = util_comments.create_comment_for_client(client, post.id)
+	util_comments.create_comment_for_client(client, post.id, data={
+		"parent_fullname": f"comment_{parent.id}",
+	})
+
+	anon_client = util_accounts.create_logged_off_client()
+	with warnings.catch_warnings(record=True) as w:
+		warnings.simplefilter("always")
+		response = anon_client.get(f"/post/{post.id}")
+		assert response.status_code == 200
+		lazy_loads = [x for x in w if issubclass(x.category, LazyLoadWarning)]
+		assert len(lazy_loads) == 0, \
+			f"Lazy loads detected: {[str(x.message) for x in lazy_loads]}"
 
 
 def test_publish_post_route():
