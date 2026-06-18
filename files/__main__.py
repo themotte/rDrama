@@ -242,6 +242,16 @@ class LazyLoadReporter:
 		if orm_execute_state.lazy_loaded_from is None:
 			return
 
+		# Only report lazy loads on read paths; POST/PUT/PATCH/DELETE handlers
+		# routinely do a cheap single-row reload after commit, which is noise.
+		# Loads outside any request context are still reported.
+		try:
+			from flask import request as _req
+			if _req.method not in ("GET", "HEAD"):
+				return
+		except RuntimeError:
+			pass  # outside request context — keep reporting
+
 		now = time.monotonic()
 		with self._lock:
 			elapsed = now - self._last_report

@@ -65,6 +65,14 @@ def warn_on_lazy_loads(setup_test_environment):
 		if orm_execute_state.lazy_loaded_from is None:
 			return
 
+		# We only care about N+1s on read paths. Mutation handlers
+		# (POST/PUT/PATCH/DELETE) commonly do one cheap post-commit reload of
+		# the row they just wrote; that's noise, not an N+1. Loads outside a
+		# request context (helpers, background work) are still reported.
+		from flask import has_request_context, request
+		if has_request_context() and request.method not in ("GET", "HEAD"):
+			return
+
 		state = orm_execute_state.lazy_loaded_from
 		parent_cls = state.class_.__name__
 
