@@ -487,6 +487,73 @@ def test_view_post_logged_out_no_lazy_loads():
 			f"Lazy loads detected: {[str(x.message) for x in lazy_loads]}"
 
 
+def test_view_post_as_admin_with_usernotes_no_lazy_loads():
+	"""Regression test: an admin (admin_level >= 2) viewing a post renders each
+	post/comment author's usernotes inline via json_notes -> UserNote.json,
+	which walks UserNote.author/.comment/.post (and the comment's .post via its
+	shortlink). Those must be eagerly loaded (see get.py:author_load_options),
+	otherwise every note on the page becomes an N+1.
+
+	The logged-in/logged-out variants above cover the base render; this asserts
+	specifically that no lazy load originates from usernote rendering.
+	"""
+	from . import util_comments
+	from files.__main__ import db_session
+	from files.classes import UserNote, UserTag
+
+	# Only admins render usernotes, so the viewer must be one.
+	admin_client, admin = util_accounts.create_test_client_and_admin(2, "vpunote-admin")
+	db_session().refresh(admin)
+	admin_id = admin.id
+
+	# A separate user authors the post and a comment, so the admin renders that
+	# author's usernotes for both the submission and the comment listing.
+	author_client, author = util_accounts.create_test_client_and_user("vpunote-author")
+	db_session().refresh(author)
+	author_id = author.id
+
+	post = util_submissions.create_submission_for_client(author_client)
+	post_id = post.id
+	util_comments.create_comment_for_client(author_client, post_id)
+
+	# The notes must reference content that is NOT loaded while rendering this
+	# post; otherwise UserNote.comment/.post are served from the session's
+	# identity map and never hit the DB. In production the notes point at other
+	# comments/posts across the site, so use a separate post + comment here.
+	other_post = util_submissions.create_submission_for_client(author_client)
+	other_post_id = other_post.id
+	other_comment = util_comments.create_comment_for_client(author_client, other_post_id)
+	other_comment_id = other_comment.id
+
+	# Attach two notes to the author: UserNote.json() takes the comment branch
+	# when reference_comment is set and the post branch otherwise, so both are
+	# needed to exercise the whole serialization path.
+	db = db_session()
+	db.add(UserNote(author_id=admin_id, reference_user=author_id,
+					reference_comment=other_comment_id, note="comment-ref note",
+					tag=UserTag.Comment))
+	db.add(UserNote(author_id=admin_id, reference_user=author_id,
+					reference_post=other_post_id, note="post-ref note",
+					tag=UserTag.Warning))
+	db.commit()
+
+	with warnings.catch_warnings(record=True) as w:
+		warnings.simplefilter("always")
+		response = admin_client.get(f"/post/{post_id}")
+		assert response.status_code == 200
+		# Sanity: the notes were actually serialized into the page (json_notes
+		# ran with non-empty notes), so the lazy-load-prone path really executed
+		# and this test can't pass vacuously.
+		assert "comment-ref note" in response.text
+		usernote_lazy_loads = [
+			x for x in w
+			if issubclass(x.category, LazyLoadWarning)
+			and "UserNote" in str(x.message)
+		]
+		assert not usernote_lazy_loads, \
+			f"UserNote lazy loads detected: {[str(x.message) for x in usernote_lazy_loads]}"
+
+
 def test_publish_post_route():
 	"""Test POST /publish/<pid> route"""
 	client, user = util_accounts.create_test_client_and_user()

@@ -13,6 +13,29 @@ from files.helpers.config.const import AUTOJANNY_ID
 from files.helpers.contentsorting import sort_comment_results
 
 
+def author_load_options(v: Optional[User]=None) -> list:
+	'''
+	Eager-load options for a content author (a ``User``).
+
+	Badges render for everyone, so they're always loaded.  Usernotes are only
+	shown to admins (``admin_level >= 2`` — the ``usernote-link`` in
+	user_info.html / submission(_listing).html), and ``UserNote.json()`` walks
+	``.author``/``.comment``/``.post`` (plus the comment's ``.post`` via its
+	shortlink).  So we only pay to load any of that when the viewer can actually
+	see it; for everyone else it's a no-op.
+	'''
+	opts = [selectinload(User.badges)]
+	if v and v.admin_level >= 2:
+		opts.append(
+			selectinload(User.notes).options(
+				selectinload(UserNote.author),
+				selectinload(UserNote.comment).selectinload(Comment.post),
+				selectinload(UserNote.post),
+			)
+		)
+	return opts
+
+
 def get_id(
 		username:str,
 		graceful:bool=False) -> Optional[int]:
@@ -151,10 +174,7 @@ def get_post(
 			blocking.c.target_id == Submission.author_id,
 			isouter=True
 		).options(
-			selectinload(Submission.author).options(
-				selectinload(User.badges),
-				selectinload(User.notes),
-			),
+			selectinload(Submission.author).options(*author_load_options(v)),
 			selectinload(Submission.reports),
 			selectinload(Submission.awards),
 		)
@@ -169,10 +189,7 @@ def get_post(
 		x.is_blocking = post[2] or 0
 	else:
 		x = g.db.query(Submission).filter_by(id=i).options(
-			selectinload(Submission.author).options(
-				selectinload(User.badges),
-				selectinload(User.notes),
-			),
+			selectinload(Submission.author).options(*author_load_options(v)),
 			selectinload(Submission.reports),
 			selectinload(Submission.awards),
 		).one_or_none()
@@ -215,10 +232,7 @@ def get_posts(
 		query = g.db.query(Submission).filter(Submission.id.in_(pids))
 
 	query = query.options(
-		selectinload(Submission.author).options(
-			selectinload(User.badges),
-			selectinload(User.notes),
-		),
+		selectinload(Submission.author).options(*author_load_options(v)),
 		selectinload(Submission.reports),
 		selectinload(Submission.awards),
 	)
@@ -250,15 +264,9 @@ def get_comment(
 		else: abort(404)
 
 	comment = g.db.query(Comment).filter_by(id=i).options(
-		selectinload(Comment.author).options(
-			selectinload(User.badges),
-			selectinload(User.notes),
-		),
+		selectinload(Comment.author).options(*author_load_options(v)),
 		selectinload(Comment.post).options(
-			selectinload(Submission.author).options(
-				selectinload(User.badges),
-				selectinload(User.notes),
-			),
+			selectinload(Submission.author).options(*author_load_options(v)),
 			selectinload(Submission.reports),
 			selectinload(Submission.awards),
 		),
@@ -312,10 +320,7 @@ def get_comments(
 			.filter(User.shadowbanned == None, Comment.id.in_(cids))
 
 	query = query.options(
-		selectinload(Comment.author).options(
-			selectinload(User.badges),
-			selectinload(User.notes),
-		),
+		selectinload(Comment.author).options(*author_load_options(v)),
 		selectinload(Comment.post),
 		selectinload(Comment.reports).options(
 			selectinload(CommentFlag.user),
@@ -375,10 +380,7 @@ def get_comment_trees_eager(
 
 	query = query_filter_callable(query)
 	query = query.options(
-		selectinload(Comment.author).options(
-			selectinload(User.badges),
-			selectinload(User.notes),
-		),
+		selectinload(Comment.author).options(*author_load_options(v)),
 		selectinload(Comment.reports).options(
 			selectinload(CommentFlag.user),
 		),
