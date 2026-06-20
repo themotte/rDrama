@@ -1,3 +1,4 @@
+from sqlalchemy import text
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm.attributes import set_committed_value
 
@@ -12,6 +13,30 @@ from files.helpers.wrappers import *
 from files.routes.importstar import *
 
 from datetime import datetime, timezone
+
+# Collect just the comment ids the context view actually renders: the focused
+# comment's subtree (down to the render depth limit, +1 level so the boundary
+# "more comments" button still appears) and its ancestor chain (up `context`
+# levels, +1 so top_comment.parent_comment stays wired). This replaces loading
+# the entire top-comment thread and discarding most of it.
+_CONTEXT_COMMENT_IDS_SQL = text("""
+WITH RECURSIVE subtree(id, depth) AS (
+		SELECT id, 0 FROM comments WHERE id = :cid
+	UNION ALL
+		SELECT c.id, s.depth + 1
+		FROM comments c JOIN subtree s ON c.parent_comment_id = s.id
+		WHERE s.depth < :subtree_depth
+), ancestors(id, parent_comment_id, depth) AS (
+		SELECT id, parent_comment_id, 0 FROM comments WHERE id = :cid
+	UNION ALL
+		SELECT c.id, c.parent_comment_id, a.depth + 1
+		FROM comments c JOIN ancestors a ON c.id = a.parent_comment_id
+		WHERE a.depth < :ancestor_depth
+)
+SELECT id FROM subtree
+UNION
+SELECT id FROM ancestors
+""")
 
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
@@ -49,16 +74,22 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	else: defaultsortingcomments = "new"
 	sort=request.values.get("sort", defaultsortingcomments)
 
+	try: context = min(int(request.values.get("context", 0)), 8)
+	except: context = 0
+
+	# Load only the comments we render, not the whole top-comment thread.
+	context_ids = [row[0] for row in g.db.execute(_CONTEXT_COMMENT_IDS_SQL, {
+		"cid": comment.id,
+		"subtree_depth": RENDER_DEPTH_LIMIT,
+		"ancestor_depth": context + 1,
+	})]
+
 	def comment_tree_filter(q):
-		# Only load the specific thread, not every comment on the post
-		q = q.filter(Comment.top_comment_id == comment.top_comment_id)
-		return q
+		return q.filter(Comment.id.in_(context_ids))
 
 	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort=sort, v=v, post=post)
 	set_committed_value(post, 'comments', comments)
 
-	try: context = min(int(request.values.get("context", 0)), 8)
-	except: context = 0
 	comment_info = comment
 	c = comment
 	while context and c.level > 1:
