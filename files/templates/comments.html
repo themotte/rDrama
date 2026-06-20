@@ -72,7 +72,7 @@
 
 		<div class="comment-body">
 			<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if c.unread %}unread{% endif %} comment-{{c.id}}-only comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.state_mod == StateMod.REMOVED %} removed{% endif %}{% if c.state_mod == StateMod.FILTERED %} filtered{% endif %}{% if c.state_user_deleted_utc %} deleted{% endif %}">
-				{%- include 'component/comment/reports.html'-%}
+				{%- if v -%}{%- include 'component/comment/reports.html'-%}{%- endif -%}
 				{% if c.state_mod == StateMod.REMOVED and c.state_mod_set_by and v and v.admin_level >= PERMS['POST_COMMENT_MODERATION'] %}
 					<div id="comment-banned-warning" class="comment-text text-removed mb-0">removed by @{{c.state_mod_set_by}}</div>
 				{% endif %}
@@ -81,7 +81,7 @@
 					{{c.realbody(v) | safe}}
 				</div>
 				{% if c.parent_submission %}
-					{%- include 'component/comment/editbox_comment.html' -%}
+					{%- if v -%}{%- include 'component/comment/editbox_comment.html' -%}{%- endif -%}
 					<div id="comment-{{c.id}}-actions" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 						<div class="d-md-none mt-2">
 							<div class="post-actions">
@@ -117,7 +117,7 @@
 				<textarea autocomplete="off" class="d-none card border my-2 p-3 comment-box form-control rounded" id="markdown-{{c.id}}" readonly>{{c.body.strip()}}</textarea> 
 			{% endif %}
 
-			{%- include 'component/comment/replybox_comment.html' -%}
+			{%- if v -%}{%- include 'component/comment/replybox_comment.html' -%}{%- endif -%}
 
 			{% if is_notification_page and c.is_strict_message and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
 				{%- include 'component/comment/replybox_message.html' -%}
