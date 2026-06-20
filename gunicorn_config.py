@@ -38,6 +38,24 @@ def post_worker_init(worker):
 
 	signal.signal(signal.SIGABRT, _abort_handler)
 
+	# Start the per-worker stats thread (RSS, CPU, DB connections, in-flight
+	# request concurrency vs. the gthread pool). See files/helpers/stats_monitor.
+	try:
+		from files.helpers.stats_monitor import start_worker_monitor
+		start_worker_monitor(getattr(worker.cfg, "threads", 0))
+	except Exception as e:
+		print(f"[stats] failed to start worker monitor: {e}", file=sys.stderr, flush=True)
+
+
+def when_ready(server):
+	"""Runs once in the master after startup. Starts the system stats monitor,
+	which keeps logging memory/swap/CPU even while workers are being recycled."""
+	try:
+		from files.helpers.stats_monitor import start_master_monitor
+		start_master_monitor()
+	except Exception as e:
+		print(f"[stats] failed to start master monitor: {e}", file=sys.stderr, flush=True)
+
 # Access logging configuration
 accesslog = 'logs/access.log'
 access_log_format = '%({X-Real-IP}i)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s" %(D)s'
