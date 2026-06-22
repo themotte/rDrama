@@ -1,10 +1,11 @@
 from dataclasses import dataclass
-from typing import Any, Callable, Final, Optional
+from typing import Any, Callable, ClassVar, Final, Optional
 
 from sqlalchemy import Column, func, text
 from sqlalchemy.orm import Session, Query
 
 from files.helpers.config.const import LEADERBOARD_LIMIT
+from files.helpers.config.environment import SITE
 
 from files.classes.badges import Badge
 from files.classes.marsey import Marsey
@@ -176,18 +177,67 @@ class UserBlockLeaderboard(_CountedAndRankedLeaderboard):
 		return lambda u: self._all_users[u]
 
 class RawSqlLeaderboard(Leaderboard):
-	def __init__(self, meta:LeaderboardMeta, db:Session, query:str) -> None: # should be LiteralString on py3.11+
+	'''
+	A leaderboard backed by a (usually expensive) raw aggregation query.
+
+	The query is *not* run when the object is constructed. Instead an instance is
+	built from already-computed rows (``[[target_id, count], ...]``). This lets
+	the heavy aggregation run once in the leaderboard cron job
+	(``files.commands.leaderboard_recalc``) and be cached, while request handlers
+	cheaply rebuild the display object from the cached rows via ``from_cache``.
+
+	Previously this query ran on every gunicorn worker boot (via a thread in
+	``files.helpers.services``), which turned worker churn into a storm of
+	full-table aggregations.
+	'''
+	_query: ClassVar[str] = "" # set by subclasses; LiteralString on py3.11+
+	cache_key: ClassVar[str] = "" # set by subclasses; names the cached rows
+
+	def __init__(self, meta:LeaderboardMeta, db:Session, rows:list) -> None:
 		super().__init__(None, meta)
 		self.db = db
-		self._calculate(query)
+		self._hydrate(rows or [])
 
-	def _calculate(self, query:str):
-		self.result = {result[0]:list(result) for result in self.db.execute(text(query)).all()}
-		users = get_accounts_dict(self.result.keys(), db=self.db)
-		if users is None:
-			raise Exception("Some users don't exist when they should (was a user deleted?)")
-		for user in users: # I know.
-			self.result[user].append(users[user])
+	@classmethod
+	def cache_name(cls) -> str:
+		return f"{SITE}_leaderboard_{cls.cache_key}"
+
+	@classmethod
+	def compute_rows(cls, db:Session) -> list[list[int]]:
+		'''Runs the (expensive) aggregation and returns plain, serializable rows
+		(``[[target_id, count], ...]``). Intended for the leaderboard cron job,
+		not request handlers.'''
+		return [[int(row[0]), int(row[1])]
+			for row in db.execute(text(cls._query)).all()]
+
+	@classmethod
+	def refresh_cache(cls, db:Session, cache) -> None:
+		'''Recomputes the aggregation and stores the rows in the cache.'''
+		cache.set(cls.cache_name(), cls.compute_rows(db))
+
+	@classmethod
+	def from_cache(cls, meta:LeaderboardMeta, db:Session, cache) -> Optional["RawSqlLeaderboard"]:
+		'''Builds a leaderboard from cached rows, or ``None`` if the cron job has
+		not populated the cache yet.'''
+		rows = cache.get(cls.cache_name())
+		if rows is None:
+			return None
+		return cls(meta, db, rows)
+
+	@classmethod
+	def from_db(cls, meta:LeaderboardMeta, db:Session) -> "RawSqlLeaderboard":
+		'''Builds a leaderboard by running the live (expensive) query. Avoid in
+		request paths; prefer ``from_cache``.'''
+		return cls(meta, db, cls.compute_rows(db))
+
+	def _hydrate(self, rows:list) -> None:
+		self.result = {row[0]:list(row) for row in rows}
+		users = get_accounts_dict(self.result.keys(), db=self.db, graceful=True) or {}
+		# Drop any users that no longer exist (e.g. deleted since the cron run),
+		# then attach the User object to each surviving row.
+		self.result = {id:row for id, row in self.result.items() if id in users}
+		for id in self.result: # I know.
+			self.result[id].append(users[id])
 
 	@property
 	def all_users(self) -> list[User]:
@@ -214,6 +264,7 @@ class RawSqlLeaderboard(Leaderboard):
 		return lambda u:self.result[u.id][1]
 
 class ReceivedDownvotesLeaderboard(RawSqlLeaderboard):
+	cache_key: Final[str] = "received_downvotes"
 	_query: Final[str] = """
 	WITH cv_for_user AS (
     SELECT
@@ -241,12 +292,10 @@ FROM cv_for_user cvfu
 ORDER BY count DESC LIMIT 25
 	"""
 
-	def __init__(self, meta:LeaderboardMeta, db:Session) -> None:
-		super().__init__(meta, db, self._query)
-
 class GivenUpvotesLeaderboard(RawSqlLeaderboard):
+	cache_key: Final[str] = "given_upvotes"
 	_query: Final[str] = """
-	SELECT 
+	SELECT
     COALESCE(cvbu.user_id, svbu.user_id) AS user_id,
     (COALESCE(cvbu.count, 0) + COALESCE(svbu.count, 0)) AS count
 FROM (SELECT user_id, COUNT(*) FROM votes WHERE vote_type = 1 GROUP BY user_id) AS svbu
@@ -255,5 +304,9 @@ FULL OUTER JOIN (SELECT user_id, COUNT(*) FROM commentvotes WHERE vote_type = 1 
 ORDER BY count DESC LIMIT 25
 	"""
 
-	def __init__(self, meta:LeaderboardMeta, db:Session) -> None:
-		super().__init__(meta, db, self._query)
+# Display metadata for the cached raw-SQL leaderboards, shared by the route that
+# renders them and the cron job that refreshes them.
+RECEIVED_DOWNVOTES_META: Final[LeaderboardMeta] = LeaderboardMeta(
+	"Downvotes", "received downvotes", "received-downvotes", "downvotes", "downvoted")
+GIVEN_UPVOTES_META: Final[LeaderboardMeta] = LeaderboardMeta(
+	"Upvotes", "given upvotes", "given-upvotes", "upvotes", "upvoting")

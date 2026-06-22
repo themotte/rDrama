@@ -12,6 +12,7 @@ from files.classes.leaderboard import (
 	UserBlockLeaderboard,
 	ReceivedDownvotesLeaderboard,
 	GivenUpvotesLeaderboard,
+	RECEIVED_DOWNVOTES_META,
 )
 
 def test_simple_leaderboard_basic():
@@ -181,7 +182,7 @@ def test_received_downvotes_leaderboard():
 
 	# Create leaderboard
 	meta = LeaderboardMeta("Downvotes", "received downvotes", "received-downvotes", "downvotes", "downvoted")
-	lb = ReceivedDownvotesLeaderboard(meta, db_session)
+	lb = ReceivedDownvotesLeaderboard.from_db(meta, db_session)
 
 	# Check basic properties (note: v is None for RawSqlLeaderboard)
 	assert lb.v is None
@@ -215,7 +216,7 @@ def test_given_upvotes_leaderboard():
 
 	# Create leaderboard
 	meta = LeaderboardMeta("Upvotes", "given upvotes", "given-upvotes", "upvotes", "upvoting")
-	lb = GivenUpvotesLeaderboard(meta, db_session)
+	lb = GivenUpvotesLeaderboard.from_db(meta, db_session)
 
 	# Check basic properties (note: v is None for RawSqlLeaderboard)
 	assert lb.v is None
@@ -230,6 +231,39 @@ def test_given_upvotes_leaderboard():
 		value = lb.value_func(first_user)
 		assert isinstance(value, int)
 		assert value >= 0
+
+def test_raw_sql_leaderboard_cache_roundtrip():
+	"""refresh_cache stores rows that from_cache rebuilds identically to from_db.
+
+	This is the path used in production: the cron job calls refresh_cache and the
+	/leaderboard route calls from_cache, instead of running the expensive
+	aggregation in-request (or on every worker boot, as it used to)."""
+	from files.__main__ import app, cache
+
+	# Create some downvote activity so the leaderboard isn't trivially empty.
+	client1, author = util_accounts.create_test_client_and_user("dv-cache-auth")
+	client2, downvoter = util_accounts.create_test_client_and_user("dv-cache-dv")
+	post = util_submissions.create_submission_for_client(client1)
+	from . import util
+	util.post_with_formkey(client2, f"/vote/post/{post.id}/-1", data={})
+
+	with app.app_context():
+		# Before the cron job has run, the cache is empty and the route skips it.
+		cache.delete(ReceivedDownvotesLeaderboard.cache_name())
+		assert ReceivedDownvotesLeaderboard.from_cache(
+			RECEIVED_DOWNVOTES_META, db_session, cache) is None
+
+		# After a refresh, from_cache rebuilds the same ranking as a live query.
+		ReceivedDownvotesLeaderboard.refresh_cache(db_session, cache)
+		cached = ReceivedDownvotesLeaderboard.from_cache(
+			RECEIVED_DOWNVOTES_META, db_session, cache)
+		live = ReceivedDownvotesLeaderboard.from_db(RECEIVED_DOWNVOTES_META, db_session)
+
+	assert cached is not None
+	assert [u.id for u in cached.all_users] == [u.id for u in live.all_users]
+	if cached.all_users:
+		assert isinstance(cached.value_func(cached.all_users[0]), int)
+
 
 def test_leaderboard_meta_dataclass():
 	"""Test LeaderboardMeta dataclass properties."""

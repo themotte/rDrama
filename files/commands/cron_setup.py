@@ -25,6 +25,12 @@ def cron_setup():
             'import_path': 'files.commands.volunteer_janitor_recalc',
             'callable': 'volunteer_janitor_recalc_cron',
         },
+        'leaderboard_recalc': {
+            'frequency_day': DayOfWeek.ALL,
+            'time_of_day_utc': datetime.time(8, 0),
+            'import_path': 'files.commands.leaderboard_recalc',
+            'callable': 'leaderboard_recalc_cron',
+        },
     }
 
     print(f"{tasklist.count()} tasks")

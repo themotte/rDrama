@@ -11,7 +11,11 @@ from sqlalchemy.orm import Query
 
 import files.helpers.listing as listings
 from files.__main__ import app, cache, limiter
-from files.classes.leaderboard import (BadgeMarseyLeaderboard, LeaderboardMeta,
+from files.classes.leaderboard import (BadgeMarseyLeaderboard,
+                                       GIVEN_UPVOTES_META,
+                                       GivenUpvotesLeaderboard, LeaderboardMeta,
+                                       RECEIVED_DOWNVOTES_META,
+                                       ReceivedDownvotesLeaderboard,
                                        SimpleLeaderboard, UserBlockLeaderboard)
 from files.classes.views import ViewerRelationship
 from files.classes.visstate import StateMod
@@ -383,9 +387,14 @@ def leaderboard(v:User):
 	badges = BadgeMarseyLeaderboard(v, LeaderboardMeta("Badges", "badges", "badges", "Badges", None), g.db, Badge.user_id)
 	blocks = UserBlockLeaderboard(v, LeaderboardMeta("Blocked", "most blocked", "blocked", "Blocked By", "blockers"), g.db, UserBlock.target_id)
 
-	# note: lb_downvotes_received and lb_upvotes_given are global variables
-	# that are populated by leaderboard_thread() in files.helpers.services
 	leaderboards = [coins, coins_spent, truescore, subscribers, posts, comments, received_awards, badges, blocks]
+
+	# The downvotes-received / upvotes-given leaderboards are expensive full-table
+	# aggregations, so they're precomputed once a day by the leaderboard_recalc
+	# cron job and cached. Rebuild them cheaply from the cache here, and skip them
+	# if the cron job hasn't populated the cache yet.
+	lb_downvotes_received = ReceivedDownvotesLeaderboard.from_cache(RECEIVED_DOWNVOTES_META, g.db, cache)
+	lb_upvotes_given = GivenUpvotesLeaderboard.from_cache(GIVEN_UPVOTES_META, g.db, cache)
 	if lb_downvotes_received is not None and lb_upvotes_given is not None:
 		leaderboards.extend([lb_downvotes_received, lb_upvotes_given])
 
