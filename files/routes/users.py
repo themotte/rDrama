@@ -445,6 +445,9 @@ def message2(v, username):
 	if user.id == MODMAIL_ID:
 		abort(403, "Please use modmail to contact the admins")
 
+	if not v.can_send_messages and user.admin_level < PERMS['POST_COMMENT_MODERATION']:
+		abort(403, MESSAGE_CONTRIBUTION_REQUIRED)
+
 	if hasattr(user, 'is_blocking') and user.is_blocking: abort(403, "You're blocking this user.")
 
 	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked:

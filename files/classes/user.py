@@ -171,6 +171,14 @@ class User(CreatedBase):
 
 	def can_manage_reports(self):
 		return self.admin_level > 1
+
+	@property
+	@lazy
+	def can_send_messages(self):
+		# Users can't send messages until they've had a post or comment approved
+		return self.admin_level > 0 \
+			or self.post_count > 0 \
+			or self.comment_count > 0
 	
 	@property
 	@lazy

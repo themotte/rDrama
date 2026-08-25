@@ -148,7 +148,11 @@
 						<a id="button-unsub" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/unfollow/{{u.username}}','POST','button-unsub','button-sub');">Unfollow</a>
 
 						<a id="button-sub" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/follow/{{u.username}}','POST','button-unsub','button-sub');">Follow</a>						
-						<a class="btn btn-primary" role="button" onclick="toggleElement('message', 'input-message')">Message</a>
+						{% if v.can_send_messages or u.admin_level >= PERMS['POST_COMMENT_MODERATION'] %}
+							<a class="btn btn-primary" role="button" onclick="toggleElement('message', 'input-message')">Message</a>
+						{% else %}
+							<a class="btn btn-primary" role="button" onclick="toggleElement('message', 'message')">Message</a>
+						{% endif %}
 
 						{% if v and v.admin_level >= 3 %}
 							<a id="admin" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/make_admin','POST','admin','unadmin');">Make admin</a>
@@ -158,6 +162,9 @@
 							{% endif %}
 						{% endif %}
 
+						{% if not (v.can_send_messages or u.admin_level >= PERMS['POST_COMMENT_MODERATION']) %}
+						<div class="d-none toggleable mt-2" id="message">{{MESSAGE_CONTRIBUTION_REQUIRED}}</div>
+						{% else %}
 						<form class="d-none toggleable" id="message" action="/@{{u.username}}/message" onsubmit="return submitFormAjax(event)">
 							{{forms.formkey(v)}} 
 							<pre></pre>
@@ -173,6 +180,7 @@
 						</form>
 
 						<div id="message-preview" class="preview mt-2"></div>
+						{% endif %}
 
 					{% elif v and v.id == u.id %}
 						<a href="/settings/profile" class="btn btn-secondary">Edit profile</a>
@@ -400,9 +408,13 @@
 					<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/unfollow/{{u.username}}','POST','button-unsub2','button-sub2');">Unfollow</a>
 
 					<a id="button-sub2" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" role="button" onclick="postToastSwitch(this,'/follow/{{u.username}}','POST','button-unsub2','button-sub2');">Follow</a>						
-					<a class="btn btn-primary" role="button" onclick="toggleElement('message-mobile', 'input-message-mobile')">Message</a>
+					{% if v.can_send_messages or u.admin_level >= PERMS['POST_COMMENT_MODERATION'] %}
+						<a class="btn btn-primary" role="button" onclick="toggleElement('message-mobile', 'input-message-mobile')">Message</a>
+					{% else %}
+						<a class="btn btn-primary" role="button" onclick="toggleElement('message-mobile', 'message-mobile')">Message</a>
+					{% endif %}
 
-					{% if v and v.admin_level >= 3 %} 
+					{% if v and v.admin_level >= 3 %}
 						<a id="admin2" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/make_admin','POST','admin2','unadmin2');">Make admin</a>
 						<a id="unadmin2" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/remove_admin','POST','admin2','unadmin2');">Remove admin</a>
 						{% if u.admin_level > 1 %}
@@ -410,6 +422,9 @@
 						{% endif %}
 					{% endif %}
 
+					{% if not (v.can_send_messages or u.admin_level >= PERMS['POST_COMMENT_MODERATION']) %}
+					<div class="d-none toggleable my-3" id="message-mobile">{{MESSAGE_CONTRIBUTION_REQUIRED}}</div>
+					{% else %}
 					<form class="d-none toggleable" id='message-mobile' action="/@{{u.username}}/message" onsubmit="return submitFormAjax(event)">
 						<pre></pre>
 						{{forms.formkey(v)}} 
@@ -425,6 +440,7 @@
 					</form>
 
 					<div id="message-preview-mobile" class="preview my-3"></div>
+					{% endif %}
 
 					{% if v and v.admin_level >= 2 %}
 						<div class="body d-lg-flex border-bottom">

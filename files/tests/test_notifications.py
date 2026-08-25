@@ -375,6 +375,9 @@ def test_blocked_user_not_in_messages():
 	client1, user1 = util_accounts.create_test_client_and_user(name="blk-msg1")
 	client2, user2 = util_accounts.create_test_client_and_user(name="blk-msg2")
 
+	# Senders need an approved post or comment before they can message
+	util_submissions.create_submission_for_client(client2)
+
 	# User2 sends a direct message to User1 (before being blocked)
 	response, _ = util.post_with_formkey(
 		client2, f"/@{user1.username}/message",

@@ -103,6 +103,7 @@ SUBMISSION_BODY_LENGTH_MAXIMUM: Final[int] = 500000 # these are filtered anyway
 COMMENT_BODY_LENGTH_MAXIMUM: Final[int] = 500000
 COMMENT_BODY_LENGTH_MAXIMUM_UNFILTERED: Final[int] = 50000
 MESSAGE_BODY_LENGTH_MAXIMUM: Final[int] = 10000
+MESSAGE_CONTRIBUTION_REQUIRED: Final[str] = "You can't send private messages until you're part of the community. Try contributing something!"
 CSS_LENGTH_MAXIMUM: Final[int] = 4000
 CHAT_LENGTH_LIMIT: Final[int] = 1000
 
