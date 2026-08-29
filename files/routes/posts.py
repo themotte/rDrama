@@ -548,6 +548,12 @@ def submit_post(v):
 	assert len(validated_post.title) <= MAX_TITLE_LENGTH
 	assert len(validated_post.body) <= SUBMISSION_BODY_LENGTH_MAXIMUM
 
+	is_filtered = v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts']
+
+	if (v.admin_level <= PERMS['POST_COMMENT_MODERATION']
+		and len(validated_post.body) > SUBMISSION_BODY_LENGTH_MAXIMUM_UNFILTERED):
+		is_filtered = True
+
 	post = Submission(
 		private=bool(request.values.get("private","")),
 		author_id=v.id,
@@ -561,7 +567,7 @@ def submit_post(v):
 		title=validated_post.title,
 		title_html=validated_post.title_html,
 		ghost=False,
-		state_mod=StateMod.FILTERED if v.admin_level == 0 and app.config['SETTINGS']['FilterNewPosts'] else StateMod.VISIBLE,
+		state_mod=StateMod.FILTERED if is_filtered else StateMod.VISIBLE,
 		thumburl=validated_post.thumburl
 	)
 	post.submit(g.db)
