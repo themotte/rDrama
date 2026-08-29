@@ -321,26 +321,6 @@ def sign_up_post(v):
 	g.db.add(new_user)
 	g.db.flush()
 
-	if ref_id:
-		ref_user = g.db.query(User).filter_by(id=ref_id).one_or_none()
-
-		if ref_user:
-			if ref_user.referral_count and not ref_user.has_badge(10):
-				new_badge = Badge(user_id=ref_user.id, badge_id=10)
-				g.db.add(new_badge)
-				g.db.flush()
-				send_notification(ref_user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-			if ref_user.referral_count >= 10 and not ref_user.has_badge(11):
-				new_badge = Badge(user_id=ref_user.id, badge_id=11)
-				g.db.add(new_badge)
-				g.db.flush()
-				send_notification(ref_user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-			if ref_user.referral_count >= 100 and not ref_user.has_badge(12):
-				new_badge = Badge(user_id=ref_user.id, badge_id=12)
-				g.db.add(new_badge)
-				g.db.flush()
-				send_notification(ref_user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-
 	check_for_alts(new_user.id)
 
 	if email: send_verification_email(new_user)
