@@ -17,7 +17,7 @@ def create_comment(text_html, autojanny=False):
 	g.db.add(new_comment)
 	g.db.flush()
 
-	new_comment.top_comment_id = new_comment.id
+	new_comment.path = str(new_comment.id)
 
 	return new_comment.id
 

@@ -475,7 +475,7 @@ def message2(v, username):
 	g.db.add(c)
 	g.db.flush()
 
-	c.top_comment_id = c.id
+	c.path = str(c.id)
 
 	notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=user.id).one_or_none()
 	if not notif:
@@ -530,7 +530,6 @@ def messagereply(v):
 	c = Comment(author_id=v.id,
 							parent_submission=None,
 							parent_comment_id=id,
-							top_comment_id=parent.top_comment_id,
 							level=parent.level + 1,
 							sentto=user_id,
 							body_html=body_html,
@@ -538,6 +537,8 @@ def messagereply(v):
 							)
 	g.db.add(c)
 	g.db.flush()
+
+	c.path = f"{parent.path}.{c.id}"
 
 	if user_id and user_id != v.id and user_id != MODMAIL_ID:
 		notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=user_id).one_or_none()
