@@ -173,6 +173,8 @@ def filtered_submissions(v):
 	except: page = 1
 
 	posts_just_ids = g.db.query(Submission) \
+		.join(User, User.id == Submission.author_id) \
+		.filter(User.shadowbanned == None) \
 		.order_by(Submission.id.desc()) \
 		.filter(Submission.state_mod == StateMod.FILTERED) \
 		.limit(26) \
@@ -193,6 +195,8 @@ def filtered_comments(v):
 	except: page = 1
 
 	comments_just_ids = g.db.query(Comment) \
+		.join(User, User.id == Comment.author_id) \
+		.filter(User.shadowbanned == None) \
 		.order_by(Comment.id.desc()) \
 		.filter(Comment.state_mod == StateMod.FILTERED) \
 		.limit(26) \
