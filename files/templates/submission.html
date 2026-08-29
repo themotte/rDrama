@@ -411,6 +411,7 @@
 			{{sorting_time.sort_dropdown(sort, none, SORTS_COMMENTS)}}
 		</div>
 
+    {% if cid %}
 	{% if v %}
 		<div id="comment-form-space-{{p.fullname}}" class="comment-write mb-3">
 			<form id="reply-to-{{p.fullname}}" action="/comment" method="post">
@@ -452,6 +453,7 @@
 			</div>
 		</div>
 	{% endif %}
+    {% endif %}
 
 	{% include "volunteer_teaser.html" %}
 
