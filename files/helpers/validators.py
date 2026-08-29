@@ -162,7 +162,12 @@ class ValidatedSubmissionLike:
 		title = sanitize.sanitize_raw(title, allow_newlines=False, length_limit=SUBMISSION_TITLE_LENGTH_MAXIMUM)
 
 		url = guarded_value("url", 0, SUBMISSION_URL_LENGTH_MAXIMUM)
-	
+
+		if url:
+			from files.helpers.content import has_valid_domain
+			if not has_valid_domain(url):
+				raise ValueError("That URL has an invalid domain name.")
+
 		body_raw = guarded_value("body", 0, SUBMISSION_BODY_LENGTH_MAXIMUM)
 		body_raw = sanitize.sanitize_raw(body_raw, allow_newlines=True, length_limit=SUBMISSION_BODY_LENGTH_MAXIMUM)
 

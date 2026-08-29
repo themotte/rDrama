@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import random
 import urllib.parse
 from typing import TYPE_CHECKING, Any, Optional
@@ -13,6 +14,27 @@ else:
 	Submittable = Any
 
 
+# Valid characters in a hostname: alphanumeric, hyphens, dots, colons (port),
+# brackets (IPv6), and @ (userinfo). Characters like & ? ! # space are not
+# valid in the netloc portion of a URL.
+_VALID_NETLOC_RE = re.compile(r'^[\w.\-:\[\]@]*$', flags=re.ASCII)
+
+
+def has_valid_domain(url:str) -> bool:
+	'''
+	Check whether a URL has a valid domain (netloc) after parsing.
+
+	Returns False for URLs where the netloc contains characters that are not
+	valid in a hostname (e.g. & or ? ending up in the domain due to malformed
+	input). Also returns False for empty URLs or URLs with no netloc.
+	'''
+	if not url:
+		return False
+	parsed = urllib.parse.urlparse(url)
+	netloc = parsed.netloc
+	if not netloc:
+		return False
+	return bool(_VALID_NETLOC_RE.match(netloc))
 
 
 def _httpsify_and_remove_tracking_urls(url:str) -> urllib.parse.ParseResult:
@@ -41,7 +63,14 @@ def _httpsify_and_remove_tracking_urls(url:str) -> urllib.parse.ParseResult:
 
 
 
-def canonicalize_url2(url:str, *, httpsify:bool=False) -> urllib.parse.ParseResult:
+def canonicalize_url2(url:str, *, httpsify:bool=False) -> Optional[urllib.parse.ParseResult]:
+	'''
+	Canonicalize a URL, optionally upgrading to HTTPS and stripping tracking
+	parameters. Returns None if the URL has an invalid domain (e.g. contains
+	& or ? in the hostname).
+	'''
+	if not has_valid_domain(url):
+		return None
 	if httpsify:
 		url_parsed = _httpsify_and_remove_tracking_urls(url)
 	else:
