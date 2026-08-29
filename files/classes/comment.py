@@ -74,6 +74,9 @@ class Comment(CreatedBase):
 		primaryjoin="CommentFlag.comment_id == Comment.id",
 		order_by="CommentFlag.created_datetimez",
 		viewonly=True)
+	saves = relationship("CommentSaveRelationship",
+		primaryjoin="CommentSaveRelationship.comment_id == Comment.id",
+		viewonly=True)
 	notes = relationship("UserNote", back_populates="comment")
 
 	def __repr__(self):
