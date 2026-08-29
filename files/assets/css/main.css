@@ -4598,6 +4598,7 @@ video {
 	margin-left: 5px;
 	margin-right: 5px;
 	align-self: center;
+	position: relative;
 }
 .comment .comment-collapse-icon::before {
 	font-family: "font awesome 5 pro" !important;
@@ -4609,6 +4610,15 @@ video {
 	font-size: 14px;
 	font-weight: 900;
 	border: none;
+}
+.comment .comment-collapse-icon::after {
+	content: "";
+	position: absolute;
+	top: -10px;
+	left: -24px;
+	right: -8px;
+	bottom: -4px;
+	cursor: pointer;
 }
 .comment .comment-collapse-icon:hover::before {
 	color: var(--primary);
