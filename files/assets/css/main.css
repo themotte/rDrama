@@ -3338,6 +3338,7 @@ small, .small {
 }
 .post-body {
 	word-break: break-word;
+	overflow-wrap: break-word;
 	overflow: hidden;
 	max-width: var(--text-width, 60em);
 }
@@ -3611,6 +3612,7 @@ small, .small {
 }
 .comment-body {
 	grid-area: comment-body;
+	min-width: 0;
 }
 #notifications .comment, #userpage .comment {
 	margin-top: 0.25rem;
@@ -3643,6 +3645,7 @@ small, .small {
 .comment .comment-body .comment-text {
 	margin-bottom: 1rem;
 	word-break: break-word;
+	overflow-wrap: break-word;
 	color: var(--black);
 	overflow: hidden;
 	padding-right: 10px !important;
@@ -5610,6 +5613,13 @@ div[id^="reply-edit-"] li > p:first-child {
   border: 1px dashed black;
   border-radius: 0.35em;
   padding: 0.375rem 0.75rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.preview {
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .comment-section div[id^="form-preview-"] p.preview-msg, div[id^="reply-edit-"] p.preview-msg {
