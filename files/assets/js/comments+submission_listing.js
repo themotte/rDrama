@@ -139,15 +139,6 @@ document.addEventListener("click", function(){
 	else document.querySelectorAll('.popover').forEach(e => e.remove());
 });
 
-function post(url) {
-	const xhr = new XMLHttpRequest();
-	xhr.open("POST", url);
-	xhr.setRequestHeader('xhr', 'xhr');
-	var form = new FormData()
-	form.append("formkey", formkey());
-	xhr.send(form);
-};
-
 function vote(type, id, dir, vid) {
 	const upvotes = document.getElementsByClassName(type + '-' + id + '-up');
 	const downvotes = document.getElementsByClassName(type + '-' + id + '-down');
