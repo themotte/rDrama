@@ -6,9 +6,10 @@ import threading
 import time
 from typing import TYPE_CHECKING
 
-from flask import abort, g, request
+from flask import abort, g, request, session
 
 from files.__main__ import app, db_session, limiter, is_known_bot, active_requests
+from files.helpers.config.const import LOGGED_IN_COOKIE
 
 if TYPE_CHECKING:
 	from flask.wrappers import Response
@@ -86,6 +87,15 @@ def after_request(response: Response):
 			ip = request.headers.get('X-Real-IP', request.remote_addr or '-')
 			print(f"[slow-request] {elapsed:.1f}s ({queries} queries, {query_time:.1f}s in sql) ip={ip}: {detail}",
 				file=sys.stderr, flush=True)
+
+	# Keep the logged-in marker cookie in step with the session: set once when a member appears, deleted on the response that logs them out. Only for requests that already touched the session; reading it here would add Vary: Cookie to static responses that never look at it.
+	if session.accessed:
+		has_marker = LOGGED_IN_COOKIE in request.cookies
+		cookie_attrs = dict(secure=app.config["SESSION_COOKIE_SECURE"], httponly=True, samesite=app.config["SESSION_COOKIE_SAMESITE"])
+		if session.get("lo_user") and not has_marker:
+			response.set_cookie(LOGGED_IN_COOKIE, "1", max_age=app.config["PERMANENT_SESSION_LIFETIME"], **cookie_attrs)
+		elif has_marker and not session.get("lo_user"):
+			response.delete_cookie(LOGGED_IN_COOKIE, **cookie_attrs)
 
 	response.headers.add("Content-Security-Policy", ("""
 		script-src 'self' 'unsafe-inline' https://*.googletagmanager.com https://hcaptcha.com https://*.hcaptcha.com;

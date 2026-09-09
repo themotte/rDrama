@@ -92,6 +92,8 @@ SORTS_COMMENTS = SORTS_COMMON
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 SESSION_COOKIE_SAMESITE = "Lax"
 PERMANENT_SESSION_LIFETIME = 60 * 60 * 24 * 365
+# Non-sensitive marker set alongside the session for logged-in users so the proxy in front of gunicorn can prioritize them without decoding the session. The name is also hardcoded in the HAProxy config (mottesetup, main-haproxy ConfigMap).
+LOGGED_IN_COOKIE = "logged_in"
 DEFAULT_THEME = "TheMotte"
 FORCE_HTTPS = 1
 COLORS = {'ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58','8cdbe6', 'fff'}

@@ -462,3 +462,78 @@ def test_reset_2fa_get():
 	response = client.get("/reset_2fa")
 	# Will likely redirect or show error without token
 	assert response.status_code in [200, 302, 400, 404]
+
+def _set_cookie_headers(response, name):
+	return [h for h in response.headers.getlist("Set-Cookie") if h.startswith(f"{name}=")]
+
+
+def test_logged_in_cookie_set_on_login():
+	"""The login response sets the logged_in marker with the session cookie's attributes, and later responses don't re-send it."""
+	from files.helpers.config.const import LOGGED_IN_COOKIE
+	client, user = util_accounts.create_test_client_and_user(name="lic-set")
+	client.get("/logout")
+	assert client.get_cookie(LOGGED_IN_COOKIE) is None
+
+	response = client.post("/login", data={"username": user.username, "password": "password"})
+	assert response.status_code == 302
+	header = _set_cookie_headers(response, LOGGED_IN_COOKIE)[0]
+	assert "HttpOnly" in header
+	assert "SameSite=Lax" in header
+	assert client.get_cookie(LOGGED_IN_COOKIE).value == "1"
+
+	response = client.get("/")
+	assert response.status_code == 200
+	assert _set_cookie_headers(response, LOGGED_IN_COOKIE) == []
+
+
+def test_logged_in_cookie_cleared_on_logout():
+	"""The logout response itself deletes the marker, and later responses don't bring it back."""
+	from files.helpers.config.const import LOGGED_IN_COOKIE
+	client, user = util_accounts.create_test_client_and_user(name="lic-clear")
+
+	client.get("/")
+	assert client.get_cookie(LOGGED_IN_COOKIE) is not None
+
+	response = client.get("/logout")
+	assert response.status_code == 302
+	deletions = _set_cookie_headers(response, LOGGED_IN_COOKIE)
+	assert len(deletions) == 1
+	assert "Max-Age=0" in deletions[0]
+	assert client.get_cookie(LOGGED_IN_COOKIE) is None
+
+	response = client.get("/")
+	assert _set_cookie_headers(response, LOGGED_IN_COOKIE) == []
+	assert client.get_cookie(LOGGED_IN_COOKIE) is None
+
+
+def test_logged_in_cookie_absent_for_anonymous():
+	"""An anonymous visitor never receives the marker, even though they get a session cookie."""
+	from files.helpers.config.const import LOGGED_IN_COOKIE
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/")
+	assert response.status_code == 200
+	assert _set_cookie_headers(response, LOGGED_IN_COOKIE) == []
+	assert client.get_cookie(LOGGED_IN_COOKIE) is None
+
+
+def test_logged_in_cookie_not_resent_by_static_routes():
+	"""Once the jar has the marker, static asset responses must not keep re-sending it."""
+	from files.helpers.config.const import LOGGED_IN_COOKIE
+	client, user = util_accounts.create_test_client_and_user(name="lic-static")
+
+	client.get("/")
+	assert client.get_cookie(LOGGED_IN_COOKIE) is not None
+
+	response = client.get("/assets/robots.txt")
+	assert response.status_code == 200
+	assert _set_cookie_headers(response, LOGGED_IN_COOKIE) == []
+
+
+def test_static_routes_do_not_start_varying_on_cookie():
+	"""The marker logic must not touch the session on requests that never did, or every static response would grow Vary: Cookie and defeat asset caching."""
+	client = util_accounts.create_logged_off_client()
+
+	response = client.get("/assets/robots.txt")
+	assert response.status_code == 200
+	assert "Cookie" not in response.vary
