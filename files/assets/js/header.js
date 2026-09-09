@@ -81,6 +81,18 @@ function expandDesktopImage(image) {
 	document.getElementById("desktop-expanded-image-wrap-link").href = image;
 };
 
+function showRequestError(xhr, fallback) {
+	let message = null;
+	try {
+		const data = JSON.parse(xhr.response);
+		message = data["details"] || data["error"] || null;
+	} catch (e) {
+		// Not JSON: a proxy or server error page. The fallback text covers it.
+	}
+	document.getElementById('toast-post-error-text').innerText = message || fallback;
+	bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
+}
+
 function postToast(targetElement, url, method, data, callbackFn) {
 	if (targetElement) { // disable element to avoid repeated requests
 		targetElement.disabled = true;
@@ -134,20 +146,11 @@ function postToast(targetElement, url, method, data, callbackFn) {
 			}
 			toastPostSuccessTextElement.innerText = message;
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-success')).show();
-		} else {
-			const toastPostErrorTextElement = document.getElementById('toast-post-error-text');
-			if (message === null && data) {
-				if (data["details"]) {
-					message = data["details"];
-				} else if (data["error"]) {
-					message = data["error"];
-				}
-			}
-			if (message === null) {
-				message = "Error, please try again later.";
-			}
-			toastPostErrorTextElement.innerText = message;
+		} else if (message !== null) {
+			document.getElementById('toast-post-error-text').innerText = message;
 			bootstrap.Toast.getOrCreateInstance(document.getElementById('toast-post-error')).show();
+		} else {
+			showRequestError(xhr, "Error, please try again later.");
 		}
 	}
 

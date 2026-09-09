@@ -149,6 +149,18 @@ function vote(type, id, dir, vid) {
 		return str.match(/-?\d+/) != null
 	}
 
+	// The arrows and score update optimistically below; keep enough state to put them back if the request fails.
+	const title = (vid && ['1','9'].includes(vid)) ? document.getElementById(id+'-title') : null;
+	const snapshot = {
+		elements: Array.from(upvotes, (upvote, i) => ({
+			upvote: upvote.className,
+			downvote: downvotes[i].className,
+			scoretext: scoretexts[i].className,
+			score: scoretexts[i].textContent,
+		})),
+		titleVisited: title ? title.classList.contains('visited') : false,
+	};
+
 	for (let i=0; i<upvotes.length; i++) {
 		
 		const upvote = upvotes[i]
@@ -234,9 +246,30 @@ function vote(type, id, dir, vid) {
 		}
 	}
 	
+	// Restores the pre-click snapshot rather than applying an inverse, so a failure after a second rapid click on the same widget lands on the state before the first one.
+	function revert() {
+		snapshot.elements.forEach((saved, i) => {
+			upvotes[i].className = saved.upvote;
+			downvotes[i].className = saved.downvote;
+			scoretexts[i].className = saved.scoretext;
+			scoretexts[i].textContent = saved.score;
+		});
+		if (title) title.classList.toggle('visited', snapshot.titleVisited);
+	}
+
 	const xhr = new XMLHttpRequest();
 	xhr.open("POST", "/vote/" + type.replace('-mobile','') + "/" + id + "/" + votedirection);
 	xhr.setRequestHeader('xhr', 'xhr');
+	xhr.onload = function() {
+		if (xhr.status < 200 || xhr.status >= 300) {
+			revert();
+			showRequestError(xhr, "Vote failed, please try again.");
+		}
+	};
+	xhr.onerror = function() {
+		revert();
+		showRequestError(xhr, "Vote failed, please try again.");
+	};
 	var form = new FormData()
 	form.append("formkey", formkey());
 	xhr.send(form);
