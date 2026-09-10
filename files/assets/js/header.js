@@ -183,11 +183,8 @@ function escapeHTML(unsafe) {
 	return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
-function changename(s1,s2) {
-	let files = document.getElementById(s2).files;
-	let filename = '';
-	for (const e of files) {
-		filename += e.name.substr(0, 20) + ', ';
-	}
-	document.getElementById(s1).innerHTML = escapeHTML(filename.slice(0, -2));
+function changename(containerId, inputId) {
+	const files = document.getElementById(inputId).files;
+	const filename = files.map(file => file.name.substr(0, 20)).join(', ');
+	document.getElementById(containerId).innerHTML = escapeHTML(filename);
 }

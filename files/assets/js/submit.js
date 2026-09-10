@@ -1,6 +1,14 @@
-document.getElementById('post-title').value = localStorage.getItem("post_title")
-document.getElementById('post-text').value = localStorage.getItem("post_text")
-document.getElementById('post-url').value = localStorage.getItem("post_url")
+document.addEventListener('DOMContentLoaded', () => {
+	const postText = localStorage.getItem("post_text");
+	if (postText) {
+		const textArea = document.getElementById('post-text');
+		textArea.value = postText;
+		textArea.dispatchEvent(new Event('input'));
+	}
+	document.getElementById('post-title').value = localStorage.getItem("post_title");
+	document.getElementById('post-url').value = localStorage.getItem("post_url");
+	checkForRequired();
+});
 
 function checkForRequired() {
 	const title = document.getElementById("post-title");
@@ -8,7 +16,7 @@ function checkForRequired() {
 	const text = document.getElementById("post-text");
 	const button = document.getElementById("create_button");
 	const image = document.getElementById("file-upload");
-	const image2 = document.getElementById("file-upload-submit");
+	const image2 = document.getElementById("file-reply-submit");
 
 	if (url.value.length > 0 || image.files.length > 0 || image2.files.length > 0) {
 		text.required = false;
@@ -32,7 +40,6 @@ function checkForRequired() {
 		button.disabled = true;
 	}
 }
-checkForRequired();
 
 function hide_image() {
 	x=document.getElementById('image-upload-block');
@@ -45,29 +52,29 @@ function hide_image() {
 	}
 }
 
-document.onpaste = function(event) {
-	files = event.clipboardData.files
+const IMAGE_FORMATS = [".jpg", ".jpeg", ".png", ".webp", ".gif"];
 
-	filename = files[0]
+document.onpaste = (event) => {
+	const files = event.clipboardData.files;
 
-	if (filename)
-	{
-		filename = filename.name.toLowerCase()
-		if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
-		{
+	if (files.length) {
+		const filename = files[0].name.toLowerCase();
+		if (IMAGE_FORMATS.some(extension => filename.endsWith(extension))) {
 			if (document.activeElement.id == 'post-text') {
-				document.getElementById('file-upload-submit').files = files;
-				document.getElementById('filename-show-submit').textContent = filename;
+				document.getElementById('file-reply-submit').files = files;
+				document.getElementById('filename-reply-submit').textContent = filename;
 			}
 			else {
-				f=document.getElementById('file-upload');
-				f.files = files;
+				const fileInput = document.getElementById('file-upload');
+				fileInput.files = files;
 				document.getElementById('filename-show').textContent = filename;
 				document.getElementById('urlblock').classList.add('d-none');
-				var fileReader = new FileReader();
-				fileReader.readAsDataURL(f.files[0]);
-				fileReader.addEventListener("load", function () {document.getElementById('image-preview').setAttribute('src', this.result);});  
-				document.getElementById('file-upload').setAttribute('required', 'false');	
+				const fileReader = new FileReader();
+				fileReader.readAsDataURL(fileInput.files[0]);
+				fileReader.addEventListener("load", function () {
+					document.getElementById('image-preview').setAttribute('src', this.result);
+				});  
+				fileInput.setAttribute('required', 'false');	
 			}
 			document.getElementById('post-url').value = null;
 			localStorage.setItem("post_url", "")
@@ -77,15 +84,14 @@ document.onpaste = function(event) {
 }
 
 document.getElementById('file-upload').addEventListener('change', function(){
-	f=document.getElementById('file-upload');
+	const fileInput = document.getElementById('file-upload');
 	document.getElementById('urlblock').classList.add('d-none');
-	document.getElementById('filename-show').textContent = document.getElementById('file-upload').files[0].name.substr(0, 20);
-	filename = f.files[0].name.toLowerCase()
-	if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".webp"))
-	{
-		var fileReader = new FileReader();
-		fileReader.readAsDataURL(f.files[0]);
-		fileReader.addEventListener("load", function () {document.getElementById('image-preview').setAttribute('src', this.result);});  
+	document.getElementById('filename-show').textContent = fileInput.files[0].name.substr(0, 20);
+	const filename = fileInput.files[0].name.toLowerCase();
+	if (IMAGE_FORMATS.some(extension => filename.endsWith(extension))) {
+		const fileReader = new FileReader();
+		fileReader.readAsDataURL(fileInput.files[0]);
+		fileReader.addEventListener("load", () => document.getElementById('image-preview').setAttribute('src', this.result));  
 	}
 	checkForRequired();
 })

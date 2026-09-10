@@ -59,25 +59,30 @@ function report_commentModal(id, author) {
 	}
 };
 
-function openReplyBox(id) {
+const openReplyBox = (id) => {
 	const element = document.getElementById(id);
-	const textarea = element.getElementsByTagName('textarea')[0]
-	let text = getSelection().toString()
+	const textarea = element.getElementsByTagName('textarea')[0];
+	const text = getSelection().toString();
 	if (text)
 	{
 		textarea.value = '>' + text
 		textarea.value = textarea.value.replace(/\n\n([^$])/g,"\n\n>$1")
-		if (!textarea.value.endsWith('\n\n')) textarea.value += '\n\n'
+		if (!textarea.value.endsWith('\n\n')) textarea.value += '\n\n';
+		markdown(textarea);
 	}
+	charLimit(textarea);
 	element.classList.remove('d-none')
-	textarea.focus()
+	textarea.focus();
 }
 
-function toggleEdit(id){
-	comment=document.getElementById("comment-text-"+id);
-	form=document.getElementById("comment-edit-"+id);
-	box=document.getElementById('comment-edit-body-'+id);
-	actions = document.getElementById('comment-' + id +'-actions');
+const toggleEdit = (id) =>{
+	const comment = document.getElementById(`comment-text-${id}`);
+	const form = document.getElementById(`comment-edit-${id}`);
+	const box = document.getElementById(`comment-edit-body-${id}`);
+	const actions = document.getElementById(`comment-${id}-actions`);
+
+	// Init preview and char count
+	box.oninput();
 
 	comment.classList.toggle("d-none");
 	form.classList.toggle("d-none");
@@ -276,42 +281,30 @@ function post_comment(fullname,id,level = 1){
 }
 
 document.onpaste = function(event) {
-	var focused = document.activeElement;
-	if (focused.id.includes('reply-form-body-')) {
-		var fullname = focused.dataset.fullname;
-		f=document.getElementById('file-upload-reply-' + fullname);
-		files = event.clipboardData.files
+	const focused = document.activeElement;
+	const relevantBodyIds = [
+		'reply-form-body-',
+		'comment-edit-body-',
+		'post-edit-box-'
+	];
+
+	const files = event.clipboardData.files;
+	if (files.length && relevantBodyIds.some((bodyId) => focused.id.includes(bodyId))) {
+		const idForFileInput = focused.dataset.idForFileInput;
+		const fileInput = document.getElementById(`file-reply-${idForFileInput}`);
+		const filenameContainer = document.getElementById(`filename-reply-${idForFileInput}`);
+
 		try {
-			filename = files[0].name.toLowerCase()
-			if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
+			const filename = files[0].name.toLowerCase();
+			const allowedExtensions = [".jpg", ".jpeg", ".png", ".webp", ".gif"];
+			if (allowedExtensions.some(extension => filename.endsWith(extension)))
 			{
-				f.files = files;
-				document.getElementById('filename-show-reply-' + fullname).textContent = filename;
+				fileInput.files = files;
+				filenameContainer.textContent = filename;
 			}
+			return;
 		}
 		catch(e) {console.log(e)}
-	}
-	else if (focused.id.includes('comment-edit-body-')) {
-		var id = focused.dataset.id;
-		f=document.getElementById('file-edit-reply-' + id);
-		files = event.clipboardData.files
-		filename = files[0].name.toLowerCase()
-		if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
-		{
-			f.files = files;
-			document.getElementById('filename-edit-reply-' + id).textContent = filename;
-		}
-	}
-	else if (focused.id.includes('post-edit-box-')) {
-		var id = focused.dataset.id;
-		f=document.getElementById('file-upload-edit-' + id);
-		files = event.clipboardData.files
-		filename = files[0].name.toLowerCase()
-		if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
-		{
-			f.files = files;
-			document.getElementById('filename-show-edit-' + id).textContent = filename;
-		}
 	}
 }
 

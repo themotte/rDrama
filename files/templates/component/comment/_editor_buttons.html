@@ -1,0 +1,22 @@
+{% macro editor_buttons(id, body_id) %}
+<div class="comment-format">
+    <a class="btn btn-secondary format m-0" role="button" onclick="makeBold('{{ body_id }}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Bold"><i class="fas fa-bold"></i></a>
+    <a class="btn btn-secondary format m-0" role="button" onclick="makeItalics('{{ body_id }}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Italicize"><i class="fas fa-italic"></i></a>
+    <a class="btn btn-secondary format m-0" role="button" onclick="makeQuote('{{ body_id }}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote"><i class="fas fa-quote-right"></i></a>
+    <a class="btn btn-secondary format m-0" role="button" onclick="makeLink('{{ body_id }}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Link"><i class="fas fa-link"></i></a>
+    <label class="btn btn-secondary format m-0" for="file-reply-{{ id }}">
+        <div id="filename-reply-{{ id }}"><i class="far fa-image"></i></div>
+            <input
+                autocomplete="off"
+                id="file-reply-{{ id }}"
+                type="file"
+                multiple="multiple"
+                name="file"
+                accept="image\/*, video\/*"
+                {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %}
+                onchange="changename('filename-reply-{{ id }}','file-reply-{{ id }}')"
+                hidden
+            >
+    </label>
+</div>
+{% endmacro %}
