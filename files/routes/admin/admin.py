@@ -165,6 +165,7 @@ def shadowbanned(v):
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).order_by(User.shadowbanned).all()]
 	return render_template("shadowbanned.html", v=v, users=users)
 
+
 @app.get("/admin/filtered/posts")
 @limiter.exempt
 @admin_level_required(2)
@@ -174,7 +175,7 @@ def filtered_submissions(v):
 
 	posts_just_ids = g.db.query(Submission) \
 		.order_by(Submission.id.desc()) \
-		.filter(Submission.state_mod == StateMod.FILTERED) \
+		.filter(Submission.state_mod == StateMod.FILTERED, Submission.state_user_deleted_utc == None) \
 		.limit(26) \
 		.offset(25 * (page - 1)) \
 		.with_entities(Submission.id)
@@ -185,6 +186,7 @@ def filtered_submissions(v):
 
 	return render_template("admin/filtered_submissions.html", v=v, listing=posts, next_exists=next_exists, page=page, sort="new")
 
+
 @app.get("/admin/filtered/comments")
 @limiter.exempt
 @admin_level_required(2)
@@ -194,7 +196,7 @@ def filtered_comments(v):
 
 	comments_just_ids = g.db.query(Comment) \
 		.order_by(Comment.id.desc()) \
-		.filter(Comment.state_mod == StateMod.FILTERED) \
+		.filter(Comment.state_mod == StateMod.FILTERED, Comment.state_user_deleted_utc == None) \
 		.limit(26) \
 		.offset(25 * (page - 1)) \
 		.with_entities(Comment.id)
@@ -204,6 +206,7 @@ def filtered_comments(v):
 	comments = get_comments(comment_ids[:25], v=v)
 
 	return render_template("admin/filtered_comments.html", v=v, listing=comments, next_exists=next_exists, page=page, sort="new")
+
 
 # NOTE:
 # This function is pretty grimy and should be rolled into the Remove/Unremove functions.
