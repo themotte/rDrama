@@ -135,7 +135,7 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 
 	db.flush()
 	for c in comments:
-		c.top_comment_id = c.id
+		c.path = str(c.id)
 		db.add(c)
 
 	db.commit()
@@ -150,7 +150,6 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 			author_id=user.id,
 			parent_submission=str(parent.post.id),
 			parent_comment_id=parent.id,
-			top_comment_id=parent.top_comment_id,
 			level=parent.level + 1,
 			over_18=False,
 			is_bot=False,
@@ -161,6 +160,8 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 			state_mod=StateMod.VISIBLE,
 		)
 		db.add(comment)
+		db.flush()
+		comment.path = f"{parent.path}.{comment.id}"
 		comments.append(comment)
 
 	db.commit()

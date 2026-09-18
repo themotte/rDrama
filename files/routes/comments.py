@@ -228,8 +228,10 @@ def api_comment(v):
 	g.db.add(c)
 	g.db.flush()
 
-	if c.level == 1: c.top_comment_id = c.id
-	else: c.top_comment_id = parent.top_comment_id
+	if c.level == 1:
+		c.path = str(c.id)
+	else:
+		c.path = f"{parent.path}.{c.id}"
 
 	if not v.shadowbanned and not is_filtered:
 		comment_on_publish(c)

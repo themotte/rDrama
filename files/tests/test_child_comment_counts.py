@@ -201,13 +201,11 @@ def test_bulk_update_descendant_count_quick():
 			db.commit()
 			posts.append(post)
 			parent_comment = None
-			top_comment = None
 			for j in range(20):
 				comment = Comment(**{
 					'author_id': alice.id,
 					'parent_submission': str(post.id),
 					'parent_comment_id': parent_comment.id if parent_comment else None,
-					'top_comment_id': top_comment.id if top_comment else None,
 					'level': parent_comment.level + 1 if parent_comment else 1,
 					'over_18': False,
 					'is_bot': False,
@@ -217,10 +215,13 @@ def test_bulk_update_descendant_count_quick():
 					'ghost': False,
 					'state_mod': StateMod.VISIBLE,
 				})
-				if parent_comment is None:
-					top_comment = comment
-				parent_comment = comment
 				db.add(comment)
+				db.flush()
+				if parent_comment is None:
+					comment.path = str(comment.id)
+				else:
+					comment.path = f"{parent_comment.path}.{comment.id}"
+				parent_comment = comment
 				db.commit()
 		sorted_comments_0 = sorted(posts[0].comments, key=lambda c: c.id)
 		sorted_comments_1 = sorted(posts[1].comments, key=lambda c: c.id)

@@ -379,7 +379,7 @@ def change_settings(v, setting):
 	g.db.add(new_comment)
 	g.db.flush()
 
-	new_comment.top_comment_id = new_comment.id
+	new_comment.path = str(new_comment.id)
 
 	for admin in g.db.query(User).filter(User.admin_level > 2, User.id != v.id).all():
 		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
@@ -808,7 +808,7 @@ def shadowban(user_id, v):
 	g.db.add(new_comment)
 	g.db.flush()
 
-	new_comment.top_comment_id = new_comment.id
+	new_comment.path = str(new_comment.id)
 
 	for admin in g.db.query(User).filter(User.admin_level > 2, User.id != v.id).all():
 		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
@@ -1052,7 +1052,7 @@ def ban_user(user_id, v):
 	g.db.add(new_comment)
 	g.db.flush()
 
-	new_comment.top_comment_id = new_comment.id
+	new_comment.path = str(new_comment.id)
 
 	for admin in g.db.query(User).filter(User.admin_level > 2, User.id != v.id).all():
 		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
