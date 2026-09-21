@@ -18,10 +18,10 @@
 					<input autocomplete="off" id="file-upload-reply-{{c.fullname}}" type="file" multiple="multiple" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-show-reply-{{c.fullname}}','file-upload-reply-{{c.fullname}}')" hidden>
 				</label>
 			</div>
-			<a id="save-reply-to-{{c.fullname}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}', {{level}})"role="button">Comment</a>
+			<a id="save-reply-to-{{c.fullname}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}', {{level}})"role="button">Reply</a>
 			<a role="button" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form fl-r commentmob">Cancel</a> 
 		</form>
-		<div id="reply-edit-{{c.id}}" class="preview mb-3 mt-5"><p class="preview-msg">Comment preview</p></div>
+		<div id="reply-edit-{{c.id}}" class="preview mb-3 mt-5"><p class="preview-msg">Reply preview</p></div>
 		<div class="form-text text-small p-0 m-0"><a href="/formatting" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>Formatting help</a></div>
 	</div>
 </div>
