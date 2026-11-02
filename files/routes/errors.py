@@ -34,7 +34,8 @@ def error(e):
 def error_401(e):
 	if request.headers.get("Authorization") or request.headers.get("xhr"): return error(e)
 	path = request.path
-	qs = urlencode(dict(request.values))
+	# Only the query string: request.values would copy a POST body (passwords, formkey) into the URL
+	qs = urlencode(dict(request.args))
 	argval = quote(f"{path}?{qs}", safe='')
 	return redirect(f"/login?redirect={argval}")
 

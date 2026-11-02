@@ -21,6 +21,12 @@ def test_anonymous_xhr_gets_json_401():
 	assert_api_unauthorized(anon().get("/me", headers=XHR))
 
 
+def test_login_redirect_after_anonymous_post_does_not_carry_the_form_body():
+	r = anon().post_raw("/settings/security", {"new_password": factories.unique("secret")})
+
+	assert_login_redirect(r, returning_to="/settings/security")
+
+
 def test_session_with_stale_login_nonce_is_anonymous_and_dropped():
 	u = factories.user(login_nonce=1)
 	client = as_user({**u, "login_nonce": 0})
