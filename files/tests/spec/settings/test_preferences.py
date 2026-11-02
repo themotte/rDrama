@@ -250,6 +250,17 @@ def test_leaving_a_house_costs_2000_coins():
 	d.assert_exactly(updated={"users": {u["id"]: {"house": None, "coins": 0}}})
 
 
+@pytest.mark.parametrize("current, requested", [("Furry", "Furry"), (None, "None")])
+def test_choosing_the_current_house_is_free_and_changes_nothing(current, requested):
+	u = factories.user(coins=5000, house=current)
+
+	with db_diff() as d:
+		r = _post(u, {"house": requested}, headers=XHR)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
 def test_house_is_paid_from_marseybux_when_coins_fall_short():
 	u = factories.user(coins=100, procoins=500, house=None)
 

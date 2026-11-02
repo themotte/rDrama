@@ -206,17 +206,18 @@ def settings_profile_post(v):
 		else: abort(400)
 
 	house = request.values.get("house")
-	if house and house in ("None","Furry","Femboy","Vampire","Racist"):
-		if v.house: cost = 2000
-		else: cost = 500
+	if house in ("None","Furry","Femboy","Vampire","Racist"):
+		new_house = None if house == "None" else house
+		if new_house != v.house:
+			if v.house: cost = 2000
+			else: cost = 500
 
-		if v.coins >= cost: v.coins -= cost
-		elif v.procoins >= cost: v.procoins -= cost
-		else: abort(403)
+			if v.coins >= cost: v.coins -= cost
+			elif v.procoins >= cost: v.procoins -= cost
+			else: abort(403)
 
-		if house == "None": house = None 
-		v.house = house
-		updated = True
+			v.house = new_house
+			updated = True
 
 	if updated:
 		g.db.add(v)
