@@ -355,9 +355,15 @@ def settings_security_post(v):
 		if not v.verifyPass(request.values.get('password')):
 			return render_template("settings_security.html", v=v, error="Invalid password or token.")
 
-		secret = request.values.get("2fa_secret")
-		x = pyotp.TOTP(secret)
-		if not x.verify(request.values.get("2fa_token"), valid_window=1):
+		if v.mfa_secret:
+			return render_template("settings_security.html", v=v, error="Two-factor authentication is already enabled; disable it first.")
+
+		secret = request.values.get("2fa_secret", "")
+		try:
+			valid = bool(secret) and pyotp.TOTP(secret).verify(request.values.get("2fa_token").strip(), valid_window=1)
+		except ValueError: # not base32
+			valid = False
+		if not valid:
 			return render_template("settings_security.html", v=v, error="Invalid password or token.")
 
 		v.mfa_secret = secret

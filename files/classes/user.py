@@ -273,8 +273,9 @@ class User(CreatedBase):
 				UserBlock.user_id == other.id, UserBlock.target_id == self.id))).first()
 
 	def validate_2fa(self, token):
+		if not self.mfa_secret or not token: return False
 		x = pyotp.TOTP(self.mfa_secret)
-		return x.verify(token, valid_window=1)
+		return x.verify(token.strip(), valid_window=1)
 
 	@property
 	@lazy

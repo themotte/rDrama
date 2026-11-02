@@ -213,6 +213,42 @@ def test_enabling_two_factor_requires_a_valid_code():
 	d.assert_exactly()
 
 
+@pytest.mark.parametrize("secret", [None, "", "not base32!"])
+def test_enabling_two_factor_with_a_missing_or_malformed_secret_is_refused(secret):
+	u = factories.user()
+	data = {"password": factories.PASSWORD, "2fa_token": "123456"}
+	if secret is not None:
+		data["2fa_secret"] = secret
+
+	with db_diff() as d:
+		r = _security(u, data)
+
+	assert_html(r, 200)
+	d.assert_exactly()
+
+
+def test_enabling_two_factor_again_does_not_replace_the_secret():
+	u = factories.user(mfa_secret=pyotp.random_base32())
+	new_secret = pyotp.random_base32()
+
+	with db_diff() as d:
+		r = _security(u, {"password": factories.PASSWORD, "2fa_secret": new_secret, "2fa_token": pyotp.TOTP(new_secret).now()})
+
+	assert_html(r, 200)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("pad", ["", " "], ids=["exact", "padded"])
+def test_two_factor_codes_may_carry_surrounding_spaces(pad):
+	u = factories.user()
+	secret = pyotp.random_base32()
+	totp_step_settle()
+
+	_security(u, {"password": factories.PASSWORD, "2fa_secret": secret, "2fa_token": f"{pad}{pyotp.TOTP(secret).now()}{pad}"})
+
+	assert db.row("users", id=u["id"])["mfa_secret"] == secret
+
+
 def test_disabling_two_factor_clears_the_secret():
 	secret = pyotp.random_base32()
 	u = factories.user(mfa_secret=secret)
@@ -242,6 +278,16 @@ def test_disabling_two_factor_requires_a_valid_code():
 
 	with db_diff() as d:
 		r = _security(u, {"password": factories.PASSWORD, "2fa_remove": _wrong_token(secret)})
+
+	assert_html(r, 200)
+	d.assert_exactly()
+
+
+def test_disabling_two_factor_when_not_enabled_is_refused():
+	u = factories.user()
+
+	with db_diff() as d:
+		r = _security(u, {"password": factories.PASSWORD, "2fa_remove": "123456"})
 
 	assert_html(r, 200)
 	d.assert_exactly()
