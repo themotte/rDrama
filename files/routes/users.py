@@ -1,6 +1,5 @@
 import io
 import math
-import threading
 import time
 from collections import Counter
 from datetime import datetime
@@ -21,6 +20,7 @@ from files.classes.views import ViewerRelationship
 from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.assetcache import assetcache_path
+from files.helpers.background import spawn_background
 from files.helpers.config.const import *
 from files.helpers.contentsorting import (apply_time_filter, sort_objects)
 from files.helpers.media import process_image
@@ -489,12 +489,7 @@ def message2(v, username):
 		else: notifbody = message
 
 		try:
-			thread = threading.Thread(
-				target=pusher_thread2,
-				args=(f'{request.host}{user.id}', notifbody, v.username),
-				daemon=True
-			)
-			thread.start()
+			spawn_background(pusher_thread2, f'{request.host}{user.id}', notifbody, v.username)
 		except: pass
 
 	return {"message": "Message sent!"}

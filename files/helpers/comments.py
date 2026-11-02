@@ -1,5 +1,4 @@
 from sys import stdout
-import threading
 from typing import Optional
 
 from flask import g, request
@@ -12,6 +11,7 @@ from files.classes import Comment, Notification, Subscription, User
 from files.classes.visstate import StateMod
 from files.helpers.alerts import NOTIFY_USERS
 from files.helpers.assetcache import assetcache_path
+from files.helpers.background import spawn_background
 from files.helpers.config.environment import (PUSHER_ID, PUSHER_KEY, SITE_FULL,
                                               SITE_ID)
 
@@ -226,12 +226,7 @@ def comment_on_publish(comment:Comment):
 	# Generate push notifications if enabled.
 	if PUSHER_ID != 'blahblahblah' and comment.author_id != parent.author_id:
 		try:
-			thread = threading.Thread(
-				target=pusher_thread,
-				args=(f'{request.host}{parent.author.id}', comment, comment.author_name),
-				daemon=True
-			)
-			thread.start()
+			spawn_background(pusher_thread, f'{request.host}{parent.author.id}', comment, comment.author_name)
 		except: pass
 
 def comment_on_unpublish(comment:Comment):

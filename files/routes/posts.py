@@ -1,5 +1,4 @@
 import sys
-import threading
 import time
 import urllib.parse
 from io import BytesIO
@@ -18,6 +17,7 @@ from files.__main__ import app, db_session, limiter
 from files.classes import *
 from files.classes.visstate import StateMod
 from files.helpers.alerts import *
+from files.helpers.background import spawn_background
 from files.helpers.caching import invalidate_cache
 from files.helpers.config.const import *
 from files.helpers.content import canonicalize_url2
@@ -567,8 +567,7 @@ def submit_post(v):
 	post.submit(g.db)
 
 	if not post.thumburl and post.url:
-		thread = threading.Thread(target=thumbnail_thread, args=(post.id,), daemon=True)
-		thread.start()
+		spawn_background(thumbnail_thread, post.id)
 
 	post.publish()
 	g.db.commit()
