@@ -7,7 +7,7 @@ from io import BytesIO
 from PIL import Image, ImageOps
 from werkzeug.exceptions import BadRequest
 
-from files.helpers.config.environment import IMAGES_DIR
+from files.helpers.config.environment import IMAGES_DIR, SITE_FULL
 
 IMAGES_URL_PREFIX = "/images/"
 
@@ -27,10 +27,15 @@ def image_url(path: str) -> str:
 
 
 def delete_uploaded_image(url: str | None):
-	'''Deletes the stored file behind `url` if it is one of our uploads; other URLs are left alone.'''
-	if not url or IMAGES_URL_PREFIX not in url:
+	'''Deletes the stored file behind `url` if it is one of our uploads (a site-relative or same-site absolute /images/ URL); other URLs are left alone.'''
+	if not url:
 		return
-	path = os.path.join(IMAGES_DIR, os.path.basename(url.split(IMAGES_URL_PREFIX)[1]))
+	for prefix in (IMAGES_URL_PREFIX, SITE_FULL + IMAGES_URL_PREFIX):
+		if url.startswith(prefix):
+			break
+	else:
+		return
+	path = os.path.join(IMAGES_DIR, os.path.basename(url[len(prefix):]))
 	if os.path.isfile(path):
 		os.remove(path)
 

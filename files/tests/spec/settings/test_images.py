@@ -1,7 +1,7 @@
 '''
 Avatar (POST /settings/images/profile, field "profile") and banner (POST /settings/images/banner, field "banner") uploads.
 
-Uploads are stored by the site and served under /images/ as WebP. Replacing an uploaded image deletes the old file; images hosted elsewhere are simply replaced. Uploads through Tor are refused.
+Uploads are stored by the site and served under /images/ as WebP. Replacing an uploaded image deletes the old file; images hosted elsewhere (any URL not starting with /images/ or <site>/images/) are simply replaced. Uploads through Tor are refused.
 '''
 from io import BytesIO
 
@@ -119,6 +119,17 @@ def test_gif_uploads_are_converted_keeping_their_animation():
 	assert_serves_image(url)
 	served = Image.open(BytesIO(anon().get(url).body))
 	assert served.format == "WEBP" and served.n_frames == 2
+
+
+def test_replacing_an_image_hosted_elsewhere_deletes_nothing_here():
+	victim = factories.user()
+	as_user(victim).post("/settings/images/banner", files={"banner": uploads.png(2, 2)})
+	victim_url = db.row("users", id=victim["id"])["bannerurl"]
+	u = factories.user(bannerurl=f"https://elsewhere.example{victim_url}")
+
+	assert_html(as_user(u).post("/settings/images/banner", files={"banner": uploads.png(2, 2)}), 200)
+
+	assert_serves_image(victim_url)
 
 
 def test_uploaded_photos_lose_identifying_metadata():
