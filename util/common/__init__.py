@@ -1,6 +1,7 @@
 # import pprint
 import subprocess
 import sys
+import time
 
 def _execute(command,**kwargs):
     # print("Running:")
@@ -93,16 +94,33 @@ def _start():
     # if they're running, hey, problem solved, we're good
     # if they're crashed, y'know what, problem still solved! because our next command will fail
 
-    # maybe there's still a race condition? I dunno! Keep an eye on this.
-    # If there is a race condition then you're stuck doing something gnarly with `docker compose ps`. Good luck!
+    # there *is* a race with postgres, though: its container is "running" well before it accepts connections, so wait for that explicitly
 
     print("  Containers started!")
 
+    _wait_for_postgres()
+
     return result
+
+# Generous: after an unclean stop, postgres fsyncs its whole data directory before recovery, which can take minutes
+POSTGRES_STARTUP_TIMEOUT_SECONDS = 180
+POSTGRES_SHUTDOWN_TIMEOUT_SECONDS = 120
+
+def _wait_for_postgres():
+    # -h localhost forces TCP: during first-time init the image runs a temporary socket-only server, which would report ready too early
+    deadline = time.monotonic() + POSTGRES_STARTUP_TIMEOUT_SECONDS
+    while True:
+        result = _execute(['docker', 'compose', 'exec', '-T', 'postgres', 'pg_isready', '-h', 'localhost'], check=False)
+        if result.returncode == 0:
+            return
+        if time.monotonic() > deadline:
+            error(f"Postgres did not accept connections within {POSTGRES_STARTUP_TIMEOUT_SECONDS}s:\n{result.stdout}")
+        time.sleep(1)
 
 def _stop():
     # use "stop" instead of "down" to avoid killing all stored data
-    command = ['docker', 'compose', 'stop']
+    # postgres's shutdown checkpoint can outlast docker's default 10s grace period; a kill there means a slow crash recovery on next start
+    command = ['docker', 'compose', 'stop', '--timeout', str(POSTGRES_SHUTDOWN_TIMEOUT_SECONDS)]
     print("Stopping containers . . .")
     result = _execute(command)
     return result
