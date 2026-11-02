@@ -80,39 +80,26 @@ The application can run in different service modes (defined in `files/helpers/co
 
 ## Testing
 
-Tests are located in `files/tests/` and use pytest. Run all tests with:
-```bash
-./util/test.py
-```
+Tests live in `files/tests/` and use pytest. Run all tests with `./util/test.py` (extra args go to pytest). For a fast inner loop, start the containers once with `docker compose -f docker-compose.yml -f docker-compose-operation.yml up -d` and run `docker compose exec -T site python3 -m pytest files/tests/spec`.
 
-Key test fixtures are defined in `files/tests/fixture_*.py` files.
+The suite builds its own database (`rdrama_test`, or `$RDRAMA_TEST_DB`) from `bootstrap/*.sql` plus migrations on every run, uses Redis db 1 (`$RDRAMA_TEST_REDIS_DB`), and points the app at a temporary copy of the committed `site_settings.json` (`files/tests/testenv.py`). Tests never use the dev database, though `./util/test.py` still migrates it first.
 
-### Important Testing Patterns
+### Tiers
 
-1. **SQLAlchemy Session Expiration**: After making HTTP requests in tests, database objects become detached from the session. To verify database changes after an HTTP request, **re-query the object** using `db_session.query(Model).get(id)` or `db_session.query(Model).filter_by(...).first()` instead of using `db_session.refresh(obj)`.
+The suite is being turned into a behavioral specification for a clean-room reimplementation, so tests are split by what they may know:
 
-   ```python
-   # ❌ WRONG - object is detached after HTTP request
-   response, _ = util.post_with_formkey(client, f"/delete/comment/{comment.id}", data={})
-   db_session.refresh(comment)  # This will fail with InvalidRequestError
+- **`files/tests/spec/`: the specification.** Tests drive the app only through `files.tests.spec.harness` (HTTP client, reflected-schema DB access, factories, asserts) and must not import anything else from `files`; `internal/test_spec_hygiene.py` enforces this and bans hardcoded row ids in URLs. Only `harness/backend.py` touches application code. Every test starts from a reset state (`backend.reset()`: the app releases its session, then `files/tests/reset.py` truncates and restores the seed rows, flushes Redis and restores settings; ids are never reused).
+- **`files/tests/internal/`: white-box tests** of things not worth reaching through HTTP. Same per-test reset. Not part of the spec.
+- **`files/tests/test_*.py`: the legacy suite.** Shares accumulated state across tests (cached users), so it runs before the new tiers, and only the new tiers are order-independent. Being retired area by area as spec coverage replaces it; don't add to it.
 
-   # ✅ CORRECT - re-query the object
-   response, _ = util.post_with_formkey(client, f"/delete/comment/{comment.id}", data={})
-   comment_after = db_session.query(Comment).get(comment.id)
-   assert comment_after.state_user_deleted_utc is not None
-   ```
+### Writing spec tests
 
-2. **CSRF Protection (formkey)**: All POST requests in the application require a CSRF token called `formkey`. In tests, use `util.post_with_formkey()` helper function instead of `client.post()` directly:
-
-   ```python
-   # ❌ WRONG - missing formkey, will return 302 redirect
-   response = client.post("/delete/comment/123", data={})
-
-   # ✅ CORRECT - automatically fetches and includes formkey
-   response, _ = util.post_with_formkey(client, "/delete/comment/123", data={})
-   ```
-
-   The `post_with_formkey()` helper automatically fetches a page (typically `/submit`) to extract the session's formkey, then includes it in the POST request data.
+- Arrange with `factories` (direct row inserts; a factory user is a copy of a real signed-up account), act through `anon()` / `as_user(user)` clients, assert on the response and the database. `as_user` forges a session cookie and the client adds the form key to every POST automatically; `post_raw` skips it. Change runtime site settings with `site_settings_set`.
+- Assert exactly one status per test (`assert_status`, `assert_redirect`, `assert_login_redirect`, `assert_api_unauthorized`). Never accept a set of statuses.
+- For anything that writes, wrap the action in `with db_diff() as d:` and call `d.assert_exactly(...)`: it fails on any change you didn't describe, including in tables you didn't think about.
+- Assert content with `factories.unique()` sentinel tokens and `assert_in_payload` / `assert_not_in_payload`, not with markup, CSS classes or user-facing copy. JSON API shapes and request parameter names are contract and may be pinned exactly.
+- Comments and docstrings describe behavior, never how the current implementation achieves it.
+- Outbound HTTP and SMTP are blocked; a test fails if the app attempted either. Background work is deferred in test mode; run it with `run_background_work()`.
 
 ## Development Environment
 

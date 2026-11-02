@@ -1,0 +1,21 @@
+'''
+Every piece of deployment configuration the harness shares with the app under test. Both read the same environment, so this list is also the configuration contract a reimplementation must honor.
+'''
+import os
+
+
+def site_host() -> str:
+	return os.environ["DOMAIN"].strip()
+
+
+def site_id() -> str:
+	return os.environ["SITE_ID"].strip()
+
+
+def master_key() -> str:
+	return os.environ["MASTER_KEY"]
+
+
+def site_settings_path() -> str:
+	'''A JSON file of runtime-toggleable settings. The app must re-read it on every request, because admins change it while the site runs and side-by-side deployments share it.'''
+	return os.environ["SITE_SETTINGS_PATH"]
