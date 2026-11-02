@@ -597,7 +597,7 @@ def settings_title_change(v):
 	
 	new_name=request.values["title"].strip()[:100].replace("𒐪","")
 
-	if new_name==v.customtitle: return render_template("settings_profile.html", v=v, error="You didn't change anything")
+	if new_name==v.customtitleplain: return render_template("settings_profile.html", v=v, error="You didn't change anything")
 
 	v.customtitleplain = new_name
 

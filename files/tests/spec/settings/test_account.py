@@ -128,6 +128,18 @@ def test_title_is_truncated_to_100_characters_and_drops_the_forbidden_glyph():
 	d.assert_exactly(updated={"users": {u["id"]: {"customtitleplain": "a" * 99, "customtitle": ANY}}})
 
 
+def test_title_change_to_the_current_title_changes_nothing():
+	u = factories.user()
+	title = "~struck~ & <odd>"
+	as_user(u).post("/settings/title_change", {"title": title})
+
+	with db_diff() as d:
+		r = as_user(u).post("/settings/title_change", {"title": title})
+
+	assert_html(r, 200)
+	d.assert_exactly()
+
+
 def test_locked_flair_cannot_be_changed():
 	u = factories.user(flairchanged=2_000_000_000)
 
