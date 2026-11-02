@@ -229,7 +229,7 @@ def settings_profile_post(v):
 @app.post("/settings/filters")
 @auth_required
 def filters(v):
-	filters=request.values.get("filters")[:1000].strip()
+	filters=request.values["filters"][:1000].strip()
 
 	if filters == v.custom_filter_list:
 		return render_template("settings_filters.html", v=v, error="You didn't change anything")
@@ -381,6 +381,8 @@ def settings_security_post(v):
 		g.db.commit()
 
 		return render_template("settings_security.html", v=v, msg="Two-factor authentication disabled.")
+
+	abort(400)
 
 @app.post("/settings/log_out_all_others")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -546,7 +548,7 @@ def settings_content_get(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def settings_name_change(v):
-	new_name=request.values.get("name").strip()
+	new_name=request.values["name"].strip()
 
 	if new_name==v.username:
 		return render_template("settings_profile.html",
@@ -584,7 +586,7 @@ def settings_name_change(v):
 def settings_title_change(v):
 	if v.flairchanged: abort(403)
 	
-	new_name=request.values.get("title").strip()[:100].replace("𒐪","")
+	new_name=request.values["title"].strip()[:100].replace("𒐪","")
 
 	if new_name==v.customtitle: return render_template("settings_profile.html", v=v, error="You didn't change anything")
 

@@ -78,6 +78,16 @@ def test_username_change_to_the_same_name_changes_nothing():
 	d.assert_exactly()
 
 
+def test_username_change_without_a_name_is_rejected():
+	u = factories.user()
+
+	with db_diff() as d:
+		r = as_user(u).post("/settings/name_change", {}, headers=XHR)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
 def test_permanently_banned_users_cannot_change_username():
 	u = factories.user(is_banned=1, unban_utc=0)
 
@@ -125,6 +135,16 @@ def test_locked_flair_cannot_be_changed():
 		r = as_user(u).post("/settings/title_change", {"title": "new"}, headers=XHR)
 
 	assert_status(r, 403)
+	d.assert_exactly()
+
+
+def test_title_change_without_a_title_is_rejected():
+	u = factories.user()
+
+	with db_diff() as d:
+		r = as_user(u).post("/settings/title_change", {}, headers=XHR)
+
+	assert_status(r, 400)
 	d.assert_exactly()
 
 
@@ -185,6 +205,16 @@ def test_filter_words_unchanged_changes_nothing():
 		r = as_user(u).post("/settings/filters", {"filters": " a,b "})
 
 	assert_html(r, 200)
+	d.assert_exactly()
+
+
+def test_filter_words_without_the_field_are_rejected():
+	u = factories.user()
+
+	with db_diff() as d:
+		r = as_user(u).post("/settings/filters", {}, headers=XHR)
+
+	assert_status(r, 400)
 	d.assert_exactly()
 
 

@@ -27,6 +27,16 @@ def _wrong_token(secret):
 	return next(t for t in ("000000", "111111", "222222", "333333") if t not in valid)
 
 
+def test_request_without_a_recognized_form_is_rejected():
+	u = factories.user()
+
+	with db_diff() as d:
+		r = _security(u, {}, headers=XHR)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
 def test_password_form_takes_precedence_over_the_email_form():
 	u = factories.user()
 
