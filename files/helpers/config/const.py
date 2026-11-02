@@ -1,3 +1,4 @@
+import os
 import re
 import sys
 from copy import deepcopy
@@ -30,7 +31,10 @@ class Service(IntEnum):
 	'''
 
 	@classmethod
-	def from_argv(cls):
+	def detect(cls):
+		# argv sniffing misfires under test runners (e.g. `pytest -k cron`), so allow an explicit override
+		if forced := os.environ.get("RDRAMA_SERVICE"):
+			return cls[forced]
 		if "db" in sys.argv:
 			return cls.MIGRATION
 		if "cron" in sys.argv:

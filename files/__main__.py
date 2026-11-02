@@ -26,7 +26,7 @@ from files.helpers.strings import bool_from_string
 
 # first, let's parse arguments to find out what type of instance this is...
 
-service:Service = Service.from_argv()
+service:Service = Service.detect()
 
 # ...and then let's create our flask app...
 

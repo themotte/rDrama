@@ -42,6 +42,7 @@ def test_migrations_up_to_date():
 		env={
 			**os.environ,
 			'FLASK_APP': 'files/cli:app',
+			'RDRAMA_SERVICE': 'MIGRATION',
 		},
 		capture_output=True,
 		text=True,
