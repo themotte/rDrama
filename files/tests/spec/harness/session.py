@@ -11,7 +11,9 @@ Session cookie: named `session_<site id, lowercased>`; value is an itsdangerous 
 - `signup_token`: hex, issued by the signup form and consumed by signup.
 - `tooltip_last_dismissed`: epoch seconds.
 
-Form key: lowercase hex HMAC-MD5 of "<session_id>+<user id>+<users.login_nonce>", with key (MASTER_KEY) and message both encoded UTF-16LE with a leading byte-order mark (FF FE). Accepted from the form body, the query string, or a `formkey` member of a JSON body.
+Signature: lowercase hex HMAC-MD5 of a message, with key (MASTER_KEY) and message both encoded UTF-16LE with a leading byte-order mark (FF FE). Used for:
+- Form key: signs "<session_id>+<user id>+<users.login_nonce>". Accepted from the form body, the query string, or a `formkey` member of a JSON body.
+- Email verification links (/activate?email=&id=&time=&token=): signs "<email, lowercased>+<user id>+<time, epoch seconds>"; valid for an hour.
 '''
 import hashlib
 import hmac
@@ -58,7 +60,10 @@ def logged_in_payload(user_id: int, login_nonce: int) -> dict:
 	return {"_permanent": True, "session_id": secrets.token_hex(49), "lo_user": user_id, "login_nonce": login_nonce}
 
 
-def formkey(session_id: str, user_id: int, login_nonce: int) -> str:
-	msg = f"{session_id}+{user_id}+{login_nonce}"
+def sign(message: str) -> str:
 	bom = b"\xff\xfe"
-	return hmac.new(key=bom + config.master_key().encode("utf-16-le"), msg=bom + msg.encode("utf-16-le"), digestmod="md5").hexdigest()
+	return hmac.new(key=bom + config.master_key().encode("utf-16-le"), msg=bom + message.encode("utf-16-le"), digestmod="md5").hexdigest()
+
+
+def formkey(session_id: str, user_id: int, login_nonce: int) -> str:
+	return sign(f"{session_id}+{user_id}+{login_nonce}")

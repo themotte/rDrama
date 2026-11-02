@@ -12,9 +12,17 @@ from files.tests.spec.harness.http import Client
 
 PASSWORD = "correct horse battery staple"
 
-# Werkzeug's "method$salt$hash" format, as in production, at 1000 iterations to keep tests fast
 _SALT = "spectest"
-PASSHASH = f"pbkdf2:sha512:1000${_SALT}${hashlib.pbkdf2_hmac('sha512', PASSWORD.encode(), _SALT.encode(), 1000).hex()}"
+# Production hashes use far more; logins must accept any count, and few keep tests fast
+FAST_HASH_ITERATIONS = 1000
+
+
+def passhash_for(password: str, iterations: int) -> str:
+	'''A stored password hash in werkzeug's "pbkdf2:sha512:<iterations>$salt$hex" format, as production uses.'''
+	return f"pbkdf2:sha512:{iterations}${_SALT}${hashlib.pbkdf2_hmac('sha512', password.encode(), _SALT.encode(), iterations).hex()}"
+
+
+PASSHASH = passhash_for(PASSWORD, FAST_HASH_ITERATIONS)
 
 _counter = itertools.count(1)
 _signup_template: dict | None = None
@@ -66,3 +74,4 @@ def user(**overrides) -> dict:
 
 def admin(level: int, **overrides) -> dict:
 	return user(admin_level=level, **overrides)
+

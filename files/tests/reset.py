@@ -1,15 +1,18 @@
 '''
-Returns the app's external state (database, Redis, site settings) to the freshly-built baseline.
+Returns the app's external state (database, Redis, site settings, uploaded files) to the freshly-built baseline.
 
 Purely external: it truncates tables and restores the seed snapshot rather than wrapping the app in a transaction, so it works the same against any implementation running on this schema. The caller must first make the app release any open transactions. Sequences are deliberately not restarted: ids are never reused, so a stale session cookie can't silently resolve to a different user.
 '''
 import os
+import shutil
+from pathlib import Path
 
 import redis
 from sqlalchemy import create_engine, text
 from sqlalchemy.exc import OperationalError
 
 from files.tests import testenv
+from files.tests.spec.harness import config
 
 _engine = None
 _tables: list[str] | None = None
@@ -36,6 +39,9 @@ def reset():
 
 	redis.Redis.from_url(os.environ["REDIS_URL"]).flushdb()
 	testenv.restore_site_settings()
+	images = Path(config.images_dir())
+	shutil.rmtree(images)
+	images.mkdir()
 
 
 def _describe_sessions(conn):

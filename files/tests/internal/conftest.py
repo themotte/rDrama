@@ -1,8 +1,10 @@
 import pytest
 
-from files.tests.spec.harness import backend
+from files.tests.spec.harness import lifecycle
 
 
 @pytest.fixture(autouse=True)
 def isolated_state():
-	backend.reset()
+	lifecycle.begin()
+	yield
+	lifecycle.end()

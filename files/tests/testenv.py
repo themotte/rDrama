@@ -28,7 +28,10 @@ def configure():
 
 	os.environ["DATABASE_URL"] = test_url.render_as_string(hide_password=False)
 	os.environ["REDIS_URL"] = urlunsplit(urlsplit(os.environ["REDIS_URL"])._replace(path=f"/{TEST_REDIS_DB}"))
-	os.environ["SITE_SETTINGS_PATH"] = str(Path(tempfile.mkdtemp(prefix="rdrama-test-")) / "site_settings.json")
+	scratch = Path(tempfile.mkdtemp(prefix="rdrama-test-"))
+	os.environ["SITE_SETTINGS_PATH"] = str(scratch / "site_settings.json")
+	os.environ["IMAGES_DIR"] = str(scratch / "images")
+	(scratch / "images").mkdir()
 	os.environ["RDRAMA_SERVICE"] = "THEMOTTE"
 	os.environ["RDRAMA_TESTING"] = "1"
 	os.environ["DBG_LIMITER_DISABLED"] = "true"

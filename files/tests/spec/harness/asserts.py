@@ -1,8 +1,8 @@
 from urllib.parse import parse_qs, urlsplit
 
-from files.tests.spec.harness.http import Response
+from files.tests.spec.harness.http import Client, Response
 
-__all__ = ["assert_status", "assert_redirect", "assert_login_redirect", "assert_api_unauthorized", "assert_in_payload", "assert_not_in_payload"]
+__all__ = ["assert_status", "assert_redirect", "assert_login_redirect", "assert_api_unauthorized", "assert_json_message", "assert_html", "assert_serves_image", "assert_in_payload", "assert_not_in_payload"]
 
 
 def _describe(r: Response) -> str:
@@ -34,6 +34,36 @@ def assert_api_unauthorized(r: Response):
 	'''API and xhr clients get a JSON error instead of a login redirect.'''
 	assert_status(r, 401)
 	assert r.json["code"] == 401, r.json
+
+
+def assert_json_message(r: Response):
+	'''The standard success reply to a script action: 200 with a JSON object holding just a human-readable "message".'''
+	assert_status(r, 200)
+	assert r.header("Content-Type").startswith("application/json"), f"expected JSON, got {r.header('Content-Type')}"
+	assert set(r.json) == {"message"} and isinstance(r.json["message"], str), r.json
+
+
+def assert_html(r: Response, status: int):
+	'''A rendered page (as opposed to JSON or a redirect).'''
+	assert_status(r, status)
+	assert r.header("Content-Type").startswith("text/html"), f"expected an HTML page, got {r.header('Content-Type')}"
+
+
+_IMAGE_SIGNATURES = {
+	"image/webp": lambda b: b[:4] == b"RIFF" and b[8:12] == b"WEBP",
+	"image/png": lambda b: b[:8] == b"\x89PNG\r\n\x1a\n",
+	"image/gif": lambda b: b[:6] in (b"GIF87a", b"GIF89a"),
+	"image/jpeg": lambda b: b[:3] == b"\xff\xd8\xff",
+}
+
+
+def assert_serves_image(url: str):
+	'''`url` is publicly fetchable as an image whose bytes match its declared type.'''
+	r = Client().get(url)
+	assert_status(r, 200)
+	content_type = r.header("Content-Type").split(";")[0]
+	assert content_type in _IMAGE_SIGNATURES, f"{url} served {content_type}"
+	assert _IMAGE_SIGNATURES[content_type](r.body), f"{url} is declared {content_type} but its bytes start {r.body[:12]!r}"
 
 
 def assert_in_payload(r: Response, token: str):

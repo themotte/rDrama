@@ -91,23 +91,24 @@ class Client:
 	def get(self, path, params=None, headers=None) -> Response:
 		return self.request("GET", path, params=params, headers=headers)
 
-	def post(self, path, data=None, headers=None) -> Response:
-		return self.request("POST", path, data=self._with_formkey(data), headers=headers)
+	def post(self, path, data=None, headers=None, files=None) -> Response:
+		'''`files` maps field name to (filename, bytes, content type) and makes the request multipart.'''
+		return self.request("POST", path, data=self._with_formkey(data), headers=headers, files=files)
 
 	def post_json(self, path, payload, headers=None) -> Response:
 		return self.request("POST", path, json=self._with_formkey(payload), headers=headers)
 
-	def post_raw(self, path, data=None, headers=None) -> Response:
+	def post_raw(self, path, data=None, headers=None, files=None) -> Response:
 		'''POST without adding the form key, for testing the form-key check itself.'''
-		return self.request("POST", path, data=data, headers=headers)
+		return self.request("POST", path, data=data, headers=headers, files=files)
 
-	def request(self, method, path, *, params=None, data=None, json=None, headers=None) -> Response:
+	def request(self, method, path, *, params=None, data=None, json=None, headers=None, files=None) -> Response:
 		if params:
 			path = f"{path}{'&' if '?' in path else '?'}{urlencode(params, doseq=True)}"
 		all_headers = {"User-Agent": DEFAULT_USER_AGENT, "Host": config.site_host(), **(headers or {})}
 		if self.cookies:
 			all_headers["Cookie"] = "; ".join(f"{k}={v}" for k, v in self.cookies.items())
-		status, response_headers, body = backend.request(method, path, headers=all_headers, data=data, json=json)
+		status, response_headers, body = backend.request(method, path, headers=all_headers, data=data, json=json, files=files)
 		response = Response(status, response_headers, body)
 		self._absorb_cookies(response)
 		return response
