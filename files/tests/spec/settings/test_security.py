@@ -308,6 +308,14 @@ def test_log_out_all_others_invalidates_other_sessions_but_keeps_this_one():
 	assert_api_unauthorized(other.get("/me", headers=XHR))
 
 
+def test_log_out_all_others_takes_the_password_verbatim():
+	password = " spaced out password "
+	u = factories.user(passhash=factories.passhash_for(password, factories.FAST_HASH_ITERATIONS))
+
+	assert_html(as_user(u).post("/settings/log_out_all_others", {"password": password.strip()}), 401)
+	assert_html(as_user(u).post("/settings/log_out_all_others", {"password": password}), 200)
+
+
 def test_log_out_all_others_requires_the_password():
 	u = factories.user()
 

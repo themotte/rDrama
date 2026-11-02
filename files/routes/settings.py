@@ -396,7 +396,7 @@ def settings_security_post(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_log_out_others(v):
-	submitted_password = request.values.get("password", "").strip()
+	submitted_password = request.values.get("password", "")
 
 	if not v.verifyPass(submitted_password):
 		return render_template("settings_security.html", v=v, error="Incorrect Password"), 401
