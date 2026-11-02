@@ -23,7 +23,7 @@ from files.helpers.assetcache import assetcache_path
 from files.helpers.background import spawn_background
 from files.helpers.config.const import *
 from files.helpers.contentsorting import (apply_time_filter, sort_objects)
-from files.helpers.media import process_image
+from files.helpers.media import new_image_path, process_image
 from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
 from files.mail import *
@@ -515,7 +515,7 @@ def messagereply(v):
 	if parent.sentto == MODMAIL_ID and request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if file.content_type.startswith('image/'):
-			name = f'/images/{time.time()}'.replace('.','') + '.webp'
+			name = new_image_path()
 			file.save(name)
 			url = process_image(name)
 			body_html += f'<img data-bs-target="#expandImageModal" data-bs-toggle="modal" onclick="expandDesktopImage(this.src)" class="img" src="{url}" loading="lazy">'

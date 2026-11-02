@@ -1,5 +1,4 @@
 import shutil
-import time
 import urllib.parse
 from dataclasses import dataclass
 from typing import Optional
@@ -14,7 +13,7 @@ from files.helpers.config.const import (SUBMISSION_BODY_LENGTH_MAXIMUM,
                                  SUBMISSION_TITLE_LENGTH_MAXIMUM,
                                  SUBMISSION_URL_LENGTH_MAXIMUM)
 from files.helpers.content import canonicalize_url2
-from files.helpers.media import process_image
+from files.helpers.media import new_image_path, process_image
 
 
 def guarded_value(val:str, min_len:int, max_len:int) -> str:
@@ -125,7 +124,7 @@ class ValidatedSubmissionLike:
 			elif not file.content_type.startswith('image/'):
 				abort(415, "Image files only")
 
-			name = f'/images/{time.time()}'.replace('.','') + '.webp'
+			name = new_image_path()
 			file.save(name)
 			url:Optional[str] = process_image(name)
 			if not url: return False, None, None
@@ -149,7 +148,7 @@ class ValidatedSubmissionLike:
 				if not file.content_type.startswith('image/'):
 					abort(415, "Image files only")
 				
-				name = f'/images/{time.time()}'.replace('.','') + '.webp'
+				name = new_image_path()
 				file.save(name)
 				image = process_image(name)
 				if allow_embedding:

@@ -1,11 +1,10 @@
-import os
 from shutil import copyfile
 
 from files.__main__ import app, limiter
 from files.helpers.alerts import *
 from files.helpers.caching import invalidate_cache
 from files.helpers.config.const import *
-from files.helpers.media import process_image
+from files.helpers.media import delete_uploaded_image, new_image_path, process_image
 from files.helpers.sanitize import *
 from files.helpers.sanitize import filter_emojis_only
 from files.mail import *
@@ -140,7 +139,7 @@ def settings_profile_post(v):
 		if request.files.get('file'):
 			file = request.files['file']
 			if file.content_type.startswith('image/'):
-				name = f'/images/{time.time()}'.replace('.','') + '.webp'
+				name = new_image_path()
 				file.save(name)
 				url = process_image(name)
 				bio += f"\n\n![]({url})"
@@ -411,7 +410,7 @@ def settings_images_profile(v):
 
 	file = request.files["profile"]
 
-	name = f'/images/{time.time()}'.replace('.','') + '.webp'
+	name = new_image_path()
 	file.save(name)
 	highres = process_image(name)
 
@@ -419,12 +418,8 @@ def settings_images_profile(v):
 	copyfile(name, name2)
 	imageurl = process_image(name2, resize=100)
 
-	if v.highres and '/images/' in v.highres:
-		fpath = '/images/' + v.highres.split('/images/')[1]
-		if path.isfile(fpath): os.remove(fpath)
-	if v.profileurl and '/images/' in v.profileurl:
-		fpath = '/images/' + v.profileurl.split('/images/')[1]
-		if path.isfile(fpath): os.remove(fpath)
+	delete_uploaded_image(v.highres)
+	delete_uploaded_image(v.profileurl)
 	v.highres = highres
 	v.profileurl = imageurl
 	g.db.add(v)
@@ -442,13 +437,11 @@ def settings_images_banner(v):
 
 	file = request.files["banner"]
 
-	name = f'/images/{time.time()}'.replace('.','') + '.webp'
+	name = new_image_path()
 	file.save(name)
 	bannerurl = process_image(name)
 
-	if v.bannerurl and '/images/' in v.bannerurl:
-		fpath = '/images/' + v.bannerurl.split('/images/')[1]
-		if path.isfile(fpath): os.remove(fpath)
+	delete_uploaded_image(v.bannerurl)
 	v.bannerurl = bannerurl
 	g.db.add(v)
 	g.db.commit()

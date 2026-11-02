@@ -22,7 +22,7 @@ from files.helpers.caching import invalidate_cache
 from files.helpers.config.const import *
 from files.helpers.content import canonicalize_url2
 from files.helpers.contentsorting import sort_objects
-from files.helpers.media import process_image
+from files.helpers.media import new_image_path, process_image
 from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import *
@@ -389,7 +389,7 @@ def thumbnail_thread(pid):
 		db.close()
 		return
 
-	name = f'/images/{time.time()}'.replace('.','') + '.webp'
+	name = new_image_path()
 
 	with open(name, "wb") as file:
 		for chunk in image_req.iter_content(1024):

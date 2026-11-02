@@ -12,8 +12,8 @@ from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.captcha import validate_captcha
 from files.helpers.config.const import *
-from files.helpers.config.environment import HCAPTCHA_SECRET, HCAPTCHA_SITEKEY
-from files.helpers.media import process_image
+from files.helpers.config.environment import HCAPTCHA_SECRET, HCAPTCHA_SITEKEY, IMAGES_DIR
+from files.helpers.media import new_image_path, process_image
 from files.mail import *
 from files.__main__ import app, cache, limiter # violates isort but used to prevent getting shadowed
 
@@ -311,7 +311,7 @@ def submit_contact(v: Optional[User]):
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if file.content_type.startswith('image/'):
-			name = f'/images/{time.time()}'.replace('.','') + '.webp'
+			name = new_image_path()
 			file.save(name)
 			url = process_image(name)
 			html += f'<img data-bs-target="#expandImageModal" data-bs-toggle="modal" onclick="expandDesktopImage(this.src)" class="img" src="{url}" loading="lazy">'
@@ -374,7 +374,7 @@ def static_service(path):
 @app.get("/static/images/<path>")
 @limiter.exempt
 def images(path):
-	resp = make_response(send_from_directory('/images', path.replace('.WEBP','.webp')))
+	resp = make_response(send_from_directory(IMAGES_DIR, path.replace('.WEBP','.webp')))
 	resp.headers.remove("Cache-Control")
 	resp.headers.add("Cache-Control", "public, max-age=3153600")
 	if request.path.endswith('.webp'):

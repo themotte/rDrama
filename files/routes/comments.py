@@ -8,7 +8,7 @@ from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.comments import comment_on_publish
 from files.helpers.config.const import *
-from files.helpers.media import process_image
+from files.helpers.media import new_image_path, process_image
 from files.helpers.wrappers import *
 from files.routes.importstar import *
 
@@ -138,7 +138,7 @@ def api_comment(v):
 		files = request.files.getlist('file')[:4]
 		for file in files:
 			if file.content_type.startswith('image/'):
-				oldname = f'/images/{time.time()}'.replace('.','') + '.webp'
+				oldname = new_image_path()
 				file.save(oldname)
 				image = process_image(oldname)
 				if image == "":
@@ -324,7 +324,7 @@ def edit_comment(cid, v):
 			files = request.files.getlist('file')[:4]
 			for file in files:
 				if file.content_type.startswith('image/'):
-					name = f'/images/{time.time()}'.replace('.','') + '.webp'
+					name = new_image_path()
 					file.save(name)
 					url = process_image(name)
 					body += f"\n\n![]({url})"
