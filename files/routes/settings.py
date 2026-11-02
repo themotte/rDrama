@@ -10,16 +10,6 @@ from files.helpers.sanitize import *
 from files.helpers.sanitize import filter_emojis_only
 from files.mail import *
 
-tiers={
-	"(Paypig)": 1,
-	"(Renthog)": 2,
-	"(Landchad)": 3,
-	"(Terminally online turboautist)": 4,
-	"(Marsey's Sugar Daddy)": 5,
-	"(JIDF Bankroller)": 6,
-	"(Rich Bich)": 7,
-	"(LlamaBean)": 1,
-	}
 
 @app.post("/settings/profile")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -164,8 +154,6 @@ def settings_profile_post(v):
 			return render_template("settings_profile.html",
 								   v=v,
 								   error="Your bio is too long")
-
-		if len(bio_html) > 10000: abort(400)
 
 		v.bio = bio[:1500]
 		v.bio_html=bio_html
@@ -427,13 +415,9 @@ def settings_images_profile(v):
 	file.save(name)
 	highres = process_image(name)
 
-	if not highres: abort(400)
-
 	name2 = name.replace('.webp', 'r.webp')
 	copyfile(name, name2)
 	imageurl = process_image(name2, resize=100)
-
-	if not imageurl: abort(400)
 
 	if v.highres and '/images/' in v.highres:
 		fpath = '/images/' + v.highres.split('/images/')[1]
@@ -462,13 +446,12 @@ def settings_images_banner(v):
 	file.save(name)
 	bannerurl = process_image(name)
 
-	if bannerurl:
-		if v.bannerurl and '/images/' in v.bannerurl:
-			fpath = '/images/' + v.bannerurl.split('/images/')[1]
-			if path.isfile(fpath): os.remove(fpath)
-		v.bannerurl = bannerurl
-		g.db.add(v)
-		g.db.commit()
+	if v.bannerurl and '/images/' in v.bannerurl:
+		fpath = '/images/' + v.bannerurl.split('/images/')[1]
+		if path.isfile(fpath): os.remove(fpath)
+	v.bannerurl = bannerurl
+	g.db.add(v)
+	g.db.commit()
 
 	return render_template("settings_profile.html", v=v, msg="Banner successfully updated.")
 
@@ -597,7 +580,6 @@ def settings_name_change(v):
 	v=g.db.query(User).filter_by(id=v.id).one_or_none()
 
 	v.username=new_name
-	v.name_changed_utc=int(time.time())
 	g.db.add(v)
 	g.db.commit()
 
@@ -617,9 +599,8 @@ def settings_title_change(v):
 
 	v.customtitle = filter_emojis_only(new_name)
 
-	if len(v.customtitle) < 1000:
-		g.db.add(v)
-		g.db.commit()
+	g.db.add(v)
+	g.db.commit()
 
 	return redirect("/settings/profile")
 
