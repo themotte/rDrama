@@ -62,7 +62,12 @@ norecursedirs = [
 
 [tool.coverage.run]
 source = ["files"]
+branch = true
 omit = [
+    # Not loaded in the tested configuration (AWARDS feature off, THEMOTTE service, non-debug); deliberately outside the spec
+    "files/routes/awards.py",
+    "files/routes/chat.py",
+    "files/routes/dev.py",
     "*/tests/*",
     "*/test_*.py",
     "*/__pycache__/*",

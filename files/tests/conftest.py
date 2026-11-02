@@ -1,7 +1,21 @@
+from files.tests import testenv
+
+testenv.configure()
+
 import pytest
-import os
 import traceback
 import warnings
+
+NEW_TIER_DIRS = ("spec", "internal")
+
+
+def _is_new_tier(item):
+	return any(part in NEW_TIER_DIRS for part in item.path.relative_to(testenv.REPO_ROOT / "files" / "tests").parts[:-1])
+
+
+def pytest_collection_modifyitems(items):
+	# The legacy tests depend on state accumulated across the run (cached users), which the new tiers' per-test reset wipes; run the legacy ones first.
+	items.sort(key=_is_new_tier)
 
 
 class LazyLoadWarning(UserWarning):
@@ -14,36 +28,27 @@ class LazyLoadWarning(UserWarning):
 	pass
 
 
-@pytest.fixture(scope="session", autouse=True)
-def setup_test_environment():
-	"""Set up test environment before any tests run"""
-	# Mark that we're in test mode so password hashing can be faster
-	os.environ['RDRAMA_TESTING'] = '1'
-	yield
-	# Clean up after all tests
-	os.environ.pop('RDRAMA_TESTING', None)
+_legacy_admin_ensured = False
 
 
-@pytest.fixture(scope="session", autouse=True)
-def ensure_admin_account(setup_test_environment):
-	"""Ensure an admin account exists before any tests run"""
-	from files.__main__ import db_session, app
+@pytest.fixture(autouse=True)
+def ensure_admin_account(request):
+	"""Ensure an admin account exists before the first legacy test runs"""
+	global _legacy_admin_ensured
+	if _legacy_admin_ensured or _is_new_tier(request.node):
+		return
+	_legacy_admin_ensured = True
+
+	from files.__main__ import db_session
 	from files.classes import User
 	from files.tests import util_accounts
 
-	# Check if any admin account already exists
-	admin = db_session.query(User).filter(User.admin_level >= 3).first()
-
-	# Create admin account if none exists
-	if not admin:
-		# Use the standard account creation function
-		client, user = util_accounts.create_test_client_and_admin(3, name="admin")
-
-	yield
+	if not db_session.query(User).filter(User.admin_level >= 3).first():
+		util_accounts.create_test_client_and_admin(3, name="admin")
 
 
 @pytest.fixture(scope="session", autouse=True)
-def warn_on_lazy_loads(setup_test_environment):
+def warn_on_lazy_loads():
 	"""Detect SQLAlchemy lazy loads and emit warnings.
 
 	When an ORM attribute is accessed that wasn't eagerly loaded, SQLAlchemy
@@ -101,34 +106,16 @@ def warn_on_lazy_loads(setup_test_environment):
 
 
 @pytest.fixture(autouse=True)
-def rollback_dirty_session():
-	"""Roll back the shared db_session after each test if it's dirty.
+def rollback_dirty_session(request):
+	"""Roll back the shared db_session after each legacy test if it's dirty.
 
 	Tests that manipulate db_session directly (outside of Flask request
 	context) can leave it in a "needs rollback" state on failure, which
 	cascades PendingRollbackError into every subsequent test.
 	"""
 	yield
+	if _is_new_tier(request.node):
+		return
 	from files.__main__ import db_session
 	if db_session.registry.has():
 		db_session.rollback()
-
-
-@pytest.fixture(autouse=True)
-def disable_rate_limiting():
-	"""Automatically disable rate limiting for all tests"""
-	from files.__main__ import app, limiter
-
-	# Store original state
-	original_config = app.config.get('RATE_LIMITER_ENABLED')
-	original_enabled = limiter.enabled
-
-	# Disable rate limiting
-	app.config['RATE_LIMITER_ENABLED'] = False
-	limiter.enabled = False
-
-	yield
-
-	# Restore original state after test
-	app.config['RATE_LIMITER_ENABLED'] = original_config
-	limiter.enabled = original_enabled
