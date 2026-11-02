@@ -88,18 +88,19 @@ The suite builds its own database (`rdrama_test`, or `$RDRAMA_TEST_DB`) from `bo
 
 The suite is being turned into a behavioral specification for a clean-room reimplementation, so tests are split by what they may know:
 
-- **`files/tests/spec/`: the specification.** Tests drive the app only through `files.tests.spec.harness` (HTTP client, reflected-schema DB access, factories, asserts) and must not import anything else from `files`; `internal/test_spec_hygiene.py` enforces this and bans hardcoded row ids in URLs. Only `harness/backend.py` touches application code. Every test starts from a reset state (`backend.reset()`: the app releases its session, then `files/tests/reset.py` truncates and restores the seed rows, flushes Redis and restores settings; ids are never reused).
+- **`files/tests/spec/`: the specification**, one subpackage per behavior area (e.g. `spec/settings/`), files split by URL/behavior family. Tests drive the app only through `files.tests.spec.harness` (HTTP client, reflected-schema DB access, factories, asserts) and must not import anything else from `files`; `internal/test_spec_hygiene.py` enforces this and bans hardcoded row ids in URLs. Only `harness/backend.py` touches application code. Every test starts from a reset state (`backend.reset()`: the app releases its session, then `files/tests/reset.py` truncates and restores the seed rows, flushes Redis and restores settings; ids are never reused).
 - **`files/tests/internal/`: white-box tests** of things not worth reaching through HTTP. Same per-test reset. Not part of the spec.
 - **`files/tests/test_*.py`: the legacy suite.** Shares accumulated state across tests (cached users), so it runs before the new tiers, and only the new tiers are order-independent. Being retired area by area as spec coverage replaces it; don't add to it.
 
 ### Writing spec tests
 
 - Arrange with `factories` (direct row inserts; a factory user is a copy of a real signed-up account), act through `anon()` / `as_user(user)` clients, assert on the response and the database. `as_user` forges a session cookie and the client adds the form key to every POST automatically; `post_raw` skips it. Change runtime site settings with `site_settings_set`.
-- Assert exactly one status per test (`assert_status`, `assert_redirect`, `assert_login_redirect`, `assert_api_unauthorized`). Never accept a set of statuses.
+- Assert exactly one status per test (`assert_status`, `assert_html`, `assert_json_message`, `assert_redirect`, `assert_login_redirect`, `assert_api_unauthorized`). Never accept a set of statuses. Send `headers=XHR` to get JSON errors instead of pages, `TOR` to simulate Tor.
 - For anything that writes, wrap the action in `with db_diff() as d:` and call `d.assert_exactly(...)`: it fails on any change you didn't describe, including in tables you didn't think about.
 - Assert content with `factories.unique()` sentinel tokens and `assert_in_payload` / `assert_not_in_payload`, not with markup, CSS classes or user-facing copy. JSON API shapes and request parameter names are contract and may be pinned exactly.
 - Comments and docstrings describe behavior, never how the current implementation achieves it.
-- Outbound HTTP and SMTP are blocked; a test fails if the app attempted either. Background work is deferred in test mode; run it with `run_background_work()`.
+- Outbound HTTP is blocked; a test fails if the app attempted any. Mail is captured instead of sent; read it with `sent_mail()`. Background work is deferred in test mode; run it with `run_background_work()`.
+- Never call a factory inside a `db_diff` block: its inserts would count as the request's writes.
 
 ## Development Environment
 
