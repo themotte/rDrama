@@ -150,6 +150,15 @@ def test_following_the_email_change_link_sets_and_verifies_the_address():
 	)
 
 
+@pytest.mark.parametrize("email", ["   ", "not-an-email", "a@b"])
+def test_email_change_to_an_invalid_address_is_refused(email):
+	u = factories.user()
+
+	assert_html(_security(u, {"password": factories.PASSWORD, "new_email": email}), 200)
+
+	assert sent_mail() == []
+
+
 def test_email_change_requires_the_password():
 	u = factories.user()
 

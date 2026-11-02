@@ -331,6 +331,9 @@ def settings_security_post(v):
 
 		new_email = request.values.get("new_email","").strip().lower()
 
+		if not email_regex.fullmatch(new_email):
+			return render_template("settings_security.html", v=v, error="Invalid email.")
+
 		if new_email == v.email:
 			return render_template("settings_security.html", v=v, error="That email is already yours!")
 
