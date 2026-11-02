@@ -110,6 +110,17 @@ def test_banner_replacement_deletes_the_previous_upload():
 	assert_status(anon().get(old), 404)
 
 
+def test_gif_uploads_are_converted_keeping_their_animation():
+	u = factories.user()
+
+	assert_html(as_user(u).post("/settings/images/banner", files={"banner": uploads.gif(4, 4)}), 200)
+
+	url = db.row("users", id=u["id"])["bannerurl"]
+	assert_serves_image(url)
+	served = Image.open(BytesIO(anon().get(url).body))
+	assert served.format == "WEBP" and served.n_frames == 2
+
+
 def test_uploaded_photos_lose_identifying_metadata():
 	u = factories.user()
 	photo = Image.new("RGB", (4, 4), "red")

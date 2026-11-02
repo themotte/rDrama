@@ -2,9 +2,9 @@ import os
 import secrets
 import subprocess
 import time
+from io import BytesIO
 
 from PIL import Image, ImageOps
-from webptools import gifwebp
 from werkzeug.exceptions import BadRequest
 
 from files.helpers.config.environment import IMAGES_DIR
@@ -49,7 +49,9 @@ def process_image(filename, resize=0) -> str:
 
 
 def _convert_image(filename, resize):
-	i = Image.open(filename)
+	# Decode from memory: frames are read lazily, and the result overwrites the source file
+	with open(filename, "rb") as f:
+		i = Image.open(BytesIO(f.read()))
 
 	if resize and i.width > resize:
 		try: subprocess.call(["convert", filename, "-coalesce", "-resize", f"{resize}>", filename])
@@ -64,7 +66,7 @@ def _convert_image(filename, resize):
 		i.info["exif"] = exif.tobytes()
 
 		if i.format.lower() == "gif":
-			gifwebp(input_image=filename, output_image=filename, option="-mixed -metadata none -f 100 -mt -m 6")
+			i.save(filename, format="WEBP", save_all=True, allow_mixed=True, quality=100, method=6)
 		else:
 			i = ImageOps.exif_transpose(i)
 			i.save(filename, format="WEBP", method=6)
