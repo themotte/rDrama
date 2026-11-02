@@ -87,6 +87,17 @@ def test_bio_upload_of_a_non_image_type_is_refused_as_json_for_scripts():
 	assert r.json["code"] == 400
 
 
+@pytest.mark.parametrize("upload", [uploads.not_an_image(), uploads.truncated_png(), uploads.oversized_png()], ids=["garbage", "truncated", "oversized"])
+def test_bio_upload_of_an_unreadable_image_is_refused(upload):
+	u = factories.user()
+
+	with db_diff() as d:
+		r = _post(u, {"bio": factories.unique()}, files={"file": upload}, headers=XHR)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
 def test_bio_image_alone_through_tor_changes_nothing():
 	u = factories.user()
 

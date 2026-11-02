@@ -5,10 +5,16 @@ import time
 
 from PIL import Image, ImageOps
 from webptools import gifwebp
+from werkzeug.exceptions import BadRequest
 
 from files.helpers.config.environment import IMAGES_DIR
 
 IMAGES_URL_PREFIX = "/images/"
+
+
+class UnreadableImage(BadRequest):
+	'''An upload that isn't an image we can process. A 400 when raised during a request.'''
+	description = "That file isn't an image we can read."
 
 
 def new_image_path() -> str:
@@ -31,6 +37,18 @@ def delete_uploaded_image(url: str | None):
 
 def process_image(filename, resize=0) -> str:
 	'''Converts the image stored at `filename` (in the upload store) to WebP in place, optionally shrinking it to `resize` pixels wide, and returns its URL.'''
+	try:
+		_convert_image(filename, resize)
+	except (OSError, Image.DecompressionBombError) as e:
+		# PIL reports unreadable, truncated and corrupt images as OSErrors without an errno; real I/O failures have one and stay errors
+		if isinstance(e, OSError) and e.errno is not None:
+			raise
+		os.remove(filename)
+		raise UnreadableImage() from e
+	return image_url(filename)
+
+
+def _convert_image(filename, resize):
 	i = Image.open(filename)
 
 	if resize and i.width > resize:
@@ -50,5 +68,3 @@ def process_image(filename, resize=0) -> str:
 		else:
 			i = ImageOps.exif_transpose(i)
 			i.save(filename, format="WEBP", method=6)
-
-	return image_url(filename)

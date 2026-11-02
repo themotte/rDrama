@@ -66,6 +66,18 @@ def test_avatar_upload_without_a_file_is_rejected():
 
 
 @pytest.mark.parametrize("path, field", [("/settings/images/profile", "profile"), ("/settings/images/banner", "banner")])
+@pytest.mark.parametrize("upload", [uploads.not_an_image(), uploads.truncated_png(), uploads.oversized_png()], ids=["garbage", "truncated", "oversized"])
+def test_unreadable_images_are_rejected(path, field, upload):
+	u = factories.user()
+
+	with db_diff() as d:
+		r = as_user(u).post(path, files={field: upload}, headers=XHR)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("path, field", [("/settings/images/profile", "profile"), ("/settings/images/banner", "banner")])
 def test_uploads_through_tor_are_refused(path, field):
 	u = factories.user()
 
