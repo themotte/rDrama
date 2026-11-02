@@ -15,6 +15,8 @@ from files.mail import *
 @auth_required
 def settings_profile_post(v):
 	updated = False
+	# Image uploads are refused through Tor
+	upload = request.files.get('file') if request.headers.get("cf-ipcountry") != "T1" else None
 
 	if request.values.get("reddit", v.reddit) != v.reddit:
 		reddit = request.values.get("reddit")
@@ -133,14 +135,13 @@ def settings_profile_post(v):
 							   msg="Your enemies list has been updated.")
 
 
-	elif request.values.get("bio") or request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
+	elif request.values.get("bio") or upload:
 		bio = request.values.get("bio")[:1500]
 
-		if request.files.get('file'):
-			file = request.files['file']
-			if file.content_type.startswith('image/'):
+		if upload:
+			if upload.content_type.startswith('image/'):
 				name = new_image_path()
-				file.save(name)
+				upload.save(name)
 				url = process_image(name)
 				bio += f"\n\n![]({url})"
 			else:
