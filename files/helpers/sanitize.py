@@ -379,4 +379,5 @@ def validate_css(css:str) -> tuple[bool, str]:
 	if '</style' in css.lower(): return False, "Invalid CSS"
 	if '@import' in css.lower(): return False, "@import statements are not allowed"
 	if css_url_regex.search(css): return False, "External URL imports are not allowed"
+	if 'image-set(' in css.lower(): return False, "External URL imports are not allowed"
 	return True, ""

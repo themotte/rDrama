@@ -37,6 +37,8 @@ def test_css_is_truncated_to_4000_characters(path, field):
 	"@import 'x.css';",
 	"body { background: url(https://example.com/x.png) }",
 	"a { b: URL( 'x' ) }",
+	"body { background: image-set('https://example.com/x.png' 1x) }",
+	"body { background: -webkit-image-set('https://example.com/x.png' 1x) }",
 ])
 def test_dangerous_css_is_refused(path, field, css):
 	u = factories.user()
