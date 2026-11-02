@@ -1,7 +1,7 @@
 '''
 POST /settings/profile, free-text fields: bio, friends list, enemies list.
 
-These come after the preference toggles in the single-choice order: clearing (an empty bio, then empty friends, enemies), then friends, enemies, bio. Each renders the profile settings page, and ignores any preference "multi" fields in the same request.
+These come after the preference toggles in the single-choice order: clearing (an empty bio without an image upload, then empty friends, enemies), then friends, enemies, bio. Each renders the profile settings page, and ignores any preference "multi" fields in the same request.
 '''
 import pytest
 
@@ -68,6 +68,27 @@ def test_bio_image_is_appended_as_markdown_image():
 	bio = db.row("users", id=u["id"])["bio"]
 	assert bio.startswith(f"{token}\n\n![](") and bio.endswith(")")
 	assert_serves_image(bio[len(f"{token}\n\n![]("):-1])
+
+
+def test_bio_image_survives_a_full_length_bio():
+	u = factories.user()
+
+	assert_html(_post(u, {"bio": "a" * 1600}, files={"file": uploads.png(2, 2)}), 200)
+
+	bio = db.row("users", id=u["id"])["bio"]
+	text, image = bio.split("\n\n![](")
+	assert len(bio) == 1500 and set(text) == {"a"}
+	assert_serves_image(image[:-1])
+
+
+@pytest.mark.parametrize("data", [{}, {"bio": ""}], ids=["no bio field", "empty bio"])
+def test_bio_image_alone_becomes_the_bio(data):
+	u = factories.user(bio="old", bio_html="<p>old</p>")
+
+	r = _post(u, data, files={"file": uploads.png(2, 2)})
+
+	assert_html(r, 200)
+	assert db.row("users", id=u["id"])["bio"].startswith("\n\n![](/")
 
 
 def test_bio_upload_of_a_non_image_type_is_refused():

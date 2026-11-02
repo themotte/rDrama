@@ -60,7 +60,7 @@ def settings_profile_post(v):
 		updated = True
 		v.is_nofollow = request.values.get("nofollow") == 'true'
 
-	elif request.values.get("bio") == "":
+	elif request.values.get("bio") == "" and not upload:
 		v.bio = None
 		v.bio_html = None
 		g.db.add(v)
@@ -136,14 +136,15 @@ def settings_profile_post(v):
 
 
 	elif request.values.get("bio") or upload:
-		bio = request.values.get("bio")[:1500]
+		bio = (request.values.get("bio") or "")[:1500]
 
 		if upload:
 			if upload.content_type.startswith('image/'):
 				name = new_image_path()
 				upload.save(name)
-				url = process_image(name)
-				bio += f"\n\n![]({url})"
+				image = f"\n\n![]({process_image(name)})"
+				# The text yields room so the image always fits the column
+				bio = bio[:1500 - len(image)] + image
 			else:
 				if request.headers.get("Authorization") or request.headers.get("xhr"): abort(400, "Image files only")
 				return render_template("settings_profile.html", v=v, error="Image files only"), 400
@@ -155,7 +156,7 @@ def settings_profile_post(v):
 								   v=v,
 								   error="Your bio is too long")
 
-		v.bio = bio[:1500]
+		v.bio = bio
 		v.bio_html=bio_html
 		g.db.add(v)
 		g.db.commit()
