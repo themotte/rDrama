@@ -11,7 +11,7 @@ from files.helpers.alerts import *
 from files.helpers.caching import invalidate_cache
 from files.helpers.comments import comment_on_publish, comment_on_unpublish
 from files.helpers.config.const import *
-from files.helpers.config.environment import CF_HEADERS, CF_ZONE
+from files.helpers.config.environment import CF_HEADERS, CF_ZONE, SITE_SETTINGS_PATH
 from files.helpers.get import *
 from files.helpers.media import *
 from files.helpers.sanitize import *
@@ -361,7 +361,7 @@ def change_settings(v, setting):
 		site_settings[setting] = not site_settings[setting]
 		if site_settings[setting]: word = 'enabled'
 		else: word = 'disabled'
-	with open("site_settings.json", "w") as f:
+	with open(SITE_SETTINGS_PATH, "w") as f:
 		json.dump(site_settings, f)
 
 	body = f"@{v.username} has {word} `{setting}` in the [admin dashboard](/admin)!"

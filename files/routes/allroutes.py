@@ -10,13 +10,14 @@ from flask import abort, g, request, session
 
 from files.__main__ import app, db_session, limiter, is_known_bot, active_requests
 from files.helpers.config.const import LOGGED_IN_COOKIE
+from files.helpers.config.environment import SITE_SETTINGS_PATH
 
 if TYPE_CHECKING:
 	from flask.wrappers import Response
 
 @app.before_request
 def before_request():
-	with open('site_settings.json', 'r') as f:
+	with open(SITE_SETTINGS_PATH, 'r') as f:
 		app.config['SETTINGS'] = json.load(f)
 
 	if request.host != app.config["SERVER_NAME"]:

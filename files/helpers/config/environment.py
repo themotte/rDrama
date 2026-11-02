@@ -54,6 +54,7 @@ COMMENT_SPAM_COUNT_THRESHOLD = int(environ.get("COMMENT_SPAM_COUNT_THRESHOLD", 1
 
 
 CACHE_REDIS_URL = environ.get("REDIS_URL", "redis://localhost")
+SITE_SETTINGS_PATH = environ.get("SITE_SETTINGS_PATH", "site_settings.json")
 MAIL_SERVER = environ.get("MAIL_SERVER", "").strip()
 MAIL_PORT = 587
 MAIL_USE_TLS = True
