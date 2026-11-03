@@ -64,6 +64,18 @@ def test_view_more_by_other_sorts_includes_newer_comments():
 	assert_in_payload(_viewmore(anon(), post, [shown["id"]], sort="old"), newer["body"])
 
 
+def test_view_more_with_an_unknown_sort_uses_the_viewers_default():
+	post = factories.post(factories.user())
+	shown = factories.comment(factories.user(), post, created_utc=3000)
+	older = factories.comment(factories.user(), post, created_utc=1000)
+	newer = factories.comment(factories.user(), post, created_utc=2000)
+	u = factories.user(defaultsortingcomments="old")
+
+	r = _viewmore(as_user(u), post, [shown["id"]], sort="bogus")
+
+	assert r.text.index(older["body"]) < r.text.index(newer["body"])
+
+
 def test_view_more_leaves_out_pinned_comments():
 	'''Pinned comments are always on the first page.'''
 	post = factories.post(factories.user())

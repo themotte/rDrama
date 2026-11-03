@@ -198,6 +198,30 @@ def test_sort_parameter_orders_comments(sort, first):
 	assert order[0] == (older if first == "older" else newer)["id"]
 
 
+@pytest.mark.parametrize("sort", ["hot", "bogus"])
+def test_unknown_comment_sorts_fall_back_to_the_default(sort):
+	post = factories.post(factories.user())
+	older = factories.comment(factories.user(), post, created_utc=1000, upvotes=1)
+	newer = factories.comment(factories.user(), post, created_utc=2000, upvotes=5)
+	u = factories.user(defaultsortingcomments="old")
+
+	assert _order(_page(as_user(u), post, params={"sort": sort}), [older, newer]) == [older["id"], newer["id"]]
+
+
+def test_the_sort_parameter_is_not_echoed_into_the_page():
+	marker = factories.unique("injected")
+	post = factories.post(factories.user())
+	big = factories.comment(factories.user(), post)
+	for _ in range(200):
+		factories.comment(factories.user(), post, parent=big)
+	factories.comment(factories.user(), post)
+
+	r = _page(anon(), post, params={"sort": f"');{marker}//"})
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, marker)
+
+
 def test_users_get_their_preferred_comment_sort_by_default():
 	post, older, newer = _older_and_newer_comments()
 	u = factories.user(defaultsortingcomments="old")

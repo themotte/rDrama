@@ -56,6 +56,11 @@ def publish(pid, v):
 def submit_get(v):
 	return render_template("submit.html", v=v)
 
+def _comment_sort(requested:Optional[str], v:Optional[User]) -> str:
+	if requested in SORTS_COMMENTS: return requested
+	return v.defaultsortingcomments if v else "new"
+
+
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
 @auth_desired
@@ -66,9 +71,7 @@ def post_id(pid, anything=None, v=None):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, "Must be 18+ to view")
 		return render_template("errors/nsfw.html", v=v)
 
-	if v: defaultsortingcomments = v.defaultsortingcomments
-	else: defaultsortingcomments = "new"
-	sort = request.values.get("sort", defaultsortingcomments)
+	sort = _comment_sort(request.values.get("sort"), v)
 
 	limit = app.config['RESULTS_PER_PAGE_COMMENTS']
 	offset = 0
@@ -116,6 +119,7 @@ def post_id(pid, anything=None, v=None):
 @auth_desired
 def viewmore(v, pid, sort, offset):
 	post = get_post(pid, v=v)
+	sort = _comment_sort(sort, v)
 	offset_prev = int(offset)
 	try: ids = set(int(x) for x in request.values.get("ids").split(','))
 	except: abort(400)
