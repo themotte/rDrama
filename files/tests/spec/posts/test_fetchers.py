@@ -211,11 +211,14 @@ def test_page_images_are_used_when_there_is_no_preview_image():
 @pytest.mark.parametrize("src, fetched", [
 	("//cdn.example.com/pic.png", "https://cdn.example.com/pic.png"),
 	("/pic.png", "https://example.com/pic.png"),
-], ids=["scheme-relative", "site-relative"])
-def test_relative_image_addresses_resolve_against_the_page(src, fetched):
-	external_web.serve("https://example.com/article", **_html(body=f'<img src="{src}">'))
+	("pic.png", "https://example.com/dir/pic.png"),
+	("../pic.png", "https://example.com/pic.png"),
+	("http://cdn.example.com/pic.png", "http://cdn.example.com/pic.png"),
+], ids=["scheme-relative", "site-relative", "page-relative", "parent-relative", "absolute http"])
+def test_image_addresses_resolve_against_the_page(src, fetched):
+	external_web.serve("https://example.com/dir/article", **_html(body=f'<img src="{src}">'))
 	external_web.serve(fetched, **_image())
-	post = _link_post("https://example.com/article")
+	post = _link_post("https://example.com/dir/article")
 
 	run_background_work()
 
@@ -238,6 +241,16 @@ def test_unsuitable_candidates_are_skipped(bad):
 
 	assert _thumbnail_of(post) is not None
 	assert [url for _, url in external_web.requests()][-1] == "https://cdn.example.com/good.png"
+
+
+def test_image_addresses_that_are_not_web_addresses_are_skipped():
+	external_web.serve("https://example.com/article", **_html(body='<img src="data:image/png;base64,AAAA"><img src="https://cdn.example.com/good.png">'))
+	external_web.serve("https://cdn.example.com/good.png", **_image())
+	post = _link_post("https://example.com/article")
+
+	run_background_work()
+
+	assert _thumbnail_of(post) is not None
 
 
 def test_unreachable_candidates_are_skipped():

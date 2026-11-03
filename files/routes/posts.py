@@ -1,7 +1,7 @@
 import time
 import urllib.parse
 from io import BytesIO
-from urllib.parse import ParseResult, urlparse
+from urllib.parse import ParseResult
 
 from datetime import datetime, timezone
 
@@ -281,17 +281,6 @@ def thumbnail_thread(pid):
 
 
 def _fetch_thumbnail(db, post):
-	def expand_url(post_url, fragment_url):
-		if fragment_url.startswith("https://"):
-			return fragment_url
-		elif fragment_url.startswith('//'):
-			return f"https:{fragment_url}"
-		elif fragment_url.startswith('/'):
-			parsed_url = urlparse(post_url)
-			return f"https://{parsed_url.netloc}{fragment_url}"
-		else:
-			return f"{post_url}{'/' if not post_url.endswith('/') else ''}{fragment_url}"
-
 	fetch_url = post.url
 
 	headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
@@ -333,10 +322,12 @@ def _fetch_thumbnail(db, post):
 						}
 					)
 			if tag:
-				thumb_candidate_urls.append(expand_url(post.url, tag['content']))
+				thumb_candidate_urls.append(urllib.parse.urljoin(post.url, tag['content']))
 
 		for tag in soup.find_all("img", attrs={'src':True}):
-			thumb_candidate_urls.append(expand_url(post.url, tag['src']))
+			thumb_candidate_urls.append(urllib.parse.urljoin(post.url, tag['src']))
+
+		thumb_candidate_urls = [url for url in thumb_candidate_urls if url.startswith(("http://", "https://"))]
 
 
 		for url in thumb_candidate_urls:
