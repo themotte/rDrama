@@ -282,13 +282,33 @@ def test_links_to_banned_domains_are_refused(banned, url):
 
 @pytest.mark.parametrize("banned, url", [
 	("sub.example.com", "https://example.com/"),
-	("example.com/bad", "https://example.com/bad/deeper"),
+	("example.com/bad", "https://example.com/badder"),
 	("example.com", "https://notexample.com/"),
-], ids=["parent of banned subdomain", "below banned path", "similar host"])
+], ids=["parent of banned subdomain", "path extending the banned one", "similar host"])
 def test_links_merely_near_banned_domains_are_accepted(banned, url):
 	db.insert("banneddomains", domain=banned, reason="r")
 
 	assert_html(_submit(as_user(factories.user()), title="t", url=url), 200)
+
+
+@pytest.mark.parametrize("banned, url", [
+	("example.com", "https://EXAMPLE.com/page"),
+	("Example.COM", "https://example.com/page"),
+	("example.com", "https://example.com:8443/page"),
+	("example.com", "https://someone@example.com/page"),
+	("example.com", "https://example.com./page"),
+	("example.com/bad", "https://example.com/bad/"),
+	("example.com/bad", "https://example.com/bad/deeper"),
+], ids=["host case", "stored case", "port", "userinfo", "trailing dot", "banned path with a slash", "below a banned path"])
+def test_banned_domains_match_however_the_link_is_written(banned, url):
+	db.insert("banneddomains", domain=banned, reason="r")
+	client = as_user(factories.user())
+
+	with db_diff() as d:
+		r = _submit(client, headers=XHR, title="t", url=url)
+
+	assert_status(r, 403)
+	d.assert_exactly()
 
 
 def test_banned_domains_in_the_body_are_refused():

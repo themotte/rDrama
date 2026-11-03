@@ -419,7 +419,7 @@ def get_comment_trees_eager(
 # TODO: This function was concisely inlined into posts.py in upstream.
 #       Think it involved adding `tldextract` as a dependency.
 def get_domain(s:str) -> Optional[BannedDomain]:
-	parts = s.split(".")
+	parts = s.lower().split(".")
 	domain_list = set()
 	for i in range(len(parts)):
 		new_domain = parts[i]
@@ -429,7 +429,7 @@ def get_domain(s:str) -> Optional[BannedDomain]:
 		domain_list.add(new_domain)
 
 	doms = g.db.query(BannedDomain) \
-		.filter(BannedDomain.domain.in_(domain_list)).all()
+		.filter(func.lower(BannedDomain.domain).in_(domain_list)).all()
 	doms = [x for x in doms]
 
 	if not doms:

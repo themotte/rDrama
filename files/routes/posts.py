@@ -460,10 +460,14 @@ def _do_antispam_submission_check(v:User, validated:validators.ValidatedSubmissi
 
 
 def _execute_domain_ban_check(parsed_url:ParseResult):
-	domain:str = parsed_url.netloc
+	if not parsed_url.hostname: return
+	domain:str = parsed_url.hostname.rstrip('.')
 	domain_obj = get_domain(domain)
-	if not domain_obj: 
-		domain_obj = get_domain(domain+parsed_url.path)
+	# A ban on a host and path covers everything below that path
+	segments = [segment for segment in parsed_url.path.split('/') if segment]
+	for i in range(1, len(segments) + 1):
+		if domain_obj: break
+		domain_obj = get_domain(domain + '/' + '/'.join(segments[:i]))
 	if not domain_obj: return
 	abort(403, f"Remove the {domain_obj.domain} link from your post and try again. {domain_obj.reason}")
 
