@@ -314,7 +314,7 @@ class Submission(CreatedBase):
 
 	@lazy
 	def realurl(self, v):
-		if v and self.url and self.url.startswith("https://old.reddit.com/"):
+		if self.url and self.url.startswith("https://old.reddit.com/"):
 
 			url = self.url
 

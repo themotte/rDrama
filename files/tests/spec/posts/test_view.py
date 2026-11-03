@@ -1,6 +1,8 @@
 '''
 The post page: GET /post/<id> and /post/<id>/<anything> (the trailing segment is a cosmetic slug and is ignored). Query parameter "sort" orders the comments (default: the viewer's comment sort preference, "new" for visitors). API clients get the post as JSON.
 '''
+from urllib.parse import parse_qs, urlsplit
+
 import pytest
 
 from files.tests.spec.harness import *
@@ -51,6 +53,18 @@ def test_link_posts_show_their_link():
 	post = factories.post(factories.user(), url=url)
 
 	assert_in_payload(_page(anon(), post), url)
+
+
+@pytest.mark.parametrize("viewer", ["visitor", "user", "api"])
+def test_links_to_old_reddit_comments_ask_for_their_context(viewer):
+	url = "https://old.reddit.com/r/sub/comments/abc/title/def/"
+	post = factories.post(factories.user(), url=url)
+	client = {"visitor": anon, "user": lambda: as_user(factories.user()), "api": lambda: as_api(factories.api_token(factories.user()))}[viewer]()
+
+	r = _page(client, post)
+
+	linked = r.json["url"] if viewer == "api" else next(u for u in urls_in(r.text) if u.startswith(url))
+	assert parse_qs(urlsplit(linked).query).get("context")
 
 
 def test_stored_links_that_are_not_web_addresses_are_not_linked():
