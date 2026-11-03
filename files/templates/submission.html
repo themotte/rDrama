@@ -17,6 +17,9 @@
 	{% set voted=-2 %}
 {% endif %}
 
+{# A post hidden from the viewer shows its title and why it's hidden, but none of its content #}
+{% set content_hidden = not p.visibility_state.is_visible_to(v) %}
+
 {% block title %}
 
 <style>
@@ -48,8 +51,8 @@
 <meta property="og:description" name="description" content="{{comment_info.plainbody(v)}}">
 <meta property="og:author" name="author" content="{{'@'+comment_info.author_name}}">
 <meta property="og:title" content="{{'@'+comment_info.author_name}} comments on {{p.plaintitle(v)}} - {{SITE_TITLE}}">
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% endif %}">
-{% if p.is_video %}
+<meta property="og:image" content="{% if content_hidden %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% elif p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% endif %}">
+{% if p.is_video and not content_hidden %}
 	<meta property="og:video" content="{{p.realurl(v)}}">
 {% endif %}
 <meta property="og:url" content="{{comment_info.permalink}}">
@@ -60,7 +63,7 @@
 <meta name="twitter:title" content="{{'@'+comment_info.author_name}} comments on {{p.plaintitle(v)}} - {{SITE_TITLE}}">
 <meta name="twitter:creator" content="{{'@'+comment_info.author_name}}">
 <meta name="twitter:description" content="{{comment_info.plainbody(v)}}">
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% endif %}">
+<meta name="twitter:image" content="{% if content_hidden %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% elif p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% endif %}">
 <meta name="twitter:url" content="{{p.permalink}}">
 
 {% else %}
@@ -70,11 +73,11 @@
 {% if p.author %}<meta property="og:article:author" content="{{'@'+p.author_name}}">{% endif %}
 <meta property="article:published_time" content="{{p.created_datetime}}">
 {% if p.edited_utc %}<meta property="article:modified_time" content="{{p.edited_string}}">{% endif %}
-<meta property="og:description" name="description" content="{{p.plainbody(v)}}">
+<meta property="og:description" name="description" content="{% if not content_hidden %}{{p.plainbody(v)}}{% endif %}">
 {% if p.author %}<meta property="og:author" name="author" content="{{'@'+p.author_name}}">{% endif %}
 <meta property="og:title" content="{{p.plaintitle(v)}} - {{SITE_TITLE}}">
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% endif %}">
-{% if p.url and p.is_video %}
+<meta property="og:image" content="{% if content_hidden %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% elif p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% endif %}">
+{% if p.url and p.is_video and not content_hidden %}
 <meta property="og:video" content="{{p.realurl(v)}}">
 {% endif %}
 <meta property="og:url" content="{{p.permalink}}">
@@ -84,8 +87,8 @@
 <meta name="twitter:site" content="{{SITE_FULL}}">
 <meta name="twitter:title" content="{{p.plaintitle(v)}} - {{SITE_TITLE}}">
 {% if p.author %}<meta name="twitter:creator" content="{{'@'+p.author_name}}">{% endif %}
-<meta name="twitter:description" content="{{p.plainbody(v)}}">
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% endif %}">
+<meta name="twitter:description" content="{% if not content_hidden %}{{p.plainbody(v)}}{% endif %}">
+<meta name="twitter:image" content="{% if content_hidden %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% elif p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{SITE_FULL}}{{ ('images/'~SITE_ID~'/site_preview.webp') | asset }}{% endif %}">
 <meta name="twitter:url" content="{{p.permalink}}">
 
 {% endif %}
@@ -109,7 +112,7 @@
 					<ul class="list-group post-actions">
 						{% if v.id==p.author_id %}
 							<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-dismiss="modal" onclick="togglePostEdit('{{p.id}}')"><i class="far fa-edit text-center text-muted mr-3"></i>Edit</button>
-						{% elif p.body %}
+						{% elif p.body and not content_hidden %}
 							<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-dismiss="modal" onclick="expandMarkdown(this,'{{p.id}}')"><i class="fas text-expand-icon-{{p.id}} fa-expand-alt text-center mr-3"></i><span>View source</span></button>
 						{% endif %}
 						{% include "component/post/actions_mobile.html" %}
@@ -169,7 +172,7 @@
 
             {% endif %}
 						<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp" onmouseover="timestamp('timestamp','{{p.created_utc}}')">&nbsp;{{p.age_string}}</span>
-						({% if p.is_image %}image post{% elif p.is_video %}video post{% elif p.domain %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" class="post-meta-domain" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>{{p.domain|truncate(35, True)}}</a>{% else %}text post{% endif %})
+						({% if content_hidden %}hidden{% elif p.is_image %}image post{% elif p.is_video %}video post{% elif p.domain %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" class="post-meta-domain" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>{{p.domain|truncate(35, True)}}</a>{% else %}text post{% endif %})
 
 						{% if p.edited_utc %}
 							&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('edited_timestamp','{{p.edited_utc}}')" id="edited_timestamp">{{p.edited_string}}</span>
@@ -190,7 +193,7 @@
 						</ul>
 					</div>
 					{% endif %}
-					{% if p.realurl(v) %}
+					{% if p.realurl(v) and not content_hidden %}
 						<h1 id="post-title" class="card-title post-title text-left mb-md-3"><a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
 							{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
 							{{p.realtitle(v) | safe}}
@@ -203,6 +206,9 @@
 					{% endif %}
 
 					<div id="post-body" class="post-body mt-3">
+						{% if content_hidden %}
+						<div class="visibility-message">{{p.visibility_state.added_message(v)}}</div>
+						{% else %}
 						{% if p.realurl(v) %}
 							{% if not p.embed_url and not p.is_image and not p.is_video %}
 								<a rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
@@ -253,6 +259,7 @@
 							{% endif %}
 
 						</div>
+						{% endif %}
 					</div>
 
 					{% if v and v.can_edit(p) %}
@@ -285,7 +292,7 @@
 							<div class="form-text text-small p-0 m-0"><a href="/formatting" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>Formatting help</a></div>
 						</div>
 					{% endif %}
-							{% if p.embed_url and "http" not in p.embed_url and "<" not in p.embed_url %}
+							{% if p.embed_url and "http" not in p.embed_url and "<" not in p.embed_url and not content_hidden %}
 							<div id="crosspost-embed">
 							<div class="row no-gutters">
 								<div id="frontpage" class="col-12 pt-0">
@@ -311,7 +318,7 @@
 							<a class="list-inline-item" role="button" onclick="togglePostEdit('{{p.id}}')"><i class="fas fa-edit"></i>Edit</a>
 						{% endif %}
 
-						{% if v and not v.can_edit(p) and p.body %}
+						{% if v and not v.can_edit(p) and p.body and not content_hidden %}
 							<a class="list-inline-item" role="button" onclick="expandMarkdown(this,'{{p.id}}')"><i class="fas text-expand-icon-{{p.id}} fa-expand-alt"></i><span>View source</span></a>
 						{% endif %}
 						{% include 'component/post/actions.html' %}
@@ -339,7 +346,7 @@
 			</div>
 		</div>
 
-		{% if not p.is_image and not p.is_video %}
+		{% if not p.is_image and not p.is_video and not content_hidden %}
 			<div class="row no-gutters d-md-none">
 				<div class="col">
 					<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}"></a>
@@ -397,7 +404,7 @@
 	</div>
 </div>
 
-{% if v and v.id != p.author_id and p.body %}
+{% if v and v.id != p.author_id and p.body and not content_hidden %}
 	<textarea autocomplete="off" class="d-none card border my-2 p-3 comment-box form-control rounded" id="markdown-{{p.id}}" readonly>{{p.body.strip()}}</textarea> 
 {% endif %}
 {%- block comment_section -%}

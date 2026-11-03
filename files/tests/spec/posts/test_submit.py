@@ -290,6 +290,17 @@ def test_new_posts_can_be_held_for_review():
 	d.assert_exactly(inserted={"submissions": [{"state_mod": "FILTERED"}], "votes": [{"user_id": author["id"]}]})
 
 
+def test_api_clients_get_their_held_post_in_full():
+	site_settings_set("FilterNewPosts", True)
+	author = factories.user()
+	body = factories.unique("body")
+
+	r = _submit(as_api(factories.api_token(author)), title="t", body=body)
+
+	assert_status(r, 200)
+	assert r.json["body"] == body
+
+
 def test_admins_posts_are_never_held_for_review():
 	site_settings_set("FilterNewPosts", True)
 	author = factories.admin(1)

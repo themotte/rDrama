@@ -162,35 +162,123 @@ def test_api_clients_that_are_18_plus_get_18_plus_posts():
 	assert r.json["id"] == post["id"]
 
 
-# Removed posts
+# Hidden posts
 
-@pytest.mark.parametrize("state_mod", ["REMOVED", "FILTERED"])
-def test_removed_and_filtered_posts_show_only_their_title_to_others(state_mod):
-	title, body = factories.unique("title"), factories.unique("body")
-	post = factories.post(factories.user(), title=title, body=body, state_mod=state_mod)
+def _hidden_post_content(author, **state):
+	'''A link post whose every piece of content is a distinct sentinel.'''
+	content = {
+		"body": factories.unique("body"),
+		"url": f"https://example.com/{factories.unique('link')}",
+		"thumburl": f"https://example.com/{factories.unique('thumb')}.png",
+		"embed_url": f"<blockquote>{factories.unique('embed')}</blockquote>",
+	}
+	post = factories.post(author, title=factories.unique("title"), **content, **state)
+	return post, content
 
-	for client in [anon(), as_user(factories.user()), as_user(factories.admin(1))]:
-		r = _page(client, post)
-		assert_html(r, 200)
-		assert_in_payload(r, title)
-		assert_not_in_payload(r, body)
 
-
-@pytest.mark.parametrize("state_mod", ["REMOVED", "FILTERED"])
-@pytest.mark.parametrize("viewer", ["author", "moderator"])
-def test_removed_and_filtered_posts_stay_visible_to_their_author_and_moderators(state_mod, viewer):
-	author = factories.user()
-	body = factories.unique("body")
-	post = factories.post(author, body=body, state_mod=state_mod)
-
-	r = _page(as_user(author if viewer == "author" else factories.admin(2)), post)
-
+def _assert_content_hidden(r, post, content):
 	assert_html(r, 200)
-	assert_in_payload(r, body)
+	assert_in_payload(r, post["title"])
+	for sentinel in [content["body"], content["url"], content["thumburl"], content["embed_url"]]:
+		assert_not_in_payload(r, sentinel.removeprefix("<blockquote>").removesuffix("</blockquote>"))
 
 
-def test_comments_under_a_removed_post_are_still_shown():
-	post = factories.post(factories.user(), state_mod="REMOVED")
+def _assert_content_shown(r, content):
+	assert_html(r, 200)
+	assert_in_payload(r, content["body"])
+	assert_in_payload(r, content["url"])
+
+
+_HIDDEN_STATES = {
+	"removed": {"state_mod": "REMOVED"},
+	"filtered": {"state_mod": "FILTERED"},
+	"deleted": {"state_user_deleted_utc": "2020-01-01T00:00:00Z"},
+}
+
+
+@pytest.mark.parametrize("state", list(_HIDDEN_STATES))
+@pytest.mark.parametrize("viewer", ["visitor", "user"])
+def test_removed_filtered_and_deleted_posts_hide_their_content(state, viewer):
+	post, content = _hidden_post_content(factories.user(), **_HIDDEN_STATES[state])
+
+	_assert_content_hidden(_page(anon() if viewer == "visitor" else as_user(factories.user()), post), post, content)
+
+
+@pytest.mark.parametrize("state", list(_HIDDEN_STATES))
+@pytest.mark.parametrize("viewer", ["author", "moderator"])
+def test_removed_filtered_and_deleted_posts_show_their_content_to_the_author_and_moderators(state, viewer):
+	author = factories.user()
+	post, content = _hidden_post_content(author, **_HIDDEN_STATES[state])
+
+	_assert_content_shown(_page(as_user(author if viewer == "author" else factories.admin(2)), post), content)
+
+
+@pytest.mark.parametrize("viewer", ["visitor", "user", "helper"])
+def test_posts_by_shadowbanned_users_hide_their_content(viewer):
+	post, content = _hidden_post_content(factories.user(shadowbanned="somemod"))
+	client = {"visitor": anon, "user": lambda: as_user(factories.user()), "helper": lambda: as_user(factories.admin(1))}[viewer]()
+
+	_assert_content_hidden(_page(client, post), post, content)
+
+
+@pytest.mark.parametrize("viewer", ["author", "moderator"])
+def test_posts_by_shadowbanned_users_show_their_content_to_them_and_moderators(viewer):
+	author = factories.user(shadowbanned="somemod")
+	post, content = _hidden_post_content(author)
+
+	_assert_content_shown(_page(as_user(author if viewer == "author" else factories.admin(2)), post), content)
+
+
+@pytest.mark.parametrize("viewer_level", [0, 2])
+def test_posts_by_users_you_block_hide_their_content(viewer_level):
+	author = factories.user()
+	post, content = _hidden_post_content(author)
+	viewer = factories.admin(viewer_level)
+	db.insert("userblocks", user_id=viewer["id"], target_id=author["id"])
+
+	_assert_content_hidden(_page(as_user(viewer), post), post, content)
+
+
+def test_posts_by_users_who_block_you_show_their_content():
+	author = factories.user()
+	post, content = _hidden_post_content(author)
+	viewer = factories.user()
+	db.insert("userblocks", user_id=author["id"], target_id=viewer["id"])
+
+	_assert_content_shown(_page(as_user(viewer), post), content)
+
+
+@pytest.mark.parametrize("state", list(_HIDDEN_STATES))
+def test_comment_links_into_hidden_posts_hide_the_post_content(state):
+	post, content = _hidden_post_content(factories.user(), **_HIDDEN_STATES[state])
+	comment = factories.comment(factories.user(), post)
+
+	r = anon().get(f"/comment/{comment['id']}")
+
+	_assert_content_hidden(r, post, content)
+	assert_in_payload(r, comment["body"])
+
+
+def test_api_json_of_a_hidden_post_has_only_its_identity():
+	post, content = _hidden_post_content(factories.user(shadowbanned="somemod"))
+
+	r = _page(as_api(factories.api_token(factories.user())), post)
+
+	assert set(r.json) == {"state_user_deleted_utc", "state_mod_set_by", "id", "title", "permalink"}
+
+
+def test_api_json_of_a_removed_post_is_complete_for_its_author():
+	author = factories.user()
+	post, content = _hidden_post_content(author, state_mod="REMOVED")
+
+	r = _page(as_api(factories.api_token(author)), post)
+
+	assert r.json["body"] == content["body"]
+
+
+@pytest.mark.parametrize("state", list(_HIDDEN_STATES))
+def test_comments_under_a_hidden_post_are_still_shown(state):
+	post = factories.post(factories.user(), **_HIDDEN_STATES[state])
 	comment = factories.comment(factories.user(), post)
 
 	assert_in_payload(_page(anon(), post), comment["body"])

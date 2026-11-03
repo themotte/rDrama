@@ -254,13 +254,7 @@ class Submission(CreatedBase):
 	@lazy
 	def json_core(self):
 		if self.state_mod != StateMod.VISIBLE:
-			return {
-					'state_user_deleted_utc': self.state_user_deleted_utc,
-					'state_mod_set_by': self.state_mod_set_by,
-					'id': self.id,
-					'title': self.title,
-					'permalink': self.permalink,
-					}
+			return self.json_identity
 		elif self.state_user_deleted_utc:
 			return {
 					'state_user_deleted_utc': self.state_user_deleted_utc,
@@ -274,10 +268,29 @@ class Submission(CreatedBase):
 	@property
 	@lazy
 	def json(self):
-		data=self.json_core
-		
 		if self.state_user_deleted_utc or self.state_mod != StateMod.VISIBLE:
-			return data
+			return self.json_core
+		return self.json_full
+
+	def json_for(self, v):
+		'''The post as `v` may see it: complete, or only its identity when it is hidden from them.'''
+		if self.visibility_state.is_visible_to(v): return self.json_full
+		return self.json_identity
+
+	@property
+	def json_identity(self):
+		return {
+			'state_user_deleted_utc': self.state_user_deleted_utc,
+			'state_mod_set_by': self.state_mod_set_by,
+			'id': self.id,
+			'title': self.title,
+			'permalink': self.permalink,
+		}
+
+	@property
+	@lazy
+	def json_full(self):
+		data=self.json_raw
 
 		data["author"]='👻' if self.ghost else self.author.json_core
 		data["comment_count"]=self.comment_count

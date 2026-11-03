@@ -109,11 +109,8 @@ def post_id(pid, anything=None, v=None):
 	g.db.commit()
 	g.db.expire_on_commit = True
 
-	if request.headers.get("Authorization"): return post.json
-	else:
-		if post.state_mod != StateMod.VISIBLE and not (v and (v.admin_level >= 2 or post.author_id == v.id)): template = "submission_banned.html"
-		else: template = "submission.html"
-		return render_template(template, v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset)
+	if request.headers.get("Authorization"): return post.json_for(v)
+	return render_template("submission.html", v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset)
 
 @app.get("/viewmore/<pid>/<sort>/<offset>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -589,7 +586,7 @@ def submit_post(v):
 	g.db.commit()
 
 	if request.headers.get("Authorization"):
-		return post.json
+		return post.json_for(v)
 	else:
 		# Re-fetch via get_post so relationships (reports/author) are
 		# eagerly loaded; rendering submission.html against the raw freshly-
