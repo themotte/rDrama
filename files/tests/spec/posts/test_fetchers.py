@@ -104,7 +104,7 @@ def test_page_title_is_fetched(asked):
 	assert r.json == {"url": "https://example.com/page", "title": "Fish & Chips"}
 
 
-@pytest.mark.parametrize("url", ["", "example.com/page", "https://example.com/a\\b", "https://example.com/photo.JPG", "https://example.com/clip.mp4?size=large"], ids=["empty", "no scheme", "backslash", "image", "video with query"])
+@pytest.mark.parametrize("url", ["", "example.com/page", "https://example.com/a\\b", "https://example.com/photo.JPG", "https://example.com/clip.mp4?size=large", "https://example.com/photo.jpg%3Fsize=large"], ids=["empty", "no scheme", "backslash", "image", "video with query", "image with escaped query"])
 def test_page_title_is_not_fetched_for_unsuitable_links(url):
 	assert_status(_title(as_user(factories.user()), url), 400)
 
