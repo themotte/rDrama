@@ -8,7 +8,7 @@ from werkzeug.datastructures import FileStorage
 
 import files.helpers.embeds as embeds
 import files.helpers.sanitize as sanitize
-from files.helpers.config.environment import SITE_FULL, YOUTUBE_KEY
+from files.helpers.config.environment import YOUTUBE_KEY
 from files.helpers.config.const import (SUBMISSION_BODY_LENGTH_MAXIMUM,
                                  SUBMISSION_TITLE_LENGTH_MAXIMUM,
                                  SUBMISSION_URL_LENGTH_MAXIMUM)
@@ -62,11 +62,6 @@ class ValidatedSubmissionLike:
 		if url.startswith('https://youtube.com/watch?v=') and YOUTUBE_KEY:
 			embed = embeds.youtube(url)
 			
-		if SITE_FULL in domain and "/post/" in url and "context" not in url:
-			id = url.split("/post/")[1]
-			if "/" in id: id = id.split("/")[0]
-			embed = str(int(id))
-
 		return embed if embed and len(embed) <= 1500 else None
 
 	@property
@@ -124,8 +119,7 @@ class ValidatedSubmissionLike:
 
 			name = new_image_path()
 			file.save(name)
-			url:Optional[str] = process_image(name)
-			if not url: return False, None, None
+			url:str = process_image(name)
 
 			name2 = name.replace('.webp', 'r.webp')
 			shutil.copyfile(name, name2)
@@ -180,7 +174,7 @@ class ValidatedSubmissionLike:
 		
 		return ValidatedSubmissionLike(
 			title=title,
-			title_html=sanitize.filter_emojis_only(title, graceful=True),
+			title_html=title_html,
 			body=body,
 			body_raw=body_raw,
 			body_html=sanitize.sanitize(body),

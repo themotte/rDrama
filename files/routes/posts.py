@@ -33,7 +33,6 @@ titleheaders = {
 }
 
 MAX_TITLE_LENGTH = 500
-MAX_URL_LENGTH = 2048
 
 
 @app.post("/publish/<pid>")
@@ -267,19 +266,12 @@ def edit_post(pid, v):
 	return redirect(p.permalink)
 
 
-def archiveorg(url):
-	try: requests.get(f'https://web.archive.org/save/{url}', headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}, timeout=100)
-	except: pass
-
-
 def thumbnail_thread(pid):
 	db = db_session()
 
 	def expand_url(post_url, fragment_url):
 		if fragment_url.startswith("https://"):
 			return fragment_url
-		elif fragment_url.startswith("https://"):
-			return f"https://{fragment_url.split('https://')[1]}"
 		elif fragment_url.startswith('//'):
 			return f"https:{fragment_url}"
 		elif fragment_url.startswith('/'):
@@ -297,8 +289,6 @@ def thumbnail_thread(pid):
 	if not post or not post.url: return
 	
 	fetch_url = post.url
-
-	if fetch_url.startswith('/'): fetch_url = f"{SITE_FULL}{fetch_url}"
 
 	headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
