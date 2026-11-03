@@ -243,6 +243,24 @@ def test_unsuitable_candidates_are_skipped(bad):
 	assert [url for _, url in external_web.requests()][-1] == "https://cdn.example.com/good.png"
 
 
+_UNUSABLE_IMAGES = {
+	"over 8 MB": lambda: uploads.noisy_png(1700, 1700)[1],
+}
+
+
+@pytest.mark.parametrize("bad", list(_UNUSABLE_IMAGES))
+def test_unusable_images_are_skipped(bad):
+	external_web.serve("https://example.com/article", **_html(body='<img src="https://cdn.example.com/bad.png"><img src="https://cdn.example.com/good.png">'))
+	external_web.serve("https://cdn.example.com/bad.png", headers={"Content-Type": "image/png"}, body=_UNUSABLE_IMAGES[bad]())
+	external_web.serve("https://cdn.example.com/good.png", **_image())
+	post = _link_post("https://example.com/article")
+
+	run_background_work()
+
+	assert _thumbnail_of(post) is not None
+	assert [url for _, url in external_web.requests()][-1] == "https://cdn.example.com/good.png"
+
+
 def test_image_addresses_that_are_not_web_addresses_are_skipped():
 	external_web.serve("https://example.com/article", **_html(body='<img src="data:image/png;base64,AAAA"><img src="https://cdn.example.com/good.png">'))
 	external_web.serve("https://cdn.example.com/good.png", **_image())
@@ -251,6 +269,16 @@ def test_image_addresses_that_are_not_web_addresses_are_skipped():
 	run_background_work()
 
 	assert _thumbnail_of(post) is not None
+
+
+@pytest.mark.parametrize("image", ["over 8 MB"])
+def test_links_to_unusable_images_give_no_thumbnail(image):
+	external_web.serve("https://example.com/photo", headers={"Content-Type": "image/png"}, body=_UNUSABLE_IMAGES[image]())
+	post = _link_post("https://example.com/photo")
+
+	run_background_work()
+
+	assert _thumbnail_of(post) is None
 
 
 def test_unreachable_candidates_are_skipped():

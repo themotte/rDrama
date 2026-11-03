@@ -1,6 +1,7 @@
 '''
 Files for upload tests, as (filename, bytes, content type) tuples ready for a client's `files=`.
 '''
+import os
 import struct
 import zlib
 from io import BytesIO
@@ -48,3 +49,10 @@ def gif(width: int, height: int):
 	data = BytesIO()
 	frames[0].save(data, format="GIF", save_all=True, append_images=frames[1:], duration=100, loop=0)
 	return ("image.gif", data.getvalue(), "image/gif")
+
+
+def noisy_png(width: int, height: int):
+	'''A valid PNG of random pixels, which barely compresses: about 3 bytes per pixel.'''
+	data = BytesIO()
+	Image.frombytes("RGB", (width, height), os.urandom(width * height * 3)).save(data, format="PNG", compress_level=0)
+	return ("noise.png", data.getvalue(), "image/png")

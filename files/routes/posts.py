@@ -280,103 +280,72 @@ def thumbnail_thread(pid):
 		db.close()
 
 
+THUMBNAIL_SOURCE_MAX_BYTES = 8 * 1024 * 1024
+THUMBNAIL_SOURCE_MIN_SIDE = 30
+THUMBNAIL_META_TAGS = ["themotte:thumbnail", "twitter:image", "og:image", "thumbnail"]
+
+
 def _fetch_thumbnail(db, post):
-	fetch_url = post.url
+	page = _thumbnail_fetch(post.url)
+	if not page or page[0].status_code != 200: return
+	response, body = page
 
-	headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
-
-	try:
-		x=requests.get(fetch_url, headers=headers, timeout=5, proxies=proxies)
-	except:
-		return
-
-	if x.status_code != 200:
-		return
-
-	if x.headers.get("Content-Type","").startswith("text/html"):
-		soup=BeautifulSoup(x.content, 'lxml')
-
-		thumb_candidate_urls=[]
-
-		meta_tags = [
-			"themotte:thumbnail",
-			"twitter:image",
-			"og:image",
-			"thumbnail"
-			]
-
-		for tag_name in meta_tags:
-			tag = soup.find(
-				'meta', 
-				attrs={
-					"name": tag_name, 
-					"content": True
-					}
-				)
-			if not tag:
-				tag = soup.find(
-					'meta',
-					attrs={
-						'property': tag_name,
-						'content': True
-						}
-					)
-			if tag:
-				thumb_candidate_urls.append(urllib.parse.urljoin(post.url, tag['content']))
-
-		for tag in soup.find_all("img", attrs={'src':True}):
-			thumb_candidate_urls.append(urllib.parse.urljoin(post.url, tag['src']))
-
-		thumb_candidate_urls = [url for url in thumb_candidate_urls if url.startswith(("http://", "https://"))]
-
-
-		for url in thumb_candidate_urls:
-
-			try:
-				image_req=requests.get(url, headers=headers, timeout=5, proxies=proxies)
-			except:
-				continue
-
-			if image_req.status_code >= 400:
-				continue
-
-			if not image_req.headers.get("Content-Type","").startswith("image/"):
-				continue
-
-			if image_req.headers.get("Content-Type","").startswith("image/svg"):
-				continue
-
-			image = PILimage.open(BytesIO(image_req.content))
-			if image.width < 30 or image.height < 30:
-				continue
-
-			break
-
-		else:
-			return
-
-
-
-	elif x.headers.get("Content-Type","").startswith("image/"):
-		image_req=x
-		image = PILimage.open(BytesIO(x.content))
-
+	content_type:str = response.headers.get("Content-Type", "")
+	if content_type.startswith("text/html"):
+		image = None
+		for url in _thumbnail_candidates(post.url, body):
+			candidate = _thumbnail_fetch(url)
+			if candidate and _thumbnail_suitable(*candidate):
+				image = candidate[1]
+				break
+	elif content_type.startswith("image/") and _thumbnail_suitable(response, body):
+		image = body
 	else:
 		return
-
-	size = len(image.fp.read())
-	if size > 8 * 1024 * 1024:
-		return
+	if image is None: return
 
 	name = new_image_path()
-
 	with open(name, "wb") as file:
-		for chunk in image_req.iter_content(1024):
-			file.write(chunk)
-
+		file.write(image)
 	post.thumburl = process_image(name, resize=100)
 	db.add(post)
 	db.commit()
+
+
+def _thumbnail_fetch(url:str) -> Optional[tuple[requests.Response, bytes]]:
+	'''The response and body at `url`, or None if it can't be fetched or is too large to be a thumbnail's source.'''
+	try:
+		with requests.get(url, headers=titleheaders, timeout=5, proxies=proxies, stream=True) as response:
+			body = bytearray()
+			for chunk in response.iter_content(64 * 1024):
+				body += chunk
+				if len(body) > THUMBNAIL_SOURCE_MAX_BYTES:
+					app.logger.info("Thumbnail source %s is over the size limit", url)
+					return None
+	except requests.RequestException as e:
+		app.logger.info("Thumbnail source %s couldn't be fetched: %s", url, e)
+		return None
+	return response, bytes(body)
+
+
+def _thumbnail_candidates(page_url:str, html:bytes) -> list[str]:
+	'''Image addresses on a page, preview images named in its metadata first, resolved against the page and limited to web addresses.'''
+	soup = BeautifulSoup(html, 'lxml')
+	found:list[str] = []
+	for tag_name in THUMBNAIL_META_TAGS:
+		tag = soup.find('meta', attrs={"name": tag_name, "content": True}) or soup.find('meta', attrs={"property": tag_name, "content": True})
+		if tag: found.append(tag['content'])
+	found += [tag['src'] for tag in soup.find_all("img", attrs={'src': True})]
+	resolved = (urllib.parse.urljoin(page_url, url) for url in found)
+	return [url for url in resolved if url.startswith(("http://", "https://"))]
+
+
+def _thumbnail_suitable(response:requests.Response, body:bytes) -> bool:
+	content_type:str = response.headers.get("Content-Type", "")
+	if response.status_code >= 400 or not content_type.startswith("image/") or content_type.startswith("image/svg"):
+		return False
+	image = PILimage.open(BytesIO(body))
+	return image.width >= THUMBNAIL_SOURCE_MIN_SIDE and image.height >= THUMBNAIL_SOURCE_MIN_SIDE
 
 
 @app.post("/is_repost")
