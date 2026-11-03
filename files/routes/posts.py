@@ -474,7 +474,7 @@ def _duplicate_check(search_url:Optional[str]) -> Optional[werkzeug.wrappers.Res
 		Submission.state_user_deleted_utc == None,
 		Submission.state_mod == StateMod.VISIBLE
 	).first()
-	if repost and SITE != 'localhost': 
+	if repost:
 		return redirect(repost.permalink)
 	return None
 
@@ -490,7 +490,7 @@ def _duplicate_check2(
 		Submission.body == validated_post.body
 	).one_or_none()
 
-	if dup and SITE != 'localhost': 
+	if dup:
 		return redirect(dup.permalink)
 	return None
 
