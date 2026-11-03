@@ -154,6 +154,11 @@ class ValidatedSubmissionLike:
 
 		title = guarded_value("title", 1, SUBMISSION_TITLE_LENGTH_MAXIMUM)
 		title = sanitize.sanitize_raw(title, allow_newlines=False, length_limit=SUBMISSION_TITLE_LENGTH_MAXIMUM)
+		title_html = sanitize.filter_emojis_only(title, graceful=True)
+		if not title_html.strip():
+			abort(400, "The title has no visible text")
+		if len(title_html) > 1500:
+			abort(400, "Rendered title is too big!")
 
 		url = guarded_value("url", 0, SUBMISSION_URL_LENGTH_MAXIMUM)
 		if url and not is_web_url(url):
@@ -172,10 +177,6 @@ class ValidatedSubmissionLike:
 
 		if not body_raw and not url and not existing_url and not has_file and not has_file2:
 			abort(400, "Please enter a URL or some text")
-		
-		title_html = sanitize.filter_emojis_only(title, graceful=True)
-		if len(title_html) > 1500:
-			abort(400, "Rendered title is too big!")
 		
 		return ValidatedSubmissionLike(
 			title=title,

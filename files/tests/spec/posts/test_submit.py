@@ -160,7 +160,13 @@ def test_out_of_bounds_fields_are_refused(fields):
 	d.assert_exactly()
 
 
-@pytest.mark.parametrize("fields", [{"title": "\u200e\u200e\u200e", "body": "x"}, {"title": "t", "body": "\u200e\u200b\ufeff"}], ids=["title", "body"])
+@pytest.mark.parametrize("fields", [
+	{"title": "\u200e\u200e\u200e", "body": "x"},
+	{"title": "\u200b", "body": "x"},
+	{"title": "\u200f", "body": "x"},
+	{"title": "\u200f \u200f", "body": "x"},
+	{"title": "t", "body": "\u200e\u200b\ufeff"},
+], ids=["title of left-to-right marks", "title of zero-width spaces", "title of right-to-left marks", "title of marks and spaces", "body"])
 def test_text_of_only_invisible_characters_counts_as_empty(fields):
 	client = as_user(factories.user())
 
