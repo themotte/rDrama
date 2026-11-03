@@ -489,6 +489,16 @@ def test_similar_links_count_as_spam_too():
 	assert_status(_submit(as_user(author), headers=XHR, title=factories.unique("title"), url="https://example.com/watches-for-sale-2"), 403)
 
 
+def test_posts_similar_in_both_title_and_link_are_removed_once():
+	author = factories.user()
+	_similar_posts(author, 10, url="https://example.com/watches-for-sale")
+	similar = [p["id"] for p in db.rows("submissions", author_id=author["id"])]
+
+	_submit(as_user(author), headers=XHR, title="buy cheap watches here", url="https://example.com/watches-for-sale-2")
+
+	assert sorted(m["target_submission_id"] for m in db.rows("modactions", kind="remove_post")) == similar
+
+
 def test_similar_posts_older_than_a_day_do_not_count():
 	author = factories.user()
 	_similar_posts(author, 10, created_utc=1000)

@@ -441,7 +441,7 @@ def _do_antispam_submission_check(v:User, validated:validators.ValidatedSubmissi
 	send_repeatable_notification(v.id, text)
 
 	v.ban(reason="Spamming.", days=1)
-	for post in similar_posts + similar_urls:
+	for post in {post.id: post for post in similar_posts + similar_urls}.values():
 		post.state_mod = StateMod.REMOVED
 		post.state_mod_set_by = "AutoJanny"
 		post.is_pinned = False
