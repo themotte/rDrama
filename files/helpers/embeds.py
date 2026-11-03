@@ -55,5 +55,5 @@ def youtube(url:str) -> Optional[str]:
 			embed += f'&start={int(t)}'
 		except: 
 			pass
-		embed += '"></lite-youtube>'
+	embed += '"></lite-youtube>'
 	return embed

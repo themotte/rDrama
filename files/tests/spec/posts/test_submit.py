@@ -795,6 +795,15 @@ def test_youtube_videos_are_embedded_from_their_start_time():
 	assert parse_qs(urlsplit(requested).query)["id"] == ["dQw4w9WgXcQ"]
 
 
+def test_youtube_videos_without_a_start_time_are_embedded():
+	external_web.serve("https://www.googleapis.com/youtube/v3/videos", body=json.dumps({"items": [{}]}))
+
+	assert_html(_submit(as_user(factories.user()), title="t", url="https://youtube.com/watch?v=dQw4w9WgXcQ"), 200)
+
+	embed = db.rows("submissions")[-1]["embed_url"]
+	assert "dQw4w9WgXcQ" in embed and "start=" not in embed and embed.endswith("</lite-youtube>")
+
+
 def test_youtube_videos_that_do_not_exist_are_not_embedded():
 	external_web.serve("https://www.googleapis.com/youtube/v3/videos", body=json.dumps({"items": []}))
 
