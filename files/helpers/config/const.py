@@ -49,29 +49,15 @@ class Service(IntEnum):
 NOTIFICATIONS_ID = 1
 AUTOJANNY_ID = 2
 MODMAIL_ID = 2
-SNAPPY_ID = 3
-LONGPOSTBOT_ID = 4
-ZOZBOT_ID = 5
-AUTOPOLLER_ID = 6
-AUTOBETTER_ID = 7
-AUTOCHOICE_ID = 8
-BASEDBOT_ID = 0
 
 SYSTEM_ACCOUNT_IDS = {
 	NOTIFICATIONS_ID,
 	AUTOJANNY_ID,
-	SNAPPY_ID,
-	LONGPOSTBOT_ID,
-	ZOZBOT_ID,
-	AUTOPOLLER_ID,
-	AUTOBETTER_ID,
-	AUTOCHOICE_ID,
+	# Retired bot accounts; their rows still exist in production, so they stay protected
+	3, 4, 5, 6, 7, 8,
 }
 
-GIFT_NOTIF_ID = 9
 OWNER_ID = 9
-BUG_THREAD = 0
-ROLES={}
 
 LEADERBOARD_LIMIT: Final[int] = 25
 
@@ -168,10 +154,6 @@ PERMS = {
 	"SCHEDULER_TASK_TRACEBACK": 3,
 	"USER_SHADOWBAN": 2,
 	'USER_SET_PROFILE_PRIVACY': 2,
-}
-
-NOTIFIED_USERS = {
-	# format: 'substring' ↦ User ID to notify
 }
 
 proxies = {}

@@ -1008,16 +1008,6 @@ def test_profilecss_empty():
 	# Content type check is flexible since route may return HTML on error
 	# Main thing is we get a 200 response
 
-def test_report_bugs_redirect():
-	"""Test /report_bugs redirects to bug thread"""
-	client, user = util_accounts.create_test_client_and_user("bug-reporter")
-
-	response = client.get("/report_bugs", follow_redirects=False)
-	assert response.status_code == 302
-	# Should redirect to /post/{BUG_THREAD}
-	assert "/post/" in response.location
-
-
 def test_is_available():
 	"""Test GET /is_available/<name> route"""
 	client = util_accounts.create_logged_off_client()

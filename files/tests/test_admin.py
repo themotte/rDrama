@@ -1099,13 +1099,11 @@ def test_ban_system_account_returns_403():
 
 
 def test_shadowban_system_account_returns_403():
-	"""Test that shadowbanning a system account (e.g. Snappy) returns 403."""
-	from files.helpers.config.const import SNAPPY_ID
-
+	"""Test that shadowbanning a reserved system account (e.g. id 3) returns 403."""
 	admin_client, admin = util_accounts.create_test_client_and_admin(2, "sbsys-admin")
 
 	response, _ = util.post_with_formkey(
-		admin_client, f"/shadowban/{SNAPPY_ID}",
+		admin_client, "/shadowban/3",
 		data={"reason": "Should not work"}
 	)
 	assert response.status_code == 403

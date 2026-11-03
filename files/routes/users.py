@@ -345,10 +345,6 @@ def unsubscribe(v, post_id):
 		g.db.commit()
 	return {"message": "Post unsubscribed!"}
 
-@app.get("/report_bugs")
-def reportbugs():
-	return redirect(f'/post/{BUG_THREAD}')
-
 @app.post("/@<username>/message")
 @limiter.limit("1/second;10/minute;20/hour;50/day")
 @auth_required

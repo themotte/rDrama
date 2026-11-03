@@ -44,8 +44,6 @@ strikethrough_regex = re.compile('''~{1,2}([^~]+)~{1,2}''', flags=re.A)
 
 chat_command_regex = re.compile(r"^/(\w+)\s?(.*)", flags=re.A)
 
-snappy_url_regex = re.compile('<a href=\\"(https?:\\/\\/[a-z]{1,20}\\.[\\w:~,()\\-.#&\\/=?@%;+]{5,250})\\" rel=\\"nofollow noopener noreferrer\\" target=\\"_blank\\">([\\w:~,()\\-.#&\\/=?@%;+]{5,250})<\\/a>', flags=re.A)
-
 email_regex = re.compile('[^@]+@[^@]+\\.[^@]+', flags=re.A)
 '''
 Regex to use for email addresses.
