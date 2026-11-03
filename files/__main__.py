@@ -129,6 +129,8 @@ app.config.update({
 	"SESSION_COOKIE_NAME": f'session_{SITE_ID.lower()}',
 	"VERSION": "1.0.0",
 	"MAX_CONTENT_LENGTH": MAX_CONTENT_LENGTH,
+	# Text fields are bounded by their own length checks; the default limit of 500 kB per field is below the longest post body
+	"MAX_FORM_MEMORY_SIZE": MAX_CONTENT_LENGTH,
 	"SESSION_COOKIE_SECURE": SESSION_COOKIE_SECURE,
 	"SESSION_COOKIE_SAMESITE": SESSION_COOKIE_SAMESITE,
 	"PERMANENT_SESSION_LIFETIME": PERMANENT_SESSION_LIFETIME,

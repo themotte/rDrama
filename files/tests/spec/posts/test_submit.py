@@ -148,7 +148,8 @@ def test_visitors_cannot_submit():
 	{"title": "   ", "body": "x"},
 	{"title": "t" * 501, "body": "x"},
 	{"title": "t", "url": "https://example.com/" + "a" * 2029},
-], ids=["no title", "empty title", "blank title", "long title", "long url"])
+	{"title": "t", "body": "b" * 500001},
+], ids=["no title", "empty title", "blank title", "long title", "long url", "long body"])
 def test_out_of_bounds_fields_are_refused(fields):
 	client = as_user(factories.user())
 
@@ -188,10 +189,16 @@ def test_requests_over_8_megabytes_are_refused():
 
 
 def test_fields_at_their_limits_are_accepted():
-	assert_html(_submit(as_user(factories.user()), title="t" * 500, url="https://example.com/" + "a" * 2028), 200)
+	assert_html(_submit(as_user(factories.user()), title="t" * 500, url="https://example.com/" + "a" * 2028, body="b" * 500000), 200)
 
 	post = db.rows("submissions")[-1]
-	assert (len(post["title"]), len(post["url"])) == (500, 2048)
+	assert (len(post["title"]), len(post["url"]), len(post["body"])) == (500, 2048, 500000)
+
+
+def test_long_bodies_of_non_ascii_text_are_accepted():
+	assert_html(_submit(as_user(factories.user()), title="t", body="é" * 400000), 200)
+
+	assert len(db.rows("submissions")[-1]["body"]) == 400000
 
 
 @pytest.mark.parametrize("url", ["javascript:alert(1)", "example.com/page", "//example.com/page", "ftp://example.com/file", "data:text/html,hi", "http://[", "https://", "https://someone@/page", "https://:80/page", "https://evil.example\\@good.example/page"])
