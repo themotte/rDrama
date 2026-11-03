@@ -121,9 +121,10 @@ def post_id(pid, anything=None, v=None):
 def viewmore(v, pid, sort, offset):
 	post = get_post(pid, v=v)
 	sort = _comment_sort(sort, v)
-	offset_prev = int(offset)
-	try: ids = set(int(x) for x in request.values.get("ids").split(','))
-	except: abort(400)
+	try:
+		offset_prev = int(offset)
+		ids = set(int(x) for x in request.values.get("ids", "").split(','))
+	except ValueError: abort(400)
 	
 	limit = app.config['RESULTS_PER_PAGE_COMMENTS']
 	offset = 0

@@ -97,6 +97,12 @@ def test_view_more_needs_the_shown_ids(ids):
 	assert_status(r, 400)
 
 
+def test_view_more_needs_a_numeric_offset():
+	post = factories.post(factories.user())
+
+	assert_status(anon().get(f"/viewmore/{post['id']}/new/x", params={"ids": "1"}), 400)
+
+
 def test_view_more_of_an_unknown_post_is_not_found():
 	post = factories.post(factories.user())
 	db.delete("votes", submission_id=post["id"])
