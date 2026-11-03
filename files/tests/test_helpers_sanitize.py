@@ -142,15 +142,6 @@ def test_allowed_attributes_img_allowed_names():
 	from files.helpers.sanitize import allowed_attributes
 	assert allowed_attributes('img', 'alt', 'Alt text') == True
 	assert allowed_attributes('img', 'title', 'Title text') == True
-	assert allowed_attributes('img', 'g', 'value') == True
-	assert allowed_attributes('img', 'b', 'value') == True
-	assert allowed_attributes('img', 'pat', 'value') == True
-
-
-def test_allowed_attributes_img_class_pat_hand():
-	"""Test allowed_attributes for img tag class pat-hand."""
-	from files.helpers.sanitize import allowed_attributes
-	assert allowed_attributes('img', 'class', 'pat-hand') == True
 	assert allowed_attributes('img', 'class', 'other-class') == False
 
 
@@ -207,25 +198,10 @@ def test_allowed_attributes_source_disallowed():
 	assert allowed_attributes('source', 'type', 'video/mp4') == False
 
 
-def test_allowed_attributes_p_class_mb_0():
-	"""Test allowed_attributes for p tag class mb-0."""
-	from files.helpers.sanitize import allowed_attributes
-	assert allowed_attributes('p', 'class', 'mb-0') == True
-	assert allowed_attributes('p', 'class', 'other-class') == False
-
-
 def test_allowed_attributes_p_disallowed():
 	"""Test allowed_attributes rejects other p attributes."""
 	from files.helpers.sanitize import allowed_attributes
 	assert allowed_attributes('p', 'id', 'myid') == False
-
-
-def test_allowed_attributes_span_class_pat():
-	"""Test allowed_attributes for span tag pat classes."""
-	from files.helpers.sanitize import allowed_attributes
-	assert allowed_attributes('span', 'class', 'pat-container') == True
-	assert allowed_attributes('span', 'class', 'pat-hand') == True
-	assert allowed_attributes('span', 'class', 'other-class') == False
 
 
 def test_allowed_attributes_span_data_bs_toggle():
@@ -318,40 +294,3 @@ def test_validate_css_url_with_spaces():
 	valid, msg = validate_css(css)
 	assert valid == False
 	assert msg == "External URL imports are not allowed"
-
-
-def test_allowed_attributes_emojis_img_loading():
-	"""Test allowed_attributes_emojis for img loading attribute."""
-	from files.helpers.sanitize import allowed_attributes_emojis
-	assert allowed_attributes_emojis('img', 'loading', 'lazy') == True
-	assert allowed_attributes_emojis('img', 'loading', 'eager') == False
-
-
-def test_allowed_attributes_emojis_img_data_bs_toggle():
-	"""Test allowed_attributes_emojis for img data-bs-toggle attribute."""
-	from files.helpers.sanitize import allowed_attributes_emojis
-	assert allowed_attributes_emojis('img', 'data-bs-toggle', 'tooltip') == True
-	assert allowed_attributes_emojis('img', 'data-bs-toggle', 'modal') == False
-
-
-def test_allowed_attributes_emojis_img_allowed_names():
-	"""Test allowed_attributes_emojis for allowed img attribute names."""
-	from files.helpers.sanitize import allowed_attributes_emojis
-	assert allowed_attributes_emojis('img', 'src', '/e/emoji.webp') == True
-	assert allowed_attributes_emojis('img', 'alt', ':emoji:') == True
-	assert allowed_attributes_emojis('img', 'title', ':emoji:') == True
-	assert allowed_attributes_emojis('img', 'g', 'value') == True
-
-
-def test_allowed_attributes_emojis_img_disallowed():
-	"""Test allowed_attributes_emojis rejects other img attributes."""
-	from files.helpers.sanitize import allowed_attributes_emojis
-	assert allowed_attributes_emojis('img', 'class', 'myclass') == False
-	assert allowed_attributes_emojis('img', 'id', 'myid') == False
-
-
-def test_allowed_attributes_emojis_other_tags():
-	"""Test allowed_attributes_emojis for non-img tags."""
-	from files.helpers.sanitize import allowed_attributes_emojis
-	assert allowed_attributes_emojis('div', 'class', 'myclass') == False
-	assert allowed_attributes_emojis('span', 'style', 'color: red') == False

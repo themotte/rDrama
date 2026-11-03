@@ -46,7 +46,7 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 			"password":"themotteadmin",
 			"email":None,
 			"ban_evade":0,
-			"profileurl":"/e/feather.webp"
+			"profileurl":"/assets/images/default-profile-pic.webp"
 		})
 		db.add(admin)
 
@@ -72,7 +72,7 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 				"password":"themotteuser",
 				"email":None,
 				"ban_evade":0,
-				"profileurl":"/e/feather.webp"
+				"profileurl":"/assets/images/default-profile-pic.webp"
 			})
 			db.add(user)
 		users_by_id[user_id] = user

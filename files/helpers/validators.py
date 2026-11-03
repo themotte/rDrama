@@ -95,8 +95,7 @@ class ValidatedSubmissionLike:
 			*,
 			allow_embedding:bool,
 			allow_media_url_upload:bool=True,
-			embed_url_file_key:str="file2",
-			edit:bool=False) -> "ValidatedSubmissionLike":
+			embed_url_file_key:str="file2") -> "ValidatedSubmissionLike":
 		'''
 		Creates the basic structure for a submission and validating it. The 
 		normal submission API has a lot of duplicate code and while this is not
@@ -110,7 +109,6 @@ class ValidatedSubmissionLike:
 		should generally be `True` for submission submitting if file uploads 
 		are allowed and `False` in other contexts (such as editing)
 		:param embed_url_file_key: The key to use for inline file uploads.
-		:param edit: The value of `edit` to pass to `sanitize`
 		'''
 
 		def _process_media(file:Optional[FileStorage]) -> tuple[bool, Optional[str], Optional[str]]:
@@ -185,7 +183,7 @@ class ValidatedSubmissionLike:
 			title_html=sanitize.filter_emojis_only(title, graceful=True),
 			body=body,
 			body_raw=body_raw,
-			body_html=sanitize.sanitize(body, edit=edit),
+			body_html=sanitize.sanitize(body),
 			url=url,
 			thumburl=thumburl,
 		)

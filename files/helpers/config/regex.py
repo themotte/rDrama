@@ -12,8 +12,6 @@ mention_regex2 = re.compile(f'<p>@(([a-zA-Z0-9_\\-]){{1,{USERNAME_LENGTH_MAX}}})
 
 valid_password_regex = re.compile("^.{8,100}$", flags=re.A)
 
-marsey_regex = re.compile("[a-z0-9]{1,30}", flags=re.A)
-
 tags_regex = re.compile("[a-z0-9: ]{1,200}", flags=re.A)
 
 valid_sub_regex = re.compile("^[a-zA-Z0-9_\\-]{3,20}$", flags=re.A)
@@ -45,10 +43,6 @@ whitespace_regex = re.compile('\\s+')
 strikethrough_regex = re.compile('''~{1,2}([^~]+)~{1,2}''', flags=re.A)
 
 chat_command_regex = re.compile(r"^/(\w+)\s?(.*)", flags=re.A)
-
-emoji_regex = re.compile(f"[^a]>\\s*(:[!#@]{{0,3}}[{valid_username_chars}]+:\\s*)+<\\/", flags=re.A)
-emoji_regex2 = re.compile(f"(?<!\"):([!#@{valid_username_chars}]{{1,31}}?):", flags=re.A)
-emoji_regex3 = re.compile(f"(?<!\"):([!@{valid_username_chars}]{{1,31}}?):", flags=re.A)
 
 snappy_url_regex = re.compile('<a href=\\"(https?:\\/\\/[a-z]{1,20}\\.[\\w:~,()\\-.#&\\/=?@%;+]{5,250})\\" rel=\\"nofollow noopener noreferrer\\" target=\\"_blank\\">([\\w:~,()\\-.#&\\/=?@%;+]{5,250})<\\/a>', flags=re.A)
 

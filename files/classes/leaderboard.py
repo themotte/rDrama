@@ -8,7 +8,6 @@ from files.helpers.config.const import LEADERBOARD_LIMIT
 from files.helpers.config.environment import SITE
 
 from files.classes.badges import Badge
-from files.classes.marsey import Marsey
 from files.classes.user import User
 from files.classes.userblock import UserBlock
 from files.helpers.get import get_accounts_dict
@@ -107,10 +106,8 @@ class BadgeMarseyLeaderboard(_CountedAndRankedLeaderboard):
 		sq_criteria = None
 		if self.column == Badge.user_id:
 			sq_criteria = User.id == sq.c.user_id
-		elif self.column == Marsey.author_id:
-			sq_criteria = User.id == sq.c.author_id
 		else:
-			raise ValueError("This leaderboard function only supports Badge.user_id and Marsey.author_id")
+			raise ValueError("This leaderboard function only supports Badge.user_id")
 		leaderboard = self.db.query(User, sq.c.count).join(sq, sq_criteria).order_by(sq.c.count.desc())
 		
 		position:Optional[tuple[int, int, int]] = self.db.query(User.id, sq.c.rank, sq.c.count).join(sq, sq_criteria).filter(User.id == self.v.id).one_or_none()

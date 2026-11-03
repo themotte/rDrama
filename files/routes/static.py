@@ -70,7 +70,6 @@ def participation_stats(v):
 	comments: Query = g.db.query(Comment.id)
 
 	stats = {
-		"marseys": g.db.query(Marsey.name).count(),
 		"users": users.count(),
 		"private users": users.filter_by(is_private=True).count(),
 		"banned users": users.filter(User.is_banned > 0).count(),
@@ -326,16 +325,6 @@ def submit_contact(v: Optional[User]):
 	g.db.commit()
 	return render_template("contact.html", v=v, msg="Your message has been sent.")
 
-@app.get('/e/<emoji>')
-@limiter.exempt
-def emoji(emoji):
-	if not emoji.endswith('.webp'): abort(404)
-	resp = make_response(send_from_directory('assets/images/emojis', emoji))
-	resp.headers.remove("Cache-Control")
-	resp.headers.add("Cache-Control", "public, max-age=3153600")
-	resp.headers.remove("Content-Type")
-	resp.headers.add("Content-Type", "image/webp")
-	return resp
 
 @app.get('/assets/<path:path>')
 @app.get('/static/assets/<path:path>')

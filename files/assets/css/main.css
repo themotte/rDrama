@@ -4543,7 +4543,7 @@ blockquote + p {
 		margin: 1.75rem auto !important;
 }
 }
-.in-comment-image:not(img[src*="/uid/"]):not(img[src*="/pp/"]), .img:not(img[src*="/uid/"]):not(img[src*="/pp/"]), img[alt^="![]("], .preview img:not(img[src$="/pic"]):not(.pat-hand) {
+.in-comment-image:not(img[src*="/uid/"]):not(img[src*="/pp/"]), .img:not(img[src*="/uid/"]):not(img[src*="/pp/"]), img[alt^="![]("], .preview img:not(img[src$="/pic"]) {
 	max-height: 150px !important;
 	max-width: 100% !important;
 	border-radius: 0.2rem !important;
@@ -4624,7 +4624,7 @@ video {
 .text-removed {
 	color: #ffabab !important;
 }
-.mirrored, img[alt^=":!"], img[alt^=":#!"], .pat-container[alt^=":!"], .pat-container[alt^=":#!"] {
+.mirrored, img[alt^=":!"], img[alt^=":#!"] {
 	transform: scaleX(-1);
 	-webkit-transform: scaleX(-1);
 }
@@ -4679,33 +4679,6 @@ input[type=radio] ~ .custom-control-label::before {
 	object-fit: contain;
 }
 
-.pat-container {
-    position: relative;
-    display: inline-block;
-}
-img[pat] {
-    animation: pat-pfp-anim 0.3s infinite !important;
-    transform-origin: bottom center;
-    margin-top: 10%;
-    text-align: center;
-    object-fit: cover;
-}
-img[pat][src^="/pp/"], img[pat][src$="/pic"] {
-	border-radius: 50%;
-}
-.pat-hand {
-    position: absolute;
-    width: 90%;
-    height: 90%;
-    margin-top: -10%;
-    z-index: 1;
-}
-@keyframes pat-pfp-anim {
-    0% { transform: scale(1, 0.8) }
-    50% { transform: scale(0.8, 1) }
-    100% { transform: scale(1, 0.8) }
-}
-        
 .twitter-tweet {
 	margin-bottom: 9.8px;
 	padding-bottom: 7px;
@@ -4825,18 +4798,6 @@ lite-youtube.lyt-activated > .lty-playbtn {
 		margin-bottom: 7px;
 	}
 }
-@keyframes golden {
-	from {filter: sepia(100%) saturate(2) drop-shadow(-1px 1px 1px gold)}
-	to {filter: sepia(100%) saturate(3) drop-shadow(-1px 1px 3px gold)}
-}
-img.golden, img[g] {
-	animation-name: golden !important;
-	animation-duration: 1s !important;
-	animation-iteration-count: infinite !important;
-	animation-direction: alternate !important;
-	animation-timing-function: linear !important;
-}
-
 .text-black {
 	color: var(--black);
 }
@@ -5011,17 +4972,6 @@ li > .sidebar > .rules {
 .self {
 	border-top:2px solid var(--primary);
 	border-bottom:2px solid var(--primary);
-}
-
-.marsey {
-	max-width: 125px;
-	max-height: 125px;
-}
-@media (max-width: 768px) {
-	.marsey {
-		max-width: 60px;
-		max-height: 60px;
-	}
 }
 
 .btn-dead:hover, .active.btn-dead:hover, .active.btn-dead {

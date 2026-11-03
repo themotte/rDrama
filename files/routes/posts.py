@@ -233,7 +233,6 @@ def edit_post(pid, v):
 			allow_embedding=MULTIMEDIA_EMBEDDING_ENABLED,
 			allow_media_url_upload=False,
 			embed_url_file_key="file",
-			edit=True
 		)
 	changed:bool=False
 

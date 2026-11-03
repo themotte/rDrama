@@ -150,7 +150,7 @@ def api_comment(v):
 					body += f'\n\n<a href="{image}">{image}</a>'
 			else: abort(400, "Image files only")
 
-	body_html = sanitize(body, comment=True)
+	body_html = sanitize(body)
 
 	existing = g.db.query(Comment.id).filter(
 		Comment.author_id == v.id,
@@ -280,7 +280,7 @@ def edit_comment(cid, v):
 		abort(400, "You have to actually type something!")
 
 	if body != c.body or request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
-		body_html = sanitize(body, edit=True)
+		body_html = sanitize(body)
 
 		# Spam Checking
 		now = int(time.time())
@@ -327,7 +327,7 @@ def edit_comment(cid, v):
 					body += f"\n\n![]({url})"
 				else: abort(400, "Image files only")
 
-			body_html = sanitize(body, edit=True)
+			body_html = sanitize(body)
 
 		c.body = body[:COMMENT_BODY_LENGTH_MAXIMUM]
 		c.body_html = body_html

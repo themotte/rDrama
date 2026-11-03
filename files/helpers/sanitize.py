@@ -3,7 +3,6 @@ import html
 import re
 import urllib.parse
 from functools import partial
-from os import path
 from typing import Optional
 
 import bleach
@@ -14,14 +13,13 @@ from flask import abort, g
 from mistletoe import markdown
 
 from files.classes.domains import BannedDomain
-from files.classes.marsey import Marsey
 from files.helpers.config.const import (embed_fullmatch_regex,
                                         image_check_regex, video_sub_regex)
 from files.helpers.config.environment import (MENTION_LIMIT,
                                               MULTIMEDIA_EMBEDDING_ENABLED,
                                               SITE_FULL)
 from files.helpers.config.regex import *
-from files.helpers.get import get_user, get_users
+from files.helpers.get import get_users
 
 TLDS = ('ac','ad','ae','aero','af','ag','ai','al','am','an','ao','aq','ar',
 	'arpa','as','asia','at','au','aw','ax','az','ba','bb','bd','be','bf','bg',
@@ -71,8 +69,7 @@ def allowed_attributes(tag, name, value):
 		if name == 'loading' and value == 'lazy': return True
 		if name == 'referrpolicy' and value == 'no-referrer': return True
 		if name == 'data-bs-toggle' and value == 'tooltip': return True
-		if name in ['alt','title','g','b','pat']: return True
-		if name == 'class' and value == 'pat-hand': return True
+		if name in ['alt','title']: return True
 		return False
 
 	if tag == 'lite-youtube':
@@ -90,11 +87,9 @@ def allowed_attributes(tag, name, value):
 		return False
 
 	if tag == 'p':
-		if name == 'class' and value == 'mb-0': return True
 		return False
 
 	if tag == 'span':
-		if name == 'class' and value in ['pat-container', 'pat-hand']: return True
 		if name == 'data-bs-toggle' and value == 'tooltip': return True
 		if name == 'title': return True
 		if name == 'alt': return True
@@ -128,42 +123,6 @@ def callback(attrs, new=False):
 	return attrs
 
 
-def render_emoji(html, regexp, edit, marseys_used=set(), b=False):
-	emojis = list(regexp.finditer(html))
-	captured = set()
-
-	for i in emojis:
-		if i.group(0) in captured: continue
-		captured.add(i.group(0))
-
-		emoji = i.group(1).lower()
-		attrs = ''
-		if b: attrs += ' b'
-
-		old = emoji
-		emoji = emoji.replace('!','').replace('#','')
-
-		emoji_partial_pat = '<img loading="lazy" alt=":{0}:" src="{1}"{2}>'
-		emoji_partial = '<img loading="lazy" data-bs-toggle="tooltip" alt=":{0}:" title=":{0}:" src="{1}"{2}>'
-		emoji_html = None
-
-		if emoji.endswith('pat'):
-			if path.isfile(f"files/assets/images/emojis/{emoji.replace('pat','')}.webp"):
-				attrs += ' pat'
-				emoji_html = f'<span class="pat-container" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:"><img src="/assets/images/hand.webp" class="pat-hand">{emoji_partial_pat.format(old, f"/e/{emoji[:-3]}.webp", attrs)}</span>'
-			elif emoji.startswith('@'):
-				if u := get_user(emoji[1:-3], graceful=True):
-					attrs += ' pat'
-					emoji_html = f'<span class="pat-container" data-bs-toggle="tooltip" alt=":{old}:" title=":{old}:"><img src="/assets/images/hand.webp" class="pat-hand">{emoji_partial_pat.format(old, f"/pp/{u.id}", attrs)}</span>'
-		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-			emoji_html = emoji_partial.format(old, f'/e/{emoji}.webp', attrs)
-
-
-		if emoji_html:
-			html = re.sub(f'(?<!"){i.group(0)}', emoji_html, html)
-	return html
-
-
 REMOVED_CHARACTERS = ['\u200e', '\u200b', '\ufeff']
 """
 Characters which are removed from content
@@ -182,7 +141,7 @@ def sanitize_raw(sanitized:Optional[str], allow_newlines:bool, length_limit:Opti
 		sanitized = sanitized[:length_limit]
 	return sanitized
 
-def sanitize(sanitized, alert=False, comment=False, edit=False):
+def sanitize(sanitized, alert=False):
 	if MULTIMEDIA_EMBEDDING_ENABLED:
 		# turn eg. https://wikipedia.org/someimage.jpg into ![](https://wikipedia.org/someimage.jpg)
 		sanitized = image_regex.sub(r'\1![](\2)\4', sanitized)
@@ -252,29 +211,6 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	sanitized = spoiler_regex.sub(r'<spoiler>\1</spoiler>', sanitized)
 
-	marseys_used = set()
-
-	# emojis = list(emoji_regex.finditer(sanitized))
-	# if len(emojis) > 20: edit = True
-
-	# captured = []
-	# for i in emojis:
-	# 	if i.group(0) in captured: continue
-	# 	captured.append(i.group(0))
-
-	# 	old = i.group(0)
-	# 	if 'marseylong1' in old or 'marseylong2' in old or 'marseyllama1' in old or 'marseyllama2' in old: new = old.lower().replace(">", " class='mb-0'>")
-	# 	else: new = old.lower()
-
-	# 	new = render_emoji(new, emoji_regex2, edit, marseys_used, True)
-
-	# 	sanitized = sanitized.replace(old, new)
-
-	# emojis = list(emoji_regex2.finditer(sanitized))
-	# if len(emojis) > 20: edit = True
-
-	# sanitized = render_emoji(sanitized, emoji_regex2, edit, marseys_used)
-
 	for rd in ["://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it", "://teddit.net"]:
 		sanitized = sanitized.replace(rd, "://old.reddit.com")
 
@@ -301,11 +237,6 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 
 	if MULTIMEDIA_EMBEDDING_ENABLED:
 		sanitized = video_sub_regex.sub(r'\1<video controls preload="none"><source src="\2"></video>', sanitized)
-
-	if comment:
-		for marsey in g.db.query(Marsey).filter(Marsey.name.in_(marseys_used)).all():
-			marsey.count += 1
-			g.db.add(marsey)
 
 	sanitized = sanitized.replace('&amp;','&')
 	sanitized = utm_regex.sub('', sanitized)
@@ -348,24 +279,12 @@ def sanitize(sanitized, alert=False, comment=False, edit=False):
 	return sanitized
 
 
-def allowed_attributes_emojis(tag, name, value):
-	if tag == 'img':
-		if name == 'loading' and value == 'lazy': return True
-		if name == 'data-bs-toggle' and value == 'tooltip': return True
-		if name in ['src','alt','title','g']: return True
-	return False
-
-
-def filter_emojis_only(title, edit=False, graceful=False):
+def filter_emojis_only(title, graceful=False):
 	title = unwanted_bytes_regex.sub('', title)
 	title = whitespace_regex.sub(' ', title)
 	title = html.escape(title, quote=True)
 
-	# title = render_emoji(title, emoji_regex3, edit)
-
 	title = strikethrough_regex.sub(r'<del>\1</del>', title)
-
-	sanitized = bleach.clean(title, tags=['img','del'], attributes=allowed_attributes_emojis, protocols=['http','https'])
 
 	if len(title) > 1500 and not graceful: abort(400)
 	else: return title

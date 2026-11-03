@@ -176,7 +176,7 @@ def test_bulk_update_descendant_count_quick():
 			"password":"themotteuser",
 			"email":None,
 			"ban_evade":0,
-			"profileurl":"/e/feather.webp"
+			"profileurl":"/assets/images/default-profile-pic.webp"
 		})
 		db.add(alice)
 		db.commit()

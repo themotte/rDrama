@@ -61,7 +61,6 @@ from .comment import Comment
 from .domains import BannedDomain
 from .flags import Flag, CommentFlag
 from .follows import Follow
-from .marsey import Marsey
 from .mod_logs import ModAction
 from .notifications import Notification
 from .saves import SaveRelationship, CommentSaveRelationship

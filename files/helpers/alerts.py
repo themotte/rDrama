@@ -2,6 +2,7 @@ from files.classes import *
 from flask import g
 
 from .sanitize import *
+from files.helpers.get import get_user
 from .config.const import *
 from files.classes.visstate import StateMod
 
