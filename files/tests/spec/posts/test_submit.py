@@ -177,6 +177,16 @@ def test_text_of_only_invisible_characters_counts_as_empty(fields):
 	d.assert_exactly()
 
 
+def test_requests_over_8_megabytes_are_refused():
+	client = as_user(factories.user())
+
+	with db_diff() as d:
+		r = _submit(client, headers=XHR, title="t", body="b" * (9 * 1024 * 1024))
+
+	assert_status(r, 413)
+	d.assert_exactly()
+
+
 def test_fields_at_their_limits_are_accepted():
 	assert_html(_submit(as_user(factories.user()), title="t" * 500, url="https://example.com/" + "a" * 2028), 200)
 

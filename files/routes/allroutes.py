@@ -71,7 +71,8 @@ def after_request(response: Response):
 		elapsed = time.time() - g.start_time
 		route = f"{request.method} {request.full_path}"
 		detail = route
-		if request.form:
+		# A request refused for its size has a form that can't be parsed
+		if response.status_code != 413 and request.form:
 			safe_form = {k: v for k, v in request.form.items()
 				if k.lower() not in ('password', 'secret', 'formkey')}
 			if safe_form:
