@@ -254,7 +254,7 @@ def edit_post(pid, v):
 	if not changed:
 		abort(400, "You need to change something")
 
-	p.publish()
+	invalidate_cache(frontlist=True, userpagelisting=True, changeloglist=p.is_changelog)
 
 	if v.id == p.author_id:
 		if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())

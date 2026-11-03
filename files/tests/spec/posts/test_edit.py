@@ -35,6 +35,19 @@ def test_author_edits_the_title():
 	d.assert_exactly(updated={"submissions": {post["id"]: {"title": title, "title_html": title}}})
 
 
+def test_edits_notify_nobody():
+	follower, mentioned = factories.user(), factories.user()
+	author = factories.user()
+	db.insert("follows", user_id=follower["id"], target_id=author["id"])
+	post = factories.post(author, body="before")
+	title = factories.unique("title")
+
+	with db_diff() as d:
+		_edit(as_user(author), post, title=title, body=f"hi @{mentioned['username']}")
+
+	d.assert_exactly(updated={"submissions": {post["id"]: {"title": title, "title_html": title, "body": ANY, "body_html": ANY}}})
+
+
 def test_editing_an_older_post_marks_it_edited():
 	'''Edits within the first three minutes after posting go unmarked.'''
 	author = factories.user()

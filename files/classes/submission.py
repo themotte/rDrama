@@ -115,12 +115,11 @@ class Submission(CreatedBase):
 		if self.private: return
 		if not self.ghost:
 			notify_submission_publish(self)
-		invalidate_cache(
-			frontlist=True,
-			userpagelisting=True,
-			changeloglist=("[changelog]" in self.title.lower()
-				or "(changelog)" in self.title.lower()),
-		)
+		invalidate_cache(frontlist=True, userpagelisting=True, changeloglist=self.is_changelog)
+
+	@property
+	def is_changelog(self) -> bool:
+		return "[changelog]" in self.title.lower() or "(changelog)" in self.title.lower()
 
 	def __repr__(self):
 		return f"<{self.__class__.__name__}(id={self.id})>"
