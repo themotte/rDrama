@@ -42,6 +42,16 @@ def test_publishing_a_draft_notifies_mentioned_users_and_followers():
 	)
 
 
+@pytest.mark.parametrize("state", [{"state_mod": "REMOVED"}, {"state_user_deleted_utc": "2020-01-01T00:00:00Z"}], ids=["removed", "deleted"])
+def test_publishing_a_draft_that_others_cannot_see_notifies_nobody(state):
+	author = factories.user()
+	mentioned = factories.user()
+	draft = factories.post(author, private=True, body=f"hi @{mentioned['username']}", **state)
+
+	assert_redirect(as_user(author).post(f"/publish/{draft['id']}"), _path(draft))
+	assert db.rows("notifications") == []
+
+
 def test_publishing_someone_elses_draft_is_forbidden():
 	draft = factories.post(factories.user(), private=True)
 	other = factories.user()

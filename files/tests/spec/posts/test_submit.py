@@ -558,6 +558,60 @@ def test_drafts_notify_nobody():
 	assert db.rows("notifications") == []
 
 
+def _audience(author):
+	mentioned, follower = factories.user(), factories.user()
+	db.insert("follows", user_id=follower["id"], target_id=author["id"])
+	return mentioned
+
+
+def test_posts_held_for_review_notify_nobody_yet():
+	site_settings_set("FilterNewPosts", True)
+	author = factories.user()
+	mentioned = _audience(author)
+
+	assert_html(_submit(as_user(author), title="t", body=f"hi @{mentioned['username']}"), 200)
+
+	assert db.rows("notifications") == []
+
+
+def test_posts_by_shadowbanned_users_notify_nobody():
+	author = factories.user(shadowbanned="somemod")
+	mentioned = _audience(author)
+
+	assert_html(_submit(as_user(author), title="t", body=f"hi @{mentioned['username']}"), 200)
+
+	assert db.rows("notifications") == []
+
+
+def _approve(post):
+	return as_user(factories.admin(2)).post_json("/admin/update_filter_status", {"post_id": post["id"], "new_status": "normal"})
+
+
+def test_approving_a_held_post_notifies():
+	site_settings_set("FilterNewPosts", True)
+	author = factories.user()
+	mentioned = _audience(author)
+	assert_html(_submit(as_user(author), title="t", body=f"hi @{mentioned['username']}"), 200)
+	post = db.rows("submissions")[-1]
+
+	assert_status(_approve(post), 200)
+
+	assert {n["user_id"] for n in db.rows("notifications")} == {mentioned["id"], db.row("follows", target_id=author["id"])["user_id"]}
+
+
+def test_approving_a_post_twice_does_not_notify_twice():
+	author = factories.user()
+	mentioned = _audience(author)
+	assert_html(_submit(as_user(author), title="t", body=f"hi @{mentioned['username']}"), 200)
+	post = db.rows("submissions")[-1]
+	moderator = as_user(factories.admin(2))
+	moderator.post_json("/admin/update_filter_status", {"post_id": post["id"], "new_status": "removed"})
+
+	moderator.post_json("/admin/update_filter_status", {"post_id": post["id"], "new_status": "normal"})
+
+	assert len(db.rows("notifications")) == 2
+
+
 def test_later_mentions_of_the_same_post_share_one_notification():
 	first, second = factories.user(), factories.user()
 	author = factories.user()

@@ -105,6 +105,9 @@ class Submission(CreatedBase):
 		db.add(author)
 
 	def publish(self):
+		'''
+		Run when the post is offered to others: when it's submitted, a draft is published, or a moderator approves it. Notifies mentioned users and followers if others can see it; running again for an unchanged post notifies nobody twice.
+		'''
 		# this is absolutely horrifying. imports are very very tangled and the
 		# spider web of imports is hard to maintain. we defer loading these
 		# imports until as late as possible. otherwise there are import loops
@@ -113,7 +116,7 @@ class Submission(CreatedBase):
 		from files.helpers.caching import invalidate_cache
 
 		if self.private: return
-		if not self.ghost:
+		if not self.ghost and self.visibility_state.publicly_visible:
 			notify_submission_publish(self)
 		invalidate_cache(frontlist=True, userpagelisting=True, changeloglist=self.is_changelog)
 

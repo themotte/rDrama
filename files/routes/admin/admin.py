@@ -254,6 +254,7 @@ def update_filter_status(v):
 	if making_visible:
 		modlog_action: str = "approve"
 		if isinstance(target, Comment): comment_on_publish(target)
+		else: target.publish()
 	elif making_invisible:
 		modlog_action: str = "remove"
 		if isinstance(target, Comment): comment_on_unpublish(target)
