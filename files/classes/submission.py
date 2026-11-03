@@ -12,7 +12,7 @@ from files.helpers.assetcache import assetcache_path
 from files.helpers.config.const import *
 from files.helpers.config.environment import (SCORE_HIDING_TIME_HOURS, SITE,
                                               SITE_FULL, SITE_ID)
-from files.helpers.content import body_displayed
+from files.helpers.content import body_displayed, is_web_url
 from files.helpers.lazy import lazy
 from files.helpers.time import format_age, format_datetime
 
@@ -303,6 +303,7 @@ class Submission(CreatedBase):
 			return url
 		elif self.url:
 			if self.url.startswith('/'): return SITE_FULL + self.url
+			if not is_web_url(self.url): return ""
 			return self.url
 		else: return ""
  

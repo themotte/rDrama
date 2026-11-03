@@ -12,7 +12,7 @@ from files.helpers.config.environment import YOUTUBE_KEY
 from files.helpers.config.const import (SUBMISSION_BODY_LENGTH_MAXIMUM,
                                  SUBMISSION_TITLE_LENGTH_MAXIMUM,
                                  SUBMISSION_URL_LENGTH_MAXIMUM)
-from files.helpers.content import canonicalize_url2
+from files.helpers.content import canonicalize_url2, is_web_url
 from files.helpers.media import new_image_path, process_image
 
 
@@ -153,6 +153,8 @@ class ValidatedSubmissionLike:
 		title = sanitize.sanitize_raw(title, allow_newlines=False, length_limit=SUBMISSION_TITLE_LENGTH_MAXIMUM)
 
 		url = guarded_value("url", 0, SUBMISSION_URL_LENGTH_MAXIMUM)
+		if url and not is_web_url(url):
+			abort(400, "Links must be web addresses starting with http:// or https://")
 	
 		body_raw = guarded_value("body", 0, SUBMISSION_BODY_LENGTH_MAXIMUM)
 		body_raw = sanitize.sanitize_raw(body_raw, allow_newlines=True, length_limit=SUBMISSION_BODY_LENGTH_MAXIMUM)

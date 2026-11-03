@@ -53,6 +53,15 @@ def test_link_posts_show_their_link():
 	assert_in_payload(_page(anon(), post), url)
 
 
+def test_stored_links_that_are_not_web_addresses_are_not_linked():
+	post = factories.post(factories.user(), url="javascript:alert(1)")
+
+	r = _page(anon(), post)
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, "javascript:alert")
+
+
 # 18+ posts
 
 def test_visitors_must_confirm_their_age_before_seeing_an_18_plus_post():

@@ -400,7 +400,8 @@ def api_is_repost():
 	url = request.values.get('url')
 	if not url: abort(400)
 
-	url = canonicalize_url2(url, httpsify=True).geturl()
+	try: url = canonicalize_url2(url, httpsify=True).geturl()
+	except ValueError: abort(400)
 	if url.endswith('/'): url = url[:-1]
 
 	search_url = sql_ilike_clean(url)

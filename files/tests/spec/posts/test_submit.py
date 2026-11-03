@@ -178,6 +178,21 @@ def test_fields_at_their_limits_are_accepted():
 	assert (len(post["title"]), len(post["url"])) == (500, 2048)
 
 
+@pytest.mark.parametrize("url", ["javascript:alert(1)", "example.com/page", "//example.com/page", "ftp://example.com/file", "data:text/html,hi", "http://[", "https://", "https://someone@/page", "https://:80/page", "https://evil.example\\@good.example/page"])
+def test_links_must_be_web_addresses(url):
+	client = as_user(factories.user())
+
+	with db_diff() as d:
+		r = _submit(client, headers=XHR, title="t", url=url)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
+def test_link_schemes_are_case_insensitive():
+	assert_html(_submit(as_user(factories.user()), title="t", url="HTTPS://example.com/page"), 200)
+
+
 def test_a_post_needs_a_link_text_or_image():
 	client = as_user(factories.user())
 

@@ -44,8 +44,9 @@ def test_repost_check_keeps_meaningful_query_parameters():
 	assert _is_repost("https://example.com/page?id=2").json == {"permalink": ""}
 
 
-def test_repost_check_needs_a_url():
-	assert_status(anon().post("/is_repost", {}), 400)
+@pytest.mark.parametrize("fields", [{}, {"url": "http://["}], ids=["missing", "malformed"])
+def test_repost_check_needs_a_url(fields):
+	assert_status(anon().post("/is_repost", fields), 400)
 
 
 # Page titles

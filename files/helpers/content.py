@@ -49,6 +49,13 @@ def canonicalize_url2(url:str, *, httpsify:bool=False) -> urllib.parse.ParseResu
 	return url_parsed
 
 
+def is_web_url(url:str) -> bool:
+	try: parsed = urllib.parse.urlparse(url)
+	except ValueError: return False
+	# Browsers read a backslash as a slash, so the host they visit could differ from the one parsed here
+	return parsed.scheme in ('http', 'https') and bool(parsed.hostname) and '\\' not in url
+
+
 def body_displayed(target:Submittable, v:Optional[User], is_html:bool) -> str:
 	added_message = target.visibility_state.added_message(v)
 
