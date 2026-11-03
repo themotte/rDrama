@@ -64,31 +64,31 @@ def activate(v):
 	timestamp = int(request.values.get("time", "0"))
 	token = request.values.get("token", "").strip()
 
-	if int(time.time()) - timestamp > 3600:
+	now = int(time.time())
+	if timestamp > now or now - timestamp > 3600:
 		return render_template("message.html", v=v, title="Verification link expired.",
 							   message="That link has expired. Visit your settings to send yourself another verification email."), 410
 
 	if not hmac.compare_digest(token, activation_token(email, id, timestamp)):
 		abort(403)
 
-	user = g.db.query(User).filter_by(id=id).one_or_none()
-	if not user:
-		abort(404)
+	if id != str(v.id):
+		abort(403, "That verification link is for a different account.")
 
-	if user.is_activated and user.email == email:
+	if v.is_activated and v.email == email:
 		return render_template("message_success.html", v=v, title="Email already verified.", message="Email already verified."), 404
 
-	user.email = email
-	user.is_activated = True
+	v.email = email
+	v.is_activated = True
 
-	if not any(b.badge_id == 2 for b in user.badges):
-		mail_badge = Badge(user_id=user.id, badge_id=2)
+	if not any(b.badge_id == 2 for b in v.badges):
+		mail_badge = Badge(user_id=v.id, badge_id=2)
 		g.db.add(mail_badge)
 		g.db.flush()
-		send_notification(user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({mail_badge.path})\n\n{mail_badge.name}")
+		send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({mail_badge.path})\n\n{mail_badge.name}")
 
 
-	g.db.add(user)
+	g.db.add(v)
 	g.db.commit()
 
 	return render_template("message_success.html", v=v, title="Email verified.", message=f"Your email {email} has been verified. Thank you.")

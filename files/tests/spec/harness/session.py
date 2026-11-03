@@ -13,7 +13,7 @@ Session cookie: named `session_<site id, lowercased>`; value is an itsdangerous 
 
 Signature: lowercase hex HMAC-MD5 of a message, with key (MASTER_KEY) and message both encoded UTF-16LE with a leading byte-order mark (FF FE). Used for:
 - Form key: signs "<session_id>+<user id>+<users.login_nonce>". Accepted from the form body, the query string, or a `formkey` member of a JSON body.
-- Email verification links (/activate?email=&id=&time=&token=): signs "activate+<email, lowercased>+<user id>+<time, epoch seconds>"; valid for an hour.
+- Email verification links (/activate?email=&id=&time=&token=): signs "activate+<email, lowercased>+<user id>+<time, epoch seconds>"; valid for an hour after its time and never before it, and only while logged in as the account it names.
 - Signup form key (the signup form's `formkey`, with its `now` field): signs "signup+<now, epoch seconds>+<session signup_token>+<User-Agent of the request>".
 
 Every message but the form key's starts with its purpose, so a signature issued for one purpose never passes for another.
