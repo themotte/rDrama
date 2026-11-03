@@ -56,6 +56,20 @@ def when_ready(server):
 	except Exception as e:
 		print(f"[stats] failed to start master monitor: {e}", file=sys.stderr, flush=True)
 
+class RedactingLogger(glogging.Logger):
+	"""Access-log lines with passwords, 2FA codes and signed tokens removed from the request line and referer, the two atoms access_log_format records that carry URLs."""
+
+	def atoms(self, resp, req, environ, request_time):
+		from files.helpers.log_redaction import redact_url
+		atoms = super().atoms(resp, req, environ, request_time)
+		method, uri, protocol = atoms["r"].split(" ", 2)
+		atoms["r"] = f"{method} {redact_url(uri)} {protocol}"
+		atoms["f"] = redact_url(atoms["f"])
+		return atoms
+
+
+logger_class = RedactingLogger
+
 # Access logging configuration
 accesslog = 'logs/access.log'
 access_log_format = '%({X-Real-IP}i)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s" %(D)s'

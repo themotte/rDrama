@@ -11,9 +11,14 @@ from flask import abort, g, request, session
 from files.__main__ import app, db_session, limiter, is_known_bot, active_requests
 from files.helpers.config.const import LOGGED_IN_COOKIE
 from files.helpers.config.environment import SITE_SETTINGS_PATH
+from files.helpers.log_redaction import redact_form, redact_request_target
 
 if TYPE_CHECKING:
 	from flask.wrappers import Response
+
+def _logged_target() -> str:
+	return redact_request_target(request.path, request.query_string.decode("utf-8", errors="replace"))
+
 
 @app.before_request
 def before_request():
@@ -54,7 +59,7 @@ def before_request():
 	# This prevents thread safety issues with Gunicorn's gthread workers
 	g.db = db_session.session_factory()
 	g.start_time = time.time()
-	active_requests[threading.get_ident()] = (request.method, request.full_path, g.start_time)
+	active_requests[threading.get_ident()] = (request.method, _logged_target(), g.start_time)
 
 
 @app.teardown_appcontext
@@ -69,21 +74,14 @@ def after_request(response: Response):
 	if not app.debug and hasattr(g, 'start_time'):
 		from files.__main__ import _perf, SLOW_THRESHOLD
 		elapsed = time.time() - g.start_time
-		route = f"{request.method} {request.full_path}"
-		detail = route
+		detail = f"{request.method} {_logged_target()}"
 		# A request refused for its size has a form that can't be parsed
 		if response.status_code != 413 and request.form:
-			safe_form = {k: v for k, v in request.form.items()
-				if k.lower() not in ('password', 'secret', 'formkey')}
-			if safe_form:
-				detail += f" form={safe_form}"
+			form = redact_form(request.form)
+			if form:
+				detail += f" form={form}"
 		_perf.record_http(elapsed, detail, request.headers.get("User-Agent", ""))
 		if elapsed >= SLOW_THRESHOLD:
-			detail = route
-			if request.form:
-				safe_form = {k: v for k, v in request.form.items()
-					if k.lower() not in ('password', 'secret', 'formkey')}
-				detail += f" form={safe_form}"
 			queries = getattr(g, 'query_count', 0)
 			query_time = getattr(g, 'query_time', 0.0)
 			ip = request.headers.get('X-Real-IP', request.remote_addr or '-')
