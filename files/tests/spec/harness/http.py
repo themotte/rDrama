@@ -63,8 +63,9 @@ class _InputFinder(HTMLParser):
 class Client:
 	'''A browser-like client: keeps cookies, and when logged in, adds the form key to every non-GET request.'''
 
-	def __init__(self):
+	def __init__(self, authorization: str | None = None):
 		self.cookies: dict[str, str] = {}
+		self.authorization = authorization
 
 	def login_as(self, user: dict):
 		self.cookies[session.cookie_name()] = session.encode(session.logged_in_payload(user["id"], user["login_nonce"]))
@@ -92,7 +93,7 @@ class Client:
 		return self.request("GET", path, params=params, headers=headers)
 
 	def post(self, path, data=None, headers=None, files=None) -> Response:
-		'''`files` maps field name to (filename, bytes, content type) and makes the request multipart.'''
+		'''`files` maps field name to (filename, bytes, content type), or to a list of them, and makes the request multipart.'''
 		return self.request("POST", path, data=self._with_formkey(data), headers=headers, files=files)
 
 	def post_json(self, path, payload, headers=None) -> Response:
@@ -105,7 +106,7 @@ class Client:
 	def request(self, method, path, *, params=None, data=None, json=None, headers=None, files=None) -> Response:
 		if params:
 			path = f"{path}{'&' if '?' in path else '?'}{urlencode(params, doseq=True)}"
-		all_headers = {"User-Agent": DEFAULT_USER_AGENT, "Host": config.site_host(), **(headers or {})}
+		all_headers = {"User-Agent": DEFAULT_USER_AGENT, "Host": config.site_host(), **({"Authorization": self.authorization} if self.authorization else {}), **(headers or {})}
 		if self.cookies:
 			all_headers["Cookie"] = "; ".join(f"{k}={v}" for k, v in self.cookies.items())
 		status, response_headers, body = backend.request(method, path, headers=all_headers, data=data, json=json, files=files)

@@ -5,13 +5,13 @@ import json
 import re
 import time
 
-from files.tests.spec.harness import backend, config, db, factories, seed, session, uploads
+from files.tests.spec.harness import backend, config, db, external_web, factories, seed, session, uploads
 from files.tests.spec.harness.asserts import *
 from files.tests.spec.harness.asserts import __all__ as _asserts_all
 from files.tests.spec.harness.db import ANY, db_diff
 from files.tests.spec.harness.http import Client, Response
 
-__all__ = ["config", "db", "factories", "seed", "session", "uploads", "XHR", "TOR", "can_log_in", "urls_in", "totp_step_settle", "ANY", "db_diff", "Client", "Response", "anon", "as_user", "site_settings_set", "run_background_work", "sent_mail", *_asserts_all]
+__all__ = ["config", "db", "external_web", "factories", "seed", "session", "uploads", "XHR", "TOR", "can_log_in", "urls_in", "totp_step_settle", "ANY", "db_diff", "Client", "Response", "anon", "as_user", "as_api", "site_settings_set", "run_background_work", "sent_mail", *_asserts_all]
 
 
 XHR = {"xhr": "1"}
@@ -28,6 +28,11 @@ def as_user(user: dict) -> Client:
 	return Client().login_as(user)
 
 
+def as_api(token: str) -> Client:
+	'''A client of the API: authenticates every request with an access token (see factories.api_token) instead of a session, and sends no form key.'''
+	return Client(authorization=token)
+
+
 def site_settings_set(key, value):
 	'''Changes one entry of the site settings file, which the app must re-read on every request (see config.site_settings_path).'''
 	path = config.site_settings_path()
@@ -39,7 +44,7 @@ def site_settings_set(key, value):
 
 
 def run_background_work():
-	'''Runs work the app handed off to the background (thumbnail fetching, push notifications) to completion.'''
+	'''Runs work the app handed off to the background (thumbnail fetching) to completion.'''
 	backend.run_background_work()
 
 

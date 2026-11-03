@@ -5,7 +5,7 @@ import os
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 
-from sqlalchemy import MetaData, Table, create_engine, select
+from sqlalchemy import MetaData, Table, create_engine, select, text
 
 _engine = None
 _metadata: MetaData | None = None
@@ -62,6 +62,13 @@ def delete(table_name, **where) -> int:
 	t = table(table_name)
 	with engine().begin() as conn:
 		return conn.execute(t.delete().where(*_where(t, where))).rowcount
+
+
+def execute(sql, **params):
+	'''Runs one SQL statement with bound `:name` parameters; returns the first column of its first row, if it returns rows.'''
+	with engine().begin() as conn:
+		result = conn.execute(text(sql), params)
+		return result.scalar() if result.returns_rows else None
 
 
 class _Any:
