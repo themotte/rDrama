@@ -628,7 +628,7 @@ def undelete_post_pid(pid, v):
 @app.post("/toggle_comment_nsfw/<cid>")
 @auth_required
 def toggle_comment_nsfw(cid, v):
-	comment = g.db.query(Comment).filter_by(id=cid).one_or_none()
+	comment = get_comment(cid)
 	if comment.author_id != v.id and not v.admin_level >= 2: abort(403)
 	comment.over_18 = not comment.over_18
 	g.db.add(comment)

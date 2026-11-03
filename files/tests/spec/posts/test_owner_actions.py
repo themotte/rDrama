@@ -204,6 +204,16 @@ def test_comment_18_plus_toggles(who):
 	d.assert_exactly(updated={"comments": {comment["id"]: {"over_18": False}}})
 
 
+@pytest.mark.parametrize("which", ["unknown", "not a number"])
+def test_toggling_an_unknown_comment_is_not_found(which):
+	comment = factories.comment(factories.user(), factories.post(factories.user()))
+	db.delete("commentvotes", comment_id=comment["id"])
+	db.delete("comments", id=comment["id"])
+	cid = comment["id"] if which == "unknown" else "abc"
+
+	assert_status(as_user(factories.user()).post(f"/toggle_comment_nsfw/{cid}", headers=XHR), 404)
+
+
 def test_toggling_someone_elses_comment_is_forbidden():
 	comment = factories.comment(factories.user(), factories.post(factories.user()))
 	helper = factories.admin(1)
