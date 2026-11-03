@@ -1,6 +1,5 @@
 import math
 from typing import TYPE_CHECKING, Literal, Optional
-from urllib.parse import parse_qs, urlencode, urlparse
 
 from flask import g
 from sqlalchemy import *
@@ -273,18 +272,6 @@ class Comment(CreatedBase):
 
 	def realbody(self, v):
 		body = body_displayed(self, v, is_html=True)
-		if v and v.controversial:
-			captured = []
-			for i in controversial_regex.finditer(body):
-				if i.group(0) in captured: continue
-				captured.append(i.group(0))
-				url = i.group(1)
-				p = urlparse(url).query
-				p = parse_qs(p)
-				if 'sort' not in p: p['sort'] = ['controversial']
-
-				url_noquery = url.split('?')[0]
-				body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
 		execute_shadowbanned_fake_votes(g.db, self, v) # TODO: put in route handler?
 		return body
 

@@ -295,15 +295,13 @@ class Submission(CreatedBase):
 	def realurl(self, v):
 		if v and self.url and self.url.startswith("https://old.reddit.com/"):
 
-			url = self.url.replace("old.reddit.com", v.reddit)
+			url = self.url
 
 			if '/comments/' in url and "sort=" not in url:
 				if "?" in url: url += f"&context={RENDER_DEPTH_LIMIT}" 
 				else: url += f"?context={RENDER_DEPTH_LIMIT - 1}"
-				if v.controversial: url += "&sort=controversial"
 			return url
 		elif self.url:
-			if v and v.nitter and '/i/' not in self.url and '/retweets' not in self.url: return self.url.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 			if self.url.startswith('/'): return SITE_FULL + self.url
 			return self.url
 		else: return ""

@@ -67,9 +67,6 @@ def body_displayed(target:Submittable, v:Optional[User], is_html:bool) -> str:
 		if added_message:
 			body = f'{body}\n\n{added_message}'
 
-	body = body.replace("old.reddit.com", v.reddit)
-	if v.nitter and '/i/' not in body and '/retweets' not in body: 
-		body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 	return body
 
 

@@ -51,24 +51,24 @@ def test_formkey_is_embedded_in_pages_for_logged_in_users():
 
 
 def test_post_with_formkey_in_form_body_is_authenticated():
-	u = factories.user()
+	u = factories.user(cardview=False)
 
 	with db_diff() as d:
-		r = as_user(u).post("/settings/profile", {"reddit": "reddit.com"}, headers=XHR)
+		r = as_user(u).post("/settings/profile", {"cardview": "true"}, headers=XHR)
 
 	assert_status(r, 200)
-	d.assert_exactly(updated={"users": {u["id"]: {"reddit": "reddit.com"}}})
+	d.assert_exactly(updated={"users": {u["id"]: {"cardview": True}}})
 
 
 def test_post_with_formkey_in_query_string_is_authenticated():
-	u = factories.user()
+	u = factories.user(cardview=False)
 	client = as_user(u)
 
 	with db_diff() as d:
-		r = client.post_raw(f"/settings/profile?formkey={client.formkey}", {"reddit": "reddit.com"}, headers=XHR)
+		r = client.post_raw(f"/settings/profile?formkey={client.formkey}", {"cardview": "true"}, headers=XHR)
 
 	assert_status(r, 200)
-	d.assert_exactly(updated={"users": {u["id"]: {"reddit": "reddit.com"}}})
+	d.assert_exactly(updated={"users": {u["id"]: {"cardview": True}}})
 
 
 def test_post_with_formkey_in_json_body_is_authenticated():
@@ -83,7 +83,7 @@ def test_post_without_formkey_is_treated_as_anonymous():
 	client = as_user(factories.user())
 
 	with db_diff() as d:
-		r = client.post_raw("/settings/profile", {"reddit": "reddit.com"}, headers=XHR)
+		r = client.post_raw("/settings/profile", {"cardview": "true"}, headers=XHR)
 
 	assert_api_unauthorized(r)
 	d.assert_exactly()
@@ -93,7 +93,7 @@ def test_post_with_wrong_formkey_is_treated_as_anonymous():
 	client = as_user(factories.user())
 
 	with db_diff() as d:
-		r = client.post_raw("/settings/profile", {"reddit": "reddit.com", "formkey": "0" * 32}, headers=XHR)
+		r = client.post_raw("/settings/profile", {"cardview": "true", "formkey": "0" * 32}, headers=XHR)
 
 	assert_api_unauthorized(r)
 	d.assert_exactly()

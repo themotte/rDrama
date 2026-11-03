@@ -1,7 +1,7 @@
 '''
 POST /settings/profile, preference fields.
 
-A request applies at most one "single-choice" field. Single-choice fields are considered in this order: reddit (only when different from the current value), hidevotedon, cardview, highlightcomments, newtab, newtabexternal, nitter, controversial, over18, nofollow (each whenever present), then the text fields (see test_profile_text), which end the request. Otherwise every present "multi" field applies too: frontsize, defaultsortingcomments, defaultsorting, defaulttime, theme.
+A request applies at most one "single-choice" field. Single-choice fields are considered in this order: hidevotedon, cardview, highlightcomments, newtab, newtabexternal, over18, nofollow (each whenever present), then the text fields (see test_profile_text), which end the request. Otherwise every present "multi" field applies too: frontsize, defaultsortingcomments, defaultsorting, defaulttime, theme.
 
 Success is a JSON message. A request that changes nothing is a 400. A request with an unlisted multi-field value (400) changes nothing at all.
 '''
@@ -15,8 +15,6 @@ BOOLEAN_TOGGLES = [
 	("highlightcomments", "highlightcomments"),
 	("newtab", "newtab"),
 	("newtabexternal", "newtabexternal"),
-	("nitter", "nitter"),
-	("controversial", "controversial"),
 	("over18", "over_18"),
 	("nofollow", "is_nofollow"),
 ]
@@ -49,61 +47,14 @@ def test_boolean_toggle_to_the_current_value_succeeds_without_change(param, colu
 	d.assert_exactly()
 
 
-@pytest.mark.parametrize("site", ["old.reddit.com", "reddit.com", "i.reddit.com", "teddit.net", "libredd.it", "unddit.com"])
-def test_reddit_frontend_accepts_known_sites(site):
-	u = factories.user(reddit="old.reddit.com" if site != "old.reddit.com" else "reddit.com")
-
-	with db_diff() as d:
-		r = _post(u, {"reddit": site})
-
-	assert_json_message(r)
-	d.assert_exactly(updated={"users": {u["id"]: {"reddit": site}}})
-
-
-def test_reddit_frontend_rejects_unknown_site():
-	u = factories.user()
-
-	with db_diff() as d:
-		r = _post(u, {"reddit": "evil.example"}, headers=XHR)
-
-	assert_status(r, 400)
-	d.assert_exactly()
-
-
-def test_unknown_reddit_frontend_still_ends_the_single_choice_fields():
-	u = factories.user(cardview=False)
-
-	with db_diff() as d:
-		r = _post(u, {"reddit": "evil.example", "cardview": "true", "frontsize": "50"})
-
-	assert_json_message(r)
-	d.assert_exactly(updated={"users": {u["id"]: {"frontsize": 50}}})
-
-
-def test_reddit_frontend_equal_to_the_current_one_falls_through_to_later_fields():
-	u = factories.user(reddit="reddit.com", cardview=False)
-
-	with db_diff() as d:
-		r = _post(u, {"reddit": "reddit.com", "cardview": "true"})
-
-	assert_json_message(r)
-	d.assert_exactly(updated={"users": {u["id"]: {"cardview": True}}})
-
-
-def test_reddit_frontend_equal_to_the_current_one_alone_changes_nothing():
-	u = factories.user(reddit="reddit.com")
-
-	assert_status(_post(u, {"reddit": "reddit.com"}, headers=XHR), 400)
-
-
 def test_only_the_first_single_choice_field_applies():
-	u = factories.user(reddit="old.reddit.com", cardview=False, newtab=False)
+	u = factories.user(hidevotedon=False, cardview=False, newtab=False)
 
 	with db_diff() as d:
-		r = _post(u, {"newtab": "true", "cardview": "true", "reddit": "reddit.com"})
+		r = _post(u, {"newtab": "true", "cardview": "true", "hidevotedon": "true"})
 
 	assert_json_message(r)
-	d.assert_exactly(updated={"users": {u["id"]: {"reddit": "reddit.com"}}})
+	d.assert_exactly(updated={"users": {u["id"]: {"hidevotedon": True}}})
 
 
 def test_single_choice_field_combines_with_multi_fields():

@@ -18,13 +18,7 @@ def settings_profile_post(v):
 	# Image uploads are refused through Tor
 	upload = request.files.get('file') if request.headers.get("cf-ipcountry") != "T1" else None
 
-	if request.values.get("reddit", v.reddit) != v.reddit:
-		reddit = request.values.get("reddit")
-		if reddit in {'old.reddit.com', 'reddit.com', 'i.reddit.com', 'teddit.net', 'libredd.it', 'unddit.com'}:
-			updated = True
-			v.reddit = reddit
-
-	elif request.values.get("hidevotedon", v.hidevotedon) != v.hidevotedon:
+	if request.values.get("hidevotedon", v.hidevotedon) != v.hidevotedon:
 		updated = True
 		v.hidevotedon = request.values.get("hidevotedon") == 'true'
 
@@ -43,14 +37,6 @@ def settings_profile_post(v):
 	elif request.values.get("newtabexternal", v.newtabexternal) != v.newtabexternal:
 		updated = True
 		v.newtabexternal = request.values.get("newtabexternal") == 'true'
-
-	elif request.values.get("nitter", v.nitter) != v.nitter:
-		updated = True
-		v.nitter = request.values.get("nitter") == 'true'
-
-	elif request.values.get("controversial", v.controversial) != v.controversial:
-		updated = True
-		v.controversial = request.values.get("controversial") == 'true'
 
 	elif request.values.get("over18", v.over_18) != v.over_18:
 		updated = True
