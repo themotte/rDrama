@@ -123,7 +123,7 @@
 							<img alt="post thumbnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
 						</a>
 					{% elif p.is_image %}
-						<img role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" onclick="expandDesktopImage('{{p.realurl(v)}}')" alt="post thumbnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
+						<img role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" data-image-url="{{p.realurl(v)}}" onclick="expandDesktopImage(this.dataset.imageUrl)" alt="post thumbnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					{% elif p.is_video %}
 						<a role="button" onclick="togglevideo({{p.id}})">
 							<img alt="post thumbnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
