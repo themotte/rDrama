@@ -8,7 +8,7 @@ from files.classes.cron.tasks import ScheduledTaskType
 from files.classes.visstate import StateMod, StateReport
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.environment import (CARD_VIEW, DEFAULT_COLOR,
-	ENABLE_DOWNVOTES, FINGERPRINT_TOKEN, SITE, SITE_FULL, SITE_ID,
+	ENABLE_DOWNVOTES, SITE, SITE_FULL, SITE_ID,
 	SITE_TITLE)
 from files.helpers.time import format_age, format_datetime
 
@@ -68,7 +68,6 @@ def inject_constants():
 		"config":app.config.get,
 		"ENABLE_DOWNVOTES": ENABLE_DOWNVOTES,
 		"CARD_VIEW": CARD_VIEW,
-		"FINGERPRINT_TOKEN": FINGERPRINT_TOKEN,
 		"COMMENT_BODY_LENGTH_MAXIMUM":COMMENT_BODY_LENGTH_MAXIMUM,
 		"SUBMISSION_BODY_LENGTH_MAXIMUM":SUBMISSION_BODY_LENGTH_MAXIMUM,
 		"SUBMISSION_TITLE_LENGTH_MAXIMUM":SUBMISSION_TITLE_LENGTH_MAXIMUM,

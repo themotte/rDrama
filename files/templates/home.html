@@ -2,34 +2,6 @@
 {%- import 'component/sorting_time.html' as sorting_time -%}
 {% block desktopBanner %}
 
-{% if v and FINGERPRINT_TOKEN %}
-	{% if not v.fp %}
-		<script>
-			function fp(fp) {
-				const xhr = new XMLHttpRequest();
-				xhr.open("POST", '/fp/'+fp);
-				xhr.setRequestHeader('xhr', 'xhr');
-				var form = new FormData()
-				form.append("formkey", formkey());
-				xhr.send(form);
-			};
-
-			const fpPromise = new Promise((resolve, reject) => {
-				const script = document.createElement('script');
-				script.onload = resolve;
-				script.onerror = reject;
-				script.async = true;
-				script.src = "{{ 'js/fp.js' | asset }}";
-				document.head.appendChild(script);
-			})
-				.then(() => FingerprintJS.load({token: '{{FINGERPRINT_TOKEN}}'}));
-
-			fpPromise
-				.then(fp => fp.get())
-				.then(result => {if (result.visitorId != '{{v.fp}}') fp(result.visitorId);})
-		</script>
-	{% endif %}
-{% endif %}
   
 <div class="row" style="overflow: visible;padding-top:5px;">
 	<div class="col">

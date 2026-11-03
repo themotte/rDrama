@@ -1130,16 +1130,6 @@ def test_uid_pic_profile_route():
 	assert response.status_code in [200, 302, 404]
 
 
-def test_fp_route():
-	"""Test GET /fp/<fp> route (fingerprint lookup)"""
-	client = util_accounts.create_logged_off_client()
-
-	# Try with a dummy fingerprint
-	response = client.get("/fp/dummy-fingerprint-hash")
-	# May return 404 if not found, require admin permissions, or be POST-only
-	assert response.status_code in [200, 302, 403, 404, 405]
-
-
 def test_2faqr_route():
 	"""Test GET /2faqr/<secret> route (2FA QR code)"""
 	client, user = util_accounts.create_test_client_and_user("2fa-user")
