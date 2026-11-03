@@ -1,4 +1,3 @@
-import sys
 import time
 import urllib.parse
 from io import BytesIO
@@ -274,7 +273,14 @@ def edit_post(pid, v):
 
 def thumbnail_thread(pid):
 	db = db_session()
+	try:
+		post = db.get(Submission, pid)
+		if post and post.url: _fetch_thumbnail(db, post)
+	finally:
+		db.close()
 
+
+def _fetch_thumbnail(db, post):
 	def expand_url(post_url, fragment_url):
 		if fragment_url.startswith("https://"):
 			return fragment_url
@@ -286,14 +292,6 @@ def thumbnail_thread(pid):
 		else:
 			return f"{post_url}{'/' if not post_url.endswith('/') else ''}{fragment_url}"
 
-	post = db.query(Submission).filter_by(id=pid).one_or_none()
-	
-	if not post or not post.url:
-		time.sleep(5)
-		post = db.query(Submission).filter_by(id=pid).one_or_none()
-
-	if not post or not post.url: return
-	
 	fetch_url = post.url
 
 	headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
@@ -301,11 +299,9 @@ def thumbnail_thread(pid):
 	try:
 		x=requests.get(fetch_url, headers=headers, timeout=5, proxies=proxies)
 	except:
-		db.close()
 		return
 
 	if x.status_code != 200:
-		db.close()
 		return
 
 	if x.headers.get("Content-Type","").startswith("text/html"):
@@ -366,7 +362,6 @@ def thumbnail_thread(pid):
 			break
 
 		else:
-			db.close()
 			return
 
 
@@ -376,12 +371,10 @@ def thumbnail_thread(pid):
 		image = PILimage.open(BytesIO(x.content))
 
 	else:
-		db.close()
 		return
 
 	size = len(image.fp.read())
 	if size > 8 * 1024 * 1024:
-		db.close()
 		return
 
 	name = new_image_path()
@@ -393,11 +386,6 @@ def thumbnail_thread(pid):
 	post.thumburl = process_image(name, resize=100)
 	db.add(post)
 	db.commit()
-
-	db.commit()
-	db.close()
-	sys.stdout.flush()
-	return
 
 
 @app.post("/is_repost")
@@ -580,11 +568,11 @@ def submit_post(v):
 	)
 	post.submit(g.db)
 
-	if not post.thumburl and post.url:
-		spawn_background(thumbnail_thread, post.id)
-
 	post.publish()
 	g.db.commit()
+
+	if not post.thumburl and post.url:
+		spawn_background(thumbnail_thread, post.id)
 
 	if request.headers.get("Authorization"):
 		return post.json_for(v)
