@@ -383,6 +383,20 @@ def test_links_of_removed_or_deleted_posts_can_be_posted_again(state):
 	assert_html(_submit(as_user(factories.user()), title="t", url="https://example.com/page"), 200)
 
 
+def test_a_link_posted_earlier_in_another_form_redirects_too():
+	earlier = factories.post(factories.user(), url="http://example.com/page/")
+
+	assert_redirect(_submit(as_user(factories.user()), title="t", url="https://example.com/page?utm_source=x"), f"/post/{earlier['id']}/{earlier['title']}")
+
+
+@pytest.mark.parametrize("hidden", ["draft", "shadowbanned author"])
+def test_links_only_others_cannot_see_can_be_posted_again(hidden):
+	author = factories.user(shadowbanned="somemod" if hidden == "shadowbanned author" else None)
+	factories.post(author, url="https://example.com/page", private=hidden == "draft")
+
+	assert_html(_submit(as_user(factories.user()), title="t", url="https://example.com/page"), 200)
+
+
 def test_resubmitting_an_identical_post_redirects_to_it():
 	author = factories.user()
 	fields = _text_post()

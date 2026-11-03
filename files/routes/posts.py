@@ -25,7 +25,6 @@ from files.helpers.content import canonicalize_url2
 from files.helpers.contentsorting import sort_objects
 from files.helpers.media import new_image_path, process_image
 from files.helpers.sanitize import *
-from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import *
 from files.routes.importstar import *
 
@@ -407,16 +406,8 @@ def api_is_repost():
 	url = request.values.get('url')
 	if not url: abort(400)
 
-	try: url = canonicalize_url2(url, httpsify=True).geturl()
+	try: repost = find_repost(url)
 	except ValueError: abort(400)
-	if url.endswith('/'): url = url[:-1]
-
-	search_url = sql_ilike_clean(url)
-	repost = g.db.query(Submission).filter(
-		Submission.url.ilike(search_url),
-		Submission.state_user_deleted_utc == None,
-		Submission.state_mod == StateMod.VISIBLE
-	).first()
 	if repost: return {'permalink': repost.permalink}
 	else: return {'permalink': ''}
 
@@ -480,13 +471,33 @@ def _execute_domain_ban_check(parsed_url:ParseResult):
 	abort(403, f"Remove the {domain_obj.domain} link from your post and try again. {domain_obj.reason}")
 
 
-def _duplicate_check(search_url:Optional[str]) -> Optional[werkzeug.wrappers.Response]:
-	if not search_url: return None
-	repost = g.db.query(Submission).filter(
-		func.lower(Submission.url) == search_url.lower(),
+def _repost_key(url:str) -> str:
+	'''`url` with the parts that don't distinguish links normalized: the scheme's and host's letter case, and a trailing slash.'''
+	parts = urllib.parse.urlsplit(url)
+	return urllib.parse.urlunsplit((parts.scheme.lower(), parts.netloc.lower(), parts.path, parts.query, parts.fragment)).removesuffix('/')
+
+
+def find_repost(url:str) -> Optional[Submission]:
+	'''
+	The earliest post others can see that links to `url`. The scheme, the host's letter case, a trailing slash and tracking parameters don't distinguish links. Raises ValueError for a URL that can't be parsed.
+	'''
+	canonical:str = canonicalize_url2(url, httpsify=True).geturl()
+	keys:set[str] = {_repost_key(form) for form in (url, canonical, 'http' + canonical.removeprefix('https'))}
+	# Narrow down case-insensitively in the database, then compare exactly
+	lowered:set[str] = {key.lower() for key in keys} | {key.lower() + '/' for key in keys}
+	candidates = g.db.query(Submission).join(Submission.author).filter(
+		func.lower(Submission.url).in_(lowered),
 		Submission.state_user_deleted_utc == None,
-		Submission.state_mod == StateMod.VISIBLE
-	).first()
+		Submission.state_mod == StateMod.VISIBLE,
+		Submission.private == False,
+		User.shadowbanned == None,
+	).order_by(Submission.id).all()
+	return next((post for post in candidates if _repost_key(post.url) in keys), None)
+
+
+def _duplicate_check(url:Optional[str]) -> Optional[werkzeug.wrappers.Response]:
+	if not url: return None
+	repost = find_repost(url)
 	if repost:
 		return redirect(repost.permalink)
 	return None
@@ -531,7 +542,7 @@ def submit_post(v):
 		return error(e.description)
 
 	duplicate:Optional[werkzeug.wrappers.Response] = \
-		_duplicate_check(validated_post.repost_search_url)
+		_duplicate_check(validated_post.url)
 	if duplicate: return duplicate
 
 	parsed_url:Optional[ParseResult] = validated_post.url_canonical

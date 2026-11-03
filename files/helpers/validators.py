@@ -65,24 +65,9 @@ class ValidatedSubmissionLike:
 		return embed if embed and len(embed) <= 1500 else None
 
 	@property
-	def repost_search_url(self) -> Optional[str]:
-		search_url = self.url_canonical_str
-		if not search_url: return None
-
-		if search_url.endswith('/'): 
-			search_url = search_url[:-1]
-		return search_url
-
-	@property
 	def url_canonical(self) -> Optional[urllib.parse.ParseResult]:
 		if not self.url: return None
 		return canonicalize_url2(self.url, httpsify=True)
-	
-	@property
-	def url_canonical_str(self) -> Optional[str]:
-		url_canonical:Optional[urllib.parse.ParseResult] = self.url_canonical
-		if not url_canonical: return None
-		return url_canonical.geturl()
 
 	@classmethod
 	def from_flask_request(cls, 

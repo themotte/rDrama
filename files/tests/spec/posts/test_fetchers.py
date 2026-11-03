@@ -19,7 +19,7 @@ def _is_repost(url):
 	"https://example.com/page",
 	"http://example.com/page",
 	"https://example.com/page/",
-	"https://EXAMPLE.com/PAGE",
+	"https://EXAMPLE.com/page",
 	"https://example.com/page?utm_source=feed&ref_src=x",
 ], ids=["same", "http", "trailing slash", "case", "tracking parameters"])
 def test_repost_check_finds_posts_linking_to_the_same_page(asked):
@@ -34,6 +34,45 @@ def test_repost_check_finds_posts_linking_to_the_same_page(asked):
 @pytest.mark.parametrize("state", [{"state_mod": "REMOVED"}, {"state_mod": "FILTERED"}, {"state_user_deleted_utc": "2020-01-01T00:00:00Z"}], ids=["removed", "filtered", "deleted"])
 def test_repost_check_ignores_posts_that_are_not_live(state):
 	factories.post(factories.user(), url="https://example.com/page", **state)
+
+	assert _is_repost("https://example.com/page").json == {"permalink": ""}
+
+
+@pytest.mark.parametrize("stored, asked", [
+	("http://example.com/page", "https://example.com/page"),
+	("https://example.com/page/", "https://example.com/page"),
+	("https://example.com/a%20b", "https://example.com/a%20b"),
+	("https://example.com/a_b", "https://example.com/a_b"),
+], ids=["stored as http", "stored with trailing slash", "percent escape", "underscore"])
+def test_repost_check_matches_variants_of_the_earlier_link(stored, asked):
+	post = factories.post(factories.user(), url=stored)
+
+	assert _is_repost(asked).json["permalink"].startswith(f"http://{config.site_host()}/post/{post['id']}/")
+
+
+def test_repost_check_distinguishes_letter_case_in_paths():
+	factories.post(factories.user(), url="https://example.com/AbC")
+
+	assert _is_repost("https://example.com/abc").json == {"permalink": ""}
+
+
+def test_repost_check_does_not_treat_underscores_as_wildcards():
+	factories.post(factories.user(), url="https://example.com/aXb")
+
+	assert _is_repost("https://example.com/a_b").json == {"permalink": ""}
+
+
+def test_repost_check_finds_the_earliest_post():
+	earliest = factories.post(factories.user(), url="https://example.com/page")
+	factories.post(factories.user(), url="https://example.com/page")
+
+	assert _is_repost("https://example.com/page").json["permalink"].startswith(f"http://{config.site_host()}/post/{earliest['id']}/")
+
+
+@pytest.mark.parametrize("hidden", ["draft", "shadowbanned author"])
+def test_repost_check_ignores_posts_others_cannot_see(hidden):
+	author = factories.user(shadowbanned="somemod" if hidden == "shadowbanned author" else None)
+	factories.post(author, url="https://example.com/page", private=hidden == "draft")
 
 	assert _is_repost("https://example.com/page").json == {"permalink": ""}
 
