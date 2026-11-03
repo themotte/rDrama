@@ -594,6 +594,16 @@ def test_body_images_alone_make_a_post():
 	assert len(_image_paths(db.rows("submissions")[-1]["body"])) == 1
 
 
+def test_body_images_may_not_push_the_body_past_its_limit():
+	client = as_user(factories.user())
+
+	with db_diff() as d:
+		r = _submit(client, headers=XHR, title="t", body="b" * 499990, files={"file2": [uploads.png(20, 20)]})
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
 def test_at_most_four_body_images_are_kept():
 	assert_html(_submit(as_user(factories.user()), title="t", body="text", files={"file2": [uploads.png(20, 20)] * 5}), 200)
 

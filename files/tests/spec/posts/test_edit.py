@@ -58,6 +58,17 @@ def test_an_edit_that_changes_nothing_is_refused():
 	d.assert_exactly()
 
 
+def test_edit_images_may_not_push_the_body_past_its_limit():
+	author = factories.user()
+	post = factories.post(author, body="text")
+
+	with db_diff() as d:
+		r = _edit(as_user(author), post, body="b" * 499990, files={"file": uploads.png(20, 20)})
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
 def test_link_posts_can_be_retitled_without_text():
 	author = factories.user()
 	post = factories.post(author, url="https://example.com/page", body="")

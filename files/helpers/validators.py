@@ -174,6 +174,8 @@ class ValidatedSubmissionLike:
 			thumburl = None
 
 		has_file2, body = _process_media2(body_raw, request.files.getlist(embed_url_file_key))
+		if len(body) > SUBMISSION_BODY_LENGTH_MAXIMUM:
+			abort(400, f"Maximum length for body is {SUBMISSION_BODY_LENGTH_MAXIMUM}, including the links to attached images")
 
 		if not body_raw and not url and not existing_url and not has_file and not has_file2:
 			abort(400, "Please enter a URL or some text")
