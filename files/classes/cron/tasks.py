@@ -65,7 +65,7 @@ class DayOfWeek(IntFlag):
 
 	@property
 	def empty(self) -> bool:
-		return self not in self.ALL
+		return not (self & self.ALL)
 
 	def __contains__(self, other:Union[date, "DayOfWeek"]) -> bool:
 		_days:dict[int, "DayOfWeek"] = {

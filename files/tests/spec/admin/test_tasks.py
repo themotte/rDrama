@@ -26,3 +26,12 @@ def test_admin_replaces_a_tasks_schedule():
 
 	assert_redirect(r, f"/tasks/{task['id']}")
 	d.assert_exactly(updated={"tasks_repeatable": {task["id"]: {"enabled": True, "frequency_day": TUESDAY, "time_of_day_utc": time(22, 0)}}})
+
+
+def test_an_enabled_task_with_no_days_ticked_has_a_page():
+	admin = factories.admin(2)
+	task = _task(admin, enabled=True, frequency_day=0)
+
+	r = as_user(admin).get(f"/tasks/{task['id']}/")
+
+	assert_status(r, 200)
