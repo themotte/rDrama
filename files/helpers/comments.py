@@ -1,8 +1,6 @@
-from sys import stdout
 from typing import Optional
 
-from flask import g, request
-from pusher_push_notifications import PushNotifications
+from flask import g
 from sqlalchemy import select, update
 from sqlalchemy.orm import Query, aliased
 from sqlalchemy.sql.expression import alias, func, text
@@ -10,42 +8,6 @@ from sqlalchemy.sql.expression import alias, func, text
 from files.classes import Comment, Notification, Subscription, User
 from files.classes.visstate import StateMod
 from files.helpers.alerts import NOTIFY_USERS
-from files.helpers.assetcache import assetcache_path
-from files.helpers.background import spawn_background
-from files.helpers.config.environment import (PUSHER_ID, PUSHER_KEY, SITE_FULL,
-                                              SITE_ID)
-
-if PUSHER_ID != 'blahblahblah':
-	beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
-
-def pusher_thread(interests, c, username):
-	if len(c.body) > 500: notifbody = c.body[:500] + '...'
-	else: notifbody = c.body
-
-	beams_client.publish_to_interests(
-		interests=[interests],
-		publish_body={
-			'web': {
-				'notification': {
-					'title': f'New reply by @{username}',
-					'body': notifbody,
-					'deep_link': f'{SITE_FULL}/comment/{c.id}?context=8&read=true#context',
-					'icon': SITE_FULL + assetcache_path(f'images/{SITE_ID}/icon.webp'),
-				}
-			},
-			'fcm': {
-				'notification': {
-					'title': f'New reply by @{username}',
-					'body': notifbody,
-				},
-				'data': {
-					'url': f'/comment/{c.id}?context=8&read=true#context',
-				}
-			}
-		},
-	)
-	stdout.flush()
-
 
 def update_stateful_counters(comment, delta):
 	"""
@@ -222,12 +184,6 @@ def comment_on_publish(comment:Comment):
 			g.db.add(notif)
 
 	update_stateful_counters(comment, +1)
-
-	# Generate push notifications if enabled.
-	if PUSHER_ID != 'blahblahblah' and comment.author_id != parent.author_id:
-		try:
-			spawn_background(pusher_thread, f'{request.host}{parent.author.id}', comment, comment.author_name)
-		except: pass
 
 def comment_on_unpublish(comment:Comment):
 	"""

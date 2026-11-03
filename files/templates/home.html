@@ -102,17 +102,6 @@
 </nav>
 {% endif %}
 
-{% if PUSHER_ID != 'blahblahblah' and v %}
-	<div class="d-none" id="strid">{{request.host}}{{v.id}}</div>
-	<div class="d-none" id="pusherid">{{PUSHER_ID}}</div>
-	<script src="{{ 'js/pusher.js' | asset }}"></script>
-	<script>
-		if (typeof Android != 'undefined') {
-			Android.Subscribe('{{request.host}}{{v.id}}');
-		}
-	</script>
-{% endif %}
-
 {% if request.path in ('/','/logged_out') and g.timestamp > session.get('tooltip_last_dismissed',0)+60*60*24*30 and not g.webview %}
 	<style>
 		.beg-icon {

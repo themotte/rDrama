@@ -214,15 +214,6 @@ def test_blocks_route():
 	assert response.status_code == 200
 
 
-def test_service_worker_route():
-	"""Test /service-worker.js route"""
-	client = util_accounts.create_logged_off_client()
-
-	response = client.get("/service-worker.js")
-	assert response.status_code == 200
-	assert "javascript" in response.content_type or response.status_code == 200
-
-
 def test_logged_out_with_path():
 	"""Test /logged_out/<path:old> route"""
 	client = util_accounts.create_logged_off_client()

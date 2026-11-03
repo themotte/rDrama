@@ -18,7 +18,7 @@ def leaderboard_recalc(db: Session, cache) -> None:
 	read.
 
 	These aggregations scan the full votes/commentvotes tables. They used to run
-	on every gunicorn worker boot (in ``files.helpers.services``), which under
+	on every gunicorn worker boot (in a startup thread), which under
 	worker churn turned into a storm of full-table aggregations and helped drive
 	CPU-saturation spirals. They now run once a day via cron instead.
 	'''

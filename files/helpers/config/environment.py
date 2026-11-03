@@ -96,8 +96,6 @@ FINGERPRINT_TOKEN = environ.get("FP", None)
 
 # other stuff from const.py that aren't constants
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
-PUSHER_ID = environ.get("PUSHER_ID", "").strip()
-PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 

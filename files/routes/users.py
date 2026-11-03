@@ -16,8 +16,6 @@ from files.classes.leaderboard import (BadgeMarseyLeaderboard,
                                        SimpleLeaderboard, UserBlockLeaderboard)
 from files.classes.visstate import StateMod
 from files.helpers.alerts import *
-from files.helpers.assetcache import assetcache_path
-from files.helpers.background import spawn_background
 from files.helpers.config.const import *
 from files.helpers.contentsorting import (apply_time_filter, sort_objects)
 from files.helpers.media import new_image_path, process_image
@@ -25,12 +23,6 @@ from files.helpers.sanitize import *
 from files.helpers.strings import sql_ilike_clean
 from files.mail import *
 from files.routes.importstar import *
-
-
-# warning: do not move currently. these have import-time side effects but 
-# until this is refactored to be not completely awful, there's not really
-# a better option.
-from files.helpers.services import *
 
 
 @app.get("/@<username>/upvoters/<uid>/posts")
@@ -409,14 +401,6 @@ def message2(v, username):
 
 	g.db.commit()
 
-	if PUSHER_ID != 'blahblahblah' and not v.shadowbanned:
-		if len(message) > 500: notifbody = message[:500] + '...'
-		else: notifbody = message
-
-		try:
-			spawn_background(pusher_thread2, f'{request.host}{user.id}', notifbody, v.username)
-		except: pass
-
 	return {"message": "Message sent!"}
 
 
@@ -464,33 +448,6 @@ def messagereply(v):
 		if not notif:
 			notif = Notification(comment_id=c.id, user_id=user_id)
 			g.db.add(notif)
-
-		if PUSHER_ID != 'blahblahblah' and not v.shadowbanned:
-			if len(message) > 500: notifbody = message[:500] + '...'
-			else: notifbody = message
-			
-			beams_client.publish_to_interests(
-				interests=[f'{request.host}{user_id}'],
-				publish_body={
-					'web': {
-						'notification': {
-							'title': f'New message from @{v.username}',
-							'body': notifbody,
-							'deep_link': f'{SITE_FULL}/notifications/messages',
-							'icon': SITE_FULL + assetcache_path(f'images/{SITE_ID}/icon.webp'),
-						}
-					},
-					'fcm': {
-						'notification': {
-							'title': f'New message from @{v.username}',
-							'body': notifbody,
-						},
-						'data': {
-							'url': '/notifications/messages',
-						}
-					}
-				},
-			)
 
 
 	if c.top_comment.sentto == MODMAIL_ID:

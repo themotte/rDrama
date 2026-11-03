@@ -404,10 +404,6 @@ def banned(v):
 def formatting(v):
 	return render_template("formatting.html", v=v)
 
-@app.get("/service-worker.js")
-def serviceworker():
-	with open("files/assets/js/service-worker.js", "r", encoding="utf-8") as f: return Response(f.read(), mimetype='application/javascript')
-
 @app.get("/settings/security")
 @auth_required
 def settings_security(v):

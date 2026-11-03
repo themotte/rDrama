@@ -183,8 +183,8 @@ class RawSqlLeaderboard(Leaderboard):
 	(``files.commands.leaderboard_recalc``) and be cached, while request handlers
 	cheaply rebuild the display object from the cached rows via ``from_cache``.
 
-	Previously this query ran on every gunicorn worker boot (via a thread in
-	``files.helpers.services``), which turned worker churn into a storm of
+	Previously this query ran on every gunicorn worker boot (in a startup
+	thread), which turned worker churn into a storm of
 	full-table aggregations.
 	'''
 	_query: ClassVar[str] = "" # set by subclasses; LiteralString on py3.11+
