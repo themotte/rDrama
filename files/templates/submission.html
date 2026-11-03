@@ -493,10 +493,11 @@
 						{% endfor %}
 					];
 
-					commentsToCheck = commentsToCheck.filter(comment => comment[1] > lastCount.t)
-					                                 .map(comment => comment[0]);
-					
-					if (lastCount) commentsAddUnreadIndicator(commentsToCheck);
+					if (lastCount) {
+						commentsToCheck = commentsToCheck.filter(comment => comment[1] > lastCount.t)
+						                                 .map(comment => comment[0]);
+						commentsAddUnreadIndicator(commentsToCheck);
+					}
 
 					collapsedCommentStorageApply();
 					MicroModal.init();
