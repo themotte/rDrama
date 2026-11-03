@@ -130,18 +130,6 @@
 					{{u.enemies_html | safe}}
 				{% endif %}
 
-				{% if FEATURES['AWARDS'] and u.received_awards %}
-				<div class="text-white rounded p-2 mb-3" style="background-color: rgba(50, 50, 50, 0.6); width: 30%;">
-					<p class="text-uppercase my-0" style="font-weight: bold; font-size: 12px;">Awards received</p>
-					{% for a in u.received_awards %}
-					<span class="d-inline-block mx-1">
-						<i class="{{a['icon']}} {{a['color']}} fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a['title']}} Awards received"></i>
-						x{{a['count']}}
-					</span>
-					{% endfor %}
-				</div>
-				{% endif %}
-
 				<div class="d-flex justify-content-between align-items-center">
 					<div>
 					{% if v and v.id != u.id %}
@@ -378,18 +366,6 @@
 					{{u.enemies_html | safe}}
 				{% endif %}
 
-				{% if FEATURES['AWARDS'] and u.received_awards %}
-				<div class="text-white rounded p-2 my-3 text-center" style="background-color: rgba(50, 50, 50, 0.6);">
-					<p class="text-uppercase my-0" style="font-weight: bold; font-size: 12px;">Awards received</p>
-					{% for a in u.received_awards %}
-					<span class="d-inline-block mx-1">
-						<i class="{{a['icon']}} {{a['color']}} fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a['title']}} Awards received"></i>
-						x{{a['count']}}
-					</span>
-					{% endfor %}
-				</div>
-				{% endif %}
-
 				<div class="mb-3">
 					{% for b in u.badges %}
 						{% if b.url %}
@@ -598,9 +574,7 @@
 {% block userpage_content required %}{% endblock %}
 
 {% if v %}
-<div id='tax' class="d-none">{% if v.patron or u.patron or v.alts_patron or u.alts_patron %}0{% else %}0.03{% endif %}</div>
 <script src="{{ 'js/userpage_v.js' | asset }}"></script>
-<div id="username" class="d-none">{{u.username}}</div>
 {% endif %}
 
 {% endblock %}

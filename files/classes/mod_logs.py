@@ -219,11 +219,6 @@ ACTIONTYPES = {
 		"icon": 'fa-tag', 
 		"color": 'bg-primary'
 	},
-	'grant_awards': {
-		"str": 'granted awards to {self.target_link}', 
-		"icon": 'fa-gift', 
-		"color": 'bg-primary'
-	},
 	'link_accounts': {
 		"str": 'linked {self.target_link}', 
 		"icon": 'fa-link', 

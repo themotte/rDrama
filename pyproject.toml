@@ -64,8 +64,7 @@ norecursedirs = [
 source = ["files"]
 branch = true
 omit = [
-    # Not loaded in the tested configuration (AWARDS feature off, THEMOTTE service, non-debug); deliberately outside the spec
-    "files/routes/awards.py",
+    # Not loaded in the tested configuration (THEMOTTE service, non-debug); deliberately outside the spec
     "files/routes/chat.py",
     "files/routes/dev.py",
     "*/tests/*",

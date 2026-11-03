@@ -1,7 +1,6 @@
 import os
 import re
 import sys
-from copy import deepcopy
 from enum import IntEnum
 from typing import Final
 
@@ -153,10 +152,6 @@ VIDEO_FORMATS = ['mp4','webm','mov','avi','mkv','flv','m4v','3gp']
 AUDIO_FORMATS = ['mp3','wav','ogg','aac','m4a','flac']
 NO_TITLE_EXTENSIONS = IMAGE_FORMATS + VIDEO_FORMATS + AUDIO_FORMATS
 
-FEATURES = {
-	"AWARDS": False,
-}
-
 PERMS = {
 	"DEBUG_LOGIN_TO_OTHERS": 3,
 	"CHAT_BYPASS_MUTE": 2,
@@ -174,21 +169,6 @@ PERMS = {
 	"USER_SHADOWBAN": 2,
 	'USER_SET_PROFILE_PRIVACY': 2,
 }
-
-AWARDS = {}
-
-if FEATURES['AWARDS']:
-	AWARDS_ENABLED = deepcopy(AWARDS)
-	for k, val in AWARDS.items():
-		if val['description'] == '???': AWARDS_ENABLED.pop(k)
-
-	AWARDS_JL2_PRINTABLE = {}
-	for k, val in AWARDS_ENABLED.items():
-		if val['price'] == 300: AWARDS_JL2_PRINTABLE[k] = val
-else:
-	AWARDS_ENABLED = {}
-	AWARDS_JL2_PRINTABLE = {}
-
 
 NOTIFIED_USERS = {
 	# format: 'substring' ↦ User ID to notify

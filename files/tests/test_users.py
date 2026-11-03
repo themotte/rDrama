@@ -1096,32 +1096,6 @@ def test_user_saved_comments():
 	assert response.status_code == 200
 
 
-def test_transfer_coins_route():
-	"""Test POST /@<username>/transfer_coins route"""
-	client1, user1 = util_accounts.create_test_client_and_user("coin-sender")
-	client2, user2 = util_accounts.create_test_client_and_user("coin-receiver")
-
-	response, _ = util.post_with_formkey(
-		client1, f"/@{user2.username}/transfer_coins",
-		data={"amount": "10"}
-	)
-	# May require sufficient coins, specific conditions, or may be disabled
-	assert response.status_code in [200, 302, 400, 403, 404]
-
-
-def test_transfer_bux_route():
-	"""Test POST /@<username>/transfer_bux route"""
-	client1, user1 = util_accounts.create_test_client_and_user("bux-sender")
-	client2, user2 = util_accounts.create_test_client_and_user("bux-receiver")
-
-	response, _ = util.post_with_formkey(
-		client1, f"/@{user2.username}/transfer_bux",
-		data={"amount": "10"}
-	)
-	# May require sufficient bux, specific conditions, or may be disabled
-	assert response.status_code in [200, 302, 400, 403, 404]
-
-
 def test_reply_route():
 	"""Test POST /reply route"""
 	client, user = util_accounts.create_test_client_and_user("replier")

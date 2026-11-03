@@ -575,7 +575,7 @@ def submit_post(v):
 	if request.headers.get("Authorization"):
 		return post.json
 	else:
-		# Re-fetch via get_post so relationships (awards/reports/author) are
+		# Re-fetch via get_post so relationships (reports/author) are
 		# eagerly loaded; rendering submission.html against the raw freshly-
 		# constructed Submission triggers lazy loads in the template.
 		post = get_post(post.id, v=v)

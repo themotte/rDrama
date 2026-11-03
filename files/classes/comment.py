@@ -67,9 +67,6 @@ class Comment(CreatedBase):
 	parent_comment = relationship("Comment", remote_side=[id], viewonly=True)
 	parent_comment_writable = relationship("Comment", remote_side=[id])
 	child_comments = relationship("Comment", lazy="dynamic", remote_side=[parent_comment_id], viewonly=True)
-	awards = relationship("AwardRelationship",
-		primaryjoin="AwardRelationship.comment_id == Comment.id",
-		viewonly=True)
 	reports = relationship("CommentFlag",
 		primaryjoin="CommentFlag.comment_id == Comment.id",
 		order_by="CommentFlag.created_datetimez",
@@ -237,10 +234,6 @@ class Comment(CreatedBase):
 			data['downvotes'] = self.downvotes
 
 		return data
-
-	def award_count(self, kind):
-		if not FEATURES['AWARDS']: return 0
-		return len([x for x in self.awards if x.kind == kind])
 
 	@property
 	@lazy

@@ -10,7 +10,6 @@ from flask import g, session
 from sqlalchemy.orm import aliased, declared_attr, deferred, relationship
 
 from files.classes.alts import Alt
-from files.classes.award import AwardRelationship
 from files.classes.badges import Badge
 from files.classes.base import CreatedBase
 from files.classes.chat_message import ChatMessage
@@ -71,10 +70,7 @@ class User(CreatedBase):
 	passhash = deferred(Column(String, nullable=False))
 	post_count = Column(Integer, default=0, nullable=False)
 	comment_count = Column(Integer, default=0, nullable=False)
-	received_award_count = Column(Integer, default=0, nullable=False)
 	admin_level = Column(Integer, default=0, nullable=False)
-	coins_spent = Column(Integer, default=0, nullable=False)
-	lootboxes_bought = Column(Integer, default=0, nullable=False)
 	agendaposter = Column(Integer, default=0, nullable=False)
 	changelogsub = Column(Boolean, default=False, nullable=False)
 	is_activated = Column(Boolean, default=False, nullable=False)
@@ -159,7 +155,6 @@ class User(CreatedBase):
 	blocking = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id", viewonly=True)
 	blocked = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id", viewonly=True)
 	authorizations = relationship("ClientAuth", viewonly=True)
-	awards = relationship("AwardRelationship", primaryjoin="User.id==AwardRelationship.user_id", viewonly=True)
 	referrals = relationship("User", viewonly=True)
 	notes = relationship("UserNote", foreign_keys='UserNote.reference_user', back_populates="user")
 
@@ -251,15 +246,6 @@ class User(CreatedBase):
 		return self.css
 
 	@property
-	@lazy
-	def user_awards(self):
-		if not FEATURES['AWARDS']: return []
-		return_value = list(AWARDS_ENABLED.values())
-		user_awards = g.db.query(AwardRelationship).filter_by(user_id=self.id)
-		for val in return_value: val['owned'] = user_awards.filter_by(kind=val['kind'], submission_id=None, comment_id=None).count()
-		return return_value
-
-	@property
 	def referral_count(self):
 		return len(self.referrals)
 
@@ -291,13 +277,6 @@ class User(CreatedBase):
 		for u in self.alts:
 			if u not in alts: alts.append(u)
 		return alts
-
-	@property
-	@lazy
-	def alts_patron(self):
-		for u in self.alts_unique:
-			if u.patron: return True
-		return False
 
 	@property
 	@lazy
@@ -381,29 +360,6 @@ class User(CreatedBase):
 
 		return f"Unban in {text}"
 
-
-	@property
-	@lazy
-	def received_awards(self):
-		if not FEATURES['AWARDS']: return []
-		awards = {}
-
-		posts_idlist = [x[0] for x in g.db.query(Submission.id).filter_by(author_id=self.id).all()]
-		comments_idlist = [x[0] for x in g.db.query(Comment.id).filter_by(author_id=self.id).all()]
-
-		post_awards = g.db.query(AwardRelationship).filter(AwardRelationship.submission_id.in_(posts_idlist)).all()
-		comment_awards = g.db.query(AwardRelationship).filter(AwardRelationship.comment_id.in_(comments_idlist)).all()
-
-		total_awards = post_awards + comment_awards
-
-		for a in total_awards:
-			if a.kind in awards:
-				awards[a.kind]['count'] += 1
-			else:
-				awards[a.kind] = a.type
-				awards[a.kind]['count'] = 1
-
-		return sorted(list(awards.values()), key=lambda x: x['kind'], reverse=True)
 
 	@property
 	@lazy

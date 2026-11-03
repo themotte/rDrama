@@ -176,7 +176,6 @@ def get_post(
 		).options(
 			selectinload(Submission.author).options(*author_load_options(v)),
 			selectinload(Submission.reports),
-			selectinload(Submission.awards),
 		)
 		post = post.one_or_none()
 		
@@ -191,7 +190,6 @@ def get_post(
 		x = g.db.query(Submission).filter_by(id=i).options(
 			selectinload(Submission.author).options(*author_load_options(v)),
 			selectinload(Submission.reports),
-			selectinload(Submission.awards),
 		).one_or_none()
 		if not x:
 			if graceful: return None
@@ -234,7 +232,6 @@ def get_posts(
 	query = query.options(
 		selectinload(Submission.author).options(*author_load_options(v)),
 		selectinload(Submission.reports),
-		selectinload(Submission.awards),
 	)
 
 	results = query.all()
@@ -268,7 +265,6 @@ def get_comment(
 		selectinload(Comment.post).options(
 			selectinload(Submission.author).options(*author_load_options(v)),
 			selectinload(Submission.reports),
-			selectinload(Submission.awards),
 		),
 	).one_or_none()
 	if not comment:
@@ -325,9 +321,6 @@ def get_comments(
 		selectinload(Comment.reports).options(
 			selectinload(CommentFlag.user),
 		),
-		selectinload(Comment.awards).options(
-			selectinload(AwardRelationship.user),
-		),
 		selectinload(Comment.parent_comment),
 	)
 
@@ -383,9 +376,6 @@ def get_comment_trees_eager(
 		selectinload(Comment.author).options(*author_load_options(v)),
 		selectinload(Comment.reports).options(
 			selectinload(CommentFlag.user),
-		),
-		selectinload(Comment.awards).options(
-			selectinload(AwardRelationship.user),
 		),
 		selectinload(Comment.senttouser),
 	)

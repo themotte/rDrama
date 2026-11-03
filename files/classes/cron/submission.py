@@ -131,9 +131,6 @@ class ScheduledSubmissionTask(RepeatableTask):
 	def state_mod(self) -> StateMod:
 		return StateMod.VISIBLE
 
-	def award_count(self, kind):
-		return 0
-
 	@lazy
 	def realurl(self, v):
 		return Submission.realurl(self, v)

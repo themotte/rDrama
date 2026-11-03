@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from sqlalchemy import func
 from sqlalchemy.orm import selectinload
 
-from files.classes.award import AWARDS
 from files.classes.badges import BadgeDef
 from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
 from files.classes.visstate import StateMod
@@ -77,7 +76,6 @@ def participation_stats(v):
 		"banned users": users.filter(User.is_banned > 0).count(),
 		"verified email users": users.filter_by(is_activated=True).count(),
 		"coins in circulation": g.db.query(func.sum(User.coins)).scalar(),
-		"total shop sales": g.db.query(func.sum(User.coins_spent)).scalar(),
 		"signups last 24h": users.filter(User.created_utc > day).count(),
 		"total posts": submissions.count(),
 		"posting users": g.db.query(Submission.author_id).distinct().count(),
@@ -96,8 +94,6 @@ def participation_stats(v):
 		"comment voting users": g.db.query(CommentVote.user_id).distinct().count(),
 		"total upvotes": g.db.query(Vote.submission_id).filter_by(vote_type=1).count() + g.db.query(CommentVote.comment_id).filter_by(vote_type=1).count(),
 		"total downvotes": g.db.query(Vote.submission_id).filter_by(vote_type=-1).count() + g.db.query(CommentVote.comment_id).filter_by(vote_type=-1).count(),
-		"total awards": g.db.query(AwardRelationship.id).count(),
-		"awards given": g.db.query(AwardRelationship.id).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count(),
 		"users who posted, commented, or voted in the past 7 days": len(active_users),
 	}
 	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=stats)

@@ -18,12 +18,6 @@
 		{%- endif %}
 	{% endif %}
 
-	{% if FEATURES['AWARDS'] %}
-		{% for a in c.awards|reverse %}
-			<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
-		{% endfor %}
-	{% endif %}
-
 	{% if c.bannedfor %}
 		<a role="button"><i class="fas fa-hammer-crash text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this comment{% if c.author.banned_by %} by @{{c.author.banned_by.username}}{% endif %}"></i></a>
 	{% endif %}

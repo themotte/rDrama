@@ -78,7 +78,6 @@ class Submission(CreatedBase):
 
 	author = relationship("User", primaryjoin="Submission.author_id==User.id")
 	oauth_app = relationship("OauthApp", viewonly=True)
-	awards = relationship("AwardRelationship", viewonly=True)
 	reports = relationship("Flag", viewonly=True)
 	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
 	notes = relationship("UserNote", back_populates="post")
@@ -291,10 +290,6 @@ class Submission(CreatedBase):
 			data["voted"] = self.voted
 
 		return data
-
-	def award_count(self, kind):
-		if not FEATURES['AWARDS']: return 0
-		return len([x for x in self.awards if x.kind == kind])
 
 	@lazy
 	def realurl(self, v):

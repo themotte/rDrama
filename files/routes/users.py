@@ -1,5 +1,4 @@
 import io
-import math
 import time
 from collections import Counter
 from datetime import datetime
@@ -301,75 +300,6 @@ def downvoting(v, username):
 	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Down', name2=f'Who @{username} downvotes')
 
 
-@app.post("/@<username>/transfer_coins")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
-@is_not_permabanned
-def transfer_coins(v, username):
-	abort(404) # disable entirely pending possible future use of coins
-
-	receiver = g.db.query(User).filter_by(username=username).one_or_none()
-
-	if receiver is None: abort(404, "That user doesn't exist.")
-
-	if receiver.id != v.id:
-		amount = request.values.get("amount", "").strip()
-		amount = int(amount) if amount.isdigit() else None
-
-		if amount is None or amount <= 0: abort(400, "Invalid amount of coins.")
-		if v.coins < amount: abort(400, "You don't have enough coins.")
-		if amount < 100: abort(400, "You have to gift at least 100 coins.")
-
-		if not v.patron and not receiver.patron and not v.alts_patron and not receiver.alts_patron: tax = math.ceil(amount*0.03)
-		else: tax = 0
-
-		log_message = f"@{v.username} has transferred {amount} coins to @{receiver.username}"
-		send_repeatable_notification(GIFT_NOTIF_ID, log_message)
-
-		receiver.coins += amount-tax
-		v.coins -= amount
-		send_repeatable_notification(receiver.id, f":marseycapitalistmanlet: @{v.username} has gifted you {amount-tax} coins!")
-		g.db.add(receiver)
-		g.db.add(v)
-
-		g.db.commit()
-		return {"message": f"{amount-tax} coins transferred!"}, 200
-
-	return {"message": "You can't transfer coins to yourself!"}, 400
-
-
-@app.post("/@<username>/transfer_bux")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
-@is_not_permabanned
-def transfer_bux(v, username):
-	abort(404) # disable entirely pending possible future use of coins
-
-	receiver = g.db.query(User).filter_by(username=username).one_or_none()
-
-	if not receiver: abort(404, "That user doesn't exist.")
-
-	if receiver.id != v.id:
-		amount = request.values.get("amount", "").strip()
-		amount = int(amount) if amount.isdigit() else None
-
-		if not amount or amount < 0: abort(400, "Invalid amount of marseybux.")
-		if v.procoins < amount: abort(400, "You don't have enough marseybux")
-		if amount < 100: abort(400, "You have to gift at least 100 marseybux.")
-
-		log_message = f"@{v.username} has transferred {amount} Marseybux to @{receiver.username}"
-		send_repeatable_notification(GIFT_NOTIF_ID, log_message)
-
-		receiver.procoins += amount
-		v.procoins -= amount
-		send_repeatable_notification(receiver.id, f":marseycapitalistmanlet: @{v.username} has gifted you {amount} marseybux!")
-		g.db.add(receiver)
-		g.db.add(v)
-
-		g.db.commit()
-		return {"message": f"{amount} marseybux transferred!"}, 200
-
-	return {"message": "You can't transfer marseybux to yourself!"}, 400
-
-
 @app.get("/leaderboard")
 @admin_level_required(2)
 def leaderboard(v:User):
@@ -381,13 +311,11 @@ def leaderboard(v:User):
 	subscribers = SimpleLeaderboard(v, LeaderboardMeta("Followers", "followers", "followers", "Followers", "followers"), g.db, users, User.stored_subscriber_count)
 	posts = SimpleLeaderboard(v, LeaderboardMeta("Posts", "post count", "posts", "Posts", ""), g.db, users, User.post_count)
 	comments = SimpleLeaderboard(v, LeaderboardMeta("Comments", "comment count", "comments", "Comments", "comments"), g.db, users, User.comment_count)
-	received_awards = SimpleLeaderboard(v, LeaderboardMeta("Awards", "received awards", "awards", "Awards", None), g.db, users, User.received_award_count)
-	coins_spent = SimpleLeaderboard(v, LeaderboardMeta("Spent in shop", "coins spent in shop", "spent", "Coins", None), g.db, users, User.coins_spent)
 	truescore = SimpleLeaderboard(v, LeaderboardMeta("Truescore", "truescore", "truescore", "Truescore", None), g.db, users, User.truescore)
 	badges = BadgeMarseyLeaderboard(v, LeaderboardMeta("Badges", "badges", "badges", "Badges", None), g.db, Badge.user_id)
 	blocks = UserBlockLeaderboard(v, LeaderboardMeta("Blocked", "most blocked", "blocked", "Blocked By", "blockers"), g.db, UserBlock.target_id)
 
-	leaderboards = [coins, coins_spent, truescore, subscribers, posts, comments, received_awards, badges, blocks]
+	leaderboards = [coins, truescore, subscribers, posts, comments, badges, blocks]
 
 	# The downvotes-received / upvotes-given leaderboards are expensive full-table
 	# aggregations, so they're precomputed once a day by the leaderboard_recalc
