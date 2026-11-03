@@ -275,14 +275,7 @@ def settings_security_post(v):
 		if new_email == v.email:
 			return render_template("settings_security.html", v=v, error="That email is already yours!")
 
-		url = f"{SITE_FULL}/activate"
-
-		now = int(time.time())
-
-		token = generate_hash(f"{new_email}+{v.id}+{now}")
-		params = f"?email={quote(new_email)}&id={v.id}&time={now}&token={token}"
-
-		link = url + params
+		link = activation_link(v, new_email)
 
 		send_mail(to_address=new_email,
 				  subject="Verify your email address.",

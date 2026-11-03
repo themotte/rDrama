@@ -129,7 +129,7 @@ def test_email_change_mails_a_verification_link_and_changes_nothing_yet():
 	params = {k: v[0] for k, v in parse_qs(urlsplit(link).query).items()}
 	assert params["email"] == new_email.lower()
 	assert params["id"] == str(u["id"])
-	assert params["token"] == session.sign(f"{params['email']}+{params['id']}+{params['time']}")
+	assert params["token"] == session.sign(f"activate+{params['email']}+{params['id']}+{params['time']}")
 
 
 def test_following_the_email_change_link_sets_and_verifies_the_address():

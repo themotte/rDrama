@@ -173,6 +173,10 @@ def logout(v):
 	return redirect('/')
 
 
+def _signup_formkey(timestamp, signup_token, agent):
+	return generate_hash(f"signup+{timestamp}+{signup_token}+{agent}")
+
+
 @app.get("/signup")
 @auth_desired
 def sign_up_get(v):
@@ -199,12 +203,7 @@ def sign_up_get(v):
 	token = token_hex(16)
 	session["signup_token"] = token
 
-	formkey_hashstr = str(now) + token + agent
-
-	formkey = hmac.new(key=bytes(SECRET_KEY, "utf-16"),
-					   msg=bytes(formkey_hashstr, "utf-16"),
-					   digestmod='md5'
-					   ).hexdigest()
+	formkey = _signup_formkey(now, token, agent)
 
 	error = request.values.get("error")
 
@@ -236,12 +235,7 @@ def sign_up_post(v):
 	submitted_token = session.get("signup_token", "")
 	if not submitted_token: abort(400)
 
-	correct_formkey_hashstr = form_timestamp + submitted_token + agent
-
-	correct_formkey = hmac.new(key=bytes(SECRET_KEY, "utf-16"),
-								msg=bytes(correct_formkey_hashstr, "utf-16"),
-								digestmod='md5'
-							   ).hexdigest()
+	correct_formkey = _signup_formkey(form_timestamp, submitted_token, agent)
 
 	now = int(time.time())
 

@@ -1,3 +1,4 @@
+import hmac
 import time
 from urllib.parse import quote
 
@@ -7,7 +8,7 @@ from files.__main__ import app, limiter, mail
 from files.classes.badges import Badge
 from files.classes.user import User
 from files.helpers.config.const import *
-from files.helpers.config.environment import SERVER_NAME, SITE_ID, SITE_TITLE
+from files.helpers.config.environment import SITE_ID, SITE_TITLE
 from files.helpers.security import *
 from files.helpers.wrappers import *
 from files.routes.importstar import *
@@ -18,17 +19,21 @@ def send_mail(to_address, subject, html):
 	mail.send(msg)
 
 
+def activation_token(email, user_id, timestamp):
+	# The leading purpose keeps tokens signed for anything else (such as the signup form key, whose message ends in the visitor's User-Agent) from passing as activation tokens.
+	return generate_hash(f"activate+{email}+{user_id}+{timestamp}")
+
+
+def activation_link(user, email):
+	now = int(time.time())
+	return f"{SITE_FULL}/activate?email={quote(email)}&id={user.id}&time={now}&token={activation_token(email, user.id, now)}"
+
+
 def send_verification_email(user, email=None):
 	if not email:
 		email = user.email
 
-	url = f"https://{SERVER_NAME}/activate"
-	now = int(time.time())
-
-	token = generate_hash(f"{email}+{user.id}+{now}")
-	params = f"?email={quote(email)}&id={user.id}&time={now}&token={token}"
-
-	link = url + params
+	link = activation_link(user, email)
 
 	send_mail(to_address=email,
 			  html=render_template("email/email_verify.html",
@@ -63,7 +68,7 @@ def activate(v):
 		return render_template("message.html", v=v, title="Verification link expired.",
 							   message="That link has expired. Visit your settings to send yourself another verification email."), 410
 
-	if not validate_hash(f"{email}+{id}+{timestamp}", token):
+	if not hmac.compare_digest(token, activation_token(email, id, timestamp)):
 		abort(403)
 
 	user = g.db.query(User).filter_by(id=id).one_or_none()
