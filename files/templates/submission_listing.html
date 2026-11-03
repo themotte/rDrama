@@ -197,10 +197,7 @@
 									tabindex="0" 
 									style="font-weight: bold;">
 										<span 
-											{% if p.author.patron and not p.distinguish_level %}
-												class="patron" 
-												style="background-color:#{{p.author.namecolor}};"
-											{% elif p.distinguish_level %}
+											{% if p.distinguish_level %}
 												class="mod"
 											{% endif %}>{{p.author_name}}</span>
 								</a>{% if p.author.customtitle %}<bdi style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}

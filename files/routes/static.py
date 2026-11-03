@@ -189,13 +189,6 @@ def cached_chart(kind, site):
 	return file
 
 
-@app.get("/patrons")
-@admin_level_required(3)
-def patrons(v):
-	users = g.db.query(User).filter(User.patron > 0).order_by(User.patron.desc(), User.id).all()
-
-	return render_template("patrons.html", v=v, users=users)
-
 @app.get("/admins")
 @auth_desired
 def admins(v):

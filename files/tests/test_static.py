@@ -232,14 +232,6 @@ def test_logged_out_with_path():
 	assert response.location == "/submit"
 
 
-def test_patrons_route():
-	"""Test GET /patrons route requires admin level 3"""
-	client, admin = util_accounts.create_test_client_and_admin(3)
-
-	response = client.get("/patrons")
-	assert response.status_code == 200
-
-
 def test_log_id_route():
 	"""Test GET /log/<id> route"""
 	client = util_accounts.create_logged_off_client()

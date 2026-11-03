@@ -174,8 +174,6 @@ NOTIFIED_USERS = {
 	# format: 'substring' ↦ User ID to notify
 }
 
-patron = 'Patron'
-
 proxies = {}
 
 approved_embed_hosts = [

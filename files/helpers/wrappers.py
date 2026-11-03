@@ -93,7 +93,7 @@ def get_logged_in_user():
 
 
 def check_ban_evade(v):
-	if v and not v.patron and v.admin_level < 2 and v.ban_evade and not v.unban_utc:
+	if v and v.admin_level < 2 and v.ban_evade and not v.unban_utc:
 		v.shadowbanned = "AutoJanny"
 		g.db.add(v)
 		g.db.commit()

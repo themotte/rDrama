@@ -19,7 +19,7 @@
 {% for user in admins %}
 	<tr>
 		<td>{{loop.index}}</td>
-		<td><a href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
+		<td><a href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span>{{user.username}}</span></a></td>
 		<td class="text-right"><a href="/log?admin={{user.username}}">{{user.modaction_num}}</a></td>
 	</tr>
 {% endfor %}

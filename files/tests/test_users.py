@@ -1036,14 +1036,6 @@ def test_user_pic_route():
 	assert response.status_code in [200, 302, 404]
 
 
-def test_views_route():
-	"""Test GET /views route"""
-	client, user = util_accounts.create_test_client_and_user("views-user")
-
-	response = client.get("/views")
-	assert response.status_code == 200
-
-
 def test_follow_user():
 	"""Test POST /follow/<username> route"""
 	client1, user1 = util_accounts.create_test_client_and_user("follower")

@@ -28,7 +28,7 @@
 
 	{% for vote in ups %}
 		<tr>
-			<td><a style="color:#{{vote.user.namecolor}};font-weight:bold" href="/@{{vote.user.username}}"><img loading="lazy" src="{{vote.user.profile_url}}" class="pp20"><span {% if vote.user.patron %}class="patron" style="background-color:#{{vote.user.namecolor}}"{% endif %}>{{vote.user.username}}</span></a></td>
+			<td><a style="color:#{{vote.user.namecolor}};font-weight:bold" href="/@{{vote.user.username}}"><img loading="lazy" src="{{vote.user.profile_url}}" class="pp20"><span>{{vote.user.username}}</span></a></td>
 			<td>{{vote.user.truescore}}</td>
 		</tr>
 	{% endfor %}
@@ -43,7 +43,7 @@
 
 	{% for vote in downs %}
 		<tr>
-			<td><a style="color:#{{vote.user.namecolor}};font-weight:bold" href="/@{{vote.user.username}}"><img loading="lazy" src="{{vote.user.profile_url}}" class="pp20"><span {% if vote.user.patron %}class="patron" style="background-color:#{{vote.user.namecolor}}"{% endif %}>{{vote.user.username}}</span></a></td>
+			<td><a style="color:#{{vote.user.namecolor}};font-weight:bold" href="/@{{vote.user.username}}"><img loading="lazy" src="{{vote.user.profile_url}}" class="pp20"><span>{{vote.user.username}}</span></a></td>
 			<td>{{vote.user.truescore}}</td>
 		</tr>
 	{% endfor %}

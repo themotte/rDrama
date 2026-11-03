@@ -1,7 +1,6 @@
 import io
 import time
 from collections import Counter
-from datetime import datetime
 from urllib.parse import urlparse
 
 import qrcode
@@ -15,7 +14,6 @@ from files.classes.leaderboard import (BadgeMarseyLeaderboard,
                                        RECEIVED_DOWNVOTES_META,
                                        ReceivedDownvotesLeaderboard,
                                        SimpleLeaderboard, UserBlockLeaderboard)
-from files.classes.views import ViewerRelationship
 from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.assetcache import assetcache_path
@@ -571,14 +569,6 @@ def following(v, username):
 	users = g.db.query(User).join(Follow, Follow.user_id == u.id).filter(Follow.target_id == User.id).order_by(Follow.created_datetimez).all()
 	return render_template("following.html", v=v, u=u, users=users)
 
-@app.get("/views")
-@auth_required
-def visitors(v):
-	if v.admin_level < 2 and not v.patron: return render_template("errors/patron.html", v=v)
-	viewers=sorted(v.viewers, key = lambda x: x.last_view_datetimez, reverse=True)
-	return render_template("viewers.html", v=v, viewers=viewers)
-
-
 @app.get("/@<username>/posts")
 @auth_desired
 def u_username(username, v=None):
@@ -590,16 +580,6 @@ def u_username(username, v=None):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"That username is reserved for: {u.reserved}")
 		return render_template("userpage_reserved.html", u=u, v=v)
 
-	if v and v.id != u.id and (u.patron or u.admin_level > 1):
-		view = g.db.query(ViewerRelationship).filter_by(viewer_id=v.id, user_id=u.id).one_or_none()
-
-		if view: view.last_view_datetimez = datetime.utcnow()
-		else: view = ViewerRelationship(viewer_id=v.id, user_id=u.id)
-
-		g.db.add(view)
-		g.db.commit()
-
-		
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2)):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, "That userpage is private")
 		return render_template("userpage_private.html", u=u, v=v)
