@@ -40,9 +40,9 @@ MAX_TITLE_LENGTH = 500
 @auth_required
 def publish(pid, v):
 	post = get_post(pid)
+	if post.author_id != v.id: abort(403)
 	if not post.private: return {"message": "Post published!"}
 
-	if post.author_id != v.id: abort(403)
 	post.private = False
 	post.created_utc = int(time.time())
 	g.db.add(post)
@@ -66,6 +66,7 @@ def _comment_sort(requested:Optional[str], v:Optional[User]) -> str:
 @auth_desired
 def post_id(pid, anything=None, v=None):
 	post = get_post(pid, v=v)
+	if post.is_draft_hidden_from(v): abort(404)
 
 	if post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, "Must be 18+ to view")
@@ -119,6 +120,7 @@ def post_id(pid, anything=None, v=None):
 @auth_desired
 def viewmore(v, pid, sort, offset):
 	post = get_post(pid, v=v)
+	if post.is_draft_hidden_from(v): abort(404)
 	sort = _comment_sort(sort, v)
 	try:
 		offset_prev = int(offset)
@@ -177,7 +179,7 @@ def morecomments(v, cid):
 	except: abort(400)
 
 	parent = g.db.get(Comment, cid)
-	if not parent or not parent.parent_submission: abort(404)
+	if not parent or not parent.parent_submission or parent.post.is_draft_hidden_from(v): abort(404)
 	tcid = parent.top_comment_id
 
 	if v:
@@ -680,6 +682,7 @@ def toggle_post_nsfw(pid, v):
 @auth_required
 def save_post(pid, v):
 	post=get_post(pid)
+	if post.is_draft_hidden_from(v): abort(404)
 
 	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
 

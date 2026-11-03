@@ -62,6 +62,44 @@ def test_stored_links_that_are_not_web_addresses_are_not_linked():
 	assert_not_in_payload(r, "javascript:alert")
 
 
+# Drafts
+
+@pytest.mark.parametrize("viewer", ["author", "moderator"])
+def test_drafts_are_shown_to_their_author_and_moderators(viewer):
+	author = factories.user()
+	body = factories.unique("body")
+	draft = factories.post(author, body=body, private=True)
+
+	r = _page(as_user(author if viewer == "author" else factories.admin(2)), draft)
+
+	assert_html(r, 200)
+	assert_in_payload(r, body)
+
+
+@pytest.mark.parametrize("viewer", ["visitor", "user", "helper", "api"])
+def test_drafts_are_not_found_by_anyone_else(viewer):
+	draft = factories.post(factories.user(), private=True)
+	client = {"visitor": anon, "user": lambda: as_user(factories.user()), "helper": lambda: as_user(factories.admin(1)), "api": lambda: as_api(factories.api_token(factories.user()))}[viewer]()
+
+	assert_status(_page(client, draft), 404)
+
+
+def test_comment_links_through_another_post_are_not_found():
+	draft = factories.post(factories.user(), private=True)
+	comment = factories.comment(factories.user(), draft)
+	public = factories.post(factories.user())
+
+	assert_status(anon().get(f"/post/{public['id']}/slug/{comment['id']}"), 404)
+
+
+def test_comment_links_into_drafts_are_not_found():
+	draft = factories.post(factories.user(), private=True)
+	comment = factories.comment(factories.user(), draft)
+
+	assert_status(anon().get(f"/post/{draft['id']}/slug/{comment['id']}"), 404)
+	assert_status(anon().get(f"/comment/{comment['id']}"), 404)
+
+
 # 18+ posts
 
 def test_visitors_must_confirm_their_age_before_seeing_an_18_plus_post():

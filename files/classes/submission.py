@@ -345,6 +345,10 @@ class Submission(CreatedBase):
 	def edit_url(self) -> str:
 		return f"/edit_post/{self.id}"
 	
+	def is_draft_hidden_from(self, v) -> bool:
+		'''Drafts exist only for their author and moderators; to everyone else they aren't there at all.'''
+		return self.private and not (v and (v.id == self.author_id or v.admin_level >= PERMS['POST_COMMENT_MODERATION']))
+
 	@property
 	def visibility_state(self) -> VisibilityState:
 		return VisibilityState.from_submittable(self)

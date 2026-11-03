@@ -111,6 +111,21 @@ def test_view_more_of_an_unknown_post_is_not_found():
 	assert_status(_viewmore(anon(), post, [1]), 404)
 
 
+def test_view_more_of_someone_elses_draft_is_not_found():
+	draft = factories.post(factories.user(), private=True)
+	shown = factories.comment(factories.user(), draft)
+
+	assert_status(_viewmore(as_user(factories.user()), draft, [shown["id"]]), 404)
+
+
+def test_more_comments_of_someone_elses_draft_is_not_found():
+	draft = factories.post(factories.user(), private=True)
+	top = factories.comment(factories.user(), draft)
+	factories.comment(factories.user(), draft, parent=top)
+
+	assert_status(anon().get(f"/morecomments/{top['id']}"), 404)
+
+
 # Deep threads
 
 def _thread(post, depth):

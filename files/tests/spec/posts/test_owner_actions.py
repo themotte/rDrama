@@ -53,6 +53,13 @@ def test_publishing_someone_elses_draft_is_forbidden():
 	d.assert_exactly()
 
 
+def test_publishing_someone_elses_public_post_is_forbidden():
+	post = factories.post(factories.user())
+	other = factories.user()
+
+	assert_status(as_user(other).post(f"/publish/{post['id']}", headers=XHR), 403)
+
+
 def test_publishing_an_already_public_post_changes_nothing():
 	author = factories.user()
 	post = factories.post(author)
@@ -237,6 +244,17 @@ def test_saving_is_idempotent():
 
 	with db_diff() as d:
 		assert_json_message(as_user(u).post(f"/save_post/{post['id']}"))
+	d.assert_exactly()
+
+
+def test_saving_someone_elses_draft_is_not_found():
+	draft = factories.post(factories.user(), private=True)
+	u = factories.user()
+
+	with db_diff() as d:
+		r = as_user(u).post(f"/save_post/{draft['id']}", headers=XHR)
+
+	assert_status(r, 404)
 	d.assert_exactly()
 
 

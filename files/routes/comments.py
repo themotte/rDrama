@@ -63,8 +63,8 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	post = get_post(pid, v=v)
 
-	# Post-private check — uses already-loaded post
-	if post.private and not (v and (v.admin_level >= 2 or v.id == post.author_id)): abort(403)
+	if comment.parent_submission and comment.parent_submission != post.id: abort(404)
+	if post.is_draft_hidden_from(v): abort(404)
 
 	if post.over_18 and not (v and v.over_18) and not session.get('over_18', 0) >= int(time.time()):
 		if request.headers.get("Authorization"): return {'error': 'This content is not suitable for some users and situations.'}
