@@ -125,11 +125,6 @@
 					{{u.friends_html | safe}}
 				{% endif %}
 
-				{% if u.enemies_html %}
-					<p class="text-muted font-weight-bold">Enemies:</p>
-					{{u.enemies_html | safe}}
-				{% endif %}
-
 				<div class="d-flex justify-content-between align-items-center">
 					<div>
 					{% if v and v.id != u.id %}
@@ -358,11 +353,6 @@
 				{% if u.friends_html %}
 					<p class="text-muted font-weight-bold mt-3">Friends:</p>
 					{{u.friends_html | safe}}
-				{% endif %}
-
-				{% if u.enemies_html %}
-					<p class="text-muted font-weight-bold mt-3">Enemies:</p>
-					{{u.enemies_html | safe}}
 				{% endif %}
 
 				<div class="mb-3">

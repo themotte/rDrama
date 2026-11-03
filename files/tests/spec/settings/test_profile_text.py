@@ -1,7 +1,7 @@
 '''
-POST /settings/profile, free-text fields: bio, friends list, enemies list.
+POST /settings/profile, free-text fields: bio, friends list.
 
-These come after the preference toggles in the single-choice order: clearing (an empty bio without an image upload, then empty friends, enemies), then friends, enemies, bio. Each renders the profile settings page, and ignores any preference "multi" fields in the same request.
+These come after the preference toggles in the single-choice order: clearing (an empty bio without an image upload, then empty friends), then friends, bio. Each renders the profile settings page, and ignores any preference "multi" fields in the same request.
 '''
 import pytest
 
@@ -12,7 +12,7 @@ def _post(user, data, headers=None, files=None):
 	return as_user(user).post("/settings/profile", data, headers=headers, files=files)
 
 
-@pytest.mark.parametrize("field", ["bio", "friends", "enemies"])
+@pytest.mark.parametrize("field", ["bio", "friends"])
 def test_empty_text_field_clears_it(field):
 	u = factories.user(**{field: "old", f"{field}_html": "<p>old</p>"})
 
@@ -140,18 +140,17 @@ def test_bio_image_alone_through_tor_changes_nothing():
 	d.assert_exactly()
 
 
-@pytest.mark.parametrize("field", ["friends", "enemies"])
-def test_relationship_list_is_stored_and_mentioned_users_are_notified(field):
+def test_friends_list_is_stored_and_mentioned_users_are_notified():
 	friend = factories.user()
 	u = factories.user()
 	text = f"@{friend['username']} is listed"
 
 	with db_diff() as d:
-		r = _post(u, {field: text})
+		r = _post(u, {"friends": text})
 
 	assert_html(r, 200)
 	d.assert_exactly(
-		updated={"users": {u["id"]: {field: text, f"{field}_html": ANY}}},
+		updated={"users": {u["id"]: {"friends": text, "friends_html": ANY}}},
 		inserted={
 			"comments": [{"author_id": seed.SYSTEM_ID, "parent_submission": None}],
 			"notifications": [{"user_id": friend["id"], "read": False}],
@@ -161,34 +160,22 @@ def test_relationship_list_is_stored_and_mentioned_users_are_notified(field):
 	assert u["username"] in notification["body_html"]
 
 
-@pytest.mark.parametrize("field", ["friends", "enemies"])
-def test_relationship_list_notification_is_reused_for_later_mentions(field):
+def test_friends_list_notification_is_reused_for_later_mentions():
 	friend, other = factories.user(), factories.user()
 	u = factories.user()
-	_post(u, {field: f"@{friend['username']}"})
+	_post(u, {"friends": f"@{friend['username']}"})
 
 	with db_diff() as d:
-		_post(u, {field: f"@{friend['username']} @{other['username']}"})
+		_post(u, {"friends": f"@{friend['username']} @{other['username']}"})
 
 	d.assert_exactly(
-		updated={"users": {u["id"]: {field: ANY, f"{field}_html": ANY}}},
+		updated={"users": {u["id"]: {"friends": ANY, "friends_html": ANY}}},
 		inserted={"notifications": [{"user_id": other["id"]}]},
 	)
 
 
-def test_friends_and_enemies_notifications_are_separate():
-	listed = factories.user()
-	u = factories.user()
-
-	_post(u, {"friends": f"@{listed['username']}"})
-	_post(u, {"enemies": f"@{listed['username']}"})
-
-	assert len({n["comment_id"] for n in db.rows("notifications", user_id=listed["id"])}) == 2
-
-
-@pytest.mark.parametrize("field", ["friends", "enemies"])
 @pytest.mark.parametrize("blocker", ["listed", "lister"])
-def test_relationship_list_does_not_notify_across_a_block(field, blocker):
+def test_friends_list_does_not_notify_across_a_block(blocker):
 	listed = factories.user()
 	u = factories.user()
 	if blocker == "listed":
@@ -197,26 +184,24 @@ def test_relationship_list_does_not_notify_across_a_block(field, blocker):
 		db.insert("userblocks", user_id=u["id"], target_id=listed["id"])
 
 	with db_diff() as d:
-		_post(u, {field: f"@{listed['username']}"})
+		_post(u, {"friends": f"@{listed['username']}"})
 
-	d.assert_exactly(updated={"users": {u["id"]: {field: ANY, f"{field}_html": ANY}}})
+	d.assert_exactly(updated={"users": {u["id"]: {"friends": ANY, "friends_html": ANY}}})
 
 
-@pytest.mark.parametrize("field", ["friends", "enemies"])
-def test_relationship_list_does_not_notify_yourself(field):
+def test_friends_list_does_not_notify_yourself():
 	u = factories.user()
 
 	with db_diff() as d:
-		_post(u, {field: f"@{u['username']}"})
+		_post(u, {"friends": f"@{u['username']}"})
 
-	d.assert_exactly(updated={"users": {u["id"]: {field: ANY, f"{field}_html": ANY}}})
+	d.assert_exactly(updated={"users": {u["id"]: {"friends": ANY, "friends_html": ANY}}})
 
 
-@pytest.mark.parametrize("field", ["friends", "enemies"])
-def test_relationship_list_is_truncated_to_500_characters(field):
+def test_friends_list_is_truncated_to_500_characters():
 	u = factories.user()
 
 	with db_diff() as d:
-		_post(u, {field: "a" * 600})
+		_post(u, {"friends": "a" * 600})
 
-	d.assert_exactly(updated={"users": {u["id"]: {field: "a" * 500, f"{field}_html": ANY}}})
+	d.assert_exactly(updated={"users": {u["id"]: {"friends": "a" * 500, "friends_html": ANY}}})

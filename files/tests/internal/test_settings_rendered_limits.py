@@ -1,8 +1,6 @@
 '''
 Profile text fields also cap their rendered HTML. The cap depends on the exact markup the sanitizer emits, which isn't part of the spec, so these live outside it.
 '''
-import pytest
-
 from files.tests.spec.harness import *
 
 # Bare URLs render to links several times their length
@@ -20,12 +18,11 @@ def test_bio_rendering_to_over_10000_characters_is_refused():
 	d.assert_exactly()
 
 
-@pytest.mark.parametrize("field", ["friends", "enemies"])
-def test_relationship_list_rendering_to_over_2000_characters_is_refused(field):
+def test_friends_list_rendering_to_over_2000_characters_is_refused():
 	u = factories.user()
 
 	with db_diff() as d:
-		r = as_user(u).post("/settings/profile", {field: LINKS_500_CHARS})
+		r = as_user(u).post("/settings/profile", {"friends": LINKS_500_CHARS})
 
 	assert_html(r, 200)
 	d.assert_exactly()

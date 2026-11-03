@@ -84,8 +84,6 @@ class User(CreatedBase):
 	bio_html = Column(String)
 	friends = deferred(Column(String))
 	friends_html = deferred(Column(String))
-	enemies = deferred(Column(String))
-	enemies_html = deferred(Column(String))
 	is_banned = Column(Integer, default=0, nullable=False)
 	unban_utc = Column(Integer, default=0, nullable=False)
 	ban_reason = deferred(Column(String))

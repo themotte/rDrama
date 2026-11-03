@@ -74,13 +74,6 @@ def settings_profile_post(v):
 		g.db.commit()
 		return render_template("settings_profile.html", v=v, msg="Your friends list has been updated.")
 
-	elif request.values.get("enemies") == "":
-		v.enemies = None
-		v.enemies_html = None
-		g.db.add(v)
-		g.db.commit()
-		return render_template("settings_profile.html", v=v, msg="Your enemies list has been updated.")
-
 	elif request.values.get("friends"):
 		friends = request.values.get("friends")[:500]
 
@@ -106,33 +99,6 @@ def settings_profile_post(v):
 		return render_template("settings_profile.html",
 							   v=v,
 							   msg="Your friends list has been updated.")
-
-
-	elif request.values.get("enemies"):
-		enemies = request.values.get("enemies")[:500]
-
-		enemies_html = sanitize(enemies)
-
-		if len(enemies_html) > 2000:
-			return render_template("settings_profile.html",
-								   v=v,
-								   error="Your enemies list is too long")
-
-
-		notify_users = NOTIFY_USERS(enemies, v)
-
-		if notify_users:
-			cid = notif_comment(f"@{v.username} has added you to their enemies list!")
-			for x in notify_users:
-				add_notif(cid, x)
-
-		v.enemies = enemies[:500]
-		v.enemies_html=enemies_html
-		g.db.add(v)
-		g.db.commit()
-		return render_template("settings_profile.html",
-							   v=v,
-							   msg="Your enemies list has been updated.")
 
 
 	elif request.values.get("bio") or upload:
