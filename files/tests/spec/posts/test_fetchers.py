@@ -265,6 +265,20 @@ def test_unusable_images_are_skipped(bad):
 	assert [url for _, url in external_web.requests()][-1] == "https://cdn.example.com/good.png"
 
 
+def test_at_most_ten_page_images_are_tried():
+	bad = "".join(f'<img src="https://cdn.example.com/missing{i}.png">' for i in range(10))
+	external_web.serve("https://example.com/article", **_html(body=bad + '<img src="https://cdn.example.com/good.png">'))
+	for i in range(10):
+		external_web.serve(f"https://cdn.example.com/missing{i}.png", status=404)
+	external_web.serve("https://cdn.example.com/good.png", **_image())
+	post = _link_post("https://example.com/article")
+
+	run_background_work()
+
+	assert _thumbnail_of(post) is None
+	assert len(external_web.requests()) == 11
+
+
 def test_image_addresses_that_are_not_web_addresses_are_skipped():
 	external_web.serve("https://example.com/article", **_html(body='<img src="data:image/png;base64,AAAA"><img src="https://cdn.example.com/good.png">'))
 	external_web.serve("https://cdn.example.com/good.png", **_image())

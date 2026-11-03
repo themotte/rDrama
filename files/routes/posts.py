@@ -282,6 +282,7 @@ def thumbnail_thread(pid):
 
 THUMBNAIL_SOURCE_MAX_BYTES = 8 * 1024 * 1024
 THUMBNAIL_SOURCE_MIN_SIDE = 30
+THUMBNAIL_MAX_CANDIDATES = 10
 THUMBNAIL_META_TAGS = ["themotte:thumbnail", "twitter:image", "og:image", "thumbnail"]
 
 
@@ -337,7 +338,7 @@ def _thumbnail_candidates(page_url:str, html:bytes) -> list[str]:
 		if tag: found.append(tag['content'])
 	found += [tag['src'] for tag in soup.find_all("img", attrs={'src': True})]
 	resolved = (urllib.parse.urljoin(page_url, url) for url in found)
-	return [url for url in resolved if url.startswith(("http://", "https://"))]
+	return [url for url in resolved if url.startswith(("http://", "https://"))][:THUMBNAIL_MAX_CANDIDATES]
 
 
 def _thumbnail_suitable(response:requests.Response, body:bytes) -> bool:
