@@ -509,10 +509,11 @@ def _duplicate_check2(
 	dup = g.db.query(Submission).filter(
 		Submission.author_id == user_id,
 		Submission.state_user_deleted_utc == None,
+		Submission.private == False,
 		Submission.title == validated_post.title,
 		Submission.url == validated_post.url,
 		Submission.body == validated_post.body
-	).one_or_none()
+	).order_by(Submission.id).first()
 
 	if dup:
 		return redirect(dup.permalink)

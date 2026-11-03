@@ -410,6 +410,21 @@ def test_resubmitting_an_identical_post_redirects_to_it():
 	d.assert_exactly()
 
 
+def test_resubmitting_a_post_already_duplicated_redirects_to_the_earliest():
+	author = factories.user()
+	earliest = factories.post(author, title="same", body="same")
+	factories.post(author, title="same", body="same")
+
+	assert_redirect(_submit(as_user(author), title="same", body="same"), f"/post/{earliest['id']}/same")
+
+
+def test_resubmitting_an_identical_draft_makes_a_new_post():
+	author = factories.user()
+	factories.post(author, title="same", body="same", private=True)
+
+	assert_html(_submit(as_user(author), title="same", body="same"), 200)
+
+
 def test_identical_posts_by_different_authors_are_both_accepted():
 	fields = _text_post()
 	assert_html(_submit(as_user(factories.user()), **fields), 200)
