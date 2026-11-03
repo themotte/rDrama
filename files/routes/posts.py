@@ -171,7 +171,9 @@ def morecomments(v, cid):
 	try: cid = int(cid)
 	except: abort(400)
 
-	tcid = g.db.query(Comment.top_comment_id).filter_by(id=cid).one_or_none()[0]
+	parent = g.db.get(Comment, cid)
+	if not parent or not parent.parent_submission: abort(404)
+	tcid = parent.top_comment_id
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -210,8 +212,7 @@ def morecomments(v, cid):
 			else: dump.append(comment)
 		comments = output
 	else:
-		c = g.db.query(Comment).filter_by(id=cid).one_or_none()
-		comments = c.replies(None)
+		comments = parent.replies(None)
 
 	if comments: p = comments[0].post
 	else: p = None

@@ -158,3 +158,30 @@ def test_more_comments_for_users_fetches_only_replies_below_the_shown_depth():
 
 def test_more_comments_needs_a_numeric_id():
 	assert_status(anon().get("/morecomments/abc"), 400)
+
+
+def _message(author, recipient, parent=None):
+	'''A private message, or a reply within a private conversation.'''
+	message_id = db.execute("SELECT nextval('comments_id_seq')")
+	body = factories.unique("message")
+	return db.insert("comments", id=message_id, author_id=author["id"], sentto=recipient["id"], created_utc=1000, parent_submission=None, parent_comment_id=parent["id"] if parent else None, level=parent["level"] + 1 if parent else 1, top_comment_id=parent["top_comment_id"] if parent else message_id, body=body, body_html=f"<p>{body}</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
+
+
+@pytest.mark.parametrize("viewer", ["visitor", "user"])
+@pytest.mark.parametrize("depth", [0, 8], ids=["first message", "deep in the conversation"])
+def test_more_comments_does_not_reveal_private_messages(viewer, depth):
+	sender, recipient = factories.user(), factories.user()
+	chain = [_message(sender, recipient)]
+	for i in range(11):
+		chain.append(_message(recipient if i % 2 == 0 else sender, sender if i % 2 == 0 else recipient, parent=chain[-1]))
+	client = anon() if viewer == "visitor" else as_user(factories.user())
+
+	assert_status(client.get(f"/morecomments/{chain[depth]['id']}"), 404)
+
+
+def test_more_comments_of_an_unknown_comment_is_not_found():
+	comment = factories.comment(factories.user(), factories.post(factories.user()))
+	db.delete("commentvotes", comment_id=comment["id"])
+	db.delete("comments", id=comment["id"])
+
+	assert_status(anon().get(f"/morecomments/{comment['id']}"), 404)
