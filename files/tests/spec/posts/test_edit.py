@@ -58,6 +58,18 @@ def test_an_edit_that_changes_nothing_is_refused():
 	d.assert_exactly()
 
 
+def test_link_posts_can_be_retitled_without_text():
+	author = factories.user()
+	post = factories.post(author, url="https://example.com/page", body="")
+	title = factories.unique("title")
+
+	with db_diff() as d:
+		r = _edit(as_user(author), post, title=title)
+
+	assert_redirect(r, f"/post/{post['id']}/{title}")
+	d.assert_exactly(updated={"submissions": {post["id"]: {"title": title, "title_html": title}}})
+
+
 @pytest.mark.parametrize("fields", [{"body": ""}, {"title": '"' * 251}], ids=["emptied text post", "title too long once rendered"])
 def test_invalid_edits_are_refused(fields):
 	author = factories.user()
