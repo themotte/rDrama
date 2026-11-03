@@ -307,7 +307,6 @@ def leaderboard(v:User):
 	if not v.can_see_shadowbanned:
 		users = users.filter(User.shadowbanned == None)
 
-	coins = SimpleLeaderboard(v, LeaderboardMeta("Coins", "coins", "coins", "Coins", None), g.db, users, User.coins)
 	subscribers = SimpleLeaderboard(v, LeaderboardMeta("Followers", "followers", "followers", "Followers", "followers"), g.db, users, User.stored_subscriber_count)
 	posts = SimpleLeaderboard(v, LeaderboardMeta("Posts", "post count", "posts", "Posts", ""), g.db, users, User.post_count)
 	comments = SimpleLeaderboard(v, LeaderboardMeta("Comments", "comment count", "comments", "Comments", "comments"), g.db, users, User.comment_count)
@@ -315,7 +314,7 @@ def leaderboard(v:User):
 	badges = BadgeMarseyLeaderboard(v, LeaderboardMeta("Badges", "badges", "badges", "Badges", None), g.db, Badge.user_id)
 	blocks = UserBlockLeaderboard(v, LeaderboardMeta("Blocked", "most blocked", "blocked", "Blocked By", "blockers"), g.db, UserBlock.target_id)
 
-	leaderboards = [coins, truescore, subscribers, posts, comments, badges, blocks]
+	leaderboards = [truescore, subscribers, posts, comments, badges, blocks]
 
 	# The downvotes-received / upvotes-given leaderboards are expensive full-table
 	# aggregations, so they're precomputed once a day by the leaderboard_recalc

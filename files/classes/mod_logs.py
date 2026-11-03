@@ -229,11 +229,6 @@ ACTIONTYPES = {
 		"icon": 'fa-user-crown', 
 		"color": 'bg-success'
 	},
-	'monthly': {
-		"str": 'distributed monthly marseybux', 
-		"icon": 'fa-sack-dollar', 
-		"color": 'bg-success'
-	},
 	'nuke_user': {
 		"str": 'removed all content of {self.target_link}', 
 		"icon": 'fa-radiation-alt', 

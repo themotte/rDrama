@@ -19,10 +19,10 @@ def test_simple_leaderboard_basic():
 	"""Test SimpleLeaderboard with basic user query."""
 	client, user = util_accounts.create_test_client_and_user()
 
-	# Create leaderboard for coins
-	meta = LeaderboardMeta("Coins", "coins", "coins", "Coins", None)
+	# Create leaderboard for truescore
+	meta = LeaderboardMeta("Truescore", "truescore", "truescore", "Truescore", None)
 	users_query = db_session.query(User)
-	lb = SimpleLeaderboard(user, meta, db_session, users_query, User.coins)
+	lb = SimpleLeaderboard(user, meta, db_session, users_query, User.truescore)
 
 	# Check basic properties
 	assert lb.v == user
@@ -35,28 +35,28 @@ def test_simple_leaderboard_basic():
 		first_user = lb.all_users[0]
 		value = lb.value_func(first_user)
 		assert isinstance(value, int)
-		assert value == first_user.coins
+		assert value == first_user.truescore
 
 def test_simple_leaderboard_user_not_in_top():
 	"""Test SimpleLeaderboard when viewing user is not in top rankings."""
-	# Create a user with low coins
-	client, low_coin_user = util_accounts.create_test_client_and_user("lb-low-coin")
+	# Create a user with low truescore
+	client, low_score_user = util_accounts.create_test_client_and_user("lb-low-score")
 
-	# Set their coins to 0 to ensure they're at the bottom
-	low_coin_user.coins = 0
+	# Set their truescore to 0 to ensure they're at the bottom
+	low_score_user.truescore = 0
 	db_session.commit()
 
-	# Create leaderboard with small limit and filter for users with positive coins
-	meta = LeaderboardMeta("Coins", "coins", "coins", "Coins", None, limit=5)
-	users_query = db_session.query(User).filter(User.coins > 0)
-	lb = SimpleLeaderboard(low_coin_user, meta, db_session, users_query, User.coins)
+	# Create leaderboard with small limit and filter for users with positive truescore
+	meta = LeaderboardMeta("Truescore", "truescore", "truescore", "Truescore", None, limit=5)
+	users_query = db_session.query(User).filter(User.truescore > 0)
+	lb = SimpleLeaderboard(low_score_user, meta, db_session, users_query, User.truescore)
 
-	# Since low_coin_user has 0 coins and query filters for > 0, they won't be in results
+	# Since low_score_user has 0 truescore and query filters for > 0, they won't be in results
 	# The leaderboard should handle this gracefully by calculating their position
 	# The _calculate method will query for this user's position even if they don't match the filter
 	assert isinstance(lb.all_users, list)
 	# v_position and v_value are only set if user is not in all_users
-	if low_coin_user not in lb.all_users:
+	if low_score_user not in lb.all_users:
 		assert lb.v_position > len(lb.all_users)
 		assert lb.v_value == 0
 
@@ -66,17 +66,17 @@ def test_simple_leaderboard_user_in_top():
 
 	client, user = util_accounts.create_test_client_and_user("lb-top-user")
 
-	# Give user more coins than anyone else to ensure they're #1
-	max_coins = db_session.query(func.max(User.coins)).scalar() or 0
-	user.coins = max_coins + 1000000
+	# Give user more truescore than anyone else to ensure they're #1
+	max_truescore = db_session.query(func.max(User.truescore)).scalar() or 0
+	user.truescore = max_truescore + 1000000
 	db_session.commit()
 
 	# Create leaderboard
-	meta = LeaderboardMeta("Coins", "coins", "coins", "Coins", None)
+	meta = LeaderboardMeta("Truescore", "truescore", "truescore", "Truescore", None)
 	users_query = db_session.query(User)
-	lb = SimpleLeaderboard(user, meta, db_session, users_query, User.coins)
+	lb = SimpleLeaderboard(user, meta, db_session, users_query, User.truescore)
 
-	# User should be in all_users (top 25) since they have the most coins
+	# User should be in all_users (top 25) since they have the most truescore
 	assert user in lb.all_users
 	# When user is in top rankings, v_position and v_value should be None
 	assert lb.v_position is None
@@ -314,14 +314,14 @@ def test_simple_leaderboard_with_different_columns():
 
 def test_leaderboard_v_appears_in_ranking():
 	"""Test v_appears_in_ranking property."""
-	# Create user with very low coins so they're not in ranking
+	# Create user with very low truescore so they're not in ranking
 	client, user = util_accounts.create_test_client_and_user("lb-appears")
-	user.coins = 1
+	user.truescore = 1
 	db_session.commit()
 
-	meta = LeaderboardMeta("Coins", "coins", "coins", "Coins", None, limit=5)
-	users_query = db_session.query(User).filter(User.coins > 0)
-	lb = SimpleLeaderboard(user, meta, db_session, users_query, User.coins)
+	meta = LeaderboardMeta("Truescore", "truescore", "truescore", "Truescore", None, limit=5)
+	users_query = db_session.query(User).filter(User.truescore > 0)
+	lb = SimpleLeaderboard(user, meta, db_session, users_query, User.truescore)
 
 	# Test that v_appears_in_ranking works correctly
 	# If user is not in all_users, v_position will be set and v_appears_in_ranking should work

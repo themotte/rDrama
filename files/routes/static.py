@@ -75,7 +75,6 @@ def participation_stats(v):
 		"private users": users.filter_by(is_private=True).count(),
 		"banned users": users.filter(User.is_banned > 0).count(),
 		"verified email users": users.filter_by(is_activated=True).count(),
-		"coins in circulation": g.db.query(func.sum(User.coins)).scalar(),
 		"signups last 24h": users.filter(User.created_utc > day).count(),
 		"total posts": submissions.count(),
 		"posting users": g.db.query(Submission.author_id).distinct().count(),

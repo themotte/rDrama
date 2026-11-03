@@ -82,7 +82,6 @@ def api_vote_post(post_id, new, v):
 	if vote:
 		# remove the old score data
 		if points_matter:
-			post.author.coins -= vote.vote_type
 			post.author.truescore -= vote.vote_type
 			# we'll be saving later anyway, so don't bother doing so here
 	else:
@@ -104,7 +103,6 @@ def api_vote_post(post_id, new, v):
 
 	# add relevant points
 	if points_matter:
-		post.author.coins += vote.vote_type
 		post.author.truescore += vote.vote_type
 	
 	# database it up
@@ -150,7 +148,6 @@ def api_vote_comment(comment_id, new, v):
 	if vote:
 		# remove the old score data
 		if points_matter:
-			comment.author.coins -= vote.vote_type
 			comment.author.truescore -= vote.vote_type
 			# we'll be saving later anyway, so don't bother doing so here
 	else:
@@ -172,7 +169,6 @@ def api_vote_comment(comment_id, new, v):
 
 	# add relevant points
 	if points_matter:
-		comment.author.coins += vote.vote_type
 		comment.author.truescore += vote.vote_type
 	
 	# database it up

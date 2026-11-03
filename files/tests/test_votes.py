@@ -334,7 +334,7 @@ def test_vote_comment_nonexistent():
 
 
 def test_vote_post_by_other_user():
-	"""Test voting on another user's post updates their coins and truescore"""
+	"""Test voting on another user's post updates their truescore"""
 	# Create two users
 	client1, user1 = util_accounts.create_test_client_and_user(name="voter1")
 	client2, user2 = util_accounts.create_test_client_and_user(name="author1")
@@ -345,20 +345,18 @@ def test_vote_post_by_other_user():
 	from files.__main__ import db_session
 	from files.classes import User, Submission
 
-	# Get user2's initial coins and truescore
+	# Get user2's initial truescore
 	db_session.expire_all()
 	user2_before = db_session.query(User).filter_by(id=user2.id).first()
-	initial_coins = user2_before.coins
 	initial_truescore = user2_before.truescore
 
 	# User1 upvotes user2's post
 	vote_response, _ = util.post_with_formkey(client1, f"/vote/post/{post.id}/1", data={})
 	assert vote_response.status_code == 204
 
-	# Verify user2's coins and truescore increased by 1
+	# Verify user2's truescore increased by 1
 	db_session.expire_all()
 	user2_after = db_session.query(User).filter_by(id=user2.id).first()
-	assert user2_after.coins == initial_coins + 1
 	assert user2_after.truescore == initial_truescore + 1
 
 	# User1 changes to downvote (if enabled)
@@ -367,15 +365,14 @@ def test_vote_post_by_other_user():
 		vote_response, _ = util.post_with_formkey(client1, f"/vote/post/{post.id}/-1", data={})
 		assert vote_response.status_code == 204
 
-		# Verify user2's coins and truescore decreased by 2 (removed +1, added -1)
+		# Verify user2's truescore decreased by 2 (removed +1, added -1)
 		db_session.expire_all()
 		user2_after = db_session.query(User).filter_by(id=user2.id).first()
-		assert user2_after.coins == initial_coins - 1
 		assert user2_after.truescore == initial_truescore - 1
 
 
 def test_vote_comment_by_other_user():
-	"""Test voting on another user's comment updates their coins and truescore"""
+	"""Test voting on another user's comment updates their truescore"""
 	# Create two users
 	client1, user1 = util_accounts.create_test_client_and_user(name="voter2")
 	client2, user2 = util_accounts.create_test_client_and_user(name="author2")
@@ -387,20 +384,18 @@ def test_vote_comment_by_other_user():
 	from files.__main__ import db_session
 	from files.classes import User, Comment
 
-	# Get user2's initial coins and truescore
+	# Get user2's initial truescore
 	db_session.expire_all()
 	user2_before = db_session.query(User).filter_by(id=user2.id).first()
-	initial_coins = user2_before.coins
 	initial_truescore = user2_before.truescore
 
 	# User1 upvotes user2's comment
 	vote_response, _ = util.post_with_formkey(client1, f"/vote/comment/{comment.id}/1", data={})
 	assert vote_response.status_code == 204
 
-	# Verify user2's coins and truescore increased by 1
+	# Verify user2's truescore increased by 1
 	db_session.expire_all()
 	user2_after = db_session.query(User).filter_by(id=user2.id).first()
-	assert user2_after.coins == initial_coins + 1
 	assert user2_after.truescore == initial_truescore + 1
 
 	# User1 changes to downvote (if enabled)
@@ -409,10 +404,9 @@ def test_vote_comment_by_other_user():
 		vote_response, _ = util.post_with_formkey(client1, f"/vote/comment/{comment.id}/-1", data={})
 		assert vote_response.status_code == 204
 
-		# Verify user2's coins and truescore decreased by 2 (removed +1, added -1)
+		# Verify user2's truescore decreased by 2 (removed +1, added -1)
 		db_session.expire_all()
 		user2_after = db_session.query(User).filter_by(id=user2.id).first()
-		assert user2_after.coins == initial_coins - 1
 		assert user2_after.truescore == initial_truescore - 1
 
 
