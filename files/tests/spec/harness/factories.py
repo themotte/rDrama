@@ -100,7 +100,7 @@ def post(author: dict, **overrides) -> dict:
 		**overrides,
 	})
 	db.insert("votes", user_id=author["id"], submission_id=row["id"], vote_type=1)
-	db.execute("UPDATE users SET post_count = (SELECT count(*) FROM submissions WHERE author_id = :id AND state_mod = 'VISIBLE' AND state_user_deleted_utc IS NULL) WHERE id = :id", id=author["id"])
+	db.execute("UPDATE users SET post_count = (SELECT count(*) FROM submissions WHERE author_id = :id AND state_mod = 'VISIBLE' AND state_user_deleted_utc IS NULL AND NOT private) WHERE id = :id", id=author["id"])
 	return row
 
 

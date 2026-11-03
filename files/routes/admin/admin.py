@@ -258,6 +258,7 @@ def update_filter_status(v):
 	elif making_invisible:
 		modlog_action: str = "remove"
 		if isinstance(target, Comment): comment_on_unpublish(target)
+		else: target.visibility_changed()
 
 	if making_visible or making_invisible:
 		g.db.add(ModAction(

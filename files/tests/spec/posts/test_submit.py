@@ -88,10 +88,7 @@ def test_draft():
 	with db_diff() as d:
 		_submit(as_user(author), **_text_post(private="1"))
 
-	d.assert_exactly(
-		inserted={"submissions": [{"private": True}], "votes": [{"user_id": author["id"]}]},
-		updated={"users": {author["id"]: {"post_count": 1}}},
-	)
+	d.assert_exactly(inserted={"submissions": [{"private": True}], "votes": [{"user_id": author["id"]}]})
 
 
 @pytest.mark.parametrize("value", ["true", "false", "0"])
@@ -473,7 +470,7 @@ def test_spam_bans_the_author_for_a_day_and_removes_their_similar_posts(age_days
 	assert_status(r, 403)
 	d.assert_exactly(
 		updated={
-			"users": {author["id"]: {"is_banned": seed.AUTOJANNY_ID, "unban_utc": ANY, "ban_reason": "Spamming."}},
+			"users": {author["id"]: {"is_banned": seed.AUTOJANNY_ID, "unban_utc": ANY, "ban_reason": "Spamming.", "post_count": 0}},
 			"submissions": {pid: {"state_mod": "REMOVED", "state_mod_set_by": "AutoJanny"} for pid in similar},
 		},
 		inserted={
@@ -597,6 +594,26 @@ def test_approving_a_held_post_notifies():
 	assert_status(_approve(post), 200)
 
 	assert {n["user_id"] for n in db.rows("notifications")} == {mentioned["id"], db.row("follows", target_id=author["id"])["user_id"]}
+
+
+def test_approving_a_held_post_counts_it():
+	site_settings_set("FilterNewPosts", True)
+	author = factories.user()
+	assert_html(_submit(as_user(author), title="t", body="text"), 200)
+	post = db.rows("submissions")[-1]
+
+	assert_status(_approve(post), 200)
+
+	assert db.row("users", id=author["id"])["post_count"] == 1
+
+
+def test_removing_a_post_from_the_review_queue_uncounts_it():
+	author = factories.user()
+	post = factories.post(author)
+
+	as_user(factories.admin(2)).post_json("/admin/update_filter_status", {"post_id": post["id"], "new_status": "removed"})
+
+	assert db.row("users", id=author["id"])["post_count"] == 0
 
 
 def test_approving_a_post_twice_does_not_notify_twice():

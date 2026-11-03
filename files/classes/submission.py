@@ -2,7 +2,7 @@ from urllib.parse import urlparse
 
 from flask import g
 from sqlalchemy import *
-from sqlalchemy.orm import Session, declared_attr, deferred, relationship
+from sqlalchemy.orm import Session, declared_attr, deferred, object_session, relationship
 
 from files.classes.base import CreatedBase
 from files.classes.flags import Flag
@@ -97,12 +97,6 @@ class Submission(CreatedBase):
 			submission_id=self.id
 		)
 		db.add(vote)
-		author = self.author
-		author.post_count = db.query(Submission.id).filter_by(
-			author_id=self.author_id, 
-			state_mod=StateMod.VISIBLE,
-			state_user_deleted_utc=None).count()
-		db.add(author)
 
 	def publish(self):
 		'''
@@ -113,11 +107,23 @@ class Submission(CreatedBase):
 		# imports until as late as possible. otherwise there are import loops
 		# that would require much more work to untangle
 		from files.helpers.alerts import notify_submission_publish
+
+		self.visibility_changed()
+		if not self.private and not self.ghost and self.visibility_state.publicly_visible:
+			notify_submission_publish(self)
+
+	def visibility_changed(self):
+		'''Run whenever whether others can see the post may have changed: keeps the author's post count and the listings current.'''
 		from files.helpers.caching import invalidate_cache
 
-		if self.private: return
-		if not self.ghost and self.visibility_state.publicly_visible:
-			notify_submission_publish(self)
+		db = object_session(self)
+		db.flush()
+		self.author.post_count = db.query(Submission.id).filter_by(
+			author_id=self.author_id,
+			state_mod=StateMod.VISIBLE,
+			state_user_deleted_utc=None,
+			private=False).count()
+		db.add(self.author)
 		invalidate_cache(frontlist=True, userpagelisting=True, changeloglist=self.is_changelog)
 
 	@property

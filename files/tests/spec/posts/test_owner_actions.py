@@ -20,7 +20,7 @@ def test_author_publishes_a_draft():
 		r = as_user(author).post(f"/publish/{draft['id']}")
 
 	assert_redirect(r, _path(draft))
-	d.assert_exactly(updated={"submissions": {draft["id"]: {"private": False, "created_utc": ANY}}})
+	d.assert_exactly(updated={"submissions": {draft["id"]: {"private": False, "created_utc": ANY}}, "users": {author["id"]: {"post_count": 1}}})
 	assert db.row("submissions", id=draft["id"])["created_utc"] > 1000
 
 
@@ -34,7 +34,7 @@ def test_publishing_a_draft_notifies_mentioned_users_and_followers():
 		as_user(author).post(f"/publish/{draft['id']}")
 
 	d.assert_exactly(
-		updated={"submissions": {draft["id"]: {"private": False, "created_utc": ANY}}},
+		updated={"submissions": {draft["id"]: {"private": False, "created_utc": ANY}}, "users": {author["id"]: {"post_count": 1}}},
 		inserted={
 			"comments": [{"author_id": seed.SYSTEM_ID, "parent_submission": None}, {"author_id": seed.AUTOJANNY_ID, "parent_submission": None}],
 			"notifications": [{"user_id": mentioned["id"]}, {"user_id": follower["id"]}],
@@ -91,7 +91,10 @@ def test_author_deletes_a_post():
 		r = as_user(author).post(f"/delete_post/{post['id']}")
 
 	assert_json_message(r)
-	d.assert_exactly(updated={"submissions": {post["id"]: {"state_user_deleted_utc": ANY, "is_pinned": False, "stickied": None}}})
+	d.assert_exactly(updated={
+		"submissions": {post["id"]: {"state_user_deleted_utc": ANY, "is_pinned": False, "stickied": None}},
+		"users": {author["id"]: {"post_count": 0}},
+	})
 	assert db.row("submissions", id=post["id"])["state_user_deleted_utc"] is not None
 
 
@@ -104,7 +107,22 @@ def test_author_undeletes_a_post():
 		r = as_user(author).post(f"/undelete_post/{post['id']}")
 
 	assert_json_message(r)
-	d.assert_exactly(updated={"submissions": {post["id"]: {"state_user_deleted_utc": None}}})
+	d.assert_exactly(updated={"submissions": {post["id"]: {"state_user_deleted_utc": None}}, "users": {author["id"]: {"post_count": 1}}})
+
+
+def test_undeleting_notifies_nobody():
+	follower, mentioned = factories.user(), factories.user()
+	author = factories.user()
+	db.insert("follows", user_id=follower["id"], target_id=author["id"])
+	post = factories.post(author, body=f"hi @{mentioned['username']}")
+	client = as_user(author)
+	client.post(f"/delete_post/{post['id']}")
+
+	with db_diff() as d:
+		r = client.post(f"/undelete_post/{post['id']}")
+
+	assert_json_message(r)
+	d.assert_exactly(updated={"submissions": {post["id"]: {"state_user_deleted_utc": None}}, "users": {author["id"]: {"post_count": 1}}})
 
 
 @pytest.mark.parametrize("action", ["delete_post", "undelete_post", "pin", "toggle_post_nsfw"])

@@ -446,6 +446,7 @@ def _do_antispam_submission_check(v:User, validated:validators.ValidatedSubmissi
 		post.state_mod_set_by = "AutoJanny"
 		post.is_pinned = False
 		g.db.add(post)
+		post.visibility_changed()
 		ma=ModAction(
 				user_id=AUTOJANNY_ID,
 				target_submission_id=post.id,
@@ -613,9 +614,7 @@ def delete_post_pid(pid, v):
 	post.stickied = None
 
 	g.db.add(post)
-
-	invalidate_cache(frontlist=True)
-
+	post.visibility_changed()
 	g.db.commit()
 
 	return {"message": "Post deleted!"}
@@ -629,9 +628,7 @@ def undelete_post_pid(pid, v):
 	post.state_user_deleted_utc = None
 
 	g.db.add(post)
-
-	invalidate_cache(frontlist=True)
-
+	post.visibility_changed()
 	g.db.commit()
 
 	return {"message": "Post undeleted!"}
