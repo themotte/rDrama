@@ -244,6 +244,10 @@ def test_unsuitable_candidates_are_skipped(bad):
 
 
 _UNUSABLE_IMAGES = {
+	"unreadable": lambda: b"not really an image",
+	"truncated": lambda: uploads.truncated_png()[1],
+	"decompression bomb": lambda: uploads.oversized_png()[1],
+	"huge": lambda: uploads.huge_png()[1],
 	"over 8 MB": lambda: uploads.noisy_png(1700, 1700)[1],
 }
 
@@ -271,7 +275,7 @@ def test_image_addresses_that_are_not_web_addresses_are_skipped():
 	assert _thumbnail_of(post) is not None
 
 
-@pytest.mark.parametrize("image", ["over 8 MB"])
+@pytest.mark.parametrize("image", ["unreadable", "over 8 MB"])
 def test_links_to_unusable_images_give_no_thumbnail(image):
 	external_web.serve("https://example.com/photo", headers={"Content-Type": "image/png"}, body=_UNUSABLE_IMAGES[image]())
 	post = _link_post("https://example.com/photo")

@@ -38,6 +38,11 @@ def oversized_png():
 	return ("image.png", _png_bytes(100_000, 100_000, rows=b"\x00"), "image/png")
 
 
+def huge_png():
+	'''A tiny file declaring 10000x10000 pixels: past the usual decoding limit, though short of what decoders refuse outright as a bomb.'''
+	return ("image.png", _png_bytes(10_000, 10_000, rows=b"\x00"), "image/png")
+
+
 def text_file():
 	return ("notes.txt", b"hello", "text/plain")
 

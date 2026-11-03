@@ -344,7 +344,16 @@ def _thumbnail_suitable(response:requests.Response, body:bytes) -> bool:
 	content_type:str = response.headers.get("Content-Type", "")
 	if response.status_code >= 400 or not content_type.startswith("image/") or content_type.startswith("image/svg"):
 		return False
-	image = PILimage.open(BytesIO(body))
+	try:
+		image = PILimage.open(BytesIO(body))
+		# Decoding allocates by the declared size, so refuse oversized images before decoding rather than after
+		if image.width * image.height > PILimage.MAX_IMAGE_PIXELS:
+			app.logger.info("Thumbnail source is %dx%d, too large to decode", image.width, image.height)
+			return False
+		image.load()
+	except (OSError, PILimage.DecompressionBombError) as e:
+		app.logger.info("Thumbnail source isn't a readable image: %s", e)
+		return False
 	return image.width >= THUMBNAIL_SOURCE_MIN_SIDE and image.height >= THUMBNAIL_SOURCE_MIN_SIDE
 
 
