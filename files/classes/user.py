@@ -58,7 +58,6 @@ class User(CreatedBase):
 	highres = Column(String)
 	profileurl = Column(String)
 	bannerurl = Column(String)
-	house = Column(String)
 	patron = Column(Integer, default=0, nullable=False)
 	patron_utc = Column(Integer, default=0, nullable=False)
 	verified = Column(String)

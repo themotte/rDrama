@@ -1,9 +1,9 @@
 '''
 POST /settings/profile, preference fields.
 
-A request applies at most one "single-choice" field. Single-choice fields are considered in this order: reddit (only when different from the current value), hidevotedon, cardview, highlightcomments, newtab, newtabexternal, nitter, controversial, over18, nofollow (each whenever present), then the text fields (see test_profile_text), which end the request. Otherwise every present "multi" field applies too: frontsize, defaultsortingcomments, defaultsorting, defaulttime, theme, house.
+A request applies at most one "single-choice" field. Single-choice fields are considered in this order: reddit (only when different from the current value), hidevotedon, cardview, highlightcomments, newtab, newtabexternal, nitter, controversial, over18, nofollow (each whenever present), then the text fields (see test_profile_text), which end the request. Otherwise every present "multi" field applies too: frontsize, defaultsortingcomments, defaultsorting, defaulttime, theme.
 
-Success is a JSON message. A request that changes nothing is a 400. A request with an unlisted multi-field value (400) or an unaffordable house (403) changes nothing at all.
+Success is a JSON message. A request that changes nothing is a 400. A request with an unlisted multi-field value (400) changes nothing at all.
 '''
 import pytest
 
@@ -126,14 +126,13 @@ def test_nothing_to_change_is_rejected():
 	d.assert_exactly()
 
 
-@pytest.mark.parametrize("bad, status", [({"frontsize": "bogus"}, 400), ({"house": "Furry"}, 403)])
-def test_a_rejected_field_discards_the_whole_request(bad, status):
-	u = factories.user(cardview=False, defaulttime="all", coins=0, procoins=0, house=None)
+def test_a_rejected_field_discards_the_whole_request():
+	u = factories.user(cardview=False, defaulttime="all")
 
 	with db_diff() as d:
-		r = _post(u, {"cardview": "true", "defaulttime": "week", **bad}, headers=XHR)
+		r = _post(u, {"cardview": "true", "defaulttime": "week", "frontsize": "bogus"}, headers=XHR)
 
-	assert_status(r, status)
+	assert_status(r, 400)
 	d.assert_exactly()
 
 
@@ -215,77 +214,3 @@ def test_win98_theme_gets_its_own_color():
 
 	assert_json_message(r)
 	d.assert_exactly(updated={"users": {u["id"]: {"theme": "win98", "themecolor": "30409f"}}})
-
-
-# Houses
-
-@pytest.mark.parametrize("house", ["Furry", "Femboy", "Vampire", "Racist"])
-def test_joining_a_first_house_costs_500_coins(house):
-	u = factories.user(coins=600, house=None)
-
-	with db_diff() as d:
-		r = _post(u, {"house": house})
-
-	assert_json_message(r)
-	d.assert_exactly(updated={"users": {u["id"]: {"house": house, "coins": 100}}})
-
-
-def test_switching_houses_costs_2000_coins():
-	u = factories.user(coins=2500, house="Furry")
-
-	with db_diff() as d:
-		r = _post(u, {"house": "Vampire"})
-
-	assert_json_message(r)
-	d.assert_exactly(updated={"users": {u["id"]: {"house": "Vampire", "coins": 500}}})
-
-
-def test_leaving_a_house_costs_2000_coins():
-	u = factories.user(coins=2000, house="Furry")
-
-	with db_diff() as d:
-		r = _post(u, {"house": "None"})
-
-	assert_json_message(r)
-	d.assert_exactly(updated={"users": {u["id"]: {"house": None, "coins": 0}}})
-
-
-@pytest.mark.parametrize("current, requested", [("Furry", "Furry"), (None, "None")])
-def test_choosing_the_current_house_is_free_and_changes_nothing(current, requested):
-	u = factories.user(coins=5000, house=current)
-
-	with db_diff() as d:
-		r = _post(u, {"house": requested}, headers=XHR)
-
-	assert_status(r, 400)
-	d.assert_exactly()
-
-
-def test_house_is_paid_from_marseybux_when_coins_fall_short():
-	u = factories.user(coins=100, procoins=500, house=None)
-
-	with db_diff() as d:
-		r = _post(u, {"house": "Furry"})
-
-	assert_json_message(r)
-	d.assert_exactly(updated={"users": {u["id"]: {"house": "Furry", "procoins": 0}}})
-
-
-def test_house_is_refused_when_neither_currency_covers_it():
-	u = factories.user(coins=499, procoins=499, house=None)
-
-	with db_diff() as d:
-		r = _post(u, {"house": "Furry"}, headers=XHR)
-
-	assert_status(r, 403)
-	d.assert_exactly()
-
-
-def test_unlisted_house_is_ignored():
-	u = factories.user(coins=1000)
-
-	with db_diff() as d:
-		r = _post(u, {"house": "Gryffindor"}, headers=XHR)
-
-	assert_status(r, 400)
-	d.assert_exactly()
