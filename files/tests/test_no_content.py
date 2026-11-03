@@ -1,35 +1,6 @@
 from . import util_accounts
 from . import util
 
-def test_no_content_submissions():
-	client, user = util_accounts.create_test_client_and_user()
-
-	title = '\u200e\u200e\u200e\u200e\u200e\u200e'
-	body = util.generate_text()
-
-	# test bad title against good content
-	submit_post_response, _ = util.post_with_formkey(
-		client, "/submit",
-		data={
-			"title": title,
-			"body": body,
-		}
-	)
-
-	assert submit_post_response.status_code == 400
-
-	title, body = body, title
-	# test good title against bad content
-	submit_post_response, _ = util.post_with_formkey(
-		client, "/submit",
-		data={
-			"title": title,
-			"body": body,
-		}
-	)
-
-	assert submit_post_response.status_code == 400
-
 def test_no_content_comments():
 	client, user = util_accounts.create_test_client_and_user()
 

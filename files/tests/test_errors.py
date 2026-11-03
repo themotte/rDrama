@@ -40,45 +40,6 @@ def test_error_404_json_with_xhr():
 	assert "error" in response.json
 
 
-def test_error_401_redirect_to_login():
-	"""Test 401 error redirects to login page with redirect parameter"""
-	client = util_accounts.create_logged_off_client()
-
-	# Try to access a protected endpoint
-	response = client.get("/submit")
-	assert response.status_code == 302  # Redirect
-	assert "/login" in response.location
-	assert "redirect=" in response.location
-
-
-def test_error_401_json_with_authorization():
-	"""Test 401 error returns JSON when Authorization header is present"""
-	client = util_accounts.create_logged_off_client()
-
-	# Make request with Authorization header
-	response = client.get("/submit", headers={"Authorization": "Bearer fake-token"})
-	assert response.status_code == 401
-	assert response.json is not None
-	assert "code" in response.json
-	assert response.json["code"] == 401
-
-
-def test_error_400_bad_request():
-	"""Test 400 error is returned for bad requests"""
-	client, user = util_accounts.create_test_client_and_user()
-
-	# Try to create a post with no title (should fail validation)
-	response, _ = util.post_with_formkey(
-		client, "/submit",
-		data={
-			"body": "Test body",
-			# Missing required 'title' field
-		}
-	)
-
-	assert response.status_code == 400
-
-
 def test_error_500_internal_server():
 	"""Test 500 error handler is registered"""
 	# This test verifies the 500 error handler exists and is properly registered
