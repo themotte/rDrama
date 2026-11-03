@@ -57,7 +57,6 @@ class DayOfWeek(IntFlag):
 	ALL = WEEKDAYS | WEEKENDS
 
 	@classmethod
-	@property
 	def all_days(cls) -> list["DayOfWeek"]:
 		return [
 			cls.SUNDAY, cls.MONDAY, cls.TUESDAY, cls.WEDNESDAY, 

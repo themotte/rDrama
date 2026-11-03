@@ -82,7 +82,7 @@ def _get_request_bool(name:str) -> bool:
 
 def _get_request_dayofweek() -> DayOfWeek:
 	days:DayOfWeek = DayOfWeek.NONE
-	for day in DayOfWeek.all_days:
+	for day in DayOfWeek.all_days():
 		name:str = day.name.lower()
 		if _get_request_bool(f'schedule_day_{name}'): days |= day
 	return days
