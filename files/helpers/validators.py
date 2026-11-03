@@ -168,11 +168,11 @@ class ValidatedSubmissionLike:
 		has_file2, body = _process_media2(body_raw, request.files.getlist(embed_url_file_key))
 
 		if not body_raw and not url and not has_file and not has_file2:
-			raise ValueError("Please enter a URL or some text")
+			abort(400, "Please enter a URL or some text")
 		
 		title_html = sanitize.filter_emojis_only(title, graceful=True)
 		if len(title_html) > 1500:
-			raise ValueError("Rendered title is too big!")
+			abort(400, "Rendered title is too big!")
 		
 		return ValidatedSubmissionLike(
 			title=title,

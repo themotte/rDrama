@@ -203,10 +203,11 @@ def test_a_post_needs_a_link_text_or_image():
 	d.assert_exactly()
 
 
-def test_the_refused_form_keeps_the_title_and_link():
+@pytest.mark.parametrize("fields", [{"body": "", "url": ""}, {"url": "https://example.com/" + "a" * 2029}, {"url": "ftp://example.com/x"}], ids=["no content", "long link", "not a web link"])
+def test_the_refused_form_keeps_the_title(fields):
 	title = factories.unique("title")
 
-	r = _submit(as_user(factories.user()), title=title, body="", url="")
+	r = _submit(as_user(factories.user()), title=title, **fields)
 
 	assert_html(r, 400)
 	assert_in_payload(r, title)

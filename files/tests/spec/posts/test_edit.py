@@ -58,6 +58,18 @@ def test_an_edit_that_changes_nothing_is_refused():
 	d.assert_exactly()
 
 
+@pytest.mark.parametrize("fields", [{"body": ""}, {"title": '"' * 251}], ids=["emptied text post", "title too long once rendered"])
+def test_invalid_edits_are_refused(fields):
+	author = factories.user()
+	post = factories.post(author, body="text")
+
+	with db_diff() as d:
+		r = _edit(as_user(author), post, **fields)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
 def test_admins_who_may_edit_posts_edit_others_posts_on_the_record():
 	post = factories.post(factories.user(), body="before", created_utc=1000)
 	editor = factories.admin(3)

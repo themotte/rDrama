@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 
 import requests
 import werkzeug.wrappers
+from werkzeug.exceptions import BadRequest
 from PIL import Image as PILimage
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.attributes import set_committed_value
@@ -524,8 +525,8 @@ def submit_post(v):
 			validators.ValidatedSubmissionLike.from_flask_request(request,
 				allow_embedding=MULTIMEDIA_EMBEDDING_ENABLED,
 			)
-	except ValueError as e:
-		return error(str(e))
+	except BadRequest as e:
+		return error(e.description)
 
 	duplicate:Optional[werkzeug.wrappers.Response] = \
 		_duplicate_check(validated_post.repost_search_url)
