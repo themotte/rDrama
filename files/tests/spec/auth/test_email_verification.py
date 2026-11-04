@@ -57,9 +57,8 @@ def test_asking_for_a_verification_mails_a_link_to_the_accounts_address():
 	assert any(url.startswith(f"{config.site_url()}/activate?") for url in urls_in(mail["body"]))
 
 
-def test_a_link_verifies_its_address_and_awards_the_badge_once():
+def test_a_link_verifies_its_address():
 	u = factories.user()
-	db.insert("badges", user_id=u["id"], badge_id=2)
 	email = f"{factories.unique()}@example.com"
 
 	with db_diff() as d:
@@ -136,7 +135,4 @@ def test_a_link_for_the_accounts_own_unverified_address_verifies_it():
 		r = as_user(u).get("/activate", params=_link_params(u, email, int(time.time())))
 
 	assert_html(r, 200)
-	d.assert_exactly(
-		updated={"users": {u["id"]: {"is_activated": True}}},
-		inserted={"badges": [{"user_id": u["id"], "badge_id": 2}], "comments": [{"author_id": ANY}], "notifications": [{"user_id": u["id"]}]},
-	)
+	d.assert_exactly(updated={"users": {u["id"]: {"is_activated": True}}})

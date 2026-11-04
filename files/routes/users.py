@@ -8,8 +8,7 @@ from sqlalchemy.orm import Query
 
 import files.helpers.listing as listings
 from files.__main__ import app, cache, limiter
-from files.classes.leaderboard import (BadgeMarseyLeaderboard,
-                                       GIVEN_UPVOTES_META,
+from files.classes.leaderboard import (GIVEN_UPVOTES_META,
                                        GivenUpvotesLeaderboard, LeaderboardMeta,
                                        RECEIVED_DOWNVOTES_META,
                                        ReceivedDownvotesLeaderboard,
@@ -301,10 +300,9 @@ def leaderboard(v:User):
 	posts = SimpleLeaderboard(v, LeaderboardMeta("Posts", "post count", "posts", "Posts", ""), g.db, users, User.post_count)
 	comments = SimpleLeaderboard(v, LeaderboardMeta("Comments", "comment count", "comments", "Comments", "comments"), g.db, users, User.comment_count)
 	truescore = SimpleLeaderboard(v, LeaderboardMeta("Truescore", "truescore", "truescore", "Truescore", None), g.db, users, User.truescore)
-	badges = BadgeMarseyLeaderboard(v, LeaderboardMeta("Badges", "badges", "badges", "Badges", None), g.db, Badge.user_id)
 	blocks = UserBlockLeaderboard(v, LeaderboardMeta("Blocked", "most blocked", "blocked", "Blocked By", "blockers"), g.db, UserBlock.target_id)
 
-	leaderboards = [truescore, subscribers, posts, comments, badges, blocks]
+	leaderboards = [truescore, subscribers, posts, comments, blocks]
 
 	# The downvotes-received / upvotes-given leaderboards are expensive full-table
 	# aggregations, so they're precomputed once a day by the leaderboard_recalc

@@ -4,11 +4,10 @@ from . import util_submissions
 from . import util_comments
 
 from files.__main__ import db_session
-from files.classes import User, Badge, UserBlock, Comment, Submission
+from files.classes import User, UserBlock, Comment, Submission
 from files.classes.leaderboard import (
 	LeaderboardMeta,
 	SimpleLeaderboard,
-	BadgeMarseyLeaderboard,
 	UserBlockLeaderboard,
 	ReceivedDownvotesLeaderboard,
 	GivenUpvotesLeaderboard,
@@ -81,46 +80,6 @@ def test_simple_leaderboard_user_in_top():
 	# When user is in top rankings, v_position and v_value should be None
 	assert lb.v_position is None
 	assert lb.v_value is None
-
-def test_badge_marsey_leaderboard_badges():
-	"""Test BadgeMarseyLeaderboard with Badge.user_id."""
-	client, user = util_accounts.create_test_client_and_user("lb-badge-user")
-
-	# Create some badges for the user
-	from files.classes.badges import Badge
-	badge1 = Badge(user_id=user.id, badge_id=1, description="Test Badge 1")
-	badge2 = Badge(user_id=user.id, badge_id=2, description="Test Badge 2")
-	db_session.add(badge1)
-	db_session.add(badge2)
-	db_session.commit()
-
-	# Create leaderboard
-	meta = LeaderboardMeta("Badges", "badges", "badges", "Badges", None)
-	lb = BadgeMarseyLeaderboard(user, meta, db_session, Badge.user_id)
-
-	# Check basic properties
-	assert isinstance(lb.all_users, list)
-	assert isinstance(lb.v_position, int)
-	assert isinstance(lb.v_value, int)
-
-	# User should have at least 2 badges
-	if user in lb.all_users:
-		assert lb.value_func(user) >= 2
-
-def test_badge_marsey_leaderboard_user_with_no_badges():
-	"""Test BadgeMarseyLeaderboard when viewing user has no badges."""
-	client, user = util_accounts.create_test_client_and_user("lb-no-badge-user")
-
-	# Don't create any badges for this user
-
-	# Create leaderboard
-	meta = LeaderboardMeta("Badges", "badges", "badges", "Badges", None)
-	lb = BadgeMarseyLeaderboard(user, meta, db_session, Badge.user_id)
-
-	# User should not be in top users (assuming other users have badges)
-	# But should have position and value of 0
-	assert isinstance(lb.v_position, int)
-	assert isinstance(lb.v_value, int)
 
 def test_userblock_leaderboard_basic():
 	"""Test UserBlockLeaderboard with basic blocking."""

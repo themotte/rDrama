@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from sqlalchemy import func
 from sqlalchemy.orm import selectinload
 
-from files.classes.badges import BadgeDef
 from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
 from files.classes.visstate import StateMod
 from files.helpers.alerts import *
@@ -366,20 +365,6 @@ def robots_txt():
 		print('/robots.txt', flush=True)
 		abort(404)
 	return f
-
-@app.get("/badges")
-@admin_level_required(2)
-@cache.memoize(timeout=3600, make_name=make_name)
-def badges(v):
-	badges = g.db.query(BadgeDef).order_by(BadgeDef.id).all()
-	counts_raw = g.db.query(Badge.badge_id, func.count()).group_by(Badge.badge_id).all()
-	users = g.db.query(User.id).count()
-
-	counts = {}
-	for c in counts_raw:
-		counts[c[0]] = (c[1], float(c[1]) * 100 / max(users, 1))
-
-	return render_template("badges.html", v=v, badges=badges, counts=counts)
 
 @app.get("/blocks")
 @admin_level_required(2)

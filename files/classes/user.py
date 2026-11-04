@@ -10,7 +10,6 @@ from flask import g, session
 from sqlalchemy.orm import aliased, declared_attr, deferred, relationship
 
 from files.classes.alts import Alt
-from files.classes.badges import Badge
 from files.classes.base import CreatedBase
 from files.classes.chat_message import ChatMessage
 from files.classes.clients import *  # note: imports Comment and Submission
@@ -133,7 +132,6 @@ class User(CreatedBase):
 
 	Index('chat_auth_index', chat_authorized)
 
-	badges = relationship("Badge", viewonly=True)
 	subscriptions = relationship("Subscription", viewonly=True)
 	following = relationship("Follow", primaryjoin="Follow.user_id==User.id", viewonly=True)
 	followers = relationship("Follow", primaryjoin="Follow.target_id==User.id", viewonly=True)
@@ -285,9 +283,6 @@ class User(CreatedBase):
 		if not self.is_suspended: return None
 		return g.db.query(User).filter_by(id=self.is_banned).one_or_none()
 
-	def has_badge(self, badge_id):
-		return g.db.query(Badge).filter_by(user_id=self.id, badge_id=badge_id).one_or_none()
-
 	def hash_password(self, password):
 		# Use faster hashing with fewer iterations during tests
 		# PBKDF2 default is 260000 iterations, we use 1000 for tests
@@ -438,7 +433,6 @@ class User(CreatedBase):
 				'bio_html': self.bio_html_eager,
 				'post_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level >= 2)) else self.post_count,
 				'comment_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level >= 2)) else self.comment_count,
-				'badges': [x.path for x in self.badges],
 				}
 
 		return data
@@ -489,7 +483,6 @@ class User(CreatedBase):
 	def json(self):
 		data = self.json_core
 
-		data["badges"] = [x.json for x in self.badges]
 		data['post_count'] = self.post_count
 		data['comment_count'] = self.comment_count
 

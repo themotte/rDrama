@@ -4,7 +4,6 @@ from urllib.parse import quote
 from flask_mail import Message
 
 from files.__main__ import app, limiter, mail
-from files.classes.badges import Badge
 from files.classes.user import User
 from files.helpers.config.const import *
 from files.helpers.config.environment import SITE_ID, SITE_TITLE
@@ -73,13 +72,6 @@ def activate(v):
 
 	v.email = email
 	v.is_activated = True
-
-	if not any(b.badge_id == 2 for b in v.badges):
-		mail_badge = Badge(user_id=v.id, badge_id=2)
-		g.db.add(mail_badge)
-		g.db.flush()
-		send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({mail_badge.path})\n\n{mail_badge.name}")
-
 
 	g.db.add(v)
 	g.db.commit()

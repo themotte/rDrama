@@ -17,14 +17,14 @@ def author_load_options(v: Optional[User]=None) -> list:
 	'''
 	Eager-load options for a content author (a ``User``).
 
-	Badges render for everyone, so they're always loaded.  Usernotes are only
+	Usernotes are only
 	shown to admins (``admin_level >= 2`` — the ``usernote-link`` in
 	user_info.html / submission(_listing).html), and ``UserNote.json()`` walks
 	``.author``/``.comment``/``.post`` (plus the comment's ``.post`` via its
 	shortlink).  So we only pay to load any of that when the viewer can actually
 	see it; for everyone else it's a no-op.
 	'''
-	opts = [selectinload(User.badges)]
+	opts = []
 	if v and v.admin_level >= 2:
 		opts.append(
 			selectinload(User.notes).options(
@@ -68,8 +68,6 @@ def get_user(
 			func.lower(User.username) == username.lower(),
 			func.lower(User.original_username) == username.lower()
 			)
-		).options(
-			selectinload(User.badges),
 		).one_or_none()
 
 	if not user:

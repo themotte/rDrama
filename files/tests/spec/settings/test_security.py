@@ -153,10 +153,7 @@ def test_following_the_email_change_link_sets_and_verifies_the_address():
 		r = client.get(f"{parts.path}?{parts.query}")
 
 	assert_html(r, 200)
-	d.assert_exactly(
-		updated={"users": {u["id"]: {"email": new_email, "is_activated": True}}},
-		inserted={"badges": [{"user_id": u["id"], "badge_id": 2}], "comments": [{"author_id": ANY}], "notifications": [{"user_id": u["id"]}]},
-	)
+	d.assert_exactly(updated={"users": {u["id"]: {"email": new_email, "is_activated": True}}})
 
 
 @pytest.mark.parametrize("email", ["   ", "not-an-email", "a@b"])

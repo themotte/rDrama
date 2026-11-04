@@ -15,10 +15,6 @@ function popclick(author) {
 		let popover = document.getElementsByClassName("popover")
 		popover = popover[popover.length-1]
 
-		let badges = ''
-		for (const x of author["badges"]) {
-			badges += `<img alt="badge" width="32" loading="lazy" src="${x}?v=1016">`
-		}
 		popover.getElementsByClassName('pop-banner')[0].src = author["bannerurl"]
 		popover.getElementsByClassName('pop-picture')[0].src = author["profile_url"]
 		popover.getElementsByClassName('pop-username')[0].innerHTML = author["username"]
@@ -26,7 +22,6 @@ function popclick(author) {
 		popover.getElementsByClassName('pop-postcount')[0].innerHTML = author["post_count"]
 		popover.getElementsByClassName('pop-commentcount')[0].innerHTML = author["comment_count"]
 		popover.getElementsByClassName('pop-viewmore')[0].href = author["url"]
-		popover.getElementsByClassName('pop-badges')[0].innerHTML = badges
 	; }, 1);
 }
 

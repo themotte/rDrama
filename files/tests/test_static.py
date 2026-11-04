@@ -149,14 +149,6 @@ def test_api_route():
 	assert response.status_code == 200
 
 
-def test_badges_route():
-	"""Test /badges route requires admin level 2"""
-	client, admin = util_accounts.create_test_client_and_admin(2)
-
-	response = client.get("/badges")
-	assert response.status_code == 200
-
-
 def test_formatting_route():
 	"""Test /formatting route"""
 	client = util_accounts.create_logged_off_client()

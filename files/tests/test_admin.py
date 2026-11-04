@@ -314,57 +314,6 @@ def test_unsticky_comment():
 		assert comment_after.is_pinned is None
 
 
-def test_admin_badge_grant():
-	"""Test POST /admin/badge_grant route"""
-	from files.__main__ import db_session
-	from files.classes import Badge
-
-	admin_client, admin = util_accounts.create_test_client_and_admin(2, "badge-admin")
-
-	client, user = util_accounts.create_test_client_and_user("badgeuser")
-	user_id = user.id
-
-	response, _ = util.post_with_formkey(
-		admin_client, "/admin/badge_grant",
-		data={"username": user.username, "badge_id": "1", "description": "Test badge"}
-	)
-	assert response.status_code in [200, 302]
-
-	# Verify badge was granted in database
-	with util.test_db_session() as session:
-		badge = session.query(Badge).filter_by(user_id=user_id, badge_id=1).first()
-		assert badge is not None
-
-
-def test_admin_badge_remove():
-	"""Test POST /admin/badge_remove route"""
-	from files.__main__ import db_session
-	from files.classes import Badge
-
-	admin_client, admin = util_accounts.create_test_client_and_admin(2, "badgerm-admin")
-
-	client, user = util_accounts.create_test_client_and_user("badgermuser")
-	user_id = user.id
-
-	# First grant a badge
-	util.post_with_formkey(
-		admin_client, "/admin/badge_grant",
-		data={"username": user.username, "badge_id": "1", "description": "Test badge"}
-	)
-
-	# Then remove it
-	response, _ = util.post_with_formkey(
-		admin_client, "/admin/badge_remove",
-		data={"username": user.username, "badge_id": "1"}
-	)
-	assert response.status_code in [200, 302]
-
-	# Verify badge was removed from database
-	with util.test_db_session() as session:
-		badge = session.query(Badge).filter_by(user_id=user_id, badge_id=1).first()
-		assert badge is None
-
-
 def test_admin_alt_votes():
 	"""Test GET /admin/alt_votes route"""
 	admin_client, admin = util_accounts.create_test_client_and_admin(3)
@@ -978,22 +927,6 @@ def test_revert_actions():
 		comment_after = session.get(Comment, comment_id)
 		assert post_after.state_mod.name == "VISIBLE"
 		assert comment_after.state_mod.name == "VISIBLE"
-
-
-def test_admin_badge_grant_get():
-	"""Test GET /admin/badge_grant route"""
-	client, admin = util_accounts.create_test_client_and_admin(2)
-
-	response = client.get("/admin/badge_grant")
-	assert response.status_code == 200
-
-
-def test_admin_badge_remove_get():
-	"""Test GET /admin/badge_remove route"""
-	client, admin = util_accounts.create_test_client_and_admin(2)
-
-	response = client.get("/admin/badge_remove")
-	assert response.status_code == 200
 
 
 def test_user_notes_modal_loads():

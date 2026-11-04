@@ -202,30 +202,14 @@ def test_an_api_client_cannot_sign_up():
 
 # Referrals
 
-def test_a_referral_is_recorded_and_earns_the_first_recruiter_badge():
+def test_a_referral_is_recorded_without_telling_the_referrer():
 	referrer = factories.user()
 	username = factories.unique("new")
 
 	_signup(anon(), usernametwo=username, referred_by=referrer["id"])
 
 	assert db.row("users", username=username)["referred_by"] == referrer["id"]
-	assert [b["badge_id"] for b in db.rows("badges", user_id=referrer["id"])] == [10]
-	assert len(db.rows("notifications", user_id=referrer["id"])) == 1
-
-
-@pytest.mark.parametrize("earlier, held, earned", [(9, [], [10, 11]), (9, [10], [11]), (99, [10, 11], [12]), (99, [10, 11, 12], [])], ids=["catching up", "tenth", "hundredth", "all held"])
-def test_more_referrals_earn_the_higher_recruiter_badges(earlier, held, earned):
-	referrer = factories.user()
-	for _ in range(earlier):
-		factories.user(referred_by=referrer["id"])
-	for badge in held:
-		db.insert("badges", user_id=referrer["id"], badge_id=badge)
-
-	with db_diff() as d:
-		_signup(anon(), referred_by=referrer["id"])
-
-	assert sorted(row["badge_id"] for row in d.inserted.get("badges", [])) == earned
-	assert len([n for n in d.inserted["notifications"] if n["user_id"] == referrer["id"]]) == len(earned)
+	assert db.rows("notifications", user_id=referrer["id"]) == []
 
 
 # Ban evasion

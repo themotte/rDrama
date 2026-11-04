@@ -244,7 +244,7 @@ def api_comment(v):
 	if request.headers.get("Authorization"): return c.json
 
 	# Re-fetch with eager-loaded relationships so the comment template
-	# (author popover/badges, reports) doesn't lazy-load per-field.
+	# (author popover, reports) doesn't lazy-load per-field.
 	c = g.db.query(Comment).filter_by(id=c.id).options(
 		selectinload(Comment.author).options(*author_load_options(v)),
 		selectinload(Comment.post),

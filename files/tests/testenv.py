@@ -79,7 +79,7 @@ def _build_database(server_url, test_url):
 
 
 def _snapshot_seed_rows(test_url):
-	'''Copies every non-empty table (seed users, badge definitions, rows inserted by migrations) so `reset` can restore them.'''
+	'''Copies every non-empty table (seed users, rows inserted by migrations) so `reset` can restore them.'''
 	conn = psycopg2.connect(_dsn(test_url))
 	with conn, conn.cursor() as cur:
 		cur.execute(f"CREATE SCHEMA {SNAPSHOT_SCHEMA}")

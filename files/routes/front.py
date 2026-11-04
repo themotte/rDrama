@@ -56,9 +56,7 @@ def notifications_main(v: User):
 			Comment.author_id.notin_(v.userblocks),
 		).order_by(Notification.created_datetimez.desc())
 		.options(
-			selectinload(Comment.author).options(
-				selectinload(User.badges),
-			),
+			selectinload(Comment.author),
 			selectinload(Comment.post).options(
 				selectinload(Submission.author),
 			),
