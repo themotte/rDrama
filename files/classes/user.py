@@ -589,6 +589,10 @@ class User(CreatedBase):
 			# XXX: avoiding import loop. should be fixed someday.
 			return self.admin_level >= PERMS['SCHEDULER_POSTS']
 
+	def shows_activity_to(self, v:"User | None") -> bool:
+		'''Whether `v` may see this user's posts and comments, and how many there are.'''
+		return not self.shadowbanned or bool(v and (v.id == self.id or v.admin_level >= PERMS['USER_SHADOWBAN']))
+
 	@property
 	def can_see_shadowbanned(self):
 		return self.admin_level >= PERMS['USER_SHADOWBAN'] or self.shadowbanned

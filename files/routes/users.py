@@ -433,6 +433,13 @@ def u_username_comments(username, v=None):
 	return render_template("userpage_comments.html", u=user, v=v, listing=listing, page=page, sort=sort, t=t,next_exists=next_exists, is_following=is_following, standalone=True)
 
 
+def _info(user:User, v:User) -> dict:
+	data = dict(user.json)
+	if not user.shows_activity_to(v):
+		data["post_count"] = data["comment_count"] = 0
+	return data
+
+
 @app.get("/@<username>/info")
 @auth_required
 def u_username_info(username, v=None):
@@ -443,7 +450,7 @@ def u_username_info(username, v=None):
 	elif user.is_blocked:
 		abort(403, "This user is blocking you.")
 
-	return user.json
+	return _info(user, v)
 
 @app.get("/<id>/info")
 @auth_required
@@ -455,7 +462,7 @@ def u_user_id_info(id, v=None):
 	elif user.is_blocked:
 		abort(403, "This user is blocking you.")
 
-	return user.json
+	return _info(user, v)
 
 
 @app.post("/follow/<username>")

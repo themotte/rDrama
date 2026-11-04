@@ -8,7 +8,7 @@ Before listing anything:
 
 The listings hold 25 items to a page, with "page" (from 1; anything else means 1) choosing the page. "sort" orders them: new (the default: newest first), old, top (highest score first), bottom, comments (most comments first; for comments, most replies), controversial (closest to evenly split votes first), hot (score weighed against age), and for posts bump (most recently bumped first, among posts with more than one comment). "t" (hour, day, week, month, year; anything else means all time) keeps only items created within that long. Ties fall back to newest first.
 
-What's listed depends on the viewer. Everyone sees the user's visible posts and comments; the user themselves and admins (level 2 and up) also see the deleted, removed, held ("filtered") and anonymous ("ghost") ones, and the user's unpublished drafts. Nobody else sees anything of a shadowbanned user. The user's pinned posts lead the first page of their posts.
+What's listed depends on the viewer. Everyone sees the user's visible posts and comments; the user themselves and admins (level 2 and up) also see the deleted, removed, held ("filtered") and anonymous ("ghost") ones, and the user's unpublished drafts. Nobody else sees anything of a shadowbanned user, other shadowbanned users included. The user's pinned posts lead the first page of their posts.
 
 API clients get the listing as JSON: an object whose "data" is the list of items.
 '''
@@ -286,6 +286,17 @@ def test_profile_of_a_shadowbanned_user_lists_to_themselves_and_admins(page, vie
 
 	assert_html(r, 200)
 	assert_in_payload(r, token)
+
+
+@pytest.mark.parametrize("page", PAGES)
+def test_profile_of_a_shadowbanned_user_lists_nothing_to_other_shadowbanned_users(page):
+	user = factories.user(shadowbanned="somemod")
+	token = _item(user, page)
+
+	r = as_user(factories.user(shadowbanned="somemod")).get(_path(user, page))
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, token)
 
 
 def test_profile_comments_leave_out_private_messages():

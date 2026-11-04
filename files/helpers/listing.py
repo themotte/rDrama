@@ -97,7 +97,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, filter_words='
 
 @cache.memoize(timeout=USERPAGELISTING_TIMEOUT_SECS)
 def userpagelisting(u:User, v=None, page=1, sort="new", t="all"):
-	if u.shadowbanned and not (v and (v.admin_level >= 2 or v.id == u.id)): return []
+	if not u.shows_activity_to(v): return []
 
 	posts = g.db.query(Submission.id).filter_by(author_id=u.id, is_pinned=False)
 
