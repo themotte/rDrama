@@ -1,4 +1,3 @@
-import hmac
 import time
 from urllib.parse import quote
 
@@ -19,14 +18,9 @@ def send_mail(to_address, subject, html):
 	mail.send(msg)
 
 
-def activation_token(email, user_id, timestamp):
-	# The leading purpose keeps tokens signed for anything else (such as the signup form key, whose message ends in the visitor's User-Agent) from passing as activation tokens.
-	return generate_hash(f"activate+{email}+{user_id}+{timestamp}")
-
-
 def activation_link(user, email):
 	now = int(time.time())
-	return f"{SITE_FULL}/activate?email={quote(email)}&id={user.id}&time={now}&token={activation_token(email, user.id, now)}"
+	return f"{SITE_FULL}/activate?email={quote(email)}&id={user.id}&time={now}&token={token_sign('activate', email, user.id, now)}"
 
 
 def send_verification_email(user):
@@ -62,12 +56,11 @@ def activate(v):
 	timestamp = int(request.values.get("time", "0"))
 	token = request.values.get("token", "").strip()
 
-	now = int(time.time())
-	if timestamp > now or now - timestamp > 3600:
+	if not token_fresh(timestamp, 3600):
 		return render_template("message.html", v=v, title="Verification link expired.",
 							   message="That link has expired. Visit your settings to send yourself another verification email."), 410
 
-	if not hmac.compare_digest(token, activation_token(email, id, timestamp)):
+	if not token_verify('activate', token, email, id, timestamp):
 		abort(403)
 
 	if id != str(v.id):

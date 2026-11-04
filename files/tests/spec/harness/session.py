@@ -12,10 +12,14 @@ Session cookie: named `session_<site id, lowercased>`; value is an itsdangerous 
 
 Signature: lowercase hex HMAC-MD5 of a message, with key (MASTER_KEY) and message both encoded UTF-16LE with a leading byte-order mark (FF FE). Used for:
 - Form key: signs "<session_id>+<user id>+<users.login_nonce>". Accepted from the form body, the query string, or a `formkey` member of a JSON body.
-- Email verification links (/activate?email=&id=&time=&token=): signs "activate+<email, lowercased>+<user id>+<time, epoch seconds>"; valid for an hour after its time and never before it, and only while logged in as the account it names.
+- Email verification links (/activate?email=&id=&time=&token=): signs "activate+<email, lowercased>+<user id>+<time, epoch seconds>"; valid for an hour after its time and not before it (a minute of clock difference allowed), and only while logged in as the account it names.
 - Signup form key (the signup form's `formkey`, with its `now` field): signs "signup+<now, epoch seconds>+<session signup_token>+<User-Agent of the request>".
+- Password reset links (/reset?id=&time=&token=): signs "forgot+<user id>+<time>+<users.login_nonce>"; valid for ten minutes after its time and not before it (a minute of clock difference allowed).
+- Password reset form (its `user_id`, `time` and `token` fields, `time` carried over from the link): signs "reset+<user id>+<time>+<users.login_nonce>"; valid as long as the link.
+- 2FA login challenge (the challenge page's `time` and `hash` fields): signs "2fa-challenge+<user id>+<time>"; valid for ten minutes after its time and not before it (a minute of clock difference allowed).
+- 2FA removal links (/reset_2fa?id=&t=&token=): signs "2fa-remove+<user id>+<username>+<t>+<users.mfa_secret>+<users.login_nonce>"; valid for a day after `t` and not before it (a minute of clock difference allowed).
 
-Every message but the form key's starts with its purpose, so a signature issued for one purpose never passes for another.
+Every message but the form key's starts with its purpose, so a signature issued for one purpose never passes for another. A token that isn't ASCII never passes.
 '''
 import hashlib
 import hmac

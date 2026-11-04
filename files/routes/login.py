@@ -103,7 +103,7 @@ def login_post():
 
 		if account.mfa_secret:
 			now = int(time.time())
-			hash = generate_hash(f"{account.id}+{now}+2fachallenge")
+			hash = token_sign("2fa-challenge", account.id, now)
 			return render_template("login/login_2fa.html",
 								   v=account,
 								   time=now,
@@ -112,16 +112,16 @@ def login_post():
 								   )
 	elif request.values.get("2fa_token", "x"):
 		now = int(time.time())
+		challenge_time = int(request.values.get("time"))
 
-		if now - int(request.values.get("time")) > 600:
+		if not token_fresh(challenge_time, 600):
 			return redirect('/login')
 
-		formhash = request.values.get("hash")
-		if not validate_hash(f"{account.id}+{request.values.get('time')}+2fachallenge", formhash):
+		if not token_verify("2fa-challenge", request.values.get("hash"), account.id, challenge_time):
 			return redirect("/login")
 
 		if not account.validate_2fa(request.values.get("2fa_token", "").strip()):
-			hash = generate_hash(f"{account.id}+{time}+2fachallenge")
+			hash = token_sign("2fa-challenge", account.id, time)
 			return render_template("login/login_2fa.html",
 								   v=account,
 								   time=now,
@@ -169,10 +169,6 @@ def logout(v):
 	return redirect('/')
 
 
-def _signup_formkey(timestamp, signup_token, agent):
-	return generate_hash(f"signup+{timestamp}+{signup_token}+{agent}")
-
-
 @app.get("/signup")
 @auth_desired
 def sign_up_get(v):
@@ -198,7 +194,7 @@ def sign_up_get(v):
 	token = token_hex(16)
 	session["signup_token"] = token
 
-	formkey = _signup_formkey(now, token, agent)
+	formkey = token_sign("signup", now, token, agent)
 
 	error = request.values.get("error")
 
@@ -229,8 +225,6 @@ def sign_up_post(v):
 	submitted_token = session.get("signup_token", "")
 	if not submitted_token: abort(400)
 
-	correct_formkey = _signup_formkey(form_timestamp, submitted_token, agent)
-
 	now = int(time.time())
 
 	username = request.values.get("usernametwo")
@@ -251,7 +245,7 @@ def sign_up_post(v):
 		if now - int(form_timestamp) < 5:
 			return signup_error("There was a problem. Please try again.")
 
-	if not hmac.compare_digest(correct_formkey, form_formkey):
+	if not token_verify("signup", form_formkey, form_timestamp, submitted_token, agent):
 		return signup_error("There was a problem. Please try again.")
 
 	if not request.values.get(
@@ -368,7 +362,7 @@ def post_forgot():
 
 	if user:
 		now = int(time.time())
-		token = generate_hash(f"{user.id}+{now}+forgot+{user.login_nonce}")
+		token = token_sign("forgot", user.id, now, user.login_nonce)
 		url = f"{SITE_FULL}/reset?id={user.id}&time={now}&token={token}"
 
 		send_mail(to_address=user.email,
@@ -389,9 +383,7 @@ def get_reset():
 	timestamp = int(request.values.get("time",0))
 	token = request.values.get("token")
 
-	now = int(time.time())
-
-	if now - timestamp > 600:
+	if not token_fresh(timestamp, 600):
 		return render_template("message.html", 
 			title="Password reset link expired",
 			error="That password reset link has expired.")
@@ -400,10 +392,10 @@ def get_reset():
 	
 	if not user: abort(400)
 
-	if not validate_hash(f"{user_id}+{timestamp}+forgot+{user.login_nonce}", token):
+	if not token_verify("forgot", token, user_id, timestamp, user.login_nonce):
 		abort(400)
 
-	reset_token = generate_hash(f"{user.id}+{timestamp}+reset+{user.login_nonce}")
+	reset_token = token_sign("reset", user.id, timestamp, user.login_nonce)
 
 	return render_template("login/reset_password.html",
 						   v=user,
@@ -426,16 +418,14 @@ def post_reset(v):
 	password = request.values.get("password")
 	confirm_password = request.values.get("confirm_password")
 
-	now = int(time.time())
-
-	if now - timestamp > 600:
+	if not token_fresh(timestamp, 600):
 		return render_template("message.html",
 							   title="Password reset expired",
 							   error="That password reset form has expired.")
 
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
-	if not validate_hash(f"{user_id}+{timestamp}+reset+{user.login_nonce}", token):
+	if not token_verify("reset", token, user_id, timestamp, user.login_nonce):
 		abort(400)
 	if not user:
 		abort(404)
@@ -487,7 +477,7 @@ def request_2fa_disable():
 						   message="If username, password, and email match, we will send you an email.")
 
 	valid=int(time.time())
-	token=generate_hash(f"{user.id}+{user.username}+disable2fa+{valid}+{user.mfa_secret}+{user.login_nonce}")
+	token=token_sign("2fa-remove", user.id, user.username, valid, user.mfa_secret, user.login_nonce)
 
 	action_url=f"{SITE_FULL}/reset_2fa?id={user.id}&t={valid}&token={token}"
 	
@@ -504,12 +494,11 @@ def request_2fa_disable():
 
 @app.get("/reset_2fa")
 def reset_2fa():
-	now=int(time.time())
 	t = request.values.get("t")
 	if not t: abort(400)
 	t = int(t)
 
-	if now > t+3600*24:
+	if not token_fresh(t, 3600*24):
 		return render_template("message.html",
 						   title="Expired Link",
 						   error="That link has expired.")
@@ -519,7 +508,7 @@ def reset_2fa():
 
 	user=get_account(uid)
 
-	if not validate_hash(f"{user.id}+{user.username}+disable2fa+{t}+{user.mfa_secret}+{user.login_nonce}", token):
+	if not user.mfa_secret or not token_verify("2fa-remove", token, user.id, user.username, t, user.mfa_secret, user.login_nonce):
 		abort(403)
 
 	user.mfa_secret=None
