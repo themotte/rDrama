@@ -76,7 +76,7 @@ def voters(v, username, list_name):
 		counts += Counter(dict(g.db.query(other, func.count(other)).select_from(cls).join(vote_cls, voted_id == cls.id).filter(*_visible(cls), vote_cls.vote_type == vote_type, this == id).group_by(other).all()))
 
 	users = g.db.query(User).filter(User.id.in_(counts.keys())).all()
-	users = sorted(((user, counts[user.id]) for user in users), key=lambda x: x[1], reverse=True)
+	users = sorted(((user, counts[user.id]) for user in users), key=lambda x: (-x[1], x[0].id))
 
 	ranked_ids = [user.id for user, _ in users]
 	if v.id in ranked_ids:

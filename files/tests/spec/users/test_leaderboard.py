@@ -6,7 +6,7 @@ The page shows several boards, each a section whose element id is "leaderboard-<
 - "blocked": the 25 users blocked by the most users, most blocked first; users nobody blocks aren't ranked.
 - "received-downvotes" and "given-upvotes": the 25 users who received the most downvotes, and who gave the most upvotes, on posts and comments. These are expensive to compute, so the `leaderboard_recalc` command computes them ahead of time; until it has run, the page leaves both out.
 
-The viewing admin's own row is added after a board's list when they aren't in it (on the blocked board, also when nobody blocks them).
+Users tied on a board are listed oldest account (lowest id) first. The viewing admin's own row is added after a board's list when they aren't in it (on the blocked board, also when nobody blocks them).
 '''
 import pytest
 
@@ -137,6 +137,28 @@ def test_simple_board_shows_a_listed_viewer_once(board, column):
 	assert _rows_of(section, viewer) == _rows_of(section, peer) > 0
 
 
+def _touch_in_reverse(users):
+	'''Rewrites each user's row, last-created first, so storage order no longer follows creation order.'''
+	for user in reversed(users):
+		db.update("users", {"id": user["id"]}, bio=factories.unique())
+
+
+def _in_order(section, users) -> bool:
+	positions = [section.index(user["username"]) for user in users]
+	return positions == sorted(positions)
+
+
+@pytest.mark.parametrize("board, column", SIMPLE_BOARDS.items())
+def test_simple_board_breaks_ties_by_account_age(board, column):
+	tied = [_ranked(column, HIGH) for _ in range(4)]
+	_touch_in_reverse(tied)
+
+	r = as_user(factories.admin(2)).get("/leaderboard")
+
+	assert_html(r, 200)
+	assert _in_order(_board(r, board), tied)
+
+
 # The blocked board
 
 def _block(blocker, target):
@@ -154,6 +176,19 @@ def test_blocked_board_ranks_the_most_blocked_first():
 	assert_html(r, 200)
 	section = _board(r, "blocked")
 	assert section.index(thrice["username"]) < section.index(twice["username"]) < section.index(once["username"])
+
+
+def test_blocked_board_breaks_ties_by_account_age():
+	tied = [factories.user() for _ in range(4)]
+	for target in reversed(tied):
+		_block(factories.user(), target)
+		_block(factories.user(), target)
+	_touch_in_reverse(tied)
+
+	r = as_user(factories.admin(2)).get("/leaderboard")
+
+	assert_html(r, 200)
+	assert _in_order(_board(r, "blocked"), tied)
 
 
 def test_blocked_board_leaves_out_users_nobody_blocks():
@@ -279,6 +314,19 @@ def test_precomputed_boards_rank_highest_first():
 	assert section.index(high["username"]) < section.index(middle["username"]) < section.index(low["username"])
 	section = _board(r, "given-upvotes")
 	assert section.index(many["username"]) < section.index(few["username"])
+
+
+def test_precomputed_boards_break_ties_by_account_age():
+	downvoted = [_downvoted(3)[0] for _ in range(4)]
+	upvoters = [_upvoter(3) for _ in range(4)]
+	_touch_in_reverse(downvoted + upvoters)
+
+	assert_cli_ok(cli("leaderboard_recalc"))
+	r = as_user(factories.admin(2)).get("/leaderboard")
+
+	assert_html(r, 200)
+	assert _in_order(_board(r, "received-downvotes"), downvoted)
+	assert _in_order(_board(r, "given-upvotes"), upvoters)
 
 
 def test_precomputed_boards_reflect_votes_as_of_the_last_computation():

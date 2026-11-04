@@ -54,7 +54,7 @@ class SimpleLeaderboard(Leaderboard):
 		self._calculate()
 
 	def _calculate(self) -> None:
-		self._all_users = self.users_query.order_by(self.column.desc()).limit(self.meta.limit).all()
+		self._all_users = self.users_query.order_by(self.column.desc(), User.id).limit(self.meta.limit).all()
 		if self.v not in self._all_users:
 			sq = self.db.query(User.id, self.column, func.rank().over(order_by=self.column.desc()).label("rank")).subquery()
 			sq_data = self.db.query(sq.c.id, sq.c[self.column.name], sq.c.rank).filter(sq.c.id == self.v.id).limit(1).one()
@@ -98,7 +98,7 @@ class UserBlockLeaderboard(_CountedAndRankedLeaderboard):
 	
 	def _calculate(self):
 		sq = self.db.query(UserBlock.target_id, self.count_and_label(UserBlock.target_id)).group_by(UserBlock.target_id).subquery()
-		leaderboard = self.db.query(User, sq.c.count).join(User, User.id == sq.c.target_id).order_by(sq.c.count.desc())
+		leaderboard = self.db.query(User, sq.c.count).join(User, User.id == sq.c.target_id).order_by(sq.c.count.desc(), User.id)
 		
 		sq = self.db.query(UserBlock.target_id, self.count_and_label(UserBlock.target_id), self.rank_filtered_rank_label_by_desc(UserBlock.target_id)).group_by(UserBlock.target_id).subquery()
 		position = self.db.query(sq.c.rank, sq.c.count).join(User, User.id == sq.c.target_id).filter(sq.c.target_id == self.v.id).limit(1).one_or_none()
@@ -219,7 +219,7 @@ SELECT
 FROM cv_for_user cvfu
     FULL OUTER JOIN sv_for_user svfu
     ON cvfu.target_id = svfu.target_id
-ORDER BY count DESC LIMIT 25
+ORDER BY count DESC, target_id LIMIT 25
 	"""
 
 class GivenUpvotesLeaderboard(RawSqlLeaderboard):
@@ -231,7 +231,7 @@ class GivenUpvotesLeaderboard(RawSqlLeaderboard):
 FROM (SELECT user_id, COUNT(*) FROM votes WHERE vote_type = 1 GROUP BY user_id) AS svbu
 FULL OUTER JOIN (SELECT user_id, COUNT(*) FROM commentvotes WHERE vote_type = 1 GROUP BY user_id) AS cvbu
     ON cvbu.user_id = svbu.user_id
-ORDER BY count DESC LIMIT 25
+ORDER BY count DESC, user_id LIMIT 25
 	"""
 
 # Display metadata for the cached raw-SQL leaderboards, shared by the route that
