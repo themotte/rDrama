@@ -135,9 +135,8 @@ def revert_actions(v, username):
 	comments = g.db.query(Comment).filter(Comment.id.in_(comments)).all()
 	
 	for item in posts + comments:
-		item.state_mod = StateMod.VISIBLE
-		item.state_mod_set_by = v.username
-		g.db.add(item)
+		if item.state_mod == StateMod.REMOVED:
+			moderate(item, StateMod.VISIBLE, v.username)
 
 	users = (x[0] for x in g.db.query(ModAction.target_user_id).filter(ModAction.user_id == user.id, ModAction.created_datetimez > cutoff, ModAction.kind.in_(('shadowban', 'ban_user'))).all())
 	users = g.db.query(User).filter(User.id.in_(users)).all()
@@ -1173,22 +1172,10 @@ def admin_toggle_ban_domain(v):
 @admin_level_required(3)
 def admin_nuke_user(v):
 	user=get_user(request.values.get("user"))
+	if user.id in SYSTEM_ACCOUNT_IDS: abort(403)
 
-	for post in g.db.query(Submission).filter_by(author_id=user.id).all():
-		if post.state_mod == StateMod.REMOVED:
-			continue
-			
-		post.state_mod = StateMod.REMOVED
-		post.state_mod_set_by = v.username
-		g.db.add(post)
-
-	for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
-		if comment.state_mod == StateMod.REMOVED:
-			continue
-
-		comment.state_mod = StateMod.REMOVED
-		comment.state_mod_set_by = v.username
-		g.db.add(comment)
+	for item in g.db.query(Submission).filter(Submission.author_id == user.id, Submission.state_mod != StateMod.REMOVED).all() + g.db.query(Comment).filter(Comment.author_id == user.id, Comment.state_mod != StateMod.REMOVED).all():
+		moderate(item, StateMod.REMOVED, v.username)
 
 	ma=ModAction(
 		kind="nuke_user",
@@ -1207,22 +1194,10 @@ def admin_nuke_user(v):
 @admin_level_required(3)
 def admin_unnuke_user(v):
 	user=get_user(request.values.get("user"))
+	if user.id in SYSTEM_ACCOUNT_IDS: abort(403)
 
-	for post in g.db.query(Submission).filter_by(author_id=user.id).all():
-		if post.state_mod == StateMod.VISIBLE:
-			continue
-			
-		post.state_mod = StateMod.VISIBLE
-		post.state_mod_set_by = v.username
-		g.db.add(post)
-
-	for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
-		if comment.state_mod == StateMod.VISIBLE:
-			continue
-
-		comment.state_mod = StateMod.VISIBLE
-		comment.state_mod_set_by = v.username
-		g.db.add(comment)
+	for item in g.db.query(Submission).filter_by(author_id=user.id, state_mod=StateMod.REMOVED).all() + g.db.query(Comment).filter_by(author_id=user.id, state_mod=StateMod.REMOVED).all():
+		moderate(item, StateMod.VISIBLE, v.username)
 
 	ma=ModAction(
 		kind="unnuke_user",
