@@ -388,6 +388,13 @@ def post_reset(v):
 							   time=timestamp,
 							   error="Passwords didn't match.")
 
+	if not valid_password_regex.fullmatch(password):
+		return render_template("login/reset_password.html",
+							   v=user,
+							   token=token,
+							   time=timestamp,
+							   error="Password must be between 8 and 100 characters.")
+
 	user.passhash = user.hash_password(password)
 	user.login_nonce += 1
 	g.db.add(user)

@@ -195,3 +195,15 @@ def test_a_reset_form_for_an_unknown_account_is_refused():
 	db.delete("users", id=u["id"])
 
 	assert_status(anon().post_raw("/reset", fields), 400)
+
+
+@pytest.mark.parametrize("password", ["", "short", "x" * 101])
+def test_a_password_of_the_wrong_length_shows_the_form_again(password):
+	u = _member()
+
+	with db_diff() as d:
+		r = anon().post_raw("/reset", _form(u, int(time.time()), password))
+
+	assert_html(r, 200)
+	assert r.form_field("token") is not None
+	d.assert_exactly()
