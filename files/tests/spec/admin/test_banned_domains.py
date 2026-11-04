@@ -1,7 +1,7 @@
 '''
 Banned domains, whose links can't be submitted (see spec/posts/test_submit), managed by level-3 admins:
 - GET /admin/banned_domains/ lists every banned domain with its reason.
-- POST /admin/banned_domains with "domain" and "reason" bans the domain, or, if it is already banned, unbans it (the reason is then ignored). Either way it logs a mod action and sends the browser back to the list. Surrounding whitespace is trimmed from both fields; a missing or blank domain is 400.
+- POST /admin/banned_domains with "domain" and "reason" bans the domain, or, if it is already banned (in any letter case), unbans it (the reason is then ignored). Either way it logs a mod action and sends the browser back to the list. Surrounding whitespace is trimmed from both fields; a missing or blank domain is 400.
 '''
 import pytest
 
@@ -56,6 +56,19 @@ def test_submitting_an_already_banned_domain_unbans_it():
 		deleted={"banneddomains": [domain]},
 		inserted={"modactions": [{"kind": "unban_domain", "user_id": admin["id"], "_note": domain, "target_user_id": None, "target_submission_id": None, "target_comment_id": None}]},
 	)
+
+
+def test_unbanning_a_domain_ignores_letter_case():
+	admin = factories.admin(3)
+	domain = _domain()
+	db.insert("banneddomains", domain=domain.upper(), reason=factories.unique("reason"))
+	client = as_user(admin)
+
+	with db_diff() as d:
+		r = client.post("/admin/banned_domains", {"domain": domain})
+
+	assert_redirect(r, LIST)
+	d.assert_exactly(deleted={"banneddomains": [domain.upper()]}, inserted={"modactions": [{"kind": "unban_domain", "user_id": admin["id"], "_note": domain}]})
 
 
 @pytest.mark.parametrize("form", [{}, {"domain": ""}, {"domain": "   "}], ids=["missing", "empty", "blank"])

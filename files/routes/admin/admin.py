@@ -1129,7 +1129,7 @@ def admin_toggle_ban_domain(v):
 
 	reason=request.values.get("reason", "").strip()
 
-	d = g.db.query(BannedDomain).filter_by(domain=domain).one_or_none()
+	d = g.db.query(BannedDomain).filter(func.lower(BannedDomain.domain) == domain.lower()).first()
 	if d:
 		g.db.delete(d)
 		ma = ModAction(
