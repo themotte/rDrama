@@ -554,8 +554,12 @@ def alt_votes_get(v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_link_accounts(v):
-	u1 = get_account(request.values.get("u1", ''))
-	u2 = get_account(request.values.get("u2", ''))
+	u1 = get_account(request.values.get("u1"), graceful=True)
+	u2 = get_account(request.values.get("u2"), graceful=True)
+	if not (u1 and u2): abort(400, "Name two existing accounts by id.")
+	if u1.id == u2.id: abort(400, "An account can't be its own alt.")
+	if g.db.query(Alt).filter(or_(and_(Alt.user1 == u1.id, Alt.user2 == u2.id), and_(Alt.user1 == u2.id, Alt.user2 == u1.id))).first():
+		abort(400, "Those accounts are already linked.")
 
 	new_alt = Alt(
 		user1=u1.id, 
@@ -574,7 +578,7 @@ def admin_link_accounts(v):
 	g.db.add(ma)
 
 	g.db.commit()
-	return redirect(f"/admin/alt_votes?u1={u1.id}&u2={u2.id}")
+	return redirect(f"/admin/alt_votes?{urlencode({'u1': u1.username, 'u2': u2.username})}")
 
 
 @app.get("/admin/removed/posts")
