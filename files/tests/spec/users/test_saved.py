@@ -1,7 +1,7 @@
 '''
 The viewer's saved posts and comments: GET /@<username>/saved/posts and GET /@<username>/saved/comments, for logged-in users, viewed under their own name (in any letter case); another user's name is refused with 403, and an unknown one is 404.
 
-They list what the viewer saved that others can still see (not removed, filtered or deleted), newest first, 25 to a page with "page" (from 1) choosing the page. Content by users the viewer blocks is left out, except that admins (level 2 and up) still see such posts. Saved comments by shadowbanned authors are left out for viewers who can't see shadowbanned users. API clients get {"data": [...]} holding each listed item's JSON object, in order. Anonymous browsers are sent to log in.
+They list what the viewer saved that others can still see (not removed, filtered or deleted), newest first, 25 to a page with "page" (from 1; anything else means 1) choosing the page. Content by users the viewer blocks is left out, except that admins (level 2 and up) still see such posts. Saved comments by shadowbanned authors are left out for viewers who can't see shadowbanned users. API clients get {"data": [...]} holding each listed item's JSON object, in order. Anonymous browsers are sent to log in.
 '''
 import pytest
 
@@ -122,6 +122,18 @@ def test_saved_pages_hold_25_items(kind, page):
 		assert_in_payload(r, token)
 	for token in off_page:
 		assert_not_in_payload(r, token)
+
+
+@pytest.mark.parametrize("kind", ["posts", "comments"])
+@pytest.mark.parametrize("page", ["0", "-2", "x"])
+def test_saved_lists_show_the_first_page_for_an_invalid_page(kind, page):
+	viewer = factories.user()
+	_, token = _saved(viewer, kind)
+
+	r = as_user(viewer).get(_path(viewer, kind), params={"page": page})
+
+	assert_html(r, 200)
+	assert_in_payload(r, token)
 
 
 @pytest.mark.parametrize("kind", ["posts", "comments"])

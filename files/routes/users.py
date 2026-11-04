@@ -581,7 +581,7 @@ def _own_saved_list(v:User, username:str):
 @auth_required
 def saved_posts(v, username):
 	_own_saved_list(v, username)
-	page=int(request.values.get("page",1))
+	page = listings.request_page()
 
 	ids=v.saved_idlist(page=page)
 
@@ -606,7 +606,7 @@ def saved_posts(v, username):
 @auth_required
 def saved_comments(v, username):
 	_own_saved_list(v, username)
-	page=int(request.values.get("page",1))
+	page = listings.request_page()
 
 	ids=v.saved_comment_idlist(page=page)
 
