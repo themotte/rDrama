@@ -4,7 +4,7 @@ Profile pages: GET /@<username>/posts lists the user's posts, GET /@<username>/ 
 Before listing anything:
 - A reserved name (an account held for someone) shows a page naming who it's reserved for; script (xhr) and API clients are refused with 403.
 - A private profile shows only its owner and admins (level 2 and up) the listings; anyone else gets a page without them, or 403 as a script or API client.
-- A viewer who blocks the user gets a page saying so instead of the listings, or 403 as a script or API client. Being blocked by the user changes nothing.
+- A viewer who blocks the user gets a page saying so instead of the listings, or 403 as a script or API client, whether or not the user blocks them too. Being blocked by the user changes nothing.
 
 The listings hold 25 items to a page, with "page" (from 1; anything else means 1) choosing the page. "sort" orders them: new (the default: newest first), old, top (highest score first), bottom, comments (most comments first; for comments, most replies), controversial (closest to evenly split votes first), hot (score weighed against age), and for posts bump (most recently bumped first, among posts with more than one comment). "t" (hour, day, week, month, year; anything else means all time) keeps only items created within that long. Ties fall back to newest first.
 
@@ -202,6 +202,21 @@ def test_profile_of_a_user_blocking_you_still_lists(page):
 
 	assert_html(r, 200)
 	assert_in_payload(r, token)
+
+
+@pytest.mark.parametrize("page", PAGES)
+@pytest.mark.parametrize("theirs_first", [False, True], ids=["yours first", "theirs first"])
+def test_profile_of_a_user_you_block_hides_its_listing_though_they_block_you_too(page, theirs_first):
+	user, viewer = factories.user(), factories.user()
+	token = _item(user, page)
+	blocks = [dict(user_id=viewer["id"], target_id=user["id"]), dict(user_id=user["id"], target_id=viewer["id"])]
+	for block in reversed(blocks) if theirs_first else blocks:
+		db.insert("userblocks", **block)
+
+	r = as_user(viewer).get(_path(user, page))
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, token)
 
 
 # What's listed, by viewer

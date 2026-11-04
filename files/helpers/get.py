@@ -467,20 +467,14 @@ def _add_block_props(
 		target.is_blocked = False
 		return target
 
-	block = db.query(UserBlock).filter(
+	blocks = {row.user_id for row in db.query(UserBlock.user_id).filter(
 		or_(
-			and_(
-				UserBlock.user_id == v.id,
-				UserBlock.target_id == id
-			),
-			and_(
-				UserBlock.user_id == id,
-				UserBlock.target_id == v.id
-			)
+			and_(UserBlock.user_id == v.id, UserBlock.target_id == id),
+			and_(UserBlock.user_id == id, UserBlock.target_id == v.id),
 		)
-	).first()
-	target.is_blocking = block and block.user_id == v.id
-	target.is_blocked = block and block.target_id == v.id
+	)}
+	target.is_blocking = v.id in blocks
+	target.is_blocked = id in blocks
 	return target
 
 
