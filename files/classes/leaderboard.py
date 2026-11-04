@@ -160,8 +160,8 @@ class RawSqlLeaderboard(Leaderboard):
 
 	@classmethod
 	def refresh_cache(cls, db:Session, cache) -> None:
-		'''Recomputes the aggregation and stores the rows in the cache.'''
-		cache.set(cls.cache_name(), cls.compute_rows(db))
+		'''Recomputes the aggregation and stores the rows in the cache, until the next refresh replaces them.'''
+		cache.set(cls.cache_name(), cls.compute_rows(db), timeout=0)
 
 	@classmethod
 	def from_cache(cls, meta:LeaderboardMeta, db:Session, cache) -> Optional["RawSqlLeaderboard"]:
