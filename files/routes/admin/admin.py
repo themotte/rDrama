@@ -20,8 +20,6 @@ from files.helpers.wrappers import *
 from files.__main__ import app, cache, limiter
 from files.routes.importstar import *
 
-month = datetime.now().strftime('%B')
-
 @app.post("/@<username>/make_admin")
 @limiter.exempt
 @admin_level_required(3)
@@ -120,7 +118,6 @@ def create_note(v,username):
 @admin_level_required(3)
 def revert_actions(v, username):
 	user = get_user(username)
-	if not user: abort(404)
 	
 	ma = ModAction(
 		kind="revert",
@@ -161,7 +158,7 @@ def revert_actions(v, username):
 @limiter.exempt
 @auth_required
 def shadowbanned(v):
-	if not (v and v.admin_level >= 2): abort(404)
+	if v.admin_level < 2: abort(404)
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).order_by(User.shadowbanned).all()]
 	return render_template("shadowbanned.html", v=v, users=users)
 
@@ -225,7 +222,7 @@ def update_filter_status(v):
 	elif new_status == 'removed':
 		state_mod_new = StateMod.REMOVED
 		state_report_new = StateReport.RESOLVED
-	elif new_status == 'ignored':
+	else:
 		state_mod_new = None	# we just leave this as-is
 		state_report_new = StateReport.IGNORED
 
@@ -829,7 +826,6 @@ def admin_title_change(user_id, v):
 	user.customtitleplain=new_name
 	new_name = filter_emojis_only(new_name)
 
-	user=g.db.query(User).filter_by(id=user.id).one_or_none()
 	user.customtitle=new_name
 	user.flairchanged = None
 	if request.values.get("locked"):
@@ -900,21 +896,20 @@ def ban_user(user_id, v):
 		)
 	g.db.add(ma)
 
-	if 'reason' in request.values:
-		if reason.startswith("/post/"):
-			try:
-				post = int(reason.split("/post/")[1].split(None, 1)[0])
-				post = get_post(post)
-				post.bannedfor = True
-				g.db.add(post)
-			except: pass
-		elif reason.startswith("/comment/"):
-			try:
-				comment = int(reason.split("/comment/")[1].split(None, 1)[0])
-				comment = get_comment(comment)
-				comment.bannedfor = True
-				g.db.add(comment)
-			except: pass
+	if reason.startswith("/post/"):
+		try:
+			post = int(reason.split("/post/")[1].split(None, 1)[0])
+			post = get_post(post)
+			post.bannedfor = True
+			g.db.add(post)
+		except: pass
+	elif reason.startswith("/comment/"):
+		try:
+			comment = int(reason.split("/comment/")[1].split(None, 1)[0])
+			comment = get_comment(comment)
+			comment.bannedfor = True
+			g.db.add(comment)
+		except: pass
 
 
 	body = f"@{v.username} has banned @{user.username} ({note})"
@@ -1012,12 +1007,8 @@ def sticky_post(post_id, v):
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 	if post and not post.stickied:
 		pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.state_mod == StateMod.VISIBLE).count()
-		if pins > 2:
-			if v.admin_level >= 2:
-				post.stickied = v.username
-				post.stickied_utc = int(time.time()) + 3600
-			else: abort(403, "Can't exceed 3 pinned posts limit!")
-		else: post.stickied = v.username
+		post.stickied = v.username
+		if pins > 2: post.stickied_utc = int(time.time()) + 3600
 		g.db.add(post)
 
 		ma=ModAction(

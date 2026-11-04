@@ -147,7 +147,6 @@ def task_scheduled_post_content_post(v:User, pid:int): # pyright: ignore
 	submission: Optional[ScheduledSubmissionTask] = \
 		g.db.get(ScheduledSubmissionTask, pid)
 	if not submission: abort(404)
-	if not v.can_edit(submission): abort(403)
 
 	validated_post:validators.ValidatedSubmissionLike = \
 		validators.ValidatedSubmissionLike.from_flask_request(request, 
