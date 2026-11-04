@@ -1,3 +1,4 @@
+import html
 import logging
 from copy import deepcopy
 
@@ -37,9 +38,8 @@ class ModAction(CreatedDateTimeBase):
 		if self.kind == "ban_user":
 			if self.target_post: return f'for <a href="{self.target_post.permalink}">post</a>'
 			elif self.target_comment_id: return f'for <a href="/comment/{self.target_comment_id}">comment</a>'
-			else: return self._note
-		else:
-			return self._note or ""
+		# Notes hold text admins typed (reasons, flair, domains).
+		return html.escape(self._note or "")
 
 	@note.setter
 	def note(self, x):
