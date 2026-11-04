@@ -1,5 +1,5 @@
 '''
-The viewer's saved posts and comments: GET /@<username>/saved/posts and GET /@<username>/saved/comments, for logged-in users, viewed under their own name.
+The viewer's saved posts and comments: GET /@<username>/saved/posts and GET /@<username>/saved/comments, for logged-in users, viewed under their own name (in any letter case); another user's name is refused with 403, and an unknown one is 404.
 
 They list what the viewer saved that others can still see (not removed, filtered or deleted), newest first, 25 to a page with "page" (from 1) choosing the page. Content by users the viewer blocks is left out, except that admins (level 2 and up) still see such posts. Saved comments by shadowbanned authors are left out for viewers who can't see shadowbanned users. API clients get {"data": [...]} holding each listed item's JSON object, in order. Anonymous browsers are sent to log in.
 '''
@@ -135,6 +135,34 @@ def test_saved_lists_answer_api_clients_with_json(kind):
 	assert_status(r, 200)
 	assert set(r.json) == {"data"}
 	assert [item["id"] for item in r.json["data"]] == [newer["id"], older["id"]]
+
+
+@pytest.mark.parametrize("kind", ["posts", "comments"])
+def test_saved_lists_under_another_users_name_are_refused(kind):
+	viewer, other = factories.user(), factories.user()
+	_saved(other, kind)
+
+	r = as_user(viewer).get(_path(other, kind))
+
+	assert_status(r, 403)
+
+
+@pytest.mark.parametrize("kind", ["posts", "comments"])
+def test_saved_lists_under_an_unknown_name_are_not_found(kind):
+	r = as_user(factories.user()).get(_path({"username": factories.unique()}, kind))
+
+	assert_status(r, 404)
+
+
+@pytest.mark.parametrize("kind", ["posts", "comments"])
+def test_saved_lists_find_the_viewer_case_insensitively(kind):
+	viewer = factories.user(username=f"Mixed{factories.unique()}")
+	_, token = _saved(viewer, kind)
+
+	r = as_user(viewer).get(_path({"username": viewer["username"].upper()}, kind))
+
+	assert_html(r, 200)
+	assert_in_payload(r, token)
 
 
 @pytest.mark.parametrize("kind", ["posts", "comments"])

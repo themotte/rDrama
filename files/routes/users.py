@@ -573,9 +573,14 @@ def user_profile_name(username:str):
 
 	return send_file(path)
 
+def _own_saved_list(v:User, username:str):
+	if get_user(username).id != v.id: abort(403, "Saved lists are private.")
+
+
 @app.get("/@<username>/saved/posts")
 @auth_required
 def saved_posts(v, username):
+	_own_saved_list(v, username)
 	page=int(request.values.get("page",1))
 
 	ids=v.saved_idlist(page=page)
@@ -600,6 +605,7 @@ def saved_posts(v, username):
 @app.get("/@<username>/saved/comments")
 @auth_required
 def saved_comments(v, username):
+	_own_saved_list(v, username)
 	page=int(request.values.get("page",1))
 
 	ids=v.saved_comment_idlist(page=page)
