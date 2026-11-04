@@ -17,7 +17,7 @@ Signature: lowercase hex HMAC-MD5 of a message, with key (MASTER_KEY) and messag
 - Password reset links (/reset?id=&time=&token=): signs "forgot+<user id>+<time>+<users.login_nonce>"; valid for ten minutes after its time and not before it (a minute of clock difference allowed).
 - Password reset form (its `user_id`, `time` and `token` fields, `time` carried over from the link): signs "reset+<user id>+<time>+<users.login_nonce>"; valid as long as the link.
 - 2FA login challenge (the challenge page's `time` and `hash` fields): signs "2fa-challenge+<user id>+<time>+<users.login_nonce>"; valid for ten minutes after its time and not before it (a minute of clock difference allowed).
-- 2FA removal links (/reset_2fa?id=&t=&token=): signs "2fa-remove+<user id>+<username>+<t>+<users.mfa_secret>+<users.login_nonce>"; valid for a day after `t` and not before it (a minute of clock difference allowed).
+- 2FA removal links (/reset_2fa?id=&t=&token=): signs "2fa-remove+<user id>+<username>+<t>+<users.mfa_secret>+<users.login_nonce>"; usable from 72 hours after `t` until a day after that, and only while the account has 2FA.
 
 Every message but the form key's starts with its purpose, so a signature issued for one purpose never passes for another. A token that isn't ASCII never passes.
 '''

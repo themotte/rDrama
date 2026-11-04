@@ -136,7 +136,7 @@ def test_the_removal_mail_links_to_a_signed_removal():
 
 def test_a_removal_link_asks_before_removing_2fa():
 	u = _two_factor_user()
-	link = _removal_link(u, int(time.time()))
+	link = _removal_link(u, int(time.time()) - 72 * 3600)
 
 	with db_diff() as d:
 		r = anon().get("/reset_2fa", params=link)
@@ -150,7 +150,7 @@ def test_confirming_a_removal_link_removes_2fa():
 	u = _two_factor_user()
 
 	with db_diff() as d:
-		r = anon().post_raw("/reset_2fa", _removal_link(u, int(time.time())))
+		r = anon().post_raw("/reset_2fa", _removal_link(u, int(time.time()) - 72 * 3600))
 
 	assert_html(r, 200)
 	d.assert_exactly(updated={"users": {u["id"]: {"mfa_secret": None}}})

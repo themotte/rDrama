@@ -444,28 +444,37 @@ def request_2fa_disable():
 						   title="Removal request received",
 						   message="If username, password, and email match, we will send you an email.")
 
+# A 2FA removal link starts working this long after it's sent, so an owner who didn't ask for it has time to read the mail and cancel it by changing the password, and keeps working for a day after that.
+TWO_FACTOR_REMOVAL_DELAY = 72 * 3600
+TWO_FACTOR_REMOVAL_WINDOW = 24 * 3600
+
+
 def _removal_link_account():
-	'''The account a 2FA removal link (its id, t and token) names, or None and the page refusing an expired link.'''
+	'''The account a 2FA removal link (its id, t and token) names. Any other link ends the request with the page refusing it.'''
 	t = request.values.get("t", type=int)
 	if t is None: abort(400)
 
-	if not token_fresh(t, 3600*24):
-		return None, render_template("message.html",
+	if int(time.time()) < t + TWO_FACTOR_REMOVAL_DELAY:
+		abort(make_response(render_template("message.html",
+						   title="Not Yet",
+						   error="That link starts working 72 hours after it was sent.")))
+
+	if not token_fresh(t, TWO_FACTOR_REMOVAL_DELAY + TWO_FACTOR_REMOVAL_WINDOW):
+		abort(make_response(render_template("message.html",
 						   title="Expired Link",
-						   error="That link has expired.")
+						   error="That link has expired.")))
 
 	user = get_account(request.values.get("id"))
 
 	if not user.mfa_secret or not token_verify("2fa-remove", request.values.get("token"), user.id, user.username, t, user.mfa_secret, user.login_nonce):
 		abort(403)
 
-	return user, None
+	return user
 
 
 @app.get("/reset_2fa")
 def reset_2fa_confirm():
-	user, refusal = _removal_link_account()
-	if refusal: return refusal
+	user = _removal_link_account()
 
 	return render_template("login/reset_2fa.html", user=user, t=request.values.get("t"), token=request.values.get("token"))
 
@@ -473,8 +482,7 @@ def reset_2fa_confirm():
 @app.post("/reset_2fa")
 @limiter.limit("1/second;6/minute;200/hour;1000/day")
 def reset_2fa():
-	user, refusal = _removal_link_account()
-	if refusal: return refusal
+	user = _removal_link_account()
 
 	user.mfa_secret=None
 

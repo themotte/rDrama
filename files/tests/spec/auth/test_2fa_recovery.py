@@ -1,5 +1,5 @@
 '''
-Removing 2FA from an account whose codes are lost: GET /lost_2fa shows the request form; POST /request_2fa_disable with "username", "password" and "email" mails a removal link (format in harness/session.py) to the account's address when all three match an account with 2FA (the email ignoring case), and answers the same either way; the link (/reset_2fa?id=&t=&token=) shows a confirmation whose POST, carrying the same fields, removes 2FA, for a day after the link was issued; both refuse a bad link the same way.
+Removing 2FA from an account whose codes are lost: GET /lost_2fa shows the request form; POST /request_2fa_disable with "username", "password" and "email" mails a removal link (format in harness/session.py) to the account's address when all three match an account with 2FA (the email ignoring case), and answers the same either way; the link (/reset_2fa?id=&t=&token=) shows a confirmation whose POST, carrying the same fields, removes 2FA. The link starts working 72 hours after it was sent, giving an owner who didn't ask for it time to change the password, which cancels it, and works for a day after that; both refuse a bad link the same way.
 '''
 import re
 import time
@@ -16,6 +16,10 @@ def _member(**overrides):
 
 def _request(u, **overrides):
 	return anon().post("/request_2fa_disable", {"username": u["username"], "password": factories.PASSWORD, "email": u["email"], **overrides})
+
+
+# How long a removal link waits before it works, and how long it works after that.
+WAIT, WINDOW = 72 * 3600, 24 * 3600
 
 
 def _follow(method, params):
@@ -79,7 +83,7 @@ def test_an_expired_link_removes_nothing(method):
 	u = _member()
 
 	with db_diff() as d:
-		r = _follow(method, _link(u, int(time.time()) - 86401))
+		r = _follow(method, _link(u, int(time.time()) - WAIT - WINDOW - 1))
 
 	assert_html(r, 200)
 	d.assert_exactly()
@@ -90,7 +94,7 @@ def test_a_link_with_a_bad_token_is_refused(method):
 	u = _member()
 
 	with db_diff() as d:
-		r = _follow(method, _link(u, int(time.time()), token="0" * 32))
+		r = _follow(method, _link(u, int(time.time()) - WAIT, token="0" * 32))
 
 	assert_status(r, 403)
 	d.assert_exactly()
@@ -108,7 +112,7 @@ def test_a_link_for_an_unknown_account_is_refused(method):
 	u = _member()
 	db.delete("users", id=u["id"])
 
-	assert_status(_follow(method, _link(u, int(time.time()))), 404)
+	assert_status(_follow(method, _link(u, int(time.time()) - WAIT)), 404)
 
 
 @BOTH
@@ -116,7 +120,7 @@ def test_a_link_for_an_account_without_2fa_is_refused(method):
 	u = _member(mfa_secret=None)
 
 	with db_diff() as d:
-		r = _follow(method, _link(u, int(time.time())))
+		r = _follow(method, _link(u, int(time.time()) - WAIT))
 
 	assert_status(r, 403)
 	d.assert_exactly()
@@ -137,7 +141,7 @@ def test_a_request_missing_a_field_gets_no_mail(missing):
 def test_a_link_with_a_malformed_time_is_refused(method):
 	u = _member()
 
-	assert_status(_follow(method, _link(u, int(time.time()), t="soon")), 400)
+	assert_status(_follow(method, _link(u, int(time.time()) - WAIT, t="soon")), 400)
 
 
 def test_a_request_naming_another_email_gets_no_mail():
@@ -164,3 +168,27 @@ def test_an_invalid_email_gets_the_same_answer_whether_or_not_the_account_exists
 	for r in answers:
 		assert_html(r, 200)
 	assert _title(answers[0]) == _title(answers[1])
+
+
+@BOTH
+def test_a_link_opened_before_its_wait_is_over_removes_nothing(method):
+	u = _member()
+
+	with db_diff() as d:
+		r = _follow(method, _link(u, int(time.time()) - 3600))
+
+	assert_html(r, 200)
+	assert r.form_field("token") is None
+	d.assert_exactly()
+
+
+def test_changing_the_password_cancels_the_link():
+	u = _member()
+	link = _link(u, int(time.time()) - WAIT)
+	as_user(u).post("/settings/security", {"old_password": factories.PASSWORD, "new_password": "new " + factories.PASSWORD, "cnf_password": "new " + factories.PASSWORD})
+
+	with db_diff() as d:
+		r = anon().post_raw("/reset_2fa", link)
+
+	assert_status(r, 403)
+	d.assert_exactly()
