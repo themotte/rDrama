@@ -427,6 +427,9 @@ def u_username_comments(username, v=None):
 
 
 def _info(user:User, v:User) -> dict:
+	if user.is_blocking: abort(403, "You're blocking this user.")
+	if user.is_blocked: abort(403, "This user is blocking you.")
+
 	data = dict(user.json)
 	if not user.shows_activity_to(v):
 		data["post_count"] = data["comment_count"] = 0
@@ -436,26 +439,12 @@ def _info(user:User, v:User) -> dict:
 @app.get("/@<username>/info")
 @auth_required
 def u_username_info(username, v=None):
-	user = get_user(username, v=v, include_blocks=True)
-
-	if user.is_blocking:
-		abort(401, "You're blocking this user.")
-	elif user.is_blocked:
-		abort(403, "This user is blocking you.")
-
-	return _info(user, v)
+	return _info(get_user(username, v=v, include_blocks=True), v)
 
 @app.get("/<id>/info")
 @auth_required
 def u_user_id_info(id, v=None):
-	user = get_account(id, v=v, include_blocks=True)
-
-	if user.is_blocking:
-		abort(401, "You're blocking this user.")
-	elif user.is_blocked:
-		abort(403, "This user is blocking you.")
-
-	return _info(user, v)
+	return _info(get_account(id, v=v, include_blocks=True), v)
 
 
 @app.post("/follow/<username>")

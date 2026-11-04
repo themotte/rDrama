@@ -3,7 +3,7 @@ A user's public details as JSON, for logged-in users: GET /@<username>/info (cas
 
 The object has "username", "url" (the profile path), "id", "is_banned", "post_count" and "comment_count". The counts read 0 for a shadowbanned user or a private profile, except to the user themselves and admins (level 2 and up), as nobody else sees their posts and comments. While the user is suspended (banned permanently, or temporarily and the ban hasn't run out) it adds only "is_permanent_ban" and "ban_reason", with "is_banned" true; otherwise it adds "created_utc", "is_private", "profile_url", "bannerurl", "bio", "bio_html", "flair", and "is_banned" says whether the account carries a ban at all (an expired one included).
 
-A user blocking the viewer refuses them with 403. An unknown user (or an id that isn't a number) is 404; anonymous browsers are sent to log in.
+A user blocking the viewer, or blocked by them, refuses them with 403. An unknown user (or an id that isn't a number) is 404; anonymous browsers are sent to log in.
 '''
 import time
 
@@ -147,6 +147,19 @@ def test_info_of_a_user_whose_ban_ran_out(route):
 def test_info_refuses_users_the_user_blocks(route):
 	user, viewer = factories.user(), factories.user()
 	db.insert("userblocks", user_id=user["id"], target_id=viewer["id"])
+
+	r = as_user(viewer).get(ROUTES[route](user))
+
+	assert_status(r, 403)
+
+
+@pytest.mark.parametrize("route", ROUTES)
+@pytest.mark.parametrize("mutual", [False, True], ids=["one way", "mutual"])
+def test_info_refuses_users_who_block_the_user(route, mutual):
+	user, viewer = factories.user(), factories.user()
+	db.insert("userblocks", user_id=viewer["id"], target_id=user["id"])
+	if mutual:
+		db.insert("userblocks", user_id=user["id"], target_id=viewer["id"])
 
 	r = as_user(viewer).get(ROUTES[route](user))
 
