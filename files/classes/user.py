@@ -590,8 +590,11 @@ class User(CreatedBase):
 			return self.admin_level >= PERMS['SCHEDULER_POSTS']
 
 	def shows_activity_to(self, v:"User | None") -> bool:
-		'''Whether `v` may see this user's posts and comments, and how many there are.'''
-		return not self.shadowbanned or bool(v and (v.id == self.id or v.admin_level >= PERMS['USER_SHADOWBAN']))
+		'''Whether `v` may see this user's posts and comments, and how many there are: everyone may, unless the user is shadowbanned or private, when only they and admins may.'''
+		if v and v.id == self.id: return True
+		if self.shadowbanned and not (v and v.admin_level >= PERMS['USER_SHADOWBAN']): return False
+		if self.is_private and not (v and v.admin_level >= PERMS['USER_SET_PROFILE_PRIVACY']): return False
+		return True
 
 	@property
 	def can_see_shadowbanned(self):

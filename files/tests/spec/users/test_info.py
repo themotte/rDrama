@@ -1,7 +1,7 @@
 '''
 A user's public details as JSON, for logged-in users: GET /@<username>/info (case-insensitively, by current or original username) and GET /<user id>/info.
 
-The object has "username", "url" (the profile path), "id", "is_banned", "post_count" and "comment_count". The counts read 0 for a shadowbanned user, except to the user themselves and admins (level 2 and up), as nobody else sees their posts and comments. While the user is suspended (banned permanently, or temporarily and the ban hasn't run out) it adds only "is_permanent_ban" and "ban_reason", with "is_banned" true; otherwise it adds "created_utc", "is_private", "profile_url", "bannerurl", "bio", "bio_html", "flair", and "is_banned" says whether the account carries a ban at all (an expired one included).
+The object has "username", "url" (the profile path), "id", "is_banned", "post_count" and "comment_count". The counts read 0 for a shadowbanned user or a private profile, except to the user themselves and admins (level 2 and up), as nobody else sees their posts and comments. While the user is suspended (banned permanently, or temporarily and the ban hasn't run out) it adds only "is_permanent_ban" and "ban_reason", with "is_banned" true; otherwise it adds "created_utc", "is_private", "profile_url", "bannerurl", "bio", "bio_html", "flair", and "is_banned" says whether the account carries a ban at all (an expired one included).
 
 A user blocking the viewer refuses them with 403. An unknown user (or an id that isn't a number) is 404; anonymous browsers are sent to log in.
 '''
@@ -69,6 +69,31 @@ def test_info_of_a_shadowbanned_user_shows_no_activity_to_others(route, viewer):
 @pytest.mark.parametrize("viewer", ["themselves", "admin"])
 def test_info_of_a_shadowbanned_user_shows_activity_to_themselves_and_admins(viewer):
 	user = _shadowbanned_with_content()
+	client = as_user(user) if viewer == "themselves" else as_user(factories.admin(2))
+
+	r = client.get(f"/@{user['username']}/info")
+
+	assert_status(r, 200)
+	assert (r.json["post_count"], r.json["comment_count"]) == (1, 1)
+
+
+@pytest.mark.parametrize("route", ROUTES)
+def test_info_of_a_private_user_shows_no_activity_to_others(route):
+	user = factories.user(is_private=True)
+	factories.post(user)
+	factories.comment(user, factories.post(factories.user()))
+
+	r = as_user(factories.user()).get(ROUTES[route](user))
+
+	assert_status(r, 200)
+	assert (r.json["post_count"], r.json["comment_count"]) == (0, 0)
+
+
+@pytest.mark.parametrize("viewer", ["themselves", "admin"])
+def test_info_of_a_private_user_shows_activity_to_themselves_and_admins(viewer):
+	user = factories.user(is_private=True)
+	factories.post(user)
+	factories.comment(user, factories.post(factories.user()))
 	client = as_user(user) if viewer == "themselves" else as_user(factories.admin(2))
 
 	r = client.get(f"/@{user['username']}/info")
