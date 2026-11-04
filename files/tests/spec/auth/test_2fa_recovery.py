@@ -38,6 +38,15 @@ def test_the_request_form():
 	assert_html(anon().get("/lost_2fa"), 200)
 
 
+def test_the_request_form_is_filled_in_for_a_logged_in_account():
+	u = factories.user()
+
+	r = as_user(u).get("/lost_2fa")
+
+	assert_html(r, 200)
+	assert (r.form_field("username"), r.form_field("email")) == (u["username"], "")
+
+
 def test_a_matching_request_mails_the_account():
 	u = _member()
 
