@@ -1133,6 +1133,7 @@ def admin_toggle_ban_domain(v):
 	if not domain: abort(400)
 
 	reason=request.values.get("reason", "").strip()
+	if len(domain) > 100 or len(reason) > 100: abort(400, "A domain and its reason hold at most 100 characters each.")
 
 	d = g.db.query(BannedDomain).filter(func.lower(BannedDomain.domain) == domain.lower()).first()
 	if d:

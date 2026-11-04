@@ -1,7 +1,7 @@
 '''
 Banned domains, whose links can't be submitted (see spec/posts/test_submit), managed by level-3 admins:
 - GET /admin/banned_domains/ lists every banned domain with its reason.
-- POST /admin/banned_domains with "domain" and "reason" bans the domain, or, if it is already banned (in any letter case), unbans it (the reason is then ignored). Either way it logs a mod action and sends the browser back to the list. Surrounding whitespace is trimmed from both fields; a missing or blank domain is 400.
+- POST /admin/banned_domains with "domain" and "reason" bans the domain, or, if it is already banned (in any letter case), unbans it (the reason is then ignored). Either way it logs a mod action and sends the browser back to the list. Surrounding whitespace is trimmed from both fields; a missing or blank domain, or a domain or reason over 100 characters, is 400.
 '''
 import pytest
 
@@ -77,6 +77,18 @@ def test_a_domain_is_required(form):
 
 	with db_diff() as d:
 		r = client.post("/admin/banned_domains", {**form, "reason": factories.unique("reason")})
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("field", ["domain", "reason"])
+def test_a_domain_or_reason_over_100_characters_is_refused(field):
+	client = as_user(factories.admin(3))
+	form = {"domain": _domain(), "reason": factories.unique("reason"), field: "x" * 98 + ".com"}
+
+	with db_diff() as d:
+		r = client.post("/admin/banned_domains", form)
 
 	assert_status(r, 400)
 	d.assert_exactly()
