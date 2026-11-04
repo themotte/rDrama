@@ -462,11 +462,14 @@ def u_user_id_info(id, v=None):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def follow_user(username, v):
-	target = get_user(username)
+	target = get_user(username, v=v, include_blocks=True)
 
 	if target.id==v.id: abort(400, "You can't follow yourself!")
 
 	if g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).one_or_none(): return {"message": "User followed!"}
+
+	if target.is_nofollow: abort(403, "This user doesn't accept followers.")
+	if target.is_blocked: abort(403, "This user is blocking you.")
 
 	new_follow = Follow(user_id=v.id, target_id=target.id)
 	g.db.add(new_follow)

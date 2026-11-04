@@ -1,6 +1,6 @@
 '''
 Following users. Each action is a POST naming the other user in the path (case-insensitively, by their current or original username) and answers JSON with a "message":
-- /follow/<username> makes the viewer a follower of the user. Following yourself is refused with 400; following someone already followed changes nothing.
+- /follow/<username> makes the viewer a follower of the user. Following yourself is refused with 400; following someone already followed changes nothing. Otherwise, following a user who disabled follows ("Disable Subscriptions") or who blocks the viewer is refused with 403; following a user the viewer blocks is allowed.
 - /unfollow/<username> stops the viewer following the user; doing so when not following changes nothing.
 - /remove_follow/<username> stops the user following the viewer; doing so when they don't changes nothing.
 
@@ -112,6 +112,56 @@ def test_following_yourself_is_refused():
 
 	assert_status(r, 400)
 	d.assert_exactly()
+
+
+def test_following_a_user_who_disabled_follows_is_refused():
+	follower, target = factories.user(), factories.user(is_nofollow=True)
+
+	with db_diff() as d:
+		r = as_user(follower).post(f"/follow/{target['username']}", headers=XHR)
+
+	assert_status(r, 403)
+	d.assert_exactly()
+
+
+def test_an_existing_follow_survives_the_user_disabling_follows():
+	follower, target = factories.user(), factories.user()
+	_follow(follower, target)
+	db.update("users", {"id": target["id"]}, is_nofollow=True)
+
+	with db_diff() as d:
+		r = as_user(follower).post(f"/follow/{target['username']}")
+
+	assert_json_message(r)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("mutual", [False, True], ids=["one way", "mutual"])
+def test_following_a_user_who_blocks_you_is_refused(mutual):
+	follower, target = factories.user(), factories.user()
+	db.insert("userblocks", user_id=target["id"], target_id=follower["id"])
+	if mutual:
+		db.insert("userblocks", user_id=follower["id"], target_id=target["id"])
+
+	with db_diff() as d:
+		r = as_user(follower).post(f"/follow/{target['username']}", headers=XHR)
+
+	assert_status(r, 403)
+	d.assert_exactly()
+
+
+def test_following_a_user_you_block_is_allowed():
+	follower, target = factories.user(), factories.user()
+	db.insert("userblocks", user_id=follower["id"], target_id=target["id"])
+
+	with db_diff() as d:
+		r = as_user(follower).post(f"/follow/{target['username']}")
+
+	assert_json_message(r)
+	d.assert_exactly(
+		inserted={"follows": [{"user_id": follower["id"], "target_id": target["id"]}], "comments": [SYSTEM_MESSAGE], "notifications": [{"user_id": target["id"]}]},
+		updated={"users": {target["id"]: {"stored_subscriber_count": 1}, follower["id"]: {"stored_following_count": 1}}},
+	)
 
 
 @pytest.mark.parametrize("action", ["/follow", "/unfollow", "/remove_follow"])
