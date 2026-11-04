@@ -82,10 +82,22 @@ def test_a_domain_is_required(form):
 	d.assert_exactly()
 
 
+def test_a_domain_and_reason_of_100_characters_are_banned():
+	admin = factories.admin(3)
+	domain, reason = factories.unique("d").ljust(96, "x") + ".com", factories.unique("reason").ljust(100, "x")
+	client = as_user(admin)
+
+	with db_diff() as d:
+		r = client.post("/admin/banned_domains", {"domain": domain, "reason": reason})
+
+	assert_redirect(r, LIST)
+	d.assert_exactly(inserted={"banneddomains": [{"domain": domain, "reason": reason}], "modactions": [{"kind": "ban_domain", "user_id": admin["id"]}]})
+
+
 @pytest.mark.parametrize("field", ["domain", "reason"])
 def test_a_domain_or_reason_over_100_characters_is_refused(field):
 	client = as_user(factories.admin(3))
-	form = {"domain": _domain(), "reason": factories.unique("reason"), field: "x" * 98 + ".com"}
+	form = {"domain": _domain(), "reason": factories.unique("reason"), field: "x" * 97 + ".com"}
 
 	with db_diff() as d:
 		r = client.post("/admin/banned_domains", form)

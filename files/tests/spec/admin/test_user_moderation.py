@@ -39,7 +39,7 @@ def _notice(d, user):
 	return message
 
 
-SYSTEM_MESSAGE = {"author_id": seed.SYSTEM_ID, "parent_submission": None, "state_mod": "VISIBLE"}
+SYSTEM_MESSAGE = {"author_id": seed.SYSTEM_ID, "parent_submission": None, "level": 1, "state_mod": "VISIBLE"}
 
 
 USER_ACTIONS = ["/shadowban", "/unshadowban", "/filter_automatic", "/filter_unfiltered", "/filter_filtered", "/admin/verify", "/admin/unverify", "/admin/title_change", "/ban_user", "/unban_user"]
@@ -200,6 +200,19 @@ def test_admin_sets_a_locked_flair():
 	)
 	assert db.row("users", id=user["id"])["flairchanged"] > time.time() + FLAIR_LOCK_HORIZON
 	assert title in d.inserted["modactions"][0]["_note"]
+
+
+def test_flair_shows_on_the_profile_as_text():
+	user = factories.user()
+	token = factories.unique("markup")
+	markup = f"<b id={token}>"
+	as_user(factories.admin(2)).post(f"/admin/title_change/{user['id']}", {"title": markup})
+
+	r = anon().get(_profile(user))
+
+	assert_html(r, 200)
+	assert_in_payload(r, token)
+	assert_not_in_payload(r, markup)
 
 
 def test_a_long_flair_is_cut_to_100_characters():
