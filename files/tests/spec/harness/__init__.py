@@ -4,6 +4,7 @@ The spec tier's whole vocabulary. Spec tests import from here and nowhere in `fi
 import json
 import re
 import time
+from typing import NamedTuple
 
 from files.tests.spec.harness import backend, config, db, external_web, factories, seed, session, uploads
 from files.tests.spec.harness.asserts import *
@@ -11,7 +12,7 @@ from files.tests.spec.harness.asserts import __all__ as _asserts_all
 from files.tests.spec.harness.db import ANY, db_diff
 from files.tests.spec.harness.http import Client, Response
 
-__all__ = ["config", "db", "external_web", "factories", "seed", "session", "uploads", "XHR", "TOR", "can_log_in", "urls_in", "totp_step_settle", "ANY", "db_diff", "Client", "Response", "anon", "as_user", "as_api", "site_settings_set", "run_background_work", "sent_mail", *_asserts_all]
+__all__ = ["config", "db", "external_web", "factories", "seed", "session", "uploads", "XHR", "TOR", "can_log_in", "urls_in", "totp_step_settle", "ANY", "db_diff", "Client", "Response", "anon", "as_user", "as_api", "site_settings_set", "run_background_work", "sent_mail", "cli", "CliResult", "assert_cli_ok", *_asserts_all]
 
 
 XHR = {"xhr": "1"}
@@ -46,6 +47,20 @@ def site_settings_set(key, value):
 def run_background_work():
 	'''Runs work the app handed off to the background (thumbnail fetching) to completion.'''
 	backend.run_background_work()
+
+
+class CliResult(NamedTuple):
+	exit_code: int
+	output: str
+
+
+def cli(*args: str) -> CliResult:
+	'''Runs one of the site's command-line commands (the first argument names it; the names are contract) against the same database and cache, and returns its exit code and output.'''
+	return CliResult(*backend.cli(args))
+
+
+def assert_cli_ok(result: CliResult):
+	assert result.exit_code == 0, f"command exited {result.exit_code}: {result.output}"
 
 
 def sent_mail() -> list[dict]:

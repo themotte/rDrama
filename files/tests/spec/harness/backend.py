@@ -12,6 +12,7 @@ import requests.adapters
 import urllib3
 
 from files.__main__ import app, db_session
+import files.cli  # registers the command-line commands
 from files.helpers import background
 from files.tests import reset as _reset
 
@@ -53,6 +54,14 @@ def reset():
 
 def run_background_work():
 	background.drain()
+
+
+def cli(args):
+	'''Returns (exit code, output).'''
+	result = app.test_cli_runner().invoke(args=list(args))
+	# A command may leave the thread's session holding a transaction; release it like a finished request would
+	db_session.remove()
+	return result.exit_code, result.output
 
 
 def sent_mail() -> list[dict]:

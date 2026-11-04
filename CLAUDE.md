@@ -99,7 +99,7 @@ The suite is being turned into a behavioral specification for a clean-room reimp
 - For anything that writes, wrap the action in `with db_diff() as d:` and call `d.assert_exactly(...)`: it fails on any change you didn't describe, including in tables you didn't think about.
 - Assert content with `factories.unique()` sentinel tokens and `assert_in_payload` / `assert_not_in_payload`, not with markup, CSS classes or user-facing copy. JSON API shapes and request parameter names are contract and may be pinned exactly.
 - Comments and docstrings describe behavior, never how the current implementation achieves it.
-- Outbound HTTP is blocked; a test fails if the app attempted any request it wasn't given an answer for. Register canned responses (or unreachable hosts) with `external_web` and read what was requested from `external_web.requests()`. Mail is captured instead of sent; read it with `sent_mail()`. Background work is deferred in test mode; run it with `run_background_work()`.
+- Outbound HTTP is blocked; a test fails if the app attempted any request it wasn't given an answer for. Register canned responses (or unreachable hosts) with `external_web` and read what was requested from `external_web.requests()`. Mail is captured instead of sent; read it with `sent_mail()`. Background work is deferred in test mode; run it with `run_background_work()`. Run the site's command-line commands with `cli(name, *args)` and check them with `assert_cli_ok`.
 - Never call a factory inside a `db_diff` block: its inserts would count as the request's writes.
 
 ## Development Environment
