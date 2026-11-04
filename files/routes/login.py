@@ -1,6 +1,7 @@
 from urllib.parse import urlencode
 
 from sqlalchemy import and_, or_
+from sqlalchemy.exc import MultipleResultsFound
 
 from files.helpers.config.environment import HCAPTCHA_SECRET, HCAPTCHA_SITEKEY, WELCOME_MSG
 from files.mail import *
@@ -50,7 +51,7 @@ def login_post():
 
 	if "@" in username:
 		try: account = g.db.query(User).filter(func.lower(User.email) == username.lower()).one_or_none()
-		except: return "Multiple users use this email!"
+		except MultipleResultsFound: return "Multiple users use this email!"
 	else: account = get_user(username, graceful=True)
 
 	if not account:
