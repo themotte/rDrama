@@ -872,7 +872,9 @@ def ban_user(user_id, v):
 	elif days == 1: duration = "1 day"
 	else: duration = f"{days} days"
 
-	note = f'reason: "{reason}", duration: {duration}'
+	# The mod log's note holds 256 characters; the reason gives way to the duration.
+	room = 256 - len(f'reason: "", duration: {duration}')
+	note = f'reason: "{reason[:room]}", duration: {duration}'
 	ma=ModAction(
 		kind="ban_user",
 		user_id=v.id,

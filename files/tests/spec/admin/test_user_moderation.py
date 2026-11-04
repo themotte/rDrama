@@ -355,6 +355,17 @@ def test_banning_with_alts_skips_admin_alts():
 	d.assert_exactly(**_ban_changes(actor, user, banned, notified=[user], updated={"users": {user["id"]: banned, alt["id"]: banned}}))
 
 
+def test_a_ban_takes_a_reason_of_up_to_256_characters():
+	actor = factories.admin(2)
+	user = factories.user()
+	reason = factories.unique("reason").ljust(300, "x")
+
+	r, d = _ban(actor, user, {"days": "1", "reason": reason})
+
+	assert_json_message(r)
+	d.assert_exactly(**_ban_changes(actor, user, {"is_banned": actor["id"], "unban_utc": ANY, "ban_reason": reason[:256]}, notified=[user]))
+
+
 def test_a_permanent_ban_replaces_a_temporary_one():
 	actor = factories.admin(2)
 	user = factories.user(is_banned=actor["id"], unban_utc=int(time.time()) + 86400, ban_reason=factories.unique("reason"))
