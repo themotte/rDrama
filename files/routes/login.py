@@ -236,9 +236,8 @@ def sign_up_post(v):
 
 	session.pop("signup_token")
 
-	id_1 = g.db.query(User.id).filter_by(id=9).count()
-	users_count = g.db.query(User.id).count()
-	if id_1 == 0 and users_count == 8:
+	# The first account on a fresh site runs it.
+	if not g.db.query(User.id).filter(User.id.notin_(SYSTEM_ACCOUNT_IDS)).first():
 		admin_level=3
 		session["history"] = []
 	else: admin_level=0

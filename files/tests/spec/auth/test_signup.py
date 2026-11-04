@@ -310,3 +310,13 @@ def test_a_referral_naming_no_account_is_refused(referred_by):
 
 	assert_status(r, 400)
 	d.assert_exactly()
+
+
+@pytest.mark.parametrize("an_existing_member", [None])
+def test_a_fresh_site_missing_a_retired_system_account_still_gets_its_first_admin(an_existing_member):
+	db.delete("users", id=8)
+	username = factories.unique("first")
+
+	_signup(anon(), usernametwo=username)
+
+	assert db.row("users", username=username)["admin_level"] == 3
