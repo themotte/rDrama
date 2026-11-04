@@ -100,7 +100,7 @@
 				{% else %}<pre></pre>
 				{% endif %}
 				
-				{% if v and v.admin_level >= 2 %}
+				{% if v and v.admin_level >= 3 %}
 					<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Upvoters</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Downvoters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Upvoted</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Downvoted</a></div>
 				{% endif %}
 
@@ -231,6 +231,7 @@
 							<a id="unverify" class="{% if not u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/admin/unverify/{{u.id}}','POST','verify','unverify');">Unverify</a>
 						{% endif %}
 
+						{% if v.admin_level >= 3 %}
 						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">
 							<input type="hidden" name="formkey", value="{{v.formkey}}">
@@ -243,6 +244,7 @@
 							<input type="hidden" name="user" value="{{u.username}}">
 							<input type="submit" class="btn btn-danger" value="Remove User's Content">
 						</form>
+						{% endif %}
 						{% endif %}
 					{% if v and v.admin_level >= PERMS['USER_SET_PROFILE_PRIVACY'] %}
 						<a id="private-desktop" class="{% if u.is_private %}d-none{% endif %} btn btn-danger" role="button" onclick="postToastSwitch(this,'/id/{{u.id}}/private/1','POST','private-desktop','unprivate-desktop');">Set Private Mode</a>
@@ -324,7 +326,7 @@
 					<pre></pre>
 				{% endif %}
 
-				{% if v and v.admin_level >= 2 %}
+				{% if v and v.admin_level >= 3 %}
 					<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Upvoters</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Downvoters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Upvoted</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Downvoted</a></div>
 				{% endif %}
 
@@ -442,6 +444,7 @@
 							<a id="unverify2" class="{% if not u.verified %}d-none{% endif %} btn btn-success" role="button" onclick="postToastSwitch(this,'/admin/unverify/{{u.id}}','POST','verify2','unverify2');">Unverify</a>
 						{% endif %}
 
+						{% if v.admin_level >= 3 %}
 						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">
 							<input type="hidden" name="formkey", value="{{v.formkey}}">
@@ -454,6 +457,7 @@
 							<input type="hidden" name="user" value="{{u.username}}">
 							<input type="submit" class="btn btn-danger" value="Remove User's Content">
 						</form>
+						{% endif %}
 					{% endif %}
 				{% endif %}
 				{% if v and v.admin_level >= PERMS['USER_SET_PROFILE_PRIVACY'] %}

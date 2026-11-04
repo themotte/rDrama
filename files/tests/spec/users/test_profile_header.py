@@ -3,6 +3,7 @@ What a profile page (GET /@<username>/ and /@<username>/posts) tells everyone ab
 - the user's bio, flair and friends text;
 - while they're suspended, that they're banned, with the ban's reason;
 - to admins (level 2 and up) only, the accounts linked to the user as alts.
+- to admins of level 3 only (the level those pages require), links to the user's voter lists (/@<username>/upvoters, /downvoters, /upvoting, /downvoting) and the forms that remove or restore all their content (to /admin/nuke_user and /admin/unnuke_user).
 '''
 import time
 
@@ -75,3 +76,29 @@ def test_profile_hides_alts_from_everyone_else(page, viewer):
 
 	assert_html(r, 200)
 	assert_not_in_payload(r, alt["username"])
+
+
+def _level_3_links(user):
+	return [f"/@{user['username']}/{name}" for name in ("upvoters", "downvoters", "upvoting", "downvoting")] + ["/admin/nuke_user", "/admin/unnuke_user"]
+
+
+@pytest.mark.parametrize("page", PAGES)
+def test_profile_links_level_3_admins_to_the_voter_lists_and_nuking(page):
+	user = factories.user()
+
+	r = as_user(factories.admin(3)).get(page.format(user["username"]))
+
+	assert_html(r, 200)
+	for link in _level_3_links(user):
+		assert_in_payload(r, link)
+
+
+@pytest.mark.parametrize("page", PAGES)
+def test_profile_doesnt_offer_level_2_admins_what_they_cant_open(page):
+	user = factories.user()
+
+	r = as_user(factories.admin(2)).get(page.format(user["username"]))
+
+	assert_html(r, 200)
+	for link in _level_3_links(user):
+		assert_not_in_payload(r, link)
