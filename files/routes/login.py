@@ -185,32 +185,38 @@ def sign_up_post(v):
 
 	username = username.strip()
 
+	ref_user = None
+	if "referred_by" in request.values:
+		ref_id = request.values.get("referred_by", type=int)
+		ref_user = g.db.get(User, ref_id) if ref_id is not None else None
+		if not ref_user: abort(400, "That referral names no account.")
+
 	def signup_error(error):
 		args = {"error": error}
-		if request.values.get("referred_by"):
-			user = g.db.query(User).filter_by(id=request.values.get("referred_by")).one_or_none()
-			if user: args["ref"] = user.username
+		if ref_user: args["ref"] = ref_user.username
 
 		return redirect(f"/signup?{urlencode(args)}")
 
 	if app.config['RATE_LIMITER_ENABLED']:
-		if now - int(form_timestamp) < 5:
+		try: form_age = now - int(form_timestamp)
+		except ValueError: form_age = 0
+		if form_age < 5:
 			return signup_error("There was a problem. Please try again.")
 
 	if not token_verify("signup", form_formkey, form_timestamp, submitted_token, agent):
 		return signup_error("There was a problem. Please try again.")
 
-	if not request.values.get(
-			"password") == request.values.get("password_confirm"):
+	password = request.values.get("password") or ""
+	if password != (request.values.get("password_confirm") or ""):
 		return signup_error("Passwords did not match. Please try again.")
 
 	if not valid_username_regex.fullmatch(username):
 		return signup_error("Invalid username")
 
-	if not valid_password_regex.fullmatch(request.values.get("password")):
+	if not valid_password_regex.fullmatch(password):
 		return signup_error("Password must be between 8 and 100 characters.")
 
-	email = request.values.get("email").strip().lower()
+	email = (request.values.get("email") or "").strip().lower()
 
 	if email:
 		if not email_regex.fullmatch(email):
@@ -230,8 +236,6 @@ def sign_up_post(v):
 
 	session.pop("signup_token")
 
-	ref_id = int(request.values.get("referred_by", 0))
-
 	id_1 = g.db.query(User.id).filter_by(id=9).count()
 	users_count = g.db.query(User.id).count()
 	if id_1 == 0 and users_count == 8:
@@ -245,9 +249,9 @@ def sign_up_post(v):
 		username=username,
 		original_username = username,
 		admin_level = admin_level,
-		password=request.values.get("password"),
+		password=password,
 		email=email,
-		referred_by=ref_id or None,
+		referred_by=ref_user.id if ref_user else None,
 		ban_evade =  int(any((x.is_banned or x.shadowbanned) and not x.unban_utc for x in g.db.query(User).filter(User.id.in_(session.get("history", []))).all() if x)),
 		profileurl=profileurl
 	)
@@ -255,25 +259,22 @@ def sign_up_post(v):
 	g.db.add(new_user)
 	g.db.flush()
 
-	if ref_id:
-		ref_user = g.db.query(User).filter_by(id=ref_id).one_or_none()
-
-		if ref_user:
-			if ref_user.referral_count and not ref_user.has_badge(10):
-				new_badge = Badge(user_id=ref_user.id, badge_id=10)
-				g.db.add(new_badge)
-				g.db.flush()
-				send_notification(ref_user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-			if ref_user.referral_count >= 10 and not ref_user.has_badge(11):
-				new_badge = Badge(user_id=ref_user.id, badge_id=11)
-				g.db.add(new_badge)
-				g.db.flush()
-				send_notification(ref_user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
-			if ref_user.referral_count >= 100 and not ref_user.has_badge(12):
-				new_badge = Badge(user_id=ref_user.id, badge_id=12)
-				g.db.add(new_badge)
-				g.db.flush()
-				send_notification(ref_user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
+	if ref_user:
+		if ref_user.referral_count and not ref_user.has_badge(10):
+			new_badge = Badge(user_id=ref_user.id, badge_id=10)
+			g.db.add(new_badge)
+			g.db.flush()
+			send_notification(ref_user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
+		if ref_user.referral_count >= 10 and not ref_user.has_badge(11):
+			new_badge = Badge(user_id=ref_user.id, badge_id=11)
+			g.db.add(new_badge)
+			g.db.flush()
+			send_notification(ref_user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
+		if ref_user.referral_count >= 100 and not ref_user.has_badge(12):
+			new_badge = Badge(user_id=ref_user.id, badge_id=12)
+			g.db.add(new_badge)
+			g.db.flush()
+			send_notification(ref_user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 
 	check_for_alts(new_user.id)
 

@@ -69,3 +69,15 @@ def test_a_signup_sent_after_a_while_goes_through(monkeypatch):
 
 	assert r.status == 302
 	assert db.row("users", username=username)
+
+
+@pytest.mark.parametrize("now", ["soon", "²"])
+def test_a_form_time_that_is_not_a_number_is_refused(monkeypatch, now):
+	factories.user()
+	monkeypatch.setitem(main.app.config, "RATE_LIMITER_ENABLED", True)
+
+	with db_diff() as d:
+		r = _signup(anon(), now=now)
+
+	assert_redirect(r, "/signup", query_keys=("error",))
+	d.assert_exactly()

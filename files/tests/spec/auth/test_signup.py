@@ -272,3 +272,41 @@ def test_later_signups_are_not_admins():
 	_signup(anon(), usernametwo=username)
 
 	assert db.row("users", username=username)["admin_level"] == 0
+
+
+# Malformed posts
+
+def test_a_signup_without_an_email_field_has_no_email():
+	client = anon()
+	form = _form(client)
+	username = factories.unique("new")
+
+	r = client.post_raw("/signup", {"formkey": form.form_field("formkey"), "now": form.form_field("now"), "usernametwo": username, "password": factories.PASSWORD, "password_confirm": factories.PASSWORD})
+
+	assert_redirect(r, "")
+	assert db.row("users", username=username)["email"] is None
+
+
+def test_a_signup_without_passwords_is_refused():
+	client = anon()
+	form = _form(client)
+
+	with db_diff() as d:
+		r = client.post_raw("/signup", {"formkey": form.form_field("formkey"), "now": form.form_field("now"), "usernametwo": factories.unique("new"), "email": ""})
+
+	assert_redirect(r, "/signup", query_keys=("error",))
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("referred_by", ["", "someone", "unknown"])
+def test_a_referral_naming_no_account_is_refused(referred_by):
+	gone = factories.user()
+	db.delete("users", id=gone["id"])
+	client = anon()
+	form = _form(client)
+
+	with db_diff() as d:
+		r = _signup(client, form, referred_by=gone["id"] if referred_by == "unknown" else referred_by)
+
+	assert_status(r, 400)
+	d.assert_exactly()
