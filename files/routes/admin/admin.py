@@ -52,7 +52,11 @@ def _set_admin_level(v, username, level, kind):
 @limiter.exempt
 @admin_level_required(2)
 def delete_note(v,username,id):
-	g.db.query(UserNote).filter_by(id=id).delete()
+	user = get_user(username)
+	note_id = parse_id(id)
+	note = g.db.get(UserNote, note_id) if note_id else None
+	if not note or note.reference_user != user.id: abort(404)
+	g.db.delete(note)
 	g.db.commit()
 
 	return make_response(jsonify({
@@ -85,7 +89,7 @@ def create_note(v,username):
 		reference_post = get_post(data['post'], graceful=True)
 		if not reference_post: abort(400, "The note's post doesn't exist.")
 
-	user = g.db.query(User).filter_by(username=username).one_or_none()
+	user = get_user(username, graceful=True)
 	if not user:
 		return result('User not found',False,None)
 

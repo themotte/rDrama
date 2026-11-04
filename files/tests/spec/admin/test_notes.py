@@ -1,7 +1,9 @@
 '''
 Admin notes about users, kept by admins of level 2 and up:
 - POST /@<username>/create_note takes one form field, "data": a JSON object with "note" (the text), "tag" (a number, as a string or a number: 0 Quality, 1 Good, 2 Comment, 3 Warning, 4 Tempban, 5 Permban, 6 Spam, 7 Bot) and optionally "post" or "comment" (the id of the item the note is about; a comment wins over a post). It answers 200 with JSON {"success", "message", "note"}: on success "note" is the saved note, with "id", "author_name", "created" (unix seconds), "reference" (an absolute link to the item, or null), "note" and "tag" (the number); for an unknown user "success" is false and "note" null. Missing or malformed data, an unknown tag, a note over 10000 characters, or a post or comment that doesn't exist is refused with 400.
-- POST /@<username>/delete_note/<id> deletes a note, answering 200 with JSON whose "success" is true.
+- POST /@<username>/delete_note/<id> deletes a note about that user, answering 200 with JSON whose "success" is true; any other id is 404.
+
+The username is matched as profiles match it: case-insensitively, current or original name.
 
 Post pages and post listings carry every note about each author shown, for viewers of admin level 2 and up only.
 '''
@@ -87,6 +89,34 @@ def test_admin_deletes_a_note():
 	assert_status(r, 200)
 	d.assert_exactly(deleted={"usernotes": [note["id"]]})
 	assert r.json["success"] is True, r.json
+
+
+@pytest.mark.parametrize("name", ["upper case", "original"])
+def test_notes_find_the_user_as_profiles_do(name):
+	user = factories.user(username=factories.unique("now"), original_username=factories.unique("was"))
+	username = user["username"].upper() if name == "upper case" else user["original_username"]
+	text = factories.unique("note")
+	client = as_user(factories.admin(2))
+
+	with db_diff() as d:
+		r = _create(client, username, {"note": text, "tag": "2"})
+
+	assert_status(r, 200)
+	d.assert_exactly(inserted={"usernotes": [{"reference_user": user["id"], "note": text}]})
+
+
+@pytest.mark.parametrize("case", ["another user's", "unknown", "not an id"])
+def test_deleting_a_note_not_about_the_user_is_not_found(case):
+	admin, user, other = factories.admin(2), factories.user(), factories.user()
+	note = db.insert("usernotes", author_id=admin["id"], reference_user=other["id"], note=factories.unique("note"), tag="Warning")
+	note_id = {"another user's": note["id"], "unknown": note["id"] + 1000, "not an id": "first"}[case]
+	client = as_user(admin)
+
+	with db_diff() as d:
+		r = client.post(f"/@{user['username']}/delete_note/{note_id}", headers=XHR)
+
+	assert_status(r, 404)
+	d.assert_exactly()
 
 
 # Notes in pages
