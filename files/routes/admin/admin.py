@@ -1,5 +1,6 @@
 import json
 import re
+import sys
 import time
 from datetime import datetime, timedelta, timezone
 
@@ -308,9 +309,8 @@ def reported_comments(v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_home(v):
-	if CF_ZONE == 'blahblahblah': response = 'high'
-	else: response = requests.get(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, timeout=5).json()['result']['value']
-	under_attack = response == 'under_attack'
+	# Only level-3 admins get the under-attack switch.
+	under_attack = v.admin_level >= 3 and _cloudflare_security_level() == 'under_attack'
 
 	return render_template("admin/admin_home.html", v=v, under_attack=under_attack, site_settings=app.config['SETTINGS'])
 
@@ -371,46 +371,46 @@ def change_settings(v, setting):
 @admin_level_required(3)
 def purge_cache(v):
 	cache.clear()
-	response = str(requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data='{"purge_everything":true}', timeout=5))
+	if _cloudflare("POST", "purge_cache", {"purge_everything": True}) is None: abort(500, "Failed to purge cache.")
 
-	ma = ModAction(
-		kind="purge_cache",
-		user_id=v.id
-	)
-	g.db.add(ma)
-
-	if response == "<Response [200]>": return {"message": "Cache purged!"}
-	abort(500, "Failed to purge cache.")
+	g.db.add(ModAction(kind="purge_cache", user_id=v.id))
+	g.db.commit()
+	return {"message": "Cache purged!"}
 
 
 @app.post("/admin/under_attack")
 @limiter.exempt
 @admin_level_required(3)
 def under_attack(v):
-	response = requests.get(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, timeout=5).json()['result']['value']
+	current = _cloudflare_security_level()
+	if current is None: abort(500, "Couldn't read the under attack mode from Cloudflare.")
+	enable = current != 'under_attack'
 
-	if response == 'under_attack':
-		ma = ModAction(
-			kind="disable_under_attack",
-			user_id=v.id,
-		)
-		g.db.add(ma)
-		g.db.commit()
+	if _cloudflare("PATCH", "settings/security_level", {"value": "under_attack" if enable else "medium"}) is None:
+		abort(500, f"Failed to {'enable' if enable else 'disable'} under attack mode.")
 
-		response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data='{"value":"medium"}', timeout=5))
-		if response == "<Response [200]>": return {"message": "Under attack mode disabled!"}
-		abort(500, "Failed to disable under attack mode.")
-	else:
-		ma = ModAction(
-			kind="enable_under_attack",
-			user_id=v.id,
-		)
-		g.db.add(ma)
-		g.db.commit()
+	g.db.add(ModAction(kind="enabled_under_attack" if enable else "disabled_under_attack", user_id=v.id))
+	g.db.commit()
+	return {"message": f"Under attack mode {'enabled' if enable else 'disabled'}!"}
 
-		response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data='{"value":"under_attack"}', timeout=5))
-		if response == "<Response [200]>": return {"message": "Under attack mode enabled!"}
-		abort(500, "Failed to enable under attack mode.")
+
+def _cloudflare(method, path, payload=None):
+	'''Calls the zone's Cloudflare API; returns the reply's JSON, or None (logged) if Cloudflare couldn't be reached or refused.'''
+	try:
+		response = requests.request(method, f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/{path}', headers=CF_HEADERS, json=payload, timeout=5)
+		response.raise_for_status()
+		return response.json()
+	except (requests.RequestException, ValueError) as e:
+		print(f"[cloudflare] {method} {path} failed: {e!r}", file=sys.stderr, flush=True)
+		return None
+
+
+def _cloudflare_security_level():
+	reply = _cloudflare("GET", "settings/security_level")
+	try: return reply['result']['value'] if reply is not None else None
+	except (KeyError, TypeError):
+		print(f"[cloudflare] unexpected security_level reply: {reply!r}", file=sys.stderr, flush=True)
+		return None
 
 @app.get("/admin/users")
 @limiter.exempt
@@ -1099,12 +1099,8 @@ def admin_distinguish_comment(c_id, v):
 def admin_dump_cache(v):
 	cache.clear()
 
-	ma = ModAction(
-		kind="dump_cache",
-		user_id=v.id
-	)
-	g.db.add(ma)
-
+	g.db.add(ModAction(kind="dump_cache", user_id=v.id))
+	g.db.commit()
 	return {"message": "Internal cache cleared."}
 
 

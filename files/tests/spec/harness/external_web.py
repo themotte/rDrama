@@ -20,3 +20,8 @@ def unreachable(url: str, *, method: str = "GET"):
 def requests() -> list[tuple[str, str]]:
 	'''(method, full url) of every request the app made to a registered URL so far, oldest first.'''
 	return backend.external_requests()
+
+
+def request_details() -> list[dict]:
+	'''Like `requests()`, with each request's "method", "url", "headers" and "body" (bytes).'''
+	return backend.external_request_details()
