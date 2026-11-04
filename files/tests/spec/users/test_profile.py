@@ -1,5 +1,5 @@
 '''
-Profile pages: GET /@<username>/posts lists the user's posts, GET /@<username>/ their comments on posts (not their private messages, nor comments on drafts the viewer can't see: only a draft's author and admins of level 2 and up see it). Both find the user by their username or the username they signed up with, ignoring letter case; a name that isn't exactly the current username redirects (302) to the same page under it. An unknown name is 404.
+Profile pages: GET /@<username>/posts lists the user's posts, GET /@<username>/ their comments on posts (not their private messages, nor comments on drafts the viewer can't see: only a draft's author and admins of level 2 and up see it). Both find the user by their username or the username they signed up with, ignoring letter case; a name that isn't exactly the current username redirects (302) to the same page under it, with the same query. An unknown name is 404.
 
 Before listing anything:
 - A reserved name (an account held for someone) shows a page naming who it's reserved for; script (xhr) and API clients are refused with 403.
@@ -13,6 +13,7 @@ What's listed depends on the viewer. Everyone sees the user's visible posts and 
 API clients get the listing as JSON: an object whose "data" is the list of items.
 '''
 import time
+from urllib.parse import parse_qs, urlsplit
 
 import pytest
 
@@ -91,6 +92,17 @@ def test_profile_under_the_original_username_redirects_to_the_current_one(page):
 	r = anon().get(_path({"username": original}, page))
 
 	assert_redirect(r, _path(user, page))
+
+
+@pytest.mark.parametrize("page", PAGES)
+def test_profile_redirect_to_the_username_keeps_the_query(page):
+	user = factories.user(username=f"Mixed{factories.unique()}")
+	upper = user["username"].upper()
+
+	r = anon().get(_path({"username": upper}, page), params={"page": "2", "sort": "old", "t": upper})
+
+	assert_redirect(r, _path(user, page))
+	assert parse_qs(urlsplit(r.location).query) == {"page": ["2"], "sort": ["old"], "t": [upper]}
 
 
 # Reserved names

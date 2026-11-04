@@ -311,12 +311,18 @@ def following(v, username):
 	users = g.db.query(User).join(Follow, Follow.user_id == u.id).filter(Follow.target_id == User.id).order_by(Follow.created_datetimez).all()
 	return render_template("following.html", v=v, u=u, users=users)
 
+def _redirect_to_username(u:User, page:str):
+	'''The same profile page, and query, under the user's current username.'''
+	query = request.query_string.decode()
+	return redirect(f"/@{u.username}/{page}" + (f"?{query}" if query else ""))
+
+
 @app.get("/@<username>/posts")
 @auth_desired
 def u_username(username, v=None):
 	u = get_user(username, v=v, include_blocks=True)
 
-	if username != u.username: return redirect(f'/@{u.username}/posts')
+	if username != u.username: return _redirect_to_username(u, "posts")
 
 	if u.reserved:
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"That username is reserved for: {u.reserved}")
@@ -363,8 +369,7 @@ def u_username(username, v=None):
 def u_username_comments(username, v=None):
 	user = get_user(username, v=v, include_blocks=True)
 
-	if username != user.username:
-		return redirect(SITE_FULL + request.full_path.replace(username, user.username)[:-1])
+	if username != user.username: return _redirect_to_username(user, "")
 	u = user
 
 	if u.reserved:
