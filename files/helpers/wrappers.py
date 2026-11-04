@@ -48,11 +48,6 @@ def get_logged_in_user():
 			else:
 				session.pop("lo_user")
 
-	if request.method.lower() != "get" \
-			and app.config['SETTINGS']['Read-only mode'] \
-			and not (v and v.admin_level):
-		abort(403)
-
 	if request.content_length and request.content_length > 8 * 1024 * 1024:
 		abort(413)
 

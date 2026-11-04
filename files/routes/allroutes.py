@@ -20,6 +20,10 @@ def _logged_target() -> str:
 	return redact_request_target(request.path, request.query_string.decode("utf-8", errors="replace"))
 
 
+# Requests read-only mode lets through: logging in, so admins can get in to turn it off, and the two that only write the browser's own session.
+_READ_ONLY_OPEN = {"/login", "/allow_nsfw", "/dismiss_mobile_tip"}
+
+
 @app.before_request
 def before_request():
 	with open(SITE_SETTINGS_PATH, 'r') as f:
@@ -60,6 +64,13 @@ def before_request():
 	g.db = db_session.session_factory()
 	g.start_time = time.time()
 	active_requests[threading.get_ident()] = (request.method, _logged_target(), g.start_time)
+
+	# Read-only mode: only admins change anything.
+	if app.config['SETTINGS']['Read-only mode'] and request.method not in ("GET", "HEAD", "OPTIONS") and request.path not in _READ_ONLY_OPEN:
+		from files.helpers.wrappers import get_logged_in_user
+		v = get_logged_in_user()
+		if not (v and v.admin_level):
+			abort(403)
 
 
 @app.teardown_appcontext

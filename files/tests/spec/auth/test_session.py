@@ -278,6 +278,33 @@ def test_read_only_mode_lets_admins_change_things():
 	d.assert_exactly(updated={"users": {u["id"]: {"cardview": True}}})
 
 
+def test_read_only_mode_refuses_every_change_from_outside_too():
+	u = factories.user(email=f"{factories.unique()}@example.com")
+	site_settings_set("Read-only mode", True)
+
+	r = anon().post_raw("/forgot", {"username": u["username"], "email": u["email"]})
+
+	assert_status(r, 403)
+	assert sent_mail() == []
+
+
+@pytest.mark.parametrize("level", [0, 3], ids=["member", "admin"])
+def test_read_only_mode_lets_members_log_in(level):
+	'''Admins have to be able to log in to turn it off.'''
+	u = factories.user(admin_level=level)
+	client = anon()
+	site_settings_set("Read-only mode", True)
+
+	assert_redirect(client.post_raw("/login", {"username": u["username"], "password": factories.PASSWORD}), "/")
+	assert client.user_id == u["id"]
+
+
+def test_read_only_mode_still_lets_visitors_through_the_18_plus_notice():
+	site_settings_set("Read-only mode", True)
+
+	assert_redirect(anon().post_raw("/allow_nsfw", {"redir": "/settings"}), "/settings")
+
+
 # Ban evasion: an account created from a browser that held a banned account is shadowbanned on its first visit
 
 def test_a_ban_evading_account_is_shadowbanned_on_its_next_request():
