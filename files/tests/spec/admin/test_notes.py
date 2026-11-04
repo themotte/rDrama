@@ -1,6 +1,6 @@
 '''
 Admin notes about users, kept by admins of level 2 and up:
-- POST /@<username>/create_note takes one form field, "data": a JSON object with "note" (the text), "tag" (a number, as a string or a number: 0 Quality, 1 Good, 2 Comment, 3 Warning, 4 Tempban, 5 Permban, 6 Spam, 7 Bot) and optionally "post" or "comment" (the id of the item the note is about; a comment wins over a post). It answers 200 with JSON {"success", "message", "note"}: on success "note" is the saved note, with "id", "author_name", "created" (unix seconds), "reference" (an absolute link to the item, or null), "note" and "tag" (the number); for an unknown user "success" is false and "note" null.
+- POST /@<username>/create_note takes one form field, "data": a JSON object with "note" (the text), "tag" (a number, as a string or a number: 0 Quality, 1 Good, 2 Comment, 3 Warning, 4 Tempban, 5 Permban, 6 Spam, 7 Bot) and optionally "post" or "comment" (the id of the item the note is about; a comment wins over a post). It answers 200 with JSON {"success", "message", "note"}: on success "note" is the saved note, with "id", "author_name", "created" (unix seconds), "reference" (an absolute link to the item, or null), "note" and "tag" (the number); for an unknown user "success" is false and "note" null. Missing or malformed data, an unknown tag, a note over 10000 characters, or a post or comment that doesn't exist is refused with 400.
 - POST /@<username>/delete_note/<id> deletes a note, answering 200 with JSON whose "success" is true.
 
 Post pages and post listings carry every note about each author shown, for viewers of admin level 2 and up only.
@@ -135,3 +135,31 @@ def test_pages_carry_no_notes_below_admin_level_2(arrange, path, level):
 
 	assert_html(r, 200)
 	assert_not_in_payload(r, text)
+
+
+@pytest.mark.parametrize("data", [
+	pytest.param(None, id="no data"),
+	pytest.param("not json", id="not JSON"),
+	pytest.param(json.dumps(["a list"]), id="not an object"),
+	pytest.param(json.dumps({"tag": "1"}), id="no note"),
+	pytest.param(json.dumps({"note": "text"}), id="no tag"),
+	pytest.param(json.dumps({"note": "text", "tag": "8"}), id="unknown tag"),
+	pytest.param('{"note": "text", "tag": Infinity}', id="infinite tag"),
+	pytest.param(json.dumps({"note": "x" * 10001, "tag": "1"}), id="note over 10000 characters"),
+	pytest.param(json.dumps({"note": "text", "tag": "Good"}), id="tag by name"),
+	pytest.param(json.dumps({"note": 5, "tag": "1"}), id="note not text"),
+	pytest.param(json.dumps({"note": "text", "tag": "1", "post": "{unknown}"}), id="unknown post"),
+	pytest.param(json.dumps({"note": "text", "tag": "1", "comment": "{unknown}"}), id="unknown comment"),
+	pytest.param(json.dumps({"note": "text", "tag": "1", "post": "first"}), id="post not an id"),
+])
+def test_a_malformed_note_is_refused(data):
+	user = factories.user()
+	unknown = db.execute("SELECT nextval('submissions_id_seq')") + 1000
+	client = as_user(factories.admin(2))
+	form = {} if data is None else {"data": data.replace("{unknown}", str(unknown))}
+
+	with db_diff() as d:
+		r = client.post(f"/@{user['username']}/create_note", form, headers=XHR)
+
+	assert_status(r, 400)
+	d.assert_exactly()

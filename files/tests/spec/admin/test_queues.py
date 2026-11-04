@@ -5,7 +5,7 @@ The moderation queues, admin pages listing posts or comments 25 to a page, newes
 - GET /admin/removed/posts and /admin/removed/comments: items a moderator removed, and every item by a shadowbanned author.
 - GET /admin/image_posts: posts whose link is an image: the URL ends (case-insensitively) in .webp, .jpg, .jpeg, .png or .gif, or in "?maxwidth=9999" or "&fidelity=high", and points at the site itself (a path, or the site's own URL) or at an approved embedding host over https.
 
-POST /admin/update_filter_status settles one item from a queue. Its JSON body names the item ("post_id" or "comment_id") and a "new_status": "normal" makes it visible, "removed" removes it, both resolving its reports; "ignored" only marks its reports ignored. Changing whether others can see the item is logged in the mod log and has the item's usual effects (approving a held post notifies the users it mentions and the author's followers). The reply is JSON whose "result" the page script compares against "Update successful".
+POST /admin/update_filter_status settles one item from a queue. Its JSON body names the item ("post_id" or "comment_id") and a "new_status": "normal" makes it visible, "removed" removes it, both resolving its reports; "ignored" only marks its reports ignored. Changing whether others can see the item is logged in the mod log and has the item's usual effects (approving a held post notifies the users it mentions and the author's followers). The reply is JSON whose "result" the page script compares against "Update successful". A body that isn't a JSON object, an unknown "new_status" or an item id that isn't a whole number (a JSON integer or a string of digits) is refused with 400; a missing or unknown item is 404. An invalid "page" (not a number, or below 1) shows the first page.
 '''
 import pytest
 
@@ -405,3 +405,52 @@ def test_settling_an_unknown_comment_is_not_found():
 
 	_assert_not_found(r)
 	d.assert_exactly()
+
+
+@pytest.mark.parametrize("body", [
+	pytest.param({"new_status": "approved", "post_id": "{post}"}, id="unknown status"),
+	pytest.param({"new_status": "normal", "post_id": "first"}, id="post id not a number"),
+	pytest.param({"new_status": "normal", "comment_id": [1]}, id="comment id not a number"),
+	pytest.param({"new_status": "normal", "post_id": "{post}.9"}, id="post id with a fraction"),
+	pytest.param({"new_status": "normal", "post_id": 0.5}, id="post id a JSON fraction"),
+	pytest.param({"new_status": "normal", "post_id": True}, id="post id a boolean"),
+	pytest.param({"new_status": "normal", "post_id": " {post}"}, id="post id with a space"),
+])
+def test_a_malformed_settlement_is_refused(body):
+	post = factories.post(factories.user(), state_mod="FILTERED")
+	client = as_user(factories.admin(2))
+	body = {k: (v.replace("{post}", str(post["id"])) if isinstance(v, str) else post["id"] + v if isinstance(v, float) else v) for k, v in body.items()}
+
+	with db_diff() as d:
+		r = client.post_json("/admin/update_filter_status", body, headers=XHR)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
+def test_a_settlement_that_is_not_json_is_refused():
+	post = factories.post(factories.user(), state_mod="FILTERED")
+	client = as_user(factories.admin(2))
+
+	with db_diff() as d:
+		r = client.post("/admin/update_filter_status", {"new_status": "normal", "post_id": post["id"]}, headers=XHR)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
+LISTINGS = [*QUEUES, "/admin/image_posts", "/admin/users"]
+
+
+@pytest.mark.parametrize("path", LISTINGS)
+@pytest.mark.parametrize("page", ["0", "-1", "first"])
+def test_an_invalid_page_shows_the_first(path, page):
+	if path in QUEUES: token = _item(path, QUEUES[path][0][0])
+	elif path == "/admin/image_posts": token = _image_post("/images/first.png")
+	else: token = factories.user()["username"]
+	client = as_user(factories.admin(2))
+
+	r = client.get(path, params={"page": page})
+
+	assert_html(r, 200)
+	assert_in_payload(r, token)

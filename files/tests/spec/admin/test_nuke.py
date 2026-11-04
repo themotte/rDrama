@@ -81,6 +81,17 @@ def test_system_accounts_cannot_be_nuked(action):
 
 
 @pytest.mark.parametrize("action", ["nuke_user", "unnuke_user"])
+def test_nuking_without_naming_a_user_is_refused(action):
+	client = as_user(factories.admin(3))
+
+	with db_diff() as d:
+		r = client.post(f"/admin/{action}", headers=XHR)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("action", ["nuke_user", "unnuke_user"])
 def test_nuking_an_unknown_user_is_not_found(action):
 	admin = factories.admin(3)
 

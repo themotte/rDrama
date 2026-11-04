@@ -69,30 +69,32 @@ def create_note(v,username):
 			'success':succ, 'message': msg, 'note': note
 		}), 200)
 
-	data = json.loads(request.values.get('data'))
-	user = g.db.query(User).filter_by(username=username).one_or_none()
+	try: data = json.loads(request.values.get('data') or '')
+	except ValueError: abort(400, "The note isn't JSON.")
+	if not isinstance(data, dict) or not isinstance(data.get('note'), str): abort(400, "A note needs its text.")
+	if len(data['note']) > 10000: abort(400, "A note holds at most 10000 characters.")
+	try: tag = UserTag(int(data.get('tag')))
+	except (TypeError, ValueError, OverflowError): abort(400, "Unknown note tag.")
 
+	# A note is about one item at most: a comment if given, else a post.
+	reference_comment = reference_post = None
+	if data.get('comment'):
+		reference_comment = get_comment(data['comment'], graceful=True)
+		if not reference_comment: abort(400, "The note's comment doesn't exist.")
+	elif data.get('post'):
+		reference_post = get_post(data['post'], graceful=True)
+		if not reference_post: abort(400, "The note's post doesn't exist.")
+
+	user = g.db.query(User).filter_by(username=username).one_or_none()
 	if not user:
 		return result('User not found',False,None)
 
-	author_id = v.id
-	reference_user = user.id
-	reference_comment = data.get('comment',None)
-	reference_post = data.get('post',None)
-	note = data['note']
-	tag = UserTag(int(data['tag']))
-
-	if reference_comment:
-		reference_post = None
-	elif reference_post:
-		reference_comment = None
-
 	note = UserNote(
-		author_id=author_id,
-		reference_user=reference_user,
-		reference_comment=reference_comment,
-		reference_post=reference_post,
-		note=note,
+		author_id=v.id,
+		reference_user=user.id,
+		reference_comment=reference_comment.id if reference_comment else None,
+		reference_post=reference_post.id if reference_post else None,
+		note=data['note'],
 		tag=tag)
 
 	g.db.add(note)
@@ -144,6 +146,12 @@ def revert_actions(v, username):
 	return {"message": "Admin actions reverted!"}
 
 
+def _page():
+	'''The listing page asked for; anything but a whole number from 1 means the first.'''
+	try: return max(1, int(request.values.get("page", 1)))
+	except ValueError: return 1
+
+
 @app.get("/admin/shadowbanned")
 @limiter.exempt
 @auth_required
@@ -156,8 +164,7 @@ def shadowbanned(v):
 @limiter.exempt
 @admin_level_required(2)
 def filtered_submissions(v):
-	try: page = int(request.values.get('page', 1))
-	except: page = 1
+	page = _page()
 
 	posts_just_ids = g.db.query(Submission) \
 		.order_by(Submission.id.desc()) \
@@ -176,8 +183,7 @@ def filtered_submissions(v):
 @limiter.exempt
 @admin_level_required(2)
 def filtered_comments(v):
-	try: page = int(request.values.get('page', 1))
-	except: page = 1
+	page = _page()
 
 	comments_just_ids = g.db.query(Comment) \
 		.order_by(Comment.id.desc()) \
@@ -199,12 +205,16 @@ def filtered_comments(v):
 @limiter.exempt
 @admin_level_required(PERMS['POST_COMMENT_MODERATION'])
 def update_filter_status(v):
-	update_body = request.get_json()
+	update_body = request.get_json(silent=True)
+	if not isinstance(update_body, dict): abort(400, "The update must be a JSON object.")
 	new_status = update_body.get('new_status')
 	post_id = update_body.get('post_id')
 	comment_id = update_body.get('comment_id')
 	if new_status not in ['normal', 'removed', 'ignored']:
-		return {'result': f'Status of {new_status} is not permitted'}, 403
+		return {'result': f'Status of {new_status} is not permitted'}, 400
+	for item_id in (post_id, comment_id):
+		if item_id is not None and parse_id(item_id) is None:
+			return {'result': "Item IDs are numbers"}, 400
 
 	if new_status == 'normal':
 		state_mod_new = StateMod.VISIBLE
@@ -247,8 +257,7 @@ def update_filter_status(v):
 @limiter.exempt
 @admin_level_required(2)
 def image_posts_listing(v):
-	try: page = int(request.values.get('page', 1))
-	except: page = 1
+	page = _page()
 
 	posts = g.db.query(Submission).order_by(Submission.id.desc())
 
@@ -265,7 +274,7 @@ def image_posts_listing(v):
 @limiter.exempt
 @admin_level_required(2)
 def reported_posts(v):
-	page = max(1, int(request.values.get("page", 1)))
+	page = _page()
 
 	subs_just_ids = g.db.query(Submission) \
 		.filter(Submission.state_report == StateReport.REPORTED) \
@@ -285,7 +294,7 @@ def reported_posts(v):
 @limiter.exempt
 @admin_level_required(2)
 def reported_comments(v):
-	page = max(1, int(request.values.get("page", 1)))
+	page = _page()
 
 	comments_just_ids = g.db.query(Comment) \
 			.filter(Comment.state_report == StateReport.REPORTED) \
@@ -416,8 +425,7 @@ def _cloudflare_security_level():
 @limiter.exempt
 @admin_level_required(2)
 def users_list(v):
-	try: page = int(request.values.get("page", 1))
-	except: page = 1
+	page = _page()
 
 	users = g.db.query(User).filter_by(is_banned=0
 									   ).order_by(User.created_utc.desc()
@@ -573,10 +581,7 @@ def admin_link_accounts(v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_removed(v):
-	try: page = int(request.values.get("page", 1))
-	except: page = 1
-
-	if page < 1: abort(400)
+	page = _page()
 	
 	ids = g.db.query(Submission.id).join(User, User.id == Submission.author_id).filter(or_(Submission.state_mod == StateMod.REMOVED, User.shadowbanned != None)).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
@@ -600,8 +605,7 @@ def admin_removed(v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_removed_comments(v):
-	try: page = int(request.values.get("page", 1))
-	except: page = 1
+	page = _page()
 	
 	ids = g.db.query(Comment.id).join(User, User.id == Comment.author_id).filter(or_(Comment.state_mod == StateMod.REMOVED, User.shadowbanned != None)).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
@@ -625,8 +629,7 @@ def admin_removed_comments(v):
 @limiter.exempt
 @admin_level_required(2)
 def shadowban(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).one_or_none()
-	if not user: abort(404)
+	user = get_account(user_id)
 	if user.id in SYSTEM_ACCOUNT_IDS: abort(403)
 	if user.admin_level != 0: abort(403)
 	user.shadowbanned = v.username
@@ -672,7 +675,7 @@ def shadowban(user_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def unshadowban(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).one_or_none()
+	user = get_account(user_id)
 	user.shadowbanned = None
 	user.ban_evade = 0
 	g.db.add(user)
@@ -693,7 +696,7 @@ def unshadowban(user_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def filter_automatic(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).one_or_none()
+	user = get_account(user_id)
 	user.filter_behavior = FilterBehavior.AUTOMATIC
 	g.db.add(user)
 
@@ -713,7 +716,7 @@ def filter_automatic(user_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def filter_unfiltered(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).one_or_none()
+	user = get_account(user_id)
 	user.filter_behavior = FilterBehavior.UNFILTERED
 	g.db.add(user)
 
@@ -733,7 +736,7 @@ def filter_unfiltered(user_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def filter_filtered(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).one_or_none()
+	user = get_account(user_id)
 	user.filter_behavior = FilterBehavior.FILTERED
 	g.db.add(user)
 
@@ -753,7 +756,7 @@ def filter_filtered(user_id, v):
 @limiter.exempt
 @admin_level_required(3)
 def verify(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).one_or_none()
+	user = get_account(user_id)
 	user.verified = "Verified"
 	g.db.add(user)
 
@@ -771,7 +774,7 @@ def verify(user_id, v):
 @limiter.exempt
 @admin_level_required(3)
 def unverify(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).one_or_none()
+	user = get_account(user_id)
 	user.verified = None
 	g.db.add(user)
 
@@ -790,9 +793,11 @@ def unverify(user_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_title_change(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).one_or_none()
+	user = get_account(user_id)
 
-	new_name=request.values.get("title").strip()[:256]
+	new_name = request.values.get("title")
+	if new_name is None: abort(400, "A flair change needs a title.")
+	new_name = new_name.strip()[:256]
 
 	user.customtitleplain=new_name
 	new_name = filter_emojis_only(new_name)
@@ -823,9 +828,7 @@ def admin_title_change(user_id, v):
 @admin_level_required(2)
 def ban_user(user_id, v):
 	
-	user = g.db.query(User).filter_by(id=user_id).one_or_none()
-
-	if not user: abort(404)
+	user = get_account(user_id)
 
 	if user.id in SYSTEM_ACCOUNT_IDS: abort(403)
 
@@ -909,9 +912,9 @@ def ban_user(user_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def unban_user(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).one_or_none()
+	user = get_account(user_id)
 
-	if not user or not user.is_banned: abort(400)
+	if not user.is_banned: abort(400)
 
 	user.is_banned = 0
 	user.unban_utc = 0
@@ -1149,6 +1152,7 @@ def admin_toggle_ban_domain(v):
 @limiter.exempt
 @admin_level_required(3)
 def admin_nuke_user(v):
+	if not request.values.get("user"): abort(400, "Name the user.")
 	user=get_user(request.values.get("user"))
 	if user.id in SYSTEM_ACCOUNT_IDS: abort(403)
 
@@ -1171,6 +1175,7 @@ def admin_nuke_user(v):
 @limiter.exempt
 @admin_level_required(3)
 def admin_unnuke_user(v):
+	if not request.values.get("user"): abort(400, "Name the user.")
 	user=get_user(request.values.get("user"))
 	if user.id in SYSTEM_ACCOUNT_IDS: abort(403)
 

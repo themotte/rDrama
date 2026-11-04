@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from collections import defaultdict
 from typing import Callable, Iterable, List, Optional, Type, Union
 
@@ -34,6 +35,13 @@ def author_load_options(v: Optional[User]=None) -> list:
 			)
 		)
 	return opts
+
+
+def parse_id(value) -> Optional[int]:
+	'''A row id from a request (an integer, or a string of ASCII digits): a positive whole number small enough for the id columns, else None.'''
+	if isinstance(value, str) and re.fullmatch(r"[0-9]+", value): value = int(value)
+	if not isinstance(value, int) or isinstance(value, bool): return None
+	return value if 0 < value < 2**31 else None
 
 
 def get_id(
@@ -106,9 +114,8 @@ def get_account(
 		graceful:bool=False,
 		include_blocks:bool=False,
 		db:Optional[scoped_session]=None) -> Optional[User]:
-	try:
-		id = int(id)
-	except:
+	id = parse_id(id)
+	if id is None:
 		if graceful: return None
 		abort(404)
 
@@ -146,8 +153,8 @@ def get_post(
 		i:Union[str,int],
 		v:Optional[User]=None,
 		graceful:bool=False) -> Optional[Submission]:
-	try: i = int(i)
-	except:
+	i = parse_id(i)
+	if i is None:
 		if graceful: return None
 		abort(404)
 
@@ -250,13 +257,10 @@ def get_comment(
 		i:Union[str,int],
 		v:Optional[User]=None,
 		graceful:bool=False) -> Optional[Comment]:
-	try: i = int(i)
-	except:
+	i = parse_id(i)
+	if i is None:
 		if graceful: return None
 		abort(404)
-	if not i:
-		if graceful: return None
-		else: abort(404)
 
 	comment = g.db.query(Comment).filter_by(id=i).options(
 		selectinload(Comment.author).options(*author_load_options(v)),

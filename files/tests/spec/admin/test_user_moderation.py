@@ -8,7 +8,7 @@ Admin actions on a user account, all POSTs taking the user's id in the path, plu
 - /unban_user/<id> lifts a ban and notifies the user; from the user's profile page (by Referer) it redirects back there, else answers JSON.
 - GET /admin/users lists non-banned accounts, newest first, 25 to a page ("page"); GET /admin/shadowbanned lists shadowbanned accounts, and doesn't exist for non-admins.
 
-Every action is logged in the mod log as a `modactions` row of the listed kind naming the actor and the target user.
+Every action is logged in the mod log as a `modactions` row of the listed kind naming the actor and the target user. An id that isn't an existing account's is 404; a missing required field is 400.
 '''
 import time
 
@@ -40,6 +40,33 @@ def _notice(d, user):
 
 
 SYSTEM_MESSAGE = {"author_id": seed.SYSTEM_ID, "parent_submission": None, "state_mod": "VISIBLE"}
+
+
+USER_ACTIONS = ["/shadowban", "/unshadowban", "/filter_automatic", "/filter_unfiltered", "/filter_filtered", "/admin/verify", "/admin/unverify", "/admin/title_change", "/ban_user", "/unban_user"]
+
+
+@pytest.mark.parametrize("action", USER_ACTIONS)
+@pytest.mark.parametrize("user_id", ["unknown", "someone", "99999999999", "0"])
+def test_an_action_on_no_existing_account_is_not_found(action, user_id):
+	client = as_user(factories.admin(3))
+	if user_id == "unknown": user_id = _unknown_user_id()
+
+	with db_diff() as d:
+		r = client.post(f"{action}/{user_id}", {"title": factories.unique(), "reason": factories.unique()}, headers=XHR)
+
+	assert_status(r, 404)
+	d.assert_exactly()
+
+
+def test_a_flair_change_without_a_title_is_refused():
+	user = factories.user()
+	client = as_user(factories.admin(2))
+
+	with db_diff() as d:
+		r = client.post(f"/admin/title_change/{user['id']}", headers=XHR)
+
+	assert_status(r, 400)
+	d.assert_exactly()
 
 
 # Shadowbans
