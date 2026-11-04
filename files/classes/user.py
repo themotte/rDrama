@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Union
 
 import pyotp
 from flask import g, session
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import aliased, declared_attr, deferred, relationship
 
 from files.classes.alts import Alt
@@ -65,7 +66,7 @@ class User(CreatedBase):
 	passhash = deferred(Column(String, nullable=False))
 	post_count = Column(Integer, default=0, nullable=False)
 	comment_count = Column(Integer, default=0, nullable=False)
-	admin_level = Column(Integer, default=0, nullable=False)
+	account_admin_level = Column('admin_level', Integer, default=0, nullable=False)
 	changelogsub = Column(Boolean, default=False, nullable=False)
 	is_activated = Column(Boolean, default=False, nullable=False)
 	shadowbanned = Column(String)
@@ -140,6 +141,20 @@ class User(CreatedBase):
 	authorizations = relationship("ClientAuth", viewonly=True)
 	referrals = relationship("User", viewonly=True)
 	notes = relationship("UserNote", foreign_keys='UserNote.reference_user', back_populates="user")
+
+	@hybrid_property
+	def admin_level(self) -> int:
+		'''The admin level to act with: the account's own (account_admin_level), except 0 for the user an API token authenticated, since such requests act with no admin powers. The session holds one object per row, so that user reads 0 wherever the request loads them, as well as the viewer.'''
+		return 0 if self.__dict__.get("client") else self.account_admin_level
+
+	@admin_level.inplace.setter
+	def _admin_level_setter(self, value:int) -> None:
+		self.account_admin_level = value
+
+	@admin_level.inplace.expression
+	@classmethod
+	def _admin_level_expression(cls):
+		return cls.account_admin_level
 
 	def __init__(self, **kwargs):
 		if "password" in kwargs:
@@ -315,7 +330,9 @@ class User(CreatedBase):
 		return f"/@{self.username}"
 
 	def __repr__(self):
-		return f"<{self.__class__.__name__}(id={self.id})>"
+		# Memoized listings key on repr(v), and an API client sees less than the same user in the browser
+		client = ", api" if self.__dict__.get("client") else ""
+		return f"<{self.__class__.__name__}(id={self.id}{client})>"
 
 	@property
 	@lazy

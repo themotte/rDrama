@@ -60,7 +60,7 @@ def get_logged_in_user():
 
 
 def check_ban_evade(v):
-	if v and v.admin_level < 2 and v.ban_evade and not v.unban_utc:
+	if v and v.account_admin_level < 2 and v.ban_evade and not v.unban_utc:
 		v.shadowbanned = "AutoJanny"
 		g.db.add(v)
 		g.db.commit()
@@ -103,8 +103,8 @@ def admin_level_required(x):
 		def wrapper(*args, **kwargs):
 			v = get_logged_in_user()
 			if not v: abort(401)
-			if v.admin_level < x: abort(403)
 			if v.client: abort(403, "Admin actions aren't available to API clients")
+			if v.admin_level < x: abort(403)
 			return make_response(f(*args, v=v, **kwargs))
 		return wrapper
 	return wrapper_maker

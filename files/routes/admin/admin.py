@@ -161,7 +161,7 @@ def _page():
 @limiter.exempt
 @auth_required
 def shadowbanned(v):
-	if v.admin_level < 2 or v.client: abort(404)
+	if v.admin_level < 2: abort(404)
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).order_by(User.shadowbanned).all()]
 	return render_template("shadowbanned.html", v=v, users=users)
 
