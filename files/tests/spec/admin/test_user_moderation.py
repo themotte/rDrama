@@ -3,7 +3,7 @@ Admin actions on a user account, all POSTs taking the user's id in the path, plu
 - /shadowban/<id> hides the user's content from everyone but them and moderators; /unshadowban/<id> lifts that (and the ban-evasion mark). System accounts and admins can't be shadowbanned. Level-3 admins other than the actor are told of each shadowban.
 - /filter_automatic/<id>, /filter_unfiltered/<id>, /filter_filtered/<id> set whether the user's new content waits in the filter queue: decided per item, never, or always.
 - /admin/verify/<id> and /admin/unverify/<id> (level 3) set or clear the account's verified mark.
-- /admin/title_change/<id> sets the user's flair from "title" (surrounding whitespace dropped); a non-empty "locked" stops the user changing it. Redirects to the profile.
+- /admin/title_change/<id> sets the user's flair from "title" (surrounding whitespace dropped, cut to 100 characters as users' own flair is); a non-empty "locked" stops the user changing it. Redirects to the profile.
 - /ban_user/<id> bans for "days" (temporary; absent, empty or 0 means permanent; at most 3650 and ending before 2038, when the stored end time runs out, else 400) with an optional "reason". A reason beginning "/post/<id>" or "/comment/<id>" marks that post or comment as the one the user was banned for. A non-empty "alts" bans the user's linked accounts too. The user is notified, and so are level-3 admins other than the actor. With "redir" present it redirects to the profile, else answers JSON. System accounts and users at or above the actor's level can't be banned.
 - /unban_user/<id> lifts a ban and notifies the user; from the user's profile page (by Referer) it redirects back there, else answers JSON.
 - GET /admin/users lists non-banned accounts, newest first, 25 to a page ("page"); GET /admin/shadowbanned lists shadowbanned accounts, and doesn't exist for non-admins.
@@ -200,6 +200,21 @@ def test_admin_sets_a_locked_flair():
 	)
 	assert db.row("users", id=user["id"])["flairchanged"] > time.time() + FLAIR_LOCK_HORIZON
 	assert title in d.inserted["modactions"][0]["_note"]
+
+
+def test_a_long_flair_is_cut_to_100_characters():
+	actor = factories.admin(2)
+	user = factories.user()
+	title = factories.unique("flair").ljust(150, "x")
+
+	with db_diff() as d:
+		r = as_user(actor).post(f"/admin/title_change/{user['id']}", {"title": title})
+
+	assert_redirect(r, _profile(user))
+	d.assert_exactly(
+		updated={"users": {user["id"]: {"customtitleplain": title[:100], "customtitle": title[:100]}}},
+		inserted={"modactions": [_mod_action("set_flair_notlocked", actor, user, _note=ANY)]},
+	)
 
 
 def test_admin_sets_an_unlocked_flair_lifting_a_lock():

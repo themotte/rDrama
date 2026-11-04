@@ -805,7 +805,7 @@ def admin_title_change(user_id, v):
 
 	new_name = request.values.get("title")
 	if new_name is None: abort(400, "A flair change needs a title.")
-	new_name = new_name.strip()[:256]
+	new_name = new_name.strip()[:100]
 
 	user.customtitleplain=new_name
 	new_name = filter_emojis_only(new_name)
