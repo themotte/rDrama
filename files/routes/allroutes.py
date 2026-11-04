@@ -26,6 +26,10 @@ _READ_ONLY_OPEN = {"/login", "/allow_nsfw", "/dismiss_mobile_tip"}
 
 @app.before_request
 def before_request():
+	# Answered plainly: the error page itself reads the query, which can't be decoded.
+	try: request.query_string.decode()
+	except UnicodeDecodeError: return "The address isn't valid UTF-8.", 400
+
 	with open(SITE_SETTINGS_PATH, 'r') as f:
 		app.config['SETTINGS'] = json.load(f)
 
