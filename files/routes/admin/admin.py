@@ -15,6 +15,7 @@ from files.helpers.caching import invalidate_cache
 from files.helpers.config.const import *
 from files.helpers.config.environment import CF_HEADERS, CF_ZONE, SITE_SETTINGS_PATH
 from files.helpers.get import *
+from files.helpers.listing import request_page
 from files.helpers.media import *
 from files.helpers.moderation import moderate
 from files.helpers.sanitize import *
@@ -151,12 +152,6 @@ def revert_actions(v, username):
 	return {"message": "Admin actions reverted!"}
 
 
-def _page():
-	'''The listing page asked for; anything but a whole number from 1 means the first.'''
-	try: return max(1, int(request.values.get("page", 1)))
-	except ValueError: return 1
-
-
 @app.get("/admin/shadowbanned")
 @limiter.exempt
 @auth_required
@@ -169,7 +164,7 @@ def shadowbanned(v):
 @limiter.exempt
 @admin_level_required(2)
 def filtered_submissions(v):
-	page = _page()
+	page = request_page()
 
 	posts_just_ids = g.db.query(Submission) \
 		.order_by(Submission.id.desc()) \
@@ -188,7 +183,7 @@ def filtered_submissions(v):
 @limiter.exempt
 @admin_level_required(2)
 def filtered_comments(v):
-	page = _page()
+	page = request_page()
 
 	comments_just_ids = g.db.query(Comment) \
 		.order_by(Comment.id.desc()) \
@@ -262,7 +257,7 @@ def update_filter_status(v):
 @limiter.exempt
 @admin_level_required(2)
 def image_posts_listing(v):
-	page = _page()
+	page = request_page()
 
 	posts = g.db.query(Submission).filter(or_(*(func.lower(Submission.url).endswith(suffix, autoescape=True) for suffix in IMAGE_URL_SUFFIXES))).order_by(Submission.id.desc())
 
@@ -279,7 +274,7 @@ def image_posts_listing(v):
 @limiter.exempt
 @admin_level_required(2)
 def reported_posts(v):
-	page = _page()
+	page = request_page()
 
 	subs_just_ids = g.db.query(Submission) \
 		.filter(Submission.state_report == StateReport.REPORTED) \
@@ -299,7 +294,7 @@ def reported_posts(v):
 @limiter.exempt
 @admin_level_required(2)
 def reported_comments(v):
-	page = _page()
+	page = request_page()
 
 	comments_just_ids = g.db.query(Comment) \
 			.filter(Comment.state_report == StateReport.REPORTED) \
@@ -430,7 +425,7 @@ def _cloudflare_security_level():
 @limiter.exempt
 @admin_level_required(2)
 def users_list(v):
-	page = _page()
+	page = request_page()
 
 	users = g.db.query(User).filter_by(is_banned=0
 									   ).order_by(User.created_utc.desc()
@@ -590,7 +585,7 @@ def admin_link_accounts(v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_removed(v):
-	page = _page()
+	page = request_page()
 	
 	ids = g.db.query(Submission.id).join(User, User.id == Submission.author_id).filter(or_(Submission.state_mod == StateMod.REMOVED, User.shadowbanned != None)).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
@@ -614,7 +609,7 @@ def admin_removed(v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_removed_comments(v):
-	page = _page()
+	page = request_page()
 	
 	ids = g.db.query(Comment.id).join(User, User.id == Comment.author_id).filter(or_(Comment.state_mod == StateMod.REMOVED, User.shadowbanned != None)).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 

@@ -339,8 +339,7 @@ def u_username(username, v=None):
 
 	sort = request.values.get("sort", "new")
 	t = request.values.get("t", "all")
-	try: page = max(int(request.values.get("page", 1)), 1)
-	except: page = 1
+	page = listings.request_page()
 
 	ids = listings.userpagelisting(u, v=v, page=page, sort=sort, t=t)
 
@@ -387,8 +386,7 @@ def u_username_comments(username, v=None):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"You are blocking @{u.username}.")
 		return render_template("userpage_blocking.html", u=u, v=v)
 
-	try: page = max(int(request.values.get("page", "1")), 1)
-	except: page = 1
+	page = listings.request_page()
 	
 	sort=request.values.get("sort","new")
 	t=request.values.get("t","all")

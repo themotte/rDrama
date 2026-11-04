@@ -5,7 +5,7 @@ Module for listings.
 import time
 from typing import Final, Optional
 
-from flask import g
+from flask import g, request
 from sqlalchemy.sql.expression import not_
 from sqlalchemy import func
 
@@ -93,6 +93,12 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, filter_words='
 	g.db.commit()
 
 	return posts, next_exists
+
+
+def request_page() -> int:
+	'''The listing page the request asks for ("page"); anything but a whole number from 1 means the first.'''
+	try: return max(1, int(request.values.get("page", 1)))
+	except ValueError: return 1
 
 
 def _userpage_posts(u:User, v:Optional[User]):
