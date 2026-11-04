@@ -194,6 +194,10 @@ def comment_on_unpublish(comment:Comment):
 	Should be used to update stateful counters, notifications, etc. that
 	reflect the comments users will actually see.
 	"""
+	# Messages and notifications were never counted (see comment_on_publish).
+	if not comment.parent_submission:
+		return
+
 	update_stateful_counters(comment, -1)
 
 

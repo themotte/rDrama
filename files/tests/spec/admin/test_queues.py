@@ -349,6 +349,26 @@ def test_ignoring_a_comment_only_marks_its_reports_ignored(state):
 	d.assert_exactly(updated={"comments": {comment["id"]: {"state_report": "IGNORED"}}})
 
 
+def _message(author, recipient):
+	message_id = db.execute("SELECT nextval('comments_id_seq')")
+	body = factories.unique()
+	return db.insert("comments", id=message_id, author_id=author["id"], sentto=recipient["id"], created_utc=1000, parent_submission=None, level=1, top_comment_id=message_id, body=body, body_html=f"<p>{body}</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="REPORTED")
+
+
+def test_removing_a_private_message_hides_it_without_touching_counts():
+	message = _message(factories.user(), factories.user())
+	admin = factories.admin(2)
+
+	with db_diff() as d:
+		r = _settle(admin, "removed", comment_id=message["id"])
+
+	_assert_settled(r)
+	d.assert_exactly(
+		updated={"comments": {message["id"]: {"state_mod": "REMOVED", "state_mod_set_by": admin["username"], "state_report": "RESOLVED"}}},
+		inserted={"modactions": [{"kind": "remove_comment", "user_id": admin["id"], "target_comment_id": message["id"]}]},
+	)
+
+
 # Settling nothing
 
 def test_settling_without_an_item_is_not_found():
