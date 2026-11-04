@@ -66,6 +66,8 @@ omit = [
     # Not loaded in the tested configuration (THEMOTTE service, non-debug); deliberately outside the spec
     "files/routes/chat.py",
     "files/routes/dev.py",
+    # Signals the gunicorn processes of the serving pod; deployment-specific process control, deliberately outside the spec
+    "files/routes/admin/performance.py",
     "*/tests/*",
     "*/test_*.py",
     "*/__pycache__/*",
