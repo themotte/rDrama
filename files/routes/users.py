@@ -346,21 +346,6 @@ def u_username(username, v=None):
 
 	listing = get_posts(ids, v=v)
 
-	if u.unban_utc:
-		if request.headers.get("Authorization"): {"data": [x.json for x in listing]}
-		return render_template("userpage_submissions.html",
-												unban=u.unban_string,
-												u=u,
-												v=v,
-												listing=listing,
-												page=page,
-												sort=sort,
-												t=t,
-												next_exists=next_exists,
-												is_following=(v and u.has_follower(v)))
-
-
-
 	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
 	return render_template("userpage_submissions.html",
 									u=u,

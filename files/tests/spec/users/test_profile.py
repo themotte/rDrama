@@ -554,6 +554,16 @@ def test_pinned_posts_of_a_shadowbanned_user_stay_hidden(viewer):
 
 # API clients
 
+def test_profile_answers_api_clients_with_json_for_a_temporarily_banned_user():
+	user = factories.user(is_banned=factories.admin(2)["id"], unban_utc=int(time.time()) + 86400)
+	post = factories.post(user)
+
+	r = as_api(factories.api_token(factories.user())).get(_path(user, "posts"))
+
+	assert_status(r, 200)
+	assert [p["id"] for p in r.json["data"]] == [post["id"]]
+
+
 @pytest.mark.parametrize("page", PAGES)
 def test_profile_answers_api_clients_with_json(page):
 	user = factories.user()
