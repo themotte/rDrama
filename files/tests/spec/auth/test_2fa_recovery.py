@@ -192,3 +192,11 @@ def test_changing_the_password_cancels_the_link():
 
 	assert_status(r, 403)
 	d.assert_exactly()
+
+
+def test_the_mail_links_to_the_security_settings_in_full():
+	u = _member()
+
+	_request(u)
+
+	assert f"{config.site_url()}/settings/security" in urls_in(sent_mail()[0]["body"])
