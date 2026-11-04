@@ -5,6 +5,7 @@ import time
 from urllib.parse import parse_qs, urlsplit
 
 import pyotp
+import pytest
 
 from files.tests.spec.harness import *
 
@@ -198,3 +199,95 @@ def test_a_form_key_that_is_not_a_string_counts_as_no_form_key():
 
 	assert_api_unauthorized(r)
 	d.assert_exactly()
+
+
+# Each token passes only for its own purpose: a signature over the same fields for any other purpose, or in the untagged formats the site once used, is refused
+
+PURPOSES = ["forgot", "reset", "2fa-challenge", "2fa-remove", "activate", "signup"]
+
+
+def _others(own):
+	return [p for p in PURPOSES if p != own]
+
+
+@pytest.mark.parametrize("purpose", _others("forgot"))
+def test_a_reset_link_signed_for_another_purpose_is_refused(purpose):
+	u = factories.user()
+	issued = int(time.time())
+
+	r = anon().get("/reset", params={"id": u["id"], "time": issued, "token": session.sign(f"{purpose}+{u['id']}+{issued}+{u['login_nonce']}")})
+
+	assert_status(r, 400)
+
+
+@pytest.mark.parametrize("purpose", _others("reset"))
+def test_a_reset_form_signed_for_another_purpose_is_refused(purpose):
+	u = factories.user()
+	issued = int(time.time())
+
+	with db_diff() as d:
+		r = anon().post_raw("/reset", {"user_id": u["id"], "time": issued, "token": session.sign(f"{purpose}+{u['id']}+{issued}+{u['login_nonce']}"), "password": "new " + factories.PASSWORD, "confirm_password": "new " + factories.PASSWORD})
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("purpose", _others("2fa-challenge"))
+def test_a_2fa_challenge_signed_for_another_purpose_goes_back_to_login(purpose):
+	u = _two_factor_user()
+	issued = int(time.time())
+	client = anon()
+	totp_step_settle()
+
+	r = client.post_raw("/login", {"username": u["username"], "time": issued, "hash": session.sign(f"{purpose}+{u['id']}+{issued}+{u['login_nonce']}"), "2fa_token": pyotp.TOTP(u["mfa_secret"]).now()})
+
+	assert_redirect(r, "/login")
+	assert client.user_id is None
+
+
+@pytest.mark.parametrize("purpose", _others("2fa-remove"))
+def test_a_removal_link_signed_for_another_purpose_is_refused(purpose):
+	u = _two_factor_user()
+	issued = int(time.time()) - 72 * 3600
+
+	with db_diff() as d:
+		r = anon().post_raw("/reset_2fa", {"id": u["id"], "t": issued, "token": session.sign(f"{purpose}+{u['id']}+{u['username']}+{issued}+{u['mfa_secret']}+{u['login_nonce']}")})
+
+	assert_status(r, 403)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("purpose", _others("activate"))
+def test_a_verification_link_signed_for_another_purpose_is_refused(purpose):
+	u = factories.user()
+	email, issued = f"{factories.unique()}@example.com", int(time.time())
+
+	with db_diff() as d:
+		r = as_user(u).get("/activate", params={"email": email, "id": u["id"], "time": issued, "token": session.sign(f"{purpose}+{email}+{u['id']}+{issued}")})
+
+	assert_status(r, 403)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("old_format", ["forgot", "reset", "2fa-challenge", "2fa-remove", "activate"])
+def test_tokens_in_the_old_untagged_formats_are_refused(old_format):
+	u = factories.user(mfa_secret=pyotp.random_base32())
+	now = int(time.time())
+	removal_time = now - 72 * 3600
+	email = f"{factories.unique()}@example.com"
+	client = anon()
+	request = {
+		"forgot": lambda: client.get("/reset", params={"id": u["id"], "time": now, "token": session.sign(f"{u['id']}+{now}+forgot+{u['login_nonce']}")}),
+		"reset": lambda: client.post_raw("/reset", {"user_id": u["id"], "time": now, "token": session.sign(f"{u['id']}+{now}+reset+{u['login_nonce']}"), "password": "new " + factories.PASSWORD, "confirm_password": "new " + factories.PASSWORD}),
+		"2fa-challenge": lambda: client.post_raw("/login", {"username": u["username"], "time": now, "hash": session.sign(f"{u['id']}+{now}+2fachallenge"), "2fa_token": pyotp.TOTP(u["mfa_secret"]).now()}),
+		"2fa-remove": lambda: client.post_raw("/reset_2fa", {"id": u["id"], "t": removal_time, "token": session.sign(f"{u['id']}+{u['username']}+disable2fa+{removal_time}+{u['mfa_secret']}+{u['login_nonce']}")}),
+		"activate": lambda: as_user(u).get("/activate", params={"email": email, "id": u["id"], "time": now, "token": session.sign(f"{email}+{u['id']}+{now}")}),
+	}[old_format]
+	totp_step_settle()
+
+	with db_diff() as d:
+		r = request()
+
+	assert_status(r, {"forgot": 400, "reset": 400, "2fa-challenge": 302, "2fa-remove": 403, "activate": 403}[old_format])
+	d.assert_exactly()
+	assert client.user_id is None

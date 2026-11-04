@@ -3,13 +3,15 @@ Resetting a forgotten password: POST /forgot with "username" and "email" mails a
 '''
 import time
 
+import pyotp
+
 import pytest
 
 from files.tests.spec.harness import *
 
 
-def _member():
-	return factories.user(email=f"{factories.unique()}@example.com")
+def _member(**overrides):
+	return factories.user(email=f"{factories.unique()}@example.com", **overrides)
 
 
 def _link(u, issued, **overrides):
@@ -206,4 +208,39 @@ def test_a_password_of_the_wrong_length_shows_the_form_again(password):
 
 	assert_html(r, 200)
 	assert r.form_field("token") is not None
+	d.assert_exactly()
+
+
+def test_a_reset_writes_the_new_password_and_moves_the_login_nonce_on():
+	u = _member()
+
+	with db_diff() as d:
+		r = anon().post_raw("/reset", _form(u, int(time.time()), f"new {factories.unique()} password"))
+
+	assert_html(r, 200)
+	d.assert_exactly(updated={"users": {u["id"]: {"passhash": ANY, "login_nonce": u["login_nonce"] + 1}}})
+
+
+def test_a_reset_form_works_once():
+	u = _member()
+	fields = _form(u, int(time.time()), f"new {factories.unique()} password")
+	anon().post_raw("/reset", fields)
+
+	with db_diff() as d:
+		r = anon().post_raw("/reset", {**fields, "password": "other " + factories.PASSWORD, "confirm_password": "other " + factories.PASSWORD})
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
+def test_a_reset_spends_outstanding_2fa_removal_links():
+	u = _member(mfa_secret=pyotp.random_base32())
+	issued = int(time.time()) - 72 * 3600
+	removal = {"id": u["id"], "t": issued, "token": session.sign(f"2fa-remove+{u['id']}+{u['username']}+{issued}+{u['mfa_secret']}+{u['login_nonce']}")}
+	anon().post_raw("/reset", _form(u, int(time.time()), f"new {factories.unique()} password"))
+
+	with db_diff() as d:
+		r = anon().post_raw("/reset_2fa", removal)
+
+	assert_status(r, 403)
 	d.assert_exactly()
