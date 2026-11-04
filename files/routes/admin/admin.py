@@ -849,9 +849,11 @@ def ban_user(user_id, v):
 	if not 0 <= days <= 3650 or time.time() + days * 86400 >= 2**31: abort(400, "A ban lasts from 0 (permanently) to 3650 days, ending before 2038.")
 
 	reason = request.values.get("reason", "").strip()[:256]
+	# The reason is stored escaped, which can lengthen it past the column: cut it until it fits.
 	passed_reason = filter_emojis_only(reason)
-
-	if len(passed_reason) > 256: passed_reason = reason
+	while len(passed_reason) > 256:
+		reason = reason[:-1]
+		passed_reason = filter_emojis_only(reason)
 
 	user.ban(admin=v, reason=passed_reason, days=days)
 

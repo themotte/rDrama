@@ -366,6 +366,19 @@ def test_a_ban_takes_a_reason_of_up_to_256_characters():
 	d.assert_exactly(**_ban_changes(actor, user, {"is_banned": actor["id"], "unban_utc": ANY, "ban_reason": reason[:256]}, notified=[user]))
 
 
+def test_a_ban_reason_is_shown_on_the_profile_as_text():
+	actor = factories.admin(2)
+	user = factories.user()
+	token = factories.unique("markup")
+	markup = f"<b id={token}>"
+	as_user(actor).post(f"/ban_user/{user['id']}", {"reason": "&" * 60 + markup})
+
+	r = anon().get(_profile(user))
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, markup)
+
+
 def test_a_permanent_ban_replaces_a_temporary_one():
 	actor = factories.admin(2)
 	user = factories.user(is_banned=actor["id"], unban_utc=int(time.time()) + 86400, ban_reason=factories.unique("reason"))
