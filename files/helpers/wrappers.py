@@ -66,6 +66,11 @@ def check_ban_evade(v):
 		g.db.commit()
 
 
+def refuse_while_suspended(v):
+	'''Suspended users can't change anything other users see.'''
+	if v.is_suspended: abort(403, "You can't perform this action while banned.")
+
+
 def auth_desired(f):
 	@functools.wraps(f)
 	def wrapper(*args, **kwargs):

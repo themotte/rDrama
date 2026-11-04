@@ -269,6 +269,7 @@ def api_comment(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def edit_comment(cid, v):
+	refuse_while_suspended(v)
 	c = get_comment(cid, v=v)
 	if c.author_id != v.id: abort(403)
 	body = sanitize_raw(request.values.get("body"), allow_newlines=True, length_limit=COMMENT_BODY_LENGTH_MAXIMUM)
@@ -366,6 +367,7 @@ def delete_comment(cid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def undelete_comment(cid, v):
+	refuse_while_suspended(v)
 	c = get_comment(cid, v=v)
 	if not c.state_user_deleted_utc: abort(409)
 	if c.author_id != v.id: abort(403)
@@ -380,6 +382,7 @@ def undelete_comment(cid, v):
 @app.post("/pin_comment/<cid>")
 @auth_required
 def pin_comment(cid, v):
+	refuse_while_suspended(v)
 	comment = get_comment(cid, v=v)
 	
 	if not comment.is_pinned:
@@ -402,6 +405,7 @@ def pin_comment(cid, v):
 @app.post("/unpin_comment/<cid>")
 @auth_required
 def unpin_comment(cid, v):
+	refuse_while_suspended(v)
 	
 	comment = get_comment(cid, v=v)
 	

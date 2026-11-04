@@ -38,6 +38,7 @@ MAX_TITLE_LENGTH = 500
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def publish(pid, v):
+	refuse_while_suspended(v)
 	post = get_post(pid)
 	if post.author_id != v.id: abort(403)
 	if not post.private: return {"message": "Post published!"}
@@ -227,6 +228,7 @@ def morecomments(v, cid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def edit_post(pid, v):
+	refuse_while_suspended(v)
 	p = get_post(pid)
 	if not v.can_edit(p): abort(403)
 
@@ -581,6 +583,7 @@ def delete_post_pid(pid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def undelete_post_pid(pid, v):
+	refuse_while_suspended(v)
 	post = get_post(pid)
 	if post.author_id != v.id: abort(403)
 	post.state_user_deleted_utc = None
@@ -595,6 +598,7 @@ def undelete_post_pid(pid, v):
 @app.post("/toggle_comment_nsfw/<cid>")
 @auth_required
 def toggle_comment_nsfw(cid, v):
+	refuse_while_suspended(v)
 	comment = get_comment(cid)
 	if comment.author_id != v.id and not v.admin_level >= 2: abort(403)
 	comment.over_18 = not comment.over_18
@@ -608,6 +612,7 @@ def toggle_comment_nsfw(cid, v):
 @app.post("/toggle_post_nsfw/<pid>")
 @auth_required
 def toggle_post_nsfw(pid, v):
+	refuse_while_suspended(v)
 	post = get_post(pid)
 
 	if post.author_id != v.id and not v.admin_level >= 2:
@@ -662,6 +667,7 @@ def unsave_post(pid, v):
 @app.post("/pin/<post_id>")
 @auth_required
 def api_pin_post(post_id, v):
+	refuse_while_suspended(v)
 	post = get_post(post_id)
 	if v.id != post.author_id: abort(403, "Only the post author's can do that!")
 	post.is_pinned = not post.is_pinned
