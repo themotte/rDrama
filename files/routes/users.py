@@ -416,6 +416,12 @@ def u_username_comments(username, v=None):
 				Comment.ghost == False,
 				)
 
+	# A comment on a draft would show the draft to those it's hidden from
+	if not (v and v.admin_level >= PERMS['POST_COMMENT_MODERATION']):
+		seen_posts = Submission.private == False
+		if v: seen_posts = or_(seen_posts, Submission.author_id == v.id)
+		comments = comments.join(Submission, Submission.id == Comment.parent_submission).filter(seen_posts)
+
 	comments = apply_time_filter(comments, t, Comment)
 	comments = sort_objects(comments, sort, Comment)
 

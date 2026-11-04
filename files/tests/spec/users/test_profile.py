@@ -1,5 +1,5 @@
 '''
-Profile pages: GET /@<username>/posts lists the user's posts, GET /@<username>/ their comments on posts (not their private messages). Both find the user by their username or the username they signed up with, ignoring letter case; a name that isn't exactly the current username redirects (302) to the same page under it. An unknown name is 404.
+Profile pages: GET /@<username>/posts lists the user's posts, GET /@<username>/ their comments on posts (not their private messages, nor comments on drafts the viewer can't see: only a draft's author and admins of level 2 and up see it). Both find the user by their username or the username they signed up with, ignoring letter case; a name that isn't exactly the current username redirects (302) to the same page under it. An unknown name is 404.
 
 Before listing anything:
 - A reserved name (an account held for someone) shows a page naming who it's reserved for; script (xhr) and API clients are refused with 403.
@@ -297,6 +297,46 @@ def test_profile_of_a_shadowbanned_user_lists_nothing_to_other_shadowbanned_user
 
 	assert_html(r, 200)
 	assert_not_in_payload(r, token)
+
+
+@pytest.mark.parametrize("viewer", ["anonymous", "other user"])
+def test_profile_comments_leave_out_comments_on_drafts_the_viewer_cant_see(viewer):
+	user = factories.user()
+	draft = factories.post(user, private=True, body=factories.unique("draftbody"))
+	token = factories.unique()
+	factories.comment(user, draft, body=token)
+	listed = _item(user, "comments")
+
+	r = _client(viewer, user).get(_path(user, "comments"))
+
+	assert_html(r, 200)
+	assert_in_payload(r, listed)
+	assert_not_in_payload(r, token)
+	assert_not_in_payload(r, draft["body"])
+
+
+def test_profile_comments_leave_out_comments_on_drafts_from_api_clients():
+	user = factories.user()
+	draft = factories.post(user, private=True, body=factories.unique("draftbody"))
+	factories.comment(user, draft)
+	listed = factories.comment(user, factories.post(factories.user()))
+
+	r = as_api(factories.api_token(factories.user())).get(_path(user, "comments"))
+
+	assert_status(r, 200)
+	assert [c["id"] for c in r.json["data"]] == [listed["id"]]
+
+
+@pytest.mark.parametrize("viewer", ["owner", "admin"])
+def test_profile_comments_show_comments_on_drafts_to_those_who_see_the_draft(viewer):
+	user = factories.user()
+	token = factories.unique()
+	factories.comment(user, factories.post(user, private=True), body=token)
+
+	r = _client(viewer, user).get(_path(user, "comments"))
+
+	assert_html(r, 200)
+	assert_in_payload(r, token)
 
 
 def test_profile_comments_leave_out_private_messages():
