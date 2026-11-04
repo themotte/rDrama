@@ -252,3 +252,28 @@ def test_a_challenge_from_before_the_account_signed_out_everywhere_goes_back_to_
 
 	assert_redirect(r, "/login")
 	assert client.user_id is None
+
+
+def test_after_a_wrong_code_the_right_one_still_logs_in_and_goes_on_to_the_redirect():
+	u = _two_factor_user()
+	client = anon()
+	totp_step_settle()
+	wrong = f"{(int(pyotp.TOTP(u['mfa_secret']).now()) + 1) % 1000000:06d}"
+	again = client.post_raw("/login", {**_challenge(u, int(time.time())), "2fa_token": wrong, "redirect": "/settings"})
+
+	r = client.post_raw("/login", {"username": again.form_field("username"), "time": again.form_field("time"), "hash": again.form_field("hash"), "redirect": again.form_field("redirect"), "2fa_token": pyotp.TOTP(u["mfa_secret"]).now()})
+
+	assert_redirect(r, "/settings")
+	assert client.user_id == u["id"]
+
+
+def test_a_wrong_code_does_not_extend_the_challenge():
+	u = _two_factor_user()
+	issued = int(time.time()) - 300
+	totp_step_settle()
+	wrong = f"{(int(pyotp.TOTP(u['mfa_secret']).now()) + 1) % 1000000:06d}"
+
+	r = anon().post_raw("/login", {**_challenge(u, issued), "2fa_token": wrong})
+
+	assert_html(r, 200)
+	assert r.form_field("time") == str(issued)

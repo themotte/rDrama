@@ -74,7 +74,6 @@ def login_post():
 								   redirect=request.values.get("redirect", "/")
 								   )
 	elif request.values.get("2fa_token", "x"):
-		now = int(time.time())
 		challenge_time = int(request.values.get("time"))
 
 		if not token_fresh(challenge_time, 600):
@@ -84,11 +83,11 @@ def login_post():
 			return redirect("/login")
 
 		if not account.validate_2fa(request.values.get("2fa_token", "").strip()):
-			hash = token_sign("2fa-challenge", account.id, time, account.login_nonce)
 			return render_template("login/login_2fa.html",
 								   v=account,
-								   time=now,
-								   hash=hash,
+								   time=challenge_time,
+								   hash=request.values.get("hash"),
+								   redirect=request.values.get("redirect", "/"),
 								   failed=True,
 								   )
 
