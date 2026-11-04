@@ -24,269 +24,68 @@ from files.mail import *
 from files.routes.importstar import *
 
 
-@app.get("/@<username>/upvoters/<uid>/posts")
+# Each voter list: (vote type, whether it ranks the voters on the user's content rather than the authors of what the user voted on, heading)
+_VOTER_LISTS = {
+	"upvoters": (1, True, "Who upvotes @{}"),
+	"downvoters": (-1, True, "Who downvotes @{}"),
+	"upvoting": (1, False, "Who @{} upvotes"),
+	"downvoting": (-1, False, "Who @{} downvotes"),
+}
+_VOTER_LIST_NAMES = ",".join(_VOTER_LISTS)
+
+
+def _visible(cls):
+	return (cls.ghost == False, cls.state_mod == StateMod.VISIBLE, cls.state_user_deleted_utc == None)
+
+
+@app.get(f"/@<username>/<any({_VOTER_LIST_NAMES}):list_name>/<uid>/<any(posts,comments):kind>")
 @admin_level_required(3)
-def upvoters_posts(v, username, uid):
+def voted_content(v, username, list_name, uid, kind):
 	u = get_user(username)
 	if u.is_private and v.id != u.id: abort(403)
-	id = u.id
 	uid = int(uid)
+	vote_type, on_users_content, _ = _VOTER_LISTS[list_name]
+	author_id, voter_id = (u.id, uid) if on_users_content else (uid, u.id)
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Submission.author_id==id, Vote.user_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	if kind == "posts":
+		cls, vote_cls, voted_id = Submission, Vote, Vote.submission_id
+	else:
+		cls, vote_cls, voted_id = Comment, CommentVote, CommentVote.comment_id
+	listing = g.db.query(cls.id).join(vote_cls, voted_id == cls.id).filter(*_visible(cls), vote_cls.vote_type == vote_type, cls.author_id == author_id, vote_cls.user_id == voter_id).order_by(cls.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
-	listing = [p.id for p in listing]
+	listing = [x[0] for x in listing]
 	next_exists = len(listing) > 25
 	listing = listing[:25]
 
-	listing = get_posts(listing, v=v)
+	if kind == "posts":
+		return render_template("voted_posts.html", next_exists=next_exists, listing=get_posts(listing, v=v), page=page, v=v)
+	return render_template("voted_comments.html", next_exists=next_exists, listing=get_comments(listing, v=v), page=page, v=v, standalone=True)
 
-	return render_template("voted_posts.html", next_exists=next_exists, listing=listing, page=page, v=v)
 
-
-@app.get("/@<username>/upvoters/<uid>/comments")
+@app.get(f"/@<username>/<any({_VOTER_LIST_NAMES}):list_name>")
 @admin_level_required(3)
-def upvoters_comments(v, username, uid):
-	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
-	id = u.id
-	uid = int(uid)
-
-	page = max(1, int(request.values.get("page", 1)))
-
-	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, Comment.author_id==id, CommentVote.user_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
-
-	listing = [c.id for c in listing]
-	next_exists = len(listing) > 25
-	listing = listing[:25]
-
-	listing = get_comments(listing, v=v)
-
-	return render_template("voted_comments.html", next_exists=next_exists, listing=listing, page=page, v=v, standalone=True)
-
-
-@app.get("/@<username>/downvoters/<uid>/posts")
-@admin_level_required(3)
-def downvoters_posts(v, username, uid):
-	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
-	id = u.id
-	uid = int(uid)
-
-	page = max(1, int(request.values.get("page", 1)))
-
-	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Submission.author_id==id, Vote.user_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
-
-	listing = [p.id for p in listing]
-	next_exists = len(listing) > 25
-	listing = listing[:25]
-
-	listing = get_posts(listing, v=v)
-
-	return render_template("voted_posts.html", next_exists=next_exists, listing=listing, page=page, v=v)
-
-
-@app.get("/@<username>/downvoters/<uid>/comments")
-@admin_level_required(3)
-def downvoters_comments(v, username, uid):
-	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
-	id = u.id
-	uid = int(uid)
-
-	page = max(1, int(request.values.get("page", 1)))
-
-	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, Comment.author_id==id, CommentVote.user_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
-
-	listing = [c.id for c in listing]
-	next_exists = len(listing) > 25
-	listing = listing[:25]
-
-	listing = get_comments(listing, v=v)
-
-	return render_template("voted_comments.html", next_exists=next_exists, listing=listing, page=page, v=v, standalone=True)
-
-@app.get("/@<username>/upvoting/<uid>/posts")
-@admin_level_required(3)
-def upvoting_posts(v, username, uid):
-	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
-	id = u.id
-	uid = int(uid)
-
-	page = max(1, int(request.values.get("page", 1)))
-
-	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Vote.user_id==id, Submission.author_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
-
-	listing = [p.id for p in listing]
-	next_exists = len(listing) > 25
-	listing = listing[:25]
-
-	listing = get_posts(listing, v=v)
-
-	return render_template("voted_posts.html", next_exists=next_exists, listing=listing, page=page, v=v)
-
-
-@app.get("/@<username>/upvoting/<uid>/comments")
-@admin_level_required(3)
-def upvoting_comments(v, username, uid):
-	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
-	id = u.id
-	uid = int(uid)
-
-	page = max(1, int(request.values.get("page", 1)))
-
-	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, CommentVote.user_id==id, Comment.author_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
-
-	listing = [c.id for c in listing]
-	next_exists = len(listing) > 25
-	listing = listing[:25]
-
-	listing = get_comments(listing, v=v)
-
-	return render_template("voted_comments.html", next_exists=next_exists, listing=listing, page=page, v=v, standalone=True)
-
-
-@app.get("/@<username>/downvoting/<uid>/posts")
-@admin_level_required(3)
-def downvoting_posts(v, username, uid):
-	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
-	id = u.id
-	uid = int(uid)
-
-	page = max(1, int(request.values.get("page", 1)))
-
-	listing = g.db.query(Submission).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Vote.user_id==id, Submission.author_id==uid).order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
-
-	listing = [p.id for p in listing]
-	next_exists = len(listing) > 25
-	listing = listing[:25]
-
-	listing = get_posts(listing, v=v)
-
-	return render_template("voted_posts.html", next_exists=next_exists, listing=listing, page=page, v=v)
-
-
-@app.get("/@<username>/downvoting/<uid>/comments")
-@admin_level_required(3)
-def downvoting_comments(v, username, uid):
-	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
-	id = u.id
-	uid = int(uid)
-
-	page = max(1, int(request.values.get("page", 1)))
-
-	listing = g.db.query(Comment).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, CommentVote.user_id==id, Comment.author_id==uid).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
-
-	listing = [c.id for c in listing]
-	next_exists = len(listing) > 25
-	listing = listing[:25]
-
-	listing = get_comments(listing, v=v)
-
-	return render_template("voted_comments.html", next_exists=next_exists, listing=listing, page=page, v=v, standalone=True)
-
-@app.get("/@<username>/upvoters")
-@admin_level_required(3)
-def upvoters(v, username):
+def voters(v, username, list_name):
 	id = get_user(username).id
+	vote_type, on_users_content, heading = _VOTER_LISTS[list_name]
 
-	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
+	counts = Counter()
+	for cls, vote_cls, voted_id in ((Submission, Vote, Vote.submission_id), (Comment, CommentVote, CommentVote.comment_id)):
+		other, this = (vote_cls.user_id, cls.author_id) if on_users_content else (cls.author_id, vote_cls.user_id)
+		counts += Counter(dict(g.db.query(other, func.count(other)).select_from(cls).join(vote_cls, voted_id == cls.id).filter(*_visible(cls), vote_cls.vote_type == vote_type, this == id).group_by(other).all()))
 
-	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
+	users = g.db.query(User).filter(User.id.in_(counts.keys())).all()
+	users = sorted(((user, counts[user.id]) for user in users), key=lambda x: x[1], reverse=True)
 
-	votes = Counter(dict(votes)) + Counter(dict(votes2))
+	ranked_ids = [user.id for user, _ in users]
+	if v.id in ranked_ids:
+		position = ranked_ids.index(v.id)
+		pos = (position + 1, users[position][1])
+	else:
+		pos = (len(users) + 1, 0)
 
-	users = g.db.query(User).filter(User.id.in_(votes.keys())).all()
-	users2 = []
-	for user in users: users2.append((user, votes[user.id]))
-
-	users = sorted(users2, key=lambda x: x[1], reverse=True)
-	
-	try:
-		pos = [x[0].id for x in users].index(v.id)
-		pos = (pos+1, users[pos][1])
-	except: pos = (len(users)+1, 0)
-
-	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Up', name2=f'Who upvotes @{username}')
-
-
-
-@app.get("/@<username>/downvoters")
-@admin_level_required(3)
-def downvoters(v, username):
-	id = get_user(username).id
-
-	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
-
-	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
-
-	votes = Counter(dict(votes)) + Counter(dict(votes2))
-
-	users = g.db.query(User).filter(User.id.in_(votes.keys())).all()
-	users2 = []
-	for user in users: users2.append((user, votes[user.id]))
-
-	users = sorted(users2, key=lambda x: x[1], reverse=True)
-	
-	try:
-		pos = [x[0].id for x in users].index(v.id)
-		pos = (pos+1, users[pos][1])
-	except: pos = (len(users)+1, 0)
-
-	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Down', name2=f'Who downvotes @{username}')
-
-@app.get("/@<username>/upvoting")
-@admin_level_required(3)
-def upvoting(v, username):
-	id = get_user(username).id
-
-	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
-
-	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
-
-	votes = Counter(dict(votes)) + Counter(dict(votes2))
-
-	users = g.db.query(User).filter(User.id.in_(votes.keys())).all()
-	users2 = []
-	for user in users: users2.append((user, votes[user.id]))
-
-	users = sorted(users2, key=lambda x: x[1], reverse=True)
-	
-	try:
-		pos = [x[0].id for x in users].index(v.id)
-		pos = (pos+1, users[pos][1])
-	except: pos = (len(users)+1, 0)
-
-	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Up', name2=f'Who @{username} upvotes')
-
-@app.get("/@<username>/downvoting")
-@admin_level_required(3)
-def downvoting(v, username):
-	id = get_user(username).id
-
-	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Submission.ghost == False, Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None, Vote.vote_type==-1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
-
-	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(Comment.ghost == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, CommentVote.vote_type==-1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
-
-	votes = Counter(dict(votes)) + Counter(dict(votes2))
-
-	users = g.db.query(User).filter(User.id.in_(votes.keys())).all()
-	users2 = []
-	for user in users: users2.append((user, votes[user.id]))
-
-	users = sorted(users2, key=lambda x: x[1], reverse=True)
-	
-	try:
-		pos = [x[0].id for x in users].index(v.id)
-		pos = (pos+1, users[pos][1])
-	except: pos = (len(users)+1, 0)
-
-	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Down', name2=f'Who @{username} downvotes')
+	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Up' if vote_type == 1 else 'Down', name2=heading.format(username))
 
 
 @app.get("/leaderboard")
