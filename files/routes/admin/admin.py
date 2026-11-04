@@ -9,11 +9,11 @@ from files.classes.user import FilterBehavior
 from files.classes.visstate import StateMod, StateReport
 from files.helpers.alerts import *
 from files.helpers.caching import invalidate_cache
-from files.helpers.comments import comment_on_publish, comment_on_unpublish
 from files.helpers.config.const import *
 from files.helpers.config.environment import CF_HEADERS, CF_ZONE, SITE_SETTINGS_PATH
 from files.helpers.get import *
 from files.helpers.media import *
+from files.helpers.moderation import moderate
 from files.helpers.sanitize import *
 from files.helpers.security import *
 from files.helpers.wrappers import *
@@ -238,28 +238,12 @@ def update_filter_status(v):
 	if not target:
 		return {"result": "Item ID does not exist"}, 404
 
-	old_status = target.state_mod
-
-	if state_mod_new is not None:
-		target.state_mod = state_mod_new
-		target.state_mod_set_by = v.username
 	target.state_report = state_report_new
+	change = moderate(target, state_mod_new, v.username) if state_mod_new is not None else 0
 
-	making_visible: bool = old_status != StateMod.VISIBLE and state_mod_new == StateMod.VISIBLE
-	making_invisible: bool = old_status == StateMod.VISIBLE and state_mod_new != StateMod.VISIBLE and state_mod_new is not None
-
-	if making_visible:
-		modlog_action: str = "approve"
-		if isinstance(target, Comment): comment_on_publish(target)
-		else: target.publish()
-	elif making_invisible:
-		modlog_action: str = "remove"
-		if isinstance(target, Comment): comment_on_unpublish(target)
-		else: target.visibility_changed()
-
-	if making_visible or making_invisible:
+	if change:
 		g.db.add(ModAction(
-			kind=f"{modlog_action}_{modlog_target_type}",
+			kind=f"{'approve' if change > 0 else 'remove'}_{modlog_target_type}",
 			user_id=v.id,
 			target_submission_id=target.id if isinstance(target, Submission) else None,
 			target_comment_id=target.id if isinstance(target, Comment) else None
