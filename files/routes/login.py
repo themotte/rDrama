@@ -287,6 +287,7 @@ def sign_up_post(v):
 	session.permanent = True
 	session["session_id"] = token_hex(49)
 	session["lo_user"] = new_user.id
+	session["login_nonce"] = new_user.login_nonce
 
 	g.db.commit()
 

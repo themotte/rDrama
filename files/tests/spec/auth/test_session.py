@@ -308,3 +308,27 @@ def test_a_permanently_suspended_account_cannot_change_its_name():
 
 	assert_status(r, 403)
 	d.assert_exactly()
+
+
+# Signing out everywhere (the account's login_nonce moving on) ends every session, however it began
+
+def test_a_session_from_signing_up_ends_when_the_account_signs_out_everywhere():
+	earlier = factories.user(login_nonce=5)
+	factories.user()
+	client = anon()
+	client.post_raw("/login", {"username": earlier["username"], "password": factories.PASSWORD})
+	client.get("/logout")
+	form = client.get("/signup")
+	username = factories.unique("new")
+	client.post_raw("/signup", {"formkey": form.form_field("formkey"), "now": form.form_field("now"), "usernametwo": username, "email": "", "password": factories.PASSWORD, "password_confirm": factories.PASSWORD})
+	new = db.row("users", username=username)
+	db.update("users", {"id": new["id"]}, login_nonce=new["login_nonce"] + 1)
+
+	assert_api_unauthorized(client.get("/me", headers=XHR))
+
+
+def test_a_session_ahead_of_its_accounts_nonce_is_anonymous():
+	u = factories.user(login_nonce=1)
+	client = as_user({**u, "login_nonce": 2})
+
+	assert_api_unauthorized(client.get("/me", headers=XHR))

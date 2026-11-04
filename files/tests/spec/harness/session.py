@@ -4,7 +4,7 @@ The session cookie and form key formats. Both are contract: old and new implemen
 Session cookie: named `session_<site id, lowercased>`; value is an itsdangerous URL-safe timed signature keyed by MASTER_KEY (HMAC key derivation, SHA-1, salt "cookie-session") over compact JSON, zlib-compressed with a leading "." whenever that is shorter. Payload values are restricted to JSON types (no tagged types). Keys:
 - `_permanent`: true.
 - `session_id`: 98 hex chars, assigned on first request and on login.
-- `lo_user`, `login_nonce`: the logged-in user's id, and their `users.login_nonce` at login. The session is invalid once the stored nonce exceeds it.
+- `lo_user`, `login_nonce`: the logged-in user's id, and their `users.login_nonce` at login. The session is valid only while the two are equal.
 - `history`: ids of accounts that have logged in from this browser (alt detection).
 - `over_18`: epoch seconds until which the adult-content interstitial is waived.
 - `signup_token`: hex, issued by the signup form and consumed by signup.
