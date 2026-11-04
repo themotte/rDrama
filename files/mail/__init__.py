@@ -53,7 +53,8 @@ def activate(v):
 
 
 	id = request.values.get("id", "").strip()
-	timestamp = int(request.values.get("time", "0"))
+	timestamp = request.values.get("time", type=int)
+	if timestamp is None: abort(400)
 	token = request.values.get("token", "").strip()
 
 	if not token_fresh(timestamp, 3600):

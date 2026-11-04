@@ -165,3 +165,33 @@ def test_a_reset_link_works_once():
 	anon().post_raw("/reset", _form(u, issued, f"new {factories.unique()} password"))
 
 	assert_status(anon().get("/reset", params=_link(u, issued)), 400)
+
+
+# Malformed requests
+
+@pytest.mark.parametrize("field, value", [("time", "soon"), ("id", "someone")])
+def test_a_reset_link_with_a_malformed_field_is_refused(field, value):
+	u = _member()
+
+	assert_status(anon().get("/reset", params=_link(u, int(time.time()), **{field: value})), 400)
+
+
+@pytest.mark.parametrize("missing", ["time", "password"])
+def test_a_reset_form_missing_a_field_is_refused(missing):
+	u = _member()
+	fields = _form(u, int(time.time()), f"new {factories.unique()} password")
+	del fields[missing]
+
+	with db_diff() as d:
+		r = anon().post_raw("/reset", fields)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
+def test_a_reset_form_for_an_unknown_account_is_refused():
+	u = _member()
+	fields = _form(u, int(time.time()), f"new {factories.unique()} password")
+	db.delete("users", id=u["id"])
+
+	assert_status(anon().post_raw("/reset", fields), 400)

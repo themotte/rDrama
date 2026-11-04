@@ -331,10 +331,10 @@ def post_forgot():
 
 @app.get("/reset")
 def get_reset():
-	user_id = request.values.get("id")
-
-	timestamp = int(request.values.get("time",0))
+	user_id = request.values.get("id", type=int)
+	timestamp = request.values.get("time", type=int)
 	token = request.values.get("token")
+	if user_id is None or timestamp is None: abort(400)
 
 	if not token_fresh(timestamp, 600):
 		return render_template("message.html", 
@@ -363,25 +363,23 @@ def get_reset():
 def post_reset(v):
 	if v: return redirect('/')
 
-	user_id = request.values.get("user_id")
-
-	timestamp = int(request.values.get("time"))
+	user_id = request.values.get("user_id", type=int)
+	timestamp = request.values.get("time", type=int)
 	token = request.values.get("token")
 
 	password = request.values.get("password")
 	confirm_password = request.values.get("confirm_password")
+	if user_id is None or timestamp is None or password is None: abort(400)
 
 	if not token_fresh(timestamp, 600):
 		return render_template("message.html",
 							   title="Password reset expired",
 							   error="That password reset form has expired.")
 
-	user = g.db.query(User).filter_by(id=user_id).one_or_none()
+	user = g.db.get(User, user_id)
 
-	if not token_verify("reset", token, user_id, timestamp, user.login_nonce):
+	if not user or not token_verify("reset", token, user_id, timestamp, user.login_nonce):
 		abort(400)
-	if not user:
-		abort(404)
 
 	if password != confirm_password:
 		return render_template("login/reset_password.html",
@@ -419,12 +417,12 @@ def request_2fa_disable():
 						   message="If username, password, and email match, we will send you an email.")
 
 
-	email=request.values.get("email").strip().lower()
+	email=(request.values.get("email") or "").strip().lower()
 
 	if not email_regex.fullmatch(email):
 		return render_template("message.html", title="Invalid email.", error="Invalid email.")
 
-	password =request.values.get("password")
+	password =request.values.get("password") or ""
 	if not user.verifyPass(password):
 		return render_template("message.html",
 						   title="Removal request received",
@@ -448,9 +446,8 @@ def request_2fa_disable():
 
 @app.get("/reset_2fa")
 def reset_2fa():
-	t = request.values.get("t")
-	if not t: abort(400)
-	t = int(t)
+	t = request.values.get("t", type=int)
+	if t is None: abort(400)
 
 	if not token_fresh(t, 3600*24):
 		return render_template("message.html",

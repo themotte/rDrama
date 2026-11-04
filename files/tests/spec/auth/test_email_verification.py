@@ -115,6 +115,12 @@ def test_a_link_for_the_address_already_verified_changes_nothing():
 	d.assert_exactly()
 
 
+def test_a_link_with_a_malformed_time_is_refused():
+	u = factories.user()
+
+	assert_status(as_user(u).get("/activate", params={**_link_params(u, f"{factories.unique()}@example.com", int(time.time())), "time": "soon"}), 400)
+
+
 def test_a_link_for_the_accounts_own_unverified_address_verifies_it():
 	email = f"{factories.unique()}@example.com"
 	u = factories.user(email=email, is_activated=False)

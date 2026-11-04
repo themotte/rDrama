@@ -93,3 +93,20 @@ def test_a_link_for_an_account_without_2fa_is_refused():
 
 	assert_status(r, 403)
 	d.assert_exactly()
+
+
+@pytest.mark.parametrize("missing", ["email", "password"])
+def test_a_request_missing_a_field_gets_no_mail(missing):
+	u = _member()
+	fields = {"username": u["username"], "password": factories.PASSWORD, "email": u["email"]}
+	del fields[missing]
+
+	assert_html(anon().post("/request_2fa_disable", fields), 200)
+
+	assert sent_mail() == []
+
+
+def test_a_link_with_a_malformed_time_is_refused():
+	u = _member()
+
+	assert_status(anon().get("/reset_2fa", params=_link(u, int(time.time()), t="soon")), 400)
