@@ -43,11 +43,12 @@ def _visible(cls):
 def voted_content(v, username, list_name, uid, kind):
 	u = get_user(username)
 	if u.is_private and v.id != u.id: abort(403)
-	uid = int(uid)
+	uid = parse_id(uid)
+	if uid is None: abort(404)
 	vote_type, on_users_content, _ = _VOTER_LISTS[list_name]
 	author_id, voter_id = (u.id, uid) if on_users_content else (uid, u.id)
 
-	page = max(1, int(request.values.get("page", 1)))
+	page = listings.request_page()
 
 	if kind == "posts":
 		cls, vote_cls, voted_id = Submission, Vote, Vote.submission_id

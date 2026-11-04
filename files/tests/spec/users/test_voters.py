@@ -5,7 +5,7 @@ Voter lists, for admins of level 3 (anonymous browsers are sent to log in; lower
 
 Only votes on content others can see count: not on removed, filtered, deleted or anonymous ("ghost") posts and comments. A user's votes on their own content count like anyone's. The 25 highest-ranked users are listed, each linking to the drilldown of their votes (/@<username>/<list>/<user id>/posts). The viewing admin's own row is added after the list when they aren't in it.
 
-Each drilldown, GET /@<username>/<list>/<user id>/posts and /@<username>/<list>/<user id>/comments, lists the posts (comments) behind one row: for upvoters and downvoters, the user's content that the other user voted on that way; for upvoting and downvoting, the other user's content the user voted on that way. Only content others can see is listed, newest first, 25 to a page, with "page" (from 1) choosing the page.
+Each drilldown, GET /@<username>/<list>/<user id>/posts and /@<username>/<list>/<user id>/comments, lists the posts (comments) behind one row: for upvoters and downvoters, the user's content that the other user voted on that way; for upvoting and downvoting, the other user's content the user voted on that way. Only content others can see is listed, newest first, 25 to a page, with "page" (from 1; anything else means 1) choosing the page. A user id that isn't a valid id is 404.
 '''
 import pytest
 
@@ -332,3 +332,23 @@ def test_drilldown_of_an_unknown_user_is_not_found(name):
 	r = as_user(factories.admin(3)).get(f"/@{factories.unique()}/{name}/{factories.user()['id']}/posts")
 
 	assert_status(r, 404)
+
+
+@pytest.mark.parametrize("name", LISTS)
+@pytest.mark.parametrize("uid", ["x", "0", "99999999999"])
+def test_drilldown_of_an_invalid_user_id_is_not_found(name, uid):
+	r = as_user(factories.admin(3)).get(f"/@{factories.user()['username']}/{name}/{uid}/posts")
+
+	assert_status(r, 404)
+
+
+@pytest.mark.parametrize("name", LISTS)
+@pytest.mark.parametrize("page", ["0", "-2", "x"])
+def test_drilldown_shows_the_first_page_for_an_invalid_page(name, page):
+	user, other = _profile_user(), factories.user()
+	token = _cast(name, user, other, "posts")
+
+	r = as_user(factories.admin(3)).get(_drilldown(name, user, other, "posts"), params={"page": page})
+
+	assert_html(r, 200)
+	assert_in_payload(r, token)
