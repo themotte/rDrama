@@ -1,6 +1,7 @@
 '''
-Removing 2FA from an account whose codes are lost: GET /lost_2fa shows the request form; POST /request_2fa_disable with "username", "password" and "email" mails a removal link (format in harness/session.py) to the account's address when the username and password match an account with 2FA and an email, and answers the same either way; the link (/reset_2fa?id=&t=&token=) shows a confirmation whose POST, carrying the same fields, removes 2FA, for a day after the link was issued; both refuse a bad link the same way.
+Removing 2FA from an account whose codes are lost: GET /lost_2fa shows the request form; POST /request_2fa_disable with "username", "password" and "email" mails a removal link (format in harness/session.py) to the account's address when all three match an account with 2FA (the email ignoring case), and answers the same either way; the link (/reset_2fa?id=&t=&token=) shows a confirmation whose POST, carrying the same fields, removes 2FA, for a day after the link was issued; both refuse a bad link the same way.
 '''
+import re
 import time
 
 import pyotp
@@ -26,6 +27,11 @@ BOTH = pytest.mark.parametrize("method", ["GET", "POST"])
 
 def _link(u, issued, **overrides):
 	return {"id": u["id"], "t": issued, "token": session.sign(f"2fa-remove+{u['id']}+{u['username']}+{issued}+{u['mfa_secret']}+{u['login_nonce']}"), **overrides}
+
+
+def _title(r):
+	'''The page's title, which tells answers apart where the rest of the page varies from request to request.'''
+	return re.search(r"<title>(.*?)</title>", r.text, re.S).group(1)
 
 
 def test_the_request_form():
@@ -123,3 +129,29 @@ def test_a_link_with_a_malformed_time_is_refused(method):
 	u = _member()
 
 	assert_status(_follow(method, _link(u, int(time.time()), t="soon")), 400)
+
+
+def test_a_request_naming_another_email_gets_no_mail():
+	u = _member()
+
+	assert_html(_request(u, email="someone.else@example.com"), 200)
+
+	assert sent_mail() == []
+
+
+def test_the_email_may_differ_in_case():
+	u = _member()
+
+	assert_html(_request(u, email=u["email"].upper()), 200)
+
+	assert len(sent_mail()) == 1
+
+
+def test_an_invalid_email_gets_the_same_answer_whether_or_not_the_account_exists():
+	u = _member()
+
+	answers = [_request(u, email="not-an-email"), _request(u, username=factories.unique("nobody"), email="not-an-email")]
+
+	for r in answers:
+		assert_html(r, 200)
+	assert _title(answers[0]) == _title(answers[1])

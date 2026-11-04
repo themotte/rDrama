@@ -416,21 +416,14 @@ def lost_2fa(v):
 @app.post("/request_2fa_disable")
 @limiter.limit("1/second;6/minute;200/hour;1000/day")
 def request_2fa_disable():
-	username=request.values.get("username")
-	user=get_user(username, graceful=True)
-	if not user or not user.email or not user.mfa_secret:
-		return render_template("message.html",
-						   title="Removal request received",
-						   message="If username, password, and email match, we will send you an email.")
-
-
 	email=(request.values.get("email") or "").strip().lower()
 
 	if not email_regex.fullmatch(email):
 		return render_template("message.html", title="Invalid email.", error="Invalid email.")
 
-	password =request.values.get("password") or ""
-	if not user.verifyPass(password):
+	user=get_user(request.values.get("username"), graceful=True)
+
+	if not user or not user.email or not user.mfa_secret or not user.verifyPass(request.values.get("password") or "") or user.email.lower() != email:
 		return render_template("message.html",
 						   title="Removal request received",
 						   message="If username, password, and email match, we will send you an email.")
