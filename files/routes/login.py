@@ -73,8 +73,9 @@ def login_post():
 								   hash=hash,
 								   redirect=request.values.get("redirect", "/")
 								   )
-	elif request.values.get("2fa_token", "x"):
-		challenge_time = int(request.values.get("time"))
+	else:
+		try: challenge_time = int(request.values.get("time", ""))
+		except ValueError: abort(400, "A login needs a password or a 2FA challenge.")
 
 		if not token_fresh(challenge_time, 600):
 			return redirect('/login')
@@ -90,9 +91,6 @@ def login_post():
 								   redirect=request.values.get("redirect", "/"),
 								   failed=True,
 								   )
-
-	else:
-		abort(400)
 
 	session.permanent = True
 	session["session_id"] = token_hex(49)

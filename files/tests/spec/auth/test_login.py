@@ -277,3 +277,10 @@ def test_a_wrong_code_does_not_extend_the_challenge():
 
 	assert_html(r, 200)
 	assert r.form_field("time") == str(issued)
+
+
+@pytest.mark.parametrize("fields", [{}, {"password": ""}, {"time": "soon", "hash": "0" * 32, "2fa_token": "000000"}], ids=["nothing", "empty password", "non-integer time"])
+def test_a_login_with_neither_password_nor_challenge_is_refused(fields):
+	u = factories.user()
+
+	assert_status(anon().post_raw("/login", {"username": u["username"], **fields}), 400)
