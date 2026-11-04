@@ -293,8 +293,6 @@ def downvoting(v, username):
 @admin_level_required(2)
 def leaderboard(v:User):
 	users:Query = g.db.query(User)
-	if not v.can_see_shadowbanned:
-		users = users.filter(User.shadowbanned == None)
 
 	subscribers = SimpleLeaderboard(v, LeaderboardMeta("Followers", "followers", "followers", "Followers", "followers"), g.db, users, User.stored_subscriber_count)
 	posts = SimpleLeaderboard(v, LeaderboardMeta("Posts", "post count", "posts", "Posts", ""), g.db, users, User.post_count)
@@ -318,9 +316,7 @@ def leaderboard(v:User):
 @app.get("/@<username>/profilecss")
 def get_profilecss(username):
 	user = get_user(username)
-	if user.profilecss: profilecss = user.profilecss
-	else: profilecss = ""
-	resp=make_response(profilecss)
+	resp=make_response(user.profilecss or "")
 	resp.headers.add("Content-Type", "text/css")
 	return resp
 
@@ -469,11 +465,7 @@ def mfa_qr(secret, v):
 	img.save(mem, format="PNG")
 	mem.seek(0, 0)
 
-	try: f = send_file(mem, mimetype="image/png", as_attachment=False)
-	except:
-		print('/2faqr/<secret>', flush=True)
-		abort(404)
-	return f
+	return send_file(mem, mimetype="image/png", as_attachment=False)
 
 
 @app.get("/is_available/<name>")
@@ -509,14 +501,14 @@ def redditor_moment_redirect(username:str):
 @app.get("/@<username>/followers")
 @auth_desired
 def followers(v, username):
-	u = get_user(username, v=v)
+	u = get_user(username)
 	users = g.db.query(User).join(Follow, Follow.target_id == u.id).filter(Follow.user_id == User.id).order_by(Follow.created_datetimez).all()
 	return render_template("followers.html", v=v, u=u, users=users)
 
 @app.get("/@<username>/following")
 @auth_desired
 def following(v, username):
-	u = get_user(username, v=v)
+	u = get_user(username)
 	users = g.db.query(User).join(Follow, Follow.user_id == u.id).filter(Follow.target_id == User.id).order_by(Follow.created_datetimez).all()
 	return render_template("following.html", v=v, u=u, users=users)
 
@@ -536,7 +528,7 @@ def u_username(username, v=None):
 		return render_template("userpage_private.html", u=u, v=v)
 
 	
-	if v and hasattr(u, 'is_blocking') and u.is_blocking:
+	if v and u.is_blocking:
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"You are blocking @{u.username}.")
 		return render_template("userpage_blocking.html", u=u, v=v)
 
@@ -551,7 +543,6 @@ def u_username(username, v=None):
 	ids = ids[:25]
 
 	if page == 1:
-		sticky = []
 		sticky = g.db.query(Submission).filter_by(is_pinned=True, author_id=u.id).all()
 		if sticky:
 			for p in sticky:
@@ -606,7 +597,7 @@ def u_username_comments(username, v=None):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, "That userpage is private")
 		return render_template("userpage_private.html", u=u, v=v)
 
-	if v and hasattr(u, 'is_blocking') and u.is_blocking:
+	if v and u.is_blocking:
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"You are blocking @{u.username}.")
 		return render_template("userpage_blocking.html", u=u, v=v)
 
@@ -648,9 +639,9 @@ def u_username_comments(username, v=None):
 def u_username_info(username, v=None):
 	user = get_user(username, v=v, include_blocks=True)
 
-	if hasattr(user, 'is_blocking') and user.is_blocking:
+	if user.is_blocking:
 		abort(401, "You're blocking this user.")
-	elif hasattr(user, 'is_blocked') and user.is_blocked:
+	elif user.is_blocked:
 		abort(403, "This user is blocking you.")
 
 	return user.json
@@ -660,9 +651,9 @@ def u_username_info(username, v=None):
 def u_user_id_info(id, v=None):
 	user = get_account(id, v=v, include_blocks=True)
 
-	if hasattr(user, 'is_blocking') and user.is_blocking:
+	if user.is_blocking:
 		abort(401, "You're blocking this user.")
-	elif hasattr(user, 'is_blocked') and user.is_blocked:
+	elif user.is_blocked:
 		abort(403, "This user is blocking you.")
 
 	return user.json

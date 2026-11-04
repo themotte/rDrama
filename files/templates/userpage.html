@@ -333,10 +333,6 @@
 
 					<a href="/@{{u.username}}/following" class="font-weight-bold" style="display:block">follows {{u.follow_count}} user{{'s' if u.follow_count != 1 else ''}}</a>&nbsp;&nbsp;
 
-					{% if u.basedcount %}
-						<br>Based count: {{u.basedcount}}
-					{% endif %}
-
 					<br>joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
 				</div>
 				{% if u.bio_html %}
