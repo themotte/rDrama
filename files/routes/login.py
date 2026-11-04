@@ -8,17 +8,18 @@ from files.__main__ import app, limiter
 from files.helpers.config.const import *
 from files.helpers.captcha import validate_captcha
 
+def _redirect_target():
+	'''Where the "redirect" parameter asks to go after logging in, as an absolute URL on this site with any "/logged_out" removed, or None when it names no page here.'''
+	redir = (request.values.get("redirect") or "").replace("/logged_out", "").strip()
+	if redir.startswith('/'): redir = SITE_FULL + redir
+	return redir if redir.startswith(f'{SITE_FULL}/') else None
+
+
 @app.get("/login")
 @auth_desired
 def login_get(v):
-	redir = request.values.get("redirect")
-	if redir:
-		redir = redir.replace("/logged_out", "").strip()
-		if not redir.startswith(f'{SITE_FULL}/') and not redir.startswith('/'): redir = None
-
-	if v and redir:
-		if redir.startswith(f'{SITE_FULL}/'): return redirect(redir)
-		elif redir.startswith('/'): return redirect(f'{SITE_FULL}{redir}')
+	redir = _redirect_target()
+	if v and redir: return redirect(redir)
 
 	return render_template("login/login.html", failed=False, redirect=redir)
 
@@ -102,15 +103,7 @@ def login_post():
 
 	g.db.commit()
 
-	redir = request.values.get("redirect")
-	if redir:
-		redir = redir.replace("/logged_out", "").strip()
-		if not redir.startswith(f'{SITE_FULL}/') and not redir.startswith('/'): redir = '/'
-
-	if redir:
-		if redir.startswith(f'{SITE_FULL}/'): return redirect(redir)
-		if redir.startswith('/'): return redirect(f'{SITE_FULL}{redir}')
-	return redirect('/')
+	return redirect(_redirect_target() or '/')
 
 @app.get("/me")
 @app.get("/@me")

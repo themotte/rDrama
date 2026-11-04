@@ -33,7 +33,7 @@ def get_logged_in_user():
 			if v:
 				v.client = None
 				nonce = session.get("login_nonce", 0)
-				if nonce < v.login_nonce or v.id != id:
+				if nonce < v.login_nonce:
 					session.pop("lo_user")
 					v = None
 
