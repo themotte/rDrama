@@ -81,3 +81,26 @@ def test_a_form_time_that_is_not_a_number_is_refused(monkeypatch, now):
 
 	assert_redirect(r, "/signup", query_keys=("error",))
 	d.assert_exactly()
+
+
+@pytest.mark.parametrize("failure", ["unreachable", "not json", "no verdict"])
+def test_a_failing_captcha_service_fails_the_captcha(failure, capsys):
+	if failure == "unreachable":
+		external_web.unreachable(HCAPTCHA_URL, method="POST")
+	else:
+		external_web.serve(HCAPTCHA_URL, method="POST", headers={"Content-Type": "application/json"}, body={"not json": "<html>busy</html>", "no verdict": "{}"}[failure])
+
+	assert validate_captcha("secret", "sitekey", "answer") is False
+	assert "[captcha]" in capsys.readouterr().err
+
+
+def test_a_signup_is_refused_while_the_captcha_service_is_down(monkeypatch):
+	factories.user()
+	monkeypatch.setattr(login, "HCAPTCHA_SITEKEY", "sitekey")
+	external_web.unreachable(HCAPTCHA_URL, method="POST")
+
+	with db_diff() as d:
+		r = _signup(anon(), **{"h-captcha-response": "answer"})
+
+	assert_redirect(r, "/signup", query_keys=("error",))
+	d.assert_exactly()

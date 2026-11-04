@@ -1,3 +1,4 @@
+import sys
 from typing import Final
 import requests
 
@@ -10,5 +11,9 @@ def validate_captcha(secret:str, sitekey: str, token: str):
 			"response": token,
 			"sitekey": sitekey
 			}
-	req = requests.post(HCAPTCHA_URL, data=data, timeout=5)
-	return bool(req.json()["success"])
+	try:
+		req = requests.post(HCAPTCHA_URL, data=data, timeout=5)
+		return bool(req.json()["success"])
+	except (requests.RequestException, ValueError, KeyError) as e:
+		print(f"[captcha] couldn't verify an answer with hCaptcha: {e!r}", file=sys.stderr, flush=True)
+		return False
