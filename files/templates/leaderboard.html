@@ -36,11 +36,10 @@
 	</thead>
 	<tbody>
 	{% for user in lb.all_users %}
-		{% set user2 = lb.user_func(user) %}
-		{% if v.id == user2.id %}
+		{% if v.id == user.id %}
 			{% set style="class=\"self\"" %}
 		{% endif %}
-		{{format_user_in_table(user2, style, loop.index, lb.value_func(user), lb.meta.user_relative_url)}}
+		{{format_user_in_table(user, style, loop.index, lb.value_func(user), lb.meta.user_relative_url)}}
 	{% endfor %}
 	{% if lb.v_position and not lb.v_appears_in_ranking %}
 		{{format_user_in_table(v, "style=\"border-top:2px solid var(--primary)\"", lb.v_position, lb.v_value, lb.meta.user_relative_url)}}

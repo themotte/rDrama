@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Callable, ClassVar, Final, Optional
+from typing import Callable, ClassVar, Final, Optional
 
 from sqlalchemy import Column, func, text
 from sqlalchemy.orm import Session, Query
@@ -40,10 +40,6 @@ class Leaderboard:
 	@property
 	def v_appears_in_ranking(self) -> bool:
 		return self.v_position is not None and self.v_position <= len(self.all_users)
-	
-	@property
-	def user_func(self) -> Callable[[Any], User]:
-		return lambda u:u
 	
 	@property
 	def value_func(self) -> Callable[[User], int]:
@@ -94,26 +90,23 @@ class _CountedAndRankedLeaderboard(Leaderboard):
 		return func.rank().over(order_by=func.count(criteria).desc()).label("rank")
 	
 class UserBlockLeaderboard(_CountedAndRankedLeaderboard):
-	def __init__(self, v:User, meta:LeaderboardMeta, db:Session, column:Column):
+	'''Users ranked by how many users block them.'''
+	def __init__(self, v:User, meta:LeaderboardMeta, db:Session):
 		super().__init__(v, meta)
 		self.db:Session = db
-		self.column = column
 		self._calculate()
 	
 	def _calculate(self):
-		if self.column != UserBlock.target_id:
-			raise ValueError("This leaderboard function only supports UserBlock.target_id")
-		sq = self.db.query(self.column, self.count_and_label(self.column)).group_by(self.column).subquery()
+		sq = self.db.query(UserBlock.target_id, self.count_and_label(UserBlock.target_id)).group_by(UserBlock.target_id).subquery()
 		leaderboard = self.db.query(User, sq.c.count).join(User, User.id == sq.c.target_id).order_by(sq.c.count.desc())
 		
-		sq = self.db.query(self.column, self.count_and_label(self.column), self.rank_filtered_rank_label_by_desc(self.column)).group_by(self.column).subquery()
+		sq = self.db.query(UserBlock.target_id, self.count_and_label(UserBlock.target_id), self.rank_filtered_rank_label_by_desc(UserBlock.target_id)).group_by(UserBlock.target_id).subquery()
 		position = self.db.query(sq.c.rank, sq.c.count).join(User, User.id == sq.c.target_id).filter(sq.c.target_id == self.v.id).limit(1).one_or_none()
 		if not position: position = (leaderboard.count() + 1, 0)
 		leaderboard = leaderboard.limit(self.meta.limit).all()
 		self._all_users = {k:v for k, v in leaderboard}
 		self._v_position = position[0]
 		self._v_value = position[1]
-		return (leaderboard, position[0], position[1])
 
 	@property
 	def all_users(self) -> list[User]:
@@ -179,12 +172,6 @@ class RawSqlLeaderboard(Leaderboard):
 			return None
 		return cls(meta, db, rows)
 
-	@classmethod
-	def from_db(cls, meta:LeaderboardMeta, db:Session) -> "RawSqlLeaderboard":
-		'''Builds a leaderboard by running the live (expensive) query. Avoid in
-		request paths; prefer ``from_cache``.'''
-		return cls(meta, db, cls.compute_rows(db))
-
 	def _hydrate(self, rows:list) -> None:
 		self.result = {row[0]:list(row) for row in rows}
 		users = get_accounts_dict(self.result.keys(), db=self.db, graceful=True) or {}
@@ -200,20 +187,8 @@ class RawSqlLeaderboard(Leaderboard):
 
 	@property
 	def v_position(self) -> Optional[int]:
-		return None
-	
-	@property
-	def v_value(self) -> Optional[int]:
-		return None
-	
-	@property
-	def v_appears_in_ranking(self) -> bool:
-		return True # we set this to True here to try and not grab the data
-	
-	@property
-	def user_func(self) -> Callable[[Any], User]:
-		return lambda u:u
-	
+		return None # the cached rows don't rank the viewer
+
 	@property
 	def value_func(self) -> Callable[[User], int]:
 		return lambda u:self.result[u.id][1]
