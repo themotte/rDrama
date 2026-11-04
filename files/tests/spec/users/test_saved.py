@@ -1,0 +1,146 @@
+'''
+The viewer's saved posts and comments: GET /@<username>/saved/posts and GET /@<username>/saved/comments, for logged-in users, viewed under their own name.
+
+They list what the viewer saved that others can still see (not removed, filtered or deleted), newest first, 25 to a page with "page" (from 1) choosing the page. Content by users the viewer blocks is left out, except that admins (level 2 and up) still see such posts. Saved comments by shadowbanned authors are left out for viewers who can't see shadowbanned users. API clients get {"data": [...]} holding each listed item's JSON object, in order. Anonymous browsers are sent to log in.
+'''
+import pytest
+
+from files.tests.spec.harness import *
+
+HIDDEN = [
+	pytest.param({"state_mod": "REMOVED"}, id="removed"),
+	pytest.param({"state_mod": "FILTERED"}, id="filtered"),
+	pytest.param({"state_user_deleted_utc": "2020-01-01T00:00:00Z"}, id="deleted"),
+]
+
+
+def _saved(viewer, kind, author=None, **overrides):
+	'''An item of `kind` by `author` (a fresh user by default) that `viewer` saved; returns (row, sentinel).'''
+	token = factories.unique()
+	author = author or factories.user()
+	if kind == "posts":
+		row = factories.post(author, title=token, **overrides)
+		db.insert("save_relationship", user_id=viewer["id"], submission_id=row["id"])
+	else:
+		row = factories.comment(author, factories.post(factories.user()), body=token, **overrides)
+		db.insert("comment_save_relationship", user_id=viewer["id"], comment_id=row["id"])
+	return row, token
+
+
+def _path(viewer, kind):
+	return f"/@{viewer['username']}/saved/{kind}"
+
+
+@pytest.mark.parametrize("kind", ["posts", "comments"])
+def test_saved_lists_what_the_viewer_saved(kind):
+	viewer = factories.user()
+	_, token = _saved(viewer, kind)
+	_, others = _saved(factories.user(), kind)
+
+	r = as_user(viewer).get(_path(viewer, kind))
+
+	assert_html(r, 200)
+	assert_in_payload(r, token)
+	assert_not_in_payload(r, others)
+
+
+@pytest.mark.parametrize("kind", ["posts", "comments"])
+@pytest.mark.parametrize("state", HIDDEN)
+def test_saved_leaves_out_hidden_content(kind, state):
+	viewer = factories.user()
+	_, listed = _saved(viewer, kind)
+	_, hidden = _saved(viewer, kind, **state)
+
+	r = as_user(viewer).get(_path(viewer, kind))
+
+	assert_html(r, 200)
+	assert_in_payload(r, listed)
+	assert_not_in_payload(r, hidden)
+
+
+@pytest.mark.parametrize("kind", ["posts", "comments"])
+def test_saved_leaves_out_content_by_blocked_users(kind):
+	viewer, blocked = factories.user(), factories.user()
+	db.insert("userblocks", user_id=viewer["id"], target_id=blocked["id"])
+	_, listed = _saved(viewer, kind)
+	_, token = _saved(viewer, kind, author=blocked)
+
+	r = as_user(viewer).get(_path(viewer, kind))
+
+	assert_html(r, 200)
+	assert_in_payload(r, listed)
+	assert_not_in_payload(r, token)
+
+
+@pytest.mark.parametrize("kind", ["posts"])
+def test_saved_keeps_content_by_blocked_users_for_admins(kind):
+	viewer, blocked = factories.admin(2), factories.user()
+	db.insert("userblocks", user_id=viewer["id"], target_id=blocked["id"])
+	_, token = _saved(viewer, kind, author=blocked)
+
+	r = as_user(viewer).get(_path(viewer, kind))
+
+	assert_html(r, 200)
+	assert_in_payload(r, token)
+
+
+def test_saved_comments_leave_out_shadowbanned_authors():
+	viewer = factories.user()
+	_, listed = _saved(viewer, "comments")
+	_, token = _saved(viewer, "comments", author=factories.user(shadowbanned="somemod"))
+
+	r = as_user(viewer).get(_path(viewer, "comments"))
+
+	assert_html(r, 200)
+	assert_in_payload(r, listed)
+	assert_not_in_payload(r, token)
+
+
+@pytest.mark.parametrize("kind", ["posts", "comments"])
+def test_saved_lists_newest_first(kind):
+	viewer = factories.user()
+	_, older = _saved(viewer, kind, created_utc=1_700_000_000)
+	_, newer = _saved(viewer, kind, created_utc=1_700_000_100)
+
+	r = as_user(viewer).get(_path(viewer, kind))
+
+	assert_html(r, 200)
+	assert r.text.index(newer) < r.text.index(older)
+
+
+@pytest.mark.parametrize("kind", ["posts", "comments"])
+@pytest.mark.parametrize("page", [1, 2])
+def test_saved_pages_hold_25_items(kind, page):
+	viewer = factories.user()
+	oldest, *rest = [_saved(viewer, kind, created_utc=1_700_000_000 + i)[1] for i in range(26)]
+
+	r = as_user(viewer).get(_path(viewer, kind), params={"page": page})
+
+	assert_html(r, 200)
+	on_page, off_page = (rest, [oldest]) if page == 1 else ([oldest], rest)
+	for token in on_page:
+		assert_in_payload(r, token)
+	for token in off_page:
+		assert_not_in_payload(r, token)
+
+
+@pytest.mark.parametrize("kind", ["posts", "comments"])
+def test_saved_lists_answer_api_clients_with_json(kind):
+	viewer = factories.user()
+	older, _ = _saved(viewer, kind, created_utc=1_700_000_000)
+	newer, _ = _saved(viewer, kind, created_utc=1_700_000_100)
+
+	r = as_api(factories.api_token(viewer)).get(_path(viewer, kind))
+
+	assert_status(r, 200)
+	assert set(r.json) == {"data"}
+	assert [item["id"] for item in r.json["data"]] == [newer["id"], older["id"]]
+
+
+@pytest.mark.parametrize("kind", ["posts", "comments"])
+def test_saved_lists_send_anonymous_browsers_to_log_in(kind):
+	path = _path(factories.user(), kind)
+
+	r = anon().get(path)
+
+	assert_login_redirect(r, path)
