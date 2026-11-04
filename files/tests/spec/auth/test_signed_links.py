@@ -96,7 +96,7 @@ def test_the_2fa_challenge_is_signed():
 	r = anon().post_raw("/login", {"username": u["username"], "password": factories.PASSWORD})
 
 	assert_html(r, 200)
-	assert r.form_field("hash") == session.sign(f"2fa-challenge+{u['id']}+{r.form_field('time')}")
+	assert r.form_field("hash") == session.sign(f"2fa-challenge+{u['id']}+{r.form_field('time')}+{u['login_nonce']}")
 
 
 def test_a_signed_challenge_and_the_current_code_log_in():
@@ -105,7 +105,7 @@ def test_a_signed_challenge_and_the_current_code_log_in():
 	client = anon()
 	totp_step_settle()
 
-	r = client.post_raw("/login", {"username": u["username"], "time": issued, "hash": session.sign(f"2fa-challenge+{u['id']}+{issued}"), "2fa_token": pyotp.TOTP(u["mfa_secret"]).now()})
+	r = client.post_raw("/login", {"username": u["username"], "time": issued, "hash": session.sign(f"2fa-challenge+{u['id']}+{issued}+{u['login_nonce']}"), "2fa_token": pyotp.TOTP(u["mfa_secret"]).now()})
 
 	assert_redirect(r, "/")
 	assert client.user_id == u["id"]
@@ -117,7 +117,7 @@ def test_a_challenge_dated_in_the_future_goes_back_to_login():
 	client = anon()
 	totp_step_settle()
 
-	r = client.post_raw("/login", {"username": u["username"], "time": issued, "hash": session.sign(f"2fa-challenge+{u['id']}+{issued}"), "2fa_token": pyotp.TOTP(u["mfa_secret"]).now()})
+	r = client.post_raw("/login", {"username": u["username"], "time": issued, "hash": session.sign(f"2fa-challenge+{u['id']}+{issued}+{u['login_nonce']}"), "2fa_token": pyotp.TOTP(u["mfa_secret"]).now()})
 
 	assert_redirect(r, "/login")
 	assert client.user_id is None

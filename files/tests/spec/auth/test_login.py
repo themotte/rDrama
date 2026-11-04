@@ -106,7 +106,7 @@ def _two_factor_user():
 
 
 def _challenge(u, issued):
-	return {"username": u["username"], "time": issued, "hash": session.sign(f"2fa-challenge+{u['id']}+{issued}")}
+	return {"username": u["username"], "time": issued, "hash": session.sign(f"2fa-challenge+{u['id']}+{issued}+{u['login_nonce']}")}
 
 
 def test_a_password_for_a_2fa_account_leads_to_the_challenge_without_logging_in():
@@ -239,3 +239,16 @@ def test_deleted_accounts_drop_out_of_the_history():
 
 	d.assert_exactly()
 	assert client.session()["history"] == [second["id"]]
+
+
+def test_a_challenge_from_before_the_account_signed_out_everywhere_goes_back_to_login():
+	u = _two_factor_user()
+	challenge = _challenge(u, int(time.time()))
+	db.update("users", {"id": u["id"]}, login_nonce=u["login_nonce"] + 1)
+	client = anon()
+	totp_step_settle()
+
+	r = client.post_raw("/login", {**challenge, "2fa_token": pyotp.TOTP(u["mfa_secret"]).now()})
+
+	assert_redirect(r, "/login")
+	assert client.user_id is None

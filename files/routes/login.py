@@ -66,7 +66,7 @@ def login_post():
 
 		if account.mfa_secret:
 			now = int(time.time())
-			hash = token_sign("2fa-challenge", account.id, now)
+			hash = token_sign("2fa-challenge", account.id, now, account.login_nonce)
 			return render_template("login/login_2fa.html",
 								   v=account,
 								   time=now,
@@ -80,11 +80,11 @@ def login_post():
 		if not token_fresh(challenge_time, 600):
 			return redirect('/login')
 
-		if not token_verify("2fa-challenge", request.values.get("hash"), account.id, challenge_time):
+		if not token_verify("2fa-challenge", request.values.get("hash"), account.id, challenge_time, account.login_nonce):
 			return redirect("/login")
 
 		if not account.validate_2fa(request.values.get("2fa_token", "").strip()):
-			hash = token_sign("2fa-challenge", account.id, time)
+			hash = token_sign("2fa-challenge", account.id, time, account.login_nonce)
 			return render_template("login/login_2fa.html",
 								   v=account,
 								   time=now,
@@ -394,6 +394,7 @@ def post_reset(v):
 							   error="Passwords didn't match.")
 
 	user.passhash = user.hash_password(password)
+	user.login_nonce += 1
 	g.db.add(user)
 
 	g.db.commit()

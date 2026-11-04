@@ -146,3 +146,22 @@ def test_an_api_client_is_sent_home():
 
 	assert_redirect(r, "/")
 	d.assert_exactly()
+
+
+# A reset signs the account out everywhere and spends its links
+
+def test_a_reset_ends_the_accounts_sessions():
+	u = _member()
+	elsewhere = as_user(u)
+
+	anon().post_raw("/reset", _form(u, int(time.time()), f"new {factories.unique()} password"))
+
+	assert_api_unauthorized(elsewhere.get("/me", headers=XHR))
+
+
+def test_a_reset_link_works_once():
+	u = _member()
+	issued = int(time.time())
+	anon().post_raw("/reset", _form(u, issued, f"new {factories.unique()} password"))
+
+	assert_status(anon().get("/reset", params=_link(u, issued)), 400)
