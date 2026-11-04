@@ -39,6 +39,7 @@ def send_verification_email(user):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def api_verify_email(v):
+	if not v.email: abort(400, "Your account has no email address to verify.")
 	send_verification_email(v)
 	return {"message": "Email has been sent (ETA ~5 minutes)"}
 

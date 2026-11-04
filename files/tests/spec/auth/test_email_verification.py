@@ -121,6 +121,13 @@ def test_a_link_with_a_malformed_time_is_refused():
 	assert_status(as_user(u).get("/activate", params={**_link_params(u, f"{factories.unique()}@example.com", int(time.time())), "time": "soon"}), 400)
 
 
+def test_asking_for_a_verification_without_an_email_is_refused():
+	r = as_user(factories.user()).post("/verify_email", headers=XHR)
+
+	assert_status(r, 400)
+	assert sent_mail() == []
+
+
 def test_a_link_for_the_accounts_own_unverified_address_verifies_it():
 	email = f"{factories.unique()}@example.com"
 	u = factories.user(email=email, is_activated=False)
