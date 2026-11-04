@@ -437,7 +437,7 @@ def post_reset(v):
 							   time=timestamp,
 							   error="Passwords didn't match.")
 
-	user.passhash = hash_password(password)
+	user.passhash = user.hash_password(password)
 	g.db.add(user)
 
 	g.db.commit()

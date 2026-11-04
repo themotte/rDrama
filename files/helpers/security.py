@@ -34,7 +34,3 @@ def token_fresh(issued, lifetime):
 	'''Whether a token stamped `issued` (epoch seconds) is still within `lifetime` seconds, and wasn't stamped in the future (beyond the clock skew allowed).'''
 	return -TOKEN_CLOCK_SKEW <= int(time.time()) - issued <= lifetime
 
-
-def hash_password(password):
-	return generate_password_hash(
-		password, method='pbkdf2:sha512', salt_length=8)
