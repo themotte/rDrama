@@ -137,6 +137,18 @@ def test_simple_board_shows_a_listed_viewer_once(board, column):
 	assert _rows_of(section, viewer) == _rows_of(section, peer) > 0
 
 
+@pytest.mark.parametrize("board, column", SIMPLE_BOARDS.items())
+def test_simple_board_adds_the_viewers_row_when_a_tie_leaves_them_out(board, column):
+	listed = [_ranked(column, HIGH) for _ in range(25)]
+	viewer = factories.admin(2, **{column: HIGH})
+
+	r = as_user(viewer).get("/leaderboard")
+
+	assert_html(r, 200)
+	section = _board(r, board)
+	assert _rows_of(section, viewer) == _rows_of(section, listed[0]) > 0
+
+
 def _touch_in_reverse(users):
 	'''Rewrites each user's row, last-created first, so storage order no longer follows creation order.'''
 	for user in reversed(users):
@@ -189,6 +201,19 @@ def test_blocked_board_breaks_ties_by_account_age():
 
 	assert_html(r, 200)
 	assert _in_order(_board(r, "blocked"), tied)
+
+
+def test_blocked_board_adds_the_viewers_row_when_a_tie_leaves_them_out():
+	listed = [factories.user() for _ in range(25)]
+	viewer = factories.admin(2)
+	for target in listed + [viewer]:
+		_block(factories.user(), target)
+
+	r = as_user(viewer).get("/leaderboard")
+
+	assert_html(r, 200)
+	section = _board(r, "blocked")
+	assert _rows_of(section, viewer) == _rows_of(section, listed[0]) > 0
 
 
 def test_blocked_board_leaves_out_users_nobody_blocks():

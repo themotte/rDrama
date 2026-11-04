@@ -39,7 +39,7 @@ class Leaderboard:
 	
 	@property
 	def v_appears_in_ranking(self) -> bool:
-		return self.v_position is not None and self.v_position <= len(self.all_users)
+		return self.v in self.all_users
 	
 	@property
 	def value_func(self) -> Callable[[User], int]:
