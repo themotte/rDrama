@@ -4,7 +4,7 @@ Admin marks on posts and comments, all POSTs answering a JSON message:
 - /sticky/<post_id> and /unsticky/<post_id> pin a post to the top of the front page and take it off, recording which admin pinned it. Pins beyond the third visible one expire an hour after pinning.
 - /sticky_comment/<comment_id> and /unsticky_comment/<comment_id> pin a comment to the top of its thread and take it off.
 
-Each change is logged in the mod log; pinning or unpinning someone else's item notifies its author. Pinning a pinned item or unpinning an unpinned one changes nothing.
+Each change is logged in the mod log; pinning or unpinning someone else's item notifies its author. Pinning a pinned item or unpinning an unpinned one changes nothing. An id that isn't an existing item's is 404.
 '''
 import time
 
@@ -78,14 +78,14 @@ def test_distinguishing_a_distinguished_post_undistinguishes_it():
 	)
 
 
-def test_distinguishing_an_unknown_post_is_not_found():
-	post = factories.post(factories.user())
-	db.delete("votes", submission_id=post["id"])
-	db.delete("submissions", id=post["id"])
-	admin = factories.admin(2)
+@pytest.mark.parametrize("action", ["distinguish", "sticky", "unsticky"])
+@pytest.mark.parametrize("post_id", ["unknown", "first", "99999999999"])
+def test_marking_no_existing_post_is_not_found(action, post_id):
+	if post_id == "unknown": post_id = db.execute("SELECT nextval('submissions_id_seq')")
+	client = as_user(factories.admin(3))
 
 	with db_diff() as d:
-		r = as_user(admin).post(f"/distinguish/{post['id']}", headers=XHR)
+		r = client.post(f"/{action}/{post_id}", headers=XHR)
 
 	assert_status(r, 404)
 	d.assert_exactly()

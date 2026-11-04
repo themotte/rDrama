@@ -948,9 +948,7 @@ def unban_user(user_id, v):
 @limiter.exempt
 @admin_level_required(1)
 def api_distinguish_post(post_id, v):
-	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
-
-	if not post: abort(404)
+	post = get_post(post_id)
 
 	if post.author_id != v.id and v.admin_level < 2 : abort(403)
 
@@ -980,8 +978,8 @@ def api_distinguish_post(post_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def sticky_post(post_id, v):
-	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
-	if post and not post.stickied:
+	post = get_post(post_id)
+	if not post.stickied:
 		pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.state_mod == StateMod.VISIBLE).count()
 		post.stickied = v.username
 		if pins > 2: post.stickied_utc = int(time.time()) + 3600
@@ -1005,8 +1003,8 @@ def sticky_post(post_id, v):
 @limiter.exempt
 @admin_level_required(2)
 def unsticky_post(post_id, v):
-	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
-	if post and post.stickied:
+	post = get_post(post_id)
+	if post.stickied:
 		post.stickied = None
 		post.stickied_utc = None
 		g.db.add(post)
