@@ -1,19 +1,32 @@
 '''
 Repeatable tasks, which the site runs on a schedule (scheduled posts are one kind; see test_scheduled_posts for the schedule fields):
-- GET /tasks/<id>/ shows one task, including when it next runs.
+- GET /tasks/ lists every task, linking to each one's page.
+- GET /tasks/<id>/ shows one task, including when it next runs, what it runs, and links to its runs. /tasks/<id>/runs/ redirects there.
+- GET /tasks/<id>/runs/<run_id> shows one run; the traceback of a failed run is shown only to admins of level 3 and up. A run asked for under another task's id redirects to its own task's URL.
 - POST /tasks/<id>/schedule replaces its schedule.
 '''
-from datetime import time
+import re
+from datetime import datetime, time
+
+import pytest
 
 from files.tests.spec.harness import *
 
 MONDAY, TUESDAY = 1 << 2, 1 << 3
 
 
-def _task(admin, *, enabled, frequency_day):
+def _task(admin, *, enabled=True, frequency_day=MONDAY):
 	task = db.insert("tasks_repeatable", author_id=admin["id"], type_id=1, enabled=enabled, run_state=1, frequency_day=frequency_day, time_of_day_utc="01:00", created_utc=1000)
-	db.insert("tasks_repeatable_python", id=task["id"], import_path="files.helpers.config.const", callable="nothing")
-	return task
+	code = db.insert("tasks_repeatable_python", id=task["id"], import_path="files.helpers.config.const", callable=factories.unique("callable"))
+	return {**task, "callable": code["callable"]}
+
+
+def _run(task, **columns):
+	return db.insert("tasks_repeatable_runs", **{"task_id": task["id"], "manual": False, "created_utc": 2000, "completed_utc": datetime(2020, 1, 1), **columns})
+
+
+def _links(r) -> set[str]:
+	return set(re.findall(r'href="([^"]*)"', r.text))
 
 
 def test_admin_replaces_a_tasks_schedule():
@@ -35,3 +48,70 @@ def test_an_enabled_task_with_no_days_ticked_has_a_page():
 	r = as_user(admin).get(f"/tasks/{task['id']}/")
 
 	assert_status(r, 200)
+
+
+def test_task_list_links_every_task():
+	admin = factories.admin(2)
+	tasks = [_task(admin), _task(admin, enabled=False)]
+
+	r = as_user(admin).get("/tasks/")
+
+	assert_html(r, 200)
+	assert {f"/tasks/{t['id']}" for t in tasks} <= _links(r)
+
+
+def test_task_page_shows_what_it_runs_and_links_its_runs():
+	admin = factories.admin(2)
+	task = _task(admin)
+	run = _run(task)
+
+	r = as_user(admin).get(f"/tasks/{task['id']}/")
+
+	assert_html(r, 200)
+	assert_in_payload(r, task["callable"])
+	assert f"/tasks/{task['id']}/runs/{run['id']}" in _links(r)
+
+
+def test_unknown_tasks_are_not_found():
+	admin = factories.admin(2)
+	unknown = db.execute("SELECT nextval('tasks_repeatable_id_seq')")
+
+	assert_status(as_user(admin).get(f"/tasks/{unknown}/"), 404)
+
+
+def test_task_runs_index_redirects_to_the_task():
+	admin = factories.admin(2)
+	task = _task(admin)
+
+	assert_redirect(as_user(admin).get(f"/tasks/{task['id']}/runs/"), f"/tasks/{task['id']}/")
+
+
+@pytest.mark.parametrize("level, shown", [(2, False), (3, True)])
+def test_run_page_shows_a_failed_runs_traceback_only_to_head_admins(level, shown):
+	admin = factories.admin(level)
+	traceback = factories.unique("traceback")
+	run = _run(_task(admin), traceback_str=traceback)
+
+	r = as_user(admin).get(f"/tasks/{run['task_id']}/runs/{run['id']}")
+
+	assert_html(r, 200)
+	(assert_in_payload if shown else assert_not_in_payload)(r, traceback)
+
+
+def test_run_asked_for_under_another_task_redirects_to_its_own():
+	admin = factories.admin(2)
+	task, other = _task(admin), _task(admin)
+	run = _run(task)
+
+	r = as_user(admin).get(f"/tasks/{other['id']}/runs/{run['id']}")
+
+	assert_redirect(r, f"/tasks/{task['id']}/runs/{run['id']}")
+
+
+def test_unknown_runs_are_not_found():
+	admin = factories.admin(2)
+	task = _task(admin)
+
+	unknown = db.execute("SELECT nextval('tasks_repeatable_runs_id_seq')")
+
+	assert_status(as_user(admin).get(f"/tasks/{task['id']}/runs/{unknown}"), 404)
