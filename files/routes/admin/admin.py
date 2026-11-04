@@ -7,6 +7,7 @@ from datetime import datetime, timedelta, timezone
 import requests
 
 from files.classes import *
+from files.classes.submission import IMAGE_URL_SUFFIXES
 from files.classes.user import FilterBehavior
 from files.classes.visstate import StateMod, StateReport
 from files.helpers.alerts import *
@@ -263,7 +264,7 @@ def update_filter_status(v):
 def image_posts_listing(v):
 	page = _page()
 
-	posts = g.db.query(Submission).order_by(Submission.id.desc())
+	posts = g.db.query(Submission).filter(or_(*(func.lower(Submission.url).endswith(suffix, autoescape=True) for suffix in IMAGE_URL_SUFFIXES))).order_by(Submission.id.desc())
 
 	firstrange = 25 * (page - 1)
 	secondrange = firstrange+26

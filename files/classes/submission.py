@@ -17,6 +17,10 @@ from files.helpers.lazy import lazy
 from files.helpers.time import format_age, format_datetime
 
 
+# A post links an image when its URL ends (case-insensitively) in one of these, and points at the site or an embedding host (see is_image).
+IMAGE_URL_SUFFIXES = ('.webp', '.jpg', '.png', '.gif', '.jpeg', '?maxwidth=9999', '&fidelity=high')
+
+
 class Submission(CreatedBase):
 	__tablename__ = "submissions"
 
@@ -350,7 +354,7 @@ class Submission(CreatedBase):
 	@property
 	@lazy
 	def is_image(self):
-		if self.url and (self.url.lower().endswith('.webp') or self.url.lower().endswith('.jpg') or self.url.lower().endswith('.png') or self.url.lower().endswith('.gif') or self.url.lower().endswith('.jpeg') or self.url.lower().endswith('?maxwidth=9999') or self.url.lower().endswith('&fidelity=high')) and (self.url.startswith('/') or self.url.startswith(f'{SITE_FULL}/') or embed_fullmatch_regex.fullmatch(self.url)):
+		if self.url and self.url.lower().endswith(IMAGE_URL_SUFFIXES) and (self.url.startswith('/') or self.url.startswith(f'{SITE_FULL}/') or embed_fullmatch_regex.fullmatch(self.url)):
 			return True
 		return False
 
