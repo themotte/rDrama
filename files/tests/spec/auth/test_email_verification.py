@@ -111,7 +111,7 @@ def test_a_link_for_the_address_already_verified_changes_nothing():
 	with db_diff() as d:
 		r = as_user(u).get("/activate", params=_link_params(u, email, int(time.time())))
 
-	assert_html(r, 404)
+	assert_html(r, 200)
 	d.assert_exactly()
 
 

@@ -69,7 +69,7 @@ def activate(v):
 		abort(403, "That verification link is for a different account.")
 
 	if v.is_activated and v.email == email:
-		return render_template("message_success.html", v=v, title="Email already verified.", message="Email already verified."), 404
+		return render_template("message_success.html", v=v, title="Email already verified.", message="Email already verified.")
 
 	v.email = email
 	v.is_activated = True
