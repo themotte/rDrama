@@ -1,6 +1,8 @@
 '''
-POST /@<username>/revert_actions undoes what the named admin did in the last day, logs the revert in the mod log against that admin, and answers a JSON message. Posts and comments they removed that are still removed come back as approving them would (ones held for approval since stay held); users they banned or shadowbanned are unbanned.
+POST /@<username>/revert_actions undoes what the named admin did in the last day, logs the revert in the mod log against that admin, and answers a JSON message. Posts and comments they removed that are still removed come back as approving them would (ones held for approval since stay held); users they banned or shadowbanned are unbanned, and those they banned are told so.
 '''
+import time
+
 from files.tests.spec.harness import *
 
 
@@ -57,6 +59,27 @@ def test_reverting_leaves_items_held_since():
 		as_user(admin).post(f"/@{target['username']}/revert_actions")
 
 	d.assert_exactly(inserted={"modactions": [{"kind": "revert", "user_id": admin["id"], "target_user_id": target["id"]}]})
+
+
+def test_reverting_unbans_whom_the_admin_banned_and_tells_only_them():
+	target = factories.admin(2)
+	banned = factories.user(is_banned=target["id"], unban_utc=int(time.time()) + 86400, ban_reason=factories.unique("reason"))
+	shadowbanned = factories.user(shadowbanned=target["username"])
+	_logged(target, "ban_user", target_user_id=banned["id"])
+	_logged(target, "shadowban", target_user_id=shadowbanned["id"])
+	admin = factories.admin(3)
+
+	with db_diff() as d:
+		as_user(admin).post(f"/@{target['username']}/revert_actions")
+
+	d.assert_exactly(
+		updated={"users": {banned["id"]: {"is_banned": 0, "unban_utc": 0, "ban_reason": None}, shadowbanned["id"]: {"shadowbanned": None}}},
+		inserted={
+			"modactions": [{"kind": "revert", "user_id": admin["id"], "target_user_id": target["id"]}],
+			"comments": [{"author_id": seed.SYSTEM_ID, "parent_submission": None}],
+			"notifications": [{"user_id": banned["id"]}],
+		},
+	)
 
 
 def test_reverting_an_unknown_user_is_not_found():

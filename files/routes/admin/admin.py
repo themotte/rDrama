@@ -142,11 +142,14 @@ def revert_actions(v, username):
 	users = g.db.query(User).filter(User.id.in_(users)).all()
 
 	for user in users:
+		# A user only shadowbanned isn't told: that would reveal the shadowban.
+		if user.is_banned:
+			send_repeatable_notification(user.id, f"@{v.username} has unbanned you!")
 		user.shadowbanned = None
 		user.is_banned = 0
 		user.unban_utc = 0
 		user.ban_evade = 0
-		send_repeatable_notification(user.id, f"@{v.username} has unbanned you!")
+		user.ban_reason = None
 		g.db.add(user)
 
 	g.db.commit()
