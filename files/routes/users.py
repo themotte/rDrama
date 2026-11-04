@@ -42,7 +42,6 @@ def _visible(cls):
 @admin_level_required(3)
 def voted_content(v, username, list_name, uid, kind):
 	u = get_user(username)
-	if u.is_private and v.id != u.id: abort(403)
 	uid = parse_id(uid)
 	if uid is None: abort(404)
 	vote_type, on_users_content, _ = _VOTER_LISTS[list_name]

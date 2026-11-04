@@ -352,3 +352,16 @@ def test_drilldown_shows_the_first_page_for_an_invalid_page(name, page):
 
 	assert_html(r, 200)
 	assert_in_payload(r, token)
+
+
+@pytest.mark.parametrize("name", LISTS)
+@pytest.mark.parametrize("what", ["posts", "comments"])
+def test_drilldown_of_a_private_profile_is_shown(name, what):
+	user, other = _profile_user(), factories.user()
+	db.update("users", {"id": user["id"]}, is_private=True)
+	token = _cast(name, user, other, what)
+
+	r = as_user(factories.admin(3)).get(_drilldown(name, user, other, what))
+
+	assert_html(r, 200)
+	assert_in_payload(r, token)
