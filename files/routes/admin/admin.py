@@ -1,4 +1,5 @@
 import json
+import re
 import time
 from datetime import datetime, timedelta, timezone
 
@@ -832,7 +833,10 @@ def ban_user(user_id, v):
 
 	if user.admin_level >= v.admin_level: abort(403)
 
-	days = float(request.values.get("days")) if request.values.get('days') else 0
+	try: days = float(request.values.get("days") or 0)
+	except ValueError: abort(400, "A ban lasts a number of days.")
+	# A ban's end is stored as a 32-bit unix time.
+	if not 0 <= days <= 3650 or time.time() + days * 86400 >= 2**31: abort(400, "A ban lasts from 0 (permanently) to 3650 days, ending before 2038.")
 
 	reason = request.values.get("reason", "").strip()[:256]
 	passed_reason = filter_emojis_only(reason)
@@ -843,7 +847,7 @@ def ban_user(user_id, v):
 
 	if request.values.get("alts"):
 		for x in user.alts:
-			if x.admin_level: break
+			if x.admin_level: continue
 			x.ban(admin=v, reason=passed_reason, days=days)
 
 	if days:
@@ -868,20 +872,11 @@ def ban_user(user_id, v):
 		)
 	g.db.add(ma)
 
-	if reason.startswith("/post/"):
-		try:
-			post = int(reason.split("/post/")[1].split(None, 1)[0])
-			post = get_post(post)
-			post.bannedfor = True
-			g.db.add(post)
-		except: pass
-	elif reason.startswith("/comment/"):
-		try:
-			comment = int(reason.split("/comment/")[1].split(None, 1)[0])
-			comment = get_comment(comment)
-			comment.bannedfor = True
-			g.db.add(comment)
-		except: pass
+	# A reason starting with a post's or comment's path marks that item as what the user was banned for.
+	named = re.match(r"/(post|comment)/(\d{1,9})(?!\S)", reason)
+	if named:
+		item = (get_post if named[1] == "post" else get_comment)(named[2], graceful=True)
+		if item: item.bannedfor = True
 
 
 	body = f"@{v.username} has banned @{user.username} ({note})"

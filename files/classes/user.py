@@ -490,12 +490,10 @@ class User(CreatedBase):
 
 
 	def ban(self, admin=None, reason=None, days=0):
-		if days:
-			self.unban_utc = int(time.time()) + (days * 86400)
-			g.db.add(self)
-
+		self.unban_utc = int(time.time() + days * 86400) if days else 0
 		self.is_banned = admin.id if admin else AUTOJANNY_ID
-		if reason: self.ban_reason = reason
+		self.ban_reason = reason or None
+		g.db.add(self)
 
 	@property
 	def is_suspended(self):

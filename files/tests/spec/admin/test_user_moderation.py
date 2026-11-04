@@ -4,7 +4,7 @@ Admin actions on a user account, all POSTs taking the user's id in the path, plu
 - /filter_automatic/<id>, /filter_unfiltered/<id>, /filter_filtered/<id> set whether the user's new content waits in the filter queue: decided per item, never, or always.
 - /admin/verify/<id> and /admin/unverify/<id> (level 3) set or clear the account's verified mark.
 - /admin/title_change/<id> sets the user's flair from "title" (surrounding whitespace dropped); a non-empty "locked" stops the user changing it. Redirects to the profile.
-- /ban_user/<id> bans for "days" (temporary; absent or empty means permanent) with an optional "reason". A reason beginning "/post/<id>" or "/comment/<id>" marks that post or comment as the one the user was banned for. A non-empty "alts" bans the user's linked accounts too. The user is notified, and so are level-3 admins other than the actor. With "redir" present it redirects to the profile, else answers JSON. System accounts and users at or above the actor's level can't be banned.
+- /ban_user/<id> bans for "days" (temporary; absent, empty or 0 means permanent; at most 3650 and ending before 2038, when the stored end time runs out, else 400) with an optional "reason". A reason beginning "/post/<id>" or "/comment/<id>" marks that post or comment as the one the user was banned for. A non-empty "alts" bans the user's linked accounts too. The user is notified, and so are level-3 admins other than the actor. With "redir" present it redirects to the profile, else answers JSON. System accounts and users at or above the actor's level can't be banned.
 - /unban_user/<id> lifts a ban and notifies the user; from the user's profile page (by Referer) it redirects back there, else answers JSON.
 - GET /admin/users lists non-banned accounts, newest first, 25 to a page ("page"); GET /admin/shadowbanned lists shadowbanned accounts, and doesn't exist for non-admins.
 
@@ -297,6 +297,75 @@ def test_banning_without_alts_leaves_the_linked_accounts_alone():
 
 	assert_json_message(r)
 	d.assert_exactly(**_ban_changes(actor, user, {"is_banned": actor["id"]}, notified=[user]))
+
+
+def test_banning_with_alts_skips_admin_alts():
+	actor = factories.admin(3)
+	user = factories.user()
+	admin_alt, alt = factories.admin(2, username=factories.unique("a")), factories.user(username=factories.unique("z"))
+	for linked in (admin_alt, alt):
+		db.insert("alts", user1=user["id"], user2=linked["id"], is_manual=True)
+
+	r, d = _ban(actor, user, {"alts": "on"})
+
+	assert_json_message(r)
+	banned = {"is_banned": actor["id"]}
+	d.assert_exactly(**_ban_changes(actor, user, banned, notified=[user], updated={"users": {user["id"]: banned, alt["id"]: banned}}))
+
+
+def test_a_permanent_ban_replaces_a_temporary_one():
+	actor = factories.admin(2)
+	user = factories.user(is_banned=actor["id"], unban_utc=int(time.time()) + 86400, ban_reason=factories.unique("reason"))
+	reason = factories.unique("reason")
+
+	r, d = _ban(actor, user, {"reason": reason})
+
+	assert_json_message(r)
+	d.assert_exactly(**_ban_changes(actor, user, {"unban_utc": 0, "ban_reason": reason}, notified=[user]))
+
+
+def test_a_ban_without_a_reason_clears_the_previous_reason():
+	actor = factories.admin(2)
+	user = factories.user(is_banned=actor["id"], ban_reason=factories.unique("reason"))
+
+	r, d = _ban(actor, user, {})
+
+	assert_json_message(r)
+	d.assert_exactly(**_ban_changes(actor, user, {"ban_reason": None}, notified=[user]))
+
+
+def test_a_ban_may_last_a_year():
+	actor = factories.admin(2)
+	user = factories.user()
+
+	r, d = _ban(actor, user, {"days": "365"})
+
+	assert_json_message(r)
+	d.assert_exactly(**_ban_changes(actor, user, {"is_banned": actor["id"], "unban_utc": ANY}, notified=[user]))
+
+
+@pytest.mark.parametrize("days", ["soon", "-1", "nan", "inf", "3651", "past 2038"])
+def test_a_ban_must_last_a_number_of_days_from_0_to_ten_years_ending_before_2038(days):
+	actor = factories.admin(2)
+	user = factories.user()
+	if days == "past 2038": days = str((2**31 - int(time.time())) / 86400 + 0.01)
+
+	r, d = _ban(actor, user, {"days": days}, headers=XHR)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("reason", ["/post/{unknown}", "/post/many", "/comment/{unknown} spam", "/comment/"])
+def test_a_ban_reason_naming_no_existing_post_or_comment_marks_nothing(reason):
+	actor = factories.admin(2)
+	user = factories.user()
+	reason = reason.format(unknown=db.execute("SELECT nextval('submissions_id_seq')") + 1000)
+
+	r, d = _ban(actor, user, {"reason": reason})
+
+	assert_json_message(r)
+	d.assert_exactly(**_ban_changes(actor, user, {"is_banned": actor["id"], "ban_reason": reason}, notified=[user]))
 
 
 @pytest.mark.parametrize("system_id", [seed.SYSTEM_ID, seed.AUTOJANNY_ID], ids=["System", "AutoJanny"])
