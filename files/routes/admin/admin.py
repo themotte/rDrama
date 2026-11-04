@@ -24,19 +24,7 @@ from files.routes.importstar import *
 @limiter.exempt
 @admin_level_required(3)
 def make_admin(v, username):
-	user = get_user(username)
-	if not user: abort(404)
-	user.admin_level = 2
-	g.db.add(user)
-
-	ma = ModAction(
-		kind="make_admin",
-		user_id=v.id,
-		target_user_id=user.id
-	)
-	g.db.add(ma)
-
-	g.db.commit()
+	_set_admin_level(v, username, 2, "make_admin")
 	return {"message": "User has been made admin!"}
 
 
@@ -44,20 +32,18 @@ def make_admin(v, username):
 @limiter.exempt
 @admin_level_required(3)
 def remove_admin(v, username):
-	user = get_user(username)
-	if not user: abort(404)
-	user.admin_level = 0
-	g.db.add(user)
-
-	ma = ModAction(
-		kind="remove_admin",
-		user_id=v.id,
-		target_user_id=user.id
-	)
-	g.db.add(ma)
-
-	g.db.commit()
+	_set_admin_level(v, username, 0, "remove_admin")
 	return {"message": "Admin removed!"}
+
+
+def _set_admin_level(v, username, level, kind):
+	user = get_user(username)
+	# Level-3 admins and system accounts change only in the database.
+	if user.admin_level >= 3 or user.id in SYSTEM_ACCOUNT_IDS: abort(403)
+	if user.admin_level == level: return
+	user.admin_level = level
+	g.db.add(ModAction(kind=kind, user_id=v.id, target_user_id=user.id))
+	g.db.commit()
 
 
 @app.post("/@<username>/delete_note/<id>")

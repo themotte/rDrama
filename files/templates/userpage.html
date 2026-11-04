@@ -138,8 +138,10 @@
 						{% endif %}
 
 						{% if v and v.admin_level >= 3 %}
-							<a id="admin" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/make_admin','POST','admin','unadmin');">Make admin</a>
-							<a id="unadmin" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/remove_admin','POST','admin','unadmin');">Remove admin</a>
+							{% if u.admin_level < 3 %}
+								<a id="admin" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/make_admin','POST','admin','unadmin');">Make admin</a>
+								<a id="unadmin" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/remove_admin','POST','admin','unadmin');">Remove admin</a>
+							{% endif %}
 							{% if u.admin_level > 1 %}
 								<a class="btn btn-primary" role="button" onclick="postToastSimple(this,'/@{{u.username}}/revert_actions')">Revert admin actions</a>
 							{% endif %}
@@ -361,8 +363,10 @@
 					{% endif %}
 
 					{% if v and v.admin_level >= 3 %}
-						<a id="admin2" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/make_admin','POST','admin2','unadmin2');">Make admin</a>
-						<a id="unadmin2" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/remove_admin','POST','admin2','unadmin2');">Remove admin</a>
+						{% if u.admin_level < 3 %}
+							<a id="admin2" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/make_admin','POST','admin2','unadmin2');">Make admin</a>
+							<a id="unadmin2" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="postToastSwitch(this,'/@{{u.username}}/remove_admin','POST','admin2','unadmin2');">Remove admin</a>
+						{% endif %}
 						{% if u.admin_level > 1 %}
 							<a class="btn btn-primary" role="button" onclick="postToastSimple(this,'/@{{u.username}}/revert_actions')">Revert admin actions</a>
 						{% endif %}
