@@ -1,4 +1,7 @@
 from urllib.parse import urlencode
+
+from sqlalchemy import and_, or_
+
 from files.helpers.config.environment import HCAPTCHA_SECRET, HCAPTCHA_SITEKEY, WELCOME_MSG
 from files.mail import *
 from files.__main__ import app, limiter
@@ -21,61 +24,19 @@ def login_get(v):
 
 
 def check_for_alts(current_id):
-	ids = [x[0] for x in g.db.query(User.id).all()]
-	past_accs = set(session.get("history", []))
+	'''Records the accounts this browser logged into before as alts of `current_id`, and adds it to the browser's history.'''
+	history = list(dict.fromkeys(session.get("history", [])))
+	live = {id for (id,) in g.db.query(User.id).filter(User.id.in_(history))} if history else set()
+	history = [id for id in history if id in live]
 
-	for past_id in list(past_accs):
-		
-		if past_id not in ids:
-			past_accs.remove(past_id)
-			continue
-
+	for past_id in history:
 		if past_id == current_id: continue
+		pair = or_(and_(Alt.user1 == past_id, Alt.user2 == current_id), and_(Alt.user1 == current_id, Alt.user2 == past_id))
+		if not g.db.query(Alt).filter(pair).first():
+			g.db.add(Alt(user1=past_id, user2=current_id))
 
-		li = [past_id, current_id]
-		existing = g.db.query(Alt).filter(Alt.user1.in_(li), Alt.user2.in_(li)).one_or_none()
-
-		if not existing:
-			new_alt = Alt(user1=past_id, user2=current_id)
-			g.db.add(new_alt)
-			g.db.flush()
-			
-		otheralts = g.db.query(Alt).filter(Alt.user1.in_(li), Alt.user2.in_(li)).all()
-		for a in otheralts:
-			if a.user1 != past_id:
-				li = [a.user1, past_id]
-				existing = g.db.query(Alt).filter(Alt.user1.in_(li), Alt.user2.in_(li)).one_or_none()
-				if not existing:
-					new_alt = Alt(user1=a.user1, user2=past_id)
-					g.db.add(new_alt)
-					g.db.flush()
-
-			if a.user1 != current_id:
-				li = [a.user1, current_id]
-				existing = g.db.query(Alt).filter(Alt.user1.in_(li), Alt.user2.in_(li)).one_or_none()
-				if not existing:
-					new_alt = Alt(user1=a.user1, user2=current_id)
-					g.db.add(new_alt)
-					g.db.flush()
-
-			if a.user2 != past_id:
-				li = [a.user2, past_id]
-				existing = g.db.query(Alt).filter(Alt.user1.in_(li), Alt.user2.in_(li)).one_or_none()
-				if not existing:
-					new_alt = Alt(user1=a.user2, user2=past_id)
-					g.db.add(new_alt)
-					g.db.flush()
-
-			if a.user2 != current_id:
-				li = [a.user2, current_id]
-				existing = g.db.query(Alt).filter(Alt.user1.in_(li), Alt.user2.in_(li)).one_or_none()
-				if not existing:
-					new_alt = Alt(user1=a.user2, user2=current_id)
-					g.db.add(new_alt)
-					g.db.flush()
-	
-	past_accs.add(current_id)
-	session["history"] = list(past_accs)
+	if current_id not in history: history.append(current_id)
+	session["history"] = history
 
 
 @app.post("/login")
