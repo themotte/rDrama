@@ -6,7 +6,6 @@ Session cookie: named `session_<site id, lowercased>`; value is an itsdangerous 
 - `session_id`: 98 hex chars, assigned on first request and on login.
 - `lo_user`, `login_nonce`: the logged-in user's id, and their `users.login_nonce` at login. The session is invalid once the stored nonce exceeds it.
 - `history`: ids of accounts that have logged in from this browser (alt detection).
-- `verified`: epoch seconds, set when the site owner logs in.
 - `over_18`: epoch seconds until which the adult-content interstitial is waived.
 - `signup_token`: hex, issued by the signup form and consumed by signup.
 - `tooltip_last_dismissed`: epoch seconds.

@@ -112,7 +112,6 @@ ERROR_MESSAGES = {
 	500: "Something went wrong and it's probably my fault. If you can do it reliably, or it's causing problems for you, please report it!",
 }
 
-LOGGEDIN_ACTIVE_TIME = 15 * 60
 RENDER_DEPTH_LIMIT = 9
 '''
 The maximum depth at which a comment tree is rendered

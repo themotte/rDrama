@@ -29,10 +29,8 @@ def activation_link(user, email):
 	return f"{SITE_FULL}/activate?email={quote(email)}&id={user.id}&time={now}&token={activation_token(email, user.id, now)}"
 
 
-def send_verification_email(user, email=None):
-	if not email:
-		email = user.email
-
+def send_verification_email(user):
+	email = user.email
 	link = activation_link(user, email)
 
 	send_mail(to_address=email,

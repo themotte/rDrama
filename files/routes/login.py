@@ -81,8 +81,6 @@ def check_for_alts(current_id):
 @app.post("/login")
 @limiter.limit("1/second;6/minute;200/hour;1000/day")
 def login_post():
-	template = ''
-
 	username = request.values.get("username")
 
 	if not username: abort(400)
@@ -138,8 +136,6 @@ def login_post():
 	session["session_id"] = token_hex(49)
 	session["lo_user"] = account.id
 	session["login_nonce"] = account.login_nonce
-	if account.id == OWNER_ID:
-		session["verified"] = time.time()
 
 	check_for_alts(account.id)
 
@@ -186,7 +182,6 @@ def sign_up_get(v):
 	if v: return redirect(SITE_FULL)
 
 	agent = request.headers.get("User-Agent")
-	if not agent: abort(403)
 
 	ref = request.values.get("ref")
 
@@ -227,7 +222,6 @@ def sign_up_post(v):
 	if v: abort(403)
 
 	agent = request.headers.get("User-Agent")
-	if not agent: abort(403)
 
 	form_timestamp = request.values.get("now", '0')
 	form_formkey = request.values.get("formkey", "none")
@@ -408,9 +402,6 @@ def get_reset():
 
 	if not validate_hash(f"{user_id}+{timestamp}+forgot+{user.login_nonce}", token):
 		abort(400)
-
-	if not user:
-		abort(404)
 
 	reset_token = generate_hash(f"{user.id}+{timestamp}+reset+{user.login_nonce}")
 

@@ -564,32 +564,6 @@ def users_list(v):
 						   )
 
 
-@app.get('/admin/loggedin')
-@limiter.exempt
-@admin_level_required(2)
-def loggedin_list(v):
-	loggedin = cache.get(f'{SITE}_loggedin')
-	if not loggedin:
-		return render_template("admin/loggedin.html", v=v, users=[])
-	ids = [x for x, val in loggedin.items() \
-		if (time.time() - val) < LOGGEDIN_ACTIVE_TIME]
-	users = g.db.query(User).filter(User.id.in_(ids)) \
-		.order_by(User.admin_level.desc(), User.truescore.desc()).all()
-	return render_template("admin/loggedin.html", v=v, users=users)
-
-
-@app.get('/admin/loggedout')
-@limiter.exempt
-@admin_level_required(2)
-def loggedout_list(v):
-	loggedout = cache.get(f'{SITE}_loggedout')
-	if not loggedout:
-		return render_template("admin/loggedout.html", v=v, users=[])
-	users = sorted([val[1] for x, val in loggedout.items() \
-		if (time.time() - val[0]) < LOGGEDIN_ACTIVE_TIME])
-	return render_template("admin/loggedout.html", v=v, users=users)
-
-
 @app.get("/admin/alt_votes")
 @limiter.exempt
 @admin_level_required(2)

@@ -86,22 +86,6 @@ def test_admin_image_posts():
 	assert response.status_code == 200
 
 
-def test_admin_loggedin():
-	"""Test GET /admin/loggedin route"""
-	client, admin = util_accounts.create_test_client_and_admin(3)
-
-	response = client.get("/admin/loggedin")
-	assert response.status_code == 200
-
-
-def test_admin_loggedout():
-	"""Test GET /admin/loggedout route"""
-	client, admin = util_accounts.create_test_client_and_admin(3)
-
-	response = client.get("/admin/loggedout")
-	assert response.status_code == 200
-
-
 def test_ban_user():
 	"""Test POST /ban_user/<user_id> route"""
 	from files.__main__ import db_session
