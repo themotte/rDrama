@@ -292,6 +292,51 @@ def test_ignoring_a_post_only_marks_its_reports_ignored(state):
 
 # Settling comments
 
+def test_approving_a_held_reply_publishes_it():
+	post = factories.post(factories.user())
+	parent = factories.comment(factories.user(), post)
+	author = factories.user()
+	reply = factories.comment(author, post, parent, state_mod="FILTERED", state_report="REPORTED")
+	admin = factories.admin(2)
+
+	with db_diff() as d:
+		r = _settle(admin, "normal", comment_id=reply["id"])
+
+	_assert_settled(r)
+	d.assert_exactly(
+		updated={
+			"comments": {reply["id"]: {"state_mod": "VISIBLE", "state_mod_set_by": admin["username"], "state_report": "RESOLVED"}, parent["id"]: {"descendant_count": 1}},
+			"submissions": {post["id"]: {"comment_count": 2}},
+			"users": {author["id"]: {"comment_count": 1}},
+		},
+		inserted={
+			"modactions": [{"kind": "approve_comment", "user_id": admin["id"], "target_comment_id": reply["id"], "target_submission_id": None}],
+			"notifications": [{"user_id": parent["author_id"], "comment_id": reply["id"]}],
+		},
+	)
+
+
+def test_removing_a_visible_reply_hides_it():
+	post = factories.post(factories.user())
+	parent = factories.comment(factories.user(), post)
+	author = factories.user()
+	reply = factories.comment(author, post, parent, state_report="REPORTED")
+	admin = factories.admin(2)
+
+	with db_diff() as d:
+		r = _settle(admin, "removed", comment_id=reply["id"])
+
+	_assert_settled(r)
+	d.assert_exactly(
+		updated={
+			"comments": {reply["id"]: {"state_mod": "REMOVED", "state_mod_set_by": admin["username"], "state_report": "RESOLVED"}, parent["id"]: {"descendant_count": 0}},
+			"submissions": {post["id"]: {"comment_count": 1}},
+			"users": {author["id"]: {"comment_count": 0}},
+		},
+		inserted={"modactions": [{"kind": "remove_comment", "user_id": admin["id"], "target_comment_id": reply["id"], "target_submission_id": None}]},
+	)
+
+
 @pytest.mark.parametrize("state", ["VISIBLE", "FILTERED", "REMOVED"])
 def test_ignoring_a_comment_only_marks_its_reports_ignored(state):
 	comment = factories.comment(factories.user(), factories.post(factories.user()), state_mod=state, state_report="REPORTED")

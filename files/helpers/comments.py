@@ -25,6 +25,8 @@ def update_post_comment_count(comment, delta):
 
 def update_author_comment_count(comment, delta):
 	author = comment.author
+	# The session doesn't autoflush, so the count would miss this comment's pending state change.
+	g.db.flush()
 	comment.author.comment_count = g.db.query(Comment).filter(
 		Comment.author_id == comment.author_id,
 		Comment.parent_submission != None,
