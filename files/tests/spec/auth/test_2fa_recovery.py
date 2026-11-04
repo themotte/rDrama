@@ -1,5 +1,5 @@
 '''
-Removing 2FA from an account whose codes are lost: GET /lost_2fa shows the request form; POST /request_2fa_disable with "username", "password" and "email" mails a removal link (format in harness/session.py) to the account's address when the username and password match an account with 2FA and an email, and answers the same either way; the link (/reset_2fa?id=&t=&token=) removes 2FA for a day after it was issued.
+Removing 2FA from an account whose codes are lost: GET /lost_2fa shows the request form; POST /request_2fa_disable with "username", "password" and "email" mails a removal link (format in harness/session.py) to the account's address when the username and password match an account with 2FA and an email, and answers the same either way; the link (/reset_2fa?id=&t=&token=) shows a confirmation whose POST, carrying the same fields, removes 2FA, for a day after the link was issued; both refuse a bad link the same way.
 '''
 import time
 
@@ -15,6 +15,13 @@ def _member(**overrides):
 
 def _request(u, **overrides):
 	return anon().post("/request_2fa_disable", {"username": u["username"], "password": factories.PASSWORD, "email": u["email"], **overrides})
+
+
+def _follow(method, params):
+	return anon().get("/reset_2fa", params=params) if method == "GET" else anon().post_raw("/reset_2fa", params)
+
+
+BOTH = pytest.mark.parametrize("method", ["GET", "POST"])
 
 
 def _link(u, issued, **overrides):
@@ -52,44 +59,49 @@ def test_an_invalid_email_gets_no_mail():
 	assert sent_mail() == []
 
 
-def test_an_expired_link_removes_nothing():
+@BOTH
+def test_an_expired_link_removes_nothing(method):
 	u = _member()
 
 	with db_diff() as d:
-		r = anon().get("/reset_2fa", params=_link(u, int(time.time()) - 86401))
+		r = _follow(method, _link(u, int(time.time()) - 86401))
 
 	assert_html(r, 200)
 	d.assert_exactly()
 
 
-def test_a_link_with_a_bad_token_is_refused():
+@BOTH
+def test_a_link_with_a_bad_token_is_refused(method):
 	u = _member()
 
 	with db_diff() as d:
-		r = anon().get("/reset_2fa", params=_link(u, int(time.time()), token="0" * 32))
+		r = _follow(method, _link(u, int(time.time()), token="0" * 32))
 
 	assert_status(r, 403)
 	d.assert_exactly()
 
 
-def test_a_link_without_its_time_is_refused():
+@BOTH
+def test_a_link_without_its_time_is_refused(method):
 	u = _member()
 
-	assert_status(anon().get("/reset_2fa", params={"id": u["id"], "token": "0" * 32}), 400)
+	assert_status(_follow(method, {"id": u["id"], "token": "0" * 32}), 400)
 
 
-def test_a_link_for_an_unknown_account_is_refused():
+@BOTH
+def test_a_link_for_an_unknown_account_is_refused(method):
 	u = _member()
 	db.delete("users", id=u["id"])
 
-	assert_status(anon().get("/reset_2fa", params=_link(u, int(time.time()))), 404)
+	assert_status(_follow(method, _link(u, int(time.time()))), 404)
 
 
-def test_a_link_for_an_account_without_2fa_is_refused():
+@BOTH
+def test_a_link_for_an_account_without_2fa_is_refused(method):
 	u = _member(mfa_secret=None)
 
 	with db_diff() as d:
-		r = anon().get("/reset_2fa", params=_link(u, int(time.time())))
+		r = _follow(method, _link(u, int(time.time())))
 
 	assert_status(r, 403)
 	d.assert_exactly()
@@ -106,7 +118,8 @@ def test_a_request_missing_a_field_gets_no_mail(missing):
 	assert sent_mail() == []
 
 
-def test_a_link_with_a_malformed_time_is_refused():
+@BOTH
+def test_a_link_with_a_malformed_time_is_refused(method):
 	u = _member()
 
-	assert_status(anon().get("/reset_2fa", params=_link(u, int(time.time()), t="soon")), 400)
+	assert_status(_follow(method, _link(u, int(time.time()), t="soon")), 400)

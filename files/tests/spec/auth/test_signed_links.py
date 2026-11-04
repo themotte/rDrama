@@ -134,11 +134,23 @@ def test_the_removal_mail_links_to_a_signed_removal():
 	assert params["token"] == session.sign(f"2fa-remove+{u['id']}+{u['username']}+{params['t']}+{u['mfa_secret']}+{u['login_nonce']}")
 
 
-def test_a_removal_link_removes_2fa():
+def test_a_removal_link_asks_before_removing_2fa():
+	u = _two_factor_user()
+	link = _removal_link(u, int(time.time()))
+
+	with db_diff() as d:
+		r = anon().get("/reset_2fa", params=link)
+
+	assert_html(r, 200)
+	assert (r.form_field("id"), r.form_field("t"), r.form_field("token")) == (str(link["id"]), str(link["t"]), link["token"])
+	d.assert_exactly()
+
+
+def test_confirming_a_removal_link_removes_2fa():
 	u = _two_factor_user()
 
 	with db_diff() as d:
-		r = anon().get("/reset_2fa", params=_removal_link(u, int(time.time())))
+		r = anon().post_raw("/reset_2fa", _removal_link(u, int(time.time())))
 
 	assert_html(r, 200)
 	d.assert_exactly(updated={"users": {u["id"]: {"mfa_secret": None}}})
@@ -148,7 +160,7 @@ def test_a_removal_link_dated_in_the_future_removes_nothing():
 	u = _two_factor_user()
 
 	with db_diff() as d:
-		r = anon().get("/reset_2fa", params=_removal_link(u, int(time.time()) + 3600))
+		r = anon().post_raw("/reset_2fa", _removal_link(u, int(time.time()) + 3600))
 
 	assert_html(r, 200)
 	d.assert_exactly()

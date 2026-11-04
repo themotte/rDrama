@@ -1,0 +1,14 @@
+{% extends "login/authforms.html" %}
+{% block pagetitle %}{{SITE_TITLE}} Two-Factor Removal{% endblock %}
+{% block authtitle %}Remove two-factor authentication from {{user.username}}?{% endblock %}
+{% block authtext %}After this, the account will need only its password to log in.{% endblock %}
+{% block content %}
+	<div id="login-form" class="">
+		<form action="/reset_2fa" method="post" class="mt-3">
+			<input type="hidden" name="id" value="{{user.id}}">
+			<input type="hidden" name="t" value="{{t}}">
+			<input type="hidden" name="token" value="{{token}}">
+			<input autocomplete="off" class="btn btn-primary login w-100 mt-3" type="submit" value="Remove two-factor authentication">
+		</form>
+	</div>
+{% endblock %}

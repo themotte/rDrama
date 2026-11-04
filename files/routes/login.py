@@ -451,23 +451,37 @@ def request_2fa_disable():
 						   title="Removal request received",
 						   message="If username, password, and email match, we will send you an email.")
 
-@app.get("/reset_2fa")
-def reset_2fa():
+def _removal_link_account():
+	'''The account a 2FA removal link (its id, t and token) names, or None and the page refusing an expired link.'''
 	t = request.values.get("t", type=int)
 	if t is None: abort(400)
 
 	if not token_fresh(t, 3600*24):
-		return render_template("message.html",
+		return None, render_template("message.html",
 						   title="Expired Link",
 						   error="That link has expired.")
 
-	token=request.values.get("token")
-	uid=request.values.get("id")
+	user = get_account(request.values.get("id"))
 
-	user=get_account(uid)
-
-	if not user.mfa_secret or not token_verify("2fa-remove", token, user.id, user.username, t, user.mfa_secret, user.login_nonce):
+	if not user.mfa_secret or not token_verify("2fa-remove", request.values.get("token"), user.id, user.username, t, user.mfa_secret, user.login_nonce):
 		abort(403)
+
+	return user, None
+
+
+@app.get("/reset_2fa")
+def reset_2fa_confirm():
+	user, refusal = _removal_link_account()
+	if refusal: return refusal
+
+	return render_template("login/reset_2fa.html", user=user, t=request.values.get("t"), token=request.values.get("token"))
+
+
+@app.post("/reset_2fa")
+@limiter.limit("1/second;6/minute;200/hour;1000/day")
+def reset_2fa():
+	user, refusal = _removal_link_account()
+	if refusal: return refusal
 
 	user.mfa_secret=None
 
