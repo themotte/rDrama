@@ -1,7 +1,7 @@
 '''
 The settings pages, and who may use the settings endpoints at all.
 
-Every settings endpoint requires login; anonymous browsers are sent to log in. Bans don't restrict settings, except that permanently banned users can't change their username (see test_account).
+Every settings endpoint requires login; anonymous browsers are sent to log in. Bans don't restrict preferences, but suspended users can't change their public profile, username included (see spec/users/test_suspended and test_account).
 '''
 import pytest
 

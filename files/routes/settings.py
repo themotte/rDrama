@@ -47,6 +47,7 @@ def settings_profile_post(v):
 		v.is_nofollow = request.values.get("nofollow") == 'true'
 
 	elif request.values.get("bio") == "" and not upload:
+		refuse_while_suspended(v)
 		v.bio = None
 		v.bio_html = None
 		g.db.add(v)
@@ -54,6 +55,7 @@ def settings_profile_post(v):
 		return render_template("settings_profile.html", v=v, msg="Your bio has been updated.")
 
 	elif request.values.get("friends") == "":
+		refuse_while_suspended(v)
 		v.friends = None
 		v.friends_html = None
 		g.db.add(v)
@@ -61,6 +63,7 @@ def settings_profile_post(v):
 		return render_template("settings_profile.html", v=v, msg="Your friends list has been updated.")
 
 	elif request.values.get("friends"):
+		refuse_while_suspended(v)
 		friends = request.values.get("friends")[:500]
 
 		friends_html = sanitize(friends)
@@ -88,6 +91,7 @@ def settings_profile_post(v):
 
 
 	elif request.values.get("bio") or upload:
+		refuse_while_suspended(v)
 		bio = (request.values.get("bio") or "")[:1500]
 
 		if upload:
@@ -196,6 +200,7 @@ def changelogsub(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def namecolor(v):
+	refuse_while_suspended(v)
 	color = str(request.values.get("color", "")).strip()
 	if color.startswith('#'): color = color[1:]
 	if len(color) != 6: return render_template("settings_security.html", v=v, error="Invalid color code")
@@ -220,6 +225,7 @@ def themecolor(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def titlecolor(v):
+	refuse_while_suspended(v)
 	titlecolor = str(request.values.get("titlecolor", "")).strip()
 	if titlecolor.startswith('#'): titlecolor = titlecolor[1:]
 	if len(titlecolor) != 6: return render_template("settings_profile.html", v=v, error="Invalid color code")
@@ -232,6 +238,7 @@ def titlecolor(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def verifiedcolor(v):
+	refuse_while_suspended(v)
 	verifiedcolor = str(request.values.get("verifiedcolor", "")).strip()
 	if verifiedcolor.startswith('#'): verifiedcolor = verifiedcolor[1:]
 	if len(verifiedcolor) != 6: return render_template("settings_profile.html", v=v, error="Invalid color code")
@@ -353,6 +360,7 @@ def settings_log_out_others(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_images_profile(v):
+	refuse_while_suspended(v)
 	if request.headers.get("cf-ipcountry") == "T1": abort(403, "Image uploads are not allowed through TOR.")
 
 	file = request.files["profile"]
@@ -380,6 +388,7 @@ def settings_images_profile(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_images_banner(v):
+	refuse_while_suspended(v)
 	if request.headers.get("cf-ipcountry") == "T1": abort(403, "Image uploads are not allowed through TOR.")
 
 	file = request.files["banner"]
@@ -429,6 +438,7 @@ def settings_profilecss_get(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_profilecss(v):
+	refuse_while_suspended(v)
 	profilecss = sanitize_raw(request.values.get("profilecss", "").replace('\\', ''), allow_newlines=True, length_limit=CSS_LENGTH_MAXIMUM)
 	ok, err = validate_css(profilecss)
 	if not ok:
@@ -493,6 +503,7 @@ def settings_content_get(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def settings_name_change(v):
+	refuse_while_suspended(v)
 	new_name=request.values["name"].strip()
 
 	if new_name==v.username:
@@ -529,6 +540,7 @@ def settings_name_change(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_title_change(v):
+	refuse_while_suspended(v)
 	if v.flairchanged: abort(403)
 	
 	new_name=request.values["title"].strip()[:100].replace("𒐪","")

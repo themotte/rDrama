@@ -98,8 +98,8 @@ def test_permanently_banned_users_cannot_change_username():
 	d.assert_exactly()
 
 
-def test_temporarily_banned_users_can_change_username():
-	u = factories.user(is_banned=1, unban_utc=2_000_000_000)
+def test_users_whose_temporary_ban_ran_out_can_change_username():
+	u = factories.user(is_banned=1, unban_utc=1_000_000_000)
 
 	assert_redirect(as_user(u).post("/settings/name_change", {"name": factories.unique("renamed")}), "/settings/profile")
 
