@@ -1,7 +1,7 @@
 '''
 The admin dashboard and the site-wide switches on it:
 - GET /admin is the dashboard, for admins of level 2 and up.
-- POST /admin/site_settings/<setting> changes one runtime site setting (the settings file, see config.site_settings_path), for level-3 admins. Without "new_value" it flips a boolean setting; with "new_value" it stores that integer in an integer setting. It answers JSON, logs a mod action whose kind names the change ("enabled_<setting>", "disabled_<setting>" or "set_<value>_for_<setting>", spaces as underscores, cut to 32 characters), and tells every other level-3 admin through a modmail notification.
+- POST /admin/site_settings/<setting> changes one runtime site setting (the settings file, see config.site_settings_path), for level-3 admins. A boolean setting takes no "new_value" and is flipped; an integer setting takes the integer to store as "new_value". Anything else is refused with 400, and an unknown setting is 404. It answers JSON, logs a mod action whose kind names the change ("enabled_<setting>", "disabled_<setting>" or "set_<value>_for_<setting>", spaces as underscores, cut to 32 characters), and tells every other level-3 admin through a modmail notification.
 - POST /admin/dump_cache, for level-2 admins, makes the site rebuild every listing it has cached.
 '''
 import json
@@ -87,3 +87,32 @@ def test_dumping_the_cache_rebuilds_cached_listings():
 	assert_json_message(as_user(factories.admin(2)).post("/admin/dump_cache"))
 
 	assert_in_payload(anon().get("/"), title)
+
+
+@pytest.mark.parametrize("setting, data", [
+	*[pytest.param(s, {"new_value": "7"}, id=f"{s} given a value") for s in BOOLEAN_SETTINGS],
+	*[pytest.param(s, {}, id=f"{s} without a value") for s in INTEGER_SETTINGS],
+	*[pytest.param(s, {"new_value": v}, id=f"{s} given {v!r}") for s in INTEGER_SETTINGS[:1] for v in ("", "seven", "7.5")],
+])
+def test_a_setting_only_takes_a_value_of_its_kind(setting, data):
+	before = _settings()
+	client = as_user(factories.admin(3))
+
+	with db_diff() as d:
+		r = client.post(f"/admin/site_settings/{quote(setting)}", data, headers=XHR)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+	assert _settings() == before
+
+
+def test_an_unknown_setting_is_not_found():
+	before = _settings()
+	client = as_user(factories.admin(3))
+
+	with db_diff() as d:
+		r = client.post(f"/admin/site_settings/{factories.unique('setting')}", headers=XHR)
+
+	assert_status(r, 404)
+	d.assert_exactly()
+	assert _settings() == before

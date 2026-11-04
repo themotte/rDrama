@@ -320,19 +320,17 @@ def admin_home(v):
 @admin_level_required(3)
 def change_settings(v, setting):
 	site_settings = app.config['SETTINGS']
+	if setting not in site_settings: abort(404)
 	new_value = request.form.get('new_value')
-	if new_value:
-		word = f'set {new_value} for'
-		if isinstance(site_settings[setting], int):
-			# we want to blow up if you try setting an int field to something that doesn't parse as an int
-			site_settings[setting] = int(new_value)
-		else:
-			# 422ing for any other types for now, feel free to add some more types if needed
-			abort(422, "Not a valid config value type")
-	else:
+	if isinstance(site_settings[setting], bool):
+		if new_value is not None: abort(400, "That setting is switched on or off, not given a value.")
 		site_settings[setting] = not site_settings[setting]
 		if site_settings[setting]: word = 'enabled'
 		else: word = 'disabled'
+	else:
+		try: site_settings[setting] = int(new_value)
+		except (TypeError, ValueError): abort(400, "That setting takes a whole number.")
+		word = f'set {site_settings[setting]} for'
 	with open(SITE_SETTINGS_PATH, "w") as f:
 		json.dump(site_settings, f)
 
