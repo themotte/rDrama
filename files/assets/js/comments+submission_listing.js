@@ -52,10 +52,10 @@ function fillnote(user,post,comment) {
 		table += "" +
 		"<div class=\"table_note\" id=\"" + note_id + "\" data-id=\"" + note.id + "\">" +
 			"<div class=\"table_note_author\">" + 
-				note.author_name + "<br/>" + 
-				"<a class=\"table_note_date\" href=\"" + note.reference + "\">" + date_str + ", " + time_str + "</a>" +
+				escapeHTML(note.author_name) + "<br/>" + 
+				"<a class=\"table_note_date\" href=\"" + escapeHTML(String(note.reference)) + "\">" + date_str + ", " + time_str + "</a>" +
 			"</div>" +
-			"<div class=\"table_note_message\">" + note.note + "</div>" +
+			"<div class=\"table_note_message\">" + escapeHTML(note.note) + "</div>" +
 			"<div class=\"table_note_tag\">" + tag + "</div>" +
 			"<div class=\"table_note_delete\"><span onclick=\"delete_note('" + note_id + "','" + user.url + "')\">Delete</span></div>" +
 		"</div>\n"
