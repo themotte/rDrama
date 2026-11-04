@@ -462,6 +462,7 @@ def u_user_id_info(id, v=None):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def follow_user(username, v):
+	refuse_while_suspended(v)
 	target = get_user(username, v=v, include_blocks=True)
 
 	if target.id==v.id: abort(400, "You can't follow yourself!")

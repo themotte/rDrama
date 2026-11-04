@@ -1,8 +1,9 @@
 '''
-What suspended users may do. While a ban runs (permanently, or until its end time), a user can't change anything other users see. Each of these is refused with 403 and changes nothing:
+What suspended users may do. While a ban runs (permanently, or until its end time), a user can't change their content or their public profile, or start following anyone. Each of these is refused with 403 and changes nothing:
 - their posts and comments: publishing a draft (POST /publish/<post id>), editing (POST /edit_post/<post id>, POST /edit_comment/<comment id>), restoring deleted ones (POST /undelete_post/<post id>, POST /undelete/comment/<comment id>), marking them NSFW (POST /toggle_post_nsfw/<post id>, POST /toggle_comment_nsfw/<comment id>), pinning a post to their profile (POST /pin/<post id>), and pinning or unpinning comments on their posts (POST /pin_comment/<comment id>, POST /unpin_comment/<comment id>);
-- their profile: setting or clearing the bio or friends text (POST /settings/profile with "bio" or "friends"), the name, flair, verified-badge colors (POST /settings/namecolor, /settings/titlecolor, /settings/verifiedcolor), the profile picture and banner (POST /settings/images/profile, /settings/images/banner), the profile page's CSS (POST /settings/profilecss), the username (POST /settings/name_change) and the flair text (POST /settings/title_change).
-(Posting and commenting are refused too; see the posts and comments areas.)
+- their profile: setting or clearing the bio or friends text (POST /settings/profile with "bio" or "friends"), the name, flair, verified-badge colors (POST /settings/namecolor, /settings/titlecolor, /settings/verifiedcolor), the profile picture and banner (POST /settings/images/profile, /settings/images/banner), the profile page's CSS (POST /settings/profilecss), the username (POST /settings/name_change) and the flair text (POST /settings/title_change);
+- following someone (POST /follow/<username>), which tells them.
+(Posting and commenting are refused too; see the posts and comments areas. Voting and reporting follow their own rules; see those areas.)
 
 Everything else still works: deleting their own content, saving, subscribing, unfollowing, removing followers, blocking, and their private preferences. Once a temporary ban has run out, nothing is refused.
 '''
@@ -15,8 +16,8 @@ from files.tests.spec.harness import *
 DELETED = "2020-01-01T00:00:00Z"
 
 
-def _suspended(**overrides):
-	return factories.user(is_banned=factories.admin(2)["id"], unban_utc=int(time.time()) + 86400, **overrides)
+def _suspended(permanently=False, **overrides):
+	return factories.user(is_banned=factories.admin(2)["id"], unban_utc=0 if permanently else int(time.time()) + 86400, **overrides)
 
 
 def _expired(**overrides):
@@ -59,11 +60,12 @@ PROFILE = {
 	"profile css": lambda v: ("/settings/profilecss", {"profilecss": "body {}"}, None),
 	"username": lambda v: ("/settings/name_change", {"name": factories.unique("renamed")}, None),
 	"flair": lambda v: ("/settings/title_change", {"title": factories.unique()}, None),
+	"follow": lambda v: (f"/follow/{factories.user()['username']}", {}, None),
 }
 
 
-def _refused(case):
-	v = _suspended(bio="old bio", bio_html="<p>old bio</p>", friends="old", friends_html="<p>old</p>")
+def _refused(case, ban):
+	v = _suspended(permanently=ban == "permanent", bio="old bio", bio_html="<p>old bio</p>", friends="old", friends_html="<p>old</p>")
 	path, fields, files = case(v)
 	client = as_user(v)
 
@@ -74,14 +76,19 @@ def _refused(case):
 	d.assert_exactly()
 
 
+BANS = ["temporary", "permanent"]
+
+
+@pytest.mark.parametrize("ban", BANS)
 @pytest.mark.parametrize("name", CONTENT)
-def test_suspended_users_cant_change_their_content(name):
-	_refused(CONTENT[name])
+def test_suspended_users_cant_change_their_content(name, ban):
+	_refused(CONTENT[name], ban)
 
 
+@pytest.mark.parametrize("ban", BANS)
 @pytest.mark.parametrize("name", PROFILE)
-def test_suspended_users_cant_change_their_profile(name):
-	_refused(PROFILE[name])
+def test_suspended_users_cant_change_their_profile(name, ban):
+	_refused(PROFILE[name], ban)
 
 
 def test_suspended_users_can_still_delete_their_posts():
@@ -106,6 +113,61 @@ def test_suspended_users_can_still_save_posts():
 
 	assert_status(r, 200)
 	d.assert_exactly(inserted={"save_relationship": [{"user_id": v["id"], "submission_id": post["id"]}]})
+
+
+def test_suspended_users_can_still_delete_their_comments():
+	v = _suspended()
+	comment = factories.comment(v, factories.post(factories.user()))
+	client = as_user(v)
+
+	with db_diff() as d:
+		r = client.post(f"/delete/comment/{comment['id']}", headers=XHR)
+
+	assert_json_message(r)
+	d.assert_exactly(updated={"comments": {comment["id"]: {"state_user_deleted_utc": ANY}}})
+
+
+def test_suspended_users_can_still_subscribe():
+	v = _suspended()
+	post = factories.post(factories.user())
+	client = as_user(v)
+
+	with db_diff() as d:
+		r = client.post(f"/subscribe/{post['id']}", headers=XHR)
+
+	assert_json_message(r)
+	d.assert_exactly(inserted={"subscriptions": [{"user_id": v["id"], "submission_id": post["id"]}]})
+
+
+def test_suspended_users_can_still_block():
+	v, other = _suspended(), factories.user()
+	client = as_user(v)
+
+	with db_diff() as d:
+		r = client.post("/settings/block", {"username": other["username"]}, headers=XHR)
+
+	assert_json_message(r)
+	d.assert_exactly(inserted={"userblocks": [{"user_id": v["id"], "target_id": other["id"]}]})
+
+
+@pytest.mark.parametrize("action", ["unfollow", "remove_follow"])
+def test_suspended_users_can_still_end_follows(action):
+	v, other = _suspended(), factories.user()
+	follower, target = (v, other) if action == "unfollow" else (other, v)
+	db.insert("follows", user_id=follower["id"], target_id=target["id"], created_datetimez="2024-01-01T00:00:00Z")
+	db.update("users", {"id": target["id"]}, stored_subscriber_count=1)
+	db.update("users", {"id": follower["id"]}, stored_following_count=1)
+	client = as_user(v)
+
+	with db_diff() as d:
+		r = client.post(f"/{action}/{other['username']}", headers=XHR)
+
+	assert_json_message(r)
+	d.assert_exactly(
+		inserted={"comments": [{"author_id": seed.SYSTEM_ID, "parent_submission": None}], "notifications": [{"user_id": other["id"]}]},
+		updated={"users": {target["id"]: {"stored_subscriber_count": 0}, follower["id"]: {"stored_following_count": 0}}},
+		deleted={"follows": [(target["id"], follower["id"])]},
+	)
 
 
 def test_suspended_users_can_still_change_private_preferences():
