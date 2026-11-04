@@ -8,6 +8,11 @@ def site_host() -> str:
 	return os.environ["DOMAIN"].strip()
 
 
+def site_url() -> str:
+	'''The site's own absolute URL: plain http for a host containing "localhost", https otherwise.'''
+	return ("http://" if "localhost" in site_host() else "https://") + site_host()
+
+
 def site_id() -> str:
 	return os.environ["SITE_ID"].strip()
 

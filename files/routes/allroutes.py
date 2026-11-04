@@ -52,7 +52,7 @@ def before_request():
 			user_agent = request.headers.get('User-Agent', 'unknown')
 			with limiter.limit("12/minute", key_func=lambda: f"bot-{user_agent}"):
 				pass  # Just enforce the limit check
-		except Exception:
+		except Exception:  # pragma: no cover (the rate limiter is off under test; rate limits are specified apart from the suite)
 			abort(429, "Rate limit exceeded for bots")
 
 	# Create a new session instead of reusing the thread-local scoped session

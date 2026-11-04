@@ -13,7 +13,7 @@ def get_logged_in_user():
 	if hasattr(g, 'v'):
 		return g.v
 
-	if not (hasattr(g, 'db') and g.db):
+	if not (hasattr(g, 'db') and g.db):  # pragma: no cover (only the chat service's socket events, which stay out of the spec, arrive without before_request)
 		# Create a new session instead of reusing the thread-local scoped session
 		g.db = db_session.session_factory()
 
