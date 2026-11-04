@@ -43,7 +43,7 @@ def test_password_form_takes_precedence_over_the_email_form():
 	with db_diff() as d:
 		_security(u, {"old_password": factories.PASSWORD, "new_password": NEW_PASSWORD, "cnf_password": NEW_PASSWORD, "password": factories.PASSWORD, "new_email": "x@example.com"})
 
-	d.assert_exactly(updated={"users": {u["id"]: {"passhash": ANY}}})
+	d.assert_exactly(updated={"users": {u["id"]: {"passhash": ANY, "login_nonce": u["login_nonce"] + 1}}})
 	assert sent_mail() == []
 
 
@@ -56,19 +56,28 @@ def test_password_change():
 		r = _security(u, {"old_password": factories.PASSWORD, "new_password": NEW_PASSWORD, "cnf_password": NEW_PASSWORD})
 
 	assert_html(r, 200)
-	d.assert_exactly(updated={"users": {u["id"]: {"passhash": ANY}}})
+	d.assert_exactly(updated={"users": {u["id"]: {"passhash": ANY, "login_nonce": u["login_nonce"] + 1}}})
 	assert PASSHASH_FORMAT.match(db.row("users", id=u["id"])["passhash"])
 	assert can_log_in(u, NEW_PASSWORD)
 	assert not can_log_in(u, factories.PASSWORD)
 
 
-def test_password_change_keeps_existing_sessions():
+def test_password_change_keeps_the_session_that_made_it():
 	u = factories.user()
 	client = as_user(u)
 
 	assert_html(client.post("/settings/security", {"old_password": factories.PASSWORD, "new_password": NEW_PASSWORD, "cnf_password": NEW_PASSWORD}), 200)
 
 	assert_redirect(client.get("/me"), f"/@{u['username']}")
+
+
+def test_password_change_ends_the_accounts_other_sessions():
+	u = factories.user()
+	elsewhere = as_user(u)
+
+	assert_html(_security(u, {"old_password": factories.PASSWORD, "new_password": NEW_PASSWORD, "cnf_password": NEW_PASSWORD}), 200)
+
+	assert_api_unauthorized(elsewhere.get("/me", headers=XHR))
 
 
 def test_password_change_rejects_mismatched_confirmation():

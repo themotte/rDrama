@@ -255,6 +255,8 @@ def settings_security_post(v):
 			return render_template("settings_security.html", v=v, error="Incorrect password")
 
 		v.passhash = v.hash_password(request.values.get("new_password"))
+		v.login_nonce += 1
+		session["login_nonce"] = v.login_nonce
 
 		g.db.add(v)
 
