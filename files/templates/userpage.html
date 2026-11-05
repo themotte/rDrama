@@ -581,9 +581,9 @@
 
 {% endblock %}
 
+{# The last block in the page body, and one no profile variant replaces #}
+{% block GIFpicker %}
 {% if v and v.admin_level >= PERMS['USER_SHADOWBAN'] %}
 {% include "component/modal/shadowban_confirm.html" %}
 {% endif %}
-
-{% block GIFpicker %}
 {% endblock %}
