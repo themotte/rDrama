@@ -347,11 +347,17 @@ def undelete_comment(cid, v):
 	return {"message": "Comment undeleted!"}
 
 
+def _saveable(comment, v):
+	'''Only comments on posts the viewer can see can be saved.'''
+	return bool(comment.parent_submission) and comment.is_open_to(v)
+
+
 @app.post("/save_comment/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def save_comment(cid, v):
 	comment=get_comment(cid)
+	if not _saveable(comment, v): abort(404)
 
 	save=g.db.query(CommentSaveRelationship).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
 
@@ -374,5 +380,6 @@ def unsave_comment(cid, v):
 	if save:
 		g.db.delete(save)
 		g.db.commit()
+	elif not _saveable(comment, v): abort(404)
 
 	return {"message": "Comment unsaved!"}

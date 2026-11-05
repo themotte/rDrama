@@ -1,6 +1,8 @@
 '''
 Saving comments: POST /save_comment/<comment id> adds the comment to the viewer's saved comments (see the users area for the list), POST /unsave_comment/<comment id> takes it off. Both answer with a JSON message, and both are idempotent: saving a saved comment or unsaving one that isn't saved succeeds and changes nothing.
 
+Only comments on posts the viewer can see can be saved: saving a private message (the viewer's own included) or a comment on someone else's draft is refused with 404, as for an unknown comment. Unsaving a saved comment always works, even one the viewer can no longer see; unsaving an unsaved comment the viewer can't see is 404.
+
 Refused: 404 for an unknown comment, 401 for anonymous scripts.
 '''
 import pytest
@@ -82,4 +84,71 @@ def test_anonymous_scripts_are_unauthorized(action):
 		r = anon().post(f"/{action}/{comment['id']}", headers=XHR)
 
 	assert_api_unauthorized(r)
+	d.assert_exactly()
+
+
+def _message(author, recipient):
+	message_id = db.execute("SELECT nextval('comments_id_seq')")
+	body = factories.unique("message")
+	return db.insert("comments", id=message_id, author_id=author["id"], sentto=recipient["id"], created_utc=1000, parent_submission=None, parent_comment_id=None, level=1, top_comment_id=message_id, body=body, body_html=f"<p>{body}</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
+
+
+def _unsaveable(kind, viewer):
+	if kind == "others' message": return _message(factories.user(), factories.user())
+	if kind == "own message": return _message(viewer, factories.user())
+	return factories.comment(factories.user(), factories.post(factories.user(), private=True))
+
+
+UNSAVEABLE = ["others' message", "own message", "comment on others' draft"]
+
+
+@pytest.mark.parametrize("kind", UNSAVEABLE)
+def test_saving_what_the_viewer_cant_see_on_a_post_is_not_found(kind):
+	viewer = factories.user()
+	comment = _unsaveable(kind, viewer)
+	client = as_user(viewer)
+
+	with db_diff() as d:
+		r = client.post(f"/save_comment/{comment['id']}", headers=XHR)
+
+	assert_status(r, 404)
+	d.assert_exactly()
+
+
+def test_saving_a_comment_on_the_viewers_own_draft():
+	viewer = factories.user()
+	comment = factories.comment(factories.user(), factories.post(viewer, private=True))
+	client = as_user(viewer)
+
+	with db_diff() as d:
+		r = client.post(f"/save_comment/{comment['id']}", headers=XHR)
+
+	assert_json_message(r)
+	d.assert_exactly(inserted={"comment_save_relationship": [{"user_id": viewer["id"], "comment_id": comment["id"]}]})
+
+
+@pytest.mark.parametrize("kind", UNSAVEABLE)
+def test_unsaving_a_saved_comment_the_viewer_cant_see(kind):
+	viewer = factories.user()
+	comment = _unsaveable(kind, viewer)
+	db.insert("comment_save_relationship", user_id=viewer["id"], comment_id=comment["id"])
+	client = as_user(viewer)
+
+	with db_diff() as d:
+		r = client.post(f"/unsave_comment/{comment['id']}", headers=XHR)
+
+	assert_json_message(r)
+	d.assert_exactly(deleted={"comment_save_relationship": [(viewer["id"], comment["id"])]})
+
+
+@pytest.mark.parametrize("kind", UNSAVEABLE)
+def test_unsaving_an_unsaved_comment_the_viewer_cant_see_is_not_found(kind):
+	viewer = factories.user()
+	comment = _unsaveable(kind, viewer)
+	client = as_user(viewer)
+
+	with db_diff() as d:
+		r = client.post(f"/unsave_comment/{comment['id']}", headers=XHR)
+
+	assert_status(r, 404)
 	d.assert_exactly()

@@ -557,7 +557,10 @@ class User(CreatedBase):
 	def saved_comment_idlist(self) -> list[int]:
 		'''Ids of the comments this user saved that their saved list shows, newest first.'''
 		saved = [x[0] for x in g.db.query(CommentSaveRelationship.comment_id).filter_by(user_id=self.id).all()]
-		comments = g.db.query(Comment.id).filter(Comment.id.in_(saved), Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None)
+		comments = g.db.query(Comment.id).join(Submission, Submission.id == Comment.parent_submission).filter(Comment.id.in_(saved), Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None)
+
+		if self.admin_level < PERMS['POST_COMMENT_MODERATION']:
+			comments = comments.filter(or_(Submission.private == False, Submission.author_id == self.id))
 
 		if self.admin_level < 2:
 			comments = comments.filter(Comment.author_id.notin_(self.userblocks))

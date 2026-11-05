@@ -1,7 +1,7 @@
 '''
 The viewer's saved posts and comments: GET /@<username>/saved/posts and GET /@<username>/saved/comments, for logged-in users, viewed under their own name (in any letter case); another user's name is refused with 403, and an unknown one is 404.
 
-They list what the viewer saved that others can still see (not removed, filtered or deleted), newest first, 25 to a page with "page" (from 1; anything else means 1) choosing the page. Content by users the viewer blocks is left out, except that admins (level 2 and up) still see such posts. Saved comments by shadowbanned authors are left out for viewers who can't see shadowbanned users. API clients get {"data": [...]} holding each listed item's JSON object, in order. Anonymous browsers are sent to log in.
+They list what the viewer saved that others can still see (not removed, filtered or deleted), newest first, 25 to a page with "page" (from 1; anything else means 1) choosing the page. Content by users the viewer blocks is left out, except that admins (level 2 and up) still see such posts. Saved comments by shadowbanned authors are left out for viewers who can't see shadowbanned users, and only comments on posts the viewer can see are listed (no private messages, nothing on others' drafts). API clients get {"data": [...]} holding each listed item's JSON object, in order. Anonymous browsers are sent to log in.
 '''
 import pytest
 
@@ -196,3 +196,37 @@ def test_saved_lists_send_anonymous_browsers_to_log_in(kind):
 	r = anon().get(path)
 
 	assert_login_redirect(r, path)
+
+
+def _saved_message(viewer):
+	message_id = db.execute("SELECT nextval('comments_id_seq')")
+	token = factories.unique()
+	db.insert("comments", id=message_id, author_id=factories.user()["id"], sentto=viewer["id"], created_utc=1000, parent_submission=None, parent_comment_id=None, level=1, top_comment_id=message_id, body=token, body_html=f"<p>{token}</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
+	db.insert("comment_save_relationship", user_id=viewer["id"], comment_id=message_id)
+	return token
+
+
+def test_saved_comments_leave_out_private_messages():
+	viewer = factories.user()
+	_, listed = _saved(viewer, "comments")
+	token = _saved_message(viewer)
+
+	r = as_user(viewer).get(_path(viewer, "comments"))
+
+	assert_html(r, 200)
+	assert_in_payload(r, listed)
+	assert_not_in_payload(r, token)
+
+
+@pytest.mark.parametrize("whose", ["others", "own", "admin"])
+def test_saved_comments_on_drafts_are_listed_only_to_those_who_see_the_draft(whose):
+	viewer = factories.admin(2) if whose == "admin" else factories.user()
+	token = factories.unique()
+	draft = factories.post(viewer if whose == "own" else factories.user(), private=True)
+	comment = factories.comment(factories.user(), draft, body=token)
+	db.insert("comment_save_relationship", user_id=viewer["id"], comment_id=comment["id"])
+
+	r = as_user(viewer).get(_path(viewer, "comments"))
+
+	assert_html(r, 200)
+	(assert_not_in_payload if whose == "others" else assert_in_payload)(r, token)
