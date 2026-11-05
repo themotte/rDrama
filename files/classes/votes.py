@@ -75,5 +75,5 @@ class CommentVote(CreatedDateTimeBase):
 	def json(self):
 		data=self.json_core
 		data["user"]=self.user.json_core
-		data["comment"]=self.comment.json_core
+		data["comment"]=self.comment.json_core_for(None)
 		return data

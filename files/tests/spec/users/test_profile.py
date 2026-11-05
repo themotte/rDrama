@@ -339,6 +339,19 @@ def test_profile_comments_leave_out_comments_on_drafts_from_api_clients():
 	assert [c["id"] for c in r.json["data"]] == [listed["id"]]
 
 
+def test_profile_comments_json_has_posts_as_the_viewer_may_see_them():
+	user, viewer, op = factories.user(), factories.user(), factories.user()
+	db.insert("userblocks", user_id=viewer["id"], target_id=op["id"])
+	post = factories.post(op, body=factories.unique())
+	comment = factories.comment(user, post)
+
+	r = as_api(factories.api_token(viewer)).get(_path(user, "comments"))
+
+	assert_status(r, 200)
+	assert [c["id"] for c in r.json["data"]] == [comment["id"]]
+	assert_not_in_payload(r, post["body"])
+
+
 @pytest.mark.parametrize("viewer", ["owner", "admin"])
 def test_profile_comments_show_comments_on_drafts_to_those_who_see_the_draft(viewer):
 	user = factories.user()

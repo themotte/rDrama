@@ -38,7 +38,7 @@ def unread(v):
 		g.db.add(n)
 	g.db.commit()
 
-	return {"data":[x[1].json for x in listing]}
+	return {"data":[x[1].json_for(v) for x in listing]}
 
 
 @app.get("/notifications")
@@ -87,7 +87,7 @@ def notifications_main(v: User):
 	g.db.expire_on_commit = True
 
 	if request.headers.get("Authorization"):
-		return {"data": [x.json for x in listing]}
+		return {"data": [x.json_for(v) for x in listing]}
 
 	return render_template("notifications.html",
 		v=v,
@@ -127,7 +127,7 @@ def notifications_posts(v: User):
 	g.db.commit()
 
 	if request.headers.get("Authorization"):
-		return {"data": [x.json for x in listing]}
+		return {"data": [x.json_for(v) for x in listing]}
 
 	return render_template("notifications.html",
 		v=v,
@@ -152,7 +152,7 @@ def notifications_modmail(v: User):
 	listing = comments[:25]
 
 	if request.headers.get("Authorization"):
-		return {"data": [x.json for x in listing]}
+		return {"data": [x.json_for(v) for x in listing]}
 
 	return render_template("notifications.html",
 		v=v,
@@ -187,7 +187,7 @@ def notifications_messages(v: User):
 	listing = comments[:25]
 
 	if request.headers.get("Authorization"):
-		return {"data": [x.json for x in listing]}
+		return {"data": [x.json_for(v) for x in listing]}
 
 	return render_template("notifications.html",
 		v=v,
@@ -326,7 +326,7 @@ def all_comments(v):
 	comments = sort_comment_results(comments, sort=sort, pins=False)
 
 	if request.headers.get("Authorization"):
-		return {"data": [x.json for x in comments]}
+		return {"data": [x.json_for(v) for x in comments]}
 	return render_template("home_comments.html", v=v,
 		sort=sort, t=time_filter, page=page, next_exists=next_exists,
 		comments=comments, standalone=True)

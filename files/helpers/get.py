@@ -336,6 +336,9 @@ def get_comments(
 			comment.is_blocking = c[2] or 0
 			comment.is_blocked = c[3] or 0
 			output.append(comment)
+		blocking = set(v.userblocks)
+		for post in {c.post for c in output if c.post}:
+			post.is_blocking = post.author_id in blocking
 	else:
 		output = results
 

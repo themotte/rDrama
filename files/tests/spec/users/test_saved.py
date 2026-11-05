@@ -230,3 +230,17 @@ def test_saved_comments_on_drafts_are_listed_only_to_those_who_see_the_draft(who
 
 	assert_html(r, 200)
 	(assert_not_in_payload if whose == "others" else assert_in_payload)(r, token)
+
+
+def test_saved_comments_json_has_posts_as_the_viewer_may_see_them():
+	viewer, op = factories.user(), factories.user()
+	db.insert("userblocks", user_id=viewer["id"], target_id=op["id"])
+	post = factories.post(op, body=factories.unique())
+	comment = factories.comment(factories.user(), post)
+	db.insert("comment_save_relationship", user_id=viewer["id"], comment_id=comment["id"])
+
+	r = as_api(factories.api_token(viewer)).get(_path(viewer, "comments"))
+
+	assert_status(r, 200)
+	assert [c["id"] for c in r.json["data"]] == [comment["id"]]
+	assert_not_in_payload(r, post["body"])

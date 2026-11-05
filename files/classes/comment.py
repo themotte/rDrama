@@ -226,40 +226,29 @@ class Comment(CreatedBase):
 
 		return data
 
-	@property
-	@lazy
-	def json_core(self):
-		if self.state_mod != StateMod.VISIBLE:
-			data = {
-					'state_mod_set_by': self.state_mod_set_by,
-					'id': self.id,
-					'post': self.post.id if self.post else 0,
-					'level': self.level,
-					'parent': self.parent_fullname
-				}
-		elif self.state_user_deleted_utc:
-			data = {
-					'state_user_deleted_utc': self.state_user_deleted_utc,
-					'id': self.id,
-					'post': self.post.id if self.post else 0,
-					'level': self.level,
-					'parent': self.parent_fullname
-				}
+	def json_core_for(self, v:Optional["User"]) -> dict:
+		'''The comment as `v` may see it, without its author and post: whole, or a stub (its place in the thread and why it's hidden) when it's hidden from them.'''
+		if self.visibility_state.is_visible_to(v):
+			data = dict(self.json_raw)
+			if self.level >= 2: data['parent_comment_id'] = self.parent_comment_id
 		else:
-			data = self.json_raw
-			if self.level >= 2: data['parent_comment_id']= self.parent_comment_id
-
-		data['replies'] = [x.json_core for x in self.replies(None)]
-
+			data = {
+				'id': self.id,
+				'post': self.post.id if self.post else 0,
+				'level': self.level,
+				'parent': self.parent_fullname,
+			}
+			if self.state_mod != StateMod.VISIBLE: data['state_mod_set_by'] = self.state_mod_set_by
+			elif self.state_user_deleted_utc: data['state_user_deleted_utc'] = self.state_user_deleted_utc
+		data['replies'] = [x.json_core_for(v) for x in self.replies(v)]
 		return data
 
-	@property
-	@lazy
-	def json(self):
-		data = self.json_core
-		if self.state_user_deleted_utc or self.state_mod != StateMod.VISIBLE: return data
-		data["author"] = '👻' if self.ghost else self.author.json_core
-		data["post"] = self.post.json_core if self.post else ''
+	def json_for(self, v:Optional["User"]) -> dict:
+		'''The comment as `v` may see it, with its author and its post (without the post's replies) when it isn't hidden from them.'''
+		data = self.json_core_for(v)
+		if self.visibility_state.is_visible_to(v):
+			data['author'] = '👻' if self.ghost else self.author.json_core
+			data['post'] = {key: value for key, value in self.post.json_for(v).items() if key != 'replies'} if self.post else ''
 		return data
 
 	def realbody(self, v):

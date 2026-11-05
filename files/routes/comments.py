@@ -99,7 +99,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	post.replies=[top_comment]
 			
-	if request.headers.get("Authorization"): return top_comment.json
+	if request.headers.get("Authorization"): return top_comment.json_for(v)
 	return render_template("submission.html", v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True)
 
 @app.post("/comment")
@@ -220,7 +220,7 @@ def api_comment(v):
 
 	g.db.commit()
 
-	if request.headers.get("Authorization"): return c.json
+	if request.headers.get("Authorization"): return c.json_for(v)
 
 	# Re-fetch with eager-loaded relationships so the comment template
 	# (author popover, reports) doesn't lazy-load per-field.
