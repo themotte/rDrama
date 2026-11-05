@@ -2,7 +2,7 @@
 Which comments a viewer is shown, wherever threads are rendered as pages: the post page (GET /post/<post id>), a comment's own page (GET /comment/<comment id>) and further threads of a post (GET /viewmore/...).
 
 - A comment that moderators removed or filtered, or that its author deleted, is hidden from everyone except its author and moderators (admin level 2 and up). Admins below level 2 don't see it either.
-- A comment by a shadowbanned user is shown only to its author and to admins of level 2 and up, wherever it sits in a thread.
+- A comment by a shadowbanned user is shown only to its author and to admins of level 2 and up, wherever it sits in a thread. Where it holds replies, its placeholder names the moderator who removed it only if it was in fact removed.
 - A comment by a user the viewer blocks is hidden from the viewer, unless it is distinguished as official. (What admins see of users they block is not yet settled.)
 - A comment by a user who blocks the viewer is still shown to the viewer.
 - Comments marked 18+ are shown like any other.
@@ -277,3 +277,17 @@ def test_comments_by_shadowbanned_users_are_shown_only_to_them_and_moderators(vi
 
 	assert_html(r, 200)
 	(assert_in_payload if SHADOWBAN_VIEWERS[viewer] else assert_not_in_payload)(r, comment["body"])
+
+
+@pytest.mark.parametrize("removed", [False, True])
+def test_a_shadowbanned_users_placeholder_names_a_moderator_only_if_they_removed_it(removed):
+	moderator = factories.unique("mod")
+	post = factories.post(factories.user())
+	hidden = factories.comment(factories.user(shadowbanned="somemod"), post, state_mod="REMOVED" if removed else "VISIBLE", state_mod_set_by=moderator)
+	reply = factories.comment(factories.user(), post, parent=hidden)
+
+	r = anon().get(f"/post/{post['id']}")
+
+	assert_html(r, 200)
+	assert_in_payload(r, reply["body"])
+	(assert_in_payload if removed else assert_not_in_payload)(r, moderator)

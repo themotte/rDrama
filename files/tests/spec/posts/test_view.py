@@ -262,6 +262,17 @@ def test_posts_by_shadowbanned_users_hide_their_content(viewer):
 	_assert_content_hidden(_page(client, post), post, content)
 
 
+@pytest.mark.parametrize("removed", [False, True])
+def test_a_shadowbanned_users_post_names_a_moderator_only_if_they_removed_it(removed):
+	moderator = factories.unique("mod")
+	post = factories.post(factories.user(shadowbanned="somemod"), state_mod="REMOVED" if removed else "VISIBLE", state_mod_set_by=moderator)
+
+	r = _page(anon(), post)
+
+	assert_html(r, 200)
+	(assert_in_payload if removed else assert_not_in_payload)(r, moderator)
+
+
 @pytest.mark.parametrize("viewer", ["author", "moderator"])
 def test_posts_by_shadowbanned_users_show_their_content_to_them_and_moderators(viewer):
 	author = factories.user(shadowbanned="somemod")

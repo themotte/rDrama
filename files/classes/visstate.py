@@ -87,7 +87,7 @@ class VisibilityState:
 		if (self.removed and not can_moderate) or \
 				(self.op_shadowbanned and not can_shadowban):
 			msg: str = 'Removed'
-			if self.state_mod_set_by:
+			if self.removed and self.state_mod_set_by:
 				msg = f'Removed by @{self.state_mod_set_by}'
 			return False, msg
 		if self.filtered and not can_moderate:
