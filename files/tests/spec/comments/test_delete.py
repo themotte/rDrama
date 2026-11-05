@@ -1,5 +1,5 @@
 '''
-Deleting and restoring your own comments: POST /delete/comment/<comment id> marks the comment deleted (with the time), POST /undelete/comment/<comment id> clears the mark. Neither changes any comment counts. Both answer with a JSON message.
+Deleting and restoring your own comments: POST /delete/comment/<comment id> marks the comment deleted (with the time), POST /undelete/comment/<comment id> clears the mark; the comment stops or starts counting (see test_counters.py), and a restored comment notifies those it concerns who weren't notified about it yet, as a new one does. Both answer with a JSON message.
 
 Refused, changing nothing: 409 for deleting a comment already deleted or restoring one that isn't, 403 for someone else's comment whatever its state, 404 for an unknown comment, 401 for anonymous scripts. (Suspended users may delete but not restore; see the users area.)
 '''
@@ -23,7 +23,7 @@ def test_deleting_your_comment_marks_it_deleted():
 		r = client.post(f"/delete/comment/{comment['id']}", headers=XHR)
 
 	assert_json_message(r)
-	d.assert_exactly(updated={"comments": {comment["id"]: {"state_user_deleted_utc": ANY}}})
+	d.assert_exactly(updated={"comments": {comment["id"]: {"state_user_deleted_utc": ANY}}, "submissions": {comment["parent_submission"]: {"comment_count": 0}}, "users": {author["id"]: {"comment_count": 0}}})
 	assert db.row("comments", id=comment["id"])["state_user_deleted_utc"] is not None
 
 
@@ -35,7 +35,10 @@ def test_restoring_your_comment_clears_the_mark():
 		r = client.post(f"/undelete/comment/{comment['id']}", headers=XHR)
 
 	assert_json_message(r)
-	d.assert_exactly(updated={"comments": {comment["id"]: {"state_user_deleted_utc": None}}})
+	d.assert_exactly(
+		updated={"comments": {comment["id"]: {"state_user_deleted_utc": None}}, "submissions": {comment["parent_submission"]: {"comment_count": 1}}, "users": {author["id"]: {"comment_count": 1}}},
+		inserted={"notifications": [{"user_id": db.row("submissions", id=comment["parent_submission"])["author_id"], "comment_id": comment["id"]}]},
+	)
 
 
 @pytest.mark.parametrize("action, state", [

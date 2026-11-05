@@ -118,7 +118,7 @@ def test_suspended_users_can_still_delete_their_comments():
 		r = client.post(f"/delete/comment/{comment['id']}", headers=XHR)
 
 	assert_json_message(r)
-	d.assert_exactly(updated={"comments": {comment["id"]: {"state_user_deleted_utc": ANY}}})
+	d.assert_exactly(updated={"comments": {comment["id"]: {"state_user_deleted_utc": ANY}}, "submissions": {comment["parent_submission"]: {"comment_count": 0}}, "users": {v["id"]: {"comment_count": 0}}})
 
 
 def test_suspended_users_can_still_subscribe():

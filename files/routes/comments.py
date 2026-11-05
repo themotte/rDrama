@@ -6,7 +6,7 @@ from files.__main__ import app, limiter
 from files.classes import *
 from files.classes.visstate import StateMod
 from files.helpers.alerts import *
-from files.helpers.comments import comment_on_publish, comment_published, comment_sort
+from files.helpers.comments import comment_counted, comment_on_publish, comment_published, comment_sort, comment_state_change
 from files.helpers.config.const import *
 from files.helpers.media import attach_images
 from files.helpers.wrappers import *
@@ -191,7 +191,7 @@ def api_comment(v):
 	if c.level == 1: c.top_comment_id = c.id
 	else: c.top_comment_id = parent.top_comment_id
 
-	if not v.shadowbanned and not is_filtered:
+	if comment_counted(c):
 		comment_on_publish(c)
 
 	vote = CommentVote(user_id=v.id,
@@ -302,8 +302,8 @@ def delete_comment(cid, v):
 	c = get_comment(cid, v=v)
 	if c.author_id != v.id: abort(403)
 	if c.state_user_deleted_utc: abort(409)
-	c.state_user_deleted_utc = datetime.now(tz=timezone.utc)
-	# TODO: update stateful counters
+	with comment_state_change(c):
+		c.state_user_deleted_utc = datetime.now(tz=timezone.utc)
 	g.db.add(c)
 	g.db.commit()
 
@@ -317,8 +317,8 @@ def undelete_comment(cid, v):
 	c = get_comment(cid, v=v)
 	if c.author_id != v.id: abort(403)
 	if not c.state_user_deleted_utc: abort(409)
-	c.state_user_deleted_utc = None
-	# TODO: update stateful counters
+	with comment_state_change(c):
+		c.state_user_deleted_utc = None
 	g.db.add(c)
 	g.db.commit()
 

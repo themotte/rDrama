@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 from typing import Optional
 
 from flask import g
@@ -5,7 +6,7 @@ from sqlalchemy import select, update
 from sqlalchemy.orm import Query, aliased
 from sqlalchemy.sql.expression import alias, func, text
 
-from files.classes import Comment, Notification, Subscription, User
+from files.classes import Comment, Notification, Submission, Subscription, User
 from files.classes.visstate import StateMod
 from files.helpers.alerts import NOTIFY_USERS
 from files.helpers.config.const import SORTS_COMMENTS
@@ -43,6 +44,16 @@ def comment_subtree_ids(cid:int, depth:int) -> list[int]:
 	return [row[0] for row in g.db.execute(_SUBTREE_IDS_SQL, {"cid": cid, "depth": depth})]
 
 
+@contextmanager
+def comment_state_change(comment:Comment):
+	'''Wraps a change to whether others can see `comment`: publishes it when it starts counting and unpublishes it when it stops.'''
+	was_counted = comment_counted(comment)
+	yield
+	is_counted = comment_counted(comment)
+	if is_counted and not was_counted: comment_on_publish(comment)
+	elif was_counted and not is_counted: comment_on_unpublish(comment)
+
+
 def update_stateful_counters(comment, delta):
 	"""
 	When a comment changes publish status, we need to update all affected stateful
@@ -53,9 +64,7 @@ def update_stateful_counters(comment, delta):
 	update_ancestor_descendant_counts(comment, delta)
 
 def update_post_comment_count(comment, delta):
-	author = comment.author
-	comment.post.comment_count += delta
-	g.db.add(comment.post)
+	g.db.execute(update(Submission).where(Submission.id == comment.parent_submission).values(comment_count=Submission.comment_count + delta))
 
 def update_author_comment_count(comment, delta):
 	author = comment.author
