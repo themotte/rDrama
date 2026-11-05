@@ -34,7 +34,8 @@ _VOTER_LIST_NAMES = ",".join(_VOTER_LISTS)
 
 
 def _visible(cls):
-	return (cls.ghost == False, cls.state_mod == StateMod.VISIBLE, cls.state_user_deleted_utc == None)
+	visible = (cls.ghost == False, cls.state_mod == StateMod.VISIBLE, cls.state_user_deleted_utc == None)
+	return (*visible, cls.private == False) if cls is Submission else visible
 
 
 @app.get(f"/@<username>/<any({_VOTER_LIST_NAMES}):list_name>/<uid>/<any(posts,comments):kind>")

@@ -3,7 +3,7 @@ Voter lists, for admins of level 3 (anonymous browsers are sent to log in; lower
 - GET /@<username>/upvoters and /@<username>/downvoters rank the users who voted up (down) on the user's posts and comments, by how many such votes each cast.
 - GET /@<username>/upvoting and /@<username>/downvoting rank the authors whose posts and comments the user voted up (down), by how many such votes the user cast on each.
 
-Only votes on content others can see count: not on removed, filtered, deleted or anonymous ("ghost") posts and comments. A user's votes on their own content count like anyone's. The 25 highest-ranked users are listed (tied users oldest account, lowest id, first), each linking to the drilldown of their votes (/@<username>/<list>/<user id>/posts). The viewing admin's own row is added after the list when they aren't in it.
+Only votes on content others can see count: not on removed, filtered, deleted or anonymous ("ghost") posts and comments, nor on drafts. A user's votes on their own content count like anyone's. The 25 highest-ranked users are listed (tied users oldest account, lowest id, first), each linking to the drilldown of their votes (/@<username>/<list>/<user id>/posts). The viewing admin's own row is added after the list when they aren't in it.
 
 Each drilldown, GET /@<username>/<list>/<user id>/posts and /@<username>/<list>/<user id>/comments, lists the posts (comments) behind one row: for upvoters and downvoters, the user's content that the other user voted on that way; for upvoting and downvoting, the other user's content the user voted on that way. Only content others can see is listed, newest first, 25 to a page, with "page" (from 1; anything else means 1) choosing the page. A user id that isn't a valid id is 404.
 '''
@@ -381,3 +381,27 @@ def test_drilldown_of_a_private_profile_is_shown(name, what):
 
 	assert_html(r, 200)
 	assert_in_payload(r, token)
+
+
+@pytest.mark.parametrize("name", LISTS)
+def test_voter_list_ignores_votes_on_drafts(name):
+	user, other = _profile_user(), factories.user()
+	_cast(name, user, other, "posts", private=True)
+
+	r = as_user(factories.admin(3)).get(f"/@{user['username']}/{name}")
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, other["username"])
+
+
+@pytest.mark.parametrize("name", LISTS)
+def test_drilldown_omits_drafts(name):
+	user, other = _profile_user(), factories.user()
+	listed = _cast(name, user, other, "posts")
+	draft = _cast(name, user, other, "posts", private=True)
+
+	r = as_user(factories.admin(3)).get(_drilldown(name, user, other, "posts"))
+
+	assert_html(r, 200)
+	assert_in_payload(r, listed)
+	assert_not_in_payload(r, draft)
