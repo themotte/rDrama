@@ -138,6 +138,7 @@ def api_comment(v):
 			else: abort(415, "Image files only")
 
 	if not body: abort(400, "You need to actually write something!")
+	if len(body) > COMMENT_BODY_LENGTH_MAXIMUM: abort(400, f"Maximum length for a comment is {COMMENT_BODY_LENGTH_MAXIMUM}, including the links to attached images")
 
 	body_html = sanitize(body)
 
@@ -190,7 +191,7 @@ def api_comment(v):
 				is_bot=is_bot,
 				app_id=v.client.application.id if v.client else None,
 				body_html=body_html,
-				body=body[:COMMENT_BODY_LENGTH_MAXIMUM],
+				body=body,
 				ghost=parent_post.ghost,
 				state_mod=StateMod.FILTERED if is_filtered else StateMod.VISIBLE,
 				)
@@ -291,9 +292,10 @@ def edit_comment(cid, v):
 						body += f'\n\n<a href="{url}">{url}</a>'
 				else: abort(415, "Image files only")
 
+			if len(body) > COMMENT_BODY_LENGTH_MAXIMUM: abort(400, f"Maximum length for a comment is {COMMENT_BODY_LENGTH_MAXIMUM}, including the links to attached images")
 			body_html = sanitize(body)
 
-		c.body = body[:COMMENT_BODY_LENGTH_MAXIMUM]
+		c.body = body
 		c.body_html = body_html
 
 		if int(time.time()) - c.created_utc > 60 * 3: c.edited_utc = int(time.time())

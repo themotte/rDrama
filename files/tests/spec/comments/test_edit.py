@@ -7,7 +7,7 @@ When the comment is published (visible, not deleted, by an author who isn't shad
 
 The answer is JSON {"comment": <the new body rendered as HTML>}.
 
-Refused, changing nothing: 400 for an empty body without a file, 415 for an upload that isn't an image, 403 for someone else's comment, 404 for an unknown comment, 401 for anonymous scripts. (Suspended users are refused; see the users area.)
+Refused, changing nothing: 400 for an empty body without a file or for text and image links together longer than 500,000 characters, 415 for an upload that isn't an image, 403 for someone else's comment, 404 for an unknown comment, 401 for anonymous scripts. (Suspended users are refused; see the users area.)
 '''
 import os
 import time
@@ -196,6 +196,17 @@ def test_uploads_that_arent_images_are_refused():
 		r = _edit(client, comment, factories.unique(), files={"file": uploads.text_file()})
 
 	assert_status(r, 415)
+	d.assert_exactly()
+
+
+def test_images_may_not_push_the_body_past_its_limit():
+	author, comment = _own()
+	client = as_user(author)
+
+	with db_diff() as d:
+		r = _edit(client, comment, "b" * 499_990, files={"file": uploads.png(2, 2)})
+
+	assert_status(r, 400)
 	d.assert_exactly()
 
 

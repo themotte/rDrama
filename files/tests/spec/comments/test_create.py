@@ -18,6 +18,7 @@ The answer to browsers and scripts is JSON {"comment": <the comment rendered as 
 Refused, changing nothing:
 - 400: "parent_fullname" shorter than 4 characters or not naming a post or a comment; no body and no file (or only a file dropped for coming through Tor);
 - 415: an upload that isn't an image;
+- 400: text and image links together longer than 500,000 characters;
 - 404: an unknown post or comment, a private message, or a draft (or a comment on one) the commenter may not see;
 - 409: the author already has a comment that isn't deleted with the same body under the same parent;
 - 403: suspended users;
@@ -592,6 +593,17 @@ def test_uploads_that_arent_images_are_refused():
 		r = _comment(client, _on(post), factories.unique(), files={"file": uploads.text_file()})
 
 	assert_status(r, 415)
+	d.assert_exactly()
+
+
+def test_images_may_not_push_the_body_past_its_limit():
+	post = factories.post(factories.user())
+	client = as_user(factories.user())
+
+	with db_diff() as d:
+		r = _comment(client, _on(post), "b" * 499_990, files={"file": uploads.png(2, 2)})
+
+	assert_status(r, 400)
 	d.assert_exactly()
 
 # Refusals
