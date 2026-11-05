@@ -6,7 +6,7 @@ A comment's own page: GET /comment/<comment id> and GET /post/<post id>/<anythin
 - "sort" orders the replies as on the post page; an unknown value means the viewer's default.
 - "read" (any non-empty value) marks the viewer's unread notification about this comment as read. Anonymous viewers and viewers without such a notification change nothing.
 - A private message (a comment with no post, sent to a user) is refused with 403 to anyone who isn't its sender or recipient, visitors included. "context" never brings in a private message the viewer couldn't open itself: the chain stops below it.
-- On an 18+ post, browsers of visitors and of users who are not 18+ get the age confirmation page instead of the comment until they confirm (POST /allow_nsfw); users who are 18+ see the comment.
+- On an 18+ post, browsers of visitors and of users who are not 18+ get the age confirmation page instead of the comment until they confirm (POST /allow_nsfw); scripts (xhr) and API clients of users who are not 18+ are refused with 403; users who are 18+ see the comment.
 - The page describes the comment (its text and author, for link previews) only to viewers who may see it.
 - API clients get the JSON object of the topmost comment shown (see test_json.py for its shape), with the chain down to the comment as its replies.
 '''
@@ -285,6 +285,20 @@ def test_visitors_must_confirm_their_age_before_seeing_a_comment_on_an_18_plus_p
 	r = anon().get(f"/comment/{comment['id']}")
 
 	assert_html(r, 200)
+	assert_not_in_payload(r, comment["body"])
+
+
+@pytest.mark.parametrize("client", ["api", "xhr"])
+def test_scripts_are_refused_comments_on_18_plus_posts_without_confirmation(client):
+	comment = _comment_on_18_plus_post()
+	user = factories.user()
+
+	if client == "api":
+		r = as_api(factories.api_token(user)).get(f"/comment/{comment['id']}")
+	else:
+		r = as_user(user).get(f"/comment/{comment['id']}", headers=XHR)
+
+	assert_status(r, 403)
 	assert_not_in_payload(r, comment["body"])
 
 
