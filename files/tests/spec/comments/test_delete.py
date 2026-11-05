@@ -1,7 +1,7 @@
 '''
 Deleting and restoring your own comments: POST /delete/comment/<comment id> marks the comment deleted (with the time), POST /undelete/comment/<comment id> clears the mark. Neither changes any comment counts. Both answer with a JSON message.
 
-Refused, changing nothing: 409 for deleting a comment already deleted or restoring one that isn't, 403 for someone else's comment, 404 for an unknown comment, 401 for anonymous scripts. (Suspended users may delete but not restore; see the users area.)
+Refused, changing nothing: 409 for deleting a comment already deleted or restoring one that isn't, 403 for someone else's comment whatever its state, 404 for an unknown comment, 401 for anonymous scripts. (Suspended users may delete but not restore; see the users area.)
 '''
 import pytest
 
@@ -56,7 +56,9 @@ def test_repeating_on_your_comment_conflicts(action, state):
 @pytest.mark.parametrize("actor", ["user", "admin"])
 @pytest.mark.parametrize("action, state", [
 	("delete", {}),
+	("delete", {"state_user_deleted_utc": DELETED}),
 	("undelete", {"state_user_deleted_utc": DELETED}),
+	("undelete", {}),
 ])
 def test_someone_elses_comment_is_forbidden(action, state, actor):
 	_, comment = _own(**state)

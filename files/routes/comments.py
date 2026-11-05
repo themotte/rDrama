@@ -318,8 +318,8 @@ def edit_comment(cid, v):
 @auth_required
 def delete_comment(cid, v):
 	c = get_comment(cid, v=v)
-	if c.state_user_deleted_utc: abort(409)
 	if c.author_id != v.id: abort(403)
+	if c.state_user_deleted_utc: abort(409)
 	c.state_user_deleted_utc = datetime.now(tz=timezone.utc)
 	# TODO: update stateful counters
 	g.db.add(c)
@@ -333,8 +333,8 @@ def delete_comment(cid, v):
 def undelete_comment(cid, v):
 	refuse_while_suspended(v)
 	c = get_comment(cid, v=v)
-	if not c.state_user_deleted_utc: abort(409)
 	if c.author_id != v.id: abort(403)
+	if not c.state_user_deleted_utc: abort(409)
 	c.state_user_deleted_utc = None
 	# TODO: update stateful counters
 	g.db.add(c)
