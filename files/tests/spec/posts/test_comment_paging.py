@@ -2,6 +2,8 @@
 Fetching more comments than the post page shows, as HTML fragments:
 - GET /viewmore/<post id>/<sort>/<offset>?ids=<comma-separated ids already shown>: the next page of top-level threads.
 - GET /morecomments/<comment id>: the replies to a comment too deep in a thread for the post page to show (threads render 9 levels deep).
+
+On an 18+ post both are refused with 403 to visitors who haven't confirmed their age and to users who aren't 18+, as the post page itself asks them to confirm first.
 '''
 import pytest
 
@@ -218,3 +220,38 @@ def test_more_comments_of_an_unknown_comment_is_not_found():
 	db.delete("comments", id=comment["id"])
 
 	assert_status(anon().get(f"/morecomments/{comment['id']}"), 404)
+
+
+def _fetch_more(which, client, post):
+	if which == "view more":
+		shown = factories.comment(factories.user(), post, created_utc=2000)
+		factories.comment(factories.user(), post, body=factories.unique(), created_utc=1000)
+		return _viewmore(client, post, [shown["id"]])
+	chain = _thread(post, 11)
+	return client.get(f"/morecomments/{chain[8]['id']}")
+
+
+@pytest.mark.parametrize("which", ["view more", "more comments"])
+@pytest.mark.parametrize("viewer", ["visitor", "user"])
+def test_fetching_more_of_an_18_plus_post_needs_age_confirmation(which, viewer):
+	post = factories.post(factories.user(), over_18=True)
+	client = anon() if viewer == "visitor" else as_user(factories.user())
+
+	r = _fetch_more(which, client, post)
+
+	assert_status(r, 403)
+
+
+@pytest.mark.parametrize("which", ["view more", "more comments"])
+@pytest.mark.parametrize("viewer", ["confirmed visitor", "18+ user"])
+def test_fetching_more_of_an_18_plus_post_after_age_confirmation(which, viewer):
+	post = factories.post(factories.user(), over_18=True)
+	if viewer == "confirmed visitor":
+		client = anon()
+		assert_redirect(client.post("/allow_nsfw", {"redir": f"/post/{post['id']}"}), f"/post/{post['id']}")
+	else:
+		client = as_user(factories.user(over_18=True))
+
+	r = _fetch_more(which, client, post)
+
+	assert_html(r, 200)

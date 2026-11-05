@@ -58,6 +58,11 @@ def publish(pid, v):
 def submit_get(v):
 	return render_template("submit.html", v=v)
 
+def age_unconfirmed(post, v) -> bool:
+	'''Whether the 18+ `post` must wait for the viewer to confirm their age: they're not an 18+ user and haven't confirmed recently.'''
+	return post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time())
+
+
 def _comment_sort(requested:Optional[str], v:Optional[User]) -> str:
 	if requested in SORTS_COMMENTS: return requested
 	return v.defaultsortingcomments if v else "new"
@@ -70,7 +75,7 @@ def post_id(pid, anything=None, v=None):
 	post = get_post(pid, v=v)
 	if post.is_draft_hidden_from(v): abort(404)
 
-	if post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
+	if age_unconfirmed(post, v):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, "Must be 18+ to view")
 		return render_template("errors/nsfw.html", v=v)
 
@@ -120,6 +125,7 @@ def post_id(pid, anything=None, v=None):
 def viewmore(v, pid, sort, offset):
 	post = get_post(pid, v=v)
 	if post.is_draft_hidden_from(v): abort(404)
+	if age_unconfirmed(post, v): abort(403, "Must be 18+ to view")
 	sort = _comment_sort(sort, v)
 	try:
 		offset_prev = int(offset)
@@ -179,6 +185,7 @@ def morecomments(v, cid):
 
 	parent = g.db.get(Comment, cid)
 	if not parent or not parent.parent_submission or parent.post.is_draft_hidden_from(v): abort(404)
+	if age_unconfirmed(parent.post, v): abort(403, "Must be 18+ to view")
 	tcid = parent.top_comment_id
 
 	if v:
