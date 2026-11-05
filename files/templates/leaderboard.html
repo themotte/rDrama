@@ -5,7 +5,7 @@
 <div id="leaderboard-contents" style="text-align: center; margin-bottom: 1.5rem; font-size: 1.2rem;">
 	{% for lb in leaderboards %}
 		{% if lb %}
-			<a href="#leaderboard-{{lb.html_id}}">{{lb.meta.header_name}}</a>{% if not loop.last %} &bull;{% endif %}
+			<a href="#leaderboard-{{lb.meta.html_id}}">{{lb.meta.header_name}}</a>{% if not loop.last %} &bull;{% endif %}
 		{% endif %}
 	{% endfor %}
 </div>
@@ -24,7 +24,7 @@
 {% endmacro %}
 
 {% macro leaderboard_table(lb) %}
-<h5 class="font-weight-bolder text-center pt-2 pb-3"><span id="leaderboard-{{lb.meta.html_id}}">Top {{lb.limit}} {% if lb.meta.table_header_name != 'most blocked' %}by{% endif %} {{lb.meta.table_header_name}}</span></h5>
+<h5 class="font-weight-bolder text-center pt-2 pb-3"><span id="leaderboard-{{lb.meta.html_id}}">Top {{lb.meta.limit}} {% if lb.meta.table_header_name != 'most blocked' %}by{% endif %} {{lb.meta.table_header_name}}</span></h5>
 <div class="overflow-x-auto">
 <table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">

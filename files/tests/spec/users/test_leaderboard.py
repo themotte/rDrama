@@ -6,7 +6,7 @@ The page shows several boards, each a section whose element id is "leaderboard-<
 - "blocked": the 25 users blocked by the most users, most blocked first; users nobody blocks aren't ranked.
 - "received-downvotes" and "given-upvotes": the 25 users who received the most downvotes, and who gave the most upvotes, on posts and comments. These are expensive to compute, so the `leaderboard_recalc` command computes them ahead of time; until it has run, the page leaves both out.
 
-Users tied on a board are listed oldest account (lowest id) first. The viewing admin's own row is added after a board's list when they aren't in it (on the blocked board, also when nobody blocks them).
+Users tied on a board are listed oldest account (lowest id) first. The page opens with links to each board (#leaderboard-<board>). The viewing admin's own row is added after a board's list when they aren't in it (on the blocked board, also when nobody blocks them).
 '''
 import pytest
 
@@ -375,3 +375,14 @@ def test_precomputed_boards_drop_users_deleted_since():
 
 	assert_html(r, 200)
 	assert target["username"] not in _board(r, "received-downvotes")
+
+
+def test_leaderboard_links_to_each_board():
+	db.insert("votes", user_id=factories.user()["id"], submission_id=factories.post(factories.user())["id"], vote_type=-1)
+	assert_cli_ok(cli("leaderboard_recalc"))
+
+	r = as_user(factories.admin(2)).get("/leaderboard")
+
+	assert_html(r, 200)
+	for board in [*SIMPLE_BOARDS, "blocked", "received-downvotes", "given-upvotes"]:
+		assert f'href="#leaderboard-{board}"' in r.text, board
