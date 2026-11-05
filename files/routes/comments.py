@@ -6,7 +6,7 @@ from files.__main__ import app, limiter
 from files.classes import *
 from files.classes.visstate import StateMod
 from files.helpers.alerts import *
-from files.helpers.comments import comment_counted, comment_on_publish, comment_published, comment_sort, comment_state_change
+from files.helpers.comments import comment_counted, comment_on_publish, comment_published, comment_sort, comment_state_change, update_author_comment_count
 from files.helpers.config.const import *
 from files.helpers.media import attach_images
 from files.helpers.wrappers import *
@@ -193,6 +193,7 @@ def api_comment(v):
 
 	if comment_counted(c):
 		comment_on_publish(c)
+	update_author_comment_count(c)
 
 	vote = CommentVote(user_id=v.id,
 						 comment_id=c.id,

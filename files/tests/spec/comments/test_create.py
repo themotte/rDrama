@@ -7,9 +7,9 @@ A comment is held for review (filtered) instead of published when:
 - its author's filter setting says to hold their comments, or the setting is automatic and the author falls short of any of the site settings FilterCommentsMinComments (published comments), FilterCommentsMinKarma or FilterCommentsMinAgeDays (account age). Admins of any level are never held by these;
 - its body is longer than 50,000 characters, unless the author is an admin of level 3 or more.
 
-A published comment counts toward its post's and its author's comment counts and the descendant counts of all the comments above it, and notifies, once each and never the author: users it mentions as @name (unless either has blocked the other), the post's subscribers, and the author of what it replies to (unless that author blocks the commenter). A held comment does neither.
+A published comment counts toward its post's comment count and the descendant counts of all the comments above it (and, like any comment that isn't held on a published post, toward its author's comment count; see test_counters.py), and notifies, once each and never the author: users it mentions as @name (unless either has blocked the other), the post's subscribers, and the author of what it replies to (unless that author blocks the commenter). A held comment does neither.
 
-Replies may go to deleted or removed comments and to removed posts. A draft takes comments only from those who may see it (its author and admins of level 2 or more); to anyone else it doesn't exist. Comments on a draft notify nobody while it is a draft; publishing it (POST /publish/<post id>) sends the notifications of its published comments then.
+Replies may go to deleted or removed comments and to removed posts. A draft takes comments only from those who may see it (its author and admins of level 2 or more); to anyone else it doesn't exist. Comments on a draft notify nobody and don't count toward their authors' comment counts while it is a draft; publishing it (POST /publish/<post id>) sends the notifications of its published comments and counts them then.
 
 Images uploaded as "file" (up to 4; more are ignored, as are empty uploads, which browsers send for file inputs left empty) are stored and linked at the end of the body, and a comment of only images is allowed. Requests through Tor have their uploads dropped, so they need text.
 
@@ -690,7 +690,7 @@ def test_drafts_take_comments_from_those_who_see_them(commenter):
 	v = author if commenter == "author" else factories.admin(2)
 	body = factories.unique()
 	client = as_user(v)
-	counted = _counted(v, draft, author_count=db.row("users", id=v["id"])["comment_count"] + 1)
+	counted = {key: value for key, value in _counted(v, draft).items() if key != "users"}
 
 	with db_diff() as d:
 		r = _comment(client, _on(draft), body)
@@ -707,7 +707,7 @@ def test_comments_on_drafts_notify_nobody():
 	parent = factories.comment(author, draft)
 	body = f"hello @{mentioned['username']}"
 	client = as_user(admin)
-	counted = _counted(admin, draft, ancestors=[parent], author_count=db.row("users", id=admin["id"])["comment_count"] + 1)
+	counted = {key: value for key, value in _counted(admin, draft, ancestors=[parent]).items() if key != "users"}
 
 	with db_diff() as d:
 		r = _comment(client, _under(parent), body)
@@ -731,7 +731,7 @@ def test_publishing_a_draft_sends_its_comments_notifications():
 
 	assert_status(r, 302)
 	d.assert_exactly(
-		updated={"submissions": {draft["id"]: {"private": False, "created_utc": ANY}}, "users": {author["id"]: {"post_count": 1}}},
+		updated={"submissions": {draft["id"]: {"private": False, "created_utc": ANY}}, "users": {author["id"]: {"post_count": 1, "comment_count": 1}, admin["id"]: {"comment_count": 1}}},
 		inserted={"notifications": _notifications(mentioned, author)},
 	)
 

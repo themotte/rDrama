@@ -46,12 +46,13 @@ def comment_subtree_ids(cid:int, depth:int) -> list[int]:
 
 @contextmanager
 def comment_state_change(comment:Comment):
-	'''Wraps a change to whether others can see `comment`: publishes it when it starts counting and unpublishes it when it stops.'''
+	'''Wraps a change to whether others can see `comment`: publishes it when it starts counting and unpublishes it when it stops, and recounts its author's comments.'''
 	was_counted = comment_counted(comment)
 	yield
 	is_counted = comment_counted(comment)
 	if is_counted and not was_counted: comment_on_publish(comment)
 	elif was_counted and not is_counted: comment_on_unpublish(comment)
+	update_author_comment_count(comment)
 
 
 _AUTHOR_COUNTED_SQL = "author_id = :author AND parent_submission IS NOT NULL AND state_mod = 'VISIBLE' AND state_user_deleted_utc IS NULL"
@@ -84,24 +85,23 @@ def comment_counts_shift_for_author(author_id:int, sign:int):
 def update_stateful_counters(comment, delta):
 	"""
 	When a comment changes publish status, we need to update all affected stateful
-	comment counters (e.g. author comment count, post comment count)
+	comment counters (post comment count, ancestors' descendant counts)
 	"""
 	update_post_comment_count(comment, delta)
-	update_author_comment_count(comment, delta)
 	update_ancestor_descendant_counts(comment, delta)
 
 def update_post_comment_count(comment, delta):
 	g.db.execute(update(Submission).where(Submission.id == comment.parent_submission).values(comment_count=Submission.comment_count + delta))
 
-def update_author_comment_count(comment, delta):
-	author = comment.author
+def update_author_comment_count(comment):
+	'''Recounts the author's comments that count toward their own count: visible and not deleted, on published posts (whatever their shadowban).'''
 	# The session doesn't autoflush, so the count would miss this comment's pending state change.
 	g.db.flush()
-	comment.author.comment_count = g.db.query(Comment).filter(
+	comment.author.comment_count = g.db.query(Comment).join(Submission, Submission.id == Comment.parent_submission).filter(
 		Comment.author_id == comment.author_id,
-		Comment.parent_submission != None,
 		Comment.state_mod == StateMod.VISIBLE,
 		Comment.state_user_deleted_utc == None,
+		Submission.private == False,
 	).count()
 	g.db.add(comment.author)
 
@@ -246,7 +246,7 @@ def _notify_on_publish(comment:Comment):
 
 
 def comments_on_draft_publish(post):
-	'''Sends the notifications a draft's published comments held back while it was a draft.'''
+	'''Sends the notifications a draft's published comments held back while it was a draft, and counts its comments toward their authors' counts.'''
 	comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(
 		Comment.parent_submission == post.id,
 		Comment.state_mod == StateMod.VISIBLE,
@@ -255,6 +255,8 @@ def comments_on_draft_publish(post):
 	).order_by(Comment.id)
 	for comment in comments:
 		_notify_on_publish(comment)
+	for comment in g.db.query(Comment).filter(Comment.parent_submission == post.id).distinct(Comment.author_id):
+		update_author_comment_count(comment)
 
 
 def comment_on_unpublish(comment:Comment):

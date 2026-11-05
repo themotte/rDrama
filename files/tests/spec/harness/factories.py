@@ -106,7 +106,7 @@ def post(author: dict, **overrides) -> dict:
 
 def comment(author: dict, post: dict, parent: dict | None = None, **overrides) -> dict:
 	'''
-	A comment on `post` (replying to `parent` if given) as commenting creates one: its own upvote, its place in the thread, and, when visible from an author who isn't shadowbanned, the comment counts of its ancestors, the post and the author. No notifications.
+	A comment on `post` (replying to `parent` if given) as commenting creates one: its own upvote, its place in the thread, its author's comment count, and, when visible from an author who isn't shadowbanned, the comment counts of its ancestors and the post. No notifications.
 	'''
 	body = overrides.pop("body", unique("comment"))
 	comment_id = db.execute("SELECT nextval('comments_id_seq')")
@@ -130,9 +130,9 @@ def comment(author: dict, post: dict, parent: dict | None = None, **overrides) -
 	})
 	db.insert("commentvotes", user_id=author["id"], comment_id=comment_id, vote_type=1)
 	shadowbanned = db.execute("SELECT shadowbanned FROM users WHERE id = :id", id=author["id"])
+	db.execute("UPDATE users SET comment_count = (SELECT count(*) FROM comments c JOIN submissions s ON s.id = c.parent_submission WHERE c.author_id = :id AND c.state_mod = 'VISIBLE' AND c.state_user_deleted_utc IS NULL AND NOT s.private) WHERE id = :id", id=author["id"])
 	if row["state_mod"] == "VISIBLE" and row["state_user_deleted_utc"] is None and not shadowbanned:
 		db.execute("UPDATE submissions SET comment_count = comment_count + 1 WHERE id = :id", id=post["id"])
-		db.execute("UPDATE users SET comment_count = (SELECT count(*) FROM comments WHERE author_id = :id AND parent_submission IS NOT NULL AND state_mod = 'VISIBLE' AND state_user_deleted_utc IS NULL) WHERE id = :id", id=author["id"])
 		db.execute("""
 			WITH RECURSIVE ancestors(id, parent_comment_id) AS (
 				SELECT id, parent_comment_id FROM comments WHERE id = :parent

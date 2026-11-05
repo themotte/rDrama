@@ -39,7 +39,7 @@ def _assert_same_comment_state(through_site, arranged, parent_ids):
 	assert _without(_vote("commentvotes", comment_id=through_site["id"]), {"user_id", "comment_id"}) == _without(_vote("commentvotes", comment_id=arranged["id"]), {"user_id", "comment_id"})
 	for site_parent, arranged_parent in parent_ids:
 		assert db.row("comments", id=site_parent)["descendant_count"] == db.row("comments", id=arranged_parent)["descendant_count"]
-	assert db.row("users", id=through_site["author_id"])["comment_count"] == db.row("users", id=arranged["author_id"])["comment_count"] == 1
+	assert db.row("users", id=through_site["author_id"])["comment_count"] == db.row("users", id=arranged["author_id"])["comment_count"]
 
 
 def test_a_factory_comment_matches_one_made_through_the_site():
@@ -50,6 +50,7 @@ def test_a_factory_comment_matches_one_made_through_the_site():
 	arranged = factories.comment(arranged_author, arranged_post)
 
 	_assert_same_comment_state(through_site, arranged, [])
+	assert db.row("users", id=site_author["id"])["comment_count"] == 1
 	assert through_site["top_comment_id"] == through_site["id"] and arranged["top_comment_id"] == arranged["id"]
 	assert db.row("submissions", id=site_post["id"])["comment_count"] == db.row("submissions", id=arranged_post["id"])["comment_count"] == 1
 
@@ -78,3 +79,27 @@ def test_a_factory_comment_on_an_18_plus_post_matches_one_made_through_the_site(
 	arranged = factories.comment(arranged_author, arranged_post)
 
 	_assert_same_comment_state(through_site, arranged, [])
+
+
+def test_a_factory_comment_by_a_shadowbanned_user_matches_one_made_through_the_site():
+	site_top, arranged_top = factories.comment(factories.user(), factories.post(factories.user())), factories.comment(factories.user(), factories.post(factories.user()))
+	site_author, arranged_author = factories.user(shadowbanned="somemod"), factories.user(shadowbanned="somemod")
+
+	through_site = _comment_through_the_site(site_author, f"comment_{site_top['id']}")
+	arranged = factories.comment(arranged_author, db.row("submissions", id=arranged_top["parent_submission"]), parent=arranged_top)
+
+	_assert_same_comment_state(through_site, arranged, [(site_top["id"], arranged_top["id"])])
+	assert db.row("users", id=site_author["id"])["comment_count"] == 1
+	assert db.row("submissions", id=site_top["parent_submission"])["comment_count"] == db.row("submissions", id=arranged_top["parent_submission"])["comment_count"] == 1
+
+
+def test_a_factory_comment_on_a_draft_matches_one_made_through_the_site():
+	site_author, arranged_author = factories.user(), factories.user()
+	site_post, arranged_post = factories.post(site_author, private=True), factories.post(arranged_author, private=True)
+
+	through_site = _comment_through_the_site(site_author, f"post_{site_post['id']}")
+	arranged = factories.comment(arranged_author, arranged_post)
+
+	_assert_same_comment_state(through_site, arranged, [])
+	assert db.row("users", id=site_author["id"])["comment_count"] == 0
+	assert db.row("submissions", id=site_post["id"])["comment_count"] == db.row("submissions", id=arranged_post["id"])["comment_count"] == 1

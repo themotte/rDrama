@@ -2,7 +2,7 @@
 The comment counts the site keeps, and what they count:
 - a post's comment count: its comments others can see, meaning not held for review or removed, not deleted by their author, and not by a shadowbanned user;
 - a comment's descendant count: comments others can see anywhere below it in its thread, whatever the state of the comments in between;
-- a user's comment count: their comments that aren't held for review, removed or deleted.
+- a user's comment count: their comments on published posts that aren't held for review, removed or deleted.
 
 Every way a comment's visibility changes keeps these exact.
 '''
@@ -126,11 +126,10 @@ def test_moderating_a_shadowbanned_users_comment_counts_nothing(new_status):
 	post, comment = _thread(author)
 	if new_status == "normal":
 		db.update("comments", {"id": comment["id"]}, state_mod="REMOVED", state_mod_set_by="somemod")
-		db.update("users", {"id": author["id"]}, comment_count=0)
 
 	_moderate(comment, new_status)
 
-	assert_counts_exact(post)
+	assert_counts_exact(post, author)
 	assert db.row("submissions", id=post["id"])["comment_count"] == 2
 
 
@@ -140,9 +139,9 @@ def test_nuking_and_unnuking_a_shadowbanned_user_keeps_counts_exact():
 	admin = as_user(factories.admin(3))
 
 	assert_status(admin.post("/admin/nuke_user", {"user": author["username"]}), 302)
-	assert_counts_exact(post)
+	assert_counts_exact(post, author)
 	assert_status(admin.post("/admin/unnuke_user", {"user": author["username"]}), 302)
-	assert_counts_exact(post)
+	assert_counts_exact(post, author)
 
 
 # Shadowbans
@@ -218,3 +217,29 @@ def test_reverting_a_shadowban_and_a_removal_keeps_counts_exact():
 	assert db.row("users", id=author["id"])["shadowbanned"] is None
 	assert_counts_exact(post)
 	assert db.row("submissions", id=post["id"])["comment_count"] == 3
+
+
+# A user's own count
+
+def test_a_shadowbanned_users_comments_count_toward_their_own_count():
+	author = factories.user(shadowbanned="somemod")
+	post = factories.post(factories.user())
+
+	assert_status(as_user(author).post("/comment", {"parent_fullname": f"post_{post['id']}", "body": factories.unique()}, headers=XHR), 200)
+
+	assert_counts_exact(post, author)
+	assert db.row("users", id=author["id"])["comment_count"] == 1
+
+
+def test_comments_on_drafts_count_toward_their_authors_count_once_published():
+	op, admin = factories.user(), factories.admin(2)
+	draft = factories.post(op, private=True)
+	for commenter in (op, admin):
+		assert_status(as_user(commenter).post("/comment", {"parent_fullname": f"post_{draft['id']}", "body": factories.unique()}, headers=XHR), 200)
+	assert_counts_exact(draft, op, admin)
+	assert db.row("users", id=admin["id"])["comment_count"] == 0
+
+	as_user(op).post(f"/publish/{draft['id']}")
+
+	assert_counts_exact(draft, op, admin)
+	assert db.row("users", id=admin["id"])["comment_count"] == 1
