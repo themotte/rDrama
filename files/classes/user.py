@@ -562,6 +562,9 @@ class User(CreatedBase):
 		if self.admin_level < 2:
 			comments = comments.filter(Comment.author_id.notin_(self.userblocks))
 
+		if not self.can_see_shadowbanned:
+			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
+
 		return [x[0] for x in comments.order_by(Comment.created_utc.desc()).all()]
 
 	@property

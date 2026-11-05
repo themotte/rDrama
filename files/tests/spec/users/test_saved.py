@@ -96,6 +96,18 @@ def test_saved_comments_leave_out_shadowbanned_authors():
 	assert_not_in_payload(r, token)
 
 
+def test_saved_comment_pages_hold_25_listed_comments_though_some_are_hidden():
+	viewer = factories.user()
+	oldest, *rest = [_saved(viewer, "comments", created_utc=1_700_000_000 + i)[1] for i in range(25)]
+	_saved(viewer, "comments", author=factories.user(shadowbanned="somemod"), created_utc=1_700_000_100)
+
+	r = as_user(viewer).get(_path(viewer, "comments"))
+
+	assert_html(r, 200)
+	for token in [oldest, *rest]:
+		assert_in_payload(r, token)
+
+
 @pytest.mark.parametrize("kind", ["posts", "comments"])
 def test_saved_lists_newest_first(kind):
 	viewer = factories.user()
