@@ -9,6 +9,7 @@ from files.commands.volunteer_janitor_histogram import volunteer_janitor_histogr
 from files.commands.cron_setup import cron_setup
 from files.commands.profile_url import profile_url
 from files.commands.leaderboard_recalc import leaderboard_recalc_cmd
+from files.commands.comment_counts_recalc import comment_counts_recalc_cmd
 import files.classes
 
 db = SQLAlchemy(app)

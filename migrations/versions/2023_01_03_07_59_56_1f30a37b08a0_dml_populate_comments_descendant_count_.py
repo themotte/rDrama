@@ -12,7 +12,6 @@ from sqlalchemy import update
 
 from files.__main__ import db_session
 from files.classes import Comment
-from files.helpers.comments import bulk_recompute_descendant_counts
 
 
 # revision identifiers, used by Alembic.
@@ -22,8 +21,17 @@ branch_labels = None
 depends_on = None
 
 def upgrade():
-	db: Session = Session(bind=op.get_bind())
-	bulk_recompute_descendant_counts(lambda q: q, db)
+	# Every comment's count of all comments below it, as counted when this ran (later definitions narrow it; see the comment_counts_recalc command)
+	op.execute("""
+		WITH RECURSIVE up(ancestor) AS (
+				SELECT parent_comment_id FROM comments WHERE parent_comment_id IS NOT NULL
+			UNION ALL
+				SELECT c.parent_comment_id FROM comments c JOIN up ON c.id = up.ancestor WHERE c.parent_comment_id IS NOT NULL
+		)
+		UPDATE comments SET descendant_count = counted.n
+		FROM (SELECT ancestor, count(*) AS n FROM up GROUP BY ancestor) counted
+		WHERE comments.id = counted.ancestor
+	""")
 
 def downgrade():
 	db: Session = Session(bind=op.get_bind())

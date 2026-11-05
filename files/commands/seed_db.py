@@ -9,7 +9,7 @@ from werkzeug.security import generate_password_hash
 from files.__main__ import app, db_session
 from files.classes import Comment, CommentVote, Submission, User, Vote
 from files.classes.visstate import StateMod
-from files.helpers.comments import bulk_recompute_descendant_counts
+from files.commands.comment_counts_recalc import comment_counts_recalc
 
 
 @app.cli.command('seed_db')
@@ -165,11 +165,6 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 
 	db.commit()
 
-	print("Updating comment counts for all posts")
-	for post in posts:
-		post.comment_count = len(post.comments)
-		db.merge(post)
-
 	print("Adding upvotes and downvotes to posts")
 	postvotes = db.query(Vote).all()
 	postvotes_pk_set = set((v.submission_id, v.user_id) for v in postvotes)
@@ -265,7 +260,7 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 		comment.realupvotes = comment.upvotes - comment.downvotes
 		db.add(comment)
 
-	print("Computing comment descendant_count")
-	bulk_recompute_descendant_counts(db=db)
-
 	db.commit()
+
+	print("Counting comments")
+	comment_counts_recalc(db)
