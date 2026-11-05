@@ -114,9 +114,7 @@ def leaderboard(v:User):
 @app.get("/@<username>/profilecss")
 def get_profilecss(username):
 	user = get_user(username)
-	resp=make_response(user.profilecss or "")
-	resp.headers.add("Content-Type", "text/css")
-	return resp
+	return Response(user.profilecss or "", mimetype="text/css")
 
 def _subscribable_post(post_id:str, v:User) -> Submission:
 	post = get_post(post_id)

@@ -4,7 +4,7 @@ Small lookups around user accounts:
 - GET /u/<name> redirects to /@<name>, whether or not such a user exists (links in Reddit's style).
 - GET /@<username> (without the trailing slash) serves the profile like /@<username>/.
 - GET /is_available/<name> tells signup whether a username is free, as {"<name>": true|false} (the name with surrounding whitespace removed). A name signup would refuse isn't available: one shorter than 3 or longer than 25 characters, or with characters other than ASCII letters, digits, "_" and "-". Nor is one that is any user's current or original username, compared case-insensitively.
-- GET /@<username>/profilecss serves the custom CSS the user set for their profile page (empty if none).
+- GET /@<username>/profilecss serves the custom CSS the user set for their profile page (empty if none), as text/css.
 - GET /pp/<user id> (the address mentions embed), /uid/<user id>/pic, /uid/<user id>/pic/profile and /@<username>/pic redirect (302) to the user's profile picture, wherever it's hosted: the "profile_url" of their /info. Browsers may keep the redirect for five minutes.
 - GET /2faqr/<secret> draws the QR code an authenticator app scans to set up two-factor login with that secret for the logged-in user, as a PNG.
 '''
@@ -146,6 +146,15 @@ def test_profile_css_is_served():
 
 	assert_status(r, 200)
 	assert r.text == css
+
+
+def test_profile_css_is_served_as_css():
+	u = factories.user(profilecss="body {}")
+
+	r = anon().get(f"/@{u['username']}/profilecss")
+
+	assert_status(r, 200)
+	assert [v.split(";")[0] for v in r.header_all("Content-Type")] == ["text/css"]
 
 
 def test_profile_css_is_empty_when_unset():
