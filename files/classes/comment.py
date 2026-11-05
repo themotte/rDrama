@@ -381,21 +381,6 @@ class Comment(CreatedBase):
 		if v.id == self.author_id: return 1
 		return getattr(self, 'voted', 0)
 
-	def sticky_api_url(self, v) -> str | None:
-		'''
-		Returns the API URL used to sticky this comment.
-		:returns: Currently `None` always. Stickying comments was disabled
-		UI-side on TheMotte.
-		'''
-		return None
-		if not self.is_comment: return None
-		if not v: return None
-		if v.admin_level >= 2:
-			return 'sticky_comment'
-		elif v.id == self.post.author_id:
-			return 'pin_comment'
-		return None
-
 	@lazy
 	def active_flags(self, v): 
 		return len(self.flags(v))

@@ -379,52 +379,6 @@ def undelete_comment(cid, v):
 	return {"message": "Comment undeleted!"}
 
 
-@app.post("/pin_comment/<cid>")
-@auth_required
-def pin_comment(cid, v):
-	refuse_while_suspended(v)
-	comment = get_comment(cid, v=v)
-	
-	if not comment.is_pinned:
-		if v.id != comment.post.author_id: abort(403)
-		
-		if comment.post.ghost: comment.is_pinned = "(OP)"
-		else: comment.is_pinned = v.username + " (OP)"
-
-		g.db.add(comment)
-
-		if v.id != comment.author_id:
-			if comment.post.ghost: message = f"OP has pinned your [comment]({comment.shortlink})!"
-			else: message = f"@{v.username} (OP) has pinned your [comment]({comment.shortlink})!"
-			send_repeatable_notification(comment.author_id, message)
-
-		g.db.commit()
-	return {"message": "Comment pinned!"}
-	
-
-@app.post("/unpin_comment/<cid>")
-@auth_required
-def unpin_comment(cid, v):
-	refuse_while_suspended(v)
-	
-	comment = get_comment(cid, v=v)
-	
-	if comment.is_pinned:
-		if v.id != comment.post.author_id: abort(403)
-
-		if not comment.is_pinned.endswith(" (OP)"): 
-			abort(403, "You can only unpin comments you have pinned!")
-
-		comment.is_pinned = None
-		g.db.add(comment)
-
-		if v.id != comment.author_id:
-			message = f"@{v.username} (OP) has unpinned your [comment]({comment.shortlink})!"
-			send_repeatable_notification(comment.author_id, message)
-		g.db.commit()
-	return {"message": "Comment unpinned!"}
-
-
 @app.post("/save_comment/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required

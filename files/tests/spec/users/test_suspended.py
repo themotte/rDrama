@@ -1,6 +1,6 @@
 '''
 What suspended users may do. While a ban runs (permanently, or until its end time), a user can't change their content or their public profile, or start following anyone. Each of these is refused with 403 and changes nothing:
-- their posts and comments: publishing a draft (POST /publish/<post id>), editing (POST /edit_post/<post id>, POST /edit_comment/<comment id>), restoring deleted ones (POST /undelete_post/<post id>, POST /undelete/comment/<comment id>), marking them NSFW (POST /toggle_post_nsfw/<post id>, POST /toggle_comment_nsfw/<comment id>), pinning a post to their profile (POST /pin/<post id>), and pinning or unpinning comments on their posts (POST /pin_comment/<comment id>, POST /unpin_comment/<comment id>);
+- their posts and comments: publishing a draft (POST /publish/<post id>), editing (POST /edit_post/<post id>, POST /edit_comment/<comment id>), restoring deleted ones (POST /undelete_post/<post id>, POST /undelete/comment/<comment id>), marking them NSFW (POST /toggle_post_nsfw/<post id>, POST /toggle_comment_nsfw/<comment id>), and pinning a post to their profile (POST /pin/<post id>);
 - their profile: setting or clearing the bio or friends text (POST /settings/profile with "bio" or "friends"), the name, flair, verified-badge colors (POST /settings/namecolor, /settings/titlecolor, /settings/verifiedcolor), the profile picture and banner (POST /settings/images/profile, /settings/images/banner), the profile page's CSS (POST /settings/profilecss), the username (POST /settings/name_change) and the flair text (POST /settings/title_change);
 - following someone (POST /follow/<username>), which tells them.
 (Posting and commenting are refused too; see the posts and comments areas. Voting and reporting follow their own rules; see those areas.)
@@ -28,10 +28,6 @@ def _own_comment(v, **overrides):
 	return factories.comment(v, factories.post(factories.user()), **overrides)
 
 
-def _others_comment_on_own_post(v, **overrides):
-	return factories.comment(factories.user(), factories.post(v), **overrides)
-
-
 # Each case builds what the request needs for the suspended user `v` and returns (path, form fields, files)
 CONTENT = {
 	"publish": lambda v: (f"/publish/{factories.post(v, private=True)['id']}", {}, None),
@@ -42,8 +38,6 @@ CONTENT = {
 	"pin post": lambda v: (f"/pin/{factories.post(v)['id']}", {}, None),
 	"edit comment": lambda v: (f"/edit_comment/{_own_comment(v)['id']}", {"body": factories.unique()}, None),
 	"undelete comment": lambda v: (f"/undelete/comment/{_own_comment(v, state_user_deleted_utc=DELETED)['id']}", {}, None),
-	"pin comment": lambda v: (f"/pin_comment/{_others_comment_on_own_post(v)['id']}", {}, None),
-	"unpin comment": lambda v: (f"/unpin_comment/{_others_comment_on_own_post(v, is_pinned=v['username'] + ' (OP)')['id']}", {}, None),
 }
 
 PROFILE = {
