@@ -3,9 +3,11 @@ The JSON object of a visible comment, as API clients get it from the comment's o
 
 It has "id", "level" (1 for a top-level comment, one more than its parent's for a reply), "author_name", "body" (the source text), "body_html", "is_bot", "created_utc", "edited_utc" (0 if never edited), "is_nsfw" (the comment is 18+), "permalink" ("/comment/<id>"), "is_pinned" (who pinned it, or null), "distinguish_level", "post_id" and "replies" (the replies' objects, newest first by default). Replies add "parent_comment_id". "score", "upvotes" and "downvotes" are left out while the comment is younger than a day. The object at the top of a response adds "author" (the author's public details, as in GET /@<username>/info without the counts) and "post" (the post's object). On posts where authors are anonymous, "author_name" and "author" are "👻" instead.
 
-The JSON follows what the viewer may see. A comment hidden from them (removed, held, deleted, or by a user they block, as on the page) is a stub: "id", "post", "level", "parent", "replies" and who removed it ("state_mod_set_by") or when its author deleted it ("state_user_deleted_utc"), without its text or author. Its author and moderators get the whole object. The "post" in a comment's object is the post as the viewer may see it, without its replies.
+The JSON follows what the viewer may see. A comment hidden from them (removed, held, deleted, by a shadowbanned user, or by a user they block, as on the page) is a stub: "id", "post", "level", "parent", "replies" and, as the page tells, who removed it ("state_mod_set_by"; null for a shadowbanned user's comment, as for one removed by no one named) or when its author deleted it ("state_user_deleted_utc"), without its text or author. Its author and moderators get the whole object. The "post" in a comment's object is the post as the viewer may see it, without its replies.
 '''
 import time
+
+import pytest
 
 from files.tests.spec.harness import *
 
@@ -231,3 +233,28 @@ def test_a_shadowbanned_users_own_comments_are_whole_to_them_in_search():
 
 	assert_status(r, 200)
 	assert_in_payload(r, token)
+
+
+@pytest.mark.parametrize("viewer", ["user", "the reply's author"])
+def test_replies_in_a_listed_comments_json_follow_the_shadowban_rule(viewer):
+	author, replier = factories.user(), factories.user(shadowbanned="somemod")
+	comment = factories.comment(author, factories.post(factories.user()))
+	reply = factories.comment(replier, db.row("submissions", id=comment["parent_submission"]), parent=comment, body=factories.unique())
+	client = as_api(factories.api_token(replier if viewer == "the reply's author" else factories.user()))
+
+	r = client.get(f"/@{author['username']}/")
+
+	assert_status(r, 200)
+	(assert_in_payload if viewer == "the reply's author" else assert_not_in_payload)(r, reply["body"])
+
+
+def test_a_shadowbanned_users_stub_looks_like_a_removed_one():
+	post = factories.post(factories.user())
+	hidden = factories.comment(factories.user(shadowbanned="somemod"), post)
+	factories.comment(factories.user(), post, parent=hidden)
+
+	r = _api().get(f"/post/{post['id']}")
+
+	assert_status(r, 200)
+	[stub] = r.json["replies"]
+	assert stub["id"] == hidden["id"] and stub["state_mod_set_by"] is None and "body" not in stub

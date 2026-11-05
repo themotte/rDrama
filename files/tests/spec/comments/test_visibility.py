@@ -2,6 +2,7 @@
 Which comments a viewer is shown, wherever threads are rendered as pages: the post page (GET /post/<post id>), a comment's own page (GET /comment/<comment id>) and further threads of a post (GET /viewmore/...).
 
 - A comment that moderators removed or filtered, or that its author deleted, is hidden from everyone except its author and moderators (admin level 2 and up). Admins below level 2 don't see it either.
+- A comment by a shadowbanned user is shown only to its author and to admins of level 2 and up, wherever it sits in a thread.
 - A comment by a user the viewer blocks is hidden from the viewer, unless it is distinguished as official. (What admins see of users they block is not yet settled.)
 - A comment by a user who blocks the viewer is still shown to the viewer.
 - Comments marked 18+ are shown like any other.
@@ -221,3 +222,22 @@ def test_the_page_reveals_nothing_of_hidden_comments_it_doesnt_show(why):
 
 	assert_html(r, 200)
 	assert_not_in_payload(r, str(created))
+
+
+SHADOWBAN_VIEWERS = {"visitor": False, "user": False, "shadowbanned user": False, "author": True, "admin 1": False, "admin 2": True, "admin 3": True}
+
+
+@pytest.mark.parametrize("surface", SURFACES)
+@pytest.mark.parametrize("depth", ["top-level", "reply"])
+@pytest.mark.parametrize("viewer", SHADOWBAN_VIEWERS)
+def test_comments_by_shadowbanned_users_are_shown_only_to_them_and_moderators(viewer, depth, surface):
+	author = factories.user(shadowbanned="somemod")
+	post = factories.post(factories.user())
+	parent = factories.comment(factories.user(), post, created_utc=1000) if depth == "reply" else None
+	comment = factories.comment(author, post, parent=parent, body=factories.unique(), created_utc=1000)
+	client = as_user(factories.user(shadowbanned="othermod")) if viewer == "shadowbanned user" else _client(viewer, author)
+
+	r = _view(surface, client, post, comment)
+
+	assert_html(r, 200)
+	(assert_in_payload if SHADOWBAN_VIEWERS[viewer] else assert_not_in_payload)(r, comment["body"])

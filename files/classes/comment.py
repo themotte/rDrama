@@ -151,7 +151,7 @@ class Comment(CreatedBase):
 		elif self.parent_submission: return f"post_{self.parent_submission}"
 
 	def replies(self, user):
-		if self.replies2 != None: return [x for x in self.replies2 if not x.author.shadowbanned or x.descendant_count > 0]
+		if self.replies2 != None: return [x for x in self.replies2 if not x.shadowban_hides_from(user) or x.descendant_count > 0]
 		author_id = None
 		if user:
 			author_id = user.id
@@ -163,9 +163,13 @@ class Comment(CreatedBase):
 				key=lambda x: x.created_utc)
 		return sorted((x for x in self.child_comments
 			if x.author
-				and not x.author.shadowbanned
+				and not x.shadowban_hides_from(user)
 				and (x.state_mod == StateMod.VISIBLE or x.author_id == author_id)),
 			key=lambda x: x.created_utc, reverse=True)
+
+	def shadowban_hides_from(self, v) -> bool:
+		'''Whether its author's shadowban hides the comment from `v`: everyone but the author and admins (level 2+).'''
+		return bool(self.author.shadowbanned) and not (v and (v.id == self.author_id or v.admin_level >= PERMS['USER_SHADOWBAN']))
 
 	@property
 	def replies2(self):
@@ -238,7 +242,10 @@ class Comment(CreatedBase):
 				'level': self.level,
 				'parent': self.parent_fullname,
 			}
-			if self.state_mod != StateMod.VISIBLE: data['state_mod_set_by'] = self.state_mod_set_by
+			# Why it's hidden, as the page says: hidden by its author's shadowban, it reads as removed by no one
+			if self.state_mod == StateMod.REMOVED: data['state_mod_set_by'] = self.state_mod_set_by
+			elif self.shadowban_hides_from(v): data['state_mod_set_by'] = None
+			elif self.state_mod != StateMod.VISIBLE: data['state_mod_set_by'] = self.state_mod_set_by
 			elif self.state_user_deleted_utc: data['state_user_deleted_utc'] = self.state_user_deleted_utc
 		data['replies'] = [x.json_core_for(v) for x in self.replies(v)]
 		return data

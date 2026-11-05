@@ -10,7 +10,7 @@ from sqlalchemy.orm import Query, scoped_session, selectinload
 from sqlalchemy.orm.attributes import set_committed_value
 
 from files.classes import *
-from files.helpers.config.const import AUTOJANNY_ID
+from files.helpers.config.const import AUTOJANNY_ID, PERMS
 from files.helpers.contentsorting import sort_comment_results
 
 
@@ -295,9 +295,9 @@ def get_comments(
 			blocked.c.target_id,
 		).filter(Comment.id.in_(cids))
 
-		if not (v and (v.shadowbanned or v.admin_level >= 2)):
+		if v.admin_level < PERMS['USER_SHADOWBAN']:
 			query = query.join(User, User.id == Comment.author_id) \
-				.filter(User.shadowbanned == None)
+				.filter(or_(User.shadowbanned == None, Comment.author_id == v.id))
 
 		query = query.join(
 			votes,
