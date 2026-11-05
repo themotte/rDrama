@@ -18,8 +18,8 @@ from files.helpers.alerts import *
 from files.helpers.config.const import *
 from files.helpers.contentsorting import (apply_time_filter, sort_objects)
 from files.helpers.media import new_image_path, process_image
+from files.helpers.config.regex import valid_username_regex
 from files.helpers.sanitize import *
-from files.helpers.strings import sql_ilike_clean
 from files.mail import *
 from files.routes.importstar import *
 
@@ -277,24 +277,10 @@ def mfa_qr(secret, v):
 
 @app.get("/is_available/<name>")
 def api_is_available(name):
-	name=name.strip()
-
-	if len(name)<3 or len(name)>25:
-		return {name:False}
-		
-	name2 = sql_ilike_clean(name)
-
-	x= g.db.query(User).filter(
-		or_(
-			User.username.ilike(name2),
-			User.original_username.ilike(name2)
-			)
-		).one_or_none()
-
-	if x:
-		return {name: False}
-	else:
-		return {name: True}
+	name = name.strip()
+	if not valid_username_regex.fullmatch(name): return {name: False}
+	taken = g.db.query(User.id).filter(or_(func.lower(User.username) == name.lower(), func.lower(User.original_username) == name.lower())).first()
+	return {name: taken is None}
 
 @app.get("/id/<int:id>")
 def user_id(id:int):

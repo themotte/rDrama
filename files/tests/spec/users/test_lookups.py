@@ -3,10 +3,12 @@ Small lookups around user accounts:
 - GET /id/<user id> redirects to the user's profile, /@<username>.
 - GET /u/<name> redirects to /@<name>, whether or not such a user exists (links in Reddit's style).
 - GET /@<username> (without the trailing slash) serves the profile like /@<username>/.
-- GET /is_available/<name> tells signup whether a username is free, as {"<name>": true|false} (the name with surrounding whitespace removed). A name shorter than 3 or longer than 25 characters isn't available, nor is one that is any user's current or original username, compared case-insensitively.
+- GET /is_available/<name> tells signup whether a username is free, as {"<name>": true|false} (the name with surrounding whitespace removed). A name signup would refuse isn't available: one shorter than 3 or longer than 25 characters, or with characters other than ASCII letters, digits, "_" and "-". Nor is one that is any user's current or original username, compared case-insensitively.
 - GET /@<username>/profilecss serves the custom CSS the user set for their profile page (empty if none).
 - GET /2faqr/<secret> draws the QR code an authenticator app scans to set up two-factor login with that secret for the logged-in user, as a PNG.
 '''
+from urllib.parse import quote
+
 import pytest
 
 from files.tests.spec.harness import *
@@ -106,6 +108,22 @@ def test_name_length_bounds_availability(length, available):
 
 	assert_status(r, 200)
 	assert r.json == {name: available}
+
+
+@pytest.mark.parametrize("name", ["has space", "dot.ted", "per%cent", "été"])
+def test_names_signup_would_refuse_are_not_available(name):
+	r = anon().get(f"/is_available/{quote(name)}")
+
+	assert_status(r, 200)
+	assert r.json == {name: False}
+
+
+@pytest.mark.parametrize("name", ["under_score", "da-sh", "MiXed123"])
+def test_names_of_letters_digits_underscores_and_dashes_are_available(name):
+	r = anon().get(f"/is_available/{name}")
+
+	assert_status(r, 200)
+	assert r.json == {name: True}
 
 
 def test_surrounding_whitespace_is_ignored():
