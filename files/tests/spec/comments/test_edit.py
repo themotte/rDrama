@@ -1,7 +1,7 @@
 '''
 Editing a comment: POST /edit_comment/<comment id> with "body" (markdown; surrounding whitespace is trimmed and it is cut to 500,000 characters). Only the comment's author may edit it, including while it is removed or held for review.
 
-The body and its rendering are replaced; the comment is marked as edited (with the time) only when it is more than 3 minutes old. Requests through Tor have their uploads ("file") dropped. Sending the body unchanged and no file changes nothing.
+The body and its rendering are replaced; the comment is marked as edited (with the time) only when it is more than 3 minutes old. Images uploaded as "file" (up to 4) are stored and linked at the end of the new body, as when commenting. Requests through Tor have their uploads dropped. Sending the body unchanged and no file changes nothing.
 
 When the comment is published (visible, not deleted, by an author who isn't shadowbanned, on a post that isn't a draft), users newly mentioned as @name are notified (unless either has blocked the other), once: a user already notified about the comment isn't notified again. Edits of any other comment, private messages included, notify no one.
 
@@ -171,6 +171,21 @@ def test_edits_of_unpublished_comments_notify_no_one(case):
 
 def _stored_images():
 	return sorted(os.listdir(config.images_dir()))
+
+
+def test_uploaded_images_are_linked_after_the_text():
+	author, comment = _own()
+	token = factories.unique()
+	client = as_user(author)
+
+	r = _edit(client, comment, token, files={"file": uploads.png(2, 2)})
+
+	_assert_answered(r, token)
+	[name] = _stored_images()
+	edited = db.row("comments", id=comment["id"])
+	assert edited["body"].startswith(f"{token}\n\n") and name in edited["body"]
+	assert name in edited["body_html"]
+	assert name in r.json["comment"]
 
 
 def test_uploads_through_tor_are_dropped_but_the_text_saved():

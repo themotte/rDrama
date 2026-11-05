@@ -285,7 +285,10 @@ def edit_comment(cid, v):
 					name = new_image_path()
 					file.save(name)
 					url = process_image(name)
-					body += f"\n\n![]({url})"
+					if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
+						body += f"\n\n![]({url})"
+					else:
+						body += f'\n\n<a href="{url}">{url}</a>'
 				else: abort(400, "Image files only")
 
 			body_html = sanitize(body)
