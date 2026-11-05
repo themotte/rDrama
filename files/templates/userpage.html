@@ -193,7 +193,7 @@
 						</div>
 						<pre></pre>
 						{% if u.is_suspended %}
-							<form action="/unban_user/{{u.id}}/" method="post" action="">
+							<form action="/unban_user/{{u.id}}" method="post">
 								{{forms.formkey(v)}}
 								<input type="hidden" name="redir" value="true">
 								<input type="submit" class="btn btn-success" value="Unban user">
@@ -415,7 +415,7 @@
 								<input type="submit" class="btn btn-success" value="Unban user">
 							</form>
 						{% else %}
-							<form action="/ban_user/{{u.id}}/" method="post">
+							<form action="/ban_user/{{u.id}}" method="post">
 								{{forms.formkey(v)}}
 								<input type="hidden" name="redir" value="true">
 								<input autocomplete="off" style="font-size:11px" type="text" class="form-control" name="reason" placeholder="Ban Reason" oninput="document.getElementById('user-ban-submit2').disabled=false">
