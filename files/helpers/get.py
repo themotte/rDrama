@@ -403,8 +403,9 @@ def get_comment_trees_eager(
 		comments_map_parent[c.parent_comment_id].append(c)
 
 	# Manually wire parent_comment (and post, if provided) from the
-	# loaded set instead of separate selectinload queries.  All parents
-	# are already present because callers filter by top_comment_id.
+	# loaded set instead of separate selectinload queries. Callers load
+	# connected parts of threads, so a comment's parent is either loaded
+	# or outside what is rendered.
 	for c in comments:
 		parent = comments_map.get(c.parent_comment_id)
 		if parent is not None:

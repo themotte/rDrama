@@ -16,7 +16,7 @@ import files.helpers.validators as validators
 from files.__main__ import app, db_session, limiter
 from files.classes import *
 from files.classes.visstate import StateMod
-from files.helpers.comments import comments_on_draft_publish
+from files.helpers.comments import comment_subtree_ids, comments_on_draft_publish
 from files.helpers.alerts import *
 from files.helpers.background import spawn_background
 from files.helpers.caching import invalidate_cache
@@ -186,51 +186,12 @@ def morecomments(v, cid):
 	parent = g.db.get(Comment, cid)
 	if not parent or not parent.parent_submission or parent.post.is_draft_hidden_from(v): abort(404)
 	if age_unconfirmed(parent.post, v): abort(403, "Must be 18+ to view")
-	tcid = parent.top_comment_id
+	post = parent.post
+	subtree = comment_subtree_ids(parent.id, RENDER_DEPTH_LIMIT + 1)
+	_, comment_tree = get_comment_trees_eager(lambda q: q.filter(Comment.id.in_(subtree)), sort=_comment_sort(None, v), v=v, post=post)
+	comments = [c for c in comment_tree[parent.id] if c.renders_for(v)]
 
-	if v:
-		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
-
-		blocking = v.blocking.subquery()
-
-		blocked = v.blocked.subquery()
-
-		comments = g.db.query(
-			Comment,
-			votes.c.vote_type,
-			blocking.c.target_id,
-			blocked.c.target_id,
-		).filter(Comment.top_comment_id == tcid, Comment.level > RENDER_DEPTH_LIMIT).join(
-			votes,
-			votes.c.comment_id == Comment.id,
-			isouter=True
-		).join(
-			blocking,
-			blocking.c.target_id == Comment.author_id,
-			isouter=True
-		).join(
-			blocked,
-			blocked.c.user_id == Comment.author_id,
-			isouter=True
-		)
-
-		output = []
-		dump = []
-		for c in comments.all():
-			comment = c[0]
-			comment.voted = c[1] or 0
-			comment.is_blocking = c[2] or 0
-			comment.is_blocked = c[3] or 0
-			if c[0].parent_comment_id == int(cid): output.append(comment)
-			else: dump.append(comment)
-		comments = output
-	else:
-		comments = parent.replies(None)
-
-	if comments: p = comments[0].post
-	else: p = None
-	
-	return render_template("comments.html", v=v, comments=comments, p=p, render_replies=True, ajax=True)
+	return render_template("comments.html", v=v, comments=comments, p=post, render_replies=True, ajax=True)
 
 
 @app.post("/edit_post/<int:pid>")

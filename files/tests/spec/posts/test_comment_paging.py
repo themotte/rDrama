@@ -1,7 +1,7 @@
 '''
 Fetching more comments than the post page shows, as HTML fragments:
 - GET /viewmore/<post id>/<sort>/<offset>?ids=<comma-separated ids already shown>: the next page of top-level threads.
-- GET /morecomments/<comment id>: the replies to a comment too deep in a thread for the post page to show (threads render 9 levels deep).
+- GET /morecomments/<comment id>: the replies to a comment too deep in a thread for the post page to show (threads render 9 levels deep), shown by the post page's rules (hidden comments as placeholders for replies the viewer may see), in the viewer's default comment order (newest first for visitors), nine levels deep.
 
 On an 18+ post both are refused with 403 to visitors who haven't confirmed their age and to users who aren't 18+, as the post page itself asks them to confirm first.
 '''
@@ -172,23 +172,59 @@ def test_more_comments_hides_replies_by_users_you_block():
 	assert_not_in_payload(r, chain[9]["body"])
 
 
-def test_more_comments_for_visitors_fetches_replies_at_any_depth():
+@pytest.mark.parametrize("viewer", ["visitor", "user"])
+def test_more_comments_fetches_the_replies_of_a_comment_at_any_depth(viewer):
 	post = factories.post(factories.user())
 	top = factories.comment(factories.user(), post)
 	reply = factories.comment(factories.user(), post, parent=top)
+	elsewhere = factories.comment(factories.user(), post, parent=factories.comment(factories.user(), post))
 
-	assert_in_payload(anon().get(f"/morecomments/{top['id']}"), reply["body"])
-
-
-def test_more_comments_for_users_fetches_only_replies_below_the_shown_depth():
-	post = factories.post(factories.user())
-	top = factories.comment(factories.user(), post)
-	reply = factories.comment(factories.user(), post, parent=top)
-
-	r = as_user(factories.user()).get(f"/morecomments/{top['id']}")
+	r = (anon() if viewer == "visitor" else as_user(factories.user())).get(f"/morecomments/{top['id']}")
 
 	assert_html(r, 200)
-	assert_not_in_payload(r, reply["body"])
+	assert_in_payload(r, reply["body"])
+	assert_not_in_payload(r, elsewhere["body"])
+	assert_not_in_payload(r, top["body"])
+
+
+@pytest.mark.parametrize("viewer", ["visitor", "user"])
+def test_more_comments_shows_replies_under_a_hidden_reply(viewer):
+	post = factories.post(factories.user())
+	top = factories.comment(factories.user(), post)
+	removed = factories.comment(factories.user(), post, parent=top, state_mod="REMOVED", state_mod_set_by="somemod")
+	below = factories.comment(factories.user(), post, parent=removed)
+
+	r = (anon() if viewer == "visitor" else as_user(factories.user())).get(f"/morecomments/{top['id']}")
+
+	assert_html(r, 200)
+	assert_in_payload(r, below["body"])
+	assert_not_in_payload(r, removed["body"])
+
+
+def test_more_comments_shows_moderators_hidden_replies_at_any_depth():
+	post = factories.post(factories.user())
+	top = factories.comment(factories.user(), post)
+	reply = factories.comment(factories.user(), post, parent=top)
+	removed = factories.comment(factories.user(), post, parent=reply, state_mod="REMOVED", state_mod_set_by="somemod")
+
+	r = as_user(factories.admin(2)).get(f"/morecomments/{top['id']}")
+
+	assert_html(r, 200)
+	assert_in_payload(r, removed["body"])
+
+
+@pytest.mark.parametrize("order", ["old", "new"])
+def test_more_comments_follows_the_viewers_comment_order(order):
+	post = factories.post(factories.user())
+	top = factories.comment(factories.user(), post)
+	newer = factories.comment(factories.user(), post, parent=top, created_utc=2000)
+	older = factories.comment(factories.user(), post, parent=top, created_utc=1000)
+
+	r = as_user(factories.user(defaultsortingcomments=order)).get(f"/morecomments/{top['id']}")
+
+	assert_html(r, 200)
+	first, second = (older, newer) if order == "old" else (newer, older)
+	assert r.text.index(first["body"]) < r.text.index(second["body"])
 
 
 def test_more_comments_needs_a_numeric_id():
@@ -255,3 +291,16 @@ def test_fetching_more_of_an_18_plus_post_after_age_confirmation(which, viewer):
 	r = _fetch_more(which, client, post)
 
 	assert_html(r, 200)
+
+
+@pytest.mark.parametrize("viewer", ["author", "user"])
+def test_more_comments_shows_shadowbanned_replies_only_to_their_author(viewer):
+	author = factories.user(shadowbanned="somemod")
+	post = factories.post(factories.user())
+	top = factories.comment(factories.user(), post)
+	reply = factories.comment(author, post, parent=top, body=factories.unique())
+
+	r = as_user(author if viewer == "author" else factories.user()).get(f"/morecomments/{top['id']}")
+
+	assert_html(r, 200)
+	(assert_in_payload if viewer == "author" else assert_not_in_payload)(r, reply["body"])

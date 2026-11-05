@@ -19,6 +19,23 @@ def comment_published(comment:Comment) -> bool:
 	return comment_counted(comment) and not comment.post.private
 
 
+_SUBTREE_IDS_SQL = text("""
+WITH RECURSIVE subtree(id, depth) AS (
+		SELECT id, 0 FROM comments WHERE id = :cid
+	UNION ALL
+		SELECT c.id, s.depth + 1
+		FROM comments c JOIN subtree s ON c.parent_comment_id = s.id
+		WHERE s.depth < :depth
+)
+SELECT id FROM subtree
+""")
+
+
+def comment_subtree_ids(cid:int, depth:int) -> list[int]:
+	'''Ids of the comment and its replies down to `depth` levels below it.'''
+	return [row[0] for row in g.db.execute(_SUBTREE_IDS_SQL, {"cid": cid, "depth": depth})]
+
+
 def update_stateful_counters(comment, delta):
 	"""
 	When a comment changes publish status, we need to update all affected stateful
