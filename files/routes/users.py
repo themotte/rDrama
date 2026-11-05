@@ -342,10 +342,8 @@ def u_username(username, v=None):
 	ids = ids[:25]
 
 	if page == 1:
-		sticky = g.db.query(Submission).filter_by(is_pinned=True, author_id=u.id).all()
-		if sticky:
-			for p in sticky:
-				ids = [p.id] + ids
+		for pid in listings.userpage_pinned(u, v):
+			ids = [pid] + ids
 
 	listing = get_posts(ids, v=v)
 

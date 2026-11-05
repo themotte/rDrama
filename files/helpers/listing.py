@@ -3,7 +3,7 @@ Module for listings.
 """
 
 import time
-from typing import Final
+from typing import Final, Optional
 
 from flask import g
 from sqlalchemy.sql.expression import not_
@@ -95,15 +95,31 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, filter_words='
 	return posts, next_exists
 
 
-@cache.memoize(timeout=USERPAGELISTING_TIMEOUT_SECS)
-def userpagelisting(u:User, v=None, page=1, sort="new", t="all"):
-	if not u.shows_activity_to(v): return []
+def _userpage_posts(u:User, v:Optional[User]):
+	'''The query for `u`'s posts that `v` may see on their profile, or None if `v` may see none.'''
+	if not u.shows_activity_to(v): return None
 
-	posts = g.db.query(Submission.id).filter_by(author_id=u.id, is_pinned=False)
+	posts = g.db.query(Submission.id).filter_by(author_id=u.id)
 
 	if not (v and (v.admin_level >= 2 or v.id == u.id)):
 		posts = posts.filter_by(state_user_deleted_utc=None, state_mod=StateMod.VISIBLE, private=False, ghost=False)
 
+	return posts
+
+
+def userpage_pinned(u:User, v:Optional[User]) -> list[int]:
+	'''Ids of `u`'s pinned posts that `v` may see.'''
+	posts = _userpage_posts(u, v)
+	if posts is None: return []
+	return [x[0] for x in posts.filter_by(is_pinned=True).all()]
+
+
+@cache.memoize(timeout=USERPAGELISTING_TIMEOUT_SECS)
+def userpagelisting(u:User, v=None, page=1, sort="new", t="all"):
+	posts = _userpage_posts(u, v)
+	if posts is None: return []
+
+	posts = posts.filter_by(is_pinned=False)
 	posts = apply_time_filter(posts, t, Submission)
 	posts = sort_objects(posts, sort, Submission)
 

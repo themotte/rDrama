@@ -8,7 +8,7 @@ Before listing anything:
 
 The listings hold 25 items to a page, with "page" (from 1; anything else means 1) choosing the page. "sort" orders them: new (the default: newest first), old, top (highest score first), bottom, comments (most comments first; for comments, most replies), controversial (closest to evenly split votes first), hot (score weighed against age), and for posts bump (most recently bumped first, among posts with more than one comment). "t" (hour, day, week, month, year; anything else means all time) keeps only items created within that long. Ties fall back to newest first.
 
-What's listed depends on the viewer. Everyone sees the user's visible posts and comments; the user themselves and admins (level 2 and up) also see the deleted, removed, held ("filtered") and anonymous ("ghost") ones, and the user's unpublished drafts. Nobody else sees anything of a shadowbanned user, other shadowbanned users included. The user's pinned posts lead the first page of their posts.
+What's listed depends on the viewer. Everyone sees the user's visible posts and comments; the user themselves and admins (level 2 and up) also see the deleted, removed, held ("filtered") and anonymous ("ghost") ones, and the user's unpublished drafts. Nobody else sees anything of a shadowbanned user, other shadowbanned users included. The user's pinned posts that the viewer may see lead the first page of their posts.
 
 API clients get the listing as JSON: an object whose "data" is the list of items.
 '''
@@ -502,6 +502,42 @@ def test_pinned_post_leads_the_first_page_only(number):
 	else:
 		assert_not_in_payload(r, pinned)
 		assert_in_payload(r, oldest)
+
+
+@pytest.mark.parametrize("state", HIDDEN_POSTS)
+@pytest.mark.parametrize("viewer", ["anonymous", "other user"])
+def test_pinned_hidden_posts_stay_hidden(state, viewer):
+	user = factories.user()
+	token = _item(user, "posts", is_pinned=True, **HIDDEN_POSTS[state])
+
+	r = _client(viewer, user).get(_path(user, "posts"))
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, token)
+
+
+@pytest.mark.parametrize("state", HIDDEN_POSTS)
+@pytest.mark.parametrize("viewer", ["owner", "admin"])
+def test_pinned_hidden_posts_lead_for_the_owner_and_admins(state, viewer):
+	user = factories.user()
+	token = _item(user, "posts", is_pinned=True, created_utc=1_600_000_000, **HIDDEN_POSTS[state])
+	listed = _item(user, "posts", created_utc=1_700_000_000)
+
+	r = _client(viewer, user).get(_path(user, "posts"))
+
+	assert_html(r, 200)
+	assert r.text.index(token) < r.text.index(listed)
+
+
+@pytest.mark.parametrize("viewer", ["anonymous", "other user"])
+def test_pinned_posts_of_a_shadowbanned_user_stay_hidden(viewer):
+	user = factories.user(shadowbanned="somemod")
+	token = _item(user, "posts", is_pinned=True)
+
+	r = _client(viewer, user).get(_path(user, "posts"))
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, token)
 
 
 # API clients
