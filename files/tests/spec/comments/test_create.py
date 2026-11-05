@@ -11,12 +11,12 @@ A published comment counts toward its post's and its author's comment counts and
 
 Replies may go to deleted or removed comments and to removed posts. A draft takes comments only from those who may see it (its author and admins of level 2 or more); to anyone else it doesn't exist. Comments on a draft notify nobody while it is a draft; publishing it (POST /publish/<post id>) sends the notifications of its published comments then.
 
-Images uploaded as "file" (up to 4; more are ignored) are stored and linked at the end of the body, and a comment of only images is allowed. Requests through Tor have their uploads dropped.
+Images uploaded as "file" (up to 4; more are ignored) are stored and linked at the end of the body, and a comment of only images is allowed. Requests through Tor have their uploads dropped, so they need text.
 
 The answer to browsers and scripts is JSON {"comment": <the comment rendered as an HTML fragment>, "message": ...} where "message" is a notice for the author when they reply to someone who blocks them (unless they're an admin of level 2 or more) or when the comment is held for its length, and null otherwise. API clients get the comment's JSON object.
 
 Refused, changing nothing:
-- 400: "parent_fullname" shorter than 4 characters or not naming a post or a comment; no body and no file;
+- 400: "parent_fullname" shorter than 4 characters or not naming a post or a comment; no body and no file (or only a file dropped for coming through Tor);
 - 404: an unknown post or comment, a private message, or a draft (or a comment on one) the commenter may not see;
 - 409: the author already has a comment that isn't deleted with the same body under the same parent;
 - 403: suspended users;
@@ -569,6 +569,18 @@ def test_uploads_through_tor_are_dropped_but_the_text_posted():
 	assert _stored_images() == []
 	assert db.row("comments", parent_submission=post["id"])["body"] == token
 
+
+
+def test_a_comment_of_only_an_upload_through_tor_is_refused():
+	post = factories.post(factories.user())
+	client = as_user(factories.user())
+
+	with db_diff() as d:
+		r = _comment(client, _on(post), "", headers={**XHR, **TOR}, files={"file": uploads.png(2, 2)})
+
+	assert_status(r, 400)
+	d.assert_exactly()
+	assert _stored_images() == []
 
 # Refusals
 

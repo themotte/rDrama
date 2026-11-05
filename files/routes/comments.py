@@ -123,9 +123,6 @@ def api_comment(v):
 	level = 1 if isinstance(parent, Submission) else parent.level + 1
 
 	body = sanitize_raw(request.values.get("body"), allow_newlines=True, length_limit=COMMENT_BODY_LENGTH_MAXIMUM)
-	if not body and not request.files.get('file'): 
-		abort(400, "You need to actually write something!")
-
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		files = request.files.getlist('file')[:4]
 		for file in files:
@@ -139,6 +136,8 @@ def api_comment(v):
 				else:
 					body += f'\n\n<a href="{image}">{image}</a>'
 			else: abort(400, "Image files only")
+
+	if not body: abort(400, "You need to actually write something!")
 
 	body_html = sanitize(body)
 
