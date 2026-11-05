@@ -123,7 +123,7 @@ def api_comment(v):
 		parent_post = get_post(parent.parent_submission, v=v) if parent.parent_submission else None
 		parent_comment_id = parent.id
 	else: abort(400)
-	if not parent_post: abort(404) # don't allow sending comments to the ether
+	if not parent_post or parent_post.is_draft_hidden_from(v): abort(404)
 	level = 1 if isinstance(parent, Submission) else parent.level + 1
 
 	body = sanitize_raw(request.values.get("body"), allow_newlines=True, length_limit=COMMENT_BODY_LENGTH_MAXIMUM)

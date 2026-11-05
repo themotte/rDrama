@@ -9,7 +9,7 @@ A comment is held for review (filtered) instead of published when:
 
 A published comment counts toward its post's and its author's comment counts and the descendant counts of all the comments above it, and notifies, once each and never the author: users it mentions as @name (unless either has blocked the other), the post's subscribers, and the author of what it replies to (unless that author blocks the commenter). A held comment does neither.
 
-Replies may go to deleted or removed comments and to removed posts.
+Replies may go to deleted or removed comments and to removed posts. A draft takes comments only from those who may see it (its author and admins of level 2 or more); to anyone else it doesn't exist.
 
 Images uploaded as "file" (up to 4; more are ignored) are stored and linked at the end of the body, and a comment of only images is allowed. Requests through Tor have their uploads dropped.
 
@@ -17,7 +17,7 @@ The answer to browsers and scripts is JSON {"comment": <the comment rendered as 
 
 Refused, changing nothing:
 - 400: "parent_fullname" shorter than 4 characters or not naming a post or a comment; no body and no file;
-- 404: an unknown post or comment, or a private message;
+- 404: an unknown post or comment, a private message, or a draft (or a comment on one) the commenter may not see;
 - 409: the author already has a comment that isn't deleted with the same body under the same parent;
 - 403: suspended users;
 - 401: anonymous scripts (browsers are sent to log in).
@@ -620,6 +620,30 @@ def test_replies_to_private_messages_are_not_found():
 	message = db.insert("comments", id=message_id, author_id=sender["id"], sentto=recipient["id"], created_utc=int(time.time()), parent_submission=None, level=1, top_comment_id=message_id, body=body, body_html=f"<p>{body}</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
 
 	_refused(as_user(recipient), _under(message), factories.unique(), 404)
+
+
+@pytest.mark.parametrize("where", ["post", "reply"])
+def test_comments_on_drafts_the_commenter_cant_see_are_not_found(where):
+	draft = factories.post(factories.user(), private=True)
+	parent_fullname = _on(draft) if where == "post" else _under(factories.comment(factories.admin(2), draft))
+
+	_refused(as_user(factories.user()), parent_fullname, factories.unique(), 404)
+
+
+@pytest.mark.parametrize("commenter", ["author", "admin"])
+def test_drafts_take_comments_from_those_who_see_them(commenter):
+	author = factories.user()
+	draft = factories.post(author, private=True)
+	v = author if commenter == "author" else factories.admin(2)
+	body = factories.unique()
+	client = as_user(v)
+	counted = _counted(v, draft, author_count=db.row("users", id=v["id"])["comment_count"] + 1)
+
+	with db_diff() as d:
+		r = _comment(client, _on(draft), body)
+
+	_assert_answered(r, body)
+	d.assert_exactly(inserted={"comments": [_row(v, draft, body)], "commentvotes": [_vote(v)], "notifications": _notifications(*([] if v is author else [author]))}, updated=counted)
 
 
 @pytest.mark.parametrize("where", ["post", "reply"])
