@@ -173,7 +173,7 @@ def api_comment(v):
 			Comment.body.op(
 				'<->')(body) < app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"],
 			Comment.created_utc > cutoff
-		).all()
+		).count()
 
 		threshold = app.config["COMMENT_SPAM_COUNT_THRESHOLD"]
 		if v.age_seconds >= (60 * 60 * 24 * 7):
@@ -181,25 +181,7 @@ def api_comment(v):
 		elif v.age_seconds >= (60 * 60 * 24):
 			threshold *= 2
 
-		if len(similar_comments) > threshold:
-			text = "Your account has been banned for **1 day** for the following reason:\n\n> Too much spam!"
-			send_repeatable_notification(v.id, text)
-
-			v.ban(reason="Spamming.",
-					days=1)
-
-			for comment in similar_comments:
-				comment.state_mod = StateMod.REMOVED
-				comment.state_mod_set_by = "AutoJanny"
-				g.db.add(comment)
-				ma=ModAction(
-					user_id=AUTOJANNY_ID,
-					target_comment_id=comment.id,
-					kind="remove_comment",
-					_note="spam"
-					)
-				g.db.add(ma)
-
+		if similar_comments > threshold:
 			abort(403, "Too much spam!")
 
 	is_filtered = v.should_comments_be_filtered
@@ -290,7 +272,7 @@ def edit_comment(cid, v):
 			Comment.body.op(
 				'<->')(body) < app.config["SPAM_SIMILARITY_THRESHOLD"],
 			Comment.created_utc > cutoff
-		).all()
+		).count()
 
 		threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
 		if v.age_seconds >= (60 * 60 * 24 * 30):
@@ -300,18 +282,7 @@ def edit_comment(cid, v):
 		elif v.age_seconds >= (60 * 60 * 24):
 			threshold *= 2
 
-		if len(similar_comments) > threshold:
-			text = "Your account has been banned for **1 day** for the following reason:\n\n> Too much spam!"
-			send_repeatable_notification(v.id, text)
-
-			v.ban(reason="Spamming.",
-					days=1)
-
-			for comment in similar_comments:
-				comment.state_mod = StateMod.REMOVED
-				comment.state_mod_set_by = "AutoJanny"
-				g.db.add(comment)
-
+		if similar_comments > threshold:
 			abort(403, "Too much spam!")
 		# End Spam Checking
 
