@@ -17,7 +17,7 @@ from files.helpers.config.environment import CF_HEADERS, CF_ZONE, SITE_SETTINGS_
 from files.helpers.get import *
 from files.helpers.listing import request_page
 from files.helpers.media import *
-from files.helpers.moderation import moderate
+from files.helpers.moderation import moderate, shadowban_lift, shadowban_set
 from files.helpers.sanitize import *
 from files.helpers.security import *
 from files.helpers.wrappers import *
@@ -141,7 +141,7 @@ def revert_actions(v, username):
 		# A user only shadowbanned isn't told: that would reveal the shadowban.
 		if user.is_banned:
 			send_repeatable_notification(user.id, f"@{v.username} has unbanned you!")
-		user.shadowbanned = None
+		shadowban_lift(user)
 		user.is_banned = 0
 		user.unban_utc = 0
 		user.ban_evade = 0
@@ -636,7 +636,7 @@ def shadowban(user_id, v):
 	user = get_account(user_id)
 	if user.id in SYSTEM_ACCOUNT_IDS: abort(403)
 	if user.admin_level != 0: abort(403)
-	user.shadowbanned = v.username
+	shadowban_set(user, v.username)
 	g.db.add(user)
 
 	ma = ModAction(
@@ -680,7 +680,7 @@ def shadowban(user_id, v):
 @admin_level_required(2)
 def unshadowban(user_id, v):
 	user = get_account(user_id)
-	user.shadowbanned = None
+	shadowban_lift(user)
 	user.ban_evade = 0
 	g.db.add(user)
 

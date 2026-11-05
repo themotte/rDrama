@@ -5,6 +5,7 @@ from files.helpers.alerts import *
 from files.helpers.config.const import *
 from files.helpers.config.environment import SITE
 from files.helpers.get import *
+from files.helpers.moderation import shadowban_set
 from files.routes.importstar import *
 from files.__main__ import app, cache, db_session
 
@@ -61,7 +62,7 @@ def get_logged_in_user():
 
 def check_ban_evade(v):
 	if v and v.account_admin_level < 2 and v.ban_evade and not v.unban_utc:
-		v.shadowbanned = "AutoJanny"
+		shadowban_set(v, "AutoJanny")
 		g.db.add(v)
 		g.db.commit()
 
