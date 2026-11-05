@@ -1,5 +1,5 @@
 '''
-Subscribing to a post's comments (the subscriber is notified of new comments on it; see the comments area): POST /subscribe/<post id> and POST /unsubscribe/<post id>, for logged-in users, answer JSON with a "message". Subscribing again, or unsubscribing from a post one isn't subscribed to, changes nothing. A post that doesn't exist is 404. Anonymous browsers are sent to log in, and nothing changes.
+Subscribing to a post's comments (the subscriber is notified of new comments on it; see the comments area): POST /subscribe/<post id> and POST /unsubscribe/<post id>, for logged-in users, answer JSON with a "message". Subscribing again, or unsubscribing from a post one isn't subscribed to, changes nothing. A post that doesn't exist, or that the user can't see (someone else's draft), is 404. Anonymous browsers are sent to log in, and nothing changes.
 '''
 import pytest
 
@@ -60,14 +60,25 @@ def test_subscribing_again_changes_nothing():
 	d.assert_exactly()
 
 
+def test_subscribing_to_ones_own_draft():
+	user = factories.user()
+	draft = factories.post(user, private=True)
+
+	with db_diff() as d:
+		r = as_user(user).post(f"/subscribe/{draft['id']}")
+
+	assert_json_message(r)
+	d.assert_exactly(inserted={"subscriptions": [{"user_id": user["id"], "submission_id": draft["id"]}]})
+
+
 def _unknown_post_id():
 	return db.execute("SELECT nextval('submissions_id_seq')")
 
 
 @pytest.mark.parametrize("action", ["/subscribe", "/unsubscribe"])
-@pytest.mark.parametrize("post", ["unknown", "not a number"])
-def test_subscriptions_to_posts_that_dont_exist_are_not_found(action, post):
-	post_id = {"unknown": _unknown_post_id, "not a number": lambda: "x"}[post]()
+@pytest.mark.parametrize("post", ["unknown", "not a number", "others' draft"])
+def test_subscriptions_to_posts_the_user_cant_see_are_not_found(action, post):
+	post_id = {"unknown": _unknown_post_id, "not a number": lambda: "x", "others' draft": lambda: factories.post(factories.user(), private=True)["id"]}[post]()
 	client = as_user(factories.user())
 
 	with db_diff() as d:

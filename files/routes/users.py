@@ -119,11 +119,17 @@ def get_profilecss(username):
 	resp.headers.add("Content-Type", "text/css")
 	return resp
 
+def _subscribable_post(post_id:str, v:User) -> Submission:
+	post = get_post(post_id)
+	if post.is_draft_hidden_from(v): abort(404)
+	return post
+
+
 @app.post("/subscribe/<post_id>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def subscribe(v, post_id):
-	post = get_post(post_id)
+	post = _subscribable_post(post_id, v)
 	if not g.db.get(Subscription, (v.id, post.id)):
 		g.db.add(Subscription(user_id=v.id, submission_id=post.id))
 		g.db.commit()
@@ -133,7 +139,7 @@ def subscribe(v, post_id):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def unsubscribe(v, post_id):
-	post = get_post(post_id)
+	post = _subscribable_post(post_id, v)
 	sub = g.db.get(Subscription, (v.id, post.id))
 	if sub:
 		g.db.delete(sub)
