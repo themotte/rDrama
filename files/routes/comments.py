@@ -73,7 +73,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	else: defaultsortingcomments = "new"
 	sort=request.values.get("sort", defaultsortingcomments)
 
-	try: context = min(int(request.values.get("context", 0)), 8)
+	try: context = max(0, min(int(request.values.get("context", 0)), 8))
 	except: context = 0
 
 	# Load only the comments we render, not the whole top-comment thread.

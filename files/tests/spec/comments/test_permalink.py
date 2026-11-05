@@ -1,7 +1,7 @@
 '''
 A comment's own page: GET /comment/<comment id> and GET /post/<post id>/<anything>/<comment id> (the middle segment is a cosmetic slug and is ignored). It shows the comment's post with the comment and its replies in place of the post's comments. An unknown comment, a comment id or post id that isn't a number, or a comment on another post than the one named is 404 (the last is pinned with the post page).
 
-- "context" (a whole number; values above 8 mean 8, anything not a number means 0) shows that many of the comment's ancestors above it, each with only the next comment of the chain under it (their other replies are left out). Without it, the comment is shown alone, without its parent.
+- "context" (a whole number; values above 8 mean 8, values below 0 and anything not a number mean 0) shows that many of the comment's ancestors above it, each with only the next comment of the chain under it (their other replies are left out). Without it, the comment is shown alone, without its parent.
 - The comment's replies are shown under it, nested to a depth of nine levels counted from the topmost comment shown (so each ancestor brought in by "context" leaves one level fewer for the replies).
 - "read" (any non-empty value) marks the viewer's unread notification about this comment as read. Anonymous viewers and viewers without such a notification change nothing.
 - A private message (a comment with no post, sent to a user) is refused with 403 to anyone who isn't its sender or recipient, visitors included. "context" never brings in a private message the viewer couldn't open itself: the chain stops below it.
@@ -82,7 +82,7 @@ def _chain(post, length):
 	return chain
 
 
-@pytest.mark.parametrize("context, shown", [("0", 0), ("1", 1), ("3", 3), ("8", 8), ("9", 8), ("100", 8), ("abc", 0), ("", 0)])
+@pytest.mark.parametrize("context, shown", [("0", 0), ("1", 1), ("3", 3), ("8", 8), ("9", 8), ("100", 8), ("-1", 0), ("-5", 0), ("abc", 0), ("", 0)])
 def test_context_shows_that_many_ancestors(context, shown):
 	post = factories.post(factories.user())
 	chain = _chain(post, 10)
