@@ -543,24 +543,26 @@ class User(CreatedBase):
 		return [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=self.id).all()]
 
 	@lazy
-	def saved_idlist(self, page=1):
+	def saved_idlist(self) -> list[int]:
+		'''Ids of the posts this user saved that their saved list shows, newest first.'''
 		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).filter_by(user_id=self.id).all()]
 		posts = g.db.query(Submission.id).filter(Submission.id.in_(saved), Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None)
 
 		if self.admin_level < 2:
 			posts = posts.filter(Submission.author_id.notin_(self.userblocks))
 
-		return [x[0] for x in posts.order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).all()]
+		return [x[0] for x in posts.order_by(Submission.created_utc.desc()).all()]
 
 	@lazy
-	def saved_comment_idlist(self, page=1):
+	def saved_comment_idlist(self) -> list[int]:
+		'''Ids of the comments this user saved that their saved list shows, newest first.'''
 		saved = [x[0] for x in g.db.query(CommentSaveRelationship.comment_id).filter_by(user_id=self.id).all()]
 		comments = g.db.query(Comment.id).filter(Comment.id.in_(saved), Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None)
 
 		if self.admin_level < 2:
 			comments = comments.filter(Comment.author_id.notin_(self.userblocks))
 
-		return [x[0] for x in comments.order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).all()]
+		return [x[0] for x in comments.order_by(Comment.created_utc.desc()).all()]
 
 	@property
 	@lazy

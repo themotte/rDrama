@@ -583,7 +583,7 @@ def saved_posts(v, username):
 	_own_saved_list(v, username)
 	page = listings.request_page()
 
-	ids=v.saved_idlist(page=page)
+	ids = v.saved_idlist()[25 * (page - 1):25 * page + 1]
 
 	next_exists=len(ids)>25
 
@@ -608,7 +608,7 @@ def saved_comments(v, username):
 	_own_saved_list(v, username)
 	page = listings.request_page()
 
-	ids=v.saved_comment_idlist(page=page)
+	ids = v.saved_comment_idlist()[25 * (page - 1):25 * page + 1]
 
 	next_exists=len(ids) > 25
 
