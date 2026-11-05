@@ -2,7 +2,7 @@ from typing import Union
 
 from files.classes import Comment, Submission, User
 from files.classes.visstate import StateMod
-from files.helpers.comments import comment_on_publish, comment_on_unpublish
+from files.helpers.comments import comment_state_change
 
 
 def moderate(item:Union[Submission, Comment], state_mod:StateMod, by:str) -> int:
@@ -12,18 +12,20 @@ def moderate(item:Union[Submission, Comment], state_mod:StateMod, by:str) -> int
 	Returns 1 if the item became visible, -1 if it stopped being visible, else 0.
 	'''
 	was_visible = item.state_mod == StateMod.VISIBLE
-	item.state_mod = state_mod
-	item.state_mod_set_by = by
 	is_visible = state_mod == StateMod.VISIBLE
 
-	if is_visible and not was_visible:
-		if isinstance(item, Comment): comment_on_publish(item)
-		else: item.publish()
-		return 1
-	if was_visible and not is_visible:
-		if isinstance(item, Comment): comment_on_unpublish(item)
-		else: item.visibility_changed()
-		return -1
+	if isinstance(item, Comment):
+		with comment_state_change(item):
+			item.state_mod = state_mod
+			item.state_mod_set_by = by
+	else:
+		item.state_mod = state_mod
+		item.state_mod_set_by = by
+		if is_visible and not was_visible: item.publish()
+		elif was_visible and not is_visible: item.visibility_changed()
+
+	if is_visible and not was_visible: return 1
+	if was_visible and not is_visible: return -1
 	return 0
 
 

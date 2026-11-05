@@ -190,24 +190,7 @@ def bulk_recompute_descendant_counts(predicate = None, db=None):
 	db.commit()
 
 def comment_on_publish(comment:Comment):
-	"""
-	Run when comment becomes visible: immediately for non-filtered comments,
-	or on approval for previously filtered comments.
-	Should be used to update stateful counters, notifications, etc. that
-	reflect the comments users will actually see.
-	"""
-	author = comment.author
-
-	# Shadowbanned users are invisible. This may lead to inconsistencies if
-	# a user comments while shadowed and is later unshadowed. (TODO?)
-	if author.shadowbanned:
-		return
-
-	# Comment instances used for purposes other than actual comments (notifs,
-	# DMs) shouldn't be considered published.
-	if not comment.parent_submission:
-		return
-
+	'''Run when the comment starts counting (see comment_counted): when it's made, approved or restored. Counts it and notifies those it concerns.'''
 	# A draft's comments notify when the draft is published
 	if not comment.post.private:
 		_notify_on_publish(comment)
@@ -248,16 +231,7 @@ def comments_on_draft_publish(post):
 
 
 def comment_on_unpublish(comment:Comment):
-	"""
-	Run when a comment becomes invisible: when a moderator makes the comment non-visible
-	by changing the state_mod to "removed", or when the user deletes the comment.
-	Should be used to update stateful counters, notifications, etc. that
-	reflect the comments users will actually see.
-	"""
-	# Messages and notifications were never counted (see comment_on_publish).
-	if not comment.parent_submission:
-		return
-
+	'''Run when the comment stops counting: when it's removed or deleted.'''
 	update_stateful_counters(comment, -1)
 
 

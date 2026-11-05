@@ -91,3 +91,55 @@ def test_deleting_and_restoring_an_uncounted_comment_counts_nothing(state):
 	assert_counts_exact(post, author)
 	assert_json_message(client.post(f"/undelete/comment/{comment['id']}", headers=XHR))
 	assert_counts_exact(post, author)
+
+
+# Moderation
+
+def _moderate(comment, new_status):
+	r = as_user(factories.admin(2)).post_json("/admin/update_filter_status", {"new_status": new_status, "comment_id": comment["id"]})
+	assert_status(r, 200)
+
+
+@pytest.mark.parametrize("state, new_status", [
+	({"state_user_deleted_utc": DELETED}, "removed"),
+	({"state_user_deleted_utc": DELETED, "state_mod": "REMOVED", "state_mod_set_by": "somemod"}, "normal"),
+	({"state_user_deleted_utc": DELETED, "state_mod": "FILTERED"}, "normal"),
+], ids=["removing a deleted comment", "approving a removed deleted comment", "approving a held deleted comment"])
+def test_moderating_a_deleted_comment_counts_nothing(state, new_status):
+	author = factories.user()
+	post, comment = _thread(author)
+	db.update("comments", {"id": comment["id"]}, **state)
+	db.update("submissions", {"id": post["id"]}, comment_count=2)
+	for ancestor in db.rows("comments", parent_submission=post["id"]):
+		if ancestor["id"] != comment["id"]:
+			db.update("comments", {"id": ancestor["id"]}, descendant_count=ancestor["descendant_count"] - 1)
+	db.update("users", {"id": author["id"]}, comment_count=0)
+
+	_moderate(comment, new_status)
+
+	assert_counts_exact(post, author)
+
+
+@pytest.mark.parametrize("new_status", ["removed", "normal"])
+def test_moderating_a_shadowbanned_users_comment_counts_nothing(new_status):
+	author = factories.user(shadowbanned="somemod")
+	post, comment = _thread(author)
+	if new_status == "normal":
+		db.update("comments", {"id": comment["id"]}, state_mod="REMOVED", state_mod_set_by="somemod")
+		db.update("users", {"id": author["id"]}, comment_count=0)
+
+	_moderate(comment, new_status)
+
+	assert_counts_exact(post)
+	assert db.row("submissions", id=post["id"])["comment_count"] == 2
+
+
+def test_nuking_and_unnuking_a_shadowbanned_user_keeps_counts_exact():
+	author = factories.user(shadowbanned="somemod")
+	post, _ = _thread(author)
+	admin = as_user(factories.admin(3))
+
+	assert_status(admin.post("/admin/nuke_user", {"user": author["username"]}), 302)
+	assert_counts_exact(post)
+	assert_status(admin.post("/admin/unnuke_user", {"user": author["username"]}), 302)
+	assert_counts_exact(post)
