@@ -6,6 +6,7 @@ A comment's own page: GET /comment/<comment id> and GET /post/<post id>/<anythin
 - "read" (any non-empty value) marks the viewer's unread notification about this comment as read. Anonymous viewers and viewers without such a notification change nothing.
 - A private message (a comment with no post, sent to a user) is refused with 403 to anyone who isn't its sender or recipient, visitors included. "context" never brings in a private message the viewer couldn't open itself: the chain stops below it.
 - On an 18+ post, browsers of visitors and of users who are not 18+ get the age confirmation page instead of the comment until they confirm (POST /allow_nsfw); users who are 18+ see the comment.
+- The page describes the comment (its text and author, for link previews) only to viewers who may see it.
 - API clients get the JSON object of the topmost comment shown (see test_json.py for its shape), with the chain down to the comment as its replies.
 '''
 import pytest
@@ -241,6 +242,20 @@ def test_context_stops_below_messages_the_viewer_cant_open():
 	assert_html(r, 200)
 	assert_in_payload(r, reply["body_html"])
 	assert_not_in_payload(r, message["body"])
+
+
+@pytest.mark.parametrize("why", ["blocked", "shadowbanned", "removed"])
+def test_the_page_doesnt_describe_comments_hidden_from_the_viewer(why):
+	viewer = factories.user()
+	author = factories.user(shadowbanned="somemod") if why == "shadowbanned" else factories.user()
+	if why == "blocked":
+		db.insert("userblocks", user_id=viewer["id"], target_id=author["id"])
+	comment = factories.comment(author, factories.post(factories.user()), body=factories.unique(), **({"state_mod": "REMOVED", "state_mod_set_by": "somemod"} if why == "removed" else {}))
+
+	r = as_user(viewer).get(f"/comment/{comment['id']}")
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, comment["body"])
 
 # 18+ posts
 
