@@ -143,3 +143,78 @@ def test_nuking_and_unnuking_a_shadowbanned_user_keeps_counts_exact():
 	assert_counts_exact(post)
 	assert_status(admin.post("/admin/unnuke_user", {"user": author["username"]}), 302)
 	assert_counts_exact(post)
+
+
+# Shadowbans
+
+def _threads(author):
+	'''Two posts with different numbers of comments by `author`, some deep in a thread, and a post they didn't comment on; returns the posts.'''
+	posts = []
+	for extra in range(2):
+		post, comment = _thread(author)
+		for _ in range(extra + 1):
+			factories.comment(author, post)
+		factories.comment(factories.user(), post, parent=comment)
+		posts.append(post)
+	other = factories.post(factories.user())
+	factories.comment(factories.user(), other)
+	return posts + [other]
+
+
+def test_shadowbanning_uncounts_the_users_comments():
+	author = factories.user()
+	posts = _threads(author)
+
+	assert_json_message(as_user(factories.admin(2)).post(f"/shadowban/{author['id']}", headers=XHR))
+
+	for post in posts:
+		assert_counts_exact(post)
+
+
+def test_unshadowbanning_counts_the_users_comments_again_without_notifying():
+	author = factories.user(shadowbanned="somemod")
+	posts = _threads(author)
+	notifications = len(db.rows("notifications"))
+
+	assert_json_message(as_user(factories.admin(2)).post(f"/unshadowban/{author['id']}", headers=XHR))
+
+	for post in posts:
+		assert_counts_exact(post)
+	assert len(db.rows("notifications")) == notifications
+
+
+def test_shadowbanning_a_shadowbanned_user_counts_nothing_twice():
+	author = factories.user(shadowbanned="somemod")
+	posts = _threads(author)
+
+	assert_json_message(as_user(factories.admin(2)).post(f"/shadowban/{author['id']}", headers=XHR))
+
+	for post in posts:
+		assert_counts_exact(post)
+
+
+def test_the_shadowban_for_ban_evasion_uncounts_the_users_comments():
+	author = factories.user(ban_evade=1)
+	posts = _threads(author)
+	client = as_user(author)
+
+	for _ in range(2):
+		assert_html(client.get(f"/post/{posts[0]['id']}"), 200)
+
+	assert db.row("users", id=author["id"])["shadowbanned"] is not None
+	for post in posts:
+		assert_counts_exact(post)
+
+
+def test_reverting_a_shadowban_and_a_removal_keeps_counts_exact():
+	author, moderator = factories.user(), factories.admin(2)
+	post, comment = _thread(author)
+	client = as_user(moderator)
+	assert_json_message(client.post(f"/shadowban/{author['id']}", headers=XHR))
+	assert_status(client.post_json("/admin/update_filter_status", {"new_status": "removed", "comment_id": comment["id"]}), 200)
+
+	assert_json_message(as_user(factories.admin(3)).post(f"/@{moderator['username']}/revert_actions", headers=XHR))
+
+	assert db.row("users", id=author["id"])["shadowbanned"] is None
+	assert_counts_exact(post)
+	assert db.row("submissions", id=post["id"])["comment_count"] == 3

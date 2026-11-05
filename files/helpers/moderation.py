@@ -2,7 +2,7 @@ from typing import Union
 
 from files.classes import Comment, Submission, User
 from files.classes.visstate import StateMod
-from files.helpers.comments import comment_state_change
+from files.helpers.comments import comment_counts_shift_for_author, comment_state_change
 
 
 def moderate(item:Union[Submission, Comment], state_mod:StateMod, by:str) -> int:
@@ -30,10 +30,12 @@ def moderate(item:Union[Submission, Comment], state_mod:StateMod, by:str) -> int
 
 
 def shadowban_set(user:User, by:str) -> None:
-	'''Shadowbans `user` on behalf of `by`. Logs nothing.'''
+	'''Shadowbans `user` on behalf of `by`, taking their comments out of the counts others see. Logs nothing.'''
+	if not user.shadowbanned: comment_counts_shift_for_author(user.id, -1)
 	user.shadowbanned = by
 
 
 def shadowban_lift(user:User) -> None:
-	'''Lifts `user`'s shadowban. Logs nothing.'''
+	'''Lifts `user`'s shadowban, counting their comments again (without notifying anyone of them). Logs nothing.'''
+	if user.shadowbanned: comment_counts_shift_for_author(user.id, +1)
 	user.shadowbanned = None

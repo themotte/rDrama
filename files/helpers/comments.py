@@ -54,6 +54,33 @@ def comment_state_change(comment:Comment):
 	elif was_counted and not is_counted: comment_on_unpublish(comment)
 
 
+_AUTHOR_COUNTED_SQL = "author_id = :author AND parent_submission IS NOT NULL AND state_mod = 'VISIBLE' AND state_user_deleted_utc IS NULL"
+
+_AUTHOR_POST_DELTAS_SQL = text(f"""
+SELECT parent_submission, count(*) FROM comments WHERE {_AUTHOR_COUNTED_SQL} GROUP BY parent_submission ORDER BY parent_submission
+""")
+
+_AUTHOR_ANCESTOR_DELTAS_SQL = text(f"""
+WITH RECURSIVE up(ancestor) AS (
+		SELECT parent_comment_id FROM comments WHERE {_AUTHOR_COUNTED_SQL} AND parent_comment_id IS NOT NULL
+	UNION ALL
+		SELECT c.parent_comment_id FROM comments c JOIN up ON c.id = up.ancestor WHERE c.parent_comment_id IS NOT NULL
+)
+SELECT ancestor, count(*) FROM up GROUP BY ancestor ORDER BY ancestor
+""")
+
+
+def comment_counts_shift_for_author(author_id:int, sign:int):
+	'''Adds (sign +1) or subtracts (-1) all the author's comments that others could see, but for the author's shadowban, to the counts of their posts and ancestors: one update for the posts, one for the comments, each locking its rows in id order first. Call it before changing the author's row, so that, like publishing a comment, it locks posts before the user.'''
+	g.db.flush()
+	for table, column, deltas_sql in (("submissions", "comment_count", _AUTHOR_POST_DELTAS_SQL), ("comments", "descendant_count", _AUTHOR_ANCESTOR_DELTAS_SQL)):
+		deltas = g.db.execute(deltas_sql, {"author": author_id}).all()
+		if not deltas: continue
+		ids, counts = [row[0] for row in deltas], [sign * row[1] for row in deltas]
+		g.db.execute(text(f"SELECT id FROM {table} WHERE id = ANY(:ids) ORDER BY id FOR UPDATE"), {"ids": ids})
+		g.db.execute(text(f"UPDATE {table} SET {column} = {column} + d.delta FROM unnest(CAST(:ids AS integer[]), CAST(:deltas AS integer[])) AS d(id, delta) WHERE {table}.id = d.id"), {"ids": ids, "deltas": counts})
+
+
 def update_stateful_counters(comment, delta):
 	"""
 	When a comment changes publish status, we need to update all affected stateful
