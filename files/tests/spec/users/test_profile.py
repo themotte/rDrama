@@ -352,6 +352,17 @@ def test_profile_comments_show_comments_on_drafts_to_those_who_see_the_draft(vie
 
 
 @pytest.mark.parametrize("page", PAGES)
+def test_profile_of_a_shadowbanned_user_gives_other_shadowbanned_api_clients_nothing(page):
+	user = factories.user(shadowbanned="somemod")
+	_item(user, page)
+
+	r = as_api(factories.api_token(factories.user(shadowbanned="somemod"))).get(_path(user, page))
+
+	assert_status(r, 200)
+	assert r.json == {"data": []}
+
+
+@pytest.mark.parametrize("page", PAGES)
 def test_profile_of_a_user_shadowbanned_since_the_last_view_lists_nothing_to_others(page):
 	user = factories.user()
 	token = _item(user, page)

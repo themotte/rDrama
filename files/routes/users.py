@@ -402,8 +402,7 @@ def u_username_comments(username, v=None):
 	comments = apply_time_filter(comments, t, Comment)
 	comments = sort_objects(comments, sort, Comment)
 
-	comments = comments.offset(25 * (page - 1)).limit(26).all()
-	ids = [x.id for x in comments]
+	ids = [x.id for x in comments.offset(25 * (page - 1)).limit(26).all()] if u.shows_activity_to(v) else []
 
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
