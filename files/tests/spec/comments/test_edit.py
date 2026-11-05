@@ -3,7 +3,7 @@ Editing a comment: POST /edit_comment/<comment id> with "body" (markdown; surrou
 
 The body and its rendering are replaced; the comment is marked as edited (with the time) only when it is more than 3 minutes old. Requests through Tor have their uploads ("file") dropped. Sending the body unchanged and no file changes nothing.
 
-When the comment is visible, users newly mentioned as @name are notified (unless either has blocked the other), once: a user already notified about the comment isn't notified again. Edits of removed or held comments notify no one.
+When the comment is published (visible, not deleted, by an author who isn't shadowbanned, on a post that isn't a draft), users newly mentioned as @name are notified (unless either has blocked the other), once: a user already notified about the comment isn't notified again. Edits of any other comment, private messages included, notify no one.
 
 The answer is JSON {"comment": <the new body rendered as HTML>}.
 
@@ -142,6 +142,32 @@ def test_some_mentions_notify_no_one(case):
 
 
 # Uploads
+
+def _message(author):
+	message_id = db.execute("SELECT nextval('comments_id_seq')")
+	return db.insert("comments", id=message_id, author_id=author["id"], sentto=factories.user()["id"], created_utc=int(time.time()), parent_submission=None, level=1, top_comment_id=message_id, body="hi", body_html="<p>hi</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
+
+
+UNPUBLISHED = {
+	"deleted": lambda: _own(state_user_deleted_utc="2020-01-01T00:00:00Z"),
+	"by a shadowbanned author": lambda: _own(author=factories.user(shadowbanned="somemod")),
+	"on a draft": lambda: (lambda author: (author, factories.comment(author, factories.post(author, private=True))))(factories.user()),
+	"a private message": lambda: (lambda author: (author, _message(author)))(factories.user()),
+}
+
+
+@pytest.mark.parametrize("case", UNPUBLISHED)
+def test_edits_of_unpublished_comments_notify_no_one(case):
+	author, comment = UNPUBLISHED[case]()
+	mentioned = factories.user()
+	client = as_user(author)
+
+	with db_diff() as d:
+		r = _edit(client, comment, f"{factories.unique()} @{mentioned['username']}")
+
+	assert_status(r, 200)
+	d.assert_exactly(updated={"comments": {comment["id"]: {"body": ANY, "body_html": ANY}}})
+
 
 def _stored_images():
 	return sorted(os.listdir(config.images_dir()))

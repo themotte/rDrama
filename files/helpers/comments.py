@@ -9,6 +9,16 @@ from files.classes import Comment, Notification, Subscription, User
 from files.classes.visstate import StateMod
 from files.helpers.alerts import NOTIFY_USERS
 
+def comment_counted(comment:Comment) -> bool:
+	'''Whether the comment counts toward its post's and its ancestors' comment counts: a comment on a post that others can see.'''
+	return bool(comment.parent_submission) and comment.state_mod == StateMod.VISIBLE and comment.state_user_deleted_utc is None and not comment.author.shadowbanned
+
+
+def comment_published(comment:Comment) -> bool:
+	'''Whether the comment has been offered to others, so that it notifies: counted, and not on a draft.'''
+	return comment_counted(comment) and not comment.post.private
+
+
 def update_stateful_counters(comment, delta):
 	"""
 	When a comment changes publish status, we need to update all affected stateful

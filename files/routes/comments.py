@@ -6,7 +6,7 @@ from files.__main__ import app, limiter
 from files.classes import *
 from files.classes.visstate import StateMod
 from files.helpers.alerts import *
-from files.helpers.comments import comment_on_publish
+from files.helpers.comments import comment_on_publish, comment_published
 from files.helpers.config.const import *
 from files.helpers.media import new_image_path, process_image
 from files.helpers.wrappers import *
@@ -302,7 +302,7 @@ def edit_comment(cid, v):
 
 		g.db.add(c)
 		
-		if c.state_mod == StateMod.VISIBLE:
+		if comment_published(c):
 			notify_users = NOTIFY_USERS(body, v)
 
 			for x in notify_users:
