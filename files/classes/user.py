@@ -498,12 +498,7 @@ class User(CreatedBase):
 	@property
 	@lazy
 	def json(self):
-		data = self.json_core
-
-		data['post_count'] = self.post_count
-		data['comment_count'] = self.comment_count
-
-		return data
+		return {**self.json_core, 'post_count': self.post_count, 'comment_count': self.comment_count}
 
 
 	def ban(self, admin=None, reason=None, days=0):
