@@ -6,7 +6,7 @@ Which comments a viewer is shown, wherever threads are rendered as pages: the po
 - A comment by a user the viewer blocks is hidden from the viewer, unless it is distinguished as official. (What admins see of users they block is not yet settled.)
 - A comment by a user who blocks the viewer is still shown to the viewer.
 - Comments marked 18+ are shown like any other.
-- A hidden comment doesn't hide its replies: those still shown appear in place. A hidden comment without replies leaves nothing of itself on the page: neither its text nor its author's name.
+- A hidden comment doesn't hide its replies: those the viewer may see appear in place, at any depth below it, whatever is hidden in between. A hidden comment without replies the viewer may see leaves nothing of itself on the page: neither its text nor its author's name.
 - Only a comment's author is offered to edit it (POST /edit_comment/<comment id>).
 - A hidden comment that isn't shown doesn't leave its time on the page either (as data for marking new comments).
 '''
@@ -188,6 +188,42 @@ def test_a_hidden_comment_without_replies_leaves_nothing_of_itself(state):
 	assert_in_payload(r, shown["body"])
 	assert_not_in_payload(r, hidden["body"])
 	assert_not_in_payload(r, author["username"])
+
+
+
+REPLY_SEEN_BY_ITS_AUTHOR = {
+	"by a shadowbanned user": lambda: (factories.user(shadowbanned="somemod"), {}),
+	"held for review": lambda: (factories.user(), {"state_mod": "FILTERED"}),
+}
+
+
+@pytest.mark.parametrize("case", REPLY_SEEN_BY_ITS_AUTHOR)
+@pytest.mark.parametrize("state", HIDDEN_STATES)
+def test_authors_see_their_hidden_replies_under_hidden_comments(state, case):
+	replier, reply_state = REPLY_SEEN_BY_ITS_AUTHOR[case]()
+	post = factories.post(factories.user())
+	hidden = factories.comment(factories.user(), post, **HIDDEN_STATES[state])
+	middle = factories.comment(factories.user(), post, parent=hidden, **HIDDEN_STATES[state])
+	reply = factories.comment(replier, post, parent=middle, body=factories.unique(), **reply_state)
+
+	r = as_user(replier).get(f"/post/{post['id']}")
+
+	assert_html(r, 200)
+	assert_in_payload(r, reply["body"])
+
+
+def test_a_hidden_comment_whose_replies_are_all_hidden_leaves_nothing_of_itself():
+	viewer, blocked = factories.user(), factories.user()
+	db.insert("userblocks", user_id=viewer["id"], target_id=blocked["id"])
+	post = factories.post(factories.user())
+	moderator = factories.unique("mod")
+	hidden = factories.comment(factories.user(), post, state_mod="REMOVED", state_mod_set_by=moderator)
+	factories.comment(blocked, post, parent=hidden)
+
+	r = as_user(viewer).get(f"/post/{post['id']}")
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, moderator)
 
 
 # Affordances

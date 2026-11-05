@@ -12,7 +12,7 @@
 	{% set replies = c.replies(v) if render_replies else [] %}
 
 {% if not c.visibility_and_message(v)[0] %}
-	{% if c.show_descendants(v) %}
+	{% if c.renders_for(v) %}
 		<div id="comment-{{c.id}}" class="comment">
 			<div class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}', this.parentElement)"></div>
 			<div class="comment-collapse-bar-click" onclick="collapse_comment('{{c.id}}', this.parentElement)">

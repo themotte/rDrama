@@ -288,7 +288,7 @@ class Submission(CreatedBase):
 		'''The post as `v` may see it: complete, or only its identity when it is hidden from them.'''
 		if not self.visibility_state.is_visible_to(v): return self.json_identity
 		data = dict(self.json_full)
-		if "replies" in self.__dict__: data["replies"] = [x.json_core_for(v) for x in self.replies]
+		if "replies" in self.__dict__: data["replies"] = [x.json_core_for(v) for x in self.replies if x.renders_for(v)]
 		return data
 
 	@property

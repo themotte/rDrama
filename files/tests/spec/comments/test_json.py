@@ -3,13 +3,14 @@ The JSON object of a visible comment, as API clients get it from the comment's o
 
 It has "id", "level" (1 for a top-level comment, one more than its parent's for a reply), "author_name", "body" (the source text), "body_html", "is_bot", "created_utc", "edited_utc" (0 if never edited), "is_nsfw" (the comment is 18+), "permalink" ("/comment/<id>"), "is_pinned" (who pinned it, or null), "distinguish_level", "post_id" and "replies" (the replies' objects, newest first by default). Replies add "parent_comment_id". "score", "upvotes" and "downvotes" are left out while the comment is younger than a day. The object at the top of a response adds "author" (the author's public details, as in GET /@<username>/info without the counts) and "post" (the post's object). On posts where authors are anonymous, "author_name" and "author" are "👻" instead.
 
-The JSON follows what the viewer may see. A comment hidden from them (removed, held, deleted, by a shadowbanned user, or by a user they block, as on the page) is a stub: "id", "post", "level", "parent", "replies" and, as the page tells, who removed it ("state_mod_set_by"; null for a shadowbanned user's comment, as for one removed by no one named) or when its author deleted it ("state_user_deleted_utc"), without its text or author. Its author and moderators get the whole object. The "post" in a comment's object is the post as the viewer may see it, without its replies.
+The JSON follows what the viewer may see. A comment hidden from them (removed, held, deleted, by a shadowbanned user, or by a user they block, as on the page) is a stub: "id", "post", "level", "parent", "replies" and, as the page tells, who removed it ("state_mod_set_by"; null for a shadowbanned user's comment, as for one removed by no one named) or when its author deleted it ("state_user_deleted_utc"), without its text or author. Its author and moderators get the whole object. A hidden comment without replies the viewer may see is left out of the lists that hold it (a post's or a comment's "replies"), as on the page. The "post" in a comment's object is the post as the viewer may see it, without its replies.
 '''
 import time
 
 import pytest
 
 from files.tests.spec.harness import *
+
 
 AUTHOR_KEYS = {"username", "url", "id", "is_banned", "created_utc", "is_private", "profile_url", "bannerurl", "bio", "bio_html", "flair"}
 
@@ -160,7 +161,6 @@ def test_comments_on_anonymous_posts_hide_their_author():
 	assert_not_in_payload(r, author["username"])
 
 
-
 def _blocking_api(viewer, blocked):
 	db.insert("userblocks", user_id=viewer["id"], target_id=blocked["id"])
 	return as_api(factories.api_token(viewer))
@@ -181,11 +181,13 @@ def test_post_json_shows_comments_by_users_the_viewer_blocks_as_stubs():
 	viewer, author = factories.user(), factories.user()
 	post = factories.post(factories.user())
 	comment = factories.comment(author, post, body=factories.unique())
+	reply = factories.comment(factories.user(), post, parent=comment, body=factories.unique())
 
 	r = _blocking_api(viewer, author).get(f"/post/{post['id']}")
 
 	assert_status(r, 200)
 	assert_not_in_payload(r, comment["body"])
+	assert_in_payload(r, reply["body"])
 	assert [c["id"] for c in r.json["replies"]] == [comment["id"]]
 
 
@@ -258,3 +260,39 @@ def test_a_shadowbanned_users_stub_looks_like_a_removed_one():
 	assert_status(r, 200)
 	[stub] = r.json["replies"]
 	assert stub["id"] == hidden["id"] and stub["state_mod_set_by"] is None and "body" not in stub
+
+
+def test_post_json_includes_a_shadowbanned_users_reply_for_them():
+	author = factories.user(shadowbanned="somemod")
+	post = factories.post(factories.user())
+	top = factories.comment(factories.user(), post)
+	reply = factories.comment(author, post, parent=top, body=factories.unique())
+
+	r = as_api(factories.api_token(author)).get(f"/post/{post['id']}")
+
+	assert_status(r, 200)
+	assert_in_payload(r, reply["body"])
+
+
+def test_post_json_leaves_out_hidden_comments_without_replies_the_viewer_may_see():
+	post = factories.post(factories.user())
+	shown = factories.comment(factories.user(), post)
+	factories.comment(factories.user(), post, state_mod="REMOVED", state_mod_set_by="somemod")
+
+	r = _api().get(f"/post/{post['id']}")
+
+	assert_status(r, 200)
+	assert [c["id"] for c in r.json["replies"]] == [shown["id"]]
+
+
+def test_listed_comments_json_keeps_replies_below_a_hidden_reply():
+	author = factories.user()
+	post = factories.post(factories.user())
+	comment = factories.comment(author, post)
+	removed = factories.comment(factories.user(), post, parent=comment, state_mod="REMOVED", state_mod_set_by="somemod")
+	below = factories.comment(factories.user(), post, parent=removed, body=factories.unique())
+
+	r = _api().get(f"/@{author['username']}/")
+
+	assert_status(r, 200)
+	assert_in_payload(r, below["body"])

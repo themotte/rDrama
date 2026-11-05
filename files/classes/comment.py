@@ -151,7 +151,7 @@ class Comment(CreatedBase):
 		elif self.parent_submission: return f"post_{self.parent_submission}"
 
 	def replies(self, user):
-		if self.replies2 != None: return [x for x in self.replies2 if not x.shadowban_hides_from(user) or x.descendant_count > 0]
+		if self.replies2 != None: return [x for x in self.replies2 if x.renders_for(user)]
 		author_id = None
 		if user:
 			author_id = user.id
@@ -161,11 +161,7 @@ class Comment(CreatedBase):
 					and (x.state_mod == StateMod.VISIBLE or x.author_id == author_id)
 					and not x.author.shadowbanned),
 				key=lambda x: x.created_utc)
-		return sorted((x for x in self.child_comments
-			if x.author
-				and not x.shadowban_hides_from(user)
-				and (x.state_mod == StateMod.VISIBLE or x.author_id == author_id)),
-			key=lambda x: x.created_utc, reverse=True)
+		return sorted((x for x in self.child_comments if x.renders_for(user)), key=lambda x: x.created_utc, reverse=True)
 
 	def shadowban_hides_from(self, v) -> bool:
 		'''Whether its author's shadowban hides the comment from `v`: everyone but the author and admins (level 2+).'''
@@ -366,11 +362,16 @@ class Comment(CreatedBase):
 	def active_flags(self, v): 
 		return len(self.flags(v))
 
-	@lazy
-	def show_descendants(self, v:"User | None") -> bool:
-		if self.visibility_state.is_visible_to(v):
-			return True
-		return bool(self.descendant_count)
+	def renders_for(self, v:"User | None") -> bool:
+		'''Whether the comment shows to `v` at all: whole when they may see it, else as a placeholder holding replies they may see. Judged from the loaded thread; where the thread wasn't loaded below the comment, from its count of counted descendants.'''
+		# Remembered per viewer: rendering asks again at every level of the thread
+		answers = self.__dict__.setdefault("_renders_for", {})
+		key = v.id if v else None
+		if key not in answers:
+			if self.visibility_state.is_visible_to(v): answers[key] = True
+			elif self.replies2: answers[key] = any(reply.renders_for(v) for reply in self.replies2)
+			else: answers[key] = bool(self.descendant_count)
+		return answers[key]
 
 	@lazy
 	def visibility_and_message(self, v:"User | None") -> tuple[bool, str | None]:
