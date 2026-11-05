@@ -281,7 +281,7 @@ def test_posts_by_shadowbanned_users_show_their_content_to_them_and_moderators(v
 	_assert_content_shown(_page(as_user(author if viewer == "author" else factories.admin(2)), post), content)
 
 
-@pytest.mark.parametrize("viewer_level", [0, 2])
+@pytest.mark.parametrize("viewer_level", [0, 1])
 def test_posts_by_users_you_block_hide_their_content(viewer_level):
 	author = factories.user()
 	post, content = _hidden_post_content(author)
@@ -289,6 +289,16 @@ def test_posts_by_users_you_block_hide_their_content(viewer_level):
 	db.insert("userblocks", user_id=viewer["id"], target_id=author["id"])
 
 	_assert_content_hidden(_page(as_user(viewer), post), post, content)
+
+
+@pytest.mark.parametrize("viewer_level", [2, 3])
+def test_posts_by_users_admins_block_show_them_their_content(viewer_level):
+	author = factories.user()
+	post, content = _hidden_post_content(author)
+	viewer = factories.admin(viewer_level)
+	db.insert("userblocks", user_id=viewer["id"], target_id=author["id"])
+
+	_assert_content_shown(_page(as_user(viewer), post), content)
 
 
 def test_posts_by_users_who_block_you_show_their_content():

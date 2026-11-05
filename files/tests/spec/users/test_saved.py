@@ -72,7 +72,7 @@ def test_saved_leaves_out_content_by_blocked_users(kind):
 	assert_not_in_payload(r, token)
 
 
-@pytest.mark.parametrize("kind", ["posts"])
+@pytest.mark.parametrize("kind", ["posts", "comments"])
 def test_saved_keeps_content_by_blocked_users_for_admins(kind):
 	viewer, blocked = factories.admin(2), factories.user()
 	db.insert("userblocks", user_id=viewer["id"], target_id=blocked["id"])

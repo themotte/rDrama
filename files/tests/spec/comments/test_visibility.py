@@ -3,7 +3,7 @@ Which comments a viewer is shown, wherever threads are rendered as pages: the po
 
 - A comment that moderators removed or filtered, or that its author deleted, is hidden from everyone except its author and moderators (admin level 2 and up). Admins below level 2 don't see it either.
 - A comment by a shadowbanned user is shown only to its author and to admins of level 2 and up, wherever it sits in a thread. Where it holds replies, its placeholder names the moderator who removed it only if it was in fact removed.
-- A comment by a user the viewer blocks is hidden from the viewer, unless it is distinguished as official. (What admins see of users they block is not yet settled.)
+- A comment by a user the viewer blocks is hidden from the viewer, unless it is distinguished as official or the viewer is an admin of level 2 or more.
 - A comment by a user who blocks the viewer is still shown to the viewer.
 - Comments marked 18+ are shown like any other.
 - A hidden comment doesn't hide its replies: those the viewer may see appear in place, at any depth below it, whatever is hidden in between. A hidden comment without replies the viewer may see leaves nothing of itself on the page: neither its text nor its author's name.
@@ -83,9 +83,10 @@ def test_removed_filtered_and_deleted_comments_are_shown_only_to_their_author_an
 
 # Blocks (a comment's own page is left out: its meta tags are outside this spec)
 
+@pytest.mark.parametrize("level", [0, 1])
 @pytest.mark.parametrize("surface", ["post page", "view more"])
-def test_comments_by_users_you_block_are_hidden(surface):
-	viewer, author = factories.user(), factories.user()
+def test_comments_by_users_you_block_are_hidden(surface, level):
+	viewer, author = factories.admin(level), factories.user()
 	db.insert("userblocks", user_id=viewer["id"], target_id=author["id"])
 	post = factories.post(factories.user())
 	comment = factories.comment(author, post, created_utc=1000)
@@ -291,3 +292,17 @@ def test_a_shadowbanned_users_placeholder_names_a_moderator_only_if_they_removed
 	assert_html(r, 200)
 	assert_in_payload(r, reply["body"])
 	(assert_in_payload if removed else assert_not_in_payload)(r, moderator)
+
+
+@pytest.mark.parametrize("level", [2, 3])
+@pytest.mark.parametrize("surface", ["post page", "view more"])
+def test_comments_by_users_admins_block_are_shown_to_them(surface, level):
+	viewer, author = factories.admin(level), factories.user()
+	db.insert("userblocks", user_id=viewer["id"], target_id=author["id"])
+	post = factories.post(factories.user())
+	comment = factories.comment(author, post, created_utc=1000)
+
+	r = _view(surface, as_user(viewer), post, comment)
+
+	assert_html(r, 200)
+	assert_in_payload(r, comment["body"])

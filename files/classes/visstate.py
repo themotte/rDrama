@@ -94,7 +94,7 @@ class VisibilityState:
 			return False, 'Filtered'
 		if self.deleted and not can_moderate:
 			return False, 'Deleted by author'
-		if is_blocking:
+		if is_blocking and not can_moderate:
 			if self.distinguished:
 				return True, f'(You are blocking @{self.op_name_safe}, but this is an official post and cannot be blocked)'
 			return False, f'You are blocking @{self.op_name_safe}'
