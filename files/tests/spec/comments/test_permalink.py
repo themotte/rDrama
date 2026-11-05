@@ -4,7 +4,7 @@ A comment's own page: GET /comment/<comment id> and GET /post/<post id>/<anythin
 - "context" (a whole number; values above 8 mean 8, anything not a number means 0) shows that many of the comment's ancestors above it, each with only the next comment of the chain under it (their other replies are left out). Without it, the comment is shown alone, without its parent.
 - The comment's replies are shown under it, nested to a depth of nine levels counted from the topmost comment shown (so each ancestor brought in by "context" leaves one level fewer for the replies).
 - "read" (any non-empty value) marks the viewer's unread notification about this comment as read. Anonymous viewers and viewers without such a notification change nothing.
-- A private message (a comment with no post, sent to a user) is refused with 403 to anyone who isn't its sender or recipient, visitors included.
+- A private message (a comment with no post, sent to a user) is refused with 403 to anyone who isn't its sender or recipient, visitors included. "context" never brings in a private message the viewer couldn't open itself: the chain stops below it.
 - On an 18+ post, browsers of visitors and of users who are not 18+ get the age confirmation page instead of the comment until they confirm (POST /allow_nsfw); users who are 18+ see the comment.
 - API clients get the JSON object of the topmost comment shown (see test_json.py for its shape), with the chain down to the comment as its replies.
 '''
@@ -227,6 +227,20 @@ def test_private_messages_are_refused_to_non_participants(viewer):
 	assert_status(r, 403)
 	assert_not_in_payload(r, message["body"])
 
+
+
+def test_context_stops_below_messages_the_viewer_cant_open():
+	sender, recipient, outsider = factories.user(), factories.user(), factories.user()
+	message = _message(sender, recipient)
+	client = as_user(outsider)
+	assert_status(client.post("/reply", {"parent_id": message["id"], "body": factories.unique("reply")}, headers=XHR), 200)
+	reply = db.row("comments", author_id=outsider["id"], parent_comment_id=message["id"])
+
+	r = client.get(f"/post/{factories.post(factories.user())['id']}/anything/{reply['id']}", params={"context": 8})
+
+	assert_html(r, 200)
+	assert_in_payload(r, reply["body_html"])
+	assert_not_in_payload(r, message["body"])
 
 # 18+ posts
 

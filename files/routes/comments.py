@@ -54,8 +54,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			g.db.add(notif)
 			g.db.commit()
 
-	# DM check — uses only column values, no relationships needed
-	if not comment.parent_submission and not (v and (comment.author_id == v.id or comment.sentto == v.id)) and not (v and v.admin_level >= 2): abort(403)
+	if not comment.parent_submission and not comment.is_open_to(v): abort(403)
 
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
@@ -92,7 +91,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	comment_info = comment
 	c = comment
-	while context and c.level > 1:
+	while context and c.level > 1 and c.parent_comment.is_open_to(v):
 		c.parent_comment.replies2 = [c]
 		c = c.parent_comment
 		context -= 1

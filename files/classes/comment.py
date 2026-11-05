@@ -279,6 +279,11 @@ class Comment(CreatedBase):
 		if v and v.filter_words and self.body and any(x in self.body for x in v.filter_words): return True
 		return False
 
+	def is_open_to(self, v:Optional["User"]) -> bool:
+		'''Whether `v` may open this comment at all: a private message only by its sender, its recipient and admins (level 2+); a comment on a post by whoever may see the post.'''
+		if self.parent_submission: return not self.post.is_draft_hidden_from(v)
+		return bool(v and (v.id in (self.author_id, self.sentto) or v.admin_level >= 2))
+
 	@property
 	@lazy
 	def is_op(self): 
