@@ -332,12 +332,13 @@ def u_username(username, v=None):
 	t = request.values.get("t", "all")
 	page = listings.request_page()
 
-	ids = listings.userpagelisting(u, v=v, page=page, sort=sort, t=t)
+	shown = u.shows_activity_to(v)
+	ids = listings.userpagelisting(u, v=v, page=page, sort=sort, t=t) if shown else []
 
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
 
-	if page == 1:
+	if page == 1 and shown:
 		ids = listings.userpage_pinned(u, v) + ids
 
 	listing = get_posts(ids, v=v)

@@ -102,9 +102,7 @@ def request_page() -> int:
 
 
 def _userpage_posts(u:User, v:Optional[User]):
-	'''The query for `u`'s posts that `v` may see on their profile, or None if `v` may see none.'''
-	if not u.shows_activity_to(v): return None
-
+	'''The query for `u`'s posts that `v` may see on their profile, given that `u.shows_activity_to(v)`.'''
 	posts = g.db.query(Submission.id).filter_by(author_id=u.id)
 
 	if not (v and (v.admin_level >= 2 or v.id == u.id)):
@@ -114,18 +112,14 @@ def _userpage_posts(u:User, v:Optional[User]):
 
 
 def userpage_pinned(u:User, v:Optional[User]) -> list[int]:
-	'''Ids of `u`'s pinned posts that `v` may see, newest first.'''
-	posts = _userpage_posts(u, v)
-	if posts is None: return []
-	return [x[0] for x in posts.filter_by(is_pinned=True).order_by(Submission.created_utc.desc()).all()]
+	'''Ids of `u`'s pinned posts that `v` may see, newest first, given that `u.shows_activity_to(v)`.'''
+	return [x[0] for x in _userpage_posts(u, v).filter_by(is_pinned=True).order_by(Submission.created_utc.desc()).all()]
 
 
+# Whether `v` may see `u`'s posts at all (a shadowban) is decided by the caller: it changes without invalidating this cache
 @cache.memoize(timeout=USERPAGELISTING_TIMEOUT_SECS)
 def userpagelisting(u:User, v=None, page=1, sort="new", t="all"):
-	posts = _userpage_posts(u, v)
-	if posts is None: return []
-
-	posts = posts.filter_by(is_pinned=False)
+	posts = _userpage_posts(u, v).filter_by(is_pinned=False)
 	posts = apply_time_filter(posts, t, Submission)
 	posts = sort_objects(posts, sort, Submission)
 

@@ -351,6 +351,32 @@ def test_profile_comments_show_comments_on_drafts_to_those_who_see_the_draft(vie
 	assert_in_payload(r, token)
 
 
+@pytest.mark.parametrize("page", PAGES)
+def test_profile_of_a_user_shadowbanned_since_the_last_view_lists_nothing_to_others(page):
+	user = factories.user()
+	token = _item(user, page)
+	assert_in_payload(anon().get(_path(user, page)), token)
+	assert_json_message(as_user(factories.admin(2)).post(f"/shadowban/{user['id']}", {"reason": "spam"}))
+
+	r = anon().get(_path(user, page))
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, token)
+
+
+@pytest.mark.parametrize("page", PAGES)
+def test_profile_of_a_user_unshadowbanned_since_the_last_view_lists_again(page):
+	user = factories.user(shadowbanned="somemod")
+	token = _item(user, page)
+	assert_not_in_payload(anon().get(_path(user, page)), token)
+	assert_json_message(as_user(factories.admin(2)).post(f"/unshadowban/{user['id']}"))
+
+	r = anon().get(_path(user, page))
+
+	assert_html(r, 200)
+	assert_in_payload(r, token)
+
+
 def test_profile_comments_leave_out_private_messages():
 	user, recipient = factories.user(), factories.user()
 	token = factories.unique()
