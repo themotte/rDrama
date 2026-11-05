@@ -7,6 +7,7 @@ Which comments a viewer is shown, wherever threads are rendered as pages: the po
 - Comments marked 18+ are shown like any other.
 - A hidden comment doesn't hide its replies: those still shown appear in place. A hidden comment without replies leaves nothing of itself on the page: neither its text nor its author's name.
 - Only a comment's author is offered to edit it (POST /edit_comment/<comment id>).
+- A hidden comment that isn't shown doesn't leave its time on the page either (as data for marking new comments).
 '''
 import pytest
 
@@ -204,3 +205,19 @@ def test_only_the_author_is_offered_to_edit_a_comment(viewer):
 		assert_in_payload(r, f"/edit_comment/{comment['id']}")
 	else:
 		assert_not_in_payload(r, f"/edit_comment/{comment['id']}")
+
+
+@pytest.mark.parametrize("why", ["removed", "shadowbanned", "blocked"])
+def test_the_page_reveals_nothing_of_hidden_comments_it_doesnt_show(why):
+	viewer = factories.user()
+	author = factories.user(shadowbanned="somemod") if why == "shadowbanned" else factories.user()
+	if why == "blocked":
+		db.insert("userblocks", user_id=viewer["id"], target_id=author["id"])
+	post = factories.post(factories.user())
+	created = 1_234_567_891
+	factories.comment(author, post, created_utc=created, **({"state_mod": "REMOVED", "state_mod_set_by": "somemod"} if why == "removed" else {}))
+
+	r = as_user(viewer).get(f"/post/{post['id']}")
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, str(created))
