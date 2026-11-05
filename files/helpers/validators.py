@@ -13,7 +13,7 @@ from files.helpers.config.const import (SUBMISSION_BODY_LENGTH_MAXIMUM,
                                  SUBMISSION_TITLE_LENGTH_MAXIMUM,
                                  SUBMISSION_URL_LENGTH_MAXIMUM)
 from files.helpers.content import canonicalize_url2, is_web_url
-from files.helpers.media import new_image_path, process_image
+from files.helpers.media import attach_images, new_image_path, process_image
 
 
 def guarded_value(val:str, min_len:int, max_len:int) -> str:
@@ -114,27 +114,6 @@ class ValidatedSubmissionLike:
 			thumburl:Optional[str] = process_image(name2, resize=100)
 			return True, url, thumburl
 
-		def _process_media2(body:str, file2:Optional[list[FileStorage]]) -> tuple[bool, str]:
-			if request.headers.get("cf-ipcountry") == "T1": # forbid Tor uploads
-				return False, body
-			# An empty file input is sent as an empty upload <'' ('application/octet-stream')>
-			file2 = [file for file in file2 or [] if file][:4]
-			if not file2:
-				return False, body
-
-			for file in file2:
-				if not file.content_type.startswith('image/'):
-					abort(415, "Image files only")
-				
-				name = new_image_path()
-				file.save(name)
-				image = process_image(name)
-				if allow_embedding:
-					body += f"\n\n![]({image})"
-				else:
-					body += f'\n\n<a href="{image}">{image}</a>'
-			return True, body
-
 		title = guarded_value("title", 1, SUBMISSION_TITLE_LENGTH_MAXIMUM)
 		title = sanitize.sanitize_raw(title, allow_newlines=False, length_limit=SUBMISSION_TITLE_LENGTH_MAXIMUM)
 		title_html = sanitize.filter_emojis_only(title, graceful=True)
@@ -156,7 +135,7 @@ class ValidatedSubmissionLike:
 			has_file = False
 			thumburl = None
 
-		has_file2, body = _process_media2(body_raw, request.files.getlist(embed_url_file_key))
+		has_file2, body = attach_images(body_raw, request.files.getlist(embed_url_file_key), allow_embedding)
 		if len(body) > SUBMISSION_BODY_LENGTH_MAXIMUM:
 			abort(400, f"Maximum length for body is {SUBMISSION_BODY_LENGTH_MAXIMUM}, including the links to attached images")
 

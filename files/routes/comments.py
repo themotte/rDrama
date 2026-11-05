@@ -8,7 +8,7 @@ from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.comments import comment_on_publish, comment_published, comment_sort
 from files.helpers.config.const import *
-from files.helpers.media import new_image_path, process_image
+from files.helpers.media import attach_images
 from files.helpers.wrappers import *
 from files.routes.importstar import *
 
@@ -123,20 +123,7 @@ def api_comment(v):
 	level = 1 if isinstance(parent, Submission) else parent.level + 1
 
 	body = sanitize_raw(request.values.get("body"), allow_newlines=True, length_limit=COMMENT_BODY_LENGTH_MAXIMUM)
-	# An empty file input is sent as an empty upload
-	files = [file for file in request.files.getlist('file') if file][:4]
-	if files and request.headers.get("cf-ipcountry") != "T1":
-		for file in files:
-			if file.content_type.startswith('image/'):
-				oldname = new_image_path()
-				file.save(oldname)
-				image = process_image(oldname)
-
-				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
-					body += f"\n\n![]({image})"
-				else:
-					body += f'\n\n<a href="{image}">{image}</a>'
-			else: abort(415, "Image files only")
+	_, body = attach_images(body, request.files.getlist('file'), app.config['MULTIMEDIA_EMBEDDING_ENABLED'])
 
 	if not body: abort(400, "You need to actually write something!")
 	if len(body) > COMMENT_BODY_LENGTH_MAXIMUM: abort(400, f"Maximum length for a comment is {COMMENT_BODY_LENGTH_MAXIMUM}, including the links to attached images")
@@ -250,8 +237,7 @@ def edit_comment(cid, v):
 	if c.author_id != v.id: abort(403)
 	body = sanitize_raw(request.values.get("body"), allow_newlines=True, length_limit=COMMENT_BODY_LENGTH_MAXIMUM)
 
-	files = [file for file in request.files.getlist('file') if file][:4]
-	uploading = bool(files) and request.headers.get("cf-ipcountry") != "T1"
+	uploading = any(request.files.getlist('file')) and request.headers.get("cf-ipcountry") != "T1"
 	if len(body) < 1 and not uploading:
 		abort(400, "You have to actually type something!")
 
@@ -282,18 +268,8 @@ def edit_comment(cid, v):
 			abort(403, "Too much spam!")
 		# End Spam Checking
 
-		if uploading:
-			for file in files:
-				if file.content_type.startswith('image/'):
-					name = new_image_path()
-					file.save(name)
-					url = process_image(name)
-					if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
-						body += f"\n\n![]({url})"
-					else:
-						body += f'\n\n<a href="{url}">{url}</a>'
-				else: abort(415, "Image files only")
-
+		attached, body = attach_images(body, request.files.getlist('file'), app.config['MULTIMEDIA_EMBEDDING_ENABLED'])
+		if attached:
 			if len(body) > COMMENT_BODY_LENGTH_MAXIMUM: abort(400, f"Maximum length for a comment is {COMMENT_BODY_LENGTH_MAXIMUM}, including the links to attached images")
 			body_html = sanitize(body)
 

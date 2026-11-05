@@ -4,7 +4,9 @@ import subprocess
 import time
 from io import BytesIO
 
+from flask import abort, request
 from PIL import Image, ImageOps
+from werkzeug.datastructures import FileStorage
 from werkzeug.exceptions import BadRequest
 
 from files.helpers.config.environment import IMAGES_DIR, SITE_FULL
@@ -15,6 +17,23 @@ IMAGES_URL_PREFIX = "/images/"
 class UnreadableImage(BadRequest):
 	'''An upload that isn't an image we can process. A 400 when raised during a request.'''
 	description = "That file isn't an image we can read."
+
+
+def attach_images(body:str, files:list[FileStorage], embed:bool) -> tuple[bool, str]:
+	'''Stores up to 4 uploaded images and adds them at the end of `body`, embedded or as links; returns whether any were attached and the new body. Uploads through Tor are dropped, and empty uploads ignored. Refuses anything that isn't an image with 415.'''
+	if request.headers.get("cf-ipcountry") == "T1": return False, body
+	# An empty file input is sent as an empty upload
+	files = [file for file in files if file][:4]
+	if not files: return False, body
+
+	for file in files:
+		if not file.content_type.startswith('image/'):
+			abort(415, "Image files only")
+		name = new_image_path()
+		file.save(name)
+		image = process_image(name)
+		body += f"\n\n![]({image})" if embed else f'\n\n<a href="{image}">{image}</a>'
+	return True, body
 
 
 def new_image_path() -> str:
