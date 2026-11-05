@@ -24,6 +24,7 @@
 {% endmacro %}
 
 {% macro leaderboard_table(lb) %}
+{% set user_relative_url = lb.meta.user_relative_url if v.admin_level >= lb.meta.user_link_level else none %}
 <h5 class="font-weight-bolder text-center pt-2 pb-3"><span id="leaderboard-{{lb.meta.html_id}}">Top {{lb.meta.limit}} {% if lb.meta.table_header_name != 'most blocked' %}by{% endif %} {{lb.meta.table_header_name}}</span></h5>
 <div class="overflow-x-auto">
 <table class="table table-striped mb-5">
@@ -39,10 +40,10 @@
 		{% if v.id == user.id %}
 			{% set style="class=\"self\"" %}
 		{% endif %}
-		{{format_user_in_table(user, style, loop.index, lb.value_func(user), lb.meta.user_relative_url)}}
+		{{format_user_in_table(user, style, loop.index, lb.value_func(user), user_relative_url)}}
 	{% endfor %}
 	{% if lb.v_position and not lb.v_appears_in_ranking %}
-		{{format_user_in_table(v, "style=\"border-top:2px solid var(--primary)\"", lb.v_position, lb.v_value, lb.meta.user_relative_url)}}
+		{{format_user_in_table(v, "style=\"border-top:2px solid var(--primary)\"", lb.v_position, lb.v_value, user_relative_url)}}
 	{% endif %}
 	</tbody>
 </table>

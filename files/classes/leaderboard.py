@@ -18,7 +18,10 @@ class LeaderboardMeta:
 	html_id:str
 	table_column_name:str
 	user_relative_url:Optional[str]
+	'''Where each row's count links, relative to the user's profile (/@<username>/<user_relative_url>); None for no link.'''
 	limit:int=LEADERBOARD_LIMIT
+	user_link_level:int=0
+	'''The admin level that page requires; viewers below it get no link.'''
 
 class Leaderboard:
 	def __init__(self, v:Optional[User], meta:LeaderboardMeta) -> None:
@@ -237,6 +240,6 @@ ORDER BY count DESC, user_id LIMIT 25
 # Display metadata for the cached raw-SQL leaderboards, shared by the route that
 # renders them and the cron job that refreshes them.
 RECEIVED_DOWNVOTES_META: Final[LeaderboardMeta] = LeaderboardMeta(
-	"Downvotes", "received downvotes", "received-downvotes", "downvotes", "downvoted")
+	"Downvotes", "received downvotes", "received-downvotes", "downvotes", "downvoters", user_link_level=3)
 GIVEN_UPVOTES_META: Final[LeaderboardMeta] = LeaderboardMeta(
-	"Upvotes", "given upvotes", "given-upvotes", "upvotes", "upvoting")
+	"Upvotes", "given upvotes", "given-upvotes", "upvotes", "upvoting", user_link_level=3)

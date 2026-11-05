@@ -94,10 +94,10 @@ def leaderboard(v:User):
 	users:Query = g.db.query(User)
 
 	subscribers = SimpleLeaderboard(v, LeaderboardMeta("Followers", "followers", "followers", "Followers", "followers"), g.db, users, User.stored_subscriber_count)
-	posts = SimpleLeaderboard(v, LeaderboardMeta("Posts", "post count", "posts", "Posts", ""), g.db, users, User.post_count)
-	comments = SimpleLeaderboard(v, LeaderboardMeta("Comments", "comment count", "comments", "Comments", "comments"), g.db, users, User.comment_count)
+	posts = SimpleLeaderboard(v, LeaderboardMeta("Posts", "post count", "posts", "Posts", "posts"), g.db, users, User.post_count)
+	comments = SimpleLeaderboard(v, LeaderboardMeta("Comments", "comment count", "comments", "Comments", ""), g.db, users, User.comment_count)
 	truescore = SimpleLeaderboard(v, LeaderboardMeta("Truescore", "truescore", "truescore", "Truescore", None), g.db, users, User.truescore)
-	blocks = UserBlockLeaderboard(v, LeaderboardMeta("Blocked", "most blocked", "blocked", "Blocked By", "blockers"), g.db)
+	blocks = UserBlockLeaderboard(v, LeaderboardMeta("Blocked", "most blocked", "blocked", "Blocked By", None), g.db)
 
 	leaderboards = [truescore, subscribers, posts, comments, blocks]
 

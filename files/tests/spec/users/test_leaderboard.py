@@ -6,7 +6,7 @@ The page shows several boards, each a section whose element id is "leaderboard-<
 - "blocked": the 25 users blocked by the most users, most blocked first; users nobody blocks aren't ranked.
 - "received-downvotes" and "given-upvotes": the 25 users who received the most downvotes, and who gave the most upvotes, on posts and comments. These are expensive to compute, so the `leaderboard_recalc` command computes them ahead of time; until it has run, the page leaves both out.
 
-Users tied on a board are listed oldest account (lowest id) first. The page opens with links to each board (#leaderboard-<board>). The viewing admin's own row is added after a board's list when they aren't in it (on the blocked board, also when nobody blocks them).
+Users tied on a board are listed oldest account (lowest id) first. The page opens with links to each board (#leaderboard-<board>). Each row's count links to the list it counts, where there is one the viewer may open: the user's followers, posts (/@<username>/posts) or comments (/@<username>/), and for admins of level 3, the voter lists behind the precomputed boards (/@<username>/downvoters, /@<username>/upvoting). The viewing admin's own row is added after a board's list when they aren't in it (on the blocked board, also when nobody blocks them).
 '''
 import pytest
 
@@ -377,8 +377,58 @@ def test_precomputed_boards_drop_users_deleted_since():
 	assert target["username"] not in _board(r, "received-downvotes")
 
 
+# Where rows lead
+
+@pytest.mark.parametrize("board, column, page", [("followers", "stored_subscriber_count", "followers"), ("posts", "post_count", "posts")])
+def test_simple_board_rows_link_to_the_counted_list(board, column, page):
+	user = _ranked(column, HIGH)
+
+	r = as_user(factories.admin(2)).get("/leaderboard")
+
+	assert_html(r, 200)
+	assert f"/@{user['username']}/{page}" in _board(r, board)
+
+
+@pytest.mark.parametrize("board, column", SIMPLE_BOARDS.items())
+def test_boards_link_to_no_missing_pages(board, column):
+	user = _ranked(column, HIGH)
+	for _ in range(2):
+		_block(factories.user(), user)
+
+	r = as_user(factories.admin(2)).get("/leaderboard")
+
+	assert_html(r, 200)
+	for missing in ("comments", "blockers", "downvoted"):
+		assert f"/@{user['username']}/{missing}" not in r.text
+
+
+def test_precomputed_boards_link_level_3_admins_to_the_voter_lists():
+	downvoted, _ = _downvoted(3)
+	upvoter = _upvoter(3)
+	assert_cli_ok(cli("leaderboard_recalc"))
+
+	r = as_user(factories.admin(3)).get("/leaderboard")
+
+	assert_html(r, 200)
+	assert f"/@{downvoted['username']}/downvoters" in _board(r, "received-downvotes")
+	assert f"/@{upvoter['username']}/upvoting" in _board(r, "given-upvotes")
+
+
+def test_precomputed_boards_dont_link_level_2_admins_to_the_voter_lists():
+	downvoted, _ = _downvoted(3)
+	upvoter = _upvoter(3)
+	assert_cli_ok(cli("leaderboard_recalc"))
+
+	r = as_user(factories.admin(2)).get("/leaderboard")
+
+	assert_html(r, 200)
+	assert f"/@{downvoted['username']}/downvoters" not in r.text
+	assert f"/@{upvoter['username']}/upvoting" not in r.text
+	assert f"/@{downvoted['username']}/downvoted" not in r.text
+
+
 def test_leaderboard_links_to_each_board():
-	db.insert("votes", user_id=factories.user()["id"], submission_id=factories.post(factories.user())["id"], vote_type=-1)
+	_downvoted(1)
 	assert_cli_ok(cli("leaderboard_recalc"))
 
 	r = as_user(factories.admin(2)).get("/leaderboard")
