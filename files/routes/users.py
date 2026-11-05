@@ -321,7 +321,7 @@ def u_username(username, v=None):
 
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2)):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, "That userpage is private")
-		return render_template("userpage_private.html", u=u, v=v)
+		return render_template("userpage_private.html", u=u, v=v, is_following=(v and u.has_follower(v)))
 
 	
 	if v and u.is_blocking:
@@ -371,7 +371,7 @@ def u_username_comments(username, v=None):
 
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2)):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, "That userpage is private")
-		return render_template("userpage_private.html", u=u, v=v)
+		return render_template("userpage_private.html", u=u, v=v, is_following=(v and u.has_follower(v)))
 
 	if v and u.is_blocking:
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"You are blocking @{u.username}.")
