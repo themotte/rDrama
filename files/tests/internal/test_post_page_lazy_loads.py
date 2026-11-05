@@ -1,5 +1,5 @@
 '''
-Rendering the post page must not lazy-load relationships one row at a time: each lazy load in a loop is an N+1 query in production. The suite's lazy-load detector reports them as LazyLoadWarning.
+Rendering the post page and a comment's permalink must not lazy-load relationships one row at a time: each lazy load in a loop is an N+1 query in production. The suite's lazy-load detector reports them as LazyLoadWarning.
 '''
 import warnings
 
@@ -9,10 +9,10 @@ from files.tests.conftest import LazyLoadWarning
 from files.tests.spec.harness import anon, as_user, db, factories
 
 
-def _lazy_loads_rendering(client, post, about=""):
+def _lazy_loads_rendering(client, post, about="", path=None):
 	with warnings.catch_warnings(record=True) as caught:
 		warnings.simplefilter("always")
-		r = client.get(f"/post/{post['id']}")
+		r = client.get(path or f"/post/{post['id']}")
 	assert r.status == 200
 	return [str(w.message) for w in caught if issubclass(w.category, LazyLoadWarning) and about in str(w.message)]
 
@@ -21,15 +21,23 @@ def _post_with_a_reply_chain():
 	post = factories.post(factories.user())
 	top = factories.comment(factories.user(), post)
 	factories.comment(factories.user(), post, parent=top)
-	return post
+	return post, top
 
 
 @pytest.mark.parametrize("viewer", ["visitor", "user"])
 def test_post_page_renders_without_lazy_loads(viewer):
-	post = _post_with_a_reply_chain()
+	post, _ = _post_with_a_reply_chain()
 	client = anon() if viewer == "visitor" else as_user(factories.user())
 
 	assert _lazy_loads_rendering(client, post) == []
+
+
+@pytest.mark.parametrize("viewer", ["visitor", "user"])
+def test_comment_permalink_renders_without_lazy_loads(viewer):
+	post, top = _post_with_a_reply_chain()
+	client = anon() if viewer == "visitor" else as_user(factories.user())
+
+	assert _lazy_loads_rendering(client, post, path=f"/comment/{top['id']}") == []
 
 
 def test_admin_post_page_renders_user_notes_without_lazy_loads():
