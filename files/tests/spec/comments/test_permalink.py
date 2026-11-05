@@ -4,7 +4,7 @@ A comment's own page: GET /comment/<comment id> and GET /post/<post id>/<anythin
 - "context" (a whole number; values above 8 mean 8, values below 0 and anything not a number mean 0) shows that many of the comment's ancestors above it, each with only the next comment of the chain under it (their other replies are left out). Without it, the comment is shown alone, without its parent.
 - The comment's replies are shown under it, nested to a depth of nine levels counted from the topmost comment shown (so each ancestor brought in by "context" leaves one level fewer for the replies).
 - "sort" orders the replies as on the post page; an unknown value means the viewer's default.
-- "read" (any non-empty value) marks the viewer's unread notification about this comment as read. Anonymous viewers and viewers without such a notification change nothing.
+- "read" (any non-empty value) marks the viewer's unread notification about this comment as read, when the page is shown to them. Anonymous viewers, viewers without such a notification and refused requests change nothing.
 - A private message (a comment with no post, sent to a user) is refused with 403 to anyone who isn't its sender or recipient, visitors included. "context" never brings in a private message the viewer couldn't open itself: the chain stops below it.
 - On an 18+ post, browsers of visitors and of users who are not 18+ get the age confirmation page instead of the comment until they confirm (POST /allow_nsfw); scripts (xhr) and API clients of users who are not 18+ are refused with 403; users who are 18+ see the comment.
 - The page describes the comment (its text and author, for link previews) only to viewers who may see it.
@@ -158,6 +158,23 @@ def test_read_marks_the_viewers_notification_about_the_comment_read():
 
 	assert_html(r, 200)
 	d.assert_exactly(updated={"notifications": {(viewer["id"], comment["id"]): {"read": True}}})
+
+
+@pytest.mark.parametrize("what", ["someone else's message", "comment on someone else's draft"])
+def test_read_changes_nothing_when_the_comment_is_refused(what):
+	viewer = factories.user()
+	if what == "someone else's message":
+		comment, status = _message(factories.user(), factories.user()), 403
+	else:
+		comment, status = factories.comment(factories.user(), factories.post(factories.user(), private=True)), 404
+	_notified(viewer, comment)
+	client = as_user(viewer)
+
+	with db_diff() as d:
+		r = client.get(f"/comment/{comment['id']}", params={"read": "1"})
+
+	assert_status(r, status)
+	d.assert_exactly()
 
 
 def test_without_read_notifications_stay_unread():

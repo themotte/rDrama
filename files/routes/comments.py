@@ -47,13 +47,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	comment = g.db.get(Comment, cid)
 	if not comment: abort(404)
 
-	if v and request.values.get("read"):
-		notif = g.db.query(Notification).filter_by(comment_id=cid, user_id=v.id, read=False).one_or_none()
-		if notif:
-			notif.read = True
-			g.db.add(notif)
-			g.db.commit()
-
 	if not comment.parent_submission and not comment.is_open_to(v): abort(403)
 
 	if not pid:
@@ -97,8 +90,13 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	post.replies=[top_comment]
 			
-	if request.headers.get("Authorization"): return top_comment.json_for(v)
-	return render_template("submission.html", v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True)
+	if request.headers.get("Authorization"): page = top_comment.json_for(v)
+	else: page = render_template("submission.html", v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True)
+
+	if v and request.values.get("read"):
+		g.db.query(Notification).filter_by(comment_id=cid, user_id=v.id, read=False).update({Notification.read: True})
+		g.db.commit()
+	return page
 
 @app.post("/comment")
 @limiter.limit("1/second;20/minute;200/hour;1000/day")
