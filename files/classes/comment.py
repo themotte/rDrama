@@ -169,13 +169,6 @@ class Comment(CreatedBase):
 			key=lambda x: x.created_utc, reverse=True)
 
 	@property
-	def replies_ignoring_shadowbans(self):
-		if self.replies2 != None: return self.replies2
-		if not self.parent_submission:
-			return sorted(self.child_comments, key=lambda x: x.created_utc)
-		return sorted(self.child_comments, key=lambda x: x.created_utc, reverse=True)
-
-	@property
 	def replies2(self):
 		return self.__dict__.get("replies2")
 
@@ -316,18 +309,6 @@ class Comment(CreatedBase):
 		but is not a notification
 		'''
 		return self.is_message and not self.is_notification
-	
-	@property
-	@lazy
-	def is_modmail(self) -> bool:
-		'''
-		Returns whether this is a modmail message
-		'''
-		if not self.is_message: return False
-		if self.sentto == MODMAIL_ID: return True
-
-		top_comment: Optional["Comment"] = self.top_comment
-		return bool(top_comment.sentto == MODMAIL_ID)
 	
 	@property
 	@lazy

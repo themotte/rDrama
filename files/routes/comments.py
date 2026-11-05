@@ -138,8 +138,6 @@ def api_comment(v):
 				oldname = new_image_path()
 				file.save(oldname)
 				image = process_image(oldname)
-				if image == "":
-					abort(500, "Image upload failed")
 
 				if app.config['MULTIMEDIA_EMBEDDING_ENABLED']:
 					body += f"\n\n![]({image})"
