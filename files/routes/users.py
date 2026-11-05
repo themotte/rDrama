@@ -123,16 +123,18 @@ def get_profilecss(username):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def subscribe(v, post_id):
-	new_sub = Subscription(user_id=v.id, submission_id=post_id)
-	g.db.add(new_sub)
-	g.db.commit()
+	post = get_post(post_id)
+	if not g.db.get(Subscription, (v.id, post.id)):
+		g.db.add(Subscription(user_id=v.id, submission_id=post.id))
+		g.db.commit()
 	return {"message": "Post subscribed!"}
 	
 @app.post("/unsubscribe/<post_id>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def unsubscribe(v, post_id):
-	sub=g.db.query(Subscription).filter_by(user_id=v.id, submission_id=post_id).one_or_none()
+	post = get_post(post_id)
+	sub = g.db.get(Subscription, (v.id, post.id))
 	if sub:
 		g.db.delete(sub)
 		g.db.commit()
