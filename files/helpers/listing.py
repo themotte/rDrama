@@ -108,10 +108,10 @@ def _userpage_posts(u:User, v:Optional[User]):
 
 
 def userpage_pinned(u:User, v:Optional[User]) -> list[int]:
-	'''Ids of `u`'s pinned posts that `v` may see.'''
+	'''Ids of `u`'s pinned posts that `v` may see, newest first.'''
 	posts = _userpage_posts(u, v)
 	if posts is None: return []
-	return [x[0] for x in posts.filter_by(is_pinned=True).all()]
+	return [x[0] for x in posts.filter_by(is_pinned=True).order_by(Submission.created_utc.desc()).all()]
 
 
 @cache.memoize(timeout=USERPAGELISTING_TIMEOUT_SECS)

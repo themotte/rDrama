@@ -8,7 +8,7 @@ Before listing anything:
 
 The listings hold 25 items to a page, with "page" (from 1; anything else means 1) choosing the page. "sort" orders them: new (the default: newest first), old, top (highest score first), bottom, comments (most comments first; for comments, most replies), controversial (closest to evenly split votes first), hot (score weighed against age), and for posts bump (most recently bumped first, among posts with more than one comment). "t" (hour, day, week, month, year; anything else means all time) keeps only items created within that long. Ties fall back to newest first.
 
-What's listed depends on the viewer. Everyone sees the user's visible posts and comments; the user themselves and admins (level 2 and up) also see the deleted, removed, held ("filtered") and anonymous ("ghost") ones, and the user's unpublished drafts. Nobody else sees anything of a shadowbanned user, other shadowbanned users included. The user's pinned posts that the viewer may see lead the first page of their posts.
+What's listed depends on the viewer. Everyone sees the user's visible posts and comments; the user themselves and admins (level 2 and up) also see the deleted, removed, held ("filtered") and anonymous ("ghost") ones, and the user's unpublished drafts. Nobody else sees anything of a shadowbanned user, other shadowbanned users included. The user's pinned posts that the viewer may see lead the first page of their posts, newest first.
 
 API clients get the listing as JSON: an object whose "data" is the list of items.
 '''
@@ -502,6 +502,18 @@ def test_pinned_post_leads_the_first_page_only(number):
 	else:
 		assert_not_in_payload(r, pinned)
 		assert_in_payload(r, oldest)
+
+
+def test_pinned_posts_lead_newest_first():
+	user = factories.user()
+	older = _item(user, "posts", is_pinned=True, created_utc=1_600_000_000)
+	newer = _item(user, "posts", is_pinned=True, created_utc=1_600_000_100)
+	listed = _item(user, "posts", created_utc=1_700_000_000)
+
+	r = anon().get(_path(user, "posts"))
+
+	assert_html(r, 200)
+	assert r.text.index(newer) < r.text.index(older) < r.text.index(listed)
 
 
 @pytest.mark.parametrize("state", HIDDEN_POSTS)

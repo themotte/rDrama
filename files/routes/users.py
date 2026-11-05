@@ -342,8 +342,7 @@ def u_username(username, v=None):
 	ids = ids[:25]
 
 	if page == 1:
-		for pid in listings.userpage_pinned(u, v):
-			ids = [pid] + ids
+		ids = listings.userpage_pinned(u, v) + ids
 
 	listing = get_posts(ids, v=v)
 
