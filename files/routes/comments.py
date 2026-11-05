@@ -274,10 +274,15 @@ def edit_comment(cid, v):
 			if len(body) > COMMENT_BODY_LENGTH_MAXIMUM: abort(400, f"Maximum length for a comment is {COMMENT_BODY_LENGTH_MAXIMUM}, including the links to attached images")
 			body_html = sanitize(body)
 
+		made_long = len(c.body or "") <= COMMENT_BODY_LENGTH_MAXIMUM_UNFILTERED < len(body)
 		c.body = body
 		c.body_html = body_html
 
 		if int(time.time()) - c.created_utc > 60 * 3: c.edited_utc = int(time.time())
+
+		if made_long and c.state_mod == StateMod.VISIBLE and v.admin_level <= PERMS['POST_COMMENT_MODERATION']:
+			with comment_state_change(c):
+				c.state_mod = StateMod.FILTERED
 
 		g.db.add(c)
 		

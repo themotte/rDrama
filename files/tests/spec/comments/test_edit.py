@@ -1,7 +1,7 @@
 '''
 Editing a comment: POST /edit_comment/<comment id> with "body" (markdown; surrounding whitespace is trimmed and it is cut to 500,000 characters). Only the comment's author may edit it, including while it is removed or held for review.
 
-The body and its rendering are replaced; the comment is marked as edited (with the time) only when it is more than 3 minutes old. Images uploaded as "file" (up to 4, empty uploads ignored) are stored and linked at the end of the new body, as when commenting. Requests through Tor have their uploads dropped. Sending the body unchanged and no file changes nothing.
+The body and its rendering are replaced; the comment is marked as edited (with the time) only when it is more than 3 minutes old. An edit that makes a visible comment longer than 50,000 characters holds it for review, as such a new comment would be (admins of level 3 and up excepted); editing a comment that was already that long (and so already reviewed) doesn't. Images uploaded as "file" (up to 4, empty uploads ignored) are stored and linked at the end of the new body, as when commenting. Requests through Tor have their uploads dropped. Sending the body unchanged and no file changes nothing.
 
 When the comment is published (visible, not deleted, by an author who isn't shadowbanned, on a post that isn't a draft), users newly mentioned as @name are notified (unless either has blocked the other), once: a user already notified about the comment isn't notified again. Edits of any other comment, private messages included, notify no one.
 
@@ -208,6 +208,44 @@ def test_images_may_not_push_the_body_past_its_limit():
 
 	assert_status(r, 400)
 	d.assert_exactly()
+
+
+@pytest.mark.parametrize("level", [0, 2])
+def test_edits_past_50000_characters_hold_the_comment_for_review(level):
+	author, comment = _own(author=factories.admin(level))
+	client = as_user(author)
+
+	with db_diff() as d:
+		r = _edit(client, comment, "a" * 50_001)
+
+	assert_status(r, 200)
+	d.assert_exactly(updated={
+		"comments": {comment["id"]: {"body": ANY, "body_html": ANY, "state_mod": "FILTERED"}},
+		"submissions": {comment["parent_submission"]: {"comment_count": 0}},
+		"users": {author["id"]: {"comment_count": 0}},
+	})
+
+
+def test_edits_of_an_approved_long_comment_keep_it_published():
+	author, comment = _own(body="a" * 50_001)
+	client = as_user(author)
+
+	with db_diff() as d:
+		r = _edit(client, comment, "b" * 50_001)
+
+	assert_status(r, 200)
+	d.assert_exactly(updated={"comments": {comment["id"]: {"body": ANY, "body_html": ANY}}})
+
+
+def test_level_3_admins_edits_past_50000_characters_stay_published():
+	author, comment = _own(author=factories.admin(3))
+	client = as_user(author)
+
+	with db_diff() as d:
+		r = _edit(client, comment, "a" * 50_001)
+
+	assert_status(r, 200)
+	d.assert_exactly(updated={"comments": {comment["id"]: {"body": ANY, "body_html": ANY}}})
 
 
 def test_an_edit_of_only_an_image_beside_an_empty_upload_links_the_image():
