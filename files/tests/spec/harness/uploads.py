@@ -47,6 +47,11 @@ def text_file():
 	return ("notes.txt", b"hello", "text/plain")
 
 
+def empty():
+	'''What a browser sends for a file input left empty: no name and no content.'''
+	return ("", b"", "application/octet-stream")
+
+
 
 def gif(width: int, height: int):
 	'''A valid two-frame animated GIF.'''

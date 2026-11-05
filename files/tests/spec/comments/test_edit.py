@@ -1,7 +1,7 @@
 '''
 Editing a comment: POST /edit_comment/<comment id> with "body" (markdown; surrounding whitespace is trimmed and it is cut to 500,000 characters). Only the comment's author may edit it, including while it is removed or held for review.
 
-The body and its rendering are replaced; the comment is marked as edited (with the time) only when it is more than 3 minutes old. Images uploaded as "file" (up to 4) are stored and linked at the end of the new body, as when commenting. Requests through Tor have their uploads dropped. Sending the body unchanged and no file changes nothing.
+The body and its rendering are replaced; the comment is marked as edited (with the time) only when it is more than 3 minutes old. Images uploaded as "file" (up to 4, empty uploads ignored) are stored and linked at the end of the new body, as when commenting. Requests through Tor have their uploads dropped. Sending the body unchanged and no file changes nothing.
 
 When the comment is published (visible, not deleted, by an author who isn't shadowbanned, on a post that isn't a draft), users newly mentioned as @name are notified (unless either has blocked the other), once: a user already notified about the comment isn't notified again. Edits of any other comment, private messages included, notify no one.
 
@@ -205,6 +205,28 @@ def test_images_may_not_push_the_body_past_its_limit():
 
 	with db_diff() as d:
 		r = _edit(client, comment, "b" * 499_990, files={"file": uploads.png(2, 2)})
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
+def test_an_edit_of_only_an_image_beside_an_empty_upload_links_the_image():
+	author, comment = _own()
+	client = as_user(author)
+
+	r = _edit(client, comment, "", files={"file": [uploads.png(2, 2), uploads.empty()]})
+
+	assert_status(r, 200)
+	[name] = _stored_images()
+	assert name in db.row("comments", id=comment["id"])["body"]
+
+
+def test_an_edit_of_only_an_empty_upload_is_refused():
+	author, comment = _own()
+	client = as_user(author)
+
+	with db_diff() as d:
+		r = _edit(client, comment, "", files={"file": uploads.empty()})
 
 	assert_status(r, 400)
 	d.assert_exactly()

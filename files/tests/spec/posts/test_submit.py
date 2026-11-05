@@ -709,6 +709,12 @@ def test_body_images_are_linked_at_the_end_of_the_body():
 		assert_serves_image(image)
 
 
+def test_empty_body_uploads_are_ignored():
+	assert_html(_submit(as_user(factories.user()), title="t", body="text", files={"file2": [uploads.png(20, 20), uploads.empty()]}), 200)
+
+	assert len(_image_paths(db.rows("submissions")[-1]["body"])) == 1
+
+
 def test_body_images_alone_make_a_post():
 	assert_html(_submit(as_user(factories.user()), title="t", files={"file2": [uploads.png(20, 20)]}), 200)
 

@@ -123,8 +123,9 @@ def api_comment(v):
 	level = 1 if isinstance(parent, Submission) else parent.level + 1
 
 	body = sanitize_raw(request.values.get("body"), allow_newlines=True, length_limit=COMMENT_BODY_LENGTH_MAXIMUM)
-	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
-		files = request.files.getlist('file')[:4]
+	# An empty file input is sent as an empty upload
+	files = [file for file in request.files.getlist('file') if file][:4]
+	if files and request.headers.get("cf-ipcountry") != "T1":
 		for file in files:
 			if file.content_type.startswith('image/'):
 				oldname = new_image_path()
@@ -249,10 +250,12 @@ def edit_comment(cid, v):
 	if c.author_id != v.id: abort(403)
 	body = sanitize_raw(request.values.get("body"), allow_newlines=True, length_limit=COMMENT_BODY_LENGTH_MAXIMUM)
 
-	if len(body) < 1 and not (request.files.get("file") and request.headers.get("cf-ipcountry") != "T1"):
+	files = [file for file in request.files.getlist('file') if file][:4]
+	uploading = bool(files) and request.headers.get("cf-ipcountry") != "T1"
+	if len(body) < 1 and not uploading:
 		abort(400, "You have to actually type something!")
 
-	if body != c.body or request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
+	if body != c.body or uploading:
 		body_html = sanitize(body)
 
 		# Spam Checking
@@ -279,8 +282,7 @@ def edit_comment(cid, v):
 			abort(403, "Too much spam!")
 		# End Spam Checking
 
-		if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
-			files = request.files.getlist('file')[:4]
+		if uploading:
 			for file in files:
 				if file.content_type.startswith('image/'):
 					name = new_image_path()

@@ -11,7 +11,7 @@ A published comment counts toward its post's and its author's comment counts and
 
 Replies may go to deleted or removed comments and to removed posts. A draft takes comments only from those who may see it (its author and admins of level 2 or more); to anyone else it doesn't exist. Comments on a draft notify nobody while it is a draft; publishing it (POST /publish/<post id>) sends the notifications of its published comments then.
 
-Images uploaded as "file" (up to 4; more are ignored) are stored and linked at the end of the body, and a comment of only images is allowed. Requests through Tor have their uploads dropped, so they need text.
+Images uploaded as "file" (up to 4; more are ignored, as are empty uploads, which browsers send for file inputs left empty) are stored and linked at the end of the body, and a comment of only images is allowed. Requests through Tor have their uploads dropped, so they need text.
 
 The answer to browsers and scripts is JSON {"comment": <the comment rendered as an HTML fragment>, "message": ...} where "message" is a notice for the author when they reply to someone who blocks them (unless they're an admin of level 2 or more) or when the comment is held for its length, and null otherwise. API clients get the comment's JSON object.
 
@@ -549,6 +549,23 @@ def test_at_most_4_images_are_kept():
 	assert len(names) == 4
 	body = db.row("comments", parent_submission=post["id"])["body"]
 	assert all(name in body for name in names)
+
+
+def test_empty_uploads_are_ignored():
+	post = factories.post(factories.user())
+	token = factories.unique()
+
+	r = _comment(as_user(factories.user()), _on(post), token, files={"file": [uploads.png(2, 2), uploads.empty()]})
+
+	_assert_answered(r, token)
+	[name] = _stored_images()
+	assert name in db.row("comments", parent_submission=post["id"])["body"]
+
+
+def test_a_comment_of_only_an_empty_upload_is_refused():
+	post = factories.post(factories.user())
+
+	_refused(as_user(factories.user()), _on(post), "", 400, files={"file": uploads.empty()})
 
 
 def test_a_comment_of_only_an_image_is_accepted():

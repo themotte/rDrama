@@ -117,11 +117,9 @@ class ValidatedSubmissionLike:
 		def _process_media2(body:str, file2:Optional[list[FileStorage]]) -> tuple[bool, str]:
 			if request.headers.get("cf-ipcountry") == "T1": # forbid Tor uploads
 				return False, body
-			elif not file2: # empty list or None
-				return False, body
-			file2 = file2[:4]
-			if not all(file for file in file2):
-				# Falseyness check to handle <'' ('application/octet-stream')>
+			# An empty file input is sent as an empty upload <'' ('application/octet-stream')>
+			file2 = [file for file in file2 or [] if file][:4]
+			if not file2:
 				return False, body
 
 			for file in file2:
