@@ -6,7 +6,7 @@ The page shows several boards, each a section whose element id is "leaderboard-<
 - "blocked": the 25 users blocked by the most users, most blocked first; users nobody blocks aren't ranked.
 - "received-downvotes" and "given-upvotes": the 25 users who received the most downvotes, and who gave the most upvotes, on posts and comments. These are expensive to compute, so the `leaderboard_recalc` command computes them ahead of time; until it has run, the page leaves both out.
 
-Users tied on a board are listed oldest account (lowest id) first. The page opens with links to each board (#leaderboard-<board>). Each row's count links to the list it counts, where there is one the viewer may open: the user's followers, posts (/@<username>/posts) or comments (/@<username>/), and for admins of level 3, the voter lists behind the precomputed boards (/@<username>/downvoters, /@<username>/upvoting). The viewing admin's own row is added after a board's list when they aren't in it (on the blocked board, also when nobody blocks them).
+Users tied on a board are listed oldest account (lowest id) first. The page opens with links to each board (#leaderboard-<board>). Each row's count links to the list it counts, where there is one the viewer may open: the user's followers, posts (/@<username>/posts) or comments (/@<username>/), and for admins of level 3, the voter lists behind the precomputed boards (/@<username>/downvoters, /@<username>/upvoting). The viewing admin's own row (with their own count, written with thousands separators) is added after a board's list when they aren't in it (on the blocked board, also when nobody blocks them).
 '''
 import pytest
 
@@ -123,6 +123,17 @@ def test_simple_board_adds_the_viewers_row_when_they_rank_below_the_top_25(board
 	assert_html(r, 200)
 	section = _board(r, board)
 	assert _rows_of(section, viewer) == _rows_of(section, listed[0]) > 0
+
+
+@pytest.mark.parametrize("board, column", SIMPLE_BOARDS.items())
+def test_simple_boards_viewer_row_gives_the_viewers_own_count(board, column):
+	[_ranked(column, HIGH + i) for i in range(25)]
+	viewer = factories.admin(2, **{column: 123_457})
+
+	r = as_user(viewer).get("/leaderboard")
+
+	assert_html(r, 200)
+	assert "123,457" in _board(r, board)
 
 
 @pytest.mark.parametrize("board, column", SIMPLE_BOARDS.items())
