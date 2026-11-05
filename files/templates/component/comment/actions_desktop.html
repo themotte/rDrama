@@ -44,6 +44,11 @@
 		<button id="mark-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.over_18 %}d-md-block{% endif %} text-danger" onclick="postToastSwitch(this,'/toggle_comment_nsfw/{{c.id}}','POST','mark-{{c.id}}','unmark-{{c.id}}', 'd-md-inline-block')"><i class="fas fa-eye-evil text-danger fa-fw"></i>Mark 18+</button>
 	{% endif %}
 
+	{% if c.parent_submission and v.admin_level >= 2 %}
+		<button id="unpin-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.is_pinned %}d-md-block{% endif %} text-info" onclick="postToastSwitch(this,'/unsticky_comment/{{c.id}}','POST','pin-{{c.id}}','unpin-{{c.id}}', 'd-md-block')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Unpin</button>
+		<button id="pin-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.is_pinned %}d-md-block{% endif %} text-info" onclick="postToastSwitch(this,'/sticky_comment/{{c.id}}','POST','pin-{{c.id}}','unpin-{{c.id}}', 'd-md-block')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Pin</button>
+	{% endif %}
+
 	{% if v.admin_level >= 2 and v.id != c.author_id %}
 		<button id="unban-{{c.id}}" class="dropdown-item list-inline-item d-none {% if c.author.is_suspended %}d-md-block{% endif %} text-success" id="unexile-comment-{{c.id}}" onclick="postToastSwitch(this,'/unban_user/{{c.author_id}}','POST','ban-{{c.id}}','unban-{{c.id}}', 'd-md-inline-block')"><i class="fas fa-user-slash text-success fa-fw"></i>Unban user</button>
 		<button id="ban-{{c.id}}" class="dropdown-item list-inline-item d-none {% if not c.author.is_suspended %}d-md-block{% endif %} text-danger" id="exile-comment-{{c.id}}" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/comment/{{c.id}}', '{{c.author.id}}', '{{c.author_name}}')"><i class="fas fa-user-slash text-danger fa-fw"></i>Ban user</button>
