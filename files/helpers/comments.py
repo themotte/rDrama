@@ -165,19 +165,25 @@ def comment_on_publish(comment:Comment):
 	if not comment.parent_submission:
 		return
 
+	# A draft's comments notify when the draft is published
+	if not comment.post.private:
+		_notify_on_publish(comment)
+
+	update_stateful_counters(comment, +1)
+
+def _notify_on_publish(comment:Comment):
+	'''Notifies those a newly published comment concerns: users it mentions, the post's subscribers and the author of what it replies to.'''
+	author = comment.author
 	# Generate notifs for: mentions, post subscribers, parent post/comment
 	to_notify = NOTIFY_USERS(comment.body, comment.author)
-
 	post_subscribers = g.db.query(Subscription.user_id).filter(
 			Subscription.submission_id == comment.parent_submission,
 			Subscription.user_id != comment.author_id,
 		).all()
 	to_notify.update([x[0] for x in post_subscribers])
-
 	parent = comment.parent
 	if parent and parent.author_id != comment.author_id and not parent.author.is_blocking(author):
 		to_notify.add(parent.author_id)
-
 	for uid in to_notify:
 		notif = g.db.query(Notification) \
 					.filter_by(comment_id=comment.id, user_id=uid).one_or_none()
@@ -185,7 +191,18 @@ def comment_on_publish(comment:Comment):
 			notif = Notification(comment_id=comment.id, user_id=uid)
 			g.db.add(notif)
 
-	update_stateful_counters(comment, +1)
+
+def comments_on_draft_publish(post):
+	'''Sends the notifications a draft's published comments held back while it was a draft.'''
+	comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(
+		Comment.parent_submission == post.id,
+		Comment.state_mod == StateMod.VISIBLE,
+		Comment.state_user_deleted_utc == None,
+		User.shadowbanned == None,
+	).order_by(Comment.id)
+	for comment in comments:
+		_notify_on_publish(comment)
+
 
 def comment_on_unpublish(comment:Comment):
 	"""

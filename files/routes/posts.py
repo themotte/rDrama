@@ -16,6 +16,7 @@ import files.helpers.validators as validators
 from files.__main__ import app, db_session, limiter
 from files.classes import *
 from files.classes.visstate import StateMod
+from files.helpers.comments import comments_on_draft_publish
 from files.helpers.alerts import *
 from files.helpers.background import spawn_background
 from files.helpers.caching import invalidate_cache
@@ -48,6 +49,7 @@ def publish(pid, v):
 	g.db.add(post)
 	
 	post.publish()
+	comments_on_draft_publish(post)
 	g.db.commit()
 	return redirect(post.permalink)
 

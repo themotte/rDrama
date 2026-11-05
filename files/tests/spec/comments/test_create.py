@@ -9,7 +9,7 @@ A comment is held for review (filtered) instead of published when:
 
 A published comment counts toward its post's and its author's comment counts and the descendant counts of all the comments above it, and notifies, once each and never the author: users it mentions as @name (unless either has blocked the other), the post's subscribers, and the author of what it replies to (unless that author blocks the commenter). A held comment does neither.
 
-Replies may go to deleted or removed comments and to removed posts. A draft takes comments only from those who may see it (its author and admins of level 2 or more); to anyone else it doesn't exist.
+Replies may go to deleted or removed comments and to removed posts. A draft takes comments only from those who may see it (its author and admins of level 2 or more); to anyone else it doesn't exist. Comments on a draft notify nobody while it is a draft; publishing it (POST /publish/<post id>) sends the notifications of its published comments then.
 
 Images uploaded as "file" (up to 4; more are ignored) are stored and linked at the end of the body, and a comment of only images is allowed. Requests through Tor have their uploads dropped.
 
@@ -643,7 +643,44 @@ def test_drafts_take_comments_from_those_who_see_them(commenter):
 		r = _comment(client, _on(draft), body)
 
 	_assert_answered(r, body)
-	d.assert_exactly(inserted={"comments": [_row(v, draft, body)], "commentvotes": [_vote(v)], "notifications": _notifications(*([] if v is author else [author]))}, updated=counted)
+	d.assert_exactly(inserted={"comments": [_row(v, draft, body)], "commentvotes": [_vote(v)]}, updated=counted)
+
+
+def test_comments_on_drafts_notify_nobody():
+	author, mentioned, subscriber = factories.user(), factories.user(), factories.user()
+	draft = factories.post(author, private=True)
+	db.insert("subscriptions", user_id=subscriber["id"], submission_id=draft["id"])
+	admin = factories.admin(2)
+	parent = factories.comment(author, draft)
+	body = f"hello @{mentioned['username']}"
+	client = as_user(admin)
+	counted = _counted(admin, draft, ancestors=[parent], author_count=db.row("users", id=admin["id"])["comment_count"] + 1)
+
+	with db_diff() as d:
+		r = _comment(client, _under(parent), body)
+
+	_assert_answered(r, "hello")
+	d.assert_exactly(inserted={"comments": [_row(admin, draft, body, parent=parent)], "commentvotes": [_vote(admin)]}, updated=counted)
+
+
+def test_publishing_a_draft_sends_its_comments_notifications():
+	author, mentioned, unseen = factories.user(), factories.user(), factories.user()
+	draft = factories.post(author, private=True, created_utc=1000)
+	admin = factories.admin(2)
+	factories.comment(admin, draft, body=f"hello @{mentioned['username']}")
+	factories.comment(admin, draft, body=f"deleted @{unseen['username']}", state_user_deleted_utc=DELETED)
+	factories.comment(admin, draft, body=f"held @{unseen['username']}", state_mod="FILTERED")
+	factories.comment(author, draft, body="the author's own")
+	client = as_user(author)
+
+	with db_diff() as d:
+		r = client.post(f"/publish/{draft['id']}")
+
+	assert_status(r, 302)
+	d.assert_exactly(
+		updated={"submissions": {draft["id"]: {"private": False, "created_utc": ANY}}, "users": {author["id"]: {"post_count": 1}}},
+		inserted={"notifications": _notifications(mentioned, author)},
+	)
 
 
 @pytest.mark.parametrize("where", ["post", "reply"])
