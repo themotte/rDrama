@@ -217,5 +217,5 @@ def searchusers(v):
 	next_exists=(len(users)>25)
 	users=users[:25]
 
-	if request.headers.get("Authorization"): return {"data": [x.json for x in users]}
+	if request.headers.get("Authorization"): return {"data": [x.json_for(v) for x in users]}
 	return render_template("search_users.html", v=v, query=query, total=total, page=page, users=users, sort=sort, t=t, next_exists=next_exists)

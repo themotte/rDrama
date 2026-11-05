@@ -1,7 +1,7 @@
 '''
 A user's public details as JSON, for logged-in users: GET /@<username>/info (case-insensitively, by current or original username) and GET /<user id>/info.
 
-The object has "username", "url" (the profile path), "id", "is_banned", "post_count" and "comment_count". The counts read 0 for a shadowbanned user or a private profile, except to the user themselves and admins (level 2 and up), as nobody else sees their posts and comments. While the user is suspended (banned permanently, or temporarily and the ban hasn't run out) it adds only "is_permanent_ban" and "ban_reason", with "is_banned" true; otherwise it adds "created_utc", "is_private", "profile_url", "bannerurl", "bio", "bio_html", "flair", and "is_banned" says whether the account carries a ban at all (an expired one included).
+The object has "username", "url" (the profile path), "id", "is_banned", "post_count" and "comment_count". The counts read 0 for a shadowbanned user or a private profile, except to the user themselves and admins (level 2 and up), as nobody else sees their posts and comments. User search (GET /search/users) answers API clients with the same objects, counts included. While the user is suspended (banned permanently, or temporarily and the ban hasn't run out) it adds only "is_permanent_ban" and "ban_reason", with "is_banned" true; otherwise it adds "created_utc", "is_private", "profile_url", "bannerurl", "bio", "bio_html", "flair", and "is_banned" says whether the account carries a ban at all (an expired one included).
 
 A user blocking the viewer, or blocked by them, refuses them with 403. An unknown user (or an id that isn't a number) is 404; anonymous browsers are sent to log in.
 '''
@@ -184,3 +184,31 @@ def test_info_sends_anonymous_browsers_to_log_in(route):
 	r = anon().get(path)
 
 	assert_login_redirect(r, path)
+
+
+# User search answers with the same objects, under the same rule
+
+@pytest.mark.parametrize("hidden", ["private", "shadowbanned"])
+def test_user_search_shows_no_activity_of_hidden_users_to_others(hidden):
+	user = factories.user(is_private=hidden == "private")
+	factories.post(user)
+	factories.comment(user, factories.post(factories.user()))
+	if hidden == "shadowbanned":
+		db.update("users", {"id": user["id"]}, shadowbanned="somemod")
+
+	r = as_api(factories.api_token(factories.user())).get("/search/users", params={"q": user["username"]})
+
+	assert_status(r, 200)
+	[found] = [u for u in r.json["data"] if u["id"] == user["id"]]
+	assert (found["post_count"], found["comment_count"]) == (0, 0)
+
+
+def test_user_search_shows_activity_to_the_user_themselves():
+	user = factories.user(is_private=True)
+	factories.post(user)
+
+	r = as_api(factories.api_token(user)).get("/search/users", params={"q": user["username"]})
+
+	assert_status(r, 200)
+	[found] = [u for u in r.json["data"] if u["id"] == user["id"]]
+	assert found["post_count"] == 1

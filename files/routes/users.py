@@ -419,10 +419,7 @@ def _info(user:User, v:User) -> dict:
 	if user.is_blocking: abort(403, "You're blocking this user.")
 	if user.is_blocked: abort(403, "This user is blocking you.")
 
-	data = dict(user.json)
-	if not user.shows_activity_to(v):
-		data["post_count"] = data["comment_count"] = 0
-	return data
+	return user.json_for(v)
 
 
 @app.get("/@<username>/info")

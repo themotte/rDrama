@@ -448,8 +448,8 @@ class User(CreatedBase):
 				'profile_url': self.profile_url,
 				'bannerurl': self.banner_url,
 				'bio_html': self.bio_html_eager,
-				'post_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level >= 2)) else self.post_count,
-				'comment_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level >= 2)) else self.comment_count,
+				'post_count': self.post_count if self.shows_activity_to(v) else 0,
+				'comment_count': self.comment_count if self.shows_activity_to(v) else 0,
 				}
 
 		return data
@@ -499,6 +499,11 @@ class User(CreatedBase):
 	@lazy
 	def json(self):
 		return {**self.json_core, 'post_count': self.post_count, 'comment_count': self.comment_count}
+
+	def json_for(self, v:"User | None") -> dict:
+		'''The user's JSON as `v` may see it: the post and comment counts read 0 unless the user shows their activity to `v`.'''
+		if self.shows_activity_to(v): return self.json
+		return {**self.json, 'post_count': 0, 'comment_count': 0}
 
 
 	def ban(self, admin=None, reason=None, days=0):
