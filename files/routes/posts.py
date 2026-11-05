@@ -16,7 +16,7 @@ import files.helpers.validators as validators
 from files.__main__ import app, db_session, limiter
 from files.classes import *
 from files.classes.visstate import StateMod
-from files.helpers.comments import comment_subtree_ids, comments_on_draft_publish
+from files.helpers.comments import comment_sort, comment_subtree_ids, comments_on_draft_publish
 from files.helpers.alerts import *
 from files.helpers.background import spawn_background
 from files.helpers.caching import invalidate_cache
@@ -63,11 +63,6 @@ def age_unconfirmed(post, v) -> bool:
 	return post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time())
 
 
-def _comment_sort(requested:Optional[str], v:Optional[User]) -> str:
-	if requested in SORTS_COMMENTS: return requested
-	return v.defaultsortingcomments if v else "new"
-
-
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
 @auth_desired
@@ -79,7 +74,7 @@ def post_id(pid, anything=None, v=None):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, "Must be 18+ to view")
 		return render_template("errors/nsfw.html", v=v)
 
-	sort = _comment_sort(request.values.get("sort"), v)
+	sort = comment_sort(request.values.get("sort"), v)
 
 	limit = app.config['RESULTS_PER_PAGE_COMMENTS']
 	offset = 0
@@ -126,7 +121,7 @@ def viewmore(v, pid, sort, offset):
 	post = get_post(pid, v=v)
 	if post.is_draft_hidden_from(v): abort(404)
 	if age_unconfirmed(post, v): abort(403, "Must be 18+ to view")
-	sort = _comment_sort(sort, v)
+	sort = comment_sort(sort, v)
 	try:
 		offset_prev = int(offset)
 		ids = set(int(x) for x in request.values.get("ids", "").split(','))
@@ -188,7 +183,7 @@ def morecomments(v, cid):
 	if age_unconfirmed(parent.post, v): abort(403, "Must be 18+ to view")
 	post = parent.post
 	subtree = comment_subtree_ids(parent.id, RENDER_DEPTH_LIMIT + 1)
-	_, comment_tree = get_comment_trees_eager(lambda q: q.filter(Comment.id.in_(subtree)), sort=_comment_sort(None, v), v=v, post=post)
+	_, comment_tree = get_comment_trees_eager(lambda q: q.filter(Comment.id.in_(subtree)), sort=comment_sort(None, v), v=v, post=post)
 	comments = [c for c in comment_tree[parent.id] if c.renders_for(v)]
 
 	return render_template("comments.html", v=v, comments=comments, p=post, render_replies=True, ajax=True)

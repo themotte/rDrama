@@ -8,6 +8,7 @@ from sqlalchemy.sql.expression import alias, func, text
 from files.classes import Comment, Notification, Subscription, User
 from files.classes.visstate import StateMod
 from files.helpers.alerts import NOTIFY_USERS
+from files.helpers.config.const import SORTS_COMMENTS
 
 def comment_counted(comment:Comment) -> bool:
 	'''Whether the comment counts toward its post's and its ancestors' comment counts: a comment on a post that others can see.'''
@@ -17,6 +18,12 @@ def comment_counted(comment:Comment) -> bool:
 def comment_published(comment:Comment) -> bool:
 	'''Whether the comment has been offered to others, so that it notifies: counted, and not on a draft.'''
 	return comment_counted(comment) and not comment.post.private
+
+
+def comment_sort(requested:Optional[str], v:Optional[User]) -> str:
+	'''The comment order a page asks for, or the viewer's default when it names none we know ("new" for visitors).'''
+	if requested in SORTS_COMMENTS: return requested
+	return v.defaultsortingcomments if v else "new"
 
 
 _SUBTREE_IDS_SQL = text("""

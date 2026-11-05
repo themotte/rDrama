@@ -6,7 +6,7 @@ from files.__main__ import app, limiter
 from files.classes import *
 from files.classes.visstate import StateMod
 from files.helpers.alerts import *
-from files.helpers.comments import comment_on_publish, comment_published
+from files.helpers.comments import comment_on_publish, comment_published, comment_sort
 from files.helpers.config.const import *
 from files.helpers.media import new_image_path, process_image
 from files.helpers.wrappers import *
@@ -69,9 +69,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 		if request.headers.get("Authorization"): return {'error': 'This content is not suitable for some users and situations.'}
 		else: return render_template("errors/nsfw.html", v=v)
 
-	if v: defaultsortingcomments = v.defaultsortingcomments
-	else: defaultsortingcomments = "new"
-	sort=request.values.get("sort", defaultsortingcomments)
+	sort = comment_sort(request.values.get("sort"), v)
 
 	try: context = max(0, min(int(request.values.get("context", 0)), 8))
 	except: context = 0

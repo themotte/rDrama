@@ -3,6 +3,7 @@ A comment's own page: GET /comment/<comment id> and GET /post/<post id>/<anythin
 
 - "context" (a whole number; values above 8 mean 8, values below 0 and anything not a number mean 0) shows that many of the comment's ancestors above it, each with only the next comment of the chain under it (their other replies are left out). Without it, the comment is shown alone, without its parent.
 - The comment's replies are shown under it, nested to a depth of nine levels counted from the topmost comment shown (so each ancestor brought in by "context" leaves one level fewer for the replies).
+- "sort" orders the replies as on the post page; an unknown value means the viewer's default.
 - "read" (any non-empty value) marks the viewer's unread notification about this comment as read. Anonymous viewers and viewers without such a notification change nothing.
 - A private message (a comment with no post, sent to a user) is refused with 403 to anyone who isn't its sender or recipient, visitors included. "context" never brings in a private message the viewer couldn't open itself: the chain stops below it.
 - On an 18+ post, browsers of visitors and of users who are not 18+ get the age confirmation page instead of the comment until they confirm (POST /allow_nsfw); users who are 18+ see the comment.
@@ -256,6 +257,20 @@ def test_the_page_doesnt_describe_comments_hidden_from_the_viewer(why):
 
 	assert_html(r, 200)
 	assert_not_in_payload(r, comment["body"])
+
+
+def test_an_unknown_sort_uses_the_viewers_default_and_isnt_echoed():
+	marker = factories.unique("injected")
+	post = factories.post(factories.user())
+	focus = factories.comment(factories.user(), post)
+	newer = factories.comment(factories.user(), post, parent=focus, created_utc=2000)
+	older = factories.comment(factories.user(), post, parent=focus, created_utc=1000)
+
+	r = as_user(factories.user(defaultsortingcomments="old")).get(f"/comment/{focus['id']}", params={"sort": f"');{marker}//"})
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, marker)
+	assert r.text.index(older["body"]) < r.text.index(newer["body"])
 
 # 18+ posts
 
