@@ -152,7 +152,7 @@ def api_comment(v):
 		Comment.parent_comment_id == parent_comment_id,
 		Comment.parent_submission == parent_post.id,
 		Comment.body_html == body_html
-	).one_or_none()
+	).first()
 
 	if existing:
 		abort(409, f"You already made that comment: /comment/{existing.id}")

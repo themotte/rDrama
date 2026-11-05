@@ -683,6 +683,17 @@ def test_publishing_a_draft_sends_its_comments_notifications():
 	)
 
 
+def test_repeating_a_comment_you_have_twice_is_refused():
+	author, post = factories.user(), factories.post(factories.user())
+	body = factories.unique()
+	client = as_user(author)
+	assert_status(_comment(client, _on(post), body), 200)
+	assert_status(_comment(client, _on(post), factories.unique()), 200)
+	assert_status(client.post(f"/edit_comment/{max(r['id'] for r in db.rows('comments', author_id=author['id']))}", {"body": body}, headers=XHR), 200)
+
+	_refused(client, _on(post), body, 409)
+
+
 @pytest.mark.parametrize("where", ["post", "reply"])
 def test_repeating_your_comment_under_the_same_parent_is_refused(where):
 	post = factories.post(factories.user())
