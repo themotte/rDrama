@@ -5,9 +5,10 @@ Small lookups around user accounts:
 - GET /@<username> (without the trailing slash) serves the profile like /@<username>/.
 - GET /is_available/<name> tells signup whether a username is free, as {"<name>": true|false} (the name with surrounding whitespace removed). A name signup would refuse isn't available: one shorter than 3 or longer than 25 characters, or with characters other than ASCII letters, digits, "_" and "-". Nor is one that is any user's current or original username, compared case-insensitively.
 - GET /@<username>/profilecss serves the custom CSS the user set for their profile page (empty if none).
+- GET /pp/<user id> (the address mentions embed), /uid/<user id>/pic, /uid/<user id>/pic/profile and /@<username>/pic redirect (302) to the user's profile picture, wherever it's hosted: the "profile_url" of their /info. Browsers may keep the redirect for five minutes.
 - GET /2faqr/<secret> draws the QR code an authenticator app scans to set up two-factor login with that secret for the logged-in user, as a PNG.
 '''
-from urllib.parse import quote
+from urllib.parse import quote, urljoin
 
 import pytest
 
@@ -176,3 +177,45 @@ def test_two_factor_qr_code_sends_anonymous_browsers_to_log_in():
 	r = anon().get("/2faqr/JBSWY3DPEHPK3PXP")
 
 	assert_login_redirect(r, "/2faqr/JBSWY3DPEHPK3PXP")
+
+
+# Profile pictures
+
+PICTURE_ROUTES = {
+	"/pp/<id>": lambda u: f"/pp/{u['id']}",
+	"/uid/<id>/pic": lambda u: f"/uid/{u['id']}/pic",
+	"/uid/<id>/pic/profile": lambda u: f"/uid/{u['id']}/pic/profile",
+	"/@<username>/pic": lambda u: f"/@{u['username']}/pic",
+}
+
+
+def _profile_url(user):
+	return as_user(factories.user()).get(f"/@{user['username']}/info").json["profile_url"]
+
+
+def _with_uploaded_picture():
+	user = factories.user()
+	assert_html(as_user(user).post("/settings/images/profile", files={"profile": uploads.png(20, 20)}), 200)
+	return user
+
+
+@pytest.mark.parametrize("route", PICTURE_ROUTES)
+@pytest.mark.parametrize("picture", ["uploaded", "default", "off-site"])
+def test_picture_routes_lead_to_the_users_picture(route, picture):
+	user = {"uploaded": _with_uploaded_picture, "default": factories.user, "off-site": lambda: factories.user(profileurl="https://i.imgur.com/abc.png")}[picture]()
+	expected = _profile_url(user)
+
+	r = anon().get(PICTURE_ROUTES[route](user))
+
+	assert_status(r, 302)
+	assert urljoin(config.site_url(), r.location) == urljoin(config.site_url(), expected)
+	assert "max-age=300" in r.header("Cache-Control")
+	if picture != "off-site":
+		assert_serves_image(expected)
+
+
+@pytest.mark.parametrize("route", PICTURE_ROUTES)
+def test_picture_routes_of_an_unknown_user_are_not_found(route):
+	r = anon().get(PICTURE_ROUTES[route]({"id": factories.user()["id"] + 1000, "username": factories.unique()}))
+
+	assert_status(r, 404)

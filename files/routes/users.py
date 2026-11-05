@@ -1,7 +1,6 @@
 import io
 import time
 from collections import Counter
-from urllib.parse import urlparse
 
 import qrcode
 from sqlalchemy.orm import Query
@@ -520,52 +519,18 @@ def remove_follow(username, v):
 @app.get("/uid/<int:id>/pic/profile")
 @limiter.exempt
 def user_profile_uid(id:int):
-	name = f"/pp/{id}"
-	path = cache.get(name)
-	tout = 5 * 60 # 5 min
-
-	# if the path isn't cached then make it
-	if not path:
-		user = get_account(id)
-		path = urlparse(user.profile_url).path
-		cache.set(name,path,timeout=tout)
-
-	# if not found, search relative to the root
-	if not os.path.exists(path):
-		path = os.path.join(app.root_path,path.lstrip('/'))
-		cache.set(name,path,timeout=tout)
-
-	# if not found, fail
-	if not os.path.exists(path):
-		cache.set(name,None)
-		abort(404)
-
-	return send_file(path)
+	return _redirect_to_picture(get_account(id))
 
 @app.get("/@<username>/pic")
 @limiter.exempt
 def user_profile_name(username:str):
-	name = f"/@{username}/pic"
-	path = cache.get(name)
-	tout = 5 * 60 # 5 min
+	return _redirect_to_picture(get_user(username))
 
-	# if the path isn't cached then make it
-	if not path:
-		user = get_user(username)
-		path = urlparse(user.profile_url).path
-		cache.set(name,path,timeout=tout)
+def _redirect_to_picture(user:User):
+	r = redirect(user.profile_url)
+	r.headers["Cache-Control"] = "public, max-age=300"
+	return r
 
-	# if not found, search relative to the root
-	if not os.path.exists(path):
-		path = os.path.join(app.root_path,path.lstrip('/'))
-		cache.set(name,path,timeout=tout)
-
-	# if not found, fail
-	if not os.path.exists(path):
-		cache.set(name,None)
-		abort(404)
-
-	return send_file(path)
 
 def _own_saved_list(v:User, username:str):
 	if get_user(username).id != v.id: abort(403, "Saved lists are private.")
