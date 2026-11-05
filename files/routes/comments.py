@@ -135,7 +135,7 @@ def api_comment(v):
 					body += f"\n\n![]({image})"
 				else:
 					body += f'\n\n<a href="{image}">{image}</a>'
-			else: abort(400, "Image files only")
+			else: abort(415, "Image files only")
 
 	if not body: abort(400, "You need to actually write something!")
 
@@ -289,7 +289,7 @@ def edit_comment(cid, v):
 						body += f"\n\n![]({url})"
 					else:
 						body += f'\n\n<a href="{url}">{url}</a>'
-				else: abort(400, "Image files only")
+				else: abort(415, "Image files only")
 
 			body_html = sanitize(body)
 

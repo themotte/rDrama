@@ -7,7 +7,7 @@ When the comment is published (visible, not deleted, by an author who isn't shad
 
 The answer is JSON {"comment": <the new body rendered as HTML>}.
 
-Refused, changing nothing: 400 for an empty body without a file, 403 for someone else's comment, 404 for an unknown comment, 401 for anonymous scripts. (Suspended users are refused; see the users area.)
+Refused, changing nothing: 400 for an empty body without a file, 415 for an upload that isn't an image, 403 for someone else's comment, 404 for an unknown comment, 401 for anonymous scripts. (Suspended users are refused; see the users area.)
 '''
 import os
 import time
@@ -186,6 +186,17 @@ def test_uploaded_images_are_linked_after_the_text():
 	assert edited["body"].startswith(f"{token}\n\n") and name in edited["body"]
 	assert name in edited["body_html"]
 	assert name in r.json["comment"]
+
+
+def test_uploads_that_arent_images_are_refused():
+	author, comment = _own()
+	client = as_user(author)
+
+	with db_diff() as d:
+		r = _edit(client, comment, factories.unique(), files={"file": uploads.text_file()})
+
+	assert_status(r, 415)
+	d.assert_exactly()
 
 
 def test_uploads_through_tor_are_dropped_but_the_text_saved():
