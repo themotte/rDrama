@@ -2,7 +2,7 @@
 {% macro username_display(user, name=None, distinguish=0, display_class="") %}
 	{% set display_name = user.username %}
 	{% set display_class = "mod" if distinguish else "" %}
-	<span class="font-weight-bold {{display_class}}" style="color: #{{user.name_color}};">{{display_name}}</span>
+	<span class="font-weight-bold {{display_class}}" style="color: #{{user.namecolor}};">{{display_name}}</span>
 {% endmacro %}
 
 {% if user %}
