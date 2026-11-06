@@ -8,6 +8,7 @@ from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.comments import comment_counted, comment_on_publish, comment_published, comment_sort, comment_state_change, update_author_comment_count
 from files.helpers.config.const import *
+from files.helpers.locks import user_shadowbanned_locked
 from files.helpers.media import attach_images
 from files.helpers.wrappers import *
 from files.routes.importstar import *
@@ -184,7 +185,9 @@ def api_comment(v):
 				state_mod=StateMod.FILTERED if is_filtered else StateMod.VISIBLE,
 				)
 
-	c.upvotes = 1
+	# The author's own upvote counts unless they're shadowbanned
+	shadowbanned = user_shadowbanned_locked(g.db, v)
+	c.upvotes = c.realupvotes = 0 if shadowbanned else 1
 	g.db.add(c)
 	g.db.flush()
 
@@ -198,6 +201,7 @@ def api_comment(v):
 	vote = CommentVote(user_id=v.id,
 						 comment_id=c.id,
 						 vote_type=1,
+						 real=not shadowbanned,
 						 )
 	g.db.add(vote)
 

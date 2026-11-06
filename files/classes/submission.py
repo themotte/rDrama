@@ -14,6 +14,7 @@ from files.helpers.config.environment import (SCORE_HIDING_TIME_HOURS, SITE,
                                               SITE_FULL, SITE_ID)
 from files.helpers.content import body_displayed, is_web_url
 from files.helpers.lazy import lazy
+from files.helpers.locks import user_shadowbanned_locked
 from files.helpers.time import format_age, format_datetime
 
 
@@ -90,15 +91,18 @@ class Submission(CreatedBase):
 	bump_utc = deferred(Column(Integer, server_default=FetchedValue()))
 
 	def submit(self, db: Session):
-		# create submission...
+		from files.classes.user import User # imports this module
+		# The author's own upvote counts unless they're shadowbanned
+		shadowbanned = user_shadowbanned_locked(db, db.get(User, self.author_id))
+		self.upvotes = self.realupvotes = 0 if shadowbanned else 1
 		db.add(self)
 		db.flush()
-		
-		# then create vote...
+
 		vote = Vote(
 			user_id=self.author_id, 
 			vote_type=1,
-			submission_id=self.id
+			submission_id=self.id,
+			real=not shadowbanned,
 		)
 		db.add(vote)
 

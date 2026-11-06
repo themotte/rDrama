@@ -7,6 +7,7 @@ import time
 
 from sqlalchemy import text
 
+from files.helpers.locks import user_counts_lock
 from files.tests.spec.harness import db
 
 WAIT_SECONDS = 10
@@ -23,6 +24,11 @@ def holding_transaction():
 	with db.engine().connect() as conn:
 		conn.execute(text("SET lock_timeout = '20s'"))
 		yield conn
+
+
+def hold_voting(conn, user_id):
+	'''Takes in `conn`'s transaction the lock a vote by the user holds until it commits, besides the rows it writes.'''
+	user_counts_lock(conn, [user_id])
 
 
 def run_while_held(conn, request):

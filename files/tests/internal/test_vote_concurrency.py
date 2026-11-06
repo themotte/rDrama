@@ -3,7 +3,7 @@ Votes cast while another vote's transaction is still open keep every vote: the c
 '''
 from sqlalchemy import text
 
-from files.tests.internal.concurrency import holding_transaction, run_while_held
+from files.tests.internal.concurrency import hold_voting, holding_transaction, run_while_held
 from files.tests.spec.harness import XHR, as_user, assert_status, db, factories
 
 
@@ -17,11 +17,13 @@ def test_a_vote_waits_for_another_vote_on_the_same_item():
 	client_request = _vote(second, "post", post, 1)
 
 	with holding_transaction() as conn:
+		hold_voting(conn, first["id"])
 		conn.execute(text("INSERT INTO votes (user_id, submission_id, vote_type, real) VALUES (:user, :post, 1, true)"), {"user": first["id"], "post": post["id"]})
 		conn.execute(text("UPDATE submissions SET upvotes = 2, realupvotes = 2 WHERE id = :post"), {"post": post["id"]})
-		r, _ = run_while_held(conn, client_request)
+		r, waited = run_while_held(conn, client_request)
 
 	assert_status(r, 204)
+	assert waited
 	assert db.row("submissions", id=post["id"])["upvotes"] == 3
 
 
@@ -30,6 +32,7 @@ def test_a_users_vote_waits_for_their_own_first_vote_on_the_same_item():
 	post = factories.post(author)
 
 	with holding_transaction() as conn:
+		hold_voting(conn, voter["id"])
 		conn.execute(text("INSERT INTO votes (user_id, submission_id, vote_type, real) VALUES (:user, :post, -1, true)"), {"user": voter["id"], "post": post["id"]})
 		conn.execute(text("UPDATE submissions SET downvotes = 1 WHERE id = :post"), {"post": post["id"]})
 		r, _ = run_while_held(conn, _vote(voter, "post", post, 1))
@@ -44,6 +47,7 @@ def test_a_vote_waits_for_another_vote_changing_the_same_authors_truescore():
 	held_post, voted_post = factories.post(author), factories.post(author)
 
 	with holding_transaction() as conn:
+		hold_voting(conn, first["id"])
 		conn.execute(text("INSERT INTO votes (user_id, submission_id, vote_type, real) VALUES (:user, :post, 1, true)"), {"user": first["id"], "post": held_post["id"]})
 		conn.execute(text("UPDATE users SET truescore = truescore + 1 WHERE id = :author"), {"author": author["id"]})
 		r, waited = run_while_held(conn, _vote(second, "post", voted_post, 1))

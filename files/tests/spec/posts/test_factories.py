@@ -44,6 +44,17 @@ def _assert_same_comment_state(through_site, arranged, parent_ids):
 	assert db.row("users", id=through_site["author_id"])["comment_count"] == db.row("users", id=arranged["author_id"])["comment_count"]
 
 
+def test_a_factory_post_by_a_shadowbanned_user_matches_a_submitted_one():
+	submitter, arranger = factories.user(shadowbanned="somemod"), factories.user(shadowbanned="somemod")
+
+	as_user(submitter).post("/submit", {"title": factories.unique("title"), "body": factories.unique("body")})
+	submitted = db.row("submissions", author_id=submitter["id"])
+	arranged = factories.post(arranger, body=factories.unique("body"))
+
+	assert _without(submitted, _POST_IDENTITY | {"author_id"}) == _without(arranged, _POST_IDENTITY | {"author_id"})
+	assert _without(_vote("votes", submission_id=submitted["id"]), {"user_id", "submission_id"}) == _without(_vote("votes", submission_id=arranged["id"]), {"user_id", "submission_id"})
+
+
 def test_a_factory_comment_matches_one_made_through_the_site():
 	site_post, arranged_post = factories.post(factories.user()), factories.post(factories.user())
 	site_author, arranged_author = factories.user(), factories.user()

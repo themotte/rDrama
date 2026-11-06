@@ -8,6 +8,7 @@ from files.classes.submission import Submission
 from files.classes.user import User
 from files.classes.votes import CommentVote, Vote
 from files.helpers.get import get_comment, get_post
+from files.helpers.locks import user_shadowbanned_locked
 from files.helpers.wrappers import admin_level_required, is_not_permabanned
 from files.routes.importstar import *
 
@@ -43,8 +44,9 @@ def admin_vote_info_get(v):
 
 
 def _vote(target:Union[Submission, Comment], vote_cls:Union[Type[Vote], Type[CommentVote]], new:int, v:User):
-	'''Sets `v`'s vote on `target` to `new` (1, 0 or -1), moving the author's truescore by the change unless `v` is the author, and recounts the target's votes.'''
+	'''Sets `v`'s vote on `target` to `new` (1, 0 or -1) and recounts the target's votes. Votes by shadowbanned users don't count: they move no counts and no truescore.'''
 	target_key = vote_cls.submission_id if vote_cls is Vote else vote_cls.comment_id
+	shadowbanned = user_shadowbanned_locked(g.db, v)
 	# Votes on one item take turns, so each reads the vote and the counts the others left
 	g.db.query(type(target)).filter_by(id=target.id).populate_existing().with_for_update(key_share=True).one()
 	vote = g.db.query(vote_cls).filter(vote_cls.user_id == v.id, target_key == target.id).one_or_none()
@@ -54,17 +56,16 @@ def _vote(target:Union[Submission, Comment], vote_cls:Union[Type[Vote], Type[Com
 	if not vote:
 		vote = vote_cls(user_id=v.id, vote_type=new, **{target_key.key: target.id})
 	vote.vote_type = new
-	# Permanently suspended users can't vote at all
-	vote.real = not v.shadowbanned
+	vote.real = not shadowbanned
 	g.db.add(vote)
-	if v.id != target.author_id:
+	if v.id != target.author_id and not shadowbanned:
 		g.db.execute(update(User).where(User.id == target.author_id).values(truescore=User.truescore + new - old))
 
 	g.db.flush()
-	counts = g.db.query(vote_cls).filter(target_key == target.id)
-	target.upvotes = counts.filter(vote_cls.vote_type == 1).count()
-	target.downvotes = counts.filter(vote_cls.vote_type == -1).count()
-	target.realupvotes = counts.filter(vote_cls.vote_type == 1, vote_cls.real == True).count()
+	counted = g.db.query(vote_cls).join(User, User.id == vote_cls.user_id).filter(target_key == target.id, User.shadowbanned == None)
+	target.upvotes = counted.filter(vote_cls.vote_type == 1).count()
+	target.downvotes = counted.filter(vote_cls.vote_type == -1).count()
+	target.realupvotes = g.db.query(vote_cls).filter(target_key == target.id, vote_cls.vote_type == 1, vote_cls.real == True).count()
 	g.db.add(target)
 	g.db.commit()
 	return "", 204

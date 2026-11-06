@@ -81,12 +81,13 @@ def admin(level: int, **overrides) -> dict:
 
 def post(author: dict, **overrides) -> dict:
 	'''
-	A post as submitting it creates one, with the author's own upvote and post count, but without the notifications publishing sends.
+	A post as submitting it creates one, with the author's own upvote (counted unless they're shadowbanned) and post count, but without the notifications publishing sends.
 
 	`body` without `body_html` gets the body rendered as one plain paragraph; `title_html` likewise follows `title`.
 	'''
 	title = overrides.pop("title", unique("title"))
 	body = overrides.get("body")
+	counted = not db.execute("SELECT shadowbanned FROM users WHERE id = :id", id=author["id"])
 	row = db.insert("submissions", **{
 		"author_id": author["id"],
 		"created_utc": int(time.time()),
@@ -95,20 +96,21 @@ def post(author: dict, **overrides) -> dict:
 		"body_html": f"<p>{html.escape(body)}</p>" if body else None,
 		"state_mod": "VISIBLE",
 		"state_report": "UNREPORTED",
-		"upvotes": 1,
-		"realupvotes": 1,
+		"upvotes": int(counted),
+		"realupvotes": int(counted),
 		**overrides,
 	})
-	db.insert("votes", user_id=author["id"], submission_id=row["id"], vote_type=1)
+	db.insert("votes", user_id=author["id"], submission_id=row["id"], vote_type=1, real=counted)
 	db.execute("UPDATE users SET post_count = (SELECT count(*) FROM submissions WHERE author_id = :id AND state_mod = 'VISIBLE' AND state_user_deleted_utc IS NULL AND NOT private) WHERE id = :id", id=author["id"])
 	return row
 
 
 def comment(author: dict, post: dict, parent: dict | None = None, **overrides) -> dict:
 	'''
-	A comment on `post` (replying to `parent` if given) as commenting creates one: its own upvote, its place in the thread, its author's comment count, and, when visible from an author who isn't shadowbanned, the comment counts of its ancestors and the post. No notifications.
+	A comment on `post` (replying to `parent` if given) as commenting creates one: its own upvote (counted unless the author is shadowbanned), its place in the thread, its author's comment count, and, when visible from an author who isn't shadowbanned, the comment counts of its ancestors and the post. No notifications.
 	'''
 	body = overrides.pop("body", unique("comment"))
+	shadowbanned = db.execute("SELECT shadowbanned FROM users WHERE id = :id", id=author["id"])
 	comment_id = db.execute("SELECT nextval('comments_id_seq')")
 	row = db.insert("comments", **{
 		"id": comment_id,
@@ -125,11 +127,11 @@ def comment(author: dict, post: dict, parent: dict | None = None, **overrides) -
 		"volunteer_janitor_badness": 0.5,
 		"state_mod": "VISIBLE",
 		"state_report": "UNREPORTED",
-		"upvotes": 1,
+		"upvotes": 0 if shadowbanned else 1,
+		"realupvotes": 0 if shadowbanned else 1,
 		**overrides,
 	})
-	db.insert("commentvotes", user_id=author["id"], comment_id=comment_id, vote_type=1)
-	shadowbanned = db.execute("SELECT shadowbanned FROM users WHERE id = :id", id=author["id"])
+	db.insert("commentvotes", user_id=author["id"], comment_id=comment_id, vote_type=1, real=not shadowbanned)
 	db.execute("UPDATE users SET comment_count = (SELECT count(*) FROM comments c JOIN submissions s ON s.id = c.parent_submission WHERE c.author_id = :id AND c.state_mod = 'VISIBLE' AND c.state_user_deleted_utc IS NULL AND NOT s.private) WHERE id = :id", id=author["id"])
 	if row["state_mod"] == "VISIBLE" and row["state_user_deleted_utc"] is None and not shadowbanned:
 		db.execute("UPDATE submissions SET comment_count = comment_count + 1 WHERE id = :id", id=post["id"])
@@ -146,14 +148,13 @@ def comment(author: dict, post: dict, parent: dict | None = None, **overrides) -
 
 def vote(voter: dict, target: dict, vote_type: int) -> dict:
 	'''
-	`voter` votes `vote_type` (1, 0 or -1) on `target` (a post or a comment from these factories), as voting does: their vote row is set, the target's vote counts are recounted, and the author's truescore moves by the change unless the voter is the author.
+	`voter` votes `vote_type` (1, 0 or -1) on `target` (a post or a comment from these factories), as voting does: their vote row is set, the target's vote counts are recounted, and the author's truescore moves by the change unless the voter is the author. A shadowbanned voter's vote moves no counts.
 	'''
 	if "title" in target:
 		table, votes, key = "submissions", "votes", "submission_id"
 	else:
 		table, votes, key = "comments", "commentvotes", "comment_id"
-	who = db.row("users", id=voter["id"])
-	real = not who["shadowbanned"] and not (who["is_banned"] and not who["unban_utc"])
+	real = not db.row("users", id=voter["id"])["shadowbanned"]
 	old = db.execute(f"SELECT vote_type FROM {votes} WHERE user_id = :user AND {key} = :target", user=voter["id"], target=target["id"])
 	if old == vote_type: return db.row(table, id=target["id"])
 	if old is None:
@@ -161,12 +162,13 @@ def vote(voter: dict, target: dict, vote_type: int) -> dict:
 	else:
 		db.execute(f"UPDATE {votes} SET vote_type = :type, real = :real WHERE user_id = :user AND {key} = :target", type=vote_type, real=real, user=voter["id"], target=target["id"])
 	author_id = db.execute(f"SELECT author_id FROM {table} WHERE id = :id", id=target["id"])
-	if author_id != voter["id"]:
+	if author_id != voter["id"] and real:
 		db.execute("UPDATE users SET truescore = truescore + :delta WHERE id = :id", delta=vote_type - (old or 0), id=author_id)
+	counted = "AND user_id IN (SELECT id FROM users WHERE shadowbanned IS NULL)"
 	db.execute(f"""
 		UPDATE {table} SET
-			upvotes = (SELECT count(*) FROM {votes} WHERE {key} = :id AND vote_type = 1),
-			downvotes = (SELECT count(*) FROM {votes} WHERE {key} = :id AND vote_type = -1),
+			upvotes = (SELECT count(*) FROM {votes} WHERE {key} = :id AND vote_type = 1 {counted}),
+			downvotes = (SELECT count(*) FROM {votes} WHERE {key} = :id AND vote_type = -1 {counted}),
 			realupvotes = (SELECT count(*) FROM {votes} WHERE {key} = :id AND vote_type = 1 AND real)
 		WHERE id = :id
 	""", id=target["id"])

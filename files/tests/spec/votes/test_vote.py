@@ -5,7 +5,7 @@ Each user has at most one vote on each post and comment. Voting sets it: the fir
 
 A vote stores whether it is "real": the voter wasn't shadowbanned when it was set.
 
-After a change, the item's upvotes and downvotes are its +1 and -1 votes, and its "realupvotes" are its real +1 votes. The author's truescore moves by the change (from the old vote to the new one), unless the voter is the author.
+Votes by shadowbanned users don't count. After a change, the item's upvotes and downvotes are its +1 and -1 votes by users who aren't shadowbanned, and its "realupvotes" are its real +1 votes. The author's truescore moves by the change (from the old vote to the new one), unless the voter is the author or is shadowbanned.
 
 Refused, changing nothing, in this order: 401 for anonymous users; 403 for API clients; 403 for permanently suspended users (temporarily suspended users vote as anyone else); 400 for any other <vote>; 404 for an unknown item or an id that isn't one, and for a draft, or a comment on a draft, that the voter can't see (only its author and admins of level 2 and up see a draft), and for every private message, which have no scores; 403 for an item hidden from the voter, which shows them only a placeholder (removed, held for review, deleted by its author, or by a shadowbanned user; its author and the admins who see it vote on it); 403 when the voter blocks the item's author, even where they still see it (an official post; an admin). The 18+ gate doesn't stop voting.
 '''
@@ -141,6 +141,35 @@ def test_sending_the_vote_already_set_keeps_whether_it_is_real(kind):
 
 	_assert_voted(r)
 	d.assert_exactly()
+
+
+@pytest.mark.parametrize("kind", KINDS)
+@pytest.mark.parametrize("vote", [1, -1])
+def test_a_shadowbanned_users_vote_is_stored_but_moves_no_counts(kind, vote):
+	voter = factories.user(shadowbanned="somemod")
+	item = _item(kind, factories.user())
+	_, votes, _ = _TABLES[kind]
+	client = as_user(voter)
+
+	with db_diff() as d:
+		r = _vote(client, kind, item, vote)
+
+	_assert_voted(r)
+	d.assert_exactly(inserted={votes: [_vote_row(kind, voter, item, vote, real=False)]})
+
+
+@pytest.mark.parametrize("kind", KINDS)
+def test_a_shadowbanned_users_changed_vote_moves_no_counts(kind):
+	voter = factories.user(shadowbanned="somemod")
+	item = factories.vote(voter, _item(kind, factories.user()), 1)
+	_, votes, _ = _TABLES[kind]
+	client = as_user(voter)
+
+	with db_diff() as d:
+		r = _vote(client, kind, item, -1)
+
+	_assert_voted(r)
+	d.assert_exactly(updated={votes: {(item["id"], voter["id"]): {"vote_type": -1}}})
 
 
 @pytest.mark.parametrize("kind", KINDS)
