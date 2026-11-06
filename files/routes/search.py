@@ -99,7 +99,7 @@ def searchposts(v):
 
 	posts = get_posts(ids, v=v)
 
-	if request.headers.get("Authorization"): return {"total":total, "data":[x.json for x in posts]}
+	if request.headers.get("Authorization"): return {"total":total, "data":[x.json_for(v) for x in posts]}
 
 	return render_template("search.html",
 						   v=v,
