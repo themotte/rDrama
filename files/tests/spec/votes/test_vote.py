@@ -7,7 +7,7 @@ A vote stores whether it is "real": the voter wasn't shadowbanned when it was se
 
 After a change, the item's upvotes and downvotes are its +1 and -1 votes, and its "realupvotes" are its real +1 votes. The author's truescore moves by the change (from the old vote to the new one), unless the voter is the author.
 
-Refused, changing nothing, in this order: 401 for anonymous users; 403 for API clients; 403 for permanently suspended users (temporarily suspended users vote as anyone else); 400 for any other <vote>; 404 for an unknown item or an id that isn't one; 403 when the voter blocks the item's author.
+Refused, changing nothing, in this order: 401 for anonymous users; 403 for API clients; 403 for permanently suspended users (temporarily suspended users vote as anyone else); 400 for any other <vote>; 404 for an unknown item or an id that isn't one, and for a draft, or a comment on a draft, that the voter can't see (only its author and admins of level 2 and up see a draft); 403 when the voter blocks the item's author.
 '''
 import time
 
@@ -257,3 +257,41 @@ def test_voting_on_content_by_a_user_the_voter_blocks_is_refused(kind):
 
 	assert_status(r, 403)
 	d.assert_exactly()
+
+
+# Drafts
+
+def _on_draft(kind, author):
+	draft = factories.post(author, private=True)
+	return draft if kind == "post" else factories.comment(author, draft)
+
+
+@pytest.mark.parametrize("kind", KINDS)
+def test_drafts_the_voter_cant_see_are_not_found(kind):
+	item = _on_draft(kind, factories.user())
+	client = as_user(factories.user())
+
+	with db_diff() as d:
+		r = _vote(client, kind, item, 1)
+
+	assert_status(r, 404)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("kind", KINDS)
+def test_a_blocked_authors_draft_is_not_found_rather_than_refused(kind):
+	author, voter = factories.user(), factories.user()
+	db.insert("userblocks", user_id=voter["id"], target_id=author["id"])
+
+	r = _vote(as_user(voter), kind, _on_draft(kind, author), 1)
+
+	assert_status(r, 404)
+
+
+@pytest.mark.parametrize("kind", KINDS)
+@pytest.mark.parametrize("who", ["author", "admin"])
+def test_those_who_see_a_draft_vote_on_it(kind, who):
+	author = factories.user()
+	voter = author if who == "author" else factories.admin(2)
+
+	_assert_voted(_vote(as_user(voter), kind, _on_draft(kind, author), -1))

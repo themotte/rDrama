@@ -76,7 +76,10 @@ def _vote_check_request(new:str) -> int:
 	return int(new)
 
 
-def _vote_check_target(target:Union[Submission, Comment]):
+def _vote_check_target(target:Union[Submission, Comment], v:User):
+	'''Refuses votes on what `v` may not vote on: 404 where they can't open it at all, 403 where they block its author.'''
+	post = target if isinstance(target, Submission) else target.post
+	if post and post.is_draft_hidden_from(v): abort(404)
 	if getattr(target, 'is_blocking', False): abort(403, "Can't vote on things from users you've blocked")
 
 
@@ -86,7 +89,7 @@ def _vote_check_target(target:Union[Submission, Comment]):
 def api_vote_post(post_id, new, v):
 	new = _vote_check_request(new)
 	post = get_post(post_id, v=v)
-	_vote_check_target(post)
+	_vote_check_target(post, v)
 	return _vote(post, Vote, new, v)
 
 
@@ -96,5 +99,5 @@ def api_vote_post(post_id, new, v):
 def api_vote_comment(comment_id, new, v):
 	new = _vote_check_request(new)
 	comment = get_comment(comment_id, v=v)
-	_vote_check_target(comment)
+	_vote_check_target(comment, v)
 	return _vote(comment, CommentVote, new, v)
