@@ -6,6 +6,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
 from files.classes.base import CreatedBase
+from files.classes.votes import votes_shown_to
 from files.classes.visstate import StateMod, StateReport, VisibilityState
 from files.helpers.config.const import *
 from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS, SITE_FULL
@@ -80,26 +81,27 @@ class Comment(CreatedBase):
 		return comment_age_hours < SCORE_HIDING_TIME_HOURS
 	
 	def _score_context_str(self, score_type:Literal['score', 'upvotes', 'downvotes'], 
-			context:CommentRenderContext) -> str:
+			context:CommentRenderContext, v:Optional["User"]) -> str:
 		if self.is_message: return '' # don't show scores for messages
 		if context == 'volunteer': return '' # volunteer: hide scores
 		if self.should_hide_score: return '' # hide scores for new comments
 
-		if score_type == 'upvotes': return str(self.upvotes)
-		if score_type == 'score': return str(self.score)
-		if score_type == 'downvotes': return str(self.downvotes)
-		
-	@lazy
-	def upvotes_str(self, context:CommentRenderContext) -> str:
-		return self._score_context_str('upvotes', context)
-	
-	@lazy
-	def score_str(self, context:CommentRenderContext) -> str:
-		return self._score_context_str('score', context)
+		ups, downs = self.votes_shown_to(v)
+		if score_type == 'upvotes': return str(ups)
+		if score_type == 'score': return str(ups - downs)
+		if score_type == 'downvotes': return str(downs)
 
-	@lazy
-	def downvotes_str(self, context:CommentRenderContext) -> str:
-		return self._score_context_str('downvotes', context)
+	def upvotes_str(self, context:CommentRenderContext, v:Optional["User"]) -> str:
+		return self._score_context_str('upvotes', context, v)
+
+	def score_str(self, context:CommentRenderContext, v:Optional["User"]) -> str:
+		return self._score_context_str('score', context, v)
+
+	def downvotes_str(self, context:CommentRenderContext, v:Optional["User"]) -> str:
+		return self._score_context_str('downvotes', context, v)
+
+	def votes_shown_to(self, v:Optional["User"]) -> tuple[int, int]:
+		return votes_shown_to(self, v)
 
 	@property
 	@lazy
@@ -229,6 +231,9 @@ class Comment(CreatedBase):
 		'''The comment as `v` may see it, without its author and post: whole, or a stub (its place in the thread and why it's hidden) when it's hidden from them.'''
 		if self.visibility_state.is_visible_to(v):
 			data = dict(self.json_raw)
+			if 'score' in data:
+				data['upvotes'], data['downvotes'] = self.votes_shown_to(v)
+				data['score'] = data['upvotes'] - data['downvotes']
 			if self.level >= 2: data['parent_comment_id'] = self.parent_comment_id
 		else:
 			data = {

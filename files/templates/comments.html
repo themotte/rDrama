@@ -6,9 +6,9 @@
 	{%- if render_ctx is not defined -%}
 		{% set render_ctx = 'comments' %}
 	{%- endif -%}
-	{%- set ups = c.upvotes_str(render_ctx) -%}
-	{%- set score = c.score_str(render_ctx) -%}
-	{%- set downs = c.downvotes_str(render_ctx) -%}
+	{%- set ups = c.upvotes_str(render_ctx, v) -%}
+	{%- set score = c.score_str(render_ctx, v) -%}
+	{%- set downs = c.downvotes_str(render_ctx, v) -%}
 	{% set replies = c.replies(v) if render_replies else [] %}
 
 {% if not c.visibility_and_message(v)[0] %}

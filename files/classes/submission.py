@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session, declared_attr, deferred, object_session, rel
 from files.classes.base import CreatedBase
 from files.classes.flags import Flag
 from files.classes.visstate import StateMod, StateReport, VisibilityState
-from files.classes.votes import Vote
+from files.classes.votes import Vote, votes_shown_to
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.const import *
 from files.helpers.config.environment import (SCORE_HIDING_TIME_HOURS, SITE,
@@ -146,6 +146,9 @@ class Submission(CreatedBase):
 	def should_hide_score(self):
 		submission_age_hours = self.age_seconds / (60*60)
 		return submission_age_hours < SCORE_HIDING_TIME_HOURS
+
+	def votes_shown_to(self, v) -> tuple[int, int]:
+		return votes_shown_to(self, v)
 
 	@property
 	@lazy
@@ -292,6 +295,9 @@ class Submission(CreatedBase):
 		'''The post as `v` may see it: complete, or only its identity when it is hidden from them.'''
 		if not self.visibility_state.is_visible_to(v): return self.json_identity
 		data = dict(self.json_full)
+		if "score" in data:
+			data["upvotes"], data["downvotes"] = self.votes_shown_to(v)
+			data["score"] = data["upvotes"] - data["downvotes"]
 		if "replies" in self.__dict__: data["replies"] = [x.json_core_for(v) for x in self.replies if x.renders_for(v)]
 		return data
 
