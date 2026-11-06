@@ -1,4 +1,4 @@
-{% if v and v.admin_level >= 2 %}
+{% if v and v.admin_level >= 2 and not c.ghost %}
 	<a href="/votes?link={{c.fullname}}" class="btn caction nobackground px-1 text-muted"><i class="fas fa-arrows-v"></i>Votes</a>
 {% endif %}
 	<a class="btn caction nobackground px-1 text-muted" href="{{c.permalink}}"><i class="fas fa-book-open"></i>Context</a>

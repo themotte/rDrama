@@ -57,7 +57,6 @@ SYSTEM_ACCOUNT_IDS = {
 	3, 4, 5, 6, 7, 8,
 }
 
-OWNER_ID = 9
 
 LEADERBOARD_LIMIT: Final[int] = 25
 

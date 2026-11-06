@@ -1,7 +1,9 @@
 '''
 The vote-info page, for admins of level 3 and up: GET /votes shows a form, and GET /votes?link=post_<id> or link=comment_<id> shows the item's author and who voted on it: its upvoters, then its downvoters, each in the order they first voted. Voters whose vote is 0 aren't listed.
 
-The page of an anonymous post or comment is refused (403), as it would name the author. A link naming neither a post nor a comment is refused with 400; one naming an unknown post or comment, or one whose id isn't an id, is 404.
+The page of an anonymous post or comment is refused (403) to every admin, as it would name the author.
+
+Posts and comments link to their vote-info page (/votes?link=post_<id> or comment_<id>) where the viewer may open it, and not on anonymous items. A link naming neither a post nor a comment is refused with 400; one naming an unknown post or comment, or one whose id isn't an id, is 404.
 
 Anonymous visitors are sent to log in; users below level 3 and API clients are refused (403).
 '''
@@ -51,6 +53,32 @@ def test_anonymous_items_are_refused(kind):
 	r = as_user(factories.admin(3)).get("/votes", params={"link": f"{kind}_{item['id']}"})
 
 	assert_status(r, 403)
+
+
+def _page_with(kind, **overrides):
+	post = factories.post(factories.user(), **overrides)
+	item = post if kind == "post" else factories.comment(factories.user(), post)
+	return f"/post/{post['id']}", f"/votes?link={kind}_{item['id']}"
+
+
+@pytest.mark.parametrize("kind", ["post", "comment"])
+def test_items_link_to_their_vote_info_for_level_3_admins(kind):
+	page, link = _page_with(kind)
+
+	r = as_user(factories.admin(3)).get(page)
+
+	assert_status(r, 200)
+	assert_in_payload(r, link)
+
+
+@pytest.mark.parametrize("kind", ["post", "comment"])
+def test_anonymous_items_dont_link_to_their_vote_info(kind):
+	page, link = _page_with(kind, ghost=True)
+
+	r = as_user(factories.admin(3)).get(page)
+
+	assert_status(r, 200)
+	assert_not_in_payload(r, link)
 
 
 def test_a_link_naming_no_post_or_comment_is_refused():

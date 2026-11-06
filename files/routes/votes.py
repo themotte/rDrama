@@ -5,7 +5,6 @@ from files.classes.comment import Comment
 from files.classes.submission import Submission
 from files.classes.user import User
 from files.classes.votes import CommentVote, Vote
-from files.helpers.config.const import OWNER_ID
 from files.helpers.get import get_comment, get_post
 from files.helpers.wrappers import admin_level_required, is_not_permabanned
 from files.routes.importstar import *
@@ -22,7 +21,7 @@ def admin_vote_info_get(v):
 	elif "comment_" in link: thing = get_comment(link.split("comment_")[1], v=v)
 	else: abort(400)
 
-	if thing.ghost and v.id != OWNER_ID: abort(403)
+	if thing.ghost: abort(403)
 
 	if isinstance(thing, Submission):
 		ups = g.db.query(Vote).filter_by(submission_id=thing.id, vote_type=1).order_by(Vote.created_datetimez).all()
