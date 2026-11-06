@@ -45,6 +45,15 @@ def test_changelog_posts_by_every_admin_level_are_listed(level):
 	assert_in_payload(r, post["sentinel"])
 
 
+@pytest.mark.parametrize("prefix", ["{changelog}", "#changelog", "changelog:"])
+def test_other_titles_are_not_changelog_posts(prefix):
+	post = _changelog(prefix)
+
+	r = as_user(factories.user()).get("/changelog")
+
+	assert_not_in_payload(r, post["sentinel"])
+
+
 def test_changelog_titled_posts_by_others_are_not_listed():
 	post = _changelog(author=factories.user())
 

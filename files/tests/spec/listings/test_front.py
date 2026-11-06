@@ -319,6 +319,23 @@ def test_changelog_posts_are_left_out_without_a_subscription(viewer):
 	assert_not_in_payload(r, post["title"])
 
 
+@pytest.mark.parametrize("prefix", ["(changelog)", "[CHANGELOG]"])
+def test_every_changelog_title_is_left_out_without_a_subscription(prefix):
+	post = factories.post(factories.admin(1), title=f"{prefix} {factories.unique()}")
+
+	r = as_user(factories.user()).get("/")
+
+	assert_not_in_payload(r, post["title"])
+
+
+def test_changelog_titled_posts_by_others_are_listed():
+	post = factories.post(factories.user(), title=f"[changelog] {factories.unique()}")
+
+	r = as_user(factories.user()).get("/")
+
+	assert_in_payload(r, post["title"])
+
+
 def test_changelog_subscribers_get_changelog_posts():
 	post = _changelog_post()
 

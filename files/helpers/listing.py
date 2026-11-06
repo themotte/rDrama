@@ -33,6 +33,11 @@ def listable_posts(posts, v: Optional[User], *, admins_see_drafts_and_deleted: b
 	return posts
 
 
+def changelog_post():
+	'''The SQL condition for a changelog post: one by an admin (level 1 and up) whose title starts with "[changelog]" or "(changelog)", in any letter case.'''
+	return or_(Submission.title.ilike('[changelog]%'), Submission.title.ilike('(changelog)%')) & Submission.author.has(User.account_admin_level >= 1)
+
+
 def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 	posts = g.db.query(Submission)
 	
@@ -51,7 +56,7 @@ def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 		posts = posts.filter(not_(Submission.pinned))
 
 	if not (v and v.changelogsub):
-		posts = posts.filter(not_(Submission.title.ilike('[changelog]%')))
+		posts = posts.filter(not_(changelog_post()))
 
 	if v and filter_words:
 		for word in filter_words:
@@ -114,8 +119,7 @@ def userpagelisting(u:User, v=None, page=1, sort="new", t="all"):
 def changeloglist(v=None, sort="new", page=1, t="all"):
 	posts = listable_posts(g.db.query(Submission.id), v)
 
-	admins = [x[0] for x in g.db.query(User.id).filter(User.admin_level > 0).all()]
-	posts = posts.filter(Submission.title.ilike('_changelog%'), Submission.author_id.in_(admins))
+	posts = posts.filter(changelog_post())
 
 	if t != 'all':
 		posts = apply_time_filter(posts, t, Submission)
