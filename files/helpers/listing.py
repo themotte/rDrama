@@ -6,7 +6,7 @@ from typing import Optional
 
 from flask import g, request
 from sqlalchemy.sql.expression import and_, not_, or_
-from sqlalchemy import false, func
+from sqlalchemy import exists, false
 
 from files.classes.comment import Comment
 from files.classes.submission import Submission
@@ -67,13 +67,13 @@ def changelog_post():
 
 
 def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
-	posts = g.db.query(Submission)
-	
-	if v and v.hidevotedon:
-		voted = [x[0] for x in g.db.query(Vote.submission_id).filter_by(user_id=v.id).all()]
-		posts = posts.filter(Submission.id.notin_(voted))
+	def shown(posts):
+		posts = listable_posts(posts, v)
+		if v and v.hidevotedon:
+			posts = posts.filter(not_(exists().where(Vote.submission_id == Submission.id, Vote.user_id == v.id, Vote.vote_type != 0)))
+		return posts
 
-	posts = listable_posts(posts, v)
+	posts = shown(g.db.query(Submission))
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
 	if lt: posts = posts.filter(Submission.created_utc < lt)
@@ -105,7 +105,7 @@ def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 	posts = posts[:size]
 
 	if page == 1 and not gt and not lt:
-		posts = listable_posts(g.db.query(Submission).filter(Submission.pinned), v).order_by(Submission.created_utc.desc(), Submission.id.desc()).all() + posts
+		posts = shown(g.db.query(Submission).filter(Submission.pinned)).order_by(Submission.created_utc.desc(), Submission.id.desc()).all() + posts
 
 	posts = [x.id for x in posts]
 

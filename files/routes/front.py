@@ -224,8 +224,6 @@ def front_all(v):
 	posts = get_posts(ids, v=v)
 	
 	if v:
-		if v.hidevotedon: posts = [x for x in posts if not hasattr(x, 'voted') or not x.voted]
-
 		if v.unban_utc and v.unban_utc < time.time():
 			v.is_banned = 0
 			v.unban_utc = 0

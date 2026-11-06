@@ -7,7 +7,7 @@ The front page, GET / (also GET /catalog), lists posts for anyone, logged in or 
 - Pinned posts come first, above the sorted list and newest first among themselves, on the first page when neither "after" nor "before" is given; they are then left out of the sorted list on every page, so the first page still holds a full page besides them. Pins ignore the sort, the time window, filter words and the changelog subscription. With "after" or "before", pinned posts are sorted with the rest. A pin made with an expiry time stops being pinned once that time has passed.
 - Changelog posts (see test_changelog) are left out unless the viewer subscribes to the changelog.
 - Posts whose title contains one of the viewer's filter words (one per line of "custom_filter_list", in any letter case) are left out.
-- A viewer who hides what they voted on ("hidevotedon") doesn't get posts they voted up or down, pinned ones included.
+- A viewer who hides what they voted on ("hidevotedon") doesn't get posts they currently vote up or down (a vote they cleared doesn't count), pinned ones included; pages are still full.
 
 Which posts a viewer may see is in test_visibility.
 
@@ -366,6 +366,28 @@ def test_hiding_voted_posts_leaves_out_posts_voted_on(vote):
 
 	assert_not_in_payload(r, voted["title"])
 	assert_in_payload(r, other["title"])
+
+
+def test_hiding_voted_posts_keeps_posts_whose_vote_was_cleared():
+	viewer = factories.user(hidevotedon=True)
+	cleared = _post()
+	factories.vote(viewer, cleared, 1)
+	factories.vote(viewer, cleared, 0)
+
+	r = as_user(viewer).get("/")
+
+	assert_in_payload(r, cleared["title"])
+
+
+def test_hiding_voted_posts_keeps_pages_full():
+	viewer = factories.user(hidevotedon=True, frontsize=15)
+	posts = _posts_newest_first(17)
+	factories.vote(viewer, posts[0], 1)
+
+	r = as_user(viewer).get("/")
+
+	assert_in_payload(r, posts[15]["title"])
+	assert_not_in_payload(r, posts[16]["title"])
 
 
 def test_hiding_voted_posts_leaves_out_pins_voted_on():
