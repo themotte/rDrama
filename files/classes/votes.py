@@ -2,7 +2,6 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
 from files.classes.base import CreatedDateTimeBase
-from files.helpers.lazy import lazy
 
 
 class Vote(CreatedDateTimeBase):
@@ -17,28 +16,6 @@ class Vote(CreatedDateTimeBase):
 	Index('vote_user_index', user_id)
 
 	user = relationship("User", lazy="subquery", viewonly=True)
-	post = relationship("Submission", lazy="subquery", viewonly=True)
-
-	def __repr__(self):
-		return f"<{self.__class__.__name__}(id={self.id})>"
-
-	@property
-	@lazy
-	def json_core(self):
-		data={
-			"user_id": self.user_id,
-			"submission_id":self.submission_id,
-			"vote_type":self.vote_type
-			}
-		return data
-
-	@property
-	@lazy
-	def json(self):
-		data=self.json_core
-		data["user"]=self.user.json_core
-		data["post"]=self.post.json_core
-		return data
 
 
 class CommentVote(CreatedDateTimeBase):
@@ -53,25 +30,3 @@ class CommentVote(CreatedDateTimeBase):
 	Index('commentvotes_comments_type_index', vote_type)
 
 	user = relationship("User", lazy="subquery")
-	comment = relationship("Comment", lazy="subquery", viewonly=True)
-
-	def __repr__(self):
-		return f"<{self.__class__.__name__}(id={self.id})>"
-
-	@property
-	@lazy
-	def json_core(self):
-		data={
-			"user_id": self.user_id,
-			"comment_id":self.comment_id,
-			"vote_type":self.vote_type
-			}
-		return data
-
-	@property
-	@lazy
-	def json(self):
-		data=self.json_core
-		data["user"]=self.user.json_core
-		data["comment"]=self.comment.json_core_for(None)
-		return data

@@ -24,24 +24,14 @@ def admin_vote_info_get(v):
 	if thing.ghost and v.id != OWNER_ID: abort(403)
 
 	if isinstance(thing, Submission):
-		if thing.author.shadowbanned and not (v and v.admin_level):
-			thing_id = g.db.query(Submission.id).filter_by(upvotes=thing.upvotes, downvotes=thing.downvotes).order_by(Submission.id).first()[0]
-		else: thing_id = thing.id
+		ups = g.db.query(Vote).filter_by(submission_id=thing.id, vote_type=1).order_by(Vote.created_datetimez).all()
 
-		ups = g.db.query(Vote).filter_by(submission_id=thing_id, vote_type=1).order_by(Vote.created_datetimez).all()
+		downs = g.db.query(Vote).filter_by(submission_id=thing.id, vote_type=-1).order_by(Vote.created_datetimez).all()
 
-		downs = g.db.query(Vote).filter_by(submission_id=thing_id, vote_type=-1).order_by(Vote.created_datetimez).all()
+	else:
+		ups = g.db.query(CommentVote).filter_by(comment_id=thing.id, vote_type=1).order_by(CommentVote.created_datetimez).all()
 
-	elif isinstance(thing, Comment):
-		if thing.author.shadowbanned and not (v and v.admin_level):
-			thing_id = g.db.query(Comment.id).filter_by(upvotes=thing.upvotes, downvotes=thing.downvotes).order_by(Comment.id).first()[0]
-		else: thing_id = thing.id
-
-		ups = g.db.query(CommentVote).filter_by(comment_id=thing_id, vote_type=1).order_by(CommentVote.created_datetimez).all()
-
-		downs = g.db.query(CommentVote).filter_by(comment_id=thing_id, vote_type=-1 ).order_by(CommentVote.created_datetimez).all()
-
-	else: abort(400)
+		downs = g.db.query(CommentVote).filter_by(comment_id=thing.id, vote_type=-1 ).order_by(CommentVote.created_datetimez).all()
 
 	return render_template("votes.html",
 						   v=v,
