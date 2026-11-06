@@ -203,22 +203,12 @@ def notifications_messages(v: User):
 @app.get("/catalog")
 @limiter.limit("3/second;30/minute;1000/hour;5000/day")
 @auth_desired
-def front_all(v, subdomain=None):
-	if g.webview and not session.get("session_id"):
-		session["session_id"] = secrets.token_hex(49)
-
+def front_all(v):
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: abort(400)
 
-	if v:
-		defaultsorting = v.defaultsorting
-		defaulttime = 'all'
-	else:
-		defaultsorting = "new"
-		defaulttime = 'all'
-
-	sort=request.values.get("sort", defaultsorting)
-	t=request.values.get('t', defaulttime)
+	sort=request.values.get("sort", v.defaultsorting if v else "new")
+	t=request.values.get('t', 'all')
 
 	try: gt=int(request.values.get("after", 0))
 	except: gt=0

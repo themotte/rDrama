@@ -23,7 +23,7 @@ USERPAGELISTING_TIMEOUT_SECS: Final[int] = 86400
 CHANGELOGLIST_TIMEOUT_SECS: Final[int] = 86400
 
 @cache.memoize(timeout=FRONTLIST_TIMEOUT_SECS)
-def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, filter_words='', gt=0, lt=0):
+def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 	posts = g.db.query(Submission)
 	
 	if v and v.hidevotedon:
@@ -88,7 +88,7 @@ def frontlist(v=None, sort='new', page=1, t="all", ids_only=True, filter_words='
 
 		posts = pins + posts
 
-	if ids_only: posts = [x.id for x in posts]
+	posts = [x.id for x in posts]
 
 	g.db.commit()
 

@@ -65,14 +65,14 @@
 	<ul class="pagination pagination-sm mb-0">
 		{% if page>1 %}
 		<li class="page-item">
-			<small><a class="page-link" href="?sort={{sort}}&page={{page-1}}&t={{t}}{% if only %}&only={{only}}{% endif %}" tabindex="-1">Prev</a></small>
+			<small><a class="page-link" href="?sort={{sort}}&page={{page-1}}&t={{t}}" tabindex="-1">Prev</a></small>
 		</li>
 		{% else %}
 		<li class="page-item disabled"><span class="page-link">Prev</span></li>
 		{% endif %}
 		{% if next_exists %}
 		<li class="page-item">
-			<small><a class="page-link" href="?sort={{sort}}&page={{page+1}}&t={{t}}{% if only %}&only={{only}}{% endif %}">Next</a></small>
+			<small><a class="page-link" href="?sort={{sort}}&page={{page+1}}&t={{t}}">Next</a></small>
 		</li>
 		{% else %}
 		<li class="page-item disabled"><span class="page-link">Next</span></li>

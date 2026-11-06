@@ -45,16 +45,14 @@ def searchposts(v):
 
 	posts = g.db.query(Submission.id)
 	
-	if v and v.admin_level < 2:
+	if v.admin_level < 2:
 		posts = posts.filter(Submission.state_user_deleted_utc == None, Submission.state_mod == StateMod.VISIBLE, Submission.private == False, Submission.author_id.notin_(v.userblocks))
-	elif not v:
-		posts = posts.filter(Submission.state_user_deleted_utc == None, Submission.state_mod == StateMod.VISIBLE, Submission.private == False)
 	
 
 	if 'author' in criteria:
 		posts = posts.filter(Submission.ghost == False)
 		author = get_user(criteria['author'])
-		if author.is_private and (not v or (author.id != v.id and v.admin_level < 2)):
+		if author.is_private and author.id != v.id and v.admin_level < 2:
 			if request.headers.get("Authorization"):
 				abort(403, f"@{author.username}'s profile is private; You can't use the 'author' syntax on them")
 			return render_template("search.html",
@@ -84,22 +82,7 @@ def searchposts(v):
 
 		domain = sql_ilike_clean(domain)
 
-		posts=posts.filter(
-			or_(
-				Submission.url.ilike("https://"+domain+'/%'),
-				Submission.url.ilike("https://"+domain+'/%'),
-				Submission.url.ilike("https://"+domain),
-				Submission.url.ilike("https://"+domain),
-				Submission.url.ilike("https://www."+domain+'/%'),
-				Submission.url.ilike("https://www."+domain+'/%'),
-				Submission.url.ilike("https://www."+domain),
-				Submission.url.ilike("https://www."+domain),
-				Submission.url.ilike("https://old." + domain + '/%'),
-				Submission.url.ilike("https://old." + domain + '/%'),
-				Submission.url.ilike("https://old." + domain),
-				Submission.url.ilike("https://old." + domain)
-				)
-			)
+		posts=posts.filter(or_(*(Submission.url.ilike(f"https://{prefix}{domain}{rest}") for prefix in ("", "www.", "old.") for rest in ("", "/%"))))
 
 	if t:
 		posts = apply_time_filter(posts, t, Submission)
@@ -151,7 +134,7 @@ def searchcomments(v):
 	if 'author' in criteria:
 		comments = comments.filter(Comment.ghost == False)
 		author = get_user(criteria['author'])
-		if author.is_private and (not v or (author.id != v.id and v.admin_level < 2)):
+		if author.is_private and author.id != v.id and v.admin_level < 2:
 			if request.headers.get("Authorization"):
 				abort(403, f"@{author.username}'s profile is private; You can't use the 'author' syntax on them")
 
@@ -170,12 +153,9 @@ def searchcomments(v):
 	if t:
 		comments = apply_time_filter(comments, t, Comment)
 
-	if v and v.admin_level < 2:
+	if v.admin_level < 2:
 		comments = comments.join(Submission, Comment.parent_submission == Submission.id)
 		comments = comments.filter(Comment.author_id.notin_(v.userblocks), Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, Submission.private == False)
-	elif not v:
-		comments = comments.join(Submission, Comment.parent_submission == Submission.id)
-		comments = comments.filter(Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, Submission.private == False)
 
 	total = comments.count()
 
