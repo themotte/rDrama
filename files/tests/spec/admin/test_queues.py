@@ -5,6 +5,8 @@ The moderation queues, admin pages listing posts or comments 25 to a page, newes
 - GET /admin/removed/posts and /admin/removed/comments: items a moderator removed, and every item by a shadowbanned author.
 - GET /admin/image_posts: posts whose link is an image: the URL ends (case-insensitively) in .webp, .jpg, .jpeg, .png or .gif, or in "?maxwidth=9999" or "&fidelity=high", and points at the site itself (a path, or the site's own URL) or at an approved embedding host over https.
 
+The queues show 18+ items whole, whether or not the admin confirmed their age.
+
 POST /admin/update_filter_status settles one item from a queue. Its JSON body names the item ("post_id" or "comment_id") and a "new_status": "normal" makes it visible, "removed" removes it, both resolving its reports; "ignored" only marks its reports ignored. Changing whether others can see the item is logged in the mod log and has the item's usual effects (approving a held post notifies the users it mentions and the author's followers). The reply is JSON whose "result" the page script compares against "Update successful". A body that isn't a JSON object, an unknown "new_status" or an item id that isn't a whole number (a JSON integer or a string of digits) is refused with 400; a missing or unknown item is 404. An invalid "page" (not a number, or below 1) shows the first page.
 '''
 import pytest
@@ -60,6 +62,23 @@ def test_queue_omits_other_items(queue, state):
 	assert_html(r, 200)
 	assert_in_payload(r, listed)
 	assert_not_in_payload(r, token)
+
+
+@pytest.mark.parametrize("queue", QUEUES)
+def test_queues_show_18_plus_items_whole_to_admins_who_have_not_confirmed_their_age(queue):
+	state = QUEUES[queue][0][0]
+	overrides = {} if state == SHADOWBANNED else state
+	author = factories.user(shadowbanned="somemod") if state == SHADOWBANNED else factories.user()
+	text = factories.unique()
+	if queue.endswith("/posts"):
+		factories.post(author, body=text, over_18=True, **overrides)
+	else:
+		factories.comment(author, factories.post(factories.user(), over_18=True), body=text, **overrides)
+
+	r = as_user(factories.admin(2, over_18=False)).get(queue)
+
+	assert_html(r, 200)
+	assert_in_payload(r, text)
 
 
 @pytest.mark.parametrize("queue", QUEUES)

@@ -66,7 +66,7 @@ def feeds_front(sort='new', t='all'):
 
 				doc.stag("media:thumbnail", url=image_url)
 
-				if len(post.body_html):
+				if len(post.body_html) and not post.over_18:
 					with tag("content", type="html"):
 						doc.cdata(f'''<img alt="{post.realtitle(None)}" loading="lazy" src="{image_url}"><br>{post.realbody(None)}''')
 

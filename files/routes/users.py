@@ -344,7 +344,7 @@ def u_username(username, v=None):
 
 	listing = get_posts(ids, v=v)
 
-	if request.headers.get("Authorization"): return {"data": [x.json_for(v) for x in listing]}
+	if request.headers.get("Authorization"): return {"data": [listings.post_json_for(x, v) for x in listing]}
 	return render_template("userpage_submissions.html",
 									u=u,
 									v=v,
@@ -546,7 +546,7 @@ def saved_posts(v, username):
 
 	listing = get_posts(ids, v=v)
 
-	if request.headers.get("Authorization"): return {"data": [x.json_for(v) for x in listing]}
+	if request.headers.get("Authorization"): return {"data": [listings.post_json_for(x, v) for x in listing]}
 	return render_template(
 		"userpage_submissions.html",
 		u=v,

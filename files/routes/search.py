@@ -2,7 +2,7 @@ from sqlalchemy import *
 
 from files.__main__ import app, limiter, is_known_bot
 from files.helpers.contentsorting import apply_time_filter, sort_objects
-from files.helpers.listing import listable_comments, listable_posts
+from files.helpers.listing import listable_comments, listable_posts, post_json_for
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import *
 from files.routes.importstar import *
@@ -99,7 +99,7 @@ def searchposts(v):
 
 	posts = get_posts(ids, v=v)
 
-	if request.headers.get("Authorization"): return {"total":total, "data":[x.json_for(v) for x in posts]}
+	if request.headers.get("Authorization"): return {"total":total, "data":[post_json_for(x, v) for x in posts]}
 
 	return render_template("search.html",
 						   v=v,

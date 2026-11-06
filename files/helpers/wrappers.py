@@ -67,6 +67,7 @@ def check_ban_evade(v):
 		g.db.commit()
 
 
+@app.template_global()
 def age_unconfirmed(post, v) -> bool:
 	'''Whether the 18+ `post` must wait for the viewer to confirm their age: they're not an 18+ user and haven't confirmed recently.'''
 	return post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time())

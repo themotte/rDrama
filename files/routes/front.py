@@ -234,7 +234,7 @@ def front_all(v):
 			g.db.add(v)
 			g.db.commit()
 
-	if request.headers.get("Authorization"): return {"data": [x.json_for(v) for x in posts], "next_exists": next_exists}
+	if request.headers.get("Authorization"): return {"data": [listing.post_json_for(x, v) for x in posts], "next_exists": next_exists}
 	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, home=True)
 
 
@@ -258,7 +258,7 @@ def changelog(v):
 
 	posts = get_posts(ids, v=v)
 
-	if request.headers.get("Authorization"): return {"data": [x.json_for(v) for x in posts], "next_exists": next_exists}
+	if request.headers.get("Authorization"): return {"data": [listing.post_json_for(x, v) for x in posts], "next_exists": next_exists}
 	return render_template("changelog.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 
 

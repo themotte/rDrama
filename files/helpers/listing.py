@@ -16,6 +16,7 @@ from files.classes.votes import Vote
 from files.helpers.config.const import PERMS
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.strings import sql_ilike_clean
+from files.helpers.wrappers import age_unconfirmed
 
 
 def _listable(items, cls, not_draft, v: Optional[User], admins_see_drafts_and_deleted: bool):
@@ -46,6 +47,12 @@ def listable_comments(comments, v: Optional[User], *, admins_see_drafts_and_dele
 	'''`comments` (a query over comments) narrowed to comments on posts that `v` could read in their threads, by the rule of `listable_posts`; comments on drafts count as drafts.'''
 	comments = comments.filter(Comment.parent_submission != None)
 	return _listable(comments, Comment, Comment.post.has(Submission.private == False), v, admins_see_drafts_and_deleted)
+
+
+def post_json_for(post: Submission, v: Optional[User]) -> dict:
+	'''A listed post's JSON as `v` may see it: its own (json_for), or only its identity while it's an 18+ post `v` hasn't confirmed their age for.'''
+	if age_unconfirmed(post, v): return {**post.json_identity, "is_nsfw": True}
+	return post.json_for(v)
 
 
 def changelog_post():
