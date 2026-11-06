@@ -1,7 +1,7 @@
 '''
 The vote-info page, for admins of level 3 and up: GET /votes shows a form, and GET /votes?link=post_<id> or link=comment_<id> shows the item's author and who voted on it: its upvoters, then its downvoters, each in the order they first voted. Voters whose vote is 0 aren't listed.
 
-The page of an anonymous post or comment is refused (403), as it would name the author. A link naming neither a post nor a comment is refused with 400.
+The page of an anonymous post or comment is refused (403), as it would name the author. A link naming neither a post nor a comment is refused with 400; one naming an unknown post or comment, or one whose id isn't an id, is 404.
 
 Anonymous visitors are sent to log in; users below level 3 and API clients are refused (403).
 '''
@@ -57,6 +57,17 @@ def test_a_link_naming_no_post_or_comment_is_refused():
 	r = as_user(factories.admin(3)).get("/votes", params={"link": factories.unique()})
 
 	assert_status(r, 400)
+
+
+@pytest.mark.parametrize("kind", ["post", "comment"])
+@pytest.mark.parametrize("which", ["unknown", "not an id"])
+def test_links_to_unknown_items_are_not_found(kind, which):
+	table = "submissions" if kind == "post" else "comments"
+	item_id = db.execute(f"SELECT nextval('{table}_id_seq')") if which == "unknown" else "abc"
+
+	r = as_user(factories.admin(3)).get("/votes", params={"link": f"{kind}_{item_id}"})
+
+	assert_status(r, 404)
 
 
 def test_anonymous_visitors_are_sent_to_log_in():

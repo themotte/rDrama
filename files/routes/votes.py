@@ -18,11 +18,9 @@ def admin_vote_info_get(v):
 	link = request.values.get("link")
 	if not link: return render_template("votes.html", v=v)
 
-	try:
-		if "post_" in link: thing = get_post(link.split("post_")[1], v=v)
-		elif "comment_" in link: thing = get_comment(link.split("comment_")[1], v=v)
-		else: abort(400)
-	except: abort(400)
+	if "post_" in link: thing = get_post(link.split("post_")[1], v=v)
+	elif "comment_" in link: thing = get_comment(link.split("comment_")[1], v=v)
+	else: abort(400)
 
 	if thing.ghost and v.id != OWNER_ID: abort(403)
 
