@@ -347,12 +347,10 @@ class Comment(CreatedBase):
 		Returns data used to modify how to show the vote buttons.
 
 		:returns: A number between `-2` and `1`. `-2` is returned if `v` is 
-		`None`. `1` is returned if the user is the comment author.
-		Otherwise, a value of `-1` (downvote),` 0` (no vote or no data), or `1`
+		`None`. Otherwise, a value of `-1` (downvote),` 0` (no vote or no data), or `1`
 		(upvote) is returned.
 		'''
 		if not v: return -2
-		if v.id == self.author_id: return 1
 		return getattr(self, 'voted', 0)
 
 	@lazy
