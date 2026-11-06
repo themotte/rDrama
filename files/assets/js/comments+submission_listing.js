@@ -134,7 +134,7 @@ document.addEventListener("click", function(){
 	else document.querySelectorAll('.popover').forEach(e => e.remove());
 });
 
-function vote(type, id, dir, vid) {
+function vote(type, id, dir) {
 	const upvotes = document.getElementsByClassName(type + '-' + id + '-up');
 	const downvotes = document.getElementsByClassName(type + '-' + id + '-down');
 	const scoretexts = document.getElementsByClassName(type + '-score-' + id);
@@ -145,7 +145,6 @@ function vote(type, id, dir, vid) {
 	}
 
 	// The arrows and score update optimistically below; keep enough state to put them back if the request fails.
-	const title = (vid && ['1','9'].includes(vid)) ? document.getElementById(id+'-title') : null;
 	const snapshot = {
 		elements: Array.from(upvotes, (upvote, i) => ({
 			upvote: upvote.className,
@@ -153,7 +152,6 @@ function vote(type, id, dir, vid) {
 			scoretext: scoretexts[i].className,
 			score: scoretexts[i].textContent,
 		})),
-		titleVisited: title ? title.classList.contains('visited') : false,
 	};
 
 	for (let i=0; i<upvotes.length; i++) {
@@ -170,7 +168,6 @@ function vote(type, id, dir, vid) {
 					scoretext.textContent = score - 1
 				}
 				votedirection = "0"
-				if (vid && ['1','9'].includes(vid)) document.getElementById(id+'-title').classList.remove('visited')
 			} else if (downvote.classList.contains('active')) {
 				upvote.classList.add('active')
 				downvote.classList.remove('active')
@@ -184,7 +181,6 @@ function vote(type, id, dir, vid) {
 					scoretext.textContent = score + 1
 				}
 				votedirection = "1"
-				if (vid && ['1','9'].includes(vid)) document.getElementById(id+'-title').classList.add('visited')
 			}
 
 			if (upvote.classList.contains('active')) {
@@ -208,7 +204,6 @@ function vote(type, id, dir, vid) {
 					scoretext.textContent = score + 1
 				}
 				votedirection = "0"
-				if (vid && ['1','9'].includes(vid)) document.getElementById(id+'-title').classList.remove('visited')
 			} else if (upvote.classList.contains('active')) {
 				downvote.classList.add('active')
 				upvote.classList.remove('active')
@@ -222,7 +217,6 @@ function vote(type, id, dir, vid) {
 					scoretext.textContent = score - 1
 				}
 				votedirection = "-1"
-				if (vid && ['1','9'].includes(vid)) document.getElementById(id+'-title').classList.add('visited')
 			}
 
 			if (upvote.classList.contains('active')) {
@@ -249,7 +243,6 @@ function vote(type, id, dir, vid) {
 			scoretexts[i].className = saved.scoretext;
 			scoretexts[i].textContent = saved.score;
 		});
-		if (title) title.classList.toggle('visited', snapshot.titleVisited);
 	}
 
 	const xhr = new XMLHttpRequest();
