@@ -112,10 +112,7 @@ def userpagelisting(u:User, v=None, page=1, sort="new", t="all"):
 
 
 def changeloglist(v=None, sort="new", page=1, t="all"):
-	posts = g.db.query(Submission.id).filter_by(state_mod=StateMod.VISIBLE, private=False,).filter(Submission.state_user_deleted_utc == None)
-
-	if v.admin_level < 2:
-		posts = posts.filter(Submission.author_id.notin_(v.userblocks))
+	posts = listable_posts(g.db.query(Submission.id), v)
 
 	admins = [x[0] for x in g.db.query(User.id).filter(User.admin_level > 0).all()]
 	posts = posts.filter(Submission.title.ilike('_changelog%'), Submission.author_id.in_(admins))

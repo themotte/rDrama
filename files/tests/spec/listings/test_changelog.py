@@ -1,7 +1,7 @@
 '''
 GET /changelog lists the changelog posts, for logged-in users only (others are sent to log in).
 
-A changelog post is a post by an admin (level 1 and up) whose title starts with "[changelog]" or "(changelog)", in any letter case. The listing takes "page", "sort" and "t" as the front page does (test_front), 25 posts to a page, newest first by default. Removed and filtered changelog posts, deleted ones and drafts are left out, as are those by users the viewer blocks.
+A changelog post is a post by an admin (level 1 and up) whose title starts with "[changelog]" or "(changelog)", in any letter case. The listing takes "page", "sort" and "t" as the front page does (test_front), 25 posts to a page, newest first by default. Removed and filtered changelog posts are left out except for their authors and admins from level 2; deleted ones and drafts are left out for everyone, as are those by users the viewer blocks (except for admins from level 2).
 
 The front page leaves changelog posts out unless the viewer subscribes (test_front).
 
@@ -73,6 +73,17 @@ def test_hidden_changelog_posts_are_left_out(state):
 	r = as_user(factories.user()).get("/changelog")
 
 	assert_not_in_payload(r, post["sentinel"])
+
+
+@pytest.mark.parametrize("state", [{"state_mod": "REMOVED", "state_mod_set_by": "somemod"}, {"state_mod": "FILTERED"}])
+@pytest.mark.parametrize("viewer", ["author", "admin"])
+def test_hidden_changelog_posts_are_listed_for_their_authors_and_admins(state, viewer):
+	author = factories.admin(1)
+	post = _changelog(author=author, **state)
+
+	r = as_user(author if viewer == "author" else factories.admin(2)).get("/changelog")
+
+	assert_in_payload(r, post["sentinel"])
 
 
 @pytest.mark.parametrize("state", [{"state_user_deleted_utc": "2020-01-01T00:00:00Z"}, {"private": True}])
