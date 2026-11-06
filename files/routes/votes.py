@@ -1,6 +1,9 @@
+from typing import Type, Union
+
 from files.__main__ import app, limiter
 from files.classes.comment import Comment
 from files.classes.submission import Submission
+from files.classes.user import User
 from files.classes.votes import CommentVote, Vote
 from files.helpers.config.const import OWNER_ID
 from files.helpers.get import get_comment, get_post
@@ -40,131 +43,61 @@ def admin_vote_info_get(v):
 						   downs=downs)
 
 
+def _vote(target:Union[Submission, Comment], vote_cls:Union[Type[Vote], Type[CommentVote]], new:int, v:User):
+	'''Sets `v`'s vote on `target` to `new` (1, 0 or -1), moving the author's truescore by the change unless `v` is the author, and recounts the target's votes.'''
+	target_key = vote_cls.submission_id if vote_cls is Vote else vote_cls.comment_id
+	vote = g.db.query(vote_cls).filter(vote_cls.user_id == v.id, target_key == target.id).one_or_none()
+	if vote and vote.vote_type == new: return "", 204
+
+	points_matter = v.id != target.author.id
+	if not vote:
+		vote = vote_cls(user_id=v.id, vote_type=new, **{target_key.key: target.id})
+	elif points_matter:
+		target.author.truescore -= vote.vote_type
+	vote.vote_type = new
+	# Permanently suspended users can't vote at all
+	vote.real = not v.shadowbanned
+	if points_matter:
+		target.author.truescore += new
+	g.db.add(target.author)
+	g.db.add(vote)
+
+	g.db.flush()
+	counts = g.db.query(vote_cls).filter(target_key == target.id)
+	target.upvotes = counts.filter(vote_cls.vote_type == 1).count()
+	target.downvotes = counts.filter(vote_cls.vote_type == -1).count()
+	target.realupvotes = counts.filter(vote_cls.vote_type == 1, vote_cls.real == True).count()
+	g.db.add(target)
+	g.db.commit()
+	return "", 204
+
+
+def _vote_check_request(new:str) -> int:
+	'''The vote a request asks for, refusing API clients and anything but 1, 0 and -1.'''
+	if request.headers.get("Authorization"): abort(403)
+	if new not in ["-1", "0", "1"]: abort(400)
+	return int(new)
+
+
+def _vote_check_target(target:Union[Submission, Comment]):
+	if getattr(target, 'is_blocking', False): abort(403, "Can't vote on things from users you've blocked")
+
 
 @app.post("/vote/post/<post_id>/<new>")
 @limiter.limit("5/second;60/minute;600/hour;1000/day")
 @is_not_permabanned
 def api_vote_post(post_id, new, v):
-	# make sure this account is not a bot
-	if request.headers.get("Authorization"): abort(403)
-
-	# make sure new is valid
-	if new not in ["-1", "0", "1"]: abort(400)
-	new = int(new)
-
-	# get the post
+	new = _vote_check_request(new)
 	post = get_post(post_id, v=v)
-	if getattr(post, 'is_blocking', False): abort(403, "Can't vote on things from users you've blocked")
+	_vote_check_target(post)
+	return _vote(post, Vote, new, v)
 
-	# get the old vote, if we have one
-	vote = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
-
-	# should we just do nothing? we could just do nothing
-	if vote and vote.vote_type == new: return "", 204
-
-	# at this point we are guaranteed to be making a change
-
-	# author votes don't matter if it's the author themselves
-	points_matter = (v.id != post.author.id)
-
-	if vote:
-		# remove the old score data
-		if points_matter:
-			post.author.truescore -= vote.vote_type
-			# we'll be saving later anyway, so don't bother doing so here
-	else:
-		# create new vote data
-		vote = Vote(
-						user_id=v.id,
-						vote_type=new,
-						submission_id=post_id,
-					)
-	
-	# update the vote data
-	vote.vote_type = new
-
-	real = True
-	if v.shadowbanned: real = False
-	if v.is_banned and not v.unban_utc: real = False
-	vote.real = real
-
-	# add relevant points
-	if points_matter:
-		post.author.truescore += vote.vote_type
-	
-	# database it up
-	g.db.add(post.author)
-	g.db.add(vote)
-	
-	# update post stats (this is horrendously slow?!)
-	g.db.flush()
-	post.upvotes = g.db.query(Vote.submission_id).filter_by(submission_id=post.id, vote_type=1).count()
-	post.downvotes = g.db.query(Vote.submission_id).filter_by(submission_id=post.id, vote_type=-1).count()
-	post.realupvotes = g.db.query(Vote.submission_id).filter_by(submission_id=post.id, vote_type=1, real=True).count()
-	g.db.add(post)
-	g.db.commit()
-	return "", 204
 
 @app.post("/vote/comment/<comment_id>/<new>")
 @limiter.limit("5/second;60/minute;600/hour;1000/day")
 @is_not_permabanned
 def api_vote_comment(comment_id, new, v):
-	# make sure this account is not a bot
-	if request.headers.get("Authorization"): abort(403)
-
-	# make sure new is valid
-	if new not in ["-1", "0", "1"]: abort(400)
-	new = int(new)
-
-	# get the comment
+	new = _vote_check_request(new)
 	comment = get_comment(comment_id, v=v)
-	if getattr(comment, 'is_blocking', False): abort(403, "Can't vote on things from users you've blocked")
-
-	# get the old vote, if we have one
-	vote = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
-
-	# should we just do nothing? we could just do nothing
-	if vote and vote.vote_type == new: return "", 204
-
-	# at this point we are guaranteed to be making a change
-
-	# author votes don't matter if it's the author themselves
-	points_matter = (v.id != comment.author.id)
-
-	if vote:
-		# remove the old score data
-		if points_matter:
-			comment.author.truescore -= vote.vote_type
-			# we'll be saving later anyway, so don't bother doing so here
-	else:
-		# create new vote data
-		vote = CommentVote(
-						user_id=v.id,
-						vote_type=new,
-						comment_id=comment_id,
-					)
-	
-	# update the vote data
-	vote.vote_type = new
-
-	real = True
-	if v.shadowbanned: real = False
-	if v.is_banned and not v.unban_utc: real = False
-	vote.real = real
-
-	# add relevant points
-	if points_matter:
-		comment.author.truescore += vote.vote_type
-	
-	# database it up
-	g.db.add(comment.author)
-	g.db.add(vote)
-	
-	# update comment stats (this is horrendously slow?!)
-	g.db.flush()
-	comment.upvotes = g.db.query(CommentVote.comment_id).filter_by(comment_id=comment.id, vote_type=1).count()
-	comment.downvotes = g.db.query(CommentVote.comment_id).filter_by(comment_id=comment.id, vote_type=-1).count()
-	comment.realupvotes = g.db.query(CommentVote.comment_id).filter_by(comment_id=comment.id, vote_type=1, real=True).count()
-	g.db.add(comment)
-	g.db.commit()
-	return "", 204
+	_vote_check_target(comment)
+	return _vote(comment, CommentVote, new, v)
