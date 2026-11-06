@@ -127,9 +127,13 @@ def request_time_filter() -> str:
 	return t if t in TIME_FILTERS else "all"
 
 
+# Further than any listing reaches, and near enough that its offset stays within what the database can count to
+_PAGE_LIMIT = 2**31
+
+
 def request_page() -> int:
 	'''The listing page the request asks for ("page"); anything but a whole number from 1 means the first.'''
-	try: return max(1, int(request.values.get("page", 1)))
+	try: return min(max(1, int(request.values.get("page", 1))), _PAGE_LIMIT)
 	except ValueError: return 1
 
 

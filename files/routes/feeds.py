@@ -14,8 +14,7 @@ from files.helpers.wrappers import *
 @app.get('/feed')
 @app.get('/rss/<sort>/<t>')
 def feeds_front(sort='new', t='all'):
-	try: page = max(int(request.values.get("page", 1)), 1)
-	except: page = 1
+	page = listing.request_page()
 
 	ids, next_exists = listing.frontlist(
 		sort=sort,

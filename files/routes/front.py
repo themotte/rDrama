@@ -200,8 +200,7 @@ def notifications_messages(v: User):
 @limiter.limit("3/second;30/minute;1000/hour;5000/day")
 @auth_desired
 def front_all(v):
-	try: page = max(int(request.values.get("page", 1)), 1)
-	except: abort(400)
+	page = listing.request_page()
 
 	sort = listing.request_sort(v.defaultsorting if v and v.defaultsorting in SORTS_POSTS else "new")
 	t = listing.request_time_filter()
@@ -239,8 +238,7 @@ def front_all(v):
 @app.get("/changelog")
 @auth_required
 def changelog(v):
-	try: page = max(int(request.values.get("page", 1)), 1)
-	except: page = 1
+	page = listing.request_page()
 
 	sort = listing.request_sort("new")
 	t = listing.request_time_filter()
@@ -283,7 +281,7 @@ def random_user():
 @app.get("/comments")
 @auth_required
 def all_comments(v):
-	page = max(request.values.get("page", 1, int), 1)
+	page = listing.request_page()
 	sort = listing.request_sort("new")
 	time_filter = listing.request_time_filter()
 	time_gt = request.values.get("after", 0, int)

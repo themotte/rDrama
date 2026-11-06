@@ -11,6 +11,7 @@ from files.helpers.alerts import *
 from files.helpers.captcha import validate_captcha
 from files.helpers.config.const import *
 from files.helpers.config.environment import HCAPTCHA_SECRET, HCAPTCHA_SITEKEY, IMAGES_DIR
+from files.helpers.listing import request_page
 from files.helpers.media import new_image_path, process_image
 from files.mail import *
 from files.__main__ import app, cache, limiter # violates isort but used to prevent getting shadowed
@@ -201,8 +202,7 @@ def admins(v):
 @app.get("/modlog")
 @auth_desired
 def log(v):
-	try: page = max(int(request.values.get("page", 1)), 1)
-	except: page = 1
+	page = request_page()
 
 	admin = request.values.get("admin")
 	if admin: admin_id = get_id(admin)

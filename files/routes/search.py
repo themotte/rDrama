@@ -2,7 +2,7 @@ from sqlalchemy import *
 
 from files.__main__ import app, limiter, is_known_bot
 from files.helpers.contentsorting import apply_time_filter, sort_objects
-from files.helpers.listing import comment_json_for, listable_comments, listable_posts, post_json_for, request_sort, request_time_filter
+from files.helpers.listing import comment_json_for, listable_comments, listable_posts, post_json_for, request_page, request_sort, request_time_filter
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import *
 from files.routes.importstar import *
@@ -35,8 +35,7 @@ def searchposts(v):
 		abort(403)
 	query = request.values.get("q", '').strip()
 
-	try: page = max(1, int(request.values.get("page", 1)))
-	except: page = 1
+	page = request_page()
 
 	sort = request_sort("new")
 	t = request_time_filter()
@@ -119,8 +118,7 @@ def searchcomments(v):
 		abort(403)
 	query = request.values.get("q", '').strip()
 
-	try: page = max(1, int(request.values.get("page", 1)))
-	except: page = 1
+	page = request_page()
 
 	sort = request_sort("new")
 	t = request_time_filter()
@@ -175,8 +173,7 @@ def searchusers(v):
 		abort(403)
 	query = request.values.get("q", '').strip()
 
-	try: page = max(1, int(request.values.get("page", 1)))
-	except: page = 1
+	page = request_page()
 	sort = request_sort("new")
 	t = request_time_filter()
 	term=query.lstrip('@')

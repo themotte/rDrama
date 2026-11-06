@@ -5,6 +5,7 @@ from files.classes import *
 from files.helpers.alerts import *
 from files.helpers.config.const import *
 from files.helpers.get import *
+from files.helpers.listing import request_page
 from files.helpers.wrappers import *
 from files.routes.importstar import *
 
@@ -206,7 +207,7 @@ def admin_app_reject(v, aid):
 def admin_app_id(v, aid):
 	oauth = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
-	pids=oauth.idlist(page=int(request.values.get("page",1)))
+	pids=oauth.idlist(page=request_page())
 
 	next_exists=len(pids)==101
 	pids=pids[:100]
@@ -225,7 +226,7 @@ def admin_app_id(v, aid):
 def admin_app_id_comments(v, aid):
 	oauth = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
-	cids=oauth.comments_idlist(page=int(request.values.get("page",1)))
+	cids=oauth.comments_idlist(page=request_page())
 
 	next_exists=len(cids)==101
 	cids=cids[:100]
