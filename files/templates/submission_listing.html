@@ -73,7 +73,7 @@
 		</div>
 	{% endif %}
 
-	<div id="post-{{p.id}}" class="card{% if p.state_mod == StateMod.REMOVED %} removed{% endif %}{% if p.state_mod == StateMod.FILTERED %} filtered{% endif %}{% if p.state_user_deleted_utc %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}">
+	<div id="post-{{p.id}}" class="card{% if p.state_mod == StateMod.REMOVED %} removed{% endif %}{% if p.state_mod == StateMod.FILTERED %} filtered{% endif %}{% if p.state_user_deleted_utc %} deleted{% endif %}{% if p.pinned %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}">
 
 		<div class="d-flex flex-row flex-nowrap justify-content-end align-items-center">
 
@@ -160,7 +160,7 @@
 							<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{p.author.shadowbanned}}"></i>
 						{% endif %}
 
-						{% if p.stickied %}
+						{% if p.pinned %}
 							<i id='pinned-{{p.id}}' class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned by @{{p.stickied}}" {% if p.stickied_utc %}onmouseover="pinned_timestamp('pinned-{{p.id}}')" data-timestamp={{p.stickied_utc}} {% endif %}></i>
 						{% endif %}
 

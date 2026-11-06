@@ -242,7 +242,7 @@ def test_pinned_changelog_posts_show_without_a_subscription():
 
 
 def test_a_pin_within_its_time_is_pinned():
-	pinned = _post(stickied="someadmin", stickied_utc=NOW + 3600, created_utc=NOW - 7200)
+	pinned = _post(stickied="someadmin", stickied_utc=int(time.time()) + 3600, created_utc=NOW - 7200)
 	newer = _post(created_utc=NOW - 60)
 
 	r = anon().get("/")
@@ -251,12 +251,14 @@ def test_a_pin_within_its_time_is_pinned():
 
 
 def test_an_expired_pin_is_sorted_with_the_rest():
-	expired = _post(stickied="someadmin", stickied_utc=NOW - 60, created_utc=NOW - 7200)
+	expired = _post(stickied="someadmin", stickied_utc=int(time.time()) - 60, created_utc=NOW - 7200)
 	newer = _post(created_utc=NOW - 60)
 
-	r = anon().get("/")
+	with db_diff() as d:
+		r = anon().get("/")
 
 	assert_in_order(r, [newer["title"], expired["title"]])
+	d.assert_exactly()
 
 
 def test_the_first_page_holds_a_full_page_besides_the_pins():

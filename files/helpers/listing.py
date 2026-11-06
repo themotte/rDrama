@@ -2,7 +2,6 @@
 Module for listings.
 """
 
-import time
 from typing import Optional
 
 from flask import g, request
@@ -36,7 +35,7 @@ def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 	if not gt and not lt:
 		posts = apply_time_filter(posts, t, Submission)
 		# The first page shows the pins above the rest
-		posts = posts.filter(not_((Submission.stickied != None) & ((Submission.stickied_utc == None) | (Submission.stickied_utc >= int(time.time())))))
+		posts = posts.filter(not_(Submission.pinned))
 
 	posts = posts.filter_by(private=False, state_user_deleted_utc=None)
 
@@ -68,22 +67,12 @@ def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 	posts = posts[:size]
 
 	if page == 1 and not gt and not lt:
-		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.state_mod == StateMod.VISIBLE)
+		pins = g.db.query(Submission).filter(Submission.pinned, Submission.state_mod == StateMod.VISIBLE)
 		if v:
 			if v.admin_level < 2:
 				pins = pins.filter(Submission.author_id.notin_(v.userblocks))
 
-		pins = pins.all()
-
-		for pin in pins:
-			if pin.stickied_utc and int(time.time()) > pin.stickied_utc:
-				pin.stickied = None
-				pin.stickied_utc = None
-				g.db.add(pin)
-				pins.remove(pin)
-				g.db.commit()
-
-		posts = pins + posts
+		posts = pins.all() + posts
 
 	posts = [x.id for x in posts]
 

@@ -971,10 +971,10 @@ def api_distinguish_post(post_id, v):
 @admin_level_required(2)
 def sticky_post(post_id, v):
 	post = get_post(post_id)
-	if not post.stickied:
-		pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.state_mod == StateMod.VISIBLE).count()
+	if not post.pinned:
+		pins = g.db.query(Submission.id).filter(Submission.pinned, Submission.state_mod == StateMod.VISIBLE).count()
 		post.stickied = v.username
-		if pins > 2: post.stickied_utc = int(time.time()) + 3600
+		post.stickied_utc = int(time.time()) + 3600 if pins > 2 else None
 		g.db.add(post)
 
 		ma=ModAction(
@@ -995,7 +995,7 @@ def sticky_post(post_id, v):
 @admin_level_required(2)
 def unsticky_post(post_id, v):
 	post = get_post(post_id)
-	if post.stickied:
+	if post.pinned:
 		post.stickied = None
 		post.stickied_utc = None
 		g.db.add(post)

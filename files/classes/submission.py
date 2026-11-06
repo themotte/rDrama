@@ -1,7 +1,9 @@
+import time
 from urllib.parse import urlparse
 
 from flask import g
 from sqlalchemy import *
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Session, declared_attr, object_session, relationship
 
 from files.classes.base import CreatedBase
@@ -117,6 +119,15 @@ class Submission(CreatedBase):
 		self.visibility_changed()
 		if not self.private and not self.ghost and self.visibility_state.publicly_visible:
 			notify_submission_publish(self)
+
+	@hybrid_property
+	def pinned(self) -> bool:
+		'''Pinned to the top of the front page: pinned by an admin (`stickied` names them), and either without an expiry or not past it.'''
+		return bool(self.stickied) and (self.stickied_utc is None or int(time.time()) <= self.stickied_utc)
+
+	@pinned.expression
+	def pinned(cls):
+		return (cls.stickied != None) & ((cls.stickied_utc == None) | (cls.stickied_utc >= int(time.time())))
 
 	def visibility_changed(self):
 		'''Run whenever whether others can see the post may have changed: keeps the author's post count current.'''
@@ -247,7 +258,7 @@ class Submission(CreatedBase):
 				'created_utc': self.created_utc,
 				'edited_utc': self.edited_utc or 0,
 				'comment_count': self.comment_count,
-				'stickied': self.stickied,
+				'stickied': self.stickied if self.pinned else None,
 				'private' : self.private,
 				'distinguish_level': self.distinguish_level,
 				'voted': self.voted if hasattr(self, 'voted') else 0,

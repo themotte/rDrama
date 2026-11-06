@@ -48,8 +48,8 @@
 			{% endif %} #}
 
 			{% if v.admin_level > 1 %}
-				<a id="pin-{{p.id}}" class="dropdown-item {% if p.stickied %}d-none{% endif %} list-inline-item text-info" role="button" onclick="postToastSwitch(this,'/sticky/{{p.id}}','POST','pin-{{p.id}}','unpin-{{p.id}}');"><i class="fas fa-thumbtack fa-rotate--45"></i>Pin</a>
-				<a id="unpin-{{p.id}}" class="dropdown-item {% if not p.stickied %}d-none{% endif %} list-inline-item text-info" role="button" onclick="postToastSwitch(this,'/unsticky/{{p.id}}','POST','pin-{{p.id}}','unpin-{{p.id}}');"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin</a>
+				<a id="pin-{{p.id}}" class="dropdown-item {% if p.pinned %}d-none{% endif %} list-inline-item text-info" role="button" onclick="postToastSwitch(this,'/sticky/{{p.id}}','POST','pin-{{p.id}}','unpin-{{p.id}}');"><i class="fas fa-thumbtack fa-rotate--45"></i>Pin</a>
+				<a id="unpin-{{p.id}}" class="dropdown-item {% if not p.pinned %}d-none{% endif %} list-inline-item text-info" role="button" onclick="postToastSwitch(this,'/unsticky/{{p.id}}','POST','pin-{{p.id}}','unpin-{{p.id}}');"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin</a>
 			{% endif %}
 
 			{%- if v and v.admin_level >= PERMS['POST_COMMENT_MODERATION'] -%}
