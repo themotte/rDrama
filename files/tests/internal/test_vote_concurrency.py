@@ -69,3 +69,18 @@ def test_shadowbanning_doesnt_wait_for_votes_merely_referencing_its_rows():
 
 	assert_json_message(r)
 	assert not waited
+
+
+def test_shadowbanning_waits_for_the_users_vote_in_flight():
+	voter, admin = factories.user(), factories.admin(3)
+	post = factories.post(factories.user())
+
+	with holding_transaction() as conn:
+		hold_voting(conn, voter["id"])
+		conn.execute(text("INSERT INTO votes (user_id, submission_id, vote_type, real) VALUES (:user, :post, 1, true)"), {"user": voter["id"], "post": post["id"]})
+		conn.execute(text("UPDATE submissions SET upvotes = 2, realupvotes = 2 WHERE id = :post"), {"post": post["id"]})
+		r, waited = run_while_held(conn, lambda: as_user(admin).post(f"/shadowban/{voter['id']}", headers=XHR))
+
+	assert_json_message(r)
+	assert waited
+	assert db.row("submissions", id=post["id"])["upvotes"] == 1

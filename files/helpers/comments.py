@@ -59,31 +59,25 @@ def comment_state_change(comment:Comment):
 COMMENT_SEEN_SQL = "c.parent_submission IS NOT NULL AND c.state_mod = 'VISIBLE' AND c.state_user_deleted_utc IS NULL"
 COMMENT_COUNTED_SQL = f"{COMMENT_SEEN_SQL} AND NOT EXISTS (SELECT 1 FROM users u WHERE u.id = c.author_id AND u.shadowbanned IS NOT NULL)"
 
-_AUTHOR_COUNTED_SQL = f"c.author_id = :author AND {COMMENT_SEEN_SQL}"
+_AUTHORS_SEEN_SQL = f"c.author_id = ANY(:authors) AND {COMMENT_SEEN_SQL}"
 
-_AUTHOR_POST_DELTAS_SQL = text(f"""
-SELECT c.parent_submission, count(*) FROM comments c WHERE {_AUTHOR_COUNTED_SQL} GROUP BY c.parent_submission ORDER BY c.parent_submission
+_AUTHORS_POST_DELTAS_SQL = text(f"""
+SELECT c.parent_submission, count(*) FROM comments c WHERE {_AUTHORS_SEEN_SQL} GROUP BY c.parent_submission
 """)
 
-_AUTHOR_ANCESTOR_DELTAS_SQL = text(f"""
+_AUTHORS_ANCESTOR_DELTAS_SQL = text(f"""
 WITH RECURSIVE up(ancestor) AS (
-		SELECT c.parent_comment_id FROM comments c WHERE {_AUTHOR_COUNTED_SQL} AND c.parent_comment_id IS NOT NULL
+		SELECT c.parent_comment_id FROM comments c WHERE {_AUTHORS_SEEN_SQL} AND c.parent_comment_id IS NOT NULL
 	UNION ALL
 		SELECT c.parent_comment_id FROM comments c JOIN up ON c.id = up.ancestor WHERE c.parent_comment_id IS NOT NULL
 )
-SELECT ancestor, count(*) FROM up GROUP BY ancestor ORDER BY ancestor
+SELECT ancestor, count(*) FROM up GROUP BY ancestor
 """)
 
 
-def comment_counts_shift_for_author(author_id:int, sign:int):
-	'''Adds (sign +1) or subtracts (-1) all the author's comments that others could see, but for the author's shadowban, to the counts of their posts and ancestors: one update for the posts, one for the comments, each locking its rows in id order first. Call it before changing the author's row, so that, like publishing a comment, it locks posts before the user.'''
-	g.db.flush()
-	for table, column, deltas_sql in (("submissions", "comment_count", _AUTHOR_POST_DELTAS_SQL), ("comments", "descendant_count", _AUTHOR_ANCESTOR_DELTAS_SQL)):
-		deltas = g.db.execute(deltas_sql, {"author": author_id}).all()
-		if not deltas: continue
-		ids, counts = [row[0] for row in deltas], [sign * row[1] for row in deltas]
-		g.db.execute(text(f"SELECT id FROM {table} WHERE id = ANY(:ids) ORDER BY id FOR NO KEY UPDATE"), {"ids": ids})
-		g.db.execute(text(f"UPDATE {table} SET {column} = {column} + d.delta FROM unnest(CAST(:ids AS integer[]), CAST(:deltas AS integer[])) AS d(id, delta) WHERE {table}.id = d.id"), {"ids": ids, "deltas": counts})
+def comment_counts_of_authors(author_ids:list[int]) -> tuple[dict[int, int], dict[int, int]]:
+	'''What the authors' comments that others could see, but for the authors' shadowbans, add to the counts: ({post id: to its comment count}, {comment id: to its descendant count}).'''
+	return tuple(dict(g.db.execute(sql, {"authors": author_ids}).all()) for sql in (_AUTHORS_POST_DELTAS_SQL, _AUTHORS_ANCESTOR_DELTAS_SQL))
 
 
 def update_stateful_counters(comment, delta):

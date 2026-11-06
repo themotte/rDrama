@@ -16,6 +16,7 @@ from files.helpers.config.const import *
 from files.helpers.config.environment import CF_HEADERS, CF_ZONE, SITE_SETTINGS_PATH
 from files.helpers.get import *
 from files.helpers.listing import request_page
+from files.helpers.locks import user_counts_lock
 from files.helpers.media import *
 from files.helpers.moderation import moderate, shadowban_lift, shadowban_set
 from files.helpers.sanitize import *
@@ -130,18 +131,21 @@ def revert_actions(v, username):
 	comments = [x[0] for x in g.db.query(ModAction.target_comment_id).filter(ModAction.user_id == user.id, ModAction.created_datetimez > cutoff, ModAction.kind == 'remove_comment').all()]
 	comments = g.db.query(Comment).filter(Comment.id.in_(comments)).all()
 	
+	users = (x[0] for x in g.db.query(ModAction.target_user_id).filter(ModAction.user_id == user.id, ModAction.created_datetimez > cutoff, ModAction.kind.in_(('shadowban', 'ban_user'))).all())
+	users = g.db.query(User).filter(User.id.in_(users)).all()
+	# Taken before restoring anything, as lifting the shadowbans would take it, so a vote or comment of theirs in flight finishes first
+	user_counts_lock(g.db, [user.id for user in users])
+
 	for item in posts + comments:
 		if item.state_mod == StateMod.REMOVED:
 			moderate(item, StateMod.VISIBLE, v.username)
 
-	users = (x[0] for x in g.db.query(ModAction.target_user_id).filter(ModAction.user_id == user.id, ModAction.created_datetimez > cutoff, ModAction.kind.in_(('shadowban', 'ban_user'))).all())
-	users = g.db.query(User).filter(User.id.in_(users)).all()
+	shadowban_lift(users)
 
 	for user in users:
 		# A user only shadowbanned isn't told: that would reveal the shadowban.
 		if user.is_banned:
 			send_repeatable_notification(user.id, f"@{v.username} has unbanned you!")
-		shadowban_lift(user)
 		user.is_banned = 0
 		user.unban_utc = 0
 		user.ban_evade = 0
@@ -680,7 +684,7 @@ def shadowban(user_id, v):
 @admin_level_required(2)
 def unshadowban(user_id, v):
 	user = get_account(user_id)
-	shadowban_lift(user)
+	shadowban_lift([user])
 	user.ban_evade = 0
 	g.db.add(user)
 

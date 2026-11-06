@@ -10,7 +10,7 @@ _USER_COUNTS = 1
 
 def user_counts_lock(db:Session, user_ids:list[int]):
 	'''
-	Waits for, then holds until the transaction ends, the right to cast the users' votes and create their posts and comments, the work that reads their shadowban to decide what counts. Locks in id order, so transactions locking several users can't deadlock each other.
+	Waits for, then holds until the transaction ends, the right to cast the users' votes, create their posts and comments, and shadowban or unshadowban them: the work that reads or changes their shadowban to decide what counts. (Moderating or deleting a comment reads its author's shadowban without it.) Locks in id order, so transactions locking several users can't deadlock each other.
 	'''
 	for user_id in sorted(set(user_ids)):
 		db.execute(text("SELECT pg_advisory_xact_lock(:kind, :user)"), {"kind": _USER_COUNTS, "user": user_id})

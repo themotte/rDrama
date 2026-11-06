@@ -46,6 +46,7 @@ def admin_vote_info_get(v):
 def _vote(target:Union[Submission, Comment], vote_cls:Union[Type[Vote], Type[CommentVote]], new:int, v:User):
 	'''Sets `v`'s vote on `target` to `new` (1, 0 or -1) and recounts the target's votes. Votes by shadowbanned users don't count: they move no counts and no truescore.'''
 	target_key = vote_cls.submission_id if vote_cls is Vote else vote_cls.comment_id
+	# The voter's shadowban can't change until this vote commits (see shadowban_set)
 	shadowbanned = user_shadowbanned_locked(g.db, v)
 	# Votes on one item take turns, so each reads the vote and the counts the others left
 	g.db.query(type(target)).filter_by(id=target.id).populate_existing().with_for_update(key_share=True).one()
