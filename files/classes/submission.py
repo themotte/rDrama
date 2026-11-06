@@ -119,9 +119,7 @@ class Submission(CreatedBase):
 			notify_submission_publish(self)
 
 	def visibility_changed(self):
-		'''Run whenever whether others can see the post may have changed: keeps the author's post count and the listings current.'''
-		from files.helpers.caching import invalidate_cache
-
+		'''Run whenever whether others can see the post may have changed: keeps the author's post count current.'''
 		db = object_session(self)
 		db.flush()
 		self.author.post_count = db.query(Submission.id).filter_by(
@@ -130,11 +128,6 @@ class Submission(CreatedBase):
 			state_user_deleted_utc=None,
 			private=False).count()
 		db.add(self.author)
-		invalidate_cache(frontlist=True, userpagelisting=True, changeloglist=self.is_changelog)
-
-	@property
-	def is_changelog(self) -> bool:
-		return "[changelog]" in self.title.lower() or "(changelog)" in self.title.lower()
 
 	def __repr__(self):
 		return f"<{self.__class__.__name__}(id={self.id})>"

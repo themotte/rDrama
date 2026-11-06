@@ -3,13 +3,12 @@ Module for listings.
 """
 
 import time
-from typing import Final, Optional
+from typing import Optional
 
 from flask import g, request
 from sqlalchemy.sql.expression import not_
 from sqlalchemy import func
 
-from files.__main__ import cache
 from files.classes.submission import Submission
 from files.classes.user import User
 from files.classes.visstate import StateMod
@@ -18,11 +17,6 @@ from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.strings import sql_ilike_clean
 
 
-FRONTLIST_TIMEOUT_SECS: Final[int] = 86400
-USERPAGELISTING_TIMEOUT_SECS: Final[int] = 86400
-CHANGELOGLIST_TIMEOUT_SECS: Final[int] = 86400
-
-@cache.memoize(timeout=FRONTLIST_TIMEOUT_SECS)
 def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 	posts = g.db.query(Submission)
 	
@@ -85,12 +79,11 @@ def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 				pin.stickied_utc = None
 				g.db.add(pin)
 				pins.remove(pin)
+				g.db.commit()
 
 		posts = pins + posts
 
 	posts = [x.id for x in posts]
-
-	g.db.commit()
 
 	return posts, next_exists
 
@@ -116,8 +109,7 @@ def userpage_pinned(u:User, v:Optional[User]) -> list[int]:
 	return [x[0] for x in _userpage_posts(u, v).filter_by(is_pinned=True).order_by(Submission.created_utc.desc()).all()]
 
 
-# Whether `v` may see `u`'s posts at all (a shadowban) is decided by the caller: it changes without invalidating this cache
-@cache.memoize(timeout=USERPAGELISTING_TIMEOUT_SECS)
+# Whether `v` may see `u`'s posts at all (a shadowban) is decided by the caller
 def userpagelisting(u:User, v=None, page=1, sort="new", t="all"):
 	posts = _userpage_posts(u, v).filter_by(is_pinned=False)
 	posts = apply_time_filter(posts, t, Submission)
@@ -128,7 +120,6 @@ def userpagelisting(u:User, v=None, page=1, sort="new", t="all"):
 	return [x[0] for x in posts]
 
 
-@cache.memoize(timeout=CHANGELOGLIST_TIMEOUT_SECS)
 def changeloglist(v=None, sort="new", page=1, t="all"):
 	posts = g.db.query(Submission.id).filter_by(state_mod=StateMod.VISIBLE, private=False,).filter(Submission.state_user_deleted_utc == None)
 

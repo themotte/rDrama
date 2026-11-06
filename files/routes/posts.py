@@ -19,7 +19,6 @@ from files.classes.visstate import StateMod
 from files.helpers.comments import comment_sort, comment_subtree_ids, comments_on_draft_publish
 from files.helpers.alerts import *
 from files.helpers.background import spawn_background
-from files.helpers.caching import invalidate_cache
 from files.helpers.config.const import *
 from files.helpers.content import canonicalize_url2
 from files.helpers.contentsorting import sort_objects
@@ -214,8 +213,6 @@ def edit_post(pid, v):
 
 	if not changed:
 		abort(400, "You need to change something")
-
-	invalidate_cache(frontlist=True, userpagelisting=True, changeloglist=p.is_changelog)
 
 	if v.id == p.author_id:
 		if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
@@ -632,8 +629,6 @@ def api_pin_post(post_id, v):
 	if v.id != post.author_id: abort(403, "Only the post author's can do that!")
 	post.is_pinned = not post.is_pinned
 	g.db.add(post)
-
-	invalidate_cache(userpagelisting=True)
 
 	g.db.commit()
 	if post.is_pinned: return {"message": "Post pinned!"}

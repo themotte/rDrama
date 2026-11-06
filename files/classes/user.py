@@ -328,7 +328,7 @@ class User(CreatedBase):
 		return f"/@{self.username}"
 
 	def __repr__(self):
-		# Memoized listings key on repr(v), and an API client sees less than the same user in the browser
+		# Memoized pages key on repr(v), and an API client sees less than the same user in the browser
 		client = ", api" if self.__dict__.get("client") else ""
 		return f"<{self.__class__.__name__}(id={self.id}{client})>"
 

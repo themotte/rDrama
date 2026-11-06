@@ -2,7 +2,7 @@
 The admin dashboard and the site-wide switches on it:
 - GET /admin is the dashboard, for admins of level 2 and up.
 - POST /admin/site_settings/<setting> changes one runtime site setting (the settings file, see config.site_settings_path), for level-3 admins. A boolean setting takes no "new_value" and is flipped; an integer setting takes the integer to store as "new_value". Anything else is refused with 400, and an unknown setting is 404. It answers JSON, logs a mod action whose kind names the change ("enabled_<setting>", "disabled_<setting>" or "set_<value>_for_<setting>", spaces as underscores, cut to 32 characters), and tells every other level-3 admin through a modmail notification.
-- POST /admin/dump_cache, for level-2 admins, makes the site rebuild every listing it has cached, and logs it.
+- POST /admin/dump_cache, for level-2 admins, makes the site recompute what it caches (the statistics pages), and logs it.
 - POST /admin/purge_cache, for level-3 admins, does that and also has Cloudflare purge everything it caches for the site ("purge_everything" through the zone's purge_cache endpoint).
 - POST /admin/under_attack, for level-3 admins, flips Cloudflare's "under attack" mode: it reads the zone's security_level setting and sets it to "medium" if it was "under_attack", else to "under_attack".
 
@@ -204,16 +204,6 @@ def test_dumping_the_cache_is_logged():
 
 	assert_json_message(r)
 	d.assert_exactly(inserted={"modactions": [{"kind": "dump_cache", "user_id": admin["id"]}]})
-
-
-def test_dumping_the_cache_rebuilds_cached_listings():
-	anon().get("/")
-	title = factories.unique("title")
-	factories.post(factories.user(), title=title)
-
-	assert_json_message(as_user(factories.admin(2)).post("/admin/dump_cache"))
-
-	assert_in_payload(anon().get("/"), title)
 
 
 @pytest.mark.parametrize("setting, data", [

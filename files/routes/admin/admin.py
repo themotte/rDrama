@@ -11,7 +11,6 @@ from files.classes.submission import IMAGE_URL_SUFFIXES
 from files.classes.user import FilterBehavior
 from files.classes.visstate import StateMod, StateReport
 from files.helpers.alerts import *
-from files.helpers.caching import invalidate_cache
 from files.helpers.config.const import *
 from files.helpers.config.environment import CF_HEADERS, CF_ZONE, SITE_SETTINGS_PATH
 from files.helpers.get import *
@@ -254,7 +253,6 @@ def update_filter_status(v):
 		))
 
 	g.db.commit()
-	invalidate_cache(frontlist=True)
 	return { 'result': 'Update successful' }
 
 @app.get("/admin/image_posts")
@@ -650,8 +648,6 @@ def shadowban(user_id, v):
 	)
 	g.db.add(ma)
 	
-	invalidate_cache(frontlist=True)
-
 	body = f"@{v.username} has shadowbanned @{user.username}"
 
 	body_html = sanitize(body)
@@ -695,8 +691,6 @@ def unshadowban(user_id, v):
 	)
 	g.db.add(ma)
 	
-	invalidate_cache(frontlist=True)
-
 	g.db.commit()
 	return {"message": "User unshadowbanned!"}
 
@@ -715,8 +709,6 @@ def filter_automatic(user_id, v):
 	)
 	g.db.add(ma)
 	
-	invalidate_cache(frontlist=True)
-
 	g.db.commit()
 	return {"message": "User autofiltered!"}
 
@@ -735,8 +727,6 @@ def filter_unfiltered(user_id, v):
 	)
 	g.db.add(ma)
 	
-	invalidate_cache(frontlist=True)
-
 	g.db.commit()
 	return {"message": "User unfiltered!"}
 
@@ -755,8 +745,6 @@ def filter_filtered(user_id, v):
 	)
 	g.db.add(ma)
 	
-	invalidate_cache(frontlist=True)
-
 	g.db.commit()
 	return {"message": "User always filtered!"}
 
@@ -999,7 +987,6 @@ def sticky_post(post_id, v):
 		if v.id != post.author_id:
 			send_repeatable_notification(post.author_id, f"@{v.username} has pinned your [post](/post/{post_id})!")
 
-		invalidate_cache(frontlist=True)
 		g.db.commit()
 	return {"message": "Post pinned!"}
 
@@ -1023,7 +1010,6 @@ def unsticky_post(post_id, v):
 		if v.id != post.author_id:
 			send_repeatable_notification(post.author_id, f"@{v.username} has unpinned your [post](/post/{post_id})!")
 
-		invalidate_cache(frontlist=True)
 		g.db.commit()
 	return {"message": "Post unpinned!"}
 
