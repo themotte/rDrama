@@ -4,7 +4,7 @@ The front page, GET / (also GET /catalog), lists posts for anyone, logged in or 
 - A page holds the viewer's front page size ("frontsize": 15, 25, 50 or 100; 25 when logged out), and "page" (from 1) chooses the page.
 - "sort" orders the posts: new (newest first), old, top (highest score first), bottom, controversial (closest to evenly split votes first), comments (most comments first), hot (score weighed against age). Without "sort", a logged-in viewer gets their default sort ("defaultsorting") and anyone else new. Ties fall back to newest first.
 - "t" (hour, day, week, month, year, all) keeps only posts created within that long (a month is 30 days, a year 365). "after" and "before" (Unix times) instead keep only posts created strictly after or before that time; with either, "t" doesn't apply.
-- Pinned posts come first, above the sorted list, on the first page when neither "after" nor "before" is given. A pin made with an expiry time stops being pinned once that time has passed.
+- Pinned posts come first, above the sorted list, on the first page when neither "after" nor "before" is given; they are then left out of the sorted list on every page, so the first page still holds a full page besides them. Pins ignore the sort, the time window, filter words and the changelog subscription. With "after" or "before", pinned posts are sorted with the rest. A pin made with an expiry time stops being pinned once that time has passed.
 - Changelog posts (see test_changelog) are left out unless the viewer subscribes to the changelog.
 - Posts whose title contains one of the viewer's filter words (one per line of "custom_filter_list", in any letter case) are left out.
 - A viewer who hides what they voted on ("hidevotedon") doesn't get posts they voted up or down, pinned ones included.
@@ -217,6 +217,30 @@ def test_pins_come_first_whatever_the_sort():
 	assert_in_order(r, [pinned["title"], top["title"]])
 
 
+def test_pins_ignore_the_time_filter():
+	pinned = _post(stickied="someadmin", created_utc=NOW - 30 * 86400)
+
+	r = anon().get("/", params={"t": "day"})
+
+	assert_in_payload(r, pinned["title"])
+
+
+def test_pins_ignore_filter_words():
+	pinned = _post(stickied="someadmin", title=f"spoilers {factories.unique()}")
+
+	r = as_user(factories.user(custom_filter_list="spoilers")).get("/")
+
+	assert_in_payload(r, pinned["title"])
+
+
+def test_pinned_changelog_posts_show_without_a_subscription():
+	pinned = factories.post(factories.admin(1), title=f"[changelog] {factories.unique()}", stickied="someadmin")
+
+	r = as_user(factories.user(changelogsub=False)).get("/")
+
+	assert_in_payload(r, pinned["title"])
+
+
 def test_a_pin_within_its_time_is_pinned():
 	pinned = _post(stickied="someadmin", stickied_utc=NOW + 3600, created_utc=NOW - 7200)
 	newer = _post(created_utc=NOW - 60)
@@ -235,18 +259,36 @@ def test_an_expired_pin_is_sorted_with_the_rest():
 	assert_in_order(r, [newer["title"], expired["title"]])
 
 
-@pytest.mark.parametrize("params", [{"page": 2}, {"after": NOW - 86400}, {"before": NOW + 60}])
-def test_pins_come_first_only_on_the_first_page_without_bounds(params):
+def test_the_first_page_holds_a_full_page_besides_the_pins():
+	pinned = _post(stickied="someadmin", created_utc=NOW)
 	posts = _posts_newest_first(16)
-	pinned = _post(stickied="someadmin", created_utc=NOW - 86400 + 1)
-	client = as_user(factories.user(frontsize=15))
 
-	r = client.get("/", params=params)
+	r = as_user(factories.user(frontsize=15)).get("/")
 
-	shown = [p["title"] for p in posts if p["title"] in r.text]
-	assert shown, "expected some of the unpinned posts on this page"
-	if pinned["title"] in r.text:
-		assert_in_order(r, [shown[-1], pinned["title"]])
+	assert_in_order(r, [pinned["title"], posts[0]["title"]])
+	assert_in_payload(r, posts[14]["title"])
+	assert_not_in_payload(r, posts[15]["title"])
+
+
+def test_pins_are_not_listed_again_on_later_pages():
+	posts = _posts_newest_first(16)
+	pinned = _post(stickied="someadmin", created_utc=NOW - 86400)
+
+	r = as_user(factories.user(frontsize=15)).get("/", params={"page": 2})
+
+	assert_in_payload(r, posts[15]["title"])
+	assert_not_in_payload(r, pinned["title"])
+
+
+@pytest.mark.parametrize("bound", ["after", "before"])
+def test_with_after_or_before_pins_are_sorted_with_the_rest(bound):
+	older = _post(created_utc=NOW - 7200)
+	pinned = _post(stickied="someadmin", created_utc=NOW - 3600)
+	newer = _post(created_utc=NOW - 60)
+
+	r = anon().get("/", params={bound: NOW - 86400 if bound == "after" else NOW})
+
+	assert_in_order(r, [newer["title"], pinned["title"], older["title"]])
 
 
 # Changelog, filter words, hiding voted posts

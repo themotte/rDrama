@@ -35,6 +35,8 @@ def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 
 	if not gt and not lt:
 		posts = apply_time_filter(posts, t, Submission)
+		# The first page shows the pins above the rest
+		posts = posts.filter(not_((Submission.stickied != None) & ((Submission.stickied_utc == None) | (Submission.stickied_utc >= int(time.time())))))
 
 	posts = posts.filter_by(private=False, state_user_deleted_utc=None)
 
