@@ -1,5 +1,8 @@
 '''
-The post listings' JSON, for API clients: the front page (GET /), /changelog, post search (GET /search/posts), a profile's posts (GET /@<username>/posts) and the viewer's saved posts (GET /@<username>/saved/posts) hold each listed post's JSON object as the viewer would get it from the post itself (GET /post/<id>), without its replies.
+The listings' JSON, for API clients.
+
+- The post listings (the front page, GET /; /changelog; post search, GET /search/posts; a profile's posts, GET /@<username>/posts; the viewer's saved posts, GET /@<username>/saved/posts) hold each listed post's JSON object as the viewer would get it from the post itself (GET /post/<id>), without its replies.
+- The comment listings (/comments; comment search, GET /search/comments; a profile's comments, GET /@<username>/; the viewer's saved comments) hold each listed comment's JSON object as the viewer would get it from the comment itself (GET /comment/<id>).
 '''
 import time
 
@@ -71,3 +74,41 @@ def test_authors_get_their_own_hidden_posts_in_full(listing):
 
 	assert listed == single
 	assert "body_html" in listed
+
+
+# Comment listings: /comments, comment search (GET /search/comments), a profile's comments (GET /@<username>/) and the viewer's saved comments (GET /@<username>/saved/comments)
+
+COMMENT_LISTINGS = ["comments", "search", "profile", "saved"]
+
+
+def _comment_listing_path(listing, viewer, comment):
+	author = db.row("users", id=comment["author_id"])
+	return {
+		"comments": "/comments",
+		"search": "/search/comments?q=zebra",
+		"profile": f"/@{author['username']}/",
+		"saved": f"/@{viewer['username']}/saved/comments",
+	}[listing]
+
+
+def _listed_comment(listing, viewer, comment):
+	client = as_api(factories.api_token(viewer))
+	r = client.get(_comment_listing_path(listing, viewer, comment))
+	assert_status(r, 200)
+	[listed] = [x for x in r.json["data"] if x["id"] == comment["id"]]
+	return listed, client.get(f"/comment/{comment['id']}").json
+
+
+@pytest.mark.parametrize("listing", COMMENT_LISTINGS)
+def test_a_listed_comments_post_is_hidden_from_viewers_blocking_its_author(listing):
+	viewer = factories.user()
+	post_author = factories.user()
+	db.insert("userblocks", user_id=viewer["id"], target_id=post_author["id"])
+	post = factories.post(post_author, created_utc=OLD)
+	comment = factories.comment(factories.user(), post, body=f"zebra {factories.unique()}", created_utc=OLD)
+	db.insert("comment_save_relationship", user_id=viewer["id"], comment_id=comment["id"])
+
+	listed, single = _listed_comment(listing, viewer, comment)
+
+	assert "body_html" not in single["post"]
+	assert listed == single

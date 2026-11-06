@@ -1,5 +1,3 @@
-from sqlalchemy.orm import Query
-
 import files.helpers.listing as listing
 from files.__main__ import app, limiter
 from files.classes.submission import Submission
@@ -298,16 +296,7 @@ def all_comments(v):
 	next_exists = len(idlist) > 25
 	idlist = idlist[:25]
 
-	def comment_tree_filter(q: Query) -> Query:
-		q = q.filter(Comment.id.in_(idlist))
-		q = q.options(
-			selectinload(Comment.post),         # post titles, is_op
-			selectinload(Comment.parent_comment), # header_msg "Comment Reply"
-		)
-		return q
-
-	comments, _ = get_comment_trees_eager(comment_tree_filter, sort=sort, v=v)
-	comments.sort(key=lambda c: idlist.index(c.id))
+	comments = get_comments(idlist, v=v)
 
 	if request.headers.get("Authorization"):
 		return {"data": [x.json_for(v) for x in comments]}
