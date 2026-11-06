@@ -1,10 +1,10 @@
 import typing
 
-# clean strings for searching
-def sql_ilike_clean(my_str):
-	if my_str is None:
-		return None
-	return my_str.replace(r'\\', '').replace('_', r'\_').replace('%', '').strip()
+
+def sql_like_literal(text: str) -> str:
+	'''`text` escaped to match only itself inside a LIKE pattern, whose wildcards (% and _) and escape character (\\) it may hold.'''
+	return text.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
+
 
 # this will also just return a bool verbatim
 def bool_from_string(input: typing.Union[str, int, bool]) -> bool:

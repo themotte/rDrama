@@ -3,7 +3,7 @@ from sqlalchemy import *
 from files.__main__ import app, limiter, is_known_bot
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.listing import comment_json_for, listable_comments, listable_posts, post_json_for, request_page, request_sort, request_time_filter
-from files.helpers.strings import sql_ilike_clean
+from files.helpers.strings import sql_like_literal
 from files.helpers.wrappers import *
 from files.routes.importstar import *
 
@@ -69,7 +69,7 @@ def searchposts(v):
 		else: posts = posts.filter(Submission.author_id == author.id)
 
 	if 'q' in criteria:
-		words = sql_ilike_clean(criteria['q']).split()
+		words = sql_like_literal(criteria['q']).split()
 		words=[Submission.title.ilike('%'+x+'%') for x in words]
 		posts=posts.filter(*words)
 		
@@ -78,7 +78,7 @@ def searchposts(v):
 	if 'domain' in criteria:
 		domain=criteria['domain']
 
-		domain = sql_ilike_clean(domain)
+		domain = sql_like_literal(domain)
 
 		posts=posts.filter(or_(*(Submission.url.ilike(f"https://{prefix}{domain}{rest}") for prefix in ("", "www.", "old.") for rest in ("", "/%"))))
 
@@ -139,7 +139,7 @@ def searchcomments(v):
 		else: comments = comments.filter(Comment.author_id == author.id)
 
 	if 'q' in criteria:
-		words = sql_ilike_clean(criteria['q']).split()
+		words = sql_like_literal(criteria['q']).split()
 
 		words = [Comment.body.ilike('%'+x+'%') for x in words]
 		comments = comments.filter(*words)
@@ -177,7 +177,7 @@ def searchusers(v):
 	sort = request_sort("new")
 	t = request_time_filter()
 	term=query.lstrip('@')
-	term = sql_ilike_clean(term)
+	term = sql_like_literal(term)
 	
 	users=g.db.query(User).filter(User.username.ilike(f'%{term}%'))
 	

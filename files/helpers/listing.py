@@ -15,7 +15,7 @@ from files.classes.visstate import StateMod
 from files.classes.votes import Vote
 from files.helpers.config.const import PERMS, SORTS_POSTS
 from files.helpers.contentsorting import apply_time_filter, sort_objects
-from files.helpers.strings import sql_ilike_clean
+from files.helpers.strings import sql_like_literal
 from files.helpers.wrappers import age_unconfirmed
 
 
@@ -88,7 +88,7 @@ def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 
 	if v and filter_words:
 		for word in filter_words:
-			word  = sql_ilike_clean(word).strip()
+			word = sql_like_literal(word)
 			posts = posts.filter(not_(Submission.title.ilike(f'%{word}%')))
 
 	posts = sort_objects(posts, sort, Submission)

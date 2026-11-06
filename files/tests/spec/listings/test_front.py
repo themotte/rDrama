@@ -6,7 +6,7 @@ The front page, GET / (also GET /catalog), lists posts for anyone, logged in or 
 - "t" (hour, day, week, month, year, all) keeps only posts created within that long (a month is 30 days, a year 365). "after" and "before" (Unix times) instead keep only posts created strictly after or before that time; with either, "t" doesn't apply.
 - Pinned posts come first, above the sorted list and newest first among themselves, on the first page when neither "after" nor "before" is given; they are then left out of the sorted list on every page, so the first page still holds a full page besides them. Pins ignore the sort, the time window, filter words and the changelog subscription. With "after" or "before", pinned posts are sorted with the rest. A pin made with an expiry time stops being pinned once that time has passed.
 - Changelog posts (see test_changelog) are left out unless the viewer subscribes to the changelog.
-- Posts whose title contains one of the viewer's filter words (one per line of "custom_filter_list", in any letter case) are left out.
+- Posts whose title contains one of the viewer's filter words (one per line of "custom_filter_list", in any letter case, matching literally) are left out.
 - A viewer who hides what they voted on ("hidevotedon") doesn't get posts they currently vote up or down (a vote they cleared doesn't count), pinned ones included; pages are still full.
 
 Which posts a viewer may see is in test_visibility.
@@ -353,6 +353,17 @@ def test_filter_words_leave_out_posts_whose_titles_contain_them():
 
 	assert_not_in_payload(r, token)
 	assert_in_payload(r, kept["title"])
+
+
+@pytest.mark.parametrize("word, filtered, kept", [("50%", "save 50% now", "save 500 now"), ("%", "100% sure", "quite sure"), ("a_b", "an a_b", "an axb"), ("\\", "back\\slash", "backslash")])
+def test_filter_words_match_literally(word, filtered, kept):
+	left_out = _post(title=f"{filtered} {factories.unique()}")
+	listed = _post(title=f"{kept} {factories.unique()}")
+
+	r = as_user(factories.user(custom_filter_list=word)).get("/")
+
+	assert_not_in_payload(r, left_out["title"])
+	assert_in_payload(r, listed["title"])
 
 
 @pytest.mark.parametrize("vote", [1, -1])

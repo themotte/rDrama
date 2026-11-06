@@ -4,7 +4,7 @@ Search, for logged-in users only (others are sent to log in): GET /search/posts,
 Requests whose User-Agent names a crawler (anything containing "bot", in any letter case, and also Bytespider and ChatGPT-User) are refused with 403.
 
 Post and comment search:
-- The words of the query must all appear, in any letter case and anywhere, in a post's title or a comment's text.
+- The words of the query must all appear, in any letter case and anywhere, in a post's title or a comment's text. They match literally: no character in them stands for others.
 - Query terms of the form "key:value" narrow the search instead (others are searched as words): "author:<username>" keeps only that user's items, leaving out anonymous ones (an unknown user is a 404; a user with a private profile can be searched this way only by themselves and admins from level 2: API clients get a 403 and others a page with no results); "over18:" (with any value) keeps only items marked 18+; for posts, "domain:<domain>" keeps only link posts to https://<domain>, https://www.<domain> or https://old.<domain>, with or without a path.
 - "sort" and "t" apply as on the front page (test_front), newest first and all time by default, 25 results to a page, "page" choosing the page.
 - An API client gets {"total": ..., "data": [...]}: the number of matching items and the page's items as JSON objects.
@@ -79,6 +79,38 @@ def test_words_match_inside_longer_words(kind):
 	r = _search(kind, "ebra")
 
 	assert_in_payload(r, item["sentinel"])
+
+
+@pytest.mark.parametrize("kind", KINDS)
+@pytest.mark.parametrize("term, matching, other", [
+	("50%", "save 50% now", "save 500 now"),
+	("a_b", "see a_b here", "see axb here"),
+	("k\\s", "back\\slash", "backslash"),
+])
+def test_words_match_literally(kind, term, matching, other):
+	match = KINDS[kind](f"zebra {matching}")
+	miss = KINDS[kind](f"zebra {other}")
+
+	r = _search(kind, f"zebra {term}")
+
+	assert_in_payload(r, match["sentinel"])
+	assert_not_in_payload(r, miss["sentinel"])
+
+
+@pytest.mark.parametrize("path", PATHS)
+@pytest.mark.parametrize("q", ["zebra\\", "\\", "100%", "domain:example.com\\"])
+def test_any_query_is_answered(path, q):
+	assert_html(as_user(factories.user()).get(path, params={"q": q}), 200)
+
+
+def test_user_search_matches_literally():
+	match = factories.user(username=f"a_b{factories.unique('u')}")
+	miss = factories.user(username=f"axb{factories.unique('u')}")
+
+	r = as_user(factories.user()).get("/search/users", params={"q": "a_b"})
+
+	assert_in_payload(r, f"/@{match['username']}\"")
+	assert_not_in_payload(r, f"/@{miss['username']}\"")
 
 
 def test_post_search_does_not_search_bodies():
