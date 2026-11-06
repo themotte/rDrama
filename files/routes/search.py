@@ -1,9 +1,8 @@
 from sqlalchemy import *
 
 from files.__main__ import app, limiter, is_known_bot
-from files.classes.visstate import StateMod
 from files.helpers.contentsorting import apply_time_filter, sort_objects
-from files.helpers.listing import listable_posts
+from files.helpers.listing import listable_comments, listable_posts
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import *
 from files.routes.importstar import *
@@ -129,7 +128,7 @@ def searchcomments(v):
 
 	criteria = searchparse(query)
 
-	comments = g.db.query(Comment.id).filter(Comment.parent_submission != None)
+	comments = g.db.query(Comment.id)
 
 	if 'author' in criteria:
 		comments = comments.filter(Comment.ghost == False)
@@ -153,9 +152,7 @@ def searchcomments(v):
 	if t:
 		comments = apply_time_filter(comments, t, Comment)
 
-	if v.admin_level < 2:
-		comments = comments.join(Submission, Comment.parent_submission == Submission.id)
-		comments = comments.filter(Comment.author_id.notin_(v.userblocks), Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, Submission.private == False)
+	comments = listable_comments(comments, v, admins_see_drafts_and_deleted=True)
 
 	total = comments.count()
 

@@ -268,6 +268,18 @@ def test_api_clients_get_the_total_and_the_page(kind):
 	assert [x["id"] for x in r.json["data"]] == [x["id"] for x in items[:25]]
 
 
+@pytest.mark.parametrize("kind", KINDS)
+def test_the_total_counts_only_what_the_searcher_may_find(kind):
+	listed = KINDS[kind]("zebra")
+	KINDS[kind]("zebra", author=factories.user(shadowbanned="somemod"))
+	KINDS[kind]("zebra", state_mod="REMOVED", state_mod_set_by="somemod")
+
+	r = _search(kind, "zebra", client=as_api(factories.api_token(factories.user())))
+
+	assert r.json["total"] == 1
+	assert [x["id"] for x in r.json["data"]] == [listed["id"]]
+
+
 # User search
 
 def _user(name_part, **overrides):
