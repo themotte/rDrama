@@ -3,7 +3,7 @@ Which posts and comments the listings show to whom: the front page (GET /), post
 
 - Posts and comments that moderators removed or filtered are shown only to their authors and to admins from level 2.
 - Items their authors deleted, and drafts, are left out of the front page for everyone; post and comment search show them only to admins from level 2. Comments on drafts likewise.
-- Items by a shadowbanned user are left out for everyone but their author (who sees their own) and, in search, admins from level 2.
+- Items by a shadowbanned user are left out for everyone but their author (who sees their own) and admins from level 2 (on the comment listing, from level 3). Other shadowbanned users don't see them either.
 - Items by a user the viewer blocks are left out, even distinguished ones, except for admins from level 2. Items by users who block the viewer are listed.
 - Private messages are never listed as comments.
 - API clients see what a user without admin rights sees, whatever their account's level.
@@ -29,6 +29,7 @@ FRONT = {
 	("removed", "author"): True, ("filtered", "author"): True, ("deleted", "author"): False, ("draft", "author"): False,
 	("removed", "admin"): True, ("filtered", "admin"): True, ("deleted", "admin"): False, ("draft", "admin"): False,
 	("shadowbanned author", "visitor"): False, ("shadowbanned author", "user"): False, ("shadowbanned author", "author"): True,
+	("shadowbanned author", "shadowbanned user"): False, ("shadowbanned author", "admin"): True, ("shadowbanned author", "admin token"): False,
 	("blocked author", "user"): False, ("blocked author", "admin"): True, ("blocked author", "admin token"): False,
 	("blocked distinguished author", "user"): False,
 	("author blocking the viewer", "user"): True,
@@ -76,7 +77,10 @@ def _cases(table):
 
 def _arrange(state, viewer, make_item):
 	'''Makes the viewer, then the item in `state` (by a fresh author, or by the viewer when the viewer is "author"); returns (client, item).'''
-	viewer_row = factories.admin(2) if viewer in ("admin", "admin token") else factories.user(shadowbanned="somemod" if state == "shadowbanned author" and viewer == "author" else None)
+	if viewer in ("admin", "admin token"):
+		viewer_row = factories.admin(2)
+	else:
+		viewer_row = factories.user(shadowbanned="somemod" if viewer == "shadowbanned user" or (state == "shadowbanned author" and viewer == "author") else None)
 	if viewer == "author":
 		author = viewer_row
 	else:

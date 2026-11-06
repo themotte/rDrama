@@ -5,15 +5,32 @@ Module for listings.
 from typing import Optional
 
 from flask import g, request
-from sqlalchemy.sql.expression import not_
-from sqlalchemy import func
+from sqlalchemy.sql.expression import and_, not_, or_
+from sqlalchemy import false, func
 
 from files.classes.submission import Submission
 from files.classes.user import User
 from files.classes.visstate import StateMod
 from files.classes.votes import Vote
+from files.helpers.config.const import PERMS
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.strings import sql_ilike_clean
+
+
+def listable_posts(posts, v: Optional[User], *, admins_see_drafts_and_deleted: bool = False):
+	'''
+	`posts` (a query over submissions) narrowed to those `v` could read on their post pages: their own, and others that are visible, by an author who isn't shadowbanned and whom `v` doesn't block. Admins who moderate (level 2 and up) may read everything.
+
+	Drafts and posts their authors deleted are left out for everyone, admins too unless `admins_see_drafts_and_deleted`.
+	'''
+	moderator = v and v.admin_level >= PERMS['POST_COMMENT_MODERATION'] and v.admin_level >= PERMS['USER_SHADOWBAN']
+	if moderator and admins_see_drafts_and_deleted: return posts
+	posts = posts.filter(Submission.private == False, Submission.state_user_deleted_utc == None)
+	if moderator: return posts
+	own = Submission.author_id == v.id if v else false()
+	posts = posts.filter(or_(own, and_(Submission.state_mod == StateMod.VISIBLE, not_(Submission.author.has(User.shadowbanned != None)))))
+	if v: posts = posts.filter(Submission.author_id.notin_(v.userblocks))
+	return posts
 
 
 def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
@@ -23,11 +40,7 @@ def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 		voted = [x[0] for x in g.db.query(Vote.submission_id).filter_by(user_id=v.id).all()]
 		posts = posts.filter(Submission.id.notin_(voted))
 
-	if not v or v.admin_level < 2:
-		filter_clause = Submission.state_mod == StateMod.VISIBLE
-		if v:
-			filter_clause = filter_clause | (Submission.author_id == v.id)
-		posts = posts.filter(filter_clause)
+	posts = listable_posts(posts, v)
 
 	if gt: posts = posts.filter(Submission.created_utc > gt)
 	if lt: posts = posts.filter(Submission.created_utc < lt)
@@ -37,11 +50,6 @@ def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 		# The first page shows the pins above the rest
 		posts = posts.filter(not_(Submission.pinned))
 
-	posts = posts.filter_by(private=False, state_user_deleted_utc=None)
-
-	if v and v.admin_level < 2:
-		posts = posts.filter(Submission.author_id.notin_(v.userblocks))
-
 	if not (v and v.changelogsub):
 		posts = posts.filter(not_(Submission.title.ilike('[changelog]%')))
 
@@ -49,9 +57,6 @@ def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 		for word in filter_words:
 			word  = sql_ilike_clean(word).strip()
 			posts = posts.filter(not_(Submission.title.ilike(f'%{word}%')))
-
-	if not (v and v.shadowbanned):
-		posts = posts.join(User, User.id == Submission.author_id).filter(User.shadowbanned == None)
 
 	posts = sort_objects(posts, sort, Submission)
 
