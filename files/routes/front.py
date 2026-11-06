@@ -318,7 +318,7 @@ def all_comments(v):
 
 
 def get_comments_idlist(page=1, v=None, sort="new", t="all", gt=0, lt=0):
-	comments = listing.listable_comments(g.db.query(Comment.id), v, admins_see_drafts_and_deleted=True)
+	comments = listing.listable_comments(g.db.query(Comment.id), v)
 
 	if gt: comments = comments.filter(Comment.created_utc > gt)
 	if lt: comments = comments.filter(Comment.created_utc < lt)

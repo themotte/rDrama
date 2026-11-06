@@ -2,7 +2,7 @@
 Which posts and comments the listings show to whom: the front page (GET /, its pinned posts alike), post search (GET /search/posts), the comment listing (GET /comments) and comment search (GET /search/comments). /changelog and random picks are in their own files.
 
 - Posts and comments that moderators removed or filtered are shown only to their authors and to admins from level 2.
-- Items their authors deleted, and drafts, are left out of the front page for everyone; post and comment search show them only to admins from level 2. Comments on drafts likewise.
+- Items their authors deleted, and drafts, are left out of the front page and the comment listing for everyone; post and comment search show them only to admins from level 2. Comments on drafts likewise.
 - Items by a shadowbanned user are left out for everyone but their author (who sees their own) and admins from level 2. Other shadowbanned users don't see them either.
 - Items by a user the viewer blocks are left out, even distinguished ones, except for admins from level 2. Items by users who block the viewer are listed.
 - Private messages are never listed as comments.
@@ -50,7 +50,7 @@ SEARCH_POSTS = {
 COMMENTS = {
 	**{(state, "user"): False for state in COMMENT_STATES},
 	**{(state, "admin token"): False for state in COMMENT_STATES},
-	("removed", "admin"): True, ("filtered", "admin"): True,
+	("removed", "admin"): True, ("filtered", "admin"): True, ("deleted", "admin"): False, ("on a draft", "admin"): False,
 	("removed", "author"): True, ("filtered", "author"): True, ("deleted", "author"): False,
 	("on a draft", "user"): False,
 	("shadowbanned author", "user"): False, ("shadowbanned author", "admin"): True,
