@@ -43,6 +43,8 @@ def admin_vote_info_get(v):
 def _vote(target:Union[Submission, Comment], vote_cls:Union[Type[Vote], Type[CommentVote]], new:int, v:User):
 	'''Sets `v`'s vote on `target` to `new` (1, 0 or -1), moving the author's truescore by the change unless `v` is the author, and recounts the target's votes.'''
 	target_key = vote_cls.submission_id if vote_cls is Vote else vote_cls.comment_id
+	# Votes on one item take turns, so each reads the vote and the counts the others left
+	g.db.query(type(target)).filter_by(id=target.id).populate_existing().with_for_update(key_share=True).one()
 	vote = g.db.query(vote_cls).filter(vote_cls.user_id == v.id, target_key == target.id).one_or_none()
 	if vote and vote.vote_type == new: return "", 204
 
