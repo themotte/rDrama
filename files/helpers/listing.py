@@ -13,7 +13,7 @@ from files.classes.submission import Submission
 from files.classes.user import User
 from files.classes.visstate import StateMod
 from files.classes.votes import Vote
-from files.helpers.config.const import PERMS
+from files.helpers.config.const import PERMS, SORTS_POSTS
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import age_unconfirmed
@@ -112,6 +112,21 @@ def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 	return posts, next_exists
 
 
+TIME_FILTERS = ("hour", "day", "week", "month", "year", "all")
+
+
+def request_sort(default: str) -> str:
+	'''The listing order the request asks for ("sort", in any letter case); anything unknown means `default`.'''
+	sort = request.values.get("sort", "").lower()
+	return sort if sort in SORTS_POSTS else default
+
+
+def request_time_filter() -> str:
+	'''The time window the request asks for ("t", in any letter case); anything unknown means all time.'''
+	t = request.values.get("t", "").lower()
+	return t if t in TIME_FILTERS else "all"
+
+
 def request_page() -> int:
 	'''The listing page the request asks for ("page"); anything but a whole number from 1 means the first.'''
 	try: return max(1, int(request.values.get("page", 1)))
@@ -149,8 +164,7 @@ def changeloglist(v=None, sort="new", page=1, t="all"):
 
 	posts = posts.filter(changelog_post())
 
-	if t != 'all':
-		posts = apply_time_filter(posts, t, Submission)
+	posts = apply_time_filter(posts, t, Submission)
 	posts = sort_objects(posts, sort, Submission)
 
 	posts = posts.offset(25 * (page - 1)).limit(26).all()

@@ -203,8 +203,8 @@ def front_all(v):
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: abort(400)
 
-	sort=request.values.get("sort", v.defaultsorting if v else "new")
-	t=request.values.get('t', 'all')
+	sort = listing.request_sort(v.defaultsorting if v and v.defaultsorting in SORTS_POSTS else "new")
+	t = listing.request_time_filter()
 
 	try: gt=int(request.values.get("after", 0))
 	except: gt=0
@@ -242,8 +242,8 @@ def changelog(v):
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: page = 1
 
-	sort=request.values.get("sort", "new")
-	t=request.values.get('t', "all")
+	sort = listing.request_sort("new")
+	t = listing.request_time_filter()
 
 	ids = listing.changeloglist(sort=sort,
 					page=page,
@@ -284,8 +284,8 @@ def random_user():
 @auth_required
 def all_comments(v):
 	page = max(request.values.get("page", 1, int), 1)
-	sort = request.values.get("sort", "new")
-	time_filter = request.values.get("t", "all")
+	sort = listing.request_sort("new")
+	time_filter = listing.request_time_filter()
 	time_gt = request.values.get("after", 0, int)
 	time_lt = request.values.get("before", 0, int)
 

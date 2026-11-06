@@ -1,10 +1,11 @@
 '''
-How the listings read their parameters: the front page (GET /), /changelog, /comments and the three searches.
+How the listings read their parameters: the front page (GET /), /changelog, /comments, the three searches and a profile's posts and comments (GET /@<username>/posts, GET /@<username>/).
 
 - "page" counts from 1: zero or a negative number means the first page. Anything else that isn't a whole number also means the first page, except on the front page.
-- An unknown "sort" lists newest first, and an unknown "t" means all time.
+- "sort" and "t" are read in any letter case. An unknown "sort" lists newest first, and an unknown "t" means all time; the page's links carry the sort and time window in use, never the unknown values.
 - On the front page and /comments, an "after" or "before" that isn't a whole number is ignored.
 '''
+import re
 import time
 
 import pytest
@@ -19,14 +20,14 @@ def _changelog(**overrides):
 	return {**factories.post(factories.admin(1), title=f"[changelog] zebra {sentinel}", **overrides), "sentinel": sentinel}
 
 
-def _post(**overrides):
+def _post(author=None, **overrides):
 	sentinel = factories.unique()
-	return {**factories.post(factories.user(), title=f"zebra {sentinel}", **overrides), "sentinel": sentinel}
+	return {**factories.post(author or factories.user(), title=f"zebra {sentinel}", **overrides), "sentinel": sentinel}
 
 
-def _comment(**overrides):
+def _comment(author=None, **overrides):
 	sentinel = factories.unique()
-	return {**factories.comment(factories.user(), factories.post(factories.user()), body=f"zebra {sentinel}", **overrides), "sentinel": sentinel}
+	return {**factories.comment(author or factories.user(), factories.post(factories.user()), body=f"zebra {sentinel}", **overrides), "sentinel": sentinel}
 
 
 LISTINGS = {
@@ -102,3 +103,46 @@ def test_bounds_that_are_not_numbers_are_ignored(path, bound):
 
 	assert_status(r, 200)
 	assert_in_payload(r, item["sentinel"])
+
+
+def _profile_path(kind):
+	author = factories.user()
+	return author, f"/@{author['username']}/posts" if kind == "posts" else f"/@{author['username']}/"
+
+
+def _links(r):
+	return re.findall(r'href="([^"]*)"', r.text)
+
+
+@pytest.mark.parametrize("path", [*LISTINGS, "/search/users", "profile posts", "profile comments"])
+def test_unknown_sort_and_time_filter_are_not_put_into_links(path):
+	sort, t = factories.unique("sort"), factories.unique("t")
+	if path.startswith("profile"):
+		_, path = _profile_path(path.split()[1])
+		r = anon().get(path, params={"sort": sort, "t": t})
+	else:
+		r = as_user(factories.user()).get(path, params={**LISTINGS.get(path, (None, {"q": "zebra"}))[1], "sort": sort, "t": t})
+
+	assert_status(r, 200)
+	assert not [link for link in _links(r) if sort in link or t in link]
+
+
+@pytest.mark.parametrize("path", [*LISTINGS, "profile posts", "profile comments"])
+def test_sort_and_time_filter_ignore_letter_case(path):
+	if path.startswith("profile"):
+		kind = path.split()[1]
+		author, path = _profile_path(kind)
+		make = (lambda **o: _post(author=author, **o)) if kind == "posts" else (lambda **o: _comment(author=author, **o))
+		client = anon()
+		extra = {}
+	else:
+		make, extra = LISTINGS[path]
+		client = as_user(factories.user())
+	older = make(created_utc=int(time.time()) - 7200)
+	newer = make(created_utc=int(time.time()) - 60)
+	too_old = make(created_utc=int(time.time()) - 3 * 86400)
+
+	r = client.get(path, params={**extra, "sort": "OLD", "t": "Day"})
+
+	assert_in_order(r, [older["sentinel"], newer["sentinel"]])
+	assert_not_in_payload(r, too_old["sentinel"])

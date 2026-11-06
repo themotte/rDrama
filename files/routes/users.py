@@ -329,8 +329,8 @@ def u_username(username, v=None):
 		if request.headers.get("Authorization") or request.headers.get("xhr"): abort(403, f"You are blocking @{u.username}.")
 		return render_template("userpage_blocking.html", u=u, v=v)
 
-	sort = request.values.get("sort", "new")
-	t = request.values.get("t", "all")
+	sort = listings.request_sort("new")
+	t = listings.request_time_filter()
 	page = listings.request_page()
 
 	shown = u.shows_activity_to(v)
@@ -381,8 +381,8 @@ def u_username_comments(username, v=None):
 
 	page = listings.request_page()
 	
-	sort=request.values.get("sort","new")
-	t=request.values.get("t","all")
+	sort = listings.request_sort("new")
+	t = listings.request_time_filter()
 
 
 	comments = g.db.query(Comment.id).filter(Comment.author_id == u.id, Comment.parent_submission != None)

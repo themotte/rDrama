@@ -2,7 +2,7 @@ from sqlalchemy import *
 
 from files.__main__ import app, limiter, is_known_bot
 from files.helpers.contentsorting import apply_time_filter, sort_objects
-from files.helpers.listing import comment_json_for, listable_comments, listable_posts, post_json_for
+from files.helpers.listing import comment_json_for, listable_comments, listable_posts, post_json_for, request_sort, request_time_filter
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import *
 from files.routes.importstar import *
@@ -38,8 +38,8 @@ def searchposts(v):
 	try: page = max(1, int(request.values.get("page", 1)))
 	except: page = 1
 
-	sort = request.values.get("sort", "new").lower()
-	t = request.values.get('t', 'all').lower()
+	sort = request_sort("new")
+	t = request_time_filter()
 
 	criteria=searchparse(query)
 
@@ -83,8 +83,7 @@ def searchposts(v):
 
 		posts=posts.filter(or_(*(Submission.url.ilike(f"https://{prefix}{domain}{rest}") for prefix in ("", "www.", "old.") for rest in ("", "/%"))))
 
-	if t:
-		posts = apply_time_filter(posts, t, Submission)
+	posts = apply_time_filter(posts, t, Submission)
 
 	total = posts.count()
 
@@ -123,8 +122,8 @@ def searchcomments(v):
 	try: page = max(1, int(request.values.get("page", 1)))
 	except: page = 1
 
-	sort = request.values.get("sort", "new").lower()
-	t = request.values.get('t', 'all').lower()
+	sort = request_sort("new")
+	t = request_time_filter()
 
 	criteria = searchparse(query)
 
@@ -149,8 +148,7 @@ def searchcomments(v):
 
 	if 'over18' in criteria: comments = comments.filter(Comment.over_18 == True)
 
-	if t:
-		comments = apply_time_filter(comments, t, Comment)
+	comments = apply_time_filter(comments, t, Comment)
 
 	comments = listable_comments(comments, v, admins_see_drafts_and_deleted=True)
 
@@ -179,8 +177,8 @@ def searchusers(v):
 
 	try: page = max(1, int(request.values.get("page", 1)))
 	except: page = 1
-	sort = request.values.get("sort", "new").lower()
-	t = request.values.get('t', 'all').lower()
+	sort = request_sort("new")
+	t = request_time_filter()
 	term=query.lstrip('@')
 	term = sql_ilike_clean(term)
 	
