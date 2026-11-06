@@ -2,7 +2,7 @@ from sqlalchemy import *
 
 from files.__main__ import app, limiter, is_known_bot
 from files.helpers.contentsorting import apply_time_filter, sort_objects
-from files.helpers.listing import listable_comments, listable_posts, post_json_for
+from files.helpers.listing import comment_json_for, listable_comments, listable_posts, post_json_for
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import *
 from files.routes.importstar import *
@@ -166,7 +166,7 @@ def searchcomments(v):
 
 	comments = get_comments(ids, v=v)
 
-	if request.headers.get("Authorization"): return {"total":total, "data":[x.json_for(v, without_replies=True) for x in comments]}
+	if request.headers.get("Authorization"): return {"total":total, "data":[comment_json_for(x, v) for x in comments]}
 	return render_template("search_comments.html", v=v, query=query, total=total, page=page, comments=comments, sort=sort, t=t, next_exists=next_exists, standalone=True)
 
 

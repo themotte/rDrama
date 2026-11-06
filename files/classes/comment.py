@@ -227,6 +227,16 @@ class Comment(CreatedBase):
 
 		return data
 
+	@property
+	def json_place(self) -> dict:
+		'''Where the comment sits, without anything of its own: what its JSON holds when it's hidden.'''
+		return {
+			'id': self.id,
+			'post': self.post.id if self.post else 0,
+			'level': self.level,
+			'parent': self.parent_fullname,
+		}
+
 	def json_core_for(self, v:Optional["User"], *, without_replies:bool=False) -> dict:
 		'''The comment as `v` may see it, without its author and post: whole, or a stub (its place in the thread and why it's hidden) when it's hidden from them.'''
 		if self.visibility_state.is_visible_to(v):
@@ -236,12 +246,7 @@ class Comment(CreatedBase):
 				data['score'] = data['upvotes'] - data['downvotes']
 			if self.level >= 2: data['parent_comment_id'] = self.parent_comment_id
 		else:
-			data = {
-				'id': self.id,
-				'post': self.post.id if self.post else 0,
-				'level': self.level,
-				'parent': self.parent_fullname,
-			}
+			data = self.json_place
 			# Why it's hidden, as the page says: hidden by its author's shadowban, it reads as removed by no one
 			if self.state_mod == StateMod.REMOVED: data['state_mod_set_by'] = self.state_mod_set_by
 			elif self.shadowban_hides_from(v): data['state_mod_set_by'] = None

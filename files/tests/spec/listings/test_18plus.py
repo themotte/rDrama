@@ -1,7 +1,11 @@
 '''
-18+ posts in the post listings (the front page, /changelog, post search, a profile's posts, saved posts) and the site's feed (GET /rss).
+18+ posts in the listings and the site's feed (GET /rss).
+
+The post listings are the front page, /changelog, post search, a profile's posts and saved posts.
 
 A viewer who hasn't confirmed they are 18 or over (one without the 18+ setting, "over_18", and not having confirmed on a post's page) gets a listed 18+ post with its title and 18+ mark only: its text, its link and anything embedded from it are left out of the page. For API clients its JSON object then holds only "id", "title", "permalink", "state_mod_set_by", "state_user_deleted_utc" and "is_nsfw" (true). The feed, read without logging in, never holds an 18+ post's text.
+
+The comment listings (/comments, comment search, a profile's comments, saved comments) likewise leave out the text of comments on 18+ posts for such viewers, listing the post they are on by its title; an API client gets such a comment's place only ("id", "post", "level", "parent", empty "replies") with "is_nsfw" true. Comments marked 18+ on other posts are listed like any other.
 
 Viewers who have the 18+ setting get 18+ posts like any other.
 '''
@@ -121,3 +125,60 @@ def test_the_feed_leaves_out_18_plus_text():
 	assert_in_payload(r, post["title"])
 	assert_not_in_payload(r, body)
 	assert_in_payload(r, other_body)
+
+
+# Comment listings: /comments, comment search, a profile's comments (GET /@<username>/) and saved comments
+
+COMMENT_LISTINGS = ["comments", "search", "profile", "saved"]
+
+
+def _comment_path(listing, viewer, comment):
+	author = db.row("users", id=comment["author_id"])
+	return {
+		"comments": "/comments",
+		"search": "/search/comments?q=zebra",
+		"profile": f"/@{author['username']}/",
+		"saved": f"/@{viewer['username']}/saved/comments",
+	}[listing]
+
+
+def _comment(viewer, post_over_18, comment_over_18):
+	post = factories.post(factories.user(), created_utc=OLD, over_18=post_over_18)
+	sentinel = factories.unique()
+	comment = factories.comment(factories.user(), post, body=f"zebra {sentinel}", over_18=comment_over_18)
+	db.insert("comment_save_relationship", user_id=viewer["id"], comment_id=comment["id"])
+	return {**comment, "sentinel": sentinel}, post
+
+
+@pytest.mark.parametrize("listing", COMMENT_LISTINGS)
+@pytest.mark.parametrize("over_18", [False, True])
+def test_comments_on_18_plus_posts_are_listed_with_their_text_only_for_18_plus_viewers(listing, over_18):
+	viewer = factories.user(over_18=over_18)
+	comment, post = _comment(viewer, True, True)
+
+	r = as_user(viewer).get(_comment_path(listing, viewer, comment))
+
+	assert_html(r, 200)
+	assert_in_payload(r, post["title"])
+	(assert_in_payload if over_18 else assert_not_in_payload)(r, comment["sentinel"])
+
+
+@pytest.mark.parametrize("listing", COMMENT_LISTINGS)
+def test_18_plus_comments_on_other_posts_are_listed_like_any_other(listing):
+	viewer = factories.user(over_18=False)
+	comment, _ = _comment(viewer, False, True)
+
+	r = as_user(viewer).get(_comment_path(listing, viewer, comment))
+
+	assert_in_payload(r, comment["sentinel"])
+
+
+@pytest.mark.parametrize("listing", COMMENT_LISTINGS)
+def test_api_clients_without_the_setting_get_a_stub_for_comments_on_18_plus_posts(listing):
+	viewer = factories.user(over_18=False)
+	comment, post = _comment(viewer, True, False)
+
+	r = as_api(factories.api_token(viewer)).get(_comment_path(listing, viewer, comment))
+
+	[listed] = [x for x in r.json["data"] if x["id"] == comment["id"]]
+	assert listed == {"id": comment["id"], "post": post["id"], "level": 1, "parent": f"post_{post['id']}", "replies": [], "is_nsfw": True}
