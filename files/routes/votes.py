@@ -3,7 +3,6 @@ from files.classes.comment import Comment
 from files.classes.submission import Submission
 from files.classes.votes import CommentVote, Vote
 from files.helpers.config.const import OWNER_ID
-from files.helpers.config.environment import ENABLE_DOWNVOTES
 from files.helpers.get import get_comment, get_post
 from files.helpers.wrappers import admin_level_required, is_not_permabanned
 from files.routes.importstar import *
@@ -60,7 +59,6 @@ def api_vote_post(post_id, new, v):
 	if request.headers.get("Authorization"): abort(403)
 
 	# make sure new is valid
-	if new == "-1" and not ENABLE_DOWNVOTES: abort(403)
 	if new not in ["-1", "0", "1"]: abort(400)
 	new = int(new)
 
@@ -126,7 +124,6 @@ def api_vote_comment(comment_id, new, v):
 	if request.headers.get("Authorization"): abort(403)
 
 	# make sure new is valid
-	if new == "-1" and not ENABLE_DOWNVOTES: abort(403)
 	if new not in ["-1", "0", "1"]: abort(400)
 	new = int(new)
 

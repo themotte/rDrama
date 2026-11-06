@@ -330,7 +330,7 @@
 					<div id="voting" class="voting d-none d-md-block mb-auto">
 						<div tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1')" class="post-{{p.id}}-up mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
 						<span  class="post-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}" data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}">{{score}}</span>
-						<div {% if not ENABLE_DOWNVOTES %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1')" class="post-{{p.id}}-down text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
+						<div tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1')" class="post-{{p.id}}-down text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
 					</div>
 
 					{% else %}
@@ -339,7 +339,7 @@
 						<div  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '1')" class="post-{{p.id}}-up arrow-up mx-auto" onclick="location.href='/login?redirect={{request.path | urlencode}}';">
 						</div>
 						<span  class="post-{{p.id}}-score-none score text-muted{% if p.controversial %} controversial{% endif %}"{% if p.state_mod == StateMod.VISIBLE %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
-						<div {% if not ENABLE_DOWNVOTES %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1')" class="post-{{p.id}}-down arrow-down mx-auto" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></div>
+						<div tabindex="0" role="button" onclick="vote('post', '{{p.id}}', '-1')" class="post-{{p.id}}-down arrow-down mx-auto" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></div>
 					</div>
 					{% endif %}
 				</div>
@@ -392,9 +392,9 @@
 					<span  class="post-mobile-score-{{p.id}} score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if p.controversial %} controversial{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}">{{score}}</span>
 
 					{% if v %}
-						<span {% if not ENABLE_DOWNVOTES %}style="display:None!important"{% endif %}  tabindex="0" role="button" onclick="vote('post-mobile', '{{p.id}}', '-1')" class="post-mobile-{{p.id}}-down mx-0 pl-1 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></span>
+						<span tabindex="0" role="button" onclick="vote('post-mobile', '{{p.id}}', '-1')" class="post-mobile-{{p.id}}-down mx-0 pl-1 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></span>
 					{% else %}
-						<span {% if not ENABLE_DOWNVOTES %}style="display:None!important"{% endif %}  tabindex="0" class="arrow-{{p.id}}-mobile-down arrow-mobile-down mx-0 pl-1 my-0" onclick="location.href='/login?redirect={{request.path | urlencode}}';">
+						<span tabindex="0" class="arrow-{{p.id}}-mobile-down arrow-mobile-down mx-0 pl-1 my-0" onclick="location.href='/login?redirect={{request.path | urlencode}}';">
 							<i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
 						</span>
 					{% endif %}

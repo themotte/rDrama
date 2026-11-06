@@ -90,7 +90,6 @@ VOLUNTEER_JANITOR_ENABLE = bool_from_string(environ.get('VOLUNTEER_JANITOR_ENABL
 
 RATE_LIMITER_ENABLED = not bool_from_string(environ.get('DBG_LIMITER_DISABLED', False))
 
-ENABLE_DOWNVOTES = not bool_from_string(environ.get('DISABLE_DOWNVOTES', False))
 CARD_VIEW = bool_from_string(environ.get("CARD_VIEW", True))
 
 # other stuff from const.py that aren't constants

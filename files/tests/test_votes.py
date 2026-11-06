@@ -35,10 +35,6 @@ def test_vote_post_upvote():
 
 def test_vote_post_downvote():
 	"""Test downvoting a post (if downvotes are enabled)"""
-	from files.helpers.config.environment import ENABLE_DOWNVOTES
-	if not ENABLE_DOWNVOTES:
-		return  # Skip if downvotes are disabled
-
 	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post to vote on
@@ -93,10 +89,6 @@ def test_vote_post_remove_vote():
 
 def test_vote_post_change_vote():
 	"""Test changing a vote on a post"""
-	from files.helpers.config.environment import ENABLE_DOWNVOTES
-	if not ENABLE_DOWNVOTES:
-		return  # Skip if downvotes are disabled
-
 	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post (already has author's upvote)
@@ -197,10 +189,6 @@ def test_vote_comment_upvote():
 
 def test_vote_comment_downvote():
 	"""Test downvoting a comment (if downvotes are enabled)"""
-	from files.helpers.config.environment import ENABLE_DOWNVOTES
-	if not ENABLE_DOWNVOTES:
-		return  # Skip if downvotes are disabled
-
 	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post and comment
@@ -257,10 +245,6 @@ def test_vote_comment_remove_vote():
 
 def test_vote_comment_change_vote():
 	"""Test changing a vote on a comment"""
-	from files.helpers.config.environment import ENABLE_DOWNVOTES
-	if not ENABLE_DOWNVOTES:
-		return  # Skip if downvotes are disabled
-
 	client, user = util_accounts.create_test_client_and_user()
 
 	# Create a post and comment (already has author's upvote)
@@ -359,9 +343,8 @@ def test_vote_post_by_other_user():
 	user2_after = db_session.query(User).filter_by(id=user2.id).first()
 	assert user2_after.truescore == initial_truescore + 1
 
-	# User1 changes to downvote (if enabled)
-	from files.helpers.config.environment import ENABLE_DOWNVOTES
-	if ENABLE_DOWNVOTES:
+	# User1 changes to downvote
+	if True:
 		vote_response, _ = util.post_with_formkey(client1, f"/vote/post/{post.id}/-1", data={})
 		assert vote_response.status_code == 204
 
@@ -398,9 +381,8 @@ def test_vote_comment_by_other_user():
 	user2_after = db_session.query(User).filter_by(id=user2.id).first()
 	assert user2_after.truescore == initial_truescore + 1
 
-	# User1 changes to downvote (if enabled)
-	from files.helpers.config.environment import ENABLE_DOWNVOTES
-	if ENABLE_DOWNVOTES:
+	# User1 changes to downvote
+	if True:
 		vote_response, _ = util.post_with_formkey(client1, f"/vote/comment/{comment.id}/-1", data={})
 		assert vote_response.status_code == 204
 
