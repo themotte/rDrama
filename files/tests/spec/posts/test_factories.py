@@ -1,6 +1,8 @@
 '''
-The post and comment factories arrange the same database state as submitting and commenting through the site, so tests that arrange with them describe states real users reach. Notifications aside, which the factories don't send.
+The post, comment and vote factories arrange the same database state as submitting, commenting and voting through the site, so tests that arrange with them describe states real users reach. Notifications aside, which the factories don't send.
 '''
+import pytest
+
 from files.tests.spec.harness import *
 
 _POST_IDENTITY = {"id", "title", "title_html", "body", "body_html", "created_utc"}
@@ -103,3 +105,37 @@ def test_a_factory_comment_on_a_draft_matches_one_made_through_the_site():
 	_assert_same_comment_state(through_site, arranged, [])
 	assert db.row("users", id=site_author["id"])["comment_count"] == 0
 	assert db.row("submissions", id=site_post["id"])["comment_count"] == db.row("submissions", id=arranged_post["id"])["comment_count"] == 1
+
+
+@pytest.mark.parametrize("kind", ["post", "comment"])
+@pytest.mark.parametrize("votes", [[1], [-1], [1, -1], [1, 0], [-1, 1, 0]])
+def test_a_factory_vote_matches_one_cast_through_the_site(kind, votes):
+	table, vote_table, key = ("submissions", "votes", "submission_id") if kind == "post" else ("comments", "commentvotes", "comment_id")
+	site_author, arranged_author = factories.user(), factories.user()
+	site_voter, arranged_voter = factories.user(), factories.user()
+	if kind == "post":
+		site_item, arranged_item = factories.post(site_author), factories.post(arranged_author)
+	else:
+		site_item, arranged_item = factories.comment(site_author, factories.post(factories.user())), factories.comment(arranged_author, factories.post(factories.user()))
+
+	for vote in votes:
+		assert_status(as_user(site_voter).post(f"/vote/{kind}/{site_item['id']}/{vote}", headers=XHR), 204)
+		factories.vote(arranged_voter, arranged_item, vote)
+
+	counts = {"upvotes", "downvotes", "realupvotes"}
+	assert {k: v for k, v in db.row(table, id=site_item["id"]).items() if k in counts} == {k: v for k, v in db.row(table, id=arranged_item["id"]).items() if k in counts}
+	assert _without(_vote(vote_table, **{key: site_item["id"], "user_id": site_voter["id"]}), {"user_id", key}) == _without(_vote(vote_table, **{key: arranged_item["id"], "user_id": arranged_voter["id"]}), {"user_id", key})
+	assert db.row("users", id=site_author["id"])["truescore"] == db.row("users", id=arranged_author["id"])["truescore"]
+
+
+def test_a_factory_vote_by_a_shadowbanned_user_matches_one_cast_through_the_site():
+	site_voter, arranged_voter = factories.user(shadowbanned="somemod"), factories.user(shadowbanned="somemod")
+	site_item, arranged_item = factories.post(factories.user()), factories.post(factories.user())
+
+	up = 1
+	assert_status(as_user(site_voter).post(f"/vote/post/{site_item['id']}/{up}", headers=XHR), 204)
+	factories.vote(arranged_voter, arranged_item, up)
+
+	assert _without(db.row("submissions", id=site_item["id"]), _POST_IDENTITY | {"author_id"}) == _without(db.row("submissions", id=arranged_item["id"]), _POST_IDENTITY | {"author_id"})
+	assert _without(_vote("votes", submission_id=site_item["id"], user_id=site_voter["id"]), {"user_id", "submission_id"}) == _without(_vote("votes", submission_id=arranged_item["id"], user_id=arranged_voter["id"]), {"user_id", "submission_id"})
+	assert db.row("users", id=site_item["author_id"])["truescore"] == db.row("users", id=arranged_item["author_id"])["truescore"]

@@ -144,6 +144,35 @@ def comment(author: dict, post: dict, parent: dict | None = None, **overrides) -
 	return row
 
 
+def vote(voter: dict, target: dict, vote_type: int) -> dict:
+	'''
+	`voter` votes `vote_type` (1, 0 or -1) on `target` (a post or a comment from these factories), as voting does: their vote row is set, the target's vote counts are recounted, and the author's truescore moves by the change unless the voter is the author.
+	'''
+	if "title" in target:
+		table, votes, key = "submissions", "votes", "submission_id"
+	else:
+		table, votes, key = "comments", "commentvotes", "comment_id"
+	who = db.row("users", id=voter["id"])
+	real = not who["shadowbanned"] and not (who["is_banned"] and not who["unban_utc"])
+	old = db.execute(f"SELECT vote_type FROM {votes} WHERE user_id = :user AND {key} = :target", user=voter["id"], target=target["id"])
+	if old == vote_type: return db.row(table, id=target["id"])
+	if old is None:
+		db.insert(votes, user_id=voter["id"], vote_type=vote_type, real=real, **{key: target["id"]})
+	else:
+		db.execute(f"UPDATE {votes} SET vote_type = :type, real = :real WHERE user_id = :user AND {key} = :target", type=vote_type, real=real, user=voter["id"], target=target["id"])
+	author_id = db.execute(f"SELECT author_id FROM {table} WHERE id = :id", id=target["id"])
+	if author_id != voter["id"]:
+		db.execute("UPDATE users SET truescore = truescore + :delta WHERE id = :id", delta=vote_type - (old or 0), id=author_id)
+	db.execute(f"""
+		UPDATE {table} SET
+			upvotes = (SELECT count(*) FROM {votes} WHERE {key} = :id AND vote_type = 1),
+			downvotes = (SELECT count(*) FROM {votes} WHERE {key} = :id AND vote_type = -1),
+			realupvotes = (SELECT count(*) FROM {votes} WHERE {key} = :id AND vote_type = 1 AND real)
+		WHERE id = :id
+	""", id=target["id"])
+	return db.row(table, id=target["id"])
+
+
 def api_token(user: dict) -> str:
 	'''An access token for an approved API application owned by `user`, authenticating as `user`.'''
 	application = db.insert("oauth_apps", client_id=secrets.token_urlsafe(48), app_name=unique("app"), redirect_uri="https://example.com/callback", author_id=user["id"], description=unique("description"))
