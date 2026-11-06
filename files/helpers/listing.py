@@ -72,7 +72,7 @@ def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 	posts = posts[:size]
 
 	if page == 1 and not gt and not lt:
-		posts = listable_posts(g.db.query(Submission).filter(Submission.pinned), v).all() + posts
+		posts = listable_posts(g.db.query(Submission).filter(Submission.pinned), v).order_by(Submission.created_utc.desc(), Submission.id.desc()).all() + posts
 
 	posts = [x.id for x in posts]
 

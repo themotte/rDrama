@@ -4,7 +4,7 @@ The front page, GET / (also GET /catalog), lists posts for anyone, logged in or 
 - A page holds the viewer's front page size ("frontsize": 15, 25, 50 or 100; 25 when logged out), and "page" (from 1) chooses the page.
 - "sort" orders the posts: new (newest first), old, top (highest score first), bottom, controversial (closest to evenly split votes first), comments (most comments first), hot (score weighed against age). Without "sort", a logged-in viewer gets their default sort ("defaultsorting") and anyone else new. Ties fall back to newest first.
 - "t" (hour, day, week, month, year, all) keeps only posts created within that long (a month is 30 days, a year 365). "after" and "before" (Unix times) instead keep only posts created strictly after or before that time; with either, "t" doesn't apply.
-- Pinned posts come first, above the sorted list, on the first page when neither "after" nor "before" is given; they are then left out of the sorted list on every page, so the first page still holds a full page besides them. Pins ignore the sort, the time window, filter words and the changelog subscription. With "after" or "before", pinned posts are sorted with the rest. A pin made with an expiry time stops being pinned once that time has passed.
+- Pinned posts come first, above the sorted list and newest first among themselves, on the first page when neither "after" nor "before" is given; they are then left out of the sorted list on every page, so the first page still holds a full page besides them. Pins ignore the sort, the time window, filter words and the changelog subscription. With "after" or "before", pinned posts are sorted with the rest. A pin made with an expiry time stops being pinned once that time has passed.
 - Changelog posts (see test_changelog) are left out unless the viewer subscribes to the changelog.
 - Posts whose title contains one of the viewer's filter words (one per line of "custom_filter_list", in any letter case) are left out.
 - A viewer who hides what they voted on ("hidevotedon") doesn't get posts they voted up or down, pinned ones included.
@@ -206,6 +206,16 @@ def test_pinned_posts_come_first():
 	r = anon().get("/", params={"sort": "new"})
 
 	assert_in_order(r, [pinned["title"], newer["title"]])
+
+
+@pytest.mark.parametrize("sort", ["new", "old", "top"])
+def test_pins_are_listed_newest_first(sort):
+	older = _post(stickied="someadmin", created_utc=NOW - 7200, upvotes=9)
+	newer = _post(stickied="someadmin", created_utc=NOW - 60)
+
+	r = anon().get("/", params={"sort": sort})
+
+	assert_in_order(r, [newer["title"], older["title"]])
 
 
 def test_pins_come_first_whatever_the_sort():
