@@ -143,13 +143,6 @@ def settings_profile_post(v):
 			updated = True
 		else: abort(400)
 
-	defaulttime = request.values.get("defaulttime")
-	if defaulttime:
-		if defaulttime in {"hour", "day", "week", "month", "year", "all"}:
-			v.defaulttime = defaulttime
-			updated = True
-		else: abort(400)
-
 	theme = request.values.get("theme")
 	if theme:
 		if theme in THEMES:

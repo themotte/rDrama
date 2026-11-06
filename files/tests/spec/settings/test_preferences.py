@@ -1,7 +1,7 @@
 '''
 POST /settings/profile, preference fields.
 
-A request applies at most one "single-choice" field. Single-choice fields are considered in this order: hidevotedon, cardview, highlightcomments, newtab, newtabexternal, over18, nofollow (each whenever present), then the text fields (see test_profile_text), which end the request. Otherwise every present "multi" field applies too: frontsize, defaultsortingcomments, defaultsorting, defaulttime, theme.
+A request applies at most one "single-choice" field. Single-choice fields are considered in this order: hidevotedon, cardview, highlightcomments, newtab, newtabexternal, over18, nofollow (each whenever present), then the text fields (see test_profile_text), which end the request. Otherwise every present "multi" field applies too: frontsize, defaultsortingcomments, defaultsorting, theme.
 
 Success is a JSON message. A request that changes nothing is a 400. A request with an unlisted multi-field value (400) changes nothing at all.
 '''
@@ -61,10 +61,10 @@ def test_single_choice_field_combines_with_multi_fields():
 	u = factories.user(cardview=False)
 
 	with db_diff() as d:
-		r = _post(u, {"cardview": "true", "frontsize": "50", "defaulttime": "week"})
+		r = _post(u, {"cardview": "true", "frontsize": "50", "defaultsorting": "old"})
 
 	assert_json_message(r)
-	d.assert_exactly(updated={"users": {u["id"]: {"cardview": True, "frontsize": 50, "defaulttime": "week"}}})
+	d.assert_exactly(updated={"users": {u["id"]: {"cardview": True, "frontsize": 50, "defaultsorting": "old"}}})
 
 
 def test_nothing_to_change_is_rejected():
@@ -78,10 +78,10 @@ def test_nothing_to_change_is_rejected():
 
 
 def test_a_rejected_field_discards_the_whole_request():
-	u = factories.user(cardview=False, defaulttime="all")
+	u = factories.user(cardview=False, defaultsorting="new")
 
 	with db_diff() as d:
-		r = _post(u, {"cardview": "true", "defaulttime": "week", "frontsize": "bogus"}, headers=XHR)
+		r = _post(u, {"cardview": "true", "defaultsorting": "old", "frontsize": "bogus"}, headers=XHR)
 
 	assert_status(r, 400)
 	d.assert_exactly()
@@ -98,7 +98,7 @@ def test_frontsize_accepts_listed_sizes(value):
 	d.assert_exactly(updated={"users": {u["id"]: {"frontsize": int(value)}}})
 
 
-@pytest.mark.parametrize("field", ["frontsize", "defaultsortingcomments", "defaultsorting", "defaulttime", "theme"])
+@pytest.mark.parametrize("field", ["frontsize", "defaultsortingcomments", "defaultsorting", "theme"])
 def test_multi_field_rejects_unlisted_values(field):
 	u = factories.user()
 
@@ -133,17 +133,6 @@ def test_default_post_sort_accepts_post_sorts(value):
 
 	assert_json_message(r)
 	d.assert_exactly(updated={"users": {u["id"]: {"defaultsorting": value}}})
-
-
-@pytest.mark.parametrize("value", ["hour", "day", "week", "month", "year", "all"])
-def test_default_time_filter_accepts_listed_windows(value):
-	u = factories.user(defaulttime="x")
-
-	with db_diff() as d:
-		r = _post(u, {"defaulttime": value})
-
-	assert_json_message(r)
-	d.assert_exactly(updated={"users": {u["id"]: {"defaulttime": value}}})
 
 
 @pytest.mark.parametrize("theme", ["TheMotte", "dramblr", "reddit", "dark", "light", "coffee", "tron", "4chan", "midnight"])

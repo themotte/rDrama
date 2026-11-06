@@ -61,21 +61,6 @@
 							</div>
 						</div>
 				</div>
-					<div class="d-lg-flex border-bottom">
-						<div class="title w-lg-25">
-							<label for="defaulttime">Default Time Filter for Posts</label>
-						</div>
-						<div class="body w-lg-100">
-							<p>Change the default time filter for posts.</p>
-							<div class="input-group mb2">
-								<select autocomplete="off" id='defaulttime' class="form-control" form="profile-settings" name="defaulttime" onchange="postToastSimple(this,'/settings/profile?defaulttime='+document.getElementById('defaulttime').value)">
-								{% for entry in ["hour", "day", "week", "month", "year", "all"] %}
-									<option value="{{entry}}"{{' selected' if v.defaulttime==entry}}>{{entry}}</option>
-								{% endfor %}
-							</select>
-							</div>
-						</div>
-				</div>
 			</div>
 
 			<h2 class="h5">Tab Behaviour</h2>

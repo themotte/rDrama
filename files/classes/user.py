@@ -24,8 +24,7 @@ from files.classes.visstate import StateMod
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.const import *
 from files.helpers.config.environment import (CARD_VIEW, DEFAULT_COLOR,
-                                              DEFAULT_TIME_FILTER, SITE_FULL,
-                                              SITE_ID)
+                                              SITE_FULL, SITE_ID)
 from files.helpers.security import *
 
 if TYPE_CHECKING:
@@ -93,7 +92,6 @@ class User(CreatedBase):
 	stored_following_count = Column(Integer, default=0, nullable=False)
 	defaultsortingcomments = Column(String, default="new", nullable=False)
 	defaultsorting = Column(String, default="new", nullable=False)
-	defaulttime = Column(String, default=DEFAULT_TIME_FILTER, nullable=False)
 	is_nofollow = Column(Boolean, default=False, nullable=False)
 	custom_filter_list = Column(String)
 	ban_evade = Column(Integer, default=0, nullable=False)

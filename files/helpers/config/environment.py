@@ -32,7 +32,6 @@ SECRET_KEY = environ.get('MASTER_KEY', '')
 SERVER_NAME = environ.get("DOMAIN").strip()
 SESSION_COOKIE_SECURE = "localhost" not in SERVER_NAME
 DEFAULT_COLOR = environ.get("DEFAULT_COLOR", "fff").strip()
-DEFAULT_TIME_FILTER = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 HCAPTCHA_SITEKEY = environ.get("HCAPTCHA_SITEKEY","").strip()
 HCAPTCHA_SECRET = environ.get("HCAPTCHA_SECRET","").strip()
 

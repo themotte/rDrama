@@ -7,7 +7,6 @@ from files.classes.visstate import StateMod
 from files.helpers.comments import comment_filter_moderated
 from files.helpers.contentsorting import (apply_time_filter,
                                           sort_comment_results, sort_objects)
-from files.helpers.config.environment import DEFAULT_TIME_FILTER
 from files.helpers.get import *
 from files.helpers.wrappers import *
 
@@ -302,7 +301,7 @@ def random_user():
 def all_comments(v):
 	page = max(request.values.get("page", 1, int), 1)
 	sort = request.values.get("sort", "new")
-	time_filter = request.values.get("t", DEFAULT_TIME_FILTER)
+	time_filter = request.values.get("t", "all")
 	time_gt = request.values.get("after", 0, int)
 	time_lt = request.values.get("before", 0, int)
 
