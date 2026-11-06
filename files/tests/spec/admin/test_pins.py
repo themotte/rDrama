@@ -1,7 +1,7 @@
 '''
 Admin marks on posts and comments, all POSTs answering a JSON message:
 - /distinguish/<post_id> and /distinguish_comment/<comment_id> toggle the item's distinguish level between the admin's own level and 0. Any admin may distinguish their own post, admins from level 2 anyone's post; comments only their own.
-- /sticky/<post_id> and /unsticky/<post_id> pin a post to the top of the front page and take it off, recording which admin pinned it. Pins beyond the third visible one expire an hour after pinning; once its time has passed, a pin counts as unpinned everywhere: the front page, the pages and JSON that show a post as pinned, these routes and the limit, without anything being written.
+- /sticky/<post_id> and /unsticky/<post_id> pin a post to the top of the front page and take it off, recording which admin pinned it. Pins beyond the third that logged-out visitors see on the front page expire an hour after pinning; once its time has passed, a pin counts as unpinned everywhere: the front page, the pages and JSON that show a post as pinned, these routes and the limit, without anything being written.
 - /sticky_comment/<comment_id> and /unsticky_comment/<comment_id> pin a comment to the top of its thread and take it off.
 
 Each change is logged in the mod log; pinning or unpinning someone else's item notifies its author. Pinning a pinned item or unpinning an unpinned one changes nothing. An id that isn't an existing item's is 404.
@@ -211,9 +211,21 @@ def test_a_fourth_pin_expires_after_an_hour():
 	assert time.time() + 3600 - 60 <= expiry <= time.time() + 3600
 
 
-def test_pins_on_posts_others_cannot_see_do_not_count_toward_the_limit():
-	for state in ["VISIBLE", "VISIBLE", "REMOVED", "FILTERED"]:
-		factories.post(factories.user(), stickied="someadmin", state_mod=state)
+@pytest.mark.parametrize("hidden", [
+	{"state_mod": "REMOVED", "state_mod_set_by": "somemod"},
+	{"state_mod": "FILTERED"},
+	{"state_user_deleted_utc": "2020-01-01T00:00:00Z"},
+	{"private": True},
+	"shadowbanned author",
+])
+def test_pins_on_posts_visitors_cannot_see_do_not_count_toward_the_limit(hidden):
+	for _ in range(2):
+		factories.post(factories.user(), stickied="someadmin")
+	for _ in range(2):
+		if hidden == "shadowbanned author":
+			factories.post(factories.user(shadowbanned="somemod"), stickied="someadmin")
+		else:
+			factories.post(factories.user(), stickied="someadmin", **hidden)
 	admin = factories.admin(2)
 	post = factories.post(admin)
 

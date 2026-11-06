@@ -14,7 +14,7 @@ from files.helpers.alerts import *
 from files.helpers.config.const import *
 from files.helpers.config.environment import CF_HEADERS, CF_ZONE, SITE_SETTINGS_PATH
 from files.helpers.get import *
-from files.helpers.listing import request_page
+from files.helpers.listing import listable_posts, request_page
 from files.helpers.locks import user_counts_lock
 from files.helpers.media import *
 from files.helpers.moderation import moderate, shadowban_lift, shadowban_set
@@ -972,7 +972,7 @@ def api_distinguish_post(post_id, v):
 def sticky_post(post_id, v):
 	post = get_post(post_id)
 	if not post.pinned:
-		pins = g.db.query(Submission.id).filter(Submission.pinned, Submission.state_mod == StateMod.VISIBLE).count()
+		pins = listable_posts(g.db.query(Submission.id).filter(Submission.pinned), None).count()
 		post.stickied = v.username
 		post.stickied_utc = int(time.time()) + 3600 if pins > 2 else None
 		g.db.add(post)
