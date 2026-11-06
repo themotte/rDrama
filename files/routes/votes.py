@@ -79,7 +79,8 @@ def _vote_check_request(new:str) -> int:
 def _vote_check_target(target:Union[Submission, Comment], v:User):
 	'''Refuses votes on what `v` may not vote on: 404 where they can't open it at all, 403 where they block its author.'''
 	post = target if isinstance(target, Submission) else target.post
-	if post and post.is_draft_hidden_from(v): abort(404)
+	if not post: abort(404) # private messages have no scores
+	if post.is_draft_hidden_from(v): abort(404)
 	if getattr(target, 'is_blocking', False): abort(403, "Can't vote on things from users you've blocked")
 
 

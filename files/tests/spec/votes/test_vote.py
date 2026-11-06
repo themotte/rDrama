@@ -7,7 +7,7 @@ A vote stores whether it is "real": the voter wasn't shadowbanned when it was se
 
 After a change, the item's upvotes and downvotes are its +1 and -1 votes, and its "realupvotes" are its real +1 votes. The author's truescore moves by the change (from the old vote to the new one), unless the voter is the author.
 
-Refused, changing nothing, in this order: 401 for anonymous users; 403 for API clients; 403 for permanently suspended users (temporarily suspended users vote as anyone else); 400 for any other <vote>; 404 for an unknown item or an id that isn't one, and for a draft, or a comment on a draft, that the voter can't see (only its author and admins of level 2 and up see a draft); 403 when the voter blocks the item's author.
+Refused, changing nothing, in this order: 401 for anonymous users; 403 for API clients; 403 for permanently suspended users (temporarily suspended users vote as anyone else); 400 for any other <vote>; 404 for an unknown item or an id that isn't one, and for a draft, or a comment on a draft, that the voter can't see (only its author and admins of level 2 and up see a draft), and for every private message, which have no scores; 403 when the voter blocks the item's author.
 '''
 import time
 
@@ -295,3 +295,24 @@ def test_those_who_see_a_draft_vote_on_it(kind, who):
 	voter = author if who == "author" else factories.admin(2)
 
 	_assert_voted(_vote(as_user(voter), kind, _on_draft(kind, author), -1))
+
+
+# Private messages
+
+def _message(sender, recipient):
+	message_id = db.execute("SELECT nextval('comments_id_seq')")
+	return db.insert("comments", id=message_id, author_id=sender["id"], sentto=recipient["id"], created_utc=int(time.time()), parent_submission=None, level=1, top_comment_id=message_id, body="hi", body_html="<p>hi</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
+
+
+@pytest.mark.parametrize("who", ["sender", "recipient", "admin", "other"])
+def test_private_messages_are_not_found(who):
+	sender, recipient = factories.user(), factories.user()
+	message = _message(sender, recipient)
+	voter = {"sender": sender, "recipient": recipient, "admin": factories.admin(3), "other": factories.user()}[who]
+	client = as_user(voter)
+
+	with db_diff() as d:
+		r = _vote(client, "comment", message, 1)
+
+	assert_status(r, 404)
+	d.assert_exactly()
