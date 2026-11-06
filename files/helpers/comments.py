@@ -9,7 +9,7 @@ from sqlalchemy.sql.expression import text
 from files.classes import Comment, Notification, Submission, Subscription, User
 from files.classes.visstate import StateMod
 from files.helpers.alerts import NOTIFY_USERS
-from files.helpers.config.const import SORTS_COMMENTS
+from files.helpers.config.const import PERMS, SORTS_COMMENTS
 
 def comment_counted(comment:Comment) -> bool:
 	'''Whether the comment counts toward its post's and its ancestors' comment counts: a comment on a post that others can see.'''
@@ -175,7 +175,7 @@ def comment_on_unpublish(comment:Comment):
 
 
 def comment_filter_moderated(q: Query, v: Optional[User]) -> Query:
-	if not (v and v.shadowbanned) and not (v and v.admin_level >= 3):
+	if not (v and v.shadowbanned) and not (v and v.admin_level >= PERMS['USER_SHADOWBAN']):
 		q = q.join(User, User.id == Comment.author_id) \
 		     .filter(User.shadowbanned == None)
 	if not v or v.admin_level < 2:

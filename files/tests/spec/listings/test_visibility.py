@@ -3,7 +3,7 @@ Which posts and comments the listings show to whom: the front page (GET /, its p
 
 - Posts and comments that moderators removed or filtered are shown only to their authors and to admins from level 2.
 - Items their authors deleted, and drafts, are left out of the front page for everyone; post and comment search show them only to admins from level 2. Comments on drafts likewise.
-- Items by a shadowbanned user are left out for everyone but their author (who sees their own) and admins from level 2 (on the comment listing, from level 3). Other shadowbanned users don't see them either.
+- Items by a shadowbanned user are left out for everyone but their author (who sees their own) and admins from level 2. Other shadowbanned users don't see them either.
 - Items by a user the viewer blocks are left out, even distinguished ones, except for admins from level 2. Items by users who block the viewer are listed.
 - Private messages are never listed as comments.
 - API clients see what a user without admin rights sees, whatever their account's level.
@@ -53,7 +53,7 @@ COMMENTS = {
 	("removed", "admin"): True, ("filtered", "admin"): True,
 	("deleted", "author"): False,
 	("on a draft", "user"): False,
-	("shadowbanned author", "user"): False,
+	("shadowbanned author", "user"): False, ("shadowbanned author", "admin"): True,
 	("blocked author", "user"): False, ("blocked author", "admin"): True,
 	("blocked distinguished author", "user"): False,
 	("author blocking the viewer", "user"): True,
