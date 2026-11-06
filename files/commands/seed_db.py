@@ -2,7 +2,6 @@ import hashlib
 import math
 from typing import Optional
 
-import sqlalchemy
 from sqlalchemy.orm import Session
 from werkzeug.security import generate_password_hash
 
@@ -10,6 +9,7 @@ from files.__main__ import app, db_session
 from files.classes import Comment, CommentVote, Submission, User, Vote
 from files.classes.visstate import StateMod
 from files.commands.comment_counts_recalc import comment_counts_recalc
+from files.commands.vote_counts_recalc import vote_counts_recalc
 
 
 @app.cli.command('seed_db')
@@ -217,48 +217,8 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 
 	db.commit()
 
-	post_upvote_counts = dict(
-		db
-			.query(Vote.submission_id, sqlalchemy.func.count(1))
-			.filter(Vote.vote_type == +1)
-			.group_by(Vote.submission_id)
-			.all()
-	)
-	post_downvote_counts = dict(
-		db
-			.query(Vote.submission_id, sqlalchemy.func.count(1))
-			.filter(Vote.vote_type == -1)
-			.group_by(Vote.submission_id)
-			.all()
-	)
-	comment_upvote_counts = dict(
-		db
-			.query(CommentVote.comment_id, sqlalchemy.func.count(1))
-			.filter(CommentVote.vote_type == +1)
-			.group_by(CommentVote.comment_id)
-			.all()
-	)
-	comment_downvote_counts = dict(
-		db
-			.query(CommentVote.comment_id, sqlalchemy.func.count(1))
-			.filter(CommentVote.vote_type == -1)
-			.group_by(CommentVote.comment_id)
-			.all()
-	)
-
-	for post in posts:
-		post.upvotes = post_upvote_counts.get(post.id, 0)
-		post.downvotes = post_downvote_counts.get(post.id, 0)
-		post.realupvotes = post.upvotes - post.downvotes
-		db.add(post)
-
-	for comment in comments:
-		comment.upvotes = comment_upvote_counts.get(comment.id, 0)
-		comment.downvotes = comment_downvote_counts.get(comment.id, 0)
-		comment.realupvotes = comment.upvotes - comment.downvotes
-		db.add(comment)
-
-	db.commit()
+	print("Counting votes")
+	vote_counts_recalc(db)
 
 	print("Counting comments")
 	comment_counts_recalc(db)
