@@ -268,7 +268,7 @@ def changelog(v):
 
 @app.get("/random_post")
 def random_post():
-	p = g.db.query(Submission.id).filter(Submission.state_user_deleted_utc == None, Submission.state_mod == StateMod.VISIBLE, Submission.private == False).order_by(func.random()).first()
+	p = listing.listable_posts(g.db.query(Submission.id), None).order_by(func.random()).first()
 
 	if p: p = p[0]
 	else: abort(404)

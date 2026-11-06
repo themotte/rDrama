@@ -1,7 +1,7 @@
 '''
 Random picks, open to anyone.
 
-- GET /random_post redirects to the page of a post picked at random among those anyone may read: not removed or filtered, not deleted by its author, and not a draft. With no such post it is a 404.
+- GET /random_post redirects to the page of a post picked at random among those anyone may read: not removed or filtered, not deleted by its author, not a draft, and not by a shadowbanned user. With no such post it is a 404.
 - GET /random_user redirects to the profile of a user picked at random among all accounts.
 '''
 import pytest
@@ -13,6 +13,7 @@ def test_random_post_redirects_to_a_readable_post():
 	readable = factories.post(factories.user())
 	for state in [{"state_mod": "REMOVED", "state_mod_set_by": "somemod"}, {"state_mod": "FILTERED"}, {"state_user_deleted_utc": "2020-01-01T00:00:00Z"}, {"private": True}]:
 		factories.post(factories.user(), **state)
+	factories.post(factories.user(shadowbanned="somemod"))
 
 	for _ in range(8):
 		assert_redirect(anon().get("/random_post"), f"/post/{readable['id']}")
