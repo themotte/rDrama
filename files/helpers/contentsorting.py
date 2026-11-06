@@ -37,8 +37,6 @@ def sort_objects(objects: Query, sort: str, cls):
 			-100000
 				* (cls.upvotes + 1)
 				/ (func.power((ti - cls.created_utc) / 1000, 1.23)))
-	elif sort == 'bump' and cls.__name__ == 'Submission':
-		ordered = objects.filter(cls.comment_count > 1).order_by(cls.bump_utc.desc())
 	elif sort == 'comments':
 		if cls.__name__ == 'Submission': # we're checking the stringified name due to a gnarly import cycle
 			ordered = objects.order_by(cls.comment_count.desc())

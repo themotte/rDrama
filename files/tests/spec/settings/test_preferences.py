@@ -124,7 +124,7 @@ def test_default_comment_sort_rejects_post_only_sorts():
 	assert_status(_post(factories.user(), {"defaultsortingcomments": "hot"}, headers=XHR), 400)
 
 
-@pytest.mark.parametrize("value", ["hot", "bump", "top", "bottom", "new", "old", "controversial", "comments"])
+@pytest.mark.parametrize("value", ["hot", "top", "bottom", "new", "old", "controversial", "comments"])
 def test_default_post_sort_accepts_post_sorts(value):
 	u = factories.user(defaultsorting="x")
 

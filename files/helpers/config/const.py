@@ -72,7 +72,6 @@ SORTS_COMMON = {
 }
 SORTS_POSTS = {
 	"hot": "fa-fire",
-	"bump": "fa-arrow-up"
 }
 SORTS_POSTS.update(SORTS_COMMON)
 SORTS_COMMENTS = SORTS_COMMON

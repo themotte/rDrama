@@ -2,7 +2,7 @@ from urllib.parse import urlparse
 
 from flask import g
 from sqlalchemy import *
-from sqlalchemy.orm import Session, declared_attr, deferred, object_session, relationship
+from sqlalchemy.orm import Session, declared_attr, object_session, relationship
 
 from files.classes.base import CreatedBase
 from files.classes.flags import Flag
@@ -87,8 +87,6 @@ class Submission(CreatedBase):
 	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
 	notes = relationship("UserNote", back_populates="post")
 	task = relationship("ScheduledSubmissionTask", back_populates="submissions")
-
-	bump_utc = deferred(Column(Integer, server_default=FetchedValue()))
 
 	def submit(self, db: Session):
 		from files.classes.user import User # imports this module

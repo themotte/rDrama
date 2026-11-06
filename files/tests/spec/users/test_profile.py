@@ -6,7 +6,7 @@ Before listing anything:
 - A private profile shows only its owner and admins (level 2 and up) the listings; anyone else gets a page without them, or 403 as a script or API client.
 - A viewer who blocks the user gets a page saying so instead of the listings, or 403 as a script or API client, whether or not the user blocks them too. Being blocked by the user changes nothing.
 
-The listings hold 25 items to a page, with "page" (from 1; anything else means 1) choosing the page. "sort" orders them: new (the default: newest first), old, top (highest score first), bottom, comments (most comments first; for comments, most replies), controversial (closest to evenly split votes first), hot (score weighed against age), and for posts bump (most recently bumped first, among posts with more than one comment). "t" (hour, day, week, month, year; anything else means all time) keeps only items created within that long. Ties fall back to newest first.
+The listings hold 25 items to a page, with "page" (from 1; anything else means 1) choosing the page. "sort" orders them: new (the default: newest first), old, top (highest score first), bottom, comments (most comments first; for comments, most replies), controversial (closest to evenly split votes first), and hot (score weighed against age). "t" (hour, day, week, month, year; anything else means all time) keeps only items created within that long. Ties fall back to newest first.
 
 What's listed depends on the viewer. Everyone sees the user's visible posts and comments; the user themselves and admins (level 2 and up) also see the deleted, removed, held ("filtered") and anonymous ("ghost") ones, and the user's unpublished drafts. Nobody else sees anything of a shadowbanned user, other shadowbanned users included. The user's pinned posts that the viewer may see lead the first page of their posts, newest first.
 
@@ -461,7 +461,6 @@ SORTS = {
 POST_SORTS = {
 	**SORTS,
 	"comments": ({"comment_count": 5}, {"comment_count": 2}),
-	"bump": ({"comment_count": 2, "bump_utc": NOW}, {"comment_count": 2, "bump_utc": NOW - 100}),
 }
 
 COMMENT_SORTS = {
@@ -488,7 +487,7 @@ def test_profile_sorts(page, sort):
 
 
 @pytest.mark.parametrize("page", PAGES)
-@pytest.mark.parametrize("sort", ["new", "nonsense"])
+@pytest.mark.parametrize("sort", ["new", "nonsense", "bump"])
 def test_profile_lists_newest_first_by_default(page, sort):
 	user = factories.user()
 	older = _item(user, page, created_utc=NOW - 7200)
@@ -498,18 +497,6 @@ def test_profile_lists_newest_first_by_default(page, sort):
 
 	assert_html(r, 200)
 	assert r.text.index(newer) < r.text.index(older)
-
-
-def test_profile_bump_sort_lists_only_posts_with_more_than_one_comment():
-	user = factories.user()
-	listed = _item(user, "posts", comment_count=2)
-	token = _item(user, "posts", comment_count=1)
-
-	r = anon().get(_path(user, "posts"), params={"sort": "bump"})
-
-	assert_html(r, 200)
-	assert_in_payload(r, listed)
-	assert_not_in_payload(r, token)
 
 
 TIMES = [
