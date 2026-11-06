@@ -1,10 +1,7 @@
 from __future__ import annotations
 
-import random
 import urllib.parse
 from typing import TYPE_CHECKING, Any, Optional
-
-from sqlalchemy.orm import Session
 
 if TYPE_CHECKING:
 	from files.classes import Comment, Submission, User
@@ -76,24 +73,3 @@ def body_displayed(target:Submittable, v:Optional[User], is_html:bool) -> str:
 
 	return body
 
-
-def execute_shadowbanned_fake_votes(db:Session, target:Submittable, v:Optional[User]):
-	if not target or not v: return
-	if not v.shadowbanned: return
-	if v.id != target.author_id: return
-	if not (86400 > target.age_seconds > 20): return
-
-	ti = max(target.age_seconds // 60, 1)
-	maxupvotes = min(ti, 11)
-	rand = random.randint(0, maxupvotes)
-	if target.upvotes >= rand: return
-
-	amount = random.randint(0, 3)
-	if amount != 1: return
-	
-	if hasattr(target, 'views'):
-		target.views += amount*random.randint(3, 5)
-	
-	target.upvotes += amount
-	db.add(target)
-	db.commit()

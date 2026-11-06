@@ -9,8 +9,7 @@ from files.classes.base import CreatedBase
 from files.classes.visstate import StateMod, StateReport, VisibilityState
 from files.helpers.config.const import *
 from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS, SITE_FULL
-from files.helpers.content import (body_displayed,
-                                   execute_shadowbanned_fake_votes)
+from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy
 from files.helpers.math import clamp
 from files.helpers.time import format_age
@@ -255,9 +254,7 @@ class Comment(CreatedBase):
 		return data
 
 	def realbody(self, v):
-		body = body_displayed(self, v, is_html=True)
-		execute_shadowbanned_fake_votes(g.db, self, v) # TODO: put in route handler?
-		return body
+		return body_displayed(self, v, is_html=True)
 
 	def plainbody(self, v):
 		return body_displayed(self, v, is_html=False)
