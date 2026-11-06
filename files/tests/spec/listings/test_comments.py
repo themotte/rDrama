@@ -1,7 +1,7 @@
 '''
 GET /comments lists comments on posts across the site, for logged-in users only (others are sent to log in).
 
-25 comments to a page, "page" (from 1) choosing the page. "sort" orders them as post listings do (test_front), with comments meaning most replies first; newest first by default. "t" keeps only comments created within that long, all time by default; "after" and "before" (Unix times) instead keep only comments created strictly after or before.
+25 comments to a page, "page" (from 1) choosing the page. "sort" orders them as post listings do (test_front), with comments meaning most replies first and ties falling back to newest first; newest first by default. "t" keeps only comments created within that long, all time by default; "after" and "before" (Unix times) instead keep only comments created strictly after or before.
 
 Which comments a viewer may see is in test_visibility. Replies aren't shown under the comments they reply to.
 
@@ -54,6 +54,16 @@ def test_sorts(sort):
 	r = as_user(factories.user()).get("/comments", params={"sort": sort})
 
 	assert_in_order(r, [first["body"], second["body"]])
+
+
+@pytest.mark.parametrize("sort", ["top", "bottom", "controversial", "comments"])
+def test_ties_list_newest_first(sort):
+	older = _comment(created_utc=NOW - 7200)
+	newer = _comment(created_utc=NOW - 60)
+
+	r = as_user(factories.user()).get("/comments", params={"sort": sort})
+
+	assert_in_order(r, [newer["body"], older["body"]])
 
 
 def test_time_filter():

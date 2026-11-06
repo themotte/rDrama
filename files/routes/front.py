@@ -4,8 +4,7 @@ import files.helpers.listing as listing
 from files.__main__ import app, limiter
 from files.classes.submission import Submission
 from files.classes.visstate import StateMod
-from files.helpers.contentsorting import (apply_time_filter,
-                                          sort_comment_results, sort_objects)
+from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.get import *
 from files.helpers.wrappers import *
 
@@ -308,7 +307,7 @@ def all_comments(v):
 		return q
 
 	comments, _ = get_comment_trees_eager(comment_tree_filter, sort=sort, v=v)
-	comments = sort_comment_results(comments, sort=sort, pins=False)
+	comments.sort(key=lambda c: idlist.index(c.id))
 
 	if request.headers.get("Authorization"):
 		return {"data": [x.json_for(v) for x in comments]}
