@@ -72,12 +72,7 @@ def frontlist(v=None, sort='new', page=1, t="all", filter_words='', gt=0, lt=0):
 	posts = posts[:size]
 
 	if page == 1 and not gt and not lt:
-		pins = g.db.query(Submission).filter(Submission.pinned, Submission.state_mod == StateMod.VISIBLE)
-		if v:
-			if v.admin_level < 2:
-				pins = pins.filter(Submission.author_id.notin_(v.userblocks))
-
-		posts = pins.all() + posts
+		posts = listable_posts(g.db.query(Submission).filter(Submission.pinned), v).all() + posts
 
 	posts = [x.id for x in posts]
 

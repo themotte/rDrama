@@ -1,5 +1,5 @@
 '''
-Which posts and comments the listings show to whom: the front page (GET /), post search (GET /search/posts), the comment listing (GET /comments) and comment search (GET /search/comments). /changelog and random picks are in their own files.
+Which posts and comments the listings show to whom: the front page (GET /, its pinned posts alike), post search (GET /search/posts), the comment listing (GET /comments) and comment search (GET /search/comments). /changelog and random picks are in their own files.
 
 - Posts and comments that moderators removed or filtered are shown only to their authors and to admins from level 2.
 - Items their authors deleted, and drafts, are left out of the front page for everyone; post and comment search show them only to admins from level 2. Comments on drafts likewise.
@@ -129,6 +129,15 @@ def _comment_in(author, state, overrides):
 @pytest.mark.parametrize("state, viewer, listed", _cases(FRONT))
 def test_front_page(state, viewer, listed):
 	client, post = _arrange(state, viewer, _post_in)
+
+	r = client.get("/")
+
+	_assert_listed(r, client, post, listed)
+
+
+@pytest.mark.parametrize("state, viewer, listed", _cases(FRONT))
+def test_front_page_pins(state, viewer, listed):
+	client, post = _arrange(state, viewer, lambda author, state, overrides: _post_in(author, state, {**overrides, "stickied": "someadmin"}))
 
 	r = client.get("/")
 
