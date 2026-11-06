@@ -10,7 +10,7 @@
 			<div class="modal-body">
 				<ul class="list-group comment-actions">
 
-					{% if v and v.admin_level >= 2 and not c.ghost %}<a href="/votes?link={{c.fullname}}"><li class="list-group-item"><i class="fas fa-arrows-v mr-2"></i>Votes</li></a>{% endif %}
+					{% if v and v.admin_level >= 3 and not c.ghost %}<a href="/votes?link={{c.fullname}}"><li class="list-group-item"><i class="fas fa-arrows-v mr-2"></i>Votes</li></a>{% endif %}
 
 					<a class="list-group-item" href="{{c.permalink}}"><i class="fas fa-book-open mr-2"></i>Context</a>
 

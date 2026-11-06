@@ -72,6 +72,17 @@ def test_items_link_to_their_vote_info_for_level_3_admins(kind):
 
 
 @pytest.mark.parametrize("kind", ["post", "comment"])
+@pytest.mark.parametrize("level", [0, 1, 2])
+def test_items_dont_link_to_their_vote_info_below_level_3(kind, level):
+	page, link = _page_with(kind)
+
+	r = as_user(factories.admin(level)).get(page)
+
+	assert_status(r, 200)
+	assert_not_in_payload(r, link)
+
+
+@pytest.mark.parametrize("kind", ["post", "comment"])
 def test_anonymous_items_dont_link_to_their_vote_info(kind):
 	page, link = _page_with(kind, ghost=True)
 
