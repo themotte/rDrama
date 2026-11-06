@@ -2,7 +2,7 @@ from urllib.parse import parse_qs, urlsplit
 
 from files.tests.spec.harness.http import Client, Response
 
-__all__ = ["assert_status", "assert_redirect", "assert_login_redirect", "assert_api_unauthorized", "assert_json_message", "assert_html", "assert_serves_image", "assert_in_payload", "assert_not_in_payload"]
+__all__ = ["assert_status", "assert_redirect", "assert_login_redirect", "assert_api_unauthorized", "assert_json_message", "assert_html", "assert_serves_image", "assert_in_payload", "assert_not_in_payload", "assert_in_order"]
 
 
 def _describe(r: Response) -> str:
@@ -73,3 +73,11 @@ def assert_in_payload(r: Response, token: str):
 
 def assert_not_in_payload(r: Response, token: str):
 	assert token not in r.text, f"expected {token!r} to be absent from the response, but it was sent"
+
+
+def assert_in_order(r: Response, tokens: list[str]):
+	'''Every one of `tokens` is in the response, and they first appear in this order.'''
+	for token in tokens:
+		assert_in_payload(r, token)
+	positions = [r.text.index(token) for token in tokens]
+	assert positions == sorted(positions), f"expected {tokens!r} in this order, but they appear in the order {sorted(tokens, key=r.text.index)!r}"

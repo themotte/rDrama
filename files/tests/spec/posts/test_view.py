@@ -386,6 +386,15 @@ def test_sort_parameter_orders_comments(sort, first):
 	assert order[0] == (older if first == "older" else newer)["id"]
 
 
+@pytest.mark.parametrize("sort, first_overrides", [("comments", {"descendant_count": 3}), ("controversial", {"upvotes": 5, "downvotes": 5})])
+def test_sort_parameter_orders_by_replies_and_split_votes(sort, first_overrides):
+	post = factories.post(factories.user())
+	first = factories.comment(factories.user(), post, created_utc=1000, **first_overrides)
+	second = factories.comment(factories.user(), post, created_utc=2000, upvotes=10)
+
+	assert _order(_page(anon(), post, params={"sort": sort}), [first, second]) == [first["id"], second["id"]]
+
+
 @pytest.mark.parametrize("sort", ["hot", "bogus"])
 def test_unknown_comment_sorts_fall_back_to_the_default(sort):
 	post = factories.post(factories.user())
