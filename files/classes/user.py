@@ -549,6 +549,9 @@ class User(CreatedBase):
 		if self.admin_level < 2:
 			posts = posts.filter(Submission.author_id.notin_(self.userblocks))
 
+		if self.admin_level < PERMS['USER_SHADOWBAN']:
+			posts = posts.filter(or_(Submission.author_id == self.id, not_(Submission.author.has(User.shadowbanned != None))))
+
 		return [x[0] for x in posts.order_by(Submission.created_utc.desc()).all()]
 
 	@lazy
