@@ -11,7 +11,6 @@ class Vote(CreatedDateTimeBase):
 	submission_id = Column(Integer, ForeignKey("submissions.id"), primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	vote_type = Column(Integer, nullable=False)
-	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	real = Column(Boolean, default=True, nullable=False)
 
 	Index('votes_type_index', vote_type)
@@ -48,7 +47,6 @@ class CommentVote(CreatedDateTimeBase):
 	comment_id = Column(Integer, ForeignKey("comments.id"), primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 	vote_type = Column(Integer, nullable=False)
-	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	real = Column(Boolean, default=True, nullable=False)
 
 	Index('cvote_user_index', user_id)

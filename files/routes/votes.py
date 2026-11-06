@@ -88,7 +88,6 @@ def api_vote_post(post_id, new, v):
 						user_id=v.id,
 						vote_type=new,
 						submission_id=post_id,
-						app_id=v.client.application.id if v.client else None,
 					)
 	
 	# update the vote data
@@ -153,7 +152,6 @@ def api_vote_comment(comment_id, new, v):
 						user_id=v.id,
 						vote_type=new,
 						comment_id=comment_id,
-						app_id=v.client.application.id if v.client else None,
 					)
 	
 	# update the vote data

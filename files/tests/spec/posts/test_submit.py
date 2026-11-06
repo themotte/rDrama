@@ -62,7 +62,7 @@ def test_text_post():
 				"private": False, "over_18": False, "is_bot": False, "app_id": None, "ghost": False, "state_mod": "VISIBLE", "state_report": "UNREPORTED",
 				"upvotes": 1, "downvotes": 0, "realupvotes": 1, "views": 0, "comment_count": 0, "embed_url": None, "thumburl": None, "edited_utc": 0,
 			}],
-			"votes": [{"user_id": author["id"], "vote_type": 1, "real": True, "app_id": None}],
+			"votes": [{"user_id": author["id"], "vote_type": 1, "real": True}],
 		},
 		updated={"users": {author["id"]: {"post_count": 1}}},
 	)

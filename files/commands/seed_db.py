@@ -186,7 +186,6 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 					user_id=user.id,
 					vote_type=vote_type,
 					submission_id=post.id,
-					app_id=None,
 					real=True
 				)
 				db.add(vote)
@@ -212,7 +211,6 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 					user_id=user.id,
 					vote_type=vote_type,
 					comment_id=comment.id,
-					app_id=None,
 					real=True
 				)
 				db.add(vote)
