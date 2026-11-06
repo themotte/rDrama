@@ -299,7 +299,7 @@ def all_comments(v):
 	comments = get_comments(idlist, v=v)
 
 	if request.headers.get("Authorization"):
-		return {"data": [x.json_for(v) for x in comments]}
+		return {"data": [x.json_for(v, without_replies=True) for x in comments]}
 	return render_template("home_comments.html", v=v,
 		sort=sort, t=time_filter, page=page, next_exists=next_exists,
 		comments=comments, standalone=True)

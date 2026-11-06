@@ -2,7 +2,7 @@
 The listings' JSON, for API clients.
 
 - The post listings (the front page, GET /; /changelog; post search, GET /search/posts; a profile's posts, GET /@<username>/posts; the viewer's saved posts, GET /@<username>/saved/posts) hold each listed post's JSON object as the viewer would get it from the post itself (GET /post/<id>), without its replies.
-- The comment listings (/comments; comment search, GET /search/comments; a profile's comments, GET /@<username>/; the viewer's saved comments) hold each listed comment's JSON object as the viewer would get it from the comment itself (GET /comment/<id>).
+- The comment listings (/comments; comment search, GET /search/comments; a profile's comments, GET /@<username>/; the viewer's saved comments) hold each listed comment's JSON object as the viewer would get it from the comment itself (GET /comment/<id>), with no replies ("replies" is empty).
 '''
 import time
 
@@ -100,6 +100,20 @@ def _listed_comment(listing, viewer, comment):
 
 
 @pytest.mark.parametrize("listing", COMMENT_LISTINGS)
+def test_a_listed_comment_is_its_comment_json_without_replies(listing):
+	viewer = factories.user()
+	post = factories.post(factories.user(), created_utc=OLD)
+	comment = factories.comment(factories.user(), post, body=f"zebra {factories.unique()}", created_utc=OLD)
+	factories.comment(factories.user(), post, comment)
+	db.insert("comment_save_relationship", user_id=viewer["id"], comment_id=comment["id"])
+
+	listed, single = _listed_comment(listing, viewer, comment)
+
+	assert single["replies"], "the comment's own JSON holds its reply"
+	assert listed == {**single, "replies": []}
+
+
+@pytest.mark.parametrize("listing", COMMENT_LISTINGS)
 def test_a_listed_comments_post_is_hidden_from_viewers_blocking_its_author(listing):
 	viewer = factories.user()
 	post_author = factories.user()
@@ -111,4 +125,4 @@ def test_a_listed_comments_post_is_hidden_from_viewers_blocking_its_author(listi
 	listed, single = _listed_comment(listing, viewer, comment)
 
 	assert "body_html" not in single["post"]
-	assert listed == single
+	assert listed == {**single, "replies": []}

@@ -1,5 +1,5 @@
 '''
-The JSON object of a visible comment, as API clients get it from the comment's own page (GET /comment/<comment id>) and, without "author" and "post", nested in other objects (a post's "replies" at GET /post/<post id>, a comment's "replies").
+The JSON object of a visible comment, as API clients get it from the comment's own page (GET /comment/<comment id>) and, without "author" and "post", nested in other objects (a post's "replies" at GET /post/<post id>, a comment's "replies"). Listings of comments hold the same object without replies (see the listings area).
 
 It has "id", "level" (1 for a top-level comment, one more than its parent's for a reply), "author_name", "body" (the source text), "body_html", "is_bot", "created_utc", "edited_utc" (0 if never edited), "is_nsfw" (the comment is 18+), "permalink" ("/comment/<id>"), "is_pinned" (who pinned it, or null), "distinguish_level", "post_id" and "replies" (the replies' objects, newest first by default). Replies add "parent_comment_id". "score", "upvotes" and "downvotes" are left out while the comment is younger than a day. The object at the top of a response adds "author" (the author's public details, as in GET /@<username>/info without the counts) and "post" (the post's object). On posts where authors are anonymous, "author_name" and "author" are "👻" instead.
 
@@ -238,13 +238,13 @@ def test_a_shadowbanned_users_own_comments_are_whole_to_them_in_search():
 
 
 @pytest.mark.parametrize("viewer", ["user", "the reply's author"])
-def test_replies_in_a_listed_comments_json_follow_the_shadowban_rule(viewer):
+def test_replies_in_a_comments_json_follow_the_shadowban_rule(viewer):
 	author, replier = factories.user(), factories.user(shadowbanned="somemod")
 	comment = factories.comment(author, factories.post(factories.user()))
 	reply = factories.comment(replier, db.row("submissions", id=comment["parent_submission"]), parent=comment, body=factories.unique())
 	client = as_api(factories.api_token(replier if viewer == "the reply's author" else factories.user()))
 
-	r = client.get(f"/@{author['username']}/")
+	r = client.get(f"/comment/{comment['id']}")
 
 	assert_status(r, 200)
 	(assert_in_payload if viewer == "the reply's author" else assert_not_in_payload)(r, reply["body"])
@@ -285,14 +285,14 @@ def test_post_json_leaves_out_hidden_comments_without_replies_the_viewer_may_see
 	assert [c["id"] for c in r.json["replies"]] == [shown["id"]]
 
 
-def test_listed_comments_json_keeps_replies_below_a_hidden_reply():
+def test_a_comments_json_keeps_replies_below_a_hidden_reply():
 	author = factories.user()
 	post = factories.post(factories.user())
 	comment = factories.comment(author, post)
 	removed = factories.comment(factories.user(), post, parent=comment, state_mod="REMOVED", state_mod_set_by="somemod")
 	below = factories.comment(factories.user(), post, parent=removed, body=factories.unique())
 
-	r = _api().get(f"/@{author['username']}/")
+	r = _api().get(f"/comment/{comment['id']}")
 
 	assert_status(r, 200)
 	assert_in_payload(r, below["body"])

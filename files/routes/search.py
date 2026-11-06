@@ -166,7 +166,7 @@ def searchcomments(v):
 
 	comments = get_comments(ids, v=v)
 
-	if request.headers.get("Authorization"): return {"total":total, "data":[x.json_for(v) for x in comments]}
+	if request.headers.get("Authorization"): return {"total":total, "data":[x.json_for(v, without_replies=True) for x in comments]}
 	return render_template("search_comments.html", v=v, query=query, total=total, page=page, comments=comments, sort=sort, t=t, next_exists=next_exists, standalone=True)
 
 

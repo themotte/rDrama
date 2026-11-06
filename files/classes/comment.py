@@ -227,7 +227,7 @@ class Comment(CreatedBase):
 
 		return data
 
-	def json_core_for(self, v:Optional["User"]) -> dict:
+	def json_core_for(self, v:Optional["User"], *, without_replies:bool=False) -> dict:
 		'''The comment as `v` may see it, without its author and post: whole, or a stub (its place in the thread and why it's hidden) when it's hidden from them.'''
 		if self.visibility_state.is_visible_to(v):
 			data = dict(self.json_raw)
@@ -247,12 +247,12 @@ class Comment(CreatedBase):
 			elif self.shadowban_hides_from(v): data['state_mod_set_by'] = None
 			elif self.state_mod != StateMod.VISIBLE: data['state_mod_set_by'] = self.state_mod_set_by
 			elif self.state_user_deleted_utc: data['state_user_deleted_utc'] = self.state_user_deleted_utc
-		data['replies'] = [x.json_core_for(v) for x in self.replies(v)]
+		data['replies'] = [] if without_replies else [x.json_core_for(v) for x in self.replies(v)]
 		return data
 
-	def json_for(self, v:Optional["User"]) -> dict:
-		'''The comment as `v` may see it, with its author and its post (without the post's replies) when it isn't hidden from them.'''
-		data = self.json_core_for(v)
+	def json_for(self, v:Optional["User"], *, without_replies:bool=False) -> dict:
+		'''The comment as `v` may see it, with its author and its post (without the post's replies) when it isn't hidden from them. Listings leave out its replies (`without_replies`).'''
+		data = self.json_core_for(v, without_replies=without_replies)
 		if self.visibility_state.is_visible_to(v):
 			data['author'] = '👻' if self.ghost else self.author.json_core
 			data['post'] = {key: value for key, value in self.post.json_for(v).items() if key != 'replies'} if self.post else ''
