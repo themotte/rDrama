@@ -47,6 +47,7 @@ def searchposts(v):
 	
 	if v.admin_level < 2:
 		posts = posts.filter(Submission.state_user_deleted_utc == None, Submission.state_mod == StateMod.VISIBLE, Submission.private == False, Submission.author_id.notin_(v.userblocks))
+		posts = posts.filter(or_(Submission.author_id == v.id, not_(Submission.author.has(User.shadowbanned != None))))
 	
 
 	if 'author' in criteria:

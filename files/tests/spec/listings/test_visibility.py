@@ -41,6 +41,7 @@ SEARCH_POSTS = {
 	**{(state, "admin"): True for state in POST_STATES},
 	("deleted", "author"): False, ("draft", "author"): False,
 	("shadowbanned author", "author"): True, ("shadowbanned author", "admin"): True,
+	("shadowbanned author", "user"): False, ("shadowbanned author", "shadowbanned user"): False, ("shadowbanned author", "admin token"): False,
 	("blocked author", "user"): False, ("blocked author", "admin"): True,
 	("blocked distinguished author", "user"): False,
 	("author blocking the viewer", "user"): True,
