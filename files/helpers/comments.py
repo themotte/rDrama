@@ -82,7 +82,7 @@ def comment_counts_shift_for_author(author_id:int, sign:int):
 		deltas = g.db.execute(deltas_sql, {"author": author_id}).all()
 		if not deltas: continue
 		ids, counts = [row[0] for row in deltas], [sign * row[1] for row in deltas]
-		g.db.execute(text(f"SELECT id FROM {table} WHERE id = ANY(:ids) ORDER BY id FOR UPDATE"), {"ids": ids})
+		g.db.execute(text(f"SELECT id FROM {table} WHERE id = ANY(:ids) ORDER BY id FOR NO KEY UPDATE"), {"ids": ids})
 		g.db.execute(text(f"UPDATE {table} SET {column} = {column} + d.delta FROM unnest(CAST(:ids AS integer[]), CAST(:deltas AS integer[])) AS d(id, delta) WHERE {table}.id = d.id"), {"ids": ids, "deltas": counts})
 
 

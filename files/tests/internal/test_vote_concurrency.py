@@ -4,7 +4,7 @@ Votes cast while another vote's transaction is still open keep every vote: the c
 from sqlalchemy import text
 
 from files.tests.internal.concurrency import hold_voting, holding_transaction, run_while_held
-from files.tests.spec.harness import XHR, as_user, assert_status, db, factories
+from files.tests.spec.harness import XHR, as_user, assert_json_message, assert_status, db, factories
 
 
 def _vote(voter, kind, item, vote):
@@ -55,3 +55,17 @@ def test_a_vote_waits_for_another_vote_changing_the_same_authors_truescore():
 	assert_status(r, 204)
 	assert waited
 	assert db.row("users", id=author["id"])["truescore"] == 2
+
+
+def test_shadowbanning_doesnt_wait_for_votes_merely_referencing_its_rows():
+	author = factories.user()
+	post = factories.post(factories.user())
+	factories.comment(author, post)
+	admin = factories.admin(3)
+
+	with holding_transaction() as conn:
+		conn.execute(text("INSERT INTO votes (user_id, submission_id, vote_type, real) VALUES (:user, :post, 1, true)"), {"user": factories.user()["id"], "post": post["id"]})
+		r, waited = run_while_held(conn, lambda: as_user(admin).post(f"/shadowban/{author['id']}", headers=XHR))
+
+	assert_json_message(r)
+	assert not waited
