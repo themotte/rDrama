@@ -4,7 +4,6 @@ import files.helpers.listing as listing
 from files.__main__ import app, limiter
 from files.classes.submission import Submission
 from files.classes.visstate import StateMod
-from files.helpers.comments import comment_filter_moderated
 from files.helpers.contentsorting import (apply_time_filter,
                                           sort_comment_results, sort_objects)
 from files.helpers.get import *
@@ -302,7 +301,6 @@ def all_comments(v):
 
 	def comment_tree_filter(q: Query) -> Query:
 		q = q.filter(Comment.id.in_(idlist))
-		q = comment_filter_moderated(q, v)
 		q = q.options(
 			selectinload(Comment.post),         # post titles, is_op
 			selectinload(Comment.parent_comment), # header_msg "Comment Reply"
@@ -320,19 +318,7 @@ def all_comments(v):
 
 
 def get_comments_idlist(page=1, v=None, sort="new", t="all", gt=0, lt=0):
-	comments = g.db.query(Comment.id) \
-		.join(Comment.post) \
-		.join(Comment.author) \
-		.filter(Comment.parent_submission != None)
-
-	if v.admin_level < 2:
-		comments = comments.filter(
-			Comment.author_id.notin_(v.userblocks),
-			Comment.state_mod == StateMod.VISIBLE,
-			Comment.state_user_deleted_utc == None,
-			Submission.private == False, # comment parent post not private
-			User.shadowbanned == None, # comment author not shadowbanned
-		)
+	comments = listing.listable_comments(g.db.query(Comment.id), v, admins_see_drafts_and_deleted=True)
 
 	if gt: comments = comments.filter(Comment.created_utc > gt)
 	if lt: comments = comments.filter(Comment.created_utc < lt)

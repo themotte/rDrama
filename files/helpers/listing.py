@@ -8,6 +8,7 @@ from flask import g, request
 from sqlalchemy.sql.expression import and_, not_, or_
 from sqlalchemy import false, func
 
+from files.classes.comment import Comment
 from files.classes.submission import Submission
 from files.classes.user import User
 from files.classes.visstate import StateMod
@@ -17,20 +18,34 @@ from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.strings import sql_ilike_clean
 
 
+def _listable(items, cls, not_draft, v: Optional[User], admins_see_drafts_and_deleted: bool):
+	# The permissions visibility_and_message checks: moderating for states and blocks, shadowbanning for shadowbans
+	can_moderate = v and v.admin_level >= PERMS['POST_COMMENT_MODERATION']
+	can_shadowban = v and v.admin_level >= PERMS['USER_SHADOWBAN']
+	own = cls.author_id == v.id if v else false()
+	if not (can_moderate and admins_see_drafts_and_deleted):
+		items = items.filter(not_draft, cls.state_user_deleted_utc == None)
+	if not can_moderate:
+		items = items.filter(or_(own, cls.state_mod == StateMod.VISIBLE))
+		if v: items = items.filter(cls.author_id.notin_(v.userblocks))
+	if not can_shadowban:
+		items = items.filter(or_(own, not_(cls.author.has(User.shadowbanned != None))))
+	return items
+
+
 def listable_posts(posts, v: Optional[User], *, admins_see_drafts_and_deleted: bool = False):
 	'''
 	`posts` (a query over submissions) narrowed to those `v` could read on their post pages: their own, and others that are visible, by an author who isn't shadowbanned and whom `v` doesn't block. Admins who moderate (level 2 and up) may read everything.
 
 	Drafts and posts their authors deleted are left out for everyone, admins too unless `admins_see_drafts_and_deleted`.
 	'''
-	moderator = v and v.admin_level >= PERMS['POST_COMMENT_MODERATION'] and v.admin_level >= PERMS['USER_SHADOWBAN']
-	if moderator and admins_see_drafts_and_deleted: return posts
-	posts = posts.filter(Submission.private == False, Submission.state_user_deleted_utc == None)
-	if moderator: return posts
-	own = Submission.author_id == v.id if v else false()
-	posts = posts.filter(or_(own, and_(Submission.state_mod == StateMod.VISIBLE, not_(Submission.author.has(User.shadowbanned != None)))))
-	if v: posts = posts.filter(Submission.author_id.notin_(v.userblocks))
-	return posts
+	return _listable(posts, Submission, Submission.private == False, v, admins_see_drafts_and_deleted)
+
+
+def listable_comments(comments, v: Optional[User], *, admins_see_drafts_and_deleted: bool = False):
+	'''`comments` (a query over comments) narrowed to comments on posts that `v` could read in their threads, by the rule of `listable_posts`; comments on drafts count as drafts.'''
+	comments = comments.filter(Comment.parent_submission != None)
+	return _listable(comments, Comment, Comment.post.has(Submission.private == False), v, admins_see_drafts_and_deleted)
 
 
 def changelog_post():

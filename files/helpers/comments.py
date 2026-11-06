@@ -3,13 +3,12 @@ from typing import Optional
 
 from flask import g
 from sqlalchemy import select, update
-from sqlalchemy.orm import Query
 from sqlalchemy.sql.expression import text
 
 from files.classes import Comment, Notification, Submission, Subscription, User
 from files.classes.visstate import StateMod
 from files.helpers.alerts import NOTIFY_USERS
-from files.helpers.config.const import PERMS, SORTS_COMMENTS
+from files.helpers.config.const import SORTS_COMMENTS
 
 def comment_counted(comment:Comment) -> bool:
 	'''Whether the comment counts toward its post's and its ancestors' comment counts: a comment on a post that others can see.'''
@@ -172,15 +171,3 @@ def comments_on_draft_publish(post):
 def comment_on_unpublish(comment:Comment):
 	'''Run when the comment stops counting: when it's removed or deleted.'''
 	update_stateful_counters(comment, -1)
-
-
-def comment_filter_moderated(q: Query, v: Optional[User]) -> Query:
-	if not (v and v.shadowbanned) and not (v and v.admin_level >= PERMS['USER_SHADOWBAN']):
-		q = q.join(User, User.id == Comment.author_id) \
-		     .filter(User.shadowbanned == None)
-	if not v or v.admin_level < 2:
-		q = q.filter(
-			(Comment.state_mod == StateMod.VISIBLE)
-			| (Comment.author_id == ((v and v.id) or 0))
-		)
-	return q
