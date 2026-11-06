@@ -1,6 +1,8 @@
 import functools
 import time
 
+import sqlalchemy
+
 from files.helpers.alerts import *
 from files.helpers.config.const import *
 from files.helpers.config.environment import SITE
@@ -56,8 +58,18 @@ def get_logged_in_user():
 		session.permanent = True
 		session["session_id"] = secrets.token_hex(49)
 
+	if v: _end_expired_ban(v)
+
 	g.v = v
 	return v
+
+
+def _end_expired_ban(v):
+	'''Ends `v`'s temporary ban once it has run out, with its ban-evasion mark, telling them; concurrent requests end it once.'''
+	if not (v.is_banned and v.unban_utc and v.unban_utc < time.time()): return
+	ended = g.db.execute(sqlalchemy.update(User).where(User.id == v.id, User.is_banned != 0, User.unban_utc == v.unban_utc).values(is_banned=0, unban_utc=0, ban_evade=0)).rowcount
+	if ended: send_repeatable_notification(v.id, "You have been unbanned!")
+	g.db.commit()
 
 
 def check_ban_evade(v):

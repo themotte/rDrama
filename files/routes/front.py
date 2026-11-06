@@ -222,15 +222,6 @@ def front_all(v):
 
 	posts = get_posts(ids, v=v)
 	
-	if v:
-		if v.unban_utc and v.unban_utc < time.time():
-			v.is_banned = 0
-			v.unban_utc = 0
-			v.ban_evade = 0
-			send_repeatable_notification(v.id, "You have been unbanned!")
-			g.db.add(v)
-			g.db.commit()
-
 	if request.headers.get("Authorization"): return {"data": [listing.post_json_for(x, v) for x in posts], "next_exists": next_exists}
 	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page, home=True)
 

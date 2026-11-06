@@ -175,6 +175,11 @@ def test_suspended_users_can_still_change_private_preferences():
 	d.assert_exactly(updated={"users": {v["id"]: {"hidevotedon": True}}})
 
 
+# The request also ends the ban that ran out (test_ban_expiry)
+_BAN_ENDED = {"is_banned": 0, "unban_utc": 0}
+_UNBANNED_NOTIFICATION = {"comments": [{"author_id": seed.SYSTEM_ID, "parent_submission": None}], "notifications": [{}]}
+
+
 def test_users_whose_ban_ran_out_can_edit_their_posts():
 	v = _expired()
 	post = factories.post(v)
@@ -184,7 +189,10 @@ def test_users_whose_ban_ran_out_can_edit_their_posts():
 		r = client.post(f"/edit_post/{post['id']}", {"title": post["title"], "body": "after"})
 
 	assert_redirect(r, f"/post/{post['id']}/{post['title']}")
-	d.assert_exactly(updated={"submissions": {post["id"]: {"body": "after", "body_html": ANY}}})
+	d.assert_exactly(
+		updated={"submissions": {post["id"]: {"body": "after", "body_html": ANY}}, "users": {v["id"]: _BAN_ENDED}},
+		inserted=_UNBANNED_NOTIFICATION,
+	)
 
 
 def test_users_whose_ban_ran_out_can_set_their_bio():
@@ -195,4 +203,4 @@ def test_users_whose_ban_ran_out_can_set_their_bio():
 		r = client.post("/settings/profile", {"bio": "after"}, headers=XHR)
 
 	assert_status(r, 200)
-	d.assert_exactly(updated={"users": {v["id"]: {"bio": "after", "bio_html": ANY}}})
+	d.assert_exactly(updated={"users": {v["id"]: {"bio": "after", "bio_html": ANY, **_BAN_ENDED}}}, inserted=_UNBANNED_NOTIFICATION)

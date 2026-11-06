@@ -37,25 +37,32 @@ def run_while_held(conn, request):
 
 	Returns (response, whether the request had to wait).
 	'''
-	outcome = {}
+	[response], waited = run_all_while_held(conn, [request])
+	return response, waited
 
-	def run():
+
+def run_all_while_held(conn, requests):
+	'''As run_while_held for several requests at once: the transaction commits once all of them wait for a lock (or WAIT_SECONDS have passed). Returns (their responses, whether they all had to wait).'''
+	outcomes = [{} for _ in requests]
+
+	def run(request, outcome):
 		try:
 			outcome["response"] = request()
 		except BaseException as e:
 			outcome["error"] = e
 
-	thread = threading.Thread(target=run)
-	thread.start()
+	threads = [threading.Thread(target=run, args=(request, outcome)) for request, outcome in zip(requests, outcomes)]
+	for thread in threads: thread.start()
 	deadline = time.monotonic() + WAIT_SECONDS
 	waited = False
-	while time.monotonic() < deadline and thread.is_alive():
-		if _lock_waiters(conn):
+	while time.monotonic() < deadline and any(thread.is_alive() for thread in threads):
+		if _lock_waiters(conn) >= len(requests):
 			waited = True
 			break
 		time.sleep(0.02)
 	conn.commit()
-	thread.join(WAIT_SECONDS * 3)
-	assert not thread.is_alive(), "the request never finished"
-	if "error" in outcome: raise outcome["error"]
-	return outcome["response"], waited
+	for thread in threads: thread.join(WAIT_SECONDS * 3)
+	assert not any(thread.is_alive() for thread in threads), "a request never finished"
+	for outcome in outcomes:
+		if "error" in outcome: raise outcome["error"]
+	return [outcome["response"] for outcome in outcomes], waited
