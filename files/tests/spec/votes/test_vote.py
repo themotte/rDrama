@@ -7,7 +7,7 @@ A vote stores whether it is "real": the voter wasn't shadowbanned when it was se
 
 After a change, the item's upvotes and downvotes are its +1 and -1 votes, and its "realupvotes" are its real +1 votes. The author's truescore moves by the change (from the old vote to the new one), unless the voter is the author.
 
-Refused, changing nothing, in this order: 401 for anonymous users; 403 for API clients; 403 for permanently suspended users (temporarily suspended users vote as anyone else); 400 for any other <vote>; 404 for an unknown item or an id that isn't one, and for a draft, or a comment on a draft, that the voter can't see (only its author and admins of level 2 and up see a draft), and for every private message, which have no scores; 403 when the voter blocks the item's author.
+Refused, changing nothing, in this order: 401 for anonymous users; 403 for API clients; 403 for permanently suspended users (temporarily suspended users vote as anyone else); 400 for any other <vote>; 404 for an unknown item or an id that isn't one, and for a draft, or a comment on a draft, that the voter can't see (only its author and admins of level 2 and up see a draft), and for every private message, which have no scores; 403 for an item hidden from the voter, which shows them only a placeholder (removed, held for review, deleted by its author, or by a shadowbanned user; its author and the admins who see it vote on it); 403 when the voter blocks the item's author, even where they still see it (an official post; an admin). The 18+ gate doesn't stop voting.
 '''
 import time
 
@@ -316,3 +316,57 @@ def test_private_messages_are_not_found(who):
 
 	assert_status(r, 404)
 	d.assert_exactly()
+
+
+# Hidden items
+
+HIDDEN = {
+	"removed": lambda: {"state_mod": "REMOVED", "state_mod_set_by": "somemod"},
+	"held for review": lambda: {"state_mod": "FILTERED"},
+	"deleted": lambda: {"state_user_deleted_utc": "2020-01-01T00:00:00Z"},
+}
+
+
+def _hidden(kind, state, author=None):
+	author = author or (factories.user(shadowbanned="somemod") if state == "by a shadowbanned user" else factories.user())
+	return author, _item(kind, author, **({} if state == "by a shadowbanned user" else HIDDEN[state]()))
+
+
+@pytest.mark.parametrize("kind", KINDS)
+@pytest.mark.parametrize("state", [*HIDDEN, "by a shadowbanned user"])
+def test_items_hidden_from_the_voter_are_refused(kind, state):
+	_, item = _hidden(kind, state)
+	client = as_user(factories.user())
+
+	with db_diff() as d:
+		r = _vote(client, kind, item, 1)
+
+	assert_status(r, 403)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("kind", KINDS)
+@pytest.mark.parametrize("state", [*HIDDEN, "by a shadowbanned user"])
+@pytest.mark.parametrize("who", ["author", "admin"])
+def test_those_who_see_a_hidden_item_vote_on_it(kind, state, who):
+	author, item = _hidden(kind, state)
+	voter = author if who == "author" else factories.admin(2)
+
+	_assert_voted(_vote(as_user(voter), kind, item, -1))
+
+
+@pytest.mark.parametrize("case", ["official post", "admin"])
+def test_voting_on_a_blocked_authors_item_the_voter_still_sees_is_refused(case):
+	author = factories.user()
+	voter = factories.admin(2) if case == "admin" else factories.user()
+	db.insert("userblocks", user_id=voter["id"], target_id=author["id"])
+	post = factories.post(author, distinguish_level=1 if case == "official post" else 0)
+
+	assert_status(_vote(as_user(voter), "post", post, 1), 403)
+
+
+@pytest.mark.parametrize("kind", KINDS)
+def test_the_18_plus_gate_doesnt_stop_voting(kind):
+	item = _item(kind, factories.user(), over_18=True)
+
+	_assert_voted(_vote(as_user(factories.user()), kind, item, 1))
