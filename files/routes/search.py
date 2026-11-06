@@ -3,6 +3,7 @@ from sqlalchemy import *
 from files.__main__ import app, limiter, is_known_bot
 from files.classes.visstate import StateMod
 from files.helpers.contentsorting import apply_time_filter, sort_objects
+from files.helpers.listing import listable_posts
 from files.helpers.strings import sql_ilike_clean
 from files.helpers.wrappers import *
 from files.routes.importstar import *
@@ -45,9 +46,7 @@ def searchposts(v):
 
 	posts = g.db.query(Submission.id)
 	
-	if v.admin_level < 2:
-		posts = posts.filter(Submission.state_user_deleted_utc == None, Submission.state_mod == StateMod.VISIBLE, Submission.private == False, Submission.author_id.notin_(v.userblocks))
-		posts = posts.filter(or_(Submission.author_id == v.id, not_(Submission.author.has(User.shadowbanned != None))))
+	posts = listable_posts(posts, v, admins_see_drafts_and_deleted=True)
 	
 
 	if 'author' in criteria:
