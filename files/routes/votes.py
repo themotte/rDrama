@@ -1,5 +1,7 @@
 from typing import Type, Union
 
+from sqlalchemy import update
+
 from files.__main__ import app, limiter
 from files.classes.comment import Comment
 from files.classes.submission import Submission
@@ -48,18 +50,15 @@ def _vote(target:Union[Submission, Comment], vote_cls:Union[Type[Vote], Type[Com
 	vote = g.db.query(vote_cls).filter(vote_cls.user_id == v.id, target_key == target.id).one_or_none()
 	if vote and vote.vote_type == new: return "", 204
 
-	points_matter = v.id != target.author.id
+	old = vote.vote_type if vote else 0
 	if not vote:
 		vote = vote_cls(user_id=v.id, vote_type=new, **{target_key.key: target.id})
-	elif points_matter:
-		target.author.truescore -= vote.vote_type
 	vote.vote_type = new
 	# Permanently suspended users can't vote at all
 	vote.real = not v.shadowbanned
-	if points_matter:
-		target.author.truescore += new
-	g.db.add(target.author)
 	g.db.add(vote)
+	if v.id != target.author_id:
+		g.db.execute(update(User).where(User.id == target.author_id).values(truescore=User.truescore + new - old))
 
 	g.db.flush()
 	counts = g.db.query(vote_cls).filter(target_key == target.id)

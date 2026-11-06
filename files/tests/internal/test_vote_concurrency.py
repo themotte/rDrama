@@ -38,3 +38,16 @@ def test_a_users_vote_waits_for_their_own_first_vote_on_the_same_item():
 	assert db.row("votes", user_id=voter["id"], submission_id=post["id"])["vote_type"] == 1
 	assert (db.row("submissions", id=post["id"])["upvotes"], db.row("submissions", id=post["id"])["downvotes"]) == (2, 0)
 
+
+def test_a_vote_waits_for_another_vote_changing_the_same_authors_truescore():
+	author, first, second = factories.user(), factories.user(), factories.user()
+	held_post, voted_post = factories.post(author), factories.post(author)
+
+	with holding_transaction() as conn:
+		conn.execute(text("INSERT INTO votes (user_id, submission_id, vote_type, real) VALUES (:user, :post, 1, true)"), {"user": first["id"], "post": held_post["id"]})
+		conn.execute(text("UPDATE users SET truescore = truescore + 1 WHERE id = :author"), {"author": author["id"]})
+		r, waited = run_while_held(conn, _vote(second, "post", voted_post, 1))
+
+	assert_status(r, 204)
+	assert waited
+	assert db.row("users", id=author["id"])["truescore"] == 2
