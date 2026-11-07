@@ -4,7 +4,7 @@ Rendering the notification pages must not lazy-load relationships one row at a t
 import warnings
 
 from files.tests.conftest import LazyLoadWarning
-from files.tests.spec.harness import as_user, factories
+from files.tests.spec.harness import as_user, factories, seed
 
 
 def _lazy_loads_rendering(client, path):
@@ -35,3 +35,14 @@ def test_a_message_page_renders_without_lazy_loads():
 	factories.message(sender, recipient, answer)
 
 	assert _lazy_loads_rendering(as_user(sender), f"/comment/{answer['id']}?context=1") == []
+
+
+def test_the_message_tabs_render_without_lazy_loads():
+	user, other, admin = factories.user(), factories.user(), factories.admin(2)
+	for answerer, recipient in ((other, other), (admin, seed.MODMAIL_ID)):
+		message = factories.message(user, recipient)
+		answer = factories.message(answerer, user if answerer is other else recipient, message)
+		factories.message(user, recipient, answer)
+
+	assert _lazy_loads_rendering(as_user(user), "/notifications/messages") == []
+	assert _lazy_loads_rendering(as_user(admin), "/notifications/modmail") == []

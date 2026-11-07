@@ -4,7 +4,7 @@ from files.classes.submission import Submission
 from files.classes.visstate import StateMod
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.get import *
-from files.helpers.notifications import not_blocked_by
+from files.helpers.notifications import not_blocked_by, with_threads
 from files.helpers.wrappers import *
 
 @app.post("/clear")
@@ -139,10 +139,10 @@ def notifications_modmail(v: User):
 	page: int = max(request.values.get("page", 1, int) or 1, 1)
 
 	comments = (g.db.query(Comment)
-		.filter(Comment.sentto == MODMAIL_ID, Comment.level == 1)
+		.filter(Comment.sentto == MODMAIL_ID, Comment.parent_submission == None, Comment.level == 1)
 		.order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all())
 	next_exists = (len(comments) > 25)
-	listing = comments[:25]
+	listing = with_threads(comments[:25], v)
 
 	return render_template("notifications.html",
 		v=v,
@@ -174,7 +174,7 @@ def notifications_messages(v: User):
 	comments = comments.order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	next_exists = (len(comments) > 25)
-	listing = comments[:25]
+	listing = with_threads(comments[:25], v)
 
 	if request.headers.get("Authorization"):
 		return {"data": [x.json_for(v) for x in listing]}

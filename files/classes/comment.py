@@ -149,15 +149,9 @@ class Comment(CreatedBase):
 
 	def replies(self, user):
 		if self.replies2 != None: return [x for x in self.replies2 if x.renders_for(user)]
-		author_id = None
-		if user:
-			author_id = user.id
+		# Conversations read oldest first
 		if not self.parent_submission:
-			return sorted((x for x in self.child_comments
-				if x.author
-					and (x.state_mod == StateMod.VISIBLE or x.author_id == author_id)
-					and not x.author.shadowbanned),
-				key=lambda x: x.created_utc)
+			return sorted((x for x in self.child_comments if x.renders_for(user)), key=lambda x: x.created_utc)
 		return sorted((x for x in self.child_comments if x.renders_for(user)), key=lambda x: x.created_utc, reverse=True)
 
 	def shadowban_hides_from(self, v) -> bool:
