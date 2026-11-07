@@ -5,7 +5,7 @@ GET /settings/apps lists the viewer's approved apps with their client ids and th
 
 The owner of an app, and only they (others: 403), may:
 - edit it (POST /edit_app/<id>: "name", "redirect_uri" and "description", by the rules of requesting: test_requests), which needs no new approval: an approved app keeps its client id and its tokens;
-- delete it (POST /delete_app/<id>), which ends every authorization of it. An app whose tokens made posts or comments is kept, revoked, so admins can still see where they came from (test_admin); to its owner it is gone like a deleted one;
+- delete it (POST /delete_app/<id>, which sends the owner back to /settings/apps), which ends every authorization of it. An app whose tokens made posts or comments is kept, revoked, so admins can still see where they came from (test_admin); to its owner it is gone like a deleted one;
 - give an approved app a new client id (POST /oauth/reroll/<id>, answering a JSON "message" and the new client id as "id"), after which users authorize it under the new id only; tokens already granted keep working. A pending request has no client id to replace (409): only an admin's approval gives it one.
 
 An id that is no app's (unknown, not a whole number, or too large), or a revoked app's, is 404.
@@ -155,7 +155,7 @@ def test_the_owner_deletes_an_app_and_its_authorizations():
 	with db_diff() as d:
 		r = as_user(owner).post(f"/delete_app/{application['id']}")
 
-	assert_status(r, 302)
+	assert_redirect(r, "/settings/apps")
 	d.assert_exactly(deleted={"oauth_apps": [application["id"]], "client_auths": [(owner["id"], application["id"]), (user["id"], application["id"])]})
 
 

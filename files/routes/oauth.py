@@ -128,7 +128,7 @@ def delete_oauth_app(v, aid):
 	_withdraw(app)
 	g.db.commit()
 
-	return redirect('/apps')
+	return redirect('/settings/apps')
 
 
 @app.post("/edit_app/<aid>")
