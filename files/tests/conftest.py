@@ -13,9 +13,27 @@ def _is_new_tier(item):
 	return any(part in NEW_TIER_DIRS for part in item.path.relative_to(testenv.REPO_ROOT / "files" / "tests").parts[:-1])
 
 
-def pytest_collection_modifyitems(items):
-	# The legacy tests depend on state accumulated across the run (cached users), which the new tiers' per-test reset wipes; run the legacy ones first.
+def pytest_configure(config):
+	# xdist sets "load" when -n is given without --dist; its workers run with "no"
+	if config.getoption("dist", "no") not in ("no", "loadgroup"):
+		raise pytest.UsageError("the legacy tests must run together in one worker: add --dist loadgroup")
+
+
+def pytest_sessionstart(session):
+	# A controller handing tests to xdist workers runs none itself; each worker builds its own database
+	if not session.config.pluginmanager.hasplugin("dsession"):
+		testenv.build_database()
+
+
+@pytest.hookimpl(tryfirst=True)  # xdist reads the group marks in its own hook, which must see them
+def pytest_collection_modifyitems(config, items):
+	# The legacy tests depend on state accumulated across the run (cached users, process-wide patches), which the new tiers' per-test reset wipes; run the legacy ones first, and under xdist all in one worker, which loadgroup scheduling starts on them
 	items.sort(key=_is_new_tier)
+	legacy = [item for item in items if not _is_new_tier(item)]
+	for item in legacy:
+		item.add_marker(pytest.mark.xdist_group("legacy"))
+	if legacy and testenv.WORKER and not config.option.loadgroup:
+		raise pytest.UsageError("the legacy tests must run together in one worker: add --dist loadgroup")
 
 
 class LazyLoadWarning(UserWarning):

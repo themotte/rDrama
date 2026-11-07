@@ -11,7 +11,8 @@ def run_test(args):
         [
             "python3",
             "-m", "pytest",
-            "-s",
+            # one worker per core, up to 12; pass -n 0 to run serially
+            "-n", "auto", "--maxprocesses", "12", "--dist", "loadgroup",
             "--cov=files",
             "--cov-report=html",
             "--cov-report=term",

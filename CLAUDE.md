@@ -80,9 +80,11 @@ The application can run in different service modes (defined in `files/helpers/co
 
 ## Testing
 
-Tests live in `files/tests/` and use pytest. Run all tests with `./util/test.py` (extra args go to pytest). For a fast inner loop, start the containers once with `docker compose -f docker-compose.yml -f docker-compose-operation.yml up -d` and run `docker compose exec -T site python3 -m pytest files/tests/spec`.
+Tests live in `files/tests/` and use pytest. Run all tests with `./util/test.py` (extra args go to pytest). For a fast inner loop, start the containers once with `docker compose -f docker-compose.yml -f docker-compose-operation.yml up -d` and run `docker compose exec -T site python3 -m pytest -n 12 --dist loadgroup files/tests/spec`.
 
 The suite builds its own database (`rdrama_test`, or `$RDRAMA_TEST_DB`) from `bootstrap/*.sql` plus migrations on every run, uses Redis db 1 (`$RDRAMA_TEST_REDIS_DB`), and points the app at a temporary copy of the committed `site_settings.json` (`files/tests/testenv.py`). Tests never use the dev database, though `./util/test.py` still migrates it first.
+
+The suite runs in parallel with pytest-xdist: `./util/test.py` uses one worker per core, up to 12; pass `-n 0` to run serially. Each worker builds its own database (`rdrama_test_gw0`, ...) and takes its own Redis db (2, 3, ...; the compose Redis has 64). `--dist loadgroup` is required whenever legacy tests are collected: it keeps the legacy tier together, first, in one worker.
 
 ### Tiers
 

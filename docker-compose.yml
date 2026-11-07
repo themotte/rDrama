@@ -22,6 +22,8 @@ services:
 
   redis:
     image: redis
+    # parallel test workers each take their own db (files/tests/testenv.py)
+    command: ["redis-server", "--databases", "64"]
     ports:
       - "6379:6379"
 

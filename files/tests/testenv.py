@@ -1,7 +1,9 @@
 '''
 Points the app at an isolated database, Redis db and site-settings file, and builds that database from scratch.
 
-`files.__main__` creates its engine, cache and limiter at import time, so `configure()` must run before anything imports it. Set RDRAMA_TEST_DB / RDRAMA_TEST_REDIS_DB to run several suites against the same servers at once.
+`files.__main__` creates its engine, cache and limiter at import time, so `configure()` must run before anything imports it; `build_database()` may come later, before the first test.
+
+Set RDRAMA_TEST_DB / RDRAMA_TEST_REDIS_DB to run several suites against the same servers at once. Under pytest-xdist each worker gwN takes database `<RDRAMA_TEST_DB>_gwN` and Redis db `<RDRAMA_TEST_REDIS_DB> + 1 + N`, so concurrent parallel suites need Redis bases at least their worker count apart (the compose Redis has 64 dbs).
 '''
 import os
 import subprocess
@@ -12,8 +14,9 @@ from urllib.parse import urlsplit, urlunsplit
 import psycopg2
 from sqlalchemy.engine import make_url
 
-TEST_DB_NAME = os.environ.get("RDRAMA_TEST_DB", "rdrama_test")
-TEST_REDIS_DB = int(os.environ.get("RDRAMA_TEST_REDIS_DB", "1"))
+WORKER = os.environ.get("PYTEST_XDIST_WORKER")  # "gw0", "gw1", ... in an xdist worker
+TEST_DB_NAME = os.environ.get("RDRAMA_TEST_DB", "rdrama_test") + (f"_{WORKER}" if WORKER else "")
+TEST_REDIS_DB = int(os.environ.get("RDRAMA_TEST_REDIS_DB", "1")) + (1 + int(WORKER.removeprefix("gw")) if WORKER else 0)
 SNAPSHOT_SCHEMA = "test_seed_snapshot"
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -39,7 +42,10 @@ def configure():
 	# The committed defaults, not the working copy, which a local dev server's admin toggles rewrite
 	_baseline_settings = subprocess.run(["git", "-c", "safe.directory=*", "show", "HEAD:site_settings.json"], cwd=REPO_ROOT, capture_output=True, text=True, check=True).stdout
 	restore_site_settings()
-	_build_database(server_url, test_url)
+
+
+def build_database():
+	_build_database(make_url(os.environ["DATABASE_URL"]))
 
 
 def restore_site_settings():
@@ -50,8 +56,8 @@ def _dsn(url):
 	return url.render_as_string(hide_password=False)
 
 
-def _build_database(server_url, test_url):
-	admin = psycopg2.connect(_dsn(server_url.set(database="postgres")))
+def _build_database(test_url):
+	admin = psycopg2.connect(_dsn(test_url.set(database="postgres")))
 	admin.autocommit = True
 	with admin.cursor() as cur:
 		cur.execute(f"DROP DATABASE IF EXISTS {TEST_DB_NAME} WITH (FORCE)")
