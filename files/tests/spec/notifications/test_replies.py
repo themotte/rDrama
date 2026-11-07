@@ -3,10 +3,14 @@ POST /reply, with "parent_id" and "body": a logged-in user answers a message in 
 
 In a conversation between two users (a direct thread), the reply is a message to the other one, under the message it answers, in the same thread (`top_comment_id`), one level deeper. Its text is rendered from "body", trimmed and cut to 10000 characters; its source isn't kept. The other user is notified.
 
+Without "parent_id" the reply is refused (400); one that names no message is not found (404).
+
 Replying doesn't need the sender to be part of the community, unlike starting a conversation (test_messages).
 
 The reply is {"comment": ...}: the new message rendered for the page.
 '''
+import pytest
+
 from files.tests.spec.harness import *
 
 
@@ -27,6 +31,27 @@ def test_logged_out_visitors_are_refused():
 	message = factories.message(factories.user(), factories.user())
 
 	assert_api_unauthorized(anon().post("/reply", {"parent_id": message["id"], "body": "hi"}, headers=XHR))
+
+
+def test_a_missing_parent_is_refused():
+	client = as_user(factories.user())
+
+	with db_diff() as d:
+		r = client.post("/reply", {"body": factories.unique()}, headers=XHR)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("parent_id", ["x", "99999999"], ids=["garbled", "unknown"])
+def test_an_unknown_parent_is_not_found(parent_id):
+	client = as_user(factories.user())
+
+	with db_diff() as d:
+		r = client.post("/reply", {"parent_id": parent_id, "body": factories.unique()}, headers=XHR)
+
+	assert_status(r, 404)
+	d.assert_exactly()
 
 
 def test_the_recipient_answers_the_sender():

@@ -204,8 +204,8 @@ def messagereply(v):
 
 	if not message and not request.files.get("file"): abort(400, "Message is empty!")
 
-	id = int(request.values.get("parent_id"))
-	parent = get_comment(id, v=v)
+	if not request.values.get("parent_id"): abort(400, "Which message are you replying to?")
+	parent = get_comment(request.values["parent_id"], v=v)
 	user_id = parent.author.id
 
 	if parent.sentto == MODMAIL_ID: user_id = None
@@ -225,7 +225,7 @@ def messagereply(v):
 
 	c = Comment(author_id=v.id,
 							parent_submission=None,
-							parent_comment_id=id,
+							parent_comment_id=parent.id,
 							top_comment_id=parent.top_comment_id,
 							level=parent.level + 1,
 							sentto=user_id,
