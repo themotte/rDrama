@@ -3,14 +3,14 @@ The notification pages, for logged-in users (visitors are sent to log in; API cl
 
 GET /notifications lists what the user was notified of, newest notification first: replies, mentions, messages and the site's own notices. Each shows alone, without its replies. Left out:
 - comments that were removed, are held for approval (filtered) or deleted;
-- comments by users the viewer blocks;
+- comments by users the viewer blocks, except messages from admins from level 2 (who may message users blocking them, test_messages);
 - comments by shadowbanned users, except to admins from level 3;
 - notifications of followed users' new posts, which have their own page.
 Showing a notification marks it read.
 
 GET /notifications/posts lists notifications of followed users' new posts, newest first, marking them read.
 
-GET /notifications/messages lists the conversations the user sent or received (their first messages, newest first), each with its replies. Left out: conversations started by users the viewer blocks, and by shadowbanned users, except to admins from level 3.
+GET /notifications/messages lists the conversations the user sent or received (their first messages, newest first), each with its replies. Left out: conversations started by users the viewer blocks (except admins from level 2), and by shadowbanned users, except to admins from level 3.
 
 Each page holds 25; "page" (from 1) chooses it. API clients get {"data": [...]}, the page's comments as JSON objects.
 
@@ -129,6 +129,36 @@ def test_blocked_authors_are_left_out(viewer):
 	db.insert("userblocks", user_id=user["id"], target_id=author["id"])
 
 	assert_not_in_payload(as_user(user).get("/notifications"), reply["body"])
+
+
+@pytest.mark.parametrize("level", [2, 3])
+def test_messages_from_blocked_admins_show(level):
+	user, admin = factories.user(), factories.admin(level)
+	message = factories.message(admin, user)
+	factories.notification(user, message)
+	db.insert("userblocks", user_id=user["id"], target_id=admin["id"])
+
+	assert_in_payload(as_user(user).get("/notifications"), message["text"])
+	assert_in_payload(as_user(user).get("/notifications/messages"), message["text"])
+	assert_in_payload(as_user(user).get(f"/comment/{message['id']}"), message["text"])
+
+
+def test_comments_by_blocked_admins_are_left_out():
+	user, admin = factories.user(), factories.admin(3)
+	reply = _notified_reply(user, author=admin)
+	db.insert("userblocks", user_id=user["id"], target_id=admin["id"])
+
+	assert_not_in_payload(as_user(user).get("/notifications"), reply["body"])
+
+
+def test_messages_from_blocked_level_1_admins_are_left_out():
+	user, admin = factories.user(), factories.admin(1)
+	message = factories.message(admin, user)
+	factories.notification(user, message)
+	db.insert("userblocks", user_id=user["id"], target_id=admin["id"])
+
+	assert_not_in_payload(as_user(user).get("/notifications"), message["text"])
+	assert_not_in_payload(as_user(user).get("/notifications/messages"), message["text"])
 
 
 def test_authors_who_block_the_viewer_still_show():

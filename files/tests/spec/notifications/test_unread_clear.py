@@ -1,5 +1,5 @@
 '''
-GET /unread gives a logged-in user's unread notifications as {"data": [...]}, newest first, and marks them read. It holds what /notifications would show (test_pages), unread: not notifications of followed users' new posts, not comments that were removed, are held for approval or deleted, and not comments by users the viewer blocks.
+GET /unread gives a logged-in user's unread notifications as {"data": [...]}, newest first, and marks them read. It holds what /notifications would show (test_pages), unread: not notifications of followed users' new posts, not comments that were removed, are held for approval or deleted, and not comments by users the viewer blocks (except messages from admins from level 2).
 
 POST /clear marks every one of the user's notifications read, whether or not any page would show it, and replies {"message": ...}.
 
@@ -90,6 +90,15 @@ def test_blocked_authors_are_left_out():
 	db.insert("userblocks", user_id=user["id"], target_id=author["id"])
 
 	assert _unread_ids(as_user(user)) == []
+
+
+def test_messages_from_blocked_admins_are_listed():
+	user, admin = factories.user(), factories.admin(2)
+	message = factories.message(admin, user)
+	factories.notification(user, message)
+	db.insert("userblocks", user_id=user["id"], target_id=admin["id"])
+
+	assert _unread_ids(as_user(user)) == [message["id"]]
 
 
 @pytest.mark.parametrize("client", ["browser", "api"])

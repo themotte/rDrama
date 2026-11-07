@@ -65,7 +65,8 @@ class VisibilityState:
 			op_id=target.author_id,  # type: ignore
 			op_name_safe=target.author_name,
 			distinguished=bool(getattr(target, 'distinguish_level', 0)),
-			is_blocking=bool(getattr(target, 'is_blocking', False)),
+			# Admins from level 2 may message users who block them
+			is_blocking=bool(getattr(target, 'is_blocking', False)) and not (getattr(target, 'sentto', None) and target.author.account_admin_level >= PERMS['POST_COMMENT_MODERATION']),
 		)
 	
 	def visibility_and_message(self, v: User | None) -> tuple[bool, str | None]:
