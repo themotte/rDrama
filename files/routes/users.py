@@ -189,10 +189,7 @@ def message2(v, username):
 
 	c.top_comment_id = c.id
 
-	notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=user.id).one_or_none()
-	if not notif:
-		notif = Notification(comment_id=c.id, user_id=user.id)
-		g.db.add(notif)
+	g.db.add(Notification(comment_id=c.id, user_id=user.id))
 
 	g.db.commit()
 

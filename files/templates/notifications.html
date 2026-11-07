@@ -72,39 +72,13 @@
 <nav aria-label="Page navigation">
 	<ul class="pagination pagination-sm mb-0 mt-4">
 		{% if page>1 %}
-		<li class="page-item">
-			{% if "?page=" in request.full_path %}
-				{% set path = request.full_path.split("?page=")[0] %}
-			{% elif "&page=" in request.full_path %}
-				{% set path = request.full_path.split("&page=")[0] %}
-			{% else %}
-				{% set path = request.full_path %}
-			{% endif %}
-			{% if '=true' in request.full_path %}
-				<small><a class="page-link" href="{{path}}&page={{page-1}}">Previous</a></small>
-			{% else %}
-				<small><a class="page-link" href="{{request.path}}?page={{page-1}}">Previous</a></small>
-			{% endif %}
-		</li>
+		<li class="page-item"><small><a class="page-link" href="{{request.path}}?page={{page-1}}">Previous</a></small></li>
 		{% else %}
 		<li class="page-item disabled"><span class="page-link">Prev</span></li>
 		{% endif %}
 
 		{% if next_exists %}
-		<li class="page-item">
-			{% if "?page=" in request.full_path %}
-				{% set path = request.full_path.split("?page=")[0] %}
-			{% elif "&page=" in request.full_path %}
-				{% set path = request.full_path.split("&page=")[0] %}
-			{% else %}
-				{% set path = request.full_path %}
-			{% endif %}
-			{% if '=true' in request.full_path %}
-				<small><a class="page-link" href="{{path}}&page={{page+1}}">Next</a></small>
-			{% else %}
-				<small><a class="page-link" href="{{request.path}}?page={{page+1}}">Next</a></small>
-			{% endif %}
-		</li>
+		<li class="page-item"><small><a class="page-link" href="{{request.path}}?page={{page+1}}">Next</a></small></li>
 		{% else %}
 		<li class="page-item disabled"><span class="page-link">Next</span></li>
 		{% endif %}
