@@ -282,9 +282,10 @@ def submit_contact(v: Optional[User]):
 	if not v and not validate_captcha(HCAPTCHA_SECRET, HCAPTCHA_SITEKEY,
 	                                  request.values.get("h-captcha-response", "")):
 		abort(403, "CAPTCHA provided was not correct. Please try it again")
-	body = request.values.get("message")
-	email = request.values.get("email")
-	if not body: abort(400)
+	body = request.values.get("message", "").strip()[:MESSAGE_BODY_LENGTH_MAXIMUM].strip()
+	# The longest an email address can be
+	email = request.values.get("email", "").strip()[:254]
+	if not body: abort(400, "Message is empty!")
 
 	header = "This message has been sent automatically to all admins via [/contact](/contact)\n"
 	if not email:

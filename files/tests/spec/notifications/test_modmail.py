@@ -3,7 +3,7 @@ Modmail: messages to the site's admins, sent to the modmail account (`seed.MODMA
 
 GET /contact (also /press and /media) is the contact form, for everyone.
 
-POST /send_admin, with "message" and optionally "email" and an image "file", sends it: a new conversation (a message that is its own top) from the logged-in user, or from the system account for visitors. Its text holds the message and the email given. An image is attached to it, except from Tor, where files are ignored; a file that isn't an image is refused (400). An empty message is refused (400). The admins who receive modmail (those from level 2) are notified, except the writer. The reply is the contact form again, saying the message was sent.
+POST /send_admin, with "message" and optionally "email" and an image "file", sends it: a new conversation (a message that is its own top) from the logged-in user, or from the system account for visitors. Its text holds the message and the email given. An image is attached to it, except from Tor, where files are ignored; a file that isn't an image is refused (400). The message is trimmed and cut to 10000 characters, as messages are, and the email to 254 (the longest an address can be); an empty (or all-whitespace) one is refused (400). The admins who receive modmail (those from level 2) are notified, except the writer. The reply is the contact form again, saying the message was sent.
 
 Requesting API keys (POST /api_keys) also writes modmail: a notice from the system account, of which the admins who receive modmail are notified.
 
@@ -46,14 +46,35 @@ def test_sends_modmail_and_notifies_the_admins_who_receive_it(sender):
 	assert text in body_html and email in body_html
 
 
-def test_an_empty_message_is_refused():
+@pytest.mark.parametrize("text", ["", "   "], ids=["empty", "whitespace"])
+def test_an_empty_message_is_refused(text):
 	client = as_user(factories.user())
 
 	with db_diff() as d:
-		r = client.post("/send_admin", {"message": ""})
+		r = client.post("/send_admin", {"message": text})
 
 	assert_status(r, 400)
 	d.assert_exactly()
+
+
+def test_the_message_is_cut_to_10000_characters():
+	user = factories.user()
+	kept, cut = factories.unique("kept"), factories.unique("cut")
+
+	assert_html(as_user(user).post("/send_admin", {"message": kept + "a" * (10000 - len(kept)) + cut}), 200)
+
+	body_html = db.row("comments", author_id=user["id"], sentto=seed.MODMAIL_ID)["body_html"]
+	assert kept in body_html and cut not in body_html
+
+
+def test_the_email_is_cut_to_254_characters():
+	user = factories.user()
+	kept, cut = factories.unique("kept"), factories.unique("cut")
+
+	assert_html(as_user(user).post("/send_admin", {"message": factories.unique(), "email": kept + "a" * (254 - len(kept)) + cut}), 200)
+
+	body_html = db.row("comments", author_id=user["id"], sentto=seed.MODMAIL_ID)["body_html"]
+	assert kept in body_html and cut not in body_html
 
 
 def _image_urls(body_html):
