@@ -263,6 +263,23 @@ def test_showing_new_post_notifications_marks_them_read():
 	d.assert_exactly(updated={"notifications": {(user["id"], notice["id"]): {"read": True}}})
 
 
+def test_new_post_notification_pages_hold_25_without_repeats():
+	user = factories.user()
+	notices = [_new_post_notification(user) for _ in range(30)]
+	for age, notice in enumerate(notices):
+		db.execute("UPDATE notifications SET created_datetimez = now() - make_interval(secs => :age) WHERE comment_id = :id", age=age, id=notice["id"])
+	client = as_user(user)
+
+	first, second = client.get("/notifications/posts"), client.get("/notifications/posts", params={"page": 2})
+
+	for notice in notices[:25]:
+		assert_in_payload(first, notice["text"])
+		assert_not_in_payload(second, notice["text"])
+	for notice in notices[25:]:
+		assert_not_in_payload(first, notice["text"])
+		assert_in_payload(second, notice["text"])
+
+
 def test_new_post_notifications_for_api_clients():
 	user = factories.user()
 	notice = _new_post_notification(user)

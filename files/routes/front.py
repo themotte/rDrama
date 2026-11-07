@@ -81,21 +81,16 @@ def notifications_posts(v: User):
 	notifications = (g.db.query(Notification, Comment)
 		.join(Comment, Notification.comment_id == Comment.id)
 		.filter(Notification.user_id == v.id, Comment.author_id == AUTOJANNY_ID)
-		.order_by(Notification.created_datetimez.desc()).offset(25 * (page - 1)).limit(101).all())
+		.order_by(Notification.created_datetimez.desc()).offset(25 * (page - 1)).limit(26).all())
 
+	next_exists = (len(notifications) > 25)
 	items = []
-
-	for index, x in enumerate(notifications[:100]):
-		n, c = x
-		if n.read and index > 24: break
-		elif not n.read:
+	for n, c in notifications[:25]:
+		if not n.read:
 			n.read = True
 			c.unread = True
-			g.db.add(n)
 		if n.created_utc > 1620391248: c.notif_utc = n.created_utc
 		items.append(c)
-
-	next_exists = (len(notifications) > len(items))
 
 	g.db.commit()
 
