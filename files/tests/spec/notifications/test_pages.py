@@ -12,7 +12,7 @@ GET /notifications/posts lists notifications of followed users' new posts, newes
 
 GET /notifications/messages lists the conversations the user sent or received (their first messages, newest first), each with its replies. Showing a conversation marks read the viewer's notifications of the messages in it they can see. Left out: conversations started by users the viewer blocks (except admins from level 2), and by shadowbanned users, except to the users themselves and admins from level 2.
 
-Each page holds 25; "page" (from 1) chooses it. API clients get {"data": [...]}, the page's comments as JSON objects: on /notifications without their replies ("replies" is empty), on the Messages tab with their conversations.
+Notifications from the same moment list the newer comment first. Each page holds 25; "page" (from 1) chooses it. API clients get {"data": [...]}, the page's comments as JSON objects: on /notifications without their replies ("replies" is empty), on the Messages tab with their conversations.
 
 Modmail's page is in test_modmail.
 '''
@@ -61,6 +61,17 @@ def test_lists_notifications_newest_first():
 
 	assert_html(r, 200)
 	assert_in_order(r, [newer["body"], older["body"]])
+
+
+@pytest.mark.parametrize("path", ["/notifications", "/notifications/posts"])
+def test_notifications_from_the_same_moment_list_the_newer_comment_first(path):
+	user = factories.user()
+	make = _notified_reply if path == "/notifications" else _new_post_notification
+	older, newer = make(user), make(user)
+	db.execute("UPDATE notifications SET created_datetimez = '2026-01-01T00:00:00Z' WHERE user_id = :id", id=user["id"])
+	key = "body" if path == "/notifications" else "text"
+
+	assert_in_order(as_user(user).get(path), [newer[key], older[key]])
 
 
 def test_lists_messages_and_notices():

@@ -1,5 +1,5 @@
 '''
-GET /unread gives a logged-in user's unread notifications as {"data": [...]} (each comment's JSON without its replies), newest first, and marks them read. It holds what /notifications would show (test_pages), unread: not notifications of followed users' new posts, not comments that were removed, are held for approval or deleted, not comments by users the viewer blocks (except messages from admins from level 2), and not, except to admins from level 2, comments by shadowbanned users.
+GET /unread gives a logged-in user's unread notifications as {"data": [...]} (each comment's JSON without its replies), newest first (the newer comment first among notifications from the same moment), and marks them read. It holds what /notifications would show (test_pages), unread: not notifications of followed users' new posts, not comments that were removed, are held for approval or deleted, not comments by users the viewer blocks (except messages from admins from level 2), and not, except to admins from level 2, comments by shadowbanned users.
 
 POST /clear marks every one of the user's notifications read, whether or not any page would show it, and replies {"message": ...}.
 
@@ -57,6 +57,14 @@ def test_comments_come_without_their_replies():
 	r = as_user(user).get("/unread")
 
 	assert [item["replies"] for item in r.json["data"]] == [[]]
+
+
+def test_notifications_from_the_same_moment_list_the_newer_comment_first():
+	user = factories.user()
+	older, newer = _notified_reply(user), _notified_reply(user)
+	db.execute("UPDATE notifications SET created_datetimez = '2026-01-01T00:00:00Z' WHERE user_id = :id", id=user["id"])
+
+	assert _unread_ids(as_user(user)) == [newer["id"], older["id"]]
 
 
 def test_through_the_browser():

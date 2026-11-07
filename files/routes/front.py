@@ -23,7 +23,7 @@ def unread(v):
 	items = shown_notifications(g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id), v).filter(
 		Notification.read == False,
 		Comment.author_id != AUTOJANNY_ID,
-	).order_by(Notification.created_datetimez.desc()).all()
+	).order_by(Notification.created_datetimez.desc(), Notification.comment_id.desc()).all()
 
 	for n, c in items:
 		n.read = True
@@ -40,7 +40,7 @@ def notifications_main(v: User):
 
 	notifications = (shown_notifications(g.db.query(Notification).join(Notification.comment), v)
 		.filter(Comment.author_id != AUTOJANNY_ID)
-		.order_by(Notification.created_datetimez.desc())
+		.order_by(Notification.created_datetimez.desc(), Notification.comment_id.desc())
 		.offset(25 * (page - 1)).limit(26).all())
 
 	next_exists = (len(notifications) > 25)
@@ -81,7 +81,7 @@ def notifications_posts(v: User):
 	notifications = (g.db.query(Notification, Comment)
 		.join(Comment, Notification.comment_id == Comment.id)
 		.filter(Notification.user_id == v.id, Comment.author_id == AUTOJANNY_ID)
-		.order_by(Notification.created_datetimez.desc()).offset(25 * (page - 1)).limit(26).all())
+		.order_by(Notification.created_datetimez.desc(), Notification.comment_id.desc()).offset(25 * (page - 1)).limit(26).all())
 
 	next_exists = (len(notifications) > 25)
 	items = []
