@@ -2,7 +2,7 @@
 Admins review API applications (who may: admin/test_access).
 
 - GET /admin/apps (level 2) lists every app, with its owner and client id.
-- POST /admin/app/approve/<id> (level 3) approves a pending app: it gets a client id, its owner gets a token for it, is notified, and the approval is logged in the mod log ("approve_app", against the owner).
+- POST /admin/app/approve/<id> (level 3) approves a pending app: it gets a client id, its owner gets a token for it and is notified (the token itself shows only on the owner's /settings/apps, never in the notice), and the approval is logged in the mod log ("approve_app", against the owner).
 - POST /admin/app/reject/<id> (level 2) refuses a pending request, and POST /admin/app/revoke/<id> (level 2) withdraws an approved app: either way the app and every authorization of it are deleted, the owner is notified, and the action is logged ("reject_app" or "revoke_app", against the owner).
 
 Each answers a JSON message.
@@ -51,6 +51,17 @@ def test_the_owners_token_works_once_approved():
 
 	token = db.row("client_auths", oauth_client=application["id"])["access_token"]
 	assert as_api(token).get("/me").json["id"] == owner["id"]
+
+
+def test_the_approval_notice_doesnt_carry_the_token():
+	owner = factories.user()
+	application = factories.oauth_app(owner, state="pending")
+
+	as_user(factories.admin(3)).post(f"/admin/app/approve/{application['id']}")
+
+	token = db.row("client_auths", oauth_client=application["id"])["access_token"]
+	[notification] = db.rows("notifications", user_id=owner["id"])
+	assert token not in db.row("comments", id=notification["comment_id"])["body_html"]
 
 
 def test_rejecting_deletes_the_request():

@@ -480,7 +480,8 @@ def settings_unblock_user(v):
 @auth_required
 def settings_apps(v):
 	refuse_api_client(v)
-	return render_template("settings_apps.html", v=v)
+	tokens = {authorization.oauth_client: authorization.access_token for authorization in v.authorizations}
+	return render_template("settings_apps.html", v=v, tokens=tokens)
 
 @app.get("/settings/content")
 @auth_required

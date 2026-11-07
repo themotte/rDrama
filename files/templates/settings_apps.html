@@ -32,6 +32,10 @@
 				
 				<label for="edit-{{app.id}}-client-id" class="mb-0 w-lg-25">Client ID</label>
 				<input autocomplete="off" id="edit-{{app.id}}-client-id" class="form-control copy-link" type="text" value="{{app.client_id}}" data-clipboard-text="{{app.client_id}}" readonly="readonly">
+				{% if tokens.get(app.id) %}
+				<label for="edit-{{app.id}}-token" class="mb-0 w-lg-25">Your Access Token</label>
+				<input autocomplete="off" id="edit-{{app.id}}-token" class="form-control copy-link" type="text" value="{{tokens[app.id]}}" data-clipboard-text="{{tokens[app.id]}}" readonly="readonly">
+				{% endif %}
 				
 				<label for="edit-{{app.id}}-redirect" class="mb-0 w-lg-25">Redirect URI</label>
 				<input autocomplete="off" id="edit-{{app.id}}-redirect" class="form-control" type="text" name="redirect_uri" value="{{app.redirect_uri}}">

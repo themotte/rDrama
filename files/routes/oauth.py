@@ -144,7 +144,7 @@ def admin_app_approve(v, aid):
 
 	g.db.add(new_auth)
 
-	send_repeatable_notification(user.id, f"@{v.username} has approved your application `{app.app_name}`. Here's your access token: `{access_token}`\nPlease check the guide [here](/api) if you don't know what to do next.")
+	send_repeatable_notification(user.id, f"@{v.username} has approved your application `{app.app_name}`. Your access token is in [your apps settings](/settings/apps).\nPlease check the guide [here](/api) if you don't know what to do next.")
 
 	ma = ModAction(
 		kind="approve_app",

@@ -1,7 +1,7 @@
 '''
 What a user does with the API applications they requested.
 
-GET /settings/apps lists the viewer's approved apps with their client ids, their pending requests, and the apps they have authorized (test_authorize), and offers the form that requests another (test_requests). Other users' apps aren't listed.
+GET /settings/apps lists the viewer's approved apps with their client ids and the viewer's own token for each (the one approval gives the owner), their pending requests, and the apps they have authorized (test_authorize), and offers the form that requests another (test_requests). Other users' apps aren't listed, and no one else's token ever shows: not those of users who authorized the viewer's apps, nor the viewer's tokens for other users' apps.
 
 The owner of an app, and only they (others: 403), may:
 - edit it (POST /edit_app/<id>: "name", "redirect_uri", "description" cut to 256 characters, as when requesting), which needs no new approval: an approved app keeps its client id and its tokens;
@@ -32,15 +32,28 @@ def test_the_page_lists_the_viewers_apps_and_requests():
 	assert_not_in_payload(r, others["app_name"])
 
 
+def test_the_page_shows_the_owner_their_token():
+	owner = factories.user()
+	application = factories.oauth_app(owner)
+	own = db.row("client_auths", oauth_client=application["id"], user_id=owner["id"])["access_token"]
+	others = factories.authorization(factories.user(), application)
+
+	r = as_user(owner).get("/settings/apps")
+
+	assert_in_payload(r, own)
+	assert_not_in_payload(r, others)
+
+
 def test_the_page_lists_the_apps_the_viewer_authorized():
 	viewer = factories.user()
 	application = factories.oauth_app(factories.user())
-	factories.authorization(viewer, application)
+	token = factories.authorization(viewer, application)
 
 	r = as_user(viewer).get("/settings/apps")
 
 	assert_in_payload(r, application["app_name"])
 	assert_not_in_payload(r, application["client_id"])
+	assert_not_in_payload(r, token)
 
 
 def test_visitors_are_sent_to_log_in():
