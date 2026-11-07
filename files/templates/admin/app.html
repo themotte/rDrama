@@ -30,18 +30,20 @@
 		</div>
 	</div>
 	<div class="footer">
-		<div class="d-flex">
+		<div class="d-flex justify-content-end">
 			{% if app.state == 'pending' %}
 
-				<a role="button" class="btn btn-primary ml-auto" onclick="postToastSimple(this,'/admin/app/approve/{{app.id}}')">Approve</a>
-				<a role="button" class="btn btn-secondary mr-0" onclick="postToastSimple(this,'/admin/app/reject/{{app.id}}')">Reject</a> 
+				{% if v.admin_level >= PERMS['API_APP_APPROVAL'] %}
+				<a role="button" class="btn btn-primary" onclick="postToastSimple(this,'/admin/app/approve/{{app.id}}')">Approve</a>
+				{% endif %}
+				<a role="button" class="btn btn-secondary" onclick="postToastSimple(this,'/admin/app/reject/{{app.id}}')">Reject</a> 
 
 			{% elif app.state == 'approved' %}
 
-				<a role="button" class="btn btn-primary ml-auto" onclick="postToastSimple(this,'/admin/app/revoke/{{app.id}}')">Revoke</a>
+				<a role="button" class="btn btn-primary" onclick="postToastSimple(this,'/admin/app/revoke/{{app.id}}')">Revoke</a>
 			{% else %}
 
-				<span class="ml-auto text-muted">Revoked</span>
+				<span class="text-muted">Revoked</span>
 
 			{% endif %}
 		</div>

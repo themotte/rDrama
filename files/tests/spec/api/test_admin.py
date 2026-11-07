@@ -1,7 +1,7 @@
 '''
 Admins review API applications (who may: admin/test_access).
 
-- GET /admin/apps (level 2) lists every app, with its owner and client id; revoked apps are listed with no actions.
+- GET /admin/apps (level 2) lists every app, with its owner and client id; revoked apps are listed with no actions, and approval is offered only to admins who may approve.
 - POST /admin/app/approve/<id> (level 3) approves a pending app: it gets a client id, its owner gets a token for it and is notified (the token itself shows only on the owner's /settings/apps, never in the notice), and the approval is logged in the mod log ("approve_app", against the owner).
 - POST /admin/app/reject/<id> (level 2) refuses a pending request, and POST /admin/app/revoke/<id> (level 2) withdraws an approved app: either way every authorization of the app is deleted, and so is the app, unless its tokens made posts or comments: then it is kept, revoked, for the app pages below; the owner is notified, and the action is logged ("reject_app" or "revoke_app", against the owner).
 
@@ -136,6 +136,17 @@ def test_the_list_offers_no_actions_on_revoked_apps():
 	assert_in_payload(r, application["app_name"])
 	for action in ("approve", "reject", "revoke"):
 		assert_not_in_payload(r, f"/admin/app/{action}/{application['id']}")
+
+
+@pytest.mark.parametrize("page", ["/admin/apps", "/admin/app/{}"])
+@pytest.mark.parametrize("level", [2, 3])
+def test_approval_is_offered_from_level_3(page, level):
+	application = factories.oauth_app(factories.user(), state="pending")
+
+	r = as_user(factories.admin(level)).get(page.format(application["id"]))
+
+	assert_in_payload(r, f"/admin/app/reject/{application['id']}")
+	(assert_in_payload if level == 3 else assert_not_in_payload)(r, f"/admin/app/approve/{application['id']}")
 
 
 def test_a_revoked_apps_page_still_shows_its_posts():
