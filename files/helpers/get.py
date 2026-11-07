@@ -324,6 +324,7 @@ def get_comments(
 			selectinload(CommentFlag.user),
 		),
 		selectinload(Comment.parent_comment),
+		selectinload(Comment.senttouser),
 	)
 
 	results = query.all()

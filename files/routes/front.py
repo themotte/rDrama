@@ -49,6 +49,8 @@ def notifications_main(v: User):
 	# With the viewer's votes and blocks
 	loaded = {c.id: c for c in get_comments([n.comment_id for n in notifications], v)}
 	items: list[Comment] = [loaded[n.comment_id] for n in notifications]
+	# Messages' first messages, which their reply boxes ask about, loaded at once; the session holds rows only while they're referenced, so this one lives until the page renders
+	tops = g.db.query(Comment).filter(Comment.id.in_({c.top_comment_id for c in items if c.is_message and c.top_comment_id})).all()
 	for c, n in zip(items, notifications):
 		c.notif_utc = n.created_utc
 		c.unread = not n.read
