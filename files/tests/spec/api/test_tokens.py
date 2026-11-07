@@ -1,5 +1,5 @@
 '''
-API clients authenticate each request with an access token (one per user per app: test_authorize) sent as the whole Authorization header, with no scheme such as "Bearer"; whitespace around it is ignored. A known token authenticates as the user who holds it, whatever session cookie the request also carries, and needs no form key. Any other token authenticates no one: routes that need a login answer 401, and pages open to everyone are served as to a logged-out client. A header of only whitespace carries no token, and the session counts.
+API clients authenticate each request with an access token (one per user per app: test_authorize) sent as the whole Authorization header, with no scheme such as "Bearer"; whitespace around it is ignored. A token of an approved app authenticates as the user who holds it, whatever session cookie the request also carries, and needs no form key. Any other token, including one for an app that isn't approved, authenticates no one: routes that need a login answer 401, and pages open to everyone are served as to a logged-out client. A header of only whitespace carries no token, and the session counts.
 
 GET /me (or /@me) answers an API client with the authenticated user's JSON.
 
@@ -43,6 +43,13 @@ def test_a_blank_header_leaves_the_session():
 	client.authorization = "   "
 
 	assert client.get("/me").json["id"] == user["id"]
+
+
+def test_tokens_for_pending_apps_authenticate_no_one():
+	user = factories.user()
+	token = factories.authorization(user, factories.oauth_app(user, state="pending"))
+
+	assert_api_unauthorized(as_api(token).get("/me"))
 
 
 def test_unknown_tokens_are_served_open_pages():

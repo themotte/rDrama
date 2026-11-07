@@ -24,7 +24,7 @@ def get_logged_in_user():
 
 	token = request.headers.get("Authorization", "").strip()
 	if token:
-		client = g.db.query(ClientAuth).filter(ClientAuth.access_token == token).one_or_none()
+		client = g.db.query(ClientAuth).join(ClientAuth.application).filter(ClientAuth.access_token == token, OauthApp.client_id != None).one_or_none()
 		if client: 
 			v = client.user
 			v.client = client
