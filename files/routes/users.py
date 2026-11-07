@@ -222,7 +222,7 @@ def messagereply(v):
 	if file and not modmail: abort(400, "Images can only be attached in modmail.")
 	if not (message or file): abort(400, "Message is empty!")
 	if file:
-		if file.content_type.startswith('image/'):
+		if (file.content_type or '').startswith('image/'):
 			name = new_image_path()
 			file.save(name)
 			url = process_image(name)

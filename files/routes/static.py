@@ -297,7 +297,7 @@ def submit_contact(v: Optional[User]):
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
-		if file.content_type.startswith('image/'):
+		if (file.content_type or '').startswith('image/'):
 			name = new_image_path()
 			file.save(name)
 			url = process_image(name)

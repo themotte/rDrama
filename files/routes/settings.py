@@ -94,7 +94,7 @@ def settings_profile_post(v):
 		bio = (request.values.get("bio") or "")[:1500]
 
 		if upload:
-			if upload.content_type.startswith('image/'):
+			if (upload.content_type or '').startswith('image/'):
 				name = new_image_path()
 				upload.save(name)
 				image = f"\n\n![]({process_image(name)})"
