@@ -108,11 +108,11 @@ function post_reply(id){
 	form.append('parent_id', id);
 	form.append('body', document.getElementById('reply-form-body-'+id).value);
 
-	try {
-		for (const e of document.getElementById('file-upload').files)
+	// Only modmail's reply boxes have an image upload
+	const upload = document.getElementById(`file-upload-${id}`);
+	if (upload)
+		for (const e of upload.files)
 			form.append('file', e);
-	}
-	catch(e) {}
 
 	const xhr = new XMLHttpRequest();
 	xhr.open("post", "/reply");

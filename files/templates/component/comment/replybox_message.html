@@ -6,9 +6,9 @@
 			<textarea required autocomplete="off" minlength="1" maxlength="{{MESSAGE_BODY_LENGTH_MAXIMUM}}" name="body" form="reply-to-message-{{c.id}}" data-id="{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3" oninput="markdown('reply-form-body-{{c.id}}', 'message-reply-{{c.id}}')"></textarea>
 			<div class="comment-format" id="comment-format-bar-{{c.id}}">
 				{% if c.sentto == MODMAIL_ID %}
-					<label class="btn btn-secondary m-0 mt-3" for="file-upload">
-						<div id="filename"><i class="far fa-image"></i></div>
-						<input autocomplete="off" id="file-upload" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename','file-upload')" hidden>
+					<label class="btn btn-secondary m-0 mt-3" for="file-upload-{{c.id}}">
+						<div id="filename-{{c.id}}"><i class="far fa-image"></i></div>
+						<input autocomplete="off" id="file-upload-{{c.id}}" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-{{c.id}}','file-upload-{{c.id}}')" hidden>
 					</label>
 				{% endif %}
 			</div>
