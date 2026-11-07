@@ -20,17 +20,17 @@ def clear(v):
 @app.get("/unread")
 @auth_required
 def unread(v):
-	listing = shown_notifications(g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id), v).filter(
+	items = shown_notifications(g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id), v).filter(
 		Notification.read == False,
 		Comment.author_id != AUTOJANNY_ID,
 	).order_by(Notification.created_datetimez.desc()).all()
 
-	for n, c in listing:
+	for n, c in items:
 		n.read = True
 		g.db.add(n)
 	g.db.commit()
 
-	return {"data":[c.json_for(v, without_replies=True) for _, c in listing]}
+	return {"data":[c.json_for(v, without_replies=True) for _, c in items]}
 
 
 @app.get("/notifications")
@@ -48,8 +48,8 @@ def notifications_main(v: User):
 
 	# With the viewer's votes and blocks
 	loaded = {c.id: c for c in get_comments([n.comment_id for n in notifications], v)}
-	listing: list[Comment] = [loaded[n.comment_id] for n in notifications]
-	for c, n in zip(listing, notifications):
+	items: list[Comment] = [loaded[n.comment_id] for n in notifications]
+	for c, n in zip(items, notifications):
 		c.notif_utc = n.created_utc
 		c.unread = not n.read
 		n.read = True
@@ -60,11 +60,11 @@ def notifications_main(v: User):
 	g.db.expire_on_commit = True
 
 	if request.headers.get("Authorization"):
-		return {"data": [x.json_for(v, without_replies=True) for x in listing]}
+		return {"data": [x.json_for(v, without_replies=True) for x in items]}
 
 	return render_template("notifications.html",
 		v=v,
-		notifications=listing,
+		notifications=items,
 		next_exists=next_exists,
 		page=page,
 		standalone=True,
@@ -83,7 +83,7 @@ def notifications_posts(v: User):
 		.filter(Notification.user_id == v.id, Comment.author_id == AUTOJANNY_ID)
 		.order_by(Notification.created_datetimez.desc()).offset(25 * (page - 1)).limit(101).all())
 
-	listing = []
+	items = []
 
 	for index, x in enumerate(notifications[:100]):
 		n, c = x
@@ -93,18 +93,18 @@ def notifications_posts(v: User):
 			c.unread = True
 			g.db.add(n)
 		if n.created_utc > 1620391248: c.notif_utc = n.created_utc
-		listing.append(c)
+		items.append(c)
 
-	next_exists = (len(notifications) > len(listing))
+	next_exists = (len(notifications) > len(items))
 
 	g.db.commit()
 
 	if request.headers.get("Authorization"):
-		return {"data": [x.json_for(v) for x in listing]}
+		return {"data": [x.json_for(v) for x in items]}
 
 	return render_template("notifications.html",
 		v=v,
-		notifications=listing,
+		notifications=items,
 		next_exists=next_exists,
 		page=page,
 		standalone=True,
@@ -122,11 +122,11 @@ def notifications_modmail(v: User):
 		.filter(Comment.sentto == MODMAIL_ID, Comment.parent_submission == None, Comment.level == 1)
 		.order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all())
 	next_exists = (len(comments) > 25)
-	listing = with_threads(comments[:25], v)
+	items = with_threads(comments[:25], v)
 
 	return render_template("notifications.html",
 		v=v,
-		notifications=listing,
+		notifications=items,
 		next_exists=next_exists,
 		page=page,
 		standalone=True,
@@ -151,14 +151,14 @@ def notifications_messages(v: User):
 	comments = comments.filter(shadowban_shown_to(v)).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	next_exists = (len(comments) > 25)
-	listing = with_threads(comments[:25], v)
+	items = with_threads(comments[:25], v)
 
 	if request.headers.get("Authorization"):
-		return {"data": [x.json_for(v) for x in listing]}
+		return {"data": [x.json_for(v) for x in items]}
 
 	return render_template("notifications.html",
 		v=v,
-		notifications=listing,
+		notifications=items,
 		next_exists=next_exists,
 		page=page,
 		standalone=True,
