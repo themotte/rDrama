@@ -1,4 +1,4 @@
-import sqlalchemy.exc
+from sqlalchemy.dialects import postgresql
 
 from files.__main__ import app, limiter
 from files.classes import *
@@ -26,18 +26,16 @@ def authorize(v):
 	client_id = request.values.get("client_id")
 	application = g.db.query(OauthApp).filter_by(client_id=client_id).one_or_none()
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
-	access_token = secrets.token_urlsafe(128)[:128]
-
-	try:
-		new_auth = ClientAuth(oauth_client = application.id, user_id = v.id, access_token=access_token)
-		g.db.add(new_auth)
-		g.db.commit()
-	except sqlalchemy.exc.IntegrityError:
-		g.db.rollback()
-		old_auth = g.db.query(ClientAuth).filter_by(oauth_client = application.id, user_id = v.id).one()
-		access_token = old_auth.access_token
+	access_token = _authorization(application, v)
+	g.db.commit()
 
 	return redirect(f"{application.redirect_uri}?token={access_token}")
+
+
+def _authorization(application: OauthApp, user: User) -> str:
+	'''The access token `user` holds for `application`, created if they hold none; concurrent requests agree on one.'''
+	g.db.execute(postgresql.insert(ClientAuth).values(oauth_client=application.id, user_id=user.id, access_token=secrets.token_urlsafe(128)[:128]).on_conflict_do_nothing(index_elements=[ClientAuth.user_id, ClientAuth.oauth_client]))
+	return g.db.query(ClientAuth.access_token).filter_by(oauth_client=application.id, user_id=user.id).scalar()
 
 
 @app.post("/api_keys")
