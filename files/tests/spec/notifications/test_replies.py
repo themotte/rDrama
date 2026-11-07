@@ -9,6 +9,8 @@ Only messages in a conversation can be answered, by those taking part in it: in 
 
 Replying doesn't need the sender to be part of the community, unlike starting a conversation (test_messages).
 
+In a modmail thread, every reply is a message to modmail, in the same thread. The admins who receive modmail (test_modmail), other than the replier, are notified, each once; when an admin replies, so is the thread's starter, unless the starter is the site itself (a visitor's message from the contact form, or a notice).
+
 The reply is {"comment": ...}: the new message rendered for the page.
 '''
 import pytest
@@ -248,13 +250,76 @@ def test_a_factory_reply_matches_one_sent_through_the_site():
 
 # Modmail
 
-def test_replying_to_an_admins_modmail_reply_notifies_each_admin_once():
-	starter, admin = factories.user(), factories.admin(3)
-	message = factories.message(starter, seed.MODMAIL_ID)
-	answer = factories.message(admin, None, message)
+def _modmail_replied(d, author, parent, notified):
+	reply = d.inserted["comments"][0]["id"] if d.inserted.get("comments") else None
+	d.assert_exactly(inserted={
+		"comments": [{"id": reply, "author_id": author["id"], "sentto": seed.MODMAIL_ID, "parent_submission": None, "parent_comment_id": parent["id"], "level": parent["level"] + 1, "top_comment_id": parent["top_comment_id"], "body": None, "state_mod": "VISIBLE"}],
+		"notifications": [{"user_id": user["id"], "comment_id": reply, "read": False} for user in notified],
+	})
 
-	r = _reply(starter, answer, factories.unique())
+
+@pytest.mark.parametrize("deep", [False, True], ids=["first message", "deeper"])
+def test_the_starter_answers_the_admins(deep):
+	starter, admins = factories.user(), [factories.admin(3), factories.admin(3)]
+	parent = factories.message(starter, seed.MODMAIL_ID)
+	if deep: parent = factories.message(admins[1], seed.MODMAIL_ID, parent)
+	client = as_user(starter)
+
+	with db_diff() as d:
+		r = client.post("/reply", {"parent_id": parent["id"], "body": factories.unique()}, headers=XHR)
 
 	assert_status(r, 200)
-	reply = db.row("comments", author_id=starter["id"], parent_comment_id=answer["id"])
-	assert [n["user_id"] for n in db.rows("notifications", comment_id=reply["id"])] == [admin["id"]]
+	_modmail_replied(d, starter, parent, admins)
+
+
+@pytest.mark.parametrize("deep", [False, True], ids=["first message", "deeper"])
+def test_an_admin_answers_the_starter_and_the_other_admins(deep):
+	starter, admin, others = factories.user(), factories.admin(3), [factories.admin(3), factories.admin(3)]
+	parent = factories.message(starter, seed.MODMAIL_ID)
+	if deep: parent = factories.message(starter, seed.MODMAIL_ID, factories.message(others[1], seed.MODMAIL_ID, parent))
+	client = as_user(admin)
+
+	with db_diff() as d:
+		r = client.post("/reply", {"parent_id": parent["id"], "body": factories.unique()}, headers=XHR)
+
+	assert_status(r, 200)
+	_modmail_replied(d, admin, parent, [starter, *others])
+
+
+def test_answering_the_site_notifies_only_the_other_admins():
+	admin, other = factories.admin(3), factories.admin(3)
+	message = factories.message(db.row("users", id=seed.SYSTEM_ID), seed.MODMAIL_ID)
+	client = as_user(admin)
+
+	with db_diff() as d:
+		r = client.post("/reply", {"parent_id": message["id"], "body": factories.unique()}, headers=XHR)
+
+	assert_status(r, 200)
+	_modmail_replied(d, admin, message, [other])
+
+
+def test_an_admin_who_started_modmail_is_notified_once():
+	starter, admin = factories.admin(3), factories.admin(3)
+	message = factories.message(starter, seed.MODMAIL_ID)
+	client = as_user(admin)
+
+	with db_diff() as d:
+		r = client.post("/reply", {"parent_id": message["id"], "body": factories.unique()}, headers=XHR)
+
+	assert_status(r, 200)
+	_modmail_replied(d, admin, message, [starter])
+
+
+@pytest.mark.parametrize("sentto", ["nobody", "starter", "admin"])
+def test_answers_older_versions_sent_elsewhere_are_still_modmail(sentto):
+	'''Older versions sent admins' answers to no one, or to whoever they answered.'''
+	starter, admin = factories.user(), factories.admin(3)
+	message = factories.message(starter, seed.MODMAIL_ID)
+	answer = factories.message(admin, {"nobody": None, "starter": starter, "admin": admin}[sentto], message)
+	client = as_user(starter)
+
+	with db_diff() as d:
+		r = client.post("/reply", {"parent_id": answer["id"], "body": factories.unique()}, headers=XHR)
+
+	assert_status(r, 200)
+	_modmail_replied(d, starter, answer, [admin])

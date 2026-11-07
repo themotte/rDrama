@@ -207,14 +207,16 @@ def messagereply(v):
 	if not request.values.get("parent_id"): abort(400, "Which message are you replying to?")
 	parent = get_comment(request.values["parent_id"], v=v)
 	if not parent.takes_part_in_thread(v): abort(403, "You can only reply in your own conversations.")
-	user_id = parent.author.id
-
-	if parent.sentto == MODMAIL_ID: user_id = None
-	elif v.id == user_id: user_id = parent.sentto
+	top = parent.thread_top
+	modmail = top.sentto == MODMAIL_ID
+	# The recipient: modmail throughout a modmail thread, else the other of the conversation's two users
+	if modmail: recipient = MODMAIL_ID
+	elif v.id == top.author_id: recipient = top.sentto
+	else: recipient = top.author_id
 
 	body_html = sanitize(message)
 
-	if parent.sentto == MODMAIL_ID and request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
+	if modmail and request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if file.content_type.startswith('image/'):
 			name = new_image_path()
@@ -229,17 +231,20 @@ def messagereply(v):
 							parent_comment_id=parent.id,
 							top_comment_id=parent.top_comment_id,
 							level=parent.level + 1,
-							sentto=user_id,
+							sentto=recipient,
 							body_html=body_html,
 							state_mod=StateMod.VISIBLE,
 							)
 	g.db.add(c)
 	g.db.flush()
 
-	notified = notify_modmail(c.id, v) if c.top_comment.sentto == MODMAIL_ID else set()
-
-	if user_id and user_id != v.id and user_id != MODMAIL_ID and user_id not in notified:
-		g.db.add(Notification(comment_id=c.id, user_id=user_id))
+	if modmail:
+		notified = notify_modmail(c.id, v)
+		# Admins' answers reach the starter, unless the site itself started the thread
+		if v.id != top.author_id and top.author_id not in SYSTEM_ACCOUNT_IDS and top.author_id not in notified:
+			g.db.add(Notification(comment_id=c.id, user_id=top.author_id))
+	else:
+		g.db.add(Notification(comment_id=c.id, user_id=recipient))
 
 	g.db.commit()
 

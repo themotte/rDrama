@@ -138,7 +138,7 @@ def notifications_modmail(v: User):
 	page: int = max(request.values.get("page", 1, int) or 1, 1)
 
 	comments = (g.db.query(Comment)
-		.filter(Comment.sentto == MODMAIL_ID)
+		.filter(Comment.sentto == MODMAIL_ID, Comment.level == 1)
 		.order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all())
 	next_exists = (len(comments) > 25)
 	listing = comments[:25]

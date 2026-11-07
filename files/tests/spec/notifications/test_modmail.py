@@ -7,7 +7,7 @@ POST /send_admin, with "message" and optionally "email" and an image "file", sen
 
 Requesting API keys (POST /api_keys) also writes modmail: a notice from the system account, of which the admins who receive modmail are notified.
 
-GET /notifications/modmail lists modmail conversations for admins from level 2, newest first: 25 to a page, "page" (from 1) choosing it, each with its replies. API clients and lower levels are refused (403); visitors are sent to log in.
+GET /notifications/modmail lists modmail conversations (their first messages) for admins from level 2, newest first: 25 to a page, "page" (from 1) choosing it, each with its replies. API clients and lower levels are refused (403); visitors are sent to log in.
 '''
 import re
 
@@ -133,7 +133,7 @@ def test_lists_modmail_newest_first(level):
 def test_shows_each_conversations_replies():
 	starter = factories.user()
 	message = factories.message(starter, seed.MODMAIL_ID)
-	reply = factories.message(factories.admin(3), None, message)
+	reply = factories.message(factories.admin(3), seed.MODMAIL_ID, message)
 
 	assert_in_order(as_user(factories.admin(2)).get("/notifications/modmail"), [message["text"], reply["text"]])
 

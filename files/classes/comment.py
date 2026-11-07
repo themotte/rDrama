@@ -103,11 +103,6 @@ class Comment(CreatedBase):
 	def votes_shown_to(self, v:Optional["User"]) -> tuple[int, int]:
 		return votes_shown_to(self, v)
 
-	@property
-	@lazy
-	def top_comment(self) -> Optional["Comment"]:
-		return g.db.query(Comment).filter_by(id=self.top_comment_id).one_or_none()
-
 	@lazy
 	def flags(self, v):
 		flags = self.reports
