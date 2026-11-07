@@ -60,6 +60,12 @@ ROUTES = [
 	("GET", "/tasks/scheduled_posts/{scheduled_post_id}", 2),
 	("POST", "/tasks/scheduled_posts/{scheduled_post_id}/content", 2),
 	("POST", "/tasks/scheduled_posts/{scheduled_post_id}/schedule", 2),
+	("GET", "/admin/apps", 2),
+	("GET", "/admin/app/{app_id}", 2),
+	("GET", "/admin/app/{app_id}/comments", 2),
+	("POST", "/admin/app/approve/{app_id}", 3),
+	("POST", "/admin/app/reject/{app_id}", 2),
+	("POST", "/admin/app/revoke/{app_id}", 2),
 ]
 
 SHADOWBANNED_PAGE = "/admin/shadowbanned"
@@ -91,6 +97,7 @@ def _targets():
 		"task_id": task["id"],
 		"run_id": run["id"],
 		"scheduled_post_id": scheduled_post["id"],
+		"app_id": factories.oauth_app(user, state="pending")["id"],
 	}
 
 

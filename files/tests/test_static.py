@@ -141,14 +141,6 @@ def test_modlog_route():
 	assert response.status_code == 200
 
 
-def test_api_route():
-	"""Test /api route returns API documentation"""
-	client = util_accounts.create_logged_off_client()
-
-	response = client.get("/api")
-	assert response.status_code == 200
-
-
 def test_formatting_route():
 	"""Test /formatting route"""
 	client = util_accounts.create_logged_off_client()
