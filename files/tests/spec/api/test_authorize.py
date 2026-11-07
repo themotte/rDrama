@@ -113,3 +113,16 @@ def test_rescinding_without_a_token_is_not_found(app_id):
 
 	assert_status(r, 404)
 	d.assert_exactly()
+
+
+def test_a_revoked_apps_former_client_id_is_refused():
+	application = factories.oauth_app(factories.user())
+	factories.post(factories.user(), app_id=application["id"])
+	as_user(factories.admin(2)).post(f"/admin/app/revoke/{application['id']}")
+	client = as_user(factories.user())
+
+	with db_diff() as d:
+		r = client.post("/authorize", {"client_id": application["client_id"]})
+
+	assert_status(r, 401)
+	d.assert_exactly()

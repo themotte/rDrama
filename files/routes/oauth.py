@@ -1,3 +1,4 @@
+from sqlalchemy import func
 from sqlalchemy.dialects import postgresql
 
 from files.__main__ import app, limiter
@@ -49,10 +50,21 @@ def _app(aid: str, lock: bool = False) -> OauthApp:
 
 
 def _app_owned(v: User, aid: str) -> OauthApp:
-	'''The app with the id `aid` from the URL, locked for its owner, the only one who may manage it, to change.'''
+	'''The app with the id `aid` from the URL, locked for its owner, the only one who may manage it, to change; to them a revoked app is gone (404).'''
 	app = _app(aid, lock=True)
+	if app.state == OauthAppState.REVOKED: abort(404)
 	if app.author_id != v.id: abort(403)
 	return app
+
+
+def _withdraw(app: OauthApp):
+	'''Ends every authorization of `app` (locked by the caller) and deletes it, except an app whose tokens made posts or comments: that is kept, revoked, so admins can still see where they came from.'''
+	g.db.query(ClientAuth).filter_by(oauth_client=app.id).delete()
+	if g.db.query(Submission.id).filter_by(app_id=app.id).first() or g.db.query(Comment.id).filter_by(app_id=app.id).first():
+		app.client_id = None
+		app.revoked_utc = func.now()
+	else:
+		g.db.delete(app)
 
 
 def _authorization(application: OauthApp, user: User) -> str:
@@ -107,12 +119,7 @@ def request_api_keys(v):
 def delete_oauth_app(v, aid):
 	refuse_api_client(v)
 	app = _app_owned(v, aid)
-
-	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all():
-		g.db.delete(auth)
-
-	g.db.delete(app)
-
+	_withdraw(app)
 	g.db.commit()
 
 	return redirect('/apps')
@@ -180,16 +187,15 @@ def admin_app_approve(v, aid):
 def admin_app_revoke(v, aid):
 	app = _app(aid, lock=True)
 	if app.state != OauthAppState.APPROVED: abort(409, "Only approved apps can be revoked")
-	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
+	owner = app.author
+	_withdraw(app)
 
-	send_repeatable_notification(app.author.id, f"@{v.username} has revoked your application `{app.app_name}`.")
-
-	g.db.delete(app)
+	send_repeatable_notification(owner.id, f"@{v.username} has revoked your application `{app.app_name}`.")
 
 	ma = ModAction(
 		kind="revoke_app",
 		user_id=v.id,
-		target_user_id=app.author.id,
+		target_user_id=owner.id,
 	)
 	g.db.add(ma)
 
@@ -204,16 +210,15 @@ def admin_app_revoke(v, aid):
 def admin_app_reject(v, aid):
 	app = _app(aid, lock=True)
 	if app.state != OauthAppState.PENDING: abort(409, "Only pending apps can be rejected")
-	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
+	owner = app.author
+	_withdraw(app)
 
-	send_repeatable_notification(app.author.id, f"@{v.username} has rejected your application `{app.app_name}`.")
-
-	g.db.delete(app)
+	send_repeatable_notification(owner.id, f"@{v.username} has rejected your application `{app.app_name}`.")
 
 	ma = ModAction(
 		kind="reject_app",
 		user_id=v.id,
-		target_user_id=app.author.id,
+		target_user_id=owner.id,
 	)
 	g.db.add(ma)
 

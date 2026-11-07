@@ -1,11 +1,11 @@
 '''
 Admins review API applications (who may: admin/test_access).
 
-- GET /admin/apps (level 2) lists every app, with its owner and client id.
+- GET /admin/apps (level 2) lists every app, with its owner and client id; revoked apps are listed with no actions.
 - POST /admin/app/approve/<id> (level 3) approves a pending app: it gets a client id, its owner gets a token for it and is notified (the token itself shows only on the owner's /settings/apps, never in the notice), and the approval is logged in the mod log ("approve_app", against the owner).
-- POST /admin/app/reject/<id> (level 2) refuses a pending request, and POST /admin/app/revoke/<id> (level 2) withdraws an approved app: either way the app and every authorization of it are deleted, the owner is notified, and the action is logged ("reject_app" or "revoke_app", against the owner).
+- POST /admin/app/reject/<id> (level 2) refuses a pending request, and POST /admin/app/revoke/<id> (level 2) withdraws an approved app: either way every authorization of the app is deleted, and so is the app, unless its tokens made posts or comments: then it is kept, revoked, for the app pages below; the owner is notified, and the action is logged ("reject_app" or "revoke_app", against the owner).
 
-Each answers a JSON message, and refuses an app in the other state with 409, changing nothing. Approving keeps a token the owner already holds for the app. An id that is no app's (unknown, not a whole number, or too large) is 404, here and on the app pages below.
+Each answers a JSON message, and refuses an app in another state (revoked apps included) with 409, changing nothing. Approving keeps a token the owner already holds for the app. An id that is no app's (unknown, not a whole number, or too large) is 404, here and on the app pages below.
 
 GET /admin/app/<id> and GET /admin/app/<id>/comments (level 2) show an app and the posts or comments its tokens made, newest first, 100 to a page, each shown as admin listings show them (listings/test_parameters).
 '''
@@ -112,6 +112,42 @@ def test_revoking_deletes_the_app_and_its_authorizations():
 	assert_api_unauthorized(as_api(token).get("/me"))
 
 
+def test_revoking_an_app_that_posted_keeps_it_revoked():
+	owner = factories.user()
+	application = factories.oauth_app(owner)
+	factories.comment(owner, factories.post(factories.user()), app_id=application["id"])
+	client = as_user(factories.admin(2))
+
+	with db_diff() as d:
+		client.post(f"/admin/app/revoke/{application['id']}")
+
+	d.assert_exactly(
+		updated={"oauth_apps": {application["id"]: {"client_id": None, "revoked_utc": ANY}}},
+		deleted={"client_auths": [(owner["id"], application["id"])]},
+		inserted={"comments": [{}], "notifications": [{}], "modactions": [{"kind": "revoke_app"}]},
+	)
+
+
+def test_the_list_offers_no_actions_on_revoked_apps():
+	application = factories.oauth_app(factories.user(), state="revoked")
+
+	r = as_user(factories.admin(3)).get("/admin/apps")
+
+	assert_in_payload(r, application["app_name"])
+	for action in ("approve", "reject", "revoke"):
+		assert_not_in_payload(r, f"/admin/app/{action}/{application['id']}")
+
+
+def test_a_revoked_apps_page_still_shows_its_posts():
+	application = factories.oauth_app(factories.user(), state="revoked")
+	post = factories.post(factories.user(), app_id=application["id"])
+
+	r = as_user(factories.admin(2)).get(f"/admin/app/{application['id']}")
+
+	assert_html(r, 200)
+	assert_in_payload(r, post["title"])
+
+
 def test_the_app_page_shows_its_posts():
 	application = factories.oauth_app(factories.user())
 	post = factories.post(factories.user(), app_id=application["id"])
@@ -159,9 +195,9 @@ def test_the_app_comments_page_shows_its_comments():
 	assert_not_in_payload(r, other["body"])
 
 
-@pytest.mark.parametrize("action, approved", [("approve", True), ("reject", True), ("revoke", False)])
-def test_actions_refuse_apps_in_the_other_state(action, approved):
-	application = factories.oauth_app(factories.user(), state="approved" if approved else "pending")
+@pytest.mark.parametrize("action, state", [("approve", "approved"), ("reject", "approved"), ("revoke", "pending"), ("approve", "revoked"), ("reject", "revoked"), ("revoke", "revoked")])
+def test_actions_refuse_apps_in_another_state(action, state):
+	application = factories.oauth_app(factories.user(), state=state)
 	client = as_user(factories.admin(3))
 
 	with db_diff() as d:

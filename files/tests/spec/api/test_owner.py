@@ -1,14 +1,14 @@
 '''
 What a user does with the API applications they requested.
 
-GET /settings/apps lists the viewer's approved apps with their client ids and the token the viewer holds for each (approval gives the owner one; without one, the page links to authorizing the app, GET /authorize?client_id=<its client id>, which grants a new one), their pending requests, and the apps they have authorized (test_authorize), and offers the form that requests another (test_requests). Other users' apps aren't listed, and no one else's token ever shows: not those of users who authorized the viewer's apps, nor the viewer's tokens for other users' apps.
+GET /settings/apps lists the viewer's approved apps with their client ids and the token the viewer holds for each (approval gives the owner one; without one, the page links to authorizing the app, GET /authorize?client_id=<its client id>, which grants a new one), their pending requests, and the apps they have authorized (test_authorize), and offers the form that requests another (test_requests). Revoked apps and other users' apps aren't listed, and no one else's token ever shows: not those of users who authorized the viewer's apps, nor the viewer's tokens for other users' apps.
 
 The owner of an app, and only they (others: 403), may:
 - edit it (POST /edit_app/<id>: "name", "redirect_uri", "description" cut to 256 characters, as when requesting), which needs no new approval: an approved app keeps its client id and its tokens;
-- delete it (POST /delete_app/<id>), which ends every authorization of it;
+- delete it (POST /delete_app/<id>), which ends every authorization of it. An app whose tokens made posts or comments is kept, revoked, so admins can still see where they came from (test_admin); to its owner it is gone like a deleted one;
 - give an approved app a new client id (POST /oauth/reroll/<id>, answering a JSON "message" and the new client id as "id"), after which users authorize it under the new id only; tokens already granted keep working. A pending request has no client id to replace (409): only an admin's approval gives it one.
 
-An id that is no app's (unknown, not a whole number, or too large) is 404.
+An id that is no app's (unknown, not a whole number, or too large), or a revoked app's, is 404.
 
 Editing is refused to permanently suspended users (403).
 '''
@@ -21,6 +21,7 @@ BAD_IDS = {
 	"unknown": lambda: db.execute("SELECT nextval('oauth_apps_id_seq')"),
 	"garbled": lambda: "abc",
 	"huge": lambda: str(2**31),
+	"revoked": lambda: factories.oauth_app(factories.user(), state="revoked")["id"],
 }
 
 
@@ -156,6 +157,31 @@ def test_the_owner_deletes_an_app_and_its_authorizations():
 
 	assert_status(r, 302)
 	d.assert_exactly(deleted={"oauth_apps": [application["id"]], "client_auths": [(owner["id"], application["id"]), (user["id"], application["id"])]})
+
+
+def test_deleting_an_app_that_posted_keeps_it_revoked():
+	owner = factories.user()
+	application = factories.oauth_app(owner)
+	factories.post(owner, app_id=application["id"])
+
+	with db_diff() as d:
+		as_user(owner).post(f"/delete_app/{application['id']}")
+
+	d.assert_exactly(
+		updated={"oauth_apps": {application["id"]: {"client_id": None, "revoked_utc": ANY}}},
+		deleted={"client_auths": [(owner["id"], application["id"])]},
+	)
+	assert db.row("oauth_apps", id=application["id"])["revoked_utc"]
+
+
+def test_the_page_leaves_out_revoked_apps():
+	owner = factories.user()
+	application = factories.oauth_app(owner, state="revoked")
+
+	r = as_user(owner).get("/settings/apps")
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, application["app_name"])
 
 
 def test_others_cant_delete_an_app():

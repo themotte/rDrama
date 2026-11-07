@@ -12,6 +12,7 @@ from files.helpers.config.const import *
 class OauthAppState(enum.StrEnum):
 	PENDING = "pending"  # requested, awaiting an admin's approval
 	APPROVED = "approved"  # has a client id: users can authorize it
+	REVOKED = "revoked"  # withdrawn, kept only because its tokens made posts or comments
 
 
 class OauthApp(Base):
@@ -19,6 +20,7 @@ class OauthApp(Base):
 	__tablename__ = "oauth_apps"
 	__table_args__ = (
 		UniqueConstraint('client_id', name='unique_id'),
+		CheckConstraint('revoked_utc IS NULL OR client_id IS NULL', name='oauth_apps_revoked_have_no_client_id'),
 	)
 
 	id = Column(Integer, primary_key=True)
@@ -27,6 +29,7 @@ class OauthApp(Base):
 	redirect_uri = Column(String(length=50), nullable=False)
 	description = Column(String(length=256), nullable=False)
 	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+	revoked_utc = Column(DateTime(timezone=True))
 
 	author = relationship("User", viewonly=True)
 
@@ -35,6 +38,7 @@ class OauthApp(Base):
 
 	@property
 	def state(self) -> OauthAppState:
+		if self.revoked_utc: return OauthAppState.REVOKED
 		return OauthAppState.APPROVED if self.client_id else OauthAppState.PENDING
 
 	@property
