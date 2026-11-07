@@ -89,8 +89,8 @@ def post_id(pid, anything=None, v=None):
 		pg_top_comment_ids.append(tc_id)
 
 	def comment_tree_filter(q: Query) -> Query:
-		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
-		return q
+		# Older versions let private replies hang under comments in the thread
+		return q.filter(Comment.top_comment_id.in_(pg_top_comment_ids), Comment.parent_submission == post.id)
 
 	comments, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v, post=post)
 	# Pre-set p.comments to the eagerly-loaded set so template iteration in the
@@ -155,8 +155,8 @@ def viewmore(v, pid, sort, offset):
 		pg_top_comment_ids.append(tc_id)
 
 	def comment_tree_filter(q: Query) -> Query:
-		q = q.filter(Comment.top_comment_id.in_(pg_top_comment_ids))
-		return q
+		# Older versions let private replies hang under comments in the thread
+		return q.filter(Comment.top_comment_id.in_(pg_top_comment_ids), Comment.parent_submission == post.id)
 
 	_, comment_tree = get_comment_trees_eager(comment_tree_filter, sort, v, post=post)
 	comments = comment_tree[None] # parent=None -> top-level comments

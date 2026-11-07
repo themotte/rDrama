@@ -19,20 +19,24 @@ from datetime import datetime, timezone
 # comment's subtree (down to the render depth limit, +1 level so the boundary
 # "more comments" button still appears) and its ancestor chain (up `context`
 # levels, +1 so top_comment.parent_comment stays wired). This replaces loading
-# the entire top-comment thread and discarding most of it.
+# the entire top-comment thread and discarding most of it. Both keep to the
+# focused comment's post (or to messages): older versions let private replies
+# hang under comments on posts.
 _CONTEXT_COMMENT_IDS_SQL = text("""
-WITH RECURSIVE subtree(id, depth) AS (
+WITH RECURSIVE focus AS (
+		SELECT parent_submission FROM comments WHERE id = :cid
+), subtree(id, depth) AS (
 		SELECT id, 0 FROM comments WHERE id = :cid
 	UNION ALL
 		SELECT c.id, s.depth + 1
 		FROM comments c JOIN subtree s ON c.parent_comment_id = s.id
-		WHERE s.depth < :subtree_depth
+		WHERE s.depth < :subtree_depth AND c.parent_submission IS NOT DISTINCT FROM (SELECT parent_submission FROM focus)
 ), ancestors(id, parent_comment_id, depth) AS (
 		SELECT id, parent_comment_id, 0 FROM comments WHERE id = :cid
 	UNION ALL
 		SELECT c.id, c.parent_comment_id, a.depth + 1
 		FROM comments c JOIN ancestors a ON c.id = a.parent_comment_id
-		WHERE a.depth < :ancestor_depth
+		WHERE a.depth < :ancestor_depth AND c.parent_submission IS NOT DISTINCT FROM (SELECT parent_submission FROM focus)
 )
 SELECT id FROM subtree
 UNION

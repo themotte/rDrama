@@ -32,14 +32,14 @@ WITH RECURSIVE subtree(id, depth) AS (
 	UNION ALL
 		SELECT c.id, s.depth + 1
 		FROM comments c JOIN subtree s ON c.parent_comment_id = s.id
-		WHERE s.depth < :depth
+		WHERE s.depth < :depth AND c.parent_submission IS NOT DISTINCT FROM (SELECT parent_submission FROM comments WHERE id = :cid)
 )
 SELECT id FROM subtree
 """)
 
 
 def comment_subtree_ids(cid:int, depth:int) -> list[int]:
-	'''Ids of the comment and its replies down to `depth` levels below it.'''
+	'''Ids of the comment and its replies down to `depth` levels below it, keeping to its post (older versions let private replies hang under comments on posts).'''
 	return [row[0] for row in g.db.execute(_SUBTREE_IDS_SQL, {"cid": cid, "depth": depth})]
 
 
