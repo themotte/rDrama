@@ -1,6 +1,8 @@
 '''
 API clients authenticate each request with an access token (one per user per app: test_authorize) sent as the whole Authorization header, with no scheme such as "Bearer"; whitespace around it is ignored. A token of an approved app authenticates as the user who holds it, whatever session cookie the request also carries, and needs no form key. Any other token, including one for an app that isn't approved, authenticates no one: routes that need a login answer 401, and pages open to everyone are served as to a logged-out client. A header of only whitespace carries no token, and the session counts.
 
+Changing or resetting the password, and logging out other devices, delete every token the account holds, as they end its other sessions (settings/test_security, auth/test_password_reset); its bots and authorized apps must be authorized again.
+
 API clients can't manage API apps or grant authorizations: the app routes (/authorize, /api_keys, /edit_app, /delete_app, /oauth/reroll, /oauth/rescind and /settings/apps) refuse them with 403, changing nothing. Everything else is open to them as to their holder's browser, without admin powers (users/test_api_clients).
 
 GET /me (or /@me) answers an API client with the authenticated user's JSON.

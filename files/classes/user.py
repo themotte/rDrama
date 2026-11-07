@@ -297,8 +297,9 @@ class User(CreatedBase):
 		return g.db.query(User).filter_by(id=self.is_banned).one_or_none()
 
 	def sign_out_everywhere(self):
-		'''Ends every session of the account (each remembers the nonce it logged in with; a request keeps its own by storing the new nonce in it).'''
+		'''Ends every session of the account (each remembers the nonce it logged in with; a request keeps its own by storing the new nonce in it) and every API token it holds.'''
 		self.login_nonce += 1
+		g.db.query(ClientAuth).filter_by(user_id=self.id).delete()
 
 	def hash_password(self, password):
 		# Use faster hashing with fewer iterations during tests

@@ -1,5 +1,5 @@
 '''
-Resetting a forgotten password: POST /forgot with "username" and "email" mails a reset link (formats in harness/session.py) when they match an account, and says the same either way; the link (GET /reset?id=&time=&token=) opens a form, and POSTing it ("user_id", "time", "token", "password", "confirm_password") sets the password. Link and form expire ten minutes after the link was issued.
+Resetting a forgotten password: POST /forgot with "username" and "email" mails a reset link (formats in harness/session.py) when they match an account, and says the same either way; the link (GET /reset?id=&time=&token=) opens a form, and POSTing it ("user_id", "time", "token", "password", "confirm_password") sets the password, signing the account out everywhere: its sessions end and every API token it holds is deleted. Link and form expire ten minutes after the link was issued.
 '''
 import time
 
@@ -209,6 +209,21 @@ def test_a_password_of_the_wrong_length_shows_the_form_again(password):
 	assert_html(r, 200)
 	assert r.form_field("token") is not None
 	d.assert_exactly()
+
+
+def test_a_reset_ends_the_accounts_api_tokens():
+	u = _member()
+	token = factories.api_token(u)
+	application_id = db.row("client_auths", access_token=token)["oauth_client"]
+	factories.authorization(factories.user(), db.row("oauth_apps", id=application_id))
+	elsewhere = factories.oauth_app(factories.user())
+	factories.authorization(u, elsewhere)
+
+	with db_diff() as d:
+		anon().post_raw("/reset", _form(u, int(time.time()), f"new {factories.unique()} password"))
+
+	d.assert_exactly(updated={"users": {u["id"]: {"passhash": ANY, "login_nonce": u["login_nonce"] + 1}}}, deleted={"client_auths": [(u["id"], application_id), (u["id"], elsewhere["id"])]})
+	assert_api_unauthorized(as_api(token).get("/me"))
 
 
 def test_a_reset_writes_the_new_password_and_moves_the_login_nonce_on():

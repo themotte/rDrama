@@ -1,6 +1,8 @@
 '''
 POST /settings/security (password, email, two-factor) and POST /settings/log_out_all_others.
 
+Changing the password and logging out other devices end the account's other sessions and every API token it holds (api/test_tokens).
+
 /settings/security handles the first present form among new_password, new_email, 2fa_token, 2fa_remove. Each form re-checks the account password; rejections re-render the page with status 200 and change nothing.
 '''
 import re
@@ -60,6 +62,21 @@ def test_password_change():
 	assert PASSHASH_FORMAT.match(db.row("users", id=u["id"])["passhash"])
 	assert can_log_in(u, NEW_PASSWORD)
 	assert not can_log_in(u, factories.PASSWORD)
+
+
+def test_a_password_change_ends_the_accounts_api_tokens():
+	u = factories.user()
+	token = factories.api_token(u)
+	application_id = db.row("client_auths", access_token=token)["oauth_client"]
+	factories.authorization(factories.user(), db.row("oauth_apps", id=application_id))
+	elsewhere = factories.oauth_app(factories.user())
+	factories.authorization(u, elsewhere)
+
+	with db_diff() as d:
+		_security(u, {"old_password": factories.PASSWORD, "new_password": NEW_PASSWORD, "cnf_password": NEW_PASSWORD})
+
+	d.assert_exactly(updated={"users": {u["id"]: {"passhash": ANY, "login_nonce": u["login_nonce"] + 1}}}, deleted={"client_auths": [(u["id"], application_id), (u["id"], elsewhere["id"])]})
+	assert_api_unauthorized(as_api(token).get("/me"))
 
 
 def test_password_change_keeps_the_session_that_made_it():
@@ -321,6 +338,21 @@ def test_log_out_all_others_invalidates_other_sessions_but_keeps_this_one():
 	d.assert_exactly(updated={"users": {u["id"]: {"login_nonce": u["login_nonce"] + 1}}})
 	assert_redirect(this.get("/me"), f"/@{u['username']}")
 	assert_api_unauthorized(other.get("/me", headers=XHR))
+
+
+def test_log_out_all_others_ends_the_accounts_api_tokens():
+	u = factories.user()
+	token = factories.api_token(u)
+	application_id = db.row("client_auths", access_token=token)["oauth_client"]
+	factories.authorization(factories.user(), db.row("oauth_apps", id=application_id))
+	elsewhere = factories.oauth_app(factories.user())
+	factories.authorization(u, elsewhere)
+
+	with db_diff() as d:
+		as_user(u).post("/settings/log_out_all_others", {"password": factories.PASSWORD})
+
+	d.assert_exactly(updated={"users": {u["id"]: {"login_nonce": u["login_nonce"] + 1}}}, deleted={"client_auths": [(u["id"], application_id), (u["id"], elsewhere["id"])]})
+	assert_api_unauthorized(as_api(token).get("/me"))
 
 
 def test_log_out_all_others_takes_the_password_verbatim():
