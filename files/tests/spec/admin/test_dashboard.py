@@ -65,10 +65,10 @@ def test_admin_sets_an_integer_setting(setting):
 	})
 
 
-def test_a_setting_change_notifies_the_other_level_3_admins():
+def test_a_setting_change_notifies_the_other_admins_from_level_2():
 	admin = factories.admin(3)
-	others = [factories.admin(3), factories.admin(3)]
-	factories.admin(2)
+	others = [factories.admin(2), factories.admin(3)]
+	factories.admin(1)
 	client = as_user(admin)
 
 	with db_diff() as d:

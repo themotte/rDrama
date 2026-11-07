@@ -9,7 +9,7 @@ Only messages in a conversation can be answered, by those taking part in it: in 
 
 Replying doesn't need the sender to be part of the community, unlike starting a conversation (test_messages).
 
-In a modmail thread, every reply is a message to modmail, in the same thread. The admins who receive modmail (test_modmail), other than the replier, are notified, each once; when an admin replies, so is the thread's starter, unless the starter is the site itself (a visitor's message from the contact form, or a notice).
+In a modmail thread, every reply is a message to modmail, in the same thread. The admins from level 2 other than the replier are notified, each once; when an admin replies, so is the thread's starter, unless the starter is the site itself (a visitor's message from the contact form, or a notice).
 
 An image "file" can be attached anywhere in a modmail thread; files from Tor are ignored, and a file that isn't an image is refused (400). Elsewhere a file is refused (400).
 
@@ -264,7 +264,7 @@ def _modmail_replied(d, author, parent, notified):
 
 @pytest.mark.parametrize("deep", [False, True], ids=["first message", "deeper"])
 def test_the_starter_answers_the_admins(deep):
-	starter, admins = factories.user(), [factories.admin(3), factories.admin(3)]
+	starter, admins = factories.user(), [factories.admin(2), factories.admin(3)]
 	parent = factories.message(starter, seed.MODMAIL_ID)
 	if deep: parent = factories.message(admins[1], seed.MODMAIL_ID, parent)
 	client = as_user(starter)
@@ -278,7 +278,7 @@ def test_the_starter_answers_the_admins(deep):
 
 @pytest.mark.parametrize("deep", [False, True], ids=["first message", "deeper"])
 def test_an_admin_answers_the_starter_and_the_other_admins(deep):
-	starter, admin, others = factories.user(), factories.admin(3), [factories.admin(3), factories.admin(3)]
+	starter, admin, others = factories.user(), factories.admin(3), [factories.admin(2), factories.admin(3)]
 	parent = factories.message(starter, seed.MODMAIL_ID)
 	if deep: parent = factories.message(starter, seed.MODMAIL_ID, factories.message(others[1], seed.MODMAIL_ID, parent))
 	client = as_user(admin)
@@ -291,7 +291,7 @@ def test_an_admin_answers_the_starter_and_the_other_admins(deep):
 
 
 def test_answering_the_site_notifies_only_the_other_admins():
-	admin, other = factories.admin(3), factories.admin(3)
+	admin, other = factories.admin(3), factories.admin(2)
 	message = factories.message(db.row("users", id=seed.SYSTEM_ID), seed.MODMAIL_ID)
 	client = as_user(admin)
 

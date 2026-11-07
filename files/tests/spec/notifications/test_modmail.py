@@ -3,7 +3,7 @@ Modmail: messages to the site's admins, sent to the modmail account (`seed.MODMA
 
 GET /contact (also /press and /media) is the contact form, for everyone.
 
-POST /send_admin, with "message" and optionally "email" and an image "file", sends it: a new conversation (a message that is its own top) from the logged-in user, or from the system account for visitors. Its text holds the message and the email given. An image is attached to it, except from Tor, where files are ignored; a file that isn't an image is refused (400). An empty message is refused (400). The admins who receive modmail are notified. The reply is the contact form again, saying the message was sent.
+POST /send_admin, with "message" and optionally "email" and an image "file", sends it: a new conversation (a message that is its own top) from the logged-in user, or from the system account for visitors. Its text holds the message and the email given. An image is attached to it, except from Tor, where files are ignored; a file that isn't an image is refused (400). An empty message is refused (400). The admins who receive modmail (those from level 2) are notified. The reply is the contact form again, saying the message was sent.
 
 Requesting API keys (POST /api_keys) also writes modmail: a notice from the system account, of which the admins who receive modmail are notified.
 
@@ -28,7 +28,8 @@ def test_the_contact_form(path, viewer):
 def test_sends_modmail_and_notifies_the_admins_who_receive_it(sender):
 	user = factories.user()
 	client = as_user(user) if sender == "user" else anon()
-	receivers = [factories.admin(3), factories.admin(3)]
+	receivers = [factories.admin(2), factories.admin(3)]
+	factories.admin(1)
 	text, email = factories.unique("message"), factories.unique("email")
 
 	with db_diff() as d:
@@ -88,7 +89,8 @@ def test_a_file_that_isnt_an_image_is_refused():
 
 
 def test_requesting_api_keys_notifies_the_admins_who_receive_modmail():
-	receivers = [factories.admin(3), factories.admin(3)]
+	receivers = [factories.admin(2), factories.admin(3)]
+	factories.admin(1)
 	client = as_user(factories.user())
 
 	with db_diff() as d:
