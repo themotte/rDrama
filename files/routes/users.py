@@ -206,6 +206,7 @@ def messagereply(v):
 
 	if not request.values.get("parent_id"): abort(400, "Which message are you replying to?")
 	parent = get_comment(request.values["parent_id"], v=v)
+	if not parent.takes_part_in_thread(v): abort(403, "You can only reply in your own conversations.")
 	user_id = parent.author.id
 
 	if parent.sentto == MODMAIL_ID: user_id = None

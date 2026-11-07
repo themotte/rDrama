@@ -250,8 +250,8 @@ def test_context_stops_below_messages_the_viewer_cant_open():
 	sender, recipient, outsider = factories.user(), factories.user(), factories.user()
 	message = _message(sender, recipient)
 	client = as_user(outsider)
-	assert_status(client.post("/reply", {"parent_id": message["id"], "body": factories.unique("reply")}, headers=XHR), 200)
-	reply = db.row("comments", author_id=outsider["id"], parent_comment_id=message["id"])
+	# Older versions let anyone answer any message
+	reply = factories.message(outsider, sender, message)
 
 	r = client.get(f"/post/{factories.post(factories.user())['id']}/anything/{reply['id']}", params={"context": 8})
 

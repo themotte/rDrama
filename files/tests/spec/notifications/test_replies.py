@@ -5,6 +5,8 @@ In a conversation between two users (a direct thread), the reply is a message to
 
 Without "parent_id" the reply is refused (400); one that names no message is not found (404).
 
+Only messages in a conversation can be answered, by those taking part in it: in a direct thread, its two users; in a modmail thread (one started by a message to modmail), its starter and admins from level 2. API tokens act as admin level 0, so an admin's API client takes part in modmail only in threads its user started. Refused (403): replies to comments on posts, to the site's notices, to messages older versions left outside any conversation, and to conversations the replier doesn't take part in, other users' included even for admins.
+
 Replying doesn't need the sender to be part of the community, unlike starting a conversation (test_messages).
 
 The reply is {"comment": ...}: the new message rendered for the page.
@@ -52,6 +54,104 @@ def test_an_unknown_parent_is_not_found(parent_id):
 
 	assert_status(r, 404)
 	d.assert_exactly()
+
+
+def _refused(user, parent):
+	client = as_user(user)
+	with db_diff() as d:
+		r = client.post("/reply", {"parent_id": parent["id"], "body": factories.unique()}, headers=XHR)
+	assert_status(r, 403)
+	d.assert_exactly()
+
+
+def test_comments_on_posts_cant_be_answered_privately():
+	comment = factories.comment(factories.user(), factories.post(factories.user()))
+
+	_refused(factories.user(), comment)
+
+
+def test_notices_cant_be_answered():
+	user = factories.user()
+	for author in (seed.SYSTEM_ID, seed.AUTOJANNY_ID):
+		notice = factories.message(db.row("users", id=author), None, distinguish_level=6)
+		factories.notification(user, notice)
+
+		_refused(user, notice)
+
+
+def test_messages_outside_any_conversation_cant_be_answered():
+	comment = factories.comment(factories.user(), factories.post(factories.user()))
+	user = factories.user()
+	private_reply = factories.message(user, db.row("users", id=comment["author_id"]), parent=comment)
+
+	_refused(db.row("users", id=comment["author_id"]), private_reply)
+	_refused(user, private_reply)
+
+
+def test_messages_whose_conversation_is_lost_cant_be_answered():
+	'''Older versions left messages pointing at a first message that isn't one: here a reply in a modmail thread.'''
+	starter, admin = factories.user(), factories.admin(3)
+	answer = factories.message(admin, seed.MODMAIL_ID, factories.message(starter, seed.MODMAIL_ID))
+	stray = factories.message(starter, admin, top_comment_id=answer["id"], level=1)
+
+	_refused(admin, stray)
+	_refused(starter, stray)
+
+
+@pytest.mark.parametrize("top", ["missing", "none"])
+def test_messages_whose_first_message_is_gone_cant_be_answered(top):
+	sender, recipient = factories.user(), factories.user()
+	stray = factories.message(sender, recipient, top_comment_id=None)
+	if top == "missing": db.update("comments", {"id": stray["id"]}, top_comment_id=stray["id"] + 100000)
+
+	_refused(recipient, stray)
+
+
+@pytest.mark.parametrize("outsider", ["user", "level 2 admin", "level 3 admin"])
+def test_outsiders_cant_answer_other_users_conversations(outsider):
+	message = factories.message(factories.user(), factories.user())
+	user = {"user": factories.user(), "level 2 admin": factories.admin(2), "level 3 admin": factories.admin(3)}[outsider]
+
+	_refused(user, message)
+
+
+def test_an_outsider_who_got_into_a_conversation_cant_answer_in_it():
+	'''Older versions let anyone answer any message.'''
+	sender, recipient, outsider = factories.user(), factories.user(), factories.user()
+	message = factories.message(sender, recipient)
+	intrusion = factories.message(outsider, sender, message)
+
+	_refused(outsider, intrusion)
+
+
+@pytest.mark.parametrize("outsider", ["user", "level 1 admin"])
+def test_only_the_starter_and_admins_take_part_in_modmail(outsider):
+	message = factories.message(factories.user(), seed.MODMAIL_ID)
+
+	_refused(factories.user(admin_level=0 if outsider == "user" else 1), message)
+
+
+def test_an_admins_api_client_takes_part_in_modmail_only_as_its_starter():
+	admin = factories.admin(3)
+	others = factories.message(factories.user(), seed.MODMAIL_ID)
+	own = factories.message(admin, seed.MODMAIL_ID)
+	client = as_api(factories.api_token(admin))
+
+	with db_diff() as d:
+		r = client.post("/reply", {"parent_id": others["id"], "body": factories.unique()})
+
+	assert_status(r, 403)
+	d.assert_exactly()
+	assert_status(client.post("/reply", {"parent_id": own["id"], "body": factories.unique()}), 200)
+
+
+@pytest.mark.parametrize("who", ["starter", "level 2 admin", "level 3 admin"])
+def test_modmail_is_answered_by_its_starter_and_admins(who):
+	starter = factories.user()
+	message = factories.message(starter, seed.MODMAIL_ID)
+	user = {"starter": starter, "level 2 admin": factories.admin(2), "level 3 admin": factories.admin(3)}[who]
+
+	assert_status(_reply(user, message, factories.unique()), 200)
 
 
 def test_the_recipient_answers_the_sender():

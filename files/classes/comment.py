@@ -285,6 +285,24 @@ class Comment(CreatedBase):
 
 	@property
 	@lazy
+	def thread_top(self) -> Optional["Comment"]:
+		'''The first message of the conversation this message is in, or None when it's in none: a comment on a post, a notice, or a message older versions left outside any conversation (under a comment on a post, under a notice, or pointing at a first message that's missing or isn't one).'''
+		if self.parent_submission: return None
+		# From the session when the thread is loaded
+		top = self if self.top_comment_id == self.id else g.db.get(Comment, self.top_comment_id) if self.top_comment_id else None
+		if not top or top.parent_submission or top.sentto is None or top.parent_comment_id: return None
+		return top
+
+	def takes_part_in_thread(self, v:Optional["User"]) -> bool:
+		'''Whether `v` takes part in this message's conversation: its two users in a direct thread; its starter and admins from level 2 in a modmail thread.'''
+		top = self.thread_top
+		if not (top and v): return False
+		if v.id == top.author_id: return True
+		if top.sentto == MODMAIL_ID: return v.admin_level >= PERMS['POST_COMMENT_MODERATION']
+		return v.id == top.sentto
+
+	@property
+	@lazy
 	def is_op(self): 
 		return self.author_id == self.post.author_id
 	
