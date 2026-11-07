@@ -8,9 +8,20 @@ The owner of an app, and only they (others: 403), may:
 - delete it (POST /delete_app/<id>), which ends every authorization of it;
 - give an approved app a new client id (POST /oauth/reroll/<id>, answering a JSON "message" and the new client id as "id"), after which users authorize it under the new id only; tokens already granted keep working. A pending request has no client id to replace (409): only an admin's approval gives it one.
 
+An id that is no app's (unknown, not a whole number, or too large) is 404.
+
 Editing is refused to permanently suspended users (403).
 '''
+import pytest
+
 from files.tests.spec.harness import *
+
+OWNER_ROUTES = ["/edit_app/{}", "/delete_app/{}", "/oauth/reroll/{}"]
+BAD_IDS = {
+	"unknown": lambda: db.execute("SELECT nextval('oauth_apps_id_seq')"),
+	"garbled": lambda: "abc",
+	"huge": lambda: str(2**31),
+}
 
 
 def _edit_fields(**overrides):
@@ -210,6 +221,30 @@ def test_others_cant_give_an_app_a_new_client_id():
 
 	with db_diff() as d:
 		r = client.post(f"/oauth/reroll/{application['id']}")
+
+	assert_status(r, 403)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("bad", BAD_IDS)
+@pytest.mark.parametrize("route", OWNER_ROUTES)
+def test_ids_that_are_no_apps_are_not_found(route, bad):
+	client = as_user(factories.user())
+	path = route.format(BAD_IDS[bad]())
+
+	with db_diff() as d:
+		r = client.post(path, _edit_fields())
+
+	assert_status(r, 404)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("route", OWNER_ROUTES)
+def test_api_clients_are_refused_before_the_id_is_looked_at(route):
+	client = as_api(factories.api_token(factories.user()))
+
+	with db_diff() as d:
+		r = client.post(route.format("abc"), _edit_fields())
 
 	assert_status(r, 403)
 	d.assert_exactly()

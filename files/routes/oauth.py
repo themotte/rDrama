@@ -38,6 +38,21 @@ def _app_by_client_id(client_id: Optional[str]) -> Optional[OauthApp]:
 	return g.db.query(OauthApp).filter(OauthApp.client_id == client_id).one_or_none()
 
 
+def _app(aid: str) -> OauthApp:
+	'''The app with the id `aid` from the URL, else 404.'''
+	app_id = parse_id(aid)
+	app = g.db.get(OauthApp, app_id) if app_id else None
+	if not app: abort(404)
+	return app
+
+
+def _app_owned(v: User, aid: str) -> OauthApp:
+	'''The app with the id `aid` from the URL, which only its owner may manage.'''
+	app = _app(aid)
+	if app.author_id != v.id: abort(403)
+	return app
+
+
 def _authorization(application: OauthApp, user: User) -> str:
 	'''The access token `user` holds for `application`, created if they hold none; concurrent requests agree on one.'''
 	g.db.execute(postgresql.insert(ClientAuth).values(oauth_client=application.id, user_id=user.id, access_token=secrets.token_urlsafe(128)[:128]).on_conflict_do_nothing(index_elements=[ClientAuth.user_id, ClientAuth.oauth_client]))
@@ -89,10 +104,7 @@ def request_api_keys(v):
 @auth_required
 def delete_oauth_app(v, aid):
 	refuse_api_client(v)
-	aid = int(aid)
-	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
-
-	if app.author_id != v.id: abort(403)
+	app = _app_owned(v, aid)
 
 	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all():
 		g.db.delete(auth)
@@ -109,10 +121,7 @@ def delete_oauth_app(v, aid):
 @is_not_permabanned
 def edit_oauth_app(v, aid):
 	refuse_api_client(v)
-	aid = int(aid)
-	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
-
-	if app.author_id != v.id: abort(403)
+	app = _app_owned(v, aid)
 
 	app.redirect_uri = request.values.get('redirect_uri')
 	app.app_name = request.values.get('name')
@@ -142,7 +151,7 @@ def rescind_authorization(v, aid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def admin_app_approve(v, aid):
-	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
+	app = _app(aid)
 	user = app.author
 
 	app.client_id = secrets.token_urlsafe(64)[:64]
@@ -175,22 +184,21 @@ def admin_app_approve(v, aid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_app_revoke(v, aid):
-	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
-	if app:
-		for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
+	app = _app(aid)
+	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
 
-		send_repeatable_notification(app.author.id, f"@{v.username} has revoked your application `{app.app_name}`.")
+	send_repeatable_notification(app.author.id, f"@{v.username} has revoked your application `{app.app_name}`.")
 
-		g.db.delete(app)
+	g.db.delete(app)
 
-		ma = ModAction(
-			kind="revoke_app",
-			user_id=v.id,
-			target_user_id=app.author.id,
-		)
-		g.db.add(ma)
+	ma = ModAction(
+		kind="revoke_app",
+		user_id=v.id,
+		target_user_id=app.author.id,
+	)
+	g.db.add(ma)
 
-		g.db.commit()
+	g.db.commit()
 
 	return {"message": "App revoked"}
 
@@ -199,23 +207,21 @@ def admin_app_revoke(v, aid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_app_reject(v, aid):
-	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
+	app = _app(aid)
+	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
 
-	if app:
-		for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
+	send_repeatable_notification(app.author.id, f"@{v.username} has rejected your application `{app.app_name}`.")
 
-		send_repeatable_notification(app.author.id, f"@{v.username} has rejected your application `{app.app_name}`.")
+	g.db.delete(app)
 
-		g.db.delete(app)
+	ma = ModAction(
+		kind="reject_app",
+		user_id=v.id,
+		target_user_id=app.author.id,
+	)
+	g.db.add(ma)
 
-		ma = ModAction(
-			kind="reject_app",
-			user_id=v.id,
-			target_user_id=app.author.id,
-		)
-		g.db.add(ma)
-
-		g.db.commit()
+	g.db.commit()
 
 	return {"message": "App rejected"}
 
@@ -223,7 +229,7 @@ def admin_app_reject(v, aid):
 @app.get("/admin/app/<aid>")
 @admin_level_required(2)
 def admin_app_id(v, aid):
-	oauth = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
+	oauth = _app(aid)
 
 	pids=oauth.idlist(page=request_page())
 
@@ -242,7 +248,7 @@ def admin_app_id(v, aid):
 @app.get("/admin/app/<aid>/comments")
 @admin_level_required(2)
 def admin_app_id_comments(v, aid):
-	oauth = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
+	oauth = _app(aid)
 
 	cids=oauth.comments_idlist(page=request_page())
 
@@ -274,9 +280,7 @@ def admin_apps_list(v):
 @auth_required
 def reroll_oauth_tokens(aid, v):
 	refuse_api_client(v)
-	a = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
-
-	if a.author_id != v.id: abort(403)
+	a = _app_owned(v, aid)
 	if a.state != OauthAppState.APPROVED: abort(409, "Only approved apps have a client ID")
 
 	a.client_id = secrets.token_urlsafe(64)[:64]
