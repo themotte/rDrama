@@ -36,7 +36,7 @@ def unread(v):
 @app.get("/notifications")
 @auth_required
 def notifications_main(v: User):
-	page: int = max(request.values.get("page", 1, int) or 1, 1)
+	page = listing.request_page()
 
 	notifications = (shown_notifications(g.db.query(Notification).join(Notification.comment), v)
 		.filter(Comment.author_id != AUTOJANNY_ID)
@@ -76,7 +76,7 @@ def notifications_main(v: User):
 @app.get("/notifications/posts")
 @auth_required
 def notifications_posts(v: User):
-	page: int = max(request.values.get("page", 1, int) or 1, 1)
+	page = listing.request_page()
 
 	notifications = (g.db.query(Notification, Comment)
 		.join(Comment, Notification.comment_id == Comment.id)
@@ -111,7 +111,7 @@ def notifications_posts(v: User):
 @app.get("/notifications/modmail")
 @admin_level_required(2)
 def notifications_modmail(v: User):
-	page: int = max(request.values.get("page", 1, int) or 1, 1)
+	page = listing.request_page()
 
 	comments = (g.db.query(Comment)
 		.filter(Comment.sentto == MODMAIL_ID, Comment.parent_submission == None, Comment.level == 1)
@@ -137,7 +137,7 @@ def notifications_modmail(v: User):
 @app.get("/notifications/messages")
 @auth_required
 def notifications_messages(v: User):
-	page: int = max(request.values.get("page", 1, int) or 1, 1)
+	page = listing.request_page()
 
 	comments = g.db.query(Comment).filter(
 		Comment.sentto != None,

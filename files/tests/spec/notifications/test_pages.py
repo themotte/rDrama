@@ -12,7 +12,7 @@ GET /notifications/posts lists notifications of followed users' new posts, newes
 
 GET /notifications/messages lists the conversations the user sent or received (their first messages, newest first), each with its replies. Showing a conversation marks read the viewer's notifications of the messages in it they can see. Left out: conversations started by users the viewer blocks (except admins from level 2), and by shadowbanned users, except to the users themselves and admins from level 2.
 
-Notifications from the same moment list the newer comment first. Each page holds 25; "page" (from 1) chooses it. API clients get {"data": [...]}, the page's comments as JSON objects: on /notifications without their replies ("replies" is empty), on the Messages tab with their conversations.
+Notifications from the same moment list the newer comment first. Each page holds 25; "page" (from 1) chooses it, anything but a whole number from 1 meaning the first, and a page past the last is empty. API clients get {"data": [...]}, the page's comments as JSON objects: on /notifications without their replies ("replies" is empty), on the Messages tab with their conversations.
 
 Modmail's page is in test_modmail.
 '''
@@ -414,3 +414,33 @@ def test_conversations_for_api_clients():
 
 	assert_status(r, 200)
 	assert [item["id"] for item in r.json["data"]] == [message["id"]]
+
+
+ALL_PAGES = [*PAGES, "/notifications/modmail"]
+
+
+@pytest.mark.parametrize("path", ALL_PAGES)
+@pytest.mark.parametrize("page", ["x", "0", "-3"])
+def test_a_page_that_isnt_a_whole_number_from_1_is_the_first(path, page):
+	admin = factories.admin(2)
+	reply = _notified_reply(admin)
+	notice = _new_post_notification(admin)
+	message = factories.message(factories.user(), admin)
+	modmail = factories.message(factories.user(), seed.MODMAIL_ID)
+	shown = {"/notifications": reply["body"], "/notifications/posts": notice["text"], "/notifications/messages": message["text"], "/notifications/modmail": modmail["text"]}[path]
+
+	r = as_user(admin).get(path, params={"page": page})
+
+	assert_html(r, 200)
+	assert_in_payload(r, shown)
+
+
+@pytest.mark.parametrize("path", ALL_PAGES)
+def test_a_huge_page_is_empty(path):
+	admin = factories.admin(2)
+	shown = {"/notifications": _notified_reply(admin)["body"], "/notifications/posts": _new_post_notification(admin)["text"], "/notifications/messages": factories.message(factories.user(), admin)["text"], "/notifications/modmail": factories.message(factories.user(), seed.MODMAIL_ID)["text"]}[path]
+
+	r = as_user(admin).get(path, params={"page": str(10**20)})
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, shown)
