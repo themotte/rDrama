@@ -146,9 +146,9 @@ def comment(author: dict, post: dict, parent: dict | None = None, **overrides) -
 	return row
 
 
-def message(author: dict, recipient: dict | int, parent: dict | None = None, **overrides) -> dict:
+def message(author: dict, recipient: dict | int | None, parent: dict | None = None, **overrides) -> dict:
 	'''
-	A private message from `author` to `recipient` (a user, or an account id such as `seed.MODMAIL_ID`), replying to the message `parent` if given, as sending one leaves it: its place in the thread and its rendered text, but no stored source text, no vote and no notification.
+	A private message from `author` to `recipient` (a user, an account id such as `seed.MODMAIL_ID`, or None for no recipient), replying to the message `parent` if given, as sending one leaves it: its place in the thread and its rendered text, but no stored source text, no vote and no notification.
 
 	The returned row also carries "text", the sentinel its rendered text holds (`text=` chooses it).
 	'''
@@ -157,7 +157,7 @@ def message(author: dict, recipient: dict | int, parent: dict | None = None, **o
 	row = db.insert("comments", **{
 		"id": message_id,
 		"author_id": author["id"],
-		"sentto": recipient if isinstance(recipient, int) else recipient["id"],
+		"sentto": recipient["id"] if isinstance(recipient, dict) else recipient,
 		"created_utc": int(time.time()),
 		"parent_submission": None,
 		"parent_comment_id": parent["id"] if parent else None,
