@@ -3,6 +3,8 @@ GET /comment/<id> of a message is its conversation's page: the message and every
 
 API clients get the shown conversation as JSON: its first shown message, with its replies.
 
+The site's notices (messages to no one, from the system accounts) open the same way, to whoever was notified of them and to admins from level 2.
+
 "read" marks the viewer's notification of the message read.
 '''
 import pytest
@@ -119,3 +121,36 @@ def test_others_cant_open_modmail():
 	answer = factories.message(factories.admin(3), seed.MODMAIL_ID, message)
 
 	assert_status(as_user(factories.user()).get(f"/comment/{answer['id']}"), 403)
+
+
+@pytest.mark.parametrize("author", [seed.SYSTEM_ID, seed.AUTOJANNY_ID], ids=["system", "autojanny"])
+def test_notices_open_to_those_notified(author):
+	user = factories.user()
+	notice = factories.message(db.row("users", id=author), None, distinguish_level=6)
+	factories.notification(user, notice)
+
+	r = as_user(user).get(f"/comment/{notice['id']}")
+
+	assert_html(r, 200)
+	assert_in_payload(r, notice["text"])
+
+
+def test_a_notice_shows_without_answers_older_versions_let_others_write():
+	'''Notices are shared: everyone notified of the same news is notified of the same notice.'''
+	user, other = factories.user(), factories.user()
+	notice = factories.message(db.row("users", id=seed.SYSTEM_ID), None, distinguish_level=6)
+	for u in (user, other):
+		factories.notification(u, notice)
+	answer = factories.message(other, seed.SYSTEM_ID, notice)
+
+	r = as_user(user).get(f"/comment/{notice['id']}")
+
+	assert_in_payload(r, notice["text"])
+	assert_not_in_payload(r, answer["text"])
+
+
+def test_notices_are_refused_to_others():
+	notice = factories.message(db.row("users", id=seed.SYSTEM_ID), None, distinguish_level=6)
+	factories.notification(factories.user(), notice)
+
+	assert_status(as_user(factories.user()).get(f"/comment/{notice['id']}"), 403)

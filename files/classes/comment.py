@@ -6,6 +6,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
 from files.classes.base import CreatedBase
+from files.classes.notifications import Notification
 from files.classes.votes import votes_shown_to
 from files.classes.visstate import StateMod, StateReport, VisibilityState
 from files.helpers.config.const import *
@@ -274,9 +275,11 @@ class Comment(CreatedBase):
 		return False
 
 	def is_open_to(self, v:Optional["User"]) -> bool:
-		'''Whether `v` may open this comment at all: a private message only by its sender, its recipient, those taking part in its conversation and admins (level 2+); a comment on a post by whoever may see the post.'''
+		'''Whether `v` may open this comment at all: a private message only by its sender, its recipient, those taking part in its conversation and admins (level 2+); one of the site's notices by those it notified and admins; a comment on a post by whoever may see the post.'''
 		if self.parent_submission: return not self.post.is_draft_hidden_from(v)
-		return bool(v and (v.id in (self.author_id, self.sentto) or self.takes_part_in_thread(v) or v.admin_level >= 2))
+		if not v: return False
+		if v.id in (self.author_id, self.sentto) or self.takes_part_in_thread(v) or v.admin_level >= PERMS['POST_COMMENT_MODERATION']: return True
+		return self.is_notification and g.db.query(exists().where(Notification.comment_id == self.id, Notification.user_id == v.id)).scalar()
 
 	@property
 	@lazy
