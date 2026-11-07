@@ -71,7 +71,7 @@ def request_api_keys(v):
 
 	new_comment.top_comment_id = new_comment.id
 
-	notify_modmail(new_comment.id, None)
+	notify_modmail(new_comment.id, v)
 
 
 	g.db.commit()

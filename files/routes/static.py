@@ -315,7 +315,7 @@ def submit_contact(v: Optional[User]):
 	g.db.flush()
 	new_comment.top_comment_id = new_comment.id
 	
-	notify_modmail(new_comment.id, None)
+	notify_modmail(new_comment.id, v)
 
 
 

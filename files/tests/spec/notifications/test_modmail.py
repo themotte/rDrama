@@ -3,7 +3,7 @@ Modmail: messages to the site's admins, sent to the modmail account (`seed.MODMA
 
 GET /contact (also /press and /media) is the contact form, for everyone.
 
-POST /send_admin, with "message" and optionally "email" and an image "file", sends it: a new conversation (a message that is its own top) from the logged-in user, or from the system account for visitors. Its text holds the message and the email given. An image is attached to it, except from Tor, where files are ignored; a file that isn't an image is refused (400). An empty message is refused (400). The admins who receive modmail (those from level 2) are notified. The reply is the contact form again, saying the message was sent.
+POST /send_admin, with "message" and optionally "email" and an image "file", sends it: a new conversation (a message that is its own top) from the logged-in user, or from the system account for visitors. Its text holds the message and the email given. An image is attached to it, except from Tor, where files are ignored; a file that isn't an image is refused (400). An empty message is refused (400). The admins who receive modmail (those from level 2) are notified, except the writer. The reply is the contact form again, saying the message was sent.
 
 Requesting API keys (POST /api_keys) also writes modmail: a notice from the system account, of which the admins who receive modmail are notified.
 
@@ -102,6 +102,18 @@ def test_requesting_api_keys_notifies_the_admins_who_receive_modmail():
 		"comments": [{"id": notice, "author_id": seed.SYSTEM_ID, "sentto": seed.MODMAIL_ID, "parent_submission": None, "level": 1, "top_comment_id": notice}],
 		"notifications": [{"user_id": admin["id"], "comment_id": notice} for admin in receivers],
 	})
+
+
+@pytest.mark.parametrize("via", ["contact form", "api keys"])
+def test_an_admin_writing_modmail_isnt_notified_of_it(via):
+	writer, other = factories.admin(3), factories.admin(2)
+	client = as_user(writer)
+
+	if via == "contact form": client.post("/send_admin", {"message": factories.unique()})
+	else: client.post("/api_keys", {"name": factories.unique("app"), "redirect_uri": "https://example.com/callback", "description": factories.unique()})
+
+	message = db.rows("comments", sentto=seed.MODMAIL_ID)[-1]
+	assert [n["user_id"] for n in db.rows("notifications", comment_id=message["id"])] == [other["id"]]
 
 
 # The modmail page
