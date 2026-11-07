@@ -26,7 +26,7 @@ class OauthApp(Base):
 	id = Column(Integer, primary_key=True)
 	client_id = Column(String(length=64))
 	app_name = Column(String(length=50), nullable=False)
-	redirect_uri = Column(String(length=50), nullable=False)
+	redirect_uri = Column(String(length=4096), nullable=False)
 	description = Column(String(length=256), nullable=False)
 	author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 	revoked_utc = Column(DateTime(timezone=True))
