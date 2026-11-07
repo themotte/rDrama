@@ -296,6 +296,10 @@ class User(CreatedBase):
 		if not self.is_suspended: return None
 		return g.db.query(User).filter_by(id=self.is_banned).one_or_none()
 
+	def sign_out_everywhere(self):
+		'''Ends every session of the account (each remembers the nonce it logged in with; a request keeps its own by storing the new nonce in it).'''
+		self.login_nonce += 1
+
 	def hash_password(self, password):
 		# Use faster hashing with fewer iterations during tests
 		# PBKDF2 default is 260000 iterations, we use 1000 for tests

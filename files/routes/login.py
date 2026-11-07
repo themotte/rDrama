@@ -379,7 +379,7 @@ def post_reset(v):
 							   error="Password must be between 8 and 100 characters.")
 
 	user.passhash = user.hash_password(password)
-	user.login_nonce += 1
+	user.sign_out_everywhere()
 	g.db.add(user)
 
 	g.db.commit()

@@ -251,7 +251,7 @@ def settings_security_post(v):
 			return render_template("settings_security.html", v=v, error="Incorrect password")
 
 		v.passhash = v.hash_password(request.values.get("new_password"))
-		v.login_nonce += 1
+		v.sign_out_everywhere()
 		session["login_nonce"] = v.login_nonce
 
 		g.db.add(v)
@@ -334,7 +334,7 @@ def settings_log_out_others(v):
 	if not v.verifyPass(submitted_password):
 		return render_template("settings_security.html", v=v, error="Incorrect Password"), 401
 
-	v.login_nonce += 1
+	v.sign_out_everywhere()
 
 	session["login_nonce"] = v.login_nonce
 
