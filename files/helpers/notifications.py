@@ -3,7 +3,7 @@ Which notifications and conversations a user is shown.
 '''
 from typing import Iterable
 
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, true
 
 from files.classes.comment import Comment
 from files.classes.notifications import Notification
@@ -34,14 +34,15 @@ def shown_notifications(query, v: User):
 	'''
 	`query` (over notifications joined to their comments) narrowed to `v`'s notifications that the notification pages show, of either kind:
 	- of followed users' new posts (from AutoJanny), all of them;
-	- of anything else, those whose comment is visible (not removed, held for approval or deleted, for admins too), by an author `v` doesn't block (`not_blocked_by`), who isn't shadowbanned unless `v` is a shadowbanned user or an admin from level 3.
+	- of anything else, those whose comment is visible (not removed, held for approval or deleted, for admins too), by an author `v` doesn't block (`not_blocked_by`) and whose shadowban doesn't hide it from `v` (`shadowban_shown_to`).
 	'''
-	query = query.filter(Notification.user_id == v.id)
-	if not v.shadowbanned and v.admin_level < 3:
-		shadowban_shown = Comment.author.has(User.shadowbanned == None)
-	else:
-		shadowban_shown = True
-	return query.filter(or_(
+	return query.filter(Notification.user_id == v.id, or_(
 		Comment.author_id == AUTOJANNY_ID,
-		and_(Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, not_blocked_by(v), shadowban_shown),
+		and_(Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None, not_blocked_by(v), shadowban_shown_to(v)),
 	))
+
+
+def shadowban_shown_to(v: User):
+	'''The SQL condition that a comment's author's shadowban doesn't hide it from `v`: the author isn't shadowbanned, or is `v`, or `v` is an admin from level 2.'''
+	if v.admin_level >= PERMS['USER_SHADOWBAN']: return true()
+	return or_(Comment.author_id == v.id, Comment.author.has(User.shadowbanned == None))

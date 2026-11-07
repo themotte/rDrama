@@ -1,5 +1,5 @@
 '''
-GET /unread gives a logged-in user's unread notifications as {"data": [...]}, newest first, and marks them read. It holds what /notifications would show (test_pages), unread: not notifications of followed users' new posts, not comments that were removed, are held for approval or deleted, not comments by users the viewer blocks (except messages from admins from level 2), and not, except to admins from level 3, comments by shadowbanned users.
+GET /unread gives a logged-in user's unread notifications as {"data": [...]}, newest first, and marks them read. It holds what /notifications would show (test_pages), unread: not notifications of followed users' new posts, not comments that were removed, are held for approval or deleted, not comments by users the viewer blocks (except messages from admins from level 2), and not, except to admins from level 2, comments by shadowbanned users.
 
 POST /clear marks every one of the user's notifications read, whether or not any page would show it, and replies {"message": ...}.
 
@@ -99,8 +99,9 @@ def test_shadowbanned_authors_are_left_out_for_users():
 	assert _unread_ids(as_user(user)) == []
 
 
-def test_shadowbanned_authors_are_listed_for_level_3_admins():
-	admin = factories.admin(3)
+@pytest.mark.parametrize("level", [2, 3])
+def test_shadowbanned_authors_are_listed_for_admins_from_level_2(level):
+	admin = factories.admin(level)
 	reply = _notified_reply(admin, author=factories.user(shadowbanned="somemod"))
 
 	assert _unread_ids(as_user(admin)) == [reply["id"]]

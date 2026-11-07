@@ -4,7 +4,7 @@ from files.classes.submission import Submission
 from files.classes.visstate import StateMod
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.get import *
-from files.helpers.notifications import not_blocked_by, shown_notifications, with_threads
+from files.helpers.notifications import not_blocked_by, shadowban_shown_to, shown_notifications, with_threads
 from files.helpers.wrappers import *
 
 @app.post("/clear")
@@ -155,10 +155,7 @@ def notifications_messages(v: User):
 		not_blocked_by(v),
 	)
 
-	if not v.shadowbanned and v.admin_level < 3:
-		comments = comments.join(Comment.author).filter(User.shadowbanned == None)
-
-	comments = comments.order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	comments = comments.filter(shadowban_shown_to(v)).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	next_exists = (len(comments) > 25)
 	listing = with_threads(comments[:25], v)

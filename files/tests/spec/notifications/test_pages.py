@@ -4,13 +4,13 @@ The notification pages, for logged-in users (visitors are sent to log in; API cl
 GET /notifications lists what the user was notified of, newest notification first: replies, mentions, messages and the site's own notices. Each shows alone, without its replies. Left out:
 - comments that were removed, are held for approval (filtered) or deleted;
 - comments by users the viewer blocks, except messages from admins from level 2 (who may message users blocking them, test_messages);
-- comments by shadowbanned users, except to admins from level 3;
+- comments by shadowbanned users, except to admins from level 2 (shadowbanned users don't see each other's);
 - notifications of followed users' new posts, which have their own page.
 Showing a notification marks it read.
 
 GET /notifications/posts lists notifications of followed users' new posts, newest first, marking them read.
 
-GET /notifications/messages lists the conversations the user sent or received (their first messages, newest first), each with its replies. Left out: conversations started by users the viewer blocks (except admins from level 2), and by shadowbanned users, except to admins from level 3.
+GET /notifications/messages lists the conversations the user sent or received (their first messages, newest first), each with its replies. Left out: conversations started by users the viewer blocks (except admins from level 2), and by shadowbanned users, except to the users themselves and admins from level 2.
 
 Each page holds 25; "page" (from 1) chooses it. API clients get {"data": [...]}, the page's comments as JSON objects.
 
@@ -176,11 +176,21 @@ def test_shadowbanned_authors_are_left_out_for_users():
 	assert_not_in_payload(as_user(user).get("/notifications"), reply["body"])
 
 
-def test_shadowbanned_authors_show_to_level_3_admins():
-	admin = factories.admin(3)
+@pytest.mark.parametrize("level", [2, 3])
+def test_shadowbanned_authors_show_to_admins_from_level_2(level):
+	admin = factories.admin(level)
 	reply = _notified_reply(admin, author=factories.user(shadowbanned="somemod"))
 
 	assert_in_payload(as_user(admin).get("/notifications"), reply["body"])
+
+
+def test_shadowbanned_users_dont_see_each_others_comments():
+	user = factories.user(shadowbanned="somemod")
+	_notified_reply(user, author=factories.user(shadowbanned="somemod"))
+
+	r = as_api(factories.api_token(user)).get("/notifications")
+
+	assert r.json["data"] == []
 
 
 def test_new_post_notifications_are_left_out():
@@ -313,11 +323,21 @@ def test_conversations_started_by_shadowbanned_users_are_left_out_for_users():
 	assert_not_in_payload(as_user(user).get("/notifications/messages"), message["text"])
 
 
-def test_conversations_started_by_shadowbanned_users_show_to_level_3_admins():
-	admin = factories.admin(3)
+@pytest.mark.parametrize("level", [2, 3])
+def test_conversations_started_by_shadowbanned_users_show_to_admins_from_level_2(level):
+	admin = factories.admin(level)
 	message = factories.message(factories.user(shadowbanned="somemod"), admin)
 
 	assert_in_payload(as_user(admin).get("/notifications/messages"), message["text"])
+
+
+def test_shadowbanned_users_dont_see_each_others_conversations():
+	user = factories.user(shadowbanned="somemod")
+	factories.message(factories.user(shadowbanned="somemod"), user)
+
+	r = as_api(factories.api_token(user)).get("/notifications/messages")
+
+	assert r.json["data"] == []
 
 
 def test_shadowbanned_users_see_their_own_conversations():
