@@ -26,3 +26,12 @@ def test_notifications_render_without_lazy_loads():
 
 	assert _lazy_loads_rendering(as_user(user), "/notifications") == []
 	assert reply["body"] in as_user(user).get("/notifications").text, "the notification wasn't rendered, so this test proves nothing"
+
+
+def test_a_message_page_renders_without_lazy_loads():
+	sender, recipient = factories.user(), factories.user()
+	message = factories.message(sender, recipient)
+	answer = factories.message(recipient, sender, message)
+	factories.message(sender, recipient, answer)
+
+	assert _lazy_loads_rendering(as_user(sender), f"/comment/{answer['id']}?context=1") == []

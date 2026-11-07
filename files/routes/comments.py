@@ -20,8 +20,8 @@ from datetime import datetime, timezone
 # "more comments" button still appears) and its ancestor chain (up `context`
 # levels, +1 so top_comment.parent_comment stays wired). This replaces loading
 # the entire top-comment thread and discarding most of it. Both keep to the
-# focused comment's post (or to messages): older versions let private replies
-# hang under comments on posts.
+# focused comment's post: older versions let private replies hang under
+# comments on posts.
 _CONTEXT_COMMENT_IDS_SQL = text("""
 WITH RECURSIVE focus AS (
 		SELECT parent_submission FROM comments WHERE id = :cid
@@ -52,11 +52,11 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	comment = g.db.get(Comment, cid)
 	if not comment: abort(404)
 
-	if not comment.parent_submission and not comment.is_open_to(v): abort(403)
+	if not comment.parent_submission:
+		if pid: abort(404)
+		return _message_page(comment, v)
 
-	if not pid:
-		if comment.parent_submission: pid = comment.parent_submission
-		else: pid = 1
+	if not pid: pid = comment.parent_submission
 
 	post = get_post(pid, v=v)
 
@@ -98,9 +98,39 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	if request.headers.get("Authorization"): page = top_comment.json_for(v)
 	else: page = render_template("submission.html", v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True)
 
+	_mark_read(comment, v)
+	return page
+
+
+def _mark_read(comment:Comment, v:Optional[User]):
+	'''Marks `v`'s notification of `comment` read, when the request asks to ("read").'''
 	if v and request.values.get("read"):
-		g.db.query(Notification).filter_by(comment_id=cid, user_id=v.id, read=False).update({Notification.read: True})
+		g.db.query(Notification).filter_by(comment_id=comment.id, user_id=v.id, read=False).update({Notification.read: True})
 		g.db.commit()
+
+
+def _message_page(message:Comment, v:Optional[User]):
+	'''A message's conversation from the message down, at any depth, with "context" messages above it.'''
+	if not message.is_open_to(v): abort(403)
+
+	try: context = max(0, min(int(request.values.get("context", 0)), 8))
+	except ValueError: context = 0
+
+	# Its conversation's messages; a notice, or a message older versions left outside any conversation, stands alone
+	in_thread = Comment.top_comment_id == message.top_comment_id if message.thread_top else Comment.id == message.id
+	messages, tree = get_comment_trees_eager(lambda q: q.filter(in_thread, Comment.parent_submission == None), sort="old", v=v)
+	loaded = {m.id for m in messages}
+	focus = next(c for c in tree[message.parent_comment_id] if c.id == message.id)
+	c = focus
+	while context and c.parent_comment_id in loaded and c.parent_comment.is_open_to(v):
+		c.parent_comment.replies2 = [c]
+		c = c.parent_comment
+		context -= 1
+
+	if request.headers.get("Authorization"): page = c.json_for(v)
+	else: page = render_template("conversation.html", v=v, top_comment=c, comment_info=focus)
+
+	_mark_read(message, v)
 	return page
 
 @app.post("/comment")

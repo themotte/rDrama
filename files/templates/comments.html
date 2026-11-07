@@ -126,7 +126,7 @@
 
 			{%- if v -%}{%- include 'component/comment/replybox_comment.html' -%}{%- endif -%}
 
-			{% if is_notification_page and c.is_strict_message and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
+			{% if is_notification_page and c.is_strict_message and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) and c.takes_part_in_thread(v) %}
 				{%- include 'component/comment/replybox_message.html' -%}
 			{% endif %}
 			

@@ -1,0 +1,14 @@
+{% extends "default.html" %}
+
+{% block pagetype %}{% endblock %}
+
+{% block content %}
+<div class="notifs px-3 p-md-0 mt-3">
+	{% with comments=[top_comment], standalone=True, render_replies=True, is_notification_page=True %}
+		{% include "comments.html" %}
+	{% endwith %}
+</div>
+{% endblock %}
+
+{% block GIFpicker %}
+{% endblock %}

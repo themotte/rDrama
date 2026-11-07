@@ -1,7 +1,7 @@
 '''
 Messages that older versions of the site let users write where no conversation is: private replies to comments on posts, and replies to the site's notices. They stay in the database.
 
-A private reply to a comment on a post is never shown with that post's comments: not on the post page or more of its comments, nor on the comment's permalink or more of its thread.
+A private reply to a comment on a post is never shown with that post's comments: not on the post page or more of its comments, nor on the comment's permalink or more of its thread. Its own page (open to its sender, its recipient and admins from level 2) shows it alone, without other such messages answering it.
 '''
 import pytest
 
@@ -26,3 +26,16 @@ def test_private_replies_to_comments_are_not_shown_with_the_post(viewer, path):
 	assert_status(r, 200)
 	if not path.startswith("/morecomments"): assert_in_payload(r, comment["body"])
 	assert_not_in_payload(r, reply["text"])
+
+
+def test_a_private_reply_to_a_comment_shows_alone_on_its_page():
+	comment = factories.comment(factories.user(), factories.post(factories.user()))
+	recipient = db.row("users", id=comment["author_id"])
+	reply = _private_reply_to(comment)
+	answer = factories.message(factories.user(), recipient, parent=reply)
+
+	r = as_user(recipient).get(f"/comment/{reply['id']}")
+
+	assert_html(r, 200)
+	assert_in_payload(r, reply["text"])
+	assert_not_in_payload(r, answer["text"])
