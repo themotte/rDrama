@@ -55,7 +55,7 @@ from urllib.parse import urlencode, urlparse, parse_qs
 # It is now safe to define the models
 from .alts import Alt
 from .chat_message import ChatMessage
-from .clients import OauthApp, ClientAuth
+from .clients import OauthApp, OauthAppState, ClientAuth
 from .comment import Comment
 from .domains import BannedDomain
 from .flags import Flag, CommentFlag

@@ -1,3 +1,5 @@
+import enum
+
 from flask import g
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
@@ -6,6 +8,11 @@ from .comment import Comment
 from files.classes.base import Base
 from files.helpers.lazy import lazy
 from files.helpers.config.const import *
+
+class OauthAppState(enum.StrEnum):
+	PENDING = "pending"  # requested, awaiting an admin's approval
+	APPROVED = "approved"  # has a client id: users can authorize it
+
 
 class OauthApp(Base):
 
@@ -25,6 +32,10 @@ class OauthApp(Base):
 
 	def __repr__(self): 
 		return f"<{self.__class__.__name__}(id={self.id})>"
+
+	@property
+	def state(self) -> OauthAppState:
+		return OauthAppState.APPROVED if self.client_id else OauthAppState.PENDING
 
 	@property
 	@lazy

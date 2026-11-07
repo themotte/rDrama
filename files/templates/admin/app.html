@@ -31,7 +31,7 @@
 	</div>
 	<div class="footer">
 		<div class="d-flex">
-			{% if not app.client_id%}
+			{% if app.state == 'pending' %}
 
 				<a role="button" class="btn btn-primary ml-auto" onclick="postToastSimple(this,'/admin/app/approve/{{app.id}}')">Approve</a>
 				<a role="button" class="btn btn-secondary mr-0" onclick="postToastSimple(this,'/admin/app/reject/{{app.id}}')">Reject</a> 
