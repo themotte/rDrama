@@ -8,7 +8,7 @@ GET /notifications lists what the user was notified of, newest notification firs
 - notifications of followed users' new posts, which have their own page.
 Showing a notification marks it read.
 
-GET /notifications/posts lists notifications of followed users' new posts, newest first, marking them read.
+GET /notifications/posts lists notifications of followed users' new posts, newest first, without replies, marking them read.
 
 GET /notifications/messages lists the conversations the user sent or received (their first messages, newest first), each with its replies. Showing a conversation marks read the viewer's notifications of the messages in it they can see. Left out: conversations started by users the viewer blocks (except admins from level 2), and by shadowbanned users, except to the users themselves and admins from level 2.
 
@@ -289,6 +289,21 @@ def test_new_post_notification_pages_hold_25_without_repeats():
 	for notice in notices[25:]:
 		assert_not_in_payload(first, notice["text"])
 		assert_in_payload(second, notice["text"])
+
+
+def test_new_post_notifications_show_without_answers_older_versions_let_others_write():
+	'''Notices are shared: every follower is notified of the same notice.'''
+	user, other = factories.user(), factories.user()
+	notice = _new_post_notification(user)
+	factories.notification(other, notice)
+	answer = factories.message(other, seed.AUTOJANNY_ID, notice)
+
+	r = as_user(user).get("/notifications/posts")
+	data = as_api(factories.api_token(user)).get("/notifications/posts").json["data"]
+
+	assert_in_payload(r, notice["text"])
+	assert_not_in_payload(r, answer["text"])
+	assert [(item["id"], item["replies"]) for item in data] == [(notice["id"], [])]
 
 
 def test_new_post_notifications_for_api_clients():

@@ -95,7 +95,7 @@ def notifications_posts(v: User):
 	g.db.commit()
 
 	if request.headers.get("Authorization"):
-		return {"data": [x.json_for(v) for x in items]}
+		return {"data": [x.json_for(v, without_replies=True) for x in items]}
 
 	return render_template("notifications.html",
 		v=v,
@@ -103,7 +103,7 @@ def notifications_posts(v: User):
 		next_exists=next_exists,
 		page=page,
 		standalone=True,
-		render_replies=True,
+		render_replies=False,
 		is_notification_page=True,
 	)
 
