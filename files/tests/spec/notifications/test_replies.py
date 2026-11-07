@@ -144,3 +144,17 @@ def test_a_factory_reply_matches_one_sent_through_the_site():
 
 	ignored = {"id", "body_html", "created_utc", "text"}
 	assert {k: v for k, v in sent.items() if k not in ignored} == {k: v for k, v in arranged.items() if k not in ignored}
+
+
+# Modmail
+
+def test_replying_to_an_admins_modmail_reply_notifies_each_admin_once():
+	starter, admin = factories.user(), factories.admin(3)
+	message = factories.message(starter, seed.MODMAIL_ID)
+	answer = factories.message(admin, None, message)
+
+	r = _reply(starter, answer, factories.unique())
+
+	assert_status(r, 200)
+	reply = db.row("comments", author_id=starter["id"], parent_comment_id=answer["id"])
+	assert [n["user_id"] for n in db.rows("notifications", comment_id=reply["id"])] == [admin["id"]]

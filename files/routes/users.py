@@ -235,15 +235,10 @@ def messagereply(v):
 	g.db.add(c)
 	g.db.flush()
 
-	if user_id and user_id != v.id and user_id != MODMAIL_ID:
-		notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=user_id).one_or_none()
-		if not notif:
-			notif = Notification(comment_id=c.id, user_id=user_id)
-			g.db.add(notif)
+	notified = notify_modmail(c.id, v) if c.top_comment.sentto == MODMAIL_ID else set()
 
-
-	if c.top_comment.sentto == MODMAIL_ID:
-		notify_modmail(c.id, v)
+	if user_id and user_id != v.id and user_id != MODMAIL_ID and user_id not in notified:
+		g.db.add(Notification(comment_id=c.id, user_id=user_id))
 
 	g.db.commit()
 

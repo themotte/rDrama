@@ -82,12 +82,14 @@ def add_notif(cid, uid):
 		g.db.add(notif)
 
 
-def notify_modmail(comment_id: int, besides: Optional[User]) -> None:
-	'''Notifies the admins who receive modmail of the modmail comment `comment_id`, except `besides` (its writer, when an admin).'''
+def notify_modmail(comment_id: int, besides: Optional[User]) -> set[int]:
+	'''Notifies the admins who receive modmail of the modmail comment `comment_id`, except `besides` (its writer, when an admin), and returns their ids.'''
 	admins = g.db.query(User.id).filter(User.admin_level > 2)
 	if besides: admins = admins.filter(User.id != besides.id)
-	for (admin_id,) in admins:
+	notified = {admin_id for (admin_id,) in admins}
+	for admin_id in notified:
 		g.db.add(Notification(comment_id=comment_id, user_id=admin_id))
+	return notified
 
 
 def NOTIFY_USERS(text, v) -> set[int]:
