@@ -13,8 +13,7 @@ from files.routes.importstar import *
 @app.get("/authorize")
 @auth_required
 def authorize_prompt(v):
-	client_id = request.values.get("client_id")
-	application = g.db.query(OauthApp).filter_by(client_id=client_id).one_or_none()
+	application = _app_by_client_id(request.values.get("client_id"))
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
 	return render_template("oauth.html", v=v, application=application)
 
@@ -23,13 +22,18 @@ def authorize_prompt(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def authorize(v):
-	client_id = request.values.get("client_id")
-	application = g.db.query(OauthApp).filter_by(client_id=client_id).one_or_none()
+	application = _app_by_client_id(request.values.get("client_id"))
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
 	access_token = _authorization(application, v)
 	g.db.commit()
 
 	return redirect(f"{application.redirect_uri}?token={access_token}")
+
+
+def _app_by_client_id(client_id: Optional[str]) -> Optional[OauthApp]:
+	'''The approved app whose client id is `client_id`; pending apps have none, so a missing id matches nothing.'''
+	if not client_id: return None
+	return g.db.query(OauthApp).filter(OauthApp.client_id == client_id).one_or_none()
 
 
 def _authorization(application: OauthApp, user: User) -> str:

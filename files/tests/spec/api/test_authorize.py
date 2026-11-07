@@ -3,7 +3,7 @@ How users let an API application act for them.
 
 The app sends the user to GET /authorize?client_id=<its client id>, which asks the logged-in user to authorize it (visitors are sent to log in and come back). Submitting that (POST /authorize with "client_id") grants the user a token for the app, one per user per app: authorizing again gives the same token. The user's browser is then sent to the app's redirect URI with the token as the "token" query parameter, and the app acts for the user with it (test_tokens). Suspended users may authorize apps.
 
-A client id no approved app has is answered, page and form alike, with 401 and the JSON object {"oauth_error": <text>}, changing nothing.
+A missing client id, or one no approved app has (pending requests have none), is answered, page and form alike, with 401 and the JSON object {"oauth_error": <text>}, changing nothing.
 '''
 import pytest
 
@@ -69,6 +69,19 @@ def test_unknown_client_ids_are_refused(method):
 
 	with db_diff() as d:
 		r = client.get("/authorize", params={"client_id": factories.unique()}) if method == "get" else client.post("/authorize", {"client_id": factories.unique()})
+
+	assert_status(r, 401)
+	assert set(r.json) == {"oauth_error"}
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("method", ["get", "post"])
+def test_pending_apps_cant_be_authorized(method):
+	factories.oauth_app(factories.user(), state="pending")
+	client = as_user(factories.user())
+
+	with db_diff() as d:
+		r = client.get("/authorize") if method == "get" else client.post("/authorize", {})
 
 	assert_status(r, 401)
 	assert set(r.json) == {"oauth_error"}
