@@ -365,12 +365,9 @@ class User(CreatedBase):
 	@property
 	@lazy
 	def notifications_count(self):
-		notifs = g.db.query(Notification.user_id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.state_mod == StateMod.VISIBLE, Comment.state_user_deleted_utc == None)
-		
-		if not self.shadowbanned and self.admin_level < 3:
-			notifs = notifs.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
-		
-		return notifs.count()
+		'''The user's unread notifications that the notification pages show, of both kinds.'''
+		from files.helpers.notifications import shown_notifications
+		return shown_notifications(g.db.query(Notification.user_id).join(Comment), self).filter(Notification.read == False).count()
 
 	@property
 	@lazy

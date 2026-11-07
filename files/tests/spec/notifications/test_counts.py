@@ -1,7 +1,7 @@
 '''
 Every page shows a logged-in user how many unread notifications they have (the bell, see `notification_counts`), and the notification pages split it into their tabs: "posts" counts the unread notifications of followed users' new posts, "all" the rest. The bell counts both.
 
-Read notifications aren't counted, nor notifications of comments that were removed, are held for approval or deleted, nor, except for admins from level 3, of comments by shadowbanned users.
+The counts are of what /notifications and /notifications/posts would show (test_pages), unread: read notifications aren't counted, nor notifications of comments that were removed, are held for approval or deleted, nor of comments by users the viewer blocks (except admins' messages), nor, except for admins from level 3, of comments by shadowbanned users.
 
 The bell leads to /notifications/posts when every unread notification is of a new post, else to /notifications.
 '''
@@ -89,6 +89,22 @@ def test_shadowbanned_authors_are_counted_for_level_3_admins():
 	_notified_reply(admin, author=factories.user(shadowbanned="somemod"))
 
 	assert _counts(admin)["bell"] == 1
+
+
+def test_blocked_authors_arent_counted():
+	user, author = factories.user(), factories.user()
+	_notified_reply(user, author=author)
+	db.insert("userblocks", user_id=user["id"], target_id=author["id"])
+
+	assert _counts(user)["bell"] == 0
+
+
+def test_messages_from_blocked_admins_are_counted():
+	user, admin = factories.user(), factories.admin(2)
+	factories.notification(user, factories.message(admin, user))
+	db.insert("userblocks", user_id=user["id"], target_id=admin["id"])
+
+	assert _counts(user)["bell"] == 1
 
 
 def test_reading_the_notifications_clears_the_count():

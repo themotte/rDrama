@@ -4,7 +4,7 @@ from files.classes.submission import Submission
 from files.classes.visstate import StateMod
 from files.helpers.contentsorting import apply_time_filter, sort_objects
 from files.helpers.get import *
-from files.helpers.notifications import not_blocked_by, with_threads
+from files.helpers.notifications import not_blocked_by, shown_notifications, with_threads
 from files.helpers.wrappers import *
 
 @app.post("/clear")
@@ -20,13 +20,9 @@ def clear(v):
 @app.get("/unread")
 @auth_required
 def unread(v):
-	listing = g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id).filter(
+	listing = shown_notifications(g.db.query(Notification, Comment).join(Comment, Notification.comment_id == Comment.id), v).filter(
 		Notification.read == False,
-		Notification.user_id == v.id,
-		Comment.state_mod == StateMod.VISIBLE,
-		Comment.state_user_deleted_utc == None,
 		Comment.author_id != AUTOJANNY_ID,
-		not_blocked_by(v),
 	).order_by(Notification.created_datetimez.desc()).all()
 
 	for n, c in listing:
@@ -42,15 +38,9 @@ def unread(v):
 def notifications_main(v: User):
 	page: int = max(request.values.get("page", 1, int) or 1, 1)
 
-	comments = (g.db.query(Comment, Notification)
-		.join(Notification.comment)
-		.filter(
-			Notification.user_id == v.id,
-			Comment.state_mod == StateMod.VISIBLE,
-			Comment.state_user_deleted_utc == None,
-			Comment.author_id != AUTOJANNY_ID,
-			not_blocked_by(v),
-		).order_by(Notification.created_datetimez.desc())
+	comments = (shown_notifications(g.db.query(Comment, Notification).join(Notification.comment), v)
+		.filter(Comment.author_id != AUTOJANNY_ID)
+		.order_by(Notification.created_datetimez.desc())
 		.options(
 			selectinload(Comment.author),
 			selectinload(Comment.post).options(
@@ -58,9 +48,6 @@ def notifications_main(v: User):
 			),
 			selectinload(Comment.parent_comment),
 		))
-
-	if not v.shadowbanned and v.admin_level < 3:
-		comments = comments.join(Comment.author).filter(User.shadowbanned == None)
 
 	comments = comments.offset(25 * (page - 1)).limit(26).all()
 
