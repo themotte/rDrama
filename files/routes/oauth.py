@@ -85,9 +85,10 @@ def _authorization(application: OauthApp, user: User) -> str:
 
 @app.post("/api_keys")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
-@is_not_permabanned
+@auth_required
 def request_api_keys(v):
 	refuse_api_client(v)
+	refuse_while_suspended(v)
 	name, redirect_uri, description = _app_fields()
 	new_app = OauthApp(app_name=name, redirect_uri=redirect_uri, author_id=v.id, description=description)
 
@@ -133,10 +134,11 @@ def delete_oauth_app(v, aid):
 
 @app.post("/edit_app/<aid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
-@is_not_permabanned
+@auth_required
 def edit_oauth_app(v, aid):
 	refuse_api_client(v)
 	app = _app_owned(v, aid)
+	refuse_while_suspended(v)
 
 	app.app_name, app.redirect_uri, app.description = _app_fields()
 

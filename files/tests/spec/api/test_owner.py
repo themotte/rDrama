@@ -10,8 +10,10 @@ The owner of an app, and only they (others: 403), may:
 
 An id that is no app's (unknown, not a whole number, or too large), or a revoked app's, is 404.
 
-Editing is refused to permanently suspended users (403).
+Editing is refused to suspended users (403), as requesting is; deleting, re-keying and withdrawing authorizations stay open to them.
 '''
+import time
+
 import pytest
 
 from files.tests.spec.harness import *
@@ -133,8 +135,9 @@ def test_others_cant_edit_an_app():
 	d.assert_exactly()
 
 
-def test_permanently_suspended_owners_cant_edit():
-	owner = factories.user(is_banned=factories.admin(2)["id"], unban_utc=0)
+@pytest.mark.parametrize("permanently", [True, False], ids=["permanently", "temporarily"])
+def test_suspended_owners_cant_edit(permanently):
+	owner = factories.user(is_banned=factories.admin(2)["id"], unban_utc=0 if permanently else int(time.time()) + 86400)
 	application = factories.oauth_app(owner)
 
 	with db_diff() as d:
@@ -142,6 +145,16 @@ def test_permanently_suspended_owners_cant_edit():
 
 	assert_status(r, 403)
 	d.assert_exactly()
+
+
+def test_suspended_owners_can_delete_their_apps():
+	owner = factories.user(is_banned=factories.admin(2)["id"], unban_utc=0)
+	application = factories.oauth_app(owner, state="pending")
+
+	with db_diff() as d:
+		as_user(owner).post(f"/delete_app/{application['id']}")
+
+	d.assert_exactly(deleted={"oauth_apps": [application["id"]]})
 
 
 # Deleting

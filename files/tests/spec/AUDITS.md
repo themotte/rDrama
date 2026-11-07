@@ -10,6 +10,8 @@ Decided and pinned in `votes/test_vote.py`: voting is refused only while permane
 
 Decided and pinned in `notifications/test_messages.py` and `notifications/test_replies.py`: while suspended (temporarily or permanently), a user can't send messages or reply in conversations, except in modmail threads they started, so they can appeal; the contact form stays open. A suspended admin can't answer other users' modmail.
 
+Decided and pinned in `api/test_requests.py` and `api/test_owner.py`: while suspended (temporarily or permanently), a user can't request API apps or edit theirs, whose names and descriptions others see; deleting their apps, re-keying them, authorizing apps and withdrawing authorizations still work.
+
 Decided and pinned in `users/test_ban_expiry.py`: a temporary ban that ran out ends (with a "You have been unbanned!" notification and `ban_evade` reset) on the user's next request to any page, not only the front page.
 
 Not yet audited. The app today has three different notions of "banned", and the routes below pick among them inconsistently:
@@ -22,6 +24,5 @@ What to decide, case by case:
 - **Admin actions by a suspended admin**: nothing checks suspension on admin routes.
 - **Notifications a suspended user causes**: unfollowing and removing a follower still notify the other user (allowed by the current rule; confirm).
 - **Chat** (outside the spec): the page and `can_access_chat` refuse only permanent suspensions, while sending and reading messages over the socket refuse on raw `is_banned`, so any temporary ban, even one that ran out, blocks them until the user's next page request ends it.
-- **API keys and apps** (`/api_keys`, `/edit_app`): refused only when permanently suspended.
 - **Ban evasion**: detection at login counts only permanent bans.
 - **Templates**: the mobile comment admin menu chooses Ban/Unban on raw `is_banned`; every other menu uses `is_suspended`.

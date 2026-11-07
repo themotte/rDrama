@@ -1,8 +1,10 @@
 '''
 POST /api_keys requests an API application: "name" (at most 50 characters), "redirect_uri" (where POST /authorize sends users with their token; at most 4096 characters) and "description" (cut to 256 characters, and may be empty). All three are required, the name and redirect URI are stripped of surrounding whitespace and must not be empty; otherwise the request is refused with 400, changing nothing. Editing an app (test_owner) takes the same fields by the same rules. Names are stored as typed and always shown as text. The request is stored as a pending app owned by the requester, with no client id, and announced in modmail (notifications/test_modmail); then the requester is sent back to /settings/apps. Admins approve or refuse it (test_admin).
 
-Permanently suspended users can't request apps (403).
+Suspended users, permanently or until their ban ends, can't request apps (403): an app's name and description are shown to the users asked to authorize it.
 '''
+import time
+
 import pytest
 
 from files.tests.spec.harness import *
@@ -89,8 +91,9 @@ def test_visitors_are_sent_to_log_in():
 	d.assert_exactly()
 
 
-def test_permanently_suspended_users_are_refused():
-	client = as_user(factories.user(is_banned=factories.admin(2)["id"], unban_utc=0))
+@pytest.mark.parametrize("permanently", [True, False], ids=["permanently", "temporarily"])
+def test_suspended_users_are_refused(permanently):
+	client = as_user(factories.user(is_banned=factories.admin(2)["id"], unban_utc=0 if permanently else int(time.time()) + 86400))
 
 	with db_diff() as d:
 		r = client.post("/api_keys", _fields())
