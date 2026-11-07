@@ -255,11 +255,10 @@ def admin_apps_list(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def reroll_oauth_tokens(aid, v):
-	aid = aid
-
 	a = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
 	if a.author_id != v.id: abort(403)
+	if a.state != OauthAppState.APPROVED: abort(409, "Only approved apps have a client ID")
 
 	a.client_id = secrets.token_urlsafe(64)[:64]
 	g.db.add(a)

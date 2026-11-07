@@ -6,7 +6,7 @@ GET /settings/apps lists the viewer's approved apps with their client ids, their
 The owner of an app, and only they (others: 403), may:
 - edit it (POST /edit_app/<id>: "name", "redirect_uri", "description" cut to 256 characters, as when requesting), which needs no new approval: an approved app keeps its client id and its tokens;
 - delete it (POST /delete_app/<id>), which ends every authorization of it;
-- give an approved app a new client id (POST /oauth/reroll/<id>, answering a JSON "message" and the new client id as "id"), after which users authorize it under the new id only; tokens already granted keep working.
+- give an approved app a new client id (POST /oauth/reroll/<id>, answering a JSON "message" and the new client id as "id"), after which users authorize it under the new id only; tokens already granted keep working. A pending request has no client id to replace (409): only an admin's approval gives it one.
 
 Editing is refused to permanently suspended users (403).
 '''
@@ -165,6 +165,17 @@ def test_tokens_outlive_a_new_client_id():
 	as_user(owner).post(f"/oauth/reroll/{application['id']}")
 
 	assert as_api(token).get("/me").json["id"] == owner["id"]
+
+
+def test_a_pending_request_cant_be_given_a_client_id():
+	owner = factories.user()
+	application = factories.oauth_app(owner, state="pending")
+
+	with db_diff() as d:
+		r = as_user(owner).post(f"/oauth/reroll/{application['id']}")
+
+	assert_status(r, 409)
+	d.assert_exactly()
 
 
 def test_others_cant_give_an_app_a_new_client_id():
