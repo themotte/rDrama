@@ -3,6 +3,8 @@ Which notifications and conversations a user is shown.
 '''
 from typing import Iterable
 
+from flask import g
+
 from sqlalchemy import and_, or_, true
 
 from files.classes.comment import Comment
@@ -28,6 +30,19 @@ def with_threads(tops: Iterable[Comment], v: User) -> list[Comment]:
 	messages, _ = get_comment_trees_eager(lambda q: q.filter(or_(Comment.id.in_(ids), Comment.top_comment_id.in_(ids)), Comment.parent_submission == None), sort="old", v=v)
 	loaded = {message.id: message for message in messages}
 	return [loaded[i] for i in ids]
+
+
+def mark_threads_read(tops: Iterable[Comment], v: User) -> None:
+	'''Marks read `v`'s notifications of the messages they can see in the loaded conversations under `tops`, flagging the unread ones to show as such.'''
+	seen, stack = {}, list(tops)
+	while stack:
+		message = stack.pop()
+		if message.visibility_state.is_visible_to(v): seen[message.id] = message
+		stack.extend(message.replies2 or [])
+	if not seen: return
+	for notification in g.db.query(Notification).filter(Notification.user_id == v.id, Notification.comment_id.in_(seen), Notification.read == False):
+		seen[notification.comment_id].unread = True
+		notification.read = True
 
 
 def shown_notifications(query, v: User):

@@ -10,7 +10,7 @@ Showing a notification marks it read.
 
 GET /notifications/posts lists notifications of followed users' new posts, newest first, marking them read.
 
-GET /notifications/messages lists the conversations the user sent or received (their first messages, newest first), each with its replies. Left out: conversations started by users the viewer blocks (except admins from level 2), and by shadowbanned users, except to the users themselves and admins from level 2.
+GET /notifications/messages lists the conversations the user sent or received (their first messages, newest first), each with its replies. Showing a conversation marks read the viewer's notifications of the messages in it they can see. Left out: conversations started by users the viewer blocks (except admins from level 2), and by shadowbanned users, except to the users themselves and admins from level 2.
 
 Each page holds 25; "page" (from 1) chooses it. API clients get {"data": [...]}, the page's comments as JSON objects: on /notifications without their replies ("replies" is empty), on the Messages tab with their conversations.
 
@@ -346,6 +346,24 @@ def test_shadowbanned_users_see_their_own_conversations():
 	message = factories.message(user, factories.user())
 
 	assert_in_payload(as_user(user).get("/notifications/messages"), message["text"])
+
+
+def test_showing_a_conversation_marks_its_messages_read():
+	user, other = factories.user(), factories.user()
+	message = factories.message(other, user)
+	answer = factories.message(user, other, message)
+	follow_up = factories.message(other, user, answer)
+	hidden = factories.message(other, user, answer, state_mod="REMOVED", state_mod_set_by="somemod")
+	for m in (message, follow_up, hidden):
+		factories.notification(user, m)
+	elsewhere = _notified_reply(user)
+	client = as_user(user)
+
+	with db_diff() as d:
+		client.get("/notifications/messages")
+
+	d.assert_exactly(updated={"notifications": {(user["id"], m["id"]): {"read": True} for m in (message, follow_up)}})
+	assert not db.row("notifications", user_id=user["id"], comment_id=elsewhere["id"])["read"]
 
 
 def test_conversation_pages_hold_25():

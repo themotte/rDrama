@@ -5,7 +5,7 @@ API clients get the shown conversation as JSON: its first shown message, with it
 
 The site's notices (messages to no one, from the system accounts) open the same way, to whoever was notified of them and to admins from level 2.
 
-"read" marks the viewer's notification of the message read.
+Showing a conversation marks read the viewer's notifications of the messages shown that they can see, as the Messages tab does ("read" changes nothing more).
 '''
 import pytest
 
@@ -90,6 +90,18 @@ def test_api_clients_get_the_conversation():
 	assert_status(r, 200)
 	assert r.json["id"] == chain[1]["id"]
 	assert [reply["id"] for reply in r.json["replies"]] == [chain[2]["id"]]
+
+
+def test_showing_a_conversation_marks_its_shown_messages_read():
+	sender, recipient, chain = _conversation(4)
+	for message in chain:
+		factories.notification(recipient, message)
+	client = as_user(recipient)
+
+	with db_diff() as d:
+		assert_html(client.get(f"/comment/{chain[2]['id']}", params={"context": 1}), 200)
+
+	d.assert_exactly(updated={"notifications": {(recipient["id"], m["id"]): {"read": True} for m in chain[1:]}})
 
 
 def test_read_marks_the_notification_read():

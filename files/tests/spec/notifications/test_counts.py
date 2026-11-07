@@ -24,7 +24,7 @@ def _new_post_notification(user):
 
 
 def _counts(user, path="/notifications/messages"):
-	'''The counts as a page that doesn't itself mark anything read shows them.'''
+	'''The counts as a page shows them; by default the Messages tab, which marks only messages read.'''
 	r = as_user(user).get(path)
 	assert_html(r, 200)
 	return notification_counts(r)
@@ -112,7 +112,7 @@ def test_messages_from_blocked_admins_are_counted():
 	factories.notification(user, factories.message(admin, user))
 	db.insert("userblocks", user_id=user["id"], target_id=admin["id"])
 
-	assert _counts(user)["bell"] == 1
+	assert _counts(user, "/")["bell"] == 1
 
 
 def test_reading_the_notifications_clears_the_count():

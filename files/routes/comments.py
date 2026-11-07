@@ -10,6 +10,7 @@ from files.helpers.comments import comment_counted, comment_on_publish, comment_
 from files.helpers.config.const import *
 from files.helpers.locks import user_shadowbanned_locked
 from files.helpers.media import attach_images
+from files.helpers.notifications import mark_threads_read
 from files.helpers.wrappers import *
 from files.routes.importstar import *
 
@@ -127,10 +128,10 @@ def _message_page(message:Comment, v:Optional[User]):
 		c = c.parent_comment
 		context -= 1
 
+	mark_threads_read([c], v)
 	if request.headers.get("Authorization"): page = c.json_for(v)
 	else: page = render_template("conversation.html", v=v, top_comment=c, comment_info=focus)
-
-	_mark_read(message, v)
+	g.db.commit()
 	return page
 
 @app.post("/comment")

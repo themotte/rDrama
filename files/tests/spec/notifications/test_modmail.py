@@ -7,7 +7,7 @@ POST /send_admin, with "message" and optionally "email" and an image "file", sen
 
 Requesting API keys (POST /api_keys) also writes modmail: a notice from the system account, of which the admins who receive modmail are notified.
 
-GET /notifications/modmail lists modmail conversations (their first messages) for admins from level 2, newest first: 25 to a page, "page" (from 1) choosing it, each with its replies. API clients and lower levels are refused (403); visitors are sent to log in.
+GET /notifications/modmail lists modmail conversations (their first messages) for admins from level 2, newest first: 25 to a page, "page" (from 1) choosing it, each with its replies. Showing them marks the admin's notifications of their messages read. API clients and lower levels are refused (403); visitors are sent to log in.
 '''
 import re
 
@@ -150,6 +150,20 @@ def test_shows_each_conversations_replies():
 	reply = factories.message(factories.admin(3), seed.MODMAIL_ID, message)
 
 	assert_in_order(as_user(factories.admin(2)).get("/notifications/modmail"), [message["text"], reply["text"]])
+
+
+def test_showing_modmail_marks_it_read():
+	admin = factories.admin(2)
+	message = factories.message(factories.user(), seed.MODMAIL_ID)
+	answer = factories.message(factories.admin(3), seed.MODMAIL_ID, message)
+	for m in (message, answer):
+		factories.notification(admin, m)
+	client = as_user(admin)
+
+	with db_diff() as d:
+		client.get("/notifications/modmail")
+
+	d.assert_exactly(updated={"notifications": {(admin["id"], m["id"]): {"read": True} for m in (message, answer)}})
 
 
 def test_pages_hold_25():
