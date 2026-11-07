@@ -1,5 +1,5 @@
 '''
-POST /api_keys requests an API application: "name", "redirect_uri" (where POST /authorize sends users with their token; up to 4096 characters) and "description" (cut to 256 characters). The request is stored as a pending app owned by the requester, with no client id, and announced in modmail (notifications/test_modmail); then the requester is sent back to /settings/apps. Admins approve or refuse it (test_admin).
+POST /api_keys requests an API application: "name", "redirect_uri" (where POST /authorize sends users with their token; up to 4096 characters) and "description" (cut to 256 characters). Names are stored as typed and always shown as text. The request is stored as a pending app owned by the requester, with no client id, and announced in modmail (notifications/test_modmail); then the requester is sent back to /settings/apps. Admins approve or refuse it (test_admin).
 
 Permanently suspended users can't request apps (403).
 '''
@@ -22,6 +22,25 @@ def test_a_request_stores_a_pending_app():
 		"oauth_apps": [{"author_id": user["id"], "client_id": None, "app_name": fields["name"], "redirect_uri": fields["redirect_uri"], "description": fields["description"]}],
 		"comments": [{}],
 	})
+
+
+def test_names_are_stored_as_typed():
+	name = f"<b>{factories.unique('app')}</b>"
+
+	as_user(factories.user()).post("/api_keys", _fields(name=name))
+
+	assert db.rows("oauth_apps")[-1]["app_name"] == name
+
+
+def test_names_are_shown_as_text():
+	inner = factories.unique("app")
+	application = factories.oauth_app(factories.user(), app_name=f"<b>{inner}</b>")
+
+	r = as_user(factories.user()).get("/authorize", params={"client_id": application["client_id"]})
+
+	assert_html(r, 200)
+	assert_in_payload(r, inner)
+	assert_not_in_payload(r, application["app_name"])
 
 
 def test_long_redirect_uris_are_stored():

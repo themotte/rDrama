@@ -79,7 +79,7 @@ def _authorization(application: OauthApp, user: User) -> str:
 def request_api_keys(v):
 	refuse_api_client(v)
 	new_app = OauthApp(
-		app_name=request.values.get('name').replace('<','').replace('>',''),
+		app_name=request.values.get('name'),
 		redirect_uri=request.values.get('redirect_uri'),
 		author_id=v.id,
 		description=request.values.get("description")[:256]
