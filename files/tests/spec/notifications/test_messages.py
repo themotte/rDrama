@@ -5,7 +5,8 @@ The message is a comment with no post, sent to the recipient: the first of a new
 
 Refused:
 - an empty (or all-whitespace) message: 400;
-- modmail's account: 403 (the admins are reached through /contact);
+- yourself: 400;
+- modmail's account and the site's other system accounts: 403 (the admins are reached through /contact);
 - suspended senders, temporarily or permanently: 403 (they can still write to modmail);
 - users the sender blocks, and users who block the sender, unless the sender is an admin from level 2: 403;
 - senders who aren't yet part of the community (no visible post or comment, and no admin level), unless the recipient is an admin from level 2: 403;
@@ -101,8 +102,15 @@ def _refused(sender, recipient, status=403):
 	d.assert_exactly()
 
 
-def test_modmail_is_refused():
-	_refused(_sender(), db.row("users", id=seed.MODMAIL_ID))
+@pytest.mark.parametrize("account", [seed.SYSTEM_ID, seed.MODMAIL_ID], ids=["system", "modmail"])
+def test_system_accounts_are_refused(account):
+	_refused(_sender(), db.row("users", id=account))
+
+
+def test_messaging_yourself_is_refused():
+	sender = _sender()
+
+	_refused(sender, sender, 400)
 
 
 @pytest.mark.parametrize("ban", ["permanent", "temporary"])

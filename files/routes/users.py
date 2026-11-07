@@ -154,8 +154,8 @@ def message2(v, username):
 
 	user = get_user(username, v=v, include_blocks=True)
 
-	if user.id == MODMAIL_ID:
-		abort(403, "Please use modmail to contact the admins")
+	if user.id == v.id: abort(400, "You can't message yourself.")
+	if user.id in SYSTEM_ACCOUNT_IDS: abort(403, "Please use modmail to contact the admins")
 
 	if not v.can_send_messages and user.admin_level < PERMS['POST_COMMENT_MODERATION']:
 		abort(403, MESSAGE_CONTRIBUTION_REQUIRED)
