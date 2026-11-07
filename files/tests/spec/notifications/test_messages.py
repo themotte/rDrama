@@ -186,6 +186,16 @@ def _refused_text(sender, recipient, text):
 	d.assert_exactly()
 
 
+def test_the_same_text_is_refused_however_many_times_it_was_sent():
+	sender, recipient = _sender(), factories.user()
+	text = factories.unique()
+	assert_json_message(_send(sender, recipient, text))
+	message = db.row("comments", author_id=sender["id"], parent_submission=None)
+	assert_status(as_user(sender).post("/reply", {"parent_id": message["id"], "body": text}, headers=XHR), 200)
+
+	_refused_text(sender, recipient, text)
+
+
 def test_the_same_text_to_someone_else_is_sent():
 	sender = _sender()
 	text = factories.unique()

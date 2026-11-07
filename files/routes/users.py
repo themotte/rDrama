@@ -170,12 +170,8 @@ def message2(v, username):
 	if not message: abort(400, "Message is empty!")
 	body_html = sanitize(message)
 
-	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
-															Comment.sentto == user.id,
-															Comment.body_html == body_html,
-															).one_or_none()
-
-	if existing: abort(403, "Message already exists.")
+	if g.db.query(exists().where(Comment.author_id == v.id, Comment.sentto == user.id, Comment.body_html == body_html)).scalar():
+		abort(403, "Message already exists.")
 
 	c = Comment(author_id=v.id,
 						  parent_submission=None,
