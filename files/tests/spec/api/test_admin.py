@@ -5,7 +5,7 @@ Admins review API applications (who may: admin/test_access).
 - POST /admin/app/approve/<id> (level 3) approves a pending app: it gets a client id, its owner gets a token for it and is notified (the token itself shows only on the owner's /settings/apps, never in the notice), and the approval is logged in the mod log ("approve_app", against the owner).
 - POST /admin/app/reject/<id> (level 2) refuses a pending request, and POST /admin/app/revoke/<id> (level 2) withdraws an approved app: either way the app and every authorization of it are deleted, the owner is notified, and the action is logged ("reject_app" or "revoke_app", against the owner).
 
-Each answers a JSON message. An id that is no app's (unknown, not a whole number, or too large) is 404, here and on the app pages below.
+Each answers a JSON message, and refuses an app in the other state with 409, changing nothing. Approving keeps a token the owner already holds for the app. An id that is no app's (unknown, not a whole number, or too large) is 404, here and on the app pages below.
 
 GET /admin/app/<id> and GET /admin/app/<id>/comments (level 2) show an app and the posts or comments its tokens made, newest first, 100 to a page, each shown as admin listings show them (listings/test_parameters).
 '''
@@ -157,6 +157,29 @@ def test_the_app_comments_page_shows_its_comments():
 	assert_html(r, 200)
 	assert_in_payload(r, comment["body"])
 	assert_not_in_payload(r, other["body"])
+
+
+@pytest.mark.parametrize("action, approved", [("approve", True), ("reject", True), ("revoke", False)])
+def test_actions_refuse_apps_in_the_other_state(action, approved):
+	application = factories.oauth_app(factories.user(), state="approved" if approved else "pending")
+	client = as_user(factories.admin(3))
+
+	with db_diff() as d:
+		r = client.post(f"/admin/app/{action}/{application['id']}")
+
+	assert_status(r, 409)
+	d.assert_exactly()
+
+
+def test_approving_keeps_a_token_the_owner_holds():
+	owner = factories.user()
+	application = factories.oauth_app(owner, state="pending")
+	token = factories.authorization(owner, application)
+
+	r = as_user(factories.admin(3)).post(f"/admin/app/approve/{application['id']}")
+
+	assert_json_message(r)
+	assert db.row("client_auths", oauth_client=application["id"])["access_token"] == token
 
 
 @pytest.mark.parametrize("bad", BAD_IDS)

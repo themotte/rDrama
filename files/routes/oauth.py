@@ -38,17 +38,19 @@ def _app_by_client_id(client_id: Optional[str]) -> Optional[OauthApp]:
 	return g.db.query(OauthApp).filter(OauthApp.client_id == client_id).one_or_none()
 
 
-def _app(aid: str) -> OauthApp:
-	'''The app with the id `aid` from the URL, else 404.'''
+def _app(aid: str, lock: bool = False) -> OauthApp:
+	'''The app with the id `aid` from the URL, else 404. Actions that change an app lock it first, so concurrent ones see each other's outcome before checking its state.'''
 	app_id = parse_id(aid)
-	app = g.db.get(OauthApp, app_id) if app_id else None
+	query = g.db.query(OauthApp).filter_by(id=app_id)
+	if lock: query = query.with_for_update().populate_existing()
+	app = query.one_or_none() if app_id else None
 	if not app: abort(404)
 	return app
 
 
 def _app_owned(v: User, aid: str) -> OauthApp:
-	'''The app with the id `aid` from the URL, which only its owner may manage.'''
-	app = _app(aid)
+	'''The app with the id `aid` from the URL, locked for its owner, the only one who may manage it, to change.'''
+	app = _app(aid, lock=True)
 	if app.author_id != v.id: abort(403)
 	return app
 
@@ -151,20 +153,12 @@ def rescind_authorization(v, aid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def admin_app_approve(v, aid):
-	app = _app(aid)
+	app = _app(aid, lock=True)
+	if app.state != OauthAppState.PENDING: abort(409, "Only pending apps can be approved")
 	user = app.author
 
 	app.client_id = secrets.token_urlsafe(64)[:64]
-	g.db.add(app)
-
-	access_token = secrets.token_urlsafe(128)[:128]
-	new_auth = ClientAuth(
-		oauth_client = app.id,
-		user_id = user.id,
-		access_token=access_token
-	)
-
-	g.db.add(new_auth)
+	_authorization(app, user)
 
 	send_repeatable_notification(user.id, f"@{v.username} has approved your application `{app.app_name}`. Your access token is in [your apps settings](/settings/apps).\nPlease check the guide [here](/api) if you don't know what to do next.")
 
@@ -184,7 +178,8 @@ def admin_app_approve(v, aid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_app_revoke(v, aid):
-	app = _app(aid)
+	app = _app(aid, lock=True)
+	if app.state != OauthAppState.APPROVED: abort(409, "Only approved apps can be revoked")
 	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
 
 	send_repeatable_notification(app.author.id, f"@{v.username} has revoked your application `{app.app_name}`.")
@@ -207,7 +202,8 @@ def admin_app_revoke(v, aid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_app_reject(v, aid):
-	app = _app(aid)
+	app = _app(aid, lock=True)
+	if app.state != OauthAppState.PENDING: abort(409, "Only pending apps can be rejected")
 	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
 
 	send_repeatable_notification(app.author.id, f"@{v.username} has rejected your application `{app.app_name}`.")
