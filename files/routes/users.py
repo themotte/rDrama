@@ -202,8 +202,6 @@ def message2(v, username):
 def messagereply(v):
 	message = request.values.get("body", "").strip()[:MESSAGE_BODY_LENGTH_MAXIMUM].strip()
 
-	if not message and not request.files.get("file"): abort(400, "Message is empty!")
-
 	if not request.values.get("parent_id"): abort(400, "Which message are you replying to?")
 	parent = get_comment(request.values["parent_id"], v=v)
 	if not parent.takes_part_in_thread(v): abort(403, "You can only reply in your own conversations.")
@@ -226,6 +224,7 @@ def messagereply(v):
 
 	file = request.files.get("file") if request.headers.get("cf-ipcountry") != "T1" else None
 	if file and not modmail: abort(400, "Images can only be attached in modmail.")
+	if not (message or file): abort(400, "Message is empty!")
 	if file:
 		if file.content_type.startswith('image/'):
 			name = new_image_path()

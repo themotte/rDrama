@@ -15,7 +15,7 @@ In a direct thread, replying to a user you block, or who blocks you (unless you'
 
 Suspended users (temporarily or permanently) can't reply (403), except in modmail threads they started, so they can still appeal; a suspended admin can't answer other users' modmail.
 
-An image "file" can be attached anywhere in a modmail thread; files from Tor are ignored, and a file that isn't an image is refused (400). Elsewhere a file is refused (400).
+An image "file" can be attached anywhere in a modmail thread, with or without text; a file that isn't an image is refused (400). Elsewhere a file is refused (400). Files sent through Tor are ignored everywhere. A reply with neither text nor an attached image is refused (400).
 
 The reply is {"comment": ...}: the new message rendered for the page.
 '''
@@ -460,3 +460,24 @@ def test_blocks_dont_apply_in_modmail():
 
 	assert_status(_reply(admin, message, factories.unique()), 200)
 	assert_status(_reply(starter, message, factories.unique()), 200)
+
+
+def test_an_image_alone_is_a_reply_in_modmail():
+	starter = factories.user()
+	message = factories.message(starter, seed.MODMAIL_ID)
+
+	assert_status(_reply(starter, message, "", files={"file": uploads.png(4, 4)}), 200)
+
+	assert len(_image_urls(db.row("comments", author_id=starter["id"], parent_comment_id=message["id"])["body_html"])) == 1
+
+
+def test_an_ignored_file_alone_is_an_empty_reply():
+	starter = factories.user()
+	message = factories.message(starter, seed.MODMAIL_ID)
+	client = as_user(starter)
+
+	with db_diff() as d:
+		r = client.post("/reply", {"parent_id": message["id"], "body": ""}, headers={**XHR, **TOR}, files={"file": uploads.png(4, 4)})
+
+	assert_status(r, 400)
+	d.assert_exactly()
