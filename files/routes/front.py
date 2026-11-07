@@ -38,28 +38,21 @@ def unread(v):
 def notifications_main(v: User):
 	page: int = max(request.values.get("page", 1, int) or 1, 1)
 
-	comments = (shown_notifications(g.db.query(Comment, Notification).join(Notification.comment), v)
+	notifications = (shown_notifications(g.db.query(Notification).join(Notification.comment), v)
 		.filter(Comment.author_id != AUTOJANNY_ID)
 		.order_by(Notification.created_datetimez.desc())
-		.options(
-			selectinload(Comment.author),
-			selectinload(Comment.post).options(
-				selectinload(Submission.author),
-			),
-			selectinload(Comment.parent_comment),
-		))
+		.offset(25 * (page - 1)).limit(26).all())
 
-	comments = comments.offset(25 * (page - 1)).limit(26).all()
+	next_exists = (len(notifications) > 25)
+	notifications = notifications[:25]
 
-	next_exists = (len(comments) > 25)
-	comments = comments[:25]
-
-	for c, n in comments:
+	# With the viewer's votes and blocks
+	loaded = {c.id: c for c in get_comments([n.comment_id for n in notifications], v)}
+	listing: list[Comment] = [loaded[n.comment_id] for n in notifications]
+	for c, n in zip(listing, notifications):
 		c.notif_utc = n.created_utc
 		c.unread = not n.read
 		n.read = True
-
-	listing: list[Comment] = [c for c, _ in comments]
 
 	# TODO: commit after request rendered, then default session expiry is fine
 	g.db.expire_on_commit = False
