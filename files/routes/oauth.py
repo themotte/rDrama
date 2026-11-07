@@ -39,6 +39,16 @@ def _app_by_client_id(client_id: Optional[str]) -> Optional[OauthApp]:
 	return g.db.query(OauthApp).filter(OauthApp.client_id == client_id).one_or_none()
 
 
+def _app_fields() -> tuple[str, str, str]:
+	'''The name, redirect URI and description a request or edit gives an app, else 400.'''
+	name, redirect_uri, description = (request.values.get(field) for field in ("name", "redirect_uri", "description"))
+	if name is None or redirect_uri is None or description is None: abort(400, "Name, redirect URI and description are required")
+	name, redirect_uri = name.strip(), redirect_uri.strip()
+	if not 0 < len(name) <= 50: abort(400, "The name must be 1 to 50 characters long")
+	if not 0 < len(redirect_uri) <= 4096: abort(400, "The redirect URI must be 1 to 4096 characters long")
+	return name, redirect_uri, description[:256]
+
+
 def _app(aid: str, lock: bool = False) -> OauthApp:
 	'''The app with the id `aid` from the URL, else 404. Actions that change an app lock it first, so concurrent ones see each other's outcome before checking its state.'''
 	app_id = parse_id(aid)
@@ -78,16 +88,12 @@ def _authorization(application: OauthApp, user: User) -> str:
 @is_not_permabanned
 def request_api_keys(v):
 	refuse_api_client(v)
-	new_app = OauthApp(
-		app_name=request.values.get('name'),
-		redirect_uri=request.values.get('redirect_uri'),
-		author_id=v.id,
-		description=request.values.get("description")[:256]
-	)
+	name, redirect_uri, description = _app_fields()
+	new_app = OauthApp(app_name=name, redirect_uri=redirect_uri, author_id=v.id, description=description)
 
 	g.db.add(new_app)
 
-	body = f"@{v.username} has requested API keys for `{request.values.get('name')}`. You can approve or deny the request [here](/admin/apps)."
+	body = f"@{v.username} has requested API keys for `{name}`. You can approve or deny the request [here](/admin/apps)."
 
 	body_html = sanitize(body)
 
@@ -132,9 +138,7 @@ def edit_oauth_app(v, aid):
 	refuse_api_client(v)
 	app = _app_owned(v, aid)
 
-	app.redirect_uri = request.values.get('redirect_uri')
-	app.app_name = request.values.get('name')
-	app.description = request.values.get("description")[:256]
+	app.app_name, app.redirect_uri, app.description = _app_fields()
 
 	g.db.add(app)
 

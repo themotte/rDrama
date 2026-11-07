@@ -4,7 +4,7 @@ What a user does with the API applications they requested.
 GET /settings/apps lists the viewer's approved apps with their client ids and the token the viewer holds for each (approval gives the owner one; without one, the page links to authorizing the app, GET /authorize?client_id=<its client id>, which grants a new one), their pending requests, and the apps they have authorized (test_authorize), and offers the form that requests another (test_requests). Revoked apps and other users' apps aren't listed, and no one else's token ever shows: not those of users who authorized the viewer's apps, nor the viewer's tokens for other users' apps.
 
 The owner of an app, and only they (others: 403), may:
-- edit it (POST /edit_app/<id>: "name", "redirect_uri", "description" cut to 256 characters, as when requesting), which needs no new approval: an approved app keeps its client id and its tokens;
+- edit it (POST /edit_app/<id>: "name", "redirect_uri" and "description", by the rules of requesting: test_requests), which needs no new approval: an approved app keeps its client id and its tokens;
 - delete it (POST /delete_app/<id>), which ends every authorization of it. An app whose tokens made posts or comments is kept, revoked, so admins can still see where they came from (test_admin); to its owner it is gone like a deleted one;
 - give an approved app a new client id (POST /oauth/reroll/<id>, answering a JSON "message" and the new client id as "id"), after which users authorize it under the new id only; tokens already granted keep working. A pending request has no client id to replace (409): only an admin's approval gives it one.
 
