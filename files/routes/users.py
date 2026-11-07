@@ -216,8 +216,9 @@ def messagereply(v):
 
 	body_html = sanitize(message)
 
-	if modmail and request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
-		file=request.files["file"]
+	file = request.files.get("file") if request.headers.get("cf-ipcountry") != "T1" else None
+	if file and not modmail: abort(400, "Images can only be attached in modmail.")
+	if file:
 		if file.content_type.startswith('image/'):
 			name = new_image_path()
 			file.save(name)

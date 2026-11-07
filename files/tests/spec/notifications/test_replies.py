@@ -11,8 +11,12 @@ Replying doesn't need the sender to be part of the community, unlike starting a 
 
 In a modmail thread, every reply is a message to modmail, in the same thread. The admins who receive modmail (test_modmail), other than the replier, are notified, each once; when an admin replies, so is the thread's starter, unless the starter is the site itself (a visitor's message from the contact form, or a notice).
 
+An image "file" can be attached anywhere in a modmail thread; files from Tor are ignored, and a file that isn't an image is refused (400). Elsewhere a file is refused (400).
+
 The reply is {"comment": ...}: the new message rendered for the page.
 '''
+import re
+
 import pytest
 
 from files.tests.spec.harness import *
@@ -323,3 +327,62 @@ def test_answers_older_versions_sent_elsewhere_are_still_modmail(sentto):
 
 	assert_status(r, 200)
 	_modmail_replied(d, starter, answer, [admin])
+
+
+# Images
+
+def _image_urls(body_html):
+	return re.findall(r'<img[^>]* src="([^"]+)"', body_html)
+
+
+@pytest.mark.parametrize("deep", [False, True], ids=["first message", "deeper"])
+def test_images_are_attached_in_modmail(deep):
+	starter, admin = factories.user(), factories.admin(3)
+	parent = factories.message(starter, seed.MODMAIL_ID)
+	if deep: parent = factories.message(admin, seed.MODMAIL_ID, parent)
+
+	assert_status(_reply(starter, parent, factories.unique(), files={"file": uploads.png(4, 4)}), 200)
+
+	urls = _image_urls(db.row("comments", author_id=starter["id"], parent_comment_id=parent["id"])["body_html"])
+	assert len(urls) == 1
+	assert_serves_image(urls[0])
+
+
+def test_files_from_tor_are_ignored_in_modmail():
+	starter = factories.user()
+	message = factories.message(starter, seed.MODMAIL_ID)
+
+	assert_status(as_user(starter).post("/reply", {"parent_id": message["id"], "body": factories.unique()}, headers={**XHR, **TOR}, files={"file": uploads.png(4, 4)}), 200)
+
+	assert _image_urls(db.row("comments", author_id=starter["id"], parent_comment_id=message["id"])["body_html"]) == []
+
+
+def test_files_from_tor_are_ignored_in_direct_threads():
+	sender, recipient = factories.user(), factories.user()
+	message = factories.message(sender, recipient)
+
+	assert_status(as_user(recipient).post("/reply", {"parent_id": message["id"], "body": factories.unique()}, headers={**XHR, **TOR}, files={"file": uploads.png(4, 4)}), 200)
+
+
+def test_files_that_arent_images_are_refused_in_modmail():
+	starter = factories.user()
+	message = factories.message(starter, seed.MODMAIL_ID)
+	client = as_user(starter)
+
+	with db_diff() as d:
+		r = client.post("/reply", {"parent_id": message["id"], "body": factories.unique()}, headers=XHR, files={"file": ("notes.txt", b"hello", "text/plain")})
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
+def test_files_are_refused_in_direct_threads():
+	sender, recipient = factories.user(), factories.user()
+	message = factories.message(sender, recipient)
+	client = as_user(recipient)
+
+	with db_diff() as d:
+		r = client.post("/reply", {"parent_id": message["id"], "body": factories.unique()}, headers=XHR, files={"file": uploads.png(4, 4)})
+
+	assert_status(r, 400)
+	d.assert_exactly()
