@@ -11,11 +11,14 @@ Replying doesn't need the sender to be part of the community, unlike starting a 
 
 In a modmail thread, every reply is a message to modmail, in the same thread. The admins from level 2 other than the replier are notified, each once; when an admin replies, so is the thread's starter, unless the starter is the site itself (a visitor's message from the contact form, or a notice).
 
+Suspended users (temporarily or permanently) can't reply (403), except in modmail threads they started, so they can still appeal; a suspended admin can't answer other users' modmail.
+
 An image "file" can be attached anywhere in a modmail thread; files from Tor are ignored, and a file that isn't an image is refused (400). Elsewhere a file is refused (400).
 
 The reply is {"comment": ...}: the new message rendered for the page.
 '''
 import re
+import time
 
 import pytest
 
@@ -386,3 +389,34 @@ def test_files_are_refused_in_direct_threads():
 
 	assert_status(r, 400)
 	d.assert_exactly()
+
+
+# Suspension
+
+def _suspended(ban, **overrides):
+	return factories.user(is_banned=seed.AUTOJANNY_ID, unban_utc=0 if ban == "permanent" else int(time.time()) + 86400, **overrides)
+
+
+@pytest.mark.parametrize("ban", ["permanent", "temporary"])
+def test_suspended_users_cant_reply(ban):
+	user = _suspended(ban)
+	message = factories.message(factories.user(), user)
+
+	_refused(user, message)
+
+
+@pytest.mark.parametrize("ban", ["permanent", "temporary"])
+def test_suspended_users_answer_their_own_modmail(ban):
+	user = _suspended(ban)
+	message = factories.message(user, seed.MODMAIL_ID)
+	answer = factories.message(factories.admin(3), seed.MODMAIL_ID, message)
+
+	assert_status(_reply(user, answer, factories.unique()), 200)
+
+
+@pytest.mark.parametrize("ban", ["permanent", "temporary"])
+def test_suspended_admins_cant_answer_others_modmail(ban):
+	admin = _suspended(ban, admin_level=3)
+	message = factories.message(factories.user(), seed.MODMAIL_ID)
+
+	_refused(admin, message)

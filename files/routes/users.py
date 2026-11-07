@@ -144,13 +144,13 @@ def unsubscribe(v, post_id):
 		g.db.commit()
 	return {"message": "Post unsubscribed!"}
 
+_SUSPENDED_MESSAGING = "You can't send messages while banned; contact modmail if you think this decision was incorrect."
+
 @app.post("/@<username>/message")
 @limiter.limit("1/second;10/minute;20/hour;50/day")
 @auth_required
 def message2(v, username):
-	if v.is_suspended_permanently:
-		abort(403, "You have been permabanned and cannot send messages; " + \
-			"contact modmail if you think this decision was incorrect.")
+	if v.is_suspended: abort(403, _SUSPENDED_MESSAGING)
 
 	user = get_user(username, v=v, include_blocks=True)
 
@@ -209,6 +209,8 @@ def messagereply(v):
 	if not parent.takes_part_in_thread(v): abort(403, "You can only reply in your own conversations.")
 	top = parent.thread_top
 	modmail = top.sentto == MODMAIL_ID
+	# Suspended users may still appeal in their own modmail
+	if v.is_suspended and not (modmail and v.id == top.author_id): abort(403, _SUSPENDED_MESSAGING)
 	# The recipient: modmail throughout a modmail thread, else the other of the conversation's two users
 	if modmail: recipient = MODMAIL_ID
 	elif v.id == top.author_id: recipient = top.sentto

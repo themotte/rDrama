@@ -6,13 +6,15 @@ The message is a comment with no post, sent to the recipient: the first of a new
 Refused:
 - an empty (or all-whitespace) message: 400;
 - modmail's account: 403 (the admins are reached through /contact);
-- permanently suspended senders: 403;
+- suspended senders, temporarily or permanently: 403 (they can still write to modmail);
 - users the sender blocks, and users who block the sender, unless the sender is an admin from level 2: 403;
 - senders who aren't yet part of the community (no visible post or comment, and no admin level), unless the recipient is an admin from level 2: 403;
 - the same text again to the same user (any earlier message from the sender to them that reads the same): 403.
 
 Messaging by API token works as by session.
 '''
+import time
+
 import pytest
 
 from files.tests.spec.harness import *
@@ -103,8 +105,13 @@ def test_modmail_is_refused():
 	_refused(_sender(), db.row("users", id=seed.MODMAIL_ID))
 
 
-def test_permanently_suspended_senders_are_refused():
-	_refused(_sender(is_banned=seed.AUTOJANNY_ID, unban_utc=0), factories.user())
+@pytest.mark.parametrize("ban", ["permanent", "temporary"])
+def test_suspended_senders_are_refused(ban):
+	_refused(_sender(is_banned=seed.AUTOJANNY_ID, unban_utc=0 if ban == "permanent" else int(time.time()) + 86400), factories.user())
+
+
+def test_a_ban_that_ran_out_doesnt_stop_messages():
+	assert_json_message(_send(_sender(is_banned=seed.AUTOJANNY_ID, unban_utc=int(time.time()) - 60), factories.user(), factories.unique()))
 
 
 def test_messaging_a_user_you_block_is_refused():
