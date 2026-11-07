@@ -279,6 +279,7 @@ def edit_comment(cid, v):
 	body = sanitize_raw(request.values.get("body"), allow_newlines=True, length_limit=length_limit)
 
 	uploading = any(request.files.getlist('file')) and request.headers.get("cf-ipcountry") != "T1"
+	if uploading and c.is_message and not (c.thread_top and c.thread_top.sentto == MODMAIL_ID): abort(400, "Images can only be attached in modmail.")
 	if len(body) < 1 and not uploading:
 		abort(400, "You have to actually type something!")
 
