@@ -56,8 +56,8 @@ def post_json_for(post: Submission, v: Optional[User]) -> dict:
 
 
 def comment_json_for(comment: Comment, v: Optional[User]) -> dict:
-	'''A listed comment's JSON as `v` may see it: its own without replies (json_for), or only its place while it's on an 18+ post `v` hasn't confirmed their age for.'''
-	if age_unconfirmed(comment.post, v): return {**comment.json_place, "replies": [], "is_nsfw": True}
+	'''A listed comment's (or message's) JSON as `v` may see it: its own without replies (json_for), or only its place while it's on an 18+ post `v` hasn't confirmed their age for.'''
+	if comment.post and age_unconfirmed(comment.post, v): return {**comment.json_place, "replies": [], "is_nsfw": True}
 	return comment.json_for(v, without_replies=True)
 
 

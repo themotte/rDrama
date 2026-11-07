@@ -59,8 +59,8 @@
 		</div>
 	{% endif %}
 
-{# Listings show a comment on an 18+ post to viewers who haven't confirmed their age as its place only; the moderation queues show it whole #}
-{% if standalone and not is_notification_page and not request.path.startswith('/admin/') and c.post and age_unconfirmed(c.post, v) %}
+{# Listings (notifications included) show a comment on an 18+ post to viewers who haven't confirmed their age as its place only; the moderation queues show it whole #}
+{% if standalone and not request.path.startswith('/admin/') and c.post and age_unconfirmed(c.post, v) %}
 	<div id="comment-{{c.id}}" class="comment">
 		<div class="comment-user-info"><span class="badge badge-danger">18+</span></div>
 	</div>
