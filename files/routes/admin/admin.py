@@ -362,9 +362,7 @@ def change_settings(v, setting):
 
 	new_comment.top_comment_id = new_comment.id
 
-	for admin in g.db.query(User).filter(User.admin_level > 2, User.id != v.id).all():
-		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
-		g.db.add(notif)
+	notify_modmail(new_comment.id, v)
 
 	ma = ModAction(
 			kind=f"{word}_{setting}".replace(' ', '_')[:32],

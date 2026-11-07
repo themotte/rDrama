@@ -243,10 +243,7 @@ def messagereply(v):
 
 
 	if c.top_comment.sentto == MODMAIL_ID:
-		admins = g.db.query(User).filter(User.admin_level > 2, User.id != v.id).all()
-		for admin in admins:
-			notif = Notification(comment_id=c.id, user_id=admin.id)
-			g.db.add(notif)
+		notify_modmail(c.id, v)
 
 	g.db.commit()
 

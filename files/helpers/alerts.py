@@ -1,3 +1,5 @@
+from typing import Optional
+
 from files.classes import *
 from flask import g
 
@@ -78,6 +80,14 @@ def add_notif(cid, uid):
 	if not existing:
 		notif = Notification(comment_id=cid, user_id=uid)
 		g.db.add(notif)
+
+
+def notify_modmail(comment_id: int, besides: Optional[User]) -> None:
+	'''Notifies the admins who receive modmail of the modmail comment `comment_id`, except `besides` (its writer, when an admin).'''
+	admins = g.db.query(User.id).filter(User.admin_level > 2)
+	if besides: admins = admins.filter(User.id != besides.id)
+	for (admin_id,) in admins:
+		g.db.add(Notification(comment_id=comment_id, user_id=admin_id))
 
 
 def NOTIFY_USERS(text, v) -> set[int]:
