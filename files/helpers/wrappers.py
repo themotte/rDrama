@@ -90,6 +90,11 @@ def refuse_while_suspended(v):
 	if v.is_suspended: abort(403, "You can't perform this action while banned.")
 
 
+def refuse_api_client(v):
+	'''Managing API apps and granting authorizations is for the account's own browser: an app acting for a user mustn't grant itself or others more.'''
+	if v.client: abort(403, "API clients can't manage API apps")
+
+
 def auth_desired(f):
 	@functools.wraps(f)
 	def wrapper(*args, **kwargs):

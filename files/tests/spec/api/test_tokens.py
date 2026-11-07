@@ -1,11 +1,25 @@
 '''
 API clients authenticate each request with an access token (one per user per app: test_authorize) sent as the whole Authorization header, with no scheme such as "Bearer"; whitespace around it is ignored. A token of an approved app authenticates as the user who holds it, whatever session cookie the request also carries, and needs no form key. Any other token, including one for an app that isn't approved, authenticates no one: routes that need a login answer 401, and pages open to everyone are served as to a logged-out client. A header of only whitespace carries no token, and the session counts.
 
+API clients can't manage API apps or grant authorizations: the app routes (/authorize, /api_keys, /edit_app, /delete_app, /oauth/reroll and /settings/apps) refuse them with 403, changing nothing. Everything else is open to them as to their holder's browser, without admin powers (users/test_api_clients).
+
 GET /me (or /@me) answers an API client with the authenticated user's JSON.
 
 API clients get errors as a JSON object: "code" (the status), "error" and "description" (readable text), and "details" (why the request was refused, when the refusal says, else null).
 '''
+import pytest
+
 from files.tests.spec.harness import *
+
+APP_ROUTES = [
+	("GET", "/authorize?client_id={client_id}"),
+	("POST", "/authorize?client_id={client_id}"),
+	("POST", "/api_keys"),
+	("POST", "/edit_app/{app_id}"),
+	("POST", "/delete_app/{app_id}"),
+	("POST", "/oauth/reroll/{app_id}"),
+	("GET", "/settings/apps"),
+]
 
 
 def test_a_token_authenticates_its_holder():
@@ -86,3 +100,18 @@ def test_refusals_say_why():
 	assert_status(r, 403)
 	assert set(r.json) == {"code", "error", "description", "details"}
 	assert r.json["code"] == 403 and r.json["details"]
+
+
+@pytest.mark.parametrize("method, template", APP_ROUTES, ids=[f"{m} {t}" for m, t in APP_ROUTES])
+def test_api_clients_cant_manage_apps(method, template):
+	user = factories.user()
+	application = factories.oauth_app(user)
+	path = template.format(client_id=application["client_id"], app_id=application["id"])
+	client = as_api(factories.api_token(user))
+	fields = {"name": factories.unique("app"), "redirect_uri": "https://example.com/callback", "description": factories.unique()}
+
+	with db_diff() as d:
+		r = client.get(path) if method == "GET" else client.post(path, fields)
+
+	assert_status(r, 403)
+	d.assert_exactly()

@@ -13,6 +13,7 @@ from files.routes.importstar import *
 @app.get("/authorize")
 @auth_required
 def authorize_prompt(v):
+	refuse_api_client(v)
 	application = _app_by_client_id(request.values.get("client_id"))
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
 	return render_template("oauth.html", v=v, application=application)
@@ -22,6 +23,7 @@ def authorize_prompt(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def authorize(v):
+	refuse_api_client(v)
 	application = _app_by_client_id(request.values.get("client_id"))
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
 	access_token = _authorization(application, v)
@@ -46,6 +48,7 @@ def _authorization(application: OauthApp, user: User) -> str:
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def request_api_keys(v):
+	refuse_api_client(v)
 	new_app = OauthApp(
 		app_name=request.values.get('name').replace('<','').replace('>',''),
 		redirect_uri=request.values.get('redirect_uri'),
@@ -85,6 +88,7 @@ def request_api_keys(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def delete_oauth_app(v, aid):
+	refuse_api_client(v)
 	aid = int(aid)
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
@@ -104,6 +108,7 @@ def delete_oauth_app(v, aid):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @is_not_permabanned
 def edit_oauth_app(v, aid):
+	refuse_api_client(v)
 	aid = int(aid)
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
@@ -255,6 +260,7 @@ def admin_apps_list(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def reroll_oauth_tokens(aid, v):
+	refuse_api_client(v)
 	a = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
 
 	if a.author_id != v.id: abort(403)

@@ -479,6 +479,7 @@ def settings_unblock_user(v):
 @app.get("/settings/apps")
 @auth_required
 def settings_apps(v):
+	refuse_api_client(v)
 	return render_template("settings_apps.html", v=v)
 
 @app.get("/settings/content")

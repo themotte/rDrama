@@ -5,7 +5,7 @@
 {% block authtext %}wants to access your @{{v.username}} account.{% endblock %}
 {%- block content -%}
 <div id="auth-form" class="">
-		<p class="mb-md-5">It will not be able to see your password, or change your account settings.</p>
+		<p class="mb-md-5">It will be able to act for you on {{SITE_TITLE}}, but not see your password or manage your API apps.</p>
 
 		<form action="/authorize" method="post" class="mt-md-3" id="login">
 
