@@ -35,6 +35,8 @@
 				{% if tokens.get(app.id) %}
 				<label for="edit-{{app.id}}-token" class="mb-0 w-lg-25">Your Access Token</label>
 				<input autocomplete="off" id="edit-{{app.id}}-token" class="form-control copy-link" type="text" value="{{tokens[app.id]}}" data-clipboard-text="{{tokens[app.id]}}" readonly="readonly">
+				{% else %}
+				<p class="mb-0"><a href="/authorize?client_id={{app.client_id}}">Authorize it</a> to get an access token.</p>
 				{% endif %}
 				
 				<label for="edit-{{app.id}}-redirect" class="mb-0 w-lg-25">Redirect URI</label>
@@ -94,7 +96,7 @@
 
 {% for auth in v.authorizations %}
 
-	<div id="auth-{{auth.id}}" class="settings-section rounded">
+	<div id="auth-{{auth.oauth_client}}" class="settings-section rounded">
 		<div class="d-lg-flex">
 				<div class="title w-lg-25">
 								<label for="over18">{{auth.application.app_name}}</label>
@@ -106,7 +108,7 @@
 		</div>
 		<div class="footer">
 			<div class="d-flex">
-				<a role="button" class="btn btn-primary ml-auto text-white" onclick="postToastSimple(this,'/oauth/rescind/{{auth.id}}')">Revoke</a>
+				<a role="button" class="btn btn-primary ml-auto text-white" onclick="postToastReload(this,'/oauth/rescind/{{auth.oauth_client}}','POST')">Revoke</a>
 			</div>
 		</div>
 	</div>

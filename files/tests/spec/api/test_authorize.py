@@ -3,6 +3,8 @@ How users let an API application act for them.
 
 The app sends the user to GET /authorize?client_id=<its client id>, which asks the logged-in user to authorize it (visitors are sent to log in and come back). Submitting that (POST /authorize with "client_id") grants the user a token for the app, one per user per app: authorizing again gives the same token. The user's browser is then sent to the app's redirect URI with the token as the "token" query parameter, and the app acts for the user with it (test_tokens). Suspended users may authorize apps.
 
+A user withdraws an app's access with POST /oauth/rescind/<app id>, which deletes their token for it (the token then authenticates no one) and answers a JSON message; if they hold none, or the id is no app's, 404.
+
 A missing client id, or one no approved app has (pending requests have none), is answered, page and form alike, with 401 and the JSON object {"oauth_error": <text>}, changing nothing.
 '''
 import pytest
@@ -85,4 +87,29 @@ def test_pending_apps_cant_be_authorized(method):
 
 	assert_status(r, 401)
 	assert set(r.json) == {"oauth_error"}
+	d.assert_exactly()
+
+
+def test_rescinding_withdraws_the_token():
+	user, application = factories.user(), factories.oauth_app(factories.user())
+	token = factories.authorization(user, application)
+	client = as_user(user)
+
+	with db_diff() as d:
+		r = client.post(f"/oauth/rescind/{application['id']}")
+
+	assert_json_message(r)
+	d.assert_exactly(deleted={"client_auths": [(user["id"], application["id"])]})
+	assert_api_unauthorized(as_api(token).get("/me"))
+
+
+@pytest.mark.parametrize("app_id", ["token-less", "abc", str(2**31)])
+def test_rescinding_without_a_token_is_not_found(app_id):
+	application = factories.oauth_app(factories.user())
+	client = as_user(factories.user())
+
+	with db_diff() as d:
+		r = client.post(f"/oauth/rescind/{application['id'] if app_id == 'token-less' else app_id}")
+
+	assert_status(r, 404)
 	d.assert_exactly()

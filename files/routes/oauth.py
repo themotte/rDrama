@@ -125,6 +125,19 @@ def edit_oauth_app(v, aid):
 	return redirect('/settings/apps')
 
 
+@app.post("/oauth/rescind/<aid>")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@auth_required
+def rescind_authorization(v, aid):
+	refuse_api_client(v)
+	app_id = parse_id(aid)
+	authorization = g.db.get(ClientAuth, (v.id, app_id)) if app_id else None
+	if not authorization: abort(404)
+	g.db.delete(authorization)
+	g.db.commit()
+	return {"message": "Authorization revoked"}
+
+
 @app.post("/admin/app/approve/<aid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)

@@ -1,7 +1,7 @@
 '''
 What a user does with the API applications they requested.
 
-GET /settings/apps lists the viewer's approved apps with their client ids and the viewer's own token for each (the one approval gives the owner), their pending requests, and the apps they have authorized (test_authorize), and offers the form that requests another (test_requests). Other users' apps aren't listed, and no one else's token ever shows: not those of users who authorized the viewer's apps, nor the viewer's tokens for other users' apps.
+GET /settings/apps lists the viewer's approved apps with their client ids and the token the viewer holds for each (approval gives the owner one; without one, the page links to authorizing the app, GET /authorize?client_id=<its client id>, which grants a new one), their pending requests, and the apps they have authorized (test_authorize), and offers the form that requests another (test_requests). Other users' apps aren't listed, and no one else's token ever shows: not those of users who authorized the viewer's apps, nor the viewer's tokens for other users' apps.
 
 The owner of an app, and only they (others: 403), may:
 - edit it (POST /edit_app/<id>: "name", "redirect_uri", "description" cut to 256 characters, as when requesting), which needs no new approval: an approved app keeps its client id and its tokens;
@@ -42,6 +42,19 @@ def test_the_page_shows_the_owner_their_token():
 
 	assert_in_payload(r, own)
 	assert_not_in_payload(r, others)
+
+
+def test_an_owner_who_rescinded_their_token_is_shown_none():
+	owner = factories.user()
+	application = factories.oauth_app(owner)
+	token = db.row("client_auths", oauth_client=application["id"])["access_token"]
+	client = as_user(owner)
+	client.post(f"/oauth/rescind/{application['id']}")
+
+	r = client.get("/settings/apps")
+
+	assert_not_in_payload(r, token)
+	assert_in_payload(r, f"/authorize?client_id={application['client_id']}")
 
 
 def test_the_page_lists_the_apps_the_viewer_authorized():
