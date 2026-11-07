@@ -210,7 +210,8 @@ class Comment(CreatedBase):
 			'is_bot': self.is_bot,
 			}
 		
-		if not self.should_hide_score:
+		# Messages have no scores, as their pages show
+		if not (self.should_hide_score or self.is_message):
 			data['score'] = self.score
 			data['upvotes'] = self.upvotes
 			data['downvotes'] = self.downvotes

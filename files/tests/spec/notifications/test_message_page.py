@@ -1,7 +1,7 @@
 '''
 GET /comment/<id> of a message is its conversation's page: the message and everything answering it, at any depth, oldest first, with no post around them. "context" (0 to 8, 0 by default) also shows that many of the messages it answers, above it. Who may open a message: its sender and recipient, those taking part in its conversation (test_replies: in modmail, its starter and admins from level 2), and admins from level 2; others are refused (403, see comments/test_permalink). A message isn't found under any post's path (/post/<post id>/<anything>/<id>): 404.
 
-API clients get the shown conversation as JSON: its first shown message, with its replies.
+API clients get the shown conversation as JSON: its first shown message, with its replies. Messages have no scores: their JSON leaves out "score", "upvotes" and "downvotes", however old they are.
 
 The site's notices (messages to no one, from the system accounts) open the same way, to whoever was notified of them and to admins from level 2.
 
@@ -154,3 +154,15 @@ def test_notices_are_refused_to_others():
 	factories.notification(factories.user(), notice)
 
 	assert_status(as_user(factories.user()).get(f"/comment/{notice['id']}"), 403)
+
+
+def test_message_json_has_no_scores():
+	sender, recipient = factories.user(), factories.user()
+	message = factories.message(sender, recipient, created_utc=1000)
+	factories.message(recipient, sender, message, created_utc=1001)
+
+	r = as_api(factories.api_token(sender)).get(f"/comment/{message['id']}")
+
+	assert_status(r, 200)
+	for item in (r.json, r.json["replies"][0]):
+		assert not {"score", "upvotes", "downvotes"} & set(item), item
