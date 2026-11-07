@@ -329,8 +329,7 @@ def test_those_who_see_a_draft_vote_on_it(kind, who):
 # Private messages
 
 def _message(sender, recipient):
-	message_id = db.execute("SELECT nextval('comments_id_seq')")
-	return db.insert("comments", id=message_id, author_id=sender["id"], sentto=recipient["id"], created_utc=int(time.time()), parent_submission=None, level=1, top_comment_id=message_id, body="hi", body_html="<p>hi</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
+	return factories.message(sender, recipient)
 
 
 @pytest.mark.parametrize("who", ["sender", "recipient", "admin", "other"])

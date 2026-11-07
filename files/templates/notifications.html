@@ -14,12 +14,12 @@
   <div class="col p-0 w-100">
 	<ul class="nav settings-nav" style="padding:0 0 0 20px">
 	<li class="nav-item">
-		<a class="nav-link py-3{% if request.path == '/notifications' %} active{% endif %}" href="/notifications">
+		<a class="nav-link py-3{% if request.path == '/notifications' %} active{% endif %}" href="/notifications" data-tab-count="{{v.normal_count}}">
 		All {% if v.normal_count %} <span class="font-weight-bold" style="color:red">({{v.normal_count}})</span>{% endif %}
 		</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link py-3{% if request.path == '/notifications/posts' %} active{% endif %}" href="/notifications/posts">
+		<a class="nav-link py-3{% if request.path == '/notifications/posts' %} active{% endif %}" href="/notifications/posts" data-tab-count="{{v.post_notifications_count}}">
 		Posts {% if v.post_notifications_count %}<span class="font-weight-bold" style="color:blue">({{v.post_notifications_count}})</span>{% endif %}
 		</a>
 	</li>

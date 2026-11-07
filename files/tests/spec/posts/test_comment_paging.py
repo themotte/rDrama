@@ -233,9 +233,7 @@ def test_more_comments_needs_a_numeric_id():
 
 def _message(author, recipient, parent=None):
 	'''A private message, or a reply within a private conversation.'''
-	message_id = db.execute("SELECT nextval('comments_id_seq')")
-	body = factories.unique("message")
-	return db.insert("comments", id=message_id, author_id=author["id"], sentto=recipient["id"], created_utc=1000, parent_submission=None, parent_comment_id=parent["id"] if parent else None, level=parent["level"] + 1 if parent else 1, top_comment_id=parent["top_comment_id"] if parent else message_id, body=body, body_html=f"<p>{body}</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
+	return factories.message(author, recipient, parent, created_utc=1000)
 
 
 @pytest.mark.parametrize("viewer", ["visitor", "user"])

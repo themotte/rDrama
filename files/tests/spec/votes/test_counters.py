@@ -78,8 +78,7 @@ def _voting_user(shadowbanned=False, **overrides):
 	for other in others:
 		factories.vote(other, post, 1)
 		factories.vote(other, comment, -1)
-	message_id = db.execute("SELECT nextval('comments_id_seq')")
-	message = db.insert("comments", id=message_id, author_id=others[0]["id"], sentto=user["id"], created_utc=1000, parent_submission=None, level=1, top_comment_id=message_id, body="hi", body_html="<p>hi</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
+	message = factories.message(others[0], user, created_utc=1000)
 	db.insert("commentvotes", user_id=user["id"], comment_id=message["id"], vote_type=1, real=True)
 	return user, [user, *others]
 

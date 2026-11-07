@@ -88,9 +88,7 @@ def test_anonymous_scripts_are_unauthorized(action):
 
 
 def _message(author, recipient):
-	message_id = db.execute("SELECT nextval('comments_id_seq')")
-	body = factories.unique("message")
-	return db.insert("comments", id=message_id, author_id=author["id"], sentto=recipient["id"], created_utc=1000, parent_submission=None, parent_comment_id=None, level=1, top_comment_id=message_id, body=body, body_html=f"<p>{body}</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
+	return factories.message(author, recipient, created_utc=1000)
 
 
 def _unsaveable(kind, viewer):

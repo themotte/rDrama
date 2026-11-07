@@ -4,6 +4,7 @@ The spec tier's whole vocabulary. Spec tests import from here and nowhere in `fi
 import json
 import re
 import time
+from html.parser import HTMLParser
 from typing import NamedTuple
 
 from files.tests.spec.harness import backend, config, db, external_web, factories, seed, session, uploads
@@ -12,7 +13,7 @@ from files.tests.spec.harness.asserts import __all__ as _asserts_all
 from files.tests.spec.harness.db import ANY, db_diff
 from files.tests.spec.harness.http import Client, Response
 
-__all__ = ["config", "db", "external_web", "factories", "seed", "session", "uploads", "XHR", "TOR", "can_log_in", "urls_in", "totp_step_settle", "ANY", "db_diff", "Client", "Response", "anon", "as_user", "as_api", "site_settings_set", "run_background_work", "sent_mail", "cli", "CliResult", "assert_cli_ok", *_asserts_all]
+__all__ = ["config", "db", "external_web", "factories", "seed", "session", "uploads", "XHR", "TOR", "can_log_in", "notification_counts", "urls_in", "totp_step_settle", "ANY", "db_diff", "Client", "Response", "anon", "as_user", "as_api", "site_settings_set", "run_background_work", "sent_mail", "cli", "CliResult", "assert_cli_ok", *_asserts_all]
 
 
 XHR = {"xhr": "1"}
@@ -91,3 +92,29 @@ def can_log_in(user: dict, password: str) -> bool:
 	client = anon()
 	client.post_raw("/login", {"username": user["username"], "password": password})
 	return client.user_id == user["id"]
+
+
+def notification_counts(r: Response) -> dict:
+	'''
+	The unread counts a page shows its logged-in viewer:
+	- "bell": the header's notification count;
+	- "bell_link": where the bell leads;
+	- "all" and "posts": the notification pages' tab counts, None on other pages.
+
+	They're read from the page's `data-notification-count` (on the bell's link) and `data-tab-count` (on the tab links of /notifications and /notifications/posts) attributes, part of the pages' markup contract.
+	'''
+	found = {"bell": None, "bell_link": None, "all": None, "posts": None}
+
+	class Parser(HTMLParser):
+		def handle_starttag(self, tag, attrs):
+			attrs = dict(attrs)
+			if "data-notification-count" in attrs:
+				count, link = int(attrs["data-notification-count"]), attrs["href"]
+				assert found["bell"] in (None, count) and found["bell_link"] in (None, link), "the header's bells disagree"
+				found["bell"], found["bell_link"] = count, link
+			if "data-tab-count" in attrs:
+				found[{"/notifications": "all", "/notifications/posts": "posts"}[attrs["href"]]] = int(attrs["data-tab-count"])
+
+	Parser().feed(r.text)
+	assert found["bell"] is not None, "the page has no notification bell"
+	return found

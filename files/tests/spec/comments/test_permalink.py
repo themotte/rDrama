@@ -231,9 +231,7 @@ def test_read_leaves_notifications_about_other_comments_alone():
 # Private messages
 
 def _message(author, recipient):
-	message_id = db.execute("SELECT nextval('comments_id_seq')")
-	body = factories.unique("message")
-	return db.insert("comments", id=message_id, author_id=author["id"], sentto=recipient["id"], created_utc=1000, parent_submission=None, parent_comment_id=None, level=1, top_comment_id=message_id, body=body, body_html=f"<p>{body}</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
+	return factories.message(author, recipient, created_utc=1000)
 
 
 @pytest.mark.parametrize("viewer", ["visitor", "user", "helper"])
@@ -244,7 +242,7 @@ def test_private_messages_are_refused_to_non_participants(viewer):
 	r = client.get(f"/comment/{message['id']}")
 
 	assert_status(r, 403)
-	assert_not_in_payload(r, message["body"])
+	assert_not_in_payload(r, message["text"])
 
 
 
@@ -259,7 +257,7 @@ def test_context_stops_below_messages_the_viewer_cant_open():
 
 	assert_html(r, 200)
 	assert_in_payload(r, reply["body_html"])
-	assert_not_in_payload(r, message["body"])
+	assert_not_in_payload(r, message["text"])
 
 
 @pytest.mark.parametrize("why", ["blocked", "shadowbanned", "removed"])

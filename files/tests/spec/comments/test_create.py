@@ -668,9 +668,7 @@ def test_unknown_parents_are_not_found(kind, which):
 
 def test_replies_to_private_messages_are_not_found():
 	sender, recipient = factories.user(), factories.user()
-	message_id = db.execute("SELECT nextval('comments_id_seq')")
-	body = factories.unique()
-	message = db.insert("comments", id=message_id, author_id=sender["id"], sentto=recipient["id"], created_utc=int(time.time()), parent_submission=None, level=1, top_comment_id=message_id, body=body, body_html=f"<p>{body}</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
+	message = factories.message(sender, recipient)
 
 	_refused(as_user(recipient), _under(message), factories.unique(), 404)
 

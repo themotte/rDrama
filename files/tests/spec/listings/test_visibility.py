@@ -208,8 +208,7 @@ def test_comment_search_json(state, viewer, listed):
 def test_private_messages_are_never_listed(path, viewer):
 	sender, recipient = factories.user(), factories.user()
 	sentinel = factories.unique()
-	body = f"{WORD} {sentinel}"
-	db.insert("comments", author_id=sender["id"], sentto=recipient["id"], created_utc=1, level=1, body=body, body_html=f"<p>{body}</p>", state_mod="VISIBLE", state_report="UNREPORTED", volunteer_janitor_badness=0.5)
+	factories.message(sender, recipient, text=f"{WORD} {sentinel}", body=f"{WORD} {sentinel}", created_utc=1)
 	client = as_user({"sender": sender, "recipient": recipient, "admin": factories.admin(3)}[viewer])
 
 	r = client.get(path, params={"q": WORD})

@@ -5,5 +5,7 @@ SYSTEM_ID = 1
 '''Authors notification messages.'''
 AUTOJANNY_ID = 2
 '''Authors automated moderation messages; also the modmail recipient.'''
+MODMAIL_ID = AUTOJANNY_ID
+'''The recipient of messages to the admins (modmail): the same account as AutoJanny.'''
 
 # Ids 3-8 are reserved for retired system accounts: production still has their rows, and they are protected like the accounts above.

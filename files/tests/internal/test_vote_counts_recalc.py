@@ -34,8 +34,7 @@ def test_recalc_corrects_every_counter_and_writes_only_wrong_rows():
 		factories.vote(who, comment, -vote)
 	# An old shadowbanned vote, counted and marked real as older code left it
 	db.execute("INSERT INTO votes (user_id, submission_id, vote_type, real) VALUES (:user, :post, 1, true)", user=factories.user(shadowbanned="somemod")["id"], post=post["id"])
-	message_id = db.execute("SELECT nextval('comments_id_seq')")
-	message = db.insert("comments", id=message_id, author_id=author["id"], sentto=voter["id"], created_utc=1000, parent_submission=None, level=1, top_comment_id=message_id, body="hi", body_html="<p>hi</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
+	message = factories.message(author, voter, created_utc=1000)
 	db.insert("commentvotes", user_id=voter["id"], comment_id=message["id"], vote_type=-1, real=True)
 	untouched_post = factories.post(bystander)
 	untouched = factories.comment(bystander, untouched_post)

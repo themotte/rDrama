@@ -224,11 +224,9 @@ def test_saved_lists_send_anonymous_browsers_to_log_in(kind):
 
 
 def _saved_message(viewer):
-	message_id = db.execute("SELECT nextval('comments_id_seq')")
-	token = factories.unique()
-	db.insert("comments", id=message_id, author_id=factories.user()["id"], sentto=viewer["id"], created_utc=1000, parent_submission=None, parent_comment_id=None, level=1, top_comment_id=message_id, body=token, body_html=f"<p>{token}</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
-	db.insert("comment_save_relationship", user_id=viewer["id"], comment_id=message_id)
-	return token
+	message = factories.message(factories.user(), viewer, created_utc=1000)
+	db.insert("comment_save_relationship", user_id=viewer["id"], comment_id=message["id"])
+	return message["text"]
 
 
 def test_saved_comments_leave_out_private_messages():

@@ -403,9 +403,7 @@ def test_profile_of_a_user_unshadowbanned_since_the_last_view_lists_again(page):
 
 def test_profile_comments_leave_out_private_messages():
 	user, recipient = factories.user(), factories.user()
-	token = factories.unique()
-	message_id = db.execute("SELECT nextval('comments_id_seq')")
-	db.insert("comments", id=message_id, author_id=user["id"], parent_submission=None, sentto=recipient["id"], level=1, top_comment_id=message_id, created_utc=int(time.time()), body=token, body_html=f"<p>{token}</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
+	token = factories.message(user, recipient)["text"]
 	listed = _item(user, "comments")
 
 	r = as_user(user).get(_path(user, "comments"))

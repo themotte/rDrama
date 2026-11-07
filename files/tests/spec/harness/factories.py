@@ -146,6 +146,38 @@ def comment(author: dict, post: dict, parent: dict | None = None, **overrides) -
 	return row
 
 
+def message(author: dict, recipient: dict | int, parent: dict | None = None, **overrides) -> dict:
+	'''
+	A private message from `author` to `recipient` (a user, or an account id such as `seed.MODMAIL_ID`), replying to the message `parent` if given, as sending one leaves it: its place in the thread and its rendered text, but no stored source text, no vote and no notification.
+
+	The returned row also carries "text", the sentinel its rendered text holds (`text=` chooses it).
+	'''
+	text = overrides.pop("text", unique("message"))
+	message_id = db.execute("SELECT nextval('comments_id_seq')")
+	row = db.insert("comments", **{
+		"id": message_id,
+		"author_id": author["id"],
+		"sentto": recipient if isinstance(recipient, int) else recipient["id"],
+		"created_utc": int(time.time()),
+		"parent_submission": None,
+		"parent_comment_id": parent["id"] if parent else None,
+		"level": parent["level"] + 1 if parent else 1,
+		"top_comment_id": parent["top_comment_id"] if parent else message_id,
+		"body": None,
+		"body_html": f"<p>{html.escape(text)}</p>",
+		"volunteer_janitor_badness": 0.5,
+		"state_mod": "VISIBLE",
+		"state_report": "UNREPORTED",
+		**overrides,
+	})
+	return {**row, "text": text}
+
+
+def notification(user: dict, comment: dict, read: bool = False) -> dict:
+	'''A notification for `user` of `comment` (a comment or message from these factories).'''
+	return db.insert("notifications", user_id=user["id"], comment_id=comment["id"], read=read)
+
+
 def vote(voter: dict, target: dict, vote_type: int) -> dict:
 	'''
 	`voter` votes `vote_type` (1, 0 or -1) on `target` (a post or a comment from these factories), as voting does: their vote row is set, the target's vote counts are recounted, and the author's truescore moves by the change unless the voter is the author. A shadowbanned voter's vote moves no counts.

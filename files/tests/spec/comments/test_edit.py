@@ -144,8 +144,7 @@ def test_some_mentions_notify_no_one(case):
 # Uploads
 
 def _message(author):
-	message_id = db.execute("SELECT nextval('comments_id_seq')")
-	return db.insert("comments", id=message_id, author_id=author["id"], sentto=factories.user()["id"], created_utc=int(time.time()), parent_submission=None, level=1, top_comment_id=message_id, body="hi", body_html="<p>hi</p>", volunteer_janitor_badness=0.5, state_mod="VISIBLE", state_report="UNREPORTED")
+	return factories.message(author, factories.user())
 
 
 UNPUBLISHED = {
