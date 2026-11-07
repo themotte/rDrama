@@ -23,13 +23,29 @@ def not_blocked_by(v: User):
 	)
 
 
+def load_messages(condition, v: User) -> dict[int, Comment]:
+	'''The messages meeting the SQL `condition`, loaded together for `v` and by id, each holding its loaded answers oldest first.'''
+	messages, _ = get_comment_trees_eager(lambda q: q.filter(condition, Comment.parent_submission == None), sort="old", v=v)
+	return {message.id: message for message in messages}
+
+
 def with_threads(tops: Iterable[Comment], v: User) -> list[Comment]:
-	'''The conversations whose first messages are `tops`, loaded whole for `v`: the first messages again, in order, each holding its answers oldest first.'''
+	'''The conversations whose first messages are `tops`, loaded whole for `v`: the first messages again, in order, each holding its answers.'''
 	ids = [top.id for top in tops]
 	if not ids: return []
-	messages, _ = get_comment_trees_eager(lambda q: q.filter(or_(Comment.id.in_(ids), Comment.top_comment_id.in_(ids)), Comment.parent_submission == None), sort="old", v=v)
-	loaded = {message.id: message for message in messages}
+	loaded = load_messages(or_(Comment.id.in_(ids), Comment.top_comment_id.in_(ids)), v)
 	return [loaded[i] for i in ids]
+
+
+def read_conversations(tops: Iterable[Comment], v: User) -> list[Comment]:
+	'''The conversations whose first messages are `tops`, loaded whole for `v` (`with_threads`), with `v`'s notifications of what they show marked read.'''
+	conversations = with_threads(tops, v)
+	mark_threads_read(conversations, v)
+	# The page renders from the loaded rows after this
+	g.db.expire_on_commit = False
+	g.db.commit()
+	g.db.expire_on_commit = True
+	return conversations
 
 
 def mark_threads_read(tops: Iterable[Comment], v: User) -> None:

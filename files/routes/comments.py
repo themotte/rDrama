@@ -10,7 +10,7 @@ from files.helpers.comments import comment_counted, comment_on_publish, comment_
 from files.helpers.config.const import *
 from files.helpers.locks import user_shadowbanned_locked
 from files.helpers.media import attach_images
-from files.helpers.notifications import mark_threads_read
+from files.helpers.notifications import load_messages, mark_threads_read
 from files.helpers.wrappers import *
 from files.routes.importstar import *
 
@@ -118,10 +118,9 @@ def _message_page(message:Comment, v:Optional[User]):
 	except ValueError: context = 0
 
 	# Its conversation's messages; a notice, or a message older versions left outside any conversation, stands alone
-	in_thread = Comment.top_comment_id == message.top_comment_id if message.thread_top else Comment.id == message.id
-	messages, tree = get_comment_trees_eager(lambda q: q.filter(in_thread, Comment.parent_submission == None), sort="old", v=v)
-	loaded = {m.id for m in messages}
-	focus = next(c for c in tree[message.parent_comment_id] if c.id == message.id)
+	top = message.thread_top
+	loaded = load_messages(Comment.top_comment_id == top.id if top else Comment.id == message.id, v)
+	focus = loaded[message.id]
 	c = focus
 	while context and c.parent_comment_id in loaded and c.parent_comment.is_open_to(v):
 		c.parent_comment.replies2 = [c]
