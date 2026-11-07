@@ -162,7 +162,7 @@ def message2(v, username):
 
 	if hasattr(user, 'is_blocking') and user.is_blocking: abort(403, "You're blocking this user.")
 
-	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked:
+	if v.admin_level < PERMS['POST_COMMENT_MODERATION'] and hasattr(user, 'is_blocked') and user.is_blocked:
 		abort(403, "This user is blocking you.")
 
 	message = request.values.get("message", "").strip()[:MESSAGE_BODY_LENGTH_MAXIMUM].strip()
@@ -215,6 +215,12 @@ def messagereply(v):
 	if modmail: recipient = MODMAIL_ID
 	elif v.id == top.author_id: recipient = top.sentto
 	else: recipient = top.author_id
+
+	if not modmail:
+		if g.db.query(exists().where(UserBlock.user_id == v.id, UserBlock.target_id == recipient)).scalar():
+			abort(403, "You're blocking this user.")
+		if v.admin_level < PERMS['POST_COMMENT_MODERATION'] and g.db.query(exists().where(UserBlock.user_id == recipient, UserBlock.target_id == v.id)).scalar():
+			abort(403, "This user is blocking you.")
 
 	body_html = sanitize(message)
 

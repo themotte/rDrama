@@ -11,6 +11,8 @@ Replying doesn't need the sender to be part of the community, unlike starting a 
 
 In a modmail thread, every reply is a message to modmail, in the same thread. The admins from level 2 other than the replier are notified, each once; when an admin replies, so is the thread's starter, unless the starter is the site itself (a visitor's message from the contact form, or a notice).
 
+In a direct thread, replying to a user you block, or who blocks you (unless you're an admin from level 2), is refused (403), as starting a conversation is. Blocks don't apply in modmail.
+
 Suspended users (temporarily or permanently) can't reply (403), except in modmail threads they started, so they can still appeal; a suspended admin can't answer other users' modmail.
 
 An image "file" can be attached anywhere in a modmail thread; files from Tor are ignored, and a file that isn't an image is refused (400). Elsewhere a file is refused (400).
@@ -420,3 +422,41 @@ def test_suspended_admins_cant_answer_others_modmail(ban):
 	message = factories.message(factories.user(), seed.MODMAIL_ID)
 
 	_refused(admin, message)
+
+
+# Blocks
+
+def test_replying_to_a_user_you_block_is_refused():
+	sender, recipient = factories.user(), factories.user()
+	message = factories.message(sender, recipient)
+	db.insert("userblocks", user_id=recipient["id"], target_id=sender["id"])
+
+	_refused(recipient, message)
+
+
+@pytest.mark.parametrize("level", [0, 1])
+def test_replying_to_a_user_who_blocks_you_is_refused(level):
+	sender, recipient = factories.user(), factories.user(admin_level=level)
+	message = factories.message(sender, recipient)
+	db.insert("userblocks", user_id=sender["id"], target_id=recipient["id"])
+
+	_refused(recipient, message)
+
+
+@pytest.mark.parametrize("level", [2, 3])
+def test_admins_reply_to_users_who_block_them(level):
+	sender, admin = factories.user(), factories.admin(level)
+	message = factories.message(sender, admin)
+	db.insert("userblocks", user_id=sender["id"], target_id=admin["id"])
+
+	assert_status(_reply(admin, message, factories.unique()), 200)
+
+
+def test_blocks_dont_apply_in_modmail():
+	starter, admin = factories.user(), factories.admin(3)
+	message = factories.message(starter, seed.MODMAIL_ID)
+	db.insert("userblocks", user_id=starter["id"], target_id=admin["id"])
+	db.insert("userblocks", user_id=admin["id"], target_id=starter["id"])
+
+	assert_status(_reply(admin, message, factories.unique()), 200)
+	assert_status(_reply(starter, message, factories.unique()), 200)
