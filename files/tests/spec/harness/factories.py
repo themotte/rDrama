@@ -207,9 +207,22 @@ def vote(voter: dict, target: dict, vote_type: int) -> dict:
 	return db.row(table, id=target["id"])
 
 
-def api_token(user: dict) -> str:
-	'''An access token for an approved API application owned by `user`, authenticating as `user`.'''
-	application = db.insert("oauth_apps", client_id=secrets.token_urlsafe(48), app_name=unique("app"), redirect_uri="https://example.com/callback", author_id=user["id"], description=unique("description"))
+def oauth_app(owner: dict, state: str = "approved", **overrides) -> dict:
+	'''An API application `owner` requested, in `state`: "approved" by an admin (it has a client id, and the owner holds a token for it, as approval leaves), "pending" approval, or "revoked" (kept for the posts and comments its tokens made).'''
+	values = dict(client_id=secrets.token_urlsafe(48) if state == "approved" else None, app_name=unique("app"), redirect_uri="https://example.com/callback", author_id=owner["id"], description=unique("description"))
+	if state == "revoked": values["revoked_utc"] = "2020-01-01T00:00:00Z"
+	application = db.insert("oauth_apps", **{**values, **overrides})
+	if state == "approved": authorization(owner, application)
+	return application
+
+
+def authorization(user: dict, application: dict) -> str:
+	'''The access token of `user`'s authorization of `application`, as POST /authorize grants it.'''
 	token = secrets.token_urlsafe(96)
 	db.insert("client_auths", user_id=user["id"], oauth_client=application["id"], access_token=token)
 	return token
+
+
+def api_token(user: dict) -> str:
+	'''An access token for an approved API application owned by `user`, authenticating as `user`.'''
+	return db.row("client_auths", user_id=user["id"], oauth_client=oauth_app(user)["id"])["access_token"]

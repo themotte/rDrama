@@ -189,7 +189,7 @@ def _other_listing(kind, viewer):
 		return "/rss", factories.post(factories.user(), body="text")["title"]
 	if kind == "mod log":
 		return "/log", None
-	application = db.row("oauth_apps", id=db.row("client_auths", access_token=factories.api_token(factories.user()))["oauth_client"])
+	application = factories.oauth_app(factories.user())
 	if kind == "app posts":
 		return f"/admin/app/{application['id']}", factories.post(factories.user(), app_id=application["id"])["title"]
 	return f"/admin/app/{application['id']}/comments", factories.comment(factories.user(), factories.post(factories.user()), app_id=application["id"])["body"]

@@ -66,7 +66,6 @@ def test_content_settings_page_shows_the_filter_words():
 
 def test_apps_settings_page_lists_the_users_apps():
 	u = factories.user()
-	name = factories.unique("app")
-	db.insert("oauth_apps", app_name=name, redirect_uri="https://example.com/cb", author_id=u["id"], description="d")
+	application = factories.oauth_app(u, state="pending")
 
-	assert_in_payload(as_user(u).get("/settings/apps"), name)
+	assert_in_payload(as_user(u).get("/settings/apps"), application["app_name"])
