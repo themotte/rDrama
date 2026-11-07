@@ -275,7 +275,8 @@ def edit_comment(cid, v):
 	refuse_while_suspended(v)
 	c = get_comment(cid, v=v)
 	if c.author_id != v.id: abort(403)
-	body = sanitize_raw(request.values.get("body"), allow_newlines=True, length_limit=COMMENT_BODY_LENGTH_MAXIMUM)
+	length_limit = MESSAGE_BODY_LENGTH_MAXIMUM if c.is_message else COMMENT_BODY_LENGTH_MAXIMUM
+	body = sanitize_raw(request.values.get("body"), allow_newlines=True, length_limit=length_limit)
 
 	uploading = any(request.files.getlist('file')) and request.headers.get("cf-ipcountry") != "T1"
 	if len(body) < 1 and not uploading:
@@ -310,7 +311,7 @@ def edit_comment(cid, v):
 
 		attached, body = attach_images(body, request.files.getlist('file'), app.config['MULTIMEDIA_EMBEDDING_ENABLED'])
 		if attached:
-			if len(body) > COMMENT_BODY_LENGTH_MAXIMUM: abort(400, f"Maximum length for a comment is {COMMENT_BODY_LENGTH_MAXIMUM}, including the links to attached images")
+			if len(body) > length_limit: abort(400, f"Maximum length is {length_limit}, including the links to attached images")
 			body_html = sanitize(body)
 
 		made_long = len(c.body or "") <= COMMENT_BODY_LENGTH_MAXIMUM_UNFILTERED < len(body)
