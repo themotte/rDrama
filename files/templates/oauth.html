@@ -1,17 +1,10 @@
-{% extends "login.html" %}
-
-{% block title %}
-<title>Application Request for Access</title>
-{% endblock %}
-
-{% block content %}
-
+{%- extends "login/authforms.html" -%}
+{%- import "util/forms.html" as forms -%}
+{% block pagetitle %}Application Request for Access{% endblock %}
+{% block authtitle %}{{application.app_name}}{% endblock %}
+{% block authtext %}wants to access your @{{v.username}} account.{% endblock %}
+{%- block content -%}
 <div id="auth-form" class="">
-
-		<h1 class="h2">{{application.app_name}}</h1>
-
-		<p class="mb-md-5">wants to access your @{{v.username}} account.</p>
-
 		<p class="mb-md-5">It will not be able to see your password, or change your account settings.</p>
 
 		<form action="/authorize" method="post" class="mt-md-3" id="login">
@@ -24,7 +17,5 @@
 				<a href="/" class="btn btn-secondary">No, back to {{SITE_TITLE}}</a>
 
 		</form>
-
 </div>
-
-{% endblock %}
+{%- endblock -%}

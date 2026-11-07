@@ -10,6 +10,16 @@ import pytest
 from files.tests.spec.harness import *
 
 
+def test_the_page_asks_the_user_about_the_app():
+	application = factories.oauth_app(factories.user())
+
+	r = as_user(factories.user()).get("/authorize", params={"client_id": application["client_id"]})
+
+	assert_html(r, 200)
+	assert_in_payload(r, application["app_name"])
+	assert r.form_field("client_id") == application["client_id"]
+
+
 def test_visitors_are_sent_to_log_in_and_back():
 	application = factories.oauth_app(factories.user())
 
