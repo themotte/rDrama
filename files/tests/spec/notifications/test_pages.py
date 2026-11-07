@@ -12,7 +12,7 @@ GET /notifications/posts lists notifications of followed users' new posts, newes
 
 GET /notifications/messages lists the conversations the user sent or received (their first messages, newest first), each with its replies. Left out: conversations started by users the viewer blocks (except admins from level 2), and by shadowbanned users, except to the users themselves and admins from level 2.
 
-Each page holds 25; "page" (from 1) chooses it. API clients get {"data": [...]}, the page's comments as JSON objects.
+Each page holds 25; "page" (from 1) chooses it. API clients get {"data": [...]}, the page's comments as JSON objects: on /notifications without their replies ("replies" is empty), on the Messages tab with their conversations.
 
 Modmail's page is in test_modmail.
 '''
@@ -229,11 +229,12 @@ def test_only_the_shown_page_is_marked_read():
 def test_api_clients_get_json():
 	user = factories.user()
 	reply = _notified_reply(user)
+	factories.comment(factories.user(), db.row("submissions", id=reply["parent_submission"]), parent=reply)
 
 	r = as_api(factories.api_token(user)).get("/notifications")
 
 	assert_status(r, 200)
-	assert [item["id"] for item in r.json["data"]] == [reply["id"]]
+	assert [(item["id"], item["replies"]) for item in r.json["data"]] == [(reply["id"], [])]
 
 
 # /notifications/posts

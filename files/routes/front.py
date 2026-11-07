@@ -30,7 +30,7 @@ def unread(v):
 		g.db.add(n)
 	g.db.commit()
 
-	return {"data":[x[1].json_for(v) for x in listing]}
+	return {"data":[c.json_for(v, without_replies=True) for _, c in listing]}
 
 
 @app.get("/notifications")
@@ -60,7 +60,7 @@ def notifications_main(v: User):
 	g.db.expire_on_commit = True
 
 	if request.headers.get("Authorization"):
-		return {"data": [x.json_for(v) for x in listing]}
+		return {"data": [x.json_for(v, without_replies=True) for x in listing]}
 
 	return render_template("notifications.html",
 		v=v,
