@@ -5,7 +5,7 @@ import dataclasses
 import time
 from datetime import date, datetime, timedelta, timezone
 from enum import IntEnum, IntFlag
-from typing import Final, Optional, Union
+from typing import Final, Union
 
 import flask
 import flask_caching
@@ -22,7 +22,6 @@ class ScheduledTaskType(IntEnum):
 	SCHEDULED_SUBMISSION = 2
 
 	def __str__(self):
-		if not self.name: return super().__str__()
 		return self.name.replace('_', ' ').title()
 
 
@@ -75,11 +74,7 @@ class DayOfWeek(IntFlag):
 		}
 		if not isinstance(other, date):
 			return super().__contains__(other)
-		weekday:int = other.weekday()
-		if not 0 <= weekday <= 6:
-			raise Exception(
-				f"Unexpected weekday value (got {weekday}, expected 0-6)")
-		return _days[weekday] in self
+		return _days[other.weekday()] in self
 
 
 @dataclasses.dataclass(frozen=True, kw_only=True, slots=True)
@@ -104,10 +99,6 @@ class TaskRunContext:
 	'''
 	A database session. Useful for when a task needs to modify something in the
 	database (for example creating a submission)
-	'''
-	task:RepeatableTask
-	'''
-	A reference to the task that is being ran.
 	'''
 	trigger_time:datetime
 	'''
@@ -158,18 +149,10 @@ class RepeatableTask(CreatedBase):
 	@property
 	def type(self) -> ScheduledTaskType:
 		return ScheduledTaskType(self.type_id)
-	
-	@type.setter
-	def type(self, value:ScheduledTaskType):
-		self.type_id = value
 
 	@property
 	def frequency_day_flags(self) -> DayOfWeek:
 		return DayOfWeek(self.frequency_day)
-	
-	@frequency_day_flags.setter
-	def frequency_day_flags(self, value:DayOfWeek):
-		self.frequency_day = int(value)
 	
 	@property
 	def run_state_enum(self) -> ScheduledTaskState:
@@ -212,7 +195,7 @@ class RepeatableTask(CreatedBase):
 			target_date = target_date + day
 			if i == 0 and target_date.time() >= self.time_of_day_utc: continue
 			if target_date in self.frequency_day_flags: break
-		else:
+		else:  # pragma: no cover (a week always holds a ticked day)
 			raise Exception("Could not find suitable timestamp to run next task")
 
 		return datetime.combine(target_date, self.time_of_day_utc, tzinfo=timezone.utc) # type: ignore
@@ -245,15 +228,6 @@ class RepeatableTaskRun(CreatedBase):
 	task = relationship(RepeatableTask, back_populates="runs")
 
 	@property
-	def completed_datetime_py(self) -> datetime | None:
-		if self.completed_utc is None:
-			return None
-		return datetime.combine(
-			self.completed_utc.date(),
-			self.completed_utc.time(),
-			timezone.utc)
-
-	@property
 	def completed_datetime_str(self) -> str:
 		return format_datetime(self.completed_utc)
 
@@ -263,12 +237,6 @@ class RepeatableTaskRun(CreatedBase):
 		return "Failed" if self.traceback_str else "Completed"
 
 	@property
-	def time_elapsed(self) -> Optional[timedelta]:
-		if self.completed_datetime_py is None: return None
-		return self.completed_datetime_py - self.created_datetime_py
-
-	@property
 	def time_elapsed_str(self) -> str:
-		elapsed:Optional[timedelta] = self.time_elapsed
-		if not elapsed: return ''
-		return str(elapsed)
+		'''How long a finished run took.'''
+		return str(self.completed_utc.replace(tzinfo=timezone.utc) - self.created_datetime_py)

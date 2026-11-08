@@ -168,7 +168,7 @@ def _task_run(db_session_factory: sessionmaker, db: Session, task_id: int, now: 
 	with db_session_factory() as work_db:
 		try:
 			task = work_db.get(RepeatableTask, task_id)
-			task.run_task(TaskRunContext(app=app, cache=cache, db=work_db, task=task, trigger_time=_naive_utc(at)))
+			task.run_task(TaskRunContext(app=app, cache=cache, db=work_db, trigger_time=_naive_utc(at)))
 			work_db.commit()
 			logging.info(f"Finished task {task_debug_identifier}")
 		except Exception as e:
