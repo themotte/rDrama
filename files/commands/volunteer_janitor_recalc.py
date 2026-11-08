@@ -1,6 +1,4 @@
 
-import pprint
-
 import sqlalchemy
 from sqlalchemy.orm import Session
 
@@ -13,7 +11,6 @@ from files.helpers.volunteer_janitor import evaluate_badness_of, userweight_from
 from files.helpers.math import saturate, remap, lerp
 
 import logging
-import random
 
 from files.__main__ import app, db_session
 
@@ -64,59 +61,10 @@ def _compile_records(db):
     # filter out anything submitted *after* a mod chimed in
     # filter out anything submitted too long after the request
 
-    users_compiled = defaultdict(lambda: {
-                "pending": 0,
-                "wonky": 0,
-                "submit": 0,
-                "resubmit": 0,
-            })
-    for key, result in records_compiled.items():
-        #pprint.pprint(key)
-        userid = key[0]
-        
-        users_compiled[key[0]][result["status"]] += 1
-
-    #pprint.pprint(records_compiled)
-    #pprint.pprint(users_compiled)
-
     # strip out invalid records
-    random_removal = -1 # this is sometimes useful for testing that our algorithm is somewhat stable; removing a random half of all responses shouldn't drastically invert people's quality scores, for example
-    records_compiled = {key: value for key, value in records_compiled.items() if "result" in value and random.random() > random_removal}
+    records_compiled = {key: value for key, value in records_compiled.items() if "result" in value}
 
-    return records_compiled, users_compiled
-
-def dbg_commentdump(cid, records_compiled, users, user_accuracy):
-    print(f"Dump for comment {cid}")
-
-    from tabulate import tabulate
-
-    dats = []
-    for key, value in [(key, value) for key, value in records_compiled.items() if key[1] == cid]:
-        uid = key[0]
-        dats.append({
-            "vote": value["result"],
-            "username": users[uid]["username"],
-            "accuracy": user_accuracy[uid],
-        })
-    print(tabulate(dats, headers = "keys"))
-
-def dbg_userdump(uid, records_compiled, users, comment_calculated_badness_user):
-    print(f"Dump for user {users[uid]['username']}")
-
-    from tabulate import tabulate
-
-    dats = []
-    for key, value in [(key, value) for key, value in records_compiled.items() if key[0] == uid]:
-        cid = key[1]
-        bad, weight = evaluate_badness_of(value["result"])
-        dats.append({
-            "cid": cid,
-            "vote": value["result"],
-            "calculated": evaluate_badness_of(value["result"]),
-            "badness": comment_calculated_badness_user[cid],
-            "correctness": evaluate_correctness_single(bad, weight, comment_calculated_badness_user[cid]),
-        })
-    print(tabulate(dats, headers = "keys"))
+    return records_compiled
 
 # Calculates how correct a user is, based on whether they thought it was bad, how confident they were, and how bad we think it is
 # Returns (IsCorrect, Confidence)
@@ -139,11 +87,12 @@ def evaluate_correctness_single(bad, user_weight, calculated_badness):
     
     return correctness_result, user_correctness
 
-def volunteer_janitor_recalc(db: Session, diagnostics: bool = False):
+def volunteer_janitor_recalc(db: Session) -> int:
+    '''Recalculates every volunteer's accuracy from their ratings; returns how many volunteers it recalculated.'''
     logging.info("Starting full janitor recalculation")
 
     # Get our full list of data
-    records_compiled, users_compiled = _compile_records(db)
+    records_compiled = _compile_records(db)
 
     reporting_user_ids = {record[0] for record in records_compiled}
     reported_comment_ids = {record[1] for record in records_compiled}
@@ -219,8 +168,8 @@ def volunteer_janitor_recalc(db: Session, diagnostics: bool = False):
     # get per-user metadata
     users = db.query(User) \
         .where(User.id.in_(reporting_user_ids)) \
-        .options(sqlalchemy.orm.load_only(User.id, User.username, User.admin_level))
-    users = {user.id: {"username": user.username, "admin": user.admin_level != 0} for user in users}
+        .options(sqlalchemy.orm.load_only(User.id, User.admin_level))
+    users = {user.id: {"admin": user.admin_level != 0} for user in users}
 
     user_accuracy = defaultdict(lambda: CONFIG_default_user_accuracy)
     
@@ -231,11 +180,6 @@ def volunteer_janitor_recalc(db: Session, diagnostics: bool = False):
         # This is used for training
         comment_weight_admin = defaultdict(lambda: 0)
         comment_badness_admin = defaultdict(lambda: 0)
-
-        # Accumulated weight/badness, not taking admin flags into account
-        # This is used for output and display
-        comment_weight_user = defaultdict(lambda: 0)
-        comment_badness_user = defaultdict(lambda: 0)
 
         # accumulate modhat weights
         for cid in reported_comment_ids:
@@ -269,17 +213,12 @@ def volunteer_janitor_recalc(db: Session, diagnostics: bool = False):
 
             # Accumulate these to our buffers
             comment_weight_admin[cid] += userweight_admin * weight
-            comment_weight_user[cid] += userweight_user * weight
             
             if bad:
                 comment_badness_admin[cid] += userweight_admin * weight
-                comment_badness_user[cid] += userweight_user * weight
 
-        # Calculated badnesses, both taking admins into account and not doing so, and "theoretical idea" versus a conversative view designed to be more skeptical of low-weighted comments
+        # Estimate each comment's badness from the verdicts and the ratings, admins at their fixed weight
         comment_calculated_badness_admin = {cid: calculate_final_comment_badness(comment_badness_admin[cid], comment_weight_admin[cid], False) for cid in reported_comment_ids}
-        comment_calculated_badness_admin_conservative = {cid: calculate_final_comment_badness(comment_badness_admin[cid], comment_weight_admin[cid], True) for cid in reported_comment_ids}
-        comment_calculated_badness_user = {cid: calculate_final_comment_badness(comment_badness_user[cid], comment_weight_user[cid], False) for cid in reported_comment_ids}
-        comment_calculated_badness_user_conservative = {cid: calculate_final_comment_badness(comment_badness_user[cid], comment_weight_user[cid], True) for cid in reported_comment_ids}
 
         # go through user submissions and count up how good users seem to be at this
         user_correctness_weight = defaultdict(lambda: CONFIG_new_user_damping)
@@ -306,36 +245,6 @@ def volunteer_janitor_recalc(db: Session, diagnostics: bool = False):
             # lerp slowly to the new values
             user_accuracy[uid] = lerp(user_accuracy[uid], target_user_correctness, CONFIG_user_correctness_lerp)
 
-    if diagnostics:
-        # debug print
-
-        from tabulate import tabulate
-        
-        commentscores = [{
-            "link": f"https://themotte.org/comment/{cid}",
-            "badness": comment_calculated_badness_admin[cid],
-            "badnessuser": comment_calculated_badness_user[cid],
-            "badnessusercons": comment_calculated_badness_user_conservative[cid],
-            "participation": comment_weight_user[cid],
-            "mh": commentresults[cid]} for cid in reported_comment_ids]
-        commentscores.sort(key = lambda item: item["badnessusercons"] + item["badnessuser"] / 100)
-        print(tabulate(commentscores, headers = "keys"))
-
-        results = [{
-                "user": f"https://themotte.org/@{users[uid]['username']}",
-                "accuracy": user_accuracy[uid],
-                "submit": users_compiled[uid]["submit"],
-                "nonsubmit": sum(users_compiled[uid].values()) - users_compiled[uid]["submit"],
-                "admin": users[uid]["admin"] and "Admin" or "",
-            } for uid in reporting_user_ids]
-        results.sort(key = lambda k: k["accuracy"])
-        print(tabulate(results, headers = "keys"))
-
-        dbg_commentdump(89681, records_compiled, users, user_accuracy)
-        print(calculate_final_comment_badness(comment_badness_user[89681], comment_weight_user[89681], True))
-
-        #dbg_userdump(131, records_compiled, users, comment_calculated_badness_user)
-
     # Shove all this in the database, yaaay
     # Conditional needed because sqlalchemy breaks if you try passing it zero data
     if len(user_accuracy) > 0:
@@ -352,10 +261,11 @@ def volunteer_janitor_recalc(db: Session, diagnostics: bool = False):
     # We don't bother recalculating comment confidences here; it's a pain to do it and they shouldn't change much
 
     logging.info("Finished full janitor recalculation")
+    return len(user_accuracy)
 
 @app.cli.command('volunteer_janitor_recalc')
 def volunteer_janitor_recalc_cmd():
-    volunteer_janitor_recalc(db_session(), diagnostics = True)
+    print(f"Recalculated the accuracy of {volunteer_janitor_recalc(db_session())} volunteers")
 
 def volunteer_janitor_recalc_cron(ctx:TaskRunContext):
     volunteer_janitor_recalc(ctx.db)

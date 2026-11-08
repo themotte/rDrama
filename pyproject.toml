@@ -47,7 +47,6 @@ optional = true
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
 pytest-cov = "*"
-tabulate = "*"
 pandas = "*"
 pytest-xdist = "^3.8.0"
 

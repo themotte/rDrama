@@ -89,7 +89,9 @@ def _rate(volunteer, comment, result):
 
 def _recalc(via="command"):
 	if via == "command":
-		assert_cli_ok(cli("volunteer_janitor_recalc"))
+		r = cli("volunteer_janitor_recalc")
+		assert_cli_ok(r)
+		assert r.output.strip()
 		return
 	job = factories.job(factories.admin(2), "files.commands.volunteer_janitor_recalc", "volunteer_janitor_recalc_cron", frequency_day=EVERY_DAY)
 	run_scheduler(datetime.now(timezone.utc) + timedelta(days=1))
