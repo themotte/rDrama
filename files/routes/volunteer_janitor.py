@@ -1,4 +1,3 @@
-
 from typing import Optional
 from files.__main__ import app
 from files.classes.comment import Comment
@@ -7,36 +6,28 @@ from files.classes.user import User
 from files.classes.visstate import StateReport, StateMod
 from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
 from files.helpers.volunteer_janitor import update_comment_badness
-from files.routes.volunteer_common import VolunteerDuty
 from flask import g
-import pprint
 import random
 import sqlalchemy
 from sqlalchemy.orm import aliased
 
-class VolunteerDutyJanitor(VolunteerDuty):
 
-    def __init__(self, choices):
-        self.choices = choices
+def accept(v: User, choices: list[int]) -> None:
+    for item in choices:
+        record = VolunteerJanitorRecord()
+        record.user_id = v.id
+        record.comment_id = item
+        record.result = VolunteerJanitorResult.Pending
+        g.db.add(record)
 
-    def accept(self, v) -> None:
-        for item in self.choices:
-            record = VolunteerJanitorRecord()
-            record.user_id = v.id
-            record.comment_id = item
-            record.result = VolunteerJanitorResult.Pending
-            g.db.add(record)
-        
-        g.db.commit()
-
-    def embed_template(self) -> str:
-        return "volunteer_janitor.html"
-
-    def comments(self) -> list[Comment]:
-        return g.db.query(Comment).where(Comment.id.in_(self.choices))
+    g.db.commit()
 
 
-def get_duty(u: User) -> Optional[VolunteerDutyJanitor]:
+def comments(choices: list[int]) -> list[Comment]:
+    return g.db.query(Comment).where(Comment.id.in_(choices)).all()
+
+
+def get_duty(u: User) -> Optional[list[int]]:
     if not app.config['VOLUNTEER_JANITOR_ENABLE']:
         return None
 
@@ -89,7 +80,7 @@ def get_duty(u: User) -> Optional[VolunteerDutyJanitor]:
     if len(final_reported) <= 0:
         return None
     
-    return VolunteerDutyJanitor(random.sample(final_reported, k = min(3, len(final_reported))))
+    return random.sample(final_reported, k = min(3, len(final_reported)))
 
 def submitted(v: User, key: str, val: str) -> None:
     record = VolunteerJanitorRecord()

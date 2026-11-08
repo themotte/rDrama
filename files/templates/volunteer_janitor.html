@@ -1,4 +1,4 @@
-{% macro display(duty) %}
+{% macro display(comments) %}
 
 <div class="volunteer_janitor">
     <div class="volunteer_text">
@@ -7,7 +7,7 @@
         <p class="text"><a href="/rules">Here's a link to the full rules</a> if you need a reference. Open this in a new tab; you may not be able to return to this page otherwise.</p>
     </div>
     <hr />
-    {% for c in duty.comments() %}
+    {% for c in comments %}
         <div>
             <div class="comment">
                 {% with comments=[c] %}

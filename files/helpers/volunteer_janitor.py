@@ -46,7 +46,7 @@ def calculate_final_comment_badness(comment_total, comment_weight, conservative)
     
     return calculated_badness
 
-def update_comment_badness(db, cid, diagnostics: bool = False):
+def update_comment_badness(db, cid):
     # Recalculate the comment's confidence values
     # This probably does more SQL queries than it should
     records = db.query(VolunteerJanitorRecord) \
@@ -82,6 +82,3 @@ def update_comment_badness(db, cid, diagnostics: bool = False):
     db.query(Comment) \
         .where(Comment.id == cid) \
         .update({Comment.volunteer_janitor_badness: comment_badness})
-
-    if diagnostics:
-        print(f"Updated comment {cid} to {comment_badness}")
