@@ -5,11 +5,11 @@ A report is stored with its reporter and its reason, and opens the item's report
 
 The reason is stored rendered: invisible formatting characters removed, surrounding whitespace trimmed, cut to its first 100 characters, runs of whitespace made one space, HTML-escaped, and text between tildes (~like this~) struck through as <del>. No reason stores "".
 
-Anything the reporter can see can be reported, also what shows them only a placeholder: a removed, held, deleted or shadowbanned user's item, or one by a user they block. API clients report as their user.
+Anything the reporter can open can be reported, also what shows them only a placeholder: a removed, held, deleted or shadowbanned user's item, or one by a user they block. API clients report as their user.
 
 An admin of level 2 or higher (in their own browser session; API clients act as level 0) reporting a post with a reason starting with "!" sets the post's flair instead: the flair is the rest of the rendered reason ("" for a lone "!"), the mod log records a "flair_post" action noting the flair in double quotes, and no report is stored. On comments, and for everyone else, such a reason is an ordinary one.
 
-Refused, changing nothing: anonymous users (401 to scripts); an unknown id, or one that isn't a whole number (404).
+Refused, changing nothing: anonymous users (401 to scripts); an unknown id, or one that isn't a whole number (404); an item the reporter can't open (404): a draft, or a comment on one, unless they are its author or an admin of level 2 or higher; a private message unless they take part in its conversation (or are such an admin); one of the site's notices unless it notified them (or they are such an admin).
 '''
 import pytest
 
@@ -194,3 +194,79 @@ def test_a_bang_on_a_comment_is_an_ordinary_reason_even_for_admins():
 		_report(as_user(admin), "comment", comment, "!Megathread")
 
 	d.assert_exactly(inserted=_stored("comment", admin, comment, "!Megathread"), updated={"comments": {comment["id"]: {"state_report": "REPORTED"}}})
+
+
+# What can't be opened
+
+def _draft_comment(author):
+	return factories.comment(author, factories.post(author, private=True))
+
+
+@pytest.mark.parametrize("kind", KINDS)
+def test_others_drafts_are_not_found(kind):
+	author = factories.user()
+	item = factories.post(author, private=True) if kind == "post" else _draft_comment(author)
+	client = as_user(factories.user())
+
+	with db_diff() as d:
+		r = _report(client, kind, item, "peek")
+
+	assert_status(r, 404)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("kind", KINDS)
+@pytest.mark.parametrize("who", ["author", "admin"])
+def test_drafts_can_be_reported_by_those_who_see_them(kind, who):
+	author = factories.user()
+	item = factories.post(author, private=True) if kind == "post" else _draft_comment(author)
+	reporter = author if who == "author" else factories.admin(2)
+
+	with db_diff() as d:
+		r = _report(as_user(reporter), kind, item, "mine")
+
+	assert_json_message(r)
+	d.assert_exactly(inserted=_stored(kind, reporter, item, "mine"), updated={_TABLES[kind][0]: {item["id"]: {"state_report": "REPORTED"}}})
+
+
+@pytest.mark.parametrize("who", ["user", "helper"])
+def test_others_private_messages_are_not_found(who):
+	message = factories.message(factories.user(), factories.user())
+	client = as_user(factories.admin(1) if who == "helper" else factories.user())
+
+	with db_diff() as d:
+		r = _report(client, "comment", message, "peek")
+
+	assert_status(r, 404)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("who", ["sender", "recipient", "admin"])
+def test_private_messages_can_be_reported_by_those_who_open_them(who):
+	sender, recipient = factories.user(), factories.user()
+	message = factories.message(sender, recipient)
+	reporter = {"sender": sender, "recipient": recipient, "admin": factories.admin(2)}[who]
+
+	with db_diff() as d:
+		r = _report(as_user(reporter), "comment", message, "rude")
+
+	assert_json_message(r)
+	d.assert_exactly(inserted=_stored("comment", reporter, message, "rude"), updated={"comments": {message["id"]: {"state_report": "REPORTED"}}})
+
+
+@pytest.mark.parametrize("notified", [True, False])
+def test_notices_can_be_reported_only_by_those_they_notified(notified):
+	user = factories.user()
+	notice = factories.message(db.row("users", id=seed.SYSTEM_ID), None)
+	if notified:
+		factories.notification(user, notice)
+
+	with db_diff() as d:
+		r = _report(as_user(user), "comment", notice, "spam")
+
+	if notified:
+		assert_json_message(r)
+		d.assert_exactly(inserted=_stored("comment", user, notice, "spam"), updated={"comments": {notice["id"]: {"state_report": "REPORTED"}}})
+	else:
+		assert_status(r, 404)
+		d.assert_exactly()

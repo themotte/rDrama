@@ -12,6 +12,7 @@ from files.helpers.wrappers import *
 @auth_required
 def api_flag_post(pid, v):
 	post = get_post(pid)
+	if post.is_draft_hidden_from(v): abort(404)
 	reason = request.values.get("reason", "").strip()[:100]
 	reason = filter_emojis_only(reason)
 
@@ -48,6 +49,7 @@ def api_flag_comment(cid, v):
 	# I'm not hugely into blocking this entirely, really we should be recording it and then mostly ignoring it, but whatever
 	if not v.is_suspended_permanently and not v.shadowbanned:
 		comment = get_comment(cid)
+		if not comment.is_open_to(v): abort(404)
 		reason = request.values.get("reason", "").strip()[:100]
 		reason = filter_emojis_only(reason)
 
