@@ -11,7 +11,7 @@ from files.classes.cron.tasks import (
     RepeatableTask, RepeatableTaskRun, DayOfWeek, ScheduledTaskState
 )
 from files.classes.cron.pycallable import PythonCodeTask
-from files.commands.cron import _acquire_lock_exclusive, _run_tasks, CRON_SLEEP_SECONDS
+from files.commands.cron import _acquire_lock_exclusive, CRON_SLEEP_SECONDS
 from . import util_accounts
 
 
@@ -189,7 +189,11 @@ def test_cron_constants():
 
 # Tests for _recover_stuck_tasks
 
-from files.commands.cron import _recover_stuck_tasks
+from files.commands.cron import tasks_recover_interrupted
+
+
+def _recover_stuck_tasks(factory):
+    tasks_recover_interrupted(factory, lambda: datetime.now(tz=timezone.utc))
 
 
 def test_recover_stuck_tasks_resets_running_state():
