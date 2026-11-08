@@ -180,6 +180,10 @@ def admins(v):
 	return render_template("admins.html", v=v, admins=admins)
 
 
+def _sees_admin_only_kinds(v) -> bool:
+	return bool(v and v.admin_level >= 2)
+
+
 @app.get("/log")
 @app.get("/modlog")
 @auth_desired
@@ -192,15 +196,12 @@ def log(v):
 
 	kind = request.values.get("kind")
 
-	if v and v.admin_level >= 2:
-		types = ACTIONTYPES
-	else:
-		types = ACTIONTYPES2
+	types = ACTIONTYPES if _sees_admin_only_kinds(v) else ACTIONTYPES2
 
 	if kind not in types: kind = None
 
 	actions = g.db.query(ModAction)
-	if not (v and v.admin_level >= 2): 
+	if not _sees_admin_only_kinds(v):
 		actions = actions.filter(ModAction.kind.notin_(ADMIN_ONLY_KINDS))
 	
 	if admin_id:
@@ -236,11 +237,11 @@ def log_item(v, id):
 	).filter_by(id=id).one_or_none()
 
 	if not action: abort(404)
+	if action.kind in ADMIN_ONLY_KINDS and not _sees_admin_only_kinds(v): abort(404)
 
 	admins = [x[0] for x in g.db.query(User.username).filter(User.admin_level > 1).all()]
 
-	if v and v.admin_level >= 2: types = ACTIONTYPES
-	else: types = ACTIONTYPES2
+	types = ACTIONTYPES if _sees_admin_only_kinds(v) else ACTIONTYPES2
 
 	return render_template("log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=types)
 
