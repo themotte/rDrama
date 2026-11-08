@@ -2,7 +2,7 @@ import calendar
 from datetime import datetime, timezone
 
 import matplotlib.pyplot as plt
-from sqlalchemy import func
+from sqlalchemy import distinct, func, select, union
 from sqlalchemy.orm import selectinload
 
 from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2, ADMIN_ONLY_KINDS
@@ -34,48 +34,54 @@ def support(v):
 
 @app.get("/stats")
 @admin_level_required(2)
-@cache.memoize(timeout=86400, make_name=make_name)
 def participation_stats(v):
 	day = int(time.time()) - 86400
 
 	week = int(time.time()) - 604800 # TODO themotte#601 use created_datetimez once all is converted
 	week_datetime = datetime.fromtimestamp(week, tz=timezone.utc)
-	posters = g.db.query(Submission.author_id).distinct(Submission.author_id).filter(Submission.created_utc > week).all()
-	commenters = g.db.query(Comment.author_id).distinct(Comment.author_id).filter(Comment.created_utc > week).all()
-	voters = g.db.query(Vote.user_id).distinct(Vote.user_id).filter(Vote.created_datetimez > week_datetime).all()
-	commentvoters = g.db.query(CommentVote.user_id).distinct(CommentVote.user_id).filter(CommentVote.created_datetimez > week_datetime).all()
+	count = func.count
+	not_system = Comment.author_id.notin_((AUTOJANNY_ID, NOTIFICATIONS_ID))
 
-	active_users = set(posters) | set(commenters) | set(voters) | set(commentvoters)
+	# One pass over each table
+	users, private, banned, verified, signups = g.db.query(count(), count().filter(User.is_private == True), count().filter(User.is_banned > 0), count().filter(User.is_activated == True), count().filter(User.created_utc > day)).one()
+	posts, posters, listed, removed_posts, deleted_posts, recent_posts = g.db.query(count(), count(distinct(Submission.author_id)), count().filter(Submission.state_mod == StateMod.VISIBLE, Submission.state_user_deleted_utc == None), count().filter(Submission.state_mod != StateMod.VISIBLE), count().filter(Submission.state_user_deleted_utc != None), count().filter(Submission.created_utc > day)).one()
+	comments, commenters, removed_comments, deleted_comments, recent_comments = g.db.query(count().filter(not_system), count(distinct(Comment.author_id)), count().filter(Comment.state_mod != StateMod.VISIBLE), count().filter(Comment.state_user_deleted_utc != None), count().filter(Comment.created_utc > day, not_system)).one()
+	post_votes, post_voters, post_up, post_down = g.db.query(count(), count(distinct(Vote.user_id)), count().filter(Vote.vote_type == 1), count().filter(Vote.vote_type == -1)).one()
+	comment_votes, comment_voters, comment_up, comment_down = g.db.query(count(), count(distinct(CommentVote.user_id)), count().filter(CommentVote.vote_type == 1), count().filter(CommentVote.vote_type == -1)).one()
+	active = union(
+		select(Submission.author_id).where(Submission.created_utc > week),
+		select(Comment.author_id).where(Comment.created_utc > week),
+		select(Vote.user_id).where(Vote.created_datetimez > week_datetime),
+		select(CommentVote.user_id).where(CommentVote.created_datetimez > week_datetime),
+	).subquery()
+	active_users = g.db.query(count()).select_from(active).scalar()
 
-	users: Query = g.db.query(User.id)
-	submissions: Query = g.db.query(Submission.id)
-	comments: Query = g.db.query(Comment.id)
-
-	stats = {
-		"users": users.count(),
-		"private users": users.filter_by(is_private=True).count(),
-		"banned users": users.filter(User.is_banned > 0).count(),
-		"verified email users": users.filter_by(is_activated=True).count(),
-		"signups last 24h": users.filter(User.created_utc > day).count(),
-		"total posts": submissions.count(),
-		"posting users": g.db.query(Submission.author_id).distinct().count(),
-		"listed posts": submissions.filter(Submission.state_mod == StateMod.VISIBLE).filter(Submission.state_user_deleted_utc == None).count(),
-		"removed posts (by admins)": submissions.filter(Submission.state_mod != StateMod.VISIBLE).count(),
-		"deleted posts (by author)": submissions.filter(Submission.state_user_deleted_utc != None).count(),
-		"posts last 24h": submissions.filter(Submission.created_utc > day).count(),
-		"total comments": comments.filter(Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count(),
-		"commenting users": g.db.query(Comment.author_id).distinct().count(),
-		"removed comments (by admins)": comments.filter(Comment.state_mod != StateMod.VISIBLE).count(),
-		"deleted comments (by author)": comments.filter(Comment.state_user_deleted_utc != None).count(),
-		"comments last_24h": comments.filter(Comment.created_utc > day, Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count(),
-		"post votes": g.db.query(Vote.submission_id).count(),
-		"post voting users": g.db.query(Vote.user_id).distinct().count(),
-		"comment votes": g.db.query(CommentVote.comment_id).count(),
-		"comment voting users": g.db.query(CommentVote.user_id).distinct().count(),
-		"total upvotes": g.db.query(Vote.submission_id).filter_by(vote_type=1).count() + g.db.query(CommentVote.comment_id).filter_by(vote_type=1).count(),
-		"total downvotes": g.db.query(Vote.submission_id).filter_by(vote_type=-1).count() + g.db.query(CommentVote.comment_id).filter_by(vote_type=-1).count(),
-		"users who posted, commented, or voted in the past 7 days": len(active_users),
-	}
+	# (id in the page, label, figure)
+	stats = [
+		("users", "users", users),
+		("private_users", "private users", private),
+		("banned_users", "banned users", banned),
+		("verified_email_users", "verified email users", verified),
+		("signups_24h", "signups last 24h", signups),
+		("posts", "total posts", posts),
+		("posting_users", "posting users", posters),
+		("listed_posts", "listed posts", listed),
+		("removed_posts", "removed posts (by admins)", removed_posts),
+		("deleted_posts", "deleted posts (by author)", deleted_posts),
+		("posts_24h", "posts last 24h", recent_posts),
+		("comments", "total comments", comments),
+		("commenting_users", "commenting users", commenters),
+		("removed_comments", "removed comments (by admins)", removed_comments),
+		("deleted_comments", "deleted comments (by author)", deleted_comments),
+		("comments_24h", "comments last 24h", recent_comments),
+		("post_votes", "post votes", post_votes),
+		("post_voting_users", "post voting users", post_voters),
+		("comment_votes", "comment votes", comment_votes),
+		("comment_voting_users", "comment voting users", comment_voters),
+		("upvotes", "total upvotes", post_up + comment_up),
+		("downvotes", "total downvotes", post_down + comment_down),
+		("active_users_7d", "users who posted, commented, or voted in the past 7 days", active_users),
+	]
 	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=stats)
 
 

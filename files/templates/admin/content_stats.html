@@ -14,10 +14,10 @@
 		<th>Value</th>
 	</tr>
 </thead>
-{% for entry in data %}
+{% for id, label, figure in data %}
 	<tr>
-		<td>{{entry}}</td>
-		<td>{{data[entry]}}</td>
+		<td>{{label}}</td>
+		<td id="stat-{{id}}">{{figure}}</td>
 	</tr>
 {% endfor %}
 </table>
