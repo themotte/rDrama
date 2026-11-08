@@ -97,6 +97,16 @@ def test_hot_weighs_score_against_age():
 	assert_in_order(r, [new_unvoted["title"], old_popular["title"]])
 
 
+@pytest.mark.parametrize("sort", SORTS)
+def test_sorts_take_any_number_of_votes(sort):
+	popular = _post(upvotes=2**31 - 1, downvotes=2**31 - 1)
+
+	r = anon().get("/", params={"sort": sort})
+
+	assert_html(r, 200)
+	assert_in_payload(r, popular["title"])
+
+
 def test_logged_out_visitors_get_newest_first():
 	older = _post(created_utc=NOW - 7200)
 	newer = _post(created_utc=NOW - 60)

@@ -2,7 +2,8 @@ import time
 from collections.abc import Iterable
 from typing import Any, TYPE_CHECKING
 
-from sqlalchemy.sql import case, func
+from sqlalchemy.sql import case, cast, func
+from sqlalchemy.sql.sqltypes import Numeric
 from sqlalchemy.orm import Query
 
 from files.helpers.config.const import *
@@ -41,7 +42,7 @@ def sort_objects(objects: Query, sort: str, cls):
 		ti = int(time.time()) + 3600
 		ordered = objects.order_by(
 			-100000
-				* (cls.upvotes + 1)
+				* (cast(cls.upvotes, Numeric) + 1)
 				/ (func.power((ti - cls.created_utc) / 1000, 1.23)))
 	elif sort == 'comments':
 		if cls.__name__ == 'Submission': # we're checking the stringified name due to a gnarly import cycle
@@ -52,8 +53,8 @@ def sort_objects(objects: Query, sort: str, cls):
 			ordered = objects
 	elif sort == 'controversial':
 		ordered = objects.order_by(
-			(cls.upvotes + 1) / (cls.downvotes + 1)
-				+ (cls.downvotes + 1) / (cls.upvotes + 1),
+			(cast(cls.upvotes, Numeric) + 1) / (cast(cls.downvotes, Numeric) + 1)
+				+ (cast(cls.downvotes, Numeric) + 1) / (cast(cls.upvotes, Numeric) + 1),
 			cls.downvotes.desc())
 	elif sort == 'top':
 		ordered = objects.order_by(cls.downvotes - cls.upvotes)
