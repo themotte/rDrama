@@ -21,7 +21,7 @@ from files.classes.saves import CommentSaveRelationship, SaveRelationship
 from files.classes.subscriptions import Subscription
 from files.classes.userblock import UserBlock
 from files.classes.visstate import StateMod
-from files.helpers.assetcache import assetcache_path
+from files.helpers.assetcache import ASSET_URL, assetcache_path
 from files.helpers.config.const import *
 from files.helpers.config.environment import (CARD_VIEW, DEFAULT_COLOR,
                                               SITE_FULL, SITE_ID)
@@ -429,6 +429,9 @@ class User(CreatedBase):
 	@lazy
 	def profile_url(self):
 		if self.profileurl:
+			# Stored addresses of site files (the default picture) carry no version
+			if self.profileurl.startswith(ASSET_URL) and '?' not in self.profileurl:
+				return SITE_FULL + assetcache_path(self.profileurl[len(ASSET_URL):])
 			if self.profileurl.startswith('/'):
 				return SITE_FULL + self.profileurl
 			return self.profileurl
