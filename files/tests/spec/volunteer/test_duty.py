@@ -11,7 +11,7 @@ A comment is eligible for a volunteer when:
 - its reports are open (REPORTED);
 - it is visible: not removed, not held for review, not deleted by its author;
 - it is neither the volunteer's own comment nor a reply to one of theirs;
-- none of its direct replies is distinguished (an admin speaking officially);
+- it carries no moderation outcome: it isn't distinguished (an admin speaking officially), pinned, or marked as one its author was banned for, and none of its direct replies is distinguished;
 - someone other than the volunteer reported it;
 - the volunteer was never assigned it before.
 
@@ -209,6 +209,9 @@ INELIGIBLE = {
 	"own comment": _own,
 	"reply to own comment": _reply_to_own,
 	"distinguished reply": _officially_answered,
+	"distinguished": lambda v: _eligible(distinguish_level=1),
+	"pinned": lambda v: _eligible(is_pinned="somemod"),
+	"banned for": lambda v: _eligible(bannedfor=True),
 	"reported only by the volunteer": _reported_only_by_the_volunteer,
 	"no report stored": _unreported_but_open,
 	"assigned before": _assigned_before,

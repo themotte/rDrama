@@ -35,7 +35,7 @@ def get_duty(u: User) -> Optional[list[int]]:
 
     # these could probably be combined into one query somehow
 
-    # find reported visible comments on posts that aren't drafts, not made by the current user or in reply to the current user, that the current user would see whole
+    # find reported visible comments on posts that aren't drafts, not made by the current user or in reply to the current user, that the current user would see whole, and that carry no moderation outcome
     ParentComment = aliased(Comment)
     reported_comments = g.db.query(Comment) \
         .join(Submission, Submission.id == Comment.parent_submission) \
@@ -44,6 +44,7 @@ def get_duty(u: User) -> Optional[list[int]]:
         .where(Comment.state_mod == StateMod.VISIBLE) \
         .where(Comment.state_user_deleted_utc == None) \
         .where(Comment.author_id != u.id) \
+        .where(Comment.distinguish_level == 0, Comment.is_pinned == None, sqlalchemy.not_(sqlalchemy.func.coalesce(Comment.bannedfor, False))) \
         .outerjoin(ParentComment, ParentComment.id == Comment.parent_comment_id) \
         .where(sqlalchemy.or_(ParentComment.author_id != u.id, ParentComment.author_id == None)) \
         .join(User, User.id == Comment.author_id) \
