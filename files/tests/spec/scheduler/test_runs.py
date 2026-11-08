@@ -1,7 +1,7 @@
 '''
 Each time the scheduled-task worker runs a task, it records the run in `tasks_repeatable_runs`: `created_utc` when it started, `completed_utc` when it finished, and in `traceback_str` the details of what went wrong, or NULL when nothing did. A run whose details aren't empty failed. A failure is logged and recorded, the task waits for its next slot as after any run, and the worker goes on to the other due tasks. Whatever a failing job had committed before it failed stays.
 
-While it runs, a task is marked running (`run_state` 2, else 1, waiting). When the worker starts, a task still marked running was interrupted by a worker that stopped: its unfinished run is recorded as failed, completed when the new worker started, and the task waits again. The interrupted run used up its slot, so the task runs again at its next slot, not at once.
+While it runs, a task is marked running (`run_state` 2, else 1, waiting). The worker runs one task at a time, so at the start of each of its passes over the tasks, a task still marked running was interrupted, by the worker stopping or by a failure while recording the run: its unfinished run is recorded as failed, completed at that pass, and the task waits again. The interrupted run used up its slot, so the task runs again at its next slot, not at once.
 
 A job task (`tasks_repeatable_python`) names the job it runs by `import_path` and `callable`; one naming no job the site has fails every run.
 '''
@@ -98,7 +98,7 @@ def test_a_failure_doesnt_stop_the_other_due_tasks():
 	assert [r["traceback_str"] is None for r in db.rows("tasks_repeatable_runs", task_id=scheduled["id"])] == [True]
 
 
-def test_a_task_interrupted_by_a_stopped_worker_is_recorded_as_failed_and_waits_for_its_next_slot():
+def test_an_interrupted_task_is_recorded_as_failed_and_waits_for_its_next_slot():
 	scheduled = _due(factories.scheduled_post, factories.admin(2), run_state=2, run_time_last=SLOT.replace(tzinfo=None))
 	run = factories.task_run(scheduled, created_utc=_epoch(SLOT), completed_utc=None)
 	restart = SLOT + timedelta(hours=1)

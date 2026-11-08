@@ -33,3 +33,15 @@ def test_a_failure_is_recorded_with_its_traceback(callable, shown):
 	[run] = db.rows("tasks_repeatable_runs", task_id=job["id"])
 	assert run["traceback_str"].startswith("Traceback") and shown in run["traceback_str"]
 	assert db.row("tasks_repeatable", id=job["id"])["run_state"] == 1
+
+
+def test_a_pass_recovers_a_task_left_running_by_an_earlier_pass():
+	from files.__main__ import db_session_factory
+	from files.commands.cron import tasks_run_due
+	job = factories.job(factories.admin(2), __name__, "raise_without_message", frequency_day=MONDAY, time_of_day_utc="08:00", run_state=2, run_time_last=SLOT.replace(tzinfo=None))
+	run = factories.task_run(job, completed_utc=None)
+
+	tasks_run_due(db_session_factory, lambda: SLOT)
+
+	assert db.row("tasks_repeatable", id=job["id"])["run_state"] == 1
+	assert db.row("tasks_repeatable_runs", id=run["id"])["traceback_str"]

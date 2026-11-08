@@ -40,40 +40,24 @@ def _utc_now() -> datetime:  # pragma: no cover (the worker's real clock; the sp
 	return datetime.now(tz=timezone.utc)
 
 
-def tasks_recover_interrupted(db_session_factory: sessionmaker, now: Clock):
+def _recover_interrupted(db: Session, at: datetime):
 	'''
-	Recovers tasks that are stuck in RUNNING state (e.g., due to server crash).
-	Also marks any orphaned task runs (with no completed_utc) as failed.
-
-	This should be called once at startup before the main loop begins.
-	No exclusive lock is needed since this runs before the main loop starts.
+	Marks waiting again any task still marked running, and records as failed any run that never completed. Exactly one worker runs, one task at a time, so at the start of a pass anything still running was interrupted: by the worker stopping, or by a failure while recording the run.
 	'''
-	with db_session_factory() as db:
+	stuck_count = db.query(RepeatableTask).filter(
+		RepeatableTask.run_state == int(ScheduledTaskState.RUNNING)
+	).update({RepeatableTask.run_state: int(ScheduledTaskState.WAITING)})
+	if stuck_count:
+		logging.warning(f"Reset {stuck_count} task(s) stuck in RUNNING state to WAITING.")
 
-		# Reset any tasks stuck in RUNNING state using a bulk update
-		stuck_count = db.query(RepeatableTask).filter(
-			RepeatableTask.run_state == int(ScheduledTaskState.RUNNING)
-		).update({RepeatableTask.run_state: int(ScheduledTaskState.WAITING)})
-
-		if stuck_count:
-			logging.warning(
-				f"Reset {stuck_count} task(s) stuck in RUNNING state to WAITING."
-			)
-
-		# Mark orphaned runs as failed (runs that never completed)
-		orphan_count = db.query(RepeatableTaskRun).filter(
-			RepeatableTaskRun.completed_utc == None
-		).update({
-			RepeatableTaskRun.completed_utc: _naive_utc(now()),
-			RepeatableTaskRun.traceback_str: "Task was interrupted by server shutdown"
-		})
-
-		if orphan_count:
-			logging.warning(
-				f"Marked {orphan_count} orphaned task run(s) as failed."
-			)
-
-		db.commit()
+	orphan_count = db.query(RepeatableTaskRun).filter(
+		RepeatableTaskRun.completed_utc == None
+	).update({
+		RepeatableTaskRun.completed_utc: _naive_utc(at),
+		RepeatableTaskRun.traceback_str: "The run was interrupted before it was recorded as finished"
+	})
+	if orphan_count:
+		logging.warning(f"Marked {orphan_count} orphaned task run(s) as failed.")
 
 
 @app.cli.command(_CRON_COMMAND_NAME)
@@ -86,12 +70,6 @@ def cron_app_worker():  # pragma: no cover (the endless worker loop; the spec ru
 	logging.basicConfig(level=logging.INFO)
 
 	logging.info("Starting scheduler worker process")
-
-	# Recover any tasks stuck from a previous crash
-	try:
-		tasks_recover_interrupted(db_session_factory, _utc_now)
-	except Exception as e:
-		logging.exception("Failed to recover stuck tasks", exc_info=e)
 
 	while True:
 		try:
@@ -130,6 +108,7 @@ def tasks_run_due(db_session_factory: sessionmaker, now: Clock):
 	with db_session_factory() as db:
 		with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
 			at: datetime = now()
+			_recover_interrupted(db, at)
 			due_ids: list[int] = [task.id for task in db.query(RepeatableTask).filter(
 				RepeatableTask.enabled == True,
 				RepeatableTask.frequency_day != int(DayOfWeek.NONE),

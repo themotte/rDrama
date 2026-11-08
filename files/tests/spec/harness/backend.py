@@ -13,7 +13,7 @@ import urllib3
 
 from files.__main__ import app, db_session, db_session_factory
 import files.cli  # registers the command-line commands
-from files.commands.cron import tasks_recover_interrupted, tasks_run_due
+from files.commands.cron import tasks_run_due
 from files.helpers import background
 from files.tests import reset as _reset
 
@@ -66,9 +66,7 @@ def cli(args):
 
 
 def run_scheduler(at):
-	clock = lambda: at
-	tasks_recover_interrupted(db_session_factory, clock)
-	tasks_run_due(db_session_factory, clock)
+	tasks_run_due(db_session_factory, lambda: at)
 	db_session.remove()
 
 

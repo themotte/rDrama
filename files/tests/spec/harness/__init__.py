@@ -58,11 +58,11 @@ def utc_now_naive() -> datetime:
 
 def run_scheduler(at: datetime):
 	'''
-	Does what the scheduled-task worker (the `cron` command) does when it starts at `at` (an aware datetime), up to the end of its first pass over the tasks: recovering tasks a stopped worker left running, then running every task due at `at`.
+	Does one pass of the scheduled-task worker (the `cron` command) at `at` (an aware datetime): recovering any task left running (see spec/scheduler/test_runs.py), then running every task due at `at`.
 
 	The worker's clock reads `at` throughout, so `at` is: when the tasks run (`tasks_repeatable.run_time_last`), the start and completion times of their runs, and a scheduled post's `created_utc` and the dates in its title. Everything else the run writes (votes, notifications) takes the real time.
 
-	A backend driving the site out of process would need a test-mode way to start the worker on a given clock, such as a test-only `cron --once --now=<epoch>`.
+	A backend driving the site out of process would need a test-mode way to run one pass on a given clock, such as a test-only `cron --once --now=<epoch>`.
 	'''
 	backend.run_scheduler(at)
 
