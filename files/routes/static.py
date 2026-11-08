@@ -328,11 +328,7 @@ def images(path):
 
 @app.get("/robots.txt")
 def robots_txt():
-	try: f = send_file("assets/robots.txt")
-	except:
-		print('/robots.txt', flush=True)
-		abort(404)
-	return f
+	return send_file("assets/robots.txt")
 
 @app.get("/blocks")
 @admin_level_required(2)
