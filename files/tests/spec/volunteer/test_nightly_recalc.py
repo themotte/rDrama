@@ -1,5 +1,5 @@
 '''
-The nightly volunteer recalc: the "volunteer_janitor_recalc" built-in job (spec/scheduler/test_builtin_jobs.py), which the `volunteer_janitor_recalc` command also runs. It works out each volunteer's accuracy (`users.volunteer_janitor_correctness`, which weighs their ratings in a comment's badness: see test_ratings.py) afresh from all their ratings.
+The nightly volunteer recalc: the "volunteer_janitor_recalc" built-in job (spec/scheduler/test_builtin_jobs.py), which the `volunteer_janitor_recalc` command also runs. It works out each volunteer's accuracy (`users.volunteer_janitor_correctness`, which weighs their ratings in a comment's badness: see test_ratings.py) afresh from all their ratings, then sets the badness of every comment volunteers rated by its definition, with the new accuracies.
 
 The ratings it learns from are the ones a comment's badness counts (test_ratings.py): each volunteer's first rating of each comment after they were first assigned it, in the order they were stored (of two stored at the same moment, the one with the lower id first). Comments their author has deleted are left out. Assignments never rated count for nothing.
 
@@ -391,8 +391,8 @@ def test_a_comment_by_a_since_shadowbanned_author_still_teaches():
 	assert _verdict(_bad(author=factories.user(shadowbanned="somemod"))) == "bad"
 
 
-def test_accuracies_feed_back_through_the_estimates():
-	# Expected values checked against a model written from this docstring alone
+def _feedback_scenario():
+	'''Three volunteers, one an admin, rating six comments; the accurate one's accuracy crosses 0.5, so their ratings weigh in the estimates.'''
 	accurate, sloppy, admin = factories.user(), factories.user(), factories.admin(2)
 	comments = [_bad(), _comment(), _comment(), _bad(), _ignored(), _comment()]
 	ratings = [
@@ -403,7 +403,81 @@ def test_accuracies_feed_back_through_the_estimates():
 	for volunteer, results in ratings:
 		for comment, result in zip(comments, results):
 			if result: _rate(volunteer, comment, result)
+	return comments, ratings
+
+
+def test_accuracies_feed_back_through_the_estimates():
+	# Expected values checked against a model written from this docstring alone
+	_, ratings = _feedback_scenario()
 
 	_recalc()
 
-	assert [_accuracy(v) for v in (accurate, sloppy, admin)] == pytest.approx([0.6996897121052889, 0.27963858112309226, 0.43027174112208855], abs=1e-12)
+	assert [_accuracy(v) for v, _ in ratings] == pytest.approx([0.6996897121052889, 0.27963858112309226, 0.43027174112208855], abs=1e-12)
+
+
+def _badness(ratings) -> float:
+	'''A comment's badness from its counted ratings, as (result, the volunteer's accuracy), as test_ratings.py defines it.'''
+	weights = [(SAYS[result][0], SAYS[result][1] * min(max((accuracy - 0.5) / 0.5, 0), 1)) for result, accuracy in ratings]
+	w, b = sum(k for _, k in weights), sum(k for bad, k in weights if bad)
+	if w == 0:
+		return 0.5
+	p = (b + 0.5) / (w + 1)
+	return max(b / (w + 1 - p), 0.5) if p > 0.5 else min((b + p) / (w + p), 0.5)
+
+
+def test_every_rated_comments_badness_follows_the_new_accuracies():
+	comments, ratings = _feedback_scenario()
+
+	with db_diff() as d:
+		_recalc()
+
+	accuracies = [_accuracy(v) for v, _ in ratings]
+	expected = [_badness([(results[n], accuracy) for (_, results), accuracy in zip(ratings, accuracies) if results[n]]) for n in range(len(comments))]
+	d.assert_exactly(updated={
+		"users": {v["id"]: {"volunteer_janitor_correctness": pytest.approx(a, abs=1e-12)} for (v, _), a in zip(ratings, accuracies)},
+		"comments": {c["id"]: {"volunteer_janitor_badness": pytest.approx(b, abs=1e-12)} for c, b in zip(comments, expected) if b != 0.5},
+	})
+	# The accurate volunteer's weight moves the comments they rated
+	assert expected != pytest.approx([0.5] * len(comments))
+
+
+def _accurate(volunteer) -> dict:
+	'''`volunteer`, having rated four bad comments right: enough for an accuracy above 0.5, so their ratings weigh in a badness.'''
+	for _ in range(4):
+		_rate(volunteer, _bad(), "Ban")
+	return volunteer
+
+
+def test_a_deleted_comments_badness_is_recalculated_too():
+	volunteer = _accurate(factories.user())
+	comment = _bad(state_user_deleted_utc="2024-01-02T00:00:00Z", volunteer_janitor_badness=0.123)
+	_rate(volunteer, comment, "Ban")
+
+	_recalc()
+
+	assert _accuracy(volunteer) > 0.5
+	assert db.row("comments", id=comment["id"])["volunteer_janitor_badness"] == pytest.approx(_badness([("Ban", _accuracy(volunteer))]), abs=1e-12)
+
+
+@pytest.mark.parametrize("left_out", ["shadowbanned", "unassigned"])
+def test_the_recalculated_badness_leaves_out_the_ratings_a_badness_does(left_out):
+	volunteer = _accurate(factories.user(shadowbanned="somemod") if left_out == "shadowbanned" else factories.user())
+	comment = _bad(volunteer_janitor_badness=0.123)
+	(_rate if left_out == "shadowbanned" else factories.rating)(volunteer, comment, "Ban")
+
+	_recalc()
+
+	assert _accuracy(volunteer) > 0.5
+	assert db.row("comments", id=comment["id"])["volunteer_janitor_badness"] == 0.5
+
+
+def test_only_rated_comments_badness_is_recalculated():
+	volunteer = factories.user()
+	rated, assigned = _bad(volunteer_janitor_badness=0.123), _bad(volunteer_janitor_badness=0.123)
+	_rate(volunteer, rated, "Ban")
+	factories.assignment(volunteer, assigned)
+
+	_recalc()
+
+	# The volunteer's accuracy stays under 0.5, so their rating weighs nothing
+	assert [db.row("comments", id=c["id"])["volunteer_janitor_badness"] for c in (rated, assigned)] == [0.5, 0.123]

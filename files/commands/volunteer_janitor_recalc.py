@@ -2,12 +2,11 @@
 import sqlalchemy
 from sqlalchemy.orm import Session
 
-from alive_progress import alive_it
 from collections import defaultdict
 from files.classes import User, Comment, UserNote, UserTag
 from files.classes.cron.tasks import TaskRunContext
 from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
-from files.helpers.volunteer_janitor import RECORD_ORDER, counted_ratings, evaluate_badness_of, userweight_from_user_accuracy, badness_estimate, update_comment_badness
+from files.helpers.volunteer_janitor import RECORD_ORDER, comment_badness, counted_ratings, evaluate_badness_of, userweight_from_user_accuracy, badness_estimate, update_comment_badness
 from files.helpers.math import saturate, remap, lerp
 
 import logging
@@ -51,8 +50,8 @@ def evaluate_correctness_single(bad, user_weight, calculated_badness):
     
     return correctness_result, user_correctness
 
-def volunteer_janitor_recalc(db: Session) -> int:
-    '''Recalculates every volunteer's accuracy from their ratings; returns how many volunteers it recalculated.'''
+def volunteer_janitor_recalc(db: Session) -> tuple[int, int]:
+    '''Recalculates every volunteer's accuracy from their ratings, then the badness of the comments they rated; returns how many volunteers it recalculated and how many comments' badness changed.'''
     logging.info("Starting full janitor recalculation")
 
     # Get our full list of data
@@ -206,33 +205,33 @@ def volunteer_janitor_recalc(db: Session) -> int:
             })
         db.commit()
 
-    # We don't bother recalculating comment confidences here; it's a pain to do it and they shouldn't change much
+    comments_changed = _recalc_badness(db)
 
     logging.info("Finished full janitor recalculation")
-    return len(user_accuracy)
+    return len(user_accuracy), comments_changed
+
+
+def _recalc_badness(db: Session) -> int:
+    '''Recalculates the badness of every comment volunteers rated, with their accuracies as now stored; returns how many changed.'''
+    records = db.query(VolunteerJanitorRecord).options(sqlalchemy.orm.selectinload(VolunteerJanitorRecord.user)).order_by(*RECORD_ORDER).all()
+    by_comment = defaultdict(list)
+    for record in records:
+        by_comment[record.comment_id].append(record)
+    rated = sorted(cid for cid, comment_records in by_comment.items() if any(r.result != VolunteerJanitorResult.Pending for r in comment_records))
+    stored = dict(db.query(Comment.id, Comment.volunteer_janitor_badness).where(Comment.id.in_(rated)).all())
+
+    # Only the comments whose badness changes take the comment's lock and recount, one at a time, each committed at once so a rating waits for one comment at most
+    changed = [cid for cid in rated if comment_badness(by_comment[cid]) != stored[cid]]
+    for cid in changed:
+        update_comment_badness(db, cid)
+        db.commit()
+    return len(changed)
+
 
 @app.cli.command('volunteer_janitor_recalc')
 def volunteer_janitor_recalc_cmd():
-    print(f"Recalculated the accuracy of {volunteer_janitor_recalc(db_session())} volunteers")
+    volunteers, comments = volunteer_janitor_recalc(db_session())
+    print(f"Recalculated the accuracy of {volunteers} volunteers; the badness of {comments} comments changed")
 
 def volunteer_janitor_recalc_cron(ctx:TaskRunContext):
     volunteer_janitor_recalc(ctx.db)
-
-def volunteer_janitor_recalc_all_comments(db: Session):
-    # may as well do this first
-    volunteer_janitor_recalc(db)
-
-    # I'm not sure of the details here, but there seems to be some session-related caching cruft left around
-    # so let's just nuke that
-    db.expire_all()
-
-    # going through all the comments piecemeal like this is hilariously efficient, but this entire system gets run exactly once ever, so, okay
-    # In id order, as each update locks its comment until the commit below, like ratings do
-    for comment in alive_it(db.query(Comment).join(Comment.reports).order_by(Comment.id)):
-        update_comment_badness(db, comment.id)
-    
-    db.commit()
-
-@app.cli.command('volunteer_janitor_recalc_all_comments')
-def volunteer_janitor_recalc_all_comments_cmd():
-    volunteer_janitor_recalc_all_comments(db_session())

@@ -93,10 +93,12 @@ def update_comment_badness(db, cid):
     db.query(Comment.id).where(Comment.id == cid).with_for_update().one()
     # The session doesn't autoflush: the records read below must include the ones just added
     db.flush()
+    # Read afresh under the lock, volunteers' accuracies and shadowbans included, whatever the session loaded before
     records = db.query(VolunteerJanitorRecord) \
         .where(VolunteerJanitorRecord.comment_id == cid) \
         .options(selectinload(VolunteerJanitorRecord.user)) \
-        .order_by(*RECORD_ORDER)
+        .order_by(*RECORD_ORDER) \
+        .populate_existing()
 
     db.query(Comment) \
         .where(Comment.id == cid) \
