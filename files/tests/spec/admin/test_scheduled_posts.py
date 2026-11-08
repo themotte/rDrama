@@ -5,11 +5,13 @@ Scheduled posts, which admins write ahead of time for the site to post on a sche
 - POST /tasks/scheduled_posts/<id>/schedule replaces its schedule.
 - POST /tasks/scheduled_posts/<id>/content edits its "title" and "body", under the same rules as submitting a post; an edit must change at least one of them. Redirects to the scheduled post's page.
 
-A schedule is "hour" and "minute" (UTC), "enabled", and one "schedule_day_<weekday>" field per day it runs (sunday through saturday); a checkbox counts as ticked when sent with a non-empty value. The days are stored in `tasks_repeatable.frequency_day` as bits: Sunday 1<<1, Monday 1<<2, through Saturday 1<<7.
+A schedule is "hour" (0-23) and "minute" (0-59), in UTC, where anything else is refused with 400, "enabled", and one "schedule_day_<weekday>" field per day it runs (sunday through saturday); a checkbox counts as ticked when sent with a non-empty value. The days are stored in `tasks_repeatable.frequency_day` as bits: Sunday 1<<1, Monday 1<<2, through Saturday 1<<7.
 
 Creating a schedule, and any save that changes whether it's enabled, its days or its time, records when in `tasks_repeatable.schedule_changed_utc` (UTC, without a zone); an unchanged save changes nothing. See spec/scheduler/test_schedule.py for what that does.
 '''
 from datetime import time
+
+import pytest
 
 from files.tests.spec.harness import *
 
@@ -38,8 +40,19 @@ def test_admin_creates_a_scheduled_post_for_the_ticked_days():
 	assert_redirect(r, f"/tasks/scheduled_posts/{task_id}")
 	d.assert_exactly(inserted={
 		"tasks_repeatable": [{"id": task_id, "author_id": admin["id"], "type_id": 2, "run_state": 1, "enabled": True, "frequency_day": MONDAY | FRIDAY, "time_of_day_utc": time(13, 30), "schedule_changed_utc": between(before, utc_now_naive())}],
-		"tasks_repeatable_scheduled_submissions": [{"id": task_id, "author_id_submission": admin["id"], "title": title, "body": body, "ghost": False, "private": False, "over_18": False}],
+		"tasks_repeatable_scheduled_submissions": [{"id": task_id, "author_id_submission": admin["id"], "title": title, "body": body, "ghost": False, "private": False, "over_18": False, "is_bot": False}],
 	})
+
+
+@pytest.mark.parametrize("hour, minute", [("24", "0"), ("1", "60")])
+def test_a_scheduled_post_outside_the_day_is_refused(hour, minute):
+	admin = factories.admin(2)
+
+	with db_diff() as d:
+		r = as_user(admin).post("/tasks/scheduled_posts/", {"title": factories.unique(), "body": factories.unique(), "schedule_day_monday": "on", "hour": hour, "minute": minute}, headers=XHR)
+
+	assert_status(r, 400)
+	d.assert_exactly()
 
 
 def test_admin_replaces_a_scheduled_posts_schedule():
@@ -128,6 +141,18 @@ def test_admin_edits_only_a_scheduled_posts_title():
 
 	assert_redirect(r, f"/tasks/scheduled_posts/{scheduled['id']}")
 	d.assert_exactly(updated={"tasks_repeatable_scheduled_submissions": {scheduled["id"]: {"title": title}}})
+
+
+def test_admin_edits_only_a_scheduled_posts_body():
+	admin = factories.admin(2)
+	scheduled = _scheduled_post(admin)
+	body = factories.unique("body")
+
+	with db_diff() as d:
+		r = as_user(admin).post(f"/tasks/scheduled_posts/{scheduled['id']}/content", {"title": scheduled["title"], "body": body})
+
+	assert_redirect(r, f"/tasks/scheduled_posts/{scheduled['id']}")
+	d.assert_exactly(updated={"tasks_repeatable_scheduled_submissions": {scheduled["id"]: {"body": body, "body_html": ANY}}})
 
 
 def test_a_scheduled_post_edit_that_changes_nothing_is_refused():

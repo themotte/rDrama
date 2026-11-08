@@ -6,7 +6,7 @@ Repeatable tasks, which the site runs on a schedule (scheduled posts are one kin
 - POST /tasks/<id>/schedule replaces its schedule.
 '''
 import re
-from datetime import time
+from datetime import datetime, time
 
 import pytest
 
@@ -54,6 +54,36 @@ def test_any_schedule_change_records_when_it_was_made(change, changed):
 	d.assert_exactly(updated={"tasks_repeatable": {task["id"]: {**changed, "schedule_changed_utc": between(before, utc_now_naive())}}})
 
 
+@pytest.mark.parametrize("hour, minute", [("0", "0"), ("23", "59")])
+def test_a_schedule_takes_any_time_of_day(hour, minute):
+	admin = factories.admin(2)
+	task = _task(admin, enabled=False, frequency_day=MONDAY)
+
+	r = as_user(admin).post(f"/tasks/{task['id']}/schedule", {"schedule_day_monday": "on", "hour": hour, "minute": minute})
+
+	assert_redirect(r, f"/tasks/{task['id']}")
+	assert db.row("tasks_repeatable", id=task["id"])["time_of_day_utc"] == time(int(hour), int(minute))
+
+
+@pytest.mark.parametrize("hour, minute", [("24", "0"), ("-1", "0"), ("1", "60"), ("1", "-1"), ("x", "0")])
+def test_a_schedule_outside_the_day_is_refused(hour, minute):
+	admin = factories.admin(2)
+	task = _task(admin, enabled=False, frequency_day=MONDAY)
+
+	with db_diff() as d:
+		r = as_user(admin).post(f"/tasks/{task['id']}/schedule", {"schedule_day_monday": "on", "hour": hour, "minute": minute}, headers=XHR)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
+def test_scheduling_an_unknown_task_is_not_found():
+	admin = factories.admin(2)
+	unknown = db.execute("SELECT nextval('tasks_repeatable_id_seq')")
+
+	assert_status(as_user(admin).post(f"/tasks/{unknown}/schedule", {"hour": "1", "minute": "0"}, headers=XHR), 404)
+
+
 def test_saving_an_unchanged_schedule_changes_nothing():
 	admin = factories.admin(2)
 	task = _task(admin, enabled=True, frequency_day=MONDAY)
@@ -86,14 +116,15 @@ def test_task_list_links_every_task():
 
 def test_task_page_shows_what_it_runs_and_links_its_runs():
 	admin = factories.admin(2)
-	task = _task(admin)
+	task = factories.job(admin, "files.helpers.config.const", factories.unique("callable"), run_time_last=datetime(2020, 1, 1))
 	run = factories.task_run(task)
+	unfinished = factories.task_run(task, completed_utc=None)
 
 	r = as_user(admin).get(f"/tasks/{task['id']}/")
 
 	assert_html(r, 200)
 	assert_in_payload(r, task["callable"])
-	assert f"/tasks/{task['id']}/runs/{run['id']}" in _links(r)
+	assert {f"/tasks/{task['id']}/runs/{r['id']}" for r in (run, unfinished)} <= _links(r)
 
 
 def test_unknown_tasks_are_not_found():
@@ -120,6 +151,13 @@ def test_run_page_shows_a_failed_runs_traceback_only_to_head_admins(level, shown
 
 	assert_html(r, 200)
 	(assert_in_payload if shown else assert_not_in_payload)(r, traceback)
+
+
+def test_run_page_of_an_unfinished_run():
+	admin = factories.admin(2)
+	run = factories.task_run(_task(admin), completed_utc=None)
+
+	assert_html(as_user(admin).get(f"/tasks/{run['task_id']}/runs/{run['id']}"), 200)
 
 
 def test_run_asked_for_under_another_task_redirects_to_its_own():

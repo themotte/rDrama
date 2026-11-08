@@ -5,7 +5,7 @@ The site's built-in jobs, which the `cron_setup` command (run at every deploy) p
 
 `cron_setup` creates a built-in job that's missing, enabled, with that schedule. For one that exists it only sets what it runs (import_path and callable); its schedule and whether it's enabled are the admins' (see spec/admin/test_tasks.py).
 '''
-from datetime import time
+from datetime import datetime, time, timedelta, timezone
 
 from files.tests.spec.harness import *
 
@@ -26,7 +26,10 @@ def _created(label, since):
 	]
 
 
-def test_setup_creates_the_builtin_jobs():
+def test_setup_creates_the_builtin_jobs_and_leaves_other_tasks_alone():
+	factories.scheduled_post(factories.admin(2), label=factories.unique("label"))
+	factories.job(factories.admin(2), "files.commands.leaderboard_recalc", "leaderboard_recalc_cron")
+
 	since = utc_now_naive().replace(microsecond=0)
 	with db_diff() as d:
 		assert_cli_ok(cli("cron_setup"))
@@ -56,3 +59,30 @@ def test_setup_keeps_what_a_builtin_job_runs_but_leaves_its_schedule_to_admins()
 		inserted={"tasks_repeatable": [task], "tasks_repeatable_python": [code]},
 		updated={"tasks_repeatable_python": {existing["id"]: {"import_path": BUILTINS["leaderboard_recalc"]["import_path"], "callable": BUILTINS["leaderboard_recalc"]["callable"]}}},
 	)
+
+
+def _run_builtin(label):
+	assert_cli_ok(cli("cron_setup"))
+	task = db.row("tasks_repeatable", label=label)
+	# Due a day after setup, whatever the time of day
+	run_scheduler(datetime.now(timezone.utc) + timedelta(days=1, hours=1))
+	return db.rows("tasks_repeatable_runs", task_id=task["id"])
+
+
+def test_the_leaderboard_job_computes_the_precomputed_boards():
+	# The job keeps its results outside the database, so the page is where they show (see spec/users/test_leaderboard.py for the board ids)
+	before = as_user(factories.admin(2)).get("/leaderboard")
+	assert_html(before, 200)
+	assert_not_in_payload(before, 'id="leaderboard-given-upvotes"')
+
+	[run] = _run_builtin("leaderboard_recalc")
+	r = as_user(factories.admin(2)).get("/leaderboard")
+
+	assert run["traceback_str"] is None
+	assert_in_payload(r, 'id="leaderboard-given-upvotes"')
+
+
+def test_the_volunteer_janitor_job_runs():
+	[run] = _run_builtin("volunteer_janitor_recalc")
+
+	assert (run["completed_utc"] is not None, run["traceback_str"]) == (True, None)
