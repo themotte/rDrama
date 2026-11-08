@@ -46,7 +46,6 @@ optional = true
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
 pytest-cov = "*"
-pandas = "*"
 pytest-xdist = "^3.8.0"
 
 [build-system]
