@@ -10,6 +10,7 @@ from files.classes.cron.tasks import (RepeatableTask, ScheduledTaskType,
                                       TaskRunContext)
 from files.classes.submission import Submission
 from files.classes.visstate import StateMod, StateReport, VisibilityState
+from files.helpers.background import spawn_background
 from files.helpers.config.const import SUBMISSION_TITLE_LENGTH_MAXIMUM
 from files.helpers.content import body_displayed
 from files.helpers.lazy import lazy
@@ -44,12 +45,19 @@ class ScheduledSubmissionTask(RepeatableTask):
 		back_populates="task", order_by="Submission.id.desc()")
 
 	def run_task(self, ctx:TaskRunContext) -> None:
+		from files.helpers.thumbnails import thumbnail_thread  # imports the app, which imports this module
+
 		submission:Submission = self.make_submission(ctx)
 		with ctx.app_context():
 			# TODO: stop using app context (currently required for sanitize and
 			# username pings)
-			submission.submit(ctx.db) # TODO: thumbnails
+			submission.submit(ctx.db)
 			submission.publish()
+		post_id, url = submission.id, submission.url
+		# Committed here rather than by the scheduler, as the thumbnail is fetched in another session that must find the post
+		ctx.db.commit()
+		if url and url.startswith(("http://", "https://")):
+			spawn_background(thumbnail_thread, post_id)
 
 	def make_submission(self, ctx:TaskRunContext) -> Submission:
 		title:str = self.make_title(ctx.trigger_time)
