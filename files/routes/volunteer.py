@@ -9,7 +9,7 @@ import files.routes.volunteer_janitor
 from files.__main__ import app
 from files.classes.user import User
 from files.helpers.locks import volunteer_duty_lock
-from files.helpers.wrappers import auth_required, refuse_while_suspended
+from files.helpers.wrappers import auth_required, refuse_api_client, refuse_while_suspended
 
 
 @files.helpers.jinja2.template_function
@@ -32,6 +32,7 @@ def volunteer_get_duty(u: Optional[User]) -> Optional[list[int]]:
 @app.get("/volunteer")
 @auth_required
 def volunteer(v: User):
+    refuse_api_client(v)
     # Visits by one volunteer take turns, so a later one sees the duty an earlier one gave
     volunteer_duty_lock(g.db, v.id)
     g.db.refresh(v, ["volunteer_last_started_utc"])
@@ -48,6 +49,7 @@ def volunteer(v: User):
 @app.post("/volunteer/submit")
 @auth_required
 def volunteer_submit(v: User):
+    refuse_api_client(v)
     refuse_while_suspended(v)
     ratings = {}
     for k in request.form:

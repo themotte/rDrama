@@ -3,7 +3,7 @@ API clients authenticate each request with an access token (one per user per app
 
 Changing or resetting the password, and logging out other devices, delete every token the account holds, as they end its other sessions (settings/test_security, auth/test_password_reset); its bots and authorized apps must be authorized again.
 
-API clients can't manage API apps or grant authorizations: the app routes (/authorize, /api_keys, /edit_app, /delete_app, /oauth/reroll, /oauth/rescind and /settings/apps) refuse them with 403, changing nothing. Everything else is open to them as to their holder's browser, without admin powers (users/test_api_clients).
+API clients can't manage API apps or grant authorizations: the app routes (/authorize, /api_keys, /edit_app, /delete_app, /oauth/reroll, /oauth/rescind and /settings/apps) refuse them with 403, changing nothing. Nor can they take volunteer duty (volunteer/). Everything else is open to them as to their holder's browser, without admin powers (users/test_api_clients).
 
 GET /me (or /@me) answers an API client with the authenticated user's JSON.
 

@@ -91,8 +91,8 @@ def refuse_while_suspended(v):
 
 
 def refuse_api_client(v):
-	'''Managing API apps and granting authorizations is for the account's own browser: an app acting for a user mustn't grant itself or others more.'''
-	if v.client: abort(403, "API clients can't manage API apps")
+	'''Refuses (403) a request made by an API app acting for `v`, for what only the person, in the account's own browser, may do.'''
+	if v.client: abort(403, "API clients can't do this")
 
 
 def auth_desired(f):

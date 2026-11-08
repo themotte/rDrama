@@ -5,7 +5,7 @@ Each rating updates the comment's "volunteer_janitor_badness" at once, counting 
 
 Ratings by shadowbanned volunteers are stored but count for nothing: shadowbanning a volunteer takes their ratings out of the badness of the comments they rated, and lifting the shadowban puts them back.
 
-Refused, storing nothing of the request: anonymous users (sent to log in); suspended users, permanently or not (403); with 400, a "volunteer-" field of another kind, a comment id that isn't a whole number in digits, a value other than those six, a field given twice, or a comment that isn't one of the volunteer's open assignments.
+Refused, storing nothing of the request: anonymous users (sent to log in); suspended users, permanently or not, and API clients (403); with 400, a "volunteer-" field of another kind, a comment id that isn't a whole number in digits, a value other than those six, a field given twice, or a comment that isn't one of the volunteer's open assignments.
 '''
 import time
 
@@ -315,3 +315,15 @@ def test_lifting_a_volunteers_shadowban_puts_their_ratings_back():
 
 	assert d.updated["comments"][(alone["id"],)] == {"volunteer_janitor_badness": pytest.approx(0.8)}
 	assert d.updated["comments"][(shared["id"],)] == {"volunteer_janitor_badness": pytest.approx(0.5)}
+
+
+def test_api_clients_are_refused():
+	volunteer = factories.user()
+	comment = _assigned_comment(volunteer)
+	client = as_api(factories.api_token(volunteer))
+
+	with db_diff() as d:
+		r = client.post("/volunteer/submit", {f"volunteer-janitor-{comment['id']}": "6"})
+
+	assert_status(r, 403)
+	d.assert_exactly()

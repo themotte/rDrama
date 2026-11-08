@@ -331,3 +331,14 @@ def test_a_posts_page_doesnt_invite_viewers_without_one(why):
 
 	assert_html(r, 200)
 	assert_not_in_payload(r, 'href="/volunteer"')
+
+
+def test_api_clients_are_refused():
+	_eligible()
+	client = as_api(factories.api_token(factories.user()))
+
+	with db_diff() as d:
+		r = client.get("/volunteer")
+
+	assert_status(r, 403)
+	d.assert_exactly()
