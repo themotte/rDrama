@@ -6,6 +6,7 @@ GET /volunteer gives the visitor a duty when one is available: up to 3 eligible 
 A visitor has no duty available within 20 hours of their last start.
 
 A comment is eligible for a volunteer when:
+- it is a comment on a post that isn't a draft: never a private message or one of the site's notices;
 - its reports are open (REPORTED);
 - it is visible: not removed, not held for review, not deleted by its author;
 - it is neither the volunteer's own comment nor a reply to one of theirs;
@@ -144,7 +145,31 @@ def _rated_before(volunteer):
 	return comment
 
 
+def _message(volunteer):
+	message = factories.message(factories.user(), volunteer, state_report="REPORTED")
+	factories.report(volunteer, message)
+	factories.report(factories.user(), message)
+	return message
+
+
+def _notice(volunteer):
+	notice = factories.message(db.row("users", id=seed.SYSTEM_ID), None, state_report="REPORTED")
+	factories.notification(volunteer, notice)
+	factories.report(factories.user(), notice)
+	return notice
+
+
+def _on_a_draft(volunteer):
+	author = factories.user()
+	comment = factories.comment(author, factories.post(author, private=True), state_report="REPORTED")
+	factories.report(author, comment)
+	return comment
+
+
 INELIGIBLE = {
+	"private message": _message,
+	"notice": _notice,
+	"comment on a draft": _on_a_draft,
 	"reports never opened": lambda v: _eligible(state_report="UNREPORTED"),
 	"reports resolved": lambda v: _eligible(state_report="RESOLVED"),
 	"reports ignored": lambda v: _eligible(state_report="IGNORED"),

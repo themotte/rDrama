@@ -2,6 +2,7 @@ from typing import Optional
 from files.__main__ import app
 from files.classes.comment import Comment
 from files.classes.flags import CommentFlag
+from files.classes.submission import Submission
 from files.classes.user import User
 from files.classes.visstate import StateReport, StateMod
 from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
@@ -33,9 +34,11 @@ def get_duty(u: User) -> Optional[list[int]]:
 
     # these could probably be combined into one query somehow
 
-    # find reported visible comments not made by the current user or in reply to the current user
+    # find reported visible comments on posts that aren't drafts, not made by the current user or in reply to the current user
     ParentComment = aliased(Comment)
     reported_comments = g.db.query(Comment) \
+        .join(Submission, Submission.id == Comment.parent_submission) \
+        .where(Submission.private == False) \
         .where(Comment.state_report == StateReport.REPORTED) \
         .where(Comment.state_mod == StateMod.VISIBLE) \
         .where(Comment.state_user_deleted_utc == None) \
