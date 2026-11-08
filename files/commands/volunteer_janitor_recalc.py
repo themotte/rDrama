@@ -117,8 +117,12 @@ def volunteer_janitor_recalc(db: Session) -> int:
         modhats[modhat.parent_comment_id] = modhat
 
     usernotes_raw = db.query(UserNote) \
+        .where(UserNote.reference_user.in_(reported_user_ids)) \
         .where(UserNote.tag.in_([UserTag.Warning, UserTag.Tempban, UserTag.Permban, UserTag.Spam, UserTag.Bot])) \
         .options(sqlalchemy.orm.load_only(UserNote.reference_user, UserNote.created_datetimez, UserNote.tag))
+    usernote_times = defaultdict(list)
+    for usernote in usernotes_raw:
+        usernote_times[usernote.reference_user].append(usernote.created_utc)
 
     # Here we're trying to figure out whether modhats are actually warnings/bans
     # We don't have a formal connection between "a comment is bad" and "the user got a warning", so we're kind of awkwardly trying to derive it from our database
@@ -128,42 +132,23 @@ def volunteer_janitor_recalc(db: Session) -> int:
     # So we ignore comments near the actual modhat time
 
     commentresults = {}
-    for uid in reported_user_ids:
-        # For each user, figure out when modhats happened
-        # this is slow but whatever
-        modhat_times = []
-        for modhat in modhats.values():
-            if comments[modhat.parent_comment_id].author_id != uid:
-                continue
-            
-            modhat_times.append(modhat.created_utc)
-        
-        usernote_times = []
-        for usernote in usernotes_raw:
-            if usernote.reference_user != uid:
-                continue
-            
-            usernote_times.append(usernote.created_utc)
-        
-        # For each comment . . .
-        for comment in comments.values():
-            if comment.author_id != uid:
-                continue
+    for comment in comments.values():
+        note_times = usernote_times[comment.author_id]
 
-            if comment.id in modhats:
-                modhat_comment = modhats[comment.id]
-            else:
-                modhat_comment = None
+        if comment.id in modhats:
+            modhat_comment = modhats[comment.id]
+        else:
+            modhat_comment = None
 
-            # if the comment was modhatted *and* resulted in a negative usernote near the modhat time, it's bad
-            if modhat_comment is not None and next((time for time in usernote_times if abs(modhat_comment.created_utc - time) < 60 * 15), None) is not None:
-                commentresults[comment.id] = "bad"
-            # otherwise, if the comment was posted less than 48 hours before a negative usernote, we ignore it for processing on the assumption that it may just have been part of a larger warning
-            elif next((time for time in usernote_times if comment.created_utc < time and comment.created_utc + 48 * 60 * 60 > time), None) is not None:
-                commentresults[comment.id] = "ignored"
-            # otherwise, we call it not-bad
-            else:
-                commentresults[comment.id] = "notbad"
+        # if the comment was modhatted *and* resulted in a negative usernote near the modhat time, it's bad
+        if modhat_comment is not None and next((time for time in note_times if abs(modhat_comment.created_utc - time) < 60 * 15), None) is not None:
+            commentresults[comment.id] = "bad"
+        # otherwise, if the comment was posted less than 48 hours before a negative usernote, we ignore it for processing on the assumption that it may just have been part of a larger warning
+        elif next((time for time in note_times if comment.created_utc < time and comment.created_utc + 48 * 60 * 60 > time), None) is not None:
+            commentresults[comment.id] = "ignored"
+        # otherwise, we call it not-bad
+        else:
+            commentresults[comment.id] = "notbad"
 
     # get per-user metadata
     users = db.query(User) \
@@ -222,7 +207,7 @@ def volunteer_janitor_recalc(db: Session) -> int:
 
         # go through user submissions and count up how good users seem to be at this
         user_correctness_weight = defaultdict(lambda: CONFIG_new_user_damping)
-        user_correctness_value = defaultdict(lambda: CONFIG_default_user_accuracy * user_correctness_weight[0])
+        user_correctness_value = defaultdict(lambda: CONFIG_default_user_accuracy * CONFIG_new_user_damping)
 
         for key, value in records_compiled.items():
             uid, cid = key
