@@ -1,13 +1,13 @@
 '''
-The mod log: GET /log/<id> shows one entry; an id that isn't one written as a plain whole number is 404.
+The mod log: GET /log lists entries; GET /log/<id> shows one entry, and an id that isn't one written as a plain whole number is 404.
 
-Some kinds of entry are shown only to admins (level 2+): shadowbanning and unshadowbanning, setting a post's flair and editing a post. To anyone else (visitors, users below level 2, and API clients whatever their account's level) such an entry doesn't exist: 404.
+Some kinds of entry are shown only to admins (level 2+): shadowbanning and unshadowbanning, setting a post's flair, editing a post, linking alt accounts, and setting a user's filter mode. To anyone else (visitors, users below level 2, and API clients whatever their account's level) such an entry doesn't exist: the list leaves it out and its page is 404.
 '''
 import pytest
 
 from files.tests.spec.harness import *
 
-ADMIN_ONLY_KINDS = ["shadowban", "unshadowban", "flair_post", "edit_post"]
+ADMIN_ONLY_KINDS = ["shadowban", "unshadowban", "flair_post", "edit_post", "link_accounts", "filter_on", "filter_off", "filter_auto"]
 NON_ADMINS = {
 	"visitor": anon,
 	"level 1": lambda: as_user(factories.admin(1)),
@@ -30,6 +30,27 @@ def test_admins_see_an_admin_only_entry(kind):
 
 	assert_html(r, 200)
 	assert_in_payload(r, target)
+
+
+@pytest.mark.parametrize("kind", ADMIN_ONLY_KINDS)
+def test_admins_find_admin_only_entries_in_the_list(kind):
+	_, target = _entry(kind)
+
+	r = as_user(factories.admin(2)).get("/log")
+
+	assert_html(r, 200)
+	assert_in_payload(r, target)
+
+
+@pytest.mark.parametrize("viewer", NON_ADMINS)
+@pytest.mark.parametrize("kind", ADMIN_ONLY_KINDS)
+def test_the_list_leaves_out_admin_only_entries_for_others(kind, viewer):
+	_, target = _entry(kind)
+
+	r = NON_ADMINS[viewer]().get("/log")
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, target)
 
 
 @pytest.mark.parametrize("viewer", NON_ADMINS)

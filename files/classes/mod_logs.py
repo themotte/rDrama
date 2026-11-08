@@ -360,7 +360,7 @@ ACTIONTYPES = {
 	}
 }
 
-ADMIN_ONLY_KINDS = frozenset({"shadowban", "unshadowban", "flair_post", "edit_post"})
+ADMIN_ONLY_KINDS = frozenset({"shadowban", "unshadowban", "flair_post", "edit_post", "link_accounts", "filter_on", "filter_off", "filter_auto"})
 '''Kinds of mod action the mod log shows only to admins (level 2+).'''
 
 ACTIONTYPES2 = {kind: t for kind, t in ACTIONTYPES.items() if kind not in ADMIN_ONLY_KINDS}
