@@ -38,13 +38,14 @@ def volunteer(v: User):
     g.db.refresh(v, ["volunteer_last_started_utc"])
     duty = volunteer_get_duty(v)
 
+    assignments = None
     if duty is not None:
-        files.routes.volunteer_janitor.accept(v, duty)
+        assignments = files.routes.volunteer_janitor.assigned_comments(files.routes.volunteer_janitor.accept(v, duty))
         v.volunteer_last_started_utc = sqlalchemy.func.now()
         g.db.add(v)
         g.db.commit()
 
-    return render_template("volunteer.html", v=v, comments=files.routes.volunteer_janitor.comments(duty) if duty else None)
+    return render_template("volunteer.html", v=v, assignments=assignments)
 
 @app.post("/volunteer/submit")
 @auth_required
@@ -57,9 +58,9 @@ def volunteer_submit(v: User):
             continue
         k_processed = k.removeprefix("volunteer-")
         values = request.form.getlist(k)
-        if not k_processed.startswith("janitor-") or len(values) != 1:
+        if not k_processed.startswith("assignment-") or len(values) != 1:
             abort(400)
-        ratings[k_processed.removeprefix("janitor-")] = values[0]
+        ratings[k_processed.removeprefix("assignment-")] = values[0]
 
     files.routes.volunteer_janitor.submitted(v, ratings)
     return render_template("volunteer_submit.html", v=v)

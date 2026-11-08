@@ -16,17 +16,18 @@ import sqlalchemy
 from sqlalchemy.orm import aliased
 
 
-def accept(v: User, choices: list[int]) -> None:
-    for item in choices:
-        record = VolunteerJanitorRecord()
-        record.user_id = v.id
-        record.comment_id = item
-        record.result = VolunteerJanitorResult.Pending
-        g.db.add(record)
+def accept(v: User, choices: list[int]) -> list[VolunteerJanitorRecord]:
+    '''Assigns `v` the comments `choices` to rate, answering the assignments.'''
+    records = [VolunteerJanitorRecord(user_id=v.id, comment_id=item, result=VolunteerJanitorResult.Pending) for item in choices]
+    g.db.add_all(records)
+    g.db.flush()
+    return records
 
 
-def comments(choices: list[int]) -> list[Comment]:
-    return g.db.query(Comment).where(Comment.id.in_(choices)).all()
+def assigned_comments(assignments: list[VolunteerJanitorRecord]) -> list[tuple[int, Comment]]:
+    '''Each assignment's id with its comment.'''
+    comments = {c.id: c for c in g.db.query(Comment).where(Comment.id.in_([a.comment_id for a in assignments]))}
+    return [(a.id, comments[a.comment_id]) for a in assignments]
 
 
 def get_duty(u: User) -> Optional[list[int]]:
@@ -99,22 +100,26 @@ RATINGS = {str(result.value): result for result in VolunteerJanitorResult if res
 
 
 def submitted(v: User, ratings: dict[str, str]) -> None:
-    '''Stores `v`'s ratings, given as {comment id: rating} as the form sends them. Refuses them all (400) unless each rates one of `v`'s open assignments: a comment assigned to them and not yet rated by them.'''
+    '''Stores `v`'s ratings, given as {assignment id: rating} as the form sends them. Refuses them all (400) unless each names one of `v`'s open assignments, a comment assigned to them and not yet rated by them, and no two name the same comment.'''
     if not ratings: return
     parsed = {parse_id(key): RATINGS.get(value) for key, value in ratings.items()}
-    if None in parsed or None in parsed.values(): abort(400)
+    # Two spellings of one id (such as 1 and 01) name it twice
+    if None in parsed or None in parsed.values() or len(parsed) != len(ratings): abort(400)
 
     # Ratings by one volunteer take turns, so each sees what the others stored
     volunteer_duty_lock(g.db, v.id)
-    records = g.db.query(VolunteerJanitorRecord.comment_id, VolunteerJanitorRecord.result) \
-        .where(VolunteerJanitorRecord.user_id == v.id, VolunteerJanitorRecord.comment_id.in_(parsed)) \
-        .all()
-    assigned = {cid for cid, result in records if result == VolunteerJanitorResult.Pending}
-    rated = {cid for cid, result in records if result != VolunteerJanitorResult.Pending}
-    if not parsed.keys() <= assigned - rated: abort(400)
+    assigned = dict(g.db.query(VolunteerJanitorRecord.id, VolunteerJanitorRecord.comment_id) \
+        .where(VolunteerJanitorRecord.id.in_(parsed), VolunteerJanitorRecord.user_id == v.id, VolunteerJanitorRecord.result == VolunteerJanitorResult.Pending) \
+        .all())
+    by_comment = {assigned.get(aid): result for aid, result in parsed.items()}
+    if len(assigned) != len(parsed) or len(by_comment) != len(parsed): abort(400)
+    rated = g.db.query(VolunteerJanitorRecord.comment_id) \
+        .where(VolunteerJanitorRecord.user_id == v.id, VolunteerJanitorRecord.comment_id.in_(by_comment), VolunteerJanitorRecord.result != VolunteerJanitorResult.Pending) \
+        .first()
+    if rated: abort(400)
 
-    # In id order, as the badness updates lock the comments: ratings of overlapping duties mustn't deadlock
-    for cid, result in sorted(parsed.items()):
+    # In comment id order, as the badness updates lock the comments: ratings of overlapping duties mustn't deadlock
+    for cid, result in sorted(by_comment.items()):
         g.db.add(VolunteerJanitorRecord(user_id=v.id, comment_id=cid, result=result))
         update_comment_badness(g.db, cid)
 

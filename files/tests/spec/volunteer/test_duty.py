@@ -1,7 +1,7 @@
 '''
 Volunteer janitor duty: logged-in users are asked to rate reported comments.
 
-GET /volunteer gives the visitor a duty when one is available: up to 3 eligible comments, chosen at random, each assigned to them to rate (a "volunteer_janitor" row with result "Pending"), and their "volunteer_last_started_utc" set to now. The page shows the assigned comments' text and the rating form (see test_ratings; its fields name the comments by id), and nothing else about the comments: not who wrote them, not the post or thread they are in (nor a link to it), not their reports or what volunteers made of them so far (not even to admins), and no actions on them. With nothing available the page says so and nothing is written. Anonymous visitors are sent to log in; API clients are refused (403), changing nothing.
+GET /volunteer gives the visitor a duty when one is available: up to 3 eligible comments, chosen at random, each assigned to them to rate (a "volunteer_janitor" row with result "Pending"), and their "volunteer_last_started_utc" set to now. The page shows the assigned comments' text and the rating form (see test_ratings; its fields name the assignments, not the comments), and nothing else about the comments: not who wrote them, not the post or thread they are in (nor a link to it), not their reports or what volunteers made of them so far (not even to admins), and no actions on them. With nothing available the page says so and nothing is written. Anonymous visitors are sent to log in; API clients are refused (403), changing nothing.
 
 A visitor has no duty available within 20 hours of their last start, nor while suspended (permanently or not) or shadowbanned.
 
@@ -17,6 +17,7 @@ A comment is eligible for a volunteer when:
 
 A post's page shows a link to /volunteer exactly when a duty is available to the viewer.
 '''
+import re
 import time
 
 import pytest
@@ -64,6 +65,19 @@ def test_the_page_shows_only_the_comments_text(volunteer_level):
 	assert_in_payload(r, comment["body"])
 	for hidden in (author["username"], post["title"], f"/post/{post['id']}", f"/comment/{comment['id']}", reporter["username"], reason):
 		assert_not_in_payload(r, hidden)
+
+
+def test_the_form_names_each_assignment():
+	comments = [_eligible() for _ in range(2)]
+	volunteer = factories.user()
+
+	r = as_user(volunteer).get("/volunteer")
+
+	assignments = db.rows("volunteer_janitor", user_id=volunteer["id"])
+	assert {row["comment_id"] for row in assignments} == {c["id"] for c in comments}
+	assert set(re.findall(r'name="(volunteer-[^"]*)"', r.text)) == {f"volunteer-assignment-{row['id']}" for row in assignments}
+	# Nothing else on the page names an assignment's comment either
+	assert {int(n) for n in re.findall(r'(?:id|for)="vj-(\d+)-', r.text)} == {row["id"] for row in assignments}
 
 
 def test_a_duty_holds_at_most_three_comments():

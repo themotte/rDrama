@@ -1,4 +1,4 @@
-{% macro display(comments) %}
+{% macro display(assignments) %}
 
 <div class="volunteer_janitor">
     <div class="volunteer_text">
@@ -7,7 +7,7 @@
         <p class="text"><a href="/rules">Here's a link to the full rules</a> if you need a reference. Open this in a new tab; you may not be able to return to this page otherwise.</p>
     </div>
     <hr />
-    {% for c in comments %}
+    {% for aid, c in assignments %}
         <div>
             {# Only the text: who wrote it, where, and what anyone made of it so far would sway the rating #}
             <div class="comment">
@@ -18,33 +18,33 @@
 
             <div class="choices">
                 <div>
-                    <input form="volunteer_submit" type="radio" id="vj-{{c.id}}-1" name="volunteer-janitor-{{c.id}}" value="1" required="required" />
-                    <label for="vj-{{c.id}}-1">High-quality!</label>
+                    <input form="volunteer_submit" type="radio" id="vj-{{aid}}-1" name="volunteer-assignment-{{aid}}" value="1" required="required" />
+                    <label for="vj-{{aid}}-1">High-quality!</label>
                 </div>
 
                 <div>
-                    <input form="volunteer_submit" type="radio" id="vj-{{c.id}}-2" name="volunteer-janitor-{{c.id}}" value="2" required="required" />
-                    <label for="vj-{{c.id}}-2">Good</label>
+                    <input form="volunteer_submit" type="radio" id="vj-{{aid}}-2" name="volunteer-assignment-{{aid}}" value="2" required="required" />
+                    <label for="vj-{{aid}}-2">Good</label>
                 </div>
 
                 <div>
-                    <input form="volunteer_submit" type="radio" id="vj-{{c.id}}-3" name="volunteer-janitor-{{c.id}}" value="3" required="required" />
-                    <label for="vj-{{c.id}}-3">Neutral</label>
+                    <input form="volunteer_submit" type="radio" id="vj-{{aid}}-3" name="volunteer-assignment-{{aid}}" value="3" required="required" />
+                    <label for="vj-{{aid}}-3">Neutral</label>
                 </div>
 
                 <div>
-                    <input form="volunteer_submit" type="radio" id="vj-{{c.id}}-4" name="volunteer-janitor-{{c.id}}" value="4" required="required" />
-                    <label for="vj-{{c.id}}-4">Bad</label>
+                    <input form="volunteer_submit" type="radio" id="vj-{{aid}}-4" name="volunteer-assignment-{{aid}}" value="4" required="required" />
+                    <label for="vj-{{aid}}-4">Bad</label>
                 </div>
 
                 <div>
-                    <input form="volunteer_submit" type="radio" id="vj-{{c.id}}-5" name="volunteer-janitor-{{c.id}}" value="5" required="required" />
-                    <label for="vj-{{c.id}}-5">Deserves a warning</label>
+                    <input form="volunteer_submit" type="radio" id="vj-{{aid}}-5" name="volunteer-assignment-{{aid}}" value="5" required="required" />
+                    <label for="vj-{{aid}}-5">Deserves a warning</label>
                 </div>
 
                 <div>
-                    <input form="volunteer_submit" type="radio" id="vj-{{c.id}}-6" name="volunteer-janitor-{{c.id}}" value="6" required="required" />
-                    <label for="vj-{{c.id}}-6">Deserves a ban</label>
+                    <input form="volunteer_submit" type="radio" id="vj-{{aid}}-6" name="volunteer-assignment-{{aid}}" value="6" required="required" />
+                    <label for="vj-{{aid}}-6">Deserves a ban</label>
                 </div>
             </div>
         </div>

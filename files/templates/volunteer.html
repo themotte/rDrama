@@ -5,7 +5,7 @@
 {% block content %}
 <script src="{{ 'js/volunteer.js' | asset }}"></script>
 
-{% if not comments %}
+{% if not assignments %}
 <a href="/" class="volunteer_unavailable_wrapper">
     <div class="volunteer_unavailable">
         <div class="volunteer_text">
@@ -19,7 +19,7 @@
 <input form="volunteer_submit" type="hidden" name="formkey" value="{{v.formkey}}">
 <div class="volunteer">
     {% from "volunteer_janitor.html" import display with context %}
-    {{ display(comments) }}
+    {{ display(assignments) }}
     <div class="submit">
         <input form="volunteer_submit" autocomplete="off" class="btn btn-primary ml-auto" type="submit" value="Submit">
     </div>
