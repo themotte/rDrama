@@ -30,6 +30,8 @@ def thumbnail_thread(pid):
 
 THUMBNAIL_SOURCE_MAX_BYTES = 8 * 1024 * 1024
 THUMBNAIL_SOURCE_MIN_SIDE = 30
+# Decoding takes 3 to 4 bytes a pixel, so this bounds an image at about 64 MB in memory; a 100 px thumbnail needs no more
+THUMBNAIL_SOURCE_MAX_PIXELS = 16_000_000
 THUMBNAIL_MAX_CANDIDATES = 10
 THUMBNAIL_META_TAGS = ["themotte:thumbnail", "twitter:image", "og:image", "thumbnail"]
 
@@ -96,7 +98,7 @@ def _thumbnail_suitable(response:requests.Response, body:bytes) -> bool:
 	try:
 		image = PILimage.open(BytesIO(body))
 		# Decoding allocates by the declared size, so refuse oversized images before decoding rather than after
-		if image.width * image.height > PILimage.MAX_IMAGE_PIXELS:
+		if image.width * image.height > THUMBNAIL_SOURCE_MAX_PIXELS:
 			app.logger.info("Thumbnail source is %dx%d, too large to decode", image.width, image.height)
 			return False
 		image.load()

@@ -9,17 +9,31 @@ from io import BytesIO
 from PIL import Image
 
 
+def _png_chunk(kind, data):
+	return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
+
+
+def _png_from_idat(width, height, idat: bytes) -> bytes:
+	return b"\x89PNG\r\n\x1a\n" + _png_chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)) + _png_chunk(b"IDAT", idat) + _png_chunk(b"IEND", b"")
+
+
 def _png_bytes(width, height, rows: bytes | None = None) -> bytes:
-	def chunk(kind, data):
-		return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
 	if rows is None:
 		rows = b"".join(b"\x00" + b"\xff\x00\x00" * width for _ in range(height))
-	return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)) + chunk(b"IDAT", zlib.compress(rows)) + chunk(b"IEND", b"")
+	return _png_from_idat(width, height, zlib.compress(rows))
 
 
 def png(width: int, height: int):
 	'''A valid solid-red RGB PNG.'''
 	return ("image.png", _png_bytes(width, height), "image/png")
+
+
+def large_png(width: int, height: int):
+	'''A valid solid-red RGB PNG of many pixels, built without holding its pixels in memory.'''
+	row = b"\x00" + b"\xff\x00\x00" * width
+	compressor = zlib.compressobj()
+	idat = b"".join(compressor.compress(row) for _ in range(height)) + compressor.flush()
+	return ("image.png", _png_from_idat(width, height, idat), "image/png")
 
 
 def not_an_image():

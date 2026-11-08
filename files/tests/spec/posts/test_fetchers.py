@@ -2,7 +2,7 @@
 Things the site looks up on other sites or in its own posts for the submit form and new link posts:
 - POST /is_repost with "url": the permalink of a live post already linking there, or "" (no login needed).
 - GET /submit/title?url=...: the <title> of the page at url, for prefilling the title field.
-- The thumbnail of a new link post, fetched in the background from the linked page's preview-image metadata, its images, or the link itself when it is an image.
+- The thumbnail of a new link post, fetched in the background from the linked page's preview-image metadata, its images, or the link itself when it is an image. Images of more than 16 million pixels aren't used.
 '''
 import pytest
 
@@ -330,6 +330,16 @@ def test_pages_without_suitable_images_give_no_thumbnail():
 	run_background_work()
 
 	assert _thumbnail_of(post) is None
+
+
+@pytest.mark.parametrize("width, height, used", [(4000, 4000, True), (4000, 4001, False)], ids=["16 million", "more"])
+def test_images_of_more_than_16_million_pixels_give_no_thumbnail(width, height, used):
+	external_web.serve("https://example.com/photo", headers={"Content-Type": "image/png"}, body=uploads.large_png(width, height)[1])
+	post = _link_post("https://example.com/photo")
+
+	run_background_work()
+
+	assert (_thumbnail_of(post) is not None) == used
 
 
 def test_links_to_images_are_their_own_thumbnail():
