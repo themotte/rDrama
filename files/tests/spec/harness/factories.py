@@ -226,3 +226,16 @@ def authorization(user: dict, application: dict) -> str:
 def api_token(user: dict) -> str:
 	'''An access token for an approved API application owned by `user`, authenticating as `user`.'''
 	return db.row("client_auths", user_id=user["id"], oauth_client=oauth_app(user)["id"])["access_token"]
+
+
+def report(reporter: dict, item: dict, reason: str | None = None) -> dict:
+	'''A report by `reporter` of `item` (a post or a comment from these factories), stored as reporting stores one; `reason` (default: a fresh sentinel) is the stored, already rendered text. The report alone doesn't open the item's reports: give the item `state_report="REPORTED"` for that.'''
+	reason = unique("reason") if reason is None else reason
+	if "title" in item:
+		return db.insert("flags", post_id=item["id"], user_id=reporter["id"], reason=reason)
+	return db.insert("commentflags", comment_id=item["id"], user_id=reporter["id"], reason=reason)
+
+
+def assignment(volunteer: dict, comment: dict) -> dict:
+	'''`comment` given to `volunteer` to rate, as taking volunteer duty gives it, still unrated.'''
+	return db.insert("volunteer_janitor", user_id=volunteer["id"], comment_id=comment["id"], result="Pending")
