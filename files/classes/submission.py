@@ -85,7 +85,7 @@ class Submission(CreatedBase):
 
 	author = relationship("User", primaryjoin="Submission.author_id==User.id")
 	oauth_app = relationship("OauthApp", viewonly=True)
-	reports = relationship("Flag", viewonly=True)
+	reports = relationship("Flag", order_by="Flag.created_datetimez", viewonly=True)
 	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
 	notes = relationship("UserNote", back_populates="post")
 	task = relationship("ScheduledSubmissionTask", back_populates="submissions")
@@ -158,14 +158,6 @@ class Submission(CreatedBase):
 		if self.downvotes > 5 and 0.25 < self.upvotes / self.downvotes < 4: return True
 		return False
 
-	@lazy
-	def flags(self, v):
-		flags = g.db.query(Flag).filter_by(post_id=self.id).order_by(Flag.created_datetimez).all()
-		if not (v and (v.shadowbanned or v.admin_level >= 1)):
-			for flag in flags:
-				if flag.user.shadowbanned:
-					flags.remove(flag)
-		return flags
 
 	@property
 	def edited_string(self):
@@ -347,10 +339,6 @@ class Submission(CreatedBase):
 			return True
 		return False
 
-	@lazy
-	def active_flags(self, v): 
-		return len(self.flags(v))
-	
 	@property
 	def is_real_submission(self) -> bool:
 		return True

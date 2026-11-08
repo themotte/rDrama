@@ -104,15 +104,6 @@ class Comment(CreatedBase):
 	def votes_shown_to(self, v:Optional["User"]) -> tuple[int, int]:
 		return votes_shown_to(self, v)
 
-	@lazy
-	def flags(self, v):
-		flags = self.reports
-		if not (v and (v.shadowbanned or v.admin_level >= 1)):
-			for flag in flags:
-				if flag.user.shadowbanned:
-					flags.remove(flag)
-		return flags
-
 	@property
 	@lazy
 	def controversial(self):
@@ -373,10 +364,6 @@ class Comment(CreatedBase):
 		'''
 		if not v: return -2
 		return getattr(self, 'voted', 0)
-
-	@lazy
-	def active_flags(self, v): 
-		return len(self.flags(v))
 
 	def renders_for(self, v:"User | None") -> bool:
 		'''Whether the comment shows to `v` at all: whole when they may see it, else as a placeholder holding replies they may see. Judged from the loaded thread; where the thread wasn't loaded below the comment, from its count of counted descendants.'''

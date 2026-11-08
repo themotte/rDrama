@@ -68,8 +68,8 @@
 			<a class="btn btn-danger" style="margin:1px 5px" onclick="filter_new_status({{p.id}}, 'removed')">Remove</a>
 			<pre></pre>
 			<ul style="padding-left:20px; margin-bottom: 0;word-wrap:break-word">
-				{% for f in p.flags(v) %}
-					<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: <span data-bs-toggle="tooltip" data-bs-placement="bottom" id="report_timestamp_{{f.id}}" onmouseover="timestamp('report_timestamp_{{f.id}}','{{f.created_utc}}')">{{f.realreason(v) | safe}}{% endif %}</span></li>
+				{% for f in p.reports %}
+					<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: <span data-bs-toggle="tooltip" data-bs-placement="bottom" id="report_timestamp_{{f.id}}" onmouseover="timestamp('report_timestamp_{{f.id}}','{{f.created_utc}}')">{{f.reason | safe}}{% endif %}</span></li>
 				{% endfor %}
 			</ul>
 		</div>
@@ -174,7 +174,7 @@
 						{% if p.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="This user is blocking you."></i>{% endif %}
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
 						{% if v and p.state_report == StateReport.REPORTED and v.can_manage_reports() %}
-						<a class="btn btn-primary" id="report-btn-{{p.id}}" role="button" style="padding:1px 5px; font-size:10px"onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags(v)}} Reports</a>
+						<a class="btn btn-primary" id="report-btn-{{p.id}}" role="button" style="padding:1px 5px; font-size:10px"onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.reports | length}} Reports</a>
 						{% endif %}
 							
 

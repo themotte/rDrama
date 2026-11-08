@@ -1,7 +1,6 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.classes.base import CreatedBase, CreatedDateTimeBase, Base
-from files.helpers.lazy import lazy
 from files.helpers.config.const import *
 
 
@@ -18,13 +17,6 @@ class Flag(CreatedDateTimeBase):
 
 	user = relationship("User", primaryjoin = "Flag.user_id == User.id", uselist = False, viewonly=True)
 
-	def __repr__(self):
-		return f"<{self.__class__.__name__}(id={self.id})>"
-
-	@lazy
-	def realreason(self, v):
-		return self.reason
-
 
 class CommentFlag(CreatedDateTimeBase):
 	__tablename__ = "commentflags"
@@ -37,10 +29,3 @@ class CommentFlag(CreatedDateTimeBase):
 	Index('cflag_user_idx', user_id)
 
 	user = relationship("User", primaryjoin = "CommentFlag.user_id == User.id", uselist = False, viewonly=True)
-
-	def __repr__(self):
-		return f"<{self.__class__.__name__}(id={self.id})>"
-
-	@lazy
-	def realreason(self, v):
-		return self.reason
