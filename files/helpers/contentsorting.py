@@ -79,7 +79,7 @@ def sort_comment_results(comments: Iterable[Comment], sort:str, *, pins:bool=Fal
 			-c.created_utc
 		)
 	elif sort == 'comments':
-		key_func = lambda c: -c.descendant_count
+		key_func = lambda c: (-c.descendant_count, -c.created_utc)
 	elif sort == 'controversial':
 		key_func = lambda c: (
 			(c.upvotes + 1) / (c.downvotes + 1)
