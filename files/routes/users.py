@@ -269,7 +269,10 @@ def mfa_qr(secret, v):
 	img.save(mem, format="PNG")
 	mem.seek(0, 0)
 
-	return send_file(mem, mimetype="image/png", as_attachment=False)
+	r = send_file(mem, mimetype="image/png", as_attachment=False)
+	# The code carries the two-factor secret
+	r.headers["Cache-Control"] = "no-store"
+	return r
 
 
 @app.get("/is_available/<name>")

@@ -6,7 +6,7 @@ Small lookups around user accounts:
 - GET /is_available/<name> tells signup whether a username is free, as {"<name>": true|false} (the name with surrounding whitespace removed). A name signup would refuse isn't available: one shorter than 3 or longer than 25 characters, or with characters other than ASCII letters, digits, "_" and "-". Nor is one that is any user's current or original username, compared case-insensitively.
 - GET /@<username>/profilecss serves the custom CSS the user set for their profile page (empty if none), as text/css.
 - GET /pp/<user id> (the address mentions embed), /uid/<user id>/pic, /uid/<user id>/pic/profile and /@<username>/pic redirect (302) to the user's profile picture, wherever it's hosted: the "profile_url" of their /info. Browsers may keep the redirect for five minutes.
-- GET /2faqr/<secret> draws the QR code an authenticator app scans to set up two-factor login with that secret for the logged-in user, as a PNG.
+- GET /2faqr/<secret> draws the QR code an authenticator app scans to set up two-factor login with that secret for the logged-in user, as a PNG. It carries the secret, so it's sent with "Cache-Control: no-store": nothing may keep it.
 '''
 from urllib.parse import quote, urljoin
 
@@ -180,6 +180,12 @@ def test_two_factor_qr_code_is_a_png():
 	assert_status(r, 200)
 	assert r.header("Content-Type") == "image/png"
 	assert r.body.startswith(PNG_SIGNATURE)
+
+
+def test_two_factor_qr_code_is_never_stored():
+	r = as_user(factories.user()).get("/2faqr/JBSWY3DPEHPK3PXP")
+
+	assert r.header("Cache-Control") == "no-store"
 
 
 def test_two_factor_qr_code_sends_anonymous_browsers_to_log_in():
