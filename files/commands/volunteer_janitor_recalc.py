@@ -7,7 +7,7 @@ from collections import defaultdict
 from files.classes import User, Comment, UserNote, UserTag
 from files.classes.cron.tasks import TaskRunContext
 from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
-from files.helpers.volunteer_janitor import RECORD_ORDER, counted_ratings, evaluate_badness_of, userweight_from_user_accuracy, calculate_final_comment_badness, update_comment_badness
+from files.helpers.volunteer_janitor import RECORD_ORDER, counted_ratings, evaluate_badness_of, userweight_from_user_accuracy, badness_estimate, update_comment_badness
 from files.helpers.math import saturate, remap, lerp
 
 import logging
@@ -164,7 +164,7 @@ def volunteer_janitor_recalc(db: Session) -> int:
                 comment_badness_admin[cid] += userweight_admin * weight
 
         # Estimate each comment's badness from the verdicts and the ratings, admins at their fixed weight
-        comment_calculated_badness_admin = {cid: calculate_final_comment_badness(comment_badness_admin[cid], comment_weight_admin[cid], False) for cid in reported_comment_ids}
+        comment_calculated_badness_admin = {cid: badness_estimate(comment_badness_admin[cid], comment_weight_admin[cid]) for cid in reported_comment_ids}
 
         # go through user submissions and count up how good users seem to be at this
         user_correctness_weight = defaultdict(lambda: CONFIG_new_user_damping)

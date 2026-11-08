@@ -1,4 +1,6 @@
 
+from sqlalchemy.orm import selectinload
+
 from files.classes.comment import Comment
 from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
 from files.helpers.math import saturate, remap
@@ -23,16 +25,16 @@ def evaluate_badness_of(choice):
 def userweight_from_user_accuracy(accuracy):
     return saturate(remap(accuracy, 0.5, 1, 0, 1))
 
-def calculate_final_comment_badness(comment_total, comment_weight, conservative):
-    if not conservative:
-        # insert an artificial 50%-badness confident vote, to prevent us from ever reaching 1.0 or 0.0
-        return (comment_total + 0.5) / (comment_weight + 1.0)
-    
+def badness_estimate(comment_total, comment_weight):
+    # insert an artificial 50%-badness confident vote, to prevent us from ever reaching 1.0 or 0.0
+    return (comment_total + 0.5) / (comment_weight + 1.0)
+
+def badness_conservative(comment_total, comment_weight):
     if comment_weight == 0:
         # INSUFFICIENT DATA FOR A MEANINGFUL ANSWER
         return 0.5
     
-    original_badness = calculate_final_comment_badness(comment_total, comment_weight, False)
+    original_badness = badness_estimate(comment_total, comment_weight)
     if original_badness > 0.5:
         # fake a not-bad vote, with the confidence being the opposite of our confidence in it being bad
         # don't let it invert though
@@ -63,18 +65,8 @@ def counted_ratings(records) -> dict[tuple[int, int], VolunteerJanitorRecord]:
     return counted
 
 
-def update_comment_badness(db, cid):
-    # Recalculate the comment's confidence values
-    # This probably does more SQL queries than it should
-
-    # Recalculations of one comment take turns, so each counts the ratings the others stored
-    db.query(Comment.id).where(Comment.id == cid).with_for_update().one()
-    # The session doesn't autoflush: the records read below must include the ones just added
-    db.flush()
-    records = db.query(VolunteerJanitorRecord) \
-        .where(VolunteerJanitorRecord.comment_id == cid) \
-        .order_by(*RECORD_ORDER)
-
+def comment_badness(records) -> float:
+    '''The badness one comment's `records` (given in RECORD_ORDER) give it, weighing each counted rating by its volunteer's accuracy.'''
     badness = 0
     weight = 0
 
@@ -91,8 +83,21 @@ def update_comment_badness(db, cid):
         if submission_bad:
             badness += additive_weight
 
-    comment_badness = calculate_final_comment_badness(badness, weight, True)
+    return badness_conservative(badness, weight)
+
+
+def update_comment_badness(db, cid):
+    # Recalculate the comment's confidence values
+
+    # Recalculations of one comment take turns, so each counts the ratings the others stored
+    db.query(Comment.id).where(Comment.id == cid).with_for_update().one()
+    # The session doesn't autoflush: the records read below must include the ones just added
+    db.flush()
+    records = db.query(VolunteerJanitorRecord) \
+        .where(VolunteerJanitorRecord.comment_id == cid) \
+        .options(selectinload(VolunteerJanitorRecord.user)) \
+        .order_by(*RECORD_ORDER)
 
     db.query(Comment) \
         .where(Comment.id == cid) \
-        .update({Comment.volunteer_janitor_badness: comment_badness})
+        .update({Comment.volunteer_janitor_badness: comment_badness(records)})
