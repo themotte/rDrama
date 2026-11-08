@@ -12,7 +12,7 @@ A comment is eligible for a volunteer when:
 - it is visible: not removed, not held for review, not deleted by its author;
 - it is neither the volunteer's own comment nor a reply to one of theirs;
 - it carries no moderation outcome: it isn't distinguished (an admin speaking officially), pinned, or marked as one its author was banned for, and none of its direct replies is distinguished;
-- someone other than the volunteer reported it;
+- someone other than the volunteer reported it, who is neither permanently suspended nor shadowbanned now;
 - the volunteer was never assigned it before.
 
 A post's page shows a link to /volunteer exactly when a duty is available to the viewer.
@@ -191,7 +191,17 @@ def _on_an_18_plus_post(volunteer):
 	return comment
 
 
+def _reported_only_by(standing):
+	def comment(volunteer):
+		reported = factories.comment(factories.user(), factories.post(factories.user()), state_report="REPORTED")
+		factories.report(factories.user(**standing), reported)
+		return reported
+	return comment
+
+
 INELIGIBLE = {
+	"reported only by a permanently suspended user": _reported_only_by({"is_banned": 1, "unban_utc": 0}),
+	"reported only by a shadowbanned user": _reported_only_by({"shadowbanned": "somemod"}),
 	"shadowbanned author": _by_shadowbanned,
 	"author blocked by the volunteer": _blocked_by_volunteer,
 	"author blocking the volunteer": _blocking_volunteer,
@@ -253,6 +263,16 @@ def test_admins_are_offered_only_what_others_would_see_whole_too(case):
 
 	assert_html(r, 200)
 	d.assert_exactly()
+
+
+def test_a_temporarily_suspended_users_report_counts():
+	comment = factories.comment(factories.user(), factories.post(factories.user()), state_report="REPORTED")
+	factories.report(factories.user(is_banned=1, unban_utc=2_000_000_000), comment)
+	volunteer = factories.user()
+
+	as_user(volunteer).get("/volunteer")
+
+	assert [row["comment_id"] for row in db.rows("volunteer_janitor", user_id=volunteer["id"])] == [comment["id"]]
 
 
 def test_others_assignments_dont_matter():

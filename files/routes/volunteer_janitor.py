@@ -72,10 +72,12 @@ def get_duty(u: User) -> Optional[list[int]]:
         # once a modhat hits, that's it, doesn't show up in the volunteer system anymore
         clean_reported = set(reported_ids) - set(distinguished_children_ids)
 
-        # also, let's make sure it has a report that isn't made by this user
+        # also, let's make sure it has a report that isn't made by this user, by someone whose reports bring items to the moderators
         nonuser_reports = g.db.query(CommentFlag) \
             .where(CommentFlag.comment_id.in_(clean_reported)) \
             .where(CommentFlag.user_id != u.id) \
+            .join(User, User.id == CommentFlag.user_id) \
+            .where(User.reports_count) \
             .with_entities(CommentFlag.comment_id)
 
         # also, let's make sure it hasn't already been looked at by this user

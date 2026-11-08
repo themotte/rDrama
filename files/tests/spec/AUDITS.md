@@ -12,6 +12,8 @@ Decided and pinned in `notifications/test_messages.py` and `notifications/test_r
 
 Decided and pinned in `api/test_requests.py` and `api/test_owner.py`: while suspended (temporarily or permanently), a user can't request API apps or edit theirs, whose names and descriptions others see; deleting their apps, re-keying them, authorizing apps and withdrawing authorizations still work.
 
+Decided and pinned in `reporting/test_reports.py`: reports by permanently suspended (or shadowbanned) users are stored but never bring the item to the moderators, posts and comments alike, nor make a comment one volunteers are given; temporarily suspended users report normally.
+
 Decided and pinned in `users/test_ban_expiry.py`: a temporary ban that ran out ends (with a "You have been unbanned!" notification and `ban_evade` reset) on the user's next request to any page, not only the front page.
 
 Not yet audited. The app today has three different notions of "banned", and the routes below pick among them inconsistently:
@@ -20,7 +22,6 @@ Not yet audited. The app today has three different notions of "banned", and the 
 - raw `is_banned`: set, even after a temporary ban ran out, until the user's next request ends it.
 
 What to decide, case by case:
-- **Reporting** (`/report/post`, `/report/comment`): a permanently suspended user's post report is stored but doesn't mark the post reported; their comment report is silently dropped (as is a shadowbanned user's). Temporarily suspended users report normally.
 - **Admin actions by a suspended admin**: nothing checks suspension on admin routes.
 - **Notifications a suspended user causes**: unfollowing and removing a follower still notify the other user (allowed by the current rule; confirm).
 - **Chat** (outside the spec): the page and `can_access_chat` refuse only permanent suspensions, while sending and reading messages over the socket refuse on raw `is_banned`, so any temporary ban, even one that ran out, blocks them until the user's next page request ends it.

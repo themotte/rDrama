@@ -1,7 +1,7 @@
 '''
 Reporting a post or a comment: POST /report/post/<post id> and POST /report/comment/<comment id>, with the form field "reason" (optional). The answer is a JSON "message".
 
-A report is stored with its reporter and its reason, and opens the item's reports ("state_report" becomes REPORTED, also when they were resolved before) unless an admin chose to ignore its reports (IGNORED), which a new report doesn't change. Every report is stored, repeated ones by the same user included.
+A report is stored with its reporter and its reason, and opens the item's reports ("state_report" becomes REPORTED, also when they were resolved before) unless an admin chose to ignore its reports (IGNORED), which a new report doesn't change. Every report is stored, repeated ones by the same user included. Reports by permanently suspended or shadowbanned users are stored too, but never open the item's reports; temporarily suspended users report as anyone else.
 
 The reason is stored rendered, in this order: surrounding whitespace trimmed, cut to its first 100 characters, invisible formatting characters removed (zero-width spaces, left-to-right and right-to-left marks, byte-order marks), runs of whitespace made one space, HTML-escaped, and text between tildes (~like this~) struck through as <del>. Where the rendering of those 100 characters would be longer than 350 characters, as many characters are kept as fit rendered into 350. No reason stores "".
 
@@ -11,6 +11,8 @@ An admin of level 2 or higher (in their own browser session; API clients act as 
 
 Refused, changing nothing: anonymous users (401 to scripts); an unknown id, or one that isn't a whole number (404); an item the reporter can't open (404): a draft, or a comment on one, unless they are its author or an admin of level 2 or higher; a private message unless they take part in its conversation (or are such an admin); one of the site's notices unless it notified them (or they are such an admin).
 '''
+import time
+
 import pytest
 
 from files.tests.spec.harness import *
@@ -203,6 +205,57 @@ def test_a_bang_on_a_comment_is_an_ordinary_reason_even_for_admins():
 		_report(as_user(admin), "comment", comment, "!Megathread")
 
 	d.assert_exactly(inserted=_stored("comment", admin, comment, "!Megathread"), updated={"comments": {comment["id"]: {"state_report": "REPORTED"}}})
+
+
+# Reporters whose reports don't count
+
+REPORTERS = {
+	"permanently suspended": lambda: factories.user(is_banned=factories.admin(2)["id"], unban_utc=0),
+	"shadowbanned": lambda: factories.user(shadowbanned="somemod"),
+}
+
+
+@pytest.mark.parametrize("kind", KINDS)
+@pytest.mark.parametrize("reporter", REPORTERS)
+def test_reports_by_users_whose_reports_dont_count_are_only_stored(kind, reporter):
+	item = _item(kind)
+	user = REPORTERS[reporter]()
+
+	with db_diff() as d:
+		r = _report(as_user(user), kind, item, "noise")
+
+	assert_json_message(r)
+	d.assert_exactly(inserted=_stored(kind, user, item, "noise"))
+
+
+@pytest.mark.parametrize("kind", KINDS)
+def test_temporarily_suspended_users_report_as_anyone_else(kind):
+	item = _item(kind)
+	user = factories.user(is_banned=factories.admin(2)["id"], unban_utc=int(time.time()) + 86400)
+
+	with db_diff() as d:
+		r = _report(as_user(user), kind, item, "counts")
+
+	assert_json_message(r)
+	d.assert_exactly(inserted=_stored(kind, user, item, "counts"), updated={_TABLES[kind][0]: {item["id"]: {"state_report": "REPORTED"}}})
+
+
+@pytest.mark.parametrize("reporter", REPORTERS)
+@pytest.mark.parametrize("kind, target", [("post", "unknown"), ("post", "draft"), ("comment", "unknown"), ("comment", "draft"), ("comment", "message")])
+def test_users_whose_reports_dont_count_are_refused_alike(kind, target, reporter):
+	client = as_user(REPORTERS[reporter]())
+	author = factories.user()
+	item = {
+		"unknown": lambda: {"id": db.execute(f"SELECT nextval('{_TABLES[kind][0]}_id_seq')")},
+		"draft": lambda: factories.post(author, private=True) if kind == "post" else _draft_comment(author),
+		"message": lambda: factories.message(author, factories.user()),
+	}[target]()
+
+	with db_diff() as d:
+		r = _report(client, kind, item, "peek")
+
+	assert_status(r, 404)
+	d.assert_exactly()
 
 
 # What can't be opened

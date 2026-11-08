@@ -520,6 +520,15 @@ class User(CreatedBase):
 	def is_suspended_permanently(self):
 		return (self.is_banned and self.unban_utc == 0)
 
+	@hybrid_property
+	def reports_count(self) -> bool:
+		'''Whether the user's reports bring items to the moderators: not those of permanently suspended or shadowbanned users.'''
+		return not (self.is_suspended_permanently or self.shadowbanned)
+
+	@reports_count.expression
+	def reports_count(cls):
+		return and_(cls.shadowbanned == None, not_(and_(cls.is_banned != 0, cls.unban_utc == 0)))
+
 	@property
 	@lazy
 	def applications(self):

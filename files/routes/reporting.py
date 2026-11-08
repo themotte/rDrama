@@ -38,11 +38,8 @@ def api_flag_post(pid, v):
 		)
 		g.db.add(ma)
 	else:
-		flag = Flag(post_id=post.id, user_id=v.id, reason=reason)
-		g.db.add(flag)
-
-		# We only want to notify if the user is not permabanned
-		if not v.is_suspended_permanently:
+		g.db.add(Flag(post_id=post.id, user_id=v.id, reason=reason))
+		if v.reports_count:
 			g.db.query(Submission) \
 				.where(Submission.id == post.id, Submission.state_report != StateReport.IGNORED) \
 				.update({Submission.state_report: StateReport.REPORTED})
@@ -56,20 +53,16 @@ def api_flag_post(pid, v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def api_flag_comment(cid, v):
+	comment = get_comment(cid)
+	if not comment.is_open_to(v): abort(404)
+	reason = _reason(REASON_RENDERED_LENGTH_MAXIMUM)
 
-	# I'm not hugely into blocking this entirely, really we should be recording it and then mostly ignoring it, but whatever
-	if not v.is_suspended_permanently and not v.shadowbanned:
-		comment = get_comment(cid)
-		if not comment.is_open_to(v): abort(404)
-		reason = _reason(REASON_RENDERED_LENGTH_MAXIMUM)
-
-		flag = CommentFlag(comment_id=comment.id, user_id=v.id, reason=reason)
-		g.db.add(flag)
-
+	g.db.add(CommentFlag(comment_id=comment.id, user_id=v.id, reason=reason))
+	if v.reports_count:
 		g.db.query(Comment) \
-				.where(Comment.id == comment.id, Comment.state_report != StateReport.IGNORED) \
-				.update({Comment.state_report: StateReport.REPORTED})
-		
-		g.db.commit()
+			.where(Comment.id == comment.id, Comment.state_report != StateReport.IGNORED) \
+			.update({Comment.state_report: StateReport.REPORTED})
+
+	g.db.commit()
 
 	return {"message": "Comment reported!"}
