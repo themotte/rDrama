@@ -73,6 +73,9 @@ def update_comment_badness(db, cid):
     weight = 0
 
     for submission in earliest_submission.values():
+        # Ratings by shadowbanned volunteers count for nothing, as their votes do
+        if submission.user.shadowbanned:
+            continue
         userweight_user = userweight_from_user_accuracy(submission.user.volunteer_janitor_correctness);
         submission_bad, submission_weight = evaluate_badness_of(submission.result)
 

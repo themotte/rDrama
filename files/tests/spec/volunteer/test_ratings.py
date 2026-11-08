@@ -3,6 +3,8 @@ Rating the comments of a volunteer duty: POST /volunteer/submit, with one form f
 
 Each rating updates the comment's "volunteer_janitor_badness" at once, counting it. The badness comes from the first rating of each volunteer assigned the comment before they rated it (other ratings count for nothing). A rating says the comment is bad (Warning, Ban: with confidence 1; Bad: 0.5) or not (TopQuality, Good: 1; Neutral: 0.5), and counts with the confidence times the volunteer's weight, which comes from their past accuracy c ("volunteer_janitor_correctness"): 0 up to c = 0.5, rising evenly to 1 at c = 1. With W the total counted weight and B the part of it saying bad, the badness is 0.5 when W is 0; otherwise, with p = (B + 0.5) / (W + 1), it is max(B / (W + 1 - p), 0.5) when p > 0.5, and min((B + p) / (W + p), 0.5) when not.
 
+Ratings by shadowbanned volunteers are stored but count for nothing: shadowbanning a volunteer takes their ratings out of the badness of the comments they rated, and lifting the shadowban puts them back.
+
 Refused, storing nothing of the request: anonymous users (sent to log in); suspended users, permanently or not (403); with 400, a "volunteer-" field of another kind, a comment id that isn't a whole number in digits, a value other than those six, a field given twice, or a comment that isn't one of the volunteer's open assignments.
 '''
 import time
@@ -253,3 +255,63 @@ def test_suspended_volunteers_cant_rate(permanently):
 
 	assert_status(r, 403)
 	d.assert_exactly()
+
+
+def test_a_shadowbanned_volunteers_rating_is_stored_but_doesnt_count():
+	volunteer = factories.user(shadowbanned="somemod", volunteer_janitor_correctness=1.0)
+	comment = _assigned_comment(volunteer)
+	client = as_user(volunteer)
+
+	with db_diff() as d:
+		r = client.post("/volunteer/submit", {f"volunteer-janitor-{comment['id']}": "6"})
+
+	assert_html(r, 200)
+	d.assert_exactly(inserted={"volunteer_janitor": [_rating(volunteer, comment, "Ban")]})
+
+
+def test_a_shadowbanned_volunteers_earlier_rating_doesnt_count_either():
+	shadowbanned, volunteer = factories.user(shadowbanned="somemod", volunteer_janitor_correctness=1.0), factories.user(volunteer_janitor_correctness=1.0)
+	comment = _assigned_comment(volunteer)
+	factories.assignment(shadowbanned, comment)
+	db.insert("volunteer_janitor", user_id=shadowbanned["id"], comment_id=comment["id"], result="Ban")
+
+	as_user(volunteer).post("/volunteer/submit", {f"volunteer-janitor-{comment['id']}": "2"})
+
+	assert db.row("comments", id=comment["id"])["volunteer_janitor_badness"] == pytest.approx(0.2)
+
+
+def _rated_by(volunteer):
+	'''Two comments `volunteer` (fully weighted) rated Ban, the second also rated Good by another fully weighted volunteer, with the badness those ratings left.'''
+	other = factories.user(volunteer_janitor_correctness=1.0)
+	alone, shared = _assigned_comment(volunteer), _assigned_comment(volunteer)
+	factories.assignment(other, shared)
+	as_user(volunteer).post("/volunteer/submit", {f"volunteer-janitor-{alone['id']}": "6", f"volunteer-janitor-{shared['id']}": "6"})
+	as_user(other).post("/volunteer/submit", {f"volunteer-janitor-{shared['id']}": "2"})
+	return alone, shared
+
+
+def test_shadowbanning_a_volunteer_takes_their_ratings_out():
+	volunteer = factories.user(volunteer_janitor_correctness=1.0)
+	alone, shared = _rated_by(volunteer)
+	client = as_user(factories.admin(2))
+
+	with db_diff() as d:
+		client.post(f"/shadowban/{volunteer['id']}", headers=XHR)
+
+	assert d.updated["comments"][(alone["id"],)] == {"volunteer_janitor_badness": pytest.approx(0.5)}
+	assert d.updated["comments"][(shared["id"],)] == {"volunteer_janitor_badness": pytest.approx(0.2)}
+
+
+def test_lifting_a_volunteers_shadowban_puts_their_ratings_back():
+	volunteer = factories.user(volunteer_janitor_correctness=1.0)
+	alone, shared = _rated_by(volunteer)
+	db.update("users", {"id": volunteer["id"]}, shadowbanned="somemod")
+	db.update("comments", {"id": alone["id"]}, volunteer_janitor_badness=0.5)
+	db.update("comments", {"id": shared["id"]}, volunteer_janitor_badness=0.2)
+	client = as_user(factories.admin(2))
+
+	with db_diff() as d:
+		client.post(f"/unshadowban/{volunteer['id']}", headers=XHR)
+
+	assert d.updated["comments"][(alone["id"],)] == {"volunteer_janitor_badness": pytest.approx(0.8)}
+	assert d.updated["comments"][(shared["id"],)] == {"volunteer_janitor_badness": pytest.approx(0.5)}

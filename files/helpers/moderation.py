@@ -7,7 +7,9 @@ from sqlalchemy import text
 from files.classes import Comment, Submission, User
 from files.classes.visstate import StateMod
 from files.helpers.comments import comment_counts_of_authors, comment_state_change
+from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
 from files.helpers.locks import user_counts_lock
+from files.helpers.volunteer_janitor import update_comment_badness
 
 
 def moderate(item:Union[Submission, Comment], state_mod:StateMod, by:str) -> int:
@@ -96,6 +98,16 @@ def _shadowban_change(users:list[User], by:Optional[str]):
 	changing = [row[0] for row in g.db.execute(text("SELECT id FROM users WHERE id = ANY(:ids) AND (shadowbanned IS NULL) = :clear"), {"ids": ids, "clear": by is not None})]
 	if changing: _counts_shift(changing, +1 if by is None else -1, ids)
 	for user in users: user.shadowbanned = by
+	if changing: _volunteer_badness_recount(changing)
+
+
+def _volunteer_badness_recount(user_ids:list[int]):
+	'''Recounts the volunteer badness of the comments the users rated, after their shadowbans changed.'''
+	g.db.flush()
+	rated = g.db.query(VolunteerJanitorRecord.comment_id).filter(VolunteerJanitorRecord.user_id.in_(user_ids), VolunteerJanitorRecord.result != VolunteerJanitorResult.Pending).distinct()
+	# In id order, as ratings lock the comments they recount
+	for comment_id in sorted(row[0] for row in rated):
+		update_comment_badness(g.db, comment_id)
 
 
 def shadowban_set(user:User, by:str) -> None:
