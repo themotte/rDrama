@@ -75,6 +75,11 @@ class Client:
 		raw = self.cookies.get(session.cookie_name())
 		return session.decode(raw) if raw else {}
 
+	def session_update(self, **values):
+		'''Sets keys of the session cookie, as a browser holding such a cookie would send them.'''
+		self.cookies[session.cookie_name()] = session.encode({**self.session(), **values})
+		return self
+
 	@property
 	def user_id(self) -> int | None:
 		return self.session().get("lo_user")

@@ -1,5 +1,7 @@
 '''
-POST /settings/security (password, email, two-factor) and POST /settings/log_out_all_others.
+GET /settings/security, POST /settings/security (password, email, two-factor) and POST /settings/log_out_all_others.
+
+The page offers an account without two-factor login a fresh secret to set it up with, in the setup form's "2fa_secret" (a new one on every visit), beside the "2fa_token" field the authenticator's code goes in. An account that has two-factor login is offered no setup.
 
 Changing the password and logging out other devices end the account's other sessions and every API token it holds (api/test_tokens).
 
@@ -22,6 +24,24 @@ PASSHASH_FORMAT = re.compile(r"^pbkdf2:sha512:\d+\$[^$]+\$[0-9a-f]{128}$")
 
 def _security(user, data, headers=None):
 	return as_user(user).post("/settings/security", data, headers=headers)
+
+
+def test_the_page_offers_a_fresh_secret_to_set_up_two_factor_login():
+	client = as_user(factories.user())
+
+	first, second = client.get("/settings/security"), client.get("/settings/security")
+
+	assert_html(first, 200)
+	secrets = first.form_field("2fa_secret"), second.form_field("2fa_secret")
+	assert all(re.fullmatch(r"[A-Z2-7]{32}", s) for s in secrets) and secrets[0] != secrets[1]
+	assert first.form_field("2fa_token") is not None
+
+
+def test_an_account_with_two_factor_login_is_offered_no_setup():
+	r = as_user(factories.user(mfa_secret=pyotp.random_base32())).get("/settings/security")
+
+	assert_html(r, 200)
+	assert r.form_field("2fa_token") is None
 
 
 def _wrong_token(secret):

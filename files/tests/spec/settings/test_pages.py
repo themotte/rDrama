@@ -7,7 +7,7 @@ import pytest
 
 from files.tests.spec.harness import *
 
-PAGES = ["/settings/profile", "/settings/blocks", "/settings/css", "/settings/profilecss", "/settings/apps", "/settings/content"]
+PAGES = ["/settings/profile", "/settings/security", "/settings/blocks", "/settings/css", "/settings/profilecss", "/settings/apps", "/settings/content"]
 
 POST_ENDPOINTS = [
 	"/settings/profile", "/settings/filters", "/changelogsub", "/settings/namecolor", "/settings/themecolor", "/settings/titlecolor", "/settings/verifiedcolor",

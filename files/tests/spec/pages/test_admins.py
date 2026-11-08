@@ -32,3 +32,12 @@ def test_admins_from_level_2_come_first_each_group_by_truescore(viewer):
 	r = viewer().get("/admins")
 
 	assert_in_order(r, [f'"mod-actions-{u["id"]}"' for u in (high_2, low_2, high_1, low_1)])
+
+
+def test_accounts_without_an_admin_level_arent_listed():
+	user, admin = factories.user(), factories.admin(1)
+
+	r = anon().get("/admins")
+
+	assert_in_payload(r, admin["username"])
+	assert_not_in_payload(r, user["username"])

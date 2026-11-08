@@ -15,6 +15,8 @@ FORBIDDEN_HARNESS_MODULES = {f"{HARNESS_PACKAGE}.backend"}
 FORBIDDEN_TOP_LEVEL_MODULES = {"flask", "werkzeug", "freezegun", "time_machine", "requests", "responses", "unittest", "itsdangerous"}
 FORBIDDEN_MODULE_PREFIXES = ("sqlalchemy.orm",)
 HARDCODED_ID_PATH = re.compile(r"/\d+(?:[/?#]|$)")
+# XML namespace names carry years in their paths
+W3C_NAMESPACE = re.compile(r"\{?http://www\.w3\.org/")
 
 SPEC_FILES = sorted(p for p in SPEC_DIR.glob("**/*.py") if HARNESS_DIR not in p.parents)
 SPEC_TEST_FILES = [p for p in SPEC_FILES if p.name.startswith("test_")]
@@ -49,7 +51,7 @@ def test_spec_code_imports_only_the_harness(path):
 @pytest.mark.parametrize("path", SPEC_TEST_FILES, ids=lambda p: str(p.relative_to(SPEC_DIR)))
 def test_spec_tests_do_not_hardcode_row_ids_in_urls(path):
 	tree = ast.parse(path.read_text())
-	offending = [node.value for node in ast.walk(tree) if isinstance(node, ast.Constant) and isinstance(node.value, str) and HARDCODED_ID_PATH.search(node.value)]
+	offending = [node.value for node in ast.walk(tree) if isinstance(node, ast.Constant) and isinstance(node.value, str) and HARDCODED_ID_PATH.search(node.value) and not W3C_NAMESPACE.match(node.value)]
 	assert not offending, f"{path.name} hardcodes ids in URLs (take them from created rows instead): {offending}"
 
 
