@@ -1,11 +1,11 @@
 '''
-Rating the comments of a volunteer duty: POST /volunteer/submit, with one form field "volunteer-assignment-<assignment id>" per rated comment, naming the assignment that gave the volunteer the comment (see test_duty), whose value is the rating: "1" high quality, "2" good, "3" neutral, "4" bad, "5" deserves a warning, "6" deserves a ban (stored as result "TopQuality", "Good", "Neutral", "Bad", "Warning", "Ban"). Only the form counts (not the query string). Each field must name one of the volunteer's open assignments: assigned to them to rate and not yet rated by them, whatever happened to it since, and no two fields the same comment. Each rating is stored as a "volunteer_janitor" row of the volunteer, the comment and the result, and the answer is a thank-you page. Fields not starting with "volunteer-" are ignored.
+Rating the comments of a volunteer duty: POST /volunteer/submit, with one form field "volunteer-assignment-<assignment id>" per rated comment, naming the assignment that gave the volunteer the comment (see test_duty), whose value is the rating: "1" high quality, "2" good, "3" neutral, "4" bad, "5" deserves a warning, "6" deserves a ban (stored as result "TopQuality", "Good", "Neutral", "Bad", "Warning", "Ban"). Only the form counts (not the query string). Each field must name one of the volunteer's assignments: assigned to them to rate and not yet rated by them, and no two fields the same comment. An assignment's rating is taken only while the comment is still one duties are made of, whoever the volunteer (see test_duty): its reports open, visible, not deleted, not distinguished, pinned or marked as a ban's reason, with no distinguished direct reply, and by an author who isn't shadowbanned. Ratings of assignments whose comment stopped being so (it may become so again) aren't stored, while the request's other ratings are, and the answer is the same thank-you page either way. Each rating is stored as a "volunteer_janitor" row of the volunteer, the comment and the result, and the answer is a thank-you page. Fields not starting with "volunteer-" are ignored.
 
 Each rating updates the comment's "volunteer_janitor_badness" at once, counting it. The badness comes from the first rating of each volunteer assigned the comment before they rated it (other ratings count for nothing). A rating says the comment is bad (Warning, Ban: with confidence 1; Bad: 0.5) or not (TopQuality, Good: 1; Neutral: 0.5), and counts with the confidence times the volunteer's weight, which comes from their past accuracy c ("volunteer_janitor_correctness"): 0 up to c = 0.5, rising evenly to 1 at c = 1. With W the total counted weight and B the part of it saying bad, the badness is 0.5 when W is 0; otherwise, with p = (B + 0.5) / (W + 1), it is max(B / (W + 1 - p), 0.5) when p > 0.5, and min((B + p) / (W + p), 0.5) when not.
 
 Ratings by shadowbanned volunteers are stored but count for nothing: shadowbanning a volunteer takes their ratings out of the badness of the comments they rated, and lifting the shadowban puts them back.
 
-Refused, storing nothing of the request: anonymous users (sent to log in); suspended users, permanently or not, and API clients (403); with 400, a "volunteer-" field of another kind, an assignment id that isn't a whole number in digits, a value other than those six, a field given twice, or a field that doesn't name one of the volunteer's open assignments.
+Refused, storing nothing of the request: anonymous users (sent to log in); suspended users, permanently or not, and API clients (403); with 400, a "volunteer-" field of another kind, an assignment id that isn't a whole number in digits, a value other than those six, a field given twice, or a field that doesn't name one of the volunteer's unrated assignments.
 '''
 import time
 
@@ -99,16 +99,83 @@ def test_visitors_are_sent_to_log_in():
 	d.assert_exactly()
 
 
-def test_an_open_assignment_is_rated_whatever_happened_since():
+def _distinguished_reply(comment):
+	factories.comment(factories.admin(2), db.row("submissions", id=comment["parent_submission"]), comment, distinguish_level=1)
+
+
+def _shadowbanned_author(comment):
+	db.update("users", {"id": comment["author_id"]}, shadowbanned="somemod")
+
+
+NO_LONGER_WANTED = {
+	"reports resolved": lambda c: db.update("comments", {"id": c["id"]}, state_report="RESOLVED"),
+	"reports ignored": lambda c: db.update("comments", {"id": c["id"]}, state_report="IGNORED"),
+	"removed": lambda c: db.update("comments", {"id": c["id"]}, state_mod="REMOVED"),
+	"held": lambda c: db.update("comments", {"id": c["id"]}, state_mod="FILTERED"),
+	"deleted": lambda c: db.update("comments", {"id": c["id"]}, state_user_deleted_utc="2020-01-01T00:00:00Z"),
+	"distinguished": lambda c: db.update("comments", {"id": c["id"]}, distinguish_level=1),
+	"pinned": lambda c: db.update("comments", {"id": c["id"]}, is_pinned="somemod"),
+	"banned for": lambda c: db.update("comments", {"id": c["id"]}, bannedfor=True),
+	"distinguished reply": _distinguished_reply,
+	"shadowbanned author": _shadowbanned_author,
+}
+
+
+@pytest.mark.parametrize("change", NO_LONGER_WANTED)
+def test_ratings_of_comments_no_longer_wanted_arent_stored(change):
 	volunteer = factories.user()
 	comment = _assigned_comment(volunteer)
-	db.update("comments", {"id": comment["id"]}, state_report="RESOLVED", state_mod="REMOVED")
+	NO_LONGER_WANTED[change](comment)
 	client = as_user(volunteer)
 
 	with db_diff() as d:
-		client.post("/volunteer/submit", {_field(volunteer, comment): "4"})
+		r = client.post("/volunteer/submit", {_field(volunteer, comment): "4"})
 
-	d.assert_exactly(inserted={"volunteer_janitor": [_rating(volunteer, comment, "Bad")]})
+	assert_html(r, 200)
+	d.assert_exactly()
+
+
+def test_the_other_ratings_of_the_request_are_stored():
+	volunteer = factories.user()
+	wanted, unwanted = _assigned_comment(volunteer), _assigned_comment(volunteer)
+	NO_LONGER_WANTED["reports resolved"](unwanted)
+	client = as_user(volunteer)
+
+	with db_diff() as d:
+		r = client.post("/volunteer/submit", {_field(volunteer, wanted): "2", _field(volunteer, unwanted): "6"})
+
+	assert_html(r, 200)
+	d.assert_exactly(inserted={"volunteer_janitor": [_rating(volunteer, wanted, "Good")]})
+
+
+def test_a_comment_wanted_again_takes_ratings_again():
+	volunteer = factories.user()
+	comment = _assigned_comment(volunteer)
+	db.update("comments", {"id": comment["id"]}, is_pinned="somemod")
+	db.update("comments", {"id": comment["id"]}, is_pinned=None)
+	client = as_user(volunteer)
+
+	with db_diff() as d:
+		r = client.post("/volunteer/submit", {_field(volunteer, comment): "3"})
+
+	assert_html(r, 200)
+	d.assert_exactly(inserted={"volunteer_janitor": [_rating(volunteer, comment, "Neutral")]})
+
+
+@pytest.mark.parametrize("bad", ["value", "already rated"])
+def test_bad_ratings_of_comments_no_longer_wanted_are_still_refused(bad):
+	volunteer = factories.user()
+	comment = _assigned_comment(volunteer)
+	if bad == "already rated":
+		db.insert("volunteer_janitor", user_id=volunteer["id"], comment_id=comment["id"], result="Good")
+	NO_LONGER_WANTED["reports resolved"](comment)
+	client = as_user(volunteer)
+
+	with db_diff() as d:
+		r = client.post("/volunteer/submit", {_field(volunteer, comment): "9" if bad == "value" else "4"})
+
+	assert_status(r, 400)
+	d.assert_exactly()
 
 
 def _no_assignment(volunteer):

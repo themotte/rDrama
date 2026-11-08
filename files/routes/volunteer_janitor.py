@@ -98,7 +98,7 @@ RATINGS = {str(result.value): result for result in VolunteerJanitorResult if res
 
 
 def submitted(v: User, ratings: dict[str, str]) -> None:
-    '''Stores `v`'s ratings, given as {assignment id: rating} as the form sends them. Refuses them all (400) unless each names one of `v`'s open assignments, a comment assigned to them and not yet rated by them, and no two name the same comment.'''
+    '''Stores `v`'s ratings, given as {assignment id: rating} as the form sends them, of the comments still wanted; the others are left out without a word, so the answer doesn't tell the volunteer what the moderators did. Refuses them all (400) unless each names one of `v`'s assignments, a comment assigned to them and not yet rated by them, and no two name the same comment.'''
     if not ratings: return
     parsed = {parse_id(key): RATINGS.get(value) for key, value in ratings.items()}
     # Two spellings of one id (such as 1 and 01) name it twice
@@ -115,9 +115,11 @@ def submitted(v: User, ratings: dict[str, str]) -> None:
         .where(VolunteerJanitorRecord.user_id == v.id, VolunteerJanitorRecord.comment_id.in_(by_comment), VolunteerJanitorRecord.result != VolunteerJanitorResult.Pending) \
         .first()
     if rated: abort(400)
+    wanted = {row[0] for row in g.db.query(Comment.id).where(Comment.id.in_(by_comment), *_still_wanted())}
 
     # In comment id order, as the badness updates lock the comments: ratings of overlapping duties mustn't deadlock
     for cid, result in sorted(by_comment.items()):
+        if cid not in wanted: continue
         g.db.add(VolunteerJanitorRecord(user_id=v.id, comment_id=cid, result=result))
         update_comment_badness(g.db, cid)
 
