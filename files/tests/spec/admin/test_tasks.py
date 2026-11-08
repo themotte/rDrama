@@ -6,7 +6,7 @@ Repeatable tasks, which the site runs on a schedule (scheduled posts are one kin
 - POST /tasks/<id>/schedule replaces its schedule.
 '''
 import re
-from datetime import datetime, time
+from datetime import time
 
 import pytest
 
@@ -16,13 +16,7 @@ MONDAY, TUESDAY = 1 << 2, 1 << 3
 
 
 def _task(admin, *, enabled=True, frequency_day=MONDAY):
-	task = db.insert("tasks_repeatable", author_id=admin["id"], type_id=1, enabled=enabled, run_state=1, frequency_day=frequency_day, time_of_day_utc="01:00", created_utc=1000)
-	code = db.insert("tasks_repeatable_python", id=task["id"], import_path="files.helpers.config.const", callable=factories.unique("callable"))
-	return {**task, "callable": code["callable"]}
-
-
-def _run(task, **columns):
-	return db.insert("tasks_repeatable_runs", **{"task_id": task["id"], "manual": False, "created_utc": 2000, "completed_utc": datetime(2020, 1, 1), **columns})
+	return factories.job(admin, "files.helpers.config.const", factories.unique("callable"), enabled=enabled, frequency_day=frequency_day, time_of_day_utc="01:00")
 
 
 def _links(r) -> set[str]:
@@ -63,7 +57,7 @@ def test_task_list_links_every_task():
 def test_task_page_shows_what_it_runs_and_links_its_runs():
 	admin = factories.admin(2)
 	task = _task(admin)
-	run = _run(task)
+	run = factories.task_run(task)
 
 	r = as_user(admin).get(f"/tasks/{task['id']}/")
 
@@ -90,7 +84,7 @@ def test_task_runs_index_redirects_to_the_task():
 def test_run_page_shows_a_failed_runs_traceback_only_to_head_admins(level, shown):
 	admin = factories.admin(level)
 	traceback = factories.unique("traceback")
-	run = _run(_task(admin), traceback_str=traceback)
+	run = factories.task_run(_task(admin), traceback_str=traceback)
 
 	r = as_user(admin).get(f"/tasks/{run['task_id']}/runs/{run['id']}")
 
@@ -101,7 +95,7 @@ def test_run_page_shows_a_failed_runs_traceback_only_to_head_admins(level, shown
 def test_run_asked_for_under_another_task_redirects_to_its_own():
 	admin = factories.admin(2)
 	task, other = _task(admin), _task(admin)
-	run = _run(task)
+	run = factories.task_run(task)
 
 	r = as_user(admin).get(f"/tasks/{other['id']}/runs/{run['id']}")
 

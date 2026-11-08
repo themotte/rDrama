@@ -15,10 +15,7 @@ MONDAY, FRIDAY, SUNDAY, SATURDAY = 1 << 2, 1 << 6, 1 << 1, 1 << 7
 
 
 def _scheduled_post(admin, *, enabled=False, frequency_day=0):
-	task = db.insert("tasks_repeatable", author_id=admin["id"], type_id=2, enabled=enabled, run_state=1, frequency_day=frequency_day, time_of_day_utc="01:00", created_utc=1000)
-	body = factories.unique("body")
-	content = db.insert("tasks_repeatable_scheduled_submissions", id=task["id"], author_id_submission=admin["id"], ghost=False, private=False, over_18=False, is_bot=False, title=factories.unique("title"), body=body, body_html=f"<p>{body}</p>")
-	return {**content, **task}
+	return factories.scheduled_post(admin, enabled=enabled, frequency_day=frequency_day, time_of_day_utc="01:00")
 
 
 def _unknown_id():

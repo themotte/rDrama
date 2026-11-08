@@ -239,3 +239,27 @@ def report(reporter: dict, item: dict, reason: str | None = None) -> dict:
 def assignment(volunteer: dict, comment: dict) -> dict:
 	'''`comment` given to `volunteer` to rate, as taking volunteer duty gives it, still unrated.'''
 	return db.insert("volunteer_janitor", user_id=volunteer["id"], comment_id=comment["id"], result="Pending")
+
+
+def _task(author: dict, type_id: int, subtype_table: str, subtype_values: dict, overrides: dict) -> dict:
+	task_columns = set(db.table("tasks_repeatable").c.keys())
+	task = db.insert("tasks_repeatable", **{**dict(author_id=author["id"], type_id=type_id, enabled=True, run_state=1, frequency_day=0, time_of_day_utc="00:00", created_utc=1000), **{k: v for k, v in overrides.items() if k in task_columns}})
+	subtype = db.insert(subtype_table, **{**subtype_values, **{k: v for k, v in overrides.items() if k not in task_columns}, "id": task["id"]})
+	return {**subtype, **task}
+
+
+def scheduled_post(author: dict, **overrides) -> dict:
+	'''A scheduled post `author` wrote, with a fresh sentinel title and body, enabled but on no days unless overridden. Overrides name columns of tasks_repeatable (the schedule: frequency_day, time_of_day_utc, enabled, ...) or of tasks_repeatable_scheduled_submissions (the content).'''
+	body = overrides.pop("body", unique("body"))
+	content = dict(author_id_submission=author["id"], ghost=False, private=False, over_18=False, is_bot=False, title=unique("title"), body=body, body_html=f"<p>{html.escape(body)}</p>")
+	return _task(author, 2, "tasks_repeatable_scheduled_submissions", content, overrides)
+
+
+def job(author: dict, import_path: str, callable: str, **overrides) -> dict:
+	'''A task that runs the job named by `import_path` and `callable`, enabled but on no days unless overridden (overrides name columns of tasks_repeatable).'''
+	return _task(author, 1, "tasks_repeatable_python", dict(import_path=import_path, callable=callable), overrides)
+
+
+def task_run(task: dict, **overrides) -> dict:
+	'''A finished, successful run of `task` unless overridden.'''
+	return db.insert("tasks_repeatable_runs", **{**dict(task_id=task["id"], manual=False, created_utc=2000, completed_utc="2020-01-01T00:00:00"), **overrides})

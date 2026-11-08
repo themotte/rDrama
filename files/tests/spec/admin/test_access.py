@@ -87,11 +87,9 @@ def _targets():
 	post = factories.post(user)
 	comment = factories.comment(user, post)
 	note = db.insert("usernotes", author_id=admin["id"], reference_user=user["id"], note=factories.unique(), tag="Comment")
-	task = db.insert("tasks_repeatable", author_id=admin["id"], type_id=1, enabled=False, run_state=1, frequency_day=0, time_of_day_utc="01:00", created_utc=1000)
-	db.insert("tasks_repeatable_python", id=task["id"], import_path="files.helpers.config.const", callable="nothing")
-	run = db.insert("tasks_repeatable_runs", task_id=task["id"], manual=False, created_utc=1000)
-	scheduled_post = db.insert("tasks_repeatable", author_id=admin["id"], type_id=2, enabled=False, run_state=1, frequency_day=0, time_of_day_utc="01:00", created_utc=1000)
-	db.insert("tasks_repeatable_scheduled_submissions", id=scheduled_post["id"], author_id_submission=admin["id"], ghost=False, private=False, over_18=False, is_bot=False, title="t", body="text", body_html="<p>text</p>")
+	task = factories.job(admin, "files.helpers.config.const", "nothing", enabled=False)
+	run = factories.task_run(task)
+	scheduled_post = factories.scheduled_post(admin, enabled=False)
 	return {
 		"username": user["username"],
 		"user_id": user["id"],
