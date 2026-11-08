@@ -28,21 +28,24 @@ class ModAction(CreatedDateTimeBase):
 	user = relationship("User", primaryjoin="User.id==ModAction.user_id", viewonly=True)
 	target_user = relationship("User", primaryjoin="User.id==ModAction.target_user_id", viewonly=True)
 	target_post = relationship("Submission", viewonly=True)
+	target_comment = relationship("Comment", viewonly=True)
 
 	def __repr__(self):
 		return f"<{self.__class__.__name__}(id={self.id})>"
 
-	@property
-	def note(self):
-		if self.kind == "ban_user":
-			if self.target_post: return f'for <a href="{self.target_post.permalink}">post</a>'
-			elif self.target_comment_id: return f'for <a href="/comment/{self.target_comment_id}">comment</a>'
+	def _hides_target_from(self, v) -> bool:
+		'''Whether the post or comment this entry is about is one `v` couldn't open: a draft hidden from them, a comment on one or a private message they aren't party to, or something whose author's shadowban hides it from them.'''
+		if self.target_post: return self.target_post.is_draft_hidden_from(v) or self.target_post.shadowban_hides_from(v)
+		return not self.target_comment.is_open_to(v) or self.target_comment.shadowban_hides_from(v)
+
+	def note_for(self, v) -> str:
+		if self.kind == "ban_user" and (self.target_post or self.target_comment):
+			what = "post" if self.target_post else "comment"
+			if self._hides_target_from(v): return f"for {what}"
+			href = self.target_post.permalink if self.target_post else f"/comment/{self.target_comment_id}"
+			return f'for <a href="{href}">{what}</a>'
 		# Notes hold text admins typed (reasons, flair, domains).
 		return html.escape(self._note or "")
-
-	@note.setter
-	def note(self, x):
-		self._note=x
 
 	def lookup_action_type(self):
 		if self.kind in ACTIONTYPES:
@@ -51,21 +54,20 @@ class ModAction(CreatedDateTimeBase):
 			logging.warning(f'Unfamiliar ACTIONTYPE {self.kind}')
 			return ACTIONTYPES["fallback"]
 
-	@property
-	@lazy
-	def string(self):
-		output = self.lookup_action_type()["str"].format(self=self)
-		if not self.note: return output
-		output += f" <i>({self.note})</i>"
-		return output
+	def string_for(self, v) -> str:
+		output = self.lookup_action_type()["str"].format(target_link=self.target_link_for(v))
+		note = self.note_for(v)
+		if not note: return output
+		return output + f" <i>({note})</i>"
 
-	@property
-	@lazy
-	def target_link(self):
+	def target_link_for(self, v) -> str | None:
 		if self.target_user: return f'<a href="{self.target_user.url}">{self.target_user.username}</a>'
 		elif self.target_post:
-			return f'<a href="{self.target_post.permalink}">{self.target_post.title_html}</a>'
-		elif self.target_comment_id: return f'<a href="/comment/{self.target_comment_id}?context=8#context">comment</a>'
+			if self._hides_target_from(v): return "a post"
+			return f'post <a href="{self.target_post.permalink}">{self.target_post.title_html}</a>'
+		elif self.target_comment:
+			if self._hides_target_from(v): return "comment"
+			return f'<a href="/comment/{self.target_comment_id}?context=8#context">comment</a>'
 
 	@property
 	@lazy
@@ -84,37 +86,37 @@ class ModAction(CreatedDateTimeBase):
 
 ACTIONTYPES = {
 	'approve_post': {
-		"str": 'approved post {self.target_link}', 
+		"str": 'approved {target_link}', 
 		"icon": 'fa-feather-alt', 
 		"color": 'bg-success'
 	},
 	'approve_comment': {
-		"str": 'approved {self.target_link}', 
+		"str": 'approved {target_link}', 
 		"icon": 'fa-comment', 
 		"color": 'bg-success'
 	},
 	'remove_post': {
-		"str": 'removed post {self.target_link}', 
+		"str": 'removed {target_link}', 
 		"icon": 'fa-feather-alt', 
 		"color": 'bg-danger'
 	},
 	'remove_comment': {
-		"str": 'removed {self.target_link}', 
+		"str": 'removed {target_link}', 
 		"icon": 'fa-comment', 
 		"color": 'bg-danger'
 	},
 	'approve_app': {
-		"str": 'approved an application by {self.target_link}', 
+		"str": 'approved an application by {target_link}', 
 		"icon": 'fa-robot', 
 		"color": 'bg-success'
 	},
 	'badge_grant': {
-		"str": 'granted badge to {self.target_link}', 
+		"str": 'granted badge to {target_link}', 
 		"icon": 'fa-badge', 
 		"color": 'bg-success'
 	},
 	'badge_remove': {
-		"str": 'removed badge from {self.target_link}', 
+		"str": 'removed badge from {target_link}', 
 		"icon": 'fa-badge', 
 		"color": 'bg-danger'
 	},
@@ -124,7 +126,7 @@ ACTIONTYPES = {
 		"color": 'bg-danger'
 	},
 	'ban_user': {
-		"str": 'banned user {self.target_link}', 
+		"str": 'banned user {target_link}', 
 		"icon": 'fa-user-slash', 
 		"color": 'bg-danger'
 	},
@@ -134,12 +136,12 @@ ACTIONTYPES = {
 		"color": 'bg-primary'
 	},
 	'check': {
-		"str": 'gave {self.target_link} a checkmark', 
+		"str": 'gave {target_link} a checkmark', 
 		"icon": 'fa-badge-check', 
 		"color": 'bg-success'
 	},
 	'delete_report': {
-		"str": 'deleted report on {self.target_link}', 
+		"str": 'deleted report on {target_link}', 
 		"icon": 'fa-flag', 
 		"color": 'bg-danger'
 	},
@@ -169,12 +171,12 @@ ACTIONTYPES = {
 		"color": 'bg-muted'
 	},
 	'distinguish_comment': {
-		"str": 'distinguished {self.target_link}', 
+		"str": 'distinguished {target_link}', 
 		"icon": 'fa-crown', 
 		"color": 'bg-success'
 	},
 	'distinguish_post': {
-		"str": 'distinguished {self.target_link}', 
+		"str": 'distinguished {target_link}', 
 		"icon": 'fa-crown', 
 		"color": 'bg-success'
 	},
@@ -184,7 +186,7 @@ ACTIONTYPES = {
 		"color": 'bg-muted'
 	},
 	'edit_post': {
-		"str": 'edited {self.target_link}', 
+		"str": 'edited {target_link}', 
 		"icon": 'fa-edit', 
 		"color": 'bg-primary'
 	},
@@ -214,32 +216,32 @@ ACTIONTYPES = {
 		"color": 'bg-success'
 	},
 	'flair_post': {
-		"str": 'set a flair on {self.target_link}', 
+		"str": 'set a flair on {target_link}', 
 		"icon": 'fa-tag', 
 		"color": 'bg-primary'
 	},
 	'link_accounts': {
-		"str": 'linked {self.target_link}', 
+		"str": 'linked {target_link}', 
 		"icon": 'fa-link', 
 		"color": 'bg-success'
 	},
 	'make_admin': {
-		"str": 'made {self.target_link} admin', 
+		"str": 'made {target_link} admin', 
 		"icon": 'fa-user-crown', 
 		"color": 'bg-success'
 	},
 	'nuke_user': {
-		"str": 'removed all content of {self.target_link}', 
+		"str": 'removed all content of {target_link}', 
 		"icon": 'fa-radiation-alt', 
 		"color": 'bg-danger'
 	},
 	'pin_comment': {
-		"str": 'pinned a {self.target_link}', 
+		"str": 'pinned a {target_link}', 
 		"icon": 'fa-thumbtack fa-rotate--45', 
 		"color": 'bg-success'
 	},
 	'pin_post': {
-		"str": 'pinned post {self.target_link}', 
+		"str": 'pinned {target_link}', 
 		"icon": 'fa-thumbtack fa-rotate--45', 
 		"color": 'bg-success'
 	},
@@ -249,42 +251,42 @@ ACTIONTYPES = {
 		"color": 'bg-muted'
 	},
 	'reject_app': {
-		"str": 'rejected an application request by {self.target_link}', 
+		"str": 'rejected an application request by {target_link}', 
 		"icon": 'fa-robot', 
 		"color": 'bg-muted'
 	},
 	'remove_admin': {
-		"str": 'removed {self.target_link} as admin', 
+		"str": 'removed {target_link} as admin', 
 		"icon": 'fa-user-crown', 
 		"color": 'bg-danger'
 	},
 	'revert': {
-		"str": 'reverted {self.target_link} mod actions', 
+		"str": 'reverted {target_link} mod actions', 
 		"icon": 'fa-history', 
 		"color": 'bg-danger'
 	},
 	'revoke_app': {
-		"str": 'revoked an application by {self.target_link}', 
+		"str": 'revoked an application by {target_link}', 
 		"icon": 'fa-robot', 
 		"color": 'bg-muted'
 	},
 	'set_flair_locked': {
-		"str": "set {self.target_link}'s flair (locked)", 
+		"str": "set {target_link}'s flair (locked)", 
 		"icon": 'fa-award', 
 		"color": 'bg-primary'
 	},
 	'set_flair_notlocked': {
-		"str": "set {self.target_link}'s flair (not locked)", 
+		"str": "set {target_link}'s flair (not locked)", 
 		"icon": 'fa-award', 
 		"color": 'bg-primary'
 	},
 	'set_nsfw': {
-		"str": 'set nsfw on post {self.target_link}', 
+		"str": 'set nsfw on {target_link}', 
 		"icon": 'fa-eye-evil', 
 		"color": 'bg-danger'
 	},
 	'shadowban': {
-		"str": 'shadowbanned {self.target_link}', 
+		"str": 'shadowbanned {target_link}', 
 		"icon": 'fa-eye-slash', 
 		"color": 'bg-danger'
 	},
@@ -294,62 +296,62 @@ ACTIONTYPES = {
 		"color": 'bg-success'
 	},
 	'unban_user': {
-		"str": 'unbanned user {self.target_link}', 
+		"str": 'unbanned user {target_link}', 
 		"icon": 'fa-user', 
 		"color": 'bg-success'
 	},
 	'uncheck': {
-		"str": 'removed checkmark from {self.target_link}', 
+		"str": 'removed checkmark from {target_link}', 
 		"icon": 'fa-badge-check', 
 		"color": 'bg-muted'
 	},
 	'undistinguish_comment': {
-		"str": 'un-distinguished {self.target_link}', 
+		"str": 'un-distinguished {target_link}', 
 		"icon": 'fa-crown', 
 		"color": 'bg-muted'
 	},
 	'undistinguish_post': {
-		"str": 'un-distinguished {self.target_link}', 
+		"str": 'un-distinguished {target_link}', 
 		"icon": 'fa-crown', 
 		"color": 'bg-muted'
 	},
 	'unnuke_user': {
-		"str": 'approved all content of {self.target_link}', 
+		"str": 'approved all content of {target_link}', 
 		"icon": 'fa-radiation-alt', 
 		"color": 'bg-success'
 	},
 	'unpin_comment': {
-		"str": 'un-pinned a {self.target_link}', 
+		"str": 'un-pinned a {target_link}', 
 		"icon": 'fa-thumbtack fa-rotate--45', 
 		"color": 'bg-muted'
 	},
 	'unpin_post': {
-		"str": 'un-pinned post {self.target_link}', 
+		"str": 'un-pinned {target_link}', 
 		"icon": 'fa-thumbtack fa-rotate--45', 
 		"color": 'bg-muted'
 	},
 	'unset_nsfw': {
-		"str": 'un-set nsfw on post {self.target_link}', 
+		"str": 'un-set nsfw on {target_link}', 
 		"icon": 'fa-eye-evil', 
 		"color": 'bg-success'
 	},
 	'unshadowban': {
-		"str": 'unshadowbanned {self.target_link}', 
+		"str": 'unshadowbanned {target_link}', 
 		"icon": 'fa-eye', 
 		"color": 'bg-success'
 	},
 	'filter_on': {
-		"str": 'force-filtered {self.target_link}', 
+		"str": 'force-filtered {target_link}', 
 		"icon": 'fa-user', 
 		"color": 'bg-success'
 	},
 	'filter_off': {
-		"str": 'unfiltered {self.target_link}', 
+		"str": 'unfiltered {target_link}', 
 		"icon": 'fa-user', 
 		"color": 'bg-success'
 	},
 	'filter_auto': {
-		"str": 'autofiltered {self.target_link}', 
+		"str": 'autofiltered {target_link}', 
 		"icon": 'fa-user', 
 		"color": 'bg-success'
 	},

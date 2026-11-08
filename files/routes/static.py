@@ -170,6 +170,16 @@ def cached_chart(kind, site):
 	return file
 
 
+# What rendering an entry reads
+_MOD_ACTION_LOADS = (
+	selectinload(ModAction.user),
+	selectinload(ModAction.target_user),
+	selectinload(ModAction.target_post).selectinload(Submission.author),
+	selectinload(ModAction.target_comment).selectinload(Comment.author),
+	selectinload(ModAction.target_comment).selectinload(Comment.post),
+)
+
+
 def _sees_admin_only_kinds(v) -> bool:
 	return bool(v and v.admin_level >= 2)
 
@@ -218,8 +228,7 @@ def log(v):
 	if kind: actions = actions.filter_by(kind=kind)
 
 	actions = actions.options(
-		selectinload(ModAction.user),
-		selectinload(ModAction.target_user),
+		*_MOD_ACTION_LOADS
 	).order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
 	next_exists=len(actions)>25
 	actions=actions[:25]
@@ -232,8 +241,7 @@ def log(v):
 @auth_desired
 def log_item(v, id):
 	action=g.db.query(ModAction).options(
-		selectinload(ModAction.user),
-		selectinload(ModAction.target_user),
+		*_MOD_ACTION_LOADS
 	).filter_by(id=id).one_or_none()
 
 	if not action: abort(404)

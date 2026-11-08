@@ -85,7 +85,7 @@
 							<div>
 								<a href="{{ma.user.url}}" class="font-weight-bold text-black" target="_self">@{{ma.user.username}}</a>
 
-							<span>{{ma.string | safe}}</span>
+							<span>{{ma.string_for(v) | safe}}</span>
 						</div>
 
 						<div class="text-gray-500">{{ma.age_string}} <a href="{{ma.permalink}}"><i class="far fa-link ml-1 text-muted"></i></a>

@@ -11,6 +11,14 @@ if TYPE_CHECKING:
 	from files.helpers.content import Submittable
 
 
+class AuthorShadowban:
+	'''For posts and comments: what their author's shadowban hides.'''
+
+	def shadowban_hides_from(self, v) -> bool:
+		'''Whether its author's shadowban hides it from `v`: from everyone but the author and admins (level 2+).'''
+		return bool(self.author.shadowbanned) and not (v and (v.id == self.author_id or v.admin_level >= PERMS['USER_SHADOWBAN']))
+
+
 class StateMod(enum.Enum):
     VISIBLE = 0
     FILTERED = 1

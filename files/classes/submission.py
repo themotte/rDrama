@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session, declared_attr, object_session, relationship
 
 from files.classes.base import CreatedBase
 from files.classes.flags import Flag
-from files.classes.visstate import StateMod, StateReport, VisibilityState
+from files.classes.visstate import AuthorShadowban, StateMod, StateReport, VisibilityState
 from files.classes.votes import Vote, votes_shown_to
 from files.helpers.assetcache import assetcache_path
 from files.helpers.config.const import *
@@ -24,7 +24,7 @@ from files.helpers.time import format_age, format_datetime
 IMAGE_URL_SUFFIXES = ('.webp', '.jpg', '.png', '.gif', '.jpeg', '?maxwidth=9999', '&fidelity=high')
 
 
-class Submission(CreatedBase):
+class Submission(CreatedBase, AuthorShadowban):
 	__tablename__ = "submissions"
 
 	id = Column(Integer, primary_key=True)

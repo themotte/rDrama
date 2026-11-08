@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 from files.classes.base import CreatedBase
 from files.classes.notifications import Notification
 from files.classes.votes import votes_shown_to
-from files.classes.visstate import StateMod, StateReport, VisibilityState
+from files.classes.visstate import AuthorShadowban, StateMod, StateReport, VisibilityState
 from files.helpers.config.const import *
 from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS, SITE_FULL
 from files.helpers.content import body_displayed
@@ -19,7 +19,7 @@ from files.helpers.time import format_age
 if TYPE_CHECKING:
 	from files.classes.user import User
 
-class Comment(CreatedBase):
+class Comment(CreatedBase, AuthorShadowban):
 	__tablename__ = "comments"
 
 	id = Column(Integer, primary_key=True)
@@ -140,10 +140,6 @@ class Comment(CreatedBase):
 		if not self.parent_submission:
 			return sorted((x for x in self.child_comments if x.renders_for(user)), key=lambda x: x.created_utc)
 		return sorted((x for x in self.child_comments if x.renders_for(user)), key=lambda x: x.created_utc, reverse=True)
-
-	def shadowban_hides_from(self, v) -> bool:
-		'''Whether its author's shadowban hides the comment from `v`: everyone but the author and admins (level 2+).'''
-		return bool(self.author.shadowbanned) and not (v and (v.id == self.author_id or v.admin_level >= PERMS['USER_SHADOWBAN']))
 
 	@property
 	def replies2(self):
