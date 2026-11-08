@@ -4,12 +4,10 @@ import contextlib
 import dataclasses
 from datetime import date, datetime, timedelta, timezone
 from enum import IntEnum, IntFlag
-from typing import TYPE_CHECKING, ClassVar, Final, Optional, Union
+from typing import ClassVar, Final, Optional, Union
 
 import flask
 import flask_caching
-import flask_mail
-import redis
 from sqlalchemy.orm import relationship, Session
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.sql.sqltypes import (Boolean, DateTime, Integer, SmallInteger,
@@ -17,9 +15,6 @@ from sqlalchemy.sql.sqltypes import (Boolean, DateTime, Integer, SmallInteger,
 
 from files.classes.base import CreatedBase
 from files.helpers.time import format_age, format_datetime
-
-if TYPE_CHECKING:
-	from files.classes.user import User
 
 class ScheduledTaskType(IntEnum):
 	PYTHON_CALLABLE = 1
@@ -86,17 +81,10 @@ class DayOfWeek(IntFlag):
 		return _days[weekday] in self
 
 
-_UserConvertible = Union["User", str, int]
-
 @dataclasses.dataclass(frozen=True, kw_only=True, slots=True)
 class TaskRunContext:
 	'''
-	A full task run context, with references to all app globals embedded.
-	This is the entirety of the application's global state at this point.
-
-	This is explicit state. This is useful so scheduled tasks do not have 
-	to import from  `files.__main__` and so they can use all of the features
-	of the application without being in a request context.
+	What a scheduled task is given to run with, so it can use the application's features without importing from `files.__main__` and without a request context.
 	'''
 	app:flask.app.Flask
 	'''
@@ -116,118 +104,25 @@ class TaskRunContext:
 	A database session. Useful for when a task needs to modify something in the
 	database (for example creating a submission)
 	'''
-	mail:flask_mail.Mail
-	'''
-	The mail extension. Needed for sending emails.
-	'''
-	redis:redis.Redis
-	'''
-	A direct reference to our redis connection. Normally most operations that
-	involve the redis datastore use flask_caching's Cache object (accessed via 
-	the `cache` property), however this is provided as a convenience for more 
-	granular redis operations.
-	'''
 	task:RepeatableTask
 	'''
 	A reference to the task that is being ran.
-	'''
-	task_run:RepeatableTaskRun
-	'''
-	A reference to this current run of the task.
 	'''
 	trigger_time:datetime
 	'''
 	The date and time (UTC) that this task was triggered
 	'''
 
-	@property
-	def run_time(self) -> datetime:
-		'''
-		The date and time (UTC) that this task was actually ran
-		'''
-		return self.task_run.created_datetime_py
-
 	@contextlib.contextmanager
-	def app_context(self, *, v:Optional[_UserConvertible]=None):
+	def app_context(self):
 		'''
-		Context manager that uses `self.app` to generate an app context and set
-		up the application with expected globals. This assigns `g.db`, `g.v`, 
-		and `g.debug`.
-		
-		This is intended for use with legacy code that does not pass state 
-		explicitly and instead relies on the use of `g` for state passing. If
-		at all possible, state should be passed explicitly to functions that
-		require it.
-
-		Usage is simple:
-		```py
-		with ctx.app_context() as app_ctx:
-			# code that requires g
-		```
-
-		Any code that uses `g` can be ran here. As this is intended for
-		scenarios that may be outside of a request context code that uses the
-		request context may still raise `RuntimeException`s.
-
-		An example
-
-		```py
-		from flask import g, request # import works ok
-
-		def legacy_function():
-			u:Optional[User] = g.db.get(User, 1784) # works ok! :)
-			u.admin_level = \\
-				request.values.get("admin_level", default=9001, type=int) 
-				# raises a RuntimeError :(
-			g.db.commit()
-		```
-
-		This is because there is no actual request being made. Creating a 
-		mock request context is doable but outside of the scope of this 
-		function as this is often not needed outside of route handlers (where
-		this function is out of scope anyway).
-
-		:param v: A `User`, an `int`, a `str`, or `None`. `g.v` will be set
-		using the following rules:
-		          
-		1. If `v` is an `int`, `files.helpers.get_account` is called and the 
-		result of that is stored in `g.v`.
-		
-		2. If `v` is an `str`, `files.helpers.get_user` is called and the 
-		result of that is stored in `g.v`.
-		
-		3. If `v` is a `User`, it is stored in `g.v`.
-			      
-		It is expected that callees will provide a valid user ID or username.
-		If an invalid one is provided, *no* exception will be raised and `g.v`
-		will be set to `None`.
-
-		This is mainly provided as an optional feature so that tasks can be 
-		somewhat "sudo"ed as a particular user. Note that `g.v` is always 
-		assigned (even if to `None`) in order to prevent code that depends on
-		its existence from raising an exception.
+		An app context with `g.db` set to this run's session, `g.v` to `None` and `g.debug` to the app's, for code that reads its state from `g` rather than taking it as parameters. Code that needs a request context still raises `RuntimeError` here.
 		'''
 		with self.app.app_context() as app_ctx:
 			app_ctx.g.db = self.db
-
-			from files.helpers.get import get_account, get_user
-
-			if isinstance(v, str):
-				v = get_user(v, graceful=True)
-			elif isinstance(v, int):
-				v = get_account(v, graceful=True, db=self.db)
-
-			app_ctx.g.v = v
+			app_ctx.g.v = None
 			app_ctx.g.debug = self.app.debug
 			yield app_ctx
-
-	@contextlib.contextmanager
-	def db_transaction(self):
-		try:
-			yield
-			self.db.commit()
-		except:
-			self.db.rollback()
 
 
 _TABLE_NAME: Final[str] = "tasks_repeatable"
@@ -314,15 +209,12 @@ class RepeatableTask(CreatedBase):
 	def run(self, db: Session, trigger_time: datetime) -> RepeatableTaskRun:
 		run:RepeatableTaskRun = RepeatableTaskRun(task_id=self.id)
 		try:
-			from files.__main__ import app, cache, mail, r  # i know
+			from files.__main__ import app, cache  # i know
 			ctx: TaskRunContext = TaskRunContext(
 				app=app,
 				cache=cache,
 				db=db,
-				mail=mail,
-				redis=r,
 				task=self,
-				task_run=run,
 				trigger_time=trigger_time,
 			)
 			self.run_task(ctx)
