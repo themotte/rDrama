@@ -2,7 +2,7 @@ import time
 from collections.abc import Iterable
 from typing import Any, TYPE_CHECKING
 
-from sqlalchemy.sql import func
+from sqlalchemy.sql import case, func
 from sqlalchemy.orm import Query
 
 from files.helpers.config.const import *
@@ -28,6 +28,12 @@ def apply_time_filter(objects, t, cls):
 	else:
 		cutoff = 0
 	return objects.filter(cls.created_utc >= cutoff)
+
+
+def pinned_comments_first(cls) -> tuple:
+	'''For comments (`cls` being the comment class, passed for the import cycle): the order keys putting pinned ones first, newest first among themselves.'''
+	pinned = cls.is_pinned != None
+	return (pinned.desc(), case((pinned, cls.created_utc)).desc().nulls_last(), case((pinned, cls.id)).desc().nulls_last())
 
 
 def sort_objects(objects: Query, sort: str, cls):
@@ -99,7 +105,6 @@ def sort_comment_results(comments: Iterable[Comment], sort:str, *, pins:bool=Fal
 	else: # default, or sort == 'new'
 		key_func = lambda c: (-c.created_utc, -c.id)
 
-	key_func_pinned = lambda c: (
-		(c.is_pinned is None, c.is_pinned == '', c.is_pinned), # sort None last
-		key_func(c))
+	# Pinned comments first, newest first among themselves
+	key_func_pinned = lambda c: (0, -c.created_utc, -c.id) if c.is_pinned is not None else (1, key_func(c))
 	return sorted(comments, key=key_func_pinned if pins else key_func)

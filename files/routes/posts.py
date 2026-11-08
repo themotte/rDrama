@@ -19,7 +19,7 @@ from files.helpers.alerts import *
 from files.helpers.background import spawn_background
 from files.helpers.config.const import *
 from files.helpers.content import canonicalize_url2
-from files.helpers.contentsorting import sort_objects
+from files.helpers.contentsorting import pinned_comments_first, sort_objects
 from files.helpers.sanitize import *
 from files.helpers.thumbnails import thumbnail_thread, titleheaders
 from files.helpers.wrappers import *
@@ -70,7 +70,7 @@ def post_id(pid, anything=None, v=None):
 	top_comments = g.db.query(Comment.id, Comment.descendant_count).filter(
 		Comment.parent_submission == post.id,
 		Comment.level == 1,
-	).order_by(Comment.is_pinned.desc().nulls_last())
+	).order_by(*pinned_comments_first(Comment))
 	top_comments = sort_objects(top_comments, sort, Comment)
 
 	pg_top_comment_ids = []
@@ -124,7 +124,7 @@ def viewmore(v, pid, sort, offset):
 		Comment.level == 1,
 		Comment.id.notin_(ids),
 		Comment.is_pinned == None,
-	).order_by(Comment.is_pinned.desc().nulls_last())
+	).order_by(*pinned_comments_first(Comment))
 
 	if sort == "new":
 		newest_created_utc = g.db.query(Comment.created_utc).filter(

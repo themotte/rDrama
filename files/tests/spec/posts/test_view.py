@@ -453,6 +453,33 @@ def test_pinned_comments_come_first():
 	assert _order(_page(anon(), post), [pinned, newer]) == [pinned["id"], newer["id"]]
 
 
+@pytest.mark.parametrize("replies", [False, True], ids=["top-level", "replies"])
+def test_pinned_comments_list_newest_first_whoever_pinned_them(replies):
+	post = factories.post(factories.user())
+	parent = factories.comment(factories.user(), post, created_utc=500) if replies else None
+	# The pinners' names sort neither way their times do
+	pins = [factories.comment(factories.user(), post, parent=parent, created_utc=at, is_pinned=name) for at, name in ((1000, "m-mod"), (2000, "z-mod"), (3000, "a-mod"))]
+	unpinned = factories.comment(factories.user(), post, parent=parent, created_utc=4000)
+
+	assert _order(_page(anon(), post, params={"sort": "old"}), [*pins, unpinned]) == [pins[2]["id"], pins[1]["id"], pins[0]["id"], unpinned["id"]]
+
+
+def test_the_newest_pinned_threads_fill_the_first_page_whatever_the_sort():
+	post = factories.post(factories.user())
+	pins = [factories.comment(factories.user(), post, created_utc=at, is_pinned=name) for at, name in ((1000, "m-mod"), (2000, "a-mod"), (3000, "z-mod"))]
+	for pin in pins:
+		for _ in range(100):
+			factories.comment(factories.user(), post, parent=pin)
+
+	r = _page(anon(), post, params={"sort": "old"})
+
+	# A page holds whole threads until it has 200 comments: the two newest pinned threads
+	assert_html(r, 200)
+	assert_not_in_payload(r, pins[0]["body"])
+	assert_in_payload(r, pins[1]["body"])
+	assert_in_payload(r, pins[2]["body"])
+
+
 def test_comments_beyond_the_first_page_are_left_for_view_more():
 	'''A page holds whole top-level threads until it has 200 or more comments; later threads are fetched with /viewmore.'''
 	post = factories.post(factories.user())
