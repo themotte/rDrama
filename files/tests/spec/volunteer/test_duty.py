@@ -322,6 +322,19 @@ def test_a_temporarily_suspended_users_report_counts():
 	assert [row["comment_id"] for row in db.rows("volunteer_janitor", user_id=volunteer["id"])] == [comment["id"]]
 
 
+def test_ordinary_replies_dont_matter():
+	post = factories.post(factories.user())
+	comment = factories.comment(factories.user(), post, state_report="REPORTED")
+	factories.report(factories.user(), comment)
+	factories.comment(factories.user(), post, comment)
+	volunteer = factories.user()
+
+	r = as_user(volunteer).get("/volunteer")
+
+	assert_html(r, 200)
+	assert [row["comment_id"] for row in db.rows("volunteer_janitor", user_id=volunteer["id"])] == [comment["id"]]
+
+
 def test_others_assignments_dont_matter():
 	comment = _eligible()
 	factories.assignment(factories.user(), comment)

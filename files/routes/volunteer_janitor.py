@@ -30,6 +30,23 @@ def assigned_comments(assignments: list[VolunteerJanitorRecord]) -> list[tuple[i
     return [(a.id, comments[a.comment_id]) for a in assignments]
 
 
+def _still_wanted() -> list:
+    '''The conditions under which a comment is one duties are made of, whoever the volunteer: its reports are open, it is visible and not deleted, its author isn't shadowbanned, and the moderators haven't spoken on it (it isn't distinguished, pinned or marked as a ban's reason, and no direct reply to it is distinguished).'''
+    Reply = aliased(Comment)
+    Author = aliased(User)
+    return [
+        Comment.state_report == StateReport.REPORTED,
+        Comment.state_mod == StateMod.VISIBLE,
+        Comment.state_user_deleted_utc == None,
+        Comment.distinguish_level == 0,
+        Comment.is_pinned == None,
+        sqlalchemy.not_(sqlalchemy.func.coalesce(Comment.bannedfor, False)),
+        # once a modhat hits, that's it, doesn't show up in the volunteer system anymore: we don't want to give people hints as to the "right" result
+        ~sqlalchemy.exists().where(Reply.parent_comment_id == Comment.id, Reply.distinguish_level > 0),
+        ~sqlalchemy.exists().where(Author.id == Comment.author_id, Author.shadowbanned != None),
+    ]
+
+
 def get_duty(u: User) -> Optional[list[int]]:
     if not app.config['VOLUNTEER_JANITOR_ENABLE']:  # pragma: no cover (a deployment switch, on unless configured off; outside the spec)
         return None
@@ -41,15 +58,10 @@ def get_duty(u: User) -> Optional[list[int]]:
     reported_comments = g.db.query(Comment) \
         .join(Submission, Submission.id == Comment.parent_submission) \
         .where(Submission.private == False) \
-        .where(Comment.state_report == StateReport.REPORTED) \
-        .where(Comment.state_mod == StateMod.VISIBLE) \
-        .where(Comment.state_user_deleted_utc == None) \
+        .where(*_still_wanted()) \
         .where(Comment.author_id != u.id, Submission.author_id != u.id) \
-        .where(Comment.distinguish_level == 0, Comment.is_pinned == None, sqlalchemy.not_(sqlalchemy.func.coalesce(Comment.bannedfor, False))) \
         .outerjoin(ParentComment, ParentComment.id == Comment.parent_comment_id) \
         .where(sqlalchemy.or_(ParentComment.author_id != u.id, ParentComment.author_id == None)) \
-        .join(User, User.id == Comment.author_id) \
-        .where(User.shadowbanned == None) \
         .where(Comment.author_id.notin_(sqlalchemy.select(UserBlock.target_id).where(UserBlock.user_id == u.id))) \
         .where(Comment.author_id.notin_(sqlalchemy.select(UserBlock.user_id).where(UserBlock.target_id == u.id))) \
         .with_entities(Comment.id)
@@ -59,23 +71,9 @@ def get_duty(u: User) -> Optional[list[int]]:
     reported_ids = [reported.id for reported in reported_comments]
     
     if not app.config['DBG_VOLUNTEER_PERMISSIVE']:
-        # find distinguished children of those reported comments
-        # this is a ghastly query and should be fixed when we're doing some kind of cleanup and mod-action formalization
-        distinguished_children = g.db.query(Comment) \
-            .where(Comment.parent_comment_id.in_(reported_ids)) \
-            .where(Comment.distinguish_level > 0) \
-            .with_entities(Comment.parent_comment_id)
-
-        distinguished_children_ids = [child.parent_comment_id for child in distinguished_children]
-
-        # filter
-        # we're doing this because we don't want to give people hints as to the "right" result
-        # once a modhat hits, that's it, doesn't show up in the volunteer system anymore
-        clean_reported = set(reported_ids) - set(distinguished_children_ids)
-
-        # also, let's make sure it has a report that isn't made by this user, by someone whose reports bring items to the moderators
+        # let's make sure it has a report that isn't made by this user, by someone whose reports bring items to the moderators
         nonuser_reports = g.db.query(CommentFlag) \
-            .where(CommentFlag.comment_id.in_(clean_reported)) \
+            .where(CommentFlag.comment_id.in_(reported_ids)) \
             .where(CommentFlag.user_id != u.id) \
             .join(User, User.id == CommentFlag.user_id) \
             .where(User.reports_count) \
