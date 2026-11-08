@@ -66,6 +66,9 @@ omit = [
     "files/routes/dev.py",
     # Signals the gunicorn processes of the serving pod; deployment-specific process control, deliberately outside the spec
     "files/routes/admin/performance.py",
+    # Developer tools (filling a dev database, profiling a page render); deliberately outside the spec
+    "files/commands/seed_db.py",
+    "files/commands/profile_url.py",
     "*/tests/*",
     "*/test_*.py",
     "*/__pycache__/*",
