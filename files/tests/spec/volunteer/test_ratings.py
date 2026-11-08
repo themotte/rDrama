@@ -3,8 +3,10 @@ Rating the comments of a volunteer duty: POST /volunteer/submit, with one form f
 
 Each rating updates the comment's "volunteer_janitor_badness" at once, counting it. The badness comes from the first rating of each volunteer assigned the comment before they rated it (other ratings count for nothing). A rating says the comment is bad (Warning, Ban: with confidence 1; Bad: 0.5) or not (TopQuality, Good: 1; Neutral: 0.5), and counts with the confidence times the volunteer's weight, which comes from their past accuracy c ("volunteer_janitor_correctness"): 0 up to c = 0.5, rising evenly to 1 at c = 1. With W the total counted weight and B the part of it saying bad, the badness is 0.5 when W is 0; otherwise, with p = (B + 0.5) / (W + 1), it is max(B / (W + 1 - p), 0.5) when p > 0.5, and min((B + p) / (W + p), 0.5) when not.
 
-Refused, storing nothing of the request: anonymous users (sent to log in); with 400, a "volunteer-" field of another kind, a comment id that isn't a whole number in digits, a value other than those six, a field given twice, or a comment that isn't one of the volunteer's open assignments.
+Refused, storing nothing of the request: anonymous users (sent to log in); suspended users, permanently or not (403); with 400, a "volunteer-" field of another kind, a comment id that isn't a whole number in digits, a value other than those six, a field given twice, or a comment that isn't one of the volunteer's open assignments.
 '''
+import time
+
 import pytest
 
 from files.tests.spec.harness import *
@@ -236,3 +238,18 @@ def test_two_bans_make_a_comment_worse_than_one():
 	as_user(volunteer).post("/volunteer/submit", {f"volunteer-janitor-{comment['id']}": "6"})
 
 	assert db.row("comments", id=comment["id"])["volunteer_janitor_badness"] == pytest.approx(2 / (2 + 1 / 6))
+
+
+# Volunteers' standing
+
+@pytest.mark.parametrize("permanently", [True, False], ids=["permanently", "temporarily"])
+def test_suspended_volunteers_cant_rate(permanently):
+	volunteer = factories.user(is_banned=factories.admin(2)["id"], unban_utc=0 if permanently else int(time.time()) + 86400, volunteer_janitor_correctness=1.0)
+	comment = _assigned_comment(volunteer)
+	client = as_user(volunteer)
+
+	with db_diff() as d:
+		r = client.post("/volunteer/submit", {f"volunteer-janitor-{comment['id']}": "6"})
+
+	assert_status(r, 403)
+	d.assert_exactly()

@@ -9,7 +9,7 @@ import files.routes.volunteer_janitor
 from files.__main__ import app
 from files.classes.user import User
 from files.helpers.locks import volunteer_duty_lock
-from files.helpers.wrappers import auth_required
+from files.helpers.wrappers import auth_required, refuse_while_suspended
 
 
 @files.helpers.jinja2.template_function
@@ -18,7 +18,7 @@ def volunteer_available_for(u: Optional[User]) -> bool:
 
 def volunteer_get_duty(u: Optional[User]) -> Optional[list[int]]:
     '''The ids of the comments `u` would be given to rate now, or None when there's nothing for them to do.'''
-    if u is None:
+    if u is None or u.is_suspended or u.shadowbanned:
         return None
     
     if not app.config['DBG_VOLUNTEER_PERMISSIVE']:  # pragma: no branch (DBG_VOLUNTEER_PERMISSIVE relaxes the limits for trying duties out in development; outside the spec)
@@ -48,6 +48,7 @@ def volunteer(v: User):
 @app.post("/volunteer/submit")
 @auth_required
 def volunteer_submit(v: User):
+    refuse_while_suspended(v)
     ratings = {}
     for k in request.form:
         if not k.startswith("volunteer-"):

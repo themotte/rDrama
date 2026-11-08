@@ -3,7 +3,7 @@ Volunteer janitor duty: logged-in users are asked to rate reported comments.
 
 GET /volunteer gives the visitor a duty when one is available: up to 3 eligible comments, chosen at random, each assigned to them to rate (a "volunteer_janitor" row with result "Pending"), and their "volunteer_last_started_utc" set to now. The page shows the assigned comments' text and the rating form (see test_ratings; its fields name the comments by id), and nothing else about the comments: not who wrote them, not the post or thread they are in (nor a link to it), not their reports or what volunteers made of them so far (not even to admins), and no actions on them. With nothing available the page says so and nothing is written. Anonymous visitors are sent to log in; API clients are refused (403), changing nothing.
 
-A visitor has no duty available within 20 hours of their last start.
+A visitor has no duty available within 20 hours of their last start, nor while suspended (permanently or not) or shadowbanned.
 
 A comment is eligible for a volunteer when:
 - it is a comment on a post that isn't a draft: never a private message or one of the site's notices;
@@ -17,6 +17,8 @@ A comment is eligible for a volunteer when:
 
 A post's page shows a link to /volunteer exactly when a duty is available to the viewer.
 '''
+import time
+
 import pytest
 
 from files.tests.spec.harness import *
@@ -96,6 +98,25 @@ def test_a_new_duty_comes_20_hours_after_the_last(hours, assigned):
 	assert_html(r, 200)
 	assert bool(db.rows("volunteer_janitor", user_id=volunteer["id"])) == assigned
 	(assert_in_payload if assigned else assert_not_in_payload)(r, comment["body"])
+
+
+UNAVAILABLE = {
+	"permanently suspended": lambda: factories.user(is_banned=factories.admin(2)["id"], unban_utc=0),
+	"temporarily suspended": lambda: factories.user(is_banned=factories.admin(2)["id"], unban_utc=int(time.time()) + 86400),
+	"shadowbanned": lambda: factories.user(shadowbanned="somemod"),
+}
+
+
+@pytest.mark.parametrize("who", UNAVAILABLE)
+def test_suspended_and_shadowbanned_users_have_no_duty(who):
+	_eligible()
+	client = as_user(UNAVAILABLE[who]())
+
+	with db_diff() as d:
+		r = client.get("/volunteer")
+
+	assert_html(r, 200)
+	d.assert_exactly()
 
 
 def test_visitors_are_sent_to_log_in():
@@ -296,9 +317,11 @@ def test_a_posts_page_invites_viewers_with_a_duty_available():
 	assert_in_payload(r, 'href="/volunteer"')
 
 
-@pytest.mark.parametrize("why", ["nothing to do", "recent duty"])
+@pytest.mark.parametrize("why", ["nothing to do", "recent duty", *UNAVAILABLE])
 def test_a_posts_page_doesnt_invite_viewers_without_one(why):
-	viewer = factories.user()
+	viewer = UNAVAILABLE[why]() if why in UNAVAILABLE else factories.user()
+	if why in UNAVAILABLE:
+		_eligible()
 	if why == "recent duty":
 		_eligible()
 		_started(viewer, 1)

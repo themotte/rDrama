@@ -14,6 +14,8 @@ Decided and pinned in `api/test_requests.py` and `api/test_owner.py`: while susp
 
 Decided and pinned in `reporting/test_reports.py`: reports by permanently suspended (or shadowbanned) users are stored but never bring the item to the moderators, posts and comments alike, nor make a comment one volunteers are given; temporarily suspended users report normally.
 
+Decided and pinned in `volunteer/test_duty.py` and `volunteer/test_ratings.py`: suspended users (temporarily or permanently) and shadowbanned users are given no volunteer duty, and suspended users can't rate comments they were given before.
+
 Decided and pinned in `users/test_ban_expiry.py`: a temporary ban that ran out ends (with a "You have been unbanned!" notification and `ban_evade` reset) on the user's next request to any page, not only the front page.
 
 Not yet audited. The app today has three different notions of "banned", and the routes below pick among them inconsistently:
