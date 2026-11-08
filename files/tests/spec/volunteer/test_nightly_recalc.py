@@ -9,7 +9,7 @@ The moderators' verdict on a comment comes from negative notes about its author:
 - otherwise not bad.
 
 Each rating says bad (Warning, Ban: confidence 1; Bad: 0.5) or not (TopQuality, Good: 1; Neutral: 0.5). An accuracy a gives a weight w(a): 0 up to a = 0.5, rising evenly to 1 at a = 1. Every volunteer starts at accuracy 0.2, whatever is stored, and 100 rounds follow. Each round first estimates every comment from the previous round's accuracies, then updates every accuracy from those estimates:
-- A comment's estimate is (B + 0.5) / (W + 1), where W sums the weights counting on it and B the part of them saying bad. A verdict of bad adds 4 to both, not bad adds 4 to W, ignored adds nothing. Every counted rating of the comment adds to them, so a volunteer is scored against estimates their own ratings are part of. Each rating adds its confidence times the volunteer's weight: 4 for admins (account admin level 1 or more), w(their accuracy) for anyone else.
+- A comment's estimate is (B + 0.5) / (W + 1), where W sums the weights counting on it and B the part of them saying bad. A verdict of bad adds 4 to both, not bad adds 4 to W, ignored adds nothing. Each counted rating adds its confidence times the volunteer's weight: 4 for admins (account admin level 1 or more), w(their accuracy) for anyone else. Ratings by shadowbanned volunteers, admins included, add nothing, though their own accuracy is worked out from them like anyone's. A volunteer's own ratings are part of the estimates they are scored against.
 - A volunteer's score is V / N, starting from N = 2 and V = 0.4, over their ratings of comments that aren't ignored: each adds k = confidence × s to N, and to V too when it was right (it says bad exactly when the estimate is above 0.5), where s = clamp((|estimate − 0.5| − 0.1) / 0.4, 0, 1). Their accuracy then moves a fifth of the way to their score: a ← 0.8 a + 0.2 × score.
 
 Every volunteer with a rating it learns from gets the result; the others keep what is stored.
@@ -310,6 +310,18 @@ def test_of_two_ratings_stored_at_once_the_first_stored_counts(first, expected):
 	_recalc()
 
 	assert _accuracy(volunteer) == pytest.approx(expected, abs=1e-12)
+
+
+def test_a_shadowbanned_volunteers_ratings_move_no_estimate_but_their_accuracy_is_worked_out():
+	shadowbanned, volunteer = factories.admin(2, shadowbanned="somemod"), factories.user()
+	comment = _comment()
+	_rate(shadowbanned, comment, "Ban")
+	_rate(volunteer, comment, "Ban")
+
+	_recalc()
+
+	# Counted, the admin's weight of 4 would make the estimate exactly 0.5 and teach nothing; left out, it stays 0.1
+	assert (_accuracy(shadowbanned), _accuracy(volunteer)) == pytest.approx((WRONG, WRONG), abs=1e-12)
 
 
 def test_a_volunteer_who_never_rated_keeps_their_accuracy():

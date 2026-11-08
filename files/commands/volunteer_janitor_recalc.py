@@ -110,8 +110,8 @@ def volunteer_janitor_recalc(db: Session) -> int:
     # get per-user metadata
     users = db.query(User) \
         .where(User.id.in_(reporting_user_ids)) \
-        .options(sqlalchemy.orm.load_only(User.id, User.admin_level))
-    users = {user.id: {"admin": user.admin_level != 0} for user in users}
+        .options(sqlalchemy.orm.load_only(User.id, User.admin_level, User.shadowbanned))
+    users = {user.id: {"admin": user.admin_level != 0, "shadowbanned": bool(user.shadowbanned)} for user in users}
 
     user_accuracy = defaultdict(lambda: CONFIG_default_user_accuracy)
     
@@ -141,6 +141,10 @@ def volunteer_janitor_recalc(db: Session) -> int:
         # accumulate volunteer weights
         for key, value in records_compiled.items():
             uid, cid = key
+
+            # Ratings by shadowbanned volunteers count for nothing, as in a comment's badness
+            if users[uid]["shadowbanned"]:
+                continue
 
             # Calculate how much to weight a user; highly inaccurate users are not inverted! They just don't get contribution
             # (losers)
