@@ -11,8 +11,9 @@ from urllib.parse import urlsplit
 import requests.adapters
 import urllib3
 
-from files.__main__ import app, db_session
+from files.__main__ import app, db_session, db_session_factory
 import files.cli  # registers the command-line commands
+from files.commands.cron import tasks_recover_interrupted, tasks_run_due
 from files.helpers import background
 from files.tests import reset as _reset
 
@@ -62,6 +63,13 @@ def cli(args):
 	# A command may leave the thread's session holding a transaction; release it like a finished request would
 	db_session.remove()
 	return result.exit_code, result.output
+
+
+def run_scheduler(at):
+	clock = lambda: at
+	tasks_recover_interrupted(db_session_factory, clock)
+	tasks_run_due(db_session_factory, clock)
+	db_session.remove()
 
 
 def sent_mail() -> list[dict]:

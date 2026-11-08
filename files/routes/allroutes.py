@@ -77,7 +77,7 @@ def before_request():
 			abort(403)
 
 
-@app.teardown_appcontext
+@app.teardown_request
 def teardown_request(error):
 	active_requests.pop(threading.get_ident(), None)
 	if hasattr(g, 'db') and g.db:

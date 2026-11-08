@@ -4,6 +4,7 @@ The spec tier's whole vocabulary. Spec tests import from here and nowhere in `fi
 import json
 import re
 import time
+from datetime import datetime
 from html.parser import HTMLParser
 from typing import NamedTuple
 
@@ -13,7 +14,7 @@ from files.tests.spec.harness.asserts import __all__ as _asserts_all
 from files.tests.spec.harness.db import ANY, db_diff
 from files.tests.spec.harness.http import Client, Response
 
-__all__ = ["config", "db", "external_web", "factories", "seed", "session", "uploads", "XHR", "TOR", "can_log_in", "notification_counts", "element_text", "urls_in", "totp_step_settle", "ANY", "db_diff", "Client", "Response", "anon", "as_user", "as_api", "site_settings_set", "run_background_work", "sent_mail", "cli", "CliResult", "assert_cli_ok", *_asserts_all]
+__all__ = ["config", "db", "external_web", "factories", "seed", "session", "uploads", "XHR", "TOR", "can_log_in", "notification_counts", "element_text", "urls_in", "totp_step_settle", "ANY", "db_diff", "Client", "Response", "anon", "as_user", "as_api", "site_settings_set", "run_background_work", "run_scheduler", "sent_mail", "cli", "CliResult", "assert_cli_ok", *_asserts_all]
 
 
 XHR = {"xhr": "1"}
@@ -48,6 +49,17 @@ def site_settings_set(key, value):
 def run_background_work():
 	'''Runs work the app handed off to the background (thumbnail fetching) to completion.'''
 	backend.run_background_work()
+
+
+def run_scheduler(at: datetime):
+	'''
+	Does what the scheduled-task worker (the `cron` command) does when it starts at `at` (an aware datetime), up to the end of its first pass over the tasks: recovering tasks a stopped worker left running, then running every task due at `at`.
+
+	The worker's clock reads `at` throughout, so `at` is: when the tasks run (`tasks_repeatable.run_time_last`), the start and completion times of their runs, and a scheduled post's `created_utc` and the dates in its title. Everything else the run writes (votes, notifications) takes the real time.
+
+	A backend driving the site out of process would need a test-mode way to start the worker on a given clock, such as a test-only `cron --once --now=<epoch>`.
+	'''
+	backend.run_scheduler(at)
 
 
 class CliResult(NamedTuple):
