@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 import requests
 import werkzeug.wrappers
 from werkzeug.exceptions import BadRequest
+from sqlalchemy import tuple_
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.attributes import set_committed_value
 
@@ -126,17 +127,15 @@ def viewmore(v, pid, sort, offset):
 	).order_by(*pinned_comments_first(Comment))
 
 	if sort == "new":
-		newest_created_utc = g.db.query(Comment.created_utc).filter(
+		# Unpinned threads newer than the newest one shown, by the sort's order, were started since the page loaded
+		newest = g.db.query(Comment.created_utc, Comment.id).filter(
 			Comment.id.in_(ids),
 			Comment.is_pinned == None,
-		).order_by(Comment.created_utc.desc()).limit(1).scalar()
+		).order_by(Comment.created_utc.desc(), Comment.id.desc()).first()
 
-		# Needs to be <=, not just <, to support seed_db data which has many identical
-		# created_utc values. Shouldn't cause duplication in real data because of the
-		# `NOT IN :ids` in top_comments.
 		# With no unpinned thread shown yet, every one is still to come
-		if newest_created_utc is not None:
-			top_comments = top_comments.filter(or_(Comment.is_pinned != None, Comment.created_utc <= newest_created_utc))
+		if newest is not None:
+			top_comments = top_comments.filter(or_(Comment.is_pinned != None, tuple_(Comment.created_utc, Comment.id) < tuple(newest)))
 
 	top_comments = sort_objects(top_comments, sort, Comment)
 

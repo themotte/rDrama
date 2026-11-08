@@ -58,6 +58,18 @@ def test_view_more_by_newest_skips_comments_newer_than_those_shown():
 	assert_not_in_payload(r, newer["body"])
 
 
+def test_view_more_by_newest_orders_threads_of_one_second_by_when_they_were_made():
+	'''Of threads started in the same second as the newest one shown, those started before it are still to come and those started after it are left out.'''
+	post = factories.post(factories.user())
+	before, shown, after = (factories.comment(factories.user(), post, created_utc=2000) for _ in range(3))
+
+	r = _viewmore(anon(), post, [shown["id"]], sort="new")
+
+	assert_html(r, 200)
+	assert_in_payload(r, before["body"])
+	assert_not_in_payload(r, after["body"])
+
+
 def test_view_more_by_newest_after_only_pinned_threads_fetches_the_rest():
 	post = factories.post(factories.user())
 	pinned = factories.comment(factories.user(), post, created_utc=1000, is_pinned="somemod")
