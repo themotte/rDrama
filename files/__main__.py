@@ -137,7 +137,8 @@ app.config.update({
 	"DATABASE_URL": DATABASE_URL,
 	"SECRET_KEY": SECRET_KEY,
 	"SERVER_NAME": SERVER_NAME,
-	"SEND_FILE_MAX_AGE_DEFAULT": 0 if app.debug else 3153600,
+	# Files are revalidated unless their route knows the address can't outlive the content
+	"SEND_FILE_MAX_AGE_DEFAULT": None,
 	"SESSION_COOKIE_NAME": f'session_{SITE_ID.lower()}',
 	"VERSION": "1.0.0",
 	"MAX_CONTENT_LENGTH": MAX_CONTENT_LENGTH,

@@ -8,6 +8,7 @@ from sqlalchemy.orm import selectinload
 from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2, ADMIN_ONLY_KINDS
 from files.classes.visstate import StateMod
 from files.helpers.alerts import *
+from files.helpers.assetcache import ASSET_CSS, assetcache_hash
 from files.helpers.captcha import validate_captcha
 from files.helpers.config.const import *
 from files.helpers.config.environment import HCAPTCHA_SECRET, HCAPTCHA_SITEKEY, IMAGES_DIR
@@ -293,38 +294,28 @@ def submit_contact(v: Optional[User]):
 	return render_template("contact.html", v=v, msg="Your message has been sent.")
 
 
+# For an address that only ever means one version of its file
+IMMUTABLE_MAX_AGE = 365 * 86400
+
+
 @app.get('/assets/<path:path>')
 @app.get('/static/assets/<path:path>')
 @limiter.exempt
 def static_service(path):
-	resp = make_response(send_from_directory('assets', path))
-	if request.path.endswith('.webp') or request.path.endswith('.gif') or request.path.endswith('.ttf') or request.path.endswith('.woff2'):
-		resp.headers.remove("Cache-Control")
-		resp.headers.add("Cache-Control", "public, max-age=3153600")
-	
-	# Cache CSS and JS files with version parameter
-	if (request.path.endswith('.css') or request.path.endswith('.js')) and request.args.get('v'):
-		resp.headers.remove("Cache-Control")
-		resp.headers.add("Cache-Control", "public, max-age=3153600")
-
-	if request.path.endswith('.webp'):
-		resp.headers.remove("Content-Type")
-		resp.headers.add("Content-Type", "image/webp")
-
-	return resp
+	# Pages link site files with their current version as "v"; any other "v" may name some other version
+	version = assetcache_hash(path)
+	max_age = IMMUTABLE_MAX_AGE if version and request.args.get('v') == version else None
+	if path in ASSET_CSS:
+		return send_file(io.BytesIO(ASSET_CSS[path]), mimetype="text/css", etag=version, max_age=max_age)
+	return send_from_directory('assets', path, max_age=max_age)
 
 @app.get('/images/<path>')
 @app.get('/hostedimages/<path>')
 @app.get("/static/images/<path>")
 @limiter.exempt
 def images(path):
-	resp = make_response(send_from_directory(IMAGES_DIR, path.replace('.WEBP','.webp')))
-	resp.headers.remove("Cache-Control")
-	resp.headers.add("Cache-Control", "public, max-age=3153600")
-	if request.path.endswith('.webp'):
-		resp.headers.remove("Content-Type")
-		resp.headers.add("Content-Type", "image/webp")
-	return resp
+	# Uploads are stored under fresh names and never replaced
+	return send_from_directory(IMAGES_DIR, path.replace('.WEBP','.webp'), max_age=IMMUTABLE_MAX_AGE)
 
 @app.get("/robots.txt")
 def robots_txt():
