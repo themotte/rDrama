@@ -170,11 +170,12 @@ def morecomments(v, cid):
 	if not parent or not parent.parent_submission or parent.post.is_draft_hidden_from(v): abort(404)
 	if age_unconfirmed(parent.post, v): abort(403, "Must be 18+ to view")
 	post = parent.post
+	sort = comment_sort(request.values.get("sort"), v)
 	subtree = comment_subtree_ids(parent.id, RENDER_DEPTH_LIMIT + 1)
-	_, comment_tree = get_comment_trees_eager(lambda q: q.filter(Comment.id.in_(subtree)), sort=comment_sort(None, v), v=v, post=post)
+	_, comment_tree = get_comment_trees_eager(lambda q: q.filter(Comment.id.in_(subtree)), sort=sort, v=v, post=post)
 	comments = [c for c in comment_tree[parent.id] if c.renders_for(v)]
 
-	return render_template("comments.html", v=v, comments=comments, p=post, render_replies=True, ajax=True)
+	return render_template("comments.html", v=v, comments=comments, p=post, sort=sort, render_replies=True, ajax=True)
 
 
 @app.post("/edit_post/<int:pid>")

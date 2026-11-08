@@ -35,7 +35,7 @@
 					{% if replies and level >= RENDER_DEPTH_LIMIT and not is_notification_page -%}
 						<div id="morecomments-{{c.id}}" class="mt-2 more-comments">
 							<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments ({{c.descendant_count}})</button>
-							<a class="d-md-none" href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+							<a class="d-md-none" href="{{c.morecomments_link(sort)}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 						</div>
 					{%- endif %}
 				{% endif %}
@@ -138,7 +138,7 @@
 					<div id="replies-of-{{c.id}}"></div>
 					<div id="morecomments-{{c.id}}" class="mt-2 more-comments">
 						<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments ({{c.descendant_count}})</button>
-						<a class="d-md-none" href="{{c.morecomments}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+						<a class="d-md-none" href="{{c.morecomments_link(sort)}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 					</div>
 				{% endif %}
 			{% else %}
@@ -234,7 +234,7 @@
 			var form = new FormData();
 			form.append("formkey", formkey());
 			const xhr = new XMLHttpRequest();
-			xhr.open("get", `/morecomments/${cid}`);
+			xhr.open("get", `/morecomments/${cid}{% if sort %}?sort={{sort|urlencode}}{% endif %}`);
 			xhr.setRequestHeader('xhr', 'xhr');
 			xhr.onload=function(){
 				if (xhr.status==200) {

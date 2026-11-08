@@ -162,10 +162,10 @@ class Comment(CreatedBase, AuthorShadowban):
 	def permalink(self):
 		return f"{SITE_FULL}{self.shortlink}"
 
-	@property
-	@lazy
-	def morecomments(self):
-		return f"{self.post.permalink}/{self.id}#context"
+	def morecomments_link(self, sort) -> str:
+		'''The comment's own page, scrolled to it, with its replies in `sort` (the viewer's default without one).'''
+		query = f"?sort={sort}" if sort else ""
+		return f"{self.post.permalink}/{self.id}{query}#context"
 
 	@property
 	@lazy

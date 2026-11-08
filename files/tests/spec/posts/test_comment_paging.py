@@ -1,7 +1,7 @@
 '''
 Fetching more comments than the post page shows, as HTML fragments:
 - GET /viewmore/<post id>/<sort>/<offset>?ids=<comma-separated ids already shown>: the next page of top-level threads.
-- GET /morecomments/<comment id>: the replies to a comment too deep in a thread for the post page to show (threads render 9 levels deep), shown by the post page's rules (hidden comments as placeholders for replies the viewer may see), in the viewer's default comment order (newest first for visitors), nine levels deep.
+- GET /morecomments/<comment id>: the replies to a comment too deep in a thread for the post page to show (threads render 9 levels deep), shown by the post page's rules (hidden comments as placeholders for replies the viewer may see), ordered by its "sort" parameter as the post page orders comments (without a known one, in the viewer's default comment order: newest first for visitors), nine levels deep.
 
 On an 18+ post both are refused with 403 to visitors who haven't confirmed their age and to users who aren't 18+, as the post page itself asks them to confirm first.
 '''
@@ -158,6 +158,33 @@ def test_more_comments_fetches_the_rest_of_a_deep_thread(viewer):
 	assert_in_payload(r, chain[9]["body"])
 	assert_in_payload(r, chain[10]["body"])
 	assert_not_in_payload(r, chain[8]["body"])
+
+
+@pytest.mark.parametrize("sort, default, first", [("old", "new", "older"), ("new", "old", "newer"), (None, "new", "newer"), ("bogus", "new", "newer")])
+def test_more_comments_orders_replies_by_the_sort_asked_for(sort, default, first):
+	'''Without a known sort, the replies come in the viewer's default order.'''
+	post = factories.post(factories.user())
+	top = factories.comment(factories.user(), post)
+	older = factories.comment(factories.user(), post, parent=top, created_utc=1000)
+	newer = factories.comment(factories.user(), post, parent=top, created_utc=2000)
+
+	r = as_user(factories.user(defaultsortingcomments=default)).get(f"/morecomments/{top['id']}", params={"sort": sort} if sort else {})
+
+	assert_html(r, 200)
+	expected = [older, newer] if first == "older" else [newer, older]
+	assert_in_order(r, [c["body"] for c in expected])
+
+
+@pytest.mark.parametrize("sort, shown", [("old", "old"), (None, "new")])
+def test_a_deep_threads_link_to_its_rest_keeps_the_pages_sort(sort, shown):
+	'''Small screens get a link to the comment's own page instead of fetching the rest in place; it carries the sort the page shows (for visitors without one, new).'''
+	post = factories.post(factories.user())
+	chain = _thread(post, 10)
+
+	r = anon().get(f"/post/{post['id']}", params={"sort": sort} if sort else {})
+
+	assert_html(r, 200)
+	assert_in_payload(r, f"/{chain[8]['id']}?sort={shown}#context")
 
 
 def test_more_comments_hides_replies_by_users_you_block():
