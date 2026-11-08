@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+import time
 
 from yattag import Doc
 
@@ -8,6 +8,11 @@ from files.helpers.config.const import *
 from files.helpers.get import *
 from files.helpers.jinja2 import *
 from files.helpers.wrappers import *
+
+
+def _atom_time(epoch: float) -> str:
+	'''`epoch` as an RFC 3339 time in UTC, as Atom wants it.'''
+	return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(epoch))
 
 
 @app.get('/rss')
@@ -32,7 +37,7 @@ def feeds_front(sort='new', t='all'):
 		with tag("id"):
 			text(SITE_FULL + request.full_path)
 		with tag("updated"):
-			text(datetime.now().isoformat()+"Z")
+			text(_atom_time(time.time()))
 		doc.stag("link", rel="self", type="application/atom+xml", href=SITE_FULL + request.full_path)
 		doc.stag("link", rel="alternate", type="text/html", href=SITE_FULL)
 
@@ -45,13 +50,10 @@ def feeds_front(sort='new', t='all'):
 					text(post.permalink)
 
 				with tag("updated"):
-					if (post.edited_utc):
-						text(datetime.fromtimestamp(post.edited_utc, timezone.utc).isoformat()+"Z")
-					else:
-						text(datetime.fromtimestamp(post.created_utc, timezone.utc).isoformat()+"Z")
+					text(_atom_time(post.edited_utc or post.created_utc))
 
 				with tag("published"):
-					text(datetime.fromtimestamp(post.created_utc, timezone.utc).isoformat()+"Z")
+					text(_atom_time(post.created_utc))
 				
 				with tag("author"):
 					with tag("name"):
