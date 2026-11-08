@@ -563,6 +563,16 @@ def test_pinned_posts_lead_newest_first():
 	assert r.text.index(newer) < r.text.index(older) < r.text.index(listed)
 
 
+def test_pinned_posts_made_in_the_same_second_lead_last_made_first():
+	user = factories.user()
+	pinned = [_item(user, "posts", is_pinned=True, created_utc=1_600_000_000) for _ in range(3)]
+
+	r = anon().get(_path(user, "posts"))
+
+	assert_html(r, 200)
+	assert_in_order(r, pinned[::-1])
+
+
 @pytest.mark.parametrize("state", HIDDEN_POSTS)
 @pytest.mark.parametrize("viewer", ["anonymous", "other user"])
 def test_pinned_hidden_posts_stay_hidden(state, viewer):

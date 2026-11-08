@@ -428,7 +428,7 @@ def users_list(v):
 	page = request_page()
 
 	users = g.db.query(User).filter_by(is_banned=0
-									   ).order_by(User.created_utc.desc()
+									   ).order_by(User.created_utc.desc(), User.id.desc()
 												  ).offset(25 * (page - 1)).limit(26)
 
 	users = [x for x in users]

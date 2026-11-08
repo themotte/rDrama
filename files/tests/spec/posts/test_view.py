@@ -395,6 +395,14 @@ def test_sort_parameter_orders_by_replies_and_split_votes(sort, first_overrides)
 	assert _order(_page(anon(), post, params={"sort": sort}), [first, second]) == [first["id"], second["id"]]
 
 
+@pytest.mark.parametrize("sort", ["new", "old", "top", "bottom", "controversial", "comments"])
+@pytest.mark.parametrize("replies", [False, True], ids=["top-level", "replies"])
+def test_comments_made_in_the_same_second_list_the_last_made_first(sort, replies):
+	post = factories.post(factories.user())
+	parent = factories.comment(factories.user(), post, created_utc=500) if replies else None
+	comments = [factories.comment(factories.user(), post, parent=parent, created_utc=1000) for _ in range(3)]
+
+	assert _order(_page(anon(), post, params={"sort": sort}), comments) == [c["id"] for c in (comments if sort == "old" else comments[::-1])]
 @pytest.mark.parametrize("time_order", [True, False], ids=["made in time order", "made in the opposite order"])
 @pytest.mark.parametrize("replies", [False, True], ids=["top-level", "replies"])
 def test_comments_with_as_many_replies_list_newest_first(replies, time_order):

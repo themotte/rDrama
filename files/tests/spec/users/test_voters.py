@@ -328,6 +328,18 @@ def test_drilldown_lists_newest_first(name, what):
 
 @pytest.mark.parametrize("name", LISTS)
 @pytest.mark.parametrize("what", ["posts", "comments"])
+def test_drilldown_lists_items_made_in_the_same_second_last_made_first(name, what):
+	user, other = _profile_user(), factories.user()
+	tokens = [_cast(name, user, other, what, created_utc=1_700_000_000) for _ in range(3)]
+
+	r = as_user(factories.admin(3)).get(_drilldown(name, user, other, what))
+
+	assert_html(r, 200)
+	assert_in_order(r, tokens[::-1])
+
+
+@pytest.mark.parametrize("name", LISTS)
+@pytest.mark.parametrize("what", ["posts", "comments"])
 @pytest.mark.parametrize("page", [1, 2])
 def test_drilldown_pages_hold_25_items(name, what, page):
 	user, other = _profile_user(), factories.user()

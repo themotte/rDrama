@@ -138,8 +138,8 @@ class Comment(CreatedBase, AuthorShadowban):
 		if self.replies2 != None: return [x for x in self.replies2 if x.renders_for(user)]
 		# Conversations read oldest first
 		if not self.parent_submission:
-			return sorted((x for x in self.child_comments if x.renders_for(user)), key=lambda x: x.created_utc)
-		return sorted((x for x in self.child_comments if x.renders_for(user)), key=lambda x: x.created_utc, reverse=True)
+			return sorted((x for x in self.child_comments if x.renders_for(user)), key=lambda x: (x.created_utc, x.id))
+		return sorted((x for x in self.child_comments if x.renders_for(user)), key=lambda x: (x.created_utc, x.id), reverse=True)
 
 	@property
 	def replies2(self):

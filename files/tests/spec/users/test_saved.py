@@ -146,6 +146,17 @@ def test_saved_lists_newest_first(kind):
 
 
 @pytest.mark.parametrize("kind", ["posts", "comments"])
+def test_saved_items_made_in_the_same_second_list_last_made_first(kind):
+	viewer = factories.user()
+	tokens = [_saved(viewer, kind, created_utc=1_700_000_000)[1] for _ in range(3)]
+
+	r = as_user(viewer).get(_path(viewer, kind))
+
+	assert_html(r, 200)
+	assert_in_order(r, tokens[::-1])
+
+
+@pytest.mark.parametrize("kind", ["posts", "comments"])
 @pytest.mark.parametrize("page", [1, 2])
 def test_saved_pages_hold_25_items(kind, page):
 	viewer = factories.user()

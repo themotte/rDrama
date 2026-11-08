@@ -561,7 +561,7 @@ class User(CreatedBase):
 		if self.admin_level < PERMS['USER_SHADOWBAN']:
 			posts = posts.filter(or_(Submission.author_id == self.id, not_(Submission.author.has(User.shadowbanned != None))))
 
-		return [x[0] for x in posts.order_by(Submission.created_utc.desc()).all()]
+		return [x[0] for x in posts.order_by(Submission.created_utc.desc(), Submission.id.desc()).all()]
 
 	@lazy
 	def saved_comment_idlist(self) -> list[int]:
@@ -578,7 +578,7 @@ class User(CreatedBase):
 		if self.admin_level < PERMS['USER_SHADOWBAN']:
 			comments = comments.join(User, User.id == Comment.author_id).filter(or_(User.shadowbanned == None, Comment.author_id == self.id))
 
-		return [x[0] for x in comments.order_by(Comment.created_utc.desc()).all()]
+		return [x[0] for x in comments.order_by(Comment.created_utc.desc(), Comment.id.desc()).all()]
 
 	@property
 	@lazy

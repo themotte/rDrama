@@ -54,10 +54,11 @@ def sort_objects(objects: Query, sort: str, cls):
 	elif sort == 'bottom':
 		ordered = objects.order_by(cls.upvotes - cls.downvotes)
 	elif sort == 'old':
-		return objects.order_by(cls.created_utc)
+		return objects.order_by(cls.created_utc, cls.id)
 	else: # default, or sort == 'new'
 		ordered = objects
-	ordered = ordered.order_by(cls.created_utc.desc())
+	# Ties go newest first, and the id makes the order total, so pages neither repeat nor skip rows
+	ordered = ordered.order_by(cls.created_utc.desc(), cls.id.desc())
 	return ordered
 
 
@@ -76,25 +77,27 @@ def sort_comment_results(comments: Iterable[Comment], sort:str, *, pins:bool=Fal
 			-100000
 				* (c.upvotes + 1)
 				/ (pow(((ti - c.created_utc) / 1000), 1.23)),
-			-c.created_utc
+			-c.created_utc,
+			-c.id
 		)
 	elif sort == 'comments':
-		key_func = lambda c: (-c.descendant_count, -c.created_utc)
+		key_func = lambda c: (-c.descendant_count, -c.created_utc, -c.id)
 	elif sort == 'controversial':
 		key_func = lambda c: (
 			(c.upvotes + 1) / (c.downvotes + 1)
 				+ (c.downvotes + 1) / (c.upvotes + 1),
 			-c.downvotes,
-			-c.created_utc
+			-c.created_utc,
+			-c.id
 		)
 	elif sort == 'top':
-		key_func = lambda c: (c.downvotes - c.upvotes, -c.created_utc)
+		key_func = lambda c: (c.downvotes - c.upvotes, -c.created_utc, -c.id)
 	elif sort == 'bottom':
-		key_func = lambda c: (c.upvotes - c.downvotes, -c.created_utc)
+		key_func = lambda c: (c.upvotes - c.downvotes, -c.created_utc, -c.id)
 	elif sort == 'old':
-		key_func = lambda c: c.created_utc
+		key_func = lambda c: (c.created_utc, c.id)
 	else: # default, or sort == 'new'
-		key_func = lambda c: -c.created_utc
+		key_func = lambda c: (-c.created_utc, -c.id)
 
 	key_func_pinned = lambda c: (
 		(c.is_pinned is None, c.is_pinned == '', c.is_pinned), # sort None last

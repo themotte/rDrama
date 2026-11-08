@@ -53,7 +53,7 @@ def voted_content(v, username, list_name, uid, kind):
 		cls, vote_cls, voted_id = Submission, Vote, Vote.submission_id
 	else:
 		cls, vote_cls, voted_id = Comment, CommentVote, CommentVote.comment_id
-	listing = g.db.query(cls.id).join(vote_cls, voted_id == cls.id).filter(*_visible(cls), vote_cls.vote_type == vote_type, cls.author_id == author_id, vote_cls.user_id == voter_id).order_by(cls.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+	listing = g.db.query(cls.id).join(vote_cls, voted_id == cls.id).filter(*_visible(cls), vote_cls.vote_type == vote_type, cls.author_id == author_id, vote_cls.user_id == voter_id).order_by(cls.created_utc.desc(), cls.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [x[0] for x in listing]
 	next_exists = len(listing) > 25

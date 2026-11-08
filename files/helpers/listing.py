@@ -149,7 +149,7 @@ def _userpage_posts(u:User, v:Optional[User]):
 
 def userpage_pinned(u:User, v:Optional[User]) -> list[int]:
 	'''Ids of `u`'s pinned posts that `v` may see, newest first, given that `u.shows_activity_to(v)`.'''
-	return [x[0] for x in _userpage_posts(u, v).filter_by(is_pinned=True).order_by(Submission.created_utc.desc()).all()]
+	return [x[0] for x in _userpage_posts(u, v).filter_by(is_pinned=True).order_by(Submission.created_utc.desc(), Submission.id.desc()).all()]
 
 
 # Whether `v` may see `u`'s posts at all (a shadowban) is decided by the caller
