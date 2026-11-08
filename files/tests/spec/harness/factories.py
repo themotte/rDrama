@@ -237,9 +237,19 @@ def report(reporter: dict, item: dict, reason: str | None = None) -> dict:
 	return db.insert("commentflags", comment_id=item["id"], user_id=reporter["id"], reason=reason)
 
 
-def assignment(volunteer: dict, comment: dict) -> dict:
-	'''`comment` given to `volunteer` to rate, as taking volunteer duty gives it, still unrated.'''
-	return db.insert("volunteer_janitor", user_id=volunteer["id"], comment_id=comment["id"], result="Pending")
+def assignment(volunteer: dict, comment: dict, at: datetime | None = None) -> dict:
+	'''`comment` given to `volunteer` to rate, as taking volunteer duty gives it, still unrated; given at `at` (default: now).'''
+	return db.insert("volunteer_janitor", user_id=volunteer["id"], comment_id=comment["id"], result="Pending", **({"recorded_datetimez": at} if at else {}))
+
+
+def rating(volunteer: dict, comment: dict, result: str, at: datetime | None = None) -> dict:
+	'''`volunteer`'s rating `result` ("TopQuality", "Good", "Neutral", "Bad", "Warning" or "Ban") of `comment`, stored at `at` (default: now), as rating a duty stores one. It makes no assignment and doesn't update the comment's badness.'''
+	return db.insert("volunteer_janitor", user_id=volunteer["id"], comment_id=comment["id"], result=result, **({"recorded_datetimez": at} if at else {}))
+
+
+def note(about: dict, tag: str, at: datetime, author: dict | None = None, **overrides) -> dict:
+	'''A moderators' note about the user `about`, tagged `tag` ("Quality", "Good", "Comment", "Warning", "Tempban", "Permban", "Spam" or "Bot") and made at `at`, by `author` (default: a new level 2 admin).'''
+	return db.insert("usernotes", author_id=(author or admin(2))["id"], reference_user=about["id"], note=unique("note"), tag=tag, created_datetimez=at, **overrides)
 
 
 def _task(author: dict, type_id: int, subtype_table: str, subtype_values: dict, overrides: dict) -> dict:

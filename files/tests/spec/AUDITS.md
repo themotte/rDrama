@@ -29,3 +29,7 @@ What to decide, case by case:
 - **Chat** (outside the spec): the page and `can_access_chat` refuse only permanent suspensions, while sending and reading messages over the socket refuse on raw `is_banned`, so any temporary ban, even one that ran out, blocks them until the user's next page request ends it.
 - **Ban evasion**: detection at login counts only permanent bans.
 - **Templates**: the mobile comment admin menu chooses Ban/Unban on raw `is_banned`; every other menu uses `is_suspended`.
+
+## The nightly volunteer recalc
+
+Pinned as they are in `volunteer/test_nightly_recalc.py`, not decided on purpose: a comment the moderators removed still teaches the volunteers who rated it (only comments their author deleted are left out); a distinguished reply counts toward the moderators' verdict even after it was deleted; a suspended volunteer's ratings still count; a comment whose author was shadowbanned since still teaches, though it's no longer given out to rate. Ratings stored before rating rules the site enforces now (an hour from the assignment, and none once a moderator's distinguished reply is in) still count. Admins weigh a fixed 4 in the estimates that score volunteers, but by their accuracy, like anyone, in a comment's badness.
