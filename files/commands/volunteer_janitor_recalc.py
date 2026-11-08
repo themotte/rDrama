@@ -194,6 +194,8 @@ def volunteer_janitor_recalc(db: Session) -> int:
     # Shove all this in the database, yaaay
     # Conditional needed because sqlalchemy breaks if you try passing it zero data
     if len(user_accuracy) > 0:
+        # In id order, as shadowbans lock users: locked in whatever order the update found them, the two could deadlock
+        db.execute(sqlalchemy.text("SELECT id FROM users WHERE id = ANY(:ids) ORDER BY id FOR NO KEY UPDATE"), {"ids": sorted(user_accuracy)})
         db.query(User) \
             .where(User.id.in_([id for id in user_accuracy.keys()])) \
             .update({
