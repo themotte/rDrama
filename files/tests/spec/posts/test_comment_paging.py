@@ -58,6 +58,17 @@ def test_view_more_by_newest_skips_comments_newer_than_those_shown():
 	assert_not_in_payload(r, newer["body"])
 
 
+def test_view_more_by_newest_after_only_pinned_threads_fetches_the_rest():
+	post = factories.post(factories.user())
+	pinned = factories.comment(factories.user(), post, created_utc=1000, is_pinned="somemod")
+	unseen = factories.comment(factories.user(), post, created_utc=2000)
+
+	r = _viewmore(anon(), post, [pinned["id"]], sort="new")
+
+	assert_html(r, 200)
+	assert_in_payload(r, unseen["body"])
+
+
 def test_view_more_by_other_sorts_includes_newer_comments():
 	post = factories.post(factories.user())
 	shown = factories.comment(factories.user(), post, created_utc=2000)

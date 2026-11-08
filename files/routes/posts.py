@@ -135,7 +135,9 @@ def viewmore(v, pid, sort, offset):
 		# Needs to be <=, not just <, to support seed_db data which has many identical
 		# created_utc values. Shouldn't cause duplication in real data because of the
 		# `NOT IN :ids` in top_comments.
-		top_comments = top_comments.filter(Comment.created_utc <= newest_created_utc)
+		# With no unpinned thread shown yet, every one is still to come
+		if newest_created_utc is not None:
+			top_comments = top_comments.filter(Comment.created_utc <= newest_created_utc)
 
 	top_comments = sort_objects(top_comments, sort, Comment)
 
