@@ -43,7 +43,8 @@ def sort_objects(objects: Query, sort: str, cls):
 		ordered = objects.order_by(
 			-100000
 				* (cast(cls.upvotes, Numeric) + 1)
-				/ (func.power((ti - cls.created_utc) / 1000, 1.23)))
+				# An age under a second, for posts dated an hour or more ahead, counts as a second
+				/ (func.power(func.greatest(ti - cls.created_utc, 1) / 1000, 1.23)))
 	elif sort == 'comments':
 		if cls.__name__ == 'Submission': # we're checking the stringified name due to a gnarly import cycle
 			ordered = objects.order_by(cls.comment_count.desc())
@@ -83,7 +84,7 @@ def sort_comment_results(comments: Iterable[Comment], sort:str, *, pins:bool=Fal
 		key_func = lambda c: (
 			-100000
 				* (c.upvotes + 1)
-				/ (pow(((ti - c.created_utc) / 1000), 1.23)),
+				/ (pow((max(ti - c.created_utc, 1) / 1000), 1.23)),
 			-c.created_utc,
 			-c.id
 		)

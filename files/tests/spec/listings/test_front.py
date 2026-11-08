@@ -107,6 +107,16 @@ def test_sorts_take_any_number_of_votes(sort):
 	assert_in_payload(r, popular["title"])
 
 
+@pytest.mark.parametrize("ahead", [3600, 7200])
+def test_hot_takes_posts_dated_ahead(ahead):
+	future = _post(created_utc=int(time.time()) + ahead)
+
+	r = anon().get("/", params={"sort": "hot"})
+
+	assert_html(r, 200)
+	assert_in_payload(r, future["title"])
+
+
 def test_logged_out_visitors_get_newest_first():
 	older = _post(created_utc=NOW - 7200)
 	newer = _post(created_utc=NOW - 60)
