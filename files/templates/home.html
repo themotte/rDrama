@@ -74,7 +74,7 @@
 </nav>
 {% endif %}
 
-{% if request.path in ('/','/logged_out') and g.timestamp > session.get('tooltip_last_dismissed',0)+60*60*24*30 and not g.webview %}
+{% if request.path == '/' and g.timestamp > session.get('tooltip_last_dismissed',0)+60*60*24*30 and not g.webview %}
 	<style>
 		.beg-icon {
 			color: #919191;

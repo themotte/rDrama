@@ -17,24 +17,6 @@ from files.mail import *
 from files.__main__ import app, cache, limiter # violates isort but used to prevent getting shadowed
 
 
-@app.get('/logged_out/')
-@app.get('/logged_out/<path:old>')
-def logged_out(old = ""):
-	# Remove trailing question mark from request.full_path which flask adds if there are no query parameters
-	redirect_url = request.full_path.replace("/logged_out", "", 1)
-	if redirect_url.endswith("?"):
-		redirect_url = redirect_url[:-1]
-
-	# Handle cases like /logged_out?asdf by adding a slash to the beginning
-	if not redirect_url.startswith('/'):
-		redirect_url = f"/{redirect_url}"
-
-	# Prevent redirect loop caused by visiting /logged_out/logged_out/logged_out/etc...
-	if redirect_url.startswith('/logged_out'):
-		abort(400)
-
-	return redirect(redirect_url)
-
 @app.get('/sidebar')
 @auth_desired
 def sidebar(v):

@@ -2,42 +2,6 @@
 from . import util_accounts
 
 
-def test_logged_out_redirect():
-	"""Test /logged_out redirects to the original URL"""
-	client = util_accounts.create_logged_off_client()
-
-	response = client.get("/logged_out/submit", follow_redirects=False)
-	assert response.status_code == 302
-	assert response.location == "/submit"
-
-
-def test_logged_out_with_query_params():
-	"""Test /logged_out preserves query parameters"""
-	client = util_accounts.create_logged_off_client()
-
-	response = client.get("/logged_out/search?q=test", follow_redirects=False)
-	assert response.status_code == 302
-	assert response.location == "/search?q=test"
-
-
-def test_logged_out_prevents_loop():
-	"""Test /logged_out prevents redirect loops"""
-	client = util_accounts.create_logged_off_client()
-
-	response = client.get("/logged_out/logged_out/submit", follow_redirects=False)
-	assert response.status_code == 400
-
-
-def test_logged_out_with_query_no_path():
-	"""Test /logged_out with query params but no path adds leading slash"""
-	client = util_accounts.create_logged_off_client()
-
-	# /logged_out?redirect=submit should redirect to /?redirect=submit
-	response = client.get("/logged_out?redirect=submit", follow_redirects=False)
-	assert response.status_code == 302
-	assert response.location == "/?redirect=submit"
-
-
 def test_sidebar_route():
 	"""Test /sidebar route returns sidebar template"""
 	client, user = util_accounts.create_test_client_and_user()
@@ -198,13 +162,6 @@ def test_blocks_route():
 	assert response.status_code == 200
 
 
-def test_logged_out_with_path():
-	"""Test /logged_out/<path:old> route"""
-	client = util_accounts.create_logged_off_client()
-
-	response = client.get("/logged_out/submit", follow_redirects=False)
-	assert response.status_code == 302
-	assert response.location == "/submit"
 
 
 def test_log_id_route():
