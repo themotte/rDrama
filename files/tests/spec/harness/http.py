@@ -38,12 +38,12 @@ class Response:
 
 	@property
 	def location(self) -> str | None:
-		'''The redirect target as a site-relative path (with query), or the absolute URL if it points off-site.'''
+		'''The redirect target as a site-relative path (with query), or the absolute URL if it points off-site or if its path would read as one (starting with "//").'''
 		loc = self.header("Location")
 		if loc is None:
 			return None
 		parts = urlsplit(loc)
-		if parts.netloc and parts.netloc != config.site_host():
+		if parts.netloc and (parts.netloc != config.site_host() or parts.path.startswith("//")):
 			return loc
 		return parts.path + (f"?{parts.query}" if parts.query else "")
 

@@ -1,5 +1,6 @@
 from urllib.parse import parse_qs, urlsplit
 
+from files.tests.spec.harness import config
 from files.tests.spec.harness.http import Client, Response
 
 __all__ = ["assert_status", "assert_redirect", "assert_login_redirect", "assert_api_unauthorized", "assert_json_message", "assert_html", "assert_serves_image", "assert_in_payload", "assert_not_in_payload", "assert_in_order"]
@@ -15,9 +16,12 @@ def assert_status(r: Response, status: int):
 
 
 def assert_redirect(r: Response, path: str, query_keys=()):
-	'''A 302 to `path` (the status matters: 307/308 would make browsers repeat a POST). Query values are often user-facing copy, so only the presence of `query_keys` is checked.'''
+	'''A 302 to `path` on this site (the status matters: 307/308 would make browsers repeat a POST). Query values are often user-facing copy, so only the presence of `query_keys` is checked.'''
 	assert r.status == 302, f"expected a 302 redirect to {path}; got {_describe(r)}"
 	parts = urlsplit(r.location)
+	# As browsers read it: they drop tabs and newlines and take backslashes for slashes, so a target such as "/<backslash>host" or "/<tab>/host" names a host just as "//host" does
+	read = urlsplit(r.location.translate({ord("\t"): None, ord("\n"): None, ord("\r"): None}).replace("\\", "/"))
+	assert read.netloc in ("", config.site_host()), f"expected a redirect on this site; got {r.header('Location')!r}"
 	assert parts.path == path, f"expected a redirect to {path}; got {r.location}"
 	missing = set(query_keys) - set(parse_qs(parts.query))
 	assert not missing, f"redirect {r.location} lacks query keys {missing}"
