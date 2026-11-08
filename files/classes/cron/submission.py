@@ -1,3 +1,4 @@
+import calendar
 import functools
 from datetime import datetime, timezone
 
@@ -56,7 +57,7 @@ class ScheduledSubmissionTask(RepeatableTask):
 		if len(title_html) > 1500: raise ValueError("Rendered title too large")
 
 		return Submission(
-			created_utc=int(ctx.trigger_time.timestamp()),
+			created_utc=calendar.timegm(ctx.trigger_time.utctimetuple()),
 			private=self.private,
 			author_id=self.author_id_submission,
 			over_18=self.over_18,
