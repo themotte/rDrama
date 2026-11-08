@@ -8,6 +8,7 @@ import files.helpers.jinja2
 import files.routes.volunteer_janitor
 from files.__main__ import app
 from files.classes.user import User
+from files.helpers.locks import volunteer_duty_lock
 from files.helpers.wrappers import auth_required
 
 
@@ -31,6 +32,9 @@ def volunteer_get_duty(u: Optional[User]) -> Optional[list[int]]:
 @app.get("/volunteer")
 @auth_required
 def volunteer(v: User):
+    # Visits by one volunteer take turns, so a later one sees the duty an earlier one gave
+    volunteer_duty_lock(g.db, v.id)
+    g.db.refresh(v, ["volunteer_last_started_utc"])
     duty = volunteer_get_duty(v)
 
     if duty is not None:

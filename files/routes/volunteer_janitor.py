@@ -24,8 +24,6 @@ def accept(v: User, choices: list[int]) -> None:
         record.result = VolunteerJanitorResult.Pending
         g.db.add(record)
 
-    g.db.commit()
-
 
 def comments(choices: list[int]) -> list[Comment]:
     return g.db.query(Comment).where(Comment.id.in_(choices)).all()
