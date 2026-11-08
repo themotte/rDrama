@@ -46,6 +46,19 @@ def calculate_final_comment_badness(comment_total, comment_weight, conservative)
     
     return calculated_badness
 
+def counted_ratings(records) -> dict[tuple[int, int], VolunteerJanitorRecord]:
+    '''The ratings that count among `records` (given in the order they were stored), by (volunteer, comment): each volunteer's first rating of each comment after they were first assigned it.'''
+    assigned = set()
+    counted = {}
+    for rec in records:
+        key = (rec.user_id, rec.comment_id)
+        if rec.result == VolunteerJanitorResult.Pending:
+            assigned.add(key)
+        elif key in assigned and key not in counted:
+            counted[key] = rec
+    return counted
+
+
 def update_comment_badness(db, cid):
     # Recalculate the comment's confidence values
     # This probably does more SQL queries than it should
@@ -58,21 +71,10 @@ def update_comment_badness(db, cid):
         .where(VolunteerJanitorRecord.comment_id == cid) \
         .order_by(VolunteerJanitorRecord.recorded_datetimez)
 
-    user_has_pending = {}
-    earliest_submission = {}
-
-    for rec in records:
-        if rec.result == VolunteerJanitorResult.Pending:
-            user_has_pending[rec.user_id] = True
-        else:
-            if rec.user_id in user_has_pending:
-                if rec.user_id not in earliest_submission or earliest_submission[rec.user_id].recorded_datetimez > rec.recorded_datetimez:
-                    earliest_submission[rec.user_id] = rec
-    
     badness = 0
     weight = 0
 
-    for submission in earliest_submission.values():
+    for submission in counted_ratings(records).values():
         # Ratings by shadowbanned volunteers count for nothing, as their votes do
         if submission.user.shadowbanned:
             continue
