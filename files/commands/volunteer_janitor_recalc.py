@@ -6,8 +6,8 @@ from alive_progress import alive_it
 from collections import defaultdict
 from files.classes import User, Comment, UserNote, UserTag
 from files.classes.cron.tasks import TaskRunContext
-from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
-from files.helpers.volunteer_janitor import RECORD_ORDER, evaluate_badness_of, userweight_from_user_accuracy, calculate_final_comment_badness, update_comment_badness
+from files.classes.volunteer_janitor import VolunteerJanitorRecord
+from files.helpers.volunteer_janitor import RECORD_ORDER, counted_ratings, evaluate_badness_of, userweight_from_user_accuracy, calculate_final_comment_badness, update_comment_badness
 from files.helpers.math import saturate, remap, lerp
 
 import logging
@@ -21,50 +21,13 @@ CONFIG_default_user_accuracy = 0.2
 CONFIG_user_correctness_lerp = 0.2
 
 def _compile_records(db):
+    '''The counted ratings, as {(volunteer, comment): rating}, leaving out comments their author deleted.'''
     vrecords = db.query(VolunteerJanitorRecord).order_by(*RECORD_ORDER).all()
 
-    # get the info we need for all mentioned posts
-    reported_comment_ids = {record.comment_id for record in vrecords}
-    reported_comments = db.query(Comment).where(Comment.id.in_(reported_comment_ids)).options(sqlalchemy.orm.load_only(Comment.id, Comment.state_user_deleted_utc))
-    reported_comments = {comment.id: comment for comment in reported_comments}
+    # we're just going to ignore deleted comments entirely
+    deleted = {row.id for row in db.query(Comment.id).where(Comment.id.in_({record.comment_id for record in vrecords}), Comment.state_user_deleted_utc != None)}
 
-    # get our compiled data
-    records_compiled = {}
-    for record in vrecords:
-        # we're just going to ignore deleted comments entirely
-        if reported_comments[record.comment_id].state_user_deleted_utc != None:
-            continue
-
-        # unique identifier for user/comment report pair
-        uic = (record.user_id, record.comment_id)
-
-        if record.result == VolunteerJanitorResult.Pending:
-            if uic in records_compiled:
-                # something wonky happened, we went back to pending after getting a result?
-                records_compiled[uic]["status"] = "wonky"
-            else:
-                # fill out the pending field
-                records_compiled[uic] = {"status": "pending"}
-        else:
-            if not uic in records_compiled:
-                # something wonky happened, we never asked them for the info to begin with
-                records_compiled[uic] = {"status": "wonky"}
-            elif records_compiled[uic]["status"] != "pending":
-                # received two submissions; practically we'll just use their first submission
-                records_compiled[uic]["status"] = "resubmit"
-            else:
-                # actually got a result, yay
-                records_compiled[uic]["status"] = "submit"
-                records_compiled[uic]["result"] = record.result
-
-    # todo:
-    # filter out anything submitted *after* a mod chimed in
-    # filter out anything submitted too long after the request
-
-    # strip out invalid records
-    records_compiled = {key: value for key, value in records_compiled.items() if "result" in value}
-
-    return records_compiled
+    return {key: record.result for key, record in counted_ratings(vrecords).items() if key[1] not in deleted}
 
 # Calculates how correct a user is, based on whether they thought it was bad, how confident they were, and how bad we think it is
 # Returns (IsCorrect, Confidence)
@@ -188,7 +151,7 @@ def volunteer_janitor_recalc(db: Session) -> int:
             else:
                 userweight_admin = userweight_user
 
-            bad, weight = evaluate_badness_of(value["result"])
+            bad, weight = evaluate_badness_of(value)
 
             # Accumulate these to our buffers
             comment_weight_admin[cid] += userweight_admin * weight
@@ -210,7 +173,7 @@ def volunteer_janitor_recalc(db: Session) -> int:
             if commentresults[cid] == "ignored":
                 continue
 
-            bad, weight = evaluate_badness_of(value["result"])
+            bad, weight = evaluate_badness_of(value)
 
             correctness, weight = evaluate_correctness_single(bad, weight, comment_calculated_badness_admin[cid])
 

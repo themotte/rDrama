@@ -1,7 +1,7 @@
 '''
 The nightly volunteer recalc: the "volunteer_janitor_recalc" built-in job (spec/scheduler/test_builtin_jobs.py), which the `volunteer_janitor_recalc` command also runs. It works out each volunteer's accuracy (`users.volunteer_janitor_correctness`, which weighs their ratings in a comment's badness: see test_ratings.py) afresh from all their ratings.
 
-The ratings it learns from: each volunteer's first rating of each comment after they were assigned it, in the order they were stored (of two stored at the same moment, the one with the lower id first), leaving out comments their author has deleted. Assignments never rated count for nothing.
+The ratings it learns from are the ones a comment's badness counts (test_ratings.py): each volunteer's first rating of each comment after they were first assigned it, in the order they were stored (of two stored at the same moment, the one with the lower id first). Comments their author has deleted are left out. Assignments never rated count for nothing.
 
 The moderators' verdict on a comment comes from negative notes about its author: notes tagged Warning, Tempban, Permban, Spam or Bot, whatever post or comment they name, taken at their time rounded down to the second. The comment is
 - bad when any of its distinguished direct replies was posted less than 15 minutes (900 s) from such a note, before or after;
@@ -280,6 +280,19 @@ def test_only_the_first_rating_after_the_assignment_counts():
 	factories.rating(volunteer, unassigned, "Good")
 	_rate(volunteer, rated, "Ban")
 	factories.rating(volunteer, rated, "Good")
+
+	_recalc()
+
+	assert _accuracy(volunteer) == pytest.approx(RIGHT, abs=1e-12)
+
+
+@pytest.mark.parametrize("sequence", [["Pending", "Ban", "Pending"], ["Pending", "Pending", "Ban"], ["Good", "Pending", "Ban"], ["Pending", "Ban", "Good"]])
+def test_the_first_rating_after_an_assignment_counts_whatever_else_was_stored(sequence):
+	volunteer = factories.user()
+	comment = _bad()
+	for minute, result in enumerate(sequence):
+		at = T0 + timedelta(minutes=minute)
+		factories.assignment(volunteer, comment, at=at) if result == "Pending" else factories.rating(volunteer, comment, result, at=at)
 
 	_recalc()
 
