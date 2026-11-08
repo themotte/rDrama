@@ -123,7 +123,6 @@ def viewmore(v, pid, sort, offset):
 		Comment.parent_submission == post.id,
 		Comment.level == 1,
 		Comment.id.notin_(ids),
-		Comment.is_pinned == None,
 	).order_by(*pinned_comments_first(Comment))
 
 	if sort == "new":
@@ -137,7 +136,7 @@ def viewmore(v, pid, sort, offset):
 		# `NOT IN :ids` in top_comments.
 		# With no unpinned thread shown yet, every one is still to come
 		if newest_created_utc is not None:
-			top_comments = top_comments.filter(Comment.created_utc <= newest_created_utc)
+			top_comments = top_comments.filter(or_(Comment.is_pinned != None, Comment.created_utc <= newest_created_utc))
 
 	top_comments = sort_objects(top_comments, sort, Comment)
 

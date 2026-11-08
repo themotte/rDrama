@@ -1,6 +1,6 @@
 '''
 Fetching more comments than the post page shows, as HTML fragments:
-- GET /viewmore/<post id>/<sort>/<offset>?ids=<comma-separated ids already shown>: the next page of top-level threads.
+- GET /viewmore/<post id>/<sort>/<offset>?ids=<comma-separated ids already shown>: the next page of top-level threads not yet shown, in the post page's order (pinned threads first), 200 comments to a page as there. With the "new" sort, unpinned threads started after the newest unpinned one shown are left out, so threads started since the page was loaded don't push in.
 - GET /morecomments/<comment id>: the replies to a comment too deep in a thread for the post page to show (threads render 9 levels deep), shown by the post page's rules (hidden comments as placeholders for replies the viewer may see), ordered by its "sort" parameter as the post page orders comments (without a known one, in the viewer's default comment order: newest first for visitors), nine levels deep.
 
 On an 18+ post both are refused with 403 to visitors who haven't confirmed their age and to users who aren't 18+, as the post page itself asks them to confirm first.
@@ -69,6 +69,22 @@ def test_view_more_by_newest_after_only_pinned_threads_fetches_the_rest():
 	assert_in_payload(r, unseen["body"])
 
 
+@pytest.mark.parametrize("sort", ["new", "old"])
+def test_view_more_fetches_pinned_threads_the_page_had_no_room_for(sort):
+	post = factories.post(factories.user())
+	pins = [factories.comment(factories.user(), post, created_utc=at, is_pinned="somemod") for at in (1000, 2000, 3000)]
+	for pin in pins:
+		for _ in range(100):
+			factories.comment(factories.user(), post, parent=pin)
+	unpinned = factories.comment(factories.user(), post, created_utc=4000)
+
+	# The page showed the two newest pinned threads
+	r = _viewmore(anon(), post, [pins[2]["id"], pins[1]["id"]], sort=sort)
+
+	assert_html(r, 200)
+	assert_in_order(r, [pins[0]["body"], unpinned["body"]])
+
+
 def test_view_more_by_other_sorts_includes_newer_comments():
 	post = factories.post(factories.user())
 	shown = factories.comment(factories.user(), post, created_utc=2000)
@@ -87,18 +103,6 @@ def test_view_more_with_an_unknown_sort_uses_the_viewers_default():
 	r = _viewmore(as_user(u), post, [shown["id"]], sort="bogus")
 
 	assert r.text.index(older["body"]) < r.text.index(newer["body"])
-
-
-def test_view_more_leaves_out_pinned_comments():
-	'''Pinned comments are always on the first page.'''
-	post = factories.post(factories.user())
-	shown = factories.comment(factories.user(), post, created_utc=2000)
-	pinned = factories.comment(factories.user(), post, created_utc=1000, is_pinned="somemod")
-
-	r = _viewmore(anon(), post, [shown["id"]], sort="old")
-
-	assert_html(r, 200)
-	assert_not_in_payload(r, pinned["body"])
 
 
 @pytest.mark.parametrize("ids", [None, "", "1,x"])
