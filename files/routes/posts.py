@@ -357,7 +357,7 @@ def _do_antispam_submission_check(v:User, validated:validators.ValidatedSubmissi
 	text = "Your account has been banned for **1 day** for the following reason:\n\n> Too much spam!"
 	send_repeatable_notification(v.id, text)
 
-	v.ban(reason="Spamming.", days=1)
+	v.ban(reason="Spamming.", until=int(time.time()) + 86400)
 	for post in {post.id: post for post in similar_posts + similar_urls}.values():
 		post.state_mod = StateMod.REMOVED
 		post.state_mod_set_by = "AutoJanny"

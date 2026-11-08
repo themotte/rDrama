@@ -503,8 +503,9 @@ class User(CreatedBase):
 		return {**self.json, 'post_count': 0, 'comment_count': 0}
 
 
-	def ban(self, admin=None, reason=None, days=0):
-		self.unban_utc = int(time.time() + days * 86400) if days else 0
+	def ban(self, admin=None, reason=None, until=0):
+		'''Suspends the account until the epoch time `until`, or for good if it's 0.'''
+		self.unban_utc = until
 		self.is_banned = admin.id if admin else AUTOJANNY_ID
 		self.ban_reason = reason or None
 		g.db.add(self)

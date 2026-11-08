@@ -840,12 +840,14 @@ def ban_user(user_id, v):
 		reason = reason[:-1]
 		passed_reason = filter_emojis_only(reason)
 
-	user.ban(admin=v, reason=passed_reason, days=days)
+	# One end for the user and their alts alike
+	until = int(time.time() + days * 86400) if days else 0
+	user.ban(admin=v, reason=passed_reason, until=until)
 
 	if request.values.get("alts"):
 		for x in user.alts:
 			if x.admin_level: continue
-			x.ban(admin=v, reason=passed_reason, days=days)
+			x.ban(admin=v, reason=passed_reason, until=until)
 
 	if days:
 		if reason: text = f"@{v.username} has banned you for **{days}** days for the following reason:\n\n> {reason}"
