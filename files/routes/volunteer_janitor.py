@@ -113,7 +113,8 @@ def submitted(v: User, ratings: dict[str, str]) -> None:
     rated = {cid for cid, result in records if result != VolunteerJanitorResult.Pending}
     if not parsed.keys() <= assigned - rated: abort(400)
 
-    for cid, result in parsed.items():
+    # In id order, as the badness updates lock the comments: ratings of overlapping duties mustn't deadlock
+    for cid, result in sorted(parsed.items()):
         g.db.add(VolunteerJanitorRecord(user_id=v.id, comment_id=cid, result=result))
         update_comment_badness(g.db, cid)
 

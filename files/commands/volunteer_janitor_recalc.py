@@ -369,7 +369,8 @@ def volunteer_janitor_recalc_all_comments(db: Session):
     db.expire_all()
 
     # going through all the comments piecemeal like this is hilariously efficient, but this entire system gets run exactly once ever, so, okay
-    for comment in alive_it(db.query(Comment).join(Comment.reports)):
+    # In id order, as each update locks its comment until the commit below, like ratings do
+    for comment in alive_it(db.query(Comment).join(Comment.reports).order_by(Comment.id)):
         update_comment_badness(db, comment.id)
     
     db.commit()

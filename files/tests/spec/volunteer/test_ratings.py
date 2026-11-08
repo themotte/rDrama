@@ -1,7 +1,7 @@
 '''
 Rating the comments of a volunteer duty: POST /volunteer/submit, with one form field "volunteer-janitor-<comment id>" per rated comment whose value is the rating: "1" high quality, "2" good, "3" neutral, "4" bad, "5" deserves a warning, "6" deserves a ban (stored as result "TopQuality", "Good", "Neutral", "Bad", "Warning", "Ban"). Only the form counts (not the query string). Each rated comment must be one of the volunteer's open assignments: assigned to them to rate (see test_duty) and not yet rated by them, whatever happened to it since. Each rating is stored as a "volunteer_janitor" row of the volunteer, the comment and the result, and the answer is a thank-you page. Fields not starting with "volunteer-" are ignored.
 
-Ratings change a comment's volunteer badness only by the weight of the volunteers giving them, which comes from their past accuracy: a volunteer whose "volunteer_janitor_correctness" is 0.5 or less weighs nothing.
+Each rating updates the comment's "volunteer_janitor_badness" at once, counting it. The badness comes from the first rating of each volunteer assigned the comment before they rated it (other ratings count for nothing). A rating says the comment is bad (Warning, Ban: with confidence 1; Bad: 0.5) or not (TopQuality, Good: 1; Neutral: 0.5), and counts with the confidence times the volunteer's weight, which comes from their past accuracy c ("volunteer_janitor_correctness"): 0 up to c = 0.5, rising evenly to 1 at c = 1. With W the total counted weight and B the part of it saying bad, the badness is 0.5 when W is 0; otherwise, with p = (B + 0.5) / (W + 1), it is max(B / (W + 1 - p), 0.5) when p > 0.5, and min((B + p) / (W + p), 0.5) when not.
 
 Refused, storing nothing of the request: anonymous users (sent to log in); with 400, a "volunteer-" field of another kind, a comment id that isn't a whole number in digits, a value other than those six, a field given twice, or a comment that isn't one of the volunteer's open assignments.
 '''
@@ -184,3 +184,55 @@ def test_ratings_in_the_query_string_are_ignored():
 
 	assert_html(r, 200)
 	d.assert_exactly()
+
+
+# Badness
+
+@pytest.mark.parametrize("value, badness", [("1", 0.2), ("2", 0.2), ("3", 0.4), ("4", 0.6), ("5", 0.8), ("6", 0.8)], ids=RESULTS.values())
+def test_a_fully_weighted_rating_sets_the_badness(value, badness):
+	volunteer = factories.user(volunteer_janitor_correctness=1.0)
+	comment = _assigned_comment(volunteer)
+	client = as_user(volunteer)
+
+	with db_diff() as d:
+		client.post("/volunteer/submit", {f"volunteer-janitor-{comment['id']}": value})
+
+	d.assert_exactly(inserted={"volunteer_janitor": [_rating(volunteer, comment, RESULTS[value])]}, updated={"comments": {comment["id"]: {"volunteer_janitor_badness": pytest.approx(badness)}}})
+
+
+@pytest.mark.parametrize("correctness, badness", [(0.5, 0.5), (0.75, 0.6), (0.3, 0.5)])
+def test_a_rating_weighs_by_the_volunteers_accuracy(correctness, badness):
+	volunteer = factories.user(volunteer_janitor_correctness=correctness)
+	comment = _assigned_comment(volunteer)
+
+	as_user(volunteer).post("/volunteer/submit", {f"volunteer-janitor-{comment['id']}": "6"})
+
+	assert db.row("comments", id=comment["id"])["volunteer_janitor_badness"] == pytest.approx(badness)
+
+
+@pytest.mark.parametrize("earlier, badness", [("Ban", 0.5), ("Warning", 0.5), ("Good", 1 / 13), ("Ban-unassigned", 0.2), ("Ban-then-Good", 0.5)])
+def test_the_badness_counts_each_assigned_volunteers_rating(earlier, badness):
+	'''The volunteer rates Good; another fully weighted volunteer rated before them (once, or twice as older versions allowed: their first rating counts).'''
+	other, volunteer = factories.user(volunteer_janitor_correctness=1.0), factories.user(volunteer_janitor_correctness=1.0)
+	comment = _assigned_comment(volunteer)
+	if earlier != "Ban-unassigned":
+		factories.assignment(other, comment)
+	first, _, second = earlier.removesuffix("-unassigned").partition("-then-")
+	db.insert("volunteer_janitor", user_id=other["id"], comment_id=comment["id"], result=first)
+	if second:
+		db.insert("volunteer_janitor", user_id=other["id"], comment_id=comment["id"], result=second)
+
+	as_user(volunteer).post("/volunteer/submit", {f"volunteer-janitor-{comment['id']}": "2"})
+
+	assert db.row("comments", id=comment["id"])["volunteer_janitor_badness"] == pytest.approx(badness)
+
+
+def test_two_bans_make_a_comment_worse_than_one():
+	other, volunteer = factories.user(volunteer_janitor_correctness=1.0), factories.user(volunteer_janitor_correctness=1.0)
+	comment = _assigned_comment(volunteer)
+	factories.assignment(other, comment)
+	db.insert("volunteer_janitor", user_id=other["id"], comment_id=comment["id"], result="Ban")
+
+	as_user(volunteer).post("/volunteer/submit", {f"volunteer-janitor-{comment['id']}": "6"})
+
+	assert db.row("comments", id=comment["id"])["volunteer_janitor_badness"] == pytest.approx(2 / (2 + 1 / 6))

@@ -49,6 +49,11 @@ def calculate_final_comment_badness(comment_total, comment_weight, conservative)
 def update_comment_badness(db, cid):
     # Recalculate the comment's confidence values
     # This probably does more SQL queries than it should
+
+    # Recalculations of one comment take turns, so each counts the ratings the others stored
+    db.query(Comment.id).where(Comment.id == cid).with_for_update().one()
+    # The session doesn't autoflush: the records read below must include the ones just added
+    db.flush()
     records = db.query(VolunteerJanitorRecord) \
         .where(VolunteerJanitorRecord.comment_id == cid) \
         .order_by(VolunteerJanitorRecord.recorded_datetimez)
