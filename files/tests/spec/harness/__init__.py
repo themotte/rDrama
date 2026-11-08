@@ -13,7 +13,7 @@ from files.tests.spec.harness.asserts import __all__ as _asserts_all
 from files.tests.spec.harness.db import ANY, db_diff
 from files.tests.spec.harness.http import Client, Response
 
-__all__ = ["config", "db", "external_web", "factories", "seed", "session", "uploads", "XHR", "TOR", "can_log_in", "notification_counts", "urls_in", "totp_step_settle", "ANY", "db_diff", "Client", "Response", "anon", "as_user", "as_api", "site_settings_set", "run_background_work", "sent_mail", "cli", "CliResult", "assert_cli_ok", *_asserts_all]
+__all__ = ["config", "db", "external_web", "factories", "seed", "session", "uploads", "XHR", "TOR", "can_log_in", "notification_counts", "element_text", "urls_in", "totp_step_settle", "ANY", "db_diff", "Client", "Response", "anon", "as_user", "as_api", "site_settings_set", "run_background_work", "sent_mail", "cli", "CliResult", "assert_cli_ok", *_asserts_all]
 
 
 XHR = {"xhr": "1"}
@@ -118,3 +118,29 @@ def notification_counts(r: Response) -> dict:
 	Parser().feed(r.text)
 	assert found["bell"] is not None, "the page has no notification bell"
 	return found
+
+
+_VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
+
+
+def element_text(r: Response, element_id: str) -> str:
+	'''The text a reader sees inside the page's element with the id `element_id` (ids such as "post-<id>" and "comment-<id>" are part of the page contract), with runs of whitespace made one space.'''
+	found = {"depth": 0, "seen": False, "text": []}
+
+	class Parser(HTMLParser):
+		def handle_starttag(self, tag, attrs):
+			if found["depth"]:
+				if tag not in _VOID_TAGS: found["depth"] += 1
+			elif dict(attrs).get("id") == element_id and not found["seen"]:
+				found["seen"] = True
+				found["depth"] = 0 if tag in _VOID_TAGS else 1
+
+		def handle_endtag(self, tag):
+			if found["depth"] and tag not in _VOID_TAGS: found["depth"] -= 1
+
+		def handle_data(self, data):
+			if found["depth"]: found["text"].append(data)
+
+	Parser().feed(r.text)
+	assert found["seen"], f"the page has no element with id {element_id!r}"
+	return " ".join("".join(found["text"]).split())

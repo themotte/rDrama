@@ -20,7 +20,7 @@ def volunteer_get_duty(u: Optional[User]) -> Optional[list[int]]:
     if u is None:
         return None
     
-    if not app.config['DBG_VOLUNTEER_PERMISSIVE']:
+    if not app.config['DBG_VOLUNTEER_PERMISSIVE']:  # pragma: no branch (DBG_VOLUNTEER_PERMISSIVE relaxes the limits for trying duties out in development; outside the spec)
         # check to make sure it's at least 20h since the last volunteer
         if (u.volunteer_last_started_utc is not None) and (datetime.now() - u.volunteer_last_started_utc) < timedelta(hours = 20):
             return None

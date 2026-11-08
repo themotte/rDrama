@@ -28,7 +28,7 @@ def comments(choices: list[int]) -> list[Comment]:
 
 
 def get_duty(u: User) -> Optional[list[int]]:
-    if not app.config['VOLUNTEER_JANITOR_ENABLE']:
+    if not app.config['VOLUNTEER_JANITOR_ENABLE']:  # pragma: no cover (a deployment switch, on unless configured off; outside the spec)
         return None
 
     # these could probably be combined into one query somehow
@@ -74,7 +74,7 @@ def get_duty(u: User) -> Optional[list[int]]:
             .with_entities(VolunteerJanitorRecord.comment_id)
 
         final_reported = list({report.comment_id for report in nonuser_reports} - {record.comment_id for record in seen_records})
-    else:
+    else:  # pragma: no cover (DBG_VOLUNTEER_PERMISSIVE relaxes the limits for trying duties out in development; outside the spec)
         final_reported = reported_ids
 
     if len(final_reported) <= 0:
