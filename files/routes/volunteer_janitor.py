@@ -4,6 +4,7 @@ from files.classes.comment import Comment
 from files.classes.flags import CommentFlag
 from files.classes.submission import Submission
 from files.classes.user import User
+from files.classes.userblock import UserBlock
 from files.classes.visstate import StateReport, StateMod
 from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
 from files.helpers.volunteer_janitor import update_comment_badness
@@ -34,7 +35,7 @@ def get_duty(u: User) -> Optional[list[int]]:
 
     # these could probably be combined into one query somehow
 
-    # find reported visible comments on posts that aren't drafts, not made by the current user or in reply to the current user
+    # find reported visible comments on posts that aren't drafts, not made by the current user or in reply to the current user, that the current user would see whole
     ParentComment = aliased(Comment)
     reported_comments = g.db.query(Comment) \
         .join(Submission, Submission.id == Comment.parent_submission) \
@@ -45,7 +46,13 @@ def get_duty(u: User) -> Optional[list[int]]:
         .where(Comment.author_id != u.id) \
         .outerjoin(ParentComment, ParentComment.id == Comment.parent_comment_id) \
         .where(sqlalchemy.or_(ParentComment.author_id != u.id, ParentComment.author_id == None)) \
+        .join(User, User.id == Comment.author_id) \
+        .where(User.shadowbanned == None) \
+        .where(Comment.author_id.notin_(sqlalchemy.select(UserBlock.target_id).where(UserBlock.user_id == u.id))) \
+        .where(Comment.author_id.notin_(sqlalchemy.select(UserBlock.user_id).where(UserBlock.target_id == u.id))) \
         .with_entities(Comment.id)
+    if not u.over_18:
+        reported_comments = reported_comments.where(Comment.over_18 == False, Submission.over_18 == False)
 
     reported_ids = [reported.id for reported in reported_comments]
     

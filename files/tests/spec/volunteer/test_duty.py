@@ -7,6 +7,7 @@ A visitor has no duty available within 20 hours of their last start.
 
 A comment is eligible for a volunteer when:
 - it is a comment on a post that isn't a draft: never a private message or one of the site's notices;
+- the volunteer would see it whole: its author isn't shadowbanned, neither of them blocks the other, and unless the volunteer has the 18+ setting, neither the comment nor its post is 18+;
 - its reports are open (REPORTED);
 - it is visible: not removed, not held for review, not deleted by its author;
 - it is neither the volunteer's own comment nor a reply to one of theirs;
@@ -166,7 +167,36 @@ def _on_a_draft(volunteer):
 	return comment
 
 
+def _blocked_by_volunteer(volunteer):
+	comment = _eligible()
+	db.insert("userblocks", user_id=volunteer["id"], target_id=comment["author_id"])
+	return comment
+
+
+def _blocking_volunteer(volunteer):
+	comment = _eligible()
+	db.insert("userblocks", user_id=comment["author_id"], target_id=volunteer["id"])
+	return comment
+
+
+def _by_shadowbanned(volunteer):
+	comment = factories.comment(factories.user(shadowbanned="somemod"), factories.post(factories.user()), state_report="REPORTED")
+	factories.report(factories.user(), comment)
+	return comment
+
+
+def _on_an_18_plus_post(volunteer):
+	comment = factories.comment(factories.user(), factories.post(factories.user(), over_18=True), state_report="REPORTED")
+	factories.report(factories.user(), comment)
+	return comment
+
+
 INELIGIBLE = {
+	"shadowbanned author": _by_shadowbanned,
+	"author blocked by the volunteer": _blocked_by_volunteer,
+	"author blocking the volunteer": _blocking_volunteer,
+	"18+ post": _on_an_18_plus_post,
+	"18+ comment": lambda v: _eligible(over_18=True),
 	"private message": _message,
 	"notice": _notice,
 	"comment on a draft": _on_a_draft,
@@ -193,6 +223,30 @@ def test_ineligible_comments_are_never_assigned(case):
 
 	with db_diff() as d:
 		r = as_user(volunteer).get("/volunteer")
+
+	assert_html(r, 200)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("case", ["18+ post", "18+ comment"])
+def test_volunteers_with_the_18_plus_setting_rate_18_plus_comments(case):
+	volunteer = factories.user(over_18=True)
+	comment = INELIGIBLE[case](volunteer)
+
+	as_user(volunteer).get("/volunteer")
+
+	assert [row["comment_id"] for row in db.rows("volunteer_janitor", user_id=volunteer["id"])] == [comment["id"]]
+
+
+@pytest.mark.parametrize("case", ["shadowbanned author", "author blocked by the volunteer"])
+def test_admins_are_offered_only_what_others_would_see_whole_too(case):
+	volunteer = factories.admin(3)
+	INELIGIBLE[case](volunteer)
+
+	client = as_user(volunteer)
+
+	with db_diff() as d:
+		r = client.get("/volunteer")
 
 	assert_html(r, 200)
 	d.assert_exactly()
