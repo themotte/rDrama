@@ -30,6 +30,8 @@ def thumbnail_thread(pid):
 
 THUMBNAIL_SOURCE_MAX_BYTES = 8 * 1024 * 1024
 THUMBNAIL_SOURCE_MIN_SIDE = 30
+# Parsing a page takes up to about 100 times its size in memory; preview images are named near the start
+THUMBNAIL_PAGE_MAX_BYTES = 512 * 1024
 # Decoding takes 3 to 4 bytes a pixel, so this bounds an image at about 64 MB in memory; a 100 px thumbnail needs no more
 THUMBNAIL_SOURCE_MAX_PIXELS = 16_000_000
 THUMBNAIL_MAX_CANDIDATES = 10
@@ -44,7 +46,7 @@ def _fetch_thumbnail(db, post):
 	content_type:str = response.headers.get("Content-Type", "")
 	if content_type.startswith("text/html"):
 		image = None
-		for url in _thumbnail_candidates(post.url, body):
+		for url in _thumbnail_candidates(post.url, body[:THUMBNAIL_PAGE_MAX_BYTES]):
 			candidate = _thumbnail_fetch(url)
 			if candidate and _thumbnail_suitable(*candidate):
 				image = candidate[1]

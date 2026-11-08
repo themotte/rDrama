@@ -2,7 +2,7 @@
 Things the site looks up on other sites or in its own posts for the submit form and new link posts:
 - POST /is_repost with "url": the permalink of a live post already linking there, or "" (no login needed).
 - GET /submit/title?url=...: the <title> of the page at url, for prefilling the title field.
-- The thumbnail of a new link post, fetched in the background from the linked page's preview-image metadata, its images, or the link itself when it is an image. Images of more than 16 million pixels aren't used.
+- The thumbnail of a new link post, fetched in the background from the linked page's preview-image metadata, its images, or the link itself when it is an image. Only the first 512 KiB of a page is looked at, and images of more than 16 million pixels aren't used.
 '''
 import pytest
 
@@ -325,6 +325,16 @@ def test_images_at_least_30_pixels_square_qualify():
 def test_pages_without_suitable_images_give_no_thumbnail():
 	external_web.serve("https://example.com/article", **_html(body='<img src="https://cdn.example.com/tiny.png">'))
 	external_web.serve("https://cdn.example.com/tiny.png", **_image(size=10))
+	post = _link_post("https://example.com/article")
+
+	run_background_work()
+
+	assert _thumbnail_of(post) is None
+
+
+def test_only_the_first_512_kib_of_a_page_is_looked_at():
+	external_web.serve("https://example.com/article", **_html(body="<p>" + "x" * (512 * 1024) + '</p><img src="https://cdn.example.com/late.png">'))
+	external_web.serve("https://cdn.example.com/late.png", **_image())
 	post = _link_post("https://example.com/article")
 
 	run_background_work()
