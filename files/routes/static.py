@@ -170,6 +170,10 @@ def cached_chart(kind, site):
 	return file
 
 
+def _sees_admin_only_kinds(v) -> bool:
+	return bool(v and v.admin_level >= 2)
+
+
 @app.get("/admins")
 @auth_desired
 def admins(v):
@@ -177,11 +181,10 @@ def admins(v):
 		admins = g.db.query(User).filter(User.admin_level>1).order_by(User.truescore.desc()).all()
 		admins += g.db.query(User).filter(User.admin_level==1).order_by(User.truescore.desc()).all()
 	else: admins = g.db.query(User).filter(User.admin_level>0).order_by(User.truescore.desc()).all()
-	return render_template("admins.html", v=v, admins=admins)
-
-
-def _sees_admin_only_kinds(v) -> bool:
-	return bool(v and v.admin_level >= 2)
+	# What each admin's entries in the mod log come to for this viewer
+	entries = g.db.query(ModAction.user_id, func.count()).filter(ModAction.user_id.in_([u.id for u in admins])).group_by(ModAction.user_id)
+	if not _sees_admin_only_kinds(v): entries = entries.filter(ModAction.kind.notin_(ADMIN_ONLY_KINDS))
+	return render_template("admins.html", v=v, admins=admins, mod_actions=dict(entries.all()))
 
 
 @app.get("/log")
