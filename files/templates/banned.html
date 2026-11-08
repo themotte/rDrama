@@ -15,7 +15,7 @@
 		<td>{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}}" href="/@{{user.username}}"><img loading="lazy" src="{{user.profile_url}}" class="pp20"><span>{{user.username}}</span></a></td>
 		<td>{% if user.ban_reason %}{{user.ban_reason}}{% endif %}</td>
-		<td href="/@{{user.banned_by.username}}"><img loading="lazy" src="{{user.banned_by.profile_url}}" class="pp20"><span>{{user.banned_by.username}}</span></a></td>
+		<td><a href="/@{{user.banned_by.username}}"><img loading="lazy" src="{{user.banned_by.profile_url}}" class="pp20"><span>{{user.banned_by.username}}</span></a></td>
 	</tr>
 {% endfor %}
 </table>
