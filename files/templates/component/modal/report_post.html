@@ -8,7 +8,7 @@
 				</button>
 			</div>
 			<div id="reportPostFormBefore">
-				{% include 'report_reasons.html' %}
+				{% with report_kind='post' %}{% include 'report_reasons.html' %}{% endwith %}
 				<div class="modal-footer">
 					<button class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
 					<button id="reportPostButton" class="btn btn-danger">Report post</button>

@@ -1,30 +1,31 @@
+{# Each report modal includes this with its own `report_kind`, so the ids and radio groups of a page's two modals stay apart #}
 <div class="modal-body">
   <div class="h6">We're sorry something here is wrong.</div>
   <small class="form-text text-muted">Please enter a reason for reporting below.</small>
   <pre></pre>
   <div>
-    <input type="radio" id="low-effort" name="report-reason" value="low-effort" />
-    <label for="low-effort">Low Effort</label>
+    <input type="radio" id="{{report_kind}}-low-effort" name="{{report_kind}}-report-reason" value="low-effort" />
+    <label for="{{report_kind}}-low-effort">Low Effort</label>
   </div>
   <div>
-    <input type="radio" id="antagonistic" name="report-reason" value="antagonistic" />
-    <label for="antagonistic">Antagonistic/Uncharitable/Unkind</label>
+    <input type="radio" id="{{report_kind}}-antagonistic" name="{{report_kind}}-report-reason" value="antagonistic" />
+    <label for="{{report_kind}}-antagonistic">Antagonistic/Uncharitable/Unkind</label>
   </div>
   <div>
-    <input type="radio" id="boo-outgroup" name="report-reason" value="boo-outgroup" />
-    <label for="boo-outgroup">Boo Outgroup</label>
+    <input type="radio" id="{{report_kind}}-boo-outgroup" name="{{report_kind}}-report-reason" value="boo-outgroup" />
+    <label for="{{report_kind}}-boo-outgroup">Boo Outgroup</label>
   </div>
   <div>
-    <input type="radio" id="build-consensus" name="report-reason" value="build-consensus" />
-    <label for="build-consensus">Attempting to speak for the whole forum or build consensus</label>
+    <input type="radio" id="{{report_kind}}-build-consensus" name="{{report_kind}}-report-reason" value="build-consensus" />
+    <label for="{{report_kind}}-build-consensus">Attempting to speak for the whole forum or build consensus</label>
   </div>
   <div>
-    <input type="radio" id="quality-contribution" name="report-reason" value="quality-contribution" />
-    <label for="quality-contribution">Actually a quality contribution</label>
+    <input type="radio" id="{{report_kind}}-quality-contribution" name="{{report_kind}}-report-reason" value="quality-contribution" />
+    <label for="{{report_kind}}-quality-contribution">Actually a quality contribution</label>
   </div>
   <div>
-    <input type="radio" id="other" name="report-reason" value="other" />
-    <label for="other">Other</label>
+    <input type="radio" id="{{report_kind}}-other" name="{{report_kind}}-report-reason" value="other" />
+    <label for="{{report_kind}}-other">Other</label>
   </div>
-  <input autocomplete="off" maxlength="100" id="reason-field" class="form-control b2" />
+  <input autocomplete="off" maxlength="100" id="{{report_kind}}-reason-field" class="form-control b2" />
 </div>

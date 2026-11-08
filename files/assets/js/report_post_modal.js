@@ -2,7 +2,7 @@ function report_postModal(id) {
 	const submitbutton = document.getElementById("reportPostButton");
 	const wholeFormBefore = document.getElementById('reportPostFormBefore');
 	const wholeFormAfter = document.getElementById('reportPostFormAfter');
-	const reasonField = document.getElementById("reason-field");
+	const reasonField = document.getElementById("post-reason-field");
 
 	//The HTML is reused if the user makes multiple reports without a reload, so clean up
 	//from any previous openings
@@ -13,11 +13,11 @@ function report_postModal(id) {
 	submitbutton.classList.add('disabled');
 	reasonField.value = "";
 	reasonField.disabled = true;
-	for (const radioButton of document.querySelectorAll('input[name="report-reason"]')) {
+	for (const radioButton of document.querySelectorAll('input[name="post-report-reason"]')) {
 		radioButton.checked = false;
 	}
 
-	const otherButton = document.querySelector('input#other');
+	const otherButton = document.getElementById('post-other');
 	function handleRadioButtonChange() {
 		submitbutton.disabled = false;
 		submitbutton.classList.remove('disabled');
@@ -43,7 +43,7 @@ function report_postModal(id) {
 		if (otherButton.checked) {
 			reasonValue = reasonField.value;
 		} else {
-			reasonValue = document.querySelector('input[name="report-reason"]:checked').value;
+			reasonValue = document.querySelector('input[name="post-report-reason"]:checked').value;
 		}
 		form.append("reason", reasonValue);
 

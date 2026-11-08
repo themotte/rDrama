@@ -4,7 +4,7 @@ function report_commentModal(id, author) {
 	const wholeFormBefore = document.getElementById('reportCommentFormBefore');
 	const wholeFormAfter = document.getElementById('reportCommentFormAfter');
 	const submitButton = document.getElementById("reportCommentButton")
-	const reasonField = document.getElementById("reason-field")
+	const reasonField = document.getElementById("comment-reason-field")
 
 	//The HTML is reused if the user makes multiple reports without a reload, so clean up
 	//from any previous openings
@@ -15,11 +15,11 @@ function report_commentModal(id, author) {
 	submitButton.innerHTML = 'Report comment';
 	reasonField.value = ""
 	reasonField.disabled = true;
-	for (const radioButton of document.querySelectorAll('input[name="report-reason"]')) {
+	for (const radioButton of document.querySelectorAll('input[name="comment-report-reason"]')) {
 		radioButton.checked = false;
 	}
 
-	const otherButton = document.querySelector('input#other');
+	const otherButton = document.getElementById('comment-other');
 	function handleRadioButtonChange() {
 		submitButton.disabled = false;
 		submitButton.classList.remove('disabled');
@@ -44,7 +44,7 @@ function report_commentModal(id, author) {
 		if (otherButton.checked) {
 			reasonValue = reasonField.value;
 		} else {
-			reasonValue = document.querySelector('input[name="report-reason"]:checked').value;
+			reasonValue = document.querySelector('input[name="comment-report-reason"]:checked').value;
 		}
 		form.append("reason", reasonValue);
 
