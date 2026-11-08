@@ -30,13 +30,19 @@ def authorize(v):
 	access_token = _authorization(application, v)
 	g.db.commit()
 
-	return redirect(f"{application.redirect_uri}?token={access_token}")
+	return redirect(_with_token(application.redirect_uri, access_token))
 
 
 def _app_by_client_id(client_id: Optional[str]) -> Optional[OauthApp]:
 	'''The approved app whose client id is `client_id`; pending apps have none, so a missing id matches nothing.'''
 	if not client_id: return None
 	return g.db.query(OauthApp).filter(OauthApp.client_id == client_id).one_or_none()
+
+
+def _with_token(redirect_uri: str, access_token: str) -> str:
+	'''`redirect_uri` with the token added to its query, after any query it already has and before its fragment, and otherwise as stored.'''
+	base, hash, fragment = redirect_uri.partition("#")
+	return f"{base}{'&' if '?' in base else '?'}token={access_token}{hash}{fragment}"
 
 
 def _app_fields() -> tuple[str, str, str]:

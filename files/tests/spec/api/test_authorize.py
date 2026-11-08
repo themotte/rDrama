@@ -1,7 +1,7 @@
 '''
 How users let an API application act for them.
 
-The app sends the user to GET /authorize?client_id=<its client id>, which asks the logged-in user to authorize it (visitors are sent to log in and come back). Submitting that (POST /authorize with "client_id") grants the user a token for the app, one per user per app: authorizing again gives the same token. The user's browser is then sent to the app's redirect URI with the token as the "token" query parameter, and the app acts for the user with it (test_tokens). Suspended users may authorize apps.
+The app sends the user to GET /authorize?client_id=<its client id>, which asks the logged-in user to authorize it (visitors are sent to log in and come back). Submitting that (POST /authorize with "client_id") grants the user a token for the app, one per user per app: authorizing again gives the same token. The user's browser is then sent to the app's redirect URI with the token added as the "token" query parameter (after any query the URI already has, and before its fragment), and the app acts for the user with it (test_tokens). Suspended users may authorize apps.
 
 A user withdraws an app's access with POST /oauth/rescind/<app id>, which deletes their token for it (the token then authenticates no one) and answers a JSON message; if they hold none, or the id is no app's, 404.
 
@@ -41,6 +41,23 @@ def test_authorizing_grants_a_token_and_sends_it_to_the_app():
 	assert_status(r, 302)
 	assert r.location == f"{application['redirect_uri']}?token={granted['access_token']}"
 	assert as_api(granted["access_token"]).get("/me").json["id"] == user["id"]
+
+
+@pytest.mark.parametrize("redirect_uri, sent_to", [
+	("https://example.com/cb?x=1", "https://example.com/cb?x=1&token={}"),
+	("https://example.com/cb#done", "https://example.com/cb?token={}#done"),
+	("https://example.com/cb?x=1&y=2#done", "https://example.com/cb?x=1&y=2&token={}#done"),
+	("myapp://callback", "myapp://callback?token={}"),
+], ids=["query", "fragment", "both", "custom scheme"])
+def test_the_token_joins_the_redirect_uris_own_query(redirect_uri, sent_to):
+	application = factories.oauth_app(factories.user(), redirect_uri=redirect_uri)
+	user = factories.user()
+
+	r = as_user(user).post("/authorize", {"client_id": application["client_id"]})
+
+	token = db.row("client_auths", user_id=user["id"], oauth_client=application["id"])["access_token"]
+	assert_status(r, 302)
+	assert r.header("Location") == sent_to.format(token)
 
 
 def test_authorizing_again_gives_the_same_token():
