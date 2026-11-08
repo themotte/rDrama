@@ -1,4 +1,4 @@
-from datetime import time
+from datetime import datetime, time, timezone
 from typing import Optional
 
 from flask import abort, g, redirect, render_template, request
@@ -19,14 +19,18 @@ def _modify_task_schedule(pid:int):
 	if not task: abort(404)
 
 	# rebuild the schedule
-	task.enabled = _get_request_bool('enabled')
-	task.frequency_day_flags = _get_request_dayofweek()
+	enabled:bool = _get_request_bool('enabled')
+	frequency_day:int = int(_get_request_dayofweek())
 	hour:int = validators.int_ranged('hour', 0, 23)
 	minute:int = validators.int_ranged('minute', 0, 59)
 	second:int = 0 # TODO: seconds?
-
 	time_of_day_utc:time = time(hour, minute, second)
-	task.time_of_day_utc = time_of_day_utc
+
+	if (task.enabled, task.frequency_day, task.time_of_day_utc) != (enabled, frequency_day, time_of_day_utc):
+		task.enabled = enabled
+		task.frequency_day = frequency_day
+		task.time_of_day_utc = time_of_day_utc
+		task.schedule_changed_utc = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 	g.db.commit()
 
 @app.get('/tasks/')

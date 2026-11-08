@@ -82,6 +82,18 @@ class _Any:
 ANY = _Any()
 
 
+class between:
+	'''Matches a value from `lo` to `hi`, inclusive: for times the test can only bracket, such as when a request it made was handled.'''
+	def __init__(self, lo, hi):
+		self.lo, self.hi = lo, hi
+
+	def __eq__(self, other):
+		return other is not None and self.lo <= other <= self.hi
+
+	def __repr__(self):
+		return f"between({self.lo!r}, {self.hi!r})"
+
+
 @dataclass
 class Diff:
 	'''

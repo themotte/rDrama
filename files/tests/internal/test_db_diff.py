@@ -1,6 +1,6 @@
 import pytest
 
-from files.tests.spec.harness.db import ANY, Diff
+from files.tests.spec.harness.db import ANY, Diff, between
 
 
 def test_inserted_rows_pair_up_regardless_of_expectation_order():
@@ -35,3 +35,7 @@ def test_deletes_compare_keys_with_nulls():
 	diff = Diff(deleted={"usernotes": [(1, None, 3), (1, 2, None)]})
 
 	diff.assert_exactly(deleted={"usernotes": [(1, 2, None), (1, None, 3)]})
+
+
+def test_between_matches_values_in_its_range_inclusive():
+	assert [between(2, 4) == v for v in (1, 2, 3, 4, 5, None)] == [False, True, True, True, False, False]

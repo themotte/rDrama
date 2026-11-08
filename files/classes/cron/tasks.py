@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import contextlib
 import dataclasses
+import time
 from datetime import date, datetime, timedelta, timezone
 from enum import IntEnum, IntFlag
 from typing import Final, Optional, Union
@@ -144,7 +145,15 @@ class RepeatableTask(CreatedBase):
 	# used for the cron hardcoding system
 	label = Column(String, nullable=True, unique=True)
 
+	# When enabled, the days or the time last changed (UTC, without a zone); creation counts as a change
+	schedule_changed_utc = Column(DateTime, nullable=False)
+
 	runs = relationship("RepeatableTaskRun", back_populates="task")
+
+	def __init__(self, *args, **kwargs):
+		kwargs.setdefault("created_utc", int(time.time()))
+		kwargs.setdefault("schedule_changed_utc", datetime.fromtimestamp(kwargs["created_utc"], tz=timezone.utc).replace(tzinfo=None))
+		super().__init__(*args, **kwargs)
 
 	@property
 	def type(self) -> ScheduledTaskType:
@@ -171,8 +180,10 @@ class RepeatableTask(CreatedBase):
 		self.run_state = int(value)
 
 	@property
-	def run_time_last_or_created_utc(self) -> datetime:
-		return self.run_time_last or self.created_datetime_py
+	def schedule_anchor(self) -> datetime:
+		'''The time the next slot must come after: the later of the last run and the last schedule change, so slots that passed before a change never run.'''
+		latest = max(t for t in (self.run_time_last, self.schedule_changed_utc) if t is not None)
+		return latest.replace(tzinfo=timezone.utc)
 
 	@property
 	def run_time_last_str(self) -> str:
@@ -182,7 +193,7 @@ class RepeatableTask(CreatedBase):
 
 	@property
 	def trigger_time(self) -> datetime | None:
-		return self.next_trigger(self.run_time_last_or_created_utc)
+		return self.next_trigger(self.schedule_anchor)
 
 	def can_run(self, now: datetime) -> bool:
 		return not (

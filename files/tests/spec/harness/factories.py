@@ -8,6 +8,7 @@ import html
 import itertools
 import secrets
 import time
+from datetime import datetime, timezone
 
 from files.tests.spec.harness import db
 from files.tests.spec.harness.http import Client
@@ -243,7 +244,10 @@ def assignment(volunteer: dict, comment: dict) -> dict:
 
 def _task(author: dict, type_id: int, subtype_table: str, subtype_values: dict, overrides: dict) -> dict:
 	task_columns = set(db.table("tasks_repeatable").c.keys())
-	task = db.insert("tasks_repeatable", **{**dict(author_id=author["id"], type_id=type_id, enabled=True, run_state=1, frequency_day=0, time_of_day_utc="00:00", created_utc=1000), **{k: v for k, v in overrides.items() if k in task_columns}})
+	values = {**dict(author_id=author["id"], type_id=type_id, enabled=True, run_state=1, frequency_day=0, time_of_day_utc="00:00", created_utc=1000), **{k: v for k, v in overrides.items() if k in task_columns}}
+	# A task's schedule counts as set when it was created, unless overridden
+	values.setdefault("schedule_changed_utc", datetime.fromtimestamp(values["created_utc"], timezone.utc).replace(tzinfo=None))
+	task = db.insert("tasks_repeatable", **values)
 	subtype = db.insert(subtype_table, **{**subtype_values, **{k: v for k, v in overrides.items() if k not in task_columns}, "id": task["id"]})
 	return {**subtype, **task}
 

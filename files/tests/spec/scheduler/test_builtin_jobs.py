@@ -18,19 +18,20 @@ BUILTINS = {
 }
 
 
-def _created(label):
+def _created(label, since):
 	spec = BUILTINS[label]
 	return [
-		{"label": label, "author_id": 2, "type_id": 1, "enabled": True, "run_state": 1, "run_time_last": None, "frequency_day": EVERY_DAY, "time_of_day_utc": spec["time_of_day_utc"]},
+		{"label": label, "author_id": 2, "type_id": 1, "enabled": True, "run_state": 1, "run_time_last": None, "frequency_day": EVERY_DAY, "time_of_day_utc": spec["time_of_day_utc"], "schedule_changed_utc": between(since, utc_now_naive())},
 		{"import_path": spec["import_path"], "callable": spec["callable"]},
 	]
 
 
 def test_setup_creates_the_builtin_jobs():
+	since = utc_now_naive().replace(microsecond=0)
 	with db_diff() as d:
 		assert_cli_ok(cli("cron_setup"))
 
-	tasks, code = zip(*(_created(label) for label in BUILTINS))
+	tasks, code = zip(*(_created(label, since) for label in BUILTINS))
 	d.assert_exactly(inserted={"tasks_repeatable": list(tasks), "tasks_repeatable_python": list(code)})
 
 
@@ -46,10 +47,11 @@ def test_setup_again_changes_nothing():
 def test_setup_keeps_what_a_builtin_job_runs_but_leaves_its_schedule_to_admins():
 	existing = factories.job(SYSTEM, "files.commands.old_leaderboards", "old_callable", label="leaderboard_recalc", enabled=False, frequency_day=MONDAY, time_of_day_utc="03:00")
 
+	since = utc_now_naive().replace(microsecond=0)
 	with db_diff() as d:
 		assert_cli_ok(cli("cron_setup"))
 
-	task, code = _created("volunteer_janitor_recalc")
+	task, code = _created("volunteer_janitor_recalc", since)
 	d.assert_exactly(
 		inserted={"tasks_repeatable": [task], "tasks_repeatable_python": [code]},
 		updated={"tasks_repeatable_python": {existing["id"]: {"import_path": BUILTINS["leaderboard_recalc"]["import_path"], "callable": BUILTINS["leaderboard_recalc"]["callable"]}}},

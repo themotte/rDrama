@@ -26,7 +26,7 @@
 				</tr>
 				<tr>
 					<td>Next Run (UTC)</td>
-					<td>{{task.next_trigger(task.run_time_last_or_created_utc) | timestamp}}</td>
+					<td>{{task.trigger_time | timestamp}}</td>
 				</tr>
 				{%- if task.type == ScheduledTaskType.SCHEDULED_SUBMISSION -%}
 				<tr>

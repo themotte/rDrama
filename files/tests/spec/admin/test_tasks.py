@@ -28,11 +28,41 @@ def test_admin_replaces_a_tasks_schedule():
 	task = _task(admin, enabled=False, frequency_day=MONDAY)
 	client = as_user(admin)
 
+	before = utc_now_naive()
 	with db_diff() as d:
 		r = client.post(f"/tasks/{task['id']}/schedule", {"schedule_day_tuesday": "on", "hour": "22", "minute": "0", "enabled": "on"})
 
 	assert_redirect(r, f"/tasks/{task['id']}")
-	d.assert_exactly(updated={"tasks_repeatable": {task["id"]: {"enabled": True, "frequency_day": TUESDAY, "time_of_day_utc": time(22, 0)}}})
+	d.assert_exactly(updated={"tasks_repeatable": {task["id"]: {"enabled": True, "frequency_day": TUESDAY, "time_of_day_utc": time(22, 0), "schedule_changed_utc": between(before, utc_now_naive())}}})
+
+
+@pytest.mark.parametrize("change, changed", [
+	({"enabled": "on"}, {"enabled": True}),
+	({"schedule_day_tuesday": "on"}, {"frequency_day": MONDAY | TUESDAY}),
+	({"hour": "2"}, {"time_of_day_utc": time(2, 0)}),
+], ids=["enabled", "days", "time"])
+def test_any_schedule_change_records_when_it_was_made(change, changed):
+	admin = factories.admin(2)
+	task = _task(admin, enabled=False, frequency_day=MONDAY)
+	client = as_user(admin)
+
+	before = utc_now_naive()
+	with db_diff() as d:
+		r = client.post(f"/tasks/{task['id']}/schedule", {"schedule_day_monday": "on", "hour": "1", "minute": "0", **change})
+
+	assert_redirect(r, f"/tasks/{task['id']}")
+	d.assert_exactly(updated={"tasks_repeatable": {task["id"]: {**changed, "schedule_changed_utc": between(before, utc_now_naive())}}})
+
+
+def test_saving_an_unchanged_schedule_changes_nothing():
+	admin = factories.admin(2)
+	task = _task(admin, enabled=True, frequency_day=MONDAY)
+
+	with db_diff() as d:
+		r = as_user(admin).post(f"/tasks/{task['id']}/schedule", {"schedule_day_monday": "on", "hour": "1", "minute": "0", "enabled": "on"})
+
+	assert_redirect(r, f"/tasks/{task['id']}")
+	d.assert_exactly()
 
 
 def test_an_enabled_task_with_no_days_ticked_has_a_page():
