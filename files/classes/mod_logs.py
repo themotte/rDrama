@@ -1,6 +1,5 @@
 import html
 import logging
-from copy import deepcopy
 
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
@@ -361,8 +360,7 @@ ACTIONTYPES = {
 	}
 }
 
-ACTIONTYPES2 = deepcopy(ACTIONTYPES)
-ACTIONTYPES2.pop("shadowban")
-ACTIONTYPES2.pop("unshadowban")
-ACTIONTYPES2.pop("flair_post")
-ACTIONTYPES2.pop("edit_post")
+ADMIN_ONLY_KINDS = frozenset({"shadowban", "unshadowban", "flair_post", "edit_post"})
+'''Kinds of mod action the mod log shows only to admins (level 2+).'''
+
+ACTIONTYPES2 = {kind: t for kind, t in ACTIONTYPES.items() if kind not in ADMIN_ONLY_KINDS}

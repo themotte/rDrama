@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from sqlalchemy import func
 from sqlalchemy.orm import selectinload
 
-from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
+from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2, ADMIN_ONLY_KINDS
 from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.captcha import validate_captcha
@@ -201,7 +201,7 @@ def log(v):
 
 	actions = g.db.query(ModAction)
 	if not (v and v.admin_level >= 2): 
-		actions = actions.filter(ModAction.kind.notin_(["shadowban","unshadowban","flair_post","edit_post"]))
+		actions = actions.filter(ModAction.kind.notin_(ADMIN_ONLY_KINDS))
 	
 	if admin_id:
 		actions = actions.filter_by(user_id=admin_id)
