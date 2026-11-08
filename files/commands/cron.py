@@ -1,15 +1,18 @@
+import calendar
 import contextlib
 import logging
 import time
+import traceback
 from datetime import datetime, timezone
-from typing import Callable, Final
+from typing import Callable, Final, LiteralString
 
 from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker, Session
 
-from files.__main__ import app, db_session_factory
+from files.__main__ import app, cache, db_session_factory
 from files.classes.cron.tasks import (DayOfWeek, RepeatableTask,
-                                      RepeatableTaskRun, ScheduledTaskState)
+                                      RepeatableTaskRun, ScheduledTaskState,
+                                      TaskRunContext)
 
 CRON_SLEEP_SECONDS: Final[int] = 15
 '''
@@ -61,7 +64,7 @@ def tasks_recover_interrupted(db_session_factory: sessionmaker, now: Clock):
 		orphan_count = db.query(RepeatableTaskRun).filter(
 			RepeatableTaskRun.completed_utc == None
 		).update({
-			RepeatableTaskRun.completed_utc: now(),
+			RepeatableTaskRun.completed_utc: _naive_utc(now()),
 			RepeatableTaskRun.traceback_str: "Task was interrupted by server shutdown"
 		})
 
@@ -102,30 +105,16 @@ def cron_app_worker():  # pragma: no cover (the endless worker loop; the spec ru
 
 
 @contextlib.contextmanager
-def _acquire_lock_exclusive(db: Session, table: str):
+def _acquire_lock_exclusive(db: Session, table: LiteralString):
 	'''
 	Acquires an exclusive lock on the table provided by the `table` parameter.
 	This can be used for synchronizing the state of the specified table and 
 	making sure no readers can access it while in the critical section.
 	''' 
-	# TODO: make `table` the type LiteralString once we upgrade to python 3.11
-	db.begin() # we want to raise an exception if there's a txn in progress
-	db.execute(text(f"LOCK TABLE {table} IN ACCESS EXCLUSIVE MODE"))
-	try:
+	# Raises if a transaction is already in progress; commits on leaving, rolls back on an exception
+	with db.begin():
+		db.execute(text(f"LOCK TABLE {table} IN ACCESS EXCLUSIVE MODE"))
 		yield
-		db.commit()
-	except Exception:
-		logging.error(
-			"An exception occurred during an operation in a critical section. "
-			"A task might not occur or might be duplicated."
-		)
-		try:
-			db.rollback()
-		except:
-			logging.warning(
-				f"Failed to rollback database. The table {table} might still "
-				"be locked.")
-		raise
 
 
 def tasks_run_due(db_session_factory: sessionmaker, now: Clock):
@@ -139,52 +128,56 @@ def tasks_run_due(db_session_factory: sessionmaker, now: Clock):
 	for example, prevent any statistics about status from being gathered.
 	'''
 	with db_session_factory() as db:
-
 		with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
 			at: datetime = now()
-
-			tasks: list[RepeatableTask] = db.query(RepeatableTask).filter(
+			due_ids: list[int] = [task.id for task in db.query(RepeatableTask).filter(
 				RepeatableTask.enabled == True,
 				RepeatableTask.frequency_day != int(DayOfWeek.NONE),
 				RepeatableTask.run_state != int(ScheduledTaskState.RUNNING),
-				(RepeatableTask.run_time_last <= at)
-					| (RepeatableTask.run_time_last == None),
-			).all()
+			).order_by(RepeatableTask.id) if task.can_run(at)]
 
-			# SQLA needs to query again for the inherited object info anyway
-			# so it's fine that objects in the list get expired on txn end.
-			# Prefer more queries to risk of task run duplication.
-			tasks_to_run: list[RepeatableTask] = list(filter(
-				lambda task: task.can_run(at),	tasks))
+		for task_id in due_ids:
+			_task_run(db_session_factory, db, task_id, now)
 
-		for task in tasks_to_run:
-			at = now()
-			with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
-				# We need to check for runnability again because we don't mutex
-				# the RepeatableTask.run_state until now.
-				if not task.can_run(at):
-					continue
-				task.run_time_last = at
-				task.run_state_enum = ScheduledTaskState.RUNNING
 
-			# This *must* happen before we start doing db queries, including sqlalchemy db queries
-			db.begin()
-			task_debug_identifier = f"(ID {task.id}:{task.label})"
-			logging.info(f"Running task {task_debug_identifier}")
+def _naive_utc(at: datetime) -> datetime:
+	'''`at` as the database's timestamp columns hold it: UTC, without a zone.'''
+	return at.astimezone(timezone.utc).replace(tzinfo=None)
 
-			run: RepeatableTaskRun = task.run(db, at.astimezone(timezone.utc).replace(tzinfo=None))
 
-			if run.exception:
-				# TODO: collect errors somewhere other than just here and in the 
-				# task run object itself (see #220).
-				logging.exception(
-					f"Exception running task {task_debug_identifier}", 
-					exc_info=run.exception
-				)
-				db.rollback()
-			else:
-				db.commit()
-				logging.info(f"Finished task {task_debug_identifier}")
+def _task_run(db_session_factory: sessionmaker, db: Session, task_id: int, now: Clock):
+	'''
+	Runs the task if it's still due, recording the run in `db`: it's marked running and the run's start is committed first, the work then runs in a session of its own, and the run's outcome is recorded as the task goes back to waiting.
+	'''
+	with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
+		task: RepeatableTask = db.get(RepeatableTask, task_id)
+		at: datetime = now()
+		# Checked again under the lock, as the task's state is only claimed here
+		if not task.can_run(at):  # pragma: no cover (only if the task changed since the pass began, as an admin's edit while an earlier task ran)
+			return
+		task.run_time_last = _naive_utc(at)
+		task.run_state_enum = ScheduledTaskState.RUNNING
+		run = RepeatableTaskRun(task_id=task_id, created_utc=calendar.timegm(at.utctimetuple()))
+		db.add(run)
+		db.flush()
+		run_id: int = run.id
+		task_debug_identifier = f"(ID {task_id}:{task.label})"
 
-			with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
-				task.run_state_enum = ScheduledTaskState.WAITING
+	logging.info(f"Running task {task_debug_identifier}")
+	failure: str | None = None
+	with db_session_factory() as work_db:
+		try:
+			task = work_db.get(RepeatableTask, task_id)
+			task.run_task(TaskRunContext(app=app, cache=cache, db=work_db, task=task, trigger_time=_naive_utc(at)))
+			work_db.commit()
+			logging.info(f"Finished task {task_debug_identifier}")
+		except Exception as e:
+			work_db.rollback()
+			logging.exception(f"Exception running task {task_debug_identifier}")
+			failure = "".join(traceback.format_exception(e))
+
+	with _acquire_lock_exclusive(db, RepeatableTask.__tablename__):
+		run = db.get(RepeatableTaskRun, run_id)
+		run.completed_utc = _naive_utc(now())
+		run.traceback_str = failure
+		db.get(RepeatableTask, task_id).run_state_enum = ScheduledTaskState.WAITING

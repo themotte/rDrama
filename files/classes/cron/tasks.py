@@ -4,7 +4,7 @@ import contextlib
 import dataclasses
 from datetime import date, datetime, timedelta, timezone
 from enum import IntEnum, IntFlag
-from typing import ClassVar, Final, Optional, Union
+from typing import Final, Optional, Union
 
 import flask
 import flask_caching
@@ -206,24 +206,6 @@ class RepeatableTask(CreatedBase):
 
 		return datetime.combine(target_date, self.time_of_day_utc, tzinfo=timezone.utc) # type: ignore
 
-	def run(self, db: Session, trigger_time: datetime) -> RepeatableTaskRun:
-		run:RepeatableTaskRun = RepeatableTaskRun(task_id=self.id)
-		try:
-			from files.__main__ import app, cache  # i know
-			ctx: TaskRunContext = TaskRunContext(
-				app=app,
-				cache=cache,
-				db=db,
-				task=self,
-				trigger_time=trigger_time,
-			)
-			self.run_task(ctx)
-		except Exception as e:
-			run.exception = e
-		run.completed_utc = datetime.now(tz=timezone.utc)
-		db.add(run)
-		return run
-
 	def run_task(self, ctx:TaskRunContext):
 		raise NotImplementedError()
 
@@ -250,8 +232,6 @@ class RepeatableTaskRun(CreatedBase):
 	completed_utc = Column(DateTime)
 
 	task = relationship(RepeatableTask, back_populates="runs")
-
-	_exception: ClassVar[Exception | None] = None # not part of the db model
 
 	@property
 	def completed_datetime_py(self) -> datetime | None:
@@ -281,12 +261,3 @@ class RepeatableTaskRun(CreatedBase):
 		elapsed:Optional[timedelta] = self.time_elapsed
 		if not elapsed: return ''
 		return str(elapsed)
-
-	@property
-	def exception(self) -> Optional[Exception]:
-		return self._exception
-
-	@exception.setter
-	def exception(self, value: Optional[Exception]) -> None:
-		self._exception = value
-		self.traceback_str = str(value) if value else None
