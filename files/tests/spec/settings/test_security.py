@@ -1,7 +1,7 @@
 '''
 GET /settings/security, POST /settings/security (password, email, two-factor) and POST /settings/log_out_all_others.
 
-The page offers an account without two-factor login a fresh secret to set it up with, in the setup form's "2fa_secret" (a new one on every visit), beside the "2fa_token" field the authenticator's code goes in. An account that has two-factor login is offered no setup.
+The page offers an account without two-factor login a fresh secret to set it up with, in the setup form's "2fa_secret" (a new one on every visit), beside the "2fa_token" field the authenticator's code goes in. An account that has two-factor login is offered no setup. Since it can carry a secret, the page is sent with "Cache-Control: no-store".
 
 Changing the password and logging out other devices end the account's other sessions and every API token it holds (api/test_tokens).
 
@@ -35,6 +35,10 @@ def test_the_page_offers_a_fresh_secret_to_set_up_two_factor_login():
 	secrets = first.form_field("2fa_secret"), second.form_field("2fa_secret")
 	assert all(re.fullmatch(r"[A-Z2-7]{32}", s) for s in secrets) and secrets[0] != secrets[1]
 	assert first.form_field("2fa_token") is not None
+
+
+def test_the_page_is_never_stored():
+	assert as_user(factories.user()).get("/settings/security").header("Cache-Control") == "no-store"
 
 
 def test_an_account_with_two_factor_login_is_offered_no_setup():

@@ -344,10 +344,10 @@ def formatting(v):
 @app.get("/settings/security")
 @auth_required
 def settings_security(v):
-	return render_template("settings_security.html",
-						   v=v,
-						   mfa_secret=pyotp.random_base32() if not v.mfa_secret else None
-						   )
+	r = make_response(render_template("settings_security.html", v=v, mfa_secret=pyotp.random_base32() if not v.mfa_secret else None))
+	# It can carry a proposed two-factor secret
+	r.headers["Cache-Control"] = "no-store"
+	return r
 
 @app.post("/dismiss_mobile_tip")
 def dismiss_mobile_tip():
