@@ -12,6 +12,7 @@ from os import environ
 from pathlib import Path
 
 import flask
+from werkzeug.routing import IntegerConverter
 import flask_caching
 import flask_compress
 import flask_limiter
@@ -32,6 +33,17 @@ service:Service = Service.detect()
 
 app = flask.app.Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
+
+
+class RowIdConverter(IntegerConverter):
+	'''A row id as URLs write it: ASCII digits with no leading zero, within Postgres's integer range.'''
+	regex = r"[1-9][0-9]*"
+
+	def __init__(self, map):
+		super().__init__(map, max=2**31 - 1)
+
+
+app.url_map.converters["id"] = RowIdConverter
 app.jinja_env.cache = {}
 app.jinja_env.auto_reload = app.debug
 faulthandler.enable()

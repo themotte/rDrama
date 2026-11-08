@@ -225,12 +225,9 @@ def log(v):
 
 	return render_template("log.html", v=v, admins=admins, types=types, admin=admin, type=kind, actions=actions, next_exists=next_exists, page=page)
 
-@app.get("/log/<id>")
+@app.get("/log/<id:id>")
 @auth_desired
 def log_item(v, id):
-	try: id = int(id)
-	except: abort(404)
-
 	action=g.db.query(ModAction).options(
 		selectinload(ModAction.user),
 		selectinload(ModAction.target_user),
