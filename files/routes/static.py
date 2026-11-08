@@ -1,4 +1,3 @@
-import calendar
 import io
 from datetime import datetime, timezone
 
@@ -94,50 +93,54 @@ def chart():
 @app.get("/weekly_chart")
 @admin_level_required(2)
 def weekly_chart(v):
-	return Response(_chart_png("weekly"), mimetype="image/png")
+	return Response(_chart_png("weekly", _utc_midnight(time.time())), mimetype="image/png")
 
 
 @app.get("/daily_chart")
 @admin_level_required(2)
 def daily_chart(v):
-	return Response(_chart_png("daily"), mimetype="image/png")
+	return Response(_chart_png("daily", _utc_midnight(time.time())), mimetype="image/png")
 
 
+CHART_POINTS = 46
+
+
+def _utc_midnight(now: float) -> int:
+	return int(now) - int(now) % 86400
+
+
+def _chart_series(kind: str, now: float) -> tuple[list[str], list[int], list[int], list[int]]:
+	'''
+	The data of the "daily" or "weekly" chart: the 46 whole UTC days (or 7-day weeks) before today's UTC midnight, oldest first, each labelled with its first day as "dd/mm", and in each, how many accounts signed up, and how many of the posts and of the comments created in it are visible (comments by the system accounts left out). Today so far isn't counted.
+	'''
+	span = 86400 * (7 if kind == "weekly" else 1)
+	midnight = _utc_midnight(now)
+	starts = [midnight - span * i for i in range(CHART_POINTS, 0, -1)]
+
+	def counts(query, created_utc):
+		point = (created_utc - starts[0]) // span
+		found = dict(query.filter(created_utc >= starts[0], created_utc < midnight).with_entities(point, func.count()).group_by(point).all())
+		return [found.get(i, 0) for i in range(CHART_POINTS)]
+
+	labels = [time.strftime("%d/%m", time.gmtime(start)) for start in starts]
+	signups = counts(g.db.query(User.id), User.created_utc)
+	posts = counts(g.db.query(Submission.id).filter(Submission.state_mod == StateMod.VISIBLE), Submission.created_utc)
+	comments = counts(g.db.query(Comment.id).filter(Comment.state_mod == StateMod.VISIBLE, Comment.author_id.notin_((AUTOJANNY_ID, NOTIFICATIONS_ID))), Comment.created_utc)
+	return labels, signups, posts, comments
+
+
+# By the day it's drawn on, so a new day's chart is drawn afresh
 @cache.memoize(timeout=86400)
-def _chart_png(kind) -> bytes:
-	now = time.gmtime()
-	midnight_this_morning = time.struct_time((now.tm_year,
-											  now.tm_mon,
-											  now.tm_mday,
-											  0,
-											  0,
-											  0,
-											  now.tm_wday,
-											  now.tm_yday,
-											  0)
-											 )
-	today_cutoff = calendar.timegm(midnight_this_morning)
-
-	if kind == "daily": day_cutoffs = [today_cutoff - 86400 * i for i in range(47)][1:]
-	else: day_cutoffs = [today_cutoff - 86400 * 7 * i for i in range(47)][1:]
-
-	day_cutoffs.insert(0, calendar.timegm(now))
-
-	daily_times = [time.strftime("%d/%m", time.gmtime(day_cutoffs[i + 1])) for i in range(len(day_cutoffs) - 1)][::-1]
-
-	daily_signups = [g.db.query(User.id).filter(User.created_utc < day_cutoffs[i], User.created_utc > day_cutoffs[i + 1]).count() for i in range(len(day_cutoffs) - 1)][::-1]
-
-	post_stats = [g.db.query(Submission.id).filter(Submission.created_utc < day_cutoffs[i], Submission.created_utc > day_cutoffs[i + 1], Submission.state_mod == StateMod.VISIBLE).count() for i in range(len(day_cutoffs) - 1)][::-1]
-
-	comment_stats = [g.db.query(Comment.id).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.state_mod == StateMod.VISIBLE, Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count() for i in range(len(day_cutoffs) - 1)][::-1]
+def _chart_png(kind: str, midnight: int) -> bytes:
+	labels, signups, posts, comments = _chart_series(kind, midnight)
 
 	# A figure of its own rather than pyplot's shared one: requests render concurrently
 	figure = Figure(figsize=(30, 20))
 	grid = figure.add_gridspec(30, 20)
-	for row, (label, color, counts) in enumerate([("Signups", "red", daily_signups), ("Posts", "blue", post_stats), ("Comments", "purple", comment_stats)]):
+	for row, (label, color, counts) in enumerate([("Signups", "red", signups), ("Posts", "blue", posts), ("Comments", "purple", comments)]):
 		chart = figure.add_subplot(grid[row * 10:row * 10 + 6, :])
 		chart.grid()
-		chart.plot(daily_times, counts, color=color, label=label)
+		chart.plot(labels, counts, color=color, label=label)
 		chart.set_ylim(bottom=0)
 		chart.set_ylabel(label)
 		chart.legend(loc='upper left', frameon=True)
