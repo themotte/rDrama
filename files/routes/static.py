@@ -168,10 +168,7 @@ def _sees_admin_only_kinds(v) -> bool:
 @app.get("/admins")
 @auth_desired
 def admins(v):
-	if v and v.admin_level >= 3:
-		admins = g.db.query(User).filter(User.admin_level>1).order_by(User.truescore.desc()).all()
-		admins += g.db.query(User).filter(User.admin_level==1).order_by(User.truescore.desc()).all()
-	else: admins = g.db.query(User).filter(User.admin_level>0).order_by(User.truescore.desc()).all()
+	admins = g.db.query(User).filter(User.admin_level > 0).order_by((User.admin_level > 1).desc(), User.truescore.desc()).all()
 	# What each admin's entries in the mod log come to for this viewer
 	entries = g.db.query(ModAction.user_id, func.count()).filter(ModAction.user_id.in_([u.id for u in admins])).group_by(ModAction.user_id)
 	if not _sees_admin_only_kinds(v): entries = entries.filter(ModAction.kind.notin_(ADMIN_ONLY_KINDS))

@@ -1,5 +1,5 @@
 '''
-GET /admins lists the site's admins, open to everyone. Each admin's entry shows (in the element with id "mod-actions-<user id>") how many mod-log entries they made that the viewer could see in the mod log: entries only admins see count only for admins.
+GET /admins lists the site's admins, open to everyone: accounts of admin level 2 and up first, then those of level 1, each group by truescore, highest first. Each admin's entry shows (in the element with id "mod-actions-<user id>") how many mod-log entries they made that the viewer could see in the mod log: entries only admins see count only for admins.
 '''
 import pytest
 
@@ -22,3 +22,13 @@ def test_each_admin_shows_the_entries_the_viewer_could_see(viewer, count):
 
 	assert_html(r, 200)
 	assert element_text(r, f"mod-actions-{admin['id']}") == count
+
+
+@pytest.mark.parametrize("viewer", [anon, lambda: as_user(factories.admin(3))], ids=["visitor", "head admin"])
+def test_admins_from_level_2_come_first_each_group_by_truescore(viewer):
+	low_2, high_2 = factories.admin(2, truescore=10), factories.admin(3, truescore=20)
+	low_1, high_1 = factories.admin(1, truescore=30), factories.admin(1, truescore=40)
+
+	r = viewer().get("/admins")
+
+	assert_in_order(r, [f'"mod-actions-{u["id"]}"' for u in (high_2, low_2, high_1, low_1)])
