@@ -1,7 +1,8 @@
 import calendar
+import io
 from datetime import datetime, timezone
 
-import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 from sqlalchemy import distinct, func, select, union
 from sqlalchemy.orm import selectinload
 
@@ -93,21 +94,17 @@ def chart():
 @app.get("/weekly_chart")
 @admin_level_required(2)
 def weekly_chart(v):
-	file = cached_chart(kind="weekly", site=SITE)
-	f = send_file(file)
-	return f
+	return Response(_chart_png("weekly"), mimetype="image/png")
 
 
 @app.get("/daily_chart")
 @admin_level_required(2)
 def daily_chart(v):
-	file = cached_chart(kind="daily", site=SITE)
-	f = send_file(file)
-	return f
+	return Response(_chart_png("daily"), mimetype="image/png")
 
 
 @cache.memoize(timeout=86400)
-def cached_chart(kind, site):
+def _chart_png(kind) -> bytes:
 	now = time.gmtime()
 	midnight_this_morning = time.struct_time((now.tm_year,
 											  now.tm_mon,
@@ -134,48 +131,21 @@ def cached_chart(kind, site):
 
 	comment_stats = [g.db.query(Comment.id).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.state_mod == StateMod.VISIBLE, Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count() for i in range(len(day_cutoffs) - 1)][::-1]
 
-	plt.rcParams["figure.figsize"] = (30, 20)
+	# A figure of its own rather than pyplot's shared one: requests render concurrently
+	figure = Figure(figsize=(30, 20))
+	grid = figure.add_gridspec(30, 20)
+	for row, (label, color, counts) in enumerate([("Signups", "red", daily_signups), ("Posts", "blue", post_stats), ("Comments", "purple", comment_stats)]):
+		chart = figure.add_subplot(grid[row * 10:row * 10 + 6, :])
+		chart.grid()
+		chart.plot(daily_times, counts, color=color, label=label)
+		chart.set_ylim(bottom=0)
+		chart.set_ylabel(label)
+		chart.legend(loc='upper left', frameon=True)
+	chart.set_xlabel("Time (UTC)")
 
-	signup_chart = plt.subplot2grid((30, 20), (0, 0), rowspan=6, colspan=30)
-	posts_chart = plt.subplot2grid((30, 20), (10, 0), rowspan=6, colspan=30)
-	comments_chart = plt.subplot2grid((30, 20), (20, 0), rowspan=6, colspan=30)
-
-	_ = signup_chart.grid(), posts_chart.grid(), comments_chart.grid()
-
-	signup_chart.plot(
-		daily_times,
-		daily_signups,
-		color='red',
-		label='Signups')
-	posts_chart.plot(
-		daily_times,
-		post_stats,
-		color='blue',
-		label='Posts')
-	comments_chart.plot(
-		daily_times,
-		comment_stats,
-		color='purple',
-		label='Comments')
-
-	signup_chart.set_ylim(ymin=0)
-	posts_chart.set_ylim(ymin=0)
-	comments_chart.set_ylim(ymin=0)
-
-	signup_chart.set_ylabel("Signups")
-	posts_chart.set_ylabel("Posts")
-	comments_chart.set_ylabel("Comments")
-	comments_chart.set_xlabel("Time (UTC)")
-
-	signup_chart.legend(loc='upper left', frameon=True)
-	posts_chart.legend(loc='upper left', frameon=True)
-	comments_chart.legend(loc='upper left', frameon=True)
-
-	file = f"/{SITE}_{kind}.png"
-
-	plt.savefig(file)
-	plt.clf()
-	return file
+	png = io.BytesIO()
+	figure.savefig(png, format="png")
+	return png.getvalue()
 
 
 # What rendering an entry reads
