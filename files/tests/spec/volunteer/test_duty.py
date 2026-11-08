@@ -10,7 +10,7 @@ A comment is eligible for a volunteer when:
 - the volunteer would see it whole: its author isn't shadowbanned, neither of them blocks the other, and unless the volunteer has the 18+ setting, neither the comment nor its post is 18+;
 - its reports are open (REPORTED);
 - it is visible: not removed, not held for review, not deleted by its author;
-- it is neither the volunteer's own comment nor a reply to one of theirs;
+- it is neither the volunteer's own comment, nor a reply to one of theirs, nor on a post of theirs;
 - it carries no moderation outcome: it isn't distinguished (an admin speaking officially), pinned, or marked as one its author was banned for, and none of its direct replies is distinguished;
 - someone other than the volunteer reported it, who is neither permanently suspended nor shadowbanned now;
 - the volunteer was never assigned it before.
@@ -220,7 +220,19 @@ def _reported_only_by(standing):
 	return comment
 
 
+def _on_own_post(reply):
+	def comment(volunteer):
+		post = factories.post(volunteer)
+		parent = factories.comment(factories.user(), post) if reply else None
+		reported = factories.comment(factories.user(), post, parent, state_report="REPORTED")
+		factories.report(factories.user(), reported)
+		return reported
+	return comment
+
+
 INELIGIBLE = {
+	"top-level comment on own post": _on_own_post(False),
+	"reply on own post": _on_own_post(True),
 	"reported only by a permanently suspended user": _reported_only_by({"is_banned": 1, "unban_utc": 0}),
 	"reported only by a shadowbanned user": _reported_only_by({"shadowbanned": "somemod"}),
 	"shadowbanned author": _by_shadowbanned,
