@@ -1,13 +1,14 @@
 '''
 Rating the comments of a volunteer duty: POST /volunteer/submit, with one form field "volunteer-assignment-<assignment id>" per rated comment, naming the assignment that gave the volunteer the comment (see test_duty), whose value is the rating: "1" high quality, "2" good, "3" neutral, "4" bad, "5" deserves a warning, "6" deserves a ban (stored as result "TopQuality", "Good", "Neutral", "Bad", "Warning", "Ban"). Only the form counts (not the query string). Each field must name one of the volunteer's assignments: assigned to them to rate and not yet rated by them, and no two fields the same comment. An assignment's rating is taken only within an hour of the assignment (a duty is rated in one sitting), and only while the comment is still one duties are made of, whoever the volunteer (see test_duty): its reports open, visible, not deleted, not distinguished, pinned or marked as a ban's reason, with no distinguished direct reply, and by an author who isn't shadowbanned. Ratings of assignments that ran out, or whose comment stopped being so (it may become so again), aren't stored, while the request's other ratings are, and the answer is the same thank-you page either way. Each rating is stored as a "volunteer_janitor" row of the volunteer, the comment and the result, and the answer is a thank-you page. Fields not starting with "volunteer-" are ignored.
 
-Each rating updates the comment's "volunteer_janitor_badness" at once, counting it. The badness comes from the first rating of each volunteer assigned the comment before they rated it (other ratings count for nothing). A rating says the comment is bad (Warning, Ban: with confidence 1; Bad: 0.5) or not (TopQuality, Good: 1; Neutral: 0.5), and counts with the confidence times the volunteer's weight, which comes from their past accuracy c ("volunteer_janitor_correctness"): 0 up to c = 0.5, rising evenly to 1 at c = 1. With W the total counted weight and B the part of it saying bad, the badness is 0.5 when W is 0; otherwise, with p = (B + 0.5) / (W + 1), it is max(B / (W + 1 - p), 0.5) when p > 0.5, and min((B + p) / (W + p), 0.5) when not.
+Each rating updates the comment's "volunteer_janitor_badness" at once, counting it. The badness comes from the first rating of each volunteer assigned the comment before they rated it, in the order they were stored (of two stored at the same moment, the one with the lower id first); other ratings count for nothing. A rating says the comment is bad (Warning, Ban: with confidence 1; Bad: 0.5) or not (TopQuality, Good: 1; Neutral: 0.5), and counts with the confidence times the volunteer's weight, which comes from their past accuracy c ("volunteer_janitor_correctness"): 0 up to c = 0.5, rising evenly to 1 at c = 1. With W the total counted weight and B the part of it saying bad, the badness is 0.5 when W is 0; otherwise, with p = (B + 0.5) / (W + 1), it is max(B / (W + 1 - p), 0.5) when p > 0.5, and min((B + p) / (W + p), 0.5) when not.
 
 Ratings by shadowbanned volunteers are stored but count for nothing: shadowbanning a volunteer takes their ratings out of the badness of the comments they rated, and lifting the shadowban puts them back.
 
 Refused, storing nothing of the request: anonymous users (sent to log in); suspended users, permanently or not, and API clients (403); with 400, a "volunteer-" field of another kind, an assignment id that isn't a whole number in digits, a value other than those six, a field given twice, or a field that doesn't name one of the volunteer's unrated assignments.
 '''
 import time
+from datetime import datetime, timezone
 
 import pytest
 
@@ -335,6 +336,20 @@ def test_the_badness_counts_each_assigned_volunteers_rating(earlier, badness):
 	db.insert("volunteer_janitor", user_id=other["id"], comment_id=comment["id"], result=first)
 	if second:
 		db.insert("volunteer_janitor", user_id=other["id"], comment_id=comment["id"], result=second)
+
+	as_user(volunteer).post("/volunteer/submit", {_field(volunteer, comment): "2"})
+
+	assert db.row("comments", id=comment["id"])["volunteer_janitor_badness"] == pytest.approx(badness)
+
+
+@pytest.mark.parametrize("first, badness", [("Ban", 0.5), ("Good", 1 / 13)])
+def test_of_two_ratings_stored_at_once_the_first_stored_counts(first, badness):
+	'''As test_the_badness_counts_each_assigned_volunteers_rating, the other volunteer's two ratings stored at the same moment.'''
+	other, volunteer = factories.user(volunteer_janitor_correctness=1.0), factories.user(volunteer_janitor_correctness=1.0)
+	comment = _assigned_comment(volunteer)
+	factories.assignment(other, comment, at=datetime(2024, 1, 1, tzinfo=timezone.utc))
+	for result in (first, "Good" if first == "Ban" else "Ban"):
+		factories.rating(other, comment, result, at=datetime(2024, 1, 1, 0, 1, tzinfo=timezone.utc))
 
 	as_user(volunteer).post("/volunteer/submit", {_field(volunteer, comment): "2"})
 

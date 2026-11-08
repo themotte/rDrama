@@ -1,7 +1,7 @@
 '''
 The nightly volunteer recalc: the "volunteer_janitor_recalc" built-in job (spec/scheduler/test_builtin_jobs.py), which the `volunteer_janitor_recalc` command also runs. It works out each volunteer's accuracy (`users.volunteer_janitor_correctness`, which weighs their ratings in a comment's badness: see test_ratings.py) afresh from all their ratings.
 
-The ratings it learns from: each volunteer's first rating of each comment after they were assigned it, leaving out comments their author has deleted. Assignments never rated count for nothing.
+The ratings it learns from: each volunteer's first rating of each comment after they were assigned it, in the order they were stored (of two stored at the same moment, the one with the lower id first), leaving out comments their author has deleted. Assignments never rated count for nothing.
 
 The moderators' verdict on a comment comes from negative notes about its author: notes tagged Warning, Tempban, Permban, Spam or Bot, whatever post or comment they name, taken at their time rounded down to the second. The comment is
 - bad when any of its distinguished direct replies was posted less than 15 minutes (900 s) from such a note, before or after;
@@ -284,6 +284,19 @@ def test_only_the_first_rating_after_the_assignment_counts():
 	_recalc()
 
 	assert _accuracy(volunteer) == pytest.approx(RIGHT, abs=1e-12)
+
+
+@pytest.mark.parametrize("first, expected", [("Ban", RIGHT), ("Good", WRONG)])
+def test_of_two_ratings_stored_at_once_the_first_stored_counts(first, expected):
+	volunteer = factories.user()
+	comment = _bad()
+	factories.assignment(volunteer, comment, at=T0)
+	for result in (first, "Good" if first == "Ban" else "Ban"):
+		factories.rating(volunteer, comment, result, at=T0 + timedelta(minutes=1))
+
+	_recalc()
+
+	assert _accuracy(volunteer) == pytest.approx(expected, abs=1e-12)
 
 
 def test_a_volunteer_who_never_rated_keeps_their_accuracy():

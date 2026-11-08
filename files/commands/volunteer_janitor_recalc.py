@@ -7,7 +7,7 @@ from collections import defaultdict
 from files.classes import User, Comment, UserNote, UserTag
 from files.classes.cron.tasks import TaskRunContext
 from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
-from files.helpers.volunteer_janitor import evaluate_badness_of, userweight_from_user_accuracy, calculate_final_comment_badness, update_comment_badness
+from files.helpers.volunteer_janitor import RECORD_ORDER, evaluate_badness_of, userweight_from_user_accuracy, calculate_final_comment_badness, update_comment_badness
 from files.helpers.math import saturate, remap, lerp
 
 import logging
@@ -21,7 +21,7 @@ CONFIG_default_user_accuracy = 0.2
 CONFIG_user_correctness_lerp = 0.2
 
 def _compile_records(db):
-    vrecords = db.query(VolunteerJanitorRecord).order_by(VolunteerJanitorRecord.recorded_datetimez).all()
+    vrecords = db.query(VolunteerJanitorRecord).order_by(*RECORD_ORDER).all()
 
     # get the info we need for all mentioned posts
     reported_comment_ids = {record.comment_id for record in vrecords}

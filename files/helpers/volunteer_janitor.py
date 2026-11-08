@@ -46,8 +46,12 @@ def calculate_final_comment_badness(comment_total, comment_weight, conservative)
     
     return calculated_badness
 
+RECORD_ORDER = (VolunteerJanitorRecord.recorded_datetimez, VolunteerJanitorRecord.id)
+'''The order records were stored in: by time, and by id among those stored at the same moment.'''
+
+
 def counted_ratings(records) -> dict[tuple[int, int], VolunteerJanitorRecord]:
-    '''The ratings that count among `records` (given in the order they were stored), by (volunteer, comment): each volunteer's first rating of each comment after they were first assigned it.'''
+    '''The ratings that count among `records` (given in RECORD_ORDER), by (volunteer, comment): each volunteer's first rating of each comment after they were first assigned it.'''
     assigned = set()
     counted = {}
     for rec in records:
@@ -69,7 +73,7 @@ def update_comment_badness(db, cid):
     db.flush()
     records = db.query(VolunteerJanitorRecord) \
         .where(VolunteerJanitorRecord.comment_id == cid) \
-        .order_by(VolunteerJanitorRecord.recorded_datetimez)
+        .order_by(*RECORD_ORDER)
 
     badness = 0
     weight = 0
