@@ -4,7 +4,7 @@ The nightly volunteer recalc: the "volunteer_janitor_recalc" built-in job (spec/
 The ratings it learns from: each volunteer's first rating of each comment after they were assigned it, leaving out comments their author has deleted. Assignments never rated count for nothing.
 
 The moderators' verdict on a comment comes from negative notes about its author: notes tagged Warning, Tempban, Permban, Spam or Bot, whatever post or comment they name, taken at their time rounded down to the second. The comment is
-- bad when a distinguished direct reply to it was posted less than 15 minutes (900 s) from such a note, before or after;
+- bad when any of its distinguished direct replies was posted less than 15 minutes (900 s) from such a note, before or after;
 - otherwise ignored, when such a note came strictly after the comment and less than 48 hours after it;
 - otherwise not bad.
 
@@ -208,6 +208,26 @@ def test_only_negative_notes_have_a_comment_ignored(tag):
 	factories.note(_author(comment), tag, T0 + timedelta(hours=1))
 
 	assert _verdict(comment) == ("ignored" if tag == "Warning" else "not bad")
+
+
+@pytest.mark.parametrize("near_first", [True, False], ids=["near reply first", "far reply first"])
+def test_any_distinguished_reply_near_a_note_makes_a_comment_bad(near_first):
+	comment = _comment()
+	for at in ((REPLY, REPLY + timedelta(hours=1)) if near_first else (REPLY + timedelta(hours=1), REPLY)):
+		_reply(comment, at=at)
+	factories.note(_author(comment), "Warning", REPLY)
+
+	assert _verdict(comment) == "bad"
+
+
+@pytest.mark.parametrize("near_first", [True, False], ids=["near note first", "far note first"])
+def test_any_negative_note_near_a_distinguished_reply_makes_a_comment_bad(near_first):
+	comment = _comment()
+	_reply(comment)
+	for at in ((REPLY, REPLY + timedelta(hours=1)) if near_first else (REPLY + timedelta(hours=1), REPLY)):
+		factories.note(_author(comment), "Warning", at)
+
+	assert _verdict(comment) == "bad"
 
 
 def test_a_note_about_someone_else_doesnt_count():

@@ -111,10 +111,9 @@ def volunteer_janitor_recalc(db: Session) -> int:
         .where(Comment.distinguish_level > 0) \
         .options(sqlalchemy.orm.load_only(Comment.parent_comment_id, Comment.created_utc))
 
-    modhats = {}
-    # we jump through some hoops to deduplicate this; I guess we just pick the last one in our list for now
+    modhat_times = defaultdict(list)
     for modhat in modhats_raw:
-        modhats[modhat.parent_comment_id] = modhat
+        modhat_times[modhat.parent_comment_id].append(modhat.created_utc)
 
     usernotes_raw = db.query(UserNote) \
         .where(UserNote.reference_user.in_(reported_user_ids)) \
@@ -135,13 +134,8 @@ def volunteer_janitor_recalc(db: Session) -> int:
     for comment in comments.values():
         note_times = usernote_times[comment.author_id]
 
-        if comment.id in modhats:
-            modhat_comment = modhats[comment.id]
-        else:
-            modhat_comment = None
-
         # if the comment was modhatted *and* resulted in a negative usernote near the modhat time, it's bad
-        if modhat_comment is not None and next((time for time in note_times if abs(modhat_comment.created_utc - time) < 60 * 15), None) is not None:
+        if any(abs(modhat_time - time) < 60 * 15 for modhat_time in modhat_times[comment.id] for time in note_times):
             commentresults[comment.id] = "bad"
         # otherwise, if the comment was posted less than 48 hours before a negative usernote, we ignore it for processing on the assumption that it may just have been part of a larger warning
         elif next((time for time in note_times if comment.created_utc < time and comment.created_utc + 48 * 60 * 60 > time), None) is not None:
