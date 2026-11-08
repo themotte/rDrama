@@ -6,7 +6,7 @@ from alive_progress import alive_it
 from collections import defaultdict
 from files.classes import User, Comment, UserNote, UserTag
 from files.classes.cron.tasks import TaskRunContext
-from files.classes.volunteer_janitor import VolunteerJanitorRecord
+from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
 from files.helpers.volunteer_janitor import RECORD_ORDER, counted_ratings, evaluate_badness_of, userweight_from_user_accuracy, calculate_final_comment_badness, update_comment_badness
 from files.helpers.math import saturate, remap, lerp
 
@@ -21,13 +21,14 @@ CONFIG_default_user_accuracy = 0.2
 CONFIG_user_correctness_lerp = 0.2
 
 def _compile_records(db):
-    '''The counted ratings, as {(volunteer, comment): rating}, leaving out comments their author deleted.'''
+    '''The counted ratings, as {(volunteer, comment): rating}, leaving out comments their author deleted; and every volunteer who stored a rating.'''
     vrecords = db.query(VolunteerJanitorRecord).order_by(*RECORD_ORDER).all()
+    raters = {record.user_id for record in vrecords if record.result != VolunteerJanitorResult.Pending}
 
     # we're just going to ignore deleted comments entirely
     deleted = {row.id for row in db.query(Comment.id).where(Comment.id.in_({record.comment_id for record in vrecords}), Comment.state_user_deleted_utc != None)}
 
-    return {key: record.result for key, record in counted_ratings(vrecords).items() if key[1] not in deleted}
+    return {key: record.result for key, record in counted_ratings(vrecords).items() if key[1] not in deleted}, raters
 
 # Calculates how correct a user is, based on whether they thought it was bad, how confident they were, and how bad we think it is
 # Returns (IsCorrect, Confidence)
@@ -55,9 +56,8 @@ def volunteer_janitor_recalc(db: Session) -> int:
     logging.info("Starting full janitor recalculation")
 
     # Get our full list of data
-    records_compiled = _compile_records(db)
+    records_compiled, reporting_user_ids = _compile_records(db)
 
-    reporting_user_ids = {record[0] for record in records_compiled}
     reported_comment_ids = {record[1] for record in records_compiled}
 
     # Get some metadata for all reported comments
