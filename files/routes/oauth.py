@@ -1,3 +1,4 @@
+from werkzeug.urls import iri_to_uri
 from sqlalchemy import func
 from sqlalchemy.dialects import postgresql
 
@@ -52,6 +53,9 @@ def _app_fields() -> tuple[str, str, str]:
 	name, redirect_uri = name.strip(), redirect_uri.strip()
 	if not 0 < len(name) <= 50: abort(400, "The name must be 1 to 50 characters long")
 	if not 0 < len(redirect_uri) <= 4096: abort(400, "The redirect URI must be 1 to 4096 characters long")
+	# What authorizing will put in the Location header, which the response must be able to send
+	try: iri_to_uri(_with_token(redirect_uri, "token"))
+	except ValueError: abort(400, "That redirect URI isn't a URL users can be sent to")
 	return name, redirect_uri, description[:256]
 
 

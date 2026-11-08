@@ -1,5 +1,5 @@
 '''
-POST /api_keys requests an API application: "name" (at most 50 characters), "redirect_uri" (where POST /authorize sends users with their token; at most 4096 characters) and "description" (cut to 256 characters, and may be empty). All three are required, the name and redirect URI are stripped of surrounding whitespace and must not be empty; otherwise the request is refused with 400, changing nothing. Editing an app (test_owner) takes the same fields by the same rules. Names are stored as typed and always shown as text. The request is stored as a pending app owned by the requester, with no client id, and announced in modmail (notifications/test_modmail); then the requester is sent back to /settings/apps. Admins approve or refuse it (test_admin).
+POST /api_keys requests an API application: "name" (at most 50 characters), "redirect_uri" (where POST /authorize sends users with their token; at most 4096 characters) and "description" (cut to 256 characters, and may be empty). All three are required, the name and redirect URI are stripped of surrounding whitespace and must not be empty, and the redirect URI must be one a browser can be sent to (not, say, one whose host is a broken IPv6 address); otherwise the request is refused with 400, changing nothing. Editing an app (test_owner) takes the same fields by the same rules. Names are stored as typed and always shown as text. The request is stored as a pending app owned by the requester, with no client id, and announced in modmail (notifications/test_modmail); then the requester is sent back to /settings/apps. Admins approve or refuse it (test_admin).
 
 Suspended users, permanently or until their ban ends, can't request apps (403): an app's name and description are shown to the users asked to authorize it.
 '''
@@ -12,6 +12,7 @@ from files.tests.spec.harness import *
 BAD_FIELDS = {
 	"no name": {"name": None},
 	"no redirect uri": {"redirect_uri": None},
+	"redirect uri with a broken host": {"redirect_uri": "https://[::1/cb"},
 	"no description": {"description": None},
 	"blank name": {"name": "   "},
 	"blank redirect uri": {"redirect_uri": " "},
