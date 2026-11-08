@@ -1,5 +1,5 @@
 '''
-Rating the comments of a volunteer duty: POST /volunteer/submit, with one form field "volunteer-assignment-<assignment id>" per rated comment, naming the assignment that gave the volunteer the comment (see test_duty), whose value is the rating: "1" high quality, "2" good, "3" neutral, "4" bad, "5" deserves a warning, "6" deserves a ban (stored as result "TopQuality", "Good", "Neutral", "Bad", "Warning", "Ban"). Only the form counts (not the query string). Each field must name one of the volunteer's assignments: assigned to them to rate and not yet rated by them, and no two fields the same comment. An assignment's rating is taken only while the comment is still one duties are made of, whoever the volunteer (see test_duty): its reports open, visible, not deleted, not distinguished, pinned or marked as a ban's reason, with no distinguished direct reply, and by an author who isn't shadowbanned. Ratings of assignments whose comment stopped being so (it may become so again) aren't stored, while the request's other ratings are, and the answer is the same thank-you page either way. Each rating is stored as a "volunteer_janitor" row of the volunteer, the comment and the result, and the answer is a thank-you page. Fields not starting with "volunteer-" are ignored.
+Rating the comments of a volunteer duty: POST /volunteer/submit, with one form field "volunteer-assignment-<assignment id>" per rated comment, naming the assignment that gave the volunteer the comment (see test_duty), whose value is the rating: "1" high quality, "2" good, "3" neutral, "4" bad, "5" deserves a warning, "6" deserves a ban (stored as result "TopQuality", "Good", "Neutral", "Bad", "Warning", "Ban"). Only the form counts (not the query string). Each field must name one of the volunteer's assignments: assigned to them to rate and not yet rated by them, and no two fields the same comment. An assignment's rating is taken only within an hour of the assignment (a duty is rated in one sitting), and only while the comment is still one duties are made of, whoever the volunteer (see test_duty): its reports open, visible, not deleted, not distinguished, pinned or marked as a ban's reason, with no distinguished direct reply, and by an author who isn't shadowbanned. Ratings of assignments that ran out, or whose comment stopped being so (it may become so again), aren't stored, while the request's other ratings are, and the answer is the same thank-you page either way. Each rating is stored as a "volunteer_janitor" row of the volunteer, the comment and the result, and the answer is a thank-you page. Fields not starting with "volunteer-" are ignored.
 
 Each rating updates the comment's "volunteer_janitor_badness" at once, counting it. The badness comes from the first rating of each volunteer assigned the comment before they rated it (other ratings count for nothing). A rating says the comment is bad (Warning, Ban: with confidence 1; Bad: 0.5) or not (TopQuality, Good: 1; Neutral: 0.5), and counts with the confidence times the volunteer's weight, which comes from their past accuracy c ("volunteer_janitor_correctness"): 0 up to c = 0.5, rising evenly to 1 at c = 1. With W the total counted weight and B the part of it saying bad, the badness is 0.5 when W is 0; otherwise, with p = (B + 0.5) / (W + 1), it is max(B / (W + 1 - p), 0.5) when p > 0.5, and min((B + p) / (W + p), 0.5) when not.
 
@@ -133,6 +133,20 @@ def test_ratings_of_comments_no_longer_wanted_arent_stored(change):
 
 	assert_html(r, 200)
 	d.assert_exactly()
+
+
+@pytest.mark.parametrize("hours, stored", [(0.9, True), (1.1, False)])
+def test_an_assignment_runs_out_after_an_hour(hours, stored):
+	volunteer = factories.user()
+	comment = _assigned_comment(volunteer)
+	db.execute("UPDATE volunteer_janitor SET recorded_datetimez = now() - :hours * interval '1 hour' WHERE user_id = :id", hours=hours, id=volunteer["id"])
+	client = as_user(volunteer)
+
+	with db_diff() as d:
+		r = client.post("/volunteer/submit", {_field(volunteer, comment): "4"})
+
+	assert_html(r, 200)
+	d.assert_exactly(inserted={"volunteer_janitor": [_rating(volunteer, comment, "Bad")]} if stored else None)
 
 
 def test_the_other_ratings_of_the_request_are_stored():

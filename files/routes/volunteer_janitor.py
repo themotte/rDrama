@@ -1,3 +1,4 @@
+from datetime import timedelta
 from typing import Optional
 from files.__main__ import app
 from files.classes.comment import Comment
@@ -14,6 +15,10 @@ from flask import abort, g
 import random
 import sqlalchemy
 from sqlalchemy.orm import aliased
+
+
+ASSIGNMENT_TIME = timedelta(hours=1)
+'''How long an assignment takes a rating after it's given: a duty is rated in one sitting, and the longer it stays open, the more of what the moderators did a volunteer can wait for.'''
 
 
 def accept(v: User, choices: list[int]) -> list[VolunteerJanitorRecord]:
@@ -98,7 +103,7 @@ RATINGS = {str(result.value): result for result in VolunteerJanitorResult if res
 
 
 def submitted(v: User, ratings: dict[str, str]) -> None:
-    '''Stores `v`'s ratings, given as {assignment id: rating} as the form sends them, of the comments still wanted; the others are left out without a word, so the answer doesn't tell the volunteer what the moderators did. Refuses them all (400) unless each names one of `v`'s assignments, a comment assigned to them and not yet rated by them, and no two name the same comment.'''
+    '''Stores `v`'s ratings, given as {assignment id: rating} as the form sends them, of the comments still wanted, within their assignment's time; the others are left out without a word, so the answer doesn't tell the volunteer what the moderators did. Refuses them all (400) unless each names one of `v`'s assignments, a comment assigned to them and not yet rated by them, and no two name the same comment.'''
     if not ratings: return
     parsed = {parse_id(key): RATINGS.get(value) for key, value in ratings.items()}
     # Two spellings of one id (such as 1 and 01) name it twice
@@ -106,16 +111,18 @@ def submitted(v: User, ratings: dict[str, str]) -> None:
 
     # Ratings by one volunteer take turns, so each sees what the others stored
     volunteer_duty_lock(g.db, v.id)
-    assigned = dict(g.db.query(VolunteerJanitorRecord.id, VolunteerJanitorRecord.comment_id) \
+    assignments = g.db.query(VolunteerJanitorRecord.id, VolunteerJanitorRecord.comment_id, VolunteerJanitorRecord.recorded_datetimez > sqlalchemy.func.now() - ASSIGNMENT_TIME) \
         .where(VolunteerJanitorRecord.id.in_(parsed), VolunteerJanitorRecord.user_id == v.id, VolunteerJanitorRecord.result == VolunteerJanitorResult.Pending) \
-        .all())
+        .all()
+    assigned = {aid: cid for aid, cid, _ in assignments}
+    current = {cid for _, cid, current in assignments if current}
     by_comment = {assigned.get(aid): result for aid, result in parsed.items()}
     if len(assigned) != len(parsed) or len(by_comment) != len(parsed): abort(400)
     rated = g.db.query(VolunteerJanitorRecord.comment_id) \
         .where(VolunteerJanitorRecord.user_id == v.id, VolunteerJanitorRecord.comment_id.in_(by_comment), VolunteerJanitorRecord.result != VolunteerJanitorResult.Pending) \
         .first()
     if rated: abort(400)
-    wanted = {row[0] for row in g.db.query(Comment.id).where(Comment.id.in_(by_comment), *_still_wanted())}
+    wanted = {row[0] for row in g.db.query(Comment.id).where(Comment.id.in_(current), *_still_wanted())}
 
     # In comment id order, as the badness updates lock the comments: ratings of overlapping duties mustn't deadlock
     for cid, result in sorted(by_comment.items()):
