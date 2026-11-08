@@ -198,12 +198,9 @@ def log(v):
 	
 	if admin_id:
 		actions = actions.filter_by(user_id=admin_id)
-		kinds = set([x.kind for x in actions])
-		kinds.add(kind)
-		types2 = {}
-		for k,val in types.items():
-			if k in kinds: types2[k] = val
-		types = types2
+		# The menu offers the kinds this admin's entries have
+		kinds = {k for (k,) in actions.with_entities(ModAction.kind).distinct()} | {kind}
+		types = {k: val for k, val in types.items() if k in kinds}
 	if kind: actions = actions.filter_by(kind=kind)
 
 	actions = actions.options(
