@@ -7,8 +7,10 @@ from files.classes.user import User
 from files.classes.userblock import UserBlock
 from files.classes.visstate import StateReport, StateMod
 from files.classes.volunteer_janitor import VolunteerJanitorRecord, VolunteerJanitorResult
+from files.helpers.get import parse_id
+from files.helpers.locks import volunteer_duty_lock
 from files.helpers.volunteer_janitor import update_comment_badness
-from flask import g
+from flask import abort, g
 import random
 import sqlalchemy
 from sqlalchemy.orm import aliased
@@ -93,13 +95,26 @@ def get_duty(u: User) -> Optional[list[int]]:
     
     return random.sample(final_reported, k = min(3, len(final_reported)))
 
-def submitted(v: User, key: str, val: str) -> None:
-    record = VolunteerJanitorRecord()
-    record.user_id = v.id
-    record.comment_id = key
-    record.result = VolunteerJanitorResult(int(val))
-    g.db.add(record)
+RATINGS = {str(result.value): result for result in VolunteerJanitorResult if result != VolunteerJanitorResult.Pending}
 
-    update_comment_badness(g.db, key)
+
+def submitted(v: User, ratings: dict[str, str]) -> None:
+    '''Stores `v`'s ratings, given as {comment id: rating} as the form sends them. Refuses them all (400) unless each rates one of `v`'s open assignments: a comment assigned to them and not yet rated by them.'''
+    if not ratings: return
+    parsed = {parse_id(key): RATINGS.get(value) for key, value in ratings.items()}
+    if None in parsed or None in parsed.values(): abort(400)
+
+    # Ratings by one volunteer take turns, so each sees what the others stored
+    volunteer_duty_lock(g.db, v.id)
+    records = g.db.query(VolunteerJanitorRecord.comment_id, VolunteerJanitorRecord.result) \
+        .where(VolunteerJanitorRecord.user_id == v.id, VolunteerJanitorRecord.comment_id.in_(parsed)) \
+        .all()
+    assigned = {cid for cid, result in records if result == VolunteerJanitorResult.Pending}
+    rated = {cid for cid, result in records if result != VolunteerJanitorResult.Pending}
+    if not parsed.keys() <= assigned - rated: abort(400)
+
+    for cid, result in parsed.items():
+        g.db.add(VolunteerJanitorRecord(user_id=v.id, comment_id=cid, result=result))
+        update_comment_badness(g.db, cid)
 
     g.db.commit()

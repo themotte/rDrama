@@ -6,6 +6,8 @@ from sqlalchemy.orm import Session
 
 # The first key of every advisory lock on a user's counted activity; the second is the user's id
 _USER_COUNTS = 1
+# The first key of every advisory lock on a user's volunteer duty; the second is the user's id
+_VOLUNTEER_DUTY = 2
 
 
 def user_counts_lock(db:Session, user_ids:list[int]):
@@ -21,3 +23,8 @@ def user_shadowbanned_locked(db:Session, user) -> bool:
 	user_counts_lock(db, [user.id])
 	db.refresh(user, ["shadowbanned"])
 	return bool(user.shadowbanned)
+
+
+def volunteer_duty_lock(db:Session, user_id:int):
+	'''Waits for, then holds until the transaction ends, the right to give the user volunteer duty and to store their ratings, so concurrent requests see each other's assignments and ratings.'''
+	db.execute(text("SELECT pg_advisory_xact_lock(:kind, :user)"), {"kind": _VOLUNTEER_DUTY, "user": user_id})

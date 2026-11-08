@@ -44,14 +44,15 @@ def volunteer(v: User):
 @app.post("/volunteer/submit")
 @auth_required
 def volunteer_submit(v: User):
-    for k in request.values:
+    ratings = {}
+    for k in request.form:
         if not k.startswith("volunteer-"):
             continue
         k_processed = k.removeprefix("volunteer-")
-
-        if k_processed.startswith("janitor-"):
-            files.routes.volunteer_janitor.submitted(v, k_processed.removeprefix("janitor-"), request.values[k])
-        else:
+        values = request.form.getlist(k)
+        if not k_processed.startswith("janitor-") or len(values) != 1:
             abort(400)
+        ratings[k_processed.removeprefix("janitor-")] = values[0]
 
+    files.routes.volunteer_janitor.submitted(v, ratings)
     return render_template("volunteer_submit.html", v=v)
