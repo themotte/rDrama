@@ -1,5 +1,8 @@
 import html
 import logging
+import re
+
+from flask import current_app
 
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
@@ -7,6 +10,15 @@ from sqlalchemy.orm import relationship
 from files.classes.base import CreatedDateTimeBase
 from files.helpers.config.const import *
 from files.helpers.lazy import lazy
+
+
+# Kinds of a change to a whole-number site setting, cut to the column's 32 characters
+_SETTING_SET_KIND = re.compile(r"set_(-?\d+)_for_(.+)")
+
+
+def _setting_named(fragment: str) -> str:
+	'''The site setting whose name, spaces as underscores, `fragment` begins, or the fragment itself if none does.'''
+	return next((name for name in current_app.config["SETTINGS"] if name.replace(" ", "_").startswith(fragment)), fragment)
 
 
 class ModAction(CreatedDateTimeBase):
@@ -50,6 +62,9 @@ class ModAction(CreatedDateTimeBase):
 	def lookup_action_type(self):
 		if self.kind in ACTIONTYPES:
 			return ACTIONTYPES[self.kind]
+		elif match := _SETTING_SET_KIND.fullmatch(self.kind or ""):
+			named = html.escape(_setting_named(match[2])).replace("{", "{{").replace("}", "}}")
+			return {"str": f"set {named} to {match[1]}", "icon": "fa-sliders-h", "color": "bg-primary"}
 		else:
 			logging.warning(f'Unfamiliar ACTIONTYPE {self.kind}')
 			return ACTIONTYPES["fallback"]

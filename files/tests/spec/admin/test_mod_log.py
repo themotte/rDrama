@@ -3,6 +3,8 @@ The mod log: GET /log lists entries; GET /log/<id> shows one entry, and an id th
 
 Some kinds of entry are shown only to admins (level 2+): shadowbanning and unshadowbanning, setting a post's flair, editing a post, linking alt accounts, and setting a user's filter mode. To anyone else (visitors, users below level 2, and API clients whatever their account's level) such an entry doesn't exist: the list leaves it out and its page is 404.
 
+An entry of a change to a whole-number site setting (kind "set_<value>_for_<setting>", cut to 32 characters, see test_dashboard) names the setting in full and the value. An entry of a kind the site doesn't know is still listed, with the admin who made it.
+
 An entry names the post or comment it's about (a post by its title, both with a link to them), unless the viewer couldn't open it: a draft (or a comment on one), seen only by its author and admins from level 2, or a post or comment by a shadowbanned user, seen only by that user and admins from level 2. For anyone else the entry stays, saying only "post" or "comment", with no title or link. A ban's note, which links the post or comment the ban was for, follows the same rule.
 '''
 import pytest
@@ -159,3 +161,22 @@ def test_a_bans_note_links_what_it_was_for_only_if_the_viewer_could_open_it(targ
 	assert_html(r, 200)
 	link = f"/post/{post['id']}" if target == "post" else f"/comment/{item['id']}"
 	assert (link in r.text) == sees
+
+
+@pytest.mark.parametrize("setting", ["FilterCommentsMinComments", "min_truescore_private_profile"])
+def test_a_setting_change_names_the_setting_and_value(setting):
+	entry = db.insert("modactions", user_id=factories.admin(3)["id"], kind=f"set_7316_for_{setting}"[:32])
+
+	text = element_text(anon().get(f"/log/{entry['id']}"), f"action-{entry['id']}")
+
+	assert setting.replace("_", " ") in text.replace("_", " ") and "7316" in text, text
+
+
+def test_an_entry_of_an_unknown_kind_is_listed_with_its_admin():
+	admin = factories.admin(2)
+	entry = db.insert("modactions", user_id=admin["id"], kind=factories.unique("kind"))
+
+	r = anon().get("/log")
+
+	assert_html(r, 200)
+	assert admin["username"] in element_text(r, f"action-{entry['id']}")
