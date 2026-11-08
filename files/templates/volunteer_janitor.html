@@ -9,12 +9,11 @@
     <hr />
     {% for c in comments %}
         <div>
+            {# Only the text: who wrote it, where, and what anyone made of it so far would sway the rating #}
             <div class="comment">
-                {% with comments=[c] %}
-                    {% set should_hide_username = true %}
-                    {% set render_ctx = 'volunteer' %}
-                    {% include "comments.html" %}
-                {% endwith %}
+                <div class="comment-body">
+                    <div class="comment-text mb-0">{{c.realbody(v) | safe}}</div>
+                </div>
             </div>
 
             <div class="choices">

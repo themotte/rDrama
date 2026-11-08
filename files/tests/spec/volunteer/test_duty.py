@@ -1,7 +1,7 @@
 '''
 Volunteer janitor duty: logged-in users are asked to rate reported comments.
 
-GET /volunteer gives the visitor a duty when one is available: up to 3 eligible comments, chosen at random, each assigned to them to rate (a "volunteer_janitor" row with result "Pending"), and their "volunteer_last_started_utc" set to now. The page shows the assigned comments' text and the rating form (see test_ratings). With nothing available the page says so and nothing is written. Anonymous visitors are sent to log in.
+GET /volunteer gives the visitor a duty when one is available: up to 3 eligible comments, chosen at random, each assigned to them to rate (a "volunteer_janitor" row with result "Pending"), and their "volunteer_last_started_utc" set to now. The page shows the assigned comments' text and the rating form (see test_ratings; its fields name the comments by id), and nothing else about the comments: not who wrote them, not the post or thread they are in (nor a link to it), not their reports or what volunteers made of them so far (not even to admins), and no actions on them. With nothing available the page says so and nothing is written. Anonymous visitors are sent to log in; API clients are refused (403), changing nothing.
 
 A visitor has no duty available within 20 hours of their last start.
 
@@ -45,7 +45,21 @@ def test_a_volunteer_is_assigned_an_eligible_comment():
 	assert_html(r, 200)
 	assert_in_payload(r, comment["body"])
 	d.assert_exactly(inserted={"volunteer_janitor": [_assigned(volunteer, comment)]}, updated={"users": {volunteer["id"]: {"volunteer_last_started_utc": ANY}}})
-	assert db.row("users", id=volunteer["id"])["volunteer_last_started_utc"]
+	assert db.execute("SELECT now() - volunteer_last_started_utc < interval '1 minute' FROM users WHERE id = :id", id=volunteer["id"])
+
+
+@pytest.mark.parametrize("volunteer_level", [0, 2])
+def test_the_page_shows_only_the_comments_text(volunteer_level):
+	post = factories.post(factories.user())
+	author, reporter = factories.user(), factories.user()
+	comment = factories.comment(author, post, state_report="REPORTED")
+	reason = factories.report(reporter, comment)["reason"]
+
+	r = as_user(factories.admin(volunteer_level)).get("/volunteer")
+
+	assert_in_payload(r, comment["body"])
+	for hidden in (author["username"], post["title"], f"/post/{post['id']}", f"/comment/{comment['id']}", reporter["username"], reason):
+		assert_not_in_payload(r, hidden)
 
 
 def test_a_duty_holds_at_most_three_comments():
