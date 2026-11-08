@@ -36,10 +36,9 @@ def cron_setup():
     print(f"{tasklist.count()} tasks")
     for task in tasklist:
         if task.label and task.label in hardcoded_cron_jobs:
+            # The schedule and the enabled flag are the admins' to change; only what the job runs comes from here
             print(f"Cron: Updating {task.label}")
             ref = hardcoded_cron_jobs[task.label]
-            task.frequency_day = ref["frequency_day"]
-            task.time_of_day_utc = ref["time_of_day_utc"]
             task.import_path = ref["import_path"]
             task.callable = ref["callable"]
             del hardcoded_cron_jobs[task.label]
