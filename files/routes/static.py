@@ -33,7 +33,7 @@ def support(v):
 	return render_template('support.html', v=v)
 
 @app.get("/stats")
-@auth_desired
+@admin_level_required(2)
 @cache.memoize(timeout=86400, make_name=make_name)
 def participation_stats(v):
 	day = int(time.time()) - 86400
@@ -85,14 +85,16 @@ def chart():
 
 
 @app.get("/weekly_chart")
-def weekly_chart():
+@admin_level_required(2)
+def weekly_chart(v):
 	file = cached_chart(kind="weekly", site=SITE)
 	f = send_file(file)
 	return f
 
 
 @app.get("/daily_chart")
-def daily_chart():
+@admin_level_required(2)
+def daily_chart(v):
 	file = cached_chart(kind="daily", site=SITE)
 	f = send_file(file)
 	return f

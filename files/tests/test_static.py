@@ -41,36 +41,6 @@ def test_chart_redirect():
 	assert "/weekly_chart" in response.location
 
 
-def test_weekly_chart_route():
-	"""Test /weekly_chart returns chart image"""
-	client = util_accounts.create_logged_off_client()
-
-	response = client.get("/weekly_chart")
-	assert response.status_code == 200
-	# Should be an image
-	assert response.content_type in ["image/png", "application/octet-stream"] or response.status_code == 200
-
-
-def test_daily_chart_route():
-	"""Test /daily_chart returns chart image"""
-	client = util_accounts.create_logged_off_client()
-
-	response = client.get("/daily_chart")
-	assert response.status_code == 200
-	# Should be an image
-	assert response.content_type in ["image/png", "application/octet-stream"] or response.status_code == 200
-
-
-def test_stats_route():
-	"""Test /stats route returns participation statistics"""
-	client = util_accounts.create_logged_off_client()
-
-	response = client.get("/stats")
-	assert response.status_code == 200
-	# Should contain stats content
-	assert response.status_code == 200
-
-
 def test_admins_route():
 	"""Test /admins route returns list of admins"""
 	client = util_accounts.create_logged_off_client()
