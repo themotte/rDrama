@@ -1,7 +1,6 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-import sqlalchemy
 from flask import abort, g, render_template, request
 
 import files.helpers.jinja2
@@ -10,6 +9,11 @@ from files.__main__ import app
 from files.classes.user import User
 from files.helpers.locks import volunteer_duty_lock
 from files.helpers.wrappers import auth_required, refuse_api_client, refuse_while_suspended
+
+
+def _now_utc() -> datetime:
+    '''Now in UTC, naive, as volunteer_last_started_utc holds it.'''
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 @files.helpers.jinja2.template_function
@@ -23,7 +27,7 @@ def volunteer_get_duty(u: Optional[User]) -> Optional[list[int]]:
     
     if not app.config['DBG_VOLUNTEER_PERMISSIVE']:  # pragma: no branch (DBG_VOLUNTEER_PERMISSIVE relaxes the limits for trying duties out in development; outside the spec)
         # check to make sure it's at least 20h since the last volunteer
-        if (u.volunteer_last_started_utc is not None) and (datetime.now() - u.volunteer_last_started_utc) < timedelta(hours = 20):
+        if (u.volunteer_last_started_utc is not None) and (_now_utc() - u.volunteer_last_started_utc) < timedelta(hours = 20):
             return None
     
     return files.routes.volunteer_janitor.get_duty(u)
@@ -41,7 +45,7 @@ def volunteer(v: User):
     assignments = None
     if duty is not None:
         assignments = files.routes.volunteer_janitor.assigned_comments(files.routes.volunteer_janitor.accept(v, duty))
-        v.volunteer_last_started_utc = sqlalchemy.func.now()
+        v.volunteer_last_started_utc = _now_utc()
         g.db.add(v)
         g.db.commit()
 
