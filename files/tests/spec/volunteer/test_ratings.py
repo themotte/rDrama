@@ -5,7 +5,7 @@ Each rating updates the comment's "volunteer_janitor_badness" at once, counting 
 
 Ratings by shadowbanned volunteers are stored but count for nothing: shadowbanning a volunteer takes their ratings out of the badness of the comments they rated, and lifting the shadowban puts them back.
 
-Refused, storing nothing of the request: anonymous users (sent to log in); suspended users, permanently or not, and API clients (403); with 400, a "volunteer-" field of another kind, an assignment id that isn't a whole number in digits, a value other than those six, a field given twice, or a field that doesn't name one of the volunteer's unrated assignments.
+Refused, storing nothing of the request: anonymous users (sent to log in); suspended users, permanently or not, and API clients (403); with 400, a "volunteer-" field of another kind, an assignment id that isn't a row id as paths write them (spec/harness/routes.py: ASCII digits, no leading zero), a value other than those six, a field given twice, or a field that doesn't name one of the volunteer's unrated assignments.
 '''
 import time
 from datetime import datetime, timezone
@@ -228,6 +228,11 @@ def _one_assignment_spelled_twice(volunteer):
 	return {field: "6", f"volunteer-assignment-0{number}": "1"}
 
 
+def _assignment_with_a_leading_zero(volunteer):
+	number = _field(volunteer, _assigned_comment(volunteer)).removeprefix("volunteer-assignment-")
+	return {f"volunteer-assignment-0{number}": "6"}
+
+
 def _value(value):
 	return lambda volunteer: {_field(volunteer, _assigned_comment(volunteer)): value}
 
@@ -259,6 +264,7 @@ REFUSED = {
 	"value with a leading zero": _value("06"),
 	"id not a number": _id("abc"),
 	"id with an underscore": _id("1_0"),
+	"id with a leading zero": _assignment_with_a_leading_zero,
 	"id too large": _id(str(2**31)),
 	"one bad among good": _one_bad_among_good,
 }

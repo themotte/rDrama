@@ -2,7 +2,7 @@
 Every route the site answers: its method, its path, who may use it and whether API clients may. This is specification content, kept in the harness so the spec's route cells and the checks that keep the table complete can share it.
 
 Paths are written with these variables:
-- `<id>`: a row id, written in ASCII digits without a leading zero, from 1 to 2147483647 (2**31 - 1); anything else there is 404 (spec/routes), for everyone, before any gate. Ids sent in a query or a form are read by the rules of the route's area;
+- `<id>`: a row id, written in ASCII digits without a leading zero, from 1 to 2147483647 (2**31 - 1); anything else there is 404 (spec/routes), for everyone, before any gate. A route reading a row id from its query or form reads it the same way;
 - `<text>`: any text without a "/", at least one character;
 - `<path>`: any text, "/" included, at least one character, not starting with "/";
 - `<a|b>`: one of the words listed.

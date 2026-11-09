@@ -38,8 +38,8 @@ def author_load_options(v: Optional[User]=None) -> list:
 
 
 def parse_id(value) -> Optional[int]:
-	'''A row id from a request (an integer, or a string of ASCII digits): a positive whole number small enough for the id columns, else None.'''
-	if isinstance(value, str) and re.fullmatch(r"[0-9]+", value): value = int(value)
+	'''A row id from a request (an integer, or a string of ASCII digits without a leading zero): a positive whole number small enough for the id columns, else None.'''
+	if isinstance(value, str) and re.fullmatch(r"[1-9][0-9]*", value): value = int(value)
 	if not isinstance(value, int) or isinstance(value, bool): return None
 	return value if 0 < value < 2**31 else None
 
