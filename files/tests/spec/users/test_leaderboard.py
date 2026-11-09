@@ -7,6 +7,8 @@ The page shows several boards, each a section whose element id is "leaderboard-<
 - "received-downvotes" and "given-upvotes": the 25 users who received the most downvotes, and who gave the most upvotes, on posts and comments. These are expensive to compute, so the `leaderboard_recalc` command computes them ahead of time; until it has run, the page leaves both out.
 
 Users tied on a board are listed oldest account (lowest id) first. The page opens with links to each board (#leaderboard-<board>). Each row's count links to the list it counts, where there is one the viewer may open: the user's followers, posts (/@<username>/posts) or comments (/@<username>/), and for admins of level 3, the voter lists behind the precomputed boards (/@<username>/downvoters, /@<username>/upvoting). The viewing admin's own row (with their own count, written with thousands separators) is added after a board's list when they aren't in it (on the blocked board, also when nobody blocks them).
+
+Shadowbanned users are ranked like anyone else, and their rows name who shadowbanned them.
 '''
 import pytest
 
@@ -447,3 +449,18 @@ def test_leaderboard_links_to_each_board():
 	assert_html(r, 200)
 	for board in [*SIMPLE_BOARDS, "blocked", "received-downvotes", "given-upvotes"]:
 		assert f'href="#leaderboard-{board}"' in r.text, board
+
+
+# Shadowbanned users
+
+def test_a_shadowbanned_users_row_names_who_shadowbanned_them():
+	shadowbanner, reason = factories.unique(), factories.unique()
+	shadowbanned = factories.user(truescore=HIGH + 1, shadowbanned=shadowbanner, ban_reason=reason)
+
+	r = as_user(factories.admin(2)).get("/leaderboard")
+
+	assert_html(r, 200)
+	section = _board(r, "truescore")
+	assert shadowbanned["username"] in section
+	assert f"@{shadowbanner}" in section
+	assert_not_in_payload(r, reason)
