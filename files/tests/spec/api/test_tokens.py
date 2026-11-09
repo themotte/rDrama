@@ -25,10 +25,11 @@ APP_ROUTES = [
 ]
 
 
-def test_a_token_authenticates_its_holder():
+@pytest.mark.parametrize("path", ["/me", "/@me"])
+def test_a_token_authenticates_its_holder(path):
 	user = factories.user()
 
-	r = as_api(factories.api_token(user)).get("/me")
+	r = as_api(factories.api_token(user)).get(path)
 
 	assert_status(r, 200)
 	assert r.json["id"] == user["id"]
