@@ -40,7 +40,7 @@ def tasks_get(v:User):
 	return render_template("admin/tasks/tasks.html", v=v, listing=tasks)
 
 
-@app.get('/tasks/<int:task_id>')
+@app.get('/tasks/<id:task_id>')
 @admin_level_required(PERMS['SCHEDULER'])
 def tasks_get_task(v:User, task_id:int):
 	task:RepeatableTask = g.db.get(RepeatableTask, task_id)
@@ -48,13 +48,13 @@ def tasks_get_task(v:User, task_id:int):
 	return render_template("admin/tasks/single_task.html", v=v, task=task)
 
 
-@app.get('/tasks/<int:task_id>/runs')
+@app.get('/tasks/<id:task_id>/runs')
 @admin_level_required(PERMS['SCHEDULER'])
 def tasks_get_task_redirect(v:User, task_id:int): # pyright: ignore
 	return redirect(f'/tasks/{task_id}/')
 
 
-@app.get('/tasks/<int:task_id>/runs/<int:run_id>')
+@app.get('/tasks/<id:task_id>/runs/<id:run_id>')
 @admin_level_required(PERMS['SCHEDULER'])
 def tasks_get_task_run(v:User, task_id:int, run_id:int):
 	run:RepeatableTaskRun = g.db.get(RepeatableTaskRun, run_id)
@@ -64,7 +64,7 @@ def tasks_get_task_run(v:User, task_id:int, run_id:int):
 	return render_template("admin/tasks/single_run.html", v=v, run=run)
 
 
-@app.post('/tasks/<int:task_id>/schedule')
+@app.post('/tasks/<id:task_id>/schedule')
 @admin_level_required(PERMS['SCHEDULER'])
 def task_schedule_post(v:User, task_id:int): # pyright: ignore
 	_modify_task_schedule(task_id)
@@ -133,7 +133,7 @@ def tasks_scheduled_posts_post(v:User):
 	return redirect(f'/tasks/scheduled_posts/{task.id}')
 
 
-@app.get('/tasks/scheduled_posts/<int:pid>')
+@app.get('/tasks/scheduled_posts/<id:pid>')
 @admin_level_required(PERMS['SCHEDULER_POSTS'])
 def tasks_scheduled_post_get(v:User, pid:int):
 	submission: Optional[ScheduledSubmissionTask] = \
@@ -142,7 +142,7 @@ def tasks_scheduled_post_get(v:User, pid:int):
 	return render_template("admin/tasks/scheduled_post.html", v=v, p=submission)
 
 
-@app.post('/tasks/scheduled_posts/<int:pid>/content')
+@app.post('/tasks/scheduled_posts/<id:pid>/content')
 @admin_level_required(PERMS['SCHEDULER_POSTS'])
 def task_scheduled_post_content_post(v:User, pid:int): # pyright: ignore
 	submission: Optional[ScheduledSubmissionTask] = \
@@ -168,7 +168,7 @@ def task_scheduled_post_content_post(v:User, pid:int): # pyright: ignore
 	g.db.commit()
 	return redirect(f'/tasks/scheduled_posts/{pid}')
 
-@app.post('/tasks/scheduled_posts/<int:task_id>/schedule')
+@app.post('/tasks/scheduled_posts/<id:task_id>/schedule')
 @admin_level_required(PERMS['SCHEDULER'])
 def task_scheduled_post_post(v:User, task_id:int): # pyright: ignore
 	# permission being SCHEDULER is intentional as SCHEDULER_POSTS is for

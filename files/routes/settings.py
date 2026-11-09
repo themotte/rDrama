@@ -551,12 +551,12 @@ def settings_profile(v):
 
 # other settings i guess
 
-@app.post("/id/<int:id>/private/<int:enabled>")
+@app.post("/id/<id:id>/private/<enabled>")
 @auth_required
-def post_set_user_profile_privacy(v: User, id: int, enabled: int):
-	if enabled != 0 and enabled != 1: abort(400, "'enabled' must be '0' or '1'")
+def post_set_user_profile_privacy(v: User, id: int, enabled: str):
+	if enabled not in ("0", "1"): abort(400, "'enabled' must be '0' or '1'")
 	user: User = get_account(id)
 	if not user.can_change_user_privacy(v): abort(403)
-	user.is_private = bool(enabled)
+	user.is_private = enabled == "1"
 	g.db.commit()
 	return {"message": f"{'Enabled' if user.is_private else 'Disabled'} private mode successfully!"}

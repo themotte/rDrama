@@ -38,12 +38,10 @@ def _visible(cls):
 	return (*visible, cls.private == False) if cls is Submission else visible
 
 
-@app.get(f"/@<username>/<any({_VOTER_LIST_NAMES}):list_name>/<uid>/<any(posts,comments):kind>")
+@app.get(f"/@<username>/<any({_VOTER_LIST_NAMES}):list_name>/<id:uid>/<any(posts,comments):kind>")
 @admin_level_required(3)
 def voted_content(v, username, list_name, uid, kind):
 	u = get_user(username)
-	uid = parse_id(uid)
-	if uid is None: abort(404)
 	vote_type, on_users_content, _ = _VOTER_LISTS[list_name]
 	author_id, voter_id = (u.id, uid) if on_users_content else (uid, u.id)
 
@@ -117,13 +115,13 @@ def get_profilecss(username):
 	user = get_user(username)
 	return Response(user.profilecss or "", mimetype="text/css")
 
-def _subscribable_post(post_id:str, v:User) -> Submission:
+def _subscribable_post(post_id:int, v:User) -> Submission:
 	post = get_post(post_id)
 	if post.is_draft_hidden_from(v): abort(404)
 	return post
 
 
-@app.post("/subscribe/<post_id>")
+@app.post("/subscribe/<id:post_id>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def subscribe(v, post_id):
@@ -133,7 +131,7 @@ def subscribe(v, post_id):
 		g.db.commit()
 	return {"message": "Post subscribed!"}
 	
-@app.post("/unsubscribe/<post_id>")
+@app.post("/unsubscribe/<id:post_id>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def unsubscribe(v, post_id):
@@ -282,7 +280,7 @@ def api_is_available(name):
 	taken = g.db.query(User.id).filter(or_(func.lower(User.username) == name.lower(), func.lower(User.original_username) == name.lower())).first()
 	return {name: taken is None}
 
-@app.get("/id/<int:id>")
+@app.get("/id/<id:id>")
 def user_id(id:int):
 	user = get_account(id)
 	return redirect(user.url)
@@ -430,7 +428,7 @@ def _info(user:User, v:User) -> dict:
 def u_username_info(username, v=None):
 	return _info(get_user(username, v=v, include_blocks=True), v)
 
-@app.get("/<id>/info")
+@app.get("/<id:id>/info")
 @auth_required
 def u_user_id_info(id, v=None):
 	return _info(get_account(id, v=v, include_blocks=True), v)
@@ -512,9 +510,9 @@ def remove_follow(username, v):
 
 	return {"message": "Follower removed!"}
 
-@app.get("/pp/<int:id>")
-@app.get("/uid/<int:id>/pic")
-@app.get("/uid/<int:id>/pic/profile")
+@app.get("/pp/<id:id>")
+@app.get("/uid/<id:id>/pic")
+@app.get("/uid/<id:id>/pic/profile")
 @limiter.exempt
 def user_profile_uid(id:int):
 	return _redirect_to_picture(get_account(id))

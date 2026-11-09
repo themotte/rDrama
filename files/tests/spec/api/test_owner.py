@@ -281,9 +281,10 @@ def test_ids_that_are_no_apps_are_not_found(route, bad):
 @pytest.mark.parametrize("route", OWNER_ROUTES)
 def test_api_clients_are_refused_before_the_id_is_looked_at(route):
 	client = as_api(factories.api_token(factories.user()))
+	unknown = db.execute("SELECT nextval('oauth_apps_id_seq')")
 
 	with db_diff() as d:
-		r = client.post(route.format("abc"), _edit_fields())
+		r = client.post(route.format(unknown), _edit_fields())
 
 	assert_status(r, 403)
 	d.assert_exactly()

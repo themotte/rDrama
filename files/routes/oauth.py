@@ -59,17 +59,16 @@ def _app_fields() -> tuple[str, str, str]:
 	return name, redirect_uri, description[:256]
 
 
-def _app(aid: str, lock: bool = False) -> OauthApp:
+def _app(aid: int, lock: bool = False) -> OauthApp:
 	'''The app with the id `aid` from the URL, else 404. Actions that change an app lock it first, so concurrent ones see each other's outcome before checking its state.'''
-	app_id = parse_id(aid)
-	query = g.db.query(OauthApp).filter_by(id=app_id)
+	query = g.db.query(OauthApp).filter_by(id=aid)
 	if lock: query = query.with_for_update().populate_existing()
-	app = query.one_or_none() if app_id else None
+	app = query.one_or_none()
 	if not app: abort(404)
 	return app
 
 
-def _app_owned(v: User, aid: str) -> OauthApp:
+def _app_owned(v: User, aid: int) -> OauthApp:
 	'''The app with the id `aid` from the URL, locked for its owner, the only one who may manage it, to change; to them a revoked app is gone (404).'''
 	app = _app(aid, lock=True)
 	if app.state == OauthAppState.REVOKED: abort(404)
@@ -130,7 +129,7 @@ def request_api_keys(v):
 	return redirect('/settings/apps')
 
 
-@app.post("/delete_app/<aid>")
+@app.post("/delete_app/<id:aid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def delete_oauth_app(v, aid):
@@ -142,7 +141,7 @@ def delete_oauth_app(v, aid):
 	return redirect('/settings/apps')
 
 
-@app.post("/edit_app/<aid>")
+@app.post("/edit_app/<id:aid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def edit_oauth_app(v, aid):
@@ -159,20 +158,19 @@ def edit_oauth_app(v, aid):
 	return redirect('/settings/apps')
 
 
-@app.post("/oauth/rescind/<aid>")
+@app.post("/oauth/rescind/<id:aid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def rescind_authorization(v, aid):
 	refuse_api_client(v)
-	app_id = parse_id(aid)
-	authorization = g.db.get(ClientAuth, (v.id, app_id)) if app_id else None
+	authorization = g.db.get(ClientAuth, (v.id, aid))
 	if not authorization: abort(404)
 	g.db.delete(authorization)
 	g.db.commit()
 	return {"message": "Authorization revoked"}
 
 
-@app.post("/admin/app/approve/<aid>")
+@app.post("/admin/app/approve/<id:aid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(PERMS['API_APP_APPROVAL'])
 def admin_app_approve(v, aid):
@@ -197,7 +195,7 @@ def admin_app_approve(v, aid):
 	return {"message": "Application approved"}
 
 
-@app.post("/admin/app/revoke/<aid>")
+@app.post("/admin/app/revoke/<id:aid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(PERMS['API_APP_MODERATION'])
 def admin_app_revoke(v, aid):
@@ -220,7 +218,7 @@ def admin_app_revoke(v, aid):
 	return {"message": "App revoked"}
 
 
-@app.post("/admin/app/reject/<aid>")
+@app.post("/admin/app/reject/<id:aid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(PERMS['API_APP_MODERATION'])
 def admin_app_reject(v, aid):
@@ -243,7 +241,7 @@ def admin_app_reject(v, aid):
 	return {"message": "App rejected"}
 
 
-@app.get("/admin/app/<aid>")
+@app.get("/admin/app/<id:aid>")
 @admin_level_required(PERMS['API_APP_MODERATION'])
 def admin_app_id(v, aid):
 	oauth = _app(aid)
@@ -262,7 +260,7 @@ def admin_app_id(v, aid):
 						   next_exists=next_exists
 						   )
 
-@app.get("/admin/app/<aid>/comments")
+@app.get("/admin/app/<id:aid>/comments")
 @admin_level_required(PERMS['API_APP_MODERATION'])
 def admin_app_id_comments(v, aid):
 	oauth = _app(aid)
@@ -292,7 +290,7 @@ def admin_apps_list(v):
 	return render_template("admin/apps.html", v=v, apps=apps)
 
 
-@app.post("/oauth/reroll/<aid>")
+@app.post("/oauth/reroll/<id:aid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def reroll_oauth_tokens(aid, v):

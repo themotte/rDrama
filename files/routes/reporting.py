@@ -15,7 +15,7 @@ def _reason() -> str:
 	return filter_emojis_only(request.values.get("reason", "").strip()[:REASON_LENGTH_MAXIMUM])
 
 
-@app.post("/report/post/<pid>")
+@app.post("/report/post/<id:pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def api_flag_post(pid, v):
@@ -45,7 +45,7 @@ def api_flag_post(pid, v):
 	return {"message": "Post reported!"}
 
 
-@app.post("/report/comment/<cid>")
+@app.post("/report/comment/<id:cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def api_flag_comment(cid, v):

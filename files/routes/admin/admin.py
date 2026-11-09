@@ -50,13 +50,12 @@ def _set_admin_level(v, username, level, kind):
 	g.db.commit()
 
 
-@app.post("/@<username>/delete_note/<id>")
+@app.post("/@<username>/delete_note/<id:id>")
 @limiter.exempt
 @admin_level_required(2)
 def delete_note(v,username,id):
 	user = get_user(username)
-	note_id = parse_id(id)
-	note = g.db.get(UserNote, note_id) if note_id else None
+	note = g.db.get(UserNote, id)
 	if not note or note.reference_user != user.id: abort(404)
 	g.db.delete(note)
 	g.db.commit()
@@ -628,7 +627,7 @@ def admin_removed_comments(v):
 						   )
 
 
-@app.post("/shadowban/<user_id>")
+@app.post("/shadowban/<id:user_id>")
 @limiter.exempt
 @admin_level_required(2)
 def shadowban(user_id, v):
@@ -672,7 +671,7 @@ def shadowban(user_id, v):
 	return {"message": "User shadowbanned!"}
 
 
-@app.post("/unshadowban/<user_id>")
+@app.post("/unshadowban/<id:user_id>")
 @limiter.exempt
 @admin_level_required(2)
 def unshadowban(user_id, v):
@@ -691,7 +690,7 @@ def unshadowban(user_id, v):
 	g.db.commit()
 	return {"message": "User unshadowbanned!"}
 
-@app.post("/filter_automatic/<user_id>")
+@app.post("/filter_automatic/<id:user_id>")
 @limiter.exempt
 @admin_level_required(2)
 def filter_automatic(user_id, v):
@@ -709,7 +708,7 @@ def filter_automatic(user_id, v):
 	g.db.commit()
 	return {"message": "User autofiltered!"}
 
-@app.post("/filter_unfiltered/<user_id>")
+@app.post("/filter_unfiltered/<id:user_id>")
 @limiter.exempt
 @admin_level_required(2)
 def filter_unfiltered(user_id, v):
@@ -727,7 +726,7 @@ def filter_unfiltered(user_id, v):
 	g.db.commit()
 	return {"message": "User unfiltered!"}
 
-@app.post("/filter_filtered/<user_id>")
+@app.post("/filter_filtered/<id:user_id>")
 @limiter.exempt
 @admin_level_required(2)
 def filter_filtered(user_id, v):
@@ -745,7 +744,7 @@ def filter_filtered(user_id, v):
 	g.db.commit()
 	return {"message": "User always filtered!"}
 
-@app.post("/admin/verify/<user_id>")
+@app.post("/admin/verify/<id:user_id>")
 @limiter.exempt
 @admin_level_required(3)
 def verify(user_id, v):
@@ -763,7 +762,7 @@ def verify(user_id, v):
 	g.db.commit()
 	return {"message": "User verfied!"}
 
-@app.post("/admin/unverify/<user_id>")
+@app.post("/admin/unverify/<id:user_id>")
 @limiter.exempt
 @admin_level_required(3)
 def unverify(user_id, v):
@@ -782,7 +781,7 @@ def unverify(user_id, v):
 	return {"message": "User unverified!"}
 
 
-@app.post("/admin/title_change/<user_id>")
+@app.post("/admin/title_change/<id:user_id>")
 @limiter.exempt
 @admin_level_required(2)
 def admin_title_change(user_id, v):
@@ -816,7 +815,7 @@ def admin_title_change(user_id, v):
 
 	return redirect(user.url)
 
-@app.post("/ban_user/<user_id>")
+@app.post("/ban_user/<id:user_id>")
 @limiter.exempt
 @admin_level_required(2)
 def ban_user(user_id, v):
@@ -903,7 +902,7 @@ def ban_user(user_id, v):
 	else: return {"message": f"@{user.username} was banned!"}
 
 
-@app.post("/unban_user/<user_id>")
+@app.post("/unban_user/<id:user_id>")
 @limiter.exempt
 @admin_level_required(2)
 def unban_user(user_id, v):
@@ -931,7 +930,7 @@ def unban_user(user_id, v):
 	else: return {"message": f"@{user.username} was unbanned!"}
 
 
-@app.post("/distinguish/<post_id>")
+@app.post("/distinguish/<id:post_id>")
 @limiter.exempt
 @admin_level_required(1)
 def api_distinguish_post(post_id, v):
@@ -961,7 +960,7 @@ def api_distinguish_post(post_id, v):
 	else: return {"message": "Post undistinguished!"}
 
 
-@app.post("/sticky/<post_id>")
+@app.post("/sticky/<id:post_id>")
 @limiter.exempt
 @admin_level_required(2)
 def sticky_post(post_id, v):
@@ -985,7 +984,7 @@ def sticky_post(post_id, v):
 		g.db.commit()
 	return {"message": "Post pinned!"}
 
-@app.post("/unsticky/<post_id>")
+@app.post("/unsticky/<id:post_id>")
 @limiter.exempt
 @admin_level_required(2)
 def unsticky_post(post_id, v):
@@ -1008,7 +1007,7 @@ def unsticky_post(post_id, v):
 		g.db.commit()
 	return {"message": "Post unpinned!"}
 
-@app.post("/sticky_comment/<cid>")
+@app.post("/sticky_comment/<id:cid>")
 @limiter.exempt
 @admin_level_required(2)
 def sticky_comment(cid, v):
@@ -1033,7 +1032,7 @@ def sticky_comment(cid, v):
 	return {"message": "Comment pinned!"}
 	
 
-@app.post("/unsticky_comment/<cid>")
+@app.post("/unsticky_comment/<id:cid>")
 @limiter.exempt
 @admin_level_required(2)
 def unsticky_comment(cid, v):
@@ -1058,7 +1057,7 @@ def unsticky_comment(cid, v):
 	return {"message": "Comment unpinned!"}
 
 
-@app.post("/distinguish_comment/<c_id>")
+@app.post("/distinguish_comment/<id:c_id>")
 @limiter.exempt
 @admin_level_required(1)
 def admin_distinguish_comment(c_id, v):

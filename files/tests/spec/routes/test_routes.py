@@ -16,7 +16,7 @@ def _path(route) -> str:
 	'''The route's path with every variable filled with a value that names nothing.'''
 	def value(m):
 		kind = m.group(1)
-		if kind in ("id", "int"): return _UNUSED_ID
+		if kind == "id": return _UNUSED_ID
 		if kind in ("text", "path"): return "x"
 		return kind.split("|")[0]
 	return re.sub(r"<([^>]+)>", value, route.path)
@@ -162,13 +162,21 @@ def test_public_routes_give_no_session(route):
 	assert session.cookie_name() not in client.cookies
 
 
-def _fullwidth(digits: str) -> str:
-	return "".join(chr(0xFF10 + int(d)) for d in digits)
+# Spellings of the System account's id (1) and of others an id can't be written as
+_NOT_IDS = {
+	"leading zero": "01",
+	"fullwidth digits": chr(0xFF11),
+	"plus sign": "+1",
+	"leading space": "%201",
+	"underscore": "1_0",
+	"zero": "0",
+	"too large": str(2**31),
+}
 
 
-@pytest.mark.parametrize("route", [r for r in ROUTES if re.search(r"<(id|int)>", r.path)], ids=_id)
-def test_numbers_in_a_path_are_ascii_digits(route):
-	'''Even for an id that names a row (the System account is 1), written in other digits.'''
-	path = re.sub(r"<(id|int)>", _fullwidth("1"), _path(route).replace(_UNUSED_ID, "<id>"))
+@pytest.mark.parametrize("spelling", _NOT_IDS)
+@pytest.mark.parametrize("route", [r for r in ROUTES if "<id>" in r.path], ids=_id)
+def test_an_id_written_otherwise_is_404(route, spelling):
+	path = _path(route).replace(_UNUSED_ID, _NOT_IDS[spelling])
 
 	assert_status(anon().request(route.method, path), 404)

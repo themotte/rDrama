@@ -29,7 +29,7 @@ from files.routes.importstar import *
 MAX_TITLE_LENGTH = 500
 
 
-@app.post("/publish/<pid>")
+@app.post("/publish/<id:pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def publish(pid, v):
@@ -52,8 +52,8 @@ def publish(pid, v):
 def submit_get(v):
 	return render_template("submit.html", v=v)
 
-@app.get("/post/<pid>")
-@app.get("/post/<pid>/<anything>")
+@app.get("/post/<id:pid>")
+@app.get("/post/<id:pid>/<anything>")
 @auth_desired
 def post_id(pid, anything=None, v=None):
 	post = get_post(pid, v=v)
@@ -103,7 +103,7 @@ def post_id(pid, anything=None, v=None):
 	if request.headers.get("Authorization"): return post.json_for(v)
 	return render_template("submission.html", v=v, p=post, ids=list(ids), sort=sort, render_replies=True, offset=offset)
 
-@app.get("/viewmore/<pid>/<sort>/<offset>")
+@app.get("/viewmore/<id:pid>/<sort>/<offset>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def viewmore(v, pid, sort, offset):
@@ -159,13 +159,10 @@ def viewmore(v, pid, sort, offset):
 	return render_template("comments.html", v=v, comments=comments, p=post, ids=list(ids), render_replies=True, pid=pid, sort=sort, offset=offset, ajax=True)
 
 
-@app.get("/morecomments/<cid>")
+@app.get("/morecomments/<id:cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def morecomments(v, cid):
-	cid = parse_id(cid)
-	if cid is None: abort(400)
-
 	parent = g.db.get(Comment, cid)
 	if not parent or not parent.parent_submission or parent.post.is_draft_hidden_from(v): abort(404)
 	if age_unconfirmed(parent.post, v): abort(403, "Must be 18+ to view")
@@ -178,7 +175,7 @@ def morecomments(v, cid):
 	return render_template("comments.html", v=v, comments=comments, p=post, sort=sort, render_replies=True, ajax=True)
 
 
-@app.post("/edit_post/<int:pid>")
+@app.post("/edit_post/<id:pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def edit_post(pid, v):
@@ -423,7 +420,7 @@ def submit_post(v):
 		return render_template('submission.html', v=v, p=post, sort=sort, render_replies=True, offset=0, success=True)
 
 
-@app.post("/delete_post/<pid>")
+@app.post("/delete_post/<id:pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def delete_post_pid(pid, v):
@@ -441,7 +438,7 @@ def delete_post_pid(pid, v):
 
 	return {"message": "Post deleted!"}
 
-@app.post("/undelete_post/<pid>")
+@app.post("/undelete_post/<id:pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def undelete_post_pid(pid, v):
@@ -457,7 +454,7 @@ def undelete_post_pid(pid, v):
 	return {"message": "Post undeleted!"}
 
 
-@app.post("/toggle_comment_nsfw/<cid>")
+@app.post("/toggle_comment_nsfw/<id:cid>")
 @auth_required
 def toggle_comment_nsfw(cid, v):
 	refuse_while_suspended(v)
@@ -471,7 +468,7 @@ def toggle_comment_nsfw(cid, v):
 	if comment.over_18: return {"message": "Comment has been marked as 18+!"}
 	else: return {"message": "Comment has been unmarked as 18+!"}
 	
-@app.post("/toggle_post_nsfw/<pid>")
+@app.post("/toggle_post_nsfw/<id:pid>")
 @auth_required
 def toggle_post_nsfw(pid, v):
 	refuse_while_suspended(v)
@@ -496,7 +493,7 @@ def toggle_post_nsfw(pid, v):
 	if post.over_18: return {"message": "Post has been marked as 18+!"}
 	else: return {"message": "Post has been unmarked as 18+!"}
 
-@app.post("/save_post/<pid>")
+@app.post("/save_post/<id:pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def save_post(pid, v):
@@ -512,7 +509,7 @@ def save_post(pid, v):
 
 	return {"message": "Post saved!"}
 
-@app.post("/unsave_post/<pid>")
+@app.post("/unsave_post/<id:pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def unsave_post(pid, v):
@@ -526,7 +523,7 @@ def unsave_post(pid, v):
 
 	return {"message": "Post unsaved!"}
 
-@app.post("/pin/<post_id>")
+@app.post("/pin/<id:post_id>")
 @auth_required
 def api_pin_post(post_id, v):
 	refuse_while_suspended(v)

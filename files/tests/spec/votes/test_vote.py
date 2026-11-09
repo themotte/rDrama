@@ -7,7 +7,7 @@ A vote stores whether it is "real": the voter wasn't shadowbanned when it was se
 
 Votes by shadowbanned users don't count. After a change, the item's upvotes and downvotes are its +1 and -1 votes by users who aren't shadowbanned, and its "realupvotes" are its real +1 votes. The author's truescore moves by the change (from the old vote to the new one), unless the voter is the author or is shadowbanned.
 
-Refused, changing nothing, in this order: 401 for anonymous users; 403 for API clients; 403 for permanently suspended users (temporarily suspended users vote as anyone else); 400 for any other <vote>; 404 for an unknown item or an id that isn't one, and for a draft, or a comment on a draft, that the voter can't see (only its author and admins of level 2 and up see a draft), and for every private message, which have no scores; 403 for an item hidden from the voter, which shows them only a placeholder (removed, held for review, deleted by its author, or by a shadowbanned user; its author and the admins who see it vote on it); 403 when the voter blocks the item's author, even where they still see it (an official post; an admin). The 18+ gate doesn't stop voting.
+Refused, changing nothing, in this order: 401 for anonymous users; 403 for API clients; 403 for permanently suspended users (temporarily suspended users vote as anyone else); 400 for any other <vote>; 404 for an unknown item (an id that isn't one is 404 before all of these: spec/routes), and for a draft, or a comment on a draft, that the voter can't see (only its author and admins of level 2 and up see a draft), and for every private message, which have no scores; 403 for an item hidden from the voter, which shows them only a placeholder (removed, held for review, deleted by its author, or by a shadowbanned user; its author and the admins who see it vote on it); 403 when the voter blocks the item's author, even where they still see it (an official post; an admin). The 18+ gate doesn't stop voting.
 '''
 import time
 
@@ -270,7 +270,8 @@ def test_other_votes_are_refused(kind, vote):
 
 @pytest.mark.parametrize("kind", KINDS)
 def test_a_bad_vote_is_refused_before_the_item_is_looked_up(kind):
-	r = _vote(as_user(factories.user()), kind, {"id": "abc"}, "2")
+	table, _, _ = _TABLES[kind]
+	r = _vote(as_user(factories.user()), kind, {"id": db.execute(f"SELECT nextval('{table}_id_seq')")}, "2")
 
 	assert_status(r, 400)
 

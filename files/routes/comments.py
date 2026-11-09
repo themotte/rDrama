@@ -44,12 +44,10 @@ UNION
 SELECT id FROM ancestors
 """)
 
-@app.get("/comment/<cid>")
-@app.get("/post/<pid>/<anything>/<cid>")
+@app.get("/comment/<id:cid>")
+@app.get("/post/<id:pid>/<anything>/<id:cid>")
 @auth_desired
 def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
-	cid = parse_id(cid)
-	if cid is None: abort(404)
 	comment = g.db.get(Comment, cid)
 	if not comment: abort(404)
 
@@ -267,7 +265,7 @@ def api_comment(v):
 		message = None
 	return {"comment": render_template("comments.html", v=v, comments=[c], ajax=True, parent_level=level), "message": message}
 
-@app.post("/edit_comment/<cid>")
+@app.post("/edit_comment/<id:cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def edit_comment(cid, v):
@@ -341,7 +339,7 @@ def edit_comment(cid, v):
 	return {"comment": c.realbody(v)}
 
 
-@app.post("/delete/comment/<cid>")
+@app.post("/delete/comment/<id:cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def delete_comment(cid, v):
@@ -355,7 +353,7 @@ def delete_comment(cid, v):
 
 	return {"message": "Comment deleted!"}
 
-@app.post("/undelete/comment/<cid>")
+@app.post("/undelete/comment/<id:cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def undelete_comment(cid, v):
@@ -376,7 +374,7 @@ def _saveable(comment, v):
 	return bool(comment.parent_submission) and comment.is_open_to(v)
 
 
-@app.post("/save_comment/<cid>")
+@app.post("/save_comment/<id:cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def save_comment(cid, v):
@@ -393,7 +391,7 @@ def save_comment(cid, v):
 
 	return {"message": "Comment saved!"}
 
-@app.post("/unsave_comment/<cid>")
+@app.post("/unsave_comment/<id:cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def unsave_comment(cid, v):

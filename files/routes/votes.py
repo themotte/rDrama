@@ -87,7 +87,7 @@ def _vote_check_target(target:Union[Submission, Comment], v:User):
 	if not target.visibility_state.is_visible_to(v): abort(403, "You can't vote on this")
 
 
-@app.post("/vote/post/<post_id>/<new>")
+@app.post("/vote/post/<id:post_id>/<new>")
 @limiter.limit("5/second;60/minute;600/hour;1000/day")
 @is_not_permabanned
 def api_vote_post(post_id, new, v):
@@ -98,7 +98,7 @@ def api_vote_post(post_id, new, v):
 	return _vote(post, Vote, new, v)
 
 
-@app.post("/vote/comment/<comment_id>/<new>")
+@app.post("/vote/comment/<id:comment_id>/<new>")
 @limiter.limit("5/second;60/minute;600/hour;1000/day")
 @is_not_permabanned
 def api_vote_comment(comment_id, new, v):

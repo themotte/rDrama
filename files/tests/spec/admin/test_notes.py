@@ -1,7 +1,7 @@
 '''
 Admin notes about users, kept by admins of level 2 and up:
 - POST /@<username>/create_note takes one form field, "data": a JSON object with "note" (the text), "tag" (a number, as a string or a number: 0 Quality, 1 Good, 2 Comment, 3 Warning, 4 Tempban, 5 Permban, 6 Spam, 7 Bot) and optionally "post" or "comment" (the id of the item the note is about; a comment wins over a post). It answers 200 with JSON {"success", "message", "note"}: on success "note" is the saved note, with "id", "author_name", "created" (unix seconds), "reference" (an absolute link to the item, or null), "note" and "tag" (the number); for an unknown user "success" is false and "note" null. Missing or malformed data, an unknown tag, a note over 10000 characters, or a post or comment that doesn't exist is refused with 400.
-- POST /@<username>/delete_note/<id> deletes a note about that user, answering 200 with JSON whose "success" is true; any other id is 404.
+- POST /@<username>/delete_note/<id> deletes a note about that user, answering 200 with JSON whose "success" is true and whose "note" is the note's id (a number); any other id is 404.
 
 The username is matched as profiles match it: case-insensitively, current or original name.
 
@@ -89,6 +89,7 @@ def test_admin_deletes_a_note():
 	assert_status(r, 200)
 	d.assert_exactly(deleted={"usernotes": [note["id"]]})
 	assert r.json["success"] is True, r.json
+	assert r.json["note"] == note["id"], r.json
 
 
 @pytest.mark.parametrize("name", ["upper case", "original"])
