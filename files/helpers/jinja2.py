@@ -31,13 +31,6 @@ def template_shuffle(ctx, l: list) -> list:
 	return random.sample(l, k=len(l))
 
 
-@app.template_filter("post_embed")
-def post_embed(id, v):
-	p = get_post(id, v, graceful=True)
-	
-	if p and not p.is_draft_hidden_from(v): return render_template("submission_listing.html", listing=[p], v=v)
-	return ''
-
 @app.template_filter("timestamp")
 def timestamp(timestamp):
 	if not timestamp: return ''

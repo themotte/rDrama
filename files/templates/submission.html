@@ -291,17 +291,6 @@
 							<div class="form-text text-small p-0 m-0"><a href="/formatting" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>Formatting help</a></div>
 						</div>
 					{% endif %}
-							{% if p.embed_url and "http" not in p.embed_url and "<" not in p.embed_url and not content_hidden %}
-							<div id="crosspost-embed">
-							<div class="row no-gutters">
-								<div id="frontpage" class="col-12 pt-0">
-								<div class="posts" id="posts">
-									{{p.embed_url | post_embed(v) | safe}}
-								</div>
-								</div>
-							</div>
-							</div>
-							{% endif %}
 							<div class="d-none d-md-flex justify-content-between align-items-center mt-2">
 								<div class="post-actions mt-2">
 				<ul class="list-inline text-right d-flex">

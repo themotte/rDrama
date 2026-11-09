@@ -98,33 +98,6 @@ def test_drafts_are_not_found_by_anyone_else(viewer):
 	assert_status(_page(client, draft), 404)
 
 
-# Posts embedding another post by its id (stored by earlier versions as the embed)
-
-@pytest.mark.parametrize("viewer", ["author", "moderator"])
-def test_an_embedded_draft_shows_to_its_author_and_moderators(viewer):
-	author = factories.user()
-	title = factories.unique("title")
-	draft = factories.post(author, title=title, private=True)
-	post = factories.post(factories.user(), embed_url=str(draft["id"]))
-
-	r = _page(as_user(author if viewer == "author" else factories.admin(2)), post)
-
-	assert_html(r, 200)
-	assert_in_payload(r, title)
-
-
-@pytest.mark.parametrize("viewer", ["visitor", "user"])
-def test_an_embedded_draft_shows_to_no_one_else(viewer):
-	title = factories.unique("title")
-	draft = factories.post(factories.user(), title=title, private=True)
-	post = factories.post(factories.user(), embed_url=str(draft["id"]))
-
-	r = _page(anon() if viewer == "visitor" else as_user(factories.user()), post)
-
-	assert_html(r, 200)
-	assert_not_in_payload(r, title)
-
-
 def test_comment_links_through_another_post_are_not_found():
 	draft = factories.post(factories.user(), private=True)
 	comment = factories.comment(factories.user(), draft)
