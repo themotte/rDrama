@@ -66,12 +66,6 @@ SQLALCHEMY_DATABASE_URI = DATABASE_URL
 MENTION_LIMIT = int(environ.get('MENTION_LIMIT', 100))
 ''' Maximum amount of username mentions '''
 
-MULTIMEDIA_EMBEDDING_ENABLED = bool_from_string(environ.get('MULTIMEDIA_EMBEDDING_ENABLED', False))
-''' 
-Whether multimedia will be embedded into a page. Note that this does not 
-affect posts or comments retroactively.
-'''
-
 RESULTS_PER_PAGE_COMMENTS = int(environ.get('RESULTS_PER_PAGE_COMMENTS', 50))
 SCORE_HIDING_TIME_HOURS = int(environ.get('SCORE_HIDING_TIME_HOURS', 0))
 

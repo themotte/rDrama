@@ -13,11 +13,8 @@ from flask import abort, g
 from mistletoe import markdown
 
 from files.classes.domains import BannedDomain
-from files.helpers.config.const import (embed_fullmatch_regex,
-                                        image_check_regex, video_sub_regex)
-from files.helpers.config.environment import (MENTION_LIMIT,
-                                              MULTIMEDIA_EMBEDDING_ENABLED,
-                                              SITE_FULL)
+from files.helpers.config.const import image_check_regex
+from files.helpers.config.environment import MENTION_LIMIT, SITE_FULL
 from files.helpers.config.regex import *
 from files.helpers.get import get_users
 
@@ -48,10 +45,6 @@ allowed_tags = ('b','blockquote','br','code','del','em','h1','h2','h3','h4',
 		'tbody','th','thead','td','tr','ul','a','span','ruby','rp','rt',
 		'spoiler',)
 
-if MULTIMEDIA_EMBEDDING_ENABLED:
-	allowed_tags += ('img', 'lite-youtube', 'video', 'source',)
-
-
 def allowed_attributes(tag, name, value):
 	if name == 'style': return True
 
@@ -59,31 +52,6 @@ def allowed_attributes(tag, name, value):
 		if name == 'href': return True
 		if name == 'rel' and value == 'nofollow noopener noreferrer': return True
 		if name == 'target' and value == '_blank': return True
-		return False
-
-	if tag == 'img':
-		if name in ['src','data-src']:
-			if value.startswith('/') or value.startswith(f'{SITE_FULL}/') or embed_fullmatch_regex.fullmatch(value): return True
-			else: return False
-
-		if name == 'loading' and value == 'lazy': return True
-		if name == 'referrpolicy' and value == 'no-referrer': return True
-		if name == 'data-bs-toggle' and value == 'tooltip': return True
-		if name in ['alt','title']: return True
-		return False
-
-	if tag == 'lite-youtube':
-		if name == 'params' and value.startswith('autoplay=1&modestbranding=1'): return True
-		if name == 'videoid': return True
-		return False
-
-	if tag == 'video':
-		if name == 'controls' and value == '': return True
-		if name == 'preload' and value == 'none': return True
-		return False
-
-	if tag == 'source':
-		if name == 'src' and embed_fullmatch_regex.fullmatch(value): return True
 		return False
 
 	if tag == 'p':
@@ -142,10 +110,6 @@ def sanitize_raw(sanitized:Optional[str], allow_newlines:bool, length_limit:Opti
 	return sanitized
 
 def sanitize(sanitized, alert=False):
-	if MULTIMEDIA_EMBEDDING_ENABLED:
-		# turn eg. https://wikipedia.org/someimage.jpg into ![](https://wikipedia.org/someimage.jpg)
-		sanitized = image_regex.sub(r'\1![](\2)\4', sanitized)
-
 	# if image url in whitelist, do nothing
 	# eg. ![](https://wikipedia.org/someimage.jpg) turns into ![](https://wikipedia.org/someimage.jpg)
 	# but if not, then extract url
@@ -193,15 +157,6 @@ def sanitize(sanitized, alert=False):
 
 	soup = BeautifulSoup(sanitized, 'lxml')
 
-	if MULTIMEDIA_EMBEDDING_ENABLED:
-		for tag in soup.find_all("img"):
-			if tag.get("src") and not tag["src"].startswith('/pp/'):
-				tag["loading"] = "lazy"
-				tag["data-src"] = tag["src"]
-				tag["src"] = "/assets/images/loading.webp"
-				tag['alt'] = f'![]({tag["data-src"]})'
-				tag['referrerpolicy'] = "no-referrer"
-
 	for tag in soup.find_all("a"):
 		if tag.get("href") and fishylinks_regex.fullmatch(str(tag.string)):
 			tag.string = tag["href"]
@@ -218,25 +173,6 @@ def sanitize(sanitized, alert=False):
 
 
 	if "https://youtube.com/watch?v=" in sanitized: sanitized = sanitized.replace("?t=", "&t=")
-
-	if MULTIMEDIA_EMBEDDING_ENABLED:
-		captured = []
-		for i in youtube_regex.finditer(sanitized):
-			if i.group(0) in captured: continue
-			captured.append(i.group(0))
-
-			params = urllib.parse.parse_qs(urllib.parse.urlparse(i.group(2).replace('&amp;','&')).query)
-			t = params.get('t', params.get('start', [0]))[0]
-			if isinstance(t, str): t = t.replace('s','')
-
-			htmlsource = f'{i.group(1)}<lite-youtube videoid="{i.group(3)}" params="autoplay=1&modestbranding=1'
-			if t: htmlsource += f'&start={t}'
-			htmlsource += '"></lite-youtube>'
-
-			sanitized = sanitized.replace(i.group(0), htmlsource)
-
-	if MULTIMEDIA_EMBEDDING_ENABLED:
-		sanitized = video_sub_regex.sub(r'\1<video controls preload="none"><source src="\2"></video>', sanitized)
 
 	sanitized = sanitized.replace('&amp;','&')
 	sanitized = utm_regex.sub('', sanitized)

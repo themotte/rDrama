@@ -10,7 +10,6 @@ from files.classes.cron.tasks import (DayOfWeek, RepeatableTask,
                                       RepeatableTaskRun, ScheduledTaskType)
 from files.classes.user import User
 from files.helpers.config.const import PERMS, SUBMISSION_FLAIR_LENGTH_MAXIMUM
-from files.helpers.config.environment import MULTIMEDIA_EMBEDDING_ENABLED
 from files.helpers.wrappers import admin_level_required
 
 
@@ -96,9 +95,7 @@ def _get_request_dayofweek() -> DayOfWeek:
 @admin_level_required(PERMS['SCHEDULER_POSTS'])
 def tasks_scheduled_posts_post(v:User):
 	validated_post:validators.ValidatedSubmissionLike = \
-		validators.ValidatedSubmissionLike.from_flask_request(request, 
-			allow_embedding=MULTIMEDIA_EMBEDDING_ENABLED,
-		)
+		validators.ValidatedSubmissionLike.from_flask_request(request)
 	
 	# first build the template
 	flair:str = validators.guarded_value("flair", min_len=0, max_len=SUBMISSION_FLAIR_LENGTH_MAXIMUM)
@@ -153,9 +150,7 @@ def task_scheduled_post_content_post(v:User, pid:int): # pyright: ignore
 	if not submission: abort(404)
 
 	validated_post:validators.ValidatedSubmissionLike = \
-		validators.ValidatedSubmissionLike.from_flask_request(request, 
-			allow_embedding=MULTIMEDIA_EMBEDDING_ENABLED,
-		)
+		validators.ValidatedSubmissionLike.from_flask_request(request)
 	
 	edited:bool = False
 	if submission.body != validated_post.body:

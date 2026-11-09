@@ -158,7 +158,7 @@ def api_comment(v):
 	level = 1 if isinstance(parent, Submission) else parent.level + 1
 
 	body = sanitize_raw(request.values.get("body"), allow_newlines=True, length_limit=COMMENT_BODY_LENGTH_MAXIMUM)
-	_, body = attach_images(body, request.files.getlist('file'), app.config['MULTIMEDIA_EMBEDDING_ENABLED'])
+	_, body = attach_images(body, request.files.getlist('file'))
 
 	if not body: abort(400, "You need to actually write something!")
 	if len(body) > COMMENT_BODY_LENGTH_MAXIMUM: abort(400, f"Maximum length for a comment is {COMMENT_BODY_LENGTH_MAXIMUM}, including the links to attached images")
@@ -309,7 +309,7 @@ def edit_comment(cid, v):
 			abort(403, "Too much spam!")
 		# End Spam Checking
 
-		attached, body = attach_images(body, request.files.getlist('file'), app.config['MULTIMEDIA_EMBEDDING_ENABLED'])
+		attached, body = attach_images(body, request.files.getlist('file'))
 		if attached:
 			if len(body) > length_limit: abort(400, f"Maximum length is {length_limit}, including the links to attached images")
 			body_html = sanitize(body)

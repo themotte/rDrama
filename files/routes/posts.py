@@ -189,7 +189,6 @@ def edit_post(pid, v):
 	validated_post: validators.ValidatedSubmissionLike = \
 		validators.ValidatedSubmissionLike.from_flask_request(
 			request,
-			allow_embedding=MULTIMEDIA_EMBEDDING_ENABLED,
 			allow_media_url_upload=False,
 			embed_url_file_key="file",
 			existing_url=p.url,
@@ -361,9 +360,7 @@ def submit_post(v):
 
 	try:
 		validated_post: validators.ValidatedSubmissionLike = \
-			validators.ValidatedSubmissionLike.from_flask_request(request,
-				allow_embedding=MULTIMEDIA_EMBEDDING_ENABLED,
-			)
+			validators.ValidatedSubmissionLike.from_flask_request(request)
 	except BadRequest as e:
 		return error(e.description)
 

@@ -73,7 +73,6 @@ class ValidatedSubmissionLike:
 	def from_flask_request(cls, 
 			request:Request,
 			*,
-			allow_embedding:bool,
 			allow_media_url_upload:bool=True,
 			embed_url_file_key:str="file2",
 			existing_url:Optional[str]=None) -> "ValidatedSubmissionLike":
@@ -84,8 +83,6 @@ class ValidatedSubmissionLike:
 		a central interface.
 
 		:param request: The Flask Request object.
-		:param allow_embedding: Whether to allow embedding. This should usually
-		be the value from the environment.
 		:param allow_media_url_upload: Whether to allow media URL upload. This
 		should generally be `True` for submission submitting if file uploads 
 		are allowed and `False` in other contexts (such as editing)
@@ -135,7 +132,7 @@ class ValidatedSubmissionLike:
 			has_file = False
 			thumburl = None
 
-		has_file2, body = attach_images(body_raw, request.files.getlist(embed_url_file_key), allow_embedding)
+		has_file2, body = attach_images(body_raw, request.files.getlist(embed_url_file_key))
 		if len(body) > SUBMISSION_BODY_LENGTH_MAXIMUM:
 			abort(400, f"Maximum length for body is {SUBMISSION_BODY_LENGTH_MAXIMUM}, including the links to attached images")
 
