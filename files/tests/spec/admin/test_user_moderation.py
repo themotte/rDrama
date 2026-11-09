@@ -6,7 +6,7 @@ Admin actions on a user account, all POSTs taking the user's id in the path, plu
 - /admin/title_change/<id> sets the user's flair from "title" (surrounding whitespace dropped, cut to 100 characters as users' own flair is); a non-empty "locked" stops the user changing it. Redirects to the profile.
 - /ban_user/<id> bans for "days" (temporary; absent, empty or 0 means permanent; at most 3650 and ending before 2038, when the stored end time runs out, else 400) with an optional "reason". A reason beginning "/post/<id>" or "/comment/<id>" marks that post or comment as the one the user was banned for. A non-empty "alts" bans the user's linked accounts too. The user is notified, and so are level-3 admins other than the actor. With "redir" present it redirects to the profile, else answers JSON. System accounts and users at or above the actor's level can't be banned.
 - /unban_user/<id> lifts a ban and notifies the user; from the user's profile page (by Referer) it redirects back there, else answers JSON.
-- GET /admin/users lists non-banned accounts, newest first, 25 to a page ("page"); GET /admin/shadowbanned lists shadowbanned accounts, and doesn't exist for non-admins.
+- GET /admin/users lists non-banned accounts, newest first, 25 to a page ("page"); GET /admin/shadowbanned lists shadowbanned accounts (admins of level 2 and up: admin/test_access).
 
 Every action is logged in the mod log as a `modactions` row of the listed kind naming the actor and the target user. An id that isn't an existing account's is 404; a missing required field is 400.
 '''
@@ -563,11 +563,4 @@ def test_shadowbanned_list_shows_shadowbanned_accounts():
 	assert_html(r, 200)
 	assert_in_payload(r, shadowbanned["username"])
 	assert_not_in_payload(r, regular["username"])
-
-
-@pytest.mark.parametrize("level", [0, 1])
-def test_shadowbanned_list_does_not_exist_for_non_admins(level):
-	factories.user(shadowbanned="AutoJanny")
-
-	assert_status(as_user(factories.admin(level)).get("/admin/shadowbanned"), 404)
 

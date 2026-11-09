@@ -1,7 +1,7 @@
 '''
 Who may use the admin area at all. Each admin route requires a minimum admin level; this file pins only the refusals, and each feature's own tests show the route working at its minimal level.
 
-Anonymous browsers are sent to log in, for pages and actions alike (an action's request body is not carried along). A logged-in account below the route's level is refused with 403, except the shadowbanned-users page, which answers 404 to anyone below level 2 as if it didn't exist. API clients are refused whatever their account's level (the shadowbanned-users page answers them 404 too): moderation happens in the browser. Refused requests change nothing.
+Anonymous browsers are sent to log in, for pages and actions alike (an action's request body is not carried along). A logged-in account below the route's level is refused with 403. API clients are refused whatever their account's level: moderation happens in the browser. Refused requests change nothing.
 '''
 import pytest
 
@@ -32,6 +32,7 @@ ROUTES = [
 	("GET", "/admin/removed/posts", 2),
 	("GET", "/admin/removed/comments", 2),
 	("GET", "/admin/users", 2),
+	("GET", "/admin/shadowbanned", 2),
 	("GET", "/admin/alt_votes", 2),
 	("POST", "/admin/link_accounts", 2),
 	("POST", "/shadowban/{user_id}", 2),
@@ -71,9 +72,6 @@ ROUTES = [
 	("POST", "/admin/app/reject/{app_id}", 2),
 	("POST", "/admin/app/revoke/{app_id}", 2),
 ]
-
-SHADOWBANNED_PAGE = "/admin/shadowbanned"
-
 
 def _route_id(route):
 	method, path, _ = route
@@ -138,24 +136,4 @@ def test_api_clients_are_forbidden_whatever_their_level(route):
 		r = client.request(method, path)
 
 	assert_status(r, 403)
-	d.assert_exactly()
-
-
-def test_the_shadowbanned_users_page_does_not_exist_for_api_clients():
-	client = as_api(factories.api_token(factories.admin(3)))
-
-	assert_status(client.get(SHADOWBANNED_PAGE), 404)
-
-
-def test_anonymous_browsers_are_sent_to_log_in_from_the_shadowbanned_users_page():
-	assert_login_redirect(anon().get(SHADOWBANNED_PAGE), returning_to=SHADOWBANNED_PAGE)
-
-
-def test_the_shadowbanned_users_page_does_not_exist_below_admin_level_2():
-	client = as_user(factories.admin(1))
-
-	with db_diff() as d:
-		r = client.get(SHADOWBANNED_PAGE)
-
-	assert_status(r, 404)
 	d.assert_exactly()

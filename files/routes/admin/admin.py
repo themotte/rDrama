@@ -157,9 +157,8 @@ def revert_actions(v, username):
 
 @app.get("/admin/shadowbanned")
 @limiter.exempt
-@auth_required
+@admin_level_required(2)
 def shadowbanned(v):
-	if v.admin_level < 2: abort(404)
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).order_by(User.shadowbanned).all()]
 	return render_template("shadowbanned.html", v=v, users=users)
 
