@@ -844,8 +844,8 @@ def ban_user(user_id, v):
 			x.ban(admin=v, reason=passed_reason, until=until)
 
 	if days:
-		if reason: text = f"@{v.username} has banned you for **{days}** days for the following reason:\n\n> {reason}"
-		else: text = f"@{v.username} has banned you for **{days}** days."
+		if reason: text = f"@{v.username} has banned you for **{days:g}** days for the following reason:\n\n> {reason}"
+		else: text = f"@{v.username} has banned you for **{days:g}** days."
 	else:
 		if reason: text = f"@{v.username} has banned you permanently for the following reason:\n\n> {reason}"
 		else: text = f"@{v.username} has banned you permanently."
@@ -854,7 +854,7 @@ def ban_user(user_id, v):
 	
 	if days == 0: duration = "permanent"
 	elif days == 1: duration = "1 day"
-	else: duration = f"{days} days"
+	else: duration = f"{days:g} days"
 
 	# The mod log's note holds 256 characters; the reason gives way to the duration.
 	room = 256 - len(f'reason: "", duration: {duration}')

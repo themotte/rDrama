@@ -8,8 +8,9 @@ Admin actions on a user account, all POSTs taking the user's id in the path, plu
 - /unban_user/<id> lifts a ban and notifies the user; from the user's profile page (by Referer) it redirects back there, else answers JSON.
 - GET /admin/users lists non-banned accounts, newest first, 25 to a page ("page"); GET /admin/shadowbanned lists shadowbanned accounts (admins of level 2 and up: admin/test_access).
 
-Every action is logged in the mod log as a `modactions` row of the listed kind naming the actor and the target user. An id that isn't an existing account's is 404; a missing required field is 400.
+Every action is logged in the mod log as a `modactions` row of the listed kind naming the actor and the target user. A ban's entry notes `reason: "<reason>", duration: <duration>`, the duration being "permanent", "1 day" or "<days> days" with the days as a plain decimal number (no trailing ".0"); the note is at most 256 characters, the reason cut to make room. A flair change notes the flair in double quotes. An id that isn't an existing account's is 404; a missing required field is 400.
 '''
+import re
 import time
 
 import pytest
@@ -281,6 +282,17 @@ def test_admin_bans_a_user_for_some_days_and_everyone_concerned_is_told():
 	assert reason in d.inserted["modactions"][0]["_note"]
 	assert reason in _notice(d, user)["body_html"]
 	assert user["username"] in _notice(d, other_head)["body_html"]
+
+
+@pytest.mark.parametrize("days, duration", [("3", "3 days"), ("1", "1 day"), ("0.5", "0.5 days"), ("2.50", "2.5 days"), ("", "permanent")])
+def test_a_bans_mod_log_note_gives_its_reason_and_duration(days, duration):
+	user, reason = factories.user(), factories.unique("reason")
+
+	r, d = _ban(factories.admin(2), user, {"days": days, "reason": reason})
+
+	assert_json_message(r)
+	assert d.inserted["modactions"][0]["_note"] == f'reason: "{reason}", duration: {duration}'
+	assert not re.search(r"\d\.0\b", _notice(d, user)["body_html"])
 
 
 def test_admin_bans_a_user_permanently_without_a_reason():
