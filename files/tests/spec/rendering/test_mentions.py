@@ -1,5 +1,5 @@
 '''
-Mentions in rendered text (see test_text.py): "@<username>" at the start of the text or of a paragraph, or after whitespace, naming an existing user by their username or their original one, in any letter case, renders as a link to /id/<their id> reading "@<their username>". Every mention of them is linked. Not inside code, and not right after another character (as in an email address).
+Mentions in rendered text (see test_text.py): "@<username>" at the start of a run of text (a paragraph, list item, heading, emphasis...) or after whitespace, and not followed by another name character, naming an existing user by their username or their original one, in any letter case, renders as a link to /id/<their id> reading "@<their username>". Every mention of them is linked. Not inside code or links, and not right after another character (as in an email address).
 
 A mention isn't linked when the writer blocks the mentioned user or is blocked by them, unless the writer is an admin of level 2 or higher.
 
@@ -32,7 +32,12 @@ def _mention(user) -> str:
 	("@{upper} and @{name}", "<p>{link} and {link}</p>"),
 	("mail a@{name}", "<p>mail a@{name}</p>"),
 	("`@{name}`", "<p><code>@{name}</code></p>"),
-], ids=["start", "after a space", "start of a paragraph", "any case, every time", "after a character", "in code"])
+	("`hi @{name}`", "<p><code>hi @{name}</code></p>"),
+	("[hi @{name}](https://example.com)", '<p><a href="https://example.com" target="_blank" rel="nofollow noopener noreferrer">hi @{name}</a></p>'),
+	('<span title="a @{name}">s</span>', '<p><span title="a @{name}">s</span></p>'),
+	("- @{name}\n\n# @{name}\n\n**@{name}**", "<ul><li>{link}</li></ul><h1>{link}</h1><p><strong>{link}</strong></p>"),
+	("hi @{name}x and @{name}", "<p>hi @{name}x and {link}</p>"),
+], ids=["start", "after a space", "start of a paragraph", "any case, every time", "after a character", "in code", "later in code", "in a link", "in an attribute", "in lists, headings and emphasis", "a longer name"])
 def test_a_mention_links_to_the_user(written, html):
 	user = factories.user()
 	name = user["username"]

@@ -8,7 +8,7 @@ from typing import Optional
 import bleach
 from bleach.css_sanitizer import CSSSanitizer
 from bleach.linkifier import LinkifyFilter, build_url_re
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 from flask import abort, g
 from mistletoe import HTMLRenderer, markdown
 
@@ -63,16 +63,39 @@ def allowed_attributes(tag, name, value):
 		return False
 
 
-_tag_or_strikethrough_regex = re.compile(r'(<[^>]+>)|(~{1,2})([^~]+?)\2', flags=re.A)
+_TEXT_ONLY_SKIP = {"a", "code", "pre", "script", "style"}
 
-def _strikethrough_replace(m):
-	if m.group(1):  # matched an HTML tag — return unchanged
-		return m.group(1)
-	return '<del>' + m.group(3) + '</del>'
 
-def _apply_strikethrough(text):
-	"""Apply strikethrough formatting only to text outside HTML tags."""
-	return _tag_or_strikethrough_regex.sub(_strikethrough_replace, text)
+def _on_text(soup, transform):
+	'''Replaces each run of text in `soup` outside links and code with `transform` of it, escaped as HTML; parts that are web addresses are left alone.'''
+	for node in list(soup.find_all(string=True)):
+		if type(node) is not NavigableString or any(parent.name in _TEXT_ONLY_SKIP for parent in node.parents):
+			continue
+		escaped = html.escape(str(node), quote=False)
+		changed = "".join(part if url_re.fullmatch(part) else transform(part) for part in _split_addresses(escaped))
+		if changed != escaped:
+			node.replace_with(*BeautifulSoup(changed, "html.parser").contents)
+
+
+def _split_addresses(text: str) -> list[str]:
+	'''`text` cut into web addresses and the rest, in order.'''
+	parts, start = [], 0
+	for match in url_re.finditer(text):
+		parts += [text[start:match.start()], match.group(0)]
+		start = match.end()
+	return [part for part in parts + [text[start:]] if part]
+
+
+_strikethrough_text_regex = re.compile(r'(~{1,2})([^~]+?)\1', flags=re.A)
+_reddit_text_regex = re.compile(r'(^|\s)/?((?:r|u)/[\w-]{3,25})(?![\w-])', flags=re.A)
+_hole_text_regex = re.compile(r'(^|\s)/?(h/[\w-]{3,25})(?![\w-])', flags=re.A)
+_mention_text_regex = re.compile(r'(^|\s)@([a-zA-Z0-9_\-]{1,25})(?![a-zA-Z0-9_\-])', flags=re.A)
+
+
+def _formatting(text: str) -> str:
+	text = _strikethrough_text_regex.sub(r'<del>\2</del>', text)
+	return spoiler_regex.sub(r'<spoiler>\1</spoiler>', text)
+
 
 url_re = build_url_re(tlds=TLDS, protocols=['http', 'https'])
 
@@ -126,52 +149,40 @@ def sanitize(sanitized, alert=False):
 	# transform markdown into html
 	sanitized = markdown(sanitized, renderer=_Renderer)
 
-	# turn ~something~ or ~~something~~  into <del>something</del>
-	# skip text inside HTML tags so tildes in URLs aren't mangled (fixes #737)
-	sanitized = _apply_strikethrough(sanitized)
-
 	# remove left-to-right mark; remove zero width space; remove zero width no-break space; remove Cuneiform Numeric Sign Eight;
 	sanitized = unwanted_bytes_regex.sub('', sanitized)
 
-	if alert:
-		matches = { g.group(1):g for g in mention_regex2.finditer(sanitized) if g }
-		users = get_users(matches.keys(),graceful=True)
+	# The site's conventions apply to runs of text, never inside code, links, addresses or markup
+	soup = BeautifulSoup(sanitized, 'html.parser')
+	_on_text(soup, _formatting)
 
-		captured = []
-		for u in users:
-			if u:
-				i = matches.get(u.username) or matches.get(u.original_username)
-				if i.group(0) not in captured:
-					captured.append(i.group(0))
-					sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''')
-	else:
-		sanitized = reddit_regex.sub(r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">/\2</a>', sanitized)
-		sanitized = sub_regex.sub(r'\1<a href="/\2">/\2</a>', sanitized)
+	mentioned = set()
+	_on_text(soup, lambda text: mentioned.update(m.group(2).lower() for m in _mention_text_regex.finditer(text)) or text)
+	users = {}
+	for u in get_users(mentioned, graceful=True):
+		if not u: continue
+		users[u.username.lower()] = users[u.original_username.lower()] = u
+	if not alert and len(set(users.values())) > MENTION_LIMIT:
+		abort(400, f'Mentioned {len(set(users.values()))} users but limit is {MENTION_LIMIT}')
 
-		matches = [ m for m in mention_regex.finditer(sanitized) if m ]
-		names = set(m.group(2) for m in matches)
-		users = get_users(names,graceful=True)
+	def _mention(m):
+		u = users.get(m.group(2).lower())
+		if not u or (not alert and g.v and g.v.any_block_exists(u) and g.v.admin_level < 2): return m.group(0)
+		return f'{m.group(1)}<a href="/id/{u.id}">@{u.username}</a>'
 
-		if len(users) > MENTION_LIMIT:
-			abort(400, f'Mentioned {len(users)} users but limit is {MENTION_LIMIT}')
+	def _links(text: str) -> str:
+		if not alert:
+			text = _reddit_text_regex.sub(r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">/\2</a>', text)
+			text = _hole_text_regex.sub(r'\1<a href="/\2">/\2</a>', text)
+		return _mention_text_regex.sub(_mention, text)
 
-		for u in users:
-			if not u: continue
-			mention_is_u = lambda m: m.group(2).lower() in (u.username.lower(), u.original_username.lower())
-			for i in filter(mention_is_u, matches):
-				if not (g.v and g.v.any_block_exists(u)) or g.v.admin_level >= 2:
-					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/pp/{u.id}">@{u.username}</a>''', 1)
-
-	soup = BeautifulSoup(sanitized, 'lxml')
+	_on_text(soup, _links)
 
 	for tag in soup.find_all("a"):
 		if tag.get("href") and fishylinks_regex.fullmatch(str(tag.string)):
 			tag.string = tag["href"]
 
-
 	sanitized = str(soup)
-
-	sanitized = spoiler_regex.sub(r'<spoiler>\1</spoiler>', sanitized)
 
 	for rd in ["://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it", "://teddit.net"]:
 		sanitized = sanitized.replace(rd, "://old.reddit.com")

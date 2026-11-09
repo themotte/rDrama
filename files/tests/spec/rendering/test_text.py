@@ -5,11 +5,10 @@ In order:
 - Invisible characters are removed: zero-width spaces, left-to-right and right-to-left marks, byte-order marks and U+1242A.
 - Images are never shown inline: an image in Markdown (![text](address)) renders as a link to the image, its text being the image's text, or its address when that's empty. Inside a link, it renders as just that text.
 - The text is Markdown (CommonMark, with tables): paragraphs, emphasis, headings, block quotes, lists, code spans and blocks (a fenced block's language is dropped), rules, hard line breaks, links and autolinks, and raw HTML.
-- Outside tags, text between single or double tildes (~like this~, ~~or this~~) is struck through (<del>); tildes inside a tag, such as in a link's address, are left alone.
+- The site's conventions below apply within runs of text, outside code, links and web addresses, and never to markup: text between single or double tildes (~like this~, ~~or this~~) is struck through (<del>), and ||text|| becomes a spoiler (<spoiler>).
 - Mentions of users (test_mentions.py) become links to them.
-- Outside code and links, "/r/<name>" and "/u/<name>" (3 to 25 letters, digits, "_" or "-") link to Reddit (old.reddit.com) and "/h/<name>" to that path on the site.
+- Likewise, "/r/<name>" and "/u/<name>" (3 to 25 letters, digits, "_" or "-", not followed by more) at the start of a run of text or after whitespace link to Reddit (old.reddit.com), and "/h/<name>" to that path on the site.
 - A link whose text is itself a web address shows its real address instead.
-- ||text|| becomes a spoiler (<spoiler>).
 - Addresses of some sites are rewritten by the replacements in REWRITES, in that order, wherever they appear in the rendering, and a YouTube video address takes its start time as "&t=" rather than "?t=".
 - Query parameters "utm_<word>=<value>" are removed from addresses.
 - Only the elements in KEPT_ELEMENTS are kept: other elements are dropped but their text stays (DROPPED_ELEMENTS). Only these attributes are kept: "style" on any element, keeping only the CSS properties "color", "background-color", "font-weight" and "text-align"; on "a", "href", "target" only as "_blank" and "rel" only as "nofollow noopener noreferrer"; on "span", "title", "alt" and "data-bs-toggle" only as "tooltip". A link keeps its address unless it has a scheme other than http or https (in any letter case).
@@ -311,6 +310,19 @@ def test_rewrites_apply_to_the_text_too():
 	("zero​width‎mark‏﻿\U0001242a!", "<p>zerowidthmark!</p>"),
 ], ids=["strikethrough", "tildes pair by count", "spoiler", "reddit names", "reddit name too short", "reddit name in code", "hole", "invisible characters"])
 def test_text_conventions(body, html):
+	assert_same_html(_rendered(body), html)
+
+
+@pytest.mark.parametrize("body, html", [
+	("`~/.bashrc and ~/x`", "<p><code>~/.bashrc and ~/x</code></p>"),
+	("```\n~a~ ||b||\n```", "<pre><code>~a~ ||b||\n</code></pre>"),
+	("`||not hidden||` but ||hidden||", "<p><code>||not hidden||</code> but <spoiler>hidden</spoiler></p>"),
+	("`x /r/motte /h/hole @nobody`", "<p><code>x /r/motte /h/hole @nobody</code></p>"),
+	("https://example.com/~a~", f'<p>{_link("https://example.com/~a~")}</p>'),
+	("~a **b** c~", "<p>~a <strong>b</strong> c~</p>"),
+	("/r/" + "a" * 26, "<p>/r/" + "a" * 26 + "</p>"),
+], ids=["code span", "code block", "code beside a spoiler", "names in code", "tildes in a bare address", "across markup", "reddit name too long"])
+def test_code_shows_its_text_as_written(body, html):
 	assert_same_html(_rendered(body), html)
 
 
