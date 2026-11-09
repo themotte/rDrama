@@ -1,7 +1,7 @@
 '''
 Scheduled posts, which admins write ahead of time for the site to post on a schedule:
 - GET /tasks/scheduled_posts/ lists them; GET /tasks/scheduled_posts/<id> shows one, as its posts will look.
-- POST /tasks/scheduled_posts/ creates one from "title", "url" and "body" plus a schedule.
+- POST /tasks/scheduled_posts/ creates one from "title", "url" and "body", an optional "flair" (stored rendered, as a post's flair set by reporting it is: spec/reporting/test_reports.py), plus a schedule.
 - POST /tasks/scheduled_posts/<id>/schedule replaces its schedule.
 - POST /tasks/scheduled_posts/<id>/content edits its "title" and "body", under the same rules as submitting a post; an edit must change at least one of them. Redirects to the scheduled post's page.
 
@@ -41,6 +41,20 @@ def test_admin_creates_a_scheduled_post_for_the_ticked_days():
 	d.assert_exactly(inserted={
 		"tasks_repeatable": [{"id": task_id, "author_id": admin["id"], "type_id": 2, "run_state": 1, "enabled": True, "frequency_day": MONDAY | FRIDAY, "time_of_day_utc": time(13, 30), "schedule_changed_utc": between(before, utc_now_naive())}],
 		"tasks_repeatable_scheduled_submissions": [{"id": task_id, "author_id_submission": admin["id"], "title": title, "body": body, "ghost": False, "private": False, "over_18": False, "is_bot": False}],
+	})
+
+
+def test_a_scheduled_posts_flair_is_stored_rendered():
+	admin = factories.admin(2)
+
+	with db_diff() as d:
+		r = as_user(admin).post("/tasks/scheduled_posts/", {"title": factories.unique(), "body": factories.unique(), "flair": " <b>x</b> & y ~z~ ", "hour": "13", "minute": "30"})
+
+	task_id = d.inserted["tasks_repeatable"][0]["id"] if d.inserted.get("tasks_repeatable") else None
+	assert_redirect(r, f"/tasks/scheduled_posts/{task_id}")
+	d.assert_exactly(inserted={
+		"tasks_repeatable": [{"id": task_id}],
+		"tasks_repeatable_scheduled_submissions": [{"id": task_id, "flair": "&lt;b&gt;x&lt;/b&gt; &amp; y <del>z</del>"}],
 	})
 
 

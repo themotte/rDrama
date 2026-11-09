@@ -1,7 +1,7 @@
 '''
 What the scheduled-task worker makes when a scheduled post (see spec/admin/test_scheduled_posts.py) runs: a new post each run, as if its author (`author_id_submission`) had submitted it at the run's time.
 
-The post (with `task_id` naming the scheduled post) takes the scheduled post's url, body, body_html, flair, ghost, private (a private one makes a draft) and over_18. Its title is the scheduled post's with Python strftime codes (`%Y`, `%m`, `%d`, `%B`, `%A`, ...; C locale) filled in from the run's start time in UTC, and its `created_utc` is that time. As for a submitted post: its author's own upvote counts unless they're shadowbanned, their post count follows, mentioned users and the author's followers are notified unless it's a draft or a ghost post, and a link to a web address (not an upload on the site) gets its thumbnail fetched in the background (spec/posts/test_fetchers.py). An author's suspension doesn't stop their scheduled posts.
+The post (with `task_id` naming the scheduled post) takes the scheduled post's url, body, body_html, flair (stored rendered, spec/admin/test_scheduled_posts.py), ghost, private (a private one makes a draft) and over_18. Its title is the scheduled post's with Python strftime codes (`%Y`, `%m`, `%d`, `%B`, `%A`, ...; C locale) filled in from the run's start time in UTC, and its `created_utc` is that time. As for a submitted post: its author's own upvote counts unless they're shadowbanned, their post count follows, mentioned users and the author's followers are notified unless it's a draft or a ghost post, and a link to a web address (not an upload on the site) gets its thumbnail fetched in the background (spec/posts/test_fetchers.py). An author's suspension doesn't stop their scheduled posts.
 
 A scheduled post's page lists the posts it made.
 '''
@@ -25,7 +25,7 @@ def _scheduled(author, **overrides):
 
 def test_a_run_posts_the_scheduled_post_as_its_author_at_the_run_time():
 	author = factories.admin(2)
-	scheduled = _scheduled(author, title="Thread for %A %d %B %Y (%m)", url="https://example.com/a", flair="Weekly", over_18=True)
+	scheduled = _scheduled(author, title="Thread for %A %d %B %Y (%m)", url="https://example.com/a", flair="Weekly &amp; <del>more</del>", over_18=True)
 
 	with db_diff() as d:
 		run_scheduler(SLOT)
@@ -33,7 +33,7 @@ def test_a_run_posts_the_scheduled_post_as_its_author_at_the_run_time():
 	[post] = d.inserted["submissions"]
 	d.assert_exactly(
 		inserted={
-			"submissions": [{"author_id": author["id"], "task_id": scheduled["id"], "title": "Thread for Monday 08 January 2024 (01)", "url": "https://example.com/a", "body": scheduled["body"], "body_html": scheduled["body_html"], "flair": "Weekly", "ghost": False, "private": False, "over_18": True, "created_utc": calendar.timegm(SLOT.utctimetuple()), "state_mod": "VISIBLE", "upvotes": 1, "realupvotes": 1, "downvotes": 0}],
+			"submissions": [{"author_id": author["id"], "task_id": scheduled["id"], "title": "Thread for Monday 08 January 2024 (01)", "url": "https://example.com/a", "body": scheduled["body"], "body_html": scheduled["body_html"], "flair": "Weekly &amp; <del>more</del>", "ghost": False, "private": False, "over_18": True, "created_utc": calendar.timegm(SLOT.utctimetuple()), "state_mod": "VISIBLE", "upvotes": 1, "realupvotes": 1, "downvotes": 0}],
 			"votes": [{"user_id": author["id"], "submission_id": post["id"], "vote_type": 1, "real": True}],
 			"tasks_repeatable_runs": [{"task_id": scheduled["id"]}],
 		},

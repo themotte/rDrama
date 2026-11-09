@@ -10,6 +10,7 @@ from files.classes.cron.tasks import (DayOfWeek, RepeatableTask,
                                       RepeatableTaskRun, ScheduledTaskType)
 from files.classes.user import User
 from files.helpers.config.const import PERMS, SUBMISSION_FLAIR_LENGTH_MAXIMUM
+from files.helpers.sanitize import filter_emojis_only
 from files.helpers.wrappers import admin_level_required
 
 
@@ -98,7 +99,7 @@ def tasks_scheduled_posts_post(v:User):
 		validators.ValidatedSubmissionLike.from_flask_request(request)
 	
 	# first build the template
-	flair:str = validators.guarded_value("flair", min_len=0, max_len=SUBMISSION_FLAIR_LENGTH_MAXIMUM)
+	flair:str = filter_emojis_only(validators.guarded_value("flair", min_len=0, max_len=SUBMISSION_FLAIR_LENGTH_MAXIMUM))
 
 	# and then build the schedule
 	enabled:bool = _get_request_bool('enabled')
