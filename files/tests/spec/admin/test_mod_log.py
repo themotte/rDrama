@@ -29,13 +29,9 @@ MOD_LOG_KINDS = {
 	"approve_app": USER,
 	"approve_comment": COMMENT,
 	"approve_post": POST,
-	"badge_grant": USER,
-	"badge_remove": USER,
 	"ban_domain": SITE,
 	"ban_user": USER,
-	"change_sidebar": SITE,
 	"check": USER,
-	"delete_report": POST,
 	"disabled_Bots": SITE,
 	"disabled_FilterNewPosts": SITE,
 	"disabled_Read-only_mode": SITE,
@@ -81,7 +77,7 @@ MOD_LOG_KINDS = {
 	"unset_nsfw": POST,
 	"unshadowban": Kind("user", admin_only=True),
 }
-'''Every kind of entry the site knows, legacy ones included (delete_report entries may name a comment instead), with what an entry of it is about and whether it's shown only to admins (level 2+).'''
+'''Every kind of entry the site knows, with what an entry of it is about and whether it's shown only to admins (level 2+).'''
 
 ADMIN_ONLY_KINDS = [name for name, kind in MOD_LOG_KINDS.items() if kind.admin_only]
 NON_ADMINS = {

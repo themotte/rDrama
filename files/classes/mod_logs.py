@@ -125,16 +125,6 @@ ACTIONTYPES = {
 		"icon": 'fa-robot', 
 		"color": 'bg-success'
 	},
-	'badge_grant': {
-		"str": 'granted badge to {target_link}', 
-		"icon": 'fa-badge', 
-		"color": 'bg-success'
-	},
-	'badge_remove': {
-		"str": 'removed badge from {target_link}', 
-		"icon": 'fa-badge', 
-		"color": 'bg-danger'
-	},
 	'ban_domain': {
 		"str": 'banned a domain', 
 		"icon": 'fa-globe', 
@@ -145,20 +135,10 @@ ACTIONTYPES = {
 		"icon": 'fa-user-slash', 
 		"color": 'bg-danger'
 	},
-	'change_sidebar': {
-		"str": 'changed the sidebar', 
-		"icon": 'fa-columns', 
-		"color": 'bg-primary'
-	},
 	'check': {
 		"str": 'gave {target_link} a checkmark', 
 		"icon": 'fa-badge-check', 
 		"color": 'bg-success'
-	},
-	'delete_report': {
-		"str": 'deleted report on {target_link}', 
-		"icon": 'fa-flag', 
-		"color": 'bg-danger'
 	},
 	'disabled_Bots': {
 		"str": 'disabled Bots', 
