@@ -197,6 +197,18 @@ def test_users_not_permanently_suspended_vote(kind, ban):
 
 
 @pytest.mark.parametrize("kind", KINDS)
+def test_a_browser_sending_a_blank_authorization_header_votes(kind):
+	'''A header of only whitespace carries no token (api/test_tokens), so the request is the browser's own.'''
+	voter = factories.user()
+	item = _item(kind, factories.user())
+	_, votes, _ = _TABLES[kind]
+
+	_assert_voted(_vote(as_user(voter), kind, item, 1, headers={**XHR, "Authorization": " "}))
+
+	assert db.rows(votes, user_id=voter["id"]) != []
+
+
+@pytest.mark.parametrize("kind", KINDS)
 def test_voting_on_content_by_a_user_who_blocks_the_voter_is_allowed(kind):
 	author, voter = factories.user(), factories.user()
 	db.insert("userblocks", user_id=author["id"], target_id=voter["id"])

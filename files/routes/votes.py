@@ -9,7 +9,7 @@ from files.classes.user import User
 from files.classes.votes import CommentVote, Vote
 from files.helpers.get import get_comment, get_post
 from files.helpers.locks import user_shadowbanned_locked
-from files.helpers.wrappers import admin_level_required, is_not_permabanned
+from files.helpers.wrappers import admin_level_required, is_not_permabanned, refuse_api_client
 from files.routes.importstar import *
 
 
@@ -73,8 +73,7 @@ def _vote(target:Union[Submission, Comment], vote_cls:Union[Type[Vote], Type[Com
 
 
 def _vote_check_request(new:str) -> int:
-	'''The vote a request asks for, refusing API clients and anything but 1, 0 and -1.'''
-	if request.headers.get("Authorization"): abort(403)
+	'''The vote a request asks for, refusing anything but 1, 0 and -1.'''
 	if new not in ["-1", "0", "1"]: abort(400)
 	return int(new)
 
@@ -92,6 +91,7 @@ def _vote_check_target(target:Union[Submission, Comment], v:User):
 @limiter.limit("5/second;60/minute;600/hour;1000/day")
 @is_not_permabanned
 def api_vote_post(post_id, new, v):
+	refuse_api_client(v)
 	new = _vote_check_request(new)
 	post = get_post(post_id, v=v)
 	_vote_check_target(post, v)
@@ -102,6 +102,7 @@ def api_vote_post(post_id, new, v):
 @limiter.limit("5/second;60/minute;600/hour;1000/day")
 @is_not_permabanned
 def api_vote_comment(comment_id, new, v):
+	refuse_api_client(v)
 	new = _vote_check_request(new)
 	comment = get_comment(comment_id, v=v)
 	_vote_check_target(comment, v)
