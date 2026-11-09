@@ -163,8 +163,8 @@ def viewmore(v, pid, sort, offset):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def morecomments(v, cid):
-	try: cid = int(cid)
-	except: abort(400)
+	cid = parse_id(cid)
+	if cid is None: abort(400)
 
 	parent = g.db.get(Comment, cid)
 	if not parent or not parent.parent_submission or parent.post.is_draft_hidden_from(v): abort(404)

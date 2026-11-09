@@ -48,8 +48,8 @@ SELECT id FROM ancestors
 @app.get("/post/<pid>/<anything>/<cid>")
 @auth_desired
 def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
-	try: cid = int(cid)
-	except: abort(404)
+	cid = parse_id(cid)
+	if cid is None: abort(404)
 	comment = g.db.get(Comment, cid)
 	if not comment: abort(404)
 

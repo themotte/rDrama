@@ -285,6 +285,14 @@ def test_more_comments_needs_a_numeric_id():
 	assert_status(anon().get("/morecomments/abc"), 400)
 
 
+def test_more_comments_needs_the_id_in_ascii_digits():
+	post = factories.post(factories.user())
+	top = factories.comment(factories.user(), post)
+	factories.comment(factories.user(), post, parent=top)
+
+	assert_status(anon().get("/morecomments/" + "".join(chr(0xFF10 + int(d)) for d in str(top["id"]))), 400)
+
+
 def _message(author, recipient, parent=None):
 	'''A private message, or a reply within a private conversation.'''
 	return factories.message(author, recipient, parent, created_utc=1000)

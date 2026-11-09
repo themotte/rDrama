@@ -35,6 +35,11 @@ app = flask.app.Flask(__name__, template_folder='templates', static_folder=None)
 app.url_map.strict_slashes = False
 
 
+class AsciiIntegerConverter(IntegerConverter):
+	'''A whole number in ASCII digits (Werkzeug's own takes any Unicode digit).'''
+	regex = r"[0-9]+"
+
+
 class RowIdConverter(IntegerConverter):
 	'''A row id as URLs write it: ASCII digits with no leading zero, within Postgres's integer range.'''
 	regex = r"[1-9][0-9]*"
@@ -43,6 +48,7 @@ class RowIdConverter(IntegerConverter):
 		super().__init__(map, max=2**31 - 1)
 
 
+app.url_map.converters["int"] = AsciiIntegerConverter
 app.url_map.converters["id"] = RowIdConverter
 app.jinja_env.cache = {}
 app.jinja_env.auto_reload = app.debug

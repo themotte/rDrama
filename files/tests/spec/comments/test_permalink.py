@@ -1,5 +1,5 @@
 '''
-A comment's own page: GET /comment/<comment id> and GET /post/<post id>/<anything>/<comment id> (the middle segment is a cosmetic slug and is ignored). It shows the comment's post with the comment and its replies in place of the post's comments. An unknown comment, a comment id or post id that isn't a number, or a comment on another post than the one named is 404 (the last is pinned with the post page).
+A comment's own page: GET /comment/<comment id> and GET /post/<post id>/<anything>/<comment id> (the middle segment is a cosmetic slug and is ignored). It shows the comment's post with the comment and its replies in place of the post's comments. An unknown comment, a comment id or post id that isn't a number in ASCII digits, or a comment on another post than the one named is 404 (the last is pinned with the post page).
 
 - "context" (a whole number; values above 8 mean 8, values below 0 and anything not a number mean 0) shows that many of the comment's ancestors above it, each with only the next comment of the chain under it (their other replies are left out). Without it, the comment is shown alone, without its parent.
 - The comment's replies are shown under it, nested to a depth of nine levels counted from the topmost comment shown (so each ancestor brought in by "context" leaves one level fewer for the replies).
@@ -65,6 +65,15 @@ def test_comment_ids_that_are_not_numbers_are_not_found(form):
 	post = factories.post(factories.user())
 
 	assert_status(anon().get(FORMS[form](post, {"id": "abc"})), 404)
+
+
+@pytest.mark.parametrize("spelling", [lambda id: "".join(chr(0xFF10 + int(d)) for d in str(id)), lambda id: f"%20{id}"], ids=["fullwidth digits", "leading space"])
+@pytest.mark.parametrize("form", FORMS)
+def test_comment_ids_written_other_than_in_ascii_digits_are_not_found(form, spelling):
+	post = factories.post(factories.user())
+	comment = factories.comment(factories.user(), post)
+
+	assert_status(anon().get(FORMS[form](post, {"id": spelling(comment["id"])})), 404)
 
 
 def test_post_ids_that_are_not_numbers_are_not_found():

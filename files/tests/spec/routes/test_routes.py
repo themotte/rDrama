@@ -160,3 +160,15 @@ def test_public_routes_give_no_session(route):
 	client.request(route.method, _path(route))
 
 	assert session.cookie_name() not in client.cookies
+
+
+def _fullwidth(digits: str) -> str:
+	return "".join(chr(0xFF10 + int(d)) for d in digits)
+
+
+@pytest.mark.parametrize("route", [r for r in ROUTES if re.search(r"<(id|int)>", r.path)], ids=_id)
+def test_numbers_in_a_path_are_ascii_digits(route):
+	'''Even for an id that names a row (the System account is 1), written in other digits.'''
+	path = re.sub(r"<(id|int)>", _fullwidth("1"), _path(route).replace(_UNUSED_ID, "<id>"))
+
+	assert_status(anon().request(route.method, path), 404)
