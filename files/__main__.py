@@ -31,7 +31,7 @@ service:Service = Service.detect()
 
 # ...and then let's create our flask app...
 
-app = flask.app.Flask(__name__, template_folder='templates')
+app = flask.app.Flask(__name__, template_folder='templates', static_folder=None)
 app.url_map.strict_slashes = False
 
 
