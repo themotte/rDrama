@@ -5,17 +5,85 @@ The list takes two filters: "admin", a username, for that account's entries only
 
 Some kinds of entry are shown only to admins (level 2+): shadowbanning and unshadowbanning, setting a post's flair, editing a post, linking alt accounts, and setting a user's filter mode. To anyone else (visitors, users below level 2, and API clients whatever their account's level) such an entry doesn't exist: the list leaves it out and its page is 404.
 
-An entry of a change to a whole-number site setting (kind "set_<value>_for_<setting>", cut to 32 characters, see test_dashboard) names the setting in full and the value. An entry of a kind the site doesn't know is still listed, with the admin who made it.
+The kinds the site knows are MOD_LOG_KINDS below, which says for each what its entries are about (a user, a post, a comment, or the site as a whole, which is the target column the site fills; the spec of each action pins what it writes) and whether it's shown only to admins. An entry shows what it is about. The kind filter takes exactly these. An entry of a change to a whole-number site setting (kind "set_<value>_for_<setting>", cut to 32 characters, see test_dashboard) names the setting in full and the value; those kinds can't be filtered on. An entry of a kind the site doesn't know is still listed, with the admin who made it.
 
 An entry names the post or comment it's about (a post by its title, both with a link to them), unless the viewer couldn't open it: a draft (or a comment on one), seen only by its author and admins from level 2; a private message, seen only by those taking part in its conversation and admins from level 2; or a post or comment by a shadowbanned user, seen only by that user and admins from level 2. For anyone else the entry stays, saying only that it was a post or a comment, with no title or link. A ban's note, which links the post or comment the ban was for, follows the same rule.
 '''
 import re
+from typing import NamedTuple
 
 import pytest
 
 from files.tests.spec.harness import *
 
-ADMIN_ONLY_KINDS = ["shadowban", "unshadowban", "flair_post", "edit_post", "link_accounts", "filter_on", "filter_off", "filter_auto"]
+
+class Kind(NamedTuple):
+	target: str | None
+	'''What an entry of the kind is about, in the column the site fills: "user" (target_user_id), "post" (target_submission_id), "comment" (target_comment_id), or None for the site as a whole.'''
+	admin_only: bool = False
+
+
+USER, POST, COMMENT, SITE = Kind("user"), Kind("post"), Kind("comment"), Kind(None)
+
+MOD_LOG_KINDS = {
+	"approve_app": USER,
+	"approve_comment": COMMENT,
+	"approve_post": POST,
+	"badge_grant": USER,
+	"badge_remove": USER,
+	"ban_domain": SITE,
+	"ban_user": USER,
+	"change_sidebar": SITE,
+	"check": USER,
+	"delete_report": POST,
+	"disabled_Bots": SITE,
+	"disabled_FilterNewPosts": SITE,
+	"disabled_Read-only_mode": SITE,
+	"disabled_Signups": SITE,
+	"disabled_under_attack": SITE,
+	"distinguish_comment": COMMENT,
+	"distinguish_post": POST,
+	"dump_cache": SITE,
+	"edit_post": Kind("post", admin_only=True),
+	"enabled_Bots": SITE,
+	"enabled_FilterNewPosts": SITE,
+	"enabled_Read-only_mode": SITE,
+	"enabled_Signups": SITE,
+	"enabled_under_attack": SITE,
+	"filter_auto": Kind("user", admin_only=True),
+	"filter_off": Kind("user", admin_only=True),
+	"filter_on": Kind("user", admin_only=True),
+	"flair_post": Kind("post", admin_only=True),
+	"link_accounts": Kind("user", admin_only=True),
+	"make_admin": USER,
+	"nuke_user": USER,
+	"pin_comment": COMMENT,
+	"pin_post": POST,
+	"purge_cache": SITE,
+	"reject_app": USER,
+	"remove_admin": USER,
+	"remove_comment": COMMENT,
+	"remove_post": POST,
+	"revert": USER,
+	"revoke_app": USER,
+	"set_flair_locked": USER,
+	"set_flair_notlocked": USER,
+	"set_nsfw": POST,
+	"shadowban": Kind("user", admin_only=True),
+	"unban_domain": SITE,
+	"unban_user": USER,
+	"uncheck": USER,
+	"undistinguish_comment": COMMENT,
+	"undistinguish_post": POST,
+	"unnuke_user": USER,
+	"unpin_comment": COMMENT,
+	"unpin_post": POST,
+	"unset_nsfw": POST,
+	"unshadowban": Kind("user", admin_only=True),
+}
+'''Every kind of entry the site knows, legacy ones included (delete_report entries may name a comment instead), with what an entry of it is about and whether it's shown only to admins (level 2+).'''
+
+ADMIN_ONLY_KINDS = [name for name, kind in MOD_LOG_KINDS.items() if kind.admin_only]
 NON_ADMINS = {
 	"visitor": anon,
 	"level 1": lambda: as_user(factories.admin(1)),
@@ -247,6 +315,44 @@ def test_a_kind_filter_that_cant_apply_is_ignored(viewer, kind):
 
 	assert_html(r, 200)
 	assert set(_ids_listed(r)) == {ban["id"], unban["id"]}
+
+
+def _entry_as_written(kind):
+	'''An entry of `kind` about a fresh target of the kind's sort, and what its page shows of that target (None for a site-wide kind).'''
+	target = MOD_LOG_KINDS[kind].target
+	columns, shown = {}, None
+	if target == "user":
+		user = factories.user()
+		columns, shown = {"target_user_id": user["id"]}, user["username"]
+	elif target == "post":
+		post = factories.post(factories.user())
+		columns, shown = {"target_submission_id": post["id"]}, f"/post/{post['id']}"
+	elif target == "comment":
+		comment = factories.comment(factories.user(), factories.post(factories.user()))
+		columns, shown = {"target_comment_id": comment["id"]}, f"/comment/{comment['id']}"
+	return db.insert("modactions", user_id=factories.admin(2)["id"], kind=kind, **columns), shown
+
+
+@pytest.mark.parametrize("kind", MOD_LOG_KINDS)
+def test_the_kind_filter_takes_every_kind_the_site_knows(kind):
+	entry, _ = _entry_as_written(kind)
+	_entry_as_written("ban_user" if kind != "ban_user" else "unban_user")
+
+	r = as_user(factories.admin(3)).get("/log", params={"kind": kind})
+
+	assert_html(r, 200)
+	assert _ids_listed(r) == [entry["id"]]
+
+
+@pytest.mark.parametrize("kind", MOD_LOG_KINDS)
+def test_an_entry_shows_what_it_is_about(kind):
+	entry, shown = _entry_as_written(kind)
+	viewer = as_user(factories.admin(2)) if MOD_LOG_KINDS[kind].admin_only else anon()
+
+	r = viewer.get(f"/log/{entry['id']}")
+
+	assert_html(r, 200)
+	if shown: assert_in_payload(r, shown)
 
 
 def test_admins_filter_by_admin_only_kinds():
