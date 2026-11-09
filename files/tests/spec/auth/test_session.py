@@ -288,14 +288,15 @@ def test_read_only_mode_refuses_every_change_from_outside_too():
 	assert sent_mail() == []
 
 
+@pytest.mark.parametrize("path", ["/login", "/login/"])
 @pytest.mark.parametrize("level", [0, 3], ids=["member", "admin"])
-def test_read_only_mode_lets_members_log_in(level):
+def test_read_only_mode_lets_members_log_in(level, path):
 	'''Admins have to be able to log in to turn it off.'''
 	u = factories.user(admin_level=level)
 	client = anon()
 	site_settings_set("Read-only mode", True)
 
-	assert_redirect(client.post_raw("/login", {"username": u["username"], "password": factories.PASSWORD}), "/")
+	assert_redirect(client.post_raw(path, {"username": u["username"], "password": factories.PASSWORD}), "/")
 	assert client.user_id == u["id"]
 
 
