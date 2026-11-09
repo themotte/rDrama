@@ -187,7 +187,7 @@ def sign_up_post(v):
 
 	ref_user = None
 	if "referred_by" in request.values:
-		ref_id = request.values.get("referred_by", type=int)
+		ref_id = parse_id(request.values.get("referred_by"))
 		ref_user = g.db.get(User, ref_id) if ref_id is not None else None
 		if not ref_user: abort(400, "That referral names no account.")
 
@@ -314,7 +314,7 @@ def post_forgot():
 
 @app.get("/reset")
 def get_reset():
-	user_id = request.values.get("id", type=int)
+	user_id = parse_id(request.values.get("id"))
 	timestamp = request.values.get("time", type=int)
 	token = request.values.get("token")
 	if user_id is None or timestamp is None: abort(400)
@@ -346,7 +346,7 @@ def get_reset():
 def post_reset(v):
 	if v: return redirect('/')
 
-	user_id = request.values.get("user_id", type=int)
+	user_id = parse_id(request.values.get("user_id"))
 	timestamp = request.values.get("time", type=int)
 	token = request.values.get("token")
 

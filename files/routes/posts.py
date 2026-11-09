@@ -111,10 +111,9 @@ def viewmore(v, pid, sort, offset):
 	if post.is_draft_hidden_from(v): abort(404)
 	if age_unconfirmed(post, v): abort(403, "Must be 18+ to view")
 	sort = comment_sort(sort, v)
-	try:
-		offset_prev = int(offset)
-		ids = set(int(x) for x in request.values.get("ids", "").split(','))
-	except ValueError: abort(400)
+	ids = {parse_id(x) for x in request.values.get("ids", "").split(',')}
+	if None in ids or not re.fullmatch("[0-9]+", offset): abort(400)
+	offset_prev = int(offset)
 	
 	limit = app.config['RESULTS_PER_PAGE_COMMENTS']
 	offset = 0

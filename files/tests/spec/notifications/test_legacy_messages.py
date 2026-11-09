@@ -14,14 +14,14 @@ def _private_reply_to(comment):
 
 
 @pytest.mark.parametrize("viewer", ["visitor", "user"])
-@pytest.mark.parametrize("path", ["/post/{post}", "/viewmore/{post}/old/{none}?ids={none}", "/post/{post}/x/{comment}", "/morecomments/{comment}"], ids=["post page", "view more", "permalink", "more comments"])
+@pytest.mark.parametrize("path", ["/post/{post}", "/viewmore/{post}/old/{offset}?ids={unshown}", "/post/{post}/x/{comment}", "/morecomments/{comment}"], ids=["post page", "view more", "permalink", "more comments"])
 def test_private_replies_to_comments_are_not_shown_with_the_post(viewer, path):
 	post = factories.post(factories.user())
 	comment = factories.comment(factories.user(), post)
 	reply = _private_reply_to(comment)
 	client = anon() if viewer == "visitor" else as_user(factories.user())
 
-	r = client.get(path.format(post=post["id"], comment=comment["id"], none=0))
+	r = client.get(path.format(post=post["id"], comment=comment["id"], offset=0, unshown=2**31 - 1))
 
 	assert_status(r, 200)
 	if not path.startswith("/morecomments"): assert_in_payload(r, comment["body"])

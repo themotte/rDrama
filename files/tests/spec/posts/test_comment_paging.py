@@ -117,19 +117,21 @@ def test_view_more_with_an_unknown_sort_uses_the_viewers_default():
 	assert r.text.index(older["body"]) < r.text.index(newer["body"])
 
 
-@pytest.mark.parametrize("ids", [None, "", "1,x"])
+@pytest.mark.parametrize("ids", [None, "", "1,x", "{shown},0{shown}"], ids=["none", "empty", "not a number", "leading zero"])
 def test_view_more_needs_the_shown_ids(ids):
 	post = factories.post(factories.user())
+	shown = factories.comment(factories.user(), post)
 
-	r = anon().get(f"/viewmore/{post['id']}/new/{1}", params=None if ids is None else {"ids": ids})
+	r = anon().get(f"/viewmore/{post['id']}/new/{1}", params=None if ids is None else {"ids": ids.format(shown=shown["id"])})
 
 	assert_status(r, 400)
 
 
-def test_view_more_needs_a_numeric_offset():
+@pytest.mark.parametrize("offset", ["x", chr(0xFF11)], ids=["not a number", "fullwidth digit"])
+def test_view_more_needs_a_numeric_offset(offset):
 	post = factories.post(factories.user())
 
-	assert_status(anon().get(f"/viewmore/{post['id']}/new/x", params={"ids": "1"}), 400)
+	assert_status(anon().get(f"/viewmore/{post['id']}/new/{offset}", params={"ids": "1"}), 400)
 
 
 def test_view_more_of_an_unknown_post_is_not_found():

@@ -191,6 +191,23 @@ def test_a_reset_form_missing_a_field_is_refused(missing):
 	d.assert_exactly()
 
 
+def test_a_reset_link_naming_the_account_with_a_leading_zero_is_refused():
+	u = _member()
+
+	assert_status(anon().get("/reset", params=_link(u, int(time.time()), id=f"0{u['id']}")), 400)
+
+
+def test_a_reset_form_naming_the_account_with_a_leading_zero_is_refused():
+	u = _member()
+	fields = {**_form(u, int(time.time()), f"new {factories.unique()} password"), "user_id": f"0{u['id']}"}
+
+	with db_diff() as d:
+		r = anon().post_raw("/reset", fields)
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
 def test_a_reset_form_for_an_unknown_account_is_refused():
 	u = _member()
 	fields = _form(u, int(time.time()), f"new {factories.unique()} password")

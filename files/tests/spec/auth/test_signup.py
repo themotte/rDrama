@@ -144,6 +144,17 @@ def test_a_refusal_keeps_the_referral():
 	assert_redirect(r, "/signup", query_keys=("error", "ref"))
 
 
+def test_a_referral_written_with_a_leading_zero_names_no_account():
+	referrer = factories.user()
+	username = factories.unique("new")
+
+	with db_diff() as d:
+		r = _signup(anon(), usernametwo=username, referred_by=f"0{referrer['id']}")
+
+	assert_status(r, 400)
+	d.assert_exactly()
+
+
 def test_a_reserved_name_leads_to_its_page():
 	reserved = factories.user(reserved="someone else")
 
