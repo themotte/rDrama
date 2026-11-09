@@ -33,3 +33,7 @@ What to decide, case by case:
 ## The nightly volunteer recalc
 
 Pinned as they are in `volunteer/test_nightly_recalc.py`, not decided on purpose: a comment the moderators removed still teaches the volunteers who rated it (only comments their author deleted are left out); a distinguished reply counts toward the moderators' verdict even after it was deleted; a suspended volunteer's ratings still count; a comment whose author was shadowbanned since still teaches, though it's no longer given out to rate. Ratings stored before rating rules the site enforces now (an hour from the assignment, and none once a moderator's distinguished reply is in) still count. Admins weigh a fixed 4 in the estimates that score volunteers, but by their accuracy, like anyone, in a comment's badness.
+
+## Notices
+
+Pinned as they are in `notifications/test_notices.py`, not decided on purpose: a notice reused by its text keeps the rendering it was first stored with, so a mention in it goes on linking the user it named then (a username given up and taken by someone else keeps linking the earlier user); notices stored before notices carried their text are never reused, so a user who already had one gets it again, once, the next time it's sent.

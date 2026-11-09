@@ -8,12 +8,13 @@ from files.helpers.get import get_user
 from .config.const import *
 from files.classes.visstate import StateMod
 
-def create_comment(text_html, autojanny=False):
+def create_comment(text, text_html, autojanny=False):
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
 
 	new_comment = Comment(author_id=author_id,
 							parent_submission=None,
+							body=text,
 							body_html=text_html,
 							distinguish_level=6,
 							state_mod=StateMod.VISIBLE,)
@@ -28,15 +29,14 @@ def send_repeatable_notification(uid, text, autojanny=False):
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
 	
-	text_html = sanitize(text)
-
-	existing_comment = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, body_html=text_html).first()
+	# Notices are matched by their text, which every rendering of it shares
+	existing_comment = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, body=text).order_by(Comment.id).first()
 
 	if existing_comment:
 		cid = existing_comment[0]
 		existing_notif = g.db.query(Notification.user_id).filter_by(user_id=uid, comment_id=cid).one_or_none()
-		if existing_notif: cid = create_comment(text_html, autojanny)
-	else: cid = create_comment(text_html, autojanny)
+		if existing_notif: cid = create_comment(text, sanitize(text), autojanny)
+	else: cid = create_comment(text, sanitize(text), autojanny)
 
 	notif = Notification(comment_id=cid, user_id=uid)
 	g.db.add(notif)
@@ -55,24 +55,22 @@ def notif_comment(text, autojanny=False):
 		author_id = NOTIFICATIONS_ID
 		alert = False
 
-	text_html = sanitize(text, alert=alert)
+	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, body=text).order_by(Comment.id).first()
 
-	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, body_html=text_html).one_or_none()
-	
 	if existing: return existing[0]
-	else: return create_comment(text_html, autojanny)
+	else: return create_comment(text, sanitize(text, alert=alert), autojanny)
 
 
 def notif_comment2(p):
-	search_html = f'%</a> has mentioned you: <a href="/post/{p.id}">%'
+	# One notice per post, whatever its title is now
+	search = f'% has mentioned you: [%](/post/{p.id})'
 
-	existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.parent_submission == None, Comment.body_html.like(search_html)).first()
-	
+	existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.parent_submission == None, Comment.body.like(search)).order_by(Comment.id).first()
+
 	if existing: return existing[0]
 	else:
 		text = f"@{p.author.username} has mentioned you: [{p.title}](/post/{p.id})"
-		text_html = sanitize(text, alert=True)
-		return create_comment(text_html)
+		return create_comment(text, sanitize(text, alert=True))
 
 
 def add_notif(cid, uid):
