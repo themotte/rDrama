@@ -67,7 +67,7 @@ class ModAction(CreatedDateTimeBase):
 			return {"str": f"set {named} to {match[1]}", "icon": "fa-sliders-h", "color": "bg-primary"}
 		else:
 			logging.warning(f'Unfamiliar ACTIONTYPE {self.kind}')
-			return ACTIONTYPES["fallback"]
+			return ACTIONTYPE_UNKNOWN
 
 	def string_for(self, v) -> str:
 		output = self.lookup_action_type()["str"].format(target_link=self.target_link_for(v))
@@ -370,12 +370,14 @@ ACTIONTYPES = {
 		"icon": 'fa-user', 
 		"color": 'bg-success'
 	},
-	'fallback': {
-		"str": 'unfamiliar action type, please report', 
-		"icon": 'fa-robot', 
-		"color": 'bg-muted'
-	}
 }
+
+ACTIONTYPE_UNKNOWN = {
+	"str": 'unfamiliar action type, please report',
+	"icon": 'fa-robot',
+	"color": 'bg-muted'
+}
+'''How an entry of a kind the site doesn't know is shown.'''
 
 ADMIN_ONLY_KINDS = frozenset({"shadowban", "unshadowban", "flair_post", "edit_post", "link_accounts", "filter_on", "filter_off", "filter_auto"})
 '''Kinds of mod action the mod log shows only to admins (level 2+).'''

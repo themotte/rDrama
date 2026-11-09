@@ -238,7 +238,7 @@ def test_the_kind_filter_lists_that_kind_only():
 	assert _ids_listed(r) == [ban["id"]]
 
 
-@pytest.mark.parametrize("viewer, kind", [(anon, "no_such_kind"), (anon, "shadowban"), (lambda: as_user(factories.admin(2)), "no_such_kind")], ids=["unknown kind", "admin-only kind for a visitor", "unknown kind for an admin"])
+@pytest.mark.parametrize("viewer, kind", [(anon, "no_such_kind"), (anon, "shadowban"), (lambda: as_user(factories.admin(2)), "no_such_kind"), (lambda: as_user(factories.admin(3)), "fallback")], ids=["unknown kind", "admin-only kind for a visitor", "unknown kind for an admin", "how unknown kinds show, for an admin"])
 def test_a_kind_filter_that_cant_apply_is_ignored(viewer, kind):
 	ban, _ = _entry("ban_user")
 	unban, _ = _entry("unban_user")
