@@ -1,5 +1,5 @@
 '''
-How the text people write is rendered: the "body" of comments, posts and messages, and a user's bio and friends list, are stored as written (a body trimmed, its line ends made "\n" and attached images' links added, as test_create.py and test_submit.py say) and rendered to HTML ("body_html", "bio_html", "friends_html"), which pages show. The rendering is compared here as an element tree: tag names, attributes and text, regardless of attribute order and of whitespace between elements. The data the rules refer to is in the tables below (KEPT_ELEMENTS, DROPPED_ELEMENTS, TOP_LEVEL_DOMAINS, REWRITES), each entry checked.
+How the text people write is rendered: the "body" of comments, posts and messages, and a user's bio and friends list, are stored as written (a body trimmed, its line ends made "\n" and attached images' links added, as test_create.py and test_submit.py say) and rendered to HTML ("body_html", "bio_html", "friends_html"), which pages show. The rendering is compared here as an element tree: tag names, attributes and text, regardless of attribute order and of whitespace a browser wouldn't show. The data the rules refer to is in the tables below (KEPT_ELEMENTS, DROPPED_ELEMENTS, TOP_LEVEL_DOMAINS, REWRITES), each entry checked.
 
 In order:
 - Invisible characters are removed: zero-width spaces, left-to-right and right-to-left marks, byte-order marks and U+1242A.
@@ -10,7 +10,7 @@ In order:
 - Likewise, "/r/<name>" and "/u/<name>" (3 to 25 letters, digits, "_" or "-", not followed by more) at the start of a run of text or after whitespace link to Reddit (old.reddit.com), and "/h/<name>" to that path on the site.
 - A link whose text is itself a web address shows its real address instead.
 - Only the elements in KEPT_ELEMENTS are kept: other elements are dropped but their text stays (DROPPED_ELEMENTS). Only these attributes are kept: "style" on any element, keeping only the CSS properties "color", "background-color", "font-weight" and "text-align"; on "a", "href", "target" only as "_blank" and "rel" only as "nofollow noopener noreferrer"; on "span", "title", "alt" and "data-bs-toggle" only as "tooltip". A link keeps its address unless it has a scheme other than http or https (in any letter case).
-- Web addresses in the text become links (not inside code) when their host name's last label is one of TOP_LEVEL_DOMAINS, with http:// or https:// or bare (linked with http://). Links leaving the site open in a new tab (target "_blank", rel "nofollow noopener noreferrer"); links to the site's own pages (an address starting with "/", or the site's own address) aren't given them, but keep them if written with them.
+- Web addresses in the text become links (not inside code) when their host name's last label is one of TOP_LEVEL_DOMAINS, with http:// or https:// or bare (linked with http://). Links leaving the site open in a new tab (target "_blank", rel "nofollow noopener noreferrer"); links to the site's own pages (an address starting with a single "/", or the site's own address) aren't given them, but keep them if written with them.
 - Every link's address is then rewritten by the replacements in REWRITES, in that order, wherever they occur in it; then a YouTube video's address takes its start time as "&t=" rather than "?t=", and query parameters "utm_<word>=<value>" are removed; a link showing its own address (with or without its scheme) shows it rewritten too. Text that isn't a link's address, code included, is left as written.
 
 Text linking to a banned domain is refused with 403: a link's host, any of the host's parent domains, or its host and path, being listed in "banneddomains".
@@ -196,6 +196,10 @@ def test_a_link_keeps_its_address_unless_it_has_another_scheme(address, html):
 ], ids=["markdown link", "site path", "autolink", "bare address", "bare host", "www host", "unknown top-level domain", "mail", "other scheme", "in a code block", "address as text", "tildes in an address", "tracking parameters"])
 def test_links(body, html):
 	assert_same_html(_rendered(body), html)
+
+
+def test_an_address_without_a_scheme_leaves_the_site():
+	assert_same_html(_rendered("[x](//example.com/a)"), f'<p>{_link("//example.com/a", "x")}</p>')
 
 
 def test_links_to_the_site_itself_stay_in_the_tab():
