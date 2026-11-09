@@ -10,9 +10,9 @@ from files.helpers.wrappers import *
 REASON_LENGTH_MAXIMUM = 100
 
 
-def _reason() -> str:
-	'''The request's report reason, rendered: its first characters, up to the limit.'''
-	return filter_emojis_only(request.values.get("reason", "").strip()[:REASON_LENGTH_MAXIMUM])
+def _reason_written() -> str:
+	'''The request's report reason as written: its first characters, up to the limit.'''
+	return request.values.get("reason", "").strip()[:REASON_LENGTH_MAXIMUM]
 
 
 @app.post("/report/post/<id:pid>")
@@ -21,7 +21,8 @@ def _reason() -> str:
 def api_flag_post(pid, v):
 	post = get_post(pid)
 	if post.is_draft_hidden_from(v): abort(404)
-	reason = _reason()
+	written = _reason_written()
+	reason = filter_emojis_only(written)
 
 	if reason.startswith('!') and v.admin_level >= 2:
 		post.flair = reason[1:]
@@ -30,7 +31,7 @@ def api_flag_post(pid, v):
 			kind="flair_post",
 			user_id=v.id,
 			target_submission_id=post.id,
-			_note=f'"{post.flair}"'
+			_note=f'"{written.partition("!")[2]}"'
 		)
 		g.db.add(ma)
 	else:
@@ -51,7 +52,7 @@ def api_flag_post(pid, v):
 def api_flag_comment(cid, v):
 	comment = get_comment(cid)
 	if not comment.is_open_to(v): abort(404)
-	reason = _reason()
+	reason = filter_emojis_only(_reason_written())
 
 	g.db.add(CommentFlag(comment_id=comment.id, user_id=v.id, reason=reason))
 	if v.reports_count:

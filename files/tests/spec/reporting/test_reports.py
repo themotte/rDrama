@@ -7,7 +7,7 @@ The reason is stored rendered, in this order: surrounding whitespace trimmed, cu
 
 Anything the reporter can open can be reported, also what shows them only a placeholder: a removed, held, deleted or shadowbanned user's item, or one by a user they block. API clients report as their user.
 
-An admin of level 2 or higher (in their own browser session; API clients act as level 0) reporting a post with a reason starting with "!" sets the post's flair instead: the flair is the rest of the rendered reason ("" for a lone "!"), the mod log records a "flair_post" action noting the flair in double quotes, and no report is stored. On comments, and for everyone else, such a reason is an ordinary one.
+An admin of level 2 or higher (in their own browser session; API clients act as level 0) reporting a post with a reason starting with "!" sets the post's flair instead: the flair is the rest of the rendered reason ("" for a lone "!"), the mod log records a "flair_post" action noting, in double quotes, the flair as the admin wrote it (cut like the reason, not rendered), and no report is stored. On comments, and for everyone else, such a reason is an ordinary one.
 
 Refused, changing nothing: anonymous users (401 to scripts); an unknown id, or one that isn't a whole number (404); an item the reporter can't open (404): a draft, or a comment on one, unless they are its author or an admin of level 2 or higher; a private message unless they take part in its conversation (or are such an admin); one of the site's notices unless it notified them (or they are such an admin).
 '''
@@ -163,13 +163,13 @@ def test_ids_that_are_no_items_are_not_found(kind, bad):
 
 # Flair
 
-@pytest.mark.parametrize("sent, flair", [
-	("!Megathread", "Megathread"),
-	("!", ""),
-	("!<i>x</i> & ~y~", "&lt;i&gt;x&lt;/i&gt; &amp; <del>y</del>"),
-	("!" + "&" * 100, "&amp;" * 99),
+@pytest.mark.parametrize("sent, flair, note", [
+	("!Megathread", "Megathread", "Megathread"),
+	("!", "", ""),
+	("!<i>x</i> & ~y~", "&lt;i&gt;x&lt;/i&gt; &amp; <del>y</del>", "<i>x</i> & ~y~"),
+	("!" + "&" * 100, "&amp;" * 99, "&" * 99),
 ], ids=["plain", "empty", "rendered", "cut-then-escaped"])
-def test_admins_set_a_posts_flair_by_reporting_it_with_a_bang(sent, flair):
+def test_admins_set_a_posts_flair_by_reporting_it_with_a_bang(sent, flair, note):
 	post = _item("post")
 	admin = factories.admin(2)
 
@@ -179,7 +179,7 @@ def test_admins_set_a_posts_flair_by_reporting_it_with_a_bang(sent, flair):
 	assert_json_message(r)
 	d.assert_exactly(
 		updated={"submissions": {post["id"]: {"flair": flair}}},
-		inserted={"modactions": [{"kind": "flair_post", "user_id": admin["id"], "target_submission_id": post["id"], "target_comment_id": None, "target_user_id": None, "_note": f'"{flair}"'}]},
+		inserted={"modactions": [{"kind": "flair_post", "user_id": admin["id"], "target_submission_id": post["id"], "target_comment_id": None, "target_user_id": None, "_note": f'"{note}"'}]},
 	)
 
 
