@@ -37,3 +37,9 @@ Pinned as they are in `volunteer/test_nightly_recalc.py`, not decided on purpose
 ## Notices
 
 Pinned as they are in `notifications/test_notices.py`, not decided on purpose: a notice reused by its text keeps the rendering it was first stored with, so a mention in it goes on linking the user it named then (a username given up and taken by someone else keeps linking the earlier user); notices stored before notices carried their text are never reused, so a user who already had one gets it again, once, the next time it's sent.
+
+## Rendering
+
+Pinned as they are in `rendering/test_text.py`, not decided on purpose: the address rewrites apply to the whole rendering, so prose naming "nitter.net" reads "twitter.com" and becomes a link; an address with another scheme, such as ftp://, keeps its scheme as text and links the rest with http://; mail addresses aren't linked. Raw HTML that HTML doesn't allow where it stands, such as text directly inside a table, may lose that text.
+
+Also pinned there as they are, not decided on purpose: a dropped element's text runs on into its neighbours' (`<details><summary>a</summary>b</details>` reads "ab"), except around some block elements such as `<dl>`, which leave a line break; a table's `<caption>` text moves before the table and its `<tfoot>` rows into another `<tbody>`; an image's alt text is lost, and the text of a `<script>`, `<style>` or `<textarea>` shows as text; relative addresses other than those starting with "/" (`foo`, `#f`, `?q`) count as leaving the site; the rewrites that name "https://" leave http:// addresses alone, "https://www.youtube.com/shorts/x" keeps "/shorts/" because that rule comes before "www." is dropped, and a host that merely ends in a rewritten name (xnitter.net) is rewritten too.
