@@ -20,7 +20,7 @@ from files.helpers.alerts import *
 from files.helpers.background import spawn_background
 from files.helpers.config.const import *
 from files.helpers.content import canonicalize_url2
-from files.helpers.contentsorting import pinned_comments_first, sort_objects
+from files.helpers.contentsorting import sort_comments
 from files.helpers.sanitize import *
 from files.helpers.thumbnails import thumbnail_thread, titleheaders
 from files.helpers.wrappers import *
@@ -71,8 +71,8 @@ def post_id(pid, anything=None, v=None):
 	top_comments = g.db.query(Comment.id, Comment.descendant_count).filter(
 		Comment.parent_submission == post.id,
 		Comment.level == 1,
-	).order_by(*pinned_comments_first(Comment))
-	top_comments = sort_objects(top_comments, sort, Comment)
+	)
+	top_comments = sort_comments(top_comments, sort, Comment)
 
 	pg_top_comment_ids = []
 	pg_comment_qty = 0
@@ -124,7 +124,7 @@ def viewmore(v, pid, sort, offset):
 		Comment.parent_submission == post.id,
 		Comment.level == 1,
 		Comment.id.notin_(ids),
-	).order_by(*pinned_comments_first(Comment))
+	)
 
 	if sort == "new":
 		# Unpinned threads newer than the newest one shown, by the sort's order, were started since the page loaded
@@ -137,7 +137,7 @@ def viewmore(v, pid, sort, offset):
 		if newest is not None:
 			top_comments = top_comments.filter(or_(Comment.is_pinned != None, tuple_(Comment.created_utc, Comment.id) < tuple(newest)))
 
-	top_comments = sort_objects(top_comments, sort, Comment)
+	top_comments = sort_comments(top_comments, sort, Comment)
 
 	pg_top_comment_ids = []
 	pg_comment_qty = 0

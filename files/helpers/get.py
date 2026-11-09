@@ -11,7 +11,7 @@ from sqlalchemy.orm.attributes import set_committed_value
 
 from files.classes import *
 from files.helpers.config.const import AUTOJANNY_ID, PERMS
-from files.helpers.contentsorting import sort_comment_results
+from files.helpers.contentsorting import sort_comments
 
 
 def author_load_options(v: Optional[User]=None) -> list:
@@ -377,7 +377,7 @@ def get_comment_trees_eager(
 	else:
 		query = g.db.query(Comment)
 
-	query = query_filter_callable(query)
+	query = sort_comments(query_filter_callable(query), sort, Comment)
 	query = query.options(
 		selectinload(Comment.author).options(*author_load_options(v)),
 		selectinload(Comment.reports).options(
@@ -414,9 +414,8 @@ def get_comment_trees_eager(
 		if post is not None:
 			set_committed_value(c, 'post', post)
 
+	# Each parent's replies are in the query's order
 	for parent_id in comments_map_parent:
-		comments_map_parent[parent_id] = sort_comment_results(
-			comments_map_parent[parent_id], sort, pins=True)
 		if parent_id in comments_map:
 			comments_map[parent_id].replies2 = comments_map_parent[parent_id]
 

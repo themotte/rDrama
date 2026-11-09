@@ -1,17 +1,10 @@
 import time
-from collections.abc import Iterable
-from typing import Any, TYPE_CHECKING
 
 from sqlalchemy.sql import case, cast, func
 from sqlalchemy.sql.sqltypes import Numeric
 from sqlalchemy.orm import Query
 
 from files.helpers.config.const import *
-
-if TYPE_CHECKING:
-	from files.classes.comment import Comment
-else:
-	Comment = Any
 
 
 def apply_time_filter(objects, t, cls):
@@ -48,10 +41,8 @@ def sort_objects(objects: Query, sort: str, cls):
 	elif sort == 'comments':
 		if cls.__name__ == 'Submission': # we're checking the stringified name due to a gnarly import cycle
 			ordered = objects.order_by(cls.comment_count.desc())
-		elif cls.__name__ == 'Comment':
-			ordered = objects.order_by(cls.descendant_count.desc())
 		else:
-			ordered = objects
+			ordered = objects.order_by(cls.descendant_count.desc())
 	elif sort == 'controversial':
 		ordered = objects.order_by(
 			(cast(cls.upvotes, Numeric) + 1) / (cast(cls.downvotes, Numeric) + 1)
@@ -70,43 +61,6 @@ def sort_objects(objects: Query, sort: str, cls):
 	return ordered
 
 
-# Presently designed around files.helpers.get.get_comment_trees_eager
-# Behavior should parallel that of sort_objects above. TODO: Unify someday?
-def sort_comment_results(comments: Iterable[Comment], sort:str, *, pins:bool=False):
-	"""
-	Sorts comments results from `files.helpers.get.get_comments_trees_eager`
-	:param comments: Comments to sort
-	:param sort: The sort to use
-	:param pins: Whether to sort pinned comments. Defaults to `True`
-	"""
-	if sort == 'hot':
-		ti = int(time.time()) + 3600
-		key_func = lambda c: (
-			-100000
-				* (c.upvotes + 1)
-				/ (pow((max(ti - c.created_utc, 1) / 1000), 1.23)),
-			-c.created_utc,
-			-c.id
-		)
-	elif sort == 'comments':
-		key_func = lambda c: (-c.descendant_count, -c.created_utc, -c.id)
-	elif sort == 'controversial':
-		key_func = lambda c: (
-			(c.upvotes + 1) / (c.downvotes + 1)
-				+ (c.downvotes + 1) / (c.upvotes + 1),
-			-c.downvotes,
-			-c.created_utc,
-			-c.id
-		)
-	elif sort == 'top':
-		key_func = lambda c: (c.downvotes - c.upvotes, -c.created_utc, -c.id)
-	elif sort == 'bottom':
-		key_func = lambda c: (c.upvotes - c.downvotes, -c.created_utc, -c.id)
-	elif sort == 'old':
-		key_func = lambda c: (c.created_utc, c.id)
-	else: # default, or sort == 'new'
-		key_func = lambda c: (-c.created_utc, -c.id)
-
-	# Pinned comments first, newest first among themselves
-	key_func_pinned = lambda c: (0, -c.created_utc, -c.id) if c.is_pinned is not None else (1, key_func(c))
-	return sorted(comments, key=key_func_pinned if pins else key_func)
+def sort_comments(objects: Query, sort: str, cls) -> Query:
+	'''Orders comments (`cls` being the comment class, passed for the import cycle) as a post page shows them: pinned ones first, newest first among themselves, then by `sort`.'''
+	return sort_objects(objects.order_by(*pinned_comments_first(cls)), sort, cls)
