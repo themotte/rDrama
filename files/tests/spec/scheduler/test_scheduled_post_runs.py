@@ -44,6 +44,15 @@ def test_a_run_posts_the_scheduled_post_as_its_author_at_the_run_time():
 	)
 
 
+def test_a_title_is_taken_however_long_it_renders():
+	scheduled = _scheduled(factories.admin(2), title="&" * 500)
+
+	run_scheduler(SLOT)
+
+	[post] = db.rows("submissions", task_id=scheduled["id"])
+	assert post["title_html"] == "&amp;" * 500
+
+
 def test_each_run_makes_a_new_post():
 	scheduled = _scheduled(factories.admin(2))
 

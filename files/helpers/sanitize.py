@@ -215,15 +215,12 @@ def sanitize(sanitized, alert=False):
 	return sanitized
 
 
-def filter_emojis_only(title, graceful=False):
+def filter_emojis_only(title):
 	title = unwanted_bytes_regex.sub('', title)
 	title = whitespace_regex.sub(' ', title)
 	title = html.escape(title, quote=True)
 
-	title = strikethrough_regex.sub(r'<del>\1</del>', title)
-
-	if len(title) > 1500 and not graceful: abort(400)
-	else: return title
+	return strikethrough_regex.sub(r'<del>\1</del>', title)
 
 def validate_css(css:str) -> tuple[bool, str]:
 	'''

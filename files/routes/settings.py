@@ -67,12 +67,6 @@ def settings_profile_post(v):
 
 		friends_html = sanitize(friends)
 
-		if len(friends_html) > 2000:
-			return render_template("settings_profile.html",
-								   v=v,
-								   error="Your friends list is too long")
-
-
 		notify_users = NOTIFY_USERS(friends, v)
 
 		if notify_users:
@@ -105,11 +99,6 @@ def settings_profile_post(v):
 				return render_template("settings_profile.html", v=v, error="Image files only"), 400
 		
 		bio_html = sanitize(bio)
-
-		if len(bio_html) > 10000:
-			return render_template("settings_profile.html",
-								   v=v,
-								   error="Your bio is too long")
 
 		v.bio = bio
 		v.bio_html=bio_html

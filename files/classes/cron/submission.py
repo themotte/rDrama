@@ -61,8 +61,7 @@ class ScheduledSubmissionTask(RepeatableTask):
 
 	def make_submission(self, ctx:TaskRunContext) -> Submission:
 		title:str = self.make_title(ctx.trigger_time)
-		title_html:str = filter_emojis_only(title, graceful=True)
-		if len(title_html) > 1500: raise ValueError("Rendered title too large")
+		title_html:str = filter_emojis_only(title)
 
 		return Submission(
 			created_utc=calendar.timegm(ctx.trigger_time.utctimetuple()),

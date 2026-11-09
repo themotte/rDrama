@@ -94,7 +94,7 @@ def test_link_posts_can_be_retitled_without_text():
 	d.assert_exactly(updated={"submissions": {post["id"]: {"title": title, "title_html": title}}})
 
 
-@pytest.mark.parametrize("fields", [{"body": ""}, {"title": '"' * 251}], ids=["emptied text post", "title too long once rendered"])
+@pytest.mark.parametrize("fields", [{"body": ""}], ids=["emptied text post"])
 def test_invalid_edits_are_refused(fields):
 	author = factories.user()
 	post = factories.post(author, body="text")

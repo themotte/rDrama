@@ -233,18 +233,8 @@ def test_the_refused_form_keeps_the_title(fields):
 	assert_in_payload(r, title)
 
 
-def test_a_title_just_short_enough_once_rendered_is_accepted():
-	assert_html(_submit(as_user(factories.user()), title='"' * 250, body="x"), 200)
-
-
-def test_a_title_too_long_once_rendered_is_refused():
-	client = as_user(factories.user())
-
-	with db_diff() as d:
-		r = _submit(client, headers=XHR, title='"' * 251, body="x")
-
-	assert_status(r, 400)
-	d.assert_exactly()
+def test_a_title_of_the_longest_length_is_taken_however_long_it_renders():
+	assert_html(_submit(as_user(factories.user()), title='"' * 500, body="x"), 200)
 
 
 def test_banned_users_cannot_submit():

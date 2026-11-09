@@ -379,6 +379,16 @@ def test_a_ban_takes_a_reason_of_up_to_256_characters():
 	d.assert_exactly(**_ban_changes(actor, user, {"is_banned": actor["id"], "unban_utc": ANY, "ban_reason": reason[:256]}, notified=[user]))
 
 
+def test_a_ban_reason_is_stored_escaped_however_long_that_makes_it():
+	actor = factories.admin(2)
+	user = factories.user()
+
+	r, d = _ban(actor, user, {"days": "1", "reason": "&" * 300})
+
+	assert_json_message(r)
+	d.assert_exactly(**_ban_changes(actor, user, {"is_banned": actor["id"], "unban_utc": ANY, "ban_reason": "&amp;" * 256}, notified=[user]))
+
+
 def test_a_ban_reason_is_shown_on_the_profile_as_text():
 	actor = factories.admin(2)
 	user = factories.user()

@@ -160,6 +160,19 @@ def test_friends_list_is_stored_and_mentioned_users_are_notified():
 	assert u["username"] in notification["body_html"]
 
 
+@pytest.mark.parametrize("field, length", [("bio", 1500), ("friends", 500)])
+def test_text_of_the_longest_length_is_taken_however_long_it_renders(field, length):
+	'''Links render several times longer than their text.'''
+	u = factories.user()
+	text = ("http://a.co " * length)[:length].strip()
+
+	with db_diff() as d:
+		r = _post(u, {field: text})
+
+	assert_html(r, 200)
+	d.assert_exactly(updated={"users": {u["id"]: {field: text, f"{field}_html": ANY}}})
+
+
 def test_friends_list_notification_is_reused_for_later_mentions():
 	friend, other = factories.user(), factories.user()
 	u = factories.user()

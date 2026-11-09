@@ -8,15 +8,11 @@ from files.helpers.wrappers import *
 
 
 REASON_LENGTH_MAXIMUM = 100
-REASON_RENDERED_LENGTH_MAXIMUM = 350 # what the reports' reason columns hold
-FLAIR_RENDERED_LENGTH_MAXIMUM = 254 # what the mod log's note holds, with the quotes around it
 
 
-def _reason(limit: int) -> str:
-	'''The request's report reason, rendered: its first characters, as many as fit rendered into `limit` characters.'''
-	reason = request.values.get("reason", "").strip()[:REASON_LENGTH_MAXIMUM]
-	while len(rendered := filter_emojis_only(reason)) > limit: reason = reason[:-1]
-	return rendered
+def _reason() -> str:
+	'''The request's report reason, rendered: its first characters, up to the limit.'''
+	return filter_emojis_only(request.values.get("reason", "").strip()[:REASON_LENGTH_MAXIMUM])
 
 
 @app.post("/report/post/<pid>")
@@ -25,10 +21,10 @@ def _reason(limit: int) -> str:
 def api_flag_post(pid, v):
 	post = get_post(pid)
 	if post.is_draft_hidden_from(v): abort(404)
-	reason = _reason(REASON_RENDERED_LENGTH_MAXIMUM)
+	reason = _reason()
 
 	if reason.startswith('!') and v.admin_level >= 2:
-		post.flair = _reason(FLAIR_RENDERED_LENGTH_MAXIMUM + 1)[1:]
+		post.flair = reason[1:]
 		g.db.add(post)
 		ma=ModAction(
 			kind="flair_post",
@@ -55,7 +51,7 @@ def api_flag_post(pid, v):
 def api_flag_comment(cid, v):
 	comment = get_comment(cid)
 	if not comment.is_open_to(v): abort(404)
-	reason = _reason(REASON_RENDERED_LENGTH_MAXIMUM)
+	reason = _reason()
 
 	g.db.add(CommentFlag(comment_id=comment.id, user_id=v.id, reason=reason))
 	if v.reports_count:
