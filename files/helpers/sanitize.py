@@ -131,6 +131,25 @@ def sanitize_raw(sanitized:Optional[str], allow_newlines:bool, length_limit:Opti
 		sanitized = sanitized[:length_limit]
 	return sanitized
 
+_ADDRESS_REWRITES = [
+	*((old, "://old.reddit.com") for old in ("://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it", "://teddit.net")),
+	("nitter.net", "twitter.com"), ("old.reddit.com/gallery", "reddit.com/gallery"),
+	("https://youtu.be/", "https://youtube.com/watch?v="), ("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v="),
+	("https://streamable.com/", "https://streamable.com/e/"), ("https://youtube.com/shorts/", "https://youtube.com/watch?v="),
+	("https://mobile.twitter", "https://twitter"), ("https://m.facebook", "https://facebook"), ("m.wikipedia.org", "wikipedia.org"),
+	("https://m.youtube", "https://youtube"), ("https://www.youtube", "https://youtube"), ("https://www.twitter", "https://twitter"),
+	("https://www.instagram", "https://instagram"), ("https://www.tiktok", "https://tiktok"),
+]
+
+
+def _rewritten_address(address: str) -> str:
+	'''`address` with the site rewrites applied, a YouTube video's start time taken as "&t=", and tracking parameters removed.'''
+	for old, new in _ADDRESS_REWRITES:
+		address = address.replace(old, new)
+	if address.startswith("https://youtube.com/watch?v="): address = address.replace("?t=", "&t=")
+	return utm_regex2.sub('', utm_regex.sub('', address))
+
+
 class _Renderer(HTMLRenderer):
 	_links_open = 0
 
@@ -184,30 +203,23 @@ def sanitize(sanitized, alert=False):
 
 	sanitized = str(soup)
 
-	for rd in ["://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it", "://teddit.net"]:
-		sanitized = sanitized.replace(rd, "://old.reddit.com")
-
-	sanitized = sanitized.replace("nitter.net", "twitter.com").replace("old.reddit.com/gallery", "reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube").replace("https://www.twitter", "https://twitter").replace("https://www.instagram", "https://instagram").replace("https://www.tiktok", "https://tiktok")
-
-
-	if "https://youtube.com/watch?v=" in sanitized: sanitized = sanitized.replace("?t=", "&t=")
-
-	sanitized = sanitized.replace('&amp;','&')
-	sanitized = utm_regex.sub('', sanitized)
-	sanitized = utm_regex2.sub('', sanitized)
-	sanitized = sanitized.replace('<html><body>','').replace('</body></html>','')
-
 	sanitized = bleach.Cleaner(tags=allowed_tags,
 								attributes=allowed_attributes,
 								protocols=['http', 'https'],
 								css_sanitizer=css_sanitizer,
-								filters=[partial(LinkifyFilter, skip_tags=["pre"], parse_email=False, callbacks=[callback], url_re=url_re)],
+								filters=[partial(LinkifyFilter, skip_tags=["pre", "code"], parse_email=False, callbacks=[callback], url_re=url_re)],
 								strip=True,
 								).clean(sanitized)
 
-	soup = BeautifulSoup(sanitized, 'lxml')
+	soup = BeautifulSoup(sanitized, 'html.parser')
 
 	links = soup.find_all("a")
+	for link in links:
+		href = link.get("href")
+		if not href: continue
+		shown = link.string in (href, href.split("://", 1)[-1])
+		link["href"] = _rewritten_address(href)
+		if shown: link.string = link["href"] if link.string == href else link["href"].split("://", 1)[-1]
 
 	domain_list = set()
 
@@ -230,7 +242,7 @@ def sanitize(sanitized, alert=False):
 
 	bans = g.db.query(BannedDomain.domain).filter(BannedDomain.domain.in_(list(domain_list))).all()
 	if bans: abort(403, description=f"Remove the banned domains {bans} and try again!")
-	return sanitized
+	return str(soup)
 
 
 def filter_emojis_only(title):

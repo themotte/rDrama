@@ -9,10 +9,9 @@ In order:
 - Mentions of users (test_mentions.py) become links to them.
 - Likewise, "/r/<name>" and "/u/<name>" (3 to 25 letters, digits, "_" or "-", not followed by more) at the start of a run of text or after whitespace link to Reddit (old.reddit.com), and "/h/<name>" to that path on the site.
 - A link whose text is itself a web address shows its real address instead.
-- Addresses of some sites are rewritten by the replacements in REWRITES, in that order, wherever they appear in the rendering, and a YouTube video address takes its start time as "&t=" rather than "?t=".
-- Query parameters "utm_<word>=<value>" are removed from addresses.
 - Only the elements in KEPT_ELEMENTS are kept: other elements are dropped but their text stays (DROPPED_ELEMENTS). Only these attributes are kept: "style" on any element, keeping only the CSS properties "color", "background-color", "font-weight" and "text-align"; on "a", "href", "target" only as "_blank" and "rel" only as "nofollow noopener noreferrer"; on "span", "title", "alt" and "data-bs-toggle" only as "tooltip". A link keeps its address unless it has a scheme other than http or https (in any letter case).
-- Web addresses in the text become links (not inside <pre>) when their host name's last label is one of TOP_LEVEL_DOMAINS, with http:// or https:// or bare (linked with http://). Links leaving the site open in a new tab (target "_blank", rel "nofollow noopener noreferrer"); links to the site's own pages (an address starting with "/", or the site's own address) aren't given them, but keep them if written with them.
+- Web addresses in the text become links (not inside code) when their host name's last label is one of TOP_LEVEL_DOMAINS, with http:// or https:// or bare (linked with http://). Links leaving the site open in a new tab (target "_blank", rel "nofollow noopener noreferrer"); links to the site's own pages (an address starting with "/", or the site's own address) aren't given them, but keep them if written with them.
+- Every link's address is then rewritten by the replacements in REWRITES, in that order, wherever they occur in it; then a YouTube video's address takes its start time as "&t=" rather than "?t=", and query parameters "utm_<word>=<value>" are removed; a link showing its own address (with or without its scheme) shows it rewritten too. Text that isn't a link's address, code included, is left as written.
 
 Text linking to a banned domain is refused with 403: a link's host, any of the host's parent domains, or its host and path, being listed in "banneddomains".
 '''
@@ -295,8 +294,18 @@ def test_some_sites_addresses_are_rewritten(address, rewritten):
 	assert_same_html(_rendered(address), f'<p>{_link(rewritten)}</p>')
 
 
-def test_rewrites_apply_to_the_text_too():
+def test_a_link_showing_its_address_shows_it_rewritten():
 	assert_same_html(_rendered("I read nitter.net"), f'<p>I read {_link("http://twitter.com", "twitter.com")}</p>')
+
+
+@pytest.mark.parametrize("body, html", [
+	("`nitter.net and https://youtu.be/abcde?utm_source=x&a=1 &amp;`", "<p><code>nitter.net and https://youtu.be/abcde?utm_source=x&amp;a=1 &amp;amp;</code></p>"),
+	("my_utm_a=b&c", "<p>my_utm_a=b&amp;c</p>"),
+	("https://example.com/x?t=1 https://youtu.be/abcde?t=5", f'<p>{_link("https://example.com/x?t=1")} {_link("https://youtube.com/watch?v=abcde&t=5")}</p>'),
+	("[a & b](https://example.com/?x=1&y=2)", f'<p>{_link("https://example.com/?x=1&amp;y=2", "a &amp; b")}</p>'),
+], ids=["in code", "in prose", "other addresses' times", "ampersands"])
+def test_addresses_are_rewritten_and_cleaned_only_where_they_are_addresses(body, html):
+	assert_same_html(_rendered(body), html)
 
 
 @pytest.mark.parametrize("body, html", [
