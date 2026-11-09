@@ -165,11 +165,11 @@ class _Renderer(HTMLRenderer):
 
 
 def sanitize(sanitized):
-	# transform markdown into html
-	sanitized = markdown(sanitized, renderer=_Renderer)
-
 	# remove left-to-right mark; remove zero width space; remove zero width no-break space; remove Cuneiform Numeric Sign Eight;
 	sanitized = unwanted_bytes_regex.sub('', sanitized)
+
+	# transform markdown into html
+	sanitized = markdown(sanitized, renderer=_Renderer)
 
 	# The site's conventions apply to runs of text, never inside code, links, addresses or markup
 	soup = BeautifulSoup(sanitized, 'html.parser')

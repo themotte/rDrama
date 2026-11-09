@@ -335,6 +335,11 @@ def test_code_shows_its_text_as_written(body, html):
 	assert_same_html(_rendered(body), html)
 
 
+@pytest.mark.parametrize("mark", ["\u200f", "\U0001242a"], ids=["right-to-left mark", "U+1242A"])
+def test_invisible_characters_are_gone_before_the_markdown_is_read(mark):
+	assert_same_html(_rendered(f"{mark}# heading"), "<h1>heading</h1>")
+
+
 def test_other_texts_render_the_same_way():
 	'''Posts, bios and friends lists take the rules above as comments do.'''
 	author = factories.user()
