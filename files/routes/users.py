@@ -34,8 +34,14 @@ _VOTER_LIST_NAMES = ",".join(_VOTER_LISTS)
 
 
 def _visible(cls):
-	visible = (cls.ghost == False, cls.state_mod == StateMod.VISIBLE, cls.state_user_deleted_utc == None)
+	visible = (cls.ghost == False, cls.state_mod == StateMod.VISIBLE, cls.state_user_deleted_utc == None, cls.author.has(shadowbanned=None))
 	return (*visible, cls.private == False) if cls is Submission else visible
+
+
+def _mark_listed_on_profile(items, u):
+	'''Marks posts or comments as listed on `u`'s profile, where admins see past their author's shadowban.'''
+	for item in items: item.listed_on_profile_of = u.id
+	return items
 
 
 @app.get(f"/@<username>/<any({_VOTER_LIST_NAMES}):list_name>/<id:uid>/<any(posts,comments):kind>")
@@ -342,7 +348,7 @@ def u_username(username, v=None):
 	if page == 1 and shown:
 		ids = listings.userpage_pinned(u, v) + ids
 
-	listing = get_posts(ids, v=v)
+	listing = _mark_listed_on_profile(get_posts(ids, v=v), u)
 
 	if request.headers.get("Authorization"): return {"data": [listings.post_json_for(x, v) for x in listing]}
 	return render_template("userpage_submissions.html",
@@ -408,7 +414,7 @@ def u_username_comments(username, v=None):
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
 
-	listing = get_comments(ids, v=v)
+	listing = _mark_listed_on_profile(get_comments(ids, v=v), user)
 
 	is_following = (v and user.has_follower(v))
 

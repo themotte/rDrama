@@ -2,8 +2,10 @@
 The moderation queues, admin pages listing posts or comments 25 to a page, newest first, with "page" (from 1) choosing the page:
 - GET /admin/filtered/posts and /admin/filtered/comments: items held for moderator approval.
 - GET /admin/reported/posts and /admin/reported/comments: items with an open report.
-- GET /admin/removed/posts and /admin/removed/comments: items a moderator removed, and every item by a shadowbanned author.
+- GET /admin/removed/posts and /admin/removed/comments: items a moderator removed.
 - GET /admin/image_posts: posts whose link is an image: the URL ends (case-insensitively) in .webp, .jpg, .jpeg, .png or .gif, or in "?maxwidth=9999" or "&fidelity=high", and points at the site itself (a path, or the site's own URL) or at an approved embedding host over https.
+
+No queue lists posts or comments by shadowbanned authors, which admins see only on the author's profile (spec/users/test_profile.py); their private messages are listed as anyone's are.
 
 The queues show 18+ items whole, whether or not the admin confirmed their age.
 
@@ -13,28 +15,24 @@ import pytest
 
 from files.tests.spec.harness import *
 
-SHADOWBANNED = "shadowbanned"
-'''Marks an item whose author is shadowbanned (otherwise the item is in the given state, by an ordinary author).'''
-
 QUEUES = {
 	"/admin/filtered/posts": ([{"state_mod": "FILTERED"}], [{}, {"state_mod": "REMOVED"}, {"state_report": "REPORTED"}]),
 	"/admin/reported/posts": ([{"state_report": "REPORTED"}], [{}, {"state_report": "RESOLVED"}, {"state_report": "IGNORED"}, {"state_mod": "FILTERED"}]),
-	"/admin/removed/posts": ([{"state_mod": "REMOVED"}, SHADOWBANNED], [{}, {"state_mod": "FILTERED"}, {"state_report": "REPORTED"}]),
+	"/admin/removed/posts": ([{"state_mod": "REMOVED"}], [{}, {"state_mod": "FILTERED"}, {"state_report": "REPORTED"}]),
 	"/admin/filtered/comments": ([{"state_mod": "FILTERED"}], [{}, {"state_mod": "REMOVED"}, {"state_report": "REPORTED"}]),
 	"/admin/reported/comments": ([{"state_report": "REPORTED"}], [{}, {"state_report": "RESOLVED"}, {"state_report": "IGNORED"}, {"state_mod": "FILTERED"}]),
-	"/admin/removed/comments": ([{"state_mod": "REMOVED"}, SHADOWBANNED], [{}, {"state_mod": "FILTERED"}, {"state_report": "REPORTED"}]),
+	"/admin/removed/comments": ([{"state_mod": "REMOVED"}], [{}, {"state_mod": "FILTERED"}, {"state_report": "REPORTED"}]),
 }
 
 
-def _item(queue, state, post=None):
-	'''An item of the queue's kind in `state`, returning the sentinel its listing shows.'''
+def _item(queue, state, post=None, author=None):
+	'''An item of the queue's kind in `state` (by `author`, or a fresh user), returning the sentinel its listing shows.'''
 	token = factories.unique()
-	author = factories.user(shadowbanned="somemod") if state == SHADOWBANNED else factories.user()
-	overrides = {} if state == SHADOWBANNED else state
+	author = author or factories.user()
 	if queue.endswith("/posts"):
-		factories.post(author, title=token, **overrides)
+		factories.post(author, title=token, **state)
 	else:
-		factories.comment(author, post or factories.post(factories.user()), body=token, **overrides)
+		factories.comment(author, post or factories.post(factories.user()), body=token, **state)
 	return token
 
 
@@ -67,18 +65,38 @@ def test_queue_omits_other_items(queue, state):
 @pytest.mark.parametrize("queue", QUEUES)
 def test_queues_show_18_plus_items_whole_to_admins_who_have_not_confirmed_their_age(queue):
 	state = QUEUES[queue][0][0]
-	overrides = {} if state == SHADOWBANNED else state
-	author = factories.user(shadowbanned="somemod") if state == SHADOWBANNED else factories.user()
+	author = factories.user()
 	text = factories.unique()
 	if queue.endswith("/posts"):
-		factories.post(author, body=text, over_18=True, **overrides)
+		factories.post(author, body=text, over_18=True, **state)
 	else:
-		factories.comment(author, factories.post(factories.user(), over_18=True), body=text, **overrides)
+		factories.comment(author, factories.post(factories.user(), over_18=True), body=text, **state)
 
 	r = as_user(factories.admin(2, over_18=False)).get(queue)
 
 	assert_html(r, 200)
 	assert_in_payload(r, text)
+
+
+@pytest.mark.parametrize("queue", QUEUES)
+def test_queue_leaves_out_shadowbanned_authors_items(queue):
+	listed = _item(queue, QUEUES[queue][0][0])
+	token = _item(queue, QUEUES[queue][0][0], author=factories.user(shadowbanned="somemod"))
+
+	r = as_user(factories.admin(2)).get(queue)
+
+	assert_html(r, 200)
+	assert_in_payload(r, listed)
+	assert_not_in_payload(r, token)
+
+
+def test_the_removed_queue_lists_a_shadowbanned_users_removed_message():
+	message = factories.message(factories.user(shadowbanned="somemod"), factories.user(), state_mod="REMOVED")
+
+	r = as_user(factories.admin(2)).get("/admin/removed/comments")
+
+	assert_html(r, 200)
+	assert_in_payload(r, message["text"])
 
 
 @pytest.mark.parametrize("queue", QUEUES)
@@ -96,7 +114,10 @@ def test_queue_lists_newest_first(queue):
 @pytest.mark.parametrize("page", [1, 2])
 def test_queue_pages_hold_25_items(queue, page):
 	post = factories.post(factories.user())
+	shadowbanned = factories.user(shadowbanned="somemod")
 	oldest, *rest = [_item(queue, QUEUES[queue][0][0], post) for _ in range(26)]
+	# Items the queue leaves out, newer than all of those, don't take places on its pages
+	for _ in range(3): _item(queue, QUEUES[queue][0][0], post, author=shadowbanned)
 
 	r = as_user(factories.admin(2)).get(queue, params={"page": page})
 
@@ -143,10 +164,21 @@ NOT_IMAGE_URLS = [
 ]
 
 
-def _image_post(url):
+def _image_post(url, author=None):
 	token = factories.unique()
-	factories.post(factories.user(), title=token, url=url.replace("SITE", config.site_url()) if url else None)
+	factories.post(author or factories.user(), title=token, url=url.replace("SITE", config.site_url()) if url else None)
 	return token
+
+
+def test_image_feed_leaves_out_shadowbanned_authors_posts():
+	listed = _image_post("/images/a.png")
+	token = _image_post("/images/b.png", author=factories.user(shadowbanned="somemod"))
+
+	r = as_user(factories.admin(2)).get("/admin/image_posts")
+
+	assert_html(r, 200)
+	assert_in_payload(r, listed)
+	assert_not_in_payload(r, token)
 
 
 @pytest.mark.parametrize("url", IMAGE_URLS)

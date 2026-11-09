@@ -7,7 +7,7 @@ Admins review API applications (who may: admin/test_access).
 
 Each answers a JSON message, and refuses an app in another state (revoked apps included) with 409, changing nothing. Approving keeps a token the owner already holds for the app. An id that is no app's (unknown, not a whole number, or too large) is 404, here and on the app pages below.
 
-GET /admin/app/<id> and GET /admin/app/<id>/comments (level 2) show an app and the posts or comments its tokens made, newest first, 100 to a page, each shown as admin listings show them (listings/test_parameters).
+GET /admin/app/<id> and GET /admin/app/<id>/comments (level 2) show an app and the posts or comments its tokens made, newest first, 100 to a page, each shown as admin listings show them (listings/test_parameters), leaving out posts and comments by shadowbanned users.
 '''
 import pytest
 
@@ -240,3 +240,15 @@ def test_ids_that_are_no_apps_are_not_found(method, route, bad):
 
 	assert_status(r, 404)
 	d.assert_exactly()
+
+
+@pytest.mark.parametrize("kind", ["posts", "comments"])
+def test_the_app_pages_leave_out_shadowbanned_users_items(kind):
+	application = factories.oauth_app(factories.user())
+	author, post = factories.user(shadowbanned="somemod"), factories.post(factories.user())
+	item = factories.post(author, app_id=application["id"]) if kind == "posts" else factories.comment(author, post, app_id=application["id"])
+
+	r = as_user(factories.admin(2)).get(f"/admin/app/{application['id']}" + ("/comments" if kind == "comments" else ""))
+
+	assert_html(r, 200)
+	assert_not_in_payload(r, item["title"] if kind == "posts" else item["body"])

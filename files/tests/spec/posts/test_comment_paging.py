@@ -343,14 +343,14 @@ def test_fetching_more_of_an_18_plus_post_after_age_confirmation(which, viewer):
 	assert_html(r, 200)
 
 
-@pytest.mark.parametrize("viewer", ["author", "user"])
+@pytest.mark.parametrize("viewer", ["author", "user", "admin"])
 def test_more_comments_shows_shadowbanned_replies_only_to_their_author(viewer):
 	author = factories.user(shadowbanned="somemod")
 	post = factories.post(factories.user())
 	top = factories.comment(factories.user(), post)
 	reply = factories.comment(author, post, parent=top, body=factories.unique())
 
-	r = as_user(author if viewer == "author" else factories.user()).get(f"/morecomments/{top['id']}")
+	r = as_user({"author": author, "user": factories.user(), "admin": factories.admin(2)}[viewer]).get(f"/morecomments/{top['id']}")
 
 	assert_html(r, 200)
 	(assert_in_payload if viewer == "author" else assert_not_in_payload)(r, reply["body"])

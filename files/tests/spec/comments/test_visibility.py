@@ -2,7 +2,7 @@
 Which comments a viewer is shown, wherever threads are rendered as pages: the post page (GET /post/<post id>), a comment's own page (GET /comment/<comment id>) and further threads of a post (GET /viewmore/...).
 
 - A comment that moderators removed or filtered, or that its author deleted, is hidden from everyone except its author and moderators (admin level 2 and up). Admins below level 2 don't see it either.
-- A comment by a shadowbanned user is shown only to its author and to admins of level 2 and up, wherever it sits in a thread. Where it holds replies, its placeholder names the moderator who removed it only if it was in fact removed.
+- A comment by a shadowbanned user is shown only to its author, wherever it sits in a thread; admins see it only where its author's profile lists it (spec/users/test_profile.py). Where it holds replies, its placeholder names the moderator who removed it only if it was in fact removed.
 - A comment by a user the viewer blocks is hidden from the viewer, unless it is distinguished as official or the viewer is an admin of level 2 or more.
 - A comment by a user who blocks the viewer is still shown to the viewer.
 - Comments marked 18+ are shown like any other.
@@ -261,13 +261,13 @@ def test_the_page_reveals_nothing_of_hidden_comments_it_doesnt_show(why):
 	assert_not_in_payload(r, str(created))
 
 
-SHADOWBAN_VIEWERS = {"visitor": False, "user": False, "shadowbanned user": False, "author": True, "admin 1": False, "admin 2": True, "admin 3": True}
+SHADOWBAN_VIEWERS = {"visitor": False, "user": False, "shadowbanned user": False, "author": True, "admin 1": False, "admin 2": False, "admin 3": False}
 
 
 @pytest.mark.parametrize("surface", SURFACES)
 @pytest.mark.parametrize("depth", ["top-level", "reply"])
 @pytest.mark.parametrize("viewer", SHADOWBAN_VIEWERS)
-def test_comments_by_shadowbanned_users_are_shown_only_to_them_and_moderators(viewer, depth, surface):
+def test_comments_by_shadowbanned_users_are_shown_only_to_them(viewer, depth, surface):
 	author = factories.user(shadowbanned="somemod")
 	post = factories.post(factories.user())
 	parent = factories.comment(factories.user(), post, created_utc=1000) if depth == "reply" else None

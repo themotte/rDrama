@@ -1,6 +1,6 @@
 '''
 Admin actions on a user account, all POSTs taking the user's id in the path, plus two admin listings of users:
-- /shadowban/<id> hides the user's content from everyone but them and moderators; /unshadowban/<id> lifts that (and the ban-evasion mark). System accounts and admins can't be shadowbanned. Level-3 admins other than the actor are told of each shadowban.
+- /shadowban/<id> hides the user's posts and comments from everyone but them, admins included except on the user's own profile (users/test_profile), while admins still get the user's private messages and modmail; /unshadowban/<id> lifts that (and the ban-evasion mark). System accounts and admins can't be shadowbanned. Level-3 admins other than the actor are told of each shadowban.
 - /filter_automatic/<id>, /filter_unfiltered/<id>, /filter_filtered/<id> set whether the user's new content waits in the filter queue: decided per item, never, or always.
 - /admin/verify/<id> and /admin/unverify/<id> (level 3) set or clear the account's verified mark.
 - /admin/title_change/<id> sets the user's flair from "title" (surrounding whitespace dropped, cut to 100 characters as users' own flair is); a non-empty "locked" stops the user changing it. Redirects to the profile.

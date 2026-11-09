@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 from files.classes.base import CreatedBase
 from files.classes.notifications import Notification
 from files.classes.votes import votes_shown_to
-from files.classes.visstate import AuthorShadowban, StateMod, StateReport, VisibilityState
+from files.classes.visstate import AuthorShadowban, StateMod, StateReport, VisibilityState, sees_past_shadowbans
 from files.helpers.config.const import *
 from files.helpers.config.environment import SCORE_HIDING_TIME_HOURS, SITE_FULL
 from files.helpers.content import body_displayed
@@ -296,6 +296,12 @@ class Comment(CreatedBase, AuthorShadowban):
 		Returns whether this is a private message or modmail
 		'''
 		return not self.is_comment
+
+	@classmethod
+	def shadowban_shown_sql(cls, v):
+		'''As for posts, and admins who see past shadowbans also get private messages and modmail.'''
+		shown = super().shadowban_shown_sql(v)
+		return or_(shown, cls.parent_submission == None) if sees_past_shadowbans(v) else shown
 	
 	@property
 	@lazy

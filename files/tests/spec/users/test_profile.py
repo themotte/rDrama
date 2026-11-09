@@ -8,7 +8,7 @@ Before listing anything:
 
 The listings hold 25 items to a page, with "page" (from 1; anything else means 1) choosing the page. "sort" orders them: new (the default: newest first), old, top (highest score first), bottom, comments (most comments first; for comments, most replies), controversial (closest to evenly split votes first), and hot (score weighed against age). "t" (hour, day, week, month, year; anything else means all time) keeps only items created within that long. Ties fall back to newest first.
 
-What's listed depends on the viewer. Everyone sees the user's visible posts and comments; the user themselves and admins (level 2 and up) also see the deleted, removed, held ("filtered") and anonymous ("ghost") ones, and the user's unpublished drafts. Nobody else sees anything of a shadowbanned user, other shadowbanned users included. The user's pinned posts that the viewer may see lead the first page of their posts, newest first.
+What's listed depends on the viewer. Everyone sees the user's visible posts and comments; the user themselves and admins (level 2 and up) also see the deleted, removed, held ("filtered") and anonymous ("ghost") ones, and the user's unpublished drafts. Nobody else sees anything of a shadowbanned user, other shadowbanned users included, except admins (level 2 and up): a shadowbanned user's lists are the one place admins see that user's posts and comments as the user does, their text not marked as hidden. Elsewhere, the posts' and comments' own pages included, they're hidden from admins as from anyone; the user's private messages and modmail are another matter (notifications/). The user's pinned posts that the viewer may see lead the first page of their posts, newest first.
 
 API clients get the listing as JSON: an object whose "data" is the list of items.
 '''
@@ -298,6 +298,16 @@ def test_profile_of_a_shadowbanned_user_lists_to_themselves_and_admins(page, vie
 
 	assert_html(r, 200)
 	assert_in_payload(r, token)
+
+
+def test_a_shadowbanned_users_posts_read_to_admins_on_the_profile_as_to_the_user():
+	user = factories.user(shadowbanned="somemod")
+	post = factories.post(user, body=factories.unique())
+
+	seen = {who: element_text(_client(who, user).get(_path(user, "posts")), f"post-text-{post['id']}") for who in ("owner", "admin")}
+
+	assert post["body"] in seen["owner"]
+	assert seen["admin"] == seen["owner"]
 
 
 @pytest.mark.parametrize("page", PAGES)

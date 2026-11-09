@@ -1,5 +1,5 @@
 '''
-GET /unread gives a logged-in user's unread notifications as {"data": [...]} (each comment's JSON without its replies), newest first (the newer comment first among notifications from the same moment), and marks them read. It holds what /notifications would show (test_pages), unread: not notifications of followed users' new posts, not comments that were removed, are held for approval or deleted, not comments by users the viewer blocks (except messages from admins from level 2), and not, except to admins from level 2, comments by shadowbanned users.
+GET /unread gives a logged-in user's unread notifications as {"data": [...]} (each comment's JSON without its replies), newest first (the newer comment first among notifications from the same moment), and marks them read. It holds what /notifications would show (test_pages), unread: not notifications of followed users' new posts, not comments that were removed, are held for approval or deleted, not comments by users the viewer blocks (except messages from admins from level 2), and not comments by shadowbanned users, except their messages and modmail to admins from level 2.
 
 POST /clear marks every one of the user's notifications read, whether or not any page would show it, and replies {"message": ...}.
 
@@ -15,6 +15,13 @@ def _notified_reply(user, **overrides):
 	reply = factories.comment(overrides.pop("author", None) or factories.user(), post, parent=factories.comment(user, post), **overrides)
 	factories.notification(user, reply)
 	return reply
+
+
+def _notified_message(user, recipient, author):
+	'''A message from `author` to `recipient` (`user`, or modmail), of which `user` was notified.'''
+	message = factories.message(author, user if recipient == "direct" else seed.MODMAIL_ID)
+	factories.notification(user, message)
+	return message
 
 
 def _new_post_notification(user):
@@ -118,11 +125,20 @@ def test_shadowbanned_authors_are_left_out_for_users():
 
 
 @pytest.mark.parametrize("level", [2, 3])
-def test_shadowbanned_authors_are_listed_for_admins_from_level_2(level):
+def test_shadowbanned_authors_are_left_out_for_admins_too(level):
 	admin = factories.admin(level)
-	reply = _notified_reply(admin, author=factories.user(shadowbanned="somemod"))
+	_notified_reply(admin, author=factories.user(shadowbanned="somemod"))
 
-	assert _unread_ids(as_user(admin)) == [reply["id"]]
+	assert _unread_ids(as_user(admin)) == []
+
+
+@pytest.mark.parametrize("recipient", ["direct", "modmail"])
+@pytest.mark.parametrize("level", [2, 3])
+def test_shadowbanned_users_messages_are_listed_for_admins_from_level_2(level, recipient):
+	admin = factories.admin(level)
+	message = _notified_message(admin, recipient, factories.user(shadowbanned="somemod"))
+
+	assert _unread_ids(as_user(admin)) == [message["id"]]
 
 
 def test_messages_from_blocked_admins_are_listed():

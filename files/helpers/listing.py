@@ -33,7 +33,7 @@ def _listable(items, cls, not_draft, v: Optional[User], admins_see_drafts_and_de
 
 def listable_posts(posts, v: Optional[User], *, admins_see_drafts_and_deleted: bool = False):
 	'''
-	`posts` (a query over submissions) narrowed to those `v` could read on their post pages: their own, and others that are visible, by an author who isn't shadowbanned and whom `v` doesn't block. Admins who moderate (level 2 and up) may read everything.
+	`posts` (a query over submissions) narrowed to those `v` could read on their post pages: their own, and others that are visible, by an author who isn't shadowbanned and whom `v` doesn't block. Admins who moderate (level 2 and up) may read everything but what a shadowban hides.
 
 	Drafts and posts their authors deleted are left out for everyone, admins too unless `admins_see_drafts_and_deleted`.
 	'''

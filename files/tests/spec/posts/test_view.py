@@ -227,10 +227,10 @@ def test_removed_filtered_and_deleted_posts_show_their_content_to_the_author_and
 	_assert_content_shown(_page(as_user(author if viewer == "author" else factories.admin(2)), post), content)
 
 
-@pytest.mark.parametrize("viewer", ["visitor", "user", "helper"])
+@pytest.mark.parametrize("viewer", ["visitor", "user", "helper", "admin 2", "admin 3"])
 def test_posts_by_shadowbanned_users_hide_their_content(viewer):
 	post, content = _hidden_post_content(factories.user(shadowbanned="somemod"))
-	client = {"visitor": anon, "user": lambda: as_user(factories.user()), "helper": lambda: as_user(factories.admin(1))}[viewer]()
+	client = {"visitor": anon, "user": lambda: as_user(factories.user()), "helper": lambda: as_user(factories.admin(1)), "admin 2": lambda: as_user(factories.admin(2)), "admin 3": lambda: as_user(factories.admin(3))}[viewer]()
 
 	_assert_content_hidden(_page(client, post), post, content)
 
@@ -246,12 +246,11 @@ def test_a_shadowbanned_users_post_names_a_moderator_only_if_they_removed_it(rem
 	(assert_in_payload if removed else assert_not_in_payload)(r, moderator)
 
 
-@pytest.mark.parametrize("viewer", ["author", "moderator"])
-def test_posts_by_shadowbanned_users_show_their_content_to_them_and_moderators(viewer):
+def test_posts_by_shadowbanned_users_show_their_content_to_them():
 	author = factories.user(shadowbanned="somemod")
 	post, content = _hidden_post_content(author)
 
-	_assert_content_shown(_page(as_user(author if viewer == "author" else factories.admin(2)), post), content)
+	_assert_content_shown(_page(as_user(author), post), content)
 
 
 @pytest.mark.parametrize("viewer_level", [0, 1])

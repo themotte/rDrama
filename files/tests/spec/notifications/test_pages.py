@@ -4,7 +4,7 @@ The notification pages, for logged-in users (visitors are sent to log in; API cl
 GET /notifications lists what the user was notified of, newest notification first: replies, mentions, messages and the site's own notices. Each shows alone, without its replies. Left out:
 - comments that were removed, are held for approval (filtered) or deleted;
 - comments by users the viewer blocks, except messages from admins from level 2 (who may message users blocking them, test_messages);
-- comments by shadowbanned users, except to admins from level 2 (shadowbanned users don't see each other's);
+- comments by shadowbanned users, admins' included, except messages and modmail, which admins from level 2 still get (shadowbanned users don't see each other's);
 - notifications of followed users' new posts, which have their own page.
 Showing a notification marks it read.
 
@@ -29,6 +29,13 @@ def _notified_reply(user, **overrides):
 	reply = factories.comment(overrides.pop("author", None) or factories.user(), post, parent=factories.comment(user, post), **overrides)
 	factories.notification(user, reply)
 	return reply
+
+
+def _notified_message(user, recipient, author):
+	'''A message from `author` to `recipient` (`user`, or modmail), of which `user` was notified.'''
+	message = factories.message(author, user if recipient == "direct" else seed.MODMAIL_ID)
+	factories.notification(user, message)
+	return message
 
 
 def _new_post_notification(user):
@@ -188,11 +195,35 @@ def test_shadowbanned_authors_are_left_out_for_users():
 
 
 @pytest.mark.parametrize("level", [2, 3])
-def test_shadowbanned_authors_show_to_admins_from_level_2(level):
+def test_shadowbanned_authors_are_left_out_for_admins_too(level):
 	admin = factories.admin(level)
 	reply = _notified_reply(admin, author=factories.user(shadowbanned="somemod"))
 
-	assert_in_payload(as_user(admin).get("/notifications"), reply["body"])
+	assert_not_in_payload(as_user(admin).get("/notifications"), reply["body"])
+
+
+@pytest.mark.parametrize("recipient", ["direct", "modmail"])
+@pytest.mark.parametrize("level", [2, 3])
+def test_shadowbanned_users_messages_show_to_admins_from_level_2(level, recipient):
+	admin = factories.admin(level)
+	message = _notified_message(admin, recipient, factories.user(shadowbanned="somemod"))
+
+	assert_in_payload(as_user(admin).get("/notifications"), message["text"])
+
+
+def test_an_admin_gets_a_shadowbanned_users_modmail_but_not_their_reply():
+	admin, author = factories.admin(2), factories.user(shadowbanned="somemod")
+	message = _notified_message(admin, "modmail", author)
+	reply = _notified_reply(admin, author=author)
+	client = as_user(admin)
+
+	front = client.get("/")
+	r = client.get("/notifications")
+
+	assert_html(r, 200)
+	assert notification_counts(front)["bell"] == 1
+	assert_in_payload(r, message["text"])
+	assert_not_in_payload(r, reply["body"])
 
 
 def test_shadowbanned_users_dont_see_each_others_comments():

@@ -169,7 +169,7 @@ def filtered_submissions(v):
 
 	posts_just_ids = g.db.query(Submission) \
 		.order_by(Submission.id.desc()) \
-		.filter(Submission.state_mod == StateMod.FILTERED) \
+		.filter(Submission.state_mod == StateMod.FILTERED, Submission.shadowban_shown_sql(v)) \
 		.limit(26) \
 		.offset(25 * (page - 1)) \
 		.with_entities(Submission.id)
@@ -188,7 +188,7 @@ def filtered_comments(v):
 
 	comments_just_ids = g.db.query(Comment) \
 		.order_by(Comment.id.desc()) \
-		.filter(Comment.state_mod == StateMod.FILTERED) \
+		.filter(Comment.state_mod == StateMod.FILTERED, Comment.shadowban_shown_sql(v)) \
 		.limit(26) \
 		.offset(25 * (page - 1)) \
 		.with_entities(Comment.id)
@@ -259,7 +259,7 @@ def update_filter_status(v):
 def image_posts_listing(v):
 	page = request_page()
 
-	posts = g.db.query(Submission).filter(or_(*(func.lower(Submission.url).endswith(suffix, autoescape=True) for suffix in IMAGE_URL_SUFFIXES))).order_by(Submission.id.desc())
+	posts = g.db.query(Submission).filter(or_(*(func.lower(Submission.url).endswith(suffix, autoescape=True) for suffix in IMAGE_URL_SUFFIXES)), Submission.shadowban_shown_sql(v)).order_by(Submission.id.desc())
 
 	firstrange = 25 * (page - 1)
 	secondrange = firstrange+26
@@ -277,7 +277,7 @@ def reported_posts(v):
 	page = request_page()
 
 	subs_just_ids = g.db.query(Submission) \
-		.filter(Submission.state_report == StateReport.REPORTED) \
+		.filter(Submission.state_report == StateReport.REPORTED, Submission.shadowban_shown_sql(v)) \
 		.order_by(Submission.id.desc()) \
 		.offset(25 * (page - 1)) \
 		.limit(26) \
@@ -297,7 +297,7 @@ def reported_comments(v):
 	page = request_page()
 
 	comments_just_ids = g.db.query(Comment) \
-			.filter(Comment.state_report == StateReport.REPORTED) \
+			.filter(Comment.state_report == StateReport.REPORTED, Comment.shadowban_shown_sql(v)) \
 			.order_by(Comment.id.desc()) \
 			.offset(25 * (page - 1)) \
 			.limit(26) \
@@ -585,7 +585,7 @@ def admin_link_accounts(v):
 def admin_removed(v):
 	page = request_page()
 	
-	ids = g.db.query(Submission.id).join(User, User.id == Submission.author_id).filter(or_(Submission.state_mod == StateMod.REMOVED, User.shadowbanned != None)).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	ids = g.db.query(Submission.id).filter(Submission.state_mod == StateMod.REMOVED, Submission.shadowban_shown_sql(v)).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	ids=[x[0] for x in ids]
 
@@ -609,7 +609,7 @@ def admin_removed(v):
 def admin_removed_comments(v):
 	page = request_page()
 	
-	ids = g.db.query(Comment.id).join(User, User.id == Comment.author_id).filter(or_(Comment.state_mod == StateMod.REMOVED, User.shadowbanned != None)).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	ids = g.db.query(Comment.id).filter(Comment.state_mod == StateMod.REMOVED, Comment.shadowban_shown_sql(v)).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	ids=[x[0] for x in ids]
 

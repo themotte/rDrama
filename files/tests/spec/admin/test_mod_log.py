@@ -7,7 +7,7 @@ Some kinds of entry are shown only to admins (level 2+): shadowbanning and unsha
 
 The kinds the site knows are MOD_LOG_KINDS below, which says for each what its entries are about (a user, a post, a comment, or the site as a whole, which is the target column the site fills; the spec of each action pins what it writes) and whether it's shown only to admins. An entry shows what it is about. The kind filter takes exactly these. An entry of a change to a whole-number site setting (kind "set_<value>_for_<setting>", cut to 32 characters, see test_dashboard) names the setting in full and the value; those kinds can't be filtered on. An entry of a kind the site doesn't know is still listed, with the admin who made it.
 
-An entry names the post or comment it's about (a post by its title, both with a link to them), unless the viewer couldn't open it: a draft (or a comment on one), seen only by its author and admins from level 2; a private message, seen only by those taking part in its conversation and admins from level 2; or a post or comment by a shadowbanned user, seen only by that user and admins from level 2. For anyone else the entry stays, saying only that it was a post or a comment, with no title or link. A ban's note, which links the post or comment the ban was for, follows the same rule.
+An entry names the post or comment it's about (a post by its title, both with a link to them), unless the viewer couldn't open it: a draft (or a comment on one), seen only by its author and admins from level 2; a private message, seen only by those taking part in its conversation and admins from level 2 (a shadowbanned user's too); or a post or comment by a shadowbanned user, seen only by that user (admins see it only on that user's profile). For anyone else the entry stays, saying only that it was a post or a comment, with no title or link. A ban's note, which links the post or comment the ban was for, follows the same rule.
 '''
 import re
 from typing import NamedTuple
@@ -158,10 +158,15 @@ TARGET_VIEWERS = {
 	"author": (lambda author: as_user(author), True),
 	"admin": (lambda author: as_user(factories.admin(2)), True),
 }
+'''Who opens a hidden draft (the second item); a shadowbanned author's items open only to the author.'''
 HIDDEN_POSTS = {
 	"draft": lambda: (factories.user(), {"private": True}),
 	"shadowbanned author": lambda: (factories.user(shadowbanned="somemod"), {}),
 }
+
+
+def _sees(viewer, hidden) -> bool:
+	return viewer == "author" if hidden == "shadowbanned author" else TARGET_VIEWERS[viewer][1]
 
 
 def _post_entry(kind, author, **post_overrides):
@@ -183,12 +188,12 @@ def _shows_post(r, entry, post) -> bool:
 def test_a_post_the_viewer_couldnt_open_goes_unnamed(hidden, viewer):
 	author, overrides = HIDDEN_POSTS[hidden]()
 	entry, post = _post_entry("remove_post", author, **overrides)
-	make_client, sees = TARGET_VIEWERS[viewer]
+	make_client, _ = TARGET_VIEWERS[viewer]
 
 	r = make_client(author).get("/log")
 
 	assert_html(r, 200)
-	assert _shows_post(r, entry, post) == sees
+	assert _shows_post(r, entry, post) == _sees(viewer, hidden)
 
 
 def test_a_post_anyone_can_open_is_named():
@@ -206,29 +211,29 @@ def test_a_comment_the_viewer_couldnt_open_goes_unlinked(hidden, viewer):
 	author = factories.user(shadowbanned="somemod") if hidden == "shadowbanned author" else factories.user()
 	comment = factories.comment(author, factories.post(author, private=hidden == "draft post"))
 	entry = db.insert("modactions", user_id=factories.admin(2)["id"], kind="remove_comment", target_comment_id=comment["id"])
-	make_client, sees = TARGET_VIEWERS[viewer]
+	make_client, _ = TARGET_VIEWERS[viewer]
 
 	r = make_client(author).get("/log")
 
 	assert_html(r, 200)
 	assert element_text(r, f"action-{entry['id']}")
-	assert (f"/comment/{comment['id']}" in r.text) == (sees or hidden is None)
+	assert (f"/comment/{comment['id']}" in r.text) == (hidden is None or _sees(viewer, hidden))
 
 
-@pytest.mark.parametrize("viewer", ["visitor", "admin"])
+@pytest.mark.parametrize("viewer", ["visitor", "admin", "author"])
 @pytest.mark.parametrize("target", ["post", "comment"])
 def test_a_bans_note_links_what_it_was_for_only_if_the_viewer_could_open_it(target, viewer):
 	author = factories.user(shadowbanned="somemod")
 	post = factories.post(author)
 	item = post if target == "post" else factories.comment(author, post)
 	db.insert("modactions", user_id=factories.admin(2)["id"], kind="ban_user", target_user_id=author["id"], **({"target_submission_id": post["id"]} if target == "post" else {"target_comment_id": item["id"]}))
-	make_client, sees = TARGET_VIEWERS[viewer]
+	make_client, _ = TARGET_VIEWERS[viewer]
 
 	r = make_client(author).get("/log")
 
 	assert_html(r, 200)
 	link = f"/post/{post['id']}" if target == "post" else f"/comment/{item['id']}"
-	assert (link in r.text) == sees
+	assert (link in r.text) == _sees(viewer, "shadowbanned author")
 
 
 @pytest.mark.parametrize("setting", ["FilterCommentsMinComments", "min_truescore_private_profile"])
@@ -360,9 +365,10 @@ def test_admins_filter_by_admin_only_kinds():
 	assert _ids_listed(r) == [shadowban["id"]]
 
 
+@pytest.mark.parametrize("sender_shadowbanned", [False, True], ids=["", "shadowbanned sender"])
 @pytest.mark.parametrize("viewer, sees", [("visitor", False), ("other user", False), ("sender", True), ("recipient", True), ("admin", True)])
-def test_a_private_message_goes_unlinked_for_those_not_party_to_it(viewer, sees):
-	sender, recipient = factories.user(), factories.user()
+def test_a_private_message_goes_unlinked_for_those_not_party_to_it(viewer, sees, sender_shadowbanned):
+	sender, recipient = factories.user(shadowbanned="somemod" if sender_shadowbanned else None), factories.user()
 	message = factories.message(sender, recipient)
 	entry = db.insert("modactions", user_id=factories.admin(2)["id"], kind="remove_comment", target_comment_id=message["id"])
 	client = {"visitor": anon, "other user": lambda: as_user(factories.user()), "sender": lambda: as_user(sender), "recipient": lambda: as_user(recipient), "admin": lambda: as_user(factories.admin(2))}[viewer]()
@@ -370,4 +376,5 @@ def test_a_private_message_goes_unlinked_for_those_not_party_to_it(viewer, sees)
 	r = client.get(f"/log/{entry['id']}")
 
 	assert_html(r, 200)
-	assert (f"/comment/{message['id']}" in r.text) == sees
+	# A shadowbanned sender's messages reach only them and admins
+	assert (f"/comment/{message['id']}" in r.text) == (sees and not (sender_shadowbanned and viewer == "recipient"))

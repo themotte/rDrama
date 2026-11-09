@@ -1,7 +1,7 @@
 '''
 The viewer's saved posts and comments: GET /@<username>/saved/posts and GET /@<username>/saved/comments, for logged-in users, viewed under their own name (in any letter case); another user's name is refused with 403, and an unknown one is 404.
 
-They list what the viewer saved that others can still see (not removed, filtered or deleted), newest first, 25 to a page with "page" (from 1; anything else means 1) choosing the page. Content by users the viewer blocks is left out, except that admins (level 2 and up) still see such posts. Saved items by shadowbanned authors are left out, except for admins (level 2 and up), and only comments on posts the viewer can see are listed (no private messages, nothing on others' drafts). API clients get {"data": [...]} holding each listed item's JSON object, in order. Anonymous browsers are sent to log in.
+They list what the viewer saved that others can still see (not removed, filtered or deleted), newest first, 25 to a page with "page" (from 1; anything else means 1) choosing the page. Content by users the viewer blocks is left out, except that admins (level 2 and up) still see such posts. Saved items by shadowbanned authors are left out, for admins too, and only comments on posts the viewer can see are listed (no private messages, nothing on others' drafts). API clients get {"data": [...]} holding each listed item's JSON object, in order. Anonymous browsers are sent to log in.
 '''
 import pytest
 
@@ -111,14 +111,14 @@ def test_saved_json_leaves_out_shadowbanned_authors_for_shadowbanned_viewers(kin
 
 
 @pytest.mark.parametrize("kind", ["posts", "comments"])
-def test_saved_items_keep_shadowbanned_authors_for_admins(kind):
+def test_saved_items_leave_out_shadowbanned_authors_for_admins_too(kind):
 	viewer = factories.admin(2)
 	_, token = _saved(viewer, kind, author=factories.user(shadowbanned="somemod"))
 
 	r = as_user(viewer).get(_path(viewer, kind))
 
 	assert_html(r, 200)
-	assert_in_payload(r, token)
+	assert_not_in_payload(r, token)
 
 
 def test_saved_comment_pages_hold_25_listed_comments_though_some_are_hidden():

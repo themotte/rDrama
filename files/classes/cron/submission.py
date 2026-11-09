@@ -187,5 +187,7 @@ class ScheduledSubmissionTask(RepeatableTask):
 			op_id=self.author_id_submission,
 			op_name_safe=self.author_name,
 			distinguished=False,
-			is_blocking=False
+			is_blocking=False,
+			is_message=False,
+			listed_on_authors_profile=False
 		)

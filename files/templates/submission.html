@@ -261,7 +261,7 @@
 						{% endif %}
 					</div>
 
-					{% if v and v.can_edit(p) %}
+					{% if v and v.can_edit(p) and not content_hidden %}
 						<div id="edit-post-body-{{p.id}}" class="d-none comment-write collapsed child">
 							<form id="post-edit-form-{{p.id}}" action="{{p.edit_url}}" method="post" enctype="multipart/form-data">
 								<div class="d-flex flex-column">
@@ -302,7 +302,7 @@
 							</a>
 						</li>
 
-						{% if v and v.can_edit(p) %}
+						{% if v and v.can_edit(p) and not content_hidden %}
 							<a class="list-inline-item" role="button" onclick="togglePostEdit('{{p.id}}')"><i class="fas fa-edit"></i>Edit</a>
 						{% endif %}
 
