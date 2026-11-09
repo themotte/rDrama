@@ -103,6 +103,7 @@ The suite is being turned into a behavioral specification for a clean-room reimp
 - Comments and docstrings describe behavior, never how the current implementation achieves it.
 - Outbound HTTP is blocked; a test fails if the app attempted any request it wasn't given an answer for. Register canned responses (or unreachable hosts) with `external_web` and read what was requested from `external_web.requests()`. Mail is captured instead of sent; read it with `sent_mail()`. Background work is deferred in test mode; run it with `run_background_work()`. Run the site's command-line commands with `cli(name, *args)` and check them with `assert_cli_ok`.
 - Never call a factory inside a `db_diff` block: its inserts would count as the request's writes.
+- Every route has a row in the route table, `spec/harness/routes.py` (method, path, gate, API clients); `internal/test_route_table.py` keeps it equal to the app, and `spec/routes/` checks each gate. A passing run that collected every spec test (nothing deselected) fails when some route isn't requested by any spec test outside `spec/routes/` in a way its gate lets through (not answered with 401, 403 or a login redirect).
 
 ## Development Environment
 

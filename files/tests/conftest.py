@@ -6,6 +6,8 @@ import pytest
 import traceback
 import warnings
 
+from files.tests import route_coverage
+
 NEW_TIER_DIRS = ("spec", "internal")
 
 
@@ -31,6 +33,57 @@ def pytest_collection_modifyitems(config, items):
 		item.add_marker(pytest.mark.xdist_group("legacy"))
 	if legacy and testenv.WORKER and not config.option.loadgroup:
 		raise pytest.UsageError("the legacy tests must run together in one worker: add --dist loadgroup")
+
+
+# Route coverage (route_coverage.py), checked when a run collected every spec test and passed
+_coverage = {"deselected": 0, "complete": True, "seen": set(), "unrequested": None}
+
+
+def pytest_deselected(items):
+	_coverage["deselected"] += len(items)
+
+
+def pytest_collection_finish(session):
+	_coverage["complete"] = not session.config.getoption("collectonly") and route_coverage.collected_whole_spec({item.path for item in session.items}, _coverage["deselected"], session.config.args)
+
+
+@pytest.hookimpl(wrapper=True)
+def pytest_runtest_call(item):
+	route_coverage.start(item.path)
+	try:
+		return (yield)
+	finally:
+		route_coverage.stop()
+
+
+@pytest.hookimpl(optionalhook=True)
+def pytest_testnodedown(node, error):
+	# A worker that crashed sends no output
+	output = getattr(node, "workeroutput", {}).get("route_coverage")
+	if output is None:
+		_coverage["complete"] = False
+		return
+	_coverage["complete"] &= output["complete"]
+	_coverage["seen"] |= {tuple(pair) for pair in output["seen"]}
+
+
+def pytest_sessionfinish(session, exitstatus):
+	if hasattr(session.config, "workeroutput"):
+		session.config.workeroutput["route_coverage"] = {"complete": _coverage["complete"], "seen": sorted(route_coverage.seen())}
+		return
+	if exitstatus != pytest.ExitCode.OK or not _coverage["complete"]:
+		return
+	_coverage["unrequested"] = route_coverage.unrequested(_coverage["seen"] | route_coverage.seen())
+	if _coverage["unrequested"]:
+		session.exitstatus = pytest.ExitCode.TESTS_FAILED
+
+
+def pytest_terminal_summary(terminalreporter):
+	if _coverage["unrequested"]:
+		terminalreporter.section("routes no spec test gets past the gate of", red=True)
+		for route in _coverage["unrequested"]:
+			terminalreporter.write_line(route)
+		terminalreporter.write_line("(the run fails: every route needs a spec test outside spec/routes/ that the gate lets through)", red=True)
 
 
 class LazyLoadWarning(UserWarning):
