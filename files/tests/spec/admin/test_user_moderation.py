@@ -197,10 +197,9 @@ def test_admin_sets_a_locked_flair():
 	assert_redirect(r, _profile(user))
 	d.assert_exactly(
 		updated={"users": {user["id"]: {"customtitleplain": title, "customtitle": title, "flairchanged": ANY}}},
-		inserted={"modactions": [_mod_action("set_flair_locked", actor, user, _note=ANY)]},
+		inserted={"modactions": [_mod_action("set_flair_locked", actor, user, _note=f'"{title}"')]},
 	)
 	assert db.row("users", id=user["id"])["flairchanged"] > time.time() + FLAIR_LOCK_HORIZON
-	assert title in d.inserted["modactions"][0]["_note"]
 
 
 def test_flair_shows_on_the_profile_as_text():
@@ -242,9 +241,8 @@ def test_admin_sets_an_unlocked_flair_lifting_a_lock():
 	assert_redirect(r, _profile(user))
 	d.assert_exactly(
 		updated={"users": {user["id"]: {"customtitleplain": title, "customtitle": title, "flairchanged": None}}},
-		inserted={"modactions": [_mod_action("set_flair_notlocked", actor, user, _note=ANY)]},
+		inserted={"modactions": [_mod_action("set_flair_notlocked", actor, user, _note=f'"{title}"')]},
 	)
-	assert title in d.inserted["modactions"][0]["_note"]
 
 
 # Bans

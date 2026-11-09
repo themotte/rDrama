@@ -1,7 +1,7 @@
 '''
 Banned domains, whose links can't be submitted (see spec/posts/test_submit), managed by level-3 admins:
 - GET /admin/banned_domains/ lists every banned domain with its reason.
-- POST /admin/banned_domains with "domain" and "reason" bans the domain, or, if it is already banned (in any letter case), unbans it (the reason is then ignored). Either way it logs a mod action and sends the browser back to the list. Surrounding whitespace is trimmed from both fields; a missing or blank domain, or a domain or reason over 100 characters, is 400.
+- POST /admin/banned_domains with "domain" and "reason" bans the domain, or, if it is already banned (in any letter case), unbans it (the reason is then ignored). Either way it logs a mod action, noting `<domain>, reason: <reason>` for a ban and the domain for an unban, and sends the browser back to the list. Surrounding whitespace is trimmed from both fields; a missing or blank domain, or a domain or reason over 100 characters, is 400.
 '''
 import pytest
 
@@ -36,10 +36,8 @@ def test_admin_bans_a_domain_with_a_reason():
 	assert_redirect(r, LIST)
 	d.assert_exactly(inserted={
 		"banneddomains": [{"domain": domain, "reason": reason}],
-		"modactions": [{"kind": "ban_domain", "user_id": admin["id"], "target_user_id": None, "target_submission_id": None, "target_comment_id": None}],
+		"modactions": [{"kind": "ban_domain", "user_id": admin["id"], "target_user_id": None, "target_submission_id": None, "target_comment_id": None, "_note": f"{domain}, reason: {reason}"}],
 	})
-	note = d.inserted["modactions"][0]["_note"]
-	assert domain in note and reason in note, note
 
 
 def test_submitting_an_already_banned_domain_unbans_it():

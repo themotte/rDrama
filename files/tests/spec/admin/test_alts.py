@@ -1,6 +1,6 @@
 '''
 Alt accounts, as admins record and compare them:
-- POST /admin/link_accounts records that the users with ids "u1" and "u2" are the same person, as a manual link, logs it in the mod log against "u1" (an entry only admins see), and shows the two users' vote comparison. Linking an account to itself or to an account it's already linked to, or naming an account that doesn't exist, is refused with 400.
+- POST /admin/link_accounts records that the users with ids "u1" and "u2" are the same person, as a manual link, logs it in the mod log against "u1", noting `with <u2>` (an entry only admins see), and shows the two users' vote comparison. Linking an account to itself or to an account it's already linked to, or naming an account that doesn't exist, is refused with 400.
 - GET /admin/alt_votes compares the voting of the users named "u1" and "u2"; without both it shows an empty comparison form.
 '''
 import pytest
@@ -18,7 +18,7 @@ def test_admin_links_two_accounts():
 	assert_redirect(r, "/admin/alt_votes", query_keys=["u1", "u2"])
 	d.assert_exactly(inserted={
 		"alts": [{"user1": u1["id"], "user2": u2["id"], "is_manual": True}],
-		"modactions": [{"kind": "link_accounts", "user_id": admin["id"], "target_user_id": u1["id"], "target_submission_id": None, "target_comment_id": None}],
+		"modactions": [{"kind": "link_accounts", "user_id": admin["id"], "target_user_id": u1["id"], "target_submission_id": None, "target_comment_id": None, "_note": f"with {u2['id']}"}],
 	})
 
 
