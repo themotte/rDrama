@@ -91,7 +91,7 @@ def notifications_posts(v: User):
 		if not n.read:
 			n.read = True
 			c.unread = True
-		if n.created_utc > 1620391248: c.notif_utc = n.created_utc
+		c.notif_utc = n.created_utc
 		items.append(c)
 
 	g.db.commit()
