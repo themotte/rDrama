@@ -295,10 +295,6 @@ def get_comments(
 			blocked.c.target_id,
 		).filter(Comment.id.in_(cids))
 
-		if v.admin_level < PERMS['USER_SHADOWBAN']:
-			query = query.join(User, User.id == Comment.author_id) \
-				.filter(or_(User.shadowbanned == None, Comment.author_id == v.id))
-
 		query = query.join(
 			votes,
 			votes.c.comment_id == Comment.id,
@@ -313,9 +309,7 @@ def get_comments(
 			isouter=True
 		)
 	else:
-		query = g.db.query(Comment) \
-			.join(User, User.id == Comment.author_id) \
-			.filter(User.shadowbanned == None, Comment.id.in_(cids))
+		query = g.db.query(Comment).filter(Comment.id.in_(cids))
 
 	query = query.options(
 		selectinload(Comment.author).options(*author_load_options(v)),
