@@ -17,11 +17,8 @@ def pytest_configure(config):
 	# xdist sets "load" when -n is given without --dist; its workers run with "no"
 	if config.getoption("dist", "no") not in ("no", "loadgroup"):
 		raise pytest.UsageError("the legacy tests must run together in one worker: add --dist loadgroup")
-
-
-def pytest_sessionstart(session):
-	# A controller handing tests to xdist workers runs none itself; each worker builds its own database
-	if not session.config.pluginmanager.hasplugin("dsession"):
+	# A controller handing tests to xdist workers runs none itself; each worker builds its own database. Built here because pytest replays pytest_configure for a conftest it loads late (as it does without a path below files/tests), unlike pytest_sessionstart.
+	if config.getoption("dist", "no") == "no" or config.getoption("collectonly"):
 		testenv.build_database()
 
 
