@@ -614,6 +614,3 @@ class User(CreatedBase):
 		if self.is_private and not (v and v.admin_level >= PERMS['USER_SET_PROFILE_PRIVACY']): return False
 		return True
 
-	@property
-	def can_see_shadowbanned(self):
-		return self.admin_level >= PERMS['USER_SHADOWBAN'] or self.shadowbanned
