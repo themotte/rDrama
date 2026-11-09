@@ -70,6 +70,16 @@ def test_bio_image_is_appended_as_markdown_image():
 	assert_serves_image(bio[len(f"{token}\n\n![]("):-1])
 
 
+def test_bio_image_shows_as_a_link_to_it():
+	u = factories.user()
+
+	_post(u, {"bio": "text"}, files={"file": uploads.png(2, 2)})
+
+	user = db.row("users", id=u["id"])
+	image = user["bio"][len("text\n\n![]("):-1]
+	assert_same_html(user["bio_html"], f'<p>text</p><p><a href="{image}">{image}</a></p>')
+
+
 def test_bio_image_survives_a_full_length_bio():
 	u = factories.user()
 

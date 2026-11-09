@@ -10,10 +10,9 @@ from bleach.css_sanitizer import CSSSanitizer
 from bleach.linkifier import LinkifyFilter, build_url_re
 from bs4 import BeautifulSoup
 from flask import abort, g
-from mistletoe import markdown
+from mistletoe import HTMLRenderer, markdown
 
 from files.classes.domains import BannedDomain
-from files.helpers.config.const import image_check_regex
 from files.helpers.config.environment import MENTION_LIMIT, SITE_FULL
 from files.helpers.config.regex import *
 from files.helpers.get import get_users
@@ -109,15 +108,23 @@ def sanitize_raw(sanitized:Optional[str], allow_newlines:bool, length_limit:Opti
 		sanitized = sanitized[:length_limit]
 	return sanitized
 
-def sanitize(sanitized, alert=False):
-	# if image url in whitelist, do nothing
-	# eg. ![](https://wikipedia.org/someimage.jpg) turns into ![](https://wikipedia.org/someimage.jpg)
-	# but if not, then extract url
-	# eg ![](https://example.org/someimage.jpg) turns into https://example.org/someimage.jpg
-	sanitized = image_check_regex.sub(r'\1', sanitized)
+class _Renderer(HTMLRenderer):
+	_links_open = 0
 
+	def render_link(self, token) -> str:
+		self._links_open += 1
+		try: return super().render_link(token)
+		finally: self._links_open -= 1
+
+	def render_image(self, token) -> str:
+		'''Images aren't shown inline: each becomes a link to it, labelled with its text or else its address; inside a link, just that label.'''
+		label = self.render_inner(token) or html.escape(token.src)
+		return label if self._links_open else f'<a href="{self.escape_url(token.src)}">{label}</a>'
+
+
+def sanitize(sanitized, alert=False):
 	# transform markdown into html
-	sanitized = markdown(sanitized)
+	sanitized = markdown(sanitized, renderer=_Renderer)
 
 	# turn ~something~ or ~~something~~  into <del>something</del>
 	# skip text inside HTML tags so tildes in URLs aren't mangled (fixes #737)

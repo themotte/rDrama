@@ -1,9 +1,10 @@
+import re
 from urllib.parse import parse_qs, urlsplit
 
 from files.tests.spec.harness import config
 from files.tests.spec.harness.http import Client, Response
 
-__all__ = ["assert_status", "assert_redirect", "assert_login_redirect", "assert_api_unauthorized", "assert_json_message", "assert_html", "assert_serves_image", "assert_in_payload", "assert_not_in_payload", "assert_in_order"]
+__all__ = ["assert_status", "assert_redirect", "assert_login_redirect", "assert_api_unauthorized", "assert_json_message", "assert_html", "assert_serves_image", "assert_in_payload", "assert_not_in_payload", "assert_in_order", "assert_same_html", "html_tree"]
 
 
 def _describe(r: Response) -> str:
@@ -85,3 +86,65 @@ def assert_in_order(r: Response, tokens: list[str]):
 		assert_in_payload(r, token)
 	positions = [r.text.index(token) for token in tokens]
 	assert positions == sorted(positions), f"expected {tokens!r} in this order, but they appear in the order {sorted(tokens, key=r.text.index)!r}"
+
+
+_BLOCK_TAGS = {"address", "article", "aside", "blockquote", "dd", "div", "dl", "dt", "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hr", "li", "main", "nav", "ol", "p", "pre", "section", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "ul"}
+
+
+def _attributes(element) -> tuple:
+	attributes = []
+	for name, value in element.attrib.items():
+		if name == "style":
+			value = tuple(sorted(tuple(part.strip() for part in declaration.split(":", 1)) for declaration in value.split(";") if declaration.strip()))
+		attributes.append((name, value))
+	return tuple(sorted(attributes))
+
+
+def _children(element, preformatted: bool) -> list:
+	'''The element's children, text included, as html_tree describes them.'''
+	raw = ([element.text] if element.text else []) + [part for child in element for part in ([child] + ([child.tail] if child.tail else []))]
+	nodes = []
+	for node in raw:
+		if isinstance(node, str):
+			nodes.append(node if preformatted else re.sub(r"[ \t\n\r\f]+", " ", node))
+		elif isinstance(node.tag, str):
+			nodes.append(_node(node, preformatted))
+		else:
+			raise AssertionError(f"unexpected {node!r} in the HTML")
+	if preformatted:
+		return [node for node in nodes if node != ""]
+	# Spaces at the edges of a block, next to a block or a line break, aren't shown
+	shown = []
+	for i, node in enumerate(nodes):
+		if isinstance(node, str):
+			before = nodes[i - 1] if i else None
+			after = nodes[i + 1] if i + 1 < len(nodes) else None
+			if before is None or (not isinstance(before, str) and before[0] in _BLOCK_TAGS | {"br"}):
+				node = node.lstrip(" ")
+			if after is None or (not isinstance(after, str) and after[0] in _BLOCK_TAGS | {"br"}):
+				node = node.rstrip(" ")
+			if node:
+				shown.append(node)
+		else:
+			shown.append(node)
+	return shown
+
+
+def _node(element, preformatted: bool):
+	inside_pre = preformatted or element.tag == "pre"
+	children = _children(element, inside_pre)
+	if element.tag == "pre" and children and isinstance(children[0], str) and children[0].startswith("\n"):
+		children[0] = children[0][1:]
+	return (element.tag, _attributes(element), tuple(children))
+
+
+def html_tree(html: str):
+	'''`html` as an element tree: (tag, sorted attributes with "style" as sorted declarations, children), text as strings. Outside <pre>, runs of whitespace are one space, and spaces a browser wouldn't show (at the edges of a block, next to a block or a line break) are dropped. Comments aren't allowed.'''
+	import lxml.html
+	wrapper = lxml.html.fragment_fromstring(html, create_parent="div") if html.strip() else lxml.html.fragment_fromstring("<div></div>")
+	return tuple(_children(wrapper, False))
+
+
+def assert_same_html(actual: str, expected: str):
+	'''`actual` and `expected` are the same HTML: the same elements, attributes and text, whatever the attribute order and the whitespace a browser wouldn't show.'''
+	assert html_tree(actual) == html_tree(expected), f"rendered {actual!r}, expected {expected!r}"
