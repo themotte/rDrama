@@ -1,5 +1,5 @@
 '''
-The post page: GET /post/<id> and /post/<id>/<anything> (the trailing segment is a cosmetic slug and is ignored). Query parameter "sort" orders the comments (default: the viewer's comment sort preference, "new" for visitors). API clients get the post as JSON.
+The post page: GET /post/<id> and /post/<id>/<anything> (the trailing segment is a cosmetic slug and is ignored). Query parameter "sort" orders the comments, each set of replies as well as the top-level ones (default: the viewer's comment sort preference, "new" for visitors): new, old, top, bottom, controversial and comments (most replies first, counting replies at every depth), by the formulas and tie-breaks of the front page's sorts (spec/listings/test_front.py). Pinned comments come first whatever the sort, newest first among themselves. A page holds whole top-level threads in that order until it has 200 or more comments. API clients get the post as JSON.
 '''
 from urllib.parse import parse_qs, urlsplit
 
@@ -412,6 +412,21 @@ def test_comments_with_as_many_replies_list_newest_first(replies, time_order):
 	older, newer = sorted(made, key=lambda c: c["created_utc"])
 
 	assert _order(_page(anon(), post, params={"sort": "comments"}), [older, newer]) == [newer["id"], older["id"]]
+
+
+@pytest.mark.parametrize("replies", [False, True], ids=["top-level", "replies"])
+@pytest.mark.parametrize("sort, first_overrides, second_overrides", [
+	("top", {"upvotes": 3}, {"upvotes": 5, "downvotes": 3}),
+	("controversial", {"upvotes": 4, "downvotes": 2}, {"upvotes": 3, "downvotes": 1}),
+	("controversial", {"upvotes": 2, "downvotes": 5, "created_utc": 1000}, {"upvotes": 5, "downvotes": 2, "created_utc": 2000}),
+], ids=["top by score", "controversial by the ratio sum", "controversial ties by most downvotes"])
+def test_comment_sort_formulas(sort, first_overrides, second_overrides, replies):
+	post = factories.post(factories.user())
+	parent = factories.comment(factories.user(), post, created_utc=500) if replies else None
+	first = factories.comment(factories.user(), post, parent=parent, **{"created_utc": 1000, **first_overrides})
+	second = factories.comment(factories.user(), post, parent=parent, **{"created_utc": 1000, **second_overrides})
+
+	assert _order(_page(anon(), post, params={"sort": sort}), [first, second]) == [first["id"], second["id"]]
 
 
 @pytest.mark.parametrize("sort", ["hot", "bogus"])

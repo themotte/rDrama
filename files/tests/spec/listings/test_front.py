@@ -2,7 +2,7 @@
 The front page, GET / (also GET /catalog), lists posts for anyone, logged in or not.
 
 - A page holds the viewer's front page size ("frontsize": 15, 25, 50 or 100; 25 when logged out), and "page" (from 1) chooses the page.
-- "sort" orders the posts: new (newest first), old, top (highest score first), bottom, controversial (closest to evenly split votes first), comments (most comments first), hot (score weighed against age). Without "sort", a logged-in viewer gets their default sort ("defaultsorting") and anyone else new. Ties fall back to newest first, and posts made in the same second to the last made (highest id) first; with old, the first made first.
+- "sort" orders the posts: new (newest first), old (oldest first), top (highest upvotes − downvotes first), bottom (lowest first), comments (most comments first), controversial (lowest (u + 1)/(d + 1) + (d + 1)/(u + 1) first, for u upvotes and d downvotes; then most downvotes first) and hot (highest (u + 1)/(a/1000)^1.23 first, where a is the post's age in seconds plus 3600). Without "sort", a logged-in viewer gets their default sort ("defaultsorting") and anyone else new. Ties fall back to newest first, and posts made in the same second to the last made (highest id) first; with old, the first made first. Every list of posts or comments sorted by one of these names uses these formulas; comments have no hot sort, and their comments sort counts the replies at every depth below them. Scores computed in double precision are close enough: implementations may differ only between scores that agree to about 15 significant digits.
 - "t" (hour, day, week, month, year, all) keeps only posts created within that long (a month is 30 days, a year 365). "after" and "before" (Unix times) instead keep only posts created strictly after or before that time; with either, "t" doesn't apply.
 - Pinned posts come first, above the sorted list and newest first among themselves, on the first page when neither "after" nor "before" is given; they are then left out of the sorted list on every page, so the first page still holds a full page besides them. Pins ignore the sort, the time window, filter words and the changelog subscription. With "after" or "before", pinned posts are sorted with the rest. A pin made with an expiry time stops being pinned once that time has passed.
 - Changelog posts (see test_changelog) are left out unless the viewer subscribes to the changelog.
@@ -95,6 +95,31 @@ def test_hot_weighs_score_against_age():
 	r = anon().get("/", params={"sort": "hot"})
 
 	assert_in_order(r, [new_unvoted["title"], old_popular["title"]])
+
+
+# Each pair is in its expected order, and the simpler formula named would swap it; ages in seconds
+FORMULAS = {
+	"top by score, not upvotes": ("top", {"upvotes": 3}, {"upvotes": 5, "downvotes": 3}),
+	"controversial by the ratio sum, not the difference": ("controversial", {"upvotes": 4, "downvotes": 2}, {"upvotes": 3, "downvotes": 1}),
+	"controversial by the ratio sum, not one ratio": ("controversial", {"upvotes": 3, "downvotes": 3}, {"upvotes": 1, "downvotes": 5}),
+	"controversial adds one to each count": ("controversial", {"upvotes": 3, "downvotes": 1}, {"upvotes": 10, "downvotes": 4}),
+	"controversial ties by most downvotes": ("controversial", {"upvotes": 2, "downvotes": 5, "age": 7200}, {"upvotes": 5, "downvotes": 2, "age": 60}),
+	"hot ignores downvotes": ("hot", {"upvotes": 3, "downvotes": 10}, {"upvotes": 2}),
+	"hot adds one to the upvotes": ("hot", {"upvotes": 0, "age": 0}, {"upvotes": 1, "age": 20000}),
+	"hot counts an hour onto every age": ("hot", {"upvotes": 10, "age": 10000}, {"upvotes": 1, "age": 100}),
+	"hot raises the age to the power 1.23": ("hot", {"upvotes": 9, "age": 6400}, {"upvotes": 109, "age": 96400}),
+}
+
+
+@pytest.mark.parametrize("case", FORMULAS)
+def test_sort_formulas(case):
+	sort, *pair = FORMULAS[case]
+	now = int(time.time())
+	first, second = (_post(created_utc=now - overrides.pop("age", 3600), **overrides) for overrides in (dict(p) for p in pair))
+
+	r = anon().get("/", params={"sort": sort})
+
+	assert_in_order(r, [first["title"], second["title"]])
 
 
 @pytest.mark.parametrize("sort", SORTS)
