@@ -48,17 +48,12 @@ def send_notification(uid, text, autojanny=False):
 
 
 def notif_comment(text, autojanny=False):
-	if autojanny:
-		author_id = AUTOJANNY_ID
-		alert = True
-	else:
-		author_id = NOTIFICATIONS_ID
-		alert = False
+	author_id = AUTOJANNY_ID if autojanny else NOTIFICATIONS_ID
 
 	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, body=text).order_by(Comment.id).first()
 
 	if existing: return existing[0]
-	else: return create_comment(text, sanitize(text, alert=alert), autojanny)
+	else: return create_comment(text, sanitize(text), autojanny)
 
 
 def notif_comment2(p):
@@ -70,7 +65,7 @@ def notif_comment2(p):
 	if existing: return existing[0]
 	else:
 		text = f"@{p.author.username} has mentioned you: [{p.title}](/post/{p.id})"
-		return create_comment(text, sanitize(text, alert=True))
+		return create_comment(text, sanitize(text))
 
 
 def add_notif(cid, uid):

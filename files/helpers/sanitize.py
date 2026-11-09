@@ -164,7 +164,7 @@ class _Renderer(HTMLRenderer):
 		return label if self._links_open else f'<a href="{self.escape_url(token.src)}">{label}</a>'
 
 
-def sanitize(sanitized, alert=False):
+def sanitize(sanitized):
 	# transform markdown into html
 	sanitized = markdown(sanitized, renderer=_Renderer)
 
@@ -181,18 +181,17 @@ def sanitize(sanitized, alert=False):
 	for u in get_users(mentioned, graceful=True):
 		if not u: continue
 		users[u.username.lower()] = users[u.original_username.lower()] = u
-	if not alert and len(set(users.values())) > MENTION_LIMIT:
+	if len(set(users.values())) > MENTION_LIMIT:
 		abort(400, f'Mentioned {len(set(users.values()))} users but limit is {MENTION_LIMIT}')
 
 	def _mention(m):
 		u = users.get(m.group(2).lower())
-		if not u or (not alert and g.v and g.v.any_block_exists(u) and g.v.admin_level < 2): return m.group(0)
+		if not u or (g.v and g.v.any_block_exists(u) and g.v.admin_level < 2): return m.group(0)
 		return f'{m.group(1)}<a href="/id/{u.id}">@{u.username}</a>'
 
 	def _links(text: str) -> str:
-		if not alert:
-			text = _reddit_text_regex.sub(r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">/\2</a>', text)
-			text = _hole_text_regex.sub(r'\1<a href="/\2">/\2</a>', text)
+		text = _reddit_text_regex.sub(r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">/\2</a>', text)
+		text = _hole_text_regex.sub(r'\1<a href="/\2">/\2</a>', text)
 		return _mention_text_regex.sub(_mention, text)
 
 	_on_text(soup, _links)
