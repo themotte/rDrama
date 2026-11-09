@@ -31,7 +31,6 @@ class ScheduledSubmissionTask(RepeatableTask):
 	ghost = Column(Boolean, default=False, nullable=False)
 	private = Column(Boolean, default=False, nullable=False)
 	over_18 = Column(Boolean, default=False, nullable=False)
-	is_bot = Column(Boolean, default=False, nullable=False)
 	title = Column(String(SUBMISSION_TITLE_LENGTH_MAXIMUM), nullable=False)
 	url = Column(String)
 	body = Column(Text)
@@ -69,7 +68,7 @@ class ScheduledSubmissionTask(RepeatableTask):
 			author_id=self.author_id_submission,
 			over_18=self.over_18,
 			app_id=None,
-			is_bot =self.is_bot,
+			is_bot=False,
 			title=title,
 			title_html=title_html,
 			url=self.url,

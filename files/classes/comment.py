@@ -35,7 +35,6 @@ class Comment(CreatedBase, AuthorShadowban):
 	over_18 = Column(Boolean, default=False, nullable=False)
 	is_bot = Column(Boolean, default=False, nullable=False)
 	is_pinned = Column(String)
-	is_pinned_utc = Column(Integer)
 	sentto = Column(Integer, ForeignKey("users.id"))
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	upvotes = Column(Integer, default=1, nullable=False)

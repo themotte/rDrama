@@ -220,7 +220,6 @@ class RepeatableTaskRun(CreatedBase):
 	
 	id = Column(Integer, primary_key=True)
 	task_id = Column(Integer, ForeignKey(RepeatableTask.id), nullable=False)
-	manual = Column(Boolean, default=False, nullable=False)
 	traceback_str = Column(Text, nullable=True)
 
 	completed_utc = Column(DateTime)

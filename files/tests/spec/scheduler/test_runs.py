@@ -47,7 +47,7 @@ def test_a_run_records_when_it_started_and_finished():
 	run_scheduler(SLOT)
 
 	[run] = db.rows("tasks_repeatable_runs", task_id=scheduled["id"])
-	assert (run["created_utc"], run["completed_utc"], run["traceback_str"], run["manual"]) == (_epoch(SLOT), SLOT.replace(tzinfo=None), None, False)
+	assert (run["created_utc"], run["completed_utc"], run["traceback_str"]) == (_epoch(SLOT), SLOT.replace(tzinfo=None), None)
 
 
 def test_a_failed_run_is_recorded_with_its_details():

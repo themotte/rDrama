@@ -265,7 +265,7 @@ def _task(author: dict, type_id: int, subtype_table: str, subtype_values: dict, 
 def scheduled_post(author: dict, **overrides) -> dict:
 	'''A scheduled post `author` wrote, with a fresh sentinel title and body, enabled but on no days unless overridden. Overrides name columns of tasks_repeatable (the schedule: frequency_day, time_of_day_utc, enabled, ...) or of tasks_repeatable_scheduled_submissions (the content).'''
 	body = overrides.pop("body", unique("body"))
-	content = dict(author_id_submission=author["id"], ghost=False, private=False, over_18=False, is_bot=False, title=unique("title"), body=body, body_html=f"<p>{html.escape(body)}</p>")
+	content = dict(author_id_submission=author["id"], ghost=False, private=False, over_18=False, title=unique("title"), body=body, body_html=f"<p>{html.escape(body)}</p>")
 	return _task(author, 2, "tasks_repeatable_scheduled_submissions", content, overrides)
 
 
@@ -276,4 +276,4 @@ def job(author: dict, import_path: str, callable: str, **overrides) -> dict:
 
 def task_run(task: dict, **overrides) -> dict:
 	'''A finished, successful run of `task` unless overridden.'''
-	return db.insert("tasks_repeatable_runs", **{**dict(task_id=task["id"], manual=False, created_utc=2000, completed_utc="2020-01-01T00:00:00"), **overrides})
+	return db.insert("tasks_repeatable_runs", **{**dict(task_id=task["id"], created_utc=2000, completed_utc="2020-01-01T00:00:00"), **overrides})

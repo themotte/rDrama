@@ -118,7 +118,6 @@ def tasks_scheduled_posts_post(v:User):
 		ghost=_get_request_bool("ghost"),
 		private=_get_request_bool("private"),
 		over_18=_get_request_bool("over_18"),
-		is_bot=False, # TODO: do we need this?
 		title=validated_post.title,
 		url=validated_post.url,
 		body=validated_post.body,

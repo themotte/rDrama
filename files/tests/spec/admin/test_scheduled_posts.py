@@ -40,7 +40,7 @@ def test_admin_creates_a_scheduled_post_for_the_ticked_days():
 	assert_redirect(r, f"/tasks/scheduled_posts/{task_id}")
 	d.assert_exactly(inserted={
 		"tasks_repeatable": [{"id": task_id, "author_id": admin["id"], "type_id": 2, "run_state": 1, "enabled": True, "frequency_day": MONDAY | FRIDAY, "time_of_day_utc": time(13, 30), "schedule_changed_utc": between(before, utc_now_naive())}],
-		"tasks_repeatable_scheduled_submissions": [{"id": task_id, "author_id_submission": admin["id"], "title": title, "body": body, "ghost": False, "private": False, "over_18": False, "is_bot": False}],
+		"tasks_repeatable_scheduled_submissions": [{"id": task_id, "author_id_submission": admin["id"], "title": title, "body": body, "ghost": False, "private": False, "over_18": False}],
 	})
 
 
