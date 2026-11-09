@@ -20,18 +20,15 @@ from files.helpers.wrappers import age_unconfirmed
 
 
 def _listable(items, cls, not_draft, v: Optional[User], admins_see_drafts_and_deleted: bool):
-	# The permissions visibility_and_message checks: moderating for states and blocks, shadowbanning for shadowbans
+	# The permission visibility_and_message checks for states and blocks; shadowbans follow its rule for listings
 	can_moderate = v and v.admin_level >= PERMS['POST_COMMENT_MODERATION']
-	can_shadowban = v and v.admin_level >= PERMS['USER_SHADOWBAN']
 	own = cls.author_id == v.id if v else false()
 	if not (can_moderate and admins_see_drafts_and_deleted):
 		items = items.filter(not_draft, cls.state_user_deleted_utc == None)
 	if not can_moderate:
 		items = items.filter(or_(own, cls.state_mod == StateMod.VISIBLE))
 		if v: items = items.filter(cls.author_id.notin_(v.userblocks))
-	if not can_shadowban:
-		items = items.filter(or_(own, not_(cls.author.has(User.shadowbanned != None))))
-	return items
+	return items.filter(cls.shadowban_shown_sql(v))
 
 
 def listable_posts(posts, v: Optional[User], *, admins_see_drafts_and_deleted: bool = False):

@@ -246,7 +246,7 @@ def admin_app_reject(v, aid):
 def admin_app_id(v, aid):
 	oauth = _app(aid)
 
-	pids=oauth.idlist(page=request_page())
+	pids=oauth.idlist(v, page=request_page())
 
 	next_exists=len(pids)==101
 	pids=pids[:100]
@@ -265,7 +265,7 @@ def admin_app_id(v, aid):
 def admin_app_id_comments(v, aid):
 	oauth = _app(aid)
 
-	cids=oauth.comments_idlist(page=request_page())
+	cids=oauth.comments_idlist(v, page=request_page())
 
 	next_exists=len(cids)==101
 	cids=cids[:100]

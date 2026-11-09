@@ -4,6 +4,8 @@ import enum
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from sqlalchemy import or_, true
+
 from files.helpers.config.const import PERMS
 
 if TYPE_CHECKING:
@@ -17,6 +19,13 @@ class AuthorShadowban:
 	def shadowban_hides_from(self, v) -> bool:
 		'''Whether its author's shadowban hides it from `v`: from everyone but the author and admins (level 2+).'''
 		return bool(self.author.shadowbanned) and not (v and (v.id == self.author_id or v.admin_level >= PERMS['USER_SHADOWBAN']))
+
+	@classmethod
+	def shadowban_shown_sql(cls, v):
+		'''The SQL condition that its author's shadowban doesn't hide an item from `v` in a listing: the author isn't shadowbanned, or is `v`, or `v` is an admin from level 2.'''
+		if v and v.admin_level >= PERMS['USER_SHADOWBAN']: return true()
+		shown = cls.author.has(shadowbanned=None)
+		return or_(shown, cls.author_id == v.id) if v else shown
 
 
 class StateMod(enum.Enum):

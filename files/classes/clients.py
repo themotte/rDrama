@@ -45,16 +45,14 @@ class OauthApp(Base):
 	@lazy
 	def permalink(self): return f"/admin/app/{self.id}"
 
-	@lazy
-	def idlist(self, page=1):
-		posts = g.db.query(Submission.id).filter_by(app_id=self.id)
+	def idlist(self, v, page=1):
+		posts = g.db.query(Submission.id).filter(Submission.app_id == self.id, Submission.shadowban_shown_sql(v))
 		posts=posts.order_by(Submission.created_utc.desc(), Submission.id.desc())
 		posts=posts.offset(100*(page-1)).limit(101)
 		return [x[0] for x in posts.all()]
 
-	@lazy
-	def comments_idlist(self, page=1):
-		posts = g.db.query(Comment.id).filter_by(app_id=self.id)
+	def comments_idlist(self, v, page=1):
+		posts = g.db.query(Comment.id).filter(Comment.app_id == self.id, Comment.shadowban_shown_sql(v))
 		posts=posts.order_by(Comment.created_utc.desc(), Comment.id.desc())
 		posts=posts.offset(100*(page-1)).limit(101)
 		return [x[0] for x in posts.all()]

@@ -558,8 +558,7 @@ class User(CreatedBase):
 		if self.admin_level < 2:
 			posts = posts.filter(Submission.author_id.notin_(self.userblocks))
 
-		if self.admin_level < PERMS['USER_SHADOWBAN']:
-			posts = posts.filter(or_(Submission.author_id == self.id, not_(Submission.author.has(User.shadowbanned != None))))
+		posts = posts.filter(Submission.shadowban_shown_sql(self))
 
 		return [x[0] for x in posts.order_by(Submission.created_utc.desc(), Submission.id.desc()).all()]
 
@@ -575,8 +574,7 @@ class User(CreatedBase):
 		if self.admin_level < 2:
 			comments = comments.filter(Comment.author_id.notin_(self.userblocks))
 
-		if self.admin_level < PERMS['USER_SHADOWBAN']:
-			comments = comments.join(User, User.id == Comment.author_id).filter(or_(User.shadowbanned == None, Comment.author_id == self.id))
+		comments = comments.filter(Comment.shadowban_shown_sql(self))
 
 		return [x[0] for x in comments.order_by(Comment.created_utc.desc(), Comment.id.desc()).all()]
 
