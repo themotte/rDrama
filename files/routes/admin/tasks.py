@@ -32,7 +32,7 @@ def _modify_task_schedule(pid:int):
 		task.schedule_changed_utc = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 	g.db.commit()
 
-@app.get('/tasks/')
+@app.get('/tasks')
 @admin_level_required(PERMS['SCHEDULER'])
 def tasks_get(v:User):
 	tasks:list[RepeatableTask] = \
@@ -40,7 +40,7 @@ def tasks_get(v:User):
 	return render_template("admin/tasks/tasks.html", v=v, listing=tasks)
 
 
-@app.get('/tasks/<int:task_id>/')
+@app.get('/tasks/<int:task_id>')
 @admin_level_required(PERMS['SCHEDULER'])
 def tasks_get_task(v:User, task_id:int):
 	task:RepeatableTask = g.db.get(RepeatableTask, task_id)
@@ -48,7 +48,7 @@ def tasks_get_task(v:User, task_id:int):
 	return render_template("admin/tasks/single_task.html", v=v, task=task)
 
 
-@app.get('/tasks/<int:task_id>/runs/')
+@app.get('/tasks/<int:task_id>/runs')
 @admin_level_required(PERMS['SCHEDULER'])
 def tasks_get_task_redirect(v:User, task_id:int): # pyright: ignore
 	return redirect(f'/tasks/{task_id}/')
@@ -71,7 +71,7 @@ def task_schedule_post(v:User, task_id:int): # pyright: ignore
 	return redirect(f'/tasks/{task_id}')
 
 
-@app.get('/tasks/scheduled_posts/')
+@app.get('/tasks/scheduled_posts')
 @admin_level_required(PERMS['SCHEDULER_POSTS'])
 def tasks_scheduled_posts_get(v:User):
 	submissions:list[ScheduledSubmissionTask] = \
@@ -91,7 +91,7 @@ def _get_request_dayofweek() -> DayOfWeek:
 	return days
 
 
-@app.post('/tasks/scheduled_posts/')
+@app.post('/tasks/scheduled_posts')
 @admin_level_required(PERMS['SCHEDULER_POSTS'])
 def tasks_scheduled_posts_post(v:User):
 	validated_post:validators.ValidatedSubmissionLike = \

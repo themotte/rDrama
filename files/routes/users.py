@@ -358,7 +358,7 @@ def u_username(username, v=None):
 									is_following=(v and u.has_follower(v)))
 
 
-@app.get("/@<username>/")
+@app.get("/@<username>")
 @auth_desired
 def u_username_comments(username, v=None):
 	user = get_user(username, v=v, include_blocks=True)

@@ -1098,7 +1098,7 @@ def admin_dump_cache(v):
 	return {"message": "Internal cache cleared."}
 
 
-@app.get("/admin/banned_domains/")
+@app.get("/admin/banned_domains")
 @limiter.exempt
 @admin_level_required(3)
 def admin_banned_domains(v):
