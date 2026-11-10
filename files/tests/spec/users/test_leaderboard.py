@@ -4,7 +4,7 @@ GET /leaderboard, for admins of level 2 (anonymous browsers are sent to log in; 
 The page shows several boards, each a section whose element id is "leaderboard-<board>":
 - "truescore", "followers", "posts", "comments": the 25 users with the highest truescore, follower count, post count and comment count, highest first.
 - "blocked": the 25 users blocked by the most users, most blocked first; users nobody blocks aren't ranked.
-- "received-downvotes" and "given-upvotes": the 25 users who received the most downvotes, and who gave the most upvotes, on posts and comments. These are expensive to compute, so the `leaderboard_recalc` command computes them ahead of time; until it has run, the page leaves both out.
+- "received-downvotes" and "given-upvotes": the 25 users who received the most downvotes, and who gave the most upvotes, on posts and comments. These are expensive to compute, so the `leaderboard_recalc` command computes them ahead of time; until it has run, and again after the cache is dumped (admin/test_dashboard.py), the page leaves both out.
 
 Users tied on a board are listed oldest account (lowest id) first. The page opens with links to each board (#leaderboard-<board>). Each row's count links to the list it counts, where there is one the viewer may open: the user's followers, posts (/@<username>/posts) or comments (/@<username>/), and for admins of level 3, the voter lists behind the precomputed boards (/@<username>/downvoters, /@<username>/upvoting). The viewing admin's own row (with their own count, written with thousands separators) is added after a board's list when they aren't in it (on the blocked board, also when nobody blocks them).
 
@@ -318,6 +318,19 @@ def test_precomputed_boards_show_once_computed():
 	assert_html(r, 200)
 	assert target["username"] in _board(r, "received-downvotes")
 	assert voter["username"] in _board(r, "given-upvotes")
+
+
+def test_dumping_the_cache_leaves_the_precomputed_boards_out_until_computed_again():
+	_downvoted(3)
+	assert_cli_ok(cli("leaderboard_recalc"))
+	admin = as_user(factories.admin(2))
+	assert_json_message(admin.post("/admin/dump_cache"))
+
+	r = admin.get("/leaderboard")
+
+	assert_html(r, 200)
+	assert not _has_board(r, "received-downvotes")
+	assert not _has_board(r, "given-upvotes")
 
 
 def test_precomputed_boards_count_comment_votes():

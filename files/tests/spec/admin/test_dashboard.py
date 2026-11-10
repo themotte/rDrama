@@ -2,7 +2,7 @@
 The admin dashboard and the site-wide switches on it:
 - GET /admin is the dashboard, for admins of level 2 and up.
 - POST /admin/site_settings/<setting> changes one runtime site setting (the settings file, see config.site_settings_path), for level-3 admins. A boolean setting takes no "new_value" and is flipped; an integer setting takes the integer to store as "new_value". Anything else is refused with 400, and an unknown setting is 404. It answers JSON, logs a mod action whose kind names the change ("enabled_<setting>", "disabled_<setting>" or "set_<value>_for_<setting>", spaces as underscores, cut to 32 characters), and tells every other level-3 admin through a modmail notification.
-- POST /admin/dump_cache, for level-2 admins, makes the site recompute what it caches (the statistics pages), and logs it.
+- POST /admin/dump_cache, for level-2 admins, empties what the site caches, and logs it: the statistics charts are drawn afresh, and the precomputed leaderboards are left out until next computed (users/test_leaderboard.py).
 '''
 import json
 from urllib.parse import quote
