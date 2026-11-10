@@ -184,7 +184,6 @@ def _hidden_post_content(author, **state):
 		"body": factories.unique("body"),
 		"url": f"https://example.com/{factories.unique('link')}",
 		"thumburl": f"https://example.com/{factories.unique('thumb')}.png",
-		"embed_url": f"<blockquote>{factories.unique('embed')}</blockquote>",
 	}
 	post = factories.post(author, title=factories.unique("title"), **content, **state)
 	return post, content
@@ -193,8 +192,8 @@ def _hidden_post_content(author, **state):
 def _assert_content_hidden(r, post, content):
 	assert_html(r, 200)
 	assert_in_payload(r, post["title"])
-	for sentinel in [content["body"], content["url"], content["thumburl"], content["embed_url"]]:
-		assert_not_in_payload(r, sentinel.removeprefix("<blockquote>").removesuffix("</blockquote>"))
+	for sentinel in [content["body"], content["url"], content["thumburl"]]:
+		assert_not_in_payload(r, sentinel)
 
 
 def _assert_content_shown(r, content):

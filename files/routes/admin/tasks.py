@@ -123,7 +123,6 @@ def tasks_scheduled_posts_post(v:User):
 		body=validated_post.body,
 		body_html=validated_post.body_html,
 		flair=flair,
-		embed_url=validated_post.embed_slow,
 		frequency_day=int(frequency_day),
 		time_of_day_utc=time_of_day_utc,
 		type_id=int(ScheduledTaskType.SCHEDULED_SUBMISSION),

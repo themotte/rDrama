@@ -100,7 +100,6 @@ def seed_db_worker(num_users = 900, num_posts = 40, num_toplevel_comments = 1000
 			url=None,
 			body=f'This is a post by {user.username}',
 			body_html=f'This is a post by {user.username}',
-			embed_url=None,
 			title=f'Clever unique post title number {i}',
 			title_html=f'Clever unique post title number {i}',
 			ghost=False,

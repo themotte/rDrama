@@ -209,7 +209,7 @@
 						<div class="visibility-message">{{p.visibility_state.added_message(v)}}</div>
 						{% else %}
 						{% if p.realurl(v) %}
-							{% if not p.embed_url and not p.is_image and not p.is_video %}
+							{% if not p.is_image and not p.is_video %}
 								<a rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
 									<div class="d-flex d-md-none justify-content-between align-items-center border rounded p-2{% if p.realbody(v) %} mb-3{% endif %}">
 										<span>{{p.domain|truncate(30, True)}}</span>
@@ -219,18 +219,6 @@
 							{% endif %}
 						{% endif %}
 
-						{% if p.embed_url %}
-							{% if p.domain == "twitter.com" %}
-								{{p.embed_url | safe}}
-								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
-									<script src="{{ 'js/twitterlight.js' | asset }}"></script>
-								{% else %}
-									<script src="{{ 'js/twitter.js' | asset }}"></script>
-								{% endif %}
-							{% elif p.domain in ['youtu.be','youtube.com'] and p.embed_url and p.embed_url.startswith('<lite-youtube') %}
-								{{p.embed_url | safe}}
-							{% endif %}
-						{% endif %}
 						<div id="post-text">
 							{% if p.is_image %}
 								<div class="row no-gutters">

@@ -6,9 +6,7 @@ from typing import Optional
 from flask import Request, abort, request
 from werkzeug.datastructures import FileStorage
 
-import files.helpers.embeds as embeds
 import files.helpers.sanitize as sanitize
-from files.helpers.config.environment import YOUTUBE_KEY
 from files.helpers.config.const import (SUBMISSION_BODY_LENGTH_MAXIMUM,
                                  SUBMISSION_TITLE_LENGTH_MAXIMUM,
                                  SUBMISSION_URL_LENGTH_MAXIMUM)
@@ -46,23 +44,6 @@ class ValidatedSubmissionLike:
 	body_html: str
 	url: Optional[str]
 	thumburl: Optional[str]
-
-	@property
-	def embed_slow(self) -> Optional[str]:
-		url:Optional[str] = self.url
-		url_canonical: Optional[urllib.parse.ParseResult] = self.url_canonical
-		if not url or not url_canonical: return None
-
-		embed:Optional[str] = None
-		domain:str = url_canonical.netloc
-
-		if domain == "twitter.com":
-			embed = embeds.twitter(url)
-		
-		if url.startswith('https://youtube.com/watch?v=') and YOUTUBE_KEY:
-			embed = embeds.youtube(url)
-			
-		return embed if embed and len(embed) <= 1500 else None
 
 	@property
 	def url_canonical(self) -> Optional[urllib.parse.ParseResult]:

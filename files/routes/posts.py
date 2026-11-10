@@ -389,7 +389,6 @@ def submit_post(v):
 		url=validated_post.url,
 		body=validated_post.body,
 		body_html=validated_post.body_html,
-		embed_url=validated_post.embed_slow,
 		title=validated_post.title,
 		title_html=validated_post.title_html,
 		ghost=False,

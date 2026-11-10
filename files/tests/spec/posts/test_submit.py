@@ -60,7 +60,7 @@ def test_text_post():
 			"submissions": [{
 				"author_id": author["id"], "title": fields["title"], "title_html": fields["title"], "body": fields["body"], "body_html": f"<p>{fields['body']}</p>\n", "url": None,
 				"private": False, "over_18": False, "is_bot": False, "app_id": None, "ghost": False, "state_mod": "VISIBLE", "state_report": "UNREPORTED",
-				"upvotes": 1, "downvotes": 0, "realupvotes": 1, "views": 0, "comment_count": 0, "embed_url": None, "thumburl": None, "edited_utc": 0,
+				"upvotes": 1, "downvotes": 0, "realupvotes": 1, "views": 0, "comment_count": 0, "thumburl": None, "edited_utc": 0,
 			}],
 			"votes": [{"user_id": author["id"], "vote_type": 1, "real": True}],
 		},
@@ -733,83 +733,11 @@ def test_an_empty_body_image_slot_is_ignored():
 	assert db.rows("submissions")[-1]["body"] == "text"
 
 
-# Embeds
+# Links to video and social sites
 
-TWEET = f"https://twitter.com/someone/status/{123}"
+@pytest.mark.parametrize("url", ["https://youtube.com/watch?v=dQw4w9WgXcQ", "https://twitter.com/someone"])
+def test_video_and_tweet_links_are_plain_link_posts(url):
+	assert_html(_submit(as_user(factories.user()), title="t", url=url), 200)
 
-
-def test_tweets_are_embedded():
-	embed = f"<blockquote>{factories.unique('tweet')}</blockquote>"
-	external_web.serve("https://publish.twitter.com/oembed", headers={"Content-Type": "application/json"}, body=json.dumps({"html": embed}))
-	assert_html(_submit(as_user(factories.user()), title="t", url=TWEET), 200)
-
-	assert db.rows("submissions")[-1]["embed_url"] == embed
-	[(method, requested)] = external_web.requests()
-	assert parse_qs(urlsplit(requested).query)["url"] == [TWEET]
-
-
-def test_tweets_that_cannot_be_fetched_are_not_embedded():
-	external_web.unreachable("https://publish.twitter.com/oembed")
-
-	assert_html(_submit(as_user(factories.user()), title="t", url=TWEET), 200)
-
-	assert db.rows("submissions")[-1]["embed_url"] is None
-
-
-def test_oversized_embeds_are_dropped():
-	external_web.serve("https://publish.twitter.com/oembed", body=json.dumps({"html": "x" * 1501}))
-
-	assert_html(_submit(as_user(factories.user()), title="t", url=TWEET), 200)
-
-	assert db.rows("submissions")[-1]["embed_url"] is None
-
-
-def test_youtube_videos_are_embedded_from_their_start_time():
-	external_web.serve("https://www.googleapis.com/youtube/v3/videos", body=json.dumps({"items": [{}]}))
-
-	assert_html(_submit(as_user(factories.user()), title="t", url="https://youtube.com/watch?v=dQw4w9WgXcQ&t=42s"), 200)
-
-	embed = db.rows("submissions")[-1]["embed_url"]
-	assert "dQw4w9WgXcQ" in embed and "start=42" in embed
-	[(method, requested)] = external_web.requests()
-	assert parse_qs(urlsplit(requested).query)["id"] == ["dQw4w9WgXcQ"]
-
-
-def test_youtube_videos_without_a_start_time_are_embedded():
-	external_web.serve("https://www.googleapis.com/youtube/v3/videos", body=json.dumps({"items": [{}]}))
-
-	assert_html(_submit(as_user(factories.user()), title="t", url="https://youtube.com/watch?v=dQw4w9WgXcQ"), 200)
-
-	embed = db.rows("submissions")[-1]["embed_url"]
-	assert "dQw4w9WgXcQ" in embed and "start=" not in embed and embed.endswith("</lite-youtube>")
-
-
-def test_youtube_videos_that_do_not_exist_are_not_embedded():
-	external_web.serve("https://www.googleapis.com/youtube/v3/videos", body=json.dumps({"items": []}))
-
-	assert_html(_submit(as_user(factories.user()), title="t", url="https://youtube.com/watch?v=dQw4w9WgXcQ"), 200)
-
-	assert db.rows("submissions")[-1]["embed_url"] is None
-
-
-def test_youtube_videos_that_cannot_be_looked_up_are_not_embedded():
-	external_web.unreachable("https://www.googleapis.com/youtube/v3/videos")
-
-	assert_html(_submit(as_user(factories.user()), title="t", url="https://youtube.com/watch?v=dQw4w9WgXcQ"), 200)
-
-	assert db.rows("submissions")[-1]["embed_url"] is None
-
-
-def test_youtube_start_times_that_are_not_numbers_are_ignored():
-	external_web.serve("https://www.googleapis.com/youtube/v3/videos", body=json.dumps({"items": [{}]}))
-
-	assert_html(_submit(as_user(factories.user()), title="t", url="https://youtube.com/watch?v=dQw4w9WgXcQ&t=soon"), 200)
-
-	embed = db.rows("submissions")[-1]["embed_url"]
-	assert "dQw4w9WgXcQ" in embed and "start=" not in embed
-
-
-def test_youtube_links_with_malformed_ids_are_not_looked_up():
-	assert_html(_submit(as_user(factories.user()), title="t", url="https://youtube.com/watch?v=no!"), 200)
-
-	assert db.rows("submissions")[-1]["embed_url"] is None
+	assert db.rows("submissions")[-1]["url"] == url
+	assert external_web.requests() == []

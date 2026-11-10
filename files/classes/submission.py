@@ -52,7 +52,6 @@ class Submission(CreatedBase, AuthorShadowban):
 	body = Column(Text)
 	body_html = Column(Text)
 	flair = Column(String)
-	embed_url = Column(String)
 	task_id = Column(Integer, ForeignKey("tasks_repeatable_scheduled_submissions.id"))
 
 	# Visibility states here
@@ -212,11 +211,6 @@ class Submission(CreatedBase, AuthorShadowban):
 
 	@property
 	@lazy
-	def is_youtube(self):
-		return self.domain == "youtube.com" and self.embed_url and self.embed_url.startswith('<lite-youtube') 
-
-	@property
-	@lazy
 	def thumb_url(self):
 		if self.over_18:
 			return SITE_FULL + assetcache_path('images/nsfw.webp')
@@ -226,7 +220,7 @@ class Submission(CreatedBase, AuthorShadowban):
 			if self.thumburl.startswith('/'):
 				return SITE_FULL + self.thumburl
 			return self.thumburl
-		elif self.is_youtube or self.is_video:
+		elif self.is_video:
 			return SITE_FULL + assetcache_path('images/default_thumb_yt.webp')
 		else:
 			return SITE_FULL + assetcache_path('images/default_thumb_link.webp')

@@ -88,4 +88,3 @@ CARD_VIEW = bool_from_string(environ.get("CARD_VIEW", True))
 # other stuff from const.py that aren't constants
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 
-YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()

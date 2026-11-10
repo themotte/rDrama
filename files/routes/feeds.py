@@ -63,7 +63,7 @@ def feeds_front(sort='new', t='all'):
 
 				doc.stag("link", href=post.permalink)
 
-				image_url = post.thumb_url or post.embed_url or post.url
+				image_url = post.thumb_url
 
 				doc.stag("media:thumbnail", url=image_url)
 

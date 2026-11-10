@@ -58,7 +58,6 @@ utm_regex2 = re.compile('[?&]utm_[a-z]+=[a-z0-9_-]+', flags=re.A)
 # urls
 
 
-yt_id_regex = re.compile('[a-z0-9-_]{5,20}', flags=re.I|re.A)
 
 
 linefeeds_regex = re.compile("([^\\n])\\n([^\\n])", flags=re.A)

@@ -36,7 +36,6 @@ class ScheduledSubmissionTask(RepeatableTask):
 	body = Column(Text)
 	body_html = Column(Text)
 	flair = Column(String)
-	embed_url = Column(String)
 
 	author = relationship("User", foreign_keys=author_id_submission)
 	task = relationship(RepeatableTask)
@@ -77,7 +76,6 @@ class ScheduledSubmissionTask(RepeatableTask):
 			flair=self.flair,
 			ghost=self.ghost,
 			state_mod=StateMod.VISIBLE,
-			embed_url=self.embed_url,
 			task_id=self.id,
 		)
 	

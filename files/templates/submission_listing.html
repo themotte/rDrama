@@ -127,10 +127,6 @@
 						<a role="button" onclick="togglevideo({{p.id}})">
 							<img alt="post thumbnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
 						</a>
-					{% elif p.is_youtube %}
-						<a role="button" onclick="document.getElementById('video-{{p.id}}').classList.toggle('d-none')">
-							<img alt="post thumbnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
-						</a>
 					{% else %}
 						<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
 							<img alt="post thumbnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
@@ -310,10 +306,6 @@
 			<video id="video2-{{p.id}}" controls preload="none" class="vid">
 				<source src="{{p.realurl(v)}}" type="video/mp4">
 			</video>
-		</div>
-	{% elif p.is_youtube %}
-		<div id="video-{{p.id}}" class="{% if p.over_18 or not ((v and v.cardview) or (not v and CARD_VIEW)) %}d-none{% endif %} mt-3 mb-4 youtube_embed">
-			{{p.embed_url | safe}}
 		</div>
 	{% endif %}
 
