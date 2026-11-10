@@ -26,6 +26,7 @@ ENVIRONMENT = {
 	"SITE_SETTINGS_PATH": Env.DEPLOYMENT,
 	"IMAGES_DIR": Env.DEPLOYMENT,
 	"MAIL_SERVER": Env.DEPLOYMENT,
+	"MAIL_PORT": Env.DEPLOYMENT,
 	"MAIL_USERNAME": Env.DEPLOYMENT,
 	"MAIL_PASSWORD": Env.DEPLOYMENT,
 	"HCAPTCHA_SECRET": Env.DEPLOYMENT,
@@ -73,7 +74,7 @@ def images_dir() -> str:
 
 
 def mail_server() -> str:
-	'''The SMTP server the app sends mail through (port 587, STARTTLS).'''
+	'''The SMTP server the app sends mail through: on port MAIL_PORT (587 when unset), over STARTTLS, checking the server's certificate and name against the trusted authorities before logging in with MAIL_USERNAME and MAIL_PASSWORD.'''
 	return os.environ["MAIL_SERVER"]
 
 
