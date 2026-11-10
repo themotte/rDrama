@@ -7,9 +7,7 @@ from files.__main__ import app
 from files.classes.cron.tasks import ScheduledTaskType
 from files.classes.visstate import StateMod, StateReport
 from files.helpers.assetcache import assetcache_path
-from files.helpers.config.environment import (CARD_VIEW, DEFAULT_COLOR,
-	SITE, SITE_FULL, SITE_ID,
-	SITE_TITLE)
+from files.helpers.config.environment import CARD_VIEW, SITE_FULL, SITE_ID, SITE_TITLE
 from files.helpers.time import format_age, format_datetime
 
 from .config.const import *
@@ -50,7 +48,6 @@ def template_asset(asset_path):
 @app.context_processor
 def inject_constants():
 	return {
-		"SITE":SITE,
 		"SITE_ID":SITE_ID,
 		"SITE_TITLE":SITE_TITLE,
 		"SITE_FULL":SITE_FULL,
@@ -63,7 +60,6 @@ def inject_constants():
 		"COMMENT_BODY_LENGTH_MAXIMUM":COMMENT_BODY_LENGTH_MAXIMUM,
 		"SUBMISSION_BODY_LENGTH_MAXIMUM":SUBMISSION_BODY_LENGTH_MAXIMUM,
 		"SUBMISSION_TITLE_LENGTH_MAXIMUM":SUBMISSION_TITLE_LENGTH_MAXIMUM,
-		"DEFAULT_COLOR":DEFAULT_COLOR,
 		"COLORS":COLORS,
 		"THEMES":THEMES,
 		"PERMS":PERMS,

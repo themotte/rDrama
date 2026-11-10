@@ -10,7 +10,6 @@ from files.helpers.strings import bool_from_string
 SITE = environ.get("DOMAIN", '').strip()
 SITE_ID = environ.get("SITE_ID").strip()
 SITE_TITLE = environ.get("SITE_TITLE").strip()
-SCHEME = environ.get('SCHEME', 'http' if 'localhost' in SITE else 'https')
 
 if "localhost" in SITE: 
 	SITE_FULL = 'http://' + SITE
@@ -70,21 +69,9 @@ RESULTS_PER_PAGE_COMMENTS = int(environ.get('RESULTS_PER_PAGE_COMMENTS', 50))
 SCORE_HIDING_TIME_HOURS = int(environ.get('SCORE_HIDING_TIME_HOURS', 0))
 
 
-ENABLE_SERVICES = bool_from_string(environ.get('ENABLE_SERVICES', False))
-'''
-Whether to start up deferred tasks. Usually `True` when running as an app and
-`False` when running as a script (for example to perform migrations).
-
-See https://github.com/themotte/rDrama/pull/427 for more info.
-'''
-
 DBG_VOLUNTEER_PERMISSIVE = bool_from_string(environ.get('DBG_VOLUNTEER_PERMISSIVE', False))
 VOLUNTEER_JANITOR_ENABLE = bool_from_string(environ.get('VOLUNTEER_JANITOR_ENABLE', True))
 
 RATE_LIMITER_ENABLED = not bool_from_string(environ.get('DBG_LIMITER_DISABLED', False))
 
 CARD_VIEW = bool_from_string(environ.get("CARD_VIEW", True))
-
-# other stuff from const.py that aren't constants
-IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
-

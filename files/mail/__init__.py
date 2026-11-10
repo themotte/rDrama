@@ -6,7 +6,7 @@ from flask_mail import Message
 from files.__main__ import app, limiter, mail
 from files.classes.user import User
 from files.helpers.config.const import *
-from files.helpers.config.environment import SITE_ID, SITE_TITLE
+from files.helpers.config.environment import SITE, SITE_ID, SITE_TITLE
 from files.helpers.security import *
 from files.helpers.wrappers import *
 from files.routes.importstar import *

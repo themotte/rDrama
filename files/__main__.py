@@ -17,7 +17,6 @@ import flask_caching
 import flask_compress
 import flask_limiter
 import flask_mail
-import redis
 from sqlalchemy.engine import Engine, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
@@ -117,16 +116,13 @@ from files.helpers.config.const import (DEFAULT_THEME, MAX_CONTENT_LENGTH,
 from files.helpers.config.environment import *
 
 app.config.update({
-	"SITE_ID": SITE_ID,
 	"SITE_TITLE": SITE_TITLE,
 	"SQLALCHEMY_TRACK_MODIFICATIONS": SQLALCHEMY_TRACK_MODIFICATIONS,
-	"DATABASE_URL": DATABASE_URL,
 	"SECRET_KEY": SECRET_KEY,
 	"SERVER_NAME": SERVER_NAME,
 	# Files are revalidated unless their route knows the address can't outlive the content
 	"SEND_FILE_MAX_AGE_DEFAULT": None,
 	"SESSION_COOKIE_NAME": f'session_{SITE_ID.lower()}',
-	"VERSION": "1.0.0",
 	"MAX_CONTENT_LENGTH": MAX_CONTENT_LENGTH,
 	# Text fields are bounded by their own length checks; the default limit of 500 kB per field is below the longest post body
 	"MAX_FORM_MEMORY_SIZE": MAX_CONTENT_LENGTH,
@@ -135,10 +131,6 @@ app.config.update({
 	"PERMANENT_SESSION_LIFETIME": PERMANENT_SESSION_LIFETIME,
 	"DEFAULT_COLOR": DEFAULT_COLOR,
 	"DEFAULT_THEME": DEFAULT_THEME,
-	"FORCE_HTTPS": 1,
-	"UserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36",
-	"HCAPTCHA_SITEKEY": HCAPTCHA_SITEKEY,
-	"HCAPTCHA_SECRET": HCAPTCHA_SECRET,
 	"SPAM_SIMILARITY_THRESHOLD": SPAM_SIMILARITY_THRESHOLD,
 	"SPAM_URL_SIMILARITY_THRESHOLD": SPAM_URL_SIMILARITY_THRESHOLD,
 	"SPAM_SIMILAR_COUNT_THRESHOLD": SPAM_SIMILAR_COUNT_THRESHOLD,
@@ -152,28 +144,16 @@ app.config.update({
 	"DESCRIPTION": DESCRIPTION,
 	"MAIL_USERNAME": MAIL_USERNAME,
 	"MAIL_PASSWORD": MAIL_PASSWORD,
-	"DESCRIPTION": DESCRIPTION,
 	"SETTINGS": {},
 	"SQLALCHEMY_DATABASE_URI": DATABASE_URL,
-	"MENTION_LIMIT": MENTION_LIMIT,
 	"RESULTS_PER_PAGE_COMMENTS": RESULTS_PER_PAGE_COMMENTS,
-	"SCORE_HIDING_TIME_HOURS": SCORE_HIDING_TIME_HOURS,
-	"ENABLE_SERVICES": ENABLE_SERVICES,
 	"RATE_LIMITER_ENABLED": RATE_LIMITER_ENABLED,
 
 	"DBG_VOLUNTEER_PERMISSIVE": DBG_VOLUNTEER_PERMISSIVE,
 	"VOLUNTEER_JANITOR_ENABLE": VOLUNTEER_JANITOR_ENABLE,
 })
 
-# ...and then let's load redis so that...
-
-r = redis.Redis(
-	host=CACHE_REDIS_URL, 
-	decode_responses=True, 
-	ssl_cert_reqs=None
-)
-
-# ...we can configure our ratelimiter...
+# ...and then let's configure our ratelimiter...
 
 def get_remote_addr():
 	with app.app_context():
