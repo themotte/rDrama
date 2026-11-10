@@ -178,7 +178,7 @@ def is_known_bot(response=None):
 		return any(bot in user_agent for bot in bot_patterns) or 'bot' in user_agent
 
 if service.enable_services and not RATE_LIMITER_ENABLED:
-	print("Rate limiter disabled in debug mode!")
+	print("Rate limits are off", file=sys.stderr)
 
 limiter = flask_limiter.Limiter(
 	key_func=get_remote_addr,
