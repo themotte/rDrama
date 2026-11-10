@@ -7,7 +7,11 @@ def _get(query_string):
 
 
 def test_a_query_that_is_not_utf8_is_refused():
-	assert _get("q=\xe9").status_code == 400
+	r = _get("q=\xe9")
+
+	assert r.status_code == 400
+	# With the headers every response carries (spec/routes/test_headers.py)
+	assert all(r.headers.get(name) for name in ("Content-Security-Policy", "Strict-Transport-Security", "X-Frame-Options"))
 
 
 def test_percent_escapes_that_are_not_utf8_are_still_served():

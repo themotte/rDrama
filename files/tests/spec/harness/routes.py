@@ -21,6 +21,8 @@ A request is checked in this order:
 4. API clients (`api_clients` False): refused with 403 where the route is only for the member's own browser, and on every admin route. The routes they may use serve them as their holder's browser (users/test_api_clients).
 5. The route's own rules, in the spec files for its area. Some of those are refusals of their own, such as search refusing known crawlers' User-Agents.
 
+Every response, whatever answered it, carries the same security headers (spec/routes/test_headers.py).
+
 spec/routes checks each gate from below, with values that name nothing; that a route serves those it should, at the lowest level it allows, is in the spec files for its area.
 
 The table describes the site as the spec runs it. The admins' request-performance controls under /performance/ are outside the spec, as are the routes a developer mode adds.

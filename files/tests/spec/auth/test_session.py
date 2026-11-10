@@ -1,6 +1,7 @@
 '''
 Who a request comes from (a session cookie, an API token, or nobody), the form key that proves a form came from the site, the `logged_in` marker cookie, and what every request must carry to be served at all.
 '''
+import email.utils
 import time
 
 import pytest
@@ -129,15 +130,31 @@ def test_login_with_password_sets_a_session():
 	d.assert_exactly()
 
 
+def _cookie_attributes(cookie):
+	'''A Set-Cookie value's attributes, by lowercased name.'''
+	return {name.strip().lower(): value.strip() for name, _, value in (part.partition("=") for part in cookie.split(";")[1:])}
+
+
 def test_login_session_cookie_attributes():
 	u = factories.user()
 
 	r = anon().post_raw("/login", {"username": u["username"], "password": factories.PASSWORD})
 
-	cookie = next(c for c in r.header_all("Set-Cookie") if c.startswith("session_"))
-	attributes = {part.strip().split("=")[0].lower() for part in cookie.split(";")[1:]}
-	assert {"path", "expires", "httponly", "samesite"} <= attributes
-	assert "Path=/" in cookie
+	[cookie] = [c for c in r.header_all("Set-Cookie") if c.startswith(f"{session.cookie_name()}=")]
+	attributes = _cookie_attributes(cookie)
+	assert (attributes["path"], attributes["samesite"], "httponly" in attributes, "domain" in attributes) == ("/", "Lax", True, False)
+	expires = email.utils.parsedate_to_datetime(attributes["expires"]).timestamp()
+	assert expires == between(time.time() + session.SESSION_LIFETIME - 60, time.time() + session.SESSION_LIFETIME + 60)
+
+
+def test_cookies_are_not_marked_secure_on_a_plain_http_site():
+	'''Only this half runs here: on an https site both cookies carry Secure.'''
+	assert config.site_url().startswith("http://")
+	u = factories.user()
+
+	r = anon().post_raw("/login", {"username": u["username"], "password": factories.PASSWORD})
+
+	assert [c for c in r.header_all("Set-Cookie") if "secure" in _cookie_attributes(c)] == []
 
 
 def test_login_with_wrong_password_sets_no_session():
@@ -175,7 +192,9 @@ def test_logging_in_sets_the_marker_once():
 	r = client.post_raw("/login", {"username": u["username"], "password": factories.PASSWORD})
 
 	[cookie] = _set_cookies(r, MARKER)
-	assert cookie.startswith(f"{MARKER}=1;") and "HttpOnly" in cookie and "SameSite=Lax" in cookie
+	attributes = _cookie_attributes(cookie)
+	assert cookie.startswith(f"{MARKER}=1;")
+	assert (attributes["max-age"], attributes["path"], attributes["samesite"], "httponly" in attributes, "domain" in attributes) == (str(session.SESSION_LIFETIME), "/", "Lax", True, False)
 	assert _set_cookies(client.get("/"), MARKER) == []
 
 
