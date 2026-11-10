@@ -5,7 +5,6 @@ Repeatable tasks, which the site runs on a schedule (scheduled posts are one kin
 - GET /tasks/<id>/runs/<run_id> shows one run; the traceback of a failed run is shown only to admins of level 3 and up. A run asked for under another task's id redirects to its own task's URL.
 - POST /tasks/<id>/schedule replaces its schedule.
 '''
-import re
 from datetime import datetime, time
 
 import pytest
@@ -17,10 +16,6 @@ MONDAY, TUESDAY = 1 << 2, 1 << 3
 
 def _task(admin, *, enabled=True, frequency_day=MONDAY):
 	return factories.job(admin, "files.helpers.config.const", factories.unique("callable"), enabled=enabled, frequency_day=frequency_day, time_of_day_utc="01:00")
-
-
-def _links(r) -> set[str]:
-	return set(re.findall(r'href="([^"]*)"', r.text))
 
 
 def test_admin_replaces_a_tasks_schedule():
@@ -111,7 +106,7 @@ def test_task_list_links_every_task():
 	r = as_user(admin).get("/tasks/")
 
 	assert_html(r, 200)
-	assert {f"/tasks/{t['id']}" for t in tasks} <= _links(r)
+	assert {f"/tasks/{t['id']}" for t in tasks} <= set(links(r))
 
 
 def test_task_page_shows_what_it_runs_and_links_its_runs():
@@ -124,7 +119,7 @@ def test_task_page_shows_what_it_runs_and_links_its_runs():
 
 	assert_html(r, 200)
 	assert_in_payload(r, task["callable"])
-	assert {f"/tasks/{task['id']}/runs/{r['id']}" for r in (run, unfinished)} <= _links(r)
+	assert {f"/tasks/{task['id']}/runs/{r['id']}" for r in (run, unfinished)} <= set(links(r))
 
 
 def test_unknown_tasks_are_not_found():

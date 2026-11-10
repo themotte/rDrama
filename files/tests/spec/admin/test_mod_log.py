@@ -9,7 +9,6 @@ The kinds the site knows are MOD_LOG_KINDS below, which says for each what its e
 
 An entry names the post or comment it's about (a post by its title, both with a link to them), unless the viewer couldn't open it: a draft (or a comment on one), seen only by its author and admins from level 2; a private message, seen only by those taking part in its conversation and admins from level 2 (a shadowbanned user's too); or a post or comment by a shadowbanned user, seen only by that user (admins see it only on that user's profile). For anyone else the entry stays, saying only that it was a post or a comment, with no title or link. A ban's note, which links the post or comment the ban was for, follows the same rule.
 '''
-import re
 from typing import NamedTuple
 
 import pytest
@@ -253,7 +252,7 @@ def test_an_entry_of_an_unknown_kind_is_listed_with_its_admin():
 
 
 def _ids_listed(r) -> list[int]:
-	return [int(m) for m in re.findall(r'id="action-(\d+)"', r.text)]
+	return element_values(r, "action-<id>")
 
 
 @pytest.mark.parametrize("path", ["/log", "/modlog"])

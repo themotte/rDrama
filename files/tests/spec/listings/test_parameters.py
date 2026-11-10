@@ -5,7 +5,6 @@ How the listings read their parameters: the front page (GET /), /changelog, /com
 - "sort" and "t" are read in any letter case. An unknown "sort" lists newest first, and an unknown "t" means all time; the page's links carry the sort and time window in use, never the unknown values.
 - On the front page and /comments, an "after" or "before" that isn't a whole number is ignored.
 '''
-import re
 import time
 
 import pytest
@@ -110,10 +109,6 @@ def _profile_path(kind):
 	return author, f"/@{author['username']}/posts" if kind == "posts" else f"/@{author['username']}/"
 
 
-def _links(r):
-	return re.findall(r'href="([^"]*)"', r.text)
-
-
 @pytest.mark.parametrize("path", [*LISTINGS, "/search/users", "profile posts", "profile comments"])
 def test_unknown_sort_and_time_filter_are_not_put_into_links(path):
 	sort, t = factories.unique("sort"), factories.unique("t")
@@ -124,7 +119,7 @@ def test_unknown_sort_and_time_filter_are_not_put_into_links(path):
 		r = as_user(factories.user()).get(path, params={**LISTINGS.get(path, (None, {"q": "zebra"}))[1], "sort": sort, "t": t})
 
 	assert_status(r, 200)
-	assert not [link for link in _links(r) if sort in link or t in link]
+	assert not [link for link in links(r) if sort in link or t in link]
 
 
 @pytest.mark.parametrize("path", [*LISTINGS, "profile posts", "profile comments"])

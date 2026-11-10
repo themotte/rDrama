@@ -19,7 +19,6 @@ An image "file" can be attached anywhere in a modmail thread, with or without te
 
 The reply is {"comment": ...}: the new message rendered for the page.
 '''
-import re
 import time
 
 import pytest
@@ -336,10 +335,6 @@ def test_answers_older_versions_sent_elsewhere_are_still_modmail(sentto):
 
 # Images
 
-def _image_urls(body_html):
-	return re.findall(r'<img[^>]* src="([^"]+)"', body_html)
-
-
 @pytest.mark.parametrize("deep", [False, True], ids=["first message", "deeper"])
 def test_images_are_attached_in_modmail(deep):
 	starter, admin = factories.user(), factories.admin(3)
@@ -348,7 +343,7 @@ def test_images_are_attached_in_modmail(deep):
 
 	assert_status(_reply(starter, parent, factories.unique(), files={"file": uploads.png(4, 4)}), 200)
 
-	urls = _image_urls(db.row("comments", author_id=starter["id"], parent_comment_id=parent["id"])["body_html"])
+	urls = images_in(db.row("comments", author_id=starter["id"], parent_comment_id=parent["id"])["body_html"])
 	assert len(urls) == 1
 	assert_serves_image(urls[0])
 
@@ -452,5 +447,5 @@ def test_an_image_alone_is_a_reply_in_modmail():
 
 	assert_status(_reply(starter, message, "", files={"file": uploads.png(4, 4)}), 200)
 
-	assert len(_image_urls(db.row("comments", author_id=starter["id"], parent_comment_id=message["id"])["body_html"])) == 1
+	assert len(images_in(db.row("comments", author_id=starter["id"], parent_comment_id=message["id"])["body_html"])) == 1
 

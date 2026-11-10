@@ -1,7 +1,6 @@
 '''
 Removing 2FA from an account whose codes are lost: GET /lost_2fa shows the request form; POST /request_2fa_disable with "username", "password" and "email" mails a removal link (format in harness/session.py) to the account's address when all three match an account with 2FA (the email ignoring case), and answers the same either way; the link (/reset_2fa?id=&t=&token=) shows a confirmation whose POST, carrying the same fields, removes 2FA. The link starts working 72 hours after it was sent, giving an owner who didn't ask for it time to change the password, which cancels it, and works for a day after that; both refuse a bad link the same way.
 '''
-import re
 import time
 
 import pyotp
@@ -35,7 +34,7 @@ def _link(u, issued, **overrides):
 
 def _title(r):
 	'''The page's title, which tells answers apart where the rest of the page varies from request to request.'''
-	return re.search(r"<title>(.*?)</title>", r.text, re.S).group(1)
+	return page_title(r)
 
 
 def test_the_request_form():

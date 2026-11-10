@@ -31,7 +31,7 @@ def test_admins_from_level_2_come_first_each_group_by_truescore(viewer):
 
 	r = viewer().get("/admins")
 
-	assert_in_order(r, [f'"mod-actions-{u["id"]}"' for u in (high_2, low_2, high_1, low_1)])
+	assert [i for i in element_values(r, "mod-actions-<id>") if i in {u["id"] for u in (high_2, low_2, high_1, low_1)}] == [u["id"] for u in (high_2, low_2, high_1, low_1)]
 
 
 def test_accounts_without_an_admin_level_arent_listed():

@@ -73,13 +73,13 @@ def test_the_leaderboard_job_computes_the_precomputed_boards():
 	# The job keeps its results outside the database, so the page is where they show (see spec/users/test_leaderboard.py for the board ids)
 	before = as_user(factories.admin(2)).get("/leaderboard")
 	assert_html(before, 200)
-	assert_not_in_payload(before, 'id="leaderboard-given-upvotes"')
+	assert not has_element(before, "leaderboard-given-upvotes")
 
 	[run] = _run_builtin("leaderboard_recalc")
 	r = as_user(factories.admin(2)).get("/leaderboard")
 
 	assert run["traceback_str"] is None
-	assert_in_payload(r, 'id="leaderboard-given-upvotes"')
+	assert has_element(r, "leaderboard-given-upvotes")
 
 
 def test_the_volunteer_janitor_job_runs():

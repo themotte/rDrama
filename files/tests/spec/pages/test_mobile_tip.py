@@ -15,15 +15,15 @@ WEBVIEW_UA = "Mozilla/5.0 (Linux; Android 14; Pixel 8 Build/AP2A; wv) AppleWebKi
 
 @pytest.mark.parametrize("client", [anon, lambda: as_user(factories.user())], ids=["visitor", "user"])
 def test_the_front_page_offers_the_tip(client):
-	assert_in_payload(client().get("/"), 'id="mobile-prompt"')
+	assert has_element(client().get("/"), "mobile-prompt")
 
 
 def test_other_pages_dont_offer_it():
-	assert_not_in_payload(anon().get("/catalog"), 'id="mobile-prompt"')
+	assert not has_element(anon().get("/catalog"), "mobile-prompt")
 
 
 def test_web_views_arent_offered_it():
-	assert_not_in_payload(anon().get("/", headers={"User-Agent": WEBVIEW_UA}), 'id="mobile-prompt"')
+	assert not has_element(anon().get("/", headers={"User-Agent": WEBVIEW_UA}), "mobile-prompt")
 
 
 @pytest.mark.parametrize("read_only", [False, True], ids=["normally", "in read-only mode"])
@@ -36,7 +36,7 @@ def test_dismissing_records_the_time_in_the_session(read_only):
 
 	assert_status(r, 204)
 	assert before <= client.session()["tooltip_last_dismissed"] <= int(time.time())
-	assert_not_in_payload(client.get("/"), 'id="mobile-prompt"')
+	assert not has_element(client.get("/"), "mobile-prompt")
 
 
 @pytest.mark.parametrize("days_ago, offered", [(29, False), (31, True)])
@@ -47,4 +47,4 @@ def test_the_tip_returns_30_days_after_dismissal(days_ago, offered):
 
 	r = client.get("/")
 
-	assert ('id="mobile-prompt"' in r.text) == offered
+	assert has_element(r, "mobile-prompt") == offered

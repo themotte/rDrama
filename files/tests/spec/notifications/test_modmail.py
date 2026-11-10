@@ -9,7 +9,6 @@ Requesting API keys (POST /api_keys) also writes modmail: a notice from the syst
 
 GET /notifications/modmail lists modmail conversations (their first messages) for admins from level 2, newest first: 25 to a page, "page" (from 1) choosing it, each with its replies. Showing them marks the admin's notifications of their messages read. API clients and lower levels are refused (403); visitors are sent to log in.
 '''
-import re
 
 import pytest
 
@@ -77,16 +76,12 @@ def test_the_email_is_cut_to_254_characters():
 	assert kept in body_html and cut not in body_html
 
 
-def _image_urls(body_html):
-	return re.findall(r'<img[^>]* src="([^"]+)"', body_html)
-
-
 def test_an_image_is_attached():
 	user = factories.user()
 
 	assert_html(as_user(user).post("/send_admin", {"message": factories.unique()}, files={"file": uploads.png(4, 4)}), 200)
 
-	urls = _image_urls(db.row("comments", author_id=user["id"], sentto=seed.MODMAIL_ID)["body_html"])
+	urls = images_in(db.row("comments", author_id=user["id"], sentto=seed.MODMAIL_ID)["body_html"])
 	assert len(urls) == 1
 	assert_serves_image(urls[0])
 

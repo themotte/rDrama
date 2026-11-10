@@ -113,7 +113,7 @@ def test_the_scheduled_posts_page_lists_the_posts_it_made():
 	r = as_user(admin).get(f"/tasks/scheduled_posts/{scheduled['id']}")
 
 	assert_html(r, 200)
-	assert_in_payload(r, f'id="post-{post["id"]}"')
+	assert has_element(r, f"post-{post['id']}")
 
 
 def test_a_scheduled_link_post_gets_a_thumbnail_like_a_submitted_one():

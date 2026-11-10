@@ -41,7 +41,7 @@ def _rows_of(section, user) -> int:
 
 
 def _has_board(r, board) -> bool:
-	return f'id="leaderboard-{board}"' in r.text
+	return has_element(r, f"leaderboard-{board}")
 
 
 def _ranked(column, value):
@@ -464,7 +464,7 @@ def test_leaderboard_links_to_each_board():
 
 	assert_html(r, 200)
 	for board in [*SIMPLE_BOARDS, "blocked", "received-downvotes", "given-upvotes"]:
-		assert f'href="#leaderboard-{board}"' in r.text, board
+		assert f"#leaderboard-{board}" in links(r), board
 
 
 # Shadowbanned users

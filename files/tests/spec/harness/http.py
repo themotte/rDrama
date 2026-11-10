@@ -1,6 +1,5 @@
 import json as _json
 from dataclasses import dataclass
-from html.parser import HTMLParser
 from http.cookies import SimpleCookie
 from urllib.parse import urlencode, urlsplit
 
@@ -32,9 +31,8 @@ class Response:
 
 	def form_field(self, name) -> str | None:
 		'''The value of the first `<input name=...>` in an HTML response. Input names are request-shape contract.'''
-		parser = _InputFinder(name)
-		parser.feed(self.text)
-		return parser.value
+		from files.tests.spec.harness.markup import input_value
+		return input_value(self, name)
 
 	@property
 	def location(self) -> str | None:
@@ -46,18 +44,6 @@ class Response:
 		if parts.netloc and (parts.netloc != config.site_host() or parts.path.startswith("//")):
 			return loc
 		return parts.path + (f"?{parts.query}" if parts.query else "")
-
-
-class _InputFinder(HTMLParser):
-	def __init__(self, name):
-		super().__init__()
-		self.name = name
-		self.value = None
-
-	def handle_starttag(self, tag, attrs):
-		attrs = dict(attrs)
-		if tag == "input" and self.value is None and attrs.get("name") == self.name:
-			self.value = attrs.get("value", "")
 
 
 class Client:

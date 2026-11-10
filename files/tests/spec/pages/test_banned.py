@@ -47,4 +47,4 @@ def test_the_reason_reads_as_the_admin_typed_it():
 def test_the_admin_who_suspended_is_linked():
 	user, admin = _suspended(unban_utc=0)
 
-	assert_in_payload(anon().get("/banned"), f'href="/@{admin["username"]}"')
+	assert f"/@{admin['username']}" in links(anon().get("/banned"))

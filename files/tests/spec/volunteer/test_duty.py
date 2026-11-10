@@ -17,7 +17,6 @@ A comment is eligible for a volunteer when:
 
 A post's page shows a link to /volunteer exactly when a duty is available to the viewer.
 '''
-import re
 import time
 
 import pytest
@@ -75,7 +74,7 @@ def test_the_form_names_each_assignment():
 
 	assignments = db.rows("volunteer_janitor", user_id=volunteer["id"])
 	assert {row["comment_id"] for row in assignments} == {c["id"] for c in comments}
-	assert set(re.findall(r'name="(volunteer-[^"]*)"', r.text)) == {f"volunteer-assignment-{row['id']}" for row in assignments}
+	assert {name for name in input_names(r) if name.startswith("volunteer-")} == {f"volunteer-assignment-{row['id']}" for row in assignments}
 
 
 def test_the_page_holds_no_assigned_comments_id():
@@ -363,7 +362,7 @@ def test_a_posts_page_invites_viewers_with_a_duty_available():
 
 	r = as_user(factories.user()).get(f"/post/{post['id']}")
 
-	assert_in_payload(r, 'href="/volunteer"')
+	assert "/volunteer" in links(r)
 
 
 @pytest.mark.parametrize("why", ["nothing to do", "recent duty", *UNAVAILABLE])
@@ -379,7 +378,7 @@ def test_a_posts_page_doesnt_invite_viewers_without_one(why):
 	r = as_user(viewer).get(f"/post/{post['id']}")
 
 	assert_html(r, 200)
-	assert_not_in_payload(r, 'href="/volunteer"')
+	assert "/volunteer" not in links(r)
 
 
 def test_api_clients_are_refused():
