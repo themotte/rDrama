@@ -10,5 +10,9 @@ def begin():
 
 
 def end():
+	log = backend.take_server_log()
+	if log:
+		# Shown beside the test's own output when it fails
+		print(f"--- the implementation's log during this test ---\n{log}")
 	attempts = backend.take_outbound_attempts()
 	assert not attempts, f"the app attempted un-faked outbound connections: {attempts}"
