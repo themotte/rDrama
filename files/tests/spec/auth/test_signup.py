@@ -76,6 +76,15 @@ def test_signing_up_creates_the_account_logs_it_in_and_greets_it():
 	assert sent_mail() == []
 
 
+def test_a_new_account_starts_with_the_configured_colour_and_listing_view():
+	username = factories.unique("new")
+
+	_signup(anon(), usernametwo=username)
+
+	new = db.row("users", username=username)
+	assert (new["namecolor"], new["titlecolor"], new["themecolor"], new["cardview"]) == (config.default_color(), config.default_color(), config.default_color(), config.card_view_default())
+
+
 def test_signing_up_with_an_email_mails_a_verification_link():
 	email = f"{factories.unique()}@example.com"
 

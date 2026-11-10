@@ -61,3 +61,13 @@ def post_spam_count() -> int:
 def comment_spam_count() -> int:
 	'''COMMENT_SPAM_COUNT_THRESHOLD: how many similar recent comments a new comment or an edit may have before it is refused, before the account-age multipliers.'''
 	return int(os.environ["COMMENT_SPAM_COUNT_THRESHOLD"])
+
+
+def default_color() -> str:
+	'''DEFAULT_COLOR: the colour (3 or 6 hex digits, no "#") a new account's name, title and theme start with.'''
+	return os.environ["DEFAULT_COLOR"].strip()
+
+
+def card_view_default() -> bool:
+	'''CARD_VIEW: whether new accounts, and visitors, get listings as cards.'''
+	return os.environ["CARD_VIEW"].strip().lower() in ("yes", "true", "t", "on", "1")
