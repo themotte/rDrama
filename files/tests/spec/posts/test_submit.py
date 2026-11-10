@@ -679,16 +679,6 @@ def test_image_posts_must_be_images():
 	d.assert_exactly()
 
 
-def test_images_from_tor_are_dropped():
-	client = as_user(factories.user())
-
-	with db_diff() as d:
-		r = _submit(client, headers={**XHR, **TOR}, title="t", files={"file": uploads.png(64, 64)})
-
-	assert_status(r, 400)
-	d.assert_exactly()
-
-
 def test_body_images_are_linked_at_the_end_of_the_body():
 	assert_html(_submit(as_user(factories.user()), title="t", body="text", files={"file2": [uploads.png(20, 20), uploads.png(30, 30)]}), 200)
 
@@ -739,12 +729,6 @@ def test_body_images_must_be_images():
 
 def test_an_empty_body_image_slot_is_ignored():
 	assert_html(_submit(as_user(factories.user()), title="t", body="text", files={"file2": [("", b"", "application/octet-stream")]}), 200)
-
-	assert db.rows("submissions")[-1]["body"] == "text"
-
-
-def test_body_images_from_tor_are_dropped():
-	_submit(as_user(factories.user()), headers=TOR, title="t", body="text", files={"file2": [uploads.png(20, 20)]})
 
 	assert db.rows("submissions")[-1]["body"] == "text"
 

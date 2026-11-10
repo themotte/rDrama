@@ -129,27 +129,6 @@ def test_bio_upload_of_an_unreadable_image_is_refused(upload):
 	d.assert_exactly()
 
 
-def test_bio_image_through_tor_is_dropped_but_the_text_saved():
-	u = factories.user()
-	token = factories.unique()
-
-	with db_diff() as d:
-		r = _post(u, {"bio": token}, files={"file": uploads.png(2, 2)}, headers=TOR)
-
-	assert_html(r, 200)
-	d.assert_exactly(updated={"users": {u["id"]: {"bio": token, "bio_html": ANY}}})
-
-
-def test_bio_image_alone_through_tor_changes_nothing():
-	u = factories.user()
-
-	with db_diff() as d:
-		r = _post(u, {}, files={"file": uploads.png(2, 2)}, headers={**XHR, **TOR})
-
-	assert_status(r, 400)
-	d.assert_exactly()
-
-
 def test_friends_list_is_stored_and_mentioned_users_are_notified():
 	friend = factories.user()
 	u = factories.user()

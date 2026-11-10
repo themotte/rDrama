@@ -14,13 +14,11 @@ from files.tests.spec.harness.asserts import __all__ as _asserts_all
 from files.tests.spec.harness.db import ANY, between, db_diff
 from files.tests.spec.harness.http import Client, Response
 
-__all__ = ["config", "db", "external_web", "factories", "seed", "session", "uploads", "XHR", "TOR", "can_log_in", "notification_counts", "element_text", "urls_in", "totp_step_settle", "ANY", "between", "db_diff", "Client", "Response", "anon", "as_user", "as_api", "site_settings_set", "run_background_work", "run_scheduler", "utc_now_naive", "sent_mail", "cli", "CliResult", "assert_cli_ok", *_asserts_all]
+__all__ = ["config", "db", "external_web", "factories", "seed", "session", "uploads", "XHR", "can_log_in", "notification_counts", "element_text", "urls_in", "totp_step_settle", "ANY", "between", "db_diff", "Client", "Response", "anon", "as_user", "as_api", "site_settings_set", "run_background_work", "run_scheduler", "utc_now_naive", "sent_mail", "cli", "CliResult", "assert_cli_ok", *_asserts_all]
 
 
 XHR = {"xhr": "1"}
 '''Headers marking a script request: errors come back as JSON instead of pages or login redirects.'''
-TOR = {"cf-ipcountry": "T1"}
-'''Headers marking a request as arriving through Tor (as reported by the CDN in front of the site).'''
 
 
 def anon() -> Client:

@@ -275,7 +275,7 @@ def edit_comment(cid, v):
 	length_limit = MESSAGE_BODY_LENGTH_MAXIMUM if c.is_message else COMMENT_BODY_LENGTH_MAXIMUM
 	body = sanitize_raw(request.values.get("body"), allow_newlines=True, length_limit=length_limit)
 
-	uploading = any(request.files.getlist('file')) and request.headers.get("cf-ipcountry") != "T1"
+	uploading = any(request.files.getlist('file'))
 	if uploading and c.is_message and not (c.thread_top and c.thread_top.sentto == MODMAIL_ID): abort(400, "Images can only be attached in modmail.")
 	if len(body) < 1 and not uploading:
 		abort(400, "You have to actually type something!")

@@ -8,7 +8,7 @@
 				{% if c.sentto == MODMAIL_ID %}
 					<label class="btn btn-secondary m-0 mt-3" for="file-upload-{{c.id}}">
 						<div id="filename-{{c.id}}"><i class="far fa-image"></i></div>
-						<input autocomplete="off" id="file-upload-{{c.id}}" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-{{c.id}}','file-upload-{{c.id}}')" hidden>
+						<input autocomplete="off" id="file-upload-{{c.id}}" type="file" name="file" accept="image/*" onchange="changename('filename-{{c.id}}','file-upload-{{c.id}}')" hidden>
 					</label>
 				{% endif %}
 			</div>

@@ -66,7 +66,7 @@
 								<form action="/settings/images/profile" method="post" enctype="multipart/form-data">
 									{{forms.formkey(v)}}
 									<label class="btn btn-secondary text-capitalize mr-2 mb-0">
-										Update<input autocomplete="off" type="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} hidden name="profile" onchange="form.submit()">
+										Update<input autocomplete="off" type="file" accept="image/*" hidden name="profile" onchange="form.submit()">
 									</label>
 								</form>
 							</div>
@@ -88,7 +88,7 @@
 								<form action="/settings/images/banner" method="post" enctype="multipart/form-data">
 									{{forms.formkey(v)}}
 									<label class="btn btn-secondary text-capitalize mr-2 mb-0">
-										Update<input autocomplete="off" type="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*" hidden name="banner" onchange="form.submit()">
+										Update<input autocomplete="off" type="file" accept="image/*" hidden name="banner" onchange="form.submit()">
 									</label>
 								</form>
 							</div>
@@ -246,7 +246,7 @@
 								&nbsp;
 								<label class="btn btn-secondary format d-inline-block m-0">
 									<div id="filename-show"><i class="far fa-image"></i></div>
-									<input autocomplete="off" id="file-upload" type="file" name="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*" onchange="changename('filename-show','file-upload')" hidden>
+									<input autocomplete="off" id="file-upload" type="file" name="file" accept="image/*" onchange="changename('filename-show','file-upload')" hidden>
 								</label>
 							</div>
 							<pre></pre>

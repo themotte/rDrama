@@ -4,7 +4,7 @@ import subprocess
 import time
 from io import BytesIO
 
-from flask import abort, request
+from flask import abort
 from PIL import Image, ImageOps
 from werkzeug.datastructures import FileStorage
 from werkzeug.exceptions import BadRequest
@@ -20,8 +20,7 @@ class UnreadableImage(BadRequest):
 
 
 def attach_images(body:str, files:list[FileStorage]) -> tuple[bool, str]:
-	'''Stores up to 4 uploaded images and adds links to them at the end of `body`; returns whether any were attached and the new body. Uploads through Tor are dropped, and empty uploads ignored. Refuses anything that isn't an image with 415.'''
-	if request.headers.get("cf-ipcountry") == "T1": return False, body
+	'''Stores up to 4 uploaded images and adds links to them at the end of `body`; returns whether any were attached and the new body. Empty uploads are ignored. Refuses anything that isn't an image with 415.'''
 	# An empty file input is sent as an empty upload
 	files = [file for file in files if file][:4]
 	if not files: return False, body

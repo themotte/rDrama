@@ -11,12 +11,12 @@ A published comment counts toward its post's comment count and the descendant co
 
 Replies may go to deleted or removed comments and to removed posts. A draft takes comments only from those who may see it (its author and admins of level 2 or more); to anyone else it doesn't exist. Comments on a draft notify nobody and don't count toward their authors' comment counts while it is a draft; publishing it (POST /publish/<post id>) sends the notifications of its published comments and counts them then.
 
-Images uploaded as "file" (up to 4; more are ignored, as are empty uploads, which browsers send for file inputs left empty) are stored and linked at the end of the body, and a comment of only images is allowed. Requests through Tor have their uploads dropped, so they need text.
+Images uploaded as "file" (up to 4; more are ignored, as are empty uploads, which browsers send for file inputs left empty) are stored and linked at the end of the body, and a comment of only images is allowed.
 
 The answer to browsers and scripts is JSON {"comment": <the comment rendered as an HTML fragment>, "message": ...} where "message" is a notice for the author when they reply to someone who blocks them (unless they're an admin of level 2 or more) or when the comment is held for its length, and null otherwise. API clients get the comment's JSON object.
 
 Refused, changing nothing:
-- 400: "parent_fullname" shorter than 4 characters or not naming a post or a comment; no body and no file (or only a file dropped for coming through Tor);
+- 400: "parent_fullname" shorter than 4 characters or not naming a post or a comment; no body and no file;
 - 415: an upload that isn't an image;
 - 400: text and image links together longer than 500,000 characters;
 - 404: an unknown post or comment, a private message, or a draft (or a comment on one) the commenter may not see;
@@ -576,30 +576,6 @@ def test_a_comment_of_only_an_image_is_accepted():
 	assert_status(r, 200)
 	[name] = _stored_images()
 	assert name in db.row("comments", parent_submission=post["id"])["body"]
-
-
-def test_uploads_through_tor_are_dropped_but_the_text_posted():
-	post = factories.post(factories.user())
-	token = factories.unique()
-
-	r = _comment(as_user(factories.user()), _on(post), token, headers={**XHR, **TOR}, files={"file": uploads.png(2, 2)})
-
-	_assert_answered(r, token)
-	assert _stored_images() == []
-	assert db.row("comments", parent_submission=post["id"])["body"] == token
-
-
-
-def test_a_comment_of_only_an_upload_through_tor_is_refused():
-	post = factories.post(factories.user())
-	client = as_user(factories.user())
-
-	with db_diff() as d:
-		r = _comment(client, _on(post), "", headers={**XHR, **TOR}, files={"file": uploads.png(2, 2)})
-
-	assert_status(r, 400)
-	d.assert_exactly()
-	assert _stored_images() == []
 
 
 def test_uploads_that_arent_images_are_refused():

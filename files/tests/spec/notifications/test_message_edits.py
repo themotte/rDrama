@@ -1,5 +1,5 @@
 '''
-Editing a message (POST /edit_comment/<id> by its sender, as comments are edited: comments/test_edit) keeps it within what messages may be: its text is cut to 10000 characters, as when sending it, so it is never long enough to be held for review. Images can be uploaded with an edit (and are linked after the text, as in comment edits) only in modmail threads, as when replying; elsewhere an upload is refused (400). Uploads through Tor are ignored.
+Editing a message (POST /edit_comment/<id> by its sender, as comments are edited: comments/test_edit) keeps it within what messages may be: its text is cut to 10000 characters, as when sending it, so it is never long enough to be held for review. Images can be uploaded with an edit (and are linked after the text, as in comment edits) only in modmail threads, as when replying; elsewhere an upload is refused (400).
 '''
 from files.tests.spec.harness import *
 

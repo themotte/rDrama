@@ -92,9 +92,7 @@ class ValidatedSubmissionLike:
 		'''
 
 		def _process_media(file:Optional[FileStorage]) -> tuple[bool, Optional[str], Optional[str]]:
-			if request.headers.get("cf-ipcountry") == "T1": # forbid Tor uploads
-				return False, None, None
-			elif not file:
+			if not file:
 				# We actually care about falseyness, not just `is not None` because
 				# no attachment is <FileStorage: '' ('application/octet-stream')>
 				# (at least from Firefox 111).

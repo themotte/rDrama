@@ -15,7 +15,7 @@ In a direct thread, replying to a user you block, or who blocks you (unless you'
 
 Suspended users (temporarily or permanently) can't reply (403), except in modmail threads they started, so they can still appeal; a suspended admin can't answer other users' modmail.
 
-An image "file" can be attached anywhere in a modmail thread, with or without text; a file that isn't an image is refused (400). Elsewhere a file is refused (400). Files sent through Tor are ignored everywhere. A reply with neither text nor an attached image is refused (400).
+An image "file" can be attached anywhere in a modmail thread, with or without text; a file that isn't an image is refused (400). Elsewhere a file is refused (400). A reply with neither text nor an attached image is refused (400).
 
 The reply is {"comment": ...}: the new message rendered for the page.
 '''
@@ -353,22 +353,6 @@ def test_images_are_attached_in_modmail(deep):
 	assert_serves_image(urls[0])
 
 
-def test_files_from_tor_are_ignored_in_modmail():
-	starter = factories.user()
-	message = factories.message(starter, seed.MODMAIL_ID)
-
-	assert_status(as_user(starter).post("/reply", {"parent_id": message["id"], "body": factories.unique()}, headers={**XHR, **TOR}, files={"file": uploads.png(4, 4)}), 200)
-
-	assert _image_urls(db.row("comments", author_id=starter["id"], parent_comment_id=message["id"])["body_html"]) == []
-
-
-def test_files_from_tor_are_ignored_in_direct_threads():
-	sender, recipient = factories.user(), factories.user()
-	message = factories.message(sender, recipient)
-
-	assert_status(as_user(recipient).post("/reply", {"parent_id": message["id"], "body": factories.unique()}, headers={**XHR, **TOR}, files={"file": uploads.png(4, 4)}), 200)
-
-
 def test_files_that_arent_images_are_refused_in_modmail():
 	starter = factories.user()
 	message = factories.message(starter, seed.MODMAIL_ID)
@@ -470,14 +454,3 @@ def test_an_image_alone_is_a_reply_in_modmail():
 
 	assert len(_image_urls(db.row("comments", author_id=starter["id"], parent_comment_id=message["id"])["body_html"])) == 1
 
-
-def test_an_ignored_file_alone_is_an_empty_reply():
-	starter = factories.user()
-	message = factories.message(starter, seed.MODMAIL_ID)
-	client = as_user(starter)
-
-	with db_diff() as d:
-		r = client.post("/reply", {"parent_id": message["id"], "body": ""}, headers={**XHR, **TOR}, files={"file": uploads.png(4, 4)})
-
-	assert_status(r, 400)
-	d.assert_exactly()

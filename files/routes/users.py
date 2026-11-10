@@ -222,7 +222,7 @@ def messagereply(v):
 
 	body_html = sanitize(message)
 
-	file = request.files.get("file") if request.headers.get("cf-ipcountry") != "T1" else None
+	file = request.files.get("file")
 	if file and not modmail: abort(400, "Images can only be attached in modmail.")
 	if not (message or file): abort(400, "Message is empty!")
 	if file:

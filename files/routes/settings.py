@@ -14,8 +14,7 @@ from files.mail import *
 @auth_required
 def settings_profile_post(v):
 	updated = False
-	# Image uploads are refused through Tor
-	upload = request.files.get('file') if request.headers.get("cf-ipcountry") != "T1" else None
+	upload = request.files.get('file')
 
 	if request.values.get("hidevotedon", v.hidevotedon) != v.hidevotedon:
 		updated = True
@@ -339,7 +338,6 @@ def settings_log_out_others(v):
 @auth_required
 def settings_images_profile(v):
 	refuse_while_suspended(v)
-	if request.headers.get("cf-ipcountry") == "T1": abort(403, "Image uploads are not allowed through TOR.")
 
 	file = request.files["profile"]
 
@@ -367,7 +365,6 @@ def settings_images_profile(v):
 @auth_required
 def settings_images_banner(v):
 	refuse_while_suspended(v)
-	if request.headers.get("cf-ipcountry") == "T1": abort(403, "Image uploads are not allowed through TOR.")
 
 	file = request.files["banner"]
 

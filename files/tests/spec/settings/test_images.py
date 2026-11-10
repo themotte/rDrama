@@ -1,7 +1,7 @@
 '''
 Avatar (POST /settings/images/profile, field "profile") and banner (POST /settings/images/banner, field "banner") uploads.
 
-Uploads are stored by the site and served under /images/ as WebP. Replacing an uploaded image deletes the old file; images hosted elsewhere (any URL not starting with /images/ or <site>/images/) are simply replaced. Uploads through Tor are refused.
+Uploads are stored by the site and served under /images/ as WebP. Replacing an uploaded image deletes the old file; images hosted elsewhere (any URL not starting with /images/ or <site>/images/) are simply replaced.
 '''
 from io import BytesIO
 
@@ -74,17 +74,6 @@ def test_unreadable_images_are_rejected(path, field, upload):
 		r = as_user(u).post(path, files={field: upload}, headers=XHR)
 
 	assert_status(r, 400)
-	d.assert_exactly()
-
-
-@pytest.mark.parametrize("path, field", [("/settings/images/profile", "profile"), ("/settings/images/banner", "banner")])
-def test_uploads_through_tor_are_refused(path, field):
-	u = factories.user()
-
-	with db_diff() as d:
-		r = as_user(u).post(path, files={field: uploads.png(2, 2)}, headers={**XHR, **TOR})
-
-	assert_status(r, 403)
 	d.assert_exactly()
 
 

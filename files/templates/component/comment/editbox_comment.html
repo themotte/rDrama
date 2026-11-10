@@ -12,7 +12,7 @@
 				<a class="btn btn-secondary format m-0" role="button" onclick="makeLink('comment-edit-body-{{c.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Link"><i class="fas fa-link"></i></a>
 				<label class="btn btn-secondary format m-0" for="file-edit-reply-{{c.id}}">
 					<div id="filename-edit-reply-{{c.id}}"><i class="far fa-image"></i></div>
-						<input autocomplete="off" id="file-edit-reply-{{c.id}}" type="file" multiple="multiple" name="file" accept="image\/*, video\/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="changename('filename-edit-reply-{{c.id}}','file-edit-reply-{{c.id}}')" hidden>
+						<input autocomplete="off" id="file-edit-reply-{{c.id}}" type="file" multiple="multiple" name="file" accept="image\/*, video\/*" onchange="changename('filename-edit-reply-{{c.id}}','file-edit-reply-{{c.id}}')" hidden>
 				</label>
 			</div>
 			<a id="edit-btn-{{c.id}}" role="button" form="comment-edit-form-{{c.id}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="comment_edit('{{c.id}}')">Save Edit</a> 

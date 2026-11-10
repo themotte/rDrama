@@ -262,7 +262,7 @@ def submit_contact(v: Optional[User]):
 	message = f"<strong>Message</strong>:\n{body}\n\n"
 	html    = sanitize(f"{header}\n{email}{message}")
 
-	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
+	if request.files.get("file"):
 		file=request.files["file"]
 		if (file.content_type or '').startswith('image/'):
 			name = new_image_path()

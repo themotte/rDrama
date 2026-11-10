@@ -1,7 +1,7 @@
 '''
 Editing a comment: POST /edit_comment/<comment id> with "body" (markdown; surrounding whitespace is trimmed and it is cut to 500,000 characters). Only the comment's author may edit it, including while it is removed or held for review.
 
-The body and its rendering are replaced; the comment is marked as edited (with the time) only when it is more than 3 minutes old. An edit that makes a visible comment longer than 50,000 characters holds it for review, as such a new comment would be (admins of level 3 and up excepted); editing a comment that was already that long (and so already reviewed) doesn't. Images uploaded as "file" (up to 4, empty uploads ignored) are stored and linked at the end of the new body, as when commenting. Requests through Tor have their uploads dropped. Sending the body unchanged and no file changes nothing.
+The body and its rendering are replaced; the comment is marked as edited (with the time) only when it is more than 3 minutes old. An edit that makes a visible comment longer than 50,000 characters holds it for review, as such a new comment would be (admins of level 3 and up excepted); editing a comment that was already that long (and so already reviewed) doesn't. Images uploaded as "file" (up to 4, empty uploads ignored) are stored and linked at the end of the new body, as when commenting. Sending the body unchanged and no file changes nothing.
 
 When the comment is published (visible, not deleted, by an author who isn't shadowbanned, on a post that isn't a draft), users newly mentioned as @name are notified (unless either has blocked the other), once: a user already notified about the comment isn't notified again. Edits of any other comment, private messages included, notify no one.
 
@@ -267,19 +267,6 @@ def test_an_edit_of_only_an_empty_upload_is_refused():
 
 	assert_status(r, 400)
 	d.assert_exactly()
-
-
-def test_uploads_through_tor_are_dropped_but_the_text_saved():
-	author, comment = _own()
-	token = factories.unique()
-	client = as_user(author)
-
-	with db_diff() as d:
-		r = _edit(client, comment, token, headers={**XHR, **TOR}, files={"file": uploads.png(2, 2)})
-
-	_assert_answered(r, token)
-	d.assert_exactly(updated={"comments": {comment["id"]: {"body": token, "body_html": ANY}}})
-	assert _stored_images() == []
 
 
 # Refusals
