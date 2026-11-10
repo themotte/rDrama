@@ -1,5 +1,5 @@
 '''
-API clients authenticate each request with an access token (one per user per app: test_authorize) sent as the whole Authorization header, with no scheme such as "Bearer"; whitespace around it is ignored. A token of an approved app authenticates as the user who holds it, whatever session cookie the request also carries, and needs no form key. Any other token, including one for an app that isn't approved, authenticates no one: routes that need a login answer 401, and pages open to everyone are served as to a logged-out client. A header of only whitespace carries no token, and the session counts.
+API clients authenticate each request with an access token (one per user per app: test_authorize) sent as the whole Authorization header, with no scheme such as "Bearer"; whitespace around it is ignored. A token of an approved app authenticates as the user who holds it, whatever session cookie the request also carries, and needs no form key. Any other token, including one for an app that isn't approved, authenticates no one: routes that need a login answer 401, and pages open to everyone are served as to a logged-out client. An empty header (as one of only whitespace arrives: HTTP drops the whitespace around a header's value) carries no token, and the session counts.
 
 Changing or resetting the password, and logging out other devices, delete every token the account holds, as they end its other sessions (settings/test_security, auth/test_password_reset); its bots and authorized apps must be authorized again.
 
@@ -57,10 +57,10 @@ def test_a_token_overrides_the_session():
 
 def test_a_blank_header_leaves_the_session():
 	user = factories.user()
-	client = as_user(user)
-	client.authorization = "   "
 
-	assert client.get("/me").json["id"] == user["id"]
+	r = as_user(user).get("/me", headers={"Authorization": ""})
+
+	assert_redirect(r, f"/@{user['username']}")
 
 
 def test_tokens_for_pending_apps_authenticate_no_one():
