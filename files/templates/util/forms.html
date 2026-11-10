@@ -43,6 +43,6 @@
 		<span class="text-gray ml-3"> (Note: all times are in UTC)</span>
 	</div>
 	{{checkbox("enabled", "scheduled-post-enabled-input", "Enabled", task.enabled if task else true)}}<br>
-	<input type="submit" onclick="disable(this)" value="Submit" class="btn btn-primary">
+	<input type="submit" value="Submit" class="btn btn-primary">
 	{{formkey(v)}}
 {%- endmacro -%}
