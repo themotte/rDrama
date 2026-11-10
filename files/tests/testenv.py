@@ -56,13 +56,18 @@ def _dsn(url):
 	return url.render_as_string(hide_password=False)
 
 
-def _build_database(test_url):
+def _server_execute(test_url, *statements):
+	'''Runs statements that act on whole databases, from the server's maintenance database.'''
 	admin = psycopg2.connect(_dsn(test_url.set(database="postgres")))
 	admin.autocommit = True
 	with admin.cursor() as cur:
-		cur.execute(f"DROP DATABASE IF EXISTS {TEST_DB_NAME} WITH (FORCE)")
-		cur.execute(f"CREATE DATABASE {TEST_DB_NAME}")
+		for statement in statements:
+			cur.execute(statement)
 	admin.close()
+
+
+def _build_database(test_url):
+	_server_execute(test_url, f"DROP DATABASE IF EXISTS {TEST_DB_NAME} WITH (FORCE)", f"CREATE DATABASE {TEST_DB_NAME}")
 
 	conn = psycopg2.connect(_dsn(test_url))
 	with conn, conn.cursor() as cur:
