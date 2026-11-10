@@ -1,12 +1,11 @@
 '''
 In-process backend: drives the Python implementation directly, which also lets coverage measure it, and its in-process checks (route coverage, what pages offer) watch it.
 
-This is the only module in the spec tier that touches the application's code. A backend for an implementation running in its own processes would provide the same functions (__all__); everything else in the harness is implementation-neutral.
+This is the only module in the spec tier that touches the application's code. backend_process provides the same functions (__all__) for an implementation running in its own processes; everything else in the harness is implementation-neutral.
 '''
 import email
 import smtplib
 from io import BytesIO
-from urllib.parse import urlsplit
 
 import requests.adapters
 import urllib3
@@ -16,6 +15,7 @@ import files.cli  # registers the command-line commands
 from files.commands.cron import tasks_run_due
 from files.helpers import background
 from files.tests import reset as _reset
+from files.tests.spec.harness.process_proxy import key as external_key
 
 __all__ = ["request", "reset", "run_background_work", "cli", "run_scheduler", "sent_mail", "take_outbound_attempts", "take_server_log", "external_serve", "external_unreachable", "external_requests"]
 
@@ -83,24 +83,19 @@ def take_server_log() -> str:
 
 
 def external_serve(method, url, status, headers, body):
-	_external_responses[_external_key(method, url)] = (status, headers, body)
+	_external_responses[external_key(method, url)] = (status, headers, body)
 
 
 def external_unreachable(method, url):
-	_external_responses[_external_key(method, url)] = _UNREACHABLE
+	_external_responses[external_key(method, url)] = _UNREACHABLE
 
 
 def external_requests() -> list[tuple[str, str]]:
 	return [(r["method"], r["url"]) for r in _external_requests]
 
 
-def _external_key(method, url):
-	parts = urlsplit(url)
-	return (method.upper(), parts.scheme.lower(), parts.netloc.lower(), parts.path or "/")
-
-
 def _fake_http_send(self, request, *args, **kwargs):
-	response = _external_responses.get(_external_key(request.method, request.url))
+	response = _external_responses.get(external_key(request.method, request.url))
 	if response is None:
 		_outbound_attempts.append(f"HTTP {request.method} {request.url}")
 		raise requests.exceptions.ConnectionError(f"Outbound HTTP is blocked in spec tests: {request.method} {request.url}")

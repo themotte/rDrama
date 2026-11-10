@@ -123,6 +123,7 @@ def test_there_are_spec_tests_to_check():
 	("files.tests.spec.harness.db", False),
 	("files.tests.spec.harness.backend", True),
 	("files.tests.spec.harness.backend_inprocess", True),
+	("files.tests.spec.harness.backend_process", True),
 	("files.tests.spec.harness.process_proxy", True),
 	("files.classes.user", True),
 	("flask", True),
@@ -132,3 +133,9 @@ def test_there_are_spec_tests_to_check():
 ])
 def test_forbidden_module_rules(module, forbidden):
 	assert _is_forbidden(module) == forbidden
+
+
+def test_the_backends_provide_the_same_functions():
+	from files.tests.spec.harness import backend_inprocess, backend_process
+	assert backend_inprocess.__all__ == backend_process.__all__
+	assert all(callable(getattr(module, name)) for module in (backend_inprocess, backend_process) for name in backend_process.__all__)

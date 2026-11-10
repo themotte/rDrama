@@ -12,6 +12,13 @@ from files.tests import affordances, route_coverage
 
 NEW_TIER_DIRS = ("spec", "internal")
 
+# The spec tier against the site running in its own processes (spec/harness/backend_process.py), started by these commands unless the runner names others
+PROCESS_BACKEND = os.environ.get("RDRAMA_SPEC_BACKEND") == "process"
+if PROCESS_BACKEND:
+	os.environ.setdefault("RDRAMA_SPEC_SERVER", "gunicorn files.tests.process_server:application -k gthread --threads 4 -w 1 -b 127.0.0.1:{port} --access-logfile - --error-logfile -")
+	os.environ.setdefault("RDRAMA_SPEC_CLI", "python3 -m files.tests.command")
+	os.environ.setdefault("RDRAMA_SPEC_SCHEDULER", "python3 -m files.tests.scheduler_pass {at}")
+
 
 def _is_new_tier(item):
 	return any(part in NEW_TIER_DIRS for part in item.path.relative_to(testenv.REPO_ROOT / "files" / "tests").parts[:-1])
@@ -31,6 +38,8 @@ def pytest_configure(config):
 @pytest.hookimpl(tryfirst=True)  # xdist reads the group marks in its own hook, which must see them
 def pytest_collection_modifyitems(config, items):
 	# The legacy tests depend on state accumulated across the run (cached users, process-wide patches), which the new tiers' per-test reset wipes; run the legacy ones first, and under xdist all in one worker, which loadgroup scheduling starts on them
+	if PROCESS_BACKEND and (outside := [item.nodeid for item in items if "spec" not in item.path.relative_to(testenv.REPO_ROOT / "files" / "tests").parts[:1]]):
+		raise pytest.UsageError(f"RDRAMA_SPEC_BACKEND=process runs only the spec tier, not {outside[0]} and {len(outside) - 1} more")
 	items.sort(key=_is_new_tier)
 	legacy = [item for item in items if not _is_new_tier(item)]
 	for item in legacy:
@@ -48,11 +57,14 @@ def pytest_deselected(items):
 
 
 def pytest_collection_finish(session):
-	_coverage["complete"] = not session.config.getoption("collectonly") and route_coverage.collected_whole_spec({item.path for item in session.items}, _coverage["deselected"], session.config.args)
+	# Both checks watch the app in the test's own process
+	_coverage["complete"] = not PROCESS_BACKEND and not session.config.getoption("collectonly") and route_coverage.collected_whole_spec({item.path for item in session.items}, _coverage["deselected"], session.config.args)
 
 
 @pytest.hookimpl(wrapper=True)
 def pytest_runtest_call(item):
+	if PROCESS_BACKEND:
+		return (yield)
 	route_coverage.start(item.path)
 	if _coverage["complete"]: affordances.start(item.path)
 	try:
@@ -94,6 +106,8 @@ def pytest_sessionfinish(session, exitstatus):
 
 
 def pytest_terminal_summary(terminalreporter):
+	if PROCESS_BACKEND:
+		terminalreporter.write_line("The site ran in its own processes, so route coverage and what pages offer weren't checked (they watch it in-process)", yellow=True)
 	if _coverage["unrequested"]:
 		terminalreporter.section("routes no spec test gets past the gate of", red=True)
 		for route in _coverage["unrequested"]:
