@@ -56,7 +56,6 @@ SITE_SETTINGS_PATH = environ.get("SITE_SETTINGS_PATH", "site_settings.json")
 IMAGES_DIR = environ.get("IMAGES_DIR", "/images")
 MAIL_SERVER = environ.get("MAIL_SERVER", "").strip()
 MAIL_PORT = 587
-MAIL_USE_TLS = True
 MAIL_USERNAME = environ.get("MAIL_USERNAME", "").strip()
 MAIL_PASSWORD = environ.get("MAIL_PASSWORD", "").strip()
 DESCRIPTION = environ.get("DESCRIPTION", "DESCRIPTION GOES HERE").strip()

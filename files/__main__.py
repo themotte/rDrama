@@ -16,11 +16,11 @@ from werkzeug.routing import IntegerConverter
 import flask_caching
 import flask_compress
 import flask_limiter
-import flask_mail
 from sqlalchemy.engine import Engine, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from files.helpers.config.const import Service
+from files.helpers.mail_transport import Mail
 from files.helpers.strings import bool_from_string
 
 # first, let's parse arguments to find out what type of instance this is...
@@ -140,7 +140,6 @@ app.config.update({
 	"CACHE_REDIS_URL": CACHE_REDIS_URL,
 	"MAIL_SERVER": MAIL_SERVER,
 	"MAIL_PORT": MAIL_PORT,
-	"MAIL_USE_TLS": MAIL_USE_TLS,
 	"DESCRIPTION": DESCRIPTION,
 	"MAIL_USERNAME": MAIL_USERNAME,
 	"MAIL_PASSWORD": MAIL_PASSWORD,
@@ -398,7 +397,7 @@ if not app.debug:
 
 cache = flask_caching.Cache(app)
 flask_compress.Compress(app)
-mail = flask_mail.Mail(app)
+mail = Mail(app)
 
 # ...and then import the before and after request handlers if this we will import routes.
 
