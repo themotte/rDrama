@@ -25,17 +25,10 @@ _external_responses: dict[tuple, object] = {}
 _external_requests: list[dict] = []
 
 
-def request(method, path, *, headers, data=None, json=None, files=None):
-	'''`files` maps field name to (filename, bytes, content type), or to a list of them. Returns (status, [(header, value), ...], body bytes).'''
-	if files:
-		data = {**(data or {}), **{field: [_file(f) for f in value] if isinstance(value, list) else _file(value) for field, value in files.items()}}
-	r = _client.open(path, method=method, headers=headers, data=data, json=json)
+def request(method, target, headers, body):
+	'''Sends a request (`target` as on the request line, `body` encoded as `headers` say). Returns (status, [(header, value), ...], body bytes).'''
+	r = _client.open(target, method=method, headers=headers, data=body or None)
 	return r.status_code, list(r.headers.items()), r.get_data()
-
-
-def _file(spec):
-	filename, content, content_type = spec
-	return (BytesIO(content), filename, content_type)
 
 
 def reset():

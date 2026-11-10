@@ -1,7 +1,9 @@
 import json as _json
 from dataclasses import dataclass
 from http.cookies import SimpleCookie
-from urllib.parse import urlencode, urlsplit
+from urllib.parse import quote, urlencode, urlsplit
+
+import urllib3
 
 from files.tests.spec.harness import backend, config, db, session
 
@@ -100,7 +102,10 @@ class Client:
 		all_headers = {"User-Agent": DEFAULT_USER_AGENT, "Host": config.site_host(), **({"Authorization": self.authorization} if self.authorization else {}), **(headers or {})}
 		if self.cookies:
 			all_headers["Cookie"] = "; ".join(f"{k}={v}" for k, v in self.cookies.items())
-		status, response_headers, body = backend.request(method, path, headers=all_headers, data=data, json=json, files=files)
+		content_type, body = _encode_body(data, json, files)
+		if content_type:
+			all_headers["Content-Type"] = content_type
+		status, response_headers, body = backend.request(method, request_target(path), all_headers, body)
 		response = Response(status, response_headers, body)
 		self._absorb_cookies(response)
 		return response
@@ -119,3 +124,33 @@ class Client:
 					self.cookies.pop(name, None)
 				else:
 					self.cookies[name] = morsel.value
+
+
+def request_target(path: str) -> str:
+	'''The request line's target for `path` (with any query): characters a URL can't hold as written, such as spaces and non-ASCII ones, percent-encoded as UTF-8, and any fragment left off, as browsers send it.'''
+	path, has_query, query = path.partition("#")[0].partition("?")
+	target = quote(path, safe="%!$&'()*+,/:;=@")
+	return target + "?" + quote(query, safe="%!$&'()*+,/:;=?@") if has_query else target
+
+
+def _fields(data):
+	'''(name, value) pairs of a form, a list value giving one pair per item; None values are left out.'''
+	for name, value in (data or {}).items():
+		for item in value if isinstance(value, list) else [value]:
+			if item is not None:
+				yield name, str(item)
+
+
+def _encode_body(data, json, files) -> tuple[str | None, bytes]:
+	'''The content type and bytes of a request body: JSON for `json`, multipart when there are `files`, otherwise a URL-encoded form (none when there are no fields).'''
+	if json is not None:
+		return "application/json", _json.dumps(json).encode()
+	if files:
+		parts = list(_fields(data))
+		for name, value in files.items():
+			parts += [(name, f) for f in (value if isinstance(value, list) else [value])]
+		body, content_type = urllib3.encode_multipart_formdata(parts)
+		return content_type, body
+	if not data:
+		return None, b""
+	return "application/x-www-form-urlencoded", urlencode(list(_fields(data))).encode()
