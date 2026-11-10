@@ -1,7 +1,7 @@
 '''
 Volunteer janitor duty: logged-in users are asked to rate reported comments.
 
-GET /volunteer gives the visitor a duty when one is available: up to 3 eligible comments, chosen at random, each assigned to them to rate (a "volunteer_janitor" row with result "Pending"), and their "volunteer_last_started_utc" set to now, in UTC. The page shows the assigned comments' text and the rating form (see test_ratings; its fields name the assignments, not the comments), and nothing else about the comments: not who wrote them, not the post or thread they are in (nor a link to it), not their reports or what volunteers made of them so far (not even to admins), and no actions on them. With nothing available the page says so and nothing is written. Anonymous visitors are sent to log in; API clients are refused (403), changing nothing.
+GET /volunteer gives the visitor a duty when one is available: up to 3 eligible comments, chosen at random, each assigned to them to rate (a "volunteer_janitor" row with result "Pending"), and their "volunteer_last_started_utc" set to now, in UTC. The page shows the assigned comments' text and the rating form (see test_ratings; its fields name the assignments, not the comments), and nothing else about the comments: not their ids, not who wrote them, not the post or thread they are in (nor a link to it), not their reports or what volunteers made of them so far (not even to admins), and no actions on them. With nothing available the page says so and nothing is written. Anonymous visitors are sent to log in; API clients are refused (403), changing nothing.
 
 A visitor has no duty available within 20 hours of their last start, nor while suspended (permanently or not) or shadowbanned.
 
@@ -76,8 +76,18 @@ def test_the_form_names_each_assignment():
 	assignments = db.rows("volunteer_janitor", user_id=volunteer["id"])
 	assert {row["comment_id"] for row in assignments} == {c["id"] for c in comments}
 	assert set(re.findall(r'name="(volunteer-[^"]*)"', r.text)) == {f"volunteer-assignment-{row['id']}" for row in assignments}
-	# Nothing else on the page names an assignment's comment either
-	assert {int(n) for n in re.findall(r'(?:id|for)="vj-(\d+)-', r.text)} == {row["id"] for row in assignments}
+
+
+def test_the_page_holds_no_assigned_comments_id():
+	# Comment ids no other number on the page comes near
+	db.execute("SELECT setval('comments_id_seq', nextval('comments_id_seq') + 1000000)")
+	comments = [_eligible() for _ in range(2)]
+	volunteer = factories.user()
+
+	r = as_user(volunteer).get("/volunteer")
+
+	assert {row["comment_id"] for row in db.rows("volunteer_janitor", user_id=volunteer["id"])} == {c["id"] for c in comments}
+	assert numbers_in(r).isdisjoint(c["id"] for c in comments)
 
 
 def test_a_duty_holds_at_most_three_comments():

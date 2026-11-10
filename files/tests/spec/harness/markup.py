@@ -1,6 +1,7 @@
 '''
 Reading pages: the markup pages share with the spec, which a reimplementation's pages must carry too.
 '''
+import re
 from html.parser import HTMLParser
 
 import lxml.html
@@ -75,3 +76,8 @@ def links(r: Response, within: str | None = None) -> list[str]:
 	'''The addresses the page's links lead to (every href), in page order; with `within`, only those inside the element with that id.'''
 	root = _element(r, within) if within else lxml.html.document_fromstring(r.text)
 	return root.xpath(".//@href")
+
+
+def numbers_in(r: Response) -> set[int]:
+	'''Every whole number written anywhere in the page, its markup and scripts included.'''
+	return {int(n) for n in re.findall(r"\d+", r.text)}
