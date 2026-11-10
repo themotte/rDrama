@@ -3,6 +3,7 @@ The deployment configuration a reimplementation must honor: every environment va
 '''
 import enum
 import os
+import typing
 
 
 class Env(enum.Enum):
@@ -77,8 +78,30 @@ def mail_server() -> str:
 
 
 def site_settings_path() -> str:
-	'''A JSON file of runtime-toggleable settings. The app must re-read it on every request, because admins change it while the site runs, and replace it whole when changing it. Side-by-side deployments must share it.'''
+	'''A JSON file of runtime-toggleable settings (SITE_SETTINGS). The app must re-read it on every request, because admins change it while the site runs, and replace it whole when changing it. Side-by-side deployments must share it.'''
 	return os.environ["SITE_SETTINGS_PATH"]
+
+
+class Setting(typing.NamedTuple):
+	kind: type
+	'''bool settings are switched on and off; int settings take a whole number.'''
+	spec: str
+	'''The spec file pinning its effect.'''
+
+
+SITE_SETTINGS = {
+	"Bots": Setting(bool, "auth/test_session.py"),
+	"Read-only mode": Setting(bool, "auth/test_session.py"),
+	"Signups": Setting(bool, "auth/test_signup.py"),
+	"FilterNewPosts": Setting(bool, "posts/test_submit.py"),
+	"FilterCommentsMinComments": Setting(int, "comments/test_create.py"),
+	"FilterCommentsMinKarma": Setting(int, "comments/test_create.py"),
+	"FilterCommentsMinAgeDays": Setting(int, "comments/test_create.py"),
+	"min_comments_private_profile": Setting(int, "settings/test_privacy.py"),
+	"min_truescore_private_profile": Setting(int, "settings/test_privacy.py"),
+	"min_age_days_private_profile": Setting(int, "settings/test_privacy.py"),
+}
+'''Every key of the site settings file (site_settings_path); admins change them on the dashboard (admin/test_dashboard.py).'''
 
 
 # Tuning values the spec runs at. The tests read them here rather than assuming them.

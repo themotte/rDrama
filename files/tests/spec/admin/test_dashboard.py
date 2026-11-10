@@ -11,8 +11,8 @@ import pytest
 
 from files.tests.spec.harness import *
 
-BOOLEAN_SETTINGS = ["Bots", "Read-only mode", "Signups", "FilterNewPosts"]
-INTEGER_SETTINGS = ["FilterCommentsMinComments", "FilterCommentsMinKarma", "FilterCommentsMinAgeDays", "min_comments_private_profile", "min_truescore_private_profile", "min_age_days_private_profile"]
+BOOLEAN_SETTINGS = [name for name, setting in config.SITE_SETTINGS.items() if setting.kind is bool]
+INTEGER_SETTINGS = [name for name, setting in config.SITE_SETTINGS.items() if setting.kind is int]
 
 
 def _settings():
