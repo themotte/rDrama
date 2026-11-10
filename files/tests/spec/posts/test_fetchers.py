@@ -3,6 +3,8 @@ Things the site looks up on other sites or in its own posts for the submit form 
 - POST /is_repost with "url": the permalink of a live post already linking there, or "" (no login needed).
 - GET /submit/title?url=...: the <title> of the page at url, for prefilling the title field.
 - The thumbnail of a new link post, fetched in the background from the linked page's preview-image metadata, its images, or the link itself when it is an image. Only the first 512 KiB of a page is looked at, and images of more than 16 million pixels aren't used.
+
+HTTPS fetches check the other site's certificate: a host whose certificate no trusted authority signed counts as unreachable.
 '''
 import pytest
 
@@ -123,6 +125,12 @@ def test_pages_without_a_usable_title_give_none(response):
 
 def test_unreachable_pages_give_no_title():
 	external_web.unreachable("https://example.com/page")
+
+	assert_status(_title(as_user(factories.user()), "https://example.com/page"), 400)
+
+
+def test_pages_on_hosts_with_untrusted_certificates_give_no_title():
+	external_web.serve("https://example.com/page", **_html(head="<title>Untrusted</title>"), trusted=False)
 
 	assert_status(_title(as_user(factories.user()), "https://example.com/page"), 400)
 
@@ -377,6 +385,15 @@ def test_links_that_are_neither_pages_nor_images_give_no_thumbnail(page):
 def test_unreachable_links_give_no_thumbnail():
 	external_web.unreachable("https://example.com/gone")
 	post = _link_post("https://example.com/gone")
+
+	run_background_work()
+
+	assert _thumbnail_of(post) is None
+
+
+def test_links_to_hosts_with_untrusted_certificates_give_no_thumbnail():
+	external_web.serve("https://example.com/image.png", **_image(), trusted=False)
+	post = _link_post("https://example.com/image.png")
 
 	run_background_work()
 

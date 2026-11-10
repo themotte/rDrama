@@ -8,8 +8,9 @@ An out-of-process backend provides this as an intercepting HTTP(S) proxy, so the
 from files.tests.spec.harness import backend
 
 
-def serve(url: str, *, status: int = 200, headers: dict | None = None, body: bytes | str = b"", method: str = "GET"):
-	backend.external_serve(method, url, status, headers or {}, body.encode() if isinstance(body, str) else body)
+def serve(url: str, *, status: int = 200, headers: dict | None = None, body: bytes | str = b"", method: str = "GET", trusted: bool = True):
+	'''Requests to `url` get this response. With `trusted` False, its host (an https one) answers with a certificate no authority the site trusts signed, so a site checking certificates, as it must, gets nothing from it; such requests aren't recorded. A host's certificate is as its latest registration says.'''
+	backend.external_serve(method, url, status, headers or {}, body.encode() if isinstance(body, str) else body, trusted)
 
 
 def unreachable(url: str, *, method: str = "GET"):

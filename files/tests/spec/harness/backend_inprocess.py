@@ -82,8 +82,8 @@ def take_server_log() -> str:
 	return ""
 
 
-def external_serve(method, url, status, headers, body):
-	_external_responses[external_key(method, url)] = (status, headers, body)
+def external_serve(method, url, status, headers, body, trusted):
+	_external_responses[external_key(method, url)] = (status, headers, body, trusted)
 
 
 def external_unreachable(method, url):
@@ -99,10 +99,12 @@ def _fake_http_send(self, request, *args, **kwargs):
 	if response is None:
 		_outbound_attempts.append(f"HTTP {request.method} {request.url}")
 		raise requests.exceptions.ConnectionError(f"Outbound HTTP is blocked in spec tests: {request.method} {request.url}")
+	if response is not _UNREACHABLE and not response[3] and kwargs.get("verify", True) is not False:
+		raise requests.exceptions.SSLError(f"{request.url}'s certificate isn't signed by a trusted authority (spec test)")
 	_external_requests.append({"method": request.method, "url": request.url})
 	if response is _UNREACHABLE:
 		raise requests.exceptions.ConnectionError(f"{request.url} is unreachable (spec test)")
-	status, headers, body = response
+	status, headers, body, _trusted = response
 	raw = urllib3.HTTPResponse(body=BytesIO(body), headers=headers, status=status, preload_content=False, decode_content=False)
 	return self.build_response(request, raw)
 

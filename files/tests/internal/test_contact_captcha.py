@@ -29,6 +29,14 @@ def test_a_visitor_failing_the_captcha_is_refused(site_key):
 	d.assert_exactly()
 
 
+def test_an_answer_hcaptcha_seems_to_pass_over_an_untrusted_connection_is_refused(site_key):
+	external_web.serve(HCAPTCHA_URL, method="POST", headers={"Content-Type": "application/json"}, body='{"success": true}', trusted=False)
+
+	r = anon().post_raw("/send_admin", {"message": factories.unique(), "h-captcha-response": "answer"})
+
+	assert_status(r, 403)
+
+
 def test_a_visitor_passing_the_captcha_is_heard(site_key):
 	_answer(True)
 

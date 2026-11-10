@@ -297,8 +297,8 @@ def take_server_log() -> str:
 	return _site.take_log() if _site is not None else ""
 
 
-def external_serve(method, url, status, headers, body):
-	_the_site().proxy.serve(method, url, status, headers, body)
+def external_serve(method, url, status, headers, body, trusted):
+	_the_site().proxy.serve(method, url, status, headers, body, trusted)
 
 
 def external_unreachable(method, url):
