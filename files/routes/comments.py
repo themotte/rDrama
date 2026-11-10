@@ -291,11 +291,11 @@ def edit_comment(cid, v):
 		).filter(
 			Comment.author_id == v.id,
 			Comment.body.op(
-				'<->')(body) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+				'<->')(body) < app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"],
 			Comment.created_utc > cutoff
 		).count()
 
-		threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
+		threshold = app.config["COMMENT_SPAM_COUNT_THRESHOLD"]
 		if v.age_seconds >= (60 * 60 * 24 * 30):
 			threshold *= 4
 		elif v.age_seconds >= (60 * 60 * 24 * 7):
