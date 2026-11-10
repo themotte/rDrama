@@ -17,7 +17,6 @@ import flask_caching
 import flask_compress
 import flask_limiter
 import flask_mail
-import flask_profiler
 import redis
 from sqlalchemy.engine import Engine, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -70,25 +69,6 @@ if environ.get("SITE_ID") is None:
 	from dotenv import load_dotenv
 	load_dotenv(dotenv_path=Path("bootstrap/site_env"))
 	load_dotenv(dotenv_path=Path("env"), override=True)
-
-# ...and let's add the flask profiler if it's enabled...
-
-if environ.get("FLASK_PROFILER_ENDPOINT"):
-	app.config["flask_profiler"] = {
-		"enabled": True,
-		"storage": {
-			"engine": "sqlalchemy",
-		},
-		"basicAuth": {
-			"enabled": True,
-			"username": environ.get("FLASK_PROFILER_USERNAME"),
-			"password": environ.get("FLASK_PROFILER_PASSWORD"),
-		},
-		"endpointRoot": environ.get("FLASK_PROFILER_ENDPOINT"),
-	}
-
-	profiler = flask_profiler.Profiler()
-	profiler.init_app(app)
 
 # ...and then let's set up the easy_profile analysis if it's enabled...
 

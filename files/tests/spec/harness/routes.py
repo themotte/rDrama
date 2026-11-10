@@ -23,7 +23,7 @@ A request is checked in this order:
 
 spec/routes checks each gate from below, with values that name nothing; that a route serves those it should, at the lowest level it allows, is in the spec files for its area.
 
-The table describes the site as the spec runs it. The admins' request-performance controls under /performance/ are outside the spec, as are the routes a developer mode and the request profiler add.
+The table describes the site as the spec runs it. The admins' request-performance controls under /performance/ are outside the spec, as are the routes a developer mode adds.
 '''
 from typing import NamedTuple
 

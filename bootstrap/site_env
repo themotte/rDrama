@@ -26,10 +26,3 @@ MENTION_LIMIT=100
 RESULTS_PER_PAGE_COMMENTS=200
 SCORE_HIDING_TIME_HOURS=24
 SQLALCHEMY_WARN_20=1
-
-# Profiling system; uncomment to enable
-# Stores and exposes sensitive data!
-# Do not recommend leaving it enabled long-term, or enabling it at all without changing all three values!
-#FLASK_PROFILER_ENDPOINT=flask-profiler
-#FLASK_PROFILER_USERNAME=admin
-#FLASK_PROFILER_PASSWORD=admin
