@@ -23,6 +23,8 @@ def pytest_configure(config):
 		raise pytest.UsageError("the legacy tests must run together in one worker: add --dist loadgroup")
 	# A controller handing tests to xdist workers runs none itself; each worker builds its own database. Built here because pytest replays pytest_configure for a conftest it loads late (as it does without a path below files/tests), unlike pytest_sessionstart.
 	if config.getoption("dist", "no") == "no" or config.getoption("collectonly"):
+		# Registered first, so a half-built database goes too
+		config.add_cleanup(testenv.drop_database)
 		testenv.build_database()
 
 

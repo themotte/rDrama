@@ -1,5 +1,5 @@
 '''
-Points the app at an isolated database, Redis db and site-settings file, and builds that database from scratch.
+Points the app at an isolated database, Redis db and site-settings file, builds that database from scratch, and drops it again.
 
 `files.__main__` creates its engine, cache and limiter at import time, so `configure()` must run before anything imports it; `build_database()` may come later, before the first test.
 
@@ -46,6 +46,11 @@ def configure():
 
 def build_database():
 	_build_database(make_url(os.environ["DATABASE_URL"]))
+
+
+def drop_database():
+	'''Drops the database `build_database` built: the next run builds its own, and the server then needn't flush this run's unflushed pages, which can hold up its shutdown for minutes.'''
+	_server_execute(make_url(os.environ["DATABASE_URL"]), f"DROP DATABASE IF EXISTS {TEST_DB_NAME} WITH (FORCE)")
 
 
 def restore_site_settings():
