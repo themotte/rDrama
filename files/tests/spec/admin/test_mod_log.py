@@ -216,6 +216,16 @@ def test_a_comment_the_viewer_couldnt_open_goes_unlinked(hidden, viewer):
 	assert (f"/comment/{comment['id']}" in r.text) == (hidden is None or _sees(viewer, hidden))
 
 
+def test_an_entry_links_to_where_links_to_its_comment_land():
+	comment = factories.comment(factories.user(), factories.post(factories.user()))
+	entry = db.insert("modactions", user_id=factories.admin(2)["id"], kind="remove_comment", target_comment_id=comment["id"])
+
+	r = anon().get(f"/log/{entry['id']}")
+
+	assert_html(r, 200)
+	assert f"/comment/{comment['id']}?context=8#context" in links(r, within=f"action-{entry['id']}")
+
+
 @pytest.mark.parametrize("viewer", ["visitor", "admin", "author"])
 @pytest.mark.parametrize("target", ["post", "comment"])
 def test_a_bans_note_links_what_it_was_for_only_if_the_viewer_could_open_it(target, viewer):

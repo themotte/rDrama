@@ -1,5 +1,5 @@
 '''
-GET /comment/<id> of a message is its conversation's page: the message and everything answering it, at any depth, oldest first, with no post around them. "context" (0 to 8, 0 by default) also shows that many of the messages it answers, above it. Who may open a message: its sender and recipient, those taking part in its conversation (test_replies: in modmail, its starter and admins from level 2), and admins from level 2; others are refused (403, see comments/test_permalink). A message isn't found under any post's path (/post/<post id>/<anything>/<id>): 404.
+GET /comment/<id> of a message is its conversation's page: the message and everything answering it, at any depth, oldest first, with no post around them. "context" (0 to 8, 0 by default) also shows that many of the messages it answers, above it. As on a comment's page, the element with id "context" holds the message itself (links to it end in "#context"). Who may open a message: its sender and recipient, those taking part in its conversation (test_replies: in modmail, its starter and admins from level 2), and admins from level 2; others are refused (403, see comments/test_permalink). A message isn't found under any post's path (/post/<post id>/<anything>/<id>): 404.
 
 API clients get the shown conversation as JSON: its first shown message, with its replies. Messages have no scores: their JSON leaves out "score", "upvotes" and "downvotes", however old they are.
 
@@ -39,6 +39,16 @@ def test_context_shows_the_messages_it_answers():
 
 	assert_in_order(r, [chain[1]["text"], chain[2]["text"], chain[3]["text"]])
 	assert_not_in_payload(r, chain[0]["text"])
+
+
+def test_the_page_marks_where_links_to_the_message_land():
+	sender, _, chain = _conversation(3)
+
+	r = as_user(sender).get(f"/comment/{chain[1]['id']}", params={"context": 1})
+
+	assert_in_order(r, [chain[0]["text"], chain[1]["text"], chain[2]["text"]])
+	focused = element_text(r, "context")
+	assert chain[1]["text"] in focused and chain[0]["text"] not in focused and chain[2]["text"] not in focused
 
 
 def test_long_conversations_show_whole():

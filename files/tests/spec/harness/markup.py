@@ -13,6 +13,7 @@ ELEMENT_IDS = {
 	"post-<id>": "a post: its entry in listings and on its own page",
 	"post-text-<id>": "a listed post's rendered text, hidden until the reader expands it",
 	"comment-<id>": "a comment with its replies",
+	"context": "on a comment's own page (and a message's conversation page), the comment itself without its ancestors or replies: where the site's links to that page (ending in #context) land",
 	"action-<id>": "an entry of the mod log (/log)",
 	"stat-<name>": "one figure on /stats (admin/test_site_stats.py)",
 	"mod-actions-<id>": "on /admins, how many mod-log entries the admin with that user id made",

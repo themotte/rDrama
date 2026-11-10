@@ -8,6 +8,7 @@ A comment's own page: GET /comment/<comment id> and GET /post/<post id>/<anythin
 - A private message (a comment with no post, sent to a user) is refused with 403 to anyone who isn't its sender or recipient or taking part in its conversation (admins from level 2 may open any), visitors included. Its page shows its conversation instead of a post (notifications/test_message_page). "context" never brings in a private message the viewer couldn't open itself: the chain stops below it.
 - On an 18+ post, browsers of visitors and of users who are not 18+ get the age confirmation page instead of the comment until they confirm (POST /allow_nsfw); scripts (xhr) and API clients of users who are not 18+ are refused with 403; users who are 18+ see the comment.
 - The page describes the comment (its text and author, for link previews) only to viewers who may see it.
+- The page's element with id "context" holds the comment itself (not its ancestors or replies): the site's links to a comment's page (in notices, the mod log, ban reasons and the comment's own links) end in "#context" to land on it.
 - API clients get the JSON object of the topmost comment shown (see test_json.py for its shape), with the chain down to the comment as its replies.
 '''
 import pytest
@@ -32,6 +33,22 @@ def test_permalink_shows_the_comment_and_its_replies(form):
 	assert_in_payload(r, post["title"])
 	assert_in_payload(r, comment["body"])
 	assert_in_payload(r, reply["body"])
+
+
+@pytest.mark.parametrize("form", FORMS)
+def test_the_page_marks_where_links_to_the_comment_land(form):
+	post = factories.post(factories.user())
+	parent = factories.comment(factories.user(), post)
+	comment = factories.comment(factories.user(), post, parent=parent)
+	reply = factories.comment(factories.user(), post, parent=comment)
+
+	r = anon().get(FORMS[form](post, comment), params={"context": "1"})
+
+	assert_html(r, 200)
+	# The page also describes the comment for link previews, ahead of the thread
+	assert_in_order(r, [parent["body"], reply["body"]])
+	focused = element_text(r, "context")
+	assert comment["body"] in focused and parent["body"] not in focused and reply["body"] not in focused
 
 
 @pytest.mark.parametrize("form", FORMS)
