@@ -51,12 +51,12 @@ def run_background_work():
 
 
 def cli(args):
-	'''Returns (exit code, output).'''
+	'''Returns (exit code, what the command printed on stdout).'''
 	with background.separately():
 		result = app.test_cli_runner().invoke(args=list(args))
 	# A command may leave the thread's session holding a transaction; release it like a finished request would
 	db_session.remove()
-	return result.exit_code, result.output
+	return result.exit_code, result.stdout
 
 
 def run_scheduler(at):

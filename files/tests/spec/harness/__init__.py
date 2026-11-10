@@ -69,7 +69,7 @@ class CliResult(NamedTuple):
 
 
 def cli(*args: str) -> CliResult:
-	'''Runs one of the site's command-line commands (the first argument names it; the names are contract) against the same database and cache, and returns its exit code and output. A command runs apart from the site and does the work it hands to the background itself, by the time it returns; work the site holds stays held.'''
+	'''Runs one of the site's command-line commands (the first argument names it; the names are contract) against the same database and cache, and returns its exit code and output: what it printed on stdout, its report. Diagnostics go to stderr, which isn't part of it. A command runs apart from the site and does the work it hands to the background itself, by the time it returns; work the site holds stays held.'''
 	return CliResult(*backend.cli(args))
 
 
