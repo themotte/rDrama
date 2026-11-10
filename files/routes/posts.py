@@ -19,6 +19,7 @@ from files.helpers.comments import comment_sort, comment_subtree_ids, comments_o
 from files.helpers.alerts import *
 from files.helpers.background import spawn_background
 from files.helpers.config.const import *
+from files.helpers.config.environment import OUTBOUND_VERIFY
 from files.helpers.content import canonicalize_url2
 from files.helpers.contentsorting import sort_comments
 from files.helpers.sanitize import *
@@ -548,7 +549,7 @@ def get_post_title(v):
 		abort(400)
 
 	try:
-		x = requests.get(url, headers=titleheaders, timeout=POST_TITLE_TIMEOUT, proxies=proxies)
+		x = requests.get(url, headers=titleheaders, timeout=POST_TITLE_TIMEOUT, proxies=proxies, verify=OUTBOUND_VERIFY)
 	except: abort(400)
 		
 	content_type = x.headers.get("Content-Type")

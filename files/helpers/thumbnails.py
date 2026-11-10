@@ -12,6 +12,7 @@ from PIL import Image as PILimage
 from files.__main__ import app, db_session
 from files.classes.submission import Submission
 from files.helpers.config.const import proxies
+from files.helpers.config.environment import OUTBOUND_VERIFY
 from files.helpers.media import new_image_path, process_image
 
 titleheaders = {
@@ -68,7 +69,7 @@ def _fetch_thumbnail(db, post):
 def _thumbnail_fetch(url:str) -> Optional[tuple[requests.Response, bytes]]:
 	'''The response and body at `url`, or None if it can't be fetched or is too large to be a thumbnail's source.'''
 	try:
-		with requests.get(url, headers=titleheaders, timeout=5, proxies=proxies, stream=True) as response:
+		with requests.get(url, headers=titleheaders, timeout=5, proxies=proxies, stream=True, verify=OUTBOUND_VERIFY) as response:
 			body = bytearray()
 			for chunk in response.iter_content(64 * 1024):
 				body += chunk

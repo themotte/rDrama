@@ -58,6 +58,8 @@ MAIL_SERVER = environ.get("MAIL_SERVER", "").strip()
 MAIL_PORT = int(environ.get("MAIL_PORT", "587").strip())
 MAIL_USERNAME = environ.get("MAIL_USERNAME", "").strip()
 MAIL_PASSWORD = environ.get("MAIL_PASSWORD", "").strip()
+# Certificates outbound HTTPS is checked against: SSL_CERT_FILE's, as written (OpenSSL reads it so for the mail server's), otherwise requests' own bundle
+OUTBOUND_VERIFY = environ.get("SSL_CERT_FILE") or True
 DESCRIPTION = environ.get("DESCRIPTION", "DESCRIPTION GOES HERE").strip()
 SQLALCHEMY_DATABASE_URI = DATABASE_URL
 

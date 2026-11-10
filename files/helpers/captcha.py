@@ -2,6 +2,8 @@ import sys
 from typing import Final
 import requests
 
+from files.helpers.config.environment import OUTBOUND_VERIFY
+
 HCAPTCHA_URL: Final[str] = "https://hcaptcha.com/siteverify"
 
 def validate_captcha(secret:str, sitekey: str, token: str):
@@ -12,7 +14,7 @@ def validate_captcha(secret:str, sitekey: str, token: str):
 			"sitekey": sitekey
 			}
 	try:
-		req = requests.post(HCAPTCHA_URL, data=data, timeout=5)
+		req = requests.post(HCAPTCHA_URL, data=data, timeout=5, verify=OUTBOUND_VERIFY)
 		return bool(req.json()["success"])
 	except (requests.RequestException, ValueError, KeyError) as e:
 		print(f"[captcha] couldn't verify an answer with hCaptcha: {e!r}", file=sys.stderr, flush=True)
