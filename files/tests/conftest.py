@@ -2,11 +2,13 @@ from files.tests import testenv
 
 testenv.configure()
 
-import pytest
+import os
 import traceback
 import warnings
 
-from files.tests import route_coverage
+import pytest
+
+from files.tests import affordances, route_coverage
 
 NEW_TIER_DIRS = ("spec", "internal")
 
@@ -35,8 +37,8 @@ def pytest_collection_modifyitems(config, items):
 		raise pytest.UsageError("the legacy tests must run together in one worker: add --dist loadgroup")
 
 
-# Route coverage (route_coverage.py), checked when a run collected every spec test and passed
-_coverage = {"deselected": 0, "complete": True, "seen": set(), "unrequested": None}
+# Route coverage (route_coverage.py) and what pages offer (affordances.py), checked when a run collected every spec test and passed
+_coverage = {"deselected": 0, "complete": True, "seen": set(), "unrequested": None, "affordances": [], "page_problems": {}, "map_unwritten": False}
 
 
 def pytest_deselected(items):
@@ -50,10 +52,12 @@ def pytest_collection_finish(session):
 @pytest.hookimpl(wrapper=True)
 def pytest_runtest_call(item):
 	route_coverage.start(item.path)
+	if _coverage["complete"]: affordances.start(item.path)
 	try:
 		return (yield)
 	finally:
 		route_coverage.stop()
+		affordances.stop()
 
 
 @pytest.hookimpl(optionalhook=True)
@@ -65,17 +69,26 @@ def pytest_testnodedown(node, error):
 		return
 	_coverage["complete"] &= output["complete"]
 	_coverage["seen"] |= {tuple(pair) for pair in output["seen"]}
+	_coverage["affordances"].append(node.workeroutput["affordances"])
 
 
 def pytest_sessionfinish(session, exitstatus):
 	if hasattr(session.config, "workeroutput"):
 		session.config.workeroutput["route_coverage"] = {"complete": _coverage["complete"], "seen": sorted(route_coverage.seen())}
+		session.config.workeroutput["affordances"] = affordances.output()
 		return
+	_coverage["map_unwritten"] = bool(os.environ.get("RDRAMA_AFFORDANCES_OUT"))
 	if exitstatus != pytest.ExitCode.OK or not _coverage["complete"]:
 		return
 	_coverage["unrequested"] = route_coverage.unrequested(_coverage["seen"] | route_coverage.seen())
-	if _coverage["unrequested"]:
+	offered = affordances.merge([*_coverage["affordances"], affordances.output()])
+	_coverage["page_problems"] = affordances.problems(offered)
+	if _coverage["unrequested"] or _coverage["page_problems"]:
 		session.exitstatus = pytest.ExitCode.TESTS_FAILED
+	elif os.environ.get("RDRAMA_AFFORDANCES_OUT"):
+		with open(os.environ["RDRAMA_AFFORDANCES_OUT"], "w") as out:
+			out.write(affordances.table(offered["rows"]))
+		_coverage["map_unwritten"] = False
 
 
 def pytest_terminal_summary(terminalreporter):
@@ -84,6 +97,13 @@ def pytest_terminal_summary(terminalreporter):
 		for route in _coverage["unrequested"]:
 			terminalreporter.write_line(route)
 		terminalreporter.write_line("(the run fails: every route needs a spec test outside spec/routes/ that the gate lets through)", red=True)
+	for heading, problems in _coverage["page_problems"].items():
+		terminalreporter.section(heading, red=True)
+		for problem in problems:
+			terminalreporter.write_line(problem)
+		terminalreporter.write_line("(the run fails: pages may lead only to routes, and every script call they make must be classified in affordances.py)", red=True)
+	if _coverage["map_unwritten"]:
+		terminalreporter.write_line("RDRAMA_AFFORDANCES_OUT is set, but the map is written only by a passing run that collected the whole spec tier", yellow=True)
 
 
 class LazyLoadWarning(UserWarning):
