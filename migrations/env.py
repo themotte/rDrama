@@ -8,10 +8,7 @@ from files.classes import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
-connection_string = current_app.config.get('DATABASE_URL')
-
 config = context.config
-config.set_main_option('sqlalchemy.url', connection_string)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -26,7 +23,7 @@ target_metadata = Base.metadata
 
 config.set_main_option(
     'sqlalchemy.url',
-    str(current_app.extensions['migrate'].db.get_engine().url).replace(
+    current_app.extensions['migrate'].db.get_engine().url.render_as_string(hide_password=False).replace(
         '%', '%%'))
 
 # other values from the config, defined by the needs of env.py,
