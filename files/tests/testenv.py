@@ -36,8 +36,7 @@ def configure():
 	os.environ["IMAGES_DIR"] = str(scratch / "images")
 	(scratch / "images").mkdir()
 	os.environ["RDRAMA_SERVICE"] = "THEMOTTE"
-	os.environ["RDRAMA_TESTING"] = "1"
-	os.environ["DBG_LIMITER_DISABLED"] = "true"
+	os.environ["SPEC_TEST_MODE"] = "1"
 
 	# The committed defaults, not the working copy, which a local dev server's admin toggles rewrite
 	_baseline_settings = subprocess.run(["git", "-c", "safe.directory=*", "show", "HEAD:site_settings.json"], cwd=REPO_ROOT, capture_output=True, text=True, check=True).stdout

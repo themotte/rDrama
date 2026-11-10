@@ -13,6 +13,8 @@ class Env(enum.Enum):
 	'''A size, threshold or default; a reimplementation reads it with the same meaning. The spec runs at the configured value, and the tests that depend on one read it through the accessors below. The similarity thresholds have none: the spam tests' texts are chosen for values near production's.'''
 	PRECONDITION = "precondition"
 	'''A switch the spec needs at one value (PRECONDITIONS); a reimplementation reads it with the same meaning.'''
+	TEST = "test"
+	'''Set by the spec harness for the implementation it runs, never in production. SPEC_TEST_MODE, when true: work the site hands to the background waits until the harness runs it (run_background_work); the rate limits and the signup form's minimum filling time are off; and password hashes may be cheap to compute.'''
 
 
 ENVIRONMENT = {
@@ -42,6 +44,7 @@ ENVIRONMENT = {
 	"COMMENT_SPAM_COUNT_THRESHOLD": Env.TUNING,
 	"HCAPTCHA_SITEKEY": Env.PRECONDITION,
 	"VOLUNTEER_JANITOR_ENABLE": Env.PRECONDITION,
+	"SPEC_TEST_MODE": Env.TEST,
 }
 
 PRECONDITIONS = {

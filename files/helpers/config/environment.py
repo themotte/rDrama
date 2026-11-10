@@ -71,6 +71,8 @@ SCORE_HIDING_TIME_HOURS = int(environ.get('SCORE_HIDING_TIME_HOURS', 0))
 DBG_VOLUNTEER_PERMISSIVE = bool_from_string(environ.get('DBG_VOLUNTEER_PERMISSIVE', False))
 VOLUNTEER_JANITOR_ENABLE = bool_from_string(environ.get('VOLUNTEER_JANITOR_ENABLE', True))
 
-RATE_LIMITER_ENABLED = not bool_from_string(environ.get('DBG_LIMITER_DISABLED', False))
+# The spec harness's test mode (spec/harness/config.py Env.TEST)
+SPEC_TEST_MODE = bool_from_string(environ.get('SPEC_TEST_MODE', False))
+RATE_LIMITER_ENABLED = not (SPEC_TEST_MODE or bool_from_string(environ.get('DBG_LIMITER_DISABLED', False)))
 
 CARD_VIEW = bool_from_string(environ.get("CARD_VIEW", True))

@@ -1,8 +1,9 @@
-import os
 import threading
 
+from files.helpers.config.environment import SPEC_TEST_MODE
+
 # In test mode, spawned work is queued instead of started, so tests can run it deterministically via drain() and it can't outlive the test that caused it.
-_deferred: list | None = [] if os.environ.get("RDRAMA_TESTING") == "1" else None
+_deferred: list | None = [] if SPEC_TEST_MODE else None
 
 
 def spawn_background(fn, *args):

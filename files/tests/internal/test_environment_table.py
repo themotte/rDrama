@@ -11,8 +11,7 @@ from files.tests.testenv import REPO_ROOT
 # Read by the current implementation for itself; a reimplementation needn't
 IMPLEMENTATION_ONLY = {
 	"RDRAMA_SERVICE": "forces which part of the site the process runs, for the test runner",
-	"RDRAMA_TESTING": "defers background work to the test harness and makes password hashes cheap",
-	"DBG_LIMITER_DISABLED": "turns off the rate limits and the signup form's minimum filling time, for tests (rate limits are specified apart)",
+	"DBG_LIMITER_DISABLED": "a developer's switch turning off the rate limits and the signup form's minimum filling time",
 	"ENFORCE_PRODUCTION": "refuses to start in Flask's debug mode unless false",
 	"DBG_SQL_ANALYSIS": "a developer's per-request query report",
 	"DBG_VOLUNTEER_PERMISSIVE": "a developer's switch relaxing volunteer duty's waits and filters",

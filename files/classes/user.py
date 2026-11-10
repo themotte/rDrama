@@ -24,7 +24,8 @@ from files.classes.visstate import StateMod
 from files.helpers.assetcache import ASSET_URL, assetcache_path
 from files.helpers.config.const import *
 from files.helpers.config.environment import (CARD_VIEW, DEFAULT_COLOR,
-                                              SITE_FULL, SITE_ID)
+                                              SITE_FULL, SITE_ID,
+                                              SPEC_TEST_MODE)
 from files.helpers.security import *
 
 if TYPE_CHECKING:
@@ -304,8 +305,7 @@ class User(CreatedBase):
 	def hash_password(self, password):
 		# Use faster hashing with fewer iterations during tests
 		# PBKDF2 default is 260000 iterations, we use 1000 for tests
-		import os
-		if os.environ.get('RDRAMA_TESTING') == '1':
+		if SPEC_TEST_MODE:
 			# Fast hashing for tests (~2ms instead of ~390ms)
 			method = 'pbkdf2:sha512:1000'
 		else:
