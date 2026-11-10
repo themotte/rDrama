@@ -56,11 +56,9 @@ def utc_now_naive() -> datetime:
 
 def run_scheduler(at: datetime):
 	'''
-	Does one pass of the scheduled-task worker (the `cron` command) at `at` (an aware datetime): recovering any task left running (see spec/scheduler/test_runs.py), then running every task due at `at`.
+	Does one pass of the scheduled-task worker (the `cron` command) at `at` (an aware datetime): recovering any task left running (see spec/scheduler/test_runs.py), then running every task due at `at`. Work the pass hands to the background, such as a scheduled link post's thumbnail, is done by the time it returns: the worker runs apart from the site, and does that work itself. Work the site holds stays held.
 
 	The worker's clock reads `at` throughout, so `at` is: when the tasks run (`tasks_repeatable.run_time_last`), the start and completion times of their runs, and a scheduled post's `created_utc` and the dates in its title. Everything else the run writes (votes, notifications) takes the real time.
-
-	A backend driving the site out of process would need a test-mode way to run one pass on a given clock, such as a test-only `cron --once --now=<epoch>`.
 	'''
 	backend.run_scheduler(at)
 
@@ -71,7 +69,7 @@ class CliResult(NamedTuple):
 
 
 def cli(*args: str) -> CliResult:
-	'''Runs one of the site's command-line commands (the first argument names it; the names are contract) against the same database and cache, and returns its exit code and output.'''
+	'''Runs one of the site's command-line commands (the first argument names it; the names are contract) against the same database and cache, and returns its exit code and output. A command runs apart from the site and does the work it hands to the background itself, by the time it returns; work the site holds stays held.'''
 	return CliResult(*backend.cli(args))
 
 

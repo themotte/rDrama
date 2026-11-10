@@ -1,4 +1,5 @@
 import threading
+from contextlib import contextmanager
 
 from files.helpers.config.environment import SPEC_TEST_MODE
 
@@ -22,3 +23,18 @@ def drain():
 def discard():
 	if _deferred is not None:
 		_deferred.clear()
+
+
+@contextmanager
+def separately():
+	'''In test mode, work handed off inside the block runs by the time the block ends, while work held before it stays held: for standing in for a process of its own (a command, the scheduler), which does its own work before it exits.'''
+	global _deferred
+	if _deferred is None:
+		yield
+		return
+	earlier, _deferred = _deferred, []
+	try:
+		yield
+		drain()
+	finally:
+		_deferred = earlier
