@@ -1,5 +1,8 @@
 import json
+import os
 import re
+import shutil
+import tempfile
 import time
 from datetime import datetime, timedelta, timezone
 
@@ -318,6 +321,18 @@ def admin_home(v):
 	return render_template("admin/admin_home.html", v=v, site_settings=app.config['SETTINGS'])
 
 
+def _write_site_settings(settings):
+	'''Replaces the settings file whole, so the requests re-reading it never find it partly written.'''
+	with tempfile.NamedTemporaryFile("w", dir=os.path.dirname(os.path.abspath(SITE_SETTINGS_PATH)), suffix=".tmp", delete=False) as f:
+		try:
+			json.dump(settings, f)
+		except BaseException:
+			os.unlink(f.name)
+			raise
+	shutil.copymode(SITE_SETTINGS_PATH, f.name)
+	os.replace(f.name, SITE_SETTINGS_PATH)
+
+
 @app.post("/admin/site_settings/<setting>")
 @limiter.exempt
 @admin_level_required(3)
@@ -334,8 +349,7 @@ def change_settings(v, setting):
 		try: site_settings[setting] = int(new_value)
 		except (TypeError, ValueError): abort(400, "That setting takes a whole number.")
 		word = f'set {site_settings[setting]} for'
-	with open(SITE_SETTINGS_PATH, "w") as f:
-		json.dump(site_settings, f)
+	_write_site_settings(site_settings)
 
 	body = f"@{v.username} has {word} `{setting}` in the [admin dashboard](/admin)!"
 
