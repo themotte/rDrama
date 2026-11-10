@@ -1,7 +1,7 @@
 '''
 The markup pages share with the spec, which a reimplementation's pages must carry too. Everything else about a page (its structure, classes, copy and scripts) is the implementation's own.
 
-Spec tests read pages through the helpers below: an element by an id matching one of ELEMENT_IDS (each unique on its page), the counts in ATTRIBUTES, and what standard HTML gives any page (the addresses its links lead to, its form inputs and title, the numbers it holds). `internal/test_spec_hygiene.py` keeps markup out of the tests themselves.
+Spec tests read pages through the helpers below: an element by an id matching one of ELEMENT_IDS or among RULE_ANCHORS (each unique on its page), the counts in ATTRIBUTES, and what standard HTML gives any page (the addresses its links lead to, its form inputs and title, the numbers it holds). `internal/test_spec_hygiene.py` keeps markup out of the tests themselves.
 '''
 import re
 
@@ -23,6 +23,9 @@ ELEMENT_IDS = {
 }
 '''Element ids by pattern: `<id>` is a row id, `<name>` and `<board>` lower-case names.'''
 
+RULE_ANCHORS = ("Contents", "Foundation", "The_Rules", "Courtesy", "Kindness", "Clarity", "Antagonism", "Charity", "Single", "Content", "Effort", "Weakman", "Culture", "Leave", "Multiple", "Engagement", "Disagreement", "Evidence", "Timeouts", "Consensus", "Inclusion", "The_Wildcard_Rule", "Obnoxious", "The_Metarule", "Sentiment")
+'''Ids on /rules, each the start of a section or rule: moderators cite rules by these anchors (/rules#Kindness), as the sidebar does.'''
+
 ATTRIBUTES = {
 	"data-notification-count": "on every link to the viewer's notifications in the page's header, the viewer's unread count",
 	"data-tab-count": "on the tabs of /notifications and /notifications/posts (links to those paths), each tab's unread count",
@@ -33,7 +36,7 @@ _PATTERNS = {pattern: re.compile(re.sub(r"<([a-z]+)>", lambda m: _VARIABLES[m[1]
 
 
 def _check(element_id: str):
-	assert any(regex.fullmatch(element_id) for regex in _PATTERNS.values()), f"{element_id!r} matches none of the ids pages share with the spec (ELEMENT_IDS)"
+	assert element_id in RULE_ANCHORS or any(regex.fullmatch(element_id) for regex in _PATTERNS.values()), f"{element_id!r} matches none of the ids pages share with the spec (ELEMENT_IDS, RULE_ANCHORS)"
 
 
 def _document(r: Response):
