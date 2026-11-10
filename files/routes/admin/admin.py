@@ -1,10 +1,7 @@
 import json
 import re
-import sys
 import time
 from datetime import datetime, timedelta, timezone
-
-import requests
 
 from files.classes import *
 from files.classes.submission import IMAGE_URL_SUFFIXES
@@ -12,7 +9,7 @@ from files.classes.user import FilterBehavior
 from files.classes.visstate import StateMod, StateReport
 from files.helpers.alerts import *
 from files.helpers.config.const import *
-from files.helpers.config.environment import CF_HEADERS, CF_ZONE, SITE_SETTINGS_PATH
+from files.helpers.config.environment import SITE_SETTINGS_PATH
 from files.helpers.get import *
 from files.helpers.listing import listable_posts, request_page
 from files.helpers.locks import user_counts_lock
@@ -318,10 +315,7 @@ def reported_comments(v):
 @limiter.exempt
 @admin_level_required(2)
 def admin_home(v):
-	# Only level-3 admins get the under-attack switch.
-	under_attack = v.admin_level >= 3 and _cloudflare_security_level() == 'under_attack'
-
-	return render_template("admin/admin_home.html", v=v, under_attack=under_attack, site_settings=app.config['SETTINGS'])
+	return render_template("admin/admin_home.html", v=v, site_settings=app.config['SETTINGS'])
 
 
 @app.post("/admin/site_settings/<setting>")
@@ -372,52 +366,6 @@ def change_settings(v, setting):
 
 	return {'message': f"{word} {setting} successfully!"}
 
-
-@app.post("/admin/purge_cache")
-@limiter.exempt
-@admin_level_required(3)
-def purge_cache(v):
-	cache.clear()
-	if _cloudflare("POST", "purge_cache", {"purge_everything": True}) is None: abort(500, "Failed to purge cache.")
-
-	g.db.add(ModAction(kind="purge_cache", user_id=v.id))
-	g.db.commit()
-	return {"message": "Cache purged!"}
-
-
-@app.post("/admin/under_attack")
-@limiter.exempt
-@admin_level_required(3)
-def under_attack(v):
-	current = _cloudflare_security_level()
-	if current is None: abort(500, "Couldn't read the under attack mode from Cloudflare.")
-	enable = current != 'under_attack'
-
-	if _cloudflare("PATCH", "settings/security_level", {"value": "under_attack" if enable else "medium"}) is None:
-		abort(500, f"Failed to {'enable' if enable else 'disable'} under attack mode.")
-
-	g.db.add(ModAction(kind="enabled_under_attack" if enable else "disabled_under_attack", user_id=v.id))
-	g.db.commit()
-	return {"message": f"Under attack mode {'enabled' if enable else 'disabled'}!"}
-
-
-def _cloudflare(method, path, payload=None):
-	'''Calls the zone's Cloudflare API; returns the reply's JSON, or None (logged) if Cloudflare couldn't be reached or refused.'''
-	try:
-		response = requests.request(method, f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/{path}', headers=CF_HEADERS, json=payload, timeout=5)
-		response.raise_for_status()
-		return response.json()
-	except (requests.RequestException, ValueError) as e:
-		print(f"[cloudflare] {method} {path} failed: {e!r}", file=sys.stderr, flush=True)
-		return None
-
-
-def _cloudflare_security_level():
-	reply = _cloudflare("GET", "settings/security_level")
-	try: return reply['result']['value'] if reply is not None else None
-	except (KeyError, TypeError):
-		print(f"[cloudflare] unexpected security_level reply: {reply!r}", file=sys.stderr, flush=True)
-		return None
 
 @app.get("/admin/users")
 @limiter.exempt

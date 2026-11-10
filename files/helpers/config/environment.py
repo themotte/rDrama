@@ -89,10 +89,3 @@ CARD_VIEW = bool_from_string(environ.get("CARD_VIEW", True))
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
-
-CF_KEY = environ.get("CF_KEY", "").strip()
-CF_ZONE = environ.get("CF_ZONE", "").strip()
-CF_HEADERS = {
-	"Authorization": f"Bearer {CF_KEY}", 
-	"Content-Type": "application/json"
-}

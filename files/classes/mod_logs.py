@@ -160,11 +160,6 @@ ACTIONTYPES = {
 		"icon": 'fa-users', 
 		"color": 'bg-danger'
 	},
-	'disabled_under_attack': {
-		"str": 'disabled under attack mode', 
-		"icon": 'fa-shield', 
-		"color": 'bg-muted'
-	},
 	'distinguish_comment': {
 		"str": 'distinguished {target_link}', 
 		"icon": 'fa-crown', 
@@ -205,11 +200,6 @@ ACTIONTYPES = {
 		"icon": 'fa-users', 
 		"color": 'bg-success'
 	},
-	'enabled_under_attack': {
-		"str": 'enabled under attack mode', 
-		"icon": 'fa-shield', 
-		"color": 'bg-success'
-	},
 	'flair_post': {
 		"str": 'set a flair on {target_link}', 
 		"icon": 'fa-tag', 
@@ -239,11 +229,6 @@ ACTIONTYPES = {
 		"str": 'pinned {target_link}', 
 		"icon": 'fa-thumbtack fa-rotate--45', 
 		"color": 'bg-success'
-	},
-	'purge_cache': {
-		"str": 'purged cache', 
-		"icon": 'fa-memory', 
-		"color": 'bg-muted'
 	},
 	'reject_app': {
 		"str": 'rejected an application request by {target_link}', 

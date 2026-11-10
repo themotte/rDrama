@@ -31,16 +31,6 @@ def mail_server() -> str:
 	return os.environ["MAIL_SERVER"]
 
 
-def cloudflare_zone() -> str:
-	'''The Cloudflare zone in front of the site. The app manages it through Cloudflare's v4 API at https://api.cloudflare.com/client/v4/zones/<zone>/.'''
-	return os.environ["CF_ZONE"].strip()
-
-
-def cloudflare_key() -> str:
-	'''The API token the app sends Cloudflare, as "Authorization: Bearer <token>".'''
-	return os.environ["CF_KEY"].strip()
-
-
 def site_settings_path() -> str:
 	'''A JSON file of runtime-toggleable settings. The app must re-read it on every request, because admins change it while the site runs and side-by-side deployments share it.'''
 	return os.environ["SITE_SETTINGS_PATH"]

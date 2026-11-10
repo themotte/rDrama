@@ -92,10 +92,6 @@ def external_requests() -> list[tuple[str, str]]:
 	return [(r["method"], r["url"]) for r in _external_requests]
 
 
-def external_request_details() -> list[dict]:
-	return list(_external_requests)
-
-
 def _external_key(method, url):
 	parts = urlsplit(url)
 	return (method.upper(), parts.scheme.lower(), parts.netloc.lower(), parts.path or "/")
@@ -106,7 +102,7 @@ def _fake_http_send(self, request, *args, **kwargs):
 	if response is None:
 		_outbound_attempts.append(f"HTTP {request.method} {request.url}")
 		raise requests.exceptions.ConnectionError(f"Outbound HTTP is blocked in spec tests: {request.method} {request.url}")
-	_external_requests.append({"method": request.method, "url": request.url, "headers": dict(request.headers), "body": request.body.encode() if isinstance(request.body, str) else (request.body or b"")})
+	_external_requests.append({"method": request.method, "url": request.url})
 	if response is _UNREACHABLE:
 		raise requests.exceptions.ConnectionError(f"{request.url} is unreachable (spec test)")
 	status, headers, body = response

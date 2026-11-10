@@ -20,8 +20,6 @@ ROUTES = [
 	("GET", "/daily_chart", 2),
 	("GET", "/blocks", 2),
 	("POST", "/admin/site_settings/Signups", 3),
-	("POST", "/admin/purge_cache", 3),
-	("POST", "/admin/under_attack", 3),
 	("POST", "/admin/dump_cache", 2),
 	("GET", "/admin/filtered/posts", 2),
 	("GET", "/admin/filtered/comments", 2),
