@@ -27,9 +27,12 @@ HIGH = 1_000_000
 
 
 def _board(r, board) -> str:
-	'''The part of the page holding one board's table.'''
-	start = r.text.index(f'id="leaderboard-{board}"')
-	return r.text[start:r.text.index("</table>", start)]
+	'''The text of one board.'''
+	return element_text(r, f"leaderboard-{board}")
+
+
+def _board_links(r, board) -> list[str]:
+	return links(r, within=f"leaderboard-{board}")
 
 
 def _rows_of(section, user) -> int:
@@ -412,7 +415,7 @@ def test_simple_board_rows_link_to_the_counted_list(board, column, page):
 	r = as_user(factories.admin(2)).get("/leaderboard")
 
 	assert_html(r, 200)
-	assert f"/@{user['username']}/{page}" in _board(r, board)
+	assert f"/@{user['username']}/{page}" in _board_links(r, board)
 
 
 @pytest.mark.parametrize("board, column", SIMPLE_BOARDS.items())
@@ -436,8 +439,8 @@ def test_precomputed_boards_link_level_3_admins_to_the_voter_lists():
 	r = as_user(factories.admin(3)).get("/leaderboard")
 
 	assert_html(r, 200)
-	assert f"/@{downvoted['username']}/downvoters" in _board(r, "received-downvotes")
-	assert f"/@{upvoter['username']}/upvoting" in _board(r, "given-upvotes")
+	assert f"/@{downvoted['username']}/downvoters" in _board_links(r, "received-downvotes")
+	assert f"/@{upvoter['username']}/upvoting" in _board_links(r, "given-upvotes")
 
 
 def test_precomputed_boards_dont_link_level_2_admins_to_the_voter_lists():
@@ -473,7 +476,7 @@ def test_a_shadowbanned_users_row_names_who_shadowbanned_them():
 	r = as_user(factories.admin(2)).get("/leaderboard")
 
 	assert_html(r, 200)
-	section = _board(r, "truescore")
-	assert shadowbanned["username"] in section
-	assert f"@{shadowbanner}" in section
+	assert shadowbanned["username"] in _board(r, "truescore")
+	# The row's tooltip
+	assert f"@{shadowbanner}" in element_html(r, "leaderboard-truescore")
 	assert_not_in_payload(r, reason)

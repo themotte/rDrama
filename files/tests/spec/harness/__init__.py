@@ -12,9 +12,9 @@ from files.tests.spec.harness.asserts import *
 from files.tests.spec.harness.asserts import __all__ as _asserts_all
 from files.tests.spec.harness.db import ANY, between, db_diff
 from files.tests.spec.harness.http import Client, Response
-from files.tests.spec.harness.markup import element_text, notification_counts
+from files.tests.spec.harness.markup import element_html, element_text, links, notification_counts
 
-__all__ = ["config", "db", "external_web", "factories", "seed", "session", "uploads", "XHR", "can_log_in", "notification_counts", "element_text", "urls_in", "totp_step_settle", "ANY", "between", "db_diff", "Client", "Response", "anon", "as_user", "as_api", "site_settings_set", "run_background_work", "run_scheduler", "utc_now_naive", "sent_mail", "cli", "CliResult", "assert_cli_ok", *_asserts_all]
+__all__ = ["config", "db", "external_web", "factories", "seed", "session", "uploads", "XHR", "can_log_in", "notification_counts", "element_text", "element_html", "links", "urls_in", "totp_step_settle", "ANY", "between", "db_diff", "Client", "Response", "anon", "as_user", "as_api", "site_settings_set", "run_background_work", "run_scheduler", "utc_now_naive", "sent_mail", "cli", "CliResult", "assert_cli_ok", *_asserts_all]
 
 
 XHR = {"xhr": "1"}

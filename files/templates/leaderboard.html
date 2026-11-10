@@ -25,7 +25,8 @@
 
 {% macro leaderboard_table(lb) %}
 {% set user_relative_url = lb.meta.user_relative_url if v.admin_level >= lb.meta.user_link_level else none %}
-<h5 class="font-weight-bolder text-center pt-2 pb-3"><span id="leaderboard-{{lb.meta.html_id}}">Top {{lb.meta.limit}} {% if lb.meta.table_header_name != 'most blocked' %}by{% endif %} {{lb.meta.table_header_name}}</span></h5>
+<div id="leaderboard-{{lb.meta.html_id}}">
+<h5 class="font-weight-bolder text-center pt-2 pb-3"><span>Top {{lb.meta.limit}} {% if lb.meta.table_header_name != 'most blocked' %}by{% endif %} {{lb.meta.table_header_name}}</span></h5>
 <div class="overflow-x-auto">
 <table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
@@ -47,6 +48,7 @@
 	{% endif %}
 	</tbody>
 </table>
+</div>
 </div>
 {% endmacro %}
 

@@ -3,6 +3,8 @@ Reading pages: the markup pages share with the spec, which a reimplementation's 
 '''
 from html.parser import HTMLParser
 
+import lxml.html
+
 from files.tests.spec.harness.http import Response
 
 
@@ -57,3 +59,19 @@ def element_text(r: Response, element_id: str) -> str:
 	assert found["seen"], f"the page has no element with id {element_id!r}"
 	return " ".join("".join(found["text"]).split())
 
+
+def _element(r: Response, element_id: str):
+	found = lxml.html.document_fromstring(r.text).xpath("//*[@id=$i]", i=element_id)
+	assert found, f"the page has no element with id {element_id!r}"
+	return found[0]
+
+
+def element_html(r: Response, element_id: str) -> str:
+	'''The markup of the page's element with the id `element_id`, the element itself included: for what an element carries outside its text, such as a tooltip.'''
+	return lxml.html.tostring(_element(r, element_id), encoding="unicode", with_tail=False)
+
+
+def links(r: Response, within: str | None = None) -> list[str]:
+	'''The addresses the page's links lead to (every href), in page order; with `within`, only those inside the element with that id.'''
+	root = _element(r, within) if within else lxml.html.document_fromstring(r.text)
+	return root.xpath(".//@href")
