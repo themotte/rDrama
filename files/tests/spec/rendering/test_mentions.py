@@ -3,7 +3,7 @@ Mentions in rendered text (see test_text.py): "@<username>" at the start of a ru
 
 A mention isn't linked when the writer blocks the mentioned user or is blocked by them, unless the writer is an admin of level 2 or higher.
 
-Text mentioning more than 100 existing users is refused with 400; names of no user don't count.
+Text mentioning more existing users than the configured limit (config.mention_limit) is refused with 400; names of no user don't count.
 
 Who a mention notifies is decided on the written text instead (spec/comments/test_create.py), so a name a rendering leaves unlinked, in code for instance, may still notify.
 '''
@@ -76,8 +76,8 @@ def test_a_block_either_way_leaves_a_mention_unlinked_except_from_admins(blocker
 	assert_same_html(rendered, f"<p>{_mention(mentioned) if linked else '@' + mentioned['username']}</p>")
 
 
-@pytest.mark.parametrize("count, status", [(100, 200), (101, 400)])
-def test_text_may_mention_up_to_100_users(count, status):
+@pytest.mark.parametrize("count, status", [(config.mention_limit(), 200), (config.mention_limit() + 1, 400)])
+def test_text_may_mention_up_to_the_limit(count, status):
 	users = [factories.user() for _ in range(count)]
 	author, post = factories.user(), factories.post(factories.user())
 	body = " ".join(f"@{u['username']}" for u in users) + " @" + factories.unique("nobody")

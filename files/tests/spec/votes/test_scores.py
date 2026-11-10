@@ -1,7 +1,7 @@
 '''
 How scores show. A post's or comment's score is its upvotes minus its downvotes. The post page (GET /post/<id>), post listings and the comments on a post page show each item's score, upvotes and downvotes, as do the JSON objects of posts ("score", "upvotes", "downvotes") and comments (see the comments area).
 
-Scores are hidden from everyone while the item is less than 24 hours old: the numbers are left out of pages and JSON alike.
+Scores are hidden from everyone while the item is younger than the configured score-hiding time (config.score_hiding_hours): the numbers are left out of pages and JSON alike.
 
 A shadowbanned user's votes count for no one else, but they see them: the scores shown to them on pages, and in the JSON of a post (GET /post/<id>) or a comment (GET /comment/<id>, its embedded post included), add their own vote to the counted ones, wherever those pages and objects are loaded from (their notifications included).
 
@@ -16,7 +16,7 @@ import pytest
 
 from files.tests.spec.harness import *
 
-DAY = 86400
+HIDING = config.score_hiding_hours() * 3600
 
 
 def _scores():
@@ -27,7 +27,7 @@ def _scores():
 
 
 def _old():
-	return int(time.time()) - DAY - 60
+	return int(time.time()) - HIDING - 60
 
 
 def _post_page(item_kind, ups, downs, created_utc):
@@ -53,9 +53,9 @@ def test_the_post_page_shows_scores(item_kind):
 
 
 @pytest.mark.parametrize("item_kind", ["post", "comment"])
-def test_the_post_page_hides_scores_of_items_under_a_day_old(item_kind):
+def test_the_post_page_hides_scores_of_items_younger_than_the_hiding_time(item_kind):
 	ups, downs, score = _scores()
-	url = _post_page(item_kind, ups, downs, int(time.time()) - DAY + 600)
+	url = _post_page(item_kind, ups, downs, int(time.time()) - HIDING + 600)
 
 	r = as_user(factories.user()).get(url)
 
@@ -64,8 +64,8 @@ def test_the_post_page_hides_scores_of_items_under_a_day_old(item_kind):
 		assert_not_in_payload(r, str(number))
 
 
-@pytest.mark.parametrize("age,shown", [(DAY + 60, True), (DAY - 600, False)])
-def test_post_listings_show_scores_after_a_day(age, shown):
+@pytest.mark.parametrize("age,shown", [(HIDING + 60, True), (HIDING - 600, False)])
+def test_post_listings_show_scores_after_the_hiding_time(age, shown):
 	ups, downs, score = _scores()
 	author = factories.user()
 	factories.post(author, upvotes=ups, downvotes=downs, created_utc=int(time.time()) - age)
@@ -87,8 +87,8 @@ def test_post_json_has_the_scores():
 	assert (r.json["score"], r.json["upvotes"], r.json["downvotes"]) == (score, ups, downs)
 
 
-def test_post_json_leaves_out_scores_under_a_day_old():
-	post = factories.post(factories.user(), created_utc=int(time.time()) - DAY + 600)
+def test_post_json_leaves_out_scores_of_young_posts():
+	post = factories.post(factories.user(), created_utc=int(time.time()) - HIDING + 600)
 
 	r = as_api(factories.api_token(factories.user())).get(f"/post/{post['id']}")
 

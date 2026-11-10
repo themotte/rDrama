@@ -253,8 +253,8 @@ def test_users_whose_ban_has_expired_can_submit():
 	assert_html(_submit(as_user(u), **_text_post()), 200)
 
 
-def test_mentioning_more_than_100_users_is_refused():
-	body = " ".join(f"@{factories.user()['username']}" for _ in range(101))
+def test_mentioning_more_users_than_the_limit_is_refused():
+	body = " ".join(f"@{factories.user()['username']}" for _ in range(config.mention_limit() + 1))
 
 	client = as_user(factories.user())
 
@@ -432,22 +432,25 @@ def test_identical_posts_by_different_authors_are_both_accepted():
 
 # Spam
 
+# Account age in days, and how many similar posts from the last day make the next one spam (config.post_spam_count, times 2 from a day old and 3 from a week)
+SPAM_TIERS = [(0, config.post_spam_count()), (1, 2 * config.post_spam_count()), (7, 3 * config.post_spam_count())]
+
+
 def _similar_posts(author, count, **fields):
 	for _ in range(count):
 		factories.post(author, title="buy cheap watches here", body=factories.unique("body"), **fields)
 
 
-@pytest.mark.parametrize("age_days, allowed", [(0, 9), (1, 19), (7, 29)])
-def test_similar_posts_up_to_the_spam_threshold_are_accepted(age_days, allowed):
-	'''New accounts may make 9 similar posts a day before the next is spam; day-old accounts 19, week-old ones 29.'''
+@pytest.mark.parametrize("age_days, threshold", SPAM_TIERS)
+def test_similar_posts_up_to_the_spam_threshold_are_accepted(age_days, threshold):
 	author = factories.user()
 	db.update("users", {"id": author["id"]}, created_utc=author["created_utc"] - age_days * 86400 - 60)
-	_similar_posts(author, allowed)
+	_similar_posts(author, threshold - 1)
 
 	assert_html(_submit(as_user(author), title="buy cheap watches here", body=factories.unique("body")), 200)
 
 
-@pytest.mark.parametrize("age_days, threshold", [(0, 10), (1, 20), (7, 30)])
+@pytest.mark.parametrize("age_days, threshold", SPAM_TIERS)
 def test_spam_bans_the_author_for_a_day_and_removes_their_similar_posts(age_days, threshold):
 	author = factories.user()
 	db.update("users", {"id": author["id"]}, created_utc=author["created_utc"] - age_days * 86400 - 60)
@@ -473,7 +476,7 @@ def test_spam_bans_the_author_for_a_day_and_removes_their_similar_posts(age_days
 
 def test_similar_links_count_as_spam_too():
 	author = factories.user()
-	for i in range(10):
+	for i in range(config.post_spam_count()):
 		factories.post(author, title=factories.unique("title"), url="https://example.com/watches-for-sale")
 
 	assert_status(_submit(as_user(author), headers=XHR, title=factories.unique("title"), url="https://example.com/watches-for-sale-2"), 403)
@@ -481,7 +484,7 @@ def test_similar_links_count_as_spam_too():
 
 def test_posts_similar_in_both_title_and_link_are_removed_once():
 	author = factories.user()
-	_similar_posts(author, 10, url="https://example.com/watches-for-sale")
+	_similar_posts(author, config.post_spam_count(), url="https://example.com/watches-for-sale")
 	similar = [p["id"] for p in db.rows("submissions", author_id=author["id"])]
 
 	_submit(as_user(author), headers=XHR, title="buy cheap watches here", url="https://example.com/watches-for-sale-2")
@@ -491,7 +494,7 @@ def test_posts_similar_in_both_title_and_link_are_removed_once():
 
 def test_similar_posts_older_than_a_day_do_not_count():
 	author = factories.user()
-	_similar_posts(author, 10, created_utc=1000)
+	_similar_posts(author, config.post_spam_count(), created_utc=1000)
 
 	assert_html(_submit(as_user(author), title="buy cheap watches here", body=factories.unique("body")), 200)
 

@@ -28,7 +28,7 @@ def test_repost_check_finds_posts_linking_to_the_same_page(asked):
 	r = _is_repost(asked)
 
 	assert_status(r, 200)
-	assert r.json == {"permalink": f"http://{config.site_host()}/post/{post['id']}/{post['title']}"}
+	assert r.json == {"permalink": f"{config.site_url()}/post/{post['id']}/{post['title']}"}
 
 
 @pytest.mark.parametrize("state", [{"state_mod": "REMOVED"}, {"state_mod": "FILTERED"}, {"state_user_deleted_utc": "2020-01-01T00:00:00Z"}], ids=["removed", "filtered", "deleted"])
@@ -47,7 +47,7 @@ def test_repost_check_ignores_posts_that_are_not_live(state):
 def test_repost_check_matches_variants_of_the_earlier_link(stored, asked):
 	post = factories.post(factories.user(), url=stored)
 
-	assert _is_repost(asked).json["permalink"].startswith(f"http://{config.site_host()}/post/{post['id']}/")
+	assert _is_repost(asked).json["permalink"].startswith(f"{config.site_url()}/post/{post['id']}/")
 
 
 def test_repost_check_distinguishes_letter_case_in_paths():
@@ -66,7 +66,7 @@ def test_repost_check_finds_the_earliest_post():
 	earliest = factories.post(factories.user(), url="https://example.com/page")
 	factories.post(factories.user(), url="https://example.com/page")
 
-	assert _is_repost("https://example.com/page").json["permalink"].startswith(f"http://{config.site_host()}/post/{earliest['id']}/")
+	assert _is_repost("https://example.com/page").json["permalink"].startswith(f"{config.site_url()}/post/{earliest['id']}/")
 
 
 @pytest.mark.parametrize("hidden", ["draft", "shadowbanned author"])

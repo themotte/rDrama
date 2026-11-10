@@ -1,7 +1,7 @@
 '''
 The JSON object of a visible comment, as API clients get it from the comment's own page (GET /comment/<comment id>) and, without "author" and "post", nested in other objects (a post's "replies" at GET /post/<post id>, a comment's "replies"). Listings of comments hold the same object without replies (see the listings area).
 
-It has "id", "level" (1 for a top-level comment, one more than its parent's for a reply), "author_name", "body" (the source text), "body_html", "is_bot", "created_utc", "edited_utc" (0 if never edited), "is_nsfw" (the comment is 18+), "permalink" ("/comment/<id>"), "is_pinned" (who pinned it, or null), "distinguish_level", "post_id" and "replies" (the replies' objects, newest first by default). Replies add "parent_comment_id". "score", "upvotes" and "downvotes" are left out while the comment is younger than a day. The object at the top of a response adds "author" (the author's public details, as in GET /@<username>/info without the counts) and "post" (the post's object). On posts where authors are anonymous, "author_name" and "author" are "👻" instead.
+It has "id", "level" (1 for a top-level comment, one more than its parent's for a reply), "author_name", "body" (the source text), "body_html", "is_bot", "created_utc", "edited_utc" (0 if never edited), "is_nsfw" (the comment is 18+), "permalink" ("/comment/<id>"), "is_pinned" (who pinned it, or null), "distinguish_level", "post_id" and "replies" (the replies' objects, newest first by default). Replies add "parent_comment_id". "score", "upvotes" and "downvotes" are left out while the comment is younger than the score-hiding time (config.score_hiding_hours). The object at the top of a response adds "author" (the author's public details, as in GET /@<username>/info without the counts) and "post" (the post's object). On posts where authors are anonymous, "author_name" and "author" are "👻" instead.
 
 The JSON follows what the viewer may see. A comment hidden from them (removed, held, deleted, by a shadowbanned user, or by a user they block, as on the page) is a stub: "id", "post", "level", "parent", "replies" and, as the page tells, who removed it ("state_mod_set_by"; null for a shadowbanned user's comment, as for one removed by no one named) or when its author deleted it ("state_user_deleted_utc"), without its text or author. Its author and moderators get the whole object, but a shadowbanned user's comment on a post only its author does. A hidden comment without replies the viewer may see is left out of the lists that hold it (a post's or a comment's "replies"), as on the page. The "post" in a comment's object is the post as the viewer may see it, without its replies.
 '''
@@ -117,7 +117,7 @@ def test_a_reply_on_its_own_names_its_parent():
 
 def test_young_comments_leave_out_their_scores():
 	post = factories.post(factories.user())
-	comment = factories.comment(factories.user(), post, created_utc=int(time.time()) - 3600)
+	comment = factories.comment(factories.user(), post, created_utc=int(time.time()) - config.score_hiding_hours() * 3600 + 600)
 
 	r = _api().get(f"/comment/{comment['id']}")
 
@@ -125,9 +125,9 @@ def test_young_comments_leave_out_their_scores():
 	assert not {"score", "upvotes", "downvotes"} & set(r.json)
 
 
-def test_comments_older_than_a_day_have_their_scores():
+def test_comments_older_than_the_hiding_time_have_their_scores():
 	post = factories.post(factories.user())
-	comment = factories.comment(factories.user(), post, created_utc=int(time.time()) - 86400 - 60)
+	comment = factories.comment(factories.user(), post, created_utc=int(time.time()) - config.score_hiding_hours() * 3600 - 60)
 
 	r = _api().get(f"/comment/{comment['id']}")
 

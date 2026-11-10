@@ -1,5 +1,5 @@
 '''
-The post page: GET /post/<id> and /post/<id>/<anything> (the trailing segment is a cosmetic slug and is ignored). Query parameter "sort" orders the comments, each set of replies as well as the top-level ones (default: the viewer's comment sort preference, "new" for visitors): new, old, top, bottom, controversial and comments (most replies first, counting replies at every depth), by the formulas and tie-breaks of the front page's sorts (spec/listings/test_front.py). Pinned comments come first whatever the sort, newest first among themselves. A page holds whole top-level threads in that order until it has 200 or more comments. API clients get the post as JSON.
+The post page: GET /post/<id> and /post/<id>/<anything> (the trailing segment is a cosmetic slug and is ignored). Query parameter "sort" orders the comments, each set of replies as well as the top-level ones (default: the viewer's comment sort preference, "new" for visitors): new, old, top, bottom, controversial and comments (most replies first, counting replies at every depth), by the formulas and tie-breaks of the front page's sorts (spec/listings/test_front.py). Pinned comments come first whatever the sort, newest first among themselves. A page holds whole top-level threads in that order until it has the configured number of comments or more (config.comments_per_page). API clients get the post as JSON.
 '''
 from urllib.parse import parse_qs, urlsplit
 
@@ -414,7 +414,7 @@ def test_the_sort_parameter_is_not_echoed_into_the_page():
 	marker = factories.unique("injected")
 	post = factories.post(factories.user())
 	big = factories.comment(factories.user(), post)
-	for _ in range(200):
+	for _ in range(config.comments_per_page()):
 		factories.comment(factories.user(), post, parent=big)
 	factories.comment(factories.user(), post)
 
@@ -454,12 +454,12 @@ def test_the_newest_pinned_threads_fill_the_first_page_whatever_the_sort():
 	post = factories.post(factories.user())
 	pins = [factories.comment(factories.user(), post, created_utc=at, is_pinned=name) for at, name in ((1000, "m-mod"), (2000, "a-mod"), (3000, "z-mod"))]
 	for pin in pins:
-		for _ in range(100):
+		for _ in range(config.comments_per_page() // 2):
 			factories.comment(factories.user(), post, parent=pin)
 
 	r = _page(anon(), post, params={"sort": "old"})
 
-	# A page holds whole threads until it has 200 comments: the two newest pinned threads
+	# Two of these threads fill a page: the two newest pinned threads
 	assert_html(r, 200)
 	assert_not_in_payload(r, pins[0]["body"])
 	assert_in_payload(r, pins[1]["body"])
@@ -467,10 +467,10 @@ def test_the_newest_pinned_threads_fill_the_first_page_whatever_the_sort():
 
 
 def test_comments_beyond_the_first_page_are_left_for_view_more():
-	'''A page holds whole top-level threads until it has 200 or more comments; later threads are fetched with /viewmore.'''
+	'''A page holds whole top-level threads until it has a page's worth of comments or more; later threads are fetched with /viewmore.'''
 	post = factories.post(factories.user())
 	big = factories.comment(factories.user(), post, created_utc=2000)
-	for _ in range(199):
+	for _ in range(config.comments_per_page() - 1):
 		factories.comment(factories.user(), post, parent=big)
 	later = factories.comment(factories.user(), post, created_utc=1000)
 
@@ -480,10 +480,10 @@ def test_comments_beyond_the_first_page_are_left_for_view_more():
 	assert_not_in_payload(r, later["body"])
 
 
-def test_a_page_fits_threads_until_it_reaches_200_comments():
+def test_a_page_fits_threads_until_it_reaches_a_pages_worth_of_comments():
 	post = factories.post(factories.user())
 	big = factories.comment(factories.user(), post, created_utc=2000)
-	for _ in range(198):
+	for _ in range(config.comments_per_page() - 2):
 		factories.comment(factories.user(), post, parent=big)
 	later = factories.comment(factories.user(), post, created_utc=1000)
 
@@ -502,7 +502,7 @@ def test_api_clients_get_the_post_as_json():
 	assert_status(r, 200)
 	assert r.json == {
 		"author_name": author["username"],
-		"permalink": f"http://{config.site_host()}/post/{post['id']}/{post['title']}",
+		"permalink": f"{config.site_url()}/post/{post['id']}/{post['title']}",
 		"shortlink": f"/post/{post['id']}/{post['title']}",
 		"created_utc": 1000,
 		"id": post["id"],

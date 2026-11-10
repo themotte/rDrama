@@ -1,6 +1,6 @@
 '''
 Fetching more comments than the post page shows, as HTML fragments:
-- GET /viewmore/<post id>/<sort>/<offset>?ids=<comma-separated ids already shown>: the next page of top-level threads not yet shown, in the post page's order (pinned threads first), 200 comments to a page as there. With the "new" sort, unpinned threads started after the newest unpinned one shown are left out, so threads started since the page was loaded don't push in.
+- GET /viewmore/<post id>/<sort>/<offset>?ids=<comma-separated ids already shown>: the next page of top-level threads not yet shown, in the post page's order (pinned threads first), a page's worth of comments at a time as there (config.comments_per_page). With the "new" sort, unpinned threads started after the newest unpinned one shown are left out, so threads started since the page was loaded don't push in.
 - GET /morecomments/<comment id>: the replies to a comment too deep in a thread for the post page to show (threads render 9 levels deep), shown by the post page's rules (hidden comments as placeholders for replies the viewer may see), ordered by its "sort" parameter as the post page orders comments (without a known one, in the viewer's default comment order: newest first for visitors), nine levels deep.
 
 On an 18+ post both are refused with 403 to visitors who haven't confirmed their age and to users who aren't 18+, as the post page itself asks them to confirm first.
@@ -29,11 +29,11 @@ def test_view_more_fetches_threads_not_yet_shown():
 	assert_not_in_payload(r, shown["body"])
 
 
-def test_view_more_pages_through_threads_200_comments_at_a_time():
+def test_view_more_pages_through_threads_a_pages_worth_at_a_time():
 	post = factories.post(factories.user())
 	shown = factories.comment(factories.user(), post, created_utc=3000)
 	big = factories.comment(factories.user(), post, created_utc=2000)
-	for _ in range(199):
+	for _ in range(config.comments_per_page() - 1):
 		factories.comment(factories.user(), post, parent=big)
 	last = factories.comment(factories.user(), post, created_utc=1000)
 
@@ -86,7 +86,7 @@ def test_view_more_fetches_pinned_threads_the_page_had_no_room_for(sort):
 	post = factories.post(factories.user())
 	pins = [factories.comment(factories.user(), post, created_utc=at, is_pinned="somemod") for at in (1000, 2000, 3000)]
 	for pin in pins:
-		for _ in range(100):
+		for _ in range(config.comments_per_page() // 2):
 			factories.comment(factories.user(), post, parent=pin)
 	unpinned = factories.comment(factories.user(), post, created_utc=4000)
 
