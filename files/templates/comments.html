@@ -3,9 +3,12 @@
 {# "level" represents the nested level in this call; always starts at 1 #}
 {# this is distinct from "comment.level", which is the global depth of this comment #}
 {% macro single_comment(c, level) %}
-	{%- set ups = c.upvotes_str(v) -%}
-	{%- set score = c.score_str(v) -%}
-	{%- set downs = c.downvotes_str(v) -%}
+	{%- if render_ctx is not defined -%}
+		{% set render_ctx = 'comments' %}
+	{%- endif -%}
+	{%- set ups = c.upvotes_str(render_ctx, v) -%}
+	{%- set score = c.score_str(render_ctx, v) -%}
+	{%- set downs = c.downvotes_str(render_ctx, v) -%}
 	{% set replies = c.replies(v) if render_replies else [] %}
 
 {% if not c.visibility_and_message(v)[0] %}

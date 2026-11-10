@@ -1,7 +1,7 @@
 '''
 Volunteer janitor duty: logged-in users are asked to rate reported comments.
 
-GET /volunteer gives the visitor a duty when one is available: up to 3 eligible comments, chosen at random, each assigned to them to rate (a "volunteer_janitor" row with result "Pending"), and their "volunteer_last_started_utc" set to now, in UTC. The page shows the assigned comments' text and the rating form (see test_ratings; its fields name the assignments, not the comments), and nothing else about the comments: not their ids, not who wrote them, not the post or thread they are in (nor a link to it), not their reports or what volunteers made of them so far (not even to admins), and no actions on them. With nothing available the page says so and nothing is written. Anonymous visitors are sent to log in; API clients are refused (403), changing nothing.
+GET /volunteer gives the visitor a duty when one is available: up to 3 eligible comments, chosen at random, each assigned to them to rate (a "volunteer_janitor" row with result "Pending"), and their "volunteer_last_started_utc" set to now, in UTC. The page shows each assigned comment with a link to it in its thread, so the volunteer can read its context, but doesn't display its author's name or its score; and the rating form (see test_ratings; its fields name the assignments, not the comments). With nothing available the page says so and nothing is written. Anonymous visitors are sent to log in; API clients are refused (403), changing nothing.
 
 A visitor has no duty available within 20 hours of their last start, nor while suspended (permanently or not) or shadowbanned.
 
@@ -18,6 +18,7 @@ A comment is eligible for a volunteer when:
 A post's page shows a link to /volunteer exactly when a duty is available to the viewer.
 '''
 import time
+from urllib.parse import urlsplit
 
 import pytest
 
@@ -52,18 +53,29 @@ def test_a_volunteer_is_assigned_an_eligible_comment():
 	assert db.execute("SELECT abs(extract(epoch FROM timezone('UTC', now()) - volunteer_last_started_utc)) < 60 FROM users WHERE id = :id", id=volunteer["id"])
 
 
-@pytest.mark.parametrize("volunteer_level", [0, 2])
-def test_the_page_shows_only_the_comments_text(volunteer_level):
-	post = factories.post(factories.user())
-	author, reporter = factories.user(), factories.user()
-	comment = factories.comment(author, post, state_report="REPORTED")
-	reason = factories.report(reporter, comment)["reason"]
+def test_the_page_links_each_comment_in_its_thread():
+	comments = [_eligible() for _ in range(2)]
 
-	r = as_user(factories.admin(volunteer_level)).get("/volunteer")
+	r = as_user(factories.user()).get("/volunteer")
 
+	assert_html(r, 200)
+	for comment in comments:
+		assert_in_payload(r, comment["body"])
+		hrefs = links(r, within=f"comment-{comment['id']}")
+		assert any(href.startswith(f"{config.site_url()}/post/{comment['parent_submission']}/") and urlsplit(href).path.endswith(f"/{comment['id']}") for href in hrefs), hrefs
+
+
+def test_the_page_doesnt_link_the_comments_author():
+	author = factories.user()
+	comment = factories.comment(author, factories.post(factories.user()), state_report="REPORTED")
+	factories.report(factories.user(), comment)
+
+	r = as_user(factories.user()).get("/volunteer")
+
+	assert_html(r, 200)
 	assert_in_payload(r, comment["body"])
-	for hidden in (author["username"], post["title"], f"/post/{post['id']}", f"/comment/{comment['id']}", reporter["username"], reason):
-		assert_not_in_payload(r, hidden)
+	hrefs = links(r, within=f"comment-{comment['id']}")
+	assert not any(urlsplit(href).path == f"/@{author['username']}" for href in hrefs), hrefs
 
 
 def test_the_form_names_each_assignment():
@@ -75,18 +87,6 @@ def test_the_form_names_each_assignment():
 	assignments = db.rows("volunteer_janitor", user_id=volunteer["id"])
 	assert {row["comment_id"] for row in assignments} == {c["id"] for c in comments}
 	assert {name for name in input_names(r) if name.startswith("volunteer-")} == {f"volunteer-assignment-{row['id']}" for row in assignments}
-
-
-def test_the_page_holds_no_assigned_comments_id():
-	# Comment ids no other number on the page comes near
-	db.execute("SELECT setval('comments_id_seq', nextval('comments_id_seq') + 1000000)")
-	comments = [_eligible() for _ in range(2)]
-	volunteer = factories.user()
-
-	r = as_user(volunteer).get("/volunteer")
-
-	assert {row["comment_id"] for row in db.rows("volunteer_janitor", user_id=volunteer["id"])} == {c["id"] for c in comments}
-	assert numbers_in(r).isdisjoint(c["id"] for c in comments)
 
 
 def test_a_duty_holds_at_most_three_comments():

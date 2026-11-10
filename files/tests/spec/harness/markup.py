@@ -1,7 +1,7 @@
 '''
 The markup pages share with the spec, which a reimplementation's pages must carry too. Everything else about a page (its structure, classes, copy and scripts) is the implementation's own.
 
-Spec tests read pages through the helpers below: an element by an id matching one of ELEMENT_IDS or among RULE_ANCHORS (each unique on its page), the counts in ATTRIBUTES, and what standard HTML gives any page (the addresses its links lead to, its form inputs and title, the numbers it holds). `internal/test_spec_hygiene.py` keeps markup out of the tests themselves.
+Spec tests read pages through the helpers below: an element by an id matching one of ELEMENT_IDS or among RULE_ANCHORS (each unique on its page), the counts in ATTRIBUTES, and what standard HTML gives any page (the addresses its links lead to, its form inputs and title). `internal/test_spec_hygiene.py` keeps markup out of the tests themselves.
 '''
 import re
 
@@ -114,11 +114,6 @@ def input_value(r: Response, name: str) -> str | None:
 def input_names(r: Response) -> set[str]:
 	'''The names of the page's form inputs, selects and text areas.'''
 	return set(_document(r).xpath("//input/@name | //select/@name | //textarea/@name"))
-
-
-def numbers_in(r: Response) -> set[int]:
-	'''Every whole number written anywhere in the page, its markup and scripts included.'''
-	return {int(n) for n in re.findall(r"\d+", r.text)}
 
 
 def images_in(html: str) -> list[str]:

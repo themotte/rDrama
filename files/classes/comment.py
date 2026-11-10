@@ -19,6 +19,8 @@ from files.helpers.time import format_age
 if TYPE_CHECKING:
 	from files.classes.user import User
 
+CommentRenderContext = Literal['comments', 'volunteer']
+
 class Comment(CreatedBase, AuthorShadowban):
 	__tablename__ = "comments"
 
@@ -78,8 +80,9 @@ class Comment(CreatedBase, AuthorShadowban):
 		comment_age_hours = self.age_seconds / (60*60)
 		return comment_age_hours < SCORE_HIDING_TIME_HOURS
 	
-	def _score_str(self, score_type:Literal['score', 'upvotes', 'downvotes'], v:Optional["User"]) -> str:
+	def _score_context_str(self, score_type:Literal['score', 'upvotes', 'downvotes'], context:CommentRenderContext, v:Optional["User"]) -> str:
 		if self.is_message: return '' # don't show scores for messages
+		if context == 'volunteer': return '' # volunteer: hide scores
 		if self.should_hide_score: return '' # hide scores for new comments
 
 		ups, downs = self.votes_shown_to(v)
@@ -87,14 +90,14 @@ class Comment(CreatedBase, AuthorShadowban):
 		if score_type == 'score': return str(ups - downs)
 		if score_type == 'downvotes': return str(downs)
 
-	def upvotes_str(self, v:Optional["User"]) -> str:
-		return self._score_str('upvotes', v)
+	def upvotes_str(self, context:CommentRenderContext, v:Optional["User"]) -> str:
+		return self._score_context_str('upvotes', context, v)
 
-	def score_str(self, v:Optional["User"]) -> str:
-		return self._score_str('score', v)
+	def score_str(self, context:CommentRenderContext, v:Optional["User"]) -> str:
+		return self._score_context_str('score', context, v)
 
-	def downvotes_str(self, v:Optional["User"]) -> str:
-		return self._score_str('downvotes', v)
+	def downvotes_str(self, context:CommentRenderContext, v:Optional["User"]) -> str:
+		return self._score_context_str('downvotes', context, v)
 
 	def votes_shown_to(self, v:Optional["User"]) -> tuple[int, int]:
 		return votes_shown_to(self, v)
