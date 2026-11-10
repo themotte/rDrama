@@ -1,7 +1,52 @@
 '''
-Every piece of deployment configuration the harness shares with the app under test. Both read the same environment, so this list is also the configuration contract a reimplementation must honor.
+The deployment configuration a reimplementation must honor: every environment variable it reads (ENVIRONMENT), and the pieces of it the harness shares with the app under test. Both read the same environment. The current implementation also reads variables of its own, for its tests, its developers and its start-up; those aren't listed.
 '''
+import enum
 import os
+
+
+class Env(enum.Enum):
+	DEPLOYMENT = "deployment"
+	'''Describes the deployment; a reimplementation reads it with the same meaning.'''
+	TUNING = "tuning"
+	'''A size, threshold or default; a reimplementation reads it with the same meaning. The spec runs at the configured value, and the tests that depend on one read it through the accessors below. The similarity thresholds have none: the spam tests' texts are chosen for values near production's.'''
+	PRECONDITION = "precondition"
+	'''A switch the spec needs at one value (PRECONDITIONS); a reimplementation reads it with the same meaning.'''
+
+
+ENVIRONMENT = {
+	"DOMAIN": Env.DEPLOYMENT,
+	"SITE_ID": Env.DEPLOYMENT,
+	"SITE_TITLE": Env.DEPLOYMENT,
+	"DESCRIPTION": Env.DEPLOYMENT,
+	"MASTER_KEY": Env.DEPLOYMENT,
+	"DATABASE_URL": Env.DEPLOYMENT,
+	"REDIS_URL": Env.DEPLOYMENT,
+	"SITE_SETTINGS_PATH": Env.DEPLOYMENT,
+	"IMAGES_DIR": Env.DEPLOYMENT,
+	"MAIL_SERVER": Env.DEPLOYMENT,
+	"MAIL_USERNAME": Env.DEPLOYMENT,
+	"MAIL_PASSWORD": Env.DEPLOYMENT,
+	"HCAPTCHA_SECRET": Env.DEPLOYMENT,
+	"DEFAULT_COLOR": Env.TUNING,
+	"CARD_VIEW": Env.TUNING,
+	"MENTION_LIMIT": Env.TUNING,
+	"RESULTS_PER_PAGE_COMMENTS": Env.TUNING,
+	"SCORE_HIDING_TIME_HOURS": Env.TUNING,
+	"SPAM_SIMILARITY_THRESHOLD": Env.TUNING,
+	"SPAM_URL_SIMILARITY_THRESHOLD": Env.TUNING,
+	"SPAM_SIMILAR_COUNT_THRESHOLD": Env.TUNING,
+	"COMMENT_SPAM_SIMILAR_THRESHOLD": Env.TUNING,
+	"COMMENT_SPAM_COUNT_THRESHOLD": Env.TUNING,
+	"HCAPTCHA_SITEKEY": Env.PRECONDITION,
+	"VOLUNTEER_JANITOR_ENABLE": Env.PRECONDITION,
+}
+
+PRECONDITIONS = {
+	"HCAPTCHA_SITEKEY": "",
+	"VOLUNTEER_JANITOR_ENABLE": True,
+}
+'''The values the spec needs; an absent variable counts as its default here (no site key: no captcha; the volunteer janitor on).'''
 
 
 def site_host() -> str:
@@ -27,12 +72,12 @@ def images_dir() -> str:
 
 
 def mail_server() -> str:
-	'''The SMTP server the app sends mail through (port 587, STARTTLS when credentials are configured).'''
+	'''The SMTP server the app sends mail through (port 587, STARTTLS).'''
 	return os.environ["MAIL_SERVER"]
 
 
 def site_settings_path() -> str:
-	'''A JSON file of runtime-toggleable settings. The app must re-read it on every request, because admins change it while the site runs and side-by-side deployments share it.'''
+	'''A JSON file of runtime-toggleable settings. The app must re-read it on every request, because admins change it while the site runs, and replace it whole when changing it. Side-by-side deployments must share it.'''
 	return os.environ["SITE_SETTINGS_PATH"]
 
 
@@ -44,7 +89,7 @@ def comments_per_page() -> int:
 
 
 def score_hiding_hours() -> int:
-	'''SCORE_HIDING_TIME_HOURS: scores are hidden while an item is younger than this.'''
+	'''SCORE_HIDING_TIME_HOURS: scores are hidden while an item is younger than this. The spec needs at least 1.'''
 	return int(os.environ["SCORE_HIDING_TIME_HOURS"])
 
 

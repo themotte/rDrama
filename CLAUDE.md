@@ -107,15 +107,15 @@ The suite is being turned into a behavioral specification for a clean-room reimp
 
 ## Development Environment
 
-The application uses environment variables for configuration. These can be set in:
-- `bootstrap/site_env` - Site-specific configuration
-- `.env` - Local overrides (takes precedence)
+The application uses environment variables for configuration. When `SITE_ID` isn't set in the environment, the app loads:
+- `bootstrap/site_env` - Site-specific configuration (only variables not already set)
+- `env` (in the working directory) - Local overrides (takes precedence)
 
-Key environment variables include:
+Every variable is listed in `files/tests/spec/harness/config.py` (what a reimplementation must honor) and `files/tests/internal/test_environment_table.py` (the implementation's own). Key ones:
 - `SITE_ID` - Site identifier
 - `DATABASE_URL` - PostgreSQL connection string
-- `CACHE_REDIS_URL` - Redis connection string
-- `SECRET_KEY` - Flask secret key
+- `REDIS_URL` - Redis connection string
+- `MASTER_KEY` - The signing key (sessions, form keys, mailed links)
 - `ENFORCE_PRODUCTION` - Set to false for development
 
 _Standards below are merged from ../claudestd (CLAUDE-general.md + CLAUDE-python.md)._

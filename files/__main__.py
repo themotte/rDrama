@@ -62,7 +62,7 @@ active_requests: dict[int, tuple[str, str, float]] = {}
 if bool_from_string(environ.get("ENFORCE_PRODUCTION", True)) and app.debug:
 	raise ValueError("Debug mode is not allowed! If this is a dev environment, please set ENFORCE_PRODUCTION to false")
 
-# ...and then attempt to load a .env file if the environment is not configured...
+# ...and then attempt to load the env files if the environment is not configured...
 
 if environ.get("SITE_ID") is None:
 	from dotenv import load_dotenv
