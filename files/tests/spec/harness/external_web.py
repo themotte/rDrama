@@ -6,6 +6,7 @@ URLs match on method, scheme, host and path; the query string is ignored, so a t
 An out-of-process backend provides this as an intercepting HTTP(S) proxy, so the implementation under test must route its outbound requests through a configured proxy and trust a configured CA bundle.
 '''
 from files.tests.spec.harness import backend
+from files.tests.spec.harness.process_proxy import key
 
 
 def serve(url: str, *, status: int = 200, headers: dict | None = None, body: bytes | str = b"", method: str = "GET", trusted: bool = True):
@@ -20,4 +21,10 @@ def unreachable(url: str, *, method: str = "GET"):
 
 def requests() -> list[tuple[str, str]]:
 	'''(method, full url) of every request the app made to a registered URL so far, oldest first.'''
-	return backend.external_requests()
+	return [(method, url) for method, url, _body in backend.external_requests()]
+
+
+def request_bodies(url: str, *, method: str = "GET") -> list[bytes]:
+	'''The bodies of the requests the app made so far to registered `url` (matched as registrations are) with `method`, oldest first.'''
+	wanted = key(method, url)
+	return [body for m, u, body in backend.external_requests() if key(m, u) == wanted]

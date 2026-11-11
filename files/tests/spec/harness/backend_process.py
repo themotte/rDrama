@@ -3,7 +3,7 @@ Out-of-process backend: drives an implementation running in its own processes, s
 
 The test-mode interface an implementation provides to be run by the spec:
 - The site. RDRAMA_SPEC_SERVER is a command that serves the site over HTTP/1.1 on 127.0.0.1, at the port its "{port}" stands for. It runs with the harness's environment (which sets SPEC_TEST_MODE, see config.Env.TEST) and, added to it:
-  - http_proxy, https_proxy, HTTP_PROXY and HTTPS_PROXY naming the proxy, and no no_proxy. The site sends all its outbound HTTP through it: plain HTTP as absolute-form requests, HTTPS through CONNECT tunnels. The proxy answers each request with Connection: close; it refuses a CONNECT to a host nothing is registered for with 502, and hangs up on a request for a URL nothing is registered for, or registered as unreachable.
+  - http_proxy, https_proxy, HTTP_PROXY and HTTPS_PROXY naming the proxy, and no no_proxy. The site sends all its outbound HTTP through it: plain HTTP as absolute-form requests, HTTPS through CONNECT tunnels. The proxy reads each request's body, by its Content-Length or chunked, and answers it with Connection: close; it refuses a CONNECT to a host nothing is registered for with 502, and hangs up on a request for a URL nothing is registered for, or registered as unreachable.
   - SSL_CERT_FILE naming the authority's certificate, which the site trusts, in place of any other, for its outbound HTTPS and its mail server.
   - MAIL_SERVER (an IP address) and MAIL_PORT naming the mail capture, which the site reaches over STARTTLS.
   It takes connections from any address in 127.0.0.0/8, and takes the address a connection comes from for the request's peer (harness.Client's `peer`). It serves from one process, since the background work it holds is that process's, and closes a connection after the response when the request asks it to (Connection: close). Requests come one at a time; each must be answered within 30 seconds. A response may come before the site has read the request's body (refusing a body by its length), and the connection may then be reset once it is sent.
@@ -319,5 +319,5 @@ def external_unreachable(method, url):
 	_the_site().proxy.unreachable(method, url)
 
 
-def external_requests() -> list[tuple[str, str]]:
-	return [(r["method"], r["url"]) for r in _the_site().proxy.requests]
+def external_requests() -> list[tuple[str, str, bytes]]:
+	return [(r["method"], r["url"], r["body"]) for r in _the_site().proxy.requests]

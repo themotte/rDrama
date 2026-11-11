@@ -40,3 +40,13 @@ def test_redirects_follow_registered_targets():
 	external_web.serve("https://example.com/old", status=302, headers={"Location": "https://example.com/new"})
 	external_web.serve("https://example.com/new", body="landed")
 	assert requests.get("https://example.com/old", timeout=5).text == "landed"
+
+
+def test_request_bodies_are_recorded_per_url_and_method():
+	external_web.serve("https://example.com/form", method="POST")
+	external_web.serve("https://example.com/form")
+	requests.post("https://Example.com/form?q=1", data={"a": "1", "b": "x y"}, timeout=5)
+	requests.post("https://example.com/form", data=b"raw", timeout=5)
+	requests.get("https://example.com/form", timeout=5)
+	assert external_web.request_bodies("https://example.com/form", method="POST") == [b"a=1&b=x+y", b"raw"]
+	assert external_web.request_bodies("https://example.com/form") == [b""]

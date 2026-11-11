@@ -120,8 +120,18 @@ def external_unreachable(method, url):
 	_external_responses[external_key(method, url)] = _UNREACHABLE
 
 
-def external_requests() -> list[tuple[str, str]]:
-	return [(r["method"], r["url"]) for r in _external_requests]
+def external_requests() -> list[tuple[str, str, bytes]]:
+	return [(r["method"], r["url"], r["body"]) for r in _external_requests]
+
+
+def _body_bytes(body) -> bytes:
+	if body is None:
+		return b""
+	if isinstance(body, str):
+		return body.encode()
+	if isinstance(body, bytes):
+		return body
+	raise TypeError(f"an outbound request's body of type {type(body).__name__} can't be recorded")
 
 
 def _fake_http_send(self, request, *args, **kwargs):
@@ -131,7 +141,7 @@ def _fake_http_send(self, request, *args, **kwargs):
 		raise requests.exceptions.ConnectionError(f"Outbound HTTP is blocked in spec tests: {request.method} {request.url}")
 	if response is not _UNREACHABLE and not response[3] and kwargs.get("verify", True) is not False:
 		raise requests.exceptions.SSLError(f"{request.url}'s certificate isn't signed by a trusted authority (spec test)")
-	_external_requests.append({"method": request.method, "url": request.url})
+	_external_requests.append({"method": request.method, "url": request.url, "body": _body_bytes(request.body)})
 	if response is _UNREACHABLE:
 		raise requests.exceptions.ConnectionError(f"{request.url} is unreachable (spec test)")
 	status, headers, body, _trusted = response

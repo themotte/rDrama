@@ -52,7 +52,7 @@ def test_a_registered_https_url_answers_as_registered(proxy):
 	r = _fetch(proxy, "https://example.com/page?q=1")
 
 	assert (r["status"], r["headers"]["X-Probe"], r["body"]) == (201, "1", "hello")
-	assert proxy.requests == [{"method": "GET", "url": "https://example.com/page?q=1"}]
+	assert proxy.requests == [{"method": "GET", "url": "https://example.com/page?q=1", "body": b""}]
 	assert proxy.take_attempts() == []
 
 
@@ -62,14 +62,14 @@ def test_a_registered_http_url_answers_too(proxy):
 	r = _fetch(proxy, "http://example.com/form", method="POST", data="a=1")
 
 	assert r["body"] == "ok"
-	assert proxy.requests == [{"method": "POST", "url": "http://example.com/form"}]
+	assert proxy.requests == [{"method": "POST", "url": "http://example.com/form", "body": b"a=1"}]
 
 
 def test_a_port_other_than_the_default_is_part_of_the_url(proxy):
 	proxy.serve("GET", "https://example.com:8443/", 200, {}, b"ok")
 
 	assert _fetch(proxy, "https://example.com:8443/")["body"] == "ok"
-	assert proxy.requests == [{"method": "GET", "url": "https://example.com:8443/"}]
+	assert proxy.requests == [{"method": "GET", "url": "https://example.com:8443/", "body": b""}]
 
 
 def test_a_host_nothing_is_registered_for_is_refused_as_an_attempt(proxy):
@@ -89,7 +89,7 @@ def test_an_unreachable_url_fails_to_connect_and_is_recorded(proxy):
 	proxy.unreachable("GET", "https://example.com/down")
 
 	assert _fetch(proxy, "https://example.com/down")["connection_error"]
-	assert proxy.requests == [{"method": "GET", "url": "https://example.com/down"}]
+	assert proxy.requests == [{"method": "GET", "url": "https://example.com/down", "body": b""}]
 	assert proxy.take_attempts() == []
 
 
@@ -113,7 +113,7 @@ def test_an_untrusted_host_answers_a_client_that_doesnt_check(proxy):
 	proxy.serve("GET", "https://example.com/page", 200, {}, b"content", trusted=False)
 
 	assert _fetch(proxy, "https://example.com/page", ca_file="")["body"] == "content"
-	assert proxy.requests == [{"method": "GET", "url": "https://example.com/page"}]
+	assert proxy.requests == [{"method": "GET", "url": "https://example.com/page", "body": b""}]
 
 
 def test_a_client_hanging_up_mid_body_is_still_answered_for(proxy):
@@ -125,5 +125,17 @@ def test_a_client_hanging_up_mid_body_is_still_answered_for(proxy):
 		s.shutdown(socket.SHUT_WR)
 		s.recv(1024)
 
-	assert proxy.requests == [{"method": "POST", "url": "http://example.com/upload"}]
+	assert proxy.requests == [{"method": "POST", "url": "http://example.com/upload", "body": b"short"}]
+	assert proxy.take_attempts() == []
+
+
+def test_a_chunked_body_is_recorded_joined(proxy):
+	proxy.serve("POST", "http://example.com/form", 200, {}, b"ok")
+	host, port = proxy.url.removeprefix("http://").split(":")
+
+	with socket.create_connection((host, int(port))) as s:
+		s.sendall(b"POST http://example.com/form HTTP/1.1\r\nHost: example.com\r\nTransfer-Encoding: chunked\r\n\r\n3;x=y\r\na=1\r\n4\r\n&b=2\r\n0\r\nX-Trailer: t\r\n\r\n")
+		assert s.recv(1024).startswith(b"HTTP/1.1 200")
+
+	assert proxy.requests == [{"method": "POST", "url": "http://example.com/form", "body": b"a=1&b=2"}]
 	assert proxy.take_attempts() == []

@@ -146,18 +146,13 @@ class Proxy:
 		self._answer(tls, stream, method, f"https://{netloc}{target}", headers)
 
 	def _answer(self, connection, stream, method, url, headers):
-		length = int(headers.get("content-length", "0"))
-		try:
-			stream.read(length)
-		except OSError:
-			# A site may hang up mid-body; what it asked for is answered for all the same
-			pass
+		body = _read_body(stream, headers)
 		response = self.responses.get(key(method, url))
 		if response is None:
 			self._attempt(f"HTTP {method} {url}")
 			return
 		with self._lock:
-			self.requests.append({"method": method, "url": url})
+			self.requests.append({"method": method, "url": url, "body": body})
 		if response is UNREACHABLE:
 			return
 		status, response_headers, body = response
@@ -188,6 +183,34 @@ def _read_head(stream):
 		name, _, value = line.decode("latin-1").partition(":")
 		headers[name.strip().lower()] = value.strip()
 	return method, target, headers
+
+
+def _read_body(stream, headers) -> bytes:
+	'''The body of the request whose head `_read_head` read from `stream`: its Content-Length bytes, or its chunks joined. A site may hang up mid-body, and what it asked for is answered for all the same; the body is then what arrived.'''
+	body = bytearray()
+	try:
+		if "chunked" in headers.get("transfer-encoding", "").lower():
+			while size := int(stream.readline(65537).split(b";")[0].strip() or b"0", 16):
+				_read_into(body, stream, size)
+				stream.readline(65537)
+			# Trailers
+			while stream.readline(65537) not in (b"\r\n", b"\n", b""):
+				pass
+		else:
+			_read_into(body, stream, int(headers.get("content-length", "0")))
+	except TimeoutError:
+		# A body that stops coming without the site hanging up: a stalled site, recorded as an attempt
+		raise
+	except OSError:
+		pass
+	return bytes(body)
+
+
+def _read_into(body: bytearray, stream, size: int):
+	'''Appends `size` bytes of `stream` to `body`, or as many as arrive before it ends.'''
+	end = len(body) + size
+	while len(body) < end and (piece := stream.read1(end - len(body))):
+		body += piece
 
 
 def _reason(status):
