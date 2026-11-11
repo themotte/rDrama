@@ -12,7 +12,7 @@ class Env(enum.Enum):
 	TUNING = "tuning"
 	'''A size, threshold or default; a reimplementation reads it with the same meaning. The spec runs at the configured value, and the tests that depend on one read it through the accessors below. The similarity thresholds have none: the spam tests' texts are chosen for values near production's.'''
 	PRECONDITION = "precondition"
-	'''A switch the spec needs at one value (PRECONDITIONS); a reimplementation reads it with the same meaning.'''
+	'''A switch the spec's default profile needs at one value (PRECONDITIONS), which a profile may change; a reimplementation reads it with the same meaning.'''
 	TEST = "test"
 	'''Set by the spec harness for the implementation it runs, never in production. SPEC_TEST_MODE, when true: work the site hands to the background waits until the harness runs it (run_background_work); the rate limits and the signup form's minimum filling time are off, unless SPEC_TEST_LIMITS is also true, which turns them on as in production; and password hashes may be cheap to compute.'''
 
@@ -51,6 +51,8 @@ ENVIRONMENT = {
 
 PROFILES = {
 	"limits": {"SPEC_TEST_LIMITS": "1"},
+	# hCaptcha's published test keys (harness/captcha.py)
+	"captcha": {"HCAPTCHA_SITEKEY": "10000000-ffff-ffff-ffff-000000000001", "HCAPTCHA_SECRET": "0x0000000000000000000000000000000000000000"},
 }
 '''
 The deployments the spec runs the site as, besides the default one: each adds these variables to the site's environment, for its server, its commands and its scheduler. A spec test names the one it needs with `pytest.mark.profile(name)`; the rest run in the default profile, which adds nothing.
@@ -60,7 +62,7 @@ PRECONDITIONS = {
 	"HCAPTCHA_SITEKEY": "",
 	"VOLUNTEER_JANITOR_ENABLE": True,
 }
-'''The values the spec needs; an absent variable counts as its default here (no site key: no captcha; the volunteer janitor on).'''
+'''The values the spec's default profile needs, which a profile may change; an absent variable counts as its default here (no site key: no captcha; the volunteer janitor on).'''
 
 
 def site_host() -> str:

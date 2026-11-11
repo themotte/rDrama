@@ -3,7 +3,7 @@ Modmail: messages to the site's admins, sent to the modmail account (`seed.MODMA
 
 GET /contact (also /press and /media) is the contact form, for everyone.
 
-POST /send_admin, with "message" and optionally "email" and an image "file", sends it: a new conversation (a message that is its own top) from the logged-in user, or from the system account for visitors. Its text holds the message and the email given. An image is attached to it; a file that isn't an image is refused (400). The message is trimmed and cut to 10000 characters, as messages are, and the email to 254 (the longest an address can be); an empty (or all-whitespace) one is refused (400). The admins who receive modmail (those from level 2) are notified, except the writer. The reply is the contact form again, saying the message was sent.
+POST /send_admin, with "message" and optionally "email" and an image "file", sends it: a new conversation (a message that is its own top) from the logged-in user, or from the system account for visitors. Its text holds the message and the email given. An image is attached to it; a file that isn't an image is refused (400). The message is trimmed and cut to 10000 characters, as messages are, and the email to 254 (the longest an address can be); an empty (or all-whitespace) one is refused (400). The admins who receive modmail (those from level 2) are notified, except the writer. The reply is the contact form again, saying the message was sent. With an hCaptcha site key, visitors also give an hCaptcha answer (captcha/test_contact.py).
 
 Requesting API keys (POST /api_keys) also writes modmail: a notice from the system account, of which the admins who receive modmail are notified.
 

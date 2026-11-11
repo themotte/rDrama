@@ -15,6 +15,7 @@ from files.__main__ import app, db_session, db_session_factory, limiter
 import files.cli  # registers the command-line commands
 from files.commands.cron import tasks_run_due
 from files.helpers import background
+from files.helpers.config import environment
 from files.helpers.strings import bool_from_string
 from files.tests import reset as _reset
 from files.tests.spec.harness import config
@@ -65,9 +66,19 @@ def _set_limits(value):
 	limiter.enabled = bool_from_string(value) if value is not None else _LIMITS_AT_START
 
 
+def _environment_setter(name):
+	'''Sets a variable the app reads from its environment module when it uses it.'''
+	at_start = getattr(environment, name)
+	def set_(value):
+		setattr(environment, name, value.strip() if value is not None else at_start)
+	return set_
+
+
 # How each variable a profile may set reaches the app, which read its environment when it started: given the profile's value, or None to put back what the app started with
 _PROFILE_SETTERS = {
 	"SPEC_TEST_LIMITS": _set_limits,
+	"HCAPTCHA_SITEKEY": _environment_setter("HCAPTCHA_SITEKEY"),
+	"HCAPTCHA_SECRET": _environment_setter("HCAPTCHA_SECRET"),
 }
 
 

@@ -1,5 +1,5 @@
 '''
-Signing up: GET /signup issues a form whose "formkey" and "now" fields are signed for this browser (format in harness/session.py) and work once; POST /signup takes "usernametwo", "password", "password_confirm", "email" (may be empty) and "referred_by" (the referring account's id, from ?ref=<username> on the form), creates the account, logs it in and greets it with a notification. A refused signup goes back to the form with an "error" (and "ref") in the query.
+Signing up: GET /signup issues a form whose "formkey" and "now" fields are signed for this browser (format in harness/session.py) and work once; POST /signup takes "usernametwo", "password", "password_confirm", "email" (may be empty) and "referred_by" (the referring account's id, from ?ref=<username> on the form), creates the account, logs it in and greets it with a notification. A refused signup goes back to the form with an "error" (and "ref") in the query. With an hCaptcha site key it also takes an hCaptcha answer (captcha/test_signup.py).
 '''
 import pytest
 
