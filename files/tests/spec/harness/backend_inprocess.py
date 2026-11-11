@@ -30,9 +30,9 @@ _external_responses: dict[tuple, object] = {}
 _external_requests: list[dict] = []
 
 
-def request(method, target, headers, body):
-	'''Sends a request (`target` as on the request line, `body` encoded as `headers` say). Returns (status, [(header, value), ...], body bytes).'''
-	r = _client.open(target, method=method, headers=headers, data=body or None)
+def request(method, target, headers, body, peer):
+	'''Sends a request (`target` as on the request line, `body` encoded as `headers` say) from address `peer`. Returns (status, [(header, value), ...], body bytes).'''
+	r = _client.open(target, method=method, headers=headers, data=body or None, environ_overrides={"REMOTE_ADDR": peer})
 	return r.status_code, list(r.headers.items()), r.get_data()
 
 

@@ -8,6 +8,8 @@ import urllib3
 from files.tests.spec.harness import backend, config, db, session
 
 DEFAULT_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0"
+# The address a client connects from, unless it names another in 127.0.0.0/8
+DEFAULT_PEER = "127.0.0.1"
 
 
 @dataclass
@@ -51,9 +53,10 @@ class Response:
 class Client:
 	'''A browser-like client: keeps cookies, and when logged in, adds the form key to every non-GET request.'''
 
-	def __init__(self, authorization: str | None = None):
+	def __init__(self, authorization: str | None = None, peer: str = DEFAULT_PEER):
 		self.cookies: dict[str, str] = {}
 		self.authorization = authorization
+		self.peer = peer
 
 	def login_as(self, user: dict):
 		self.cookies[session.cookie_name()] = session.encode(session.logged_in_payload(user["id"], user["login_nonce"]))
@@ -105,7 +108,7 @@ class Client:
 		content_type, body = _encode_body(data, json, files)
 		if content_type:
 			all_headers["Content-Type"] = content_type
-		status, response_headers, body = backend.request(method, request_target(path), all_headers, body)
+		status, response_headers, body = backend.request(method, request_target(path), all_headers, body, self.peer)
 		response = Response(status, response_headers, body)
 		self._absorb_cookies(response)
 		return response

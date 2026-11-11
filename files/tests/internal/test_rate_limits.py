@@ -2,8 +2,10 @@
 import os
 import subprocess
 
+import flask
 import pytest
 import redis
+from flask import request
 from werkzeug.exceptions import TooManyRequests
 
 import files.__main__ as main
@@ -129,3 +131,17 @@ def test_the_limits_profile_turns_the_limiter_on_for_its_tests():
 
 	backend_inprocess.reset(None)
 	assert not main.limiter.enabled
+
+
+def test_a_clients_peer_is_the_address_it_connects_from():
+	peers = []
+	def record(sender, **extra):
+		peers.append(request.remote_addr)
+	flask.request_started.connect(record, app)
+	try:
+		anon(peer="127.0.0.2").get("/robots.txt")
+		anon().get("/robots.txt")
+	finally:
+		flask.request_started.disconnect(record, app)
+
+	assert peers == ["127.0.0.2", "127.0.0.1"]

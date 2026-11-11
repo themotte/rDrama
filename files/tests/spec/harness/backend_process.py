@@ -6,7 +6,7 @@ The test-mode interface an implementation provides to be run by the spec:
   - http_proxy, https_proxy, HTTP_PROXY and HTTPS_PROXY naming the proxy, and no no_proxy. The site sends all its outbound HTTP through it: plain HTTP as absolute-form requests, HTTPS through CONNECT tunnels. The proxy answers each request with Connection: close; it refuses a CONNECT to a host nothing is registered for with 502, and hangs up on a request for a URL nothing is registered for, or registered as unreachable.
   - SSL_CERT_FILE naming the authority's certificate, which the site trusts, in place of any other, for its outbound HTTPS and its mail server.
   - MAIL_SERVER (an IP address) and MAIL_PORT naming the mail capture, which the site reaches over STARTTLS.
-  It serves from one process, since the background work it holds is that process's, and closes a connection after the response when the request asks it to (Connection: close). Requests come one at a time; each must be answered within 30 seconds. A response may come before the site has read the request's body (refusing a body by its length), and the connection may then be reset once it is sent.
+  It takes connections from any address in 127.0.0.0/8, and takes the address a connection comes from for the request's peer (harness.Client's `peer`). It serves from one process, since the background work it holds is that process's, and closes a connection after the response when the request asks it to (Connection: close). Requests come one at a time; each must be answered within 30 seconds. A response may come before the site has read the request's body (refusing a body by its length), and the connection may then be reset once it is sent.
 - Shared state. The database, the Redis db, the site settings file and the upload store are the state the environment configures. The harness reads and writes them directly, between requests and between tests (files/tests/reset.py puts them back after each test), so the site keeps no copy of them across requests that such a change would leave stale.
 - Control requests, answered in test mode only, whatever their Host, ahead of any of the site's own handling:
   - POST /__spec__/ready answers once the site serves requests; the harness retries it while the connection is refused, for up to 60 seconds, and takes any other answer than 200 for a failure to start.
@@ -45,6 +45,7 @@ _TIMEOUT = 30
 _START_TIMEOUT = 60
 _COMMAND_TIMEOUT = 300
 _BODY_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
+_HARNESS_ADDRESS = "127.0.0.1"
 
 
 class SiteDown(Exception):
@@ -93,7 +94,7 @@ class _Site:
 				time.sleep(0.1)
 
 	def control(self, name, payload=None):
-		status, _headers, body = self.request("POST", f"/__spec__/{name}", {"Host": config.site_host(), "Content-Type": "application/json"}, json.dumps(payload).encode() if payload is not None else b"")
+		status, _headers, body = self.request("POST", f"/__spec__/{name}", {"Host": config.site_host(), "Content-Type": "application/json"}, json.dumps(payload).encode() if payload is not None else b"", _HARNESS_ADDRESS)
 		if status != 200:
 			raise RuntimeError(f"the site's /__spec__/{name} answered {status}:\n{body.decode(errors='replace')}")
 		boot = json.loads(body)["boot"]
@@ -102,9 +103,9 @@ class _Site:
 		elif boot != self.boot:
 			raise RuntimeError(f"the site's serving process changed (boot {self.boot} became {boot}), losing what it held:\n{self.take_log()}")
 
-	def request(self, method, target, headers, body):
+	def request(self, method, target, headers, body, peer):
 		try:
-			connection = socket.create_connection(("127.0.0.1", self.port), timeout=_TIMEOUT)
+			connection = socket.create_connection(("127.0.0.1", self.port), timeout=_TIMEOUT, source_address=(peer, 0))
 		except ConnectionRefusedError:
 			if self.boot is not None and self.process.poll() is not None:
 				raise SiteDown(f"the site exited with status {self.process.returncode}:\n{self.take_log()}")
@@ -256,9 +257,9 @@ def _dechunk(data):
 		data = data[size + 2:]
 
 
-def request(method, target, headers, body):
-	'''Sends a request (`target` as on the request line, `body` encoded as `headers` say). Returns (status, [(header, value), ...], body bytes).'''
-	return _the_site().request(method, target, headers, body)
+def request(method, target, headers, body, peer):
+	'''Sends a request (`target` as on the request line, `body` encoded as `headers` say) from address `peer`. Returns (status, [(header, value), ...], body bytes).'''
+	return _the_site().request(method, target, headers, body, peer)
 
 
 def reset(profile):
