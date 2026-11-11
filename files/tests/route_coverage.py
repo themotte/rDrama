@@ -1,12 +1,12 @@
 '''
-Route coverage: a run of the whole spec tier must get past the gate of every route in the spec's route table (harness/routes.py) from some spec test outside spec/routes/, whose generic cells say nothing of what a route does. A request counts when the gate let it through: it was answered with neither 401, 403 nor a login redirect. Requests count from the test itself, not its fixtures.
+Route coverage: a run of the whole spec tier must get past the gate of every route in the spec's route table (harness/routes.py) from some spec test outside spec/routes/ and spec/limits/, whose generic cells say nothing of what a route does. A request counts when the gate let it through: it was answered with neither 401, 403 nor a login redirect. Requests count from the test itself, not its fixtures.
 '''
 from pathlib import Path
 
 from files.tests import testenv
 
 SPEC = testenv.REPO_ROOT / "files" / "tests" / "spec"
-_GENERIC_CELLS = SPEC / "routes"
+_GENERIC_CELLS = (SPEC / "routes", SPEC / "limits")
 
 _seen: set[tuple[str, str]] = set()
 _recording = False
@@ -29,7 +29,7 @@ def start(path: Path):
 		from files.__main__ import app
 		flask.request_finished.connect(_record, app)
 		_connected = True
-	_recording = path.is_relative_to(SPEC) and not path.is_relative_to(_GENERIC_CELLS)
+	_recording = path.is_relative_to(SPEC) and not any(path.is_relative_to(cells) for cells in _GENERIC_CELLS)
 
 
 def stop():

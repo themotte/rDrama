@@ -12,20 +12,21 @@ Where a path matches more than one row, a row with fixed text where the other ha
 A request is checked in this order:
 1. The checks every request gets: a query that isn't UTF-8 (400); the Host (403 unless the site's own); while the Bots site setting is off, any Authorization header (403); a missing User-Agent (403); read-only mode, which refuses changes from all but admins, logging in aside (auth/test_session).
 2. The path and method, as above.
-3. The route's gate (`access`), which answers before anything the path names is looked up, so a refused request learns nothing about it:
+3. The rate limits (limits.py): a request over any of its limits is refused with 429, and one within them counts toward them, whatever it is answered next.
+4. The route's gate (`access`), which answers before anything the path names is looked up, so a refused request learns nothing about it:
    - PUBLIC: open to everyone, and the login isn't read, so the request is answered the same logged in or not (read-only mode aside), and a browser arriving without a session isn't given one (unless the route is there to write the session);
    - ANYONE: open to everyone, served as the logged-in member when there is one (a POST without that member's form key is served as logged out). A browser arriving without a session is given one, as at every gate below;
    - USER: logged-in members only; anyone else is sent to log in (asserts.assert_login_redirect), including a member's POST without their form key, except that API clients and xhr requests get 401 with a JSON error (asserts.assert_api_unauthorized);
    - USER_NOT_PERMABANNED: as USER, and a permanently suspended member is refused with 403;
    - admin(n): as USER, and a member below admin level n is refused with 403.
-4. API clients (`api_clients` False): refused with 403 where the route is only for the member's own browser, and on every admin route. The routes they may use serve them as their holder's browser (users/test_api_clients).
-5. The route's own rules, in the spec files for its area. Some of those are refusals of their own, such as search refusing known crawlers' User-Agents.
+5. API clients (`api_clients` False): refused with 403 where the route is only for the member's own browser, and on every admin route. The routes they may use serve them as their holder's browser (users/test_api_clients).
+6. The route's own rules, in the spec files for its area. Some of those are refusals of their own, such as search refusing known crawlers' User-Agents.
 
 Every response, whatever answered it, carries the same security headers (spec/routes/test_headers.py).
 
 spec/routes checks each gate from below, with values that name nothing; that a route serves those it should, at the lowest level it allows, is in the spec files for its area.
 
-The table describes the site as the spec runs it. The admins' request-performance controls under /performance/ are outside the spec, as are the routes a developer mode adds.
+The table describes the site as the spec runs it, which is with the rate limits off but in spec/limits. The admins' request-performance controls under /performance/ are outside the spec, as are the routes a developer mode adds.
 '''
 import re
 from typing import NamedTuple

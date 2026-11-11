@@ -120,7 +120,7 @@ def pytest_terminal_summary(terminalreporter):
 		terminalreporter.section("routes no spec test gets past the gate of", red=True)
 		for route in _coverage["unrequested"]:
 			terminalreporter.write_line(route)
-		terminalreporter.write_line("(the run fails: every route needs a spec test outside spec/routes/ that the gate lets through)", red=True)
+		terminalreporter.write_line("(the run fails: every route needs a spec test outside spec/routes/ and spec/limits/ that the gate lets through)", red=True)
 	for heading, problems in _coverage["page_problems"].items():
 		terminalreporter.section(heading, red=True)
 		for problem in problems:

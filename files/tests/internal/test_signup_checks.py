@@ -1,14 +1,11 @@
-'''Signup's anti-bot checks that only apply in some deployments, so the spec runs without them: an hCaptcha (when a site key is configured, read at startup) and a minimum time on the form (when the rate limiter is on).'''
+'''Signup's hCaptcha, which only applies where a site key is configured (read at startup), so the spec runs without it. Its minimum time on the form is in spec/limits.'''
 import sys
-import time
 
 import pytest
 
-import files.__main__ as main
 import files.routes.login  # noqa: F401  (the module, not the route function of the same package name)
 from files.helpers.captcha import HCAPTCHA_URL, validate_captcha
-from files.tests.spec.harness import anon, assert_redirect, db, db_diff, external_web, factories, session
-from files.tests.spec.harness.http import DEFAULT_USER_AGENT
+from files.tests.spec.harness import anon, assert_redirect, db_diff, external_web, factories
 
 login = sys.modules["files.routes.login"]
 
@@ -41,43 +38,6 @@ def test_a_signup_failing_the_captcha_is_refused(monkeypatch):
 
 	with db_diff() as d:
 		r = _signup(anon(), **{"h-captcha-response": "answer"})
-
-	assert_redirect(r, "/signup", query_keys=("error",))
-	d.assert_exactly()
-
-
-def test_a_signup_sent_too_soon_after_the_form_is_refused(monkeypatch):
-	factories.user()
-	monkeypatch.setattr(main.limiter, "enabled", True)
-
-	with db_diff() as d:
-		r = _signup(anon())
-
-	assert_redirect(r, "/signup", query_keys=("error",))
-	d.assert_exactly()
-
-
-def test_a_signup_sent_after_a_while_goes_through(monkeypatch):
-	factories.user()
-	monkeypatch.setattr(main.limiter, "enabled", True)
-	client = anon()
-	client.get("/signup")
-	issued = int(time.time()) - 10
-	username = factories.unique("new")
-
-	r = client.post_raw("/signup", {"formkey": session.sign(f"signup+{issued}+{client.session()['signup_token']}+{DEFAULT_USER_AGENT}"), "now": issued, "usernametwo": username, "email": "", "password": factories.PASSWORD, "password_confirm": factories.PASSWORD})
-
-	assert r.status == 302
-	assert db.row("users", username=username)
-
-
-@pytest.mark.parametrize("now", ["soon", "²"])
-def test_a_form_time_that_is_not_a_number_is_refused(monkeypatch, now):
-	factories.user()
-	monkeypatch.setattr(main.limiter, "enabled", True)
-
-	with db_diff() as d:
-		r = _signup(anon(), now=now)
 
 	assert_redirect(r, "/signup", query_keys=("error",))
 	d.assert_exactly()

@@ -15,6 +15,10 @@ The spec runs with the limits off, but for its tests in the "limits" profile (co
 
 Several instances serving one site may each count apart, so a client may get more than a limit allows across them.
 '''
+from collections import Counter
+from datetime import datetime, timedelta, timezone
+
+from files.tests.spec.harness import limit_clock_set
 from files.tests.spec.harness.routes import Route
 
 DEFAULT = "3/second;30/minute;200/hour;1000/day"
@@ -167,3 +171,41 @@ def parse(text: str) -> list[tuple[int, int]]:
 		count, _, unit = part.partition("/")
 		limits.append((int(count), _PERIODS[unit]))
 	return sorted(limits, key=lambda limit: limit[1])
+
+
+T0 = datetime(2031, 1, 1, tzinfo=timezone.utc)
+'''A time when a window of every period starts, for tests to set the clock from.'''
+
+
+def most_in_a_window(offsets: list[float], period: int) -> int:
+	'''The most of the times `offsets` (seconds after T0) in one window of `period`.'''
+	return max(Counter(int(offset // period) for offset in offsets).values(), default=0)
+
+
+def paced(limits: list[tuple[int, int]], target: tuple[int, int], requests: int) -> list[float]:
+	'''
+	Times (seconds after T0) for `requests` requests counted toward all of `limits`, spaced so that only `target` of them binds: as close together as the limits of shorter periods allow, and all in the target's first window.
+	'''
+	spacing = max((period / count for count, period in limits if period < target[1]), default=0)
+	offsets = [round(i * spacing, 6) for i in range(requests)]
+	assert most_in_a_window(offsets, target[1]) == requests, f"{requests} requests {spacing}s apart don't fit in one window of {target}"
+	for limit in limits:
+		if limit != target:
+			assert most_in_a_window(offsets, limit[1]) <= limit[0], f"{limit} would bind before {target}"
+	return offsets
+
+
+def statuses_at(send, offsets: list[float]) -> list[int]:
+	'''The statuses of the responses to `send()` (one request), sent with the clock at each of `offsets` (seconds after T0).'''
+	statuses, clock = [], None
+	for offset in offsets:
+		if offset != clock:
+			limit_clock_set(T0 + timedelta(seconds=offset))
+			clock = offset
+		statuses.append(send().status)
+	return statuses
+
+
+def assert_served_then_refused(statuses: list[int], served: int):
+	'''The first `served` requests were answered alike, neither refused for their limits nor failing; the rest were refused (429).'''
+	assert statuses[0] < 429 and statuses[:served] == [statuses[0]] * served and statuses[served:] == [429] * (len(statuses) - served), statuses
