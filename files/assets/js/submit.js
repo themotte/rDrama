@@ -76,6 +76,8 @@ document.onpaste = function(event) {
 			}
 			document.getElementById('post-url').value = null;
 			localStorage.setItem("post_url", "")
+			// Cancels a pending repost check of the URL, and its warning
+			checkRepost(document.getElementById('post-url'));
 		}
 		checkForRequired();
 	}
@@ -102,7 +104,12 @@ function savetext() {
 }
 
 
-function autoSuggestTitle()	{
+// A title is asked for once a URL is entered (the field changes, or a URL is pasted), not while one is typed, and not again for the URL it last answered for: suggestions are limited to a few a minute
+let titleAskedFor = null;
+
+function autoSuggestTitle(event)	{
+
+	if (event.type === "input" && event.inputType !== "insertFromPaste") return;
 
 	var urlField = document.getElementById("post-url");
 
@@ -110,14 +117,23 @@ function autoSuggestTitle()	{
 
 	var isValidURL = urlField.checkValidity();
 
-	if (isValidURL && urlField.value.length > 0 && titleField.value === "") {
+	const url = urlField.value;
+	if (isValidURL && url.length > 0 && titleField.value === "" && url !== titleAskedFor) {
 
-		const url = urlField.value;
+		titleAskedFor = url;
 		var x = new XMLHttpRequest();
 		x.withCredentials=true;
 		x.onreadystatechange = function() {
+			if (x.readyState != 4) return;
+			// The site has no title for a page it can't read (400)
+			if (x.status != 200 && x.status != 400) {
+				console.error(`Couldn't ask for a title for ${url}: the site answered ${x.status}`);
+				// Asked again when the URL is entered again
+				if (titleAskedFor === url) titleAskedFor = null;
+				return;
+			}
 			// A title for the URL the field still holds, into a title field still empty
-			if (x.readyState == 4 && x.status == 200 && !titleField.value && urlField.value === url) {
+			if (x.status == 200 && !titleField.value && urlField.value === url) {
 
 				const title=JSON.parse(x.responseText)["title"];
 				titleField.value=title;
@@ -142,31 +158,41 @@ function draft(t) {
    }
 }
 
+// A URL is checked for reposts once typing pauses, and only once it's a URL, so typing one doesn't send a request per keystroke
+const REPOST_CHECK_DELAY_MS = 500;
+let repostCheckTimer;
+
 function checkRepost(t) {
 	const system = document.getElementById('system')
 	system.innerHTML = `To post an image, use a direct image link such as i.imgur.com`;
+	clearTimeout(repostCheckTimer);
 	const url = t.value
 
-	if (url) {
-		const xhr = new XMLHttpRequest();
-		xhr.open("post", "/is_repost");
-		xhr.setRequestHeader('xhr', 'xhr');
-		var form = new FormData()
-		form.append("url", url);
+	if (url && t.checkValidity()) {
+		repostCheckTimer = setTimeout(() => {
+			const xhr = new XMLHttpRequest();
+			xhr.open("post", "/is_repost");
+			xhr.setRequestHeader('xhr', 'xhr');
+			var form = new FormData()
+			form.append("url", url);
 
-		xhr.onload=function(){
-			let data;
-			try {data = JSON.parse(xhr.response)}
-			catch(e) {console.log(e)}
+			xhr.onload=function(){
+				if (xhr.status != 200) {
+					console.error(`Couldn't check ${url} for reposts: the site answered ${xhr.status}`);
+					return;
+				}
+				let data;
+				try {data = JSON.parse(xhr.response)}
+				catch(e) {console.error(`Couldn't check ${url} for reposts:`, e); return;}
 
-			// The answer is about a URL the field may no longer hold
-			if (data && data["permalink"] && t.value === url) {
-				const permalink = data["permalink"]
-				if (permalink) {
+				// The answer is about a URL the field may no longer hold
+				if (data && data["permalink"] && t.value === url) {
+					const permalink = data["permalink"]
 					system.innerHTML = `<span class='text-danger'>This is a repost of <a href=${permalink}>${permalink}</a></span>`;
 				}
 			}
-		}
-		xhr.send(form)
+			xhr.onerror = () => console.error(`Couldn't check ${url} for reposts: the request failed`);
+			xhr.send(form)
+		}, REPOST_CHECK_DELAY_MS);
 	}
 }
