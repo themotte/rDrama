@@ -1,6 +1,11 @@
-document.getElementById('post-title').value = localStorage.getItem("post_title")
-document.getElementById('post-text').value = localStorage.getItem("post_text")
-document.getElementById('post-url').value = localStorage.getItem("post_url")
+// The draft fills only fields the page came with empty: what the page came with (a link's ?url=, a refused post's title and URL) is newer
+function draftRestore(id, stored) {
+	const field = document.getElementById(id);
+	if (stored && !field.value) field.value = stored;
+}
+draftRestore('post-title', localStorage.getItem("post_title"))
+draftRestore('post-text', localStorage.getItem("post_text"))
+draftRestore('post-url', localStorage.getItem("post_url"))
 
 function checkForRequired() {
 	const title = document.getElementById("post-title");
