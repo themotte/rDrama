@@ -2,11 +2,13 @@
 from files.tests.spec.harness import backend, factories
 
 
-def begin():
-	backend.reset()
+def begin(profile: str | None):
+	'''Puts the site back in its starting state, in deployment `profile` (one of config.PROFILES, or the default one when None).'''
 	if not factories.has_signup_template():
+		# In the default profile, where signing up straight after fetching the form isn't too soon
+		backend.reset(None)
 		factories.capture_signup_template()
-		backend.reset()
+	backend.reset(profile)
 
 
 def end():

@@ -14,7 +14,7 @@ class Env(enum.Enum):
 	PRECONDITION = "precondition"
 	'''A switch the spec needs at one value (PRECONDITIONS); a reimplementation reads it with the same meaning.'''
 	TEST = "test"
-	'''Set by the spec harness for the implementation it runs, never in production. SPEC_TEST_MODE, when true: work the site hands to the background waits until the harness runs it (run_background_work); the rate limits and the signup form's minimum filling time are off; and password hashes may be cheap to compute.'''
+	'''Set by the spec harness for the implementation it runs, never in production. SPEC_TEST_MODE, when true: work the site hands to the background waits until the harness runs it (run_background_work); the rate limits and the signup form's minimum filling time are off, unless SPEC_TEST_LIMITS is also true, which turns them on as in production; and password hashes may be cheap to compute.'''
 
 
 ENVIRONMENT = {
@@ -46,7 +46,15 @@ ENVIRONMENT = {
 	"HCAPTCHA_SITEKEY": Env.PRECONDITION,
 	"VOLUNTEER_JANITOR_ENABLE": Env.PRECONDITION,
 	"SPEC_TEST_MODE": Env.TEST,
+	"SPEC_TEST_LIMITS": Env.TEST,
 }
+
+PROFILES = {
+	"limits": {"SPEC_TEST_LIMITS": "1"},
+}
+'''
+The deployments the spec runs the site as, besides the default one: each adds these variables to the site's environment, for its server, its commands and its scheduler. A spec test names the one it needs with `pytest.mark.profile(name)`; the rest run in the default profile, which adds nothing.
+'''
 
 PRECONDITIONS = {
 	"HCAPTCHA_SITEKEY": "",

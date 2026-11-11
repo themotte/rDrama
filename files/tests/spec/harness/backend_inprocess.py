@@ -10,11 +10,13 @@ from io import BytesIO
 import requests.adapters
 import urllib3
 
-from files.__main__ import app, db_session, db_session_factory
+from files.__main__ import app, db_session, db_session_factory, limiter
 import files.cli  # registers the command-line commands
 from files.commands.cron import tasks_run_due
 from files.helpers import background
+from files.helpers.strings import bool_from_string
 from files.tests import reset as _reset
+from files.tests.spec.harness import config
 from files.tests.spec.harness.process_proxy import key as external_key
 
 __all__ = ["request", "reset", "run_background_work", "cli", "run_scheduler", "sent_mail", "take_outbound_attempts", "take_server_log", "external_serve", "external_unreachable", "external_requests"]
@@ -33,7 +35,13 @@ def request(method, target, headers, body):
 	return r.status_code, list(r.headers.items()), r.get_data()
 
 
-def reset():
+def reset(profile):
+	'''Puts the app back in its starting state, configured as deployment `profile` (see config.PROFILES; None for the default one).'''
+	variables = config.PROFILES[profile] if profile else {}
+	if unknown := set(variables) - set(_PROFILE_SETTERS):
+		raise KeyError(f"no setter for profile variables {unknown}")
+	for name, setter in _PROFILE_SETTERS.items():
+		setter(variables.get(name))
 	# Release the app's thread-local session so an open transaction can't block the truncate
 	db_session.remove()
 	background.discard()
@@ -46,6 +54,19 @@ def reset():
 	requests.adapters.HTTPAdapter.send = _fake_http_send
 	smtplib.SMTP = _CapturingSMTP
 	smtplib.SMTP_SSL = _CapturingSMTP
+
+
+_LIMITS_AT_START = limiter.enabled
+
+
+def _set_limits(value):
+	limiter.enabled = bool_from_string(value) if value is not None else _LIMITS_AT_START
+
+
+# How each variable a profile may set reaches the app, which read its environment when it started: given the profile's value, or None to put back what the app started with
+_PROFILE_SETTERS = {
+	"SPEC_TEST_LIMITS": _set_limits,
+}
 
 
 def run_background_work():

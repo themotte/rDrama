@@ -25,6 +25,7 @@ def _is_new_tier(item):
 
 
 def pytest_configure(config):
+	config.addinivalue_line("markers", "profile(name): runs the test with the site in that deployment profile (spec/harness/config.py PROFILES)")
 	# xdist sets "load" when -n is given without --dist; its workers run with "no"
 	if config.getoption("dist", "no") not in ("no", "loadgroup"):
 		raise pytest.UsageError("the legacy tests must run together in one worker: add --dist loadgroup")
@@ -40,6 +41,13 @@ def pytest_collection_modifyitems(config, items):
 	# The legacy tests depend on state accumulated across the run (cached users, process-wide patches), which the new tiers' per-test reset wipes; run the legacy ones first, and under xdist all in one worker, which loadgroup scheduling starts on them
 	if PROCESS_BACKEND and (outside := [item.nodeid for item in items if "spec" not in item.path.relative_to(testenv.REPO_ROOT / "files" / "tests").parts[:1]]):
 		raise pytest.UsageError(f"RDRAMA_SPEC_BACKEND=process runs only the spec tier, not {outside[0]} and {len(outside) - 1} more")
+	from files.tests.spec.harness.config import PROFILES
+	for item in items:
+		if (profile := item.get_closest_marker("profile")) and profile.args[0] not in PROFILES:
+			raise pytest.UsageError(f"{item.nodeid} names no profile of spec/harness/config.py: {profile.args[0]}")
+		# A worker starts a site for each profile it runs tests in: keep each profile's tests to one worker
+		if profile and PROCESS_BACKEND:
+			item.add_marker(pytest.mark.xdist_group(f"profile-{profile.args[0]}"))
 	items.sort(key=_is_new_tier)
 	legacy = [item for item in items if not _is_new_tier(item)]
 	for item in legacy:

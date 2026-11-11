@@ -16,7 +16,9 @@ The test-mode interface an implementation provides to be run by the spec:
 - Commands. RDRAMA_SPEC_CLI is a command prefix: followed by a command's name and arguments, it runs that command (harness.cli) with the site's environment, doing the work it hands to the background before it exits. Its exit status and stdout are the result; its stderr is diagnostics. It has 300 seconds.
 - The scheduler. RDRAMA_SPEC_SCHEDULER is a command whose "{at}" stands for a time in ISO 8601 with its UTC offset, perhaps with fractions of a second ("2024-01-08T08:00:00+00:00"). It does one pass of the scheduled-task worker on a clock reading that time (harness.run_scheduler), does the work the pass hands to the background, and exits 0 when the pass ran. It has 300 seconds.
 
-The site starts with the first test and stops when the harness's process exits, or dies with it. If it can't start, or stops serving, every test from then on fails at once with its log.
+- Deployment profiles (config.PROFILES). The harness runs a separate site for each profile its tests use, with the profile's variables added to its environment and to its commands' and scheduler's. Only one site serves at a time, the current test's; the others keep running, idle.
+
+Each site starts with the first test in its profile and stops when the harness's process exits, or dies with it. If it can't start, or stops serving, every test in its profile from then on fails at once with its log.
 '''
 import atexit
 import json
@@ -49,12 +51,12 @@ class SiteDown(Exception):
 
 
 class _Site:
-	def __init__(self):
+	def __init__(self, profile):
 		self.dir = Path(tempfile.mkdtemp(prefix="spec-site-"))
 		self.authority = Authority(self.dir / "authority")
 		self.proxy = Proxy(self.authority)
 		self.mail = Capture(self.authority)
-		self.env = {**os.environ, "SSL_CERT_FILE": self.authority.ca_file, "MAIL_SERVER": MAIL_HOST, "MAIL_PORT": str(self.mail.port)}
+		self.env = {**os.environ, **(config.PROFILES[profile] if profile else {}), "SSL_CERT_FILE": self.authority.ca_file, "MAIL_SERVER": MAIL_HOST, "MAIL_PORT": str(self.mail.port)}
 		for name in ("http_proxy", "https_proxy", "HTTP_PROXY", "HTTPS_PROXY"):
 			self.env[name] = self.proxy.url
 		for name in ("no_proxy", "NO_PROXY"):
@@ -150,21 +152,22 @@ class _Site:
 		shutil.rmtree(self.dir, ignore_errors=True)
 
 
-_site: _Site | None = None
-_start_failure: SiteDown | None = None
+# A site per deployment profile (None: the default one), and the one the current test runs against
+_sites: dict[str | None, _Site] = {}
+_start_failures: dict[str | None, SiteDown] = {}
+_profile: str | None = None
 
 
 def _the_site() -> _Site:
-	global _site, _start_failure
-	if _start_failure is not None:
-		raise SiteDown(f"the site couldn't start earlier in this run:\n{_start_failure}")
-	if _site is None:
+	if _profile in _start_failures:
+		raise SiteDown(f"the site couldn't start earlier in this run:\n{_start_failures[_profile]}")
+	if _profile not in _sites:
 		try:
-			_site = _Site()
+			_sites[_profile] = _Site(_profile)
 		except SiteDown as e:
-			_start_failure = e
+			_start_failures[_profile] = e
 			raise
-	return _site
+	return _sites[_profile]
 
 
 def _command(variable, **placeholders) -> list[str]:
@@ -257,7 +260,10 @@ def request(method, target, headers, body):
 	return _the_site().request(method, target, headers, body)
 
 
-def reset():
+def reset(profile):
+	'''Puts the site back in its starting state, and has the test run against the site deployed as `profile` (see config.PROFILES; None for the default one).'''
+	global _profile
+	_profile = profile
 	site = _the_site()
 	site.control("background/discard")
 	_reset.reset()
@@ -287,14 +293,16 @@ def sent_mail() -> list[dict]:
 
 
 def take_outbound_attempts():
-	'''Outbound attempts since the test began; none when no site is running, since a site that didn't start has already failed the test.'''
-	if _site is None:
+	'''Outbound attempts since the test began; none when its site isn't running, since a site that didn't start has already failed the test.'''
+	site = _sites.get(_profile)
+	if site is None:
 		return []
-	return _site.proxy.take_attempts() + _site.mail.take_attempts()
+	return site.proxy.take_attempts() + site.mail.take_attempts()
 
 
 def take_server_log() -> str:
-	return _site.take_log() if _site is not None else ""
+	site = _sites.get(_profile)
+	return site.take_log() if site is not None else ""
 
 
 def external_serve(method, url, status, headers, body, trusted):

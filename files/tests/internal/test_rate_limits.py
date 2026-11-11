@@ -1,4 +1,7 @@
 '''The site's rate limiter (files/helpers/rate_limits.py): its windows and counting, and its key.'''
+import os
+import subprocess
+
 import pytest
 import redis
 from werkzeug.exceptions import TooManyRequests
@@ -7,7 +10,8 @@ import files.__main__ as main
 from files.__main__ import app
 from files.helpers.config.environment import CACHE_REDIS_URL
 from files.helpers.rate_limits import _COUNTER_GRACE, Limit, RateLimiter, client_address, parse
-from files.tests.spec.harness import anon
+from files.tests.spec.harness import anon, backend_inprocess
+from files.tests.testenv import REPO_ROOT
 
 
 @pytest.mark.parametrize(("headers", "peer", "address"), [
@@ -102,3 +106,26 @@ def test_the_site_counts_its_requests(clock):
 	client = anon()
 
 	assert [client.get("/robots.txt").status for _ in range(4)] == [200, 200, 200, 429]
+
+
+@pytest.mark.parametrize(("variables", "enabled"), [
+	({}, True),
+	({"DBG_LIMITER_DISABLED": "true"}, False),
+	({"SPEC_TEST_MODE": "1"}, False),
+	({"SPEC_TEST_MODE": "1", "SPEC_TEST_LIMITS": "1"}, True),
+	({"SPEC_TEST_MODE": "1", "SPEC_TEST_LIMITS": "1", "DBG_LIMITER_DISABLED": "true"}, True),
+], ids=["production", "developer's switch", "test mode", "test mode with limits", "test mode with limits, developer's switch set"])
+def test_the_limiter_is_on_in_production_and_where_test_mode_says(variables, enabled):
+	env = {name: value for name, value in os.environ.items() if name not in ("SPEC_TEST_MODE", "SPEC_TEST_LIMITS", "DBG_LIMITER_DISABLED")}
+	result = subprocess.run(["python3", "-c", "from files.__main__ import limiter; print(limiter.enabled)"], cwd=REPO_ROOT, env={**env, **variables}, capture_output=True, text=True)
+
+	assert result.returncode == 0, result.stderr
+	assert result.stdout.strip() == str(enabled)
+
+
+def test_the_limits_profile_turns_the_limiter_on_for_its_tests():
+	backend_inprocess.reset("limits")
+	assert main.limiter.enabled
+
+	backend_inprocess.reset(None)
+	assert not main.limiter.enabled
