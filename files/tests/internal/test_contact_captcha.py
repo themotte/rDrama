@@ -1,18 +1,13 @@
 '''The contact form's hCaptcha for visitors, which applies only when a site key is configured (read at startup), so the spec runs without it.'''
-import sys
-
 import pytest
 
-import files.routes.static  # noqa: F401  (the module, not a route function of the same package name)
 from files.helpers.captcha import HCAPTCHA_URL
+from files.helpers.config import environment
 from files.tests.spec.harness import anon, as_user, assert_html, assert_status, db_diff, external_web, factories
-
-static = sys.modules["files.routes.static"]
-
 
 @pytest.fixture
 def site_key(monkeypatch):
-	monkeypatch.setattr(static, "HCAPTCHA_SITEKEY", "sitekey")
+	monkeypatch.setattr(environment, "HCAPTCHA_SITEKEY", "sitekey")
 
 
 def _answer(success: bool):

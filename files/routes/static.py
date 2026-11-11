@@ -9,9 +9,9 @@ from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2, ADMIN_ONLY_KINDS
 from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.assetcache import ASSET_CSS, assetcache_hash
-from files.helpers.captcha import validate_captcha
+from files.helpers.captcha import site_key, validate_captcha
 from files.helpers.config.const import *
-from files.helpers.config.environment import HCAPTCHA_SECRET, HCAPTCHA_SITEKEY, IMAGES_DIR
+from files.helpers.config.environment import IMAGES_DIR
 from files.helpers.listing import request_page
 from files.helpers.media import new_image_path, process_image
 from files.mail import *
@@ -240,14 +240,13 @@ def api(v):
 @app.get("/media")
 @auth_desired
 def contact(v):
-	return render_template("contact.html", v=v, hcaptcha=HCAPTCHA_SITEKEY)
+	return render_template("contact.html", v=v, hcaptcha=site_key())
 
 @app.post("/send_admin")
 @limiter.limit("1/second;2/minute;6/hour;10/day")
 @auth_desired
 def submit_contact(v: Optional[User]):
-	if not v and not validate_captcha(HCAPTCHA_SECRET, HCAPTCHA_SITEKEY,
-	                                  request.values.get("h-captcha-response", "")):
+	if not v and not validate_captcha(request.values.get("h-captcha-response", "")):
 		abort(403, "CAPTCHA provided was not correct. Please try it again")
 	body = request.values.get("message", "").strip()[:MESSAGE_BODY_LENGTH_MAXIMUM].strip()
 	# The longest an email address can be

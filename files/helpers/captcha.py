@@ -2,14 +2,22 @@ import sys
 from typing import Final
 import requests
 
+from files.helpers.config import environment
 from files.helpers.config.environment import OUTBOUND_VERIFY
 
 HCAPTCHA_URL: Final[str] = "https://hcaptcha.com/siteverify"
 
-def validate_captcha(secret:str, sitekey: str, token: str):
+
+def site_key() -> str:
+	'''The site's hCaptcha site key; without one, no captcha is asked.'''
+	return environment.HCAPTCHA_SITEKEY
+
+
+def validate_captcha(token: str):
+	sitekey = site_key()
 	if not sitekey: return True
 	if not token: return False
-	data = {"secret": secret,
+	data = {"secret": environment.HCAPTCHA_SECRET,
 			"response": token,
 			"sitekey": sitekey
 			}

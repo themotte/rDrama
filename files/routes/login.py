@@ -3,11 +3,11 @@ from urllib.parse import urlencode
 from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound
 
-from files.helpers.config.environment import HCAPTCHA_SECRET, HCAPTCHA_SITEKEY, WELCOME_MSG
+from files.helpers.config.environment import WELCOME_MSG
 from files.mail import *
 from files.__main__ import app, limiter
 from files.helpers.config.const import *
-from files.helpers.captcha import validate_captcha
+from files.helpers.captcha import site_key, validate_captcha
 
 def _redirect_target():
 	'''Where the "redirect" parameter asks to go after logging in, as an absolute URL on this site with any "/logged_out" removed, or None when it names no page here.'''
@@ -155,7 +155,7 @@ def sign_up_get(v):
 		formkey=formkey,
 		now=now,
 		ref_user=ref_user,
-		hcaptcha=HCAPTCHA_SITEKEY,
+		hcaptcha=site_key(),
 		error=error
 	)
 
@@ -230,8 +230,7 @@ def sign_up_post(v):
 	if existing_account:
 		return signup_error("An account with that username already exists.")
 	
-	if not validate_captcha(HCAPTCHA_SECRET, HCAPTCHA_SITEKEY,
-	                        request.values.get("h-captcha-response", "")):
+	if not validate_captcha(request.values.get("h-captcha-response", "")):
 		return signup_error("Unable to verify CAPTCHA")
 
 	session.pop("signup_token")
