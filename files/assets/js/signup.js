@@ -24,7 +24,7 @@ document.getElementById('username-register').addEventListener('input', function 
 	const id = document.getElementById("usernameHelpRegister");
 	clearTimeout(usernameCheckTimer);
 
-	if (/[^a-zA-Z0-9_\-$]/.test(userName)) {
+	if (/[^a-zA-Z0-9_\-]/.test(userName)) {
 		id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">No special characters or spaces allowed.</span>';
 	} else if (userName.length < 3) {
 		id.innerHTML = '<span class="form-text font-weight-bold text-muted mt-1">Username must be at least 3 characters long.</span>';
