@@ -22,6 +22,9 @@ _UNREADABLE = {
 	"no verdict": "{}",
 	"a verdict that's a string": '{"success": "false"}',
 	"a verdict that's a number": '{"success": 1}',
+	"a JSON array": "[]",
+	"JSON null": "null",
+	"a bare JSON value": "5",
 }
 
 FAILURES = ("unreachable", "untrusted certificate", *_UNREADABLE)

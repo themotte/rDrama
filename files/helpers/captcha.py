@@ -23,11 +23,12 @@ def validate_captcha(token: str):
 			}
 	try:
 		req = requests.post(HCAPTCHA_URL, data=data, timeout=5, verify=OUTBOUND_VERIFY)
-		verdict = req.json()["success"]
-	except (requests.RequestException, ValueError, KeyError) as e:
+		reply = req.json()
+	except (requests.RequestException, ValueError) as e:
 		print(f"[captcha] couldn't verify an answer with hCaptcha: {e!r}", file=sys.stderr, flush=True)
 		return False
+	verdict = reply.get("success") if isinstance(reply, dict) else None
 	if not isinstance(verdict, bool):
-		print(f"[captcha] hCaptcha's verdict is neither true nor false: {verdict!r}", file=sys.stderr, flush=True)
+		print(f"[captcha] hCaptcha's reply holds no verdict of true or false: {reply!r:.500}", file=sys.stderr, flush=True)
 		return False
 	return verdict
