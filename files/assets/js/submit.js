@@ -117,6 +117,7 @@ function autoSuggestTitle()	{
 				const title=JSON.parse(x.responseText)["title"];
 				titleField.value=title;
 				checkForRequired()
+				savetext()
 			}
 		}
 		x.open('get','/submit/title?url=' + encodeURIComponent(url));
