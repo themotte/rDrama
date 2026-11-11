@@ -1,25 +1,10 @@
 '''
 The route table (harness/routes.py, which says what each column means) holds for every route: each refusal a route's gate makes, checked with values that name nothing, since the gate answers first; the session every gate gives a browser; the methods each path takes.
 '''
-import re
-
 import pytest
 
 from files.tests.spec.harness import *
-from files.tests.spec.harness.routes import ANYONE, PUBLIC, ROUTES, USER_NOT_PERMABANNED, admin_level
-
-# An id no row has: the largest the id columns hold
-_UNUSED_ID = str(2**31 - 1)
-
-
-def _path(route) -> str:
-	'''The route's path with every variable filled with a value that names nothing.'''
-	def value(m):
-		kind = m.group(1)
-		if kind == "id": return _UNUSED_ID
-		if kind in ("text", "path"): return "x"
-		return kind.split("|")[0]
-	return re.sub(r"<([^>]+)>", value, route.path)
+from files.tests.spec.harness.routes import ANYONE, PUBLIC, ROUTES, UNUSED_ID, USER_NOT_PERMABANNED, admin_level, fill
 
 
 def _id(route) -> str:
@@ -41,7 +26,7 @@ _PATHS = sorted({r.path for r in ROUTES})
 @pytest.mark.parametrize("slash", ["", "/"], ids=["as written", "with a trailing slash"])
 @pytest.mark.parametrize("route", _GATED, ids=_id)
 def test_anonymous_requests_are_sent_to_log_in(route, slash):
-	path = _path(route) + slash
+	path = fill(route) + slash
 
 	with db_diff() as d:
 		r = anon().request(route.method, path)
@@ -52,7 +37,7 @@ def test_anonymous_requests_are_sent_to_log_in(route, slash):
 
 @pytest.mark.parametrize("route", [r for r in _GATED if r.method == "POST"], ids=_id)
 def test_a_members_post_without_their_form_key_is_sent_to_log_in(route):
-	path = _path(route)
+	path = fill(route)
 	client = as_user(_member_with_access(route))
 
 	with db_diff() as d:
@@ -67,7 +52,7 @@ def test_members_below_the_admin_level_are_refused(route):
 	client = as_user(factories.admin(admin_level(route.access) - 1))
 
 	with db_diff() as d:
-		r = client.request(route.method, _path(route)) if route.method == "GET" else client.post(_path(route))
+		r = client.request(route.method, fill(route)) if route.method == "GET" else client.post(fill(route))
 
 	assert_status(r, 403)
 	d.assert_exactly()
@@ -78,7 +63,7 @@ def test_permanently_suspended_members_are_refused(route):
 	client = as_user(factories.user(is_banned=factories.admin(2)["id"], unban_utc=0))
 
 	with db_diff() as d:
-		r = client.post(_path(route)) if route.method == "POST" else client.get(_path(route))
+		r = client.post(fill(route)) if route.method == "POST" else client.get(fill(route))
 
 	assert_status(r, 403)
 	d.assert_exactly()
@@ -89,7 +74,7 @@ def test_api_clients_are_refused(route):
 	client = as_api(factories.api_token(factories.admin(3)))
 
 	with db_diff() as d:
-		r = client.request(route.method, _path(route))
+		r = client.request(route.method, fill(route))
 
 	assert_status(r, 403)
 	d.assert_exactly()
@@ -102,7 +87,7 @@ def test_a_method_the_path_does_not_take_is_405(path, slash):
 	route = next(r for r in ROUTES if r.path == path)
 
 	with db_diff() as d:
-		r = anon().request(unlisted, _path(route) + slash)
+		r = anon().request(unlisted, fill(route) + slash)
 
 	assert_status(r, 405)
 	d.assert_exactly()
@@ -114,7 +99,7 @@ def test_an_unlisted_path_is_404():
 
 @pytest.mark.parametrize("route", [r for r in ROUTES if r.method == "GET"], ids=_id)
 def test_head_is_answered_as_get_without_the_body(route):
-	get, head = anon().get(_path(route)), anon().request("HEAD", _path(route))
+	get, head = anon().get(fill(route)), anon().request("HEAD", fill(route))
 
 	assert_status(head, get.status)
 	assert head.body == b""
@@ -125,7 +110,7 @@ def test_options_lists_the_methods_a_path_takes(path):
 	methods = {r.method for r in ROUTES if r.path == path}
 	route = next(r for r in ROUTES if r.path == path)
 
-	r = anon().request("OPTIONS", _path(route))
+	r = anon().request("OPTIONS", fill(route))
 
 	assert_status(r, 200)
 	assert {m.strip() for m in r.header("Allow").split(",")} == methods | {"OPTIONS"} | ({"HEAD"} if "GET" in methods else set())
@@ -144,7 +129,7 @@ def test_doubled_slashes_are_redirected_to_the_merged_path():
 def test_a_browser_without_a_session_is_given_one(route):
 	client = anon()
 
-	client.request(route.method, _path(route))
+	client.request(route.method, fill(route))
 
 	assert session.cookie_name() in client.cookies
 
@@ -157,7 +142,7 @@ _WRITE_THE_SESSION = {("POST", "/allow_nsfw"), ("POST", "/dismiss_mobile_tip")}
 def test_public_routes_give_no_session(route):
 	client = anon()
 
-	client.request(route.method, _path(route))
+	client.request(route.method, fill(route))
 
 	assert session.cookie_name() not in client.cookies
 
@@ -177,6 +162,6 @@ _NOT_IDS = {
 @pytest.mark.parametrize("spelling", _NOT_IDS)
 @pytest.mark.parametrize("route", [r for r in ROUTES if "<id>" in r.path], ids=_id)
 def test_an_id_written_otherwise_is_404(route, spelling):
-	path = _path(route).replace(_UNUSED_ID, _NOT_IDS[spelling])
+	path = fill(route).replace(UNUSED_ID, _NOT_IDS[spelling])
 
 	assert_status(anon().request(route.method, path), 404)

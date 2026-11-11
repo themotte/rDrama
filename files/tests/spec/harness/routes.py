@@ -27,6 +27,7 @@ spec/routes checks each gate from below, with values that name nothing; that a r
 
 The table describes the site as the spec runs it. The admins' request-performance controls under /performance/ are outside the spec, as are the routes a developer mode adds.
 '''
+import re
 from typing import NamedTuple
 
 PUBLIC = "public"
@@ -42,6 +43,20 @@ def admin(level: int) -> str:
 def admin_level(access: str) -> int | None:
 	'''The admin level an `access` value requires, if it is admin(n).'''
 	return int(access.removeprefix("admin ")) if access.startswith("admin ") else None
+
+
+# An id no row has: the largest the id columns hold
+UNUSED_ID = str(2**31 - 1)
+
+
+def fill(route) -> str:
+	'''The route's path with every variable filled with a value that names nothing.'''
+	def value(m):
+		kind = m.group(1)
+		if kind == "id": return UNUSED_ID
+		if kind in ("text", "path"): return "x"
+		return kind.split("|")[0]
+	return re.sub(r"<([^>]+)>", value, route.path)
 
 
 class Route(NamedTuple):
