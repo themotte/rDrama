@@ -5,6 +5,7 @@ This is the only module in the spec tier that touches the application's code. ba
 '''
 import email
 import smtplib
+import time
 from io import BytesIO
 
 import requests.adapters
@@ -19,7 +20,7 @@ from files.tests import reset as _reset
 from files.tests.spec.harness import config
 from files.tests.spec.harness.process_proxy import key as external_key
 
-__all__ = ["request", "reset", "run_background_work", "cli", "run_scheduler", "sent_mail", "take_outbound_attempts", "take_server_log", "external_serve", "external_unreachable", "external_requests"]
+__all__ = ["request", "reset", "run_background_work", "limit_clock_set", "cli", "run_scheduler", "sent_mail", "take_outbound_attempts", "take_server_log", "external_serve", "external_unreachable", "external_requests"]
 
 _client = app.test_client(use_cookies=False)
 _outbound_attempts: list[str] = []
@@ -45,6 +46,7 @@ def reset(profile):
 	# Release the app's thread-local session so an open transaction can't block the truncate
 	db_session.remove()
 	background.discard()
+	limiter.clock = time.time
 	_reset.reset()
 	_outbound_attempts.clear()
 	_sent_mail.clear()
@@ -71,6 +73,13 @@ _PROFILE_SETTERS = {
 
 def run_background_work():
 	background.drain()
+
+
+def limit_clock_set(at):
+	if at.tzinfo is None:
+		raise ValueError(f"the time {at} has no UTC offset")
+	timestamp = at.timestamp()
+	limiter.clock = lambda: timestamp
 
 
 def cli(args):

@@ -11,7 +11,8 @@ The test-mode interface an implementation provides to be run by the spec:
 - Control requests, answered in test mode only, whatever their Host, ahead of any of the site's own handling:
   - POST /__spec__/ready answers once the site serves requests; the harness retries it while the connection is refused, for up to 60 seconds, and takes any other answer than 200 for a failure to start.
   - POST /__spec__/background/run runs the work the site has handed to the background to completion.
-  - POST /__spec__/background/discard drops that work unrun.
+  - POST /__spec__/reset drops that work unrun, and sets the clock below back to the real time.
+  - POST /__spec__/clock, with the JSON body {"at": <a time in ISO 8601 with its UTC offset, perhaps with fractions of a second>}, stops the clock the rate limits and the signup form's minimum filling time are measured by at that time, until it is set again or reset (harness.limit_clock_set).
   Each answers 200 with a JSON object whose "boot" names the process serving (the same for its whole life) if what it asked for ran without error, and otherwise 500 with a description of the error, such as a traceback, as the body.
 - Commands. RDRAMA_SPEC_CLI is a command prefix: followed by a command's name and arguments, it runs that command (harness.cli) with the site's environment, doing the work it hands to the background before it exits. Its exit status and stdout are the result; its stderr is diagnostics. It has 300 seconds.
 - The scheduler. RDRAMA_SPEC_SCHEDULER is a command whose "{at}" stands for a time in ISO 8601 with its UTC offset, perhaps with fractions of a second ("2024-01-08T08:00:00+00:00"). It does one pass of the scheduled-task worker on a clock reading that time (harness.run_scheduler), does the work the pass hands to the background, and exits 0 when the pass ran. It has 300 seconds.
@@ -38,7 +39,7 @@ from files.tests.spec.harness.process_proxy import Proxy
 from files.tests.spec.harness.process_smtp import HOST as MAIL_HOST, Capture
 from files.tests.spec.harness.process_tls import Authority
 
-__all__ = ["request", "reset", "run_background_work", "cli", "run_scheduler", "sent_mail", "take_outbound_attempts", "take_server_log", "external_serve", "external_unreachable", "external_requests"]
+__all__ = ["request", "reset", "run_background_work", "limit_clock_set", "cli", "run_scheduler", "sent_mail", "take_outbound_attempts", "take_server_log", "external_serve", "external_unreachable", "external_requests"]
 
 _TIMEOUT = 30
 _START_TIMEOUT = 60
@@ -91,8 +92,8 @@ class _Site:
 					raise SiteDown(f"the site didn't answer within {_START_TIMEOUT} seconds:\n{self.full_log()}")
 				time.sleep(0.1)
 
-	def control(self, name):
-		status, _headers, body = self.request("POST", f"/__spec__/{name}", {"Host": config.site_host()}, b"")
+	def control(self, name, payload=None):
+		status, _headers, body = self.request("POST", f"/__spec__/{name}", {"Host": config.site_host(), "Content-Type": "application/json"}, json.dumps(payload).encode() if payload is not None else b"")
 		if status != 200:
 			raise RuntimeError(f"the site's /__spec__/{name} answered {status}:\n{body.decode(errors='replace')}")
 		boot = json.loads(body)["boot"]
@@ -265,7 +266,7 @@ def reset(profile):
 	global _profile
 	_profile = profile
 	site = _the_site()
-	site.control("background/discard")
+	site.control("reset")
 	_reset.reset()
 	site.proxy.clear()
 	site.mail.clear()
@@ -274,6 +275,10 @@ def reset(profile):
 
 def run_background_work():
 	_the_site().control("background/run")
+
+
+def limit_clock_set(at):
+	_the_site().control("clock", {"at": at.isoformat()})
 
 
 def cli(args):
