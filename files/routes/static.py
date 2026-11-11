@@ -9,7 +9,7 @@ from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2, ADMIN_ONLY_KINDS
 from files.classes.visstate import StateMod
 from files.helpers.alerts import *
 from files.helpers.assetcache import ASSET_CSS, assetcache_hash
-from files.helpers.captcha import site_key, validate_captcha
+from files.helpers.captcha import validate_captcha
 from files.helpers.config.const import *
 from files.helpers.config.environment import IMAGES_DIR
 from files.helpers.listing import request_page
@@ -240,7 +240,7 @@ def api(v):
 @app.get("/media")
 @auth_desired
 def contact(v):
-	return render_template("contact.html", v=v, hcaptcha=site_key())
+	return render_template("contact.html", v=v)
 
 @app.post("/send_admin")
 @limiter.limit("1/second;2/minute;6/hour;10/day")

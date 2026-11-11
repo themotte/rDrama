@@ -7,6 +7,7 @@ from files.__main__ import app
 from files.classes.cron.tasks import ScheduledTaskType
 from files.classes.visstate import StateMod, StateReport
 from files.helpers.assetcache import assetcache_path
+from files.helpers.captcha import site_key
 from files.helpers.config.environment import CARD_VIEW, SITE_FULL, SITE_ID, SITE_TITLE
 from files.helpers.time import format_age, format_datetime
 
@@ -78,3 +79,9 @@ def inject_constants():
 def template_function(func):
 	assert(func.__name__ not in app.jinja_env.globals)
 	app.jinja_env.globals[func.__name__] = func
+
+
+@template_function
+def captcha_site_key() -> str:
+	'''The hCaptcha site key a page's captcha widget is drawn for; empty when the site asks for no captcha.'''
+	return site_key()

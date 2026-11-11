@@ -41,8 +41,8 @@
 				<label class="custom-control-label terms" for="termsCheck">I accept the <a href="/rules" tabindex="8">rules</a></label>
 			</div>
 
-			{% if hcaptcha %}
-				<div class="h-captcha" data-sitekey="{{hcaptcha}}"></div>
+			{% if captcha_site_key() %}
+				<div class="h-captcha" data-sitekey="{{captcha_site_key()}}"></div>
 			{% endif %}
 
 			<button class="btn btn-primary login w-100 mt-3" id="register_button" tabindex="7">Register</button>
@@ -55,7 +55,7 @@
 {%- endblock -%}
 {%- block scripts -%}
 <script src="{{ 'js/signup.js' | asset }}"></script>
-{% if hcaptcha %}
+{% if captcha_site_key() %}
 	<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 {% endif %}
 {%- endblock -%}

@@ -30,8 +30,8 @@
 			<div id="filename"><i class="far fa-image"></i></div>
 			<input autocomplete="off" id="file-upload" type="file" name="file" accept="image/*" onchange="changename('filename','file-upload')" hidden>
 		</label>
-		{% if not v and hcaptcha %}
-			<div class="h-captcha" data-sitekey="{{hcaptcha}}"></div>
+		{% if not v and captcha_site_key() %}
+			<div class="h-captcha" data-sitekey="{{captcha_site_key()}}"></div>
 		{% endif %}
 		<input type="submit" value="Submit" class="btn btn-primary mt-3">
 	</form>
@@ -39,7 +39,7 @@
 	<section id="canary">
 		<p>If you can see this line, we haven't been contacted by any law enforcement or governmental organizations in 2023 yet.</p>
 	</section>
-	{% if hcaptcha %}
+	{% if captcha_site_key() %}
 		<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 	{% endif %}
 {% endblock %}

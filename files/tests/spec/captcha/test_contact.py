@@ -41,6 +41,16 @@ def test_a_visitor_hcaptcha_approves_is_heard():
 	captcha.assert_checked(answer)
 
 
+def test_the_reply_to_a_visitor_offers_the_captcha_again():
+	captcha.answer(True)
+
+	r = _send(anon(), **{captcha.FIELD: factories.unique("answer")})
+
+	assert_html(r, 200)
+	assert_in_payload(r, captcha.SITE_KEY)
+	assert_in_payload(r, captcha.WIDGET_SCRIPT)
+
+
 def test_a_visitor_hcaptcha_refuses_is_refused():
 	captcha.answer(False)
 	answer = factories.unique("answer")

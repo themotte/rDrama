@@ -7,7 +7,7 @@ from files.helpers.config.environment import WELCOME_MSG
 from files.mail import *
 from files.__main__ import app, limiter
 from files.helpers.config.const import *
-from files.helpers.captcha import site_key, validate_captcha
+from files.helpers.captcha import validate_captcha
 
 def _redirect_target():
 	'''Where the "redirect" parameter asks to go after logging in, as an absolute URL on this site with any "/logged_out" removed, or None when it names no page here.'''
@@ -155,7 +155,6 @@ def sign_up_get(v):
 		formkey=formkey,
 		now=now,
 		ref_user=ref_user,
-		hcaptcha=site_key(),
 		error=error
 	)
 
