@@ -12,6 +12,7 @@ from files.__main__ import app, db_session, limiter, is_known_bot, active_reques
 from files.helpers.config.const import LOGGED_IN_COOKIE
 from files.helpers.config.environment import SITE_SETTINGS_PATH
 from files.helpers.log_redaction import redact_form, redact_request_target
+from files.helpers.rate_limits import client_address
 
 if TYPE_CHECKING:
 	from flask.wrappers import Response
@@ -99,8 +100,7 @@ def after_request(response: Response):
 		if elapsed >= SLOW_THRESHOLD:
 			queries = getattr(g, 'query_count', 0)
 			query_time = getattr(g, 'query_time', 0.0)
-			ip = request.headers.get('X-Real-IP', request.remote_addr or '-')
-			print(f"[slow-request] {elapsed:.1f}s ({queries} queries, {query_time:.1f}s in sql) ip={ip}: {detail}",
+			print(f"[slow-request] {elapsed:.1f}s ({queries} queries, {query_time:.1f}s in sql) ip={client_address()}: {detail}",
 				file=sys.stderr, flush=True)
 
 	# Keep the logged-in marker cookie in step with the session: set once when a member appears, deleted on the response that logs them out. Only for requests that already touched the session; reading it here would add Vary: Cookie to static responses that never look at it.
