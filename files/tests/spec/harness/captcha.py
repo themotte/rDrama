@@ -20,6 +20,8 @@ _JSON = {"Content-Type": "application/json"}
 _UNREADABLE = {
 	"not JSON": "<html>busy</html>",
 	"no verdict": "{}",
+	"a verdict that's a string": '{"success": "false"}',
+	"a verdict that's a number": '{"success": 1}',
 }
 
 FAILURES = ("unreachable", "untrusted certificate", *_UNREADABLE)
