@@ -107,17 +107,19 @@ function autoSuggestTitle()	{
 
 	if (isValidURL && urlField.value.length > 0 && titleField.value === "") {
 
+		const url = urlField.value;
 		var x = new XMLHttpRequest();
 		x.withCredentials=true;
 		x.onreadystatechange = function() {
-			if (x.readyState == 4 && x.status == 200 && !titleField.value) {
+			// A title for the URL the field still holds, into a title field still empty
+			if (x.readyState == 4 && x.status == 200 && !titleField.value && urlField.value === url) {
 
-				title=JSON.parse(x.responseText)["title"];
+				const title=JSON.parse(x.responseText)["title"];
 				titleField.value=title;
 				checkForRequired()
 			}
 		}
-		x.open('get','/submit/title?url=' + encodeURIComponent(urlField.value));
+		x.open('get','/submit/title?url=' + encodeURIComponent(url));
 		x.send(null);
 
 	};
@@ -147,10 +149,12 @@ function checkRepost(t) {
 		form.append("url", url);
 
 		xhr.onload=function(){
+			let data;
 			try {data = JSON.parse(xhr.response)}
 			catch(e) {console.log(e)}
-			
-			if (data && data["permalink"]) {
+
+			// The answer is about a URL the field may no longer hold
+			if (data && data["permalink"] && t.value === url) {
 				const permalink = data["permalink"]
 				if (permalink) {
 					system.innerHTML = `<span class='text-danger'>This is a repost of <a href=${permalink}>${permalink}</a></span>`;
