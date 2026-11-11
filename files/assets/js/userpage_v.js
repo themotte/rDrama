@@ -10,15 +10,19 @@ function toggleElement(id, id2) {
 }
 
 function submitFormAjax(e) {
-	for (elementId in ['message', 'message-mobile', 'message-preview', 'message-preview-mobile']) {
-		const element = document.getElementById(elementId);
-		if (element !== null) {
-			element.classList.add("d-none");
-		}
-	}
-	
 	const form = e.target;
 	postToast(null, form.getAttribute("action"), "POST", form, null);
+
+	// The message has been read from the form: put the message box away, and empty its preview so it starts afresh when opened again
+	for (const formId of ['message', 'message-mobile']) {
+		document.getElementById(formId)?.classList.add("d-none");
+	}
+	for (const previewId of ['message-preview', 'message-preview-mobile']) {
+		const preview = document.getElementById(previewId);
+		if (preview !== null) {
+			preview.innerHTML = "";
+		}
+	}
 	return false;
 }
 
