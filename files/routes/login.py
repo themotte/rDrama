@@ -142,7 +142,7 @@ def sign_up_get(v):
 	if ref_user and (ref_user.id in session.get("history", [])):
 		return render_template("login/sign_up_failed_ref.html")
 
-	now = int(time.time())
+	now = int(limiter.clock())
 	token = token_hex(16)
 	session["signup_token"] = token
 
@@ -177,7 +177,7 @@ def sign_up_post(v):
 	submitted_token = session.get("signup_token", "")
 	if not submitted_token: abort(400)
 
-	now = int(time.time())
+	now = int(limiter.clock())
 
 	username = request.values.get("usernametwo")
 	
@@ -197,7 +197,7 @@ def sign_up_post(v):
 
 		return redirect(f"/signup?{urlencode(args)}")
 
-	if app.config['RATE_LIMITER_ENABLED']:
+	if limiter.enabled:
 		try: form_age = now - int(form_timestamp)
 		except ValueError: form_age = 0
 		if form_age < 5:

@@ -15,13 +15,12 @@ import flask
 from werkzeug.routing import IntegerConverter
 import flask_caching
 import flask_compress
-import flask_limiter
 from sqlalchemy.engine import Engine, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from files.helpers.config.const import Service
 from files.helpers.mail_transport import Mail
-from files.helpers.rate_limits import client_address
+from files.helpers.rate_limits import RateLimiter
 from files.helpers.strings import bool_from_string
 
 # first, let's parse arguments to find out what type of instance this is...
@@ -147,7 +146,6 @@ app.config.update({
 	"SETTINGS": {},
 	"SQLALCHEMY_DATABASE_URI": DATABASE_URL,
 	"RESULTS_PER_PAGE_COMMENTS": RESULTS_PER_PAGE_COMMENTS,
-	"RATE_LIMITER_ENABLED": RATE_LIMITER_ENABLED,
 
 	"DBG_VOLUNTEER_PERMISSIVE": DBG_VOLUNTEER_PERMISSIVE,
 	"VOLUNTEER_JANITOR_ENABLE": VOLUNTEER_JANITOR_ENABLE,
@@ -155,15 +153,8 @@ app.config.update({
 
 # ...and then let's configure our ratelimiter...
 
-def is_known_bot(response=None):
-	"""Detect common bots based on User-Agent string.
-
-	Args:
-		response: Optional response object (required by flask-limiter's deduct_when)
-
-	Returns:
-		True if the user agent matches a known bot pattern
-	"""
+def is_known_bot():
+	"""Whether the request's User-Agent is a known crawler's."""
 	with app.app_context():
 		user_agent = request.headers.get('User-Agent', '').lower()
 		bot_patterns = [
@@ -177,12 +168,12 @@ def is_known_bot(response=None):
 if service.enable_services and not RATE_LIMITER_ENABLED:
 	print("Rate limits are off", file=sys.stderr)
 
-limiter = flask_limiter.Limiter(
-	key_func=client_address,
-	app=app,
-	default_limits=["3/second;30/minute;200/hour;1000/day"],
-	application_limits=["10/second;200/minute;5000/hour;10000/day"],
-	storage_uri=CACHE_REDIS_URL,
+limiter = RateLimiter(
+	CACHE_REDIS_URL,
+	default="3/second;30/minute;200/hour;1000/day",
+	site_wide="10/second;200/minute;5000/hour;10000/day",
+	crawlers="12/minute",
+	is_crawler=is_known_bot,
 	enabled=RATE_LIMITER_ENABLED,
 )
 
@@ -400,6 +391,9 @@ mail = Mail(app)
 
 if service.enable_services:
 	from files.routes.allroutes import *
+
+# Counted after the checks every request gets, and before a route's own handling
+app.before_request(limiter.check)
 
 # setup is done. let's conditionally import the rest of the routes.
 

@@ -109,9 +109,9 @@ def chat(v):
 
 
 @socketio.on('speak')
-@limiter.limit("3/second")
 @chat_is_allowed()
 def speak(data, v):
+	limiter.check_now("chat-speak", "3/second")
 	if v.is_banned: return '', 403
 
 	text = sanitize_raw(

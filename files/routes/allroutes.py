@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from flask import abort, g, request, session
 
-from files.__main__ import app, db_session, limiter, is_known_bot, active_requests
+from files.__main__ import app, db_session, active_requests
 from files.helpers.config.const import LOGGED_IN_COOKIE
 from files.helpers.config.environment import SITE_SETTINGS_PATH
 from files.helpers.log_redaction import redact_form, redact_request_target
@@ -54,15 +54,6 @@ def before_request():
 		'mac os' in ua or
 		' firefox/' in ua)
 	g.timestamp = int(time.time())
-
-	# Apply stricter rate limits for known bots (12 requests/minute ~= 1 every 5s)
-	if is_known_bot():
-		try:
-			user_agent = request.headers.get('User-Agent', 'unknown')
-			with limiter.limit("12/minute", key_func=lambda: f"bot-{user_agent}"):
-				pass  # Just enforce the limit check
-		except Exception:  # pragma: no cover (the rate limiter is off under test; rate limits are specified apart from the suite)
-			abort(429, "Rate limit exceeded for bots")
 
 	# Create a new session instead of reusing the thread-local scoped session
 	# This prevents thread safety issues with Gunicorn's gthread workers

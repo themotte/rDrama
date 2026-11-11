@@ -74,7 +74,7 @@ The application can run in different service modes (defined in `files/helpers/co
 
 3. **Authentication**: Session-based authentication with Redis backing
 
-4. **Rate Limiting**: Configured via Flask-Limiter with Redis storage
+4. **Rate Limiting**: The site's own limiter (`files/helpers/rate_limits.py`), counting in Redis; routes mark their limits with `@limiter.limit` / `@limiter.exempt`
 
 5. **Templates**: Server-side rendering with Jinja2, client-side JavaScript for interactivity
 

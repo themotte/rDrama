@@ -48,7 +48,7 @@ def test_a_signup_failing_the_captcha_is_refused(monkeypatch):
 
 def test_a_signup_sent_too_soon_after_the_form_is_refused(monkeypatch):
 	factories.user()
-	monkeypatch.setitem(main.app.config, "RATE_LIMITER_ENABLED", True)
+	monkeypatch.setattr(main.limiter, "enabled", True)
 
 	with db_diff() as d:
 		r = _signup(anon())
@@ -59,7 +59,7 @@ def test_a_signup_sent_too_soon_after_the_form_is_refused(monkeypatch):
 
 def test_a_signup_sent_after_a_while_goes_through(monkeypatch):
 	factories.user()
-	monkeypatch.setitem(main.app.config, "RATE_LIMITER_ENABLED", True)
+	monkeypatch.setattr(main.limiter, "enabled", True)
 	client = anon()
 	client.get("/signup")
 	issued = int(time.time()) - 10
@@ -74,7 +74,7 @@ def test_a_signup_sent_after_a_while_goes_through(monkeypatch):
 @pytest.mark.parametrize("now", ["soon", "²"])
 def test_a_form_time_that_is_not_a_number_is_refused(monkeypatch, now):
 	factories.user()
-	monkeypatch.setitem(main.app.config, "RATE_LIMITER_ENABLED", True)
+	monkeypatch.setattr(main.limiter, "enabled", True)
 
 	with db_diff() as d:
 		r = _signup(anon(), now=now)
