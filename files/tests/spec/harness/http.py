@@ -5,7 +5,7 @@ from urllib.parse import quote, urlencode, urlsplit
 
 import urllib3
 
-from files.tests.spec.harness import backend, config, db, session
+from files.tests.spec.harness import backend, config, db, run_record, session
 
 DEFAULT_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0"
 # The address a client connects from, unless it names another in 127.0.0.0/8
@@ -108,9 +108,11 @@ class Client:
 		content_type, body = _encode_body(data, json, files)
 		if content_type:
 			all_headers["Content-Type"] = content_type
-		status, response_headers, body = backend.request(method, request_target(path), all_headers, body, self.peer)
+		target = request_target(path)
+		status, response_headers, body = backend.request(method, target, all_headers, body, self.peer)
 		response = Response(status, response_headers, body)
 		self._absorb_cookies(response)
+		run_record.exchange(method, target, response)
 		return response
 
 	def _with_formkey(self, data):
