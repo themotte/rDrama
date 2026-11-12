@@ -13,7 +13,6 @@ import warnings
 import pytest
 
 from files.tests import affordances, router_check
-from files.tests.spec.harness import coverage, pages, run_record
 
 # The spec tier against the site running in its own processes (spec/harness/backend_process.py), started by these commands unless the runner names others
 PROCESS_BACKEND = os.environ["RDRAMA_SPEC_BACKEND"] != "inprocess"
@@ -23,8 +22,15 @@ if PROCESS_BACKEND:
 	os.environ.setdefault("RDRAMA_SPEC_SCHEDULER", "python3 -m files.tests.scheduler_pass {at}")
 
 
+def _spec_plugin():
+	# Imported once registered, so that pytest's assertion rewriting has it first
+	from files.tests.spec.harness import plugin
+	return plugin
+
+
 def pytest_configure(config):
-	config.addinivalue_line("markers", "profile(name): runs the test with the site in that deployment profile (spec/harness/config.py PROFILES)")
+	# The spec's own plugin, registered here rather than by pytest_plugins, which a conftest loaded late (as it is without a path below files/tests) may not use
+	config.pluginmanager.import_plugin("files.tests.spec.harness.plugin")
 	if PROCESS_BACKEND and os.environ.get("RDRAMA_AFFORDANCES_OUT"):
 		raise pytest.UsageError("RDRAMA_AFFORDANCES_OUT needs the in-process backend: the map's script rows come from watching the app")
 	# A controller handing tests to xdist workers runs none itself; each worker builds its own database. Built here because pytest replays pytest_configure for a conftest it loads late (as it does without a path below files/tests), unlike pytest_sessionstart.
@@ -34,100 +40,71 @@ def pytest_configure(config):
 		testenv.build_database()
 
 
-@pytest.hookimpl(tryfirst=True)  # xdist reads the group marks in its own hook, which must see them
 def pytest_collection_modifyitems(config, items):
 	if PROCESS_BACKEND and (outside := [item.nodeid for item in items if "spec" not in item.path.relative_to(testenv.REPO_ROOT / "files" / "tests").parts[:1]]):
 		raise pytest.UsageError(f"RDRAMA_SPEC_BACKEND=process runs only the spec tier, not {outside[0]} and {len(outside) - 1} more")
-	from files.tests.spec.harness.config import PROFILES
-	for item in items:
-		if (profile := item.get_closest_marker("profile")) and profile.args[0] not in PROFILES:
-			raise pytest.UsageError(f"{item.nodeid} names no profile of spec/harness/config.py: {profile.args[0]}")
-		# A worker starts a site for each profile it runs tests in: keep each profile's tests to one worker (under --dist loadgroup)
-		if profile and PROCESS_BACKEND:
-			item.add_marker(pytest.mark.xdist_group(f"profile-{profile.args[0]}"))
 
 
-# Route coverage (spec/harness/coverage.py), the harness's route matching checked against the router (router_check.py) and what pages offer (affordances.py), checked when a run collected every spec test and passed
-_coverage = {"deselected": 0, "complete": True, "seen": set(), "unrequested": None, "mismatches": set(), "pages": [], "affordances": [], "page_problems": {}, "map_unwritten": False}
-
-
-def pytest_deselected(items):
-	_coverage["deselected"] += len(items)
-
-
-def pytest_collection_finish(session):
-	_coverage["complete"] = not session.config.getoption("collectonly") and coverage.collected_whole_spec({item.path for item in session.items}, _coverage["deselected"], session.config.args)
+# What only rDrama's own runs check, beside the spec plugin's whole-run checks and on the same whole runs: the harness's route matching against the router (router_check.py) and what pages offer, scripts included (affordances.py), with the map it writes
+_checks = {"ran": False, "mismatches": set(), "affordances": [], "problems": {}, "map_unwritten": False}
 
 
 @pytest.hookimpl(wrapper=True)
 def pytest_runtest_call(item):
-	if not item.path.is_relative_to(coverage.SPEC):
+	if PROCESS_BACKEND or not item.path.is_relative_to(testenv.REPO_ROOT / "files" / "tests" / "spec"):
 		return (yield)
-	run_record.start(item.path, check_pages=_coverage["complete"])
-	if not PROCESS_BACKEND:
-		router_check.connect()
-		if _coverage["complete"]: affordances.start(item.path)
+	router_check.connect()
+	if _spec_plugin().whole_run(): affordances.start(item.path)
 	try:
 		return (yield)
 	finally:
-		run_record.stop()
 		affordances.stop()
 
 
 @pytest.hookimpl(optionalhook=True)
 def pytest_testnodedown(node, error):
-	# A worker that crashed sends no output
-	output = getattr(node, "workeroutput", {}).get("route_coverage")
-	if output is None:
-		_coverage["complete"] = False
-		return
-	_coverage["complete"] &= output["complete"]
-	_coverage["seen"] |= {tuple(pair) for pair in output["seen"]}
-	_coverage["mismatches"] |= set(output["mismatches"])
-	_coverage["pages"].append(node.workeroutput["pages"])
-	_coverage["affordances"].append(node.workeroutput["affordances"])
+	# A worker that crashed sends no output, which the spec plugin counts against the run
+	output = getattr(node, "workeroutput", {}).get("rdrama_checks")
+	if output is not None:
+		_checks["mismatches"] |= set(output["mismatches"])
+		_checks["affordances"].append(output["affordances"])
 
 
+# After the spec plugin's, whose verdict is then in session.exitstatus; these checks run on the tests' own verdict, `exitstatus`, so that both kinds of finding show
+@pytest.hookimpl(trylast=True)
 def pytest_sessionfinish(session, exitstatus):
 	if hasattr(session.config, "workeroutput"):
-		session.config.workeroutput["route_coverage"] = {"complete": _coverage["complete"], "seen": sorted(coverage.seen()), "mismatches": sorted(router_check.mismatches())}
-		session.config.workeroutput["pages"] = pages.output()
-		session.config.workeroutput["affordances"] = affordances.output()
+		session.config.workeroutput["rdrama_checks"] = {"mismatches": sorted(router_check.mismatches()), "affordances": affordances.output()}
 		return
-	_coverage["map_unwritten"] = bool(os.environ.get("RDRAMA_AFFORDANCES_OUT"))
-	if exitstatus != pytest.ExitCode.OK or not _coverage["complete"]:
+	_checks["map_unwritten"] = bool(os.environ.get("RDRAMA_AFFORDANCES_OUT"))
+	if exitstatus != pytest.ExitCode.OK or not _spec_plugin().whole_run():
 		return
-	_coverage["unrequested"] = coverage.unrequested(_coverage["seen"] | coverage.seen())
-	_coverage["mismatches"] |= router_check.mismatches()
-	offered = affordances.merge([*_coverage["affordances"], affordances.output()])
-	_coverage["page_problems"] = {**pages.problems([*_coverage["pages"], pages.output()]), **affordances.problems(offered)}
-	if _coverage["unrequested"] or _coverage["mismatches"] or _coverage["page_problems"]:
+	_checks["ran"] = True
+	_checks["mismatches"] |= router_check.mismatches()
+	offered = affordances.merge([*_checks["affordances"], affordances.output()])
+	_checks["problems"] = affordances.problems(offered)
+	if _checks["mismatches"] or _checks["problems"]:
 		session.exitstatus = pytest.ExitCode.TESTS_FAILED
-	elif os.environ.get("RDRAMA_AFFORDANCES_OUT"):
+	elif os.environ.get("RDRAMA_AFFORDANCES_OUT") and session.exitstatus == pytest.ExitCode.OK:
 		with open(os.environ["RDRAMA_AFFORDANCES_OUT"], "w") as out:
 			out.write(affordances.table(offered["rows"]))
-		_coverage["map_unwritten"] = False
+		_checks["map_unwritten"] = False
 
 
 def pytest_terminal_summary(terminalreporter):
 	if PROCESS_BACKEND:
 		terminalreporter.write_line("The site ran in its own processes: route coverage and where pages lead were checked from what the harness saw; script calls and the affordance map are checked only in-process", yellow=True)
-	if _coverage["unrequested"]:
-		terminalreporter.section("routes no spec test gets past the gate of", red=True)
-		for route in _coverage["unrequested"]:
-			terminalreporter.write_line(route)
-		terminalreporter.write_line("(the run fails: every route needs a spec test outside spec/routes/ and spec/limits/ that the gate lets through)", red=True)
-	if _coverage["mismatches"] and _coverage["unrequested"] is not None:
+	if _checks["mismatches"] and _checks["ran"]:
 		terminalreporter.section("requests the harness matches to another row than the router", red=True)
-		for mismatch in sorted(_coverage["mismatches"]):
+		for mismatch in sorted(_checks["mismatches"]):
 			terminalreporter.write_line(mismatch)
 		terminalreporter.write_line("(the run fails: spec/harness/routes.py match() must answer as the router does)", red=True)
-	for heading, problems in _coverage["page_problems"].items():
+	for heading, problems in _checks["problems"].items():
 		terminalreporter.section(heading, red=True)
 		for problem in problems:
 			terminalreporter.write_line(problem)
-		terminalreporter.write_line("(the run fails: pages may lead only to routes, and every script call they make must be classified in affordances.py)", red=True)
-	if _coverage["map_unwritten"]:
+		terminalreporter.write_line("(the run fails: every script call pages make must be classified in affordances.py, and lead to a route)", red=True)
+	if _checks["map_unwritten"]:
 		terminalreporter.write_line("RDRAMA_AFFORDANCES_OUT is set, but the map is written only by a passing run that collected the whole spec tier", yellow=True)
 
 

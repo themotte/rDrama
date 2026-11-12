@@ -23,13 +23,12 @@ Each site starts with the first test in its profile and stops when the harness's
 
 A run of the whole spec tier also checks the implementation by what its answers show the harness's clients: route coverage (coverage.py), where every route of the table must have answered some test outside spec/routes and spec/limits past its gate, so that the spec, run against this implementation, exercised each; and where pages lead (pages.py), where no link, form or embed of a page may lead to an address no route answers. Neither sees routes the implementation adds beyond the table, nor a missing route it answers with a status other than 404 or 405; pages.py says what of a page it doesn't read.
 
-The runner: what runs the spec tier (pytest, with pytest-xdist for workers) provides around the harness.
-- It runs it on Python RUNNER_PYTHON with the packages of RUNNER_PACKAGES, on Linux with the `openssl` command (process_tls), and `setpriv` where it can, so sites die with their harness.
-- In each process (each xdist worker), before importing the harness: a database built fresh from the contract's schema.sql and seed.sql (holding nothing else, state.py's snapshot included), on a PostgreSQL role allowed to set session_replication_role (a superuser), for state.py's restore; and the environment of config.SPEC_RUN, config.RUNNER_CHOSEN, config.PRECONDITIONS (or the variables left out) and RDRAMA_SPEC_SERVER, RDRAMA_SPEC_CLI and RDRAMA_SPEC_SCHEDULER.
-- It collects the spec tier with its own conftest (spec/conftest.py), whose fixture puts the state and the site back before every test (lifecycle).
-- The `profile` mark: registered, a name not in config.PROFILES refused, and under xdist each profile's tests kept to one worker (an xdist_group mark per profile, added before xdist reads the marks, and `--dist loadgroup`).
-- Around each spec test's call phase only (not its fixtures): run_record.start(the test's file, check_pages=whether the run checks a whole spec tier) and run_record.stop().
-- At the end of a passing run that collected the whole tier (coverage.collected_whole_spec, given the tests collected and the number deselected), from every worker's coverage.seen() and pages.output(): the run fails when coverage.unrequested(all seen) or pages.problems(all outputs) reports anything. A worker that crashed sends nothing, which makes the run incomplete, so these checks don't run.
+The runner: what runs the spec tier, pytest with pytest-xdist for workers, provides around the harness.
+- Python RUNNER_PYTHON with the packages of RUNNER_PACKAGES, on Linux with the `openssl` command (process_tls), and `setpriv` where it can, so sites die with their harness.
+- The spec's pytest plugin (plugin.py), loaded as its docstring says: it handles the profile mark, the run record and the whole-run checks. The spec's conftest (spec/conftest.py), which puts the state and the site back before every test, refuses to run without it.
+- The environment, set in each process before its first test (the harness reads it as it needs it; an xdist worker can take its own values from PYTEST_XDIST_WORKER, as a conftest would): config.SPEC_RUN, config.RUNNER_CHOSEN, config.PRECONDITIONS (or the variables left out) and RDRAMA_SPEC_SERVER, RDRAMA_SPEC_CLI and RDRAMA_SPEC_SCHEDULER, each process with its own database, Redis db, settings file path and upload store. RDRAMA_SPEC_BACKEND is the one read at import (backend.py): leave it unset.
+- Before each process's first test, its database built fresh from the contract's schema.sql and seed.sql (holding nothing else, state.py's snapshot included), on a PostgreSQL role allowed to set session_replication_role (a superuser), for state.py's restore.
+- Run with `--dist loadgroup` under xdist, for the plugin's profile groups.
 '''
 import atexit
 import json
