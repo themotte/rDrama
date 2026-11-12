@@ -1,7 +1,7 @@
 import re
 from urllib.parse import parse_qs, urlsplit
 
-from files.tests.spec.harness import config
+from files.tests.spec.harness import config, html5
 from files.tests.spec.harness.http import Client, Response
 
 __all__ = ["assert_status", "assert_redirect", "assert_login_redirect", "assert_api_unauthorized", "assert_json_message", "assert_html", "assert_serves_image", "assert_in_payload", "assert_not_in_payload", "assert_in_order", "assert_same_html", "html_tree"]
@@ -133,16 +133,12 @@ def _children(element, preformatted: bool) -> list:
 def _node(element, preformatted: bool):
 	inside_pre = preformatted or element.tag == "pre"
 	children = _children(element, inside_pre)
-	if element.tag == "pre" and children and isinstance(children[0], str) and children[0].startswith("\n"):
-		children[0] = children[0][1:]
 	return (element.tag, _attributes(element), tuple(children))
 
 
 def html_tree(html: str):
 	'''`html` as an element tree: (tag, sorted attributes with "style" as sorted declarations, children), text as strings. Outside <pre>, runs of whitespace are one space, and spaces a browser wouldn't show (at the edges of a block, next to a block or a line break) are dropped. Comments aren't allowed.'''
-	import lxml.html
-	wrapper = lxml.html.fragment_fromstring(html, create_parent="div") if html.strip() else lxml.html.fragment_fromstring("<div></div>")
-	return tuple(_children(wrapper, False))
+	return tuple(_children(html5.fragment(html), False))
 
 
 def assert_same_html(actual: str, expected: str):

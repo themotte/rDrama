@@ -5,14 +5,13 @@ Not checked:
 - addresses users wrote, anywhere in what's stored (the rendered text of the *_html columns and users.customtitle, and link posts' URLs), which are theirs, not the page's: an address any of them names isn't checked on any page, by its path;
 - the target of a form with its own submit handler (onsubmit), whose script may send it elsewhere or not at all (one that submits as written all the same goes unchecked);
 - in an HTML fragment a script fetches (a request with an "xhr" header), addresses that aren't absolute paths or URLs, which the browser reads against the page the fragment goes into.
-Nor does it see what a page's scripts request, redirects' targets, mail's links, srcset, formaction, SVG or CSS addresses, or pages answered with another status than 200.
+Nor does it see what a page's scripts request or what its templates hold (html5.py), redirects' targets, mail's links, srcset, formaction, SVG or CSS addresses, or pages answered with another status than 200.
 '''
 from urllib.parse import urljoin, urlsplit
 
-import lxml.html
 from sqlalchemy import text
 
-from files.tests.spec.harness import config, db
+from files.tests.spec.harness import config, db, html5
 from files.tests.spec.harness.routes import match, off_spec
 
 LINKS = "//a/@href | //area/@href"
@@ -68,7 +67,7 @@ def _written(page_url: str, host: str) -> set[str]:
 		values = [value for table, column in _stored_text_columns for (value,) in conn.execute(text(f'SELECT "{column}" FROM "{table}" WHERE "{column}" ILIKE \'%href=%\' OR "{column}" ILIKE \'%src=%\''))]
 		urls = [url for (url,) in conn.execute(text("SELECT url FROM submissions WHERE url IS NOT NULL"))]
 	for value in values:
-		urls += lxml.html.fragment_fromstring(value, create_parent="div").xpath(".//@href | .//@src")
+		urls += html5.fragment(value).xpath(".//@href | .//@src")
 	return {address.partition("?")[0] for address in (site_address(url, page_url, host) for url in urls) if address}
 
 
@@ -80,7 +79,7 @@ def see(page_label: str, target: str, body: bytes, *, fragment: bool):
 		host = config.site_host()
 		page_url = target if target.startswith(("http://", "https://")) else config.site_url() + target
 		written = None
-		for kind, method, address in leads(lxml.html.document_fromstring(html), page_url, host, fragment=fragment):
+		for kind, method, address in leads(html5.document(html), page_url, host, fragment=fragment):
 			path = address.partition("?")[0]
 			if match(method, address) or off_spec(path):
 				continue

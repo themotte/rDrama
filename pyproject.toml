@@ -45,6 +45,7 @@ optional = true
 pytest = "*"
 pytest-cov = "*"
 pytest-xdist = "^3.8.0"
+selectolax = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

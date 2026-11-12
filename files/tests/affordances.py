@@ -9,6 +9,7 @@ from typing import Callable, NamedTuple
 from urllib.parse import parse_qsl, unquote, urlsplit
 
 from files.tests import testenv
+from files.tests.spec.harness import html5
 from files.tests.spec.harness.pages import STORED_TEXT_COLUMNS, form_method, leads, site_address
 from files.tests.spec.harness.routes import ROUTES, match, off_spec
 
@@ -264,9 +265,8 @@ def _script_sent(form) -> bool:
 
 def page_affordances(html: str, page_url: str, host: str) -> tuple[list[Affordance], list[str]]:
 	'''What a page offers, and the script calls in it nobody has classified.'''
-	import lxml.html
 	if not html.strip(): return [], []
-	document = lxml.html.document_fromstring(html)
+	document = html5.document(html)
 	# Links and embeds as the harness reads them (spec/harness/pages.py)
 	found = [Affordance(kind, method, address) for kind, method, address in leads(document, page_url, host) if kind != "form"]
 	unknown = []
