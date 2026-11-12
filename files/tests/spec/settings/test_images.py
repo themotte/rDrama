@@ -1,8 +1,9 @@
 '''
 Avatar (POST /settings/images/profile, field "profile") and banner (POST /settings/images/banner, field "banner") uploads.
 
-Uploads are stored by the site and served under /images/ as WebP. Replacing an uploaded image deletes the old file; images hosted elsewhere (any URL not starting with /images/ or <site>/images/) are simply replaced.
+Uploads are stored by the site and served under /images/ as WebP, without the metadata they arrived with (EXIF, GPS, XMP, text chunks, colour profiles). An animated GIF or WebP stays animated, its frames' timing and its loop count kept; anything else is stored as its first picture (of a phone's multi-picture photo, an animated PNG or a multi-page TIFF), turned upright by its EXIF orientation, or as it is when its EXIF can't be read. An image more than 16383 pixels wide or high is refused (400), as is one that can't be read whole, and neither is stored. Replacing an uploaded image deletes the old file; images hosted elsewhere (any URL not starting with /images/ or <site>/images/) are simply replaced.
 '''
+import os
 from io import BytesIO
 
 import pytest
@@ -121,17 +122,63 @@ def test_replacing_an_image_hosted_elsewhere_deletes_nothing_here():
 	assert_serves_image(victim_url)
 
 
-def test_uploaded_photos_lose_identifying_metadata():
-	u = factories.user()
-	photo = Image.new("RGB", (4, 4), "red")
-	exif = Image.Exif()
-	exif[0x010F] = "SpyCam"  # camera make
-	exif[0x0131] = "Tracker 1.0"  # software
-	exif[0x0112] = 1  # orientation, which is honored rather than stripped
-	data = BytesIO()
-	photo.save(data, format="JPEG", exif=exif)
+def _no_identifying_metadata(url: str, marker: str) -> bool:
+	body = anon().get(url).body
+	served = Image.open(BytesIO(body))
+	return marker.encode() not in body and not served.getexif() and not served.info.get("xmp")
 
-	assert_html(as_user(u).post("/settings/images/banner", files={"banner": ("photo.jpg", data.getvalue(), "image/jpeg")}), 200)
+
+@pytest.mark.parametrize("image_format", ["JPEG", "PNG", "WEBP"])
+@pytest.mark.parametrize("field, columns", [("banner", ["bannerurl"]), ("profile", ["highres", "profileurl"])], ids=["banner", "avatar"])
+def test_uploaded_images_lose_identifying_metadata(image_format, field, columns):
+	u = factories.user()
+	marker = factories.unique("marker")
+
+	assert_html(as_user(u).post(f"/settings/images/{field}", files={field: uploads.photo(image_format, 200, 150, marker)}), 200)
+
+	row = db.row("users", id=u["id"])
+	assert [column for column in columns if not _no_identifying_metadata(row[column], marker)] == []
+
+
+def test_a_photo_holding_a_second_picture_is_stored_as_its_first_upright():
+	u = factories.user()
+
+	assert_html(as_user(u).post("/settings/images/banner", files={"banner": uploads.multi_picture_jpeg(8, 6, orientation=6)}), 200)
 
 	served = Image.open(BytesIO(anon().get(db.row("users", id=u["id"])["bannerurl"]).body))
-	assert not {0x010F, 0x0131} & set(served.getexif())
+	red, _, blue = served.convert("RGB").getpixel((0, 0))
+	assert (getattr(served, "n_frames", 1), served.size, red > 200 > blue) == (1, (6, 8), True)
+
+
+@pytest.mark.parametrize("image_format", ["GIF", "WEBP"])
+def test_an_animation_keeps_its_frames_timing_and_loop_count(image_format):
+	u = factories.user()
+
+	assert_html(as_user(u).post("/settings/images/banner", files={"banner": uploads.animation(image_format, [100, 500, 1000], loop=2)}), 200)
+
+	served = Image.open(BytesIO(anon().get(db.row("users", id=u["id"])["bannerurl"]).body))
+	durations = []
+	for frame in range(served.n_frames):
+		served.seek(frame)
+		served.load()
+		durations.append(served.info["duration"])
+	assert (durations, served.info["loop"]) == ([100, 500, 1000], 2)
+
+
+def test_an_image_whose_exif_cant_be_read_is_stored_as_it_is():
+	u = factories.user()
+
+	assert_html(as_user(u).post("/settings/images/banner", files={"banner": uploads.unreadable_exif_webp()}), 200)
+
+	assert_serves_image(db.row("users", id=u["id"])["bannerurl"])
+
+
+def test_an_image_too_wide_to_store_is_refused():
+	u = factories.user()
+
+	with db_diff() as d:
+		r = as_user(u).post("/settings/images/banner", files={"banner": uploads.too_wide_png()})
+
+	assert_status(r, 400)
+	d.assert_exactly()
+	assert os.listdir(config.images_dir()) == []

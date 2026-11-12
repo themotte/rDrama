@@ -5,7 +5,7 @@ import time
 from io import BytesIO
 
 from flask import abort
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageSequence
 from werkzeug.datastructures import FileStorage
 from werkzeug.exceptions import BadRequest
 
@@ -17,6 +17,15 @@ IMAGES_URL_PREFIX = "/images/"
 class UnreadableImage(BadRequest):
 	'''An upload that isn't an image we can process. A 400 when raised during a request.'''
 	description = "That file isn't an image we can read."
+
+
+WEBP_MAX_SIDE = 16383
+'''The most pixels a stored image may have on a side: WebP's limit.'''
+
+
+class ImageTooLarge(UnreadableImage):
+	'''An upload too large on a side to store. A 400 when raised during a request.'''
+	description = f"That image is too large: images may be at most {WEBP_MAX_SIDE} pixels wide and high."
 
 
 def attach_images(body:str, files:list[FileStorage]) -> tuple[bool, str]:
@@ -59,37 +68,57 @@ def delete_uploaded_image(url: str | None):
 
 
 def process_image(filename, resize=0) -> str:
-	'''Converts the image stored at `filename` (in the upload store) to WebP in place, optionally shrinking it to `resize` pixels wide, and returns its URL.'''
+	'''Converts the image stored at `filename` (in the upload store) to WebP in place, without the metadata it came with and turned upright, optionally shrinking it to `resize` pixels wide, and returns its URL. Raises UnreadableImage for an upload that can't be read whole, and ImageTooLarge for one too large to store, removing the file.'''
 	try:
-		_convert_image(filename, resize)
-	except (OSError, Image.DecompressionBombError) as e:
+		_reencode(filename)
+	except BaseException as e:
+		# Neither the upload nor a half-written result stays in the store
+		if os.path.exists(filename): os.remove(filename)
 		# PIL reports unreadable, truncated and corrupt images as OSErrors without an errno; real I/O failures have one and stay errors
-		if isinstance(e, OSError) and e.errno is not None:
-			raise
-		os.remove(filename)
-		raise UnreadableImage() from e
+		if isinstance(e, Image.DecompressionBombError) or (isinstance(e, OSError) and e.errno is None):
+			raise UnreadableImage() from e
+		raise
+	if resize:
+		_shrink(filename, resize)
 	return image_url(filename)
 
 
-def _convert_image(filename, resize):
+def _reencode(filename):
+	'''Decodes the image whole and stores it again as WebP, which holds no metadata unless asked to: a GIF or an animated WebP with all its frames, their timing and its loop count, anything else from its first picture, turned by its EXIF orientation.'''
 	# Decode from memory: frames are read lazily, and the result overwrites the source file
 	with open(filename, "rb") as f:
 		i = Image.open(BytesIO(f.read()))
+	animated = i.format == "GIF" or (i.format == "WEBP" and getattr(i, "is_animated", False))
+	if animated:
+		frames, durations = [], []
+		for frame in ImageSequence.Iterator(i):
+			# A frame's timing is known once it is decoded
+			frame.load()
+			durations.append(frame.info.get("duration", 0))
+			frames.append(frame.convert("RGBA"))
+	else:
+		frames = [_upright(i)]
+	if max(frames[0].size) > WEBP_MAX_SIDE:
+		raise ImageTooLarge()
+	if animated:
+		frames[0].save(filename, format="WEBP", save_all=True, append_images=frames[1:], duration=durations, loop=i.info.get("loop", 0), allow_mixed=True, quality=100, method=6)
+	else:
+		frames[0].save(filename, format="WEBP", method=6)
 
-	if resize and i.width > resize:
-		try: subprocess.call(["convert", filename, "-coalesce", "-resize", f"{resize}>", filename])
-		except: pass
-	elif i.format.lower() != "webp":
 
-		exif = i.getexif()
-		for k in exif.keys():
-			if k != 0x0112:
-				exif[k] = None
-				del exif[k]
-		i.info["exif"] = exif.tobytes()
+def _upright(i):
+	'''The image turned by its EXIF orientation; as stored, when its EXIF can't be read.'''
+	try:
+		return ImageOps.exif_transpose(i)
+	except SyntaxError:
+		# What PIL raises for EXIF that isn't EXIF: the orientation is unknown, and the rest of the metadata is dropped anyway
+		return i.copy()
 
-		if i.format.lower() == "gif":
-			i.save(filename, format="WEBP", save_all=True, allow_mixed=True, quality=100, method=6)
-		else:
-			i = ImageOps.exif_transpose(i)
-			i.save(filename, format="WEBP", method=6)
+
+
+def _shrink(filename, width):
+	'''Shrinks the site's own WebP at `filename` to `width` pixels wide, if it is wider, frames and all.'''
+	with Image.open(filename) as i:
+		if i.width <= width: return
+	try: subprocess.call(["convert", filename, "-coalesce", "-resize", f"{width}>", filename])
+	except: pass

@@ -13,7 +13,7 @@ from files.__main__ import app, db_session
 from files.classes.submission import Submission
 from files.helpers.config.const import proxies
 from files.helpers.config.environment import OUTBOUND_VERIFY
-from files.helpers.media import new_image_path, process_image
+from files.helpers.media import UnreadableImage, new_image_path, process_image
 
 titleheaders = {
 	"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"
@@ -61,7 +61,11 @@ def _fetch_thumbnail(db, post):
 	name = new_image_path()
 	with open(name, "wb") as file:
 		file.write(image)
-	post.thumburl = process_image(name, resize=100)
+	try:
+		post.thumburl = process_image(name, resize=100)
+	except UnreadableImage:
+		app.logger.info("Thumbnail source for %s isn't an image that can be read whole", post.url)
+		return
 	db.add(post)
 	db.commit()
 

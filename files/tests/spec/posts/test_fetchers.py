@@ -2,11 +2,14 @@
 Things the site looks up on other sites or in its own posts for the submit form and new link posts:
 - POST /is_repost with "url": the permalink of a live post already linking there, or "" (no login needed).
 - GET /submit/title?url=...: the <title> of the page at url, for prefilling the title field.
-- The thumbnail of a new link post, fetched in the background from the linked page's preview-image metadata, its images, or the link itself when it is an image. Only the first 512 KiB of a page is looked at, and images of more than 16 million pixels aren't used.
+- The thumbnail of a new link post, fetched in the background from the linked page's preview-image metadata, its images, or the link itself when it is an image. Only the first 512 KiB of a page is looked at, and images of more than 16 million pixels, or that can't be read whole, aren't used. A thumbnail is at most 100 pixels wide, upright, and holds no metadata.
 
 HTTPS fetches check the other site's certificate: a host whose certificate no trusted authority signed counts as unreachable.
 '''
+from io import BytesIO
+
 import pytest
+from PIL import Image
 
 from files.tests.spec.harness import *
 
@@ -358,6 +361,39 @@ def test_images_of_more_than_16_million_pixels_give_no_thumbnail(width, height, 
 	run_background_work()
 
 	assert (_thumbnail_of(post) is not None) == used
+
+
+def test_thumbnails_are_upright_and_hold_no_metadata():
+	marker = factories.unique("marker")
+	name, body, content_type = uploads.photo("JPEG", 300, 200, marker, orientation=6)
+	external_web.serve("https://example.com/photo", headers={"Content-Type": content_type}, body=body)
+	post = _link_post("https://example.com/photo")
+
+	run_background_work()
+
+	thumbnail = anon().get(_thumbnail_of(post)).body
+	served = Image.open(BytesIO(thumbnail))
+	assert (served.size, marker.encode() in thumbnail, dict(served.getexif()), served.info.get("xmp")) == ((100, 150), False, {}, None)
+
+
+def test_an_image_whose_exif_cant_be_read_is_its_own_thumbnail():
+	name, body, content_type = uploads.unreadable_exif_webp()
+	external_web.serve("https://example.com/photo", headers={"Content-Type": content_type}, body=body)
+	post = _link_post("https://example.com/photo")
+
+	run_background_work()
+
+	assert_serves_image(_thumbnail_of(post))
+
+
+def test_links_to_broken_animated_images_give_no_thumbnail():
+	name, body, content_type = uploads.truncated_gif(64, 64)
+	external_web.serve("https://example.com/photo", headers={"Content-Type": content_type}, body=body)
+	post = _link_post("https://example.com/photo")
+
+	run_background_work()
+
+	assert _thumbnail_of(post) is None
 
 
 def test_links_to_images_are_their_own_thumbnail():
