@@ -5,7 +5,7 @@ Requests whose User-Agent names a crawler (anything containing "bot", in any let
 
 Post and comment search:
 - The words of the query must all appear, in any letter case and anywhere, in a post's title or a comment's text. They match literally: no character in them stands for others.
-- Query terms of the form "key:value" narrow the search instead (others are searched as words): "author:<username>" keeps only that user's items, leaving out anonymous ones (an unknown user is a 404; a user with a private profile can be searched this way only by themselves and admins from level 2: API clients get a 403 and others a page with no results); "over18:" (with any value) keeps only items marked 18+; for posts, "domain:<domain>" keeps only link posts to https://<domain>, https://www.<domain> or https://old.<domain>, with or without a path.
+- Query terms of the form "key:value" narrow the search instead (others are searched as words): "author:<username>" keeps only that user's items, leaving out anonymous ones (an unknown user is a 404; a user with a private profile can be searched this way only by themselves and admins from level 2: API clients get a 403 and others a page with no results); "over18:" (with any value) keeps only items marked 18+; for posts, "domain:<domain>" keeps only link posts to https://<domain> or to any of its subdomains (https://<name>.<domain>), with or without a path.
 - "sort" and "t" apply as on the front page (test_front), newest first and all time by default, 25 results to a page, "page" choosing the page.
 - An API client gets {"total": ..., "data": [...]}: the number of matching items and the page's items as JSON objects.
 - Which items a viewer may find is in test_visibility.
@@ -222,7 +222,7 @@ def test_over18_keeps_only_18_plus_items(kind, value):
 	assert_not_in_payload(r, other["sentinel"])
 
 
-@pytest.mark.parametrize("url", ["https://example.com", "https://example.com/a/b", "https://www.example.com/x", "https://old.example.com", "https://EXAMPLE.com/y"])
+@pytest.mark.parametrize("url", ["https://example.com", "https://example.com/a/b", "https://example.com?q=1", "https://www.example.com/x", "https://old.example.com", "https://sub.example.com/x", "https://a.b.example.com", "https://EXAMPLE.com/y"])
 def test_domain_keeps_links_to_the_domain(url):
 	post = _post(url=url)
 
@@ -231,7 +231,7 @@ def test_domain_keeps_links_to_the_domain(url):
 	assert_in_payload(r, post["sentinel"])
 
 
-@pytest.mark.parametrize("url", ["https://example.org/x", "https://sub.example.com/x", "https://example.com.evil.net/x", "https://notexample.com/x"])
+@pytest.mark.parametrize("url", ["https://example.org/x", "https://example.com.evil.net/x", "https://notexample.com/x", "https://evil.net/example.com", "https://evil.net/a.example.com/x", "https://evil.net?.example.com/", "https://evil.net#.example.com/"])
 def test_domain_leaves_out_other_links(url):
 	post = _post(url=url)
 

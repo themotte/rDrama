@@ -1,3 +1,5 @@
+import re
+
 from sqlalchemy import *
 
 from files.__main__ import app, limiter, is_known_bot
@@ -78,9 +80,8 @@ def searchposts(v):
 	if 'domain' in criteria:
 		domain=criteria['domain']
 
-		domain = sql_like_literal(domain)
-
-		posts=posts.filter(or_(*(Submission.url.ilike(f"https://{prefix}{domain}{rest}") for prefix in ("", "www.", "old.") for rest in ("", "/%"))))
+		# The host is the domain or one of its subdomains, whatever follows it
+		posts=posts.filter(Submission.url.op("~*")(f"^https://([^/?#]*\\.)?{re.escape(domain)}([/?#]|$)"))
 
 	posts = apply_time_filter(posts, t, Submission)
 
