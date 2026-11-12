@@ -293,15 +293,7 @@ class Submission(CreatedBase, AuthorShadowban):
 
 	@lazy
 	def realurl(self, v):
-		if self.url and self.url.startswith("https://old.reddit.com/"):
-
-			url = self.url
-
-			if '/comments/' in url and "sort=" not in url:
-				if "?" in url: url += f"&context={RENDER_DEPTH_LIMIT}" 
-				else: url += f"?context={RENDER_DEPTH_LIMIT - 1}"
-			return url
-		elif self.url:
+		if self.url:
 			if self.url.startswith('/'): return SITE_FULL + self.url
 			if not is_web_url(self.url): return ""
 			return self.url

@@ -1,7 +1,6 @@
 '''
 The post page: GET /post/<id> and /post/<id>/<anything> (the trailing segment is a cosmetic slug and is ignored). Query parameter "sort" orders the comments, each set of replies as well as the top-level ones (default: the viewer's comment sort preference, "new" for visitors): new, old, top, bottom, controversial and comments (most replies first, counting replies at every depth), by the formulas and tie-breaks of the front page's sorts (spec/listings/test_front.py). Pinned comments come first whatever the sort, newest first among themselves. A page holds whole top-level threads in that order until it has the configured number of comments or more (config.comments_per_page). API clients get the post as JSON.
 '''
-from urllib.parse import parse_qs, urlsplit
 
 import pytest
 
@@ -56,15 +55,15 @@ def test_link_posts_show_their_link():
 
 
 @pytest.mark.parametrize("viewer", ["visitor", "user", "api"])
-def test_links_to_old_reddit_comments_ask_for_their_context(viewer):
+def test_a_link_posts_address_is_linked_as_written(viewer):
 	url = "https://old.reddit.com/r/sub/comments/abc/title/def/"
 	post = factories.post(factories.user(), url=url)
 	client = {"visitor": anon, "user": lambda: as_user(factories.user()), "api": lambda: as_api(factories.api_token(factories.user()))}[viewer]()
 
 	r = _page(client, post)
 
-	linked = r.json["url"] if viewer == "api" else next(u for u in urls_in(r.text) if u.startswith(url))
-	assert parse_qs(urlsplit(linked).query).get("context")
+	linked = [r.json["url"]] if viewer == "api" else [u for u in urls_in(r.text) if u.startswith(url)]
+	assert linked and set(linked) == {url}
 
 
 def test_stored_links_that_are_not_web_addresses_are_not_linked():
