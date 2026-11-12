@@ -1,8 +1,12 @@
+import os
+
+# The harness drives an implementation in its own processes by default; this suite drives rDrama in-process unless told otherwise
+os.environ.setdefault("RDRAMA_SPEC_BACKEND", "inprocess")
+
 from files.tests import testenv
 
 testenv.configure()
 
-import os
 import traceback
 import warnings
 
@@ -12,7 +16,7 @@ from files.tests import affordances, router_check
 from files.tests.spec.harness import coverage, pages, run_record
 
 # The spec tier against the site running in its own processes (spec/harness/backend_process.py), started by these commands unless the runner names others
-PROCESS_BACKEND = os.environ.get("RDRAMA_SPEC_BACKEND") == "process"
+PROCESS_BACKEND = os.environ["RDRAMA_SPEC_BACKEND"] != "inprocess"
 if PROCESS_BACKEND:
 	os.environ.setdefault("RDRAMA_SPEC_SERVER", "gunicorn files.tests.process_server:application -k gthread --threads 4 -w 1 -b 127.0.0.1:{port} --access-logfile - --error-logfile -")
 	os.environ.setdefault("RDRAMA_SPEC_CLI", "python3 -m files.tests.command")
