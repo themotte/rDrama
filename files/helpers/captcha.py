@@ -23,6 +23,9 @@ def validate_captcha(token: str):
 			}
 	try:
 		req = requests.post(HCAPTCHA_URL, data=data, timeout=5, verify=OUTBOUND_VERIFY)
+		if req.status_code != 200:
+			print(f"[captcha] hCaptcha answered with status {req.status_code}: {req.text!r:.500}", file=sys.stderr, flush=True)
+			return False
 		reply = req.json()
 	except (requests.RequestException, ValueError) as e:
 		print(f"[captcha] couldn't verify an answer with hCaptcha: {e!r}", file=sys.stderr, flush=True)

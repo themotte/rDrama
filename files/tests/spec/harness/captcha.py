@@ -1,7 +1,7 @@
 '''
 hCaptcha, as the site meets it in the `captcha` deployment profile (config.PROFILES), which gives it a site key and a secret (hCaptcha's published test pair). spec/captcha/ specifies it.
 
-With a site key, signing up and the contact form for visitors (not logged in) ask for an hCaptcha answer. Their pages load hCaptcha's script (WIDGET_SCRIPT) and carry the site key, for the widget it draws, and the answer arrives as the form field FIELD. The site checks the answer by POSTing a form to either of hCaptcha's SITEVERIFY addresses, holding "secret", "response" (the answer) and "sitekey"; it may send hCaptcha's optional fields as well. It accepts the answer only when the reply is a JSON object whose "success" is true. Everything else refuses: a missing or empty answer (without asking hCaptcha), hCaptcha's refusal, and an answer the site can't check (FAILURES).
+With a site key, signing up and the contact form for visitors (not logged in) ask for an hCaptcha answer. Their pages load hCaptcha's script (WIDGET_SCRIPT) and carry the site key, for the widget it draws, and the answer arrives as the form field FIELD. The site checks the answer by POSTing a form to either of hCaptcha's SITEVERIFY addresses, holding "secret", "response" (the answer) and "sitekey"; it may send hCaptcha's optional fields as well. It accepts the answer only when the reply has status 200 and is a JSON object whose "success" is true. Everything else refuses: a missing or empty answer (without asking hCaptcha), hCaptcha's refusal, and an answer the site can't check (FAILURES).
 '''
 import json
 from urllib.parse import parse_qsl
@@ -27,8 +27,8 @@ _UNREADABLE = {
 	"a bare JSON value": "5",
 }
 
-FAILURES = ("unreachable", "untrusted certificate", *_UNREADABLE)
-'''Ways checking an answer can fail (fail), each of which refuses it.'''
+FAILURES = ("unreachable", "untrusted certificate", "an error status", *_UNREADABLE)
+'''Ways checking an answer can fail (fail), each of which refuses it. An untrusted certificate and an error status come with a reply approving the answer, which the site mustn't heed.'''
 
 
 def _reply(success: bool) -> str:
@@ -42,12 +42,14 @@ def answer(success: bool):
 
 
 def fail(how: str):
-	'''Checking an answer fails from now on, in the way FAILURES names. An untrusted certificate comes with a reply approving the answer, which a site checking certificates, as it must, never reads.'''
+	'''Checking an answer fails from now on, in the way FAILURES names. An untrusted certificate, and an error status, come with a reply approving the answer: a site checking certificates, as it must, never reads the first, and a reply that isn't a 200 holds no verdict.'''
 	for url in SITEVERIFY:
 		if how == "unreachable":
 			external_web.unreachable(url, method="POST")
 		elif how == "untrusted certificate":
 			external_web.serve(url, method="POST", headers=_JSON, body=_reply(True), trusted=False)
+		elif how == "an error status":
+			external_web.serve(url, method="POST", status=500, headers=_JSON, body=_reply(True))
 		else:
 			external_web.serve(url, method="POST", headers=_JSON, body=_UNREADABLE[how])
 
