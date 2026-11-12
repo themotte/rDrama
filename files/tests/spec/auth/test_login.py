@@ -61,7 +61,8 @@ def test_an_email_shared_by_several_accounts_logs_into_none():
 	assert client.user_id is None
 
 
-@pytest.mark.parametrize("iterations", [1000, 150000, 260000])
+# The counts production's hashes use (2026-11-11: 260000 for older accounts, 1000000 for newer ones), and the spec's own
+@pytest.mark.parametrize("iterations", [factories.FAST_HASH_ITERATIONS, 260000, 1000000])
 def test_stored_hashes_of_any_strength_log_in(iterations):
 	u = factories.user(passhash=factories.passhash_for(factories.PASSWORD, iterations))
 	client = anon()
@@ -79,6 +80,14 @@ def test_an_unknown_account_logs_into_nothing():
 	assert_html(r, 200)
 	assert client.user_id is None
 	d.assert_exactly()
+
+
+def test_an_account_without_a_password_hash_cannot_log_in():
+	u = factories.user(passhash="")
+	client = anon()
+
+	assert_html(_login(client, u["username"]), 200)
+	assert client.user_id is None
 
 
 def test_a_system_account_cannot_log_in():
