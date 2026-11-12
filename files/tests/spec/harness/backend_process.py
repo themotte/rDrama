@@ -20,6 +20,8 @@ The test-mode interface an implementation provides to be run by the spec:
 - Deployment profiles (config.PROFILES). The harness runs a separate site for each profile its tests use, with the profile's variables added to its environment and to its commands' and scheduler's. Only one site serves at a time, the current test's; the others keep running, idle.
 
 Each site starts with the first test in its profile and stops when the harness's process exits, or dies with it. If it can't start, or stops serving, every test in its profile from then on fails at once with its log.
+
+A run of the whole spec tier also checks the implementation by what its answers show the harness's clients: route coverage (coverage.py), where every route of the table must have answered some test outside spec/routes and spec/limits past its gate, so that the spec, run against this implementation, exercised each; and where pages lead (pages.py), where no link, form or embed of a page may lead to an address no route answers. Neither sees routes the implementation adds beyond the table, nor a missing route it answers with a status other than 404 or 405; pages.py says what of a page it doesn't read.
 '''
 import atexit
 import json

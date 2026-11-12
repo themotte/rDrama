@@ -21,6 +21,8 @@ if PROCESS_BACKEND:
 
 def pytest_configure(config):
 	config.addinivalue_line("markers", "profile(name): runs the test with the site in that deployment profile (spec/harness/config.py PROFILES)")
+	if PROCESS_BACKEND and os.environ.get("RDRAMA_AFFORDANCES_OUT"):
+		raise pytest.UsageError("RDRAMA_AFFORDANCES_OUT needs the in-process backend: the map's script rows come from watching the app")
 	# A controller handing tests to xdist workers runs none itself; each worker builds its own database. Built here because pytest replays pytest_configure for a conftest it loads late (as it does without a path below files/tests), unlike pytest_sessionstart.
 	if config.getoption("dist", "no") == "no" or config.getoption("collectonly"):
 		# Registered first, so a half-built database goes too
@@ -50,8 +52,7 @@ def pytest_deselected(items):
 
 
 def pytest_collection_finish(session):
-	# Both checks watch the app in the test's own process
-	_coverage["complete"] = not PROCESS_BACKEND and not session.config.getoption("collectonly") and coverage.collected_whole_spec({item.path for item in session.items}, _coverage["deselected"], session.config.args)
+	_coverage["complete"] = not session.config.getoption("collectonly") and coverage.collected_whole_spec({item.path for item in session.items}, _coverage["deselected"], session.config.args)
 
 
 @pytest.hookimpl(wrapper=True)
@@ -106,7 +107,7 @@ def pytest_sessionfinish(session, exitstatus):
 
 def pytest_terminal_summary(terminalreporter):
 	if PROCESS_BACKEND:
-		terminalreporter.write_line("The site ran in its own processes, so route coverage and what pages offer weren't checked (they watch it in-process)", yellow=True)
+		terminalreporter.write_line("The site ran in its own processes: route coverage and where pages lead were checked from what the harness saw; script calls and the affordance map are checked only in-process", yellow=True)
 	if _coverage["unrequested"]:
 		terminalreporter.section("routes no spec test gets past the gate of", red=True)
 		for route in _coverage["unrequested"]:
