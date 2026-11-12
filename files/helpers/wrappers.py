@@ -133,6 +133,8 @@ def admin_level_required(x):
 			if not v: abort(401)
 			if v.client: abort(403, "Admin actions aren't available to API clients")
 			if v.admin_level < x: abort(403)
+			# Admins read while suspended, but don't act as admins
+			if request.method not in ("GET", "HEAD"): refuse_while_suspended(v)
 			return make_response(f(*args, v=v, **kwargs))
 		return wrapper
 	return wrapper_maker

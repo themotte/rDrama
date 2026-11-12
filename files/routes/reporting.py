@@ -25,6 +25,7 @@ def api_flag_post(pid, v):
 	reason = filter_emojis_only(written)
 
 	if reason.startswith('!') and v.admin_level >= 2:
+		refuse_while_suspended(v)
 		post.flair = reason[1:]
 		g.db.add(post)
 		ma=ModAction(

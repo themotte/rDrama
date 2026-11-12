@@ -297,6 +297,17 @@ def test_read_only_mode_lets_admins_change_things():
 	d.assert_exactly(updated={"users": {u["id"]: {"cardview": True}}})
 
 
+def test_read_only_mode_refuses_a_suspended_admins_changes():
+	u = factories.admin(2, cardview=False, is_banned=factories.admin(3)["id"], unban_utc=int(time.time()) + 86400)
+	site_settings_set("Read-only mode", True)
+
+	with db_diff() as d:
+		r = as_user(u).post("/settings/profile", {"cardview": "true"}, headers=XHR)
+
+	assert_status(r, 403)
+	d.assert_exactly()
+
+
 def test_read_only_mode_refuses_every_change_from_outside_too():
 	u = factories.user(email=f"{factories.unique()}@example.com")
 	site_settings_set("Read-only mode", True)

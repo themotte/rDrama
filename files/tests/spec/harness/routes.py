@@ -10,7 +10,7 @@ Paths are written with these variables:
 Where a path matches more than one row, a row with fixed text where the other has a variable wins (GET /@me isn't the profile of a user "me"). A trailing "/" is optional on every path; none is written here. Any number of "/" at the start of a path count as one. Doubled "/" inside a path that matches no row as written are redirected (308) to the path with each pair merged into one (match() below), so "///" is still doubled and matches nothing. A path the table doesn't list is 404, and a method a listed path doesn't take is 405. HEAD is answered for every GET row as GET would be, without the body, and OPTIONS for every path, listing its methods (spec/routes).
 
 A request is checked in this order:
-1. The checks every request gets: a query that isn't UTF-8 (400); the Host (403 unless the site's own); while the Bots site setting is off, any Authorization header (403); a missing User-Agent (403); read-only mode, which refuses changes from all but admins, logging in aside (auth/test_session).
+1. The checks every request gets: a query that isn't UTF-8 (400); the Host (403 unless the site's own); while the Bots site setting is off, any Authorization header (403); a missing User-Agent (403); read-only mode, which refuses changes from all but admins whose suspension isn't running, logging in aside (auth/test_session).
 2. The path and method, as above.
 3. The rate limits (limits.py): a request over any of its limits is refused with 429, and one within them counts toward them, whatever it is answered next.
 4. The route's gate (`access`), which answers before anything the path names is looked up, so a refused request learns nothing about it:
@@ -18,7 +18,7 @@ A request is checked in this order:
    - ANYONE: open to everyone, served as the logged-in member when there is one (a POST without that member's form key is served as logged out). A browser arriving without a session is given one, as at every gate below;
    - USER: logged-in members only; anyone else is sent to log in (asserts.assert_login_redirect), including a member's POST without their form key, except that API clients and xhr requests get 401 with a JSON error (asserts.assert_api_unauthorized);
    - USER_NOT_PERMABANNED: as USER, and a permanently suspended member is refused with 403;
-   - admin(n): as USER, and a member below admin level n is refused with 403.
+   - admin(n): as USER, and a member below admin level n is refused with 403, as is, for a POST, an admin whose suspension is running (reading stays open to them).
 5. API clients (`api_clients` False): refused with 403 where the route is only for the member's own browser, and on every admin route. The routes they may use serve them as their holder's browser (users/test_api_clients).
 6. The route's own rules, in the spec files for its area. Some of those are refusals of their own, such as search refusing known crawlers' User-Agents.
 

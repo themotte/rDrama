@@ -7,7 +7,7 @@ The reason is stored rendered, in this order: surrounding whitespace trimmed, cu
 
 Anything the reporter can open can be reported, also what shows them only a placeholder: a removed, held, deleted or shadowbanned user's item, or one by a user they block. API clients report as their user.
 
-An admin of level 2 or higher (in their own browser session; API clients act as level 0) reporting a post with a reason starting with "!" sets the post's flair instead: the flair is the rest of the rendered reason ("" for a lone "!"), the mod log records a "flair_post" action noting, in double quotes, the flair as the admin wrote it (cut like the reason, not rendered), and no report is stored. On comments, and for everyone else, such a reason is an ordinary one.
+An admin of level 2 or higher (in their own browser session; API clients act as level 0) reporting a post with a reason starting with "!" sets the post's flair instead: the flair is the rest of the rendered reason ("" for a lone "!"), the mod log records a "flair_post" action noting, in double quotes, the flair as the admin wrote it (cut like the reason, not rendered), and no report is stored. On comments, and for everyone else, such a reason is an ordinary one. An admin whose suspension is running is refused it (403), as admin actions are; anyone else suspended reports it as an ordinary reason.
 
 Refused, changing nothing: anonymous users (401 to scripts); an unknown id, or one that isn't a whole number (404); an item the reporter can't open (404): a draft, or a comment on one, unless they are its author or an admin of level 2 or higher; a private message unless they take part in its conversation (or are such an admin); one of the site's notices unless it notified them (or they are such an admin).
 '''
@@ -191,6 +191,27 @@ def test_a_bang_from_others_is_an_ordinary_reason(who):
 
 	with db_diff() as d:
 		client.post(f"/report/post/{post['id']}", {"reason": "!Megathread"}, headers=XHR)
+
+	d.assert_exactly(inserted=_stored("post", reporter, post, "!Megathread"), updated={"submissions": {post["id"]: {"state_report": "REPORTED"}}})
+
+
+def test_a_suspended_admins_bang_is_refused():
+	post = _item("post")
+	admin = factories.admin(2, is_banned=factories.admin(3)["id"], unban_utc=int(time.time()) + 86400)
+
+	with db_diff() as d:
+		r = _report(as_user(admin), "post", post, "!Megathread")
+
+	assert_status(r, 403)
+	d.assert_exactly()
+
+
+def test_a_suspended_members_bang_is_an_ordinary_reason():
+	post = _item("post")
+	reporter = factories.user(is_banned=factories.admin(2)["id"], unban_utc=int(time.time()) + 86400)
+
+	with db_diff() as d:
+		_report(as_user(reporter), "post", post, "!Megathread")
 
 	d.assert_exactly(inserted=_stored("post", reporter, post, "!Megathread"), updated={"submissions": {post["id"]: {"state_report": "REPORTED"}}})
 

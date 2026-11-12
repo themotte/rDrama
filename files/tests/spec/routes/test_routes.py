@@ -1,6 +1,8 @@
 '''
 The route table (harness/routes.py, which says what each column means) holds for every route: each refusal a route's gate makes, checked with values that name nothing, since the gate answers first; the session every gate gives a browser; the methods each path takes.
 '''
+import time
+
 import pytest
 
 from files.tests.spec.harness import *
@@ -56,6 +58,30 @@ def test_members_below_the_admin_level_are_refused(route):
 
 	assert_status(r, 403)
 	d.assert_exactly()
+
+
+def _suspended_admin(level: int, *, permanently: bool) -> dict:
+	return factories.admin(level, is_banned=factories.admin(3)["id"], unban_utc=0 if permanently else int(time.time()) + 86400)
+
+
+@pytest.mark.parametrize("permanently", [False, True], ids=["temporarily", "permanently"])
+@pytest.mark.parametrize("route", [r for r in _ADMIN if r.method == "POST"], ids=_id)
+def test_suspended_admins_cant_act(route, permanently):
+	client = as_user(_suspended_admin(admin_level(route.access), permanently=permanently))
+
+	with db_diff() as d:
+		r = client.post(fill(route))
+
+	assert_status(r, 403)
+	d.assert_exactly()
+
+
+@pytest.mark.parametrize("route", [r for r in _ADMIN if r.method == "GET"], ids=_id)
+def test_suspended_admins_still_read(route):
+	level = admin_level(route.access)
+	free, suspended = as_user(factories.admin(level)), as_user(_suspended_admin(level, permanently=True))
+
+	assert_status(suspended.get(fill(route)), free.get(fill(route)).status)
 
 
 @pytest.mark.parametrize("route", _NOT_PERMABANNED, ids=_id)

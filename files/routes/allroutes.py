@@ -61,11 +61,11 @@ def before_request():
 	g.start_time = time.time()
 	active_requests[threading.get_ident()] = (request.method, _logged_target(), g.start_time)
 
-	# Read-only mode: only admins change anything.
+	# Read-only mode: only admins change anything, and not while suspended
 	if app.config['SETTINGS']['Read-only mode'] and request.method not in ("GET", "HEAD", "OPTIONS") and request.path.rstrip("/") not in _READ_ONLY_OPEN:
 		from files.helpers.wrappers import get_logged_in_user
 		v = get_logged_in_user()
-		if not (v and v.admin_level):
+		if not (v and v.admin_level and not v.is_suspended):
 			abort(403)
 
 
