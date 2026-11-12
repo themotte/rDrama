@@ -27,7 +27,6 @@ What to decide, case by case:
 - **Notifications a suspended user causes**: unfollowing and removing a follower still notify the other user (allowed by the current rule; confirm).
 - **Chat** (outside the spec): the page and `can_access_chat` refuse only permanent suspensions, while sending and reading messages over the socket refuse on raw `is_banned`, so any temporary ban, even one that ran out, blocks them until the user's next page request ends it.
 - **Ban evasion**: detection at login counts only permanent bans.
-- **Templates**: the mobile comment admin menu chooses Ban/Unban on raw `is_banned`; every other menu uses `is_suspended`.
 
 ## The nightly volunteer recalc
 

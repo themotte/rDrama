@@ -23,8 +23,8 @@
 					{% endif %}
 
 					{% if v.id != c.author_id %}
-						<a id="ban2-{{c.id}}" class="{% if c.author.is_banned %}d-none{% endif %} list-group-item text-danger" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/comment/{{c.id}}', '{{c.author.id}}', '{{c.author_name}}')" role="button"><i class="fas fa-user-slash text-danger fa-fw mr-2"></i>Ban user</a>
-						<a id="unban2-{{c.id}}" class="{% if not c.author.is_banned %}d-none{% endif %} list-group-item text-success" role="button" onclick="postToastSwitch(this,'/unban_user/{{c.author_id}}','POST','ban2-{{c.id}}','unban2-{{c.id}}');" data-bs-dismiss="modal"><i class="fas fa-user-minus fa-fw text-success mr-2"></i>Unban user</a>
+						<a id="ban2-{{c.id}}" class="{% if c.author.is_suspended %}d-none{% endif %} list-group-item text-danger" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/comment/{{c.id}}', '{{c.author.id}}', '{{c.author_name}}')" role="button"><i class="fas fa-user-slash text-danger fa-fw mr-2"></i>Ban user</a>
+						<a id="unban2-{{c.id}}" class="{% if not c.author.is_suspended %}d-none{% endif %} list-group-item text-success" role="button" onclick="postToastSwitch(this,'/unban_user/{{c.author_id}}','POST','ban2-{{c.id}}','unban2-{{c.id}}');" data-bs-dismiss="modal"><i class="fas fa-user-minus fa-fw text-success mr-2"></i>Unban user</a>
 					{% endif %}
 
 					{%- if v and v.admin_level >= PERMS['POST_COMMENT_MODERATION'] -%}
