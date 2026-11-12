@@ -30,7 +30,7 @@ Pinned as they are in `notifications/test_notices.py`, not decided on purpose: a
 
 Pinned as they are in `rendering/test_text.py`, not decided on purpose: an address with another scheme, such as ftp://, keeps its scheme as text and links the rest with http://; mail addresses aren't linked. Raw HTML that HTML doesn't allow where it stands, such as text directly inside a table, may lose that text.
 
-Also pinned there as they are, not decided on purpose: a dropped element's text runs on into its neighbours' (`<details><summary>a</summary>b</details>` reads "ab"), except around some block elements such as `<dl>`, which leave a line break; a table's `<caption>` text moves before the table and its `<tfoot>` rows into another `<tbody>`; an image's alt text is lost, and the text of a `<script>`, `<style>` or `<textarea>` shows as text; relative addresses other than those starting with "/" (`foo`, `#f`, `?q`) count as leaving the site; the rewrites that name "https://" leave http:// addresses alone, "https://www.youtube.com/shorts/x" keeps "/shorts/" because that rule comes before "www." is dropped, and a host that merely ends in a rewritten name (xnitter.net) is rewritten too.
+Also pinned there as they are, not decided on purpose: a dropped element's text runs on into its neighbours' (`<details><summary>a</summary>b</details>` reads "ab"), except around some block elements such as `<dl>`, which leave a line break; a table's `<caption>` text moves before the table and its `<tfoot>` rows into another `<tbody>`; an image's alt text is lost, and the text of a `<script>`, `<style>` or `<textarea>` shows as text; relative addresses other than those starting with "/" (`foo`, `#f`, `?q`) count as leaving the site.
 
 ## The captcha
 

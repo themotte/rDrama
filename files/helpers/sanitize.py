@@ -132,22 +132,8 @@ def sanitize_raw(sanitized:Optional[str], allow_newlines:bool, length_limit:Opti
 		sanitized = sanitized[:length_limit]
 	return sanitized
 
-_ADDRESS_REWRITES = [
-	*((old, "://old.reddit.com") for old in ("://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it", "://teddit.net")),
-	("nitter.net", "twitter.com"), ("old.reddit.com/gallery", "reddit.com/gallery"),
-	("https://youtu.be/", "https://youtube.com/watch?v="), ("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v="),
-	("https://streamable.com/", "https://streamable.com/e/"), ("https://youtube.com/shorts/", "https://youtube.com/watch?v="),
-	("https://mobile.twitter", "https://twitter"), ("https://m.facebook", "https://facebook"), ("m.wikipedia.org", "wikipedia.org"),
-	("https://m.youtube", "https://youtube"), ("https://www.youtube", "https://youtube"), ("https://www.twitter", "https://twitter"),
-	("https://www.instagram", "https://instagram"), ("https://www.tiktok", "https://tiktok"),
-]
-
-
-def _rewritten_address(address: str) -> str:
-	'''`address` with the site rewrites applied, a YouTube video's start time taken as "&t=", and tracking parameters removed.'''
-	for old, new in _ADDRESS_REWRITES:
-		address = address.replace(old, new)
-	if address.startswith("https://youtube.com/watch?v="): address = address.replace("?t=", "&t=")
+def _without_tracking(address: str) -> str:
+	'''`address` without its "utm_" tracking parameters.'''
 	return utm_regex2.sub('', utm_regex.sub('', address))
 
 
@@ -218,7 +204,7 @@ def sanitize(sanitized):
 		href = link.get("href")
 		if not href: continue
 		shown = link.string in (href, href.split("://", 1)[-1])
-		link["href"] = _rewritten_address(href)
+		link["href"] = _without_tracking(href)
 		if shown: link.string = link["href"] if link.string == href else link["href"].split("://", 1)[-1]
 
 	domain_list = set()

@@ -1,5 +1,5 @@
 '''
-How the text people write is rendered: the "body" of comments, posts and messages, and a user's bio and friends list, are stored as written (a body trimmed, its line ends made "\n" and attached images' links added, as test_create.py and test_submit.py say) and rendered to HTML ("body_html", "bio_html", "friends_html"), which pages show. The rendering is compared here as an element tree: tag names, attributes and text, regardless of attribute order and of whitespace a browser wouldn't show. The data the rules refer to is in the tables below (KEPT_ELEMENTS, DROPPED_ELEMENTS, TOP_LEVEL_DOMAINS, REWRITES), each entry checked.
+How the text people write is rendered: the "body" of comments, posts and messages, and a user's bio and friends list, are stored as written (a body trimmed, its line ends made "\n" and attached images' links added, as test_create.py and test_submit.py say) and rendered to HTML ("body_html", "bio_html", "friends_html"), which pages show. The rendering is compared here as an element tree: tag names, attributes and text, regardless of attribute order and of whitespace a browser wouldn't show. The data the rules refer to is in the tables below (KEPT_ELEMENTS, DROPPED_ELEMENTS, TOP_LEVEL_DOMAINS), each entry checked.
 
 In order:
 - Invisible characters are removed: zero-width spaces, left-to-right and right-to-left marks, byte-order marks and U+1242A.
@@ -11,7 +11,7 @@ In order:
 - A link whose text is itself a web address shows its real address instead.
 - Only the elements in KEPT_ELEMENTS are kept: other elements are dropped but their text stays (DROPPED_ELEMENTS). Only these attributes are kept: "style" on any element, keeping only the CSS properties "color", "background-color", "font-weight" and "text-align"; on "a", "href", "target" only as "_blank" and "rel" only as "nofollow noopener noreferrer"; on "span", "title", "alt" and "data-bs-toggle" only as "tooltip". A link keeps its address unless it has a scheme other than http or https (in any letter case).
 - Web addresses in the text become links (not inside code) when their host name's last label is one of TOP_LEVEL_DOMAINS, with http:// or https:// or bare (linked with http://). Links leaving the site open in a new tab (target "_blank", rel "nofollow noopener noreferrer"); links to the site's own pages (an address starting with a single "/", or the site's own address) aren't given them, but keep them if written with them.
-- Every link's address is then rewritten by the replacements in REWRITES, in that order, wherever they occur in it; then a YouTube video's address takes its start time as "&t=" rather than "?t=", and query parameters "utm_<word>=<value>" are removed; a link showing its own address (with or without its scheme) shows it rewritten too. Text that isn't a link's address, code included, is left as written.
+- Every link's address then loses its query parameters "utm_<word>=<value>", and is otherwise kept as written; a link showing its own address (with or without its scheme) shows it without them too. Text that isn't a link's address, code included, is left as written.
 
 Text linking to a banned domain is refused with 403: a link's host, any of the host's parent domains, or its host and path, being listed in "banneddomains".
 '''
@@ -225,90 +225,38 @@ def test_addresses_under_other_names_stay_text(host):
 	assert_same_html(_rendered(f"{host} https://{host}/x"), f"<p>{host} https://{host}/x</p>")
 
 
-REWRITES = [
-	# (written, becomes), replaced in this order
-	("://reddit.com", "://old.reddit.com"),
-	("://new.reddit.com", "://old.reddit.com"),
-	("://www.reddit.com", "://old.reddit.com"),
-	("://redd.it", "://old.reddit.com"),
-	("://libredd.it", "://old.reddit.com"),
-	("://teddit.net", "://old.reddit.com"),
-	("nitter.net", "twitter.com"),
-	("old.reddit.com/gallery", "reddit.com/gallery"),
-	("https://youtu.be/", "https://youtube.com/watch?v="),
-	("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v="),
-	("https://streamable.com/", "https://streamable.com/e/"),
-	("https://youtube.com/shorts/", "https://youtube.com/watch?v="),
-	("https://mobile.twitter", "https://twitter"),
-	("https://m.facebook", "https://facebook"),
-	("m.wikipedia.org", "wikipedia.org"),
-	("https://m.youtube", "https://youtube"),
-	("https://www.youtube", "https://youtube"),
-	("https://www.twitter", "https://twitter"),
-	("https://www.instagram", "https://instagram"),
-	("https://www.tiktok", "https://tiktok"),
-]
-REWRITE_EXAMPLES = [
-	("https://reddit.com/r/x", "https://old.reddit.com/r/x"),
-	("https://www.reddit.com/r/x", "https://old.reddit.com/r/x"),
-	("https://new.reddit.com/r/x", "https://old.reddit.com/r/x"),
-	("https://redd.it/x", "https://old.reddit.com/x"),
-	("https://libredd.it/r/x", "https://old.reddit.com/r/x"),
-	("https://teddit.net/r/x", "https://old.reddit.com/r/x"),
-	("https://www.reddit.com/gallery/x", "https://reddit.com/gallery/x"),
-	("https://nitter.net/x", "https://twitter.com/x"),
-	("https://mobile.twitter.com/x", "https://twitter.com/x"),
-	("https://www.twitter.com/x", "https://twitter.com/x"),
-	("https://youtu.be/abcde", "https://youtube.com/watch?v=abcde"),
-	("https://music.youtube.com/watch?v=abcde", "https://youtube.com/watch?v=abcde"),
-	("https://youtube.com/shorts/abcde", "https://youtube.com/watch?v=abcde"),
-	("https://m.youtube.com/watch?v=abcde", "https://youtube.com/watch?v=abcde"),
-	("https://www.youtube.com/watch?v=abcde", "https://youtube.com/watch?v=abcde"),
-	("https://youtu.be/abcde?t=5", "https://youtube.com/watch?v=abcde&t=5"),
-	("https://streamable.com/abc", "https://streamable.com/e/abc"),
-	("https://m.facebook.com/x", "https://facebook.com/x"),
-	("https://en.m.wikipedia.org/wiki/X", "https://en.wikipedia.org/wiki/X"),
-	("https://www.instagram.com/x", "https://instagram.com/x"),
-	("https://www.tiktok.com/x", "https://tiktok.com/x"),
-	("https://www.youtube.com/shorts/abcde", "https://youtube.com/shorts/abcde"),
-	("http://reddit.com/r/x", "http://old.reddit.com/r/x"),
-	("https://xnitter.net/x", "https://xtwitter.com/x"),
-	("http://www.youtube.com/watch?v=abcde", "http://www.youtube.com/watch?v=abcde"),
-	("http://m.facebook.com/x", "http://m.facebook.com/x"),
-]
+@pytest.mark.parametrize("address", [
+	"https://reddit.com/r/x",
+	"https://www.reddit.com/r/x",
+	"https://redd.it/x",
+	"https://nitter.net/x",
+	"https://mobile.twitter.com/x",
+	"https://youtu.be/abcde",
+	"https://www.youtube.com/watch?v=abcde",
+	"https://youtube.com/shorts/abcde",
+	"https://streamable.com/abc",
+	"https://m.facebook.com/x",
+	"https://en.m.wikipedia.org/wiki/X",
+])
+def test_addresses_link_as_written(address):
+	assert_same_html(_rendered(address), f'<p>{_link(address)}</p>')
 
 
-def test_the_rewrite_examples_follow_the_table():
-	'''Each example's address is rewritten by applying REWRITES in order (then the YouTube start time), and every replacement applies in some example.'''
-	applied = set()
-
-	def rewrite(address):
-		for written, becomes in REWRITES:
-			if written in address:
-				applied.add(written)
-				address = address.replace(written, becomes)
-		return address.replace("?t=", "&t=") if address.startswith("https://youtube.com/watch?v=") else address
-
-	assert [rewrite(address) for address, _ in REWRITE_EXAMPLES] == [rewritten for _, rewritten in REWRITE_EXAMPLES]
-	assert [written for written, _ in REWRITES if written not in applied] == []
-
-
-@pytest.mark.parametrize("address, rewritten", REWRITE_EXAMPLES)
-def test_some_sites_addresses_are_rewritten(address, rewritten):
-	assert_same_html(_rendered(address), f'<p>{_link(rewritten)}</p>')
-
-
-def test_a_link_showing_its_address_shows_it_rewritten():
-	assert_same_html(_rendered("I read nitter.net"), f'<p>I read {_link("http://twitter.com", "twitter.com")}</p>')
+@pytest.mark.parametrize("body, html", [
+	("example.com/?utm_source=x", f'<p>{_link("http://example.com/", "example.com/")}</p>'),
+	("https://example.com/?a=1&utm_medium=y", f'<p>{_link("https://example.com/?a=1")}</p>'),
+], ids=["without its scheme", "with it"])
+def test_a_link_showing_its_address_shows_it_without_tracking(body, html):
+	assert_same_html(_rendered(body), html)
 
 
 @pytest.mark.parametrize("body, html", [
 	("`nitter.net and https://youtu.be/abcde?utm_source=x&a=1 &amp;`", "<p><code>nitter.net and https://youtu.be/abcde?utm_source=x&amp;a=1 &amp;amp;</code></p>"),
 	("my_utm_a=b&c", "<p>my_utm_a=b&amp;c</p>"),
-	("https://example.com/x?t=1 https://youtu.be/abcde?t=5", f'<p>{_link("https://example.com/x?t=1")} {_link("https://youtube.com/watch?v=abcde&t=5")}</p>'),
+	("https://example.com/x?t=1 https://youtu.be/abcde?t=5", f'<p>{_link("https://example.com/x?t=1")} {_link("https://youtu.be/abcde?t=5")}</p>'),
 	("[a & b](https://example.com/?x=1&y=2)", f'<p>{_link("https://example.com/?x=1&amp;y=2", "a &amp; b")}</p>'),
-], ids=["in code", "in prose", "other addresses' times", "ampersands"])
-def test_addresses_are_rewritten_and_cleaned_only_where_they_are_addresses(body, html):
+], ids=["in code", "in prose", "start times", "ampersands"])
+def test_addresses_are_cleaned_only_where_they_are_addresses(body, html):
 	assert_same_html(_rendered(body), html)
 
 
