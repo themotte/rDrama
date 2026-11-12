@@ -100,21 +100,23 @@ def site_settings_path() -> str:
 class Setting(typing.NamedTuple):
 	kind: type
 	'''bool settings are switched on and off; int settings take a whole number.'''
+	default: bool | int
+	'''Its value in a new site's settings file, and before every test.'''
 	spec: str
 	'''The spec file pinning its effect.'''
 
 
 SITE_SETTINGS = {
-	"Bots": Setting(bool, "auth/test_session.py"),
-	"Read-only mode": Setting(bool, "auth/test_session.py"),
-	"Signups": Setting(bool, "auth/test_signup.py"),
-	"FilterNewPosts": Setting(bool, "posts/test_submit.py"),
-	"FilterCommentsMinComments": Setting(int, "comments/test_create.py"),
-	"FilterCommentsMinKarma": Setting(int, "comments/test_create.py"),
-	"FilterCommentsMinAgeDays": Setting(int, "comments/test_create.py"),
-	"min_comments_private_profile": Setting(int, "settings/test_privacy.py"),
-	"min_truescore_private_profile": Setting(int, "settings/test_privacy.py"),
-	"min_age_days_private_profile": Setting(int, "settings/test_privacy.py"),
+	"Bots": Setting(bool, True, "auth/test_session.py"),
+	"Read-only mode": Setting(bool, False, "auth/test_session.py"),
+	"Signups": Setting(bool, True, "auth/test_signup.py"),
+	"FilterNewPosts": Setting(bool, False, "posts/test_submit.py"),
+	"FilterCommentsMinComments": Setting(int, 0, "comments/test_create.py"),
+	"FilterCommentsMinKarma": Setting(int, 0, "comments/test_create.py"),
+	"FilterCommentsMinAgeDays": Setting(int, 0, "comments/test_create.py"),
+	"min_comments_private_profile": Setting(int, 0, "settings/test_privacy.py"),
+	"min_truescore_private_profile": Setting(int, 0, "settings/test_privacy.py"),
+	"min_age_days_private_profile": Setting(int, 0, "settings/test_privacy.py"),
 }
 '''Every key of the site settings file (site_settings_path); admins change them on the dashboard (admin/test_dashboard.py).'''
 

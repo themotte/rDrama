@@ -21,11 +21,7 @@ SNAPSHOT_SCHEMA = "test_seed_snapshot"
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
-_baseline_settings: str | None = None
-
-
 def configure():
-	global _baseline_settings
 	server_url = make_url(os.environ["DATABASE_URL"])
 	test_url = server_url.set(database=TEST_DB_NAME)
 
@@ -38,9 +34,9 @@ def configure():
 	os.environ["RDRAMA_SERVICE"] = "THEMOTTE"
 	os.environ["SPEC_TEST_MODE"] = "1"
 
-	# The committed defaults, not the working copy, which a local dev server's admin toggles rewrite
-	_baseline_settings = subprocess.run(["git", "-c", "safe.directory=*", "show", "HEAD:site_settings.json"], cwd=REPO_ROOT, capture_output=True, text=True, check=True).stdout
-	restore_site_settings()
+	# Imported once the environment points at the test database, since importing the harness may import the app
+	from files.tests.spec.harness import state
+	state.write_site_settings()
 
 
 def build_database():
@@ -50,10 +46,6 @@ def build_database():
 def drop_database():
 	'''Drops the database `build_database` built: the next run builds its own, and the server then needn't flush this run's unflushed pages, which can hold up its shutdown for minutes.'''
 	_server_execute(make_url(os.environ["DATABASE_URL"]), f"DROP DATABASE IF EXISTS {TEST_DB_NAME} WITH (FORCE)")
-
-
-def restore_site_settings():
-	Path(os.environ["SITE_SETTINGS_PATH"]).write_text(_baseline_settings)
 
 
 def _dsn(url):

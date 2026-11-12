@@ -3,6 +3,7 @@ Returns the app's external state (database, Redis, site settings, uploaded files
 
 Purely external: it truncates tables and restores the seed snapshot rather than wrapping the app in a transaction, so it works the same against any implementation running on this schema. The caller must first make the app release any open transactions. Sequences are deliberately not restarted: ids are never reused, so a stale session cookie can't silently resolve to a different user.
 '''
+import json
 import os
 import shutil
 from pathlib import Path
@@ -17,6 +18,10 @@ from files.tests.spec.harness import config
 _engine = None
 _tables: list[str] | None = None
 _snapshot_tables: list[str] | None = None
+
+
+def write_site_settings():
+	Path(config.site_settings_path()).write_text(json.dumps({name: setting.default for name, setting in config.SITE_SETTINGS.items()}))
 
 
 def reset():
@@ -38,7 +43,7 @@ def reset():
 		conn.commit()
 
 	redis.Redis.from_url(os.environ["REDIS_URL"]).flushdb()
-	testenv.restore_site_settings()
+	write_site_settings()
 	images = Path(config.images_dir())
 	shutil.rmtree(images)
 	images.mkdir()
