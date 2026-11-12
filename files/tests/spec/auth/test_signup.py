@@ -242,7 +242,7 @@ def test_a_referral_is_recorded_without_telling_the_referrer():
 	assert db.rows("notifications", user_id=referrer["id"]) == []
 
 
-# Ban evasion
+# Ban evasion: signing up from a browser that used an account banned, or shadowbanned, with no end time to its ban marks the new account (users.ban_evade); one whose ban has an end time, shadowbanned or not, doesn't, even once that time has passed
 
 @pytest.mark.parametrize("ban", [{"is_banned": 1}, {"shadowbanned": "someone"}], ids=["banned", "shadowbanned"])
 def test_signing_up_from_a_banned_accounts_browser_flags_ban_evasion(ban):
@@ -259,6 +259,18 @@ def test_signing_up_from_a_banned_accounts_browser_flags_ban_evasion(ban):
 
 def test_a_temporary_ban_is_not_ban_evasion():
 	banned = factories.user(is_banned=1, unban_utc=2_000_000_000)
+	client = anon()
+	_login(client, banned)
+	client.get("/logout")
+	username = factories.unique("new")
+
+	_signup(client, usernametwo=username)
+
+	assert db.row("users", username=username)["ban_evade"] == 0
+
+
+def test_a_shadowbanned_account_serving_a_temporary_ban_is_not_ban_evasion():
+	banned = factories.user(is_banned=1, unban_utc=2_000_000_000, shadowbanned="someone")
 	client = anon()
 	_login(client, banned)
 	client.get("/logout")

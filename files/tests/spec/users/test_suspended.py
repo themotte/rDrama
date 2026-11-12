@@ -6,7 +6,7 @@ What suspended users may do. While a ban runs (permanently, or until its end tim
 - making their profile private or public (POST /id/<their id>/private/<0|1>; settings/test_privacy.py).
 (Posting and commenting are refused too; see the posts and comments areas. Voting and reporting follow their own rules; see those areas.)
 
-Everything else still works: deleting their own content, saving, subscribing, unfollowing, removing followers, blocking, and their private preferences. Once a temporary ban has run out, nothing is refused.
+Everything else still works: deleting their own content, saving, subscribing, unfollowing and removing followers (which tell the other user, as ever), blocking, and their private preferences. Once a temporary ban has run out, nothing is refused.
 
 A suspended admin is refused their admin actions too, and reads admin pages as before (harness/routes.py, admin(n); reporting/test_reports.py, the "!" reason; auth/test_session.py, read-only mode).
 '''

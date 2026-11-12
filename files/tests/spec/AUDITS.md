@@ -18,16 +18,6 @@ Decided and pinned in `volunteer/test_duty.py` and `volunteer/test_ratings.py`: 
 
 Decided and pinned in `users/test_ban_expiry.py`: a temporary ban that ran out ends (with a "You have been unbanned!" notification and `ban_evade` reset) on the user's next request to any page, not only the front page.
 
-Not yet audited. The app today has three different notions of "banned", and the routes below pick among them inconsistently:
-- `is_suspended`: banned and the ban hasn't run out;
-- `is_suspended_permanently`: banned with no end time;
-- raw `is_banned`: set, even after a temporary ban ran out, until the user's next request ends it.
-
-What to decide, case by case:
-- **Notifications a suspended user causes**: unfollowing and removing a follower still notify the other user (allowed by the current rule; confirm).
-- **Chat** (outside the spec): the page and `can_access_chat` refuse only permanent suspensions, while sending and reading messages over the socket refuse on raw `is_banned`, so any temporary ban, even one that ran out, blocks them until the user's next page request ends it.
-- **Ban evasion**: detection at login counts only permanent bans.
-
 ## The nightly volunteer recalc
 
 Pinned as they are in `volunteer/test_nightly_recalc.py`, not decided on purpose: a comment the moderators removed still teaches the volunteers who rated it (only comments their author deleted are left out); a distinguished reply counts toward the moderators' verdict even after it was deleted; a suspended volunteer's ratings still count; a comment whose author was shadowbanned since still teaches, though it's no longer given out to rate. Ratings stored before rating rules the site enforces now (an hour from the assignment, and none once a moderator's distinguished reply is in) still count. Admins weigh a fixed 4 in the estimates that score volunteers, but by their accuracy, like anyone, in a comment's badness.
