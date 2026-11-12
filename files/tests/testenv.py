@@ -17,7 +17,6 @@ from sqlalchemy.engine import make_url
 WORKER = os.environ.get("PYTEST_XDIST_WORKER")  # "gw0", "gw1", ... in an xdist worker
 TEST_DB_NAME = os.environ.get("RDRAMA_TEST_DB", "rdrama_test") + (f"_{WORKER}" if WORKER else "")
 TEST_REDIS_DB = int(os.environ.get("RDRAMA_TEST_REDIS_DB", "1")) + (1 + int(WORKER.removeprefix("gw")) if WORKER else 0)
-SNAPSHOT_SCHEMA = "test_seed_snapshot"
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -40,7 +39,9 @@ def configure():
 
 
 def build_database():
+	from files.tests.spec.harness import state
 	_build_database(make_url(os.environ["DATABASE_URL"]))
+	state.snapshot()
 
 
 def drop_database():
@@ -82,17 +83,3 @@ def _build_database(test_url):
 	if result.returncode != 0:
 		raise RuntimeError(f"Test database migration failed:\n{result.stdout}\n{result.stderr}")
 
-	_snapshot_seed_rows(test_url)
-
-
-def _snapshot_seed_rows(test_url):
-	'''Copies every non-empty table (seed users, rows inserted by migrations) so `reset` can restore them.'''
-	conn = psycopg2.connect(_dsn(test_url))
-	with conn, conn.cursor() as cur:
-		cur.execute(f"CREATE SCHEMA {SNAPSHOT_SCHEMA}")
-		cur.execute("SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename != 'alembic_version' ORDER BY tablename")
-		for (table,) in cur.fetchall():
-			cur.execute(f'SELECT EXISTS (SELECT 1 FROM public."{table}")')
-			if cur.fetchone()[0]:
-				cur.execute(f'CREATE TABLE {SNAPSHOT_SCHEMA}."{table}" AS TABLE public."{table}"')
-	conn.close()

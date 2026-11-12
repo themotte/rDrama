@@ -266,7 +266,8 @@ def request(method, target, headers, body, peer):
 def reset(profile):
 	'''Puts the site back in its starting state, and has the test run against the site deployed as `profile` (see config.PROFILES; None for the default one).'''
 	global _profile
-	# Before the first site starts, which finds its settings file
+	# Before the first site starts: the snapshot holds the database as built, and the site finds its settings file
+	state.snapshot()
 	state.write_site_settings()
 	_profile = profile
 	site = _the_site()
