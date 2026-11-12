@@ -2,10 +2,15 @@
 Keeps the spec tier usable as a clean-room specification: spec code outside the harness may reach the application only through the harness's public API, may not use in-process tricks that wouldn't work against a separately running implementation, and must not depend on particular row ids or on markup beyond what pages share with the spec (harness/markup.py).
 '''
 import ast
+import io
 import re
+import tokenize
 from pathlib import Path
 
 import pytest
+
+from files.tests.internal import spec_export
+from files.tests.testenv import REPO_ROOT
 
 SPEC_DIR = Path(__file__).resolve().parent.parent / "spec"
 HARNESS_DIR = SPEC_DIR / "harness"
@@ -148,3 +153,68 @@ def test_the_backends_provide_the_same_functions():
 	from files.tests.spec.harness import backend_inprocess, backend_process
 	assert backend_inprocess.__all__ == backend_process.__all__
 	assert all(callable(getattr(module, name)) for module in (backend_inprocess, backend_process) for name in backend_process.__all__)
+
+
+# What the handed-over spec may name outside itself, and why
+REFERENCES_ALLOWED = {
+	"files.commands.volunteer_janitor_recalc": "the import path a built-in job stores (tasks_repeatable_python), which is data",
+	"files.commands.leaderboard_recalc": "the import path a built-in job stores (tasks_repeatable_python), which is data",
+	"files.tests.spec.harness.backend_inprocess": "the current implementation's own backend, which backend.py picks only when asked to",
+}
+REFERENCE = re.compile(r"\bfiles(?:[/.][\w-]+)+/?|\b[\w+-]+\.(?:py|html|js|css|md|sql|json)\b")
+TEXT_TOKENS = {tokenize.STRING, tokenize.COMMENT, tokenize.FSTRING_MIDDLE}
+
+
+def _texts(path: Path) -> list[tuple[int, str]]:
+	'''A file's comments and strings (all of it, for a file that isn't Python), with their lines.'''
+	if path.suffix != ".py":
+		return list(enumerate(path.read_text().splitlines(), 1))
+	return [(token.start[0], token.string) for token in tokenize.generate_tokens(io.StringIO(path.read_text()).readline) if token.type in TEXT_TOKENS]
+
+
+def _outside(reference: str, exported: set[str], exported_names: set[str], repository_names: set[str]) -> bool:
+	if reference.startswith("files"):
+		path = reference.rstrip("/") if "/" in reference else reference.replace(".", "/")
+		return not (path in exported or f"{path}.py" in exported or any(name.startswith(path + "/") for name in exported))
+	return reference in repository_names and reference not in exported_names
+
+
+def test_the_handed_over_spec_names_nothing_outside_it():
+	files = spec_export.exported()
+	exported = {str(f.relative_to(REPO_ROOT)) for f in files}
+	exported_names = {Path(name).name for name in exported}
+	repository_names = {f.name for f in spec_export.repository_files()}
+	found = []
+	for path in files:
+		for line, text in _texts(path):
+			found += [f"{path.relative_to(REPO_ROOT)}:{line}: {reference}" for reference in REFERENCE.findall(text) if reference not in REFERENCES_ALLOWED and _outside(reference, exported, exported_names, repository_names)]
+	assert found == [], "the spec names what isn't handed over with it:\n" + "\n".join(found)
+
+
+def test_the_handover_leaves_out_the_in_process_backend():
+	assert {f.name for f in spec_export.exported()} >= {"backend.py", "backend_process.py"} and "backend_inprocess.py" not in {f.name for f in spec_export.exported()}
+
+
+def _is_exported_module(module: str, exported: set[str]) -> bool:
+	path = module.replace(".", "/")
+	return f"{path}.py" in exported or f"{path}/__init__.py" in exported
+
+
+def test_the_handed_over_spec_imports_nothing_outside_it():
+	files = spec_export.exported()
+	exported = {str(f.relative_to(REPO_ROOT)) for f in files}
+	repository = {str(f.relative_to(REPO_ROOT)) for f in spec_export.repository_files()}
+	found = []
+	for path in files:
+		if path.suffix != ".py":
+			continue
+		for node in ast.walk(ast.parse(path.read_text())):
+			if isinstance(node, ast.Import):
+				modules = [alias.name for alias in node.names]
+			elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
+				# `from package import name` reaches the module of that name, where there is one
+				modules = [node.module] + [f"{node.module}.{alias.name}" for alias in node.names if _is_exported_module(f"{node.module}.{alias.name}", repository)]
+			else:
+				continue
+			found += [f"{path.relative_to(REPO_ROOT)}:{node.lineno}: {module}" for module in modules if module.split(".")[0] == "files" and module not in REFERENCES_ALLOWED and not _is_exported_module(module, exported)]
+	assert found == [], "the spec imports what isn't handed over with it:\n" + "\n".join(found)

@@ -107,6 +107,8 @@ The suite is being turned into a behavioral specification for a clean-room reimp
 
 With `RDRAMA_SPEC_BACKEND=process` (the harness's own default; the root conftest sets `inprocess` unless told otherwise) the spec tier runs against the site in its own processes instead (`spec/harness/backend_process.py`, whose docstring is the test-mode interface a reimplementation provides and what a runner of the spec provides, with the values the spec runs at in `config.py`'s `SPEC_RUN` and the packages in `RUNNER_PACKAGES`, which `internal/test_runner_tables.py` checks against this suite's own runs): a gunicorn server of `files/tests/process_server.py`, commands and scheduler passes as subprocesses, outbound HTTP through an intercepting proxy and mail through a capturing SMTP server. Run it (`docker compose exec -T -e RDRAMA_SPEC_BACKEND=process site python3 -m pytest -n 8 --dist loadgroup files/tests/spec`, about two minutes) after changing the harness or how the site meets the outside world. It collects only the spec tier, and checks route coverage and where pages lead from what the harness sees; script calls and the affordance map are checked only in-process.
 
+The spec handed over to another implementation is `git archive HEAD files/__init__.py files/tests/__init__.py files/tests/spec`, which leaves out what `.gitattributes` marks `export-ignore` (the in-process backend, `spec/AUDITS.md`); `internal/test_spec_hygiene.py` checks that what it hands over (`internal/spec_export.py`) imports and names nothing outside it.
+
 ## Development Environment
 
 The application uses environment variables for configuration. When `SITE_ID` isn't set in the environment, the app loads:

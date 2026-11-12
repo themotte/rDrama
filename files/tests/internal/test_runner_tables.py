@@ -1,16 +1,14 @@
 '''
-What spec/harness/backend_process.py says a runner provides holds for rDrama's: the environment of config.SPEC_RUN, Python RUNNER_PYTHON, and the packages of RUNNER_PACKAGES at their versions, which cover what the spec imports.
+What spec/harness/backend_process.py says a runner provides holds for rDrama's: the environment of config.SPEC_RUN, Python RUNNER_PYTHON, and the packages of RUNNER_PACKAGES at their versions, which cover what the handed-over spec imports.
 '''
 import ast
 import importlib.metadata
 import os
 import sys
 
+from files.tests.internal import spec_export
 from files.tests.spec.harness import config
 from files.tests.spec.harness.backend_process import RUNNER_PACKAGES, RUNNER_PYTHON
-from files.tests.testenv import REPO_ROOT
-
-SPEC = REPO_ROOT / "files" / "tests" / "spec"
 
 
 def test_the_spec_runs_at_the_values_of_spec_run():
@@ -32,8 +30,8 @@ def test_the_runner_packages_are_installed_at_their_versions():
 
 def test_the_spec_imports_only_the_runner_packages():
 	imported = set()
-	for path in SPEC.rglob("*.py"):
-		if path.name == "backend_inprocess.py":
+	for path in spec_export.exported():
+		if path.suffix != ".py":
 			continue
 		for node in ast.walk(ast.parse(path.read_text())):
 			if isinstance(node, ast.Import):
