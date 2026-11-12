@@ -1,5 +1,5 @@
 '''
-With a site key, the contact form (GET /contact, /press, /media) asks visitors for an hCaptcha answer, and POST /send_admin hears a visitor (notifications/test_modmail.py) only once hCaptcha approves the answer; otherwise it refuses with 403. Members, and API clients, aren't asked.
+With a site key, the contact form (GET /contact, /press, /media) asks visitors for an hCaptcha answer, and POST /send_admin hears a visitor (notifications/test_modmail.py) only once hCaptcha approves the answer; otherwise it refuses with 403. Members, and API clients, aren't asked, and members' pages don't load hCaptcha's script.
 '''
 import pytest
 
@@ -28,6 +28,7 @@ def test_the_form_doesnt_offer_members_the_captcha(path):
 
 	assert_html(r, 200)
 	assert_not_in_payload(r, captcha.SITE_KEY)
+	assert_not_in_payload(r, captcha.WIDGET_SCRIPT)
 
 
 def test_a_visitor_hcaptcha_approves_is_heard():

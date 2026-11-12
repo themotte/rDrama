@@ -39,7 +39,7 @@
 	<section id="canary">
 		<p>If you can see this line, we haven't been contacted by any law enforcement or governmental organizations in 2023 yet.</p>
 	</section>
-	{% if captcha_site_key() %}
+	{% if not v and captcha_site_key() %}
 		<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 	{% endif %}
 {% endblock %}
