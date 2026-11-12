@@ -83,7 +83,7 @@ def _targets():
 	post = factories.post(user)
 	comment = factories.comment(user, post)
 	note = db.insert("usernotes", author_id=admin["id"], reference_user=user["id"], note=factories.unique(), tag="Comment")
-	task = factories.job(admin, "files.helpers.config.const", "nothing", enabled=False)
+	task = factories.job(admin, "example.jobs", "nothing", enabled=False)
 	run = factories.task_run(task)
 	scheduled_post = factories.scheduled_post(admin, enabled=False)
 	return {

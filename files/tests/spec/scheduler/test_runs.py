@@ -29,7 +29,7 @@ def _due(task_factory, *args, **overrides):
 
 def _missing_job(admin):
 	token = factories.unique("job")
-	return _due(factories.job, admin, f"files.nonexistent_{token}", "run"), token
+	return _due(factories.job, admin, token, "run"), token
 
 
 def test_a_job_naming_a_callable_its_module_lacks_fails():

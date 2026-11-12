@@ -1,7 +1,7 @@
 '''
 The markup pages share with the spec, which a reimplementation's pages must carry too. Everything else about a page (its structure, classes, copy and scripts) is the implementation's own.
 
-Spec tests read pages through the helpers below: an element by an id matching one of ELEMENT_IDS or among RULE_ANCHORS (each unique on its page), the counts in ATTRIBUTES, and what standard HTML gives any page (the addresses its links lead to, its form inputs and title). Pages are read as the HTML standard parses them (html5.py). `internal/test_spec_hygiene.py` keeps markup out of the tests themselves.
+Spec tests read pages through the helpers below: an element by an id matching one of ELEMENT_IDS or among RULE_ANCHORS (each unique on its page), the counts in ATTRIBUTES, and what standard HTML gives any page (the addresses its links lead to, its form inputs and title). Pages are read as the HTML standard parses them (html5.py). The tests themselves hold no markup.
 '''
 import re
 

@@ -15,7 +15,7 @@ MONDAY, TUESDAY = 1 << 2, 1 << 3
 
 
 def _task(admin, *, enabled=True, frequency_day=MONDAY):
-	return factories.job(admin, "files.helpers.config.const", factories.unique("callable"), enabled=enabled, frequency_day=frequency_day, time_of_day_utc="01:00")
+	return factories.job(admin, "example.jobs", factories.unique("callable"), enabled=enabled, frequency_day=frequency_day, time_of_day_utc="01:00")
 
 
 def test_admin_replaces_a_tasks_schedule():
@@ -111,7 +111,7 @@ def test_task_list_links_every_task():
 
 def test_task_page_shows_what_it_runs_and_links_its_runs():
 	admin = factories.admin(2)
-	task = factories.job(admin, "files.helpers.config.const", factories.unique("callable"), run_time_last=datetime(2020, 1, 1))
+	task = factories.job(admin, "example.jobs", factories.unique("callable"), run_time_last=datetime(2020, 1, 1))
 	run = factories.task_run(task)
 	unfinished = factories.task_run(task, completed_utc=None)
 

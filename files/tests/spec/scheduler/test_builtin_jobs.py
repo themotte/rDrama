@@ -48,7 +48,7 @@ def test_setup_again_changes_nothing():
 
 
 def test_setup_keeps_what_a_builtin_job_runs_but_leaves_its_schedule_to_admins():
-	existing = factories.job(SYSTEM, "files.commands.old_leaderboards", "old_callable", label="leaderboard_recalc", enabled=False, frequency_day=MONDAY, time_of_day_utc="03:00")
+	existing = factories.job(SYSTEM, "retired.leaderboards", "old_callable", label="leaderboard_recalc", enabled=False, frequency_day=MONDAY, time_of_day_utc="03:00")
 
 	since = utc_now_naive().replace(microsecond=0)
 	with db_diff() as d:
