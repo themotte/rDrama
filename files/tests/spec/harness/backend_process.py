@@ -7,7 +7,7 @@ The test-mode interface an implementation provides to be run by the spec:
   - SSL_CERT_FILE naming the authority's certificate, which the site trusts, in place of any other, for its outbound HTTPS and its mail server.
   - MAIL_SERVER (an IP address) and MAIL_PORT naming the mail capture, which the site reaches over STARTTLS.
   It takes connections from any address in 127.0.0.0/8, and takes the address a connection comes from for the request's peer (harness.Client's `peer`). It serves from one process, since the background work it holds is that process's, and closes a connection after the response when the request asks it to (Connection: close). Requests come one at a time; each must be answered within 30 seconds. A response may come before the site has read the request's body (refusing a body by its length), and the connection may then be reset once it is sent.
-- Shared state. The database, the Redis db, the site settings file and the upload store are the state the environment configures. The harness reads and writes them directly, between requests and between tests (state.py puts them back before each test), so the site keeps no copy of them across requests that such a change would leave stale.
+- Shared state. The database, the Redis db, the site settings file and the upload store are the state the environment configures. The harness reads and writes them directly, between requests and between tests (state.py puts them back before each test), so the site keeps no copy of them across requests that such a change would leave stale, and holds no transaction open between requests, which would hold up the reset's truncate.
 - Control requests, answered in test mode only, whatever their Host, ahead of any of the site's own handling:
   - POST /__spec__/ready answers once the site serves requests; the harness retries it while the connection is refused, for up to 60 seconds, and takes any other answer than 200 for a failure to start.
   - POST /__spec__/background/run runs the work the site has handed to the background to completion.
@@ -22,6 +22,14 @@ The test-mode interface an implementation provides to be run by the spec:
 Each site starts with the first test in its profile and stops when the harness's process exits, or dies with it. If it can't start, or stops serving, every test in its profile from then on fails at once with its log.
 
 A run of the whole spec tier also checks the implementation by what its answers show the harness's clients: route coverage (coverage.py), where every route of the table must have answered some test outside spec/routes and spec/limits past its gate, so that the spec, run against this implementation, exercised each; and where pages lead (pages.py), where no link, form or embed of a page may lead to an address no route answers. Neither sees routes the implementation adds beyond the table, nor a missing route it answers with a status other than 404 or 405; pages.py says what of a page it doesn't read.
+
+The runner: what runs the spec tier (pytest, with pytest-xdist for workers) provides around the harness.
+- It runs it on Python RUNNER_PYTHON with the packages of RUNNER_PACKAGES, on Linux with the `openssl` command (process_tls), and `setpriv` where it can, so sites die with their harness.
+- In each process (each xdist worker), before importing the harness: a database built fresh from the contract's schema.sql and seed.sql (holding nothing else, state.py's snapshot included), on a PostgreSQL role allowed to set session_replication_role (a superuser), for state.py's restore; and the environment of config.SPEC_RUN, config.RUNNER_CHOSEN, config.PRECONDITIONS (or the variables left out) and RDRAMA_SPEC_SERVER, RDRAMA_SPEC_CLI and RDRAMA_SPEC_SCHEDULER.
+- It collects the spec tier with its own conftest (spec/conftest.py), whose fixture puts the state and the site back before every test (lifecycle).
+- The `profile` mark: registered, a name not in config.PROFILES refused, and under xdist each profile's tests kept to one worker (an xdist_group mark per profile, added before xdist reads the marks, and `--dist loadgroup`).
+- Around each spec test's call phase only (not its fixtures): run_record.start(the test's file, check_pages=whether the run checks a whole spec tier) and run_record.stop().
+- At the end of a passing run that collected the whole tier (coverage.collected_whole_spec, given the tests collected and the number deselected), from every worker's coverage.seen() and pages.output(): the run fails when coverage.unrequested(all seen) or pages.problems(all outputs) reports anything. A worker that crashed sends nothing, which makes the run incomplete, so these checks don't run.
 '''
 import atexit
 import json
@@ -41,6 +49,24 @@ from files.tests.spec.harness.process_smtp import HOST as MAIL_HOST, Capture
 from files.tests.spec.harness.process_tls import Authority
 
 __all__ = ["request", "reset", "run_background_work", "limit_clock_set", "cli", "run_scheduler", "sent_mail", "take_outbound_attempts", "take_server_log", "external_serve", "external_unreachable", "external_requests"]
+
+RUNNER_PYTHON = "3.13"
+'''The Python version the harness runs on.'''
+
+RUNNER_PACKAGES = {
+	"pytest": "8.4.2",
+	"pytest-xdist": "3.8.0",
+	"SQLAlchemy": "2.0.43",
+	"psycopg2": "2.9.10",
+	"redis": "6.4.0",
+	"lxml": "6.0.2",
+	"selectolax": "1.0.2",
+	"itsdangerous": "2.2.0",
+	"pillow": "11.3.0",
+	"pyotp": "2.9.0",
+	"urllib3": "2.5.0",
+}
+'''The Python distributions the harness and the spec's tests run with, at the versions they are known to run with: what they import, the database driver and the runner's.'''
 
 _TIMEOUT = 30
 _START_TIMEOUT = 60

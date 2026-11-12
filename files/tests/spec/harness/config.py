@@ -14,7 +14,7 @@ class Env(enum.Enum):
 	PRECONDITION = "precondition"
 	'''A switch the spec's default profile needs at one value (PRECONDITIONS), which a profile may change; a reimplementation reads it with the same meaning.'''
 	TEST = "test"
-	'''Set by the spec harness for the implementation it runs, never in production. SPEC_TEST_MODE, when true: work the site hands to the background waits until the harness runs it (run_background_work); the rate limits and the signup form's minimum filling time are off, unless SPEC_TEST_LIMITS is also true, which turns them on as in production; and password hashes may be cheap to compute.'''
+	'''Set for the implementation the spec runs (by its runner, config.SPEC_RUN, or a profile), never in production. SPEC_TEST_MODE, when true: work the site hands to the background waits until the harness runs it (run_background_work); the rate limits and the signup form's minimum filling time are off, unless SPEC_TEST_LIMITS is also true, which turns them on as in production; and password hashes may be cheap to compute.'''
 
 
 ENVIRONMENT = {
@@ -63,6 +63,41 @@ PRECONDITIONS = {
 	"VOLUNTEER_JANITOR_ENABLE": True,
 }
 '''The values the spec's default profile needs, which a profile may change; an absent variable counts as its default here (no site key: no captcha; the volunteer janitor on).'''
+
+
+SPEC_RUN = {
+	"DOMAIN": "localhost",
+	"SITE_ID": "TheMotte",
+	"SITE_TITLE": "The Motte",
+	"DESCRIPTION": "A place for people who want to test their ideas.",
+	"DEFAULT_COLOR": "ffffff",
+	"CARD_VIEW": "0",
+	"MENTION_LIMIT": "100",
+	"RESULTS_PER_PAGE_COMMENTS": "200",
+	"SCORE_HIDING_TIME_HOURS": "24",
+	"SPAM_SIMILARITY_THRESHOLD": "0.5",
+	"SPAM_URL_SIMILARITY_THRESHOLD": "0.1",
+	"SPAM_SIMILAR_COUNT_THRESHOLD": "10",
+	"COMMENT_SPAM_SIMILAR_THRESHOLD": "0.5",
+	"COMMENT_SPAM_COUNT_THRESHOLD": "10",
+	"SPEC_TEST_MODE": "1",
+}
+'''The values the spec runs the site at, which its runner sets in the harness's environment: the tuning values are production's, and DOMAIN, holding "localhost", makes the site's address plain http. The default profile's switches are PRECONDITIONS.'''
+
+RUNNER_CHOSEN = {
+	"MASTER_KEY": "any signing key",
+	"DATABASE_URL": "the database the runner built from the contract's schema.sql and seed.sql, for this process alone",
+	"REDIS_URL": "a Redis db for this process alone",
+	"SITE_SETTINGS_PATH": "a path in a writable directory of this process's own, where the harness writes the settings file",
+	"IMAGES_DIR": "an empty directory of this process's own",
+	"MAIL_USERNAME": "any",
+	"MAIL_PASSWORD": "any",
+	"HCAPTCHA_SECRET": "any (the captcha profile sets its own)",
+}
+'''The variables whose values the runner chooses.'''
+
+SET_BY_HARNESS = {"MAIL_SERVER", "MAIL_PORT", "SSL_CERT_FILE", "SPEC_TEST_LIMITS"}
+'''The rest of ENVIRONMENT, which the harness sets for the site it starts (backend_process) or for a profile.'''
 
 
 def site_host() -> str:
