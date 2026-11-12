@@ -13,7 +13,7 @@ from files.helpers.captcha import validate_captcha
 from files.helpers.config.const import *
 from files.helpers.config.environment import IMAGES_DIR
 from files.helpers.listing import request_page
-from files.helpers.media import new_image_path, process_image
+from files.helpers.media import delete_uploaded_image, new_image_path, process_image
 from files.mail import *
 from files.__main__ import app, cache, limiter # violates isort but used to prevent getting shadowed
 
@@ -246,8 +246,6 @@ def contact(v):
 @limiter.limit("1/second;2/minute;6/hour;10/day")
 @auth_desired
 def submit_contact(v: Optional[User]):
-	if not v and not validate_captcha(request.values.get("h-captcha-response", "")):
-		abort(403, "CAPTCHA provided was not correct. Please try it again")
 	body = request.values.get("message", "").strip()[:MESSAGE_BODY_LENGTH_MAXIMUM].strip()
 	# The longest an email address can be
 	email = request.values.get("email", "").strip()[:254]
@@ -261,14 +259,21 @@ def submit_contact(v: Optional[User]):
 	message = f"<strong>Message</strong>:\n{body}\n\n"
 	html    = sanitize(f"{header}\n{email}{message}")
 
+	url = None
 	if request.files.get("file"):
 		file=request.files["file"]
-		if (file.content_type or '').startswith('image/'):
-			name = new_image_path()
-			file.save(name)
-			url = process_image(name)
-			html += f'<img data-bs-target="#expandImageModal" data-bs-toggle="modal" onclick="expandDesktopImage(this.src)" class="img" src="{url}" loading="lazy">'
-		else: abort(400, "Image files only")
+		if not (file.content_type or '').startswith('image/'): abort(400, "Image files only")
+		name = new_image_path()
+		file.save(name)
+		url = process_image(name)
+
+	# After the form's own checks, so a form refused anyway doesn't ask hCaptcha
+	if not v and not validate_captcha(request.values.get("h-captcha-response", "")):
+		delete_uploaded_image(url)
+		abort(403, "CAPTCHA provided was not correct. Please try it again")
+
+	if url:
+		html += f'<img data-bs-target="#expandImageModal" data-bs-toggle="modal" onclick="expandDesktopImage(this.src)" class="img" src="{url}" loading="lazy">'
 
 	new_comment = Comment(
 		author_id=v.id if v else NOTIFICATIONS_ID,

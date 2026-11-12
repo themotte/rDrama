@@ -1,5 +1,5 @@
 '''
-With a site key, the signup form asks for an hCaptcha answer, and a signup is created only once hCaptcha approves its answer; otherwise it goes back to the form with an "error", as other refused signups do (auth/test_signup.py).
+With a site key, the signup form asks for an hCaptcha answer, and a signup is created only once hCaptcha approves its answer; otherwise it goes back to the form with an "error", as other refused signups do (auth/test_signup.py). The answer is checked after everything else about the signup: one refused for another reason never asks hCaptcha.
 '''
 import pytest
 
@@ -72,3 +72,21 @@ def test_a_signup_whose_answer_cant_be_checked_is_refused(failure):
 
 	assert_redirect(r, "/signup", query_keys=("error",))
 	d.assert_exactly()
+
+
+def test_a_signup_for_a_taken_name_never_asks():
+	existing = factories.user()
+
+	r = _signup(anon(), usernametwo=existing["username"], **{captcha.FIELD: factories.unique("answer")})
+
+	assert_redirect(r, "/signup", query_keys=("error",))
+	assert external_web.requests() == []
+
+
+def test_a_signup_for_a_reserved_name_never_asks():
+	reserved = factories.user(reserved="someone else")
+
+	r = _signup(anon(), usernametwo=reserved["username"], **{captcha.FIELD: factories.unique("answer")})
+
+	assert_redirect(r, f"/@{reserved['username']}")
+	assert external_web.requests() == []

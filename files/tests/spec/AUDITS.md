@@ -31,7 +31,3 @@ Pinned as they are in `notifications/test_notices.py`, not decided on purpose: a
 Pinned as they are in `rendering/test_text.py`, not decided on purpose: mail addresses aren't linked. Raw HTML that HTML doesn't allow where it stands, such as text directly inside a table, may lose that text.
 
 Also pinned there as they are, not decided on purpose: a dropped element's text runs on into its neighbours' (`<details><summary>a</summary>b</details>` reads "ab"), except around some block elements such as `<dl>`, which leave a line break; a table's `<caption>` text moves before the table and its `<tfoot>` rows into another `<tbody>`; an image's alt text is lost, and the text of a `<script>`, `<style>` or `<textarea>` shows as text; relative addresses other than those starting with "/" (`foo`, `#f`, `?q`) count as leaving the site.
-
-## The captcha
-
-Not pinned, so not decided: where checking the answer comes among a request's other checks. Today a visitor's empty contact message without an answer is refused with 403, as the missing answer, not with the empty message's 400; and a signup is checked with hCaptcha only once everything else about it is in order, so a signup refused for another reason never asks. The spec's profiles don't combine, so neither is the order of the signup form's minimum filling time (the `limits` profile) and the captcha (the `captcha` profile).
