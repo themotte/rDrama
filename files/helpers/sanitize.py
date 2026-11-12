@@ -177,7 +177,7 @@ def sanitize(sanitized):
 		return f'{m.group(1)}<a href="/id/{u.id}">@{u.username}</a>'
 
 	def _links(text: str) -> str:
-		text = _reddit_text_regex.sub(r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">/\2</a>', text)
+		text = _reddit_text_regex.sub(r'\1<a href="https://reddit.com/\2" rel="nofollow noopener noreferrer">/\2</a>', text)
 		text = _hole_text_regex.sub(r'\1<a href="/\2">/\2</a>', text)
 		return _mention_text_regex.sub(_mention, text)
 

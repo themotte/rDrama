@@ -7,7 +7,7 @@ In order:
 - The text is Markdown (CommonMark, with tables): paragraphs, emphasis, headings, block quotes, lists, code spans and blocks (a fenced block's language is dropped), rules, hard line breaks, links and autolinks, and raw HTML.
 - The site's conventions below apply within runs of text, outside code, links and web addresses, and never to markup: text between single or double tildes (~like this~, ~~or this~~) is struck through (<del>), and ||text|| becomes a spoiler (<spoiler>).
 - Mentions of users (test_mentions.py) become links to them.
-- Likewise, "/r/<name>" and "/u/<name>" (3 to 25 letters, digits, "_" or "-", not followed by more) at the start of a run of text or after whitespace link to Reddit (old.reddit.com), and "/h/<name>" to that path on the site.
+- Likewise, "/r/<name>" and "/u/<name>" (3 to 25 letters, digits, "_" or "-", not followed by more) at the start of a run of text or after whitespace link to Reddit (reddit.com), and "/h/<name>" to that path on the site.
 - A link whose text is itself a web address shows its real address instead.
 - Only the elements in KEPT_ELEMENTS are kept: other elements are dropped but their text stays (DROPPED_ELEMENTS). Only these attributes are kept: "style" on any element, keeping only the CSS properties "color", "background-color", "font-weight" and "text-align"; on "a", "href", "target" only as "_blank" and "rel" only as "nofollow noopener noreferrer"; on "span", "title", "alt" and "data-bs-toggle" only as "tooltip". A link keeps its address unless it has a scheme other than http or https (in any letter case).
 - Web addresses in the text become links (not inside code) when their host name's last label is one of TOP_LEVEL_DOMAINS, with http:// or https:// or bare (linked with http://). Links leaving the site open in a new tab (target "_blank", rel "nofollow noopener noreferrer"); links to the site's own pages (an address starting with a single "/", or the site's own address) aren't given them, but keep them if written with them.
@@ -264,7 +264,7 @@ def test_addresses_are_cleaned_only_where_they_are_addresses(body, html):
 	("~struck~ and ~~double~~", "<p><del>struck</del> and <del>double</del></p>"),
 	("~one~~", "<p><del>one</del>~</p>"),
 	("||hidden||", "<p><spoiler>hidden</spoiler></p>"),
-	("/r/motte and u/some-one", '<p><a href="https://old.reddit.com/r/motte" target="_blank" rel="nofollow noopener noreferrer">/r/motte</a> and <a href="https://old.reddit.com/u/some-one" target="_blank" rel="nofollow noopener noreferrer">/u/some-one</a></p>'),
+	("/r/motte and u/some-one", '<p><a href="https://reddit.com/r/motte" target="_blank" rel="nofollow noopener noreferrer">/r/motte</a> and <a href="https://reddit.com/u/some-one" target="_blank" rel="nofollow noopener noreferrer">/u/some-one</a></p>'),
 	("/r/ab", "<p>/r/ab</p>"),
 	("`/r/motte`", "<p><code>/r/motte</code></p>"),
 	("/h/hole", '<p><a href="/h/hole">/h/hole</a></p>'),
