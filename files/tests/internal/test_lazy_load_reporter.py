@@ -1,3 +1,4 @@
+'''The app's report of lazy loads (files/__main__.py LazyLoadReporter), which names what loaded and holds back repeats within its interval.'''
 import io
 import re
 from contextlib import redirect_stderr
@@ -9,8 +10,7 @@ from sqlalchemy.orm import Session
 from files import __main__ as main
 from files.__main__ import LazyLoadReporter
 from files.classes import Submission
-
-from . import util_accounts, util
+from files.tests.spec.harness import factories
 
 pytestmark = pytest.mark.filterwarnings(
 	"ignore::files.tests.conftest.LazyLoadWarning"
@@ -18,19 +18,11 @@ pytestmark = pytest.mark.filterwarnings(
 
 
 def _trigger_lazy_load():
-	"""Create a fresh submission, reload it in an isolated session, then
-	access .author after expiring that relationship to force a lazy load."""
-	client, _ = util_accounts.create_test_client_and_user()
-	response, _ = util.post_with_formkey(
-		client, "/submit",
-		data={"title": util.generate_text(), "body": util.generate_text()},
-	)
-	assert response.status_code == 200
-
-	post = util.ItemData.from_html(response.text)
+	"""Load a post in an isolated session and access .author after expiring that relationship, forcing a lazy load."""
+	post = factories.post(factories.user())
 	session = main.db_session_factory()
 	try:
-		sub = session.get(Submission, post.id)
+		sub = session.get(Submission, post["id"])
 		session.expire(sub, ['author'])
 		_ = sub.author
 	finally:
