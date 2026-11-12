@@ -112,7 +112,7 @@ class Client:
 		status, response_headers, body = backend.request(method, target, all_headers, body, self.peer)
 		response = Response(status, response_headers, body)
 		self._absorb_cookies(response)
-		run_record.exchange(method, target, response)
+		run_record.exchange(method, target, response, api_client=self.authorization is not None, script_request=any(name.lower() == "xhr" for name in all_headers))
 		return response
 
 	def _with_formkey(self, data):

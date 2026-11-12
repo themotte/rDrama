@@ -9,7 +9,7 @@ import warnings
 import pytest
 
 from files.tests import affordances, router_check
-from files.tests.spec.harness import coverage, run_record
+from files.tests.spec.harness import coverage, pages, run_record
 
 # The spec tier against the site running in its own processes (spec/harness/backend_process.py), started by these commands unless the runner names others
 PROCESS_BACKEND = os.environ.get("RDRAMA_SPEC_BACKEND") == "process"
@@ -42,7 +42,7 @@ def pytest_collection_modifyitems(config, items):
 
 
 # Route coverage (spec/harness/coverage.py), the harness's route matching checked against the router (router_check.py) and what pages offer (affordances.py), checked when a run collected every spec test and passed
-_coverage = {"deselected": 0, "complete": True, "seen": set(), "unrequested": None, "mismatches": set(), "affordances": [], "page_problems": {}, "map_unwritten": False}
+_coverage = {"deselected": 0, "complete": True, "seen": set(), "unrequested": None, "mismatches": set(), "pages": [], "affordances": [], "page_problems": {}, "map_unwritten": False}
 
 
 def pytest_deselected(items):
@@ -58,7 +58,7 @@ def pytest_collection_finish(session):
 def pytest_runtest_call(item):
 	if not item.path.is_relative_to(coverage.SPEC):
 		return (yield)
-	run_record.start(item.path)
+	run_record.start(item.path, check_pages=_coverage["complete"])
 	if not PROCESS_BACKEND:
 		router_check.connect()
 		if _coverage["complete"]: affordances.start(item.path)
@@ -79,12 +79,14 @@ def pytest_testnodedown(node, error):
 	_coverage["complete"] &= output["complete"]
 	_coverage["seen"] |= {tuple(pair) for pair in output["seen"]}
 	_coverage["mismatches"] |= set(output["mismatches"])
+	_coverage["pages"].append(node.workeroutput["pages"])
 	_coverage["affordances"].append(node.workeroutput["affordances"])
 
 
 def pytest_sessionfinish(session, exitstatus):
 	if hasattr(session.config, "workeroutput"):
 		session.config.workeroutput["route_coverage"] = {"complete": _coverage["complete"], "seen": sorted(coverage.seen()), "mismatches": sorted(router_check.mismatches())}
+		session.config.workeroutput["pages"] = pages.output()
 		session.config.workeroutput["affordances"] = affordances.output()
 		return
 	_coverage["map_unwritten"] = bool(os.environ.get("RDRAMA_AFFORDANCES_OUT"))
@@ -93,7 +95,7 @@ def pytest_sessionfinish(session, exitstatus):
 	_coverage["unrequested"] = coverage.unrequested(_coverage["seen"] | coverage.seen())
 	_coverage["mismatches"] |= router_check.mismatches()
 	offered = affordances.merge([*_coverage["affordances"], affordances.output()])
-	_coverage["page_problems"] = affordances.problems(offered)
+	_coverage["page_problems"] = {**pages.problems([*_coverage["pages"], pages.output()]), **affordances.problems(offered)}
 	if _coverage["unrequested"] or _coverage["mismatches"] or _coverage["page_problems"]:
 		session.exitstatus = pytest.ExitCode.TESTS_FAILED
 	elif os.environ.get("RDRAMA_AFFORDANCES_OUT"):

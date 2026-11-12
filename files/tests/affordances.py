@@ -6,15 +6,15 @@ Scripts are read through CALLS and SCRIPTS below, which know the site's own scri
 import json
 import re
 from typing import Callable, NamedTuple
-from urllib.parse import parse_qsl, urljoin, urlsplit
+from urllib.parse import parse_qsl, unquote, urlsplit
 
 from files.tests import testenv
+from files.tests.spec.harness.pages import STORED_TEXT_COLUMNS, form_method, leads, site_address
+from files.tests.spec.harness.routes import ROUTES, match, off_spec
 
 SPEC = testenv.REPO_ROOT / "files" / "tests" / "spec"
 JS = testenv.REPO_ROOT / "files" / "assets" / "js"
 TEMPLATES = testenv.REPO_ROOT / "files" / "templates"
-# Served beside the site, outside the spec
-OFF_SPEC = {"/chat"}
 VIEWER_ANON = "anon"
 PLACEHOLDER = "1"
 
@@ -256,14 +256,6 @@ def _field_names(form) -> tuple[str, ...]:
 	return tuple(sorted({re.sub(r"-\d+$", "-<id>", c.get("name")) for c in controls if c.get("name")}))
 
 
-def _site_address(url: str, page_url: str, host: str) -> str | None:
-	'''The address on the site `url` (as written on the page at `page_url`) leads to, or None if it leads off the site.'''
-	if url.strip().lower().startswith("javascript:"): return None
-	parts = urlsplit(urljoin(page_url, url.strip()))
-	if parts.scheme not in ("http", "https") or parts.netloc != host: return None
-	return parts.path + (f"?{parts.query}" if parts.query else "")
-
-
 def _script_sent(form) -> bool:
 	'''Whether a form's own handler keeps the browser from sending it (its script sends it instead, or nothing does).'''
 	calls = parse_calls(form.get("onsubmit") or "")
@@ -275,23 +267,25 @@ def page_affordances(html: str, page_url: str, host: str) -> tuple[list[Affordan
 	import lxml.html
 	if not html.strip(): return [], []
 	document = lxml.html.document_fromstring(html)
-	found, unknown = [], []
-	for kind, xpath in (("link", "//a/@href"), ("copy", "//@data-clipboard-text"), ("embed", "//img/@src | //img/@data-src | //source/@src | //script/@src | //link/@href")):
-		for value in document.xpath(xpath):
-			# What a page offers to copy is an address only when written as one (it may be a token)
-			if value.startswith("#") or (kind == "copy" and not value.startswith(("/", "http:", "https:"))): continue
-			address = _site_address(value, page_url, host)
-			if address: found.append(Affordance(kind, "GET", address))
+	# Links and embeds as the harness reads them (spec/harness/pages.py)
+	found = [Affordance(kind, method, address) for kind, method, address in leads(document, page_url, host) if kind != "form"]
+	unknown = []
+	for value in document.xpath("//@data-clipboard-text"):
+		# What a page offers to copy is an address only when written as one (it may be a token)
+		if value.startswith(("/", "http:", "https:")) and (address := site_address(value, page_url, host)):
+			found.append(Affordance("copy", "GET", address))
+	# Forms, unless their own handler keeps the browser from sending them: the harness checks only those without a handler
 	for form in document.xpath("//form"):
-		if _script_sent(form): continue
-		address = _site_address(form.get("action") or "", page_url, host)
-		if address: found.append(Affordance("form", (form.get("method") or "GET").upper(), address, _field_names(form)))
+		method = form_method(form)
+		if _script_sent(form) or not method: continue
+		address = site_address(form.get("action") or "", page_url, host)
+		if address: found.append(Affordance("form", method, address, _field_names(form)))
 	for element in document.iter():
 		if not isinstance(element.tag, str): continue
 		for attribute, source in element.attrib.items():
 			if attribute.startswith("on"):
 				requests, unclassified = script_requests(source, element)
-				found += [r if r.route else r._replace(address=_site_address(r.address, page_url, host) or r.address) for r in requests]
+				found += [r if r.route else r._replace(address=site_address(r.address, page_url, host) or r.address) for r in requests]
 				unknown += unclassified
 	loaded = {urlsplit(src).path.rsplit("/", 1)[-1] for src in document.xpath("//script/@src")}
 	inline = "".join(document.xpath("//script[not(@src)]/text()"))
@@ -310,7 +304,7 @@ _failures: set[str] = set()
 _recording = False
 _connected = False
 _stored_text_columns: list[tuple[str, str]] | None = None
-_routes: set[tuple[str, str]] | None = None
+_app_routes: set[tuple[str, str]] | None = None
 
 
 def _viewer(g) -> str:
@@ -324,25 +318,37 @@ def _without_stored_text(html: str, db) -> str:
 	global _stored_text_columns
 	from sqlalchemy import text
 	if _stored_text_columns is None:
-		_stored_text_columns = [tuple(row) for row in db.execute(text("SELECT table_name, column_name FROM information_schema.columns WHERE table_schema = 'public' AND (column_name LIKE '%\\_html' OR (table_name = 'users' AND column_name = 'customtitle'))"))]
+		_stored_text_columns = [tuple(row) for row in db.execute(text(STORED_TEXT_COLUMNS))]
 	# Only text holding a link or an image can add to what the page offers
-	values = {value for table, column in _stored_text_columns for (value,) in db.execute(text(f'SELECT "{column}" FROM "{table}" WHERE "{column}" LIKE \'%href=%\' OR "{column}" LIKE \'%src=%\''))}
+	values = {value for table, column in _stored_text_columns for (value,) in db.execute(text(f'SELECT "{column}" FROM "{table}" WHERE "{column}" ILIKE \'%href=%\' OR "{column}" ILIKE \'%src=%\''))}
 	for value in sorted(values, key=len, reverse=True):
 		html = html.replace(value, "")
 	return html
 
 
-def target(app, host: str, a: Affordance) -> str | None:
-	'''The route-table row ("METHOD path") that answers an affordance's request, None if none does.'''
+def target(a: Affordance) -> str | None:
+	'''The route-table row ("METHOD path") that answers an affordance's request, or the address of what's served beside the spec; None if nothing does.'''
+	path = a.address.partition("?")[0]
+	if a.route:
+		return f"{a.method} {path}" if any(r.method == a.method and r.path == path for r in ROUTES) else None
+	if off_spec(path): return f"{a.method} {path.rstrip('/') or '/'}"
+	found = match(a.method, a.address)
+	return f"{found.route.method} {found.route.path}" if found else None
+
+
+def _routers_target(app, host: str, a: Affordance) -> str | None:
+	'''target() as the app's router answers it, which target() must agree with.'''
 	from werkzeug.exceptions import HTTPException
 	from werkzeug.routing import RequestRedirect
 	from files.tests import route_table
-	global _routes
-	path = urlsplit(a.address).path
+	global _app_routes
+	# As the server hands it to the router: decoded
+	path = unquote(urlsplit(a.address).path)
 	if a.route:
-		if _routes is None: _routes = set(route_table.app_routes(app))
-		return f"{a.method} {path}" if (a.method, path) in _routes else None
-	if path in OFF_SPEC: return f"{a.method} {path}"
+		if _app_routes is None: _app_routes = set(route_table.app_routes(app))
+		return f"{a.method} {path}" if (a.method, path) in _app_routes else None
+	# Answered by other services (the chat) or by rules the table leaves out
+	if off_spec(path): return target(a)
 	adapter = app.url_map.bind(host)
 	for _ in range(2):
 		try:
@@ -377,9 +383,13 @@ def _record_page(sender, response):
 	_rows.add((page, viewer, "page", "", "", "", ""))
 	_unclassified.update(f"{page}: {name}" for name in unknown)
 	for a in found:
-		row = target(sender, request.host, a)
+		row = target(a)
+		if row != (routers := _routers_target(sender, request.host, a)):
+			_failures.add(f"{page}: {a.kind} {a.method} {a.address} reaches {routers} by the router, {row} by the harness's match()")
 		if row is None:
-			_dead.add(f"{page}: {a.kind} {a.method} {a.address}")
+			# Dead links and embeds are the harness's to report
+			if a.kind not in ("link", "embed"):
+				_dead.add(f"{page}: {a.kind} {a.method} {a.address}")
 			continue
 		query = ",".join(sorted({key for key, _ in parse_qsl(urlsplit(a.address).query, keep_blank_values=True)}))
 		method, path = row.split(" ", 1)
@@ -414,7 +424,7 @@ def merge(outputs: list[dict]) -> dict:
 
 def problems(merged: dict) -> dict[str, list[str]]:
 	'''What fails the run, by heading.'''
-	return {heading: merged[key] for key, heading in (("dead", "page affordances no route answers"), ("unclassified", "script calls in pages nobody has classified (affordances.py)"), ("failures", "pages the affordance recorder failed on")) if merged[key]}
+	return {heading: merged[key] for key, heading in (("dead", "page affordances no route answers (affordances.py: forms and what scripts request)"), ("unclassified", "script calls in pages nobody has classified (affordances.py)"), ("failures", "pages the affordance recorder failed on")) if merged[key]}
 
 
 COLUMNS = ("page", "viewer", "kind", "method", "target", "query", "fields")

@@ -12,7 +12,7 @@ HARNESS_DIR = SPEC_DIR / "harness"
 HARNESS_PACKAGE = "files.tests.spec.harness"
 # How the harness reaches an implementation, which tests go through the harness for
 # The backends, and what the runner checks of a whole run, which tests mustn't reach into
-FORBIDDEN_HARNESS_PREFIXES = (f"{HARNESS_PACKAGE}.backend", f"{HARNESS_PACKAGE}.process_", f"{HARNESS_PACKAGE}.run_record", f"{HARNESS_PACKAGE}.coverage")
+FORBIDDEN_HARNESS_PREFIXES = (f"{HARNESS_PACKAGE}.backend", f"{HARNESS_PACKAGE}.process_", f"{HARNESS_PACKAGE}.run_record", f"{HARNESS_PACKAGE}.coverage", f"{HARNESS_PACKAGE}.pages")
 # Tools that only work by reaching into the process under test, and page parsers (pages are read through harness/markup.py)
 FORBIDDEN_TOP_LEVEL_MODULES = {"flask", "werkzeug", "freezegun", "time_machine", "requests", "responses", "unittest", "itsdangerous", "lxml", "bs4", "html5lib"}
 FORBIDDEN_MODULE_PREFIXES = ("sqlalchemy.orm", "html.parser")
@@ -128,6 +128,7 @@ def test_there_are_spec_tests_to_check():
 	("files.tests.spec.harness.process_proxy", True),
 	("files.tests.spec.harness.run_record", True),
 	("files.tests.spec.harness.coverage", True),
+	("files.tests.spec.harness.pages", True),
 	("files.classes.user", True),
 	("flask", True),
 	("sqlalchemy.orm.session", True),

@@ -89,14 +89,14 @@ def app():
 	return app
 
 
-def test_the_classified_requests_reach_routes(app):
+def test_the_classified_requests_reach_routes():
 	wrong = []
 	for name, source in _handlers():
 		for callee, args in affordances.parse_calls(source):
 			if callee not in CALLS: continue
 			for request in CALLS[callee].requests(args, None):
-				if affordances.target(app, "localhost", request) is None or (CALLS[callee].sources and not any(literal in request.address for _, literal in CALLS[callee].sources)):
+				if affordances.target(request) is None or (CALLS[callee].sources and not any(literal in request.address for _, literal in CALLS[callee].sources)):
 					wrong.append(f"{name}: {callee} → {request.method} {request.address}")
 	for (script, literal), requests in SCRIPTS.items():
-		wrong += [f"{script}: {r.method} {r.address}" for r in requests if affordances.target(app, "localhost", r) is None or literal not in r.address]
+		wrong += [f"{script}: {r.method} {r.address}" for r in requests if affordances.target(r) is None or literal not in r.address]
 	assert wrong == []
