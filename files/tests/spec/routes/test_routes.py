@@ -4,7 +4,7 @@ The route table (harness/routes.py, which says what each column means) holds for
 import pytest
 
 from files.tests.spec.harness import *
-from files.tests.spec.harness.routes import ANYONE, PUBLIC, ROUTES, UNUSED_ID, USER_NOT_PERMABANNED, admin_level, fill
+from files.tests.spec.harness.routes import ANYONE, NOT_IDS, PUBLIC, ROUTES, UNUSED_ID, USER_NOT_PERMABANNED, admin_level, fill
 
 
 def _id(route) -> str:
@@ -147,21 +147,9 @@ def test_public_routes_give_no_session(route):
 	assert session.cookie_name() not in client.cookies
 
 
-# Spellings of the System account's id (1) and of others an id can't be written as
-_NOT_IDS = {
-	"leading zero": "01",
-	"fullwidth digits": chr(0xFF11),
-	"plus sign": "+1",
-	"leading space": "%201",
-	"underscore": "1_0",
-	"zero": "0",
-	"too large": str(2**31),
-}
-
-
-@pytest.mark.parametrize("spelling", _NOT_IDS)
+@pytest.mark.parametrize("spelling", NOT_IDS)
 @pytest.mark.parametrize("route", [r for r in ROUTES if "<id>" in r.path], ids=_id)
 def test_an_id_written_otherwise_is_404(route, spelling):
-	path = fill(route).replace(UNUSED_ID, _NOT_IDS[spelling])
+	path = fill(route).replace(UNUSED_ID, NOT_IDS[spelling])
 
 	assert_status(anon().request(route.method, path), 404)

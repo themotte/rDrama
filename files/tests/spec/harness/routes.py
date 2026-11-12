@@ -7,7 +7,7 @@ Paths are written with these variables:
 - `<path>`: any text, "/" included, at least one character, not starting with "/";
 - `<a|b>`: one of the words listed.
 
-Where a path matches more than one row, a row with fixed text where the other has a variable wins (GET /@me isn't the profile of a user "me"). A trailing "/" is optional on every path; none is written here. Doubled "/" inside a path are redirected (308) to the path with them merged. A path the table doesn't list is 404, and a method a listed path doesn't take is 405. HEAD is answered for every GET row as GET would be, without the body, and OPTIONS for every path, listing its methods (spec/routes).
+Where a path matches more than one row, a row with fixed text where the other has a variable wins (GET /@me isn't the profile of a user "me"). A trailing "/" is optional on every path; none is written here. Any number of "/" at the start of a path count as one. Doubled "/" inside a path that matches no row as written are redirected (308) to the path with each pair merged into one (match() below), so "///" is still doubled and matches nothing. A path the table doesn't list is 404, and a method a listed path doesn't take is 405. HEAD is answered for every GET row as GET would be, without the body, and OPTIONS for every path, listing its methods (spec/routes).
 
 A request is checked in this order:
 1. The checks every request gets: a query that isn't UTF-8 (400); the Host (403 unless the site's own); while the Bots site setting is off, any Authorization header (403); a missing User-Agent (403); read-only mode, which refuses changes from all but admins, logging in aside (auth/test_session).
@@ -30,6 +30,7 @@ The table describes the site as the spec runs it, which is with the rate limits 
 '''
 import re
 from typing import NamedTuple
+from urllib.parse import unquote
 
 PUBLIC = "public"
 ANYONE = "anyone"
@@ -48,6 +49,17 @@ def admin_level(access: str) -> int | None:
 
 # An id no row has: the largest the id columns hold
 UNUSED_ID = str(2**31 - 1)
+
+# Spellings of the System account's id (1) and of others an id can't be written as
+NOT_IDS = {
+	"leading zero": "01",
+	"fullwidth digits": chr(0xFF11),
+	"plus sign": "+1",
+	"leading space": "%201",
+	"underscore": "1_0",
+	"zero": "0",
+	"too large": str(2**31),
+}
 
 
 def fill(route) -> str:
@@ -280,3 +292,123 @@ ROUTES = [
 	Route("GET", "/votes", admin(3), False),
 	Route("GET", "/weekly_chart", admin(2), False),
 ]
+
+
+def off_spec(path: str) -> bool:
+	'''Whether a path is answered beside the spec, by what the table leaves out: the chat's page and the admins' request-performance controls.'''
+	return path == "/chat" or path == "/performance" or path.startswith("/performance/")
+
+
+class Match(NamedTuple):
+	route: Route
+	redirected: bool
+	'''True when the site answers by redirecting (308) to the path with doubled "/" merged, which this row answers.'''
+
+
+# Each table path as segments: fixed text, a variable within one segment, or <path>, which takes the rest
+class _Variable(NamedTuple):
+	text: str
+	pattern: re.Pattern
+	takes_the_rest: bool
+
+
+_VARIABLE = {"id": "([1-9][0-9]*)", "text": "[^/]+"}
+_ID_MAX = 2**31 - 1
+
+
+def _variable(text: str) -> _Variable:
+	if text == "<path>":
+		return _Variable(text, re.compile("[^/].*"), True)
+	def part(m):
+		kind = m.group(1)
+		if kind is None:
+			return re.escape(m.group(0))
+		if kind in _VARIABLE:
+			return _VARIABLE[kind]
+		assert "|" in kind, f"<{kind}> is no variable of the table's"
+		return "(?:" + "|".join(map(re.escape, kind.split("|"))) + ")"
+	return _Variable(text, re.compile("".join(part(m) for m in re.finditer(r"<([^>]+)>|[^<]+", text))), False)
+
+
+def _probe(text: str) -> str:
+	'''A value of a segment with variables.'''
+	return re.sub(r"<([^>]+)>", lambda m: "1" if m.group(1) == "id" else m.group(1).split("|")[0] if "|" in m.group(1) else "x", text)
+
+
+class _Node:
+	def __init__(self):
+		self.rows: list[Route] = []
+		self.fixed: dict[str, "_Node"] = {}
+		self.variables: list[tuple[_Variable, "_Node"]] = []
+
+
+def _tree(method: str) -> _Node:
+	root = _Node()
+	for route in (r for r in ROUTES if r.method == method):
+		node = root
+		for text in route.path.strip("/").split("/") if route.path != "/" else []:
+			if "<" not in text:
+				node = node.fixed.setdefault(text, _Node())
+				continue
+			variable = _variable(text)
+			existing = next((child for v, child in node.variables if v.pattern.pattern == variable.pattern.pattern), None)
+			if existing is None:
+				# Variables at one place are tried in table order, which must never decide a match: checked with a value of each
+				for other, _ in node.variables:
+					assert not (other.pattern.fullmatch(_probe(text)) or variable.pattern.fullmatch(_probe(other.text))), f"{method} rows' variables {text} and {other.text} can match the same segment"
+				existing = _Node()
+				node.variables.append((variable, existing))
+			node = existing
+		node.rows.append(route)
+	return root
+
+
+def _search(node: _Node, parts: list[str], ids: list[str]):
+	'''The row the parts lead to, with the ids it read, trying fixed text before variables at each segment.'''
+	if not parts:
+		return (node.rows[0], ids) if node.rows else None
+	if parts[0] in node.fixed:
+		if found := _search(node.fixed[parts[0]], parts[1:], ids):
+			return found
+	for variable, child in node.variables:
+		target, remaining = ("/".join(parts), []) if variable.takes_the_rest else (parts[0], parts[1:])
+		if m := variable.pattern.fullmatch(target):
+			if found := _search(child, remaining, ids + list(m.groups())):
+				return found
+	# A trailing "/" is optional on every path
+	if parts == [""] and node.rows:
+		return node.rows[0], ids
+	return None
+
+
+_TREES = {method: _tree(method) for method in {r.method for r in ROUTES}}
+
+
+def _find(method: str, path: str):
+	'''The row a path leads to and whether every id it read is in range, or None.'''
+	found = _search(_TREES[method], path[1:].split("/"), []) if method in _TREES else None
+	if found is None:
+		return None
+	route, ids = found
+	return route, all(int(value) <= _ID_MAX for value in ids)
+
+
+def match(method: str, target: str) -> Match | None:
+	'''The row answering a request for `target` (a path, with any query, or an absolute URL, whose host is ignored: the caller knows it's the site's), as the table's notes say: HEAD as GET, a trailing "/" optional, any number of "/" at the start taken as one, fixed text before a variable; doubled "/" inside it are merged only when the path as written matches nothing, and the answer is then a redirect. None when no row answers (404 or 405) and for OPTIONS.'''
+	if method == "OPTIONS":
+		return None
+	method = "GET" if method == "HEAD" else method
+	# A target in absolute form names the site too; "/" at the start count once
+	path = re.sub(r"^[a-zA-Z][a-zA-Z0-9+.-]*://[^/?#]*", "", target.partition("?")[0])
+	path = "/" + unquote(path).lstrip("/")
+	found = _find(method, path)
+	if found is not None:
+		# An id out of range names nothing, and no other row is tried
+		route, ids_in_range = found
+		return Match(route, False) if ids_in_range else None
+	if "//" in path:
+		# Each pair of "/" merged once, so "///" leaves "//", which matches no row
+		merged = re.sub("/{2,}?", "/", path)
+		if found := _find(method, merged):
+			return Match(found[0], True)
+	return None
