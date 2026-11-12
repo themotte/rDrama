@@ -234,13 +234,13 @@
 						{% if v.admin_level >= 3 %}
 						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">
-							<input type="hidden" name="formkey", value="{{v.formkey}}">
+							<input type="hidden" name="formkey" value="{{v.formkey}}">
 							<input type="hidden" name="user" value="{{u.username}}">
 							<input type="submit" class="btn btn-success" value="Restore User's Removed Content">
 						</form>
 						<pre></pre>
 						<form action="/admin/nuke_user" method="post">
-							<input type="hidden" name="formkey", value="{{v.formkey}}">
+							<input type="hidden" name="formkey" value="{{v.formkey}}">
 							<input type="hidden" name="user" value="{{u.username}}">
 							<input type="submit" class="btn btn-danger" value="Remove User's Content">
 						</form>
@@ -410,7 +410,7 @@
 						<pre></pre>
 						{% if u.is_suspended %}
 							<form action="/unban_user/{{u.id}}" method="post">
-								<input type="hidden" name="formkey", value="{{v.formkey}}">
+								<input type="hidden" name="formkey" value="{{v.formkey}}">
 								<input type="hidden" name="redir" value="true">
 								<input type="submit" class="btn btn-success" value="Unban user">
 							</form>
@@ -447,13 +447,13 @@
 						{% if v.admin_level >= 3 %}
 						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">
-							<input type="hidden" name="formkey", value="{{v.formkey}}">
+							<input type="hidden" name="formkey" value="{{v.formkey}}">
 							<input type="hidden" name="user" value="{{u.username}}">
 							<input type="submit" class="btn btn-success" value="Restore User's Removed Content">
 						</form>
 						<pre></pre>
 						<form action="/admin/nuke_user" method="post">
-							<input type="hidden" name="formkey", value="{{v.formkey}}">
+							<input type="hidden" name="formkey" value="{{v.formkey}}">
 							<input type="hidden" name="user" value="{{u.username}}">
 							<input type="submit" class="btn btn-danger" value="Remove User's Content">
 						</form>

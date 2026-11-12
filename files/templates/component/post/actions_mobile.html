@@ -1,7 +1,7 @@
 {%- if p.is_real_submission -%}
 {% if v and v.id==p.author_id and p.private %}
 	<form class="btn-block" action="/publish/{{p.id}}" method="post">
-		<input type="hidden" name="formkey", value="{{v.formkey}}">
+		<input type="hidden" name="formkey" value="{{v.formkey}}">
 		<button class="nobackground btn btn-link btn-lg text-left text-muted" data-bs-dismiss="modal" type="submit"><i class="fas fa-globe text-center mr-3"></i>Publish</button>
 	</form>
 {% endif %}
