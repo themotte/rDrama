@@ -358,7 +358,7 @@ def test_an_assignment_never_rated_costs_nothing(missed):
 	assert _accuracy(volunteer) == pytest.approx(RIGHT, abs=1e-12)
 
 
-# Pinned as they are, not decided on purpose
+# What a comment and its ratings teach, whatever became of them since
 
 
 def test_a_comment_the_moderators_removed_still_teaches():

@@ -4,4 +4,3 @@
 *.py linguist-detectable=true
 # Handed over with the spec: git archive HEAD files/__init__.py files/tests/__init__.py files/tests/spec
 files/tests/spec/harness/backend_inprocess.py export-ignore
-files/tests/spec/AUDITS.md export-ignore
