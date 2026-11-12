@@ -231,14 +231,14 @@ def test_static_files_do_not_resend_the_marker():
 	client = as_user(factories.user())
 	client.get("/")
 
-	r = client.get("/assets/robots.txt")
+	r = client.get(DEFAULT_PICTURE)
 
 	assert_status(r, 200)
 	assert _set_cookies(r, MARKER) == []
 
 
 def test_static_files_do_not_vary_on_cookies_for_a_fresh_visitor():
-	r = anon().get("/assets/robots.txt")
+	r = anon().get(DEFAULT_PICTURE)
 
 	assert_status(r, 200)
 	assert "cookie" not in (r.header("Vary") or "").lower()

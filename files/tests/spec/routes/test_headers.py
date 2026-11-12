@@ -27,7 +27,7 @@ def _json():
 
 
 def _file():
-	return anon().get("/assets/robots.txt")
+	return anon().get(DEFAULT_PICTURE)
 
 
 def _not_found():

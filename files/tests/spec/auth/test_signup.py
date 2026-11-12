@@ -85,6 +85,16 @@ def test_a_new_account_starts_with_the_configured_colour_and_listing_view():
 	assert (new["namecolor"], new["titlecolor"], new["themecolor"], new["cardview"]) == (config.default_color(), config.default_color(), config.default_color(), config.card_view_default())
 
 
+def test_a_new_account_shows_the_default_picture():
+	username = factories.unique("new")
+
+	_signup(anon(), usernametwo=username)
+
+	new = db.row("users", username=username)
+	assert (new["profileurl"], new["highres"]) == (DEFAULT_PICTURE, None)
+	assert_serves_image(DEFAULT_PICTURE)
+
+
 def test_signing_up_with_an_email_mails_a_verification_link():
 	email = f"{factories.unique()}@example.com"
 

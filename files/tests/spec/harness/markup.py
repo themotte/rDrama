@@ -106,6 +106,11 @@ def links(r: Response, within: str | None = None) -> list[str]:
 	return root.xpath(".//@href")
 
 
+def addresses(r: Response) -> list[str]:
+	'''The addresses the page's links lead to and its embeds load (every href and src), in page order.'''
+	return _document(r).xpath("//@href | //@src")
+
+
 def input_value(r: Response, name: str) -> str | None:
 	'''The value of the page's first input named `name`, None if it has none.'''
 	found = _document(r).xpath("//input[@name=$n]", n=name)
