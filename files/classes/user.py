@@ -304,12 +304,12 @@ class User(CreatedBase):
 
 	def hash_password(self, password):
 		# Use faster hashing with fewer iterations during tests
-		# PBKDF2 default is 260000 iterations, we use 1000 for tests
+		# werkzeug's PBKDF2 default is 1000000 iterations (older accounts' hashes have 260000, its earlier default); we use 1000 for tests
 		if SPEC_TEST_MODE:
-			# Fast hashing for tests (~2ms instead of ~390ms)
+			# Fast hashing for tests (a few ms instead of over a second)
 			method = 'pbkdf2:sha512:1000'
 		else:
-			# Secure hashing for production (default 260000 iterations)
+			# Secure hashing for production (werkzeug's default iterations)
 			method = 'pbkdf2:sha512'
 		return generate_password_hash(password, method=method, salt_length=8)
 
