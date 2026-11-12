@@ -10,7 +10,7 @@ In order:
 - Likewise, "/r/<name>" and "/u/<name>" (3 to 25 letters, digits, "_" or "-", not followed by more) at the start of a run of text or after whitespace link to Reddit (reddit.com), and "/h/<name>" to that path on the site.
 - A link whose text is itself a web address shows its real address instead.
 - Only the elements in KEPT_ELEMENTS are kept: other elements are dropped but their text stays (DROPPED_ELEMENTS). Only these attributes are kept: "style" on any element, keeping only the CSS properties "color", "background-color", "font-weight" and "text-align"; on "a", "href", "target" only as "_blank" and "rel" only as "nofollow noopener noreferrer"; on "span", "title", "alt" and "data-bs-toggle" only as "tooltip". A link keeps its address unless it has a scheme other than http or https (in any letter case).
-- Web addresses in the text become links (not inside code) when their host name's last label is one of TOP_LEVEL_DOMAINS, with http:// or https:// or bare (linked with http://). Links leaving the site open in a new tab (target "_blank", rel "nofollow noopener noreferrer"); links to the site's own pages (an address starting with a single "/", or the site's own address) aren't given them, but keep them if written with them.
+- Web addresses in the text become links (not inside code) when their host name's last label is one of TOP_LEVEL_DOMAINS, with http:// or https:// or bare (linked with http://); an address right after "://" stays text, whatever the scheme before it (ftp://…, and a doubled https://https://…), and is ordinary text to the rules above and below, so the site's conventions apply in it and banned domains aren't looked for in it; only an exact "://" counts. Links leaving the site open in a new tab (target "_blank", rel "nofollow noopener noreferrer"); links to the site's own pages (an address starting with a single "/", or the site's own address) aren't given them, but keep them if written with them.
 - Every link's address then loses its query parameters "utm_<word>=<value>", and is otherwise kept as written; a link showing its own address (with or without its scheme) shows it without them too. Text that isn't a link's address, code included, is left as written.
 
 Text linking to a banned domain is refused with 403: a link's host, any of the host's parent domains, or its host and path, being listed in "banneddomains".
@@ -188,12 +188,16 @@ def test_a_link_keeps_its_address_unless_it_has_another_scheme(address, html):
 	("www.example.com/p", f'<p>{_link("http://www.example.com/p", "www.example.com/p")}</p>'),
 	("notes.txt", "<p>notes.txt</p>"),
 	("mailto:a@b.com a@b.com", "<p>mailto:a@b.com a@b.com</p>"),
-	("ftp://example.com/x", f'<p>ftp://{_link("http://example.com/x", "example.com/x")}</p>'),
+	("ftp://example.com/x", "<p>ftp://example.com/x</p>"),
+	("git+ssh://example.com/x", "<p>git+ssh://example.com/x</p>"),
+	("https://https://example.com", "<p>https://https://example.com</p>"),
+	("ftp://example.com/~a~", "<p>ftp://example.com/<del>a</del></p>"),
+	("ftp:/example.com/x", f'<p>ftp:/{_link("http://example.com/x", "example.com/x")}</p>'),
 	("```\nhttps://example.com\n```", "<pre><code>https://example.com\n</code></pre>"),
 	("[https://evil.example](https://good.example)", f'<p>{_link("https://good.example")}</p>'),
 	("[x](https://example.com/a~b~c)", f'<p>{_link("https://example.com/a~b~c", "x")}</p>'),
 	("https://example.com/?utm_source=x&a=1 https://example.com/?a=1&utm_medium=y", f'<p>{_link("https://example.com/?a=1")} {_link("https://example.com/?a=1")}</p>'),
-], ids=["markdown link", "site path", "autolink", "bare address", "bare host", "www host", "unknown top-level domain", "mail", "other scheme", "in a code block", "address as text", "tildes in an address", "tracking parameters"])
+], ids=["markdown link", "site path", "autolink", "bare address", "bare host", "www host", "unknown top-level domain", "mail", "other scheme", "other scheme with a plus", "doubled scheme", "conventions after another scheme", "one slash after another scheme", "in a code block", "address as text", "tildes in an address", "tracking parameters"])
 def test_links(body, html):
 	assert_same_html(_rendered(body), html)
 
@@ -320,6 +324,12 @@ def test_linking_a_banned_domain_is_refused(banned, address):
 
 	assert_status(r, 403)
 	d.assert_exactly()
+
+
+def test_an_address_after_another_scheme_isnt_checked_for_banned_domains():
+	db.insert("banneddomains", domain="banned.example.com", reason="spam")
+
+	assert_same_html(_rendered("ftp://banned.example.com/x"), "<p>ftp://banned.example.com/x</p>")
 
 
 def test_a_banned_hosts_other_paths_are_allowed():

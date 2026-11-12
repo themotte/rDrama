@@ -97,7 +97,9 @@ def _formatting(text: str) -> str:
 	return spoiler_regex.sub(r'<spoiler>\1</spoiler>', text)
 
 
-url_re = build_url_re(tlds=TLDS, protocols=['http', 'https'])
+_bleach_url_re = build_url_re(tlds=TLDS, protocols=['http', 'https'])
+# An address right after "://" belongs to another scheme (ftp://…) or a doubled one, and isn't linked
+url_re = re.compile(r"(?<!://)" + _bleach_url_re.pattern, _bleach_url_re.flags)
 
 css_sanitizer = CSSSanitizer(allowed_css_properties=['color', 'background-color', 'font-weight', 'text-align'])
 
