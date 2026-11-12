@@ -2,7 +2,8 @@
 What suspended users may do. While a ban runs (permanently, or until its end time), a user can't change their content or their public profile, or start following anyone. Each of these is refused with 403 and changes nothing:
 - their posts and comments: publishing a draft (POST /publish/<post id>), editing (POST /edit_post/<post id>, POST /edit_comment/<comment id>), restoring deleted ones (POST /undelete_post/<post id>, POST /undelete/comment/<comment id>), marking them NSFW (POST /toggle_post_nsfw/<post id>, POST /toggle_comment_nsfw/<comment id>), and pinning a post to their profile (POST /pin/<post id>);
 - their profile: setting or clearing the bio or friends text (POST /settings/profile with "bio" or "friends"), the name, flair, verified-badge colors (POST /settings/namecolor, /settings/titlecolor, /settings/verifiedcolor), the profile picture and banner (POST /settings/images/profile, /settings/images/banner), the profile page's CSS (POST /settings/profilecss), the username (POST /settings/name_change) and the flair text (POST /settings/title_change);
-- following someone (POST /follow/<username>), which tells them.
+- following someone (POST /follow/<username>), which tells them;
+- making their profile private or public (POST /id/<their id>/private/<0|1>; settings/test_privacy.py).
 (Posting and commenting are refused too; see the posts and comments areas. Voting and reporting follow their own rules; see those areas.)
 
 Everything else still works: deleting their own content, saving, subscribing, unfollowing, removing followers, blocking, and their private preferences. Once a temporary ban has run out, nothing is refused.
@@ -206,3 +207,42 @@ def test_users_whose_ban_ran_out_can_set_their_bio():
 
 	assert_status(r, 200)
 	d.assert_exactly(updated={"users": {v["id"]: {"bio": "after", "bio_html": ANY, **_BAN_ENDED}}}, inserted=_UNBANNED_NOTIFICATION)
+
+
+def _privacy(user, private: bool) -> str:
+	return f"/id/{user['id']}/private/{int(private)}"
+
+
+@pytest.mark.parametrize("permanently", [False, True], ids=["temporarily", "permanently"])
+def test_suspended_users_cant_change_their_profiles_privacy(permanently):
+	v = _suspended(permanently)
+
+	with db_diff() as d:
+		r = as_user(v).post(_privacy(v, True), headers=XHR)
+
+	assert_status(r, 403)
+	d.assert_exactly()
+
+
+def test_a_suspended_admin_cant_change_others_privacy():
+	target = factories.user()
+	admin = factories.admin(2, is_banned=factories.admin(3)["id"], unban_utc=int(time.time()) + 86400)
+
+	with db_diff() as d:
+		r = as_user(admin).post(_privacy(target, True), headers=XHR)
+
+	assert_status(r, 403)
+	d.assert_exactly()
+
+
+def test_an_admin_whose_ban_ran_out_sets_others_privacy_again():
+	admin = factories.admin(2, is_banned=factories.admin(3)["id"], unban_utc=int(time.time()) - 60)
+	target = factories.user()
+	client = as_user(admin)
+	client.get("/")
+
+	with db_diff() as d:
+		r = client.post(_privacy(target, True), headers=XHR)
+
+	assert_json_message(r)
+	d.assert_exactly(updated={"users": {target["id"]: {"is_private": True}}})

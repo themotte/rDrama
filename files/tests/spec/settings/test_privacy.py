@@ -1,7 +1,7 @@
 '''
 POST /id/<user id>/private/<0|1>: private profiles.
 
-Members may change only their own, and only once they meet the site's thresholds (site settings min_comments_private_profile, min_truescore_private_profile, min_age_days_private_profile). Admins of level 2 and up may change anyone's, regardless of thresholds.
+Members may change only their own, and only once they meet the site's thresholds (site settings min_comments_private_profile, min_truescore_private_profile, min_age_days_private_profile). Admins of level 2 and up may change anyone's, regardless of thresholds. A user whose suspension is running can change none, their own included (users/test_suspended.py).
 '''
 import time
 

@@ -552,6 +552,8 @@ def settings_profile(v):
 @auth_required
 def post_set_user_profile_privacy(v: User, id: int, enabled: str):
 	if enabled not in ("0", "1"): abort(400, "'enabled' must be '0' or '1'")
+	# Privacy changes what others see, even of one's own profile
+	refuse_while_suspended(v)
 	user: User = get_account(id)
 	if not user.can_change_user_privacy(v): abort(403)
 	user.is_private = enabled == "1"
