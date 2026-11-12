@@ -1,6 +1,6 @@
 '''
 Things the site looks up on other sites or in its own posts for the submit form and new link posts:
-- POST /is_repost with "url": the permalink of a live post already linking there, or "" (no login needed).
+- POST /is_repost with "url": the permalink of a live post already linking there, or "" (no login needed). The scheme, the host's letter case, a trailing slash and tracking parameters (utm_… and ref_…) don't distinguish links, nor does any query on twitter.com, instagram.com and tiktok.com.
 - GET /submit/title?url=...: the <title> of the page at url, for prefilling the title field.
 - The thumbnail of a new link post, fetched in the background from the linked page's preview-image metadata, its images, or the link itself when it is an image. Only the first 512 KiB of a page is looked at, and images of more than 16 million pixels, or that can't be read whole, aren't used. A thumbnail is at most 100 pixels wide, upright, and holds no metadata.
 
@@ -82,10 +82,21 @@ def test_repost_check_ignores_posts_others_cannot_see(hidden):
 	assert _is_repost("https://example.com/page").json == {"permalink": ""}
 
 
-def test_repost_check_keeps_meaningful_query_parameters():
-	factories.post(factories.user(), url="https://example.com/page?id=1")
+@pytest.mark.parametrize("stored, asked", [
+	("https://example.com/page?id=1", "https://example.com/page?id=2"),
+	("https://old.reddit.com/r/x/comments/abc/", "https://old.reddit.com/r/x/comments/abc/?context=3"),
+], ids=["a site", "old reddit"])
+def test_repost_check_keeps_meaningful_query_parameters(stored, asked):
+	factories.post(factories.user(), url=stored)
 
-	assert _is_repost("https://example.com/page?id=2").json == {"permalink": ""}
+	assert _is_repost(asked).json == {"permalink": ""}
+
+
+@pytest.mark.parametrize("host", ["twitter.com", "instagram.com", "tiktok.com"])
+def test_no_query_distinguishes_links_to_some_hosts(host):
+	post = factories.post(factories.user(), url=f"https://{host}/someone")
+
+	assert _is_repost(f"https://{host}/someone?s=20&igshid=x").json["permalink"].startswith(f"{config.site_url()}/post/{post['id']}/")
 
 
 @pytest.mark.parametrize("fields", [{}, {"url": "http://["}], ids=["missing", "malformed"])

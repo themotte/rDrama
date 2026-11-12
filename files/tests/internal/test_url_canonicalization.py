@@ -54,6 +54,14 @@ def test_url_canonicalization_with_utm_parameters():
 			"https://www.youtube.com/watch?v=xyz456&utm_campaign=video",
 			"https://www.youtube.com/watch?v=xyz456"  # Just strip UTM, no www. removal
 		),
+		(
+			"https://old.reddit.com/r/x/comments/abc/?context=3&utm_source=share",
+			"https://old.reddit.com/r/x/comments/abc/?context=3"  # A host like any other
+		),
+		(
+			"https://twitter.com/someone/status/1?s=20&t=abc",
+			"https://twitter.com/someone/status/1"  # No query distinguishes these hosts' links
+		),
 	]
 
 	for input_url, expected_url in test_cases:

@@ -15,10 +15,8 @@ else:
 def _httpsify_and_remove_tracking_urls(url:str) -> urllib.parse.ParseResult:
 	parsed_url = urllib.parse.urlparse(url)
 	domain = parsed_url.netloc
-	is_reddit_twitter_instagram_tiktok:bool = domain in \
-		('old.reddit.com','twitter.com','instagram.com','tiktok.com')
-
-	if is_reddit_twitter_instagram_tiktok:
+	# No query distinguishes these hosts' links
+	if domain in ('twitter.com', 'instagram.com', 'tiktok.com'):
 		query = ""
 	else:
 		qd = urllib.parse.parse_qs(parsed_url.query)

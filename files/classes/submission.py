@@ -201,7 +201,7 @@ class Submission(CreatedBase, AuthorShadowban):
 		if self.url.startswith('/'): return SITE
 		domain = urlparse(self.url).netloc
 		if domain.startswith("www."): domain = domain.split("www.")[1]
-		return domain.replace("old.reddit.com", "reddit.com")
+		return domain
 
 	@property
 	@lazy

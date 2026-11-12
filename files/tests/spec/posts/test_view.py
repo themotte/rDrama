@@ -54,6 +54,13 @@ def test_link_posts_show_their_link():
 	assert_in_payload(_page(anon(), post), url)
 
 
+@pytest.mark.parametrize("url, domain", [("https://www.example.com/x", "example.com"), ("https://old.reddit.com/r/x", "old.reddit.com")], ids=["www", "another subdomain"])
+def test_the_shown_domain_is_the_links_host_without_www(url, domain):
+	post = factories.post(factories.user(), url=url)
+
+	assert as_api(factories.api_token(factories.user())).get(f"/post/{post['id']}").json["domain"] == domain
+
+
 @pytest.mark.parametrize("viewer", ["visitor", "user", "api"])
 def test_a_link_posts_address_is_linked_as_written(viewer):
 	url = "https://old.reddit.com/r/sub/comments/abc/title/def/"
