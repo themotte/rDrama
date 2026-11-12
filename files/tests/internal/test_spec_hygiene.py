@@ -11,8 +11,8 @@ SPEC_DIR = Path(__file__).resolve().parent.parent / "spec"
 HARNESS_DIR = SPEC_DIR / "harness"
 HARNESS_PACKAGE = "files.tests.spec.harness"
 # How the harness reaches an implementation, which tests go through the harness for
-# The backends, and what the runner checks of a whole run, which tests mustn't reach into
-FORBIDDEN_HARNESS_PREFIXES = (f"{HARNESS_PACKAGE}.backend", f"{HARNESS_PACKAGE}.process_", f"{HARNESS_PACKAGE}.run_record", f"{HARNESS_PACKAGE}.coverage", f"{HARNESS_PACKAGE}.pages", f"{HARNESS_PACKAGE}.html5")
+# The backends, the state reset, the page parser, and what the runner checks of a whole run, which tests mustn't reach into
+FORBIDDEN_HARNESS_PREFIXES = (f"{HARNESS_PACKAGE}.backend", f"{HARNESS_PACKAGE}.process_", f"{HARNESS_PACKAGE}.run_record", f"{HARNESS_PACKAGE}.coverage", f"{HARNESS_PACKAGE}.pages", f"{HARNESS_PACKAGE}.html5", f"{HARNESS_PACKAGE}.state", f"{HARNESS_PACKAGE}.lifecycle")
 # Tools that only work by reaching into the process under test, and page parsers (pages are read through harness/markup.py)
 FORBIDDEN_TOP_LEVEL_MODULES = {"flask", "werkzeug", "freezegun", "time_machine", "requests", "responses", "unittest", "itsdangerous", "lxml", "bs4", "html5lib", "selectolax"}
 FORBIDDEN_MODULE_PREFIXES = ("sqlalchemy.orm", "html.parser")
@@ -60,7 +60,9 @@ def _is_forbidden(module):
 @pytest.mark.parametrize("path", SPEC_FILES, ids=lambda p: str(p.relative_to(SPEC_DIR)))
 def test_spec_code_imports_only_the_harness(path):
 	tree = ast.parse(path.read_text())
-	offending = sorted({m for m in _imported_modules(tree) if _is_forbidden(m)})
+	# The spec's own fixture runs each test in the lifecycle
+	allowed = {f"{HARNESS_PACKAGE}.lifecycle"} if path == SPEC_DIR / "conftest.py" else set()
+	offending = sorted({m for m in _imported_modules(tree) if _is_forbidden(m)} - allowed)
 	assert not offending, f"{path.name} reaches past the harness: {offending}"
 
 
@@ -130,6 +132,8 @@ def test_there_are_spec_tests_to_check():
 	("files.tests.spec.harness.coverage", True),
 	("files.tests.spec.harness.pages", True),
 	("files.tests.spec.harness.html5", True),
+	("files.tests.spec.harness.state", True),
+	("files.tests.spec.harness.lifecycle", True),
 	("files.classes.user", True),
 	("flask", True),
 	("sqlalchemy.orm.session", True),

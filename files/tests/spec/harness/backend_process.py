@@ -7,7 +7,7 @@ The test-mode interface an implementation provides to be run by the spec:
   - SSL_CERT_FILE naming the authority's certificate, which the site trusts, in place of any other, for its outbound HTTPS and its mail server.
   - MAIL_SERVER (an IP address) and MAIL_PORT naming the mail capture, which the site reaches over STARTTLS.
   It takes connections from any address in 127.0.0.0/8, and takes the address a connection comes from for the request's peer (harness.Client's `peer`). It serves from one process, since the background work it holds is that process's, and closes a connection after the response when the request asks it to (Connection: close). Requests come one at a time; each must be answered within 30 seconds. A response may come before the site has read the request's body (refusing a body by its length), and the connection may then be reset once it is sent.
-- Shared state. The database, the Redis db, the site settings file and the upload store are the state the environment configures. The harness reads and writes them directly, between requests and between tests (files/tests/reset.py puts them back after each test), so the site keeps no copy of them across requests that such a change would leave stale.
+- Shared state. The database, the Redis db, the site settings file and the upload store are the state the environment configures. The harness reads and writes them directly, between requests and between tests (state.py puts them back before each test), so the site keeps no copy of them across requests that such a change would leave stale.
 - Control requests, answered in test mode only, whatever their Host, ahead of any of the site's own handling:
   - POST /__spec__/ready answers once the site serves requests; the harness retries it while the connection is refused, for up to 60 seconds, and takes any other answer than 200 for a failure to start.
   - POST /__spec__/background/run runs the work the site has handed to the background to completion.
@@ -35,8 +35,7 @@ import threading
 import time
 from pathlib import Path
 
-from files.tests import reset as _reset
-from files.tests.spec.harness import config
+from files.tests.spec.harness import config, state
 from files.tests.spec.harness.process_proxy import Proxy
 from files.tests.spec.harness.process_smtp import HOST as MAIL_HOST, Capture
 from files.tests.spec.harness.process_tls import Authority
@@ -270,7 +269,7 @@ def reset(profile):
 	_profile = profile
 	site = _the_site()
 	site.control("reset")
-	_reset.reset()
+	state.reset()
 	site.proxy.clear()
 	site.mail.clear()
 	site.take_log()

@@ -17,8 +17,7 @@ from files.commands.cron import tasks_run_due
 from files.helpers import background
 from files.helpers.config import environment
 from files.helpers.strings import bool_from_string
-from files.tests import reset as _reset
-from files.tests.spec.harness import config
+from files.tests.spec.harness import config, state
 from files.tests.spec.harness.process_proxy import key as external_key
 
 __all__ = ["request", "reset", "run_background_work", "limit_clock_set", "cli", "run_scheduler", "sent_mail", "take_outbound_attempts", "take_server_log", "external_serve", "external_unreachable", "external_requests"]
@@ -48,7 +47,7 @@ def reset(profile):
 	db_session.remove()
 	background.discard()
 	limiter.clock = time.time
-	_reset.reset()
+	state.reset()
 	_outbound_attempts.clear()
 	_sent_mail.clear()
 	_external_responses.clear()
