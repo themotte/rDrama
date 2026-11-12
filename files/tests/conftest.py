@@ -10,8 +10,6 @@ import pytest
 
 from files.tests import affordances, route_coverage
 
-NEW_TIER_DIRS = ("spec", "internal")
-
 # The spec tier against the site running in its own processes (spec/harness/backend_process.py), started by these commands unless the runner names others
 PROCESS_BACKEND = os.environ.get("RDRAMA_SPEC_BACKEND") == "process"
 if PROCESS_BACKEND:
@@ -20,15 +18,8 @@ if PROCESS_BACKEND:
 	os.environ.setdefault("RDRAMA_SPEC_SCHEDULER", "python3 -m files.tests.scheduler_pass {at}")
 
 
-def _is_new_tier(item):
-	return any(part in NEW_TIER_DIRS for part in item.path.relative_to(testenv.REPO_ROOT / "files" / "tests").parts[:-1])
-
-
 def pytest_configure(config):
 	config.addinivalue_line("markers", "profile(name): runs the test with the site in that deployment profile (spec/harness/config.py PROFILES)")
-	# xdist sets "load" when -n is given without --dist; its workers run with "no"
-	if config.getoption("dist", "no") not in ("no", "loadgroup"):
-		raise pytest.UsageError("the legacy tests must run together in one worker: add --dist loadgroup")
 	# A controller handing tests to xdist workers runs none itself; each worker builds its own database. Built here because pytest replays pytest_configure for a conftest it loads late (as it does without a path below files/tests), unlike pytest_sessionstart.
 	if config.getoption("dist", "no") == "no" or config.getoption("collectonly"):
 		# Registered first, so a half-built database goes too
@@ -38,22 +29,15 @@ def pytest_configure(config):
 
 @pytest.hookimpl(tryfirst=True)  # xdist reads the group marks in its own hook, which must see them
 def pytest_collection_modifyitems(config, items):
-	# The legacy tests depend on state accumulated across the run (cached users, process-wide patches), which the new tiers' per-test reset wipes; run the legacy ones first, and under xdist all in one worker, which loadgroup scheduling starts on them
 	if PROCESS_BACKEND and (outside := [item.nodeid for item in items if "spec" not in item.path.relative_to(testenv.REPO_ROOT / "files" / "tests").parts[:1]]):
 		raise pytest.UsageError(f"RDRAMA_SPEC_BACKEND=process runs only the spec tier, not {outside[0]} and {len(outside) - 1} more")
 	from files.tests.spec.harness.config import PROFILES
 	for item in items:
 		if (profile := item.get_closest_marker("profile")) and profile.args[0] not in PROFILES:
 			raise pytest.UsageError(f"{item.nodeid} names no profile of spec/harness/config.py: {profile.args[0]}")
-		# A worker starts a site for each profile it runs tests in: keep each profile's tests to one worker
+		# A worker starts a site for each profile it runs tests in: keep each profile's tests to one worker (under --dist loadgroup)
 		if profile and PROCESS_BACKEND:
 			item.add_marker(pytest.mark.xdist_group(f"profile-{profile.args[0]}"))
-	items.sort(key=_is_new_tier)
-	legacy = [item for item in items if not _is_new_tier(item)]
-	for item in legacy:
-		item.add_marker(pytest.mark.xdist_group("legacy"))
-	if legacy and testenv.WORKER and not config.option.loadgroup:
-		raise pytest.UsageError("the legacy tests must run together in one worker: add --dist loadgroup")
 
 
 # Route coverage (route_coverage.py) and what pages offer (affordances.py), checked when a run collected every spec test and passed
@@ -140,25 +124,6 @@ class LazyLoadWarning(UserWarning):
 	pass
 
 
-_legacy_admin_ensured = False
-
-
-@pytest.fixture(autouse=True)
-def ensure_admin_account(request):
-	"""Ensure an admin account exists before the first legacy test runs"""
-	global _legacy_admin_ensured
-	if _legacy_admin_ensured or _is_new_tier(request.node):
-		return
-	_legacy_admin_ensured = True
-
-	from files.__main__ import db_session
-	from files.classes import User
-	from files.tests import util_accounts
-
-	if not db_session.query(User).filter(User.admin_level >= 3).first():
-		util_accounts.create_test_client_and_admin(3, name="admin")
-
-
 @pytest.fixture(scope="session", autouse=True)
 def warn_on_lazy_loads():
 	"""Detect SQLAlchemy lazy loads and emit warnings.
@@ -215,19 +180,3 @@ def warn_on_lazy_loads():
 	yield
 
 	event.remove(Session, "do_orm_execute", on_orm_execute)
-
-
-@pytest.fixture(autouse=True)
-def rollback_dirty_session(request):
-	"""Roll back the shared db_session after each legacy test if it's dirty.
-
-	Tests that manipulate db_session directly (outside of Flask request
-	context) can leave it in a "needs rollback" state on failure, which
-	cascades PendingRollbackError into every subsequent test.
-	"""
-	yield
-	if _is_new_tier(request.node):
-		return
-	from files.__main__ import db_session
-	if db_session.registry.has():
-		db_session.rollback()

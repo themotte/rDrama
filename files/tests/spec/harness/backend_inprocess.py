@@ -53,7 +53,7 @@ def reset(profile):
 	_sent_mail.clear()
 	_external_responses.clear()
 	_external_requests.clear()
-	# Installed for the rest of the process; the legacy tests that would mind run before any spec test
+	# Installed for the rest of the process: every test starts from a reset, so all of them run under these
 	requests.adapters.HTTPAdapter.send = _fake_http_send
 	smtplib.SMTP = _CapturingSMTP
 	smtplib.SMTP_SSL = _CapturingSMTP
