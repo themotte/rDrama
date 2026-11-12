@@ -150,6 +150,10 @@ def _link_post(url):
 	return db.rows("submissions")[-1]
 
 
+def _width(url):
+	return Image.open(BytesIO(anon().get(url).body)).width
+
+
 def _thumbnail_of(post):
 	return db.row("submissions", id=post["id"])["thumburl"]
 
@@ -374,6 +378,15 @@ def test_thumbnails_are_upright_and_hold_no_metadata():
 	thumbnail = anon().get(_thumbnail_of(post)).body
 	served = Image.open(BytesIO(thumbnail))
 	assert (served.size, marker.encode() in thumbnail, dict(served.getexif()), served.info.get("xmp")) == ((100, 150), False, {}, None)
+
+
+def test_an_image_too_wide_to_store_whole_is_still_a_thumbnail():
+	external_web.serve("https://example.com/photo", headers={"Content-Type": "image/png"}, body=uploads.png(20000, 40)[1])
+	post = _link_post("https://example.com/photo")
+
+	run_background_work()
+
+	assert _width(_thumbnail_of(post)) == 100
 
 
 def test_an_image_whose_exif_cant_be_read_is_its_own_thumbnail():

@@ -1,6 +1,5 @@
 import os
 import secrets
-import subprocess
 import time
 from io import BytesIO
 
@@ -70,7 +69,7 @@ def delete_uploaded_image(url: str | None):
 def process_image(filename, resize=0) -> str:
 	'''Converts the image stored at `filename` (in the upload store) to WebP in place, without the metadata it came with and turned upright, optionally shrinking it to `resize` pixels wide, and returns its URL. Raises UnreadableImage for an upload that can't be read whole, and ImageTooLarge for one too large to store, removing the file.'''
 	try:
-		_reencode(filename)
+		_reencode(filename, resize)
 	except BaseException as e:
 		# Neither the upload nor a half-written result stays in the store
 		if os.path.exists(filename): os.remove(filename)
@@ -78,13 +77,11 @@ def process_image(filename, resize=0) -> str:
 		if isinstance(e, Image.DecompressionBombError) or (isinstance(e, OSError) and e.errno is None):
 			raise UnreadableImage() from e
 		raise
-	if resize:
-		_shrink(filename, resize)
 	return image_url(filename)
 
 
-def _reencode(filename):
-	'''Decodes the image whole and stores it again as WebP, which holds no metadata unless asked to: a GIF or an animated WebP with all its frames, their timing and its loop count, anything else from its first picture, turned by its EXIF orientation.'''
+def _reencode(filename, width):
+	'''Decodes the image whole and stores it again as WebP, which holds no metadata unless asked to: a GIF or an animated WebP with all its frames, their timing and its loop count, anything else from its first picture, turned by its EXIF orientation; shrunk to `width` pixels wide first if given and wider.'''
 	# Decode from memory: frames are read lazily, and the result overwrites the source file
 	with open(filename, "rb") as f:
 		i = Image.open(BytesIO(f.read()))
@@ -98,6 +95,9 @@ def _reencode(filename):
 			frames.append(frame.convert("RGBA"))
 	else:
 		frames = [_upright(i)]
+	if width and frames[0].width > width:
+		size = (width, max(1, round(frames[0].height * width / frames[0].width)))
+		frames = [frame.resize(size, Image.LANCZOS) for frame in frames]
 	if max(frames[0].size) > WEBP_MAX_SIDE:
 		raise ImageTooLarge()
 	if animated:
@@ -114,11 +114,3 @@ def _upright(i):
 		# What PIL raises for EXIF that isn't EXIF: the orientation is unknown, and the rest of the metadata is dropped anyway
 		return i.copy()
 
-
-
-def _shrink(filename, width):
-	'''Shrinks the site's own WebP at `filename` to `width` pixels wide, if it is wider, frames and all.'''
-	with Image.open(filename) as i:
-		if i.width <= width: return
-	try: subprocess.call(["convert", filename, "-coalesce", "-resize", f"{width}>", filename])
-	except: pass
