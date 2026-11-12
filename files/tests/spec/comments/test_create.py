@@ -1,5 +1,5 @@
 '''
-Commenting: POST /comment with "parent_fullname" naming what is replied to ("post_<post id>" for a top-level comment, "comment_<comment id>" for a reply) and "body" (markdown; surrounding whitespace is trimmed and it is cut to 500,000 characters).
+Commenting: POST /comment with "parent_fullname" naming what is replied to ("post_<post id>" for a top-level comment, "comment_<comment id>" for a reply) and "body" (markdown; surrounding whitespace is trimmed and it is cut to 500,000 characters). A body with nothing left once trimmed and rid of invisible characters (rendering/test_text.py) is refused (400).
 
 The new comment sits one level below its parent (top-level comments are level 1) and belongs to the parent's thread (a top-level comment starts its own thread). It is 18+ when the post is, or when the request says "over_18" = "true"; it is anonymous ("ghost") when the post is. Comments from API clients are marked as bots and record the client's application. The author's own upvote comes with it.
 
@@ -616,7 +616,7 @@ def test_parents_that_arent_posts_or_comments_are_refused(parent_fullname):
 	_refused(as_user(factories.user()), parent_fullname, factories.unique(), 400)
 
 
-@pytest.mark.parametrize("body", ["", "   \n "])
+@pytest.mark.parametrize("body", ["", "   \n ", "\ufeff\u200b\u200e \ufeff"], ids=["empty", "whitespace", "invisible characters"])
 def test_empty_comments_are_refused(body):
 	post = factories.post(factories.user())
 
