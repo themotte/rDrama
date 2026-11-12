@@ -94,7 +94,7 @@ def _reencode(filename, width):
 			durations.append(frame.info.get("duration", 0))
 			frames.append(frame.convert("RGBA"))
 	else:
-		frames = [_upright(i)]
+		frames = [_eight_bit(_upright(i))]
 	if width and frames[0].width > width:
 		size = (width, max(1, round(frames[0].height * width / frames[0].width)))
 		frames = [frame.resize(size, Image.LANCZOS) for frame in frames]
@@ -114,3 +114,9 @@ def _upright(i):
 		# What PIL raises for EXIF that isn't EXIF: the orientation is unknown, and the rest of the metadata is dropped anyway
 		return i.copy()
 
+
+def _eight_bit(i):
+	'''The image with 8 bits a channel, as WebP holds: 16- and 32-bit greys scaled down rather than cut off.'''
+	if i.mode.startswith("I"):
+		return i.convert("I").point(lambda v: v / 257).convert("L")
+	return i

@@ -1,7 +1,7 @@
 '''
 Avatar (POST /settings/images/profile, field "profile") and banner (POST /settings/images/banner, field "banner") uploads.
 
-Uploads are stored by the site and served under /images/ as WebP, without the metadata they arrived with (EXIF, GPS, XMP, text chunks, colour profiles). An animated GIF or WebP stays animated, its frames' timing and its loop count kept; anything else is stored as its first picture (of a phone's multi-picture photo, an animated PNG or a multi-page TIFF), turned upright by its EXIF orientation, or as it is when its EXIF can't be read. An image more than 16383 pixels wide or high is refused (400), as is one that can't be read whole, and neither is stored. Replacing an uploaded image deletes the old file; images hosted elsewhere (any URL not starting with /images/ or <site>/images/) are simply replaced.
+Uploads are stored by the site and served under /images/ as WebP, without the metadata they arrived with (EXIF, GPS, XMP, text chunks, colour profiles). Images of more than 8 bits a channel keep their shades, scaled down. An animated GIF or WebP stays animated, its frames' timing and its loop count kept; anything else is stored as its first picture (of a phone's multi-picture photo, an animated PNG or a multi-page TIFF), turned upright by its EXIF orientation, or as it is when its EXIF can't be read. An image more than 16383 pixels wide or high is refused (400), as is one that can't be read whole, and neither is stored. Replacing an uploaded image deletes the old file; images hosted elsewhere (any URL not starting with /images/ or <site>/images/) are simply replaced.
 '''
 import os
 from io import BytesIO
@@ -163,6 +163,15 @@ def test_an_animation_keeps_its_frames_timing_and_loop_count(image_format):
 		served.load()
 		durations.append(served.info["duration"])
 	assert (durations, served.info["loop"]) == ([100, 500, 1000], 2)
+
+
+def test_a_16_bit_grey_keeps_its_shade():
+	u = factories.user()
+
+	assert_html(as_user(u).post("/settings/images/banner", files={"banner": uploads.grey_16_bit_png(30000)}), 200)
+
+	red, green, blue = Image.open(BytesIO(anon().get(db.row("users", id=u["id"])["bannerurl"]).body)).convert("RGB").getpixel((0, 0))
+	assert 100 < red < 135 and abs(red - green) < 4 and abs(red - blue) < 4
 
 
 def test_an_image_whose_exif_cant_be_read_is_stored_as_it_is():

@@ -151,3 +151,10 @@ def truncated_gif(width: int, height: int):
 	frames[0].save(data, format="GIF", save_all=True, append_images=frames[1:], duration=100, loop=0)
 	whole = data.getvalue()
 	return ("image.gif", whole[:len(whole) * 3 // 4], "image/gif")
+
+
+def grey_16_bit_png(level: int):
+	'''An 8x8 PNG of 16-bit grey at `level` (of 65535).'''
+	data = BytesIO()
+	Image.new("I;16", (8, 8), level).save(data, format="PNG")
+	return ("grey.png", data.getvalue(), "image/png")
